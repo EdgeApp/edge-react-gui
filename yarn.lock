@@ -1838,9 +1838,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@git+https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b":
+"@fioprotocol/fiosdk@https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b":
   version "1.8.0"
-  resolved "git+https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b"
+  resolved "https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -7654,10 +7654,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-1.7.0.tgz#c728cc8b904193bf5fd32b6003672bcd0757cc5f"
-  integrity sha512-t88JaqM0X030/X2KGeJuIAqRlSfxI83Hg5+0V1q4bfaVXHRpmbdaiiWXliUteB7mlMePu3uuslzRVmAgGOpwdQ==
+edge-core-js@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-1.9.0.tgz#6e586a018cb73a73f0555f246b27e98362df2137"
+  integrity sha512-7Ggf4+r6zBEBQf+J3Qdt/yQcGX6vmH5jUKQUCqW2+eYWCshCziEGCuYbC5qLBXaoFTnsaw6KFKqRfdEOTDGuAw==
   dependencies:
     aes-js "^3.1.0"
     base-x "^4.0.0"
@@ -7679,10 +7679,10 @@ edge-core-js@^1.7.0:
     yaob "^0.3.11"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^2.5.5:
-  version "2.5.5"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-2.5.5.tgz#73715b01d7a194df645b32ee93713c8329ff6adb"
-  integrity sha512-Y0qI20fz8OsNjX6T3QY6rMlN9fjIlLBv7v12W8fKWjn780SCBsjNdnAsJ/56WVFhCssbgfnfkJefeCHIHr2//g==
+edge-currency-accountbased@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-2.7.0.tgz#411ceb863c01f9ecf190559410c29dfec99fc123"
+  integrity sha512-VdTfDkoPjoGwoAse0k5isAdyMLJWUyaZH4vPqNRGUWLessRSyC7zUYbU7zlgNPAEOBe7BDlwYkckfyC2qmfyqA==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@ethereumjs/common" "^2.4.0"
@@ -7756,10 +7756,10 @@ edge-currency-plugins@^2.3.0:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^0.21.9:
-  version "0.21.9"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.21.9.tgz#9eac8c074e89d5c6d7756026ae4220cf6e567dc1"
-  integrity sha512-sxDKGWq7slsEUQJsVnjJeq68ydV4lhLIDonRbk7H/XDPh885+2puFX7Wj9ot0PLX82sUZSnMcsxl56P8wQNIrA==
+edge-exchange-plugins@^0.21.10:
+  version "0.21.10"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.21.10.tgz#206dc4c52a750f7f8f47fae34a262a1ff68e31fa"
+  integrity sha512-y1j/ogelQHfOTAOolpR25OY8RsSl9z0/WZOyYaY3EWKJcWKXx66eoPqmSVunrhhzc+AlWsTYf7K4bLCBRk/zug==
   dependencies:
     "@ethersproject/address" "^5.5.0"
     "@ethersproject/contracts" "^5.5.0"
@@ -7773,6 +7773,13 @@ edge-exchange-plugins@^0.21.9:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
     xrpl "^2.10.0"
+
+edge-info-server@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/edge-info-server/-/edge-info-server-1.0.1.tgz#3cdb4c8e017fd3a674a145264291cb81d78ec404"
+  integrity sha512-/CrEQ7eSCOkPuFhrOGQm304WvyRQsrvgKIQSCMEjoiEO9yL83S5fTCrcbwDj5LY2t+fhRp5bKwXNlo2xOqzVJQ==
+  dependencies:
+    cleaners "^0.3.16"
 
 edge-login-ui-rn@^2.14.1:
   version "2.14.1"
@@ -8914,9 +8921,9 @@ eyes@^0.1.8:
   resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
   integrity sha512-GipyPsXO1anza0AOZdy69Im7hGFCNB7Y/NGjDlZGJ3GJJLtwNSb2vrzYrTYJRrRloVx7pl+bhUaTB8yiccPvFQ==
 
-"eztz.js@git+https://github.com/EdgeApp/eztz.git#edge-fixes":
+"eztz.js@https://github.com/EdgeApp/eztz.git#edge-fixes":
   version "0.0.1"
-  resolved "git+https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
+  resolved "https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
   dependencies:
     bignumber.js "^7.2.1"
     bip39 "^3.0.2"
@@ -13797,10 +13804,10 @@ react-native-keyboard-aware-scroll-view@^0.9.5:
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
 
-react-native-linear-gradient@^2.5.6:
-  version "2.5.6"
-  resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
-  integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
+react-native-linear-gradient@^2.8.3:
+  version "2.8.3"
+  resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz#9a116649f86d74747304ee13db325e20b21e564f"
+  integrity sha512-KflAXZcEg54PXkLyflaSZQ3PJp4uC4whM7nT/Uot9m0e/qxFV3p6uor1983D1YOBJbJN7rrWdqIjq0T42jOJyA==
 
 react-native-localize@^3.0.2:
   version "3.0.2"
@@ -13833,6 +13840,13 @@ react-native-permissions@^3.8.3:
   dependencies:
     picocolors "^1.0.0"
     pkg-dir "^5.0.0"
+
+react-native-piratechain@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.4.0.tgz#0a42204ddd28142b6a703ea91ba06ae5ecb04abb"
+  integrity sha512-iZuh7ST6TtSsGklO9Q08gJP/7OnmJ4afraLiOPmMgysTpY+M28umGTZK4Yg0t7gwudE5j46MWn51X6m46wjUzA==
+  dependencies:
+    rfc4648 "^1.3.0"
 
 react-native-popup-menu@^0.16.1:
   version "0.16.1"
@@ -13928,11 +13942,12 @@ react-native-webview@^13.2.2:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
 
-react-native-zcash@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.5.0.tgz#1544e767df751228b4e6bbd659876eb4ad19d725"
-  integrity sha512-XDiSWYlMq/Q2J8lIkwijrZxSVXZl5CsbEB5qXtFmV9PlEhyM2AH3wo7vX6QbwRvW1LDz4NhTp9CVKhKOmnrrJw==
+react-native-zcash@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.6.1.tgz#31896d9ae5a698f4269a38835b36a2018d090192"
+  integrity sha512-xOdh6SyFzQBWNeZ6Yshz3Apa+GvWKHpEV9g4MvlX6he6Ky2EjsvNSDdtH21G0Sw1BbIts8LMB/xXc7vK5pjy4Q==
   dependencies:
+    biggystring "^4.1.3"
     rfc4648 "^1.3.0"
 
 react-native@0.71.11:

@@ -878,7 +878,7 @@ const updateInboundAddresses = async (opts: EdgeGuiPluginOptions): Promise<void>
     if (now - inboundAddressesLastUpdate > INBOUND_ADDRESSES_UPDATE_FREQ_MS || inboundAddresses == null) {
       // Get current pool
       const [iaResponse] = await Promise.all([
-        fetchWaterfall(midgardServers, 'v2/thorchain/inbound_addresses', {
+        fetchWaterfall(thornodeServers, 'thorchain/inbound_addresses', {
           headers: { ...headers, 'x-client-id': ninerealmsClientId }
         })
       ])

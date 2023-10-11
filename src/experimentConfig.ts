@@ -29,7 +29,7 @@ const experimentConfigDisklet = makeReactNativeDisklet()
 const experimentDistribution = {
   swipeLastUsp: [0.5],
   createAccountType: [0.5],
-  legacyLanding: [0.5],
+  legacyLanding: [0],
   createAccountText: [0.33, 0.33]
 }
 

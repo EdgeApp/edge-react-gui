@@ -3,8 +3,8 @@ PODS:
   - boost (1.76.0)
   - BugsnagReactNative (7.20.2):
     - React-Core
-  - BVLinearGradient (2.5.6):
-    - React
+  - BVLinearGradient (2.8.3):
+    - React-Core
   - CGRPCZlib (1.8.0)
   - CNIOAtomics (2.40.0)
   - CNIOBoringSSL (2.19.0)
@@ -18,9 +18,9 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (1.7.0):
+  - edge-core-js (1.9.0):
     - React-Core
-  - edge-currency-accountbased (2.5.4):
+  - edge-currency-accountbased (2.7.0):
     - React-Core
   - edge-login-ui-rn (2.14.1):
     - React
@@ -497,6 +497,11 @@ PODS:
     - React-Core
   - react-native-netinfo (8.3.0):
     - React-Core
+  - react-native-piratechain (0.4.0):
+    - gRPC-Swift (~> 1.8)
+    - MnemonicSwift (~> 2.2)
+    - React-Core
+    - SQLite.swift (~> 0.12)
   - react-native-safari-view (1.0.0):
     - React
   - react-native-safe-area-context (4.6.4):
@@ -507,7 +512,7 @@ PODS:
     - ReactCommon/turbomodule/core
   - react-native-webview (13.2.2):
     - React-Core
-  - react-native-zcash (0.5.0):
+  - react-native-zcash (0.6.1):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -614,18 +619,18 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNFBAnalytics (14.12.0):
+  - RNFBAnalytics (14.9.2):
     - Firebase/AnalyticsWithoutAdIdSupport (= 8.15.0)
     - React-Core
     - RNFBApp
-  - RNFBApp (14.12.0):
+  - RNFBApp (14.9.2):
     - Firebase/CoreOnly (= 8.15.0)
     - React-Core
-  - RNFBMessaging (14.12.0):
+  - RNFBMessaging (14.9.2):
     - Firebase/Messaging (= 8.15.0)
     - React-Core
     - RNFBApp
-  - RNFBRemoteConfig (14.12.0):
+  - RNFBRemoteConfig (14.9.2):
     - Firebase/RemoteConfig (= 8.15.0)
     - React-Core
     - RNFBApp
@@ -913,6 +918,7 @@ DEPENDENCIES:
   - react-native-mail (from `../node_modules/react-native-mail`)
   - react-native-mymonero-core (from `../node_modules/react-native-mymonero-core`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
+  - react-native-piratechain (from `../node_modules/react-native-piratechain`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -1105,6 +1111,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-mymonero-core"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
+  react-native-piratechain:
+    :path: "../node_modules/react-native-piratechain"
   react-native-safari-view:
     :path: "../node_modules/react-native-safari-view"
   react-native-safe-area-context:
@@ -1198,7 +1206,7 @@ SPEC CHECKSUMS:
   _NIODataStructures: 3d45d8e70a1d17a15b1dc59d102c63dbc0525ffd
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   BugsnagReactNative: bf6f4ebababa8536726b3014c7d3e4af8c53d488
-  BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
+  BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   CGRPCZlib: 298dd3237ba4bd7b3eed109e7080ff3324b7d9c9
   CNIOAtomics: 8edf08644e5e6fa0f021c239be9e8beb1cd9ef18
   CNIOBoringSSL: 2c9c96c2e95f15e83fb8d26b9738d939cc39ae33
@@ -1210,8 +1218,8 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  edge-core-js: 82972b10438ab46ea09e6127d67e8f8093fd623d
-  edge-currency-accountbased: 6395e70014b3a104b36d9614ec65eb1abac4c647
+  edge-core-js: 4cd9ce2265c6f937d3d54d0cd546555ac0c1c074
+  edge-currency-accountbased: ba06f404c124cfc67c35897b38a589ba81063114
   edge-login-ui-rn: 7ecda4499b7cfba19b4f87775f7980d88a1b2d7a
   FBLazyVector: c511d4cd0210f416cb5c289bd5ae6b36d909b048
   FBReactNativeSpec: a911fb22def57aef1d74215e8b6b8761d25c1c54
@@ -1276,10 +1284,11 @@ SPEC CHECKSUMS:
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408
   react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
+  react-native-piratechain: da117c2a088cb6af7b9aa0ec1dba8f78a490a526
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: 68b07eabfb0d14547d36f6929c0e98d818064f02
   react-native-webview: b8ec89966713985111a14d6e4bf98d8b54bced0d
-  react-native-zcash: 46273ab60ef5b6f43190544c0353823b558e3eef
+  react-native-zcash: 33a147e8edc963a95dacd0ac3d5113d91db57e45
   React-perflogger: e706562ab7eb8eb590aa83a224d26fa13963d7f2
   React-RCTActionSheet: 57d4bd98122f557479a3359ad5dad8e109e20c5a
   React-RCTAnimation: ccf3ef00101ea74bda73a045d79a658b36728a60
@@ -1301,10 +1310,10 @@ SPEC CHECKSUMS:
   RNDateTimePicker: 3942382593f104af226ad9c56e16166960c7ae30
   RNDeviceInfo: aad3c663b25752a52bf8fce93f2354001dd185aa
   RNFastImage: 1f2cab428712a4baaf78d6169eaec7f622556dd7
-  RNFBAnalytics: c5740a00a436398796639189f82b58b1ebe4c705
-  RNFBApp: e4439717c23252458da2b41b81b4b475c86f90c4
-  RNFBMessaging: 40dac204b4197a2661dec5be964780c6ec39bf65
-  RNFBRemoteConfig: 92fbb75ceb69fec44ae727b70d23c5d1798f7648
+  RNFBAnalytics: 43558b1ae95a6d0fec9124f70c365b4f5ecc0907
+  RNFBApp: 6f5c7b9931378efb467e08144959ff93172ac83b
+  RNFBMessaging: cecaa5c11d993b6b5c22c580bb5c3111fa5c6ef5
+  RNFBRemoteConfig: 837617c42142be01e0c3f9bc6a0c0e7330131206
   RNFlashList: 8ec7f7454721145fe84566bb9e88bcf58981c9fe
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: dec4645026e7401a0899f2846d864403478ff6a5

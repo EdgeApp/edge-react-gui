@@ -42,7 +42,7 @@ const SettingsRowComponent = (props: Props) => {
   const [pending, handlePress] = usePendingPress(onPress)
 
   return (
-    <TouchableHighlight underlayColor={theme.settingsRowPressed} style={styles.row} onPress={handlePress}>
+    <TouchableHighlight accessible={false} underlayColor={theme.settingsRowPressed} style={styles.row} onPress={handlePress}>
       <>
         {children}
         <Text style={disabled ? styles.disabledText : dangerous ? styles.dangerText : styles.text}>{label}</Text>

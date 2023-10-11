@@ -8,10 +8,12 @@ export function executePluginAction(navigation: NavigationBase, pluginId: string
   return async (dispatch, getState) => {
     const state = getState()
     const { account, context } = state.core
+    const { accountReferral } = state.account
     const deviceId = base58ToUuid(context.clientId)
 
     await executePlugin({
       account,
+      accountReferral,
       deviceId,
       direction: 'sell',
       guiPlugin: guiPlugins[pluginId],
