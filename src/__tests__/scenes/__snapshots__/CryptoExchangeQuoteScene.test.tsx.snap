@@ -1,31 +1,1255 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`] = `
-<NotificationSceneWrapper
-  background="theme"
-  hasTabs={true}
-  navigation={
+<BVLinearGradient
+  colors={
+    [
+      4278585612,
+      4279971643,
+    ]
+  }
+  endPoint={
     {
-      "addListener": [Function],
-      "canGoBack": [Function],
-      "dispatch": [Function],
-      "getId": [Function],
-      "getParent": [Function],
-      "getState": [Function],
-      "goBack": [Function],
-      "isFocused": [Function],
-      "navigate": [Function],
-      "pop": [Function],
-      "popToTop": [Function],
-      "push": [Function],
-      "removeListener": [Function],
-      "replace": [Function],
-      "reset": [Function],
-      "setOptions": [Function],
-      "setParams": [Function],
+      "x": 1,
+      "y": 0,
+    }
+  }
+  locations={null}
+  startPoint={
+    {
+      "x": 0,
+      "y": 0,
+    }
+  }
+  style={
+    {
+      "bottom": 0,
+      "left": 0,
+      "position": "absolute",
+      "right": 0,
+      "top": 0,
     }
   }
 >
-  [Function]
-</NotificationSceneWrapper>
+  <View
+    style={
+      [
+        {
+          "alignItems": "stretch",
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+          "left": 0,
+          "padding": 0,
+          "paddingBottom": undefined,
+          "right": 0,
+          "top": 64,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "justifyContent": "center",
+            "marginHorizontal": 22,
+            "paddingBottom": 22,
+          },
+          {
+            "marginTop": 22,
+          },
+          undefined,
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 27,
+              },
+              null,
+            ]
+          }
+        >
+          Exchange
+        </Text>
+      </View>
+    </View>
+    <BVLinearGradient
+      colors={
+        [
+          452984831,
+          452984831,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0.5,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0.5,
+        }
+      }
+      style={
+        [
+          {
+            "alignSelf": "stretch",
+            "height": 1,
+          },
+          {
+            "marginBottom": 0,
+            "marginLeft": 22,
+            "marginRight": 0,
+            "marginTop": 0,
+          },
+        ]
+      }
+    />
+    <RCTScrollView
+      contentContainerStyle={
+        [
+          {
+            "paddingBottom": 0,
+          },
+          {
+            "paddingTop": 11,
+          },
+        ]
+      }
+    >
+      <View>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "marginVertical": 22,
+              "paddingHorizontal": 22,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "borderBottomColor": "#A4C7DF",
+                "borderBottomWidth": 1,
+                "flex": 1,
+              }
+            }
+          />
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                [
+                  {
+                    "color": "#A4C7DF",
+                    "fontFamily": "Quicksand-Medium",
+                    "fontSize": 22,
+                    "paddingHorizontal": 17,
+                  },
+                  {
+                    "textTransform": "lowercase",
+                  },
+                ],
+                null,
+              ]
+            }
+          >
+            From
+          </Text>
+          <View
+            style={
+              {
+                "borderBottomColor": "#A4C7DF",
+                "borderBottomWidth": 1,
+                "flex": 1,
+              }
+            }
+          />
+        </View>
+        <View
+          style={
+            {
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "borderColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 4,
+                  "borderWidth": 1,
+                },
+                null,
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 22,
+                  "marginRight": 22,
+                  "marginTop": 0,
+                },
+                {
+                  "paddingBottom": 22,
+                  "paddingLeft": 22,
+                  "paddingRight": 22,
+                  "paddingTop": 22,
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "flex": 1,
+                  "flexDirection": "row",
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                    "marginRight": 22,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "height": 34,
+                      "marginBottom": 0,
+                      "marginLeft": 0,
+                      "marginRight": 0,
+                      "marginTop": 0,
+                      "width": 34,
+                    }
+                  }
+                />
+              </View>
+              <View
+                style={
+                  {
+                    "flex": 1,
+                    "flexDirection": "column",
+                  }
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "flexDirection": "row",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "center",
+                        "flex": 1,
+                        "flexDirection": "row",
+                      }
+                    }
+                  >
+                    <Text
+                      adjustsFontSizeToFit={true}
+                      minimumFontScale={0.65}
+                      numberOfLines={1}
+                      style={
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
+                          {
+                            "fontFamily": "Quicksand-Medium",
+                          },
+                          null,
+                        ]
+                      }
+                    />
+                  </View>
+                  <View
+                    style={
+                      {
+                        "marginLeft": 6,
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <Text
+                      adjustsFontSizeToFit={true}
+                      minimumFontScale={0.65}
+                      numberOfLines={1}
+                      style={
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
+                          {
+                            "fontFamily": "Quicksand-Medium",
+                            "textAlign": "right",
+                          },
+                          null,
+                        ]
+                      }
+                    >
+                      10000 
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "flexDirection": "row",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "center",
+                        "flex": 1,
+                        "flexDirection": "row",
+                      }
+                    }
+                  >
+                    <Text
+                      adjustsFontSizeToFit={true}
+                      minimumFontScale={0.65}
+                      numberOfLines={1}
+                      style={
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
+                          {
+                            "color": "#A4C7DF",
+                            "flex": 1,
+                            "fontSize": 17,
+                            "marginTop": 6,
+                          },
+                          null,
+                        ]
+                      }
+                    />
+                  </View>
+                  <View
+                    style={
+                      {
+                        "marginLeft": 6,
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <Text
+                      adjustsFontSizeToFit={true}
+                      minimumFontScale={0.65}
+                      numberOfLines={1}
+                      style={
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
+                          {
+                            "color": "#A4C7DF",
+                            "fontSize": 17,
+                            "marginTop": 6,
+                          },
+                          null,
+                        ]
+                      }
+                    >
+                      0.00 USD
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View>
+              <View
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                    },
+                    {
+                      "marginBottom": 0,
+                      "marginLeft": 0,
+                      "marginRight": 0,
+                      "marginTop": 17,
+                    },
+                  ]
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flex": 1,
+                      "flexDirection": "row",
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Max network fee
+                  </Text>
+                </View>
+                <View
+                  style={
+                    {
+                      "marginLeft": 6,
+                      "textAlign": "right",
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    1  (0 USD)
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                    },
+                    {},
+                  ]
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flex": 1,
+                      "flexDirection": "row",
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Total Amount
+                  </Text>
+                </View>
+                <View
+                  style={
+                    {
+                      "marginLeft": 6,
+                      "textAlign": "right",
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    1.00 USD
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "marginVertical": 22,
+              "paddingHorizontal": 22,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "borderBottomColor": "#A4C7DF",
+                "borderBottomWidth": 1,
+                "flex": 1,
+              }
+            }
+          />
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                [
+                  {
+                    "color": "#A4C7DF",
+                    "fontFamily": "Quicksand-Medium",
+                    "fontSize": 22,
+                    "paddingHorizontal": 17,
+                  },
+                  {
+                    "textTransform": "lowercase",
+                  },
+                ],
+                null,
+              ]
+            }
+          >
+            To
+          </Text>
+          <View
+            style={
+              {
+                "borderBottomColor": "#A4C7DF",
+                "borderBottomWidth": 1,
+                "flex": 1,
+              }
+            }
+          />
+        </View>
+        <View
+          style={
+            {
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "borderColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 4,
+                  "borderWidth": 1,
+                },
+                null,
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 22,
+                  "marginRight": 22,
+                  "marginTop": 0,
+                },
+                {
+                  "paddingBottom": 22,
+                  "paddingLeft": 22,
+                  "paddingRight": 22,
+                  "paddingTop": 22,
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "flex": 1,
+                  "flexDirection": "row",
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                    "marginRight": 22,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "height": 34,
+                      "marginBottom": 0,
+                      "marginLeft": 0,
+                      "marginRight": 0,
+                      "marginTop": 0,
+                      "width": 34,
+                    }
+                  }
+                />
+              </View>
+              <View
+                style={
+                  {
+                    "flex": 1,
+                    "flexDirection": "column",
+                  }
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "flexDirection": "row",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "center",
+                        "flex": 1,
+                        "flexDirection": "row",
+                      }
+                    }
+                  >
+                    <Text
+                      adjustsFontSizeToFit={true}
+                      minimumFontScale={0.65}
+                      numberOfLines={1}
+                      style={
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
+                          {
+                            "fontFamily": "Quicksand-Medium",
+                          },
+                          null,
+                        ]
+                      }
+                    />
+                  </View>
+                  <View
+                    style={
+                      {
+                        "marginLeft": 6,
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <Text
+                      adjustsFontSizeToFit={true}
+                      minimumFontScale={0.65}
+                      numberOfLines={1}
+                      style={
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
+                          {
+                            "fontFamily": "Quicksand-Medium",
+                            "textAlign": "right",
+                          },
+                          null,
+                        ]
+                      }
+                    >
+                      10000 
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "flexDirection": "row",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "alignItems": "center",
+                        "flex": 1,
+                        "flexDirection": "row",
+                      }
+                    }
+                  >
+                    <Text
+                      adjustsFontSizeToFit={true}
+                      minimumFontScale={0.65}
+                      numberOfLines={1}
+                      style={
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
+                          {
+                            "color": "#A4C7DF",
+                            "flex": 1,
+                            "fontSize": 17,
+                            "marginTop": 6,
+                          },
+                          null,
+                        ]
+                      }
+                    />
+                  </View>
+                  <View
+                    style={
+                      {
+                        "marginLeft": 6,
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <Text
+                      adjustsFontSizeToFit={true}
+                      minimumFontScale={0.65}
+                      numberOfLines={1}
+                      style={
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
+                          {
+                            "color": "#A4C7DF",
+                            "fontSize": 17,
+                            "marginTop": 6,
+                          },
+                          null,
+                        ]
+                      }
+                    >
+                      0.00 USD
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "flex-end",
+              "marginTop": 22,
+              "opacity": 1,
+              "paddingRight": 22,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#A4C7DF",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Powered by  
+          </Text>
+          <View
+            style={
+              [
+                {
+                  "overflow": "hidden",
+                },
+                {
+                  "aspectRatio": 1,
+                  "height": 17,
+                  "width": 17,
+                },
+              ]
+            }
+          >
+            <FastImageView
+              resizeMode="contain"
+              source={
+                {
+                  "uri": "https://content.edge.app/exchangeIcons/bitcoin/icon.png",
+                }
+              }
+              style={
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+          </View>
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#A4C7DF",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+             
+          </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              [
+                {
+                  "color": "#00f1a2",
+                  "fontSize": 22,
+                },
+                undefined,
+                {
+                  "fontFamily": "Ionicons",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                {},
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "opacity": 1,
+            }
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "stretch",
+                  "borderRadius": 4,
+                  "borderWidth": 1,
+                },
+                {
+                  "marginBottom": 22,
+                  "marginLeft": 22,
+                  "marginRight": 22,
+                  "marginTop": 22,
+                },
+                {
+                  "paddingBottom": 22,
+                  "paddingLeft": 22,
+                  "paddingRight": 22,
+                  "paddingTop": 22,
+                },
+                {
+                  "borderColor": "#F1AA19",
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    [
+                      {
+                        "fontSize": 17,
+                      },
+                      {
+                        "color": "#F1AA19",
+                      },
+                    ],
+                    null,
+                  ]
+                }
+              >
+                Estimated Quote
+              </Text>
+            </View>
+            <Text
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.65}
+              numberOfLines={2}
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  [
+                    {
+                      "fontSize": 17,
+                    },
+                    {
+                      "color": "#F1AA19",
+                    },
+                  ],
+                  null,
+                ]
+              }
+            >
+              The amount above is an estimate. This exchange may result in less funds received than quoted.
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "marginBottom": 22,
+                "marginTop": 11,
+              },
+              {
+                "alignItems": "center",
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "backgroundColor": "#2B333A",
+                  "borderRadius": 27.5,
+                  "height": 55,
+                  "justifyContent": "center",
+                  "width": 295,
+                },
+                null,
+                {
+                  "width": 295,
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                [
+                  {
+                    "backgroundColor": "#2B333A",
+                    "borderRadius": 27.5,
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  },
+                  {
+                    "width": 295,
+                  },
+                ]
+              }
+            />
+            <View
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#00f1a2",
+                    "borderRadius": 27.5,
+                    "height": 55,
+                    "justifyContent": "center",
+                    "width": 55,
+                    "zIndex": 5,
+                  },
+                  null,
+                  {
+                    "transform": [
+                      {
+                        "translateX": 240,
+                      },
+                    ],
+                  },
+                ]
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  [
+                    {
+                      "color": undefined,
+                      "fontSize": 34,
+                    },
+                    {
+                      "color": "#1b2f3b",
+                      "fontSize": 51,
+                    },
+                    {
+                      "fontFamily": "Entypo",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+            <Text
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.65}
+              numberOfLines={1}
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "alignSelf": "center",
+                    "color": "#FFFFFF",
+                    "fontSize": 17,
+                    "lineHeight": 55,
+                    "position": "absolute",
+                    "zIndex": 1,
+                  },
+                  null,
+                ]
+              }
+            >
+              Slide to Confirm
+            </Text>
+          </View>
+        </View>
+      </View>
+    </RCTScrollView>
+  </View>
+</BVLinearGradient>
 `;

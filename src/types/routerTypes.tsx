@@ -10,6 +10,7 @@ import { CreateWalletImportOptionsParams } from '../components/scenes/CreateWall
 import { CreateWalletImportParams } from '../components/scenes/CreateWalletImportScene'
 import { CreateWalletSelectCryptoParams } from '../components/scenes/CreateWalletSelectCryptoScene'
 import { CreateWalletSelectFiatParams } from '../components/scenes/CreateWalletSelectFiatScene'
+import { CryptoExchangeQuoteParams } from '../components/scenes/CryptoExchangeQuoteScene'
 import { FioCreateHandleParams } from '../components/scenes/Fio/FioCreateHandleScene'
 import { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
@@ -116,10 +117,7 @@ export interface RouteParamList {
     walletId: string
   }
   exchange: {}
-  exchangeQuote: {
-    swapInfo: GuiSwapInfo
-    onApprove: () => void
-  }
+  exchangeQuote: CryptoExchangeQuoteParams
   exchangeQuoteProcessing: {
     fetchSwapQuotePromise: Promise<GuiSwapInfo>
     onCancel: () => void

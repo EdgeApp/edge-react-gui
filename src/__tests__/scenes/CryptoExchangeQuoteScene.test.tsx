@@ -1,12 +1,18 @@
-import { describe, expect, it } from '@jest/globals'
-import { EdgeSwapInfo } from 'edge-core-js'
+import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
+import { asDate, asObject, asOptional, asString, asUnknown } from 'cleaners'
+import { addEdgeCorePlugins, EdgeAccount, EdgeContext, EdgeSwapInfo, EdgeSwapQuote, lockEdgeCorePlugins, makeFakeEdgeWorld } from 'edge-core-js'
 import * as React from 'react'
-import { createRenderer } from 'react-test-renderer/shallow'
+import TestRenderer from 'react-test-renderer'
 
-import { CryptoExchangeQuoteScreenComponent } from '../../components/scenes/CryptoExchangeQuoteScene'
-import { getTheme } from '../../components/services/ThemeContext'
-import { GuiSwapInfo } from '../../types/types'
+import { CryptoExchangeQuoteScene } from '../../components/scenes/CryptoExchangeQuoteScene'
+import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
+import { makeFakePlugin } from '../../util/fake/fakeCurrencyPlugin'
+import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { fakeRootState } from '../../util/fake/fakeRootState'
 import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
+import fakeUser from '../../util/fake/fakeUserDump.json'
+
+jest.useRealTimers()
 
 const dummySwapInfo: EdgeSwapInfo = {
   pluginId: '',
@@ -14,99 +20,120 @@ const dummySwapInfo: EdgeSwapInfo = {
   supportEmail: ''
 }
 
+let context: EdgeContext | undefined
+let account: EdgeAccount | undefined
+
+// For use later when we need tests that use EVM currencies
+// let ethWallet: EdgeCurrencyWallet | undefined
+// let avaxWallet: EdgeCurrencyWallet | undefined
+
+const asFakeUser = asObject({
+  username: asString,
+  lastLogin: asOptional(asDate),
+  loginId: asString,
+  loginKey: asString,
+  repos: asObject(asObject(asUnknown)),
+  server: asUnknown
+})
+
+const asUserDump = asObject({
+  loginKey: asString,
+  data: asFakeUser
+})
+
+beforeAll(async () => {
+  const dump = asUserDump(fakeUser)
+  const loginKey = dump.loginKey
+  const fakeUsers = [dump.data]
+
+  const allPlugins = {
+    bitcoin: makeFakePlugin(btcCurrencyInfo)
+  }
+
+  addEdgeCorePlugins(allPlugins)
+  lockEdgeCorePlugins()
+
+  const world = await makeFakeEdgeWorld(fakeUsers, {})
+  context = await world.makeEdgeContext({ apiKey: '', appId: '', plugins: { bitcoin: true } })
+  account = await context.loginWithKey('bob', loginKey)
+})
+
 describe('CryptoExchangeQuoteScreenComponent', () => {
   it('should render with loading props', () => {
-    const renderer = createRenderer()
-
-    const fakeAccount: any = {
-      swapConfig: {
-        ChangeNow: {
-          swapInfo: {
-            pluginId: 'ChangeNow',
-            displayName: 'ChangeNow',
-            orderUri: 'ChangeNow.ChangeNow',
-            supportEmail: 'ChangeNow@ChangeNow'
-          }
-        }
-      }
-    }
+    const rootState: FakeState = { ...fakeRootState, core: { account } }
 
     const fakeRequest: any = {
       fromWallet: {
         fiatCurrencyCode: 'USD',
-        name: ''
+        name: '',
+        currencyInfo: {
+          pluginId: 'bitcoin'
+        }
       },
       toWallet: {
         fiatCurrencyCode: 'USD',
-        name: ''
+        name: '',
+        currencyInfo: {
+          pluginId: 'bitcoin'
+        }
       }
     }
 
-    const swapInfo: GuiSwapInfo = {
-      quote: {
-        swapInfo: dummySwapInfo,
-        request: fakeRequest,
-        isEstimate: true,
-        fromNativeAmount: '10000',
-        toNativeAmount: '10000',
-        networkFee: {
-          currencyCode: 'BTC',
-          nativeAmount: '1'
-        },
-        pluginId: 'ChangeNow',
-        approve: async () => ({
-          orderId: 'demo',
+    const quote: EdgeSwapQuote = {
+      swapInfo: dummySwapInfo,
+      request: fakeRequest,
+      isEstimate: true,
+      fromNativeAmount: '10000',
+      toNativeAmount: '10000',
+      networkFee: {
+        currencyCode: 'BTC',
+        nativeAmount: '1'
+      },
+      pluginId: 'bitcoin',
+      approve: async () => {
+        return {
           transaction: {
             blockHeight: 500000,
             currencyCode: 'BTC',
-            date: 1524486980,
+            date: 1524476980,
             deviceDescription: 'iphone12',
-            isSend: true,
+            isSend: false,
             memos: [],
             metadata: {
-              name: 'Crazy Person 2',
-              category: 'Expense: Less Money',
-              notes: 'Hell yeah! Here\'s a fish"',
-              amountFiat: 36001.45
+              name: 'Crazy Person',
+              category: 'Income:Mo Money',
+              notes: 'Hell yeah! Thanks for the fish <<&&>>',
+              amountFiat: 12000.45
             },
-            nativeAmount: '-321000000',
-            networkFee: '2000',
-            ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
-            parentNetworkFee: '20001',
-            signedTx: 'fiuwh34f98h3tiuheirgserg',
-            txid: 'txid2',
+            nativeAmount: '123000000',
+            networkFee: '1000',
+            ourReceiveAddresses: ['receiveaddress1', 'receiveaddress2'],
+            parentNetworkFee: '10002',
+            signedTx: '298t983y4t983y4t93y4g98oeshfgi4t89w394t',
+            txid: 'txid1',
             walletId: ''
           }
-        }),
-        close: async () => undefined
+        }
       },
-      request: fakeRequest,
-      fee: '1',
-      fromDisplayAmount: '1',
-      fromFiat: '1',
-      fromTotalFiat: '1',
-      toDisplayAmount: '1',
-      toFiat: '1'
+      close: async () => {}
     }
 
-    const actual = renderer.render(
-      <CryptoExchangeQuoteScreenComponent
-        {...fakeSceneProps('exchangeQuote', {
-          swapInfo,
-          onApprove: () => undefined
-        })}
-        account={fakeAccount}
-        fromDenomination="BTC"
-        fromWalletCurrencyName={{ fromDenomination: '' } as any}
-        pending
-        toDenomination="ETH"
-        toWalletCurrencyName={{ fromDenomination: '' } as any}
-        shift={async (swapInfo, onApprove) => {}}
-        timeExpired={async (swapInfo, onApprove) => {}}
-        theme={getTheme()}
-      />
+    const renderer = TestRenderer.create(
+      <FakeProviders initialState={rootState}>
+        <CryptoExchangeQuoteScene
+          {...fakeSceneProps('exchangeQuote', {
+            quote,
+            onApprove: () => undefined
+          })}
+        />
+      </FakeProviders>
     )
 
-    expect(actual).toMatchSnapshot()
+    expect(renderer.toJSON()).toMatchSnapshot()
+    renderer.unmount()
   })
+})
+
+afterAll(async () => {
+  await context?.close()
 })

@@ -53,7 +53,7 @@ import { CreateWalletImportScene as CreateWalletImportSceneComponent } from './s
 import { CreateWalletSelectCryptoScene as CreateWalletSelectCryptoSceneComponent } from './scenes/CreateWalletSelectCryptoScene'
 import { CreateWalletSelectFiatScene as CreateWalletSelectFiatSceneComponent } from './scenes/CreateWalletSelectFiatScene'
 import { CryptoExchangeQuoteProcessingScene as CryptoExchangeQuoteProcessingSceneComponent } from './scenes/CryptoExchangeQuoteProcessingScene'
-import { CryptoExchangeQuote as CryptoExchangeQuoteComponent } from './scenes/CryptoExchangeQuoteScene'
+import { CryptoExchangeQuoteScene as CryptoExchangeQuoteComponent } from './scenes/CryptoExchangeQuoteScene'
 import { CryptoExchangeSuccessScene as CryptoExchangeSuccessSceneComponent } from './scenes/CryptoExchangeSuccessScene'
 import { CurrencyNotificationScene as CurrencyNotificationSceneComponent } from './scenes/CurrencyNotificationScene'
 import { CurrencySettingsScene as CurrencySettingsSceneComponent } from './scenes/CurrencySettingsScene'
