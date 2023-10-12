@@ -146,24 +146,16 @@ exports[`FlipInputComponent should render with loading props 1`] = `
               <WithTheme(EdgeTextComponent)
                 style={
                   {
-                    "color": "#87939E",
+                    "color": "#00f1a2",
                     "fontFamily": "Quicksand-Medium",
                     "fontSize": 34,
                     "marginLeft": -2,
                   }
                 }
               >
-                Amount
+                Tap to edit
               </WithTheme(EdgeTextComponent)>
             </View>
-            <WithTheme(EdgeTextComponent)
-              style={
-                {
-                  "color": "#87939E",
-                  "paddingTop": 3,
-                }
-              }
-            />
             <TextInput
               autoCorrect={false}
               editable={true}
@@ -247,24 +239,16 @@ exports[`FlipInputComponent should render with loading props 1`] = `
               <WithTheme(EdgeTextComponent)
                 style={
                   {
-                    "color": "#87939E",
+                    "color": "#00f1a2",
                     "fontFamily": "Quicksand-Medium",
                     "fontSize": 34,
                     "marginLeft": -2,
                   }
                 }
               >
-                Amount
+                Tap to edit
               </WithTheme(EdgeTextComponent)>
             </View>
-            <WithTheme(EdgeTextComponent)
-              style={
-                {
-                  "color": "#87939E",
-                  "paddingTop": 3,
-                }
-              }
-            />
             <TextInput
               autoCorrect={false}
               editable={true}

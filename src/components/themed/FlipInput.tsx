@@ -457,7 +457,6 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
   bottomRow = (isFront: boolean) => {
     const { isEditable, inputAccessoryViewID, onNext, topReturnKeyType = 'done', theme } = this.props
     const { textInputBackFocus, textInputFrontFocus } = this.state
-    const showCursor = textInputBackFocus || textInputFrontFocus
     const styles = getStyles(theme)
     let displayAmount = isFront ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
     if (displayAmount === '0') displayAmount = ''
@@ -469,10 +468,16 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
     const onFocus = isFront ? this.textInputFrontFocusTrue : this.textInputBackFocusTrue
     const onBlur = isFront ? this.textInputFrontFocusFalse : this.textInputBackFocusFalse
     const ref = isFront ? this.getTextInputFrontRef : this.getTextInputBackRef
-    const displayAmountCheck = (decimalAmount.match(/^0*$/) && !showCursor) || displayAmount === ''
-    const displayAmountString = displayAmountCheck ? lstrings.string_amount : displayAmount
-    const displayAmountStyle = displayAmountCheck ? styles.bottomAmountMuted : styles.bottomAmount
-    const currencyNameStyle = displayAmountCheck ? styles.bottomCurrencyMuted : styles.bottomCurrency
+
+    // Input field styling logic:
+    const showCursor = textInputBackFocus || textInputFrontFocus
+    const zeroAmount = zeroString(decimalAmount)
+    const displayEditPlaceholder = !showCursor && zeroAmount
+
+    const placeholderOrAmount = displayEditPlaceholder ? lstrings.string_tap_to_edit : displayAmount
+    const inputFieldStyle = showCursor ? styles.bottomAmount : styles.bottomAmountTappable
+    const showBottomCurrency = showCursor || !zeroAmount
+    const currencyNameStyle = showCursor ? styles.bottomCurrency : styles.bottomCurrencyTappable
 
     return (
       <TouchableWithoutFeedback onPress={onPress}>
@@ -480,15 +485,15 @@ export class FlipInputComponent extends React.PureComponent<Props, State> {
           {displayAmount === '' ? (
             <View style={styles.valueContainer}>
               <BlinkingCursor showCursor={showCursor} />
-              <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>
+              <EdgeText style={inputFieldStyle}>{placeholderOrAmount}</EdgeText>
             </View>
           ) : (
             <View style={styles.valueContainer}>
-              <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>
+              <EdgeText style={inputFieldStyle}>{placeholderOrAmount}</EdgeText>
               <BlinkingCursor showCursor={showCursor} />
             </View>
           )}
-          <EdgeText style={currencyNameStyle}>{currencyName}</EdgeText>
+          {showBottomCurrency ? <EdgeText style={currencyNameStyle}>{currencyName}</EdgeText> : null}
           <TextInput
             style={styles.hiddenTextInput}
             value=""
@@ -635,21 +640,25 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1.5),
     minHeight: theme.rem(1.5)
   },
-  bottomAmountMuted: {
+  bottomAmountTappable: {
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1.5),
     marginLeft: theme.rem(-0.1), // Hack because of amount being bigger font size not aligning to the rest of the text on justified left
-    color: theme.deactivatedText
+    color: theme.iconTappable
   },
   bottomCurrency: {
     paddingTop: theme.rem(0.125)
   },
-  bottomCurrencyMuted: {
+  bottomCurrencyHidden: {
     paddingTop: theme.rem(0.125),
-    color: theme.deactivatedText
+    opacity: 0
+  },
+  bottomCurrencyTappable: {
+    paddingTop: theme.rem(0.125),
+    color: theme.iconTappable
   },
   blinkingCursor: {
-    color: theme.deactivatedText,
+    color: theme.defaultBorderColor,
     includeFontPadding: false
   },
   blinkingCursorandroidAdjust: {
