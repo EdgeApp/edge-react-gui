@@ -17,6 +17,7 @@ import { sprintf } from 'sprintf-js'
 import { trackConversion } from '../actions/TrackingActions'
 import { InsufficientFeesModal } from '../components/modals/InsufficientFeesModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
+import { formatFiatString } from '../hooks/useFiatText'
 import { formatNumber } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../selectors/DenominationSelectors'
@@ -65,12 +66,12 @@ export function getQuoteForTransaction(navigation: NavigationBase, info: SetNati
       onCancel: () => {
         navigation.goBack()
       },
-      onDone: swapInfo => {
+      onDone: quote => {
         navigation.replace('exchangeQuote', {
-          swapInfo,
+          quote,
           onApprove
         })
-        dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
+        dispatch({ type: 'UPDATE_SWAP_QUOTE', data: {} })
       },
       onError: async (error: any) => {
         navigation.navigate('exchangeTab', { screen: 'exchange' })
@@ -103,19 +104,19 @@ export function getQuoteForTransaction(navigation: NavigationBase, info: SetNati
   }
 }
 
-export function exchangeTimerExpired(navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void): ThunkAction<Promise<void>> {
+export function exchangeTimerExpired(navigation: NavigationBase, quote: EdgeSwapQuote, onApprove: () => void): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     navigation.replace('exchangeQuoteProcessing', {
-      fetchSwapQuotePromise: fetchSwapQuote(getState(), swapInfo.request),
+      fetchSwapQuotePromise: fetchSwapQuote(getState(), quote.request),
       onCancel: () => {
         navigation.navigate('exchangeTab', { screen: 'exchange' })
       },
-      onDone: swapInfo => {
+      onDone: quote => {
         navigation.replace('exchangeQuote', {
-          swapInfo,
+          quote,
           onApprove
         })
-        dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
+        dispatch({ type: 'UPDATE_SWAP_QUOTE', data: {} })
       },
       onError: async (error: any) => {
         navigation.navigate('exchangeTab', { screen: 'exchange' })
@@ -125,7 +126,7 @@ export function exchangeTimerExpired(navigation: NavigationBase, swapInfo: GuiSw
   }
 }
 
-async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promise<GuiSwapInfo> {
+async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promise<EdgeSwapQuote> {
   const { account } = state.core
   const {
     exchangeInfo: {
@@ -152,8 +153,13 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
     promoCodes: activePlugins.promoCodes
   })
 
+  return quote
+}
+
+export const getSwapInfo = (state: RootState, quote: EdgeSwapQuote): GuiSwapInfo => {
   // Currency conversion tools:
   // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
+  const { request } = quote
   const { fromWallet, toWallet, fromCurrencyCode = '', toCurrencyCode = '' } = request
 
   // Format from amount:
@@ -174,11 +180,14 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   const feeDisplayAmount = toFixed(feeTempAmount, 0, 6)
 
   // Format fiat fee:
-  const feeDenominatedAmount = await fromWallet.nativeToDenomination(feeNativeAmount, request.fromWallet.currencyInfo.currencyCode)
-  const feeFiatAmountRaw = parseFloat(convertCurrency(state, request.fromWallet.currencyInfo.currencyCode, fromWallet.fiatCurrencyCode, feeDenominatedAmount))
-  const feeFiatAmount = formatNumber(feeFiatAmountRaw || 0, { toFixed: 2 })
+  const feeCryptoAmount = div(feeNativeAmount, feeDenomination.multiplier, DECIMAL_PRECISION)
+  const feeFiatAmount = formatFiatString({
+    fiatAmount: convertCurrency(state, fromWallet.currencyInfo.currencyCode, fromWallet.fiatCurrencyCode, feeCryptoAmount)
+  })
   const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${fromWallet.fiatCurrencyCode.replace('iso:', '')})`
-  const fromTotalFiat = formatNumber(add(fromBalanceInFiatRaw.toFixed(DECIMAL_PRECISION), feeFiatAmountRaw.toFixed(DECIMAL_PRECISION)), { toFixed: 2 })
+  const fromTotalFiat = formatNumber(add(fromBalanceInFiatRaw.toFixed(DECIMAL_PRECISION), parseFloat(feeCryptoAmount).toFixed(DECIMAL_PRECISION)), {
+    toFixed: 2
+  })
 
   // Format to amount:
   const toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
@@ -190,11 +199,7 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   const toBalanceInCryptoDisplay = convertNativeToExchange(toExchangeDenomination.multiplier)(quote.toNativeAmount)
   const toBalanceInFiatRaw = parseFloat(convertCurrency(state, toCurrencyCode, toWallet.fiatCurrencyCode, toBalanceInCryptoDisplay))
   const toFiat = formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
-
   const swapInfo: GuiSwapInfo = {
-    quote,
-    request,
-
     fee,
     fromDisplayAmount,
     fromFiat,
@@ -202,6 +207,7 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
     toDisplayAmount,
     toFiat
   }
+
   return swapInfo
 }
 
@@ -285,14 +291,14 @@ function processSwapQuoteError(error: unknown): ThunkAction<void> {
   }
 }
 
-export function shiftCryptoCurrency(navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void): ThunkAction<Promise<void>> {
+export function shiftCryptoCurrency(navigation: NavigationBase, quote: EdgeSwapQuote, onApprove: () => void): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
     dispatch({ type: 'START_SHIFT_TRANSACTION' })
 
-    const { fromDisplayAmount, quote, request, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = swapInfo
-    const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate } = quote
+    const { fromDisplayAmount, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = getSwapInfo(state, quote)
+    const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate, request } = quote
     // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
     const { toWallet, fromCurrencyCode = '', toCurrencyCode = '' } = request
     try {

@@ -36,8 +36,8 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
 
   useAsyncEffect(async () => {
     try {
-      const swapinfo = await fetchSwapQuotePromise
-      if (mounted.current) onDone(swapinfo)
+      const quote = await fetchSwapQuotePromise
+      if (mounted.current) onDone(quote)
     } catch (e: any) {
       await onError(e)
     }

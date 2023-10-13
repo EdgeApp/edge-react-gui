@@ -1,15 +1,5 @@
 import { asBoolean, asMaybe, asNumber, asObject, asString } from 'cleaners'
-import {
-  EdgeCurrencyWallet,
-  EdgeDenomination,
-  EdgeMetadata,
-  EdgeSpendTarget,
-  EdgeSwapQuote,
-  EdgeSwapRequest,
-  EdgeToken,
-  EdgeTransaction,
-  JsonObject
-} from 'edge-core-js/types'
+import { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeSpendTarget, EdgeToken, EdgeTransaction, JsonObject } from 'edge-core-js/types'
 
 import { LocaleStringKey } from '../locales/en_US'
 import { RootState } from './reduxTypes'
@@ -56,9 +46,6 @@ export interface GuiContact {
  * An EdgeSwapQuote, but with amounts pretty-printed.
  */
 export interface GuiSwapInfo {
-  quote: EdgeSwapQuote
-  request: EdgeSwapRequest
-
   // Formatted amounts:
   fee: string
   fromDisplayAmount: string

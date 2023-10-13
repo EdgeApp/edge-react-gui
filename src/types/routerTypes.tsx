@@ -1,6 +1,6 @@
 import * as NavigationCore from '@react-navigation/core'
 import { StackActionHelpers } from '@react-navigation/native'
-import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
+import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeSwapQuote, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
 import { InitialRouteName } from 'edge-login-ui-rn'
 
 import { CoinRankingDetailsParams } from '../components/scenes/CoinRankingDetailsScene'
@@ -31,7 +31,7 @@ import { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWeb
 import { RewardsCardDashboardParams } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
-import { CreateWalletType, FeeOption, FioConnectionWalletItem, FioDomain, FioRequest, GuiMakeSpendInfo, GuiSwapInfo } from './types'
+import { CreateWalletType, FeeOption, FioConnectionWalletItem, FioDomain, FioRequest, GuiMakeSpendInfo } from './types'
 
 /**
  * Defines the acceptable route parameters for each scene key.
@@ -119,10 +119,10 @@ export interface RouteParamList {
   exchange: {}
   exchangeQuote: CryptoExchangeQuoteParams
   exchangeQuoteProcessing: {
-    fetchSwapQuotePromise: Promise<GuiSwapInfo>
+    fetchSwapQuotePromise: Promise<EdgeSwapQuote>
     onCancel: () => void
     onError: (error: any) => Promise<void>
-    onDone: (swapInfo: GuiSwapInfo) => void
+    onDone: (quote: EdgeSwapQuote) => void
   }
   exchangeSettings: {}
   exchangeSuccess: {}
