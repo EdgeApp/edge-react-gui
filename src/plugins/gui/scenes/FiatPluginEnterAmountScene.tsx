@@ -1,10 +1,8 @@
 import * as React from 'react'
 import { useEffect } from 'react'
 import { Image, Text, View } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { Card } from '../../../components/cards/Card'
+import { PoweredByCard } from '../../../components/cards/PoweredByCard'
 import { NotificationSceneWrapper } from '../../../components/common/SceneWrapper'
 import { showError } from '../../../components/services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
@@ -129,7 +127,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     statusTextStyle = styles.textError
   }
 
-  const poweredByIconPath = poweredBy != null ? { uri: getPartnerIconUri(poweredBy.poweredByIcon) } : {}
+  const poweredByIconPath = poweredBy != null ? getPartnerIconUri(poweredBy.poweredByIcon) : undefined
   return (
     <NotificationSceneWrapper navigation={navigation} scroll keyboardShouldPersistTaps="handled" background="theme">
       <SceneHeader style={styles.sceneHeader} title={headerTitle} underline withTopMargin>
@@ -165,29 +163,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
           />
         </View>
         {statusText != null ? <Text style={statusTextStyle}>{statusText.content}</Text> : null}
-        {poweredBy != null ? (
-          <View style={styles.cardContainer}>
-            <TouchableOpacity onPress={handlePoweredByPress}>
-              <Card paddingRem={0.5}>
-                <View style={styles.poweredByContainer}>
-                  <Image style={styles.poweredByIcon} source={poweredByIconPath} />
-
-                  <View style={styles.poweredByContainerColumn}>
-                    <View style={styles.poweredByContainerRow}>
-                      <Text style={styles.poweredByText}>{lstrings.plugin_powered_by_space}</Text>
-                      <Text style={styles.poweredByText}>{poweredBy.poweredByText}</Text>
-                    </View>
-                    <View style={styles.poweredByContainerRow}>
-                      <Text style={styles.tapToChangeText}>{lstrings.tap_to_change_provider}</Text>
-                    </View>
-                  </View>
-
-                  <IonIcon name="chevron-forward" size={theme.rem(1)} color={theme.iconTappable} />
-                </View>
-              </Card>
-            </TouchableOpacity>
-          </View>
-        ) : null}
+        {poweredBy != null ? <PoweredByCard iconUri={poweredByIconPath} poweredByText={poweredBy.poweredByText} onPress={handlePoweredByPress} /> : null}
         <MainButton disabled={spinner1 || spinner2} label={lstrings.string_next_capitalized} marginRem={[1, 0]} type="secondary" onPress={handleSubmit} />
       </View>
     </NotificationSceneWrapper>
@@ -198,11 +174,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   sceneHeader: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
-  },
-  cardContainer: {
-    paddingTop: theme.rem(1),
-    paddingBottom: theme.rem(1),
     alignItems: 'center'
   },
   container: {
@@ -232,30 +203,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1),
     includeFontPadding: false
-  },
-  poweredByContainerRow: {
-    flexDirection: 'row'
-  },
-  poweredByContainerColumn: {
-    paddingHorizontal: theme.rem(0.5),
-    flexDirection: 'column'
-  },
-  poweredByContainer: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  poweredByText: {
-    fontSize: theme.rem(0.75),
-    color: theme.secondaryText
-  },
-  tapToChangeText: {
-    fontSize: theme.rem(0.75),
-    color: theme.deactivatedText
-  },
-  poweredByIcon: {
-    aspectRatio: 1,
-    width: theme.rem(2),
-    height: theme.rem(2)
   },
   icon: {
     height: theme.rem(1.5),

@@ -867,140 +867,196 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
           </View>
         </View>
         <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
           style={
             {
               "alignItems": "center",
-              "flexDirection": "row",
-              "justifyContent": "flex-end",
-              "marginTop": 22,
-              "opacity": 1,
-              "paddingRight": 22,
+              "paddingBottom": 22,
+              "paddingTop": 22,
             }
           }
         >
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
-            style={
-              [
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#A4C7DF",
-                  "fontSize": 17,
-                },
-                null,
-              ]
-            }
-          >
-            Powered by  
-          </Text>
           <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "aspectRatio": 1,
-                  "height": 17,
-                  "width": 17,
-                },
-              ]
+              {
+                "opacity": 1,
+              }
             }
           >
-            <FastImageView
-              resizeMode="contain"
-              source={
-                {
-                  "uri": "https://content.edge.app/exchangeIcons/bitcoin/icon.png",
-                }
-              }
+            <View
               style={
                 {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
+                  "width": "100%",
                 }
               }
-            />
+            >
+              <View
+                style={
+                  [
+                    {
+                      "borderColor": "rgba(255, 255, 255, .1)",
+                      "borderRadius": 4,
+                      "borderWidth": 1,
+                    },
+                    null,
+                    {
+                      "marginBottom": 0,
+                      "marginLeft": 0,
+                      "marginRight": 0,
+                      "marginTop": 0,
+                    },
+                    {
+                      "paddingBottom": 11,
+                      "paddingLeft": 11,
+                      "paddingRight": 11,
+                      "paddingTop": 11,
+                    },
+                  ]
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      [
+                        {
+                          "overflow": "hidden",
+                        },
+                        {
+                          "aspectRatio": 1,
+                          "height": 45,
+                          "width": 45,
+                        },
+                      ]
+                    }
+                  >
+                    <FastImageView
+                      resizeMode="contain"
+                      source={
+                        {
+                          "uri": "https://content.edge.app/exchangeIcons/bitcoin/icon.png",
+                        }
+                      }
+                      style={
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
+                      }
+                    />
+                  </View>
+                  <View
+                    style={
+                      {
+                        "flexDirection": "column",
+                        "paddingHorizontal": 11,
+                      }
+                    }
+                  >
+                    <View
+                      style={
+                        {
+                          "flexDirection": "row",
+                        }
+                      }
+                    >
+                      <Text
+                        style={
+                          {
+                            "color": "#A4C7DF",
+                            "fontSize": 17,
+                          }
+                        }
+                      >
+                        Powered by 
+                      </Text>
+                      <Text
+                        style={
+                          {
+                            "color": "#A4C7DF",
+                            "fontSize": 17,
+                          }
+                        }
+                      />
+                    </View>
+                    <View
+                      style={
+                        {
+                          "flexDirection": "row",
+                        }
+                      }
+                    >
+                      <Text
+                        style={
+                          {
+                            "color": "#87939E",
+                            "fontSize": 17,
+                          }
+                        }
+                      >
+                        Tap to Change Provider
+                      </Text>
+                    </View>
+                  </View>
+                  <Text
+                    allowFontScaling={false}
+                    style={
+                      [
+                        {
+                          "color": "#00f1a2",
+                          "fontSize": 22,
+                        },
+                        undefined,
+                        {
+                          "fontFamily": "Ionicons",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {},
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
+              </View>
+            </View>
           </View>
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
-            style={
-              [
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#A4C7DF",
-                  "fontSize": 17,
-                },
-                null,
-              ]
-            }
-          >
-             
-          </Text>
-          <Text
-            allowFontScaling={false}
-            style={
-              [
-                {
-                  "color": "#00f1a2",
-                  "fontSize": 22,
-                },
-                undefined,
-                {
-                  "fontFamily": "Ionicons",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                {},
-              ]
-            }
-          >
-            
-          </Text>
         </View>
         <View
           accessibilityState={
