@@ -21,7 +21,6 @@ import {
   GuiCurrencyInfo,
   GuiExchangeRates,
   GuiMakeSpendInfo,
-  GuiSwapInfo,
   MostRecentWallet,
   SpendAuthType,
   SpendingLimits,
@@ -139,7 +138,7 @@ export type Action =
   | { type: 'UI/WALLETS/UPSERT_WALLETS'; data: { wallets: EdgeCurrencyWallet[] } }
   | { type: 'UPDATE_EXCHANGE_INFO'; data: ExchangeInfo }
   | { type: 'UPDATE_SORTED_WALLET_LIST'; data: WalletListItem[] }
-  | { type: 'UPDATE_SWAP_QUOTE'; data: GuiSwapInfo }
+  | { type: 'UPDATE_SWAP_QUOTE'; data: {} }
   | { type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'; data: PasswordReminderTime }
   | { type: 'UPDATE_WALLET_LOADING_PROGRESS'; data: { walletId: string; addressLoadingProgress: number } }
   | { type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR'; data: string }

@@ -1,16 +1,16 @@
 import { div, gte } from 'biggystring'
+import { EdgeSwapQuote } from 'edge-core-js'
 import React, { useEffect, useState } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
+import { exchangeTimerExpired, getSwapInfo, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
@@ -28,7 +28,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { Slider } from '../themed/Slider'
 
 export interface CryptoExchangeQuoteParams {
-  swapInfo: GuiSwapInfo
+  quote: EdgeSwapQuote
   onApprove: () => void
 }
 
@@ -36,7 +36,8 @@ interface Props extends EdgeSceneProps<'exchangeQuote'> {}
 
 export const CryptoExchangeQuoteScene = (props: Props) => {
   const { route, navigation } = props
-  const { swapInfo, onApprove } = route.params
+  const { quote, onApprove } = route.params
+  const { request } = quote
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -51,10 +52,11 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   const toWalletCurrencyName = useSelector(state =>
     state.cryptoExchange.toWalletId != null ? state.core.account.currencyWallets[state.cryptoExchange.toWalletId].currencyInfo.displayName : ''
   )
+  const swapInfo = useSelector(state => getSwapInfo(state, quote))
 
   const [calledApprove, setCalledApprove] = useState(false)
 
-  const { fee, fromDisplayAmount, fromFiat, fromTotalFiat, toDisplayAmount, toFiat, quote, request } = swapInfo
+  const { fee, fromDisplayAmount, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = swapInfo
   const { fiatCurrencyCode } = request.fromWallet
   const { pluginId } = quote
 
@@ -69,12 +71,11 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
     logEvent('Exchange_Shift_Quote')
     swapVerifyTerms(swapConfig)
       .then(async result => {
-        if (!result) await dispatch(exchangeTimerExpired(navigation, swapInfo, onApprove))
+        if (!result) await dispatch(exchangeTimerExpired(navigation, quote, onApprove))
       })
       .catch(err => showError(err))
 
     return () => {
-      const { quote } = swapInfo
       if (!calledApprove) quote.close().catch(err => showError(err))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,13 +83,13 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
 
   const doShift = async () => {
     setCalledApprove(true)
-    await dispatch(shiftCryptoCurrency(navigation, swapInfo, onApprove))
+    await dispatch(shiftCryptoCurrency(navigation, quote, onApprove))
   }
 
   const renderTimer = () => {
-    const { expirationDate } = swapInfo.quote
+    const { expirationDate } = quote
     if (!expirationDate) return null
-    return <CircleTimer timeExpired={async () => await dispatch(exchangeTimerExpired(navigation, swapInfo, onApprove))} expiration={expirationDate} />
+    return <CircleTimer timeExpired={async () => await dispatch(exchangeTimerExpired(navigation, quote, onApprove))} expiration={expirationDate} />
   }
 
   const handleForEstimateExplanation = async () => {
@@ -103,7 +104,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   }
 
   const handleCanBePartialExplanation = async () => {
-    const { canBePartial, maxFulfillmentSeconds } = swapInfo.quote
+    const { canBePartial, maxFulfillmentSeconds } = quote
     let canBePartialString: string | undefined
     if (canBePartial === true) {
       if (maxFulfillmentSeconds != null) {
