@@ -1,9 +1,7 @@
 import { div, gte } from 'biggystring'
 import { EdgeSwapQuote } from 'edge-core-js'
 import React, { useEffect, useState } from 'react'
-import { ScrollView, TouchableOpacity } from 'react-native'
-import FastImage from 'react-native-fast-image'
-import IonIcon from 'react-native-vector-icons/Ionicons'
+import { ScrollView } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { exchangeTimerExpired, getSwapInfo, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
@@ -14,6 +12,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
+import { PoweredByCard } from '../cards/PoweredByCard'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal'
@@ -21,7 +20,6 @@ import { CircleTimer } from '../progress-indicators/CircleTimer'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
-import { EdgeText } from '../themed/EdgeText'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -154,12 +152,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
               walletId={request.toWallet.id}
               walletName={getWalletName(request.toWallet)}
             />
-            <TouchableOpacity style={styles.pluginRowPoweredByRow} onPress={handlePoweredByTap}>
-              <EdgeText style={styles.footerText}>{lstrings.plugin_powered_by_space + ' '}</EdgeText>
-              <FastImage style={styles.partnerIconImage} resizeMode="contain" source={{ uri: getSwapPluginIconUri(quote.pluginId, theme) }} />
-              <EdgeText style={styles.footerText}>{' ' + exchangeName}</EdgeText>
-              <IonIcon name="chevron-forward" size={theme.rem(1)} color={theme.iconTappable} />
-            </TouchableOpacity>
+            <PoweredByCard iconUri={getSwapPluginIconUri(quote.pluginId, theme)} poweredByText={exchangeName} onPress={handlePoweredByTap} />
             {quote.isEstimate && (
               <Alert
                 title={lstrings.estimated_quote}
@@ -195,18 +188,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   footerText: {
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
-  },
-  partnerIconImage: {
-    aspectRatio: 1,
-    width: theme.rem(0.75),
-    height: theme.rem(0.75)
-  },
-  pluginRowPoweredByRow: {
-    marginTop: theme.rem(1),
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    paddingRight: theme.rem(1),
-    alignItems: 'center'
   },
   slider: {
     marginTop: theme.rem(0.5),
