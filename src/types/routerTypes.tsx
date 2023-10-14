@@ -1,6 +1,6 @@
 import * as NavigationCore from '@react-navigation/core'
 import { StackActionHelpers } from '@react-navigation/native'
-import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeSwapQuote, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
+import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
 import { InitialRouteName } from 'edge-login-ui-rn'
 
 import { CoinRankingDetailsParams } from '../components/scenes/CoinRankingDetailsScene'
@@ -10,6 +10,7 @@ import { CreateWalletImportOptionsParams } from '../components/scenes/CreateWall
 import { CreateWalletImportParams } from '../components/scenes/CreateWalletImportScene'
 import { CreateWalletSelectCryptoParams } from '../components/scenes/CreateWalletSelectCryptoScene'
 import { CreateWalletSelectFiatParams } from '../components/scenes/CreateWalletSelectFiatScene'
+import { ExchangeQuoteProcessingParams } from '../components/scenes/CryptoExchangeQuoteProcessingScene'
 import { CryptoExchangeQuoteParams } from '../components/scenes/CryptoExchangeQuoteScene'
 import { FioCreateHandleParams } from '../components/scenes/Fio/FioCreateHandleScene'
 import { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
@@ -119,12 +120,7 @@ export interface RouteParamList {
   }
   exchange: {}
   exchangeQuote: CryptoExchangeQuoteParams
-  exchangeQuoteProcessing: {
-    fetchSwapQuotePromise: Promise<EdgeSwapQuote>
-    onCancel: () => void
-    onError: (error: any) => Promise<void>
-    onDone: (quote: EdgeSwapQuote) => void
-  }
+  exchangeQuoteProcessing: ExchangeQuoteProcessingParams
   exchangeSettings: {}
   exchangeSuccess: {}
   extraTab: undefined

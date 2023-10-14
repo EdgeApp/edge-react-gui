@@ -578,7 +578,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       ]
                     }
                   >
-                    1.00 USD
+                    0.00 USD
                   </Text>
                 </View>
               </View>

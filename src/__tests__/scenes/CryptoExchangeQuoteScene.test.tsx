@@ -122,7 +122,8 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
       <FakeProviders initialState={rootState}>
         <CryptoExchangeQuoteScene
           {...fakeSceneProps('exchangeQuote', {
-            quote,
+            quotes: [quote],
+            selectedQuote: quote,
             onApprove: () => undefined
           })}
         />
