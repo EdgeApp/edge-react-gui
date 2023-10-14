@@ -1,11 +1,13 @@
 import { div, gte } from 'biggystring'
 import { EdgeSwapQuote } from 'edge-core-js'
 import React, { useEffect, useState } from 'react'
-import { ScrollView } from 'react-native'
+import { ScrollView, SectionList, TouchableOpacity, ViewStyle } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
 import { exchangeTimerExpired, getSwapInfo, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
 import { useHandler } from '../../hooks/useHandler'
+import { useRowLayout } from '../../hooks/useRowLayout'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -14,28 +16,39 @@ import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
 import { PoweredByCard } from '../cards/PoweredByCard'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { IconDataRow } from '../data/row/IconDataRow'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal'
 import { CircleTimer } from '../progress-indicators/CircleTimer'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
+import { EdgeText } from '../themed/EdgeText'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent'
 import { LineTextDivider } from '../themed/LineTextDivider'
+import { ModalFooter } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Slider } from '../themed/Slider'
+import { ThemedModal } from '../themed/ThemedModal'
+import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
 
 export interface CryptoExchangeQuoteParams {
-  quote: EdgeSwapQuote
+  selectedQuote: EdgeSwapQuote
+  quotes: EdgeSwapQuote[]
   onApprove: () => void
 }
 
 interface Props extends EdgeSceneProps<'exchangeQuote'> {}
 
+interface Section {
+  title: string
+  data: EdgeSwapQuote[]
+}
+
 export const CryptoExchangeQuoteScene = (props: Props) => {
   const { route, navigation } = props
-  const { quote, onApprove } = route.params
-  const { request } = quote
+  const { selectedQuote, quotes, onApprove } = route.params
+  const { request } = selectedQuote
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -50,17 +63,44 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   const toWalletCurrencyName = useSelector(state =>
     state.cryptoExchange.toWalletId != null ? state.core.account.currencyWallets[state.cryptoExchange.toWalletId].currencyInfo.displayName : ''
   )
-  const swapInfo = useSelector(state => getSwapInfo(state, quote))
+  // TODO: remove in favor of the correct text fns
+  const swapInfo = useSelector(state => getSwapInfo(state, selectedQuote))
 
   const [calledApprove, setCalledApprove] = useState(false)
 
+  const scrollPadding = React.useMemo<ViewStyle>(
+    () => ({
+      paddingBottom: theme.rem(ModalFooter.bottomRem)
+    }),
+    [theme]
+  )
+
+  const sectionList = React.useMemo(
+    () =>
+      [
+        {
+          title: lstrings.quote_selected_quote,
+          data: [selectedQuote]
+        },
+        {
+          title: lstrings.quote_fixed_quotes,
+          data: [...quotes.filter((quote: EdgeSwapQuote) => !quote.isEstimate)]
+        },
+        {
+          title: lstrings.quote_variable_quotes,
+          data: [...quotes.filter((quote: EdgeSwapQuote) => quote.isEstimate)]
+        }
+      ].filter(section => section.data.length > 0),
+    [quotes, selectedQuote]
+  )
+
   const { fee, fromDisplayAmount, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = swapInfo
   const { fiatCurrencyCode } = request.fromWallet
-  const { pluginId } = quote
+  const { pluginId } = selectedQuote
 
   const swapConfig = account.swapConfig[pluginId]
   const exchangeName = swapConfig?.swapInfo.displayName ?? '' // HACK: for unit tests to run
-  const feePercent = div(quote.networkFee.nativeAmount, quote.fromNativeAmount, 2)
+  const feePercent = div(selectedQuote.networkFee.nativeAmount, selectedQuote.fromNativeAmount, 2)
   const showFeeWarning = gte(feePercent, '0.05')
 
   useEffect(() => {
@@ -69,26 +109,73 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
     logEvent('Exchange_Shift_Quote')
     swapVerifyTerms(swapConfig)
       .then(async result => {
-        if (!result) await dispatch(exchangeTimerExpired(navigation, quote, onApprove))
+        if (!result) await dispatch(exchangeTimerExpired(navigation, selectedQuote, onApprove))
       })
       .catch(err => showError(err))
 
     return () => {
-      if (!calledApprove) quote.close().catch(err => showError(err))
+      if (!calledApprove) selectedQuote.close().catch(err => showError(err))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const doShift = async () => {
     setCalledApprove(true)
-    await dispatch(shiftCryptoCurrency(navigation, quote, onApprove))
+    await dispatch(shiftCryptoCurrency(navigation, selectedQuote, onApprove))
   }
 
   const renderTimer = () => {
-    const { expirationDate } = quote
+    const { expirationDate } = selectedQuote
     if (!expirationDate) return null
-    return <CircleTimer timeExpired={async () => await dispatch(exchangeTimerExpired(navigation, quote, onApprove))} expiration={expirationDate} />
+    return <CircleTimer timeExpired={async () => await dispatch(exchangeTimerExpired(navigation, selectedQuote, onApprove))} expiration={expirationDate} />
   }
+
+  const renderRow = useHandler((item: { item: EdgeSwapQuote; section: Section; index: number }) => {
+    const quote = item.item
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          navigation.replace('exchangeQuote', {
+            selectedQuote: quote,
+            quotes,
+            onApprove
+          })
+          Airship.clear()
+        }}
+      >
+        <IconDataRow
+          icon={<FastImage style={styles.providerIcon} source={{ uri: getSwapPluginIconUri(quote.pluginId, theme) }} resizeMode="contain" />}
+          leftText={quote.swapInfo.displayName}
+          leftSubtext={quote.swapInfo.isDex ? lstrings.quote_dex_provider : lstrings.quote_centralized_provider}
+          // TODO: CryptoText
+          rightText={`${toDisplayAmount} ${toDenomination}`}
+          rightSubText={quote.canBePartial ? <EdgeText style={styles.partialSettlementText}>{lstrings.quote_partial_settlement}</EdgeText> : ''}
+        />
+      </TouchableOpacity>
+    )
+  })
+
+  const renderSectionHeader = useHandler((sectionObj: { section: Section }) => {
+    return <WalletListSectionHeader title={sectionObj.section.title} />
+  })
+
+  const handleItemLayout = useRowLayout()
+
+  const handlePoweredByTap = useHandler(async () => {
+    await Airship.show(bridge => (
+      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve()}>
+        <SectionList
+          contentContainerStyle={scrollPadding}
+          getItemLayout={handleItemLayout}
+          keyboardShouldPersistTaps="handled"
+          keyExtractor={(item, index) => item.swapInfo.displayName + index}
+          renderItem={renderRow}
+          renderSectionHeader={renderSectionHeader}
+          sections={sectionList}
+        />
+      </ThemedModal>
+    ))
+  })
 
   const handleForEstimateExplanation = async () => {
     await Airship.show<'ok' | undefined>(bridge => (
@@ -102,7 +189,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   }
 
   const handleCanBePartialExplanation = async () => {
-    const { canBePartial, maxFulfillmentSeconds } = quote
+    const { canBePartial, maxFulfillmentSeconds } = selectedQuote
     let canBePartialString: string | undefined
     if (canBePartial === true) {
       if (maxFulfillmentSeconds != null) {
@@ -116,11 +203,6 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
       <ButtonsModal bridge={bridge} title={lstrings.can_be_partial_quote_title} message={canBePartialString} buttons={{ ok: { label: lstrings.string_ok } }} />
     ))
   }
-
-  const handlePoweredByTap = useHandler(() => {
-    navigation.navigate('exchangeSettings', {})
-  })
-
   return (
     <NotificationSceneWrapper hasTabs navigation={navigation} background="theme">
       {(gap, notificationHeight) => (
@@ -152,8 +234,8 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
               walletId={request.toWallet.id}
               walletName={getWalletName(request.toWallet)}
             />
-            <PoweredByCard iconUri={getSwapPluginIconUri(quote.pluginId, theme)} poweredByText={exchangeName} onPress={handlePoweredByTap} />
-            {quote.isEstimate && (
+            <PoweredByCard iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)} poweredByText={exchangeName} onPress={handlePoweredByTap} />
+            {selectedQuote.isEstimate && (
               <Alert
                 title={lstrings.estimated_quote}
                 message={lstrings.estimated_exchange_message}
@@ -162,7 +244,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
                 onPress={handleForEstimateExplanation}
               />
             )}
-            {quote.canBePartial === true && (
+            {selectedQuote.canBePartial === true && (
               <Alert
                 title={lstrings.can_be_partial_quote_title}
                 message={lstrings.can_be_partial_quote_message}
@@ -188,6 +270,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
   footerText: {
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
+  },
+  providerIcon: {
+    aspectRatio: 1,
+    width: theme.rem(2),
+    height: theme.rem(2)
+  },
+  partialSettlementText: {
+    fontSize: theme.rem(0.75),
+    color: theme.warningText
   },
   slider: {
     marginTop: theme.rem(0.5),

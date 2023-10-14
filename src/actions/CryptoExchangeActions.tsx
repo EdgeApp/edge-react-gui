@@ -62,13 +62,14 @@ export function getQuoteForTransaction(navigation: NavigationBase, info: SetNati
     }
 
     navigation.navigate('exchangeQuoteProcessing', {
-      fetchSwapQuotePromise: fetchSwapQuote(state, request),
+      fetchSwapQuotesPromise: fetchSwapQuotes(state, request),
       onCancel: () => {
         navigation.goBack()
       },
-      onDone: quote => {
+      onDone: quotes => {
         navigation.replace('exchangeQuote', {
-          quote,
+          selectedQuote: quotes[0],
+          quotes,
           onApprove
         })
         dispatch({ type: 'UPDATE_SWAP_QUOTE', data: {} })
@@ -107,13 +108,14 @@ export function getQuoteForTransaction(navigation: NavigationBase, info: SetNati
 export function exchangeTimerExpired(navigation: NavigationBase, quote: EdgeSwapQuote, onApprove: () => void): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     navigation.replace('exchangeQuoteProcessing', {
-      fetchSwapQuotePromise: fetchSwapQuote(getState(), quote.request),
+      fetchSwapQuotesPromise: fetchSwapQuotes(getState(), quote.request),
       onCancel: () => {
         navigation.navigate('exchangeTab', { screen: 'exchange' })
       },
-      onDone: quote => {
+      onDone: quotes => {
         navigation.replace('exchangeQuote', {
-          quote,
+          selectedQuote: quotes[0],
+          quotes,
           onApprove
         })
         dispatch({ type: 'UPDATE_SWAP_QUOTE', data: {} })
@@ -126,7 +128,7 @@ export function exchangeTimerExpired(navigation: NavigationBase, quote: EdgeSwap
   }
 }
 
-async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promise<EdgeSwapQuote> {
+async function fetchSwapQuotes(state: RootState, request: EdgeSwapRequest): Promise<EdgeSwapQuote[]> {
   const { account } = state.core
   const {
     exchangeInfo: {
@@ -146,14 +148,14 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   }
 
   // Get the quote:
-  const quote: EdgeSwapQuote = await account.fetchSwapQuote(request, {
+  const quotes: EdgeSwapQuote[] = await account.fetchSwapQuotes(request, {
     preferPluginId,
     preferType: preferredSwapPluginType,
     disabled: { ...activePlugins.disabled, ...disablePlugins },
     promoCodes: activePlugins.promoCodes
   })
 
-  return quote
+  return quotes
 }
 
 export const getSwapInfo = (state: RootState, quote: EdgeSwapQuote): GuiSwapInfo => {
@@ -199,6 +201,7 @@ export const getSwapInfo = (state: RootState, quote: EdgeSwapQuote): GuiSwapInfo
   const toBalanceInCryptoDisplay = convertNativeToExchange(toExchangeDenomination.multiplier)(quote.toNativeAmount)
   const toBalanceInFiatRaw = parseFloat(convertCurrency(state, toCurrencyCode, toWallet.fiatCurrencyCode, toBalanceInCryptoDisplay))
   const toFiat = formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
+
   const swapInfo: GuiSwapInfo = {
     fee,
     fromDisplayAmount,
@@ -207,7 +210,6 @@ export const getSwapInfo = (state: RootState, quote: EdgeSwapQuote): GuiSwapInfo
     toDisplayAmount,
     toFiat
   }
-
   return swapInfo
 }
 
