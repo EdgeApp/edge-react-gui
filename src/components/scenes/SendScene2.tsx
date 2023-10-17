@@ -5,6 +5,7 @@ import {
   EdgeAccount,
   EdgeCurrencyWallet,
   EdgeDenomination,
+  EdgeMemo,
   EdgeSpendInfo,
   EdgeSpendTarget,
   EdgeTransaction
@@ -570,6 +571,12 @@ const SendComponent = (props: Props) => {
         maxLength = 2 * memoOption.maxBytes
       }
 
+      const createEdgeMemo = (text: string): EdgeMemo => ({
+        type: memoOption.type,
+        memoName: memoOption.memoName,
+        value: text
+      })
+
       const handleUniqueIdentifier = async () => {
         await Airship.show<string | undefined>(bridge => (
           <TextInputModal
@@ -581,21 +588,11 @@ const SendComponent = (props: Props) => {
             message={sprintf(lstrings.unique_identifier_modal_description, memoLabel)}
             submitLabel={lstrings.unique_identifier_modal_confirm}
             title={memoTitle}
-            onSubmit={async text =>
-              getMemoError(
-                {
-                  type: memoOption.type,
-                  memoName: memoOption.memoName,
-                  value: text
-                },
-                memoOption
-              ) ?? true
-            }
+            onSubmit={async text => getMemoError(createEdgeMemo(text), memoOption) ?? true}
           />
-        )).then(newUniqueIdentifier => {
-          if (newUniqueIdentifier == null) return
-          // XXX Ugly hack. Put the uniqueIdentifier in the first spendTarget
-          spendTarget.memo = spendTarget.uniqueIdentifier = newUniqueIdentifier
+        )).then(value => {
+          if (value == null) return
+          spendInfo.memos = [createEdgeMemo(value)]
           setSpendInfo({ ...spendInfo })
         })
       }
