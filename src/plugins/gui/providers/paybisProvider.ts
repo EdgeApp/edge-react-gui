@@ -1,11 +1,14 @@
 import { eq, round } from 'biggystring'
 import { asArray, asDate, asMaybe, asObject, asOptional, asString, asValue } from 'cleaners'
-import { EdgeFetchOptions, JsonObject } from 'edge-core-js'
+import { EdgeFetchOptions, EdgeSpendInfo, JsonObject } from 'edge-core-js'
 import URL from 'url-parse'
 
+import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { locale } from '../../../locales/intl'
+import { lstrings } from '../../../locales/strings'
 import { EdgeTokenId, StringMap } from '../../../types/types'
 import { makeUuid } from '../../../util/utils'
+import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
 import {
   FiatProvider,
@@ -18,6 +21,7 @@ import {
   FiatProviderQuote
 } from '../fiatProviderTypes'
 import { assert, isWalletTestnet } from '../pluginUtils'
+import { NOT_SUCCESS_TOAST_HIDE_MS, RETURN_URL_FAIL, RETURN_URL_PAYMENT, RETURN_URL_SUCCESS } from './common'
 const providerId = 'paybis'
 const storeId = 'paybis'
 const partnerIcon = 'paybis.png'
@@ -29,8 +33,13 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
   buy: {
     credit: true
   },
-  sell: {}
+  sell: {
+    credit: true
+  }
 }
+
+// https://widget.sandbox.paybis.com/?requestId={requestId}&successReturnURL= {urlencodedUrl}&failureReturnURL={urlendodedUrl}
+// requestId<string>(format: uuid) successReturnURL<string>(urlencoded) failureReturnURL<string>(urlencoded)
 
 const asApiKeys = asObject({
   apiKey: asString,
@@ -112,6 +121,31 @@ const asAmountCurrency = asObject({
   currencyCode: asString // "BTC"
 })
 
+const asQuotePaymentMethod = asObject({
+  id: asPaymentMethodId, // "early-access-credit-card",
+  // "name": asString, // "Credit/Debit Card",
+  amountTo: asAmountCurrency,
+  amountFrom: asAmountCurrency,
+  // "amountToEquivalent": asAmountCurrency,
+  fees: asObject({
+    networkFee: asAmountCurrency,
+    serviceFee: asAmountCurrency,
+    totalFee: asAmountCurrency
+  }),
+  expiration: asDate, // "2023-10-04T04:26:51+00:00",
+  expiresAt: asDate // "2023-10-04T04:26:51+00:00"
+})
+
+const asQuotePaymentErrors = asObject({
+  paymentMethod: asOptional(asPaymentMethodId), // "early-access-credit-card",
+  payoutMethod: asOptional(asPaymentMethodId), // "early-access-credit-card",
+  error: asObject({
+    message: asString // "Minimum amount is 5.00 USD",
+    // "message": asString // "Amount must be less than 20000.00 USD",
+    // "code": asString, // "d20d4269-5e95-4234-9e4b-64e3279017b6"
+  })
+})
+
 const asQuote = asObject({
   id: asString, // "4ddd2465-4713-40b3-84d2-9a08d7bdcd09",
   currencyCodeTo: asString, // "BTC",
@@ -121,34 +155,20 @@ const asQuote = asObject({
     currencyCode: asString // "USD"
   }),
   requestedAmountType: asValue('from', 'to'), // "from",
-  paymentMethods: asArray(
-    asObject({
-      id: asPaymentMethodId, // "early-access-credit-card",
-      // "name": asString, // "Credit/Debit Card",
-      amountTo: asAmountCurrency,
-      amountFrom: asAmountCurrency,
-      // "amountToEquivalent": asAmountCurrency,
-      fees: asObject({
-        networkFee: asAmountCurrency,
-        serviceFee: asAmountCurrency,
-        totalFee: asAmountCurrency
-      }),
-      expiration: asDate, // "2023-10-04T04:26:51+00:00",
-      expiresAt: asDate // "2023-10-04T04:26:51+00:00"
-    })
-  ),
-  paymentMethodErrors: asOptional(
-    asArray(
-      asObject({
-        paymentMethod: asPaymentMethodId, // "early-access-credit-card",
-        error: asObject({
-          message: asString // "Minimum amount is 5.00 USD",
-          // "message": asString // "Amount must be less than 20000.00 USD",
-          // "code": asString, // "d20d4269-5e95-4234-9e4b-64e3279017b6"
-        })
-      })
-    )
-  )
+  paymentMethods: asOptional(asArray(asQuotePaymentMethod)),
+  payoutMethods: asOptional(asArray(asQuotePaymentMethod)),
+  paymentMethodErrors: asOptional(asArray(asQuotePaymentErrors)),
+  payoutMethodErrors: asOptional(asArray(asQuotePaymentErrors))
+})
+
+const asPaymentDetails = asObject({
+  invoice: asString,
+  blockchain: asString,
+  network: asString,
+  depositAddress: asString,
+  destinationTag: asOptional(asString),
+  currencyCode: asString,
+  amount: asString
 })
 
 type PaymentMethodId = ReturnType<typeof asPaymentMethodId>
@@ -173,7 +193,6 @@ interface ExtendedTokenId extends EdgeTokenId {
 
 const WIDGET_URL = 'https://widget.paybis.com'
 const WIDGET_URL_SANDBOX = 'https://widget.sandbox.paybis.com'
-
 
 const FIAT_DECIMALS = -2
 const CRYPTO_DECIMALS = -8
@@ -222,6 +241,10 @@ const PAYMENT_METHOD_MAP: { [Payment in PaymentMethodId]: FiatPaymentType } = {
 
 const REVERSE_PAYMENT_METHOD_MAP: Partial<{ [Payment in FiatPaymentType]: PaymentMethodId }> = {
   credit: 'method-id-credit-card'
+}
+
+const SELL_REVERSE_PAYMENT_METHOD_MAP: Partial<{ [Payment in FiatPaymentType]: PaymentMethodId }> = {
+  credit: 'method-id-credit-card-out'
 }
 
 const allowedCurrencyCodes: Record<FiatDirection, { [F in FiatPaymentType]?: FiatProviderAssetMap }> = {
@@ -289,7 +312,7 @@ export const paybisProvider: FiatProviderFactory = {
         const paymentType = paymentTypes.find(paymentType => allowedPaymentTypes[direction][paymentType] === true)
         if (paymentType == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
-        const pairs = paybisPairs.buy?.data
+        const pairs = paybisPairs[direction]?.data
         if (pairs == null) {
           throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
         }
@@ -297,7 +320,7 @@ export const paybisProvider: FiatProviderFactory = {
         // Check if the region, payment type, and fiat/crypto codes are supported
         const fiat = fiatCurrencyCode.replace('iso:', '')
 
-        const paymentMethod = REVERSE_PAYMENT_METHOD_MAP[paymentType]
+        const paymentMethod = direction === 'buy' ? REVERSE_PAYMENT_METHOD_MAP[paymentType] : SELL_REVERSE_PAYMENT_METHOD_MAP[paymentType]
         const paybisCc = EDGE_TO_PAYBIS_CURRENCY_MAP[`${currencyPluginId}_${tokenId ?? ''}`]
 
         if (paymentMethod == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
@@ -334,14 +357,16 @@ export const paybisProvider: FiatProviderFactory = {
           currencyCodeTo,
           directionChange,
           isReceivedAmount: directionChange === 'to',
-          paymentMethod
+          paymentMethod: direction === 'buy' ? paymentMethod : undefined,
+          payoutMethod: direction === 'sell' ? paymentMethod : undefined
         }
         const response = await paybisFetch({ method: 'POST', url, path: 'v2/quote', apiKey, bodyParams })
-        const { id: quoteId, paymentMethods, paymentMethodErrors } = asQuote(response)
+        const { id: quoteId, paymentMethods, paymentMethodErrors, payoutMethods, payoutMethodErrors } = asQuote(response)
 
-        if (paymentMethodErrors != null) {
+        const pmErrors = paymentMethodErrors ?? payoutMethodErrors
+        if (pmErrors != null) {
           let lastError
-          for (const e of paymentMethodErrors) {
+          for (const e of pmErrors) {
             lastError = e
             const maxMatch = e.error.message.match(/^Amount must be less than (\d+\.\d+) ([A-Z]+)/)
             const minMatch = e.error.message.match(/^Minimum amount is (\d+\.\d+) ([A-Z]+)/)
@@ -354,27 +379,33 @@ export const paybisProvider: FiatProviderFactory = {
           throw new Error(lastError?.error.message ?? 'Paybis Unknown paymentMethodError')
         }
 
-        // Should only have one payment method
-        assert(paymentMethods.length === 1, 'Invalid number of quoted payment methods')
+        let pmQuote
+        if (direction === 'buy' && paymentMethods?.length === 1) {
+          pmQuote = paymentMethods[0]
+        } else if (direction === 'sell' && payoutMethods?.length === 1) {
+          pmQuote = payoutMethods[0]
+        } else {
+          throw new Error('Invalid number of quoted payment methods')
+        }
 
-        const pmQuote = paymentMethods[0]
         const { id: paymentMethodId, amountFrom, amountTo } = pmQuote
 
         let cryptoAmount: string
         let fiatAmount: string
 
+        if (directionChange === 'from') {
+          // Sanity check the quote
+          assert(eq(amount, amountFrom.amount), 'Quote not equal to requested from amount')
+        } else {
+          assert(eq(amount, amountTo.amount), 'Quote not equal to requested to amount')
+        }
+
         if (direction === 'buy') {
           fiatAmount = amountFrom.amount
           cryptoAmount = amountTo.amount
-          if (directionChange === 'from') {
-            // Sanity check the quote
-            assert(eq(amount, amountFrom.amount), 'Quote not equal to requested from amount')
-          } else {
-            assert(eq(amount, amountTo.amount), 'Quote not equal to requested to amount')
-          }
         } else {
-          // XXX Todo
-          throw new Error('Sell not supported')
+          fiatAmount = amountTo.amount
+          cryptoAmount = amountFrom.amount
         }
 
         return {
@@ -393,26 +424,145 @@ export const paybisProvider: FiatProviderFactory = {
             const { coreWallet, showUi } = approveParams
             const receiveAddress = await coreWallet.getReceiveAddress()
 
-            const bodyParams = {
-              cryptoWalletAddress: {
-                currencyCode: paybisCc,
-                address: receiveAddress.segwitAddress ?? receiveAddress.publicAddress
-              },
-              partnerUserId,
-              locale: locale.localeIdentifier.slice(0, 2),
-              passwordless: false,
-              trustedKyc: false,
-              quoteId,
-              flow: 'buyCrypto',
-              paymentMethod: paymentMethodId
+            let bodyParams
+            if (direction === 'buy') {
+              bodyParams = {
+                cryptoWalletAddress: {
+                  currencyCode: paybisCc,
+                  address: receiveAddress.segwitAddress ?? receiveAddress.publicAddress
+                },
+                partnerUserId,
+                locale: locale.localeIdentifier.slice(0, 2),
+                passwordless: false,
+                trustedKyc: false,
+                quoteId,
+                flow: 'buyCrypto',
+                paymentMethod: paymentMethodId
+              }
+            } else {
+              bodyParams = {
+                cryptoPaymentMethod: 'partner_controlled_with_redirect',
+                partnerUserId,
+                locale: locale.localeIdentifier.slice(0, 2),
+                passwordless: false,
+                trustedKyc: false,
+                quoteId,
+                flow: 'sellCrypto',
+                depositCallbackUrl: RETURN_URL_PAYMENT,
+                paymentMethod: paymentMethodId
+              }
             }
+
             const response = await paybisFetch({ method: 'POST', url, path: 'v2/request', apiKey, bodyParams })
             const { requestId } = response
 
             const widgetUrl = isWalletTestnet(coreWallet) ? WIDGET_URL_SANDBOX : WIDGET_URL
-            await showUi.openExternalWebView({
-              url: `${widgetUrl}?requestId=${requestId}`
-            })
+            if (direction === 'buy') {
+              await showUi.openExternalWebView({
+                url: `${widgetUrl}?requestId=${requestId}`
+              })
+              return
+            }
+
+            const successReturnURL = encodeURI(RETURN_URL_SUCCESS)
+            const failureReturnURL = encodeURI(RETURN_URL_FAIL)
+            const webviewUrl = `${widgetUrl}?requestId=${requestId}&successReturnURL=${successReturnURL}&failureReturnURL=${failureReturnURL}`
+            console.log(`webviewUrl: ${webviewUrl}`)
+            let inPayment = false
+
+            const openWebView = async () => {
+              await showUi.openWebView({
+                url: webviewUrl,
+                onUrlChange: async newUrl => {
+                  console.log(`*** onUrlChange: ${newUrl}`)
+                  if (newUrl.startsWith(RETURN_URL_FAIL)) {
+                    await showUi.exitScene()
+                    await showUi.showToast(lstrings.fiat_plugin_sell_failed_try_again, NOT_SUCCESS_TOAST_HIDE_MS)
+                  } else if (newUrl.startsWith(RETURN_URL_PAYMENT)) {
+                    if (inPayment) return
+                    inPayment = true
+                    try {
+                      const payDetails = await paybisFetch({ method: 'GET', url, path: `v2/request/${requestId}/payment-details`, apiKey })
+                      const { amount, currencyCode: pbCurrencyCode, invoice, network, depositAddress, destinationTag } = asPaymentDetails(payDetails)
+                      const { pluginId, tokenId } = PAYBIS_TO_EDGE_CURRENCY_MAP[pbCurrencyCode]
+
+                      console.log(`Creating Paybis payment`)
+                      console.log(`  amount: ${amount}`)
+                      console.log(`  pbCurrencyCode: ${pbCurrencyCode}`)
+                      console.log(`  network: ${network}`)
+                      console.log(`  pluginId: ${pluginId}`)
+                      console.log(`  tokenId: ${tokenId}`)
+                      const nativeAmount = await coreWallet.denominationToNative(amount, displayCurrencyCode)
+
+                      // Launch the SendScene to make payment
+                      const spendInfo: EdgeSpendInfo = {
+                        spendTargets: [
+                          {
+                            nativeAmount,
+                            publicAddress: depositAddress
+                          }
+                        ]
+                      }
+
+                      if (destinationTag != null) {
+                        spendInfo.memos = [
+                          {
+                            type: 'text',
+                            value: destinationTag,
+                            hidden: true
+                          }
+                        ]
+                      }
+
+                      const sendParams: SendScene2Params = {
+                        walletId: coreWallet.id,
+                        tokenId,
+                        spendInfo,
+                        lockTilesMap: {
+                          address: true,
+                          amount: true,
+                          wallet: true
+                        },
+                        hiddenFeaturesMap: {
+                          address: true
+                        }
+                      }
+                      await showUi.send(sendParams)
+                      await showUi.trackConversion('Sell_Success', {
+                        destCurrencyCode: fiatCurrencyCode,
+                        destExchangeAmount: fiatAmount,
+                        sourceCurrencyCode: displayCurrencyCode,
+                        sourceExchangeAmount: amount,
+                        sourcePluginId: coreWallet.currencyInfo.pluginId,
+                        pluginId: providerId,
+                        orderId: invoice
+                      })
+
+                      // Route back to the original URL to show Paybis confirmation screen
+                      await showUi.exitScene()
+                      await openWebView()
+                    } catch (e: any) {
+                      if (e.message === SendErrorBackPressed) {
+                        await showUi.exitScene()
+
+                        // Reopen the webivew on the Paybis payment screen
+                        await openWebView()
+                      } else if (e.message === SendErrorNoTransaction) {
+                        await showUi.showToast(lstrings.fiat_plugin_sell_failed_to_send_try_again, NOT_SUCCESS_TOAST_HIDE_MS)
+                        await showUi.exitScene()
+                        // Reopen the webivew on the Paybis payment screen
+                        await openWebView()
+                      } else {
+                        await showUi.showError(e)
+                      }
+                    } finally {
+                      inPayment = false
+                    }
+                  }
+                }
+              })
+            }
+            await openWebView()
           },
           closeQuote: async () => {}
         }

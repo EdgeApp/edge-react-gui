@@ -234,6 +234,20 @@ exports[`Production plugin data Sell plugins match snapshot on iOS + US 1`] = `
     "cryptoCodes": [],
     "deepPath": "",
     "deepQuery": {},
+    "description": "Fee: 2.5%
+Settlement: 5 min - 24 hours",
+    "paymentType": "credit",
+    "paymentTypeLogoKey": "bank",
+    "paymentTypes": [
+      "credit",
+    ],
+    "pluginId": "debit",
+    "title": "Bank Transfer via Debit Card",
+  },
+  {
+    "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
     "description": "Fee: 4-5% / Settlement: 1 - 4 days",
     "partnerIconPath": "moonpay_symbol_prp.png",
     "paymentTypeLogoKey": "bank",
