@@ -171,9 +171,9 @@ interface ExtendedTokenId extends EdgeTokenId {
   currencyCode?: string
 }
 
-const WIDGET_URL = 'https://content.edge.app/html/paybis.html'
-// const WIDGET_URL_SANDBOX = 'https://content.edge.app/html/paybisSandbox.html'
-const WIDGET_URL_SANDBOX = 'http://localhost:8080/scripts/html/paybisSandbox.html'
+const WIDGET_URL = 'https://widget.paybis.com'
+const WIDGET_URL_SANDBOX = 'https://widget.sandbox.paybis.com'
+
 
 const FIAT_DECIMALS = -2
 const CRYPTO_DECIMALS = -8
