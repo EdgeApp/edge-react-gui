@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Change FlipInput styling to make the edit functionality more obvious
+
 ## 3.20.0
 
 - added: Asset status card to remotely communicate known issues or important info
