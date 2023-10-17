@@ -8,6 +8,7 @@
 - added: Paybis buy with credit card
 - changed: 'legacyLanding' experiment config set to 0% probability
 - changed: Banxa sell to use new widget
+- changed: Replace deprecated memo handling with `EdgeMemo` in SendScene2
 - changed: Re-enable Piratechain
 - fixed: Crash in react-native-linear-gradient when app built with Xcode 15
 
