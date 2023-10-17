@@ -7,6 +7,7 @@
 - added: Paybis sell to debit card
 - added: Signup captcha experiment.
 - changed: Change FlipInput styling to make the edit functionality more obvious
+- changed: Enable max spend for Filecoin
 - changed: Move asset-specific settings into their own settings page
 - removed: Moonpay sell via ACH
 - removed: Banxa buy via Pix

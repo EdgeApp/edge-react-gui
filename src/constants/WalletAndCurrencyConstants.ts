@@ -339,8 +339,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: true,
     isStakingSupported: false,
     isCustomTokensSupported: false,
-    isPaymentProtocolSupported: false,
-    noMaxSpend: true
+    isPaymentProtocolSupported: false
   },
   tron: {
     initWalletName: lstrings.string_first_tron_wallet_name,
