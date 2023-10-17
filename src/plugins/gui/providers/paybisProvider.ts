@@ -37,7 +37,20 @@ const asApiKeys = asObject({
   partnerUrl: asString
 })
 
-const asPaymentMethodId = asValue('early-access-credit-card')
+const asPaymentMethodId = asValue(
+  'method-id-credit-card',
+  'method-id-credit-card-out'
+  // 'method-id-bank-transfer-out',
+  // 'method-id-bridgerpay_astropay_payout',
+  // 'method-id-bridgerpay_directa24_brazil_payout',
+  // 'method-id-bridgerpay_directa24_chile_payout',
+  // 'method-id-bridgerpay_directa24_colombia_payout',
+  // 'method-id-bridgerpay_directa24_ecuador_payout',
+  // 'method-id-bridgerpay_directa24_mexico_payout',
+  // 'method-id-bridgerpay_directa24_panama_payout',
+  // 'method-id-bridgerpay_directa24_peru_payout',
+  // 'method-id-bridgerpay_directa24_pix_payout'
+)
 
 // To be used soon
 
@@ -77,6 +90,21 @@ const asPaymentMethodPairs = asObject({
 
 const asPaybisBuyPairs = asObject({
   data: asArray(asPaymentMethodPairs)
+})
+
+const asSellPair = asObject({
+  fromAssetId: asString,
+  to: asArray(asString)
+})
+
+const asSellPaymentMethodPairs = asObject({
+  name: asMaybe(asPaymentMethodId),
+  // displayName: asString,
+  pairs: asArray(asSellPair)
+})
+
+const asPaybisSellPairs = asObject({
+  data: asArray(asSellPaymentMethodPairs)
 })
 
 const asAmountCurrency = asObject({
@@ -125,6 +153,7 @@ const asQuote = asObject({
 
 type PaymentMethodId = ReturnType<typeof asPaymentMethodId>
 type PaybisBuyPairs = ReturnType<typeof asPaybisBuyPairs>
+type PaybisSellPairs = ReturnType<typeof asPaybisSellPairs>
 
 interface InittializePairs {
   url: string
@@ -133,9 +162,10 @@ interface InittializePairs {
 
 interface PaybisPairs {
   buy: PaybisBuyPairs | undefined
+  sell: PaybisSellPairs | undefined
 }
 
-const paybisPairs: PaybisPairs = { buy: undefined }
+const paybisPairs: PaybisPairs = { buy: undefined, sell: undefined }
 
 interface ExtendedTokenId extends EdgeTokenId {
   currencyCode?: string
@@ -186,11 +216,12 @@ const EDGE_TO_PAYBIS_CURRENCY_MAP: StringMap = Object.entries(PAYBIS_TO_EDGE_CUR
 }, {})
 
 const PAYMENT_METHOD_MAP: { [Payment in PaymentMethodId]: FiatPaymentType } = {
-  'early-access-credit-card': 'credit'
+  'method-id-credit-card': 'credit',
+  'method-id-credit-card-out': 'credit'
 }
 
 const REVERSE_PAYMENT_METHOD_MAP: Partial<{ [Payment in FiatPaymentType]: PaymentMethodId }> = {
-  credit: 'early-access-credit-card'
+  credit: 'method-id-credit-card'
 }
 
 const allowedCurrencyCodes: Record<FiatDirection, { [F in FiatPaymentType]?: FiatProviderAssetMap }> = {
@@ -234,7 +265,11 @@ export const paybisProvider: FiatProviderFactory = {
           }
         }
 
-        await initializeBuyPairs({ url, apiKey })
+        if (direction === 'buy') {
+          await initializeBuyPairs({ url, apiKey })
+        } else {
+          await initializeSellPairs({ url, apiKey })
+        }
 
         const out = allowedCurrencyCodes[direction][paymentType] ?? { fiat: {}, crypto: {} }
         return out
@@ -474,6 +509,60 @@ const initializeBuyPairs = async ({ url, apiKey }: InittializePairs): Promise<vo
             }
             tokenMap[ccode] = true
           }
+        }
+      }
+    }
+  }
+}
+
+const initializeSellPairs = async ({ url, apiKey }: InittializePairs): Promise<void> => {
+  if (paybisPairs.sell == null) {
+    const promises = [
+      paybisFetch({ method: 'GET', url, path: `v2/currency/pairs/sell-crypto`, apiKey })
+        .then(response => {
+          paybisPairs.sell = asPaybisSellPairs(response)
+        })
+        .catch(e => {
+          console.error(String(e))
+        })
+    ]
+    await Promise.all(promises)
+  }
+
+  if (paybisPairs.sell != null) {
+    for (const paymentMethodPairs of paybisPairs.sell.data) {
+      const { name, pairs } = paymentMethodPairs
+      if (name == null) continue
+      const edgePaymentType = PAYMENT_METHOD_MAP[name]
+      if (edgePaymentType == null) continue
+      for (const pair of pairs) {
+        const { fromAssetId, to } = pair
+
+        let paymentMethodObj = allowedCurrencyCodes.sell[edgePaymentType]
+        if (paymentMethodObj == null) {
+          paymentMethodObj = { crypto: {}, fiat: {} }
+          allowedCurrencyCodes.sell[edgePaymentType] = paymentMethodObj
+        }
+
+        const edgeTokenId = PAYBIS_TO_EDGE_CURRENCY_MAP[fromAssetId]
+        if (edgeTokenId == null) continue
+        const { pluginId: currencyPluginId } = edgeTokenId
+        let { currencyCode: ccode } = edgeTokenId
+        if (ccode == null) {
+          ccode = fromAssetId
+        }
+
+        // If the edgeTokenId has a tokenId, use it. If not use the currencyCode.
+        // If no currencyCode, use the key of PAYBIS_TO_EDGE_CURRENCY_MAP
+        let tokenMap = paymentMethodObj.crypto[currencyPluginId]
+        if (tokenMap == null) {
+          tokenMap = {}
+          paymentMethodObj.crypto[currencyPluginId] = tokenMap
+        }
+        tokenMap[ccode] = true
+
+        for (const fiat of to) {
+          paymentMethodObj.fiat[`iso:${fiat}`] = true
         }
       }
     }
