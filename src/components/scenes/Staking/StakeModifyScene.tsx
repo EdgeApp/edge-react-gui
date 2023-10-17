@@ -283,20 +283,21 @@ const StakeModifySceneComponent = (props: Props) => {
     const quoteCurrencyCode = currencyCode
     const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, quoteCurrencyCode)
 
+    const isClaim = allocationType === 'claim'
+
     const title =
       allocationType === 'stake'
         ? sprintf(lstrings.stake_amount_s_stake, quoteCurrencyCode)
-        : allocationType === 'unstake'
-        ? sprintf(lstrings.stake_amount_s_unstake, quoteCurrencyCode)
-        : sprintf(lstrings.stake_amount_claim, quoteCurrencyCode)
+        : isClaim
+        ? sprintf(lstrings.stake_amount_claim, quoteCurrencyCode)
+        : sprintf(lstrings.stake_amount_s_unstake, quoteCurrencyCode)
 
     const nativeAmount = zeroString(quoteAllocation?.nativeAmount) ? '' : quoteAllocation?.nativeAmount ?? ''
     const { nativeAmount: earnedAmount = '0', locktime } = existingAllocations.earned[0] ?? {}
-    if (allocationType === 'claim' && locktime != null && Date.now() < new Date(locktime).valueOf()) {
+    if (isClaim && locktime != null && Date.now() < new Date(locktime).valueOf()) {
       return null
     }
 
-    const isClaim = allocationType === 'claim'
     return (
       <EditableAmountTile
         title={title}
