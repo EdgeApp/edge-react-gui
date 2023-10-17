@@ -355,7 +355,7 @@ export const paybisProvider: FiatProviderFactory = {
         }
 
         // Should only have one payment method
-        assert(paymentMethod.length === 1, 'Invalid number of quoted payment methods')
+        assert(paymentMethods.length === 1, 'Invalid number of quoted payment methods')
 
         const pmQuote = paymentMethods[0]
         const { id: paymentMethodId, amountFrom, amountTo } = pmQuote
