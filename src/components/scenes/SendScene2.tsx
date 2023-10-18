@@ -554,7 +554,7 @@ const SendComponent = (props: Props) => {
   // Only supports the first spendTarget that has a `memo` or `uniqueIdentifier`
   const renderUniqueIdentifier = () => {
     const spendTarget = spendInfo.spendTargets[0]
-    const uniqueIdentifier = spendTarget?.memo ?? spendTarget?.uniqueIdentifier
+    const uniqueIdentifier = spendInfo.memos?.[0]?.value ?? spendTarget?.memo ?? spendTarget?.uniqueIdentifier
     const [memoOption] = memoOptions.filter(option => option.hidden !== true)
 
     if (memoOption != null && spendTarget.publicAddress != null) {
