@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Paybis sell to debit card
 - changed: Change FlipInput styling to make the edit functionality more obvious
 
 ## 3.20.0
