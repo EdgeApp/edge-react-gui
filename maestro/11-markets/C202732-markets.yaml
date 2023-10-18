@@ -17,7 +17,9 @@ tags:
       USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
       PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
 
-- assertVisible: "Markets"
+- extendedWaitUntil:
+    visible: "Markets"
+    timeout: 120000
 - tapOn: "Markets"
 - assertVisible: "Help"
 - assertVisible:
