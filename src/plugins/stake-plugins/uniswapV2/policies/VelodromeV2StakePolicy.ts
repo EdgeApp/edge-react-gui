@@ -700,7 +700,7 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
       const canStake = !disableStake && ((gt(tokenABalance, '0') && gt(tokenBBalance, '0')) || gt(lpTokenBalance, '0'))
 
       // You can unstake so long as there is some staked LP-Token balance (there are no timelocks)
-      const canUnstake = !disableUnstake && gt(stakedLpTokenBalance, '0')
+      const canUnstakeAndClaim = !disableUnstake && gt(stakedLpTokenBalance, '0')
 
       // You can claim so long as there is some reward balance (there are no timelocks)
       const canClaim = !disableClaim && gt(rewardNativeAmount, '0')
@@ -708,8 +708,8 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
       return {
         allocations: [...stakedAllocations, ...earnedAllocations],
         canStake,
-        canUnstake,
-        canUnstakeAndClaim: false,
+        canUnstake: false,
+        canUnstakeAndClaim,
         canClaim
       }
     }
