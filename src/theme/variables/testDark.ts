@@ -342,6 +342,10 @@ export const testDark: Theme = {
   underlayColor: palette.white,
   underlayOpacity: 0.95,
 
+  // TouchableHighlights overlay
+  overlayDisabledColor: palette.blackOp50,
+  overlayDisabledTextColor: palette.white,
+
   // Tutorials
   tutorialModalUnderlay: palette.transparent,
 

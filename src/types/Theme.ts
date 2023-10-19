@@ -328,6 +328,10 @@ export interface Theme {
   underlayColor: string
   underlayOpacity: number
 
+  // TouchableHighlights overlay
+  overlayDisabledColor: string
+  overlayDisabledTextColor: string
+
   // Tutorials
   tutorialModalUnderlay: string
 
