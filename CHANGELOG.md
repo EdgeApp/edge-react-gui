@@ -4,6 +4,7 @@
 
 ## 3.20.0
 
+- added: Banxa purchase with iDEAL
 - added: Asset status card to remotely communicate known issues or important info
 - added: Paybis buy with credit card
 - changed: 'legacyLanding' experiment config set to 0% probability
