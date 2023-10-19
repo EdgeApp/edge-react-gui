@@ -1,10 +1,5 @@
-import { Platform } from 'react-native'
-import RNFS from 'react-native-fs'
-
 import { amountQuoteFiatPlugin } from '../../plugins/gui/amountQuotePlugin'
 import { GuiPlugin, GuiPluginRow } from '../../types/GuiPluginTypes'
-
-const hostedUri = Platform.OS === 'android' ? 'file:///android_asset/plugins/' : `file:///${RNFS.MainBundlePath}/plugins/`
 
 export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
   libertyx: {
@@ -141,13 +136,6 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     forceFiatCurrencyCode: 'iso:TRY',
     defaultFiatAmount: '2000',
     displayName: ''
-  },
-  simplex: {
-    pluginId: 'simplex',
-    storeId: 'co.edgesecure.simplex',
-    baseUri: hostedUri + 'co.edgesecure.simplex/index.html',
-    lockUriPath: true,
-    displayName: 'Simplex'
   },
   sepa: {
     pluginId: 'amountquote',
