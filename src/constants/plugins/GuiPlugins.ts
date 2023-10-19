@@ -66,6 +66,16 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     nativePlugin: amountQuoteFiatPlugin,
     displayName: 'Credit Card'
   },
+  columbiabank: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:COP',
+    defaultFiatAmount: '100000',
+    displayName: 'XX Do not show'
+  },
   debit: {
     pluginId: 'amountquote',
     storeId: '',
@@ -118,6 +128,16 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     forceFiatCurrencyCode: 'iso:CAD',
     displayName: ''
   },
+  mexicobank: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:MXN',
+    defaultFiatAmount: '5000',
+    displayName: 'XX Do not show'
+  },
   payid: {
     pluginId: 'amountquote',
     storeId: '',
@@ -134,6 +154,17 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     lockUriPath: true,
     nativePlugin: amountQuoteFiatPlugin,
     forceFiatCurrencyCode: 'iso:BRL',
+    defaultFiatAmount: '1000',
+    displayName: ''
+  },
+  pse: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:COP',
+    defaultFiatAmount: '100000',
     displayName: ''
   },
   turkishbank: {
@@ -156,6 +187,16 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     nativePlugin: amountQuoteFiatPlugin,
     forceFiatCurrencyCode: 'iso:EUR',
     displayName: 'Bity'
+  },
+  spei: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:MXN',
+    defaultFiatAmount: '5000',
+    displayName: 'XX Do not show'
   },
   bitrefill: {
     pluginId: 'bitrefill',

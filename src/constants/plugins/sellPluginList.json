@@ -33,6 +33,17 @@
     "paymentTypeLogoKey": "fasterPayments"
   },
   {
+    "id": "columbiabank",
+    "pluginId": "columbiabank",
+    "paymentType": "columbiabank",
+    "paymentTypes": ["columbiabank"],
+    "title": "Columbia Bank Transfer ",
+    "description": "",
+    "forCountries": ["CO"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
     "id": "interac",
     "pluginId": "interac",
     "paymentType": "interac",
@@ -44,15 +55,28 @@
     "paymentTypeLogoKey": "interac"
   },
   {
-    "id": "moonpay",
-    "pluginId": "moonpay",
-    "paymentTypes": ["credit"],
-    "description": "Fee: 4-5% / Settlement: 1 - 4 days",
-    "title": "ACH Bank Transfer",
-    "partnerIconPath": "moonpay_symbol_prp.png",
-    "forCountries": ["US"],
+    "id": "mexicobank",
+    "pluginId": "mexicobank",
+    "paymentType": "mexicobank",
+    "paymentTypes": ["mexicobank"],
+    "title": "Mexico Bank Transfer ",
+    "description": "",
+    "forCountries": ["MX"],
+    "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },
+  {
+    "id": "pix",
+    "pluginId": "pix",
+    "paymentType": "pix",
+    "paymentTypes": ["pix"],
+    "title": "PIX ",
+    "description": "",
+    "forCountries": ["BR"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "pix"
+  },
+
   {
     "id": "bits of gold",
     "pluginId": "bitsofgold",

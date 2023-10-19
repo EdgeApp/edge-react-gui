@@ -231,19 +231,6 @@ Settlement: 5 min - 24 hours",
     "title": "Bank Transfer via Debit Card",
   },
   {
-    "cryptoCodes": [],
-    "deepPath": "",
-    "deepQuery": {},
-    "description": "Fee: 4-5% / Settlement: 1 - 4 days",
-    "partnerIconPath": "moonpay_symbol_prp.png",
-    "paymentTypeLogoKey": "bank",
-    "paymentTypes": [
-      "credit",
-    ],
-    "pluginId": "moonpay",
-    "title": "ACH Bank Transfer",
-  },
-  {
     "cryptoCodes": [
       "BTC",
       "DASH",
