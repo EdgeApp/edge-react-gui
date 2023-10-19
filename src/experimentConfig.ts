@@ -13,13 +13,15 @@ export interface ExperimentConfig {
   createAccountType: CreateAccountType
   legacyLanding: 'legacyLanding' | 'uspLanding'
   createAccountText: 'signUp' | 'getStarted' | 'createAccount'
+  signupCaptcha: 'withCaptcha' | 'withoutCaptcha'
 }
 
 const DEFAULT_EXPERIMENT_CONFIG: ExperimentConfig = {
   swipeLastUsp: 'false',
   createAccountType: 'full',
   legacyLanding: 'uspLanding',
-  createAccountText: 'createAccount'
+  createAccountText: 'createAccount',
+  signupCaptcha: 'withoutCaptcha'
 }
 
 const experimentConfigDisklet = makeReactNativeDisklet()
@@ -30,7 +32,8 @@ const experimentDistribution = {
   swipeLastUsp: [0.5],
   createAccountType: [0.5],
   legacyLanding: [0],
-  createAccountText: [0.33, 0.33]
+  createAccountText: [0.33, 0.33],
+  signupCaptcha: [0.5]
 }
 
 /**
@@ -69,7 +72,8 @@ const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
   createAccountText: asOptional(
     asValue('signUp', 'getStarted', 'createAccount'),
     generateExperimentConfigVal('createAccountText', ['signUp', 'getStarted', 'createAccount'])
-  )
+  ),
+  signupCaptcha: asOptional(asValue('withCaptcha', 'withoutCaptcha'), generateExperimentConfigVal('signupCaptcha', ['withCaptcha', 'withoutCaptcha']))
 })
 
 /**
