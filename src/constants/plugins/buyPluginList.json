@@ -1,16 +1,5 @@
 [
   {
-    "id": "iach",
-    "pluginId": "iach",
-    "description": "Fee: 4-5%\nSettlement: 1 - 4 days",
-    "paymentType": "iach",
-    "paymentTypes": ["iach"],
-    "title": "ACH Bank Transfer",
-    "forCountries": ["US"],
-    "cryptoCodes": [],
-    "paymentTypeLogoKey": "bank"
-  },
-  {
     "id": "creditcard",
     "pluginId": "creditcard",
     "description": "Fee: 5-7%\nSettlement: 10 - 30 minutes",
