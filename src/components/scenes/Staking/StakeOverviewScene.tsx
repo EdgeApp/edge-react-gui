@@ -82,13 +82,27 @@ const StakeOverviewSceneComponent = (props: Props) => {
   }, [account, stakePlugin, stakePolicyId, updateCounter, wallet])
 
   // Handlers
-  const handleModifyPress = (modification: ChangeQuoteRequest['action']) => () => {
+  const handleModifyPress = (modification: ChangeQuoteRequest['action'] | 'unstakeAndClaim') => () => {
+    const sceneTitleMap = {
+      stake: getPolicyTitleName(stakePolicy),
+      claim: lstrings.stake_claim_rewards,
+      unstake: lstrings.stake_unstake,
+      unstakeAndClaim: lstrings.stake_unstake_claim,
+      unstakeExact: '' // Only for internal use
+    }
+    const title = sceneTitleMap[modification]
+
+    if (modification === 'unstakeAndClaim') {
+      modification = 'unstake'
+    }
+
     if (stakePosition != null && stakeAllocations != null && rewardAllocations != null) {
       navigation.navigate('stakeModify', {
         modification,
         stakePlugin,
         stakePolicy,
         stakePosition,
+        title,
         walletId: wallet.id
       })
     }

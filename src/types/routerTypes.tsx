@@ -270,6 +270,7 @@ export interface RouteParamList {
   settingsOverviewTab: {}
   spendingLimits: {}
   stakeModify: {
+    title: string
     stakePlugin: StakePlugin
     walletId: string
     stakePolicy: StakePolicy

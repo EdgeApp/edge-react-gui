@@ -107,7 +107,7 @@ export interface StakePolicy {
 // Change Quote
 // -----------------------------------------------------------------------------
 export interface ChangeQuoteRequest {
-  action: 'stake' | 'unstake' | 'unstakeAndClaim' | 'claim' | 'unstakeExact'
+  action: 'stake' | 'unstake' | 'claim' | 'unstakeExact'
   stakePolicyId: string
   currencyCode: string
   nativeAmount: string

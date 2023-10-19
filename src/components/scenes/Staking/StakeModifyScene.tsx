@@ -13,7 +13,7 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
-import { getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
+import { getPolicyIconUris, getPositionAllocations } from '../../../util/stakeUtils'
 import { toBigNumberString } from '../../../util/toBigNumberString'
 import { zeroString } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -40,7 +40,7 @@ interface Props extends EdgeSceneProps<'stakeModify'> {
 
 const StakeModifySceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
-  const { modification, stakePlugin, stakePolicy, stakePosition } = route.params
+  const { modification, title, stakePlugin, stakePolicy, stakePosition } = route.params
   const { stakeWarning, unstakeWarning, claimWarning, disableMaxStake, mustMaxUnstake } = stakePolicy
   const existingAllocations = React.useMemo(() => getPositionAllocations(stakePosition), [stakePosition])
 
@@ -165,7 +165,6 @@ const StakeModifySceneComponent = (props: Props) => {
     const message = {
       stake: lstrings.stake_change_stake_success,
       unstake: lstrings.stake_change_unstake_success,
-      unstakeAndClaim: lstrings.stake_change_claim_success,
       claim: lstrings.stake_change_claim_success,
       unstakeExact: ''
     }
@@ -283,20 +282,21 @@ const StakeModifySceneComponent = (props: Props) => {
     const quoteCurrencyCode = currencyCode
     const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, quoteCurrencyCode)
 
+    const isClaim = allocationType === 'claim'
+
     const title =
       allocationType === 'stake'
         ? sprintf(lstrings.stake_amount_s_stake, quoteCurrencyCode)
-        : allocationType === 'unstake'
-        ? sprintf(lstrings.stake_amount_s_unstake, quoteCurrencyCode)
-        : sprintf(lstrings.stake_amount_claim, quoteCurrencyCode)
+        : isClaim
+        ? sprintf(lstrings.stake_amount_claim, quoteCurrencyCode)
+        : sprintf(lstrings.stake_amount_s_unstake, quoteCurrencyCode)
 
     const nativeAmount = zeroString(quoteAllocation?.nativeAmount) ? '' : quoteAllocation?.nativeAmount ?? ''
     const { nativeAmount: earnedAmount = '0', locktime } = existingAllocations.earned[0] ?? {}
-    if (allocationType === 'claim' && locktime != null && Date.now() < new Date(locktime).valueOf()) {
+    if (isClaim && locktime != null && Date.now() < new Date(locktime).valueOf()) {
       return null
     }
 
-    const isClaim = allocationType === 'claim'
     return (
       <EditableAmountTile
         title={title}
@@ -457,16 +457,6 @@ const StakeModifySceneComponent = (props: Props) => {
     )
   }
 
-  const sceneTitleMap = React.useMemo(() => {
-    return {
-      stake: getPolicyTitleName(stakePolicy),
-      claim: lstrings.stake_claim_rewards,
-      unstake: lstrings.stake_unstake,
-      unstakeAndClaim: lstrings.stake_unstake_claim,
-      unstakeExact: '' // Only for internal use
-    }
-  }, [stakePolicy])
-
   const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)
   const icon = React.useMemo(
     () => (modification === 'stake' ? null : <Image style={styles.icon} source={{ uri: policyIcons.rewardAssetUris[0] }} />),
@@ -486,7 +476,7 @@ const StakeModifySceneComponent = (props: Props) => {
   return (
     <SceneWrapper scroll background="theme">
       <ScrollView>
-        <SceneHeader style={styles.sceneHeader} title={sceneTitleMap[modification]} underline withTopMargin>
+        <SceneHeader style={styles.sceneHeader} title={title} underline withTopMargin>
           {icon}
         </SceneHeader>
         {renderChangeQuoteAmountTiles(modification)}
