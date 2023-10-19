@@ -332,6 +332,17 @@
     "paymentTypeLogoKey": "pix"
   },
   {
+    "id": "pse",
+    "pluginId": "pse",
+    "paymentType": "pse",
+    "paymentTypes": ["pse"],
+    "title": "PSE Payment",
+    "description": "",
+    "forCountries": ["CO"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
     "id": "turkishbank",
     "pluginId": "turkishbank",
     "paymentType": "turkishbank",
@@ -339,6 +350,17 @@
     "title": "Turkish Bank Transfer",
     "description": "Fee: 8-9%\nSettlement: Instant - 1 hour",
     "forCountries": ["TR"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
+    "id": "spei",
+    "pluginId": "spei",
+    "paymentType": "spei",
+    "paymentTypes": ["spei"],
+    "title": "SPEI Bank Transfer",
+    "description": "",
+    "forCountries": ["MX"],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },

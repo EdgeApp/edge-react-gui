@@ -40,7 +40,6 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
     interac: true,
     iobank: true,
     payid: true,
-    pix: true,
     sepa: false, // Leave this to Bity for now
     turkishbank: true
   },
@@ -50,7 +49,6 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
     interac: true,
     iobank: true,
     payid: true,
-    pix: true,
     sepa: false, // Leave this to Bity for now
     turkishbank: true
   }
