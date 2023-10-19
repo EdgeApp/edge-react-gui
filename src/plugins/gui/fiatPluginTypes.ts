@@ -25,6 +25,7 @@ export const asFiatPaymentType = asValue(
   'fasterpayments',
   'googlepay',
   'iach',
+  'ideal',
   'interac',
   'iobank',
   'payid',

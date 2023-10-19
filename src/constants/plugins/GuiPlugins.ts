@@ -97,6 +97,15 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     nativePlugin: amountQuoteFiatPlugin,
     displayName: 'ACH Bank Transfer'
   },
+  ideal: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:EUR',
+    displayName: 'XX Do not show'
+  },
   interac: {
     pluginId: 'amountquote',
     storeId: '',

@@ -309,6 +309,17 @@
     "deepPath": "/"
   },
   {
+    "id": "ideal",
+    "pluginId": "ideal",
+    "paymentType": "ideal",
+    "paymentTypes": ["ideal"],
+    "title": "iDEAL",
+    "description": "Fee: 4%\nSettlement: Instant - 24 hours",
+    "forCountries": ["NL"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "ideal"
+  },
+  {
     "id": "interac",
     "pluginId": "interac",
     "paymentType": "interac",
