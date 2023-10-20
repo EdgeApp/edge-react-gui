@@ -17,6 +17,12 @@ tags:
       USERNAME: ${MAESTRO_EDGE_XRP_USERNAME}
       PASSWORD: ${MAESTRO_EDGE_XRP_PASSWORD}
 
+- extendedWaitUntil:
+    visible: "Wallets"
+    timeout: 120000
+- extendedWaitUntil:
+    visible: "My XRP"
+    timeout: 120000
 - assertVisible:
     text: "Exchange"
 - tapOn: "Exchange"

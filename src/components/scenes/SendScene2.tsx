@@ -5,6 +5,7 @@ import {
   EdgeAccount,
   EdgeCurrencyWallet,
   EdgeDenomination,
+  EdgeMemo,
   EdgeSpendInfo,
   EdgeSpendTarget,
   EdgeTransaction
@@ -553,7 +554,7 @@ const SendComponent = (props: Props) => {
   // Only supports the first spendTarget that has a `memo` or `uniqueIdentifier`
   const renderUniqueIdentifier = () => {
     const spendTarget = spendInfo.spendTargets[0]
-    const uniqueIdentifier = spendTarget?.memo ?? spendTarget?.uniqueIdentifier
+    const uniqueIdentifier = spendInfo.memos?.[0]?.value ?? spendTarget?.memo ?? spendTarget?.uniqueIdentifier
     const [memoOption] = memoOptions.filter(option => option.hidden !== true)
 
     if (memoOption != null && spendTarget.publicAddress != null) {
@@ -570,6 +571,12 @@ const SendComponent = (props: Props) => {
         maxLength = 2 * memoOption.maxBytes
       }
 
+      const createEdgeMemo = (text: string): EdgeMemo => ({
+        type: memoOption.type,
+        memoName: memoOption.memoName,
+        value: text
+      })
+
       const handleUniqueIdentifier = async () => {
         await Airship.show<string | undefined>(bridge => (
           <TextInputModal
@@ -581,21 +588,11 @@ const SendComponent = (props: Props) => {
             message={sprintf(lstrings.unique_identifier_modal_description, memoLabel)}
             submitLabel={lstrings.unique_identifier_modal_confirm}
             title={memoTitle}
-            onSubmit={async text =>
-              getMemoError(
-                {
-                  type: memoOption.type,
-                  memoName: memoOption.memoName,
-                  value: text
-                },
-                memoOption
-              ) ?? true
-            }
+            onSubmit={async text => getMemoError(createEdgeMemo(text), memoOption) ?? true}
           />
-        )).then(newUniqueIdentifier => {
-          if (newUniqueIdentifier == null) return
-          // XXX Ugly hack. Put the uniqueIdentifier in the first spendTarget
-          spendTarget.memo = spendTarget.uniqueIdentifier = newUniqueIdentifier
+        )).then(value => {
+          if (value == null) return
+          spendInfo.memos = [createEdgeMemo(value)]
           setSpendInfo({ ...spendInfo })
         })
       }
@@ -950,6 +947,15 @@ const SendComponent = (props: Props) => {
       flipInputModalRef.current?.setError(null)
       setError(undefined)
     } catch (e: any) {
+      const insufficientFunds = asMaybeInsufficientFundsError(e)
+      if (insufficientFunds != null) {
+        if (insufficientFunds.currencyCode != null) {
+          e.message = sprintf(lstrings.stake_error_insufficient_s, insufficientFunds.currencyCode)
+        } else {
+          e.message = lstrings.exchange_insufficient_funds_title
+        }
+      }
+
       setError(e)
       setEdgeTransaction(null)
       flipInputModalRef.current?.setError(e.message)

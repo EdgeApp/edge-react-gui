@@ -1,6 +1,8 @@
 import { FlashList } from '@shopify/flash-list'
 import { lt } from 'biggystring'
+import { asArray } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
+import { asAssetStatus, AssetStatus } from 'edge-info-server/types'
 import * as React from 'react'
 import { RefreshControl } from 'react-native'
 
@@ -10,10 +12,13 @@ import { useTransactionList } from '../../hooks/useTransactionList'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
+import { fetchInfo } from '../../util/network'
 import { calculateSpamThreshold, unixToLocaleDateTime, zeroString } from '../../util/utils'
+import { AssetStatusCard } from '../cards/AssetStatusCard'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { useTheme } from '../services/ThemeContext'
@@ -47,6 +52,7 @@ function TransactionListComponent(props: Props) {
   const flashList = React.useRef<FlashList<ListItem>>(null)
   const [searching, setSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
+  const [assetStatuses, setAssetStatuses] = React.useState<AssetStatus[]>()
 
   // Selectors:
   const exchangeDenom = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
@@ -136,6 +142,15 @@ function TransactionListComponent(props: Props) {
     }
   }, [hideSearch, theme])
 
+  // Check for AssetStatuses from info server (known sync issues, etc):
+  React.useEffect(() => {
+    fetchInfo(`v1/assetStatus/${pluginId}${tokenId == null ? '' : `_${tokenId}`}`)
+      .then(async res => {
+        setAssetStatuses(asArray(asAssetStatus)(await res.json()))
+      })
+      .catch(console.error)
+  }, [pluginId, tokenId])
+
   // ---------------------------------------------------------------------------
   // Renderers
   // ---------------------------------------------------------------------------
@@ -153,17 +168,26 @@ function TransactionListComponent(props: Props) {
 
   const topArea = React.useMemo(() => {
     return (
-      <TransactionListTop
-        isEmpty={listItems.length < 1}
-        navigation={navigation}
-        searching={searching}
-        tokenId={tokenId}
-        wallet={wallet}
-        onSearchingChange={setSearching}
-        onSearchTextChange={setSearchText}
-      />
+      <>
+        <TransactionListTop
+          isEmpty={listItems.length < 1}
+          navigation={navigation}
+          searching={searching}
+          tokenId={tokenId}
+          wallet={wallet}
+          onSearchingChange={setSearching}
+          onSearchTextChange={setSearchText}
+        />
+        {assetStatuses != null && assetStatuses.length > 0
+          ? assetStatuses.map(assetStatus =>
+              assetStatus.appId == null || assetStatus.appId === config.appId ? (
+                <AssetStatusCard assetStatus={assetStatus} key={`${String(assetStatus.localeStatusTitle)}-${String(assetStatus.localeStatusBody)}`} />
+              ) : null
+            )
+          : null}
+      </>
     )
-  }, [listItems.length, navigation, searching, tokenId, wallet])
+  }, [assetStatuses, listItems.length, navigation, searching, tokenId, wallet])
 
   const emptyComponent = React.useMemo(() => {
     if (isTransactionListUnsupported) {

@@ -647,7 +647,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
     // Only unstake the exact amount specified in the request.nativeAmount
     totalUnstakeNativeAmount = nativeAmount
   } else {
-    // If action === claim || action === unstakeAndClaim
+    // If action === claim
     // The user will be explicitly unstaking the earned amount
     totalUnstakeNativeAmount = earnedAmount
   }
@@ -789,7 +789,6 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
 const changeQuoteFuncs = {
   stake: stakeRequest,
   unstake: unstakeRequest,
-  unstakeAndClaim: unstakeRequest,
   claim: unstakeRequest,
   unstakeExact: unstakeRequest
 }
@@ -878,7 +877,7 @@ const updateInboundAddresses = async (opts: EdgeGuiPluginOptions): Promise<void>
     if (now - inboundAddressesLastUpdate > INBOUND_ADDRESSES_UPDATE_FREQ_MS || inboundAddresses == null) {
       // Get current pool
       const [iaResponse] = await Promise.all([
-        fetchWaterfall(midgardServers, 'v2/thorchain/inbound_addresses', {
+        fetchWaterfall(thornodeServers, 'thorchain/inbound_addresses', {
           headers: { ...headers, 'x-client-id': ninerealmsClientId }
         })
       ])

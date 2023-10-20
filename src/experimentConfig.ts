@@ -29,7 +29,7 @@ const experimentConfigDisklet = makeReactNativeDisklet()
 const experimentDistribution = {
   swipeLastUsp: [0.5],
   createAccountType: [0.5],
-  legacyLanding: [0.5],
+  legacyLanding: [0],
   createAccountText: [0.33, 0.33]
 }
 
@@ -65,7 +65,7 @@ const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution
 const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
   swipeLastUsp: asOptional(asValue('true', 'false'), generateExperimentConfigVal('swipeLastUsp', ['true', 'false'])),
   createAccountType: asOptional(asValue('light', 'full'), generateExperimentConfigVal('createAccountType', ['light', 'full'])),
-  legacyLanding: asOptional(asValue('legacyLanding', 'uspLanding'), generateExperimentConfigVal('legacyLanding', ['legacyLanding', 'uspLanding'])),
+  legacyLanding: asOptional(asValue('uspLanding'), 'uspLanding'),
   createAccountText: asOptional(
     asValue('signUp', 'getStarted', 'createAccount'),
     generateExperimentConfigVal('createAccountText', ['signUp', 'getStarted', 'createAccount'])
@@ -81,6 +81,7 @@ const experimentConfigPromise: Promise<ExperimentConfig> = (async (): Promise<Ex
     const experimentConfigJson = await experimentConfigDisklet.getText(LOCAL_EXPERIMENT_CONFIG)
     return asExperimentConfig(JSON.parse(experimentConfigJson))
   } catch (err) {
+    console.debug('Experiment config not found/out of date. Regenerating...')
     // Not found or incompatible. Re-generate with random values according to
     // the defined distribution.
     const generatedExperimentConfig = asExperimentConfig({})
@@ -101,6 +102,7 @@ export const getExperimentConfig = async (): Promise<ExperimentConfig> => {
   if (isMaestro()) return DEFAULT_EXPERIMENT_CONFIG // Test with forced defaults
   else if (ENV.EXPERIMENT_CONFIG_OVERRIDE != null && Object.keys(ENV.EXPERIMENT_CONFIG_OVERRIDE).length > 0) {
     try {
+      console.debug('exp cfg override')
       return asExperimentConfig(ENV.EXPERIMENT_CONFIG_OVERRIDE)
     } catch (err) {
       console.error('Error applying ENV.EXPERIMENT_CONFIG_OVERRIDE: ', String(err))

@@ -26,6 +26,7 @@ import { PaymentMethod } from '../controllers/action-queue/PaymentMethod'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
 import { FiatPluginAddressFormParams, FiatPluginSepaFormParams, FiatPluginSepaTransferParams } from '../plugins/gui/fiatPluginTypes'
 import { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
+import { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWebView'
 import { RewardsCardDashboardParams } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
@@ -57,6 +58,7 @@ export interface RouteParamList {
   guiPluginAddressForm: FiatPluginAddressFormParams
   guiPluginInfoDisplay: FiatPluginSepaTransferParams
   guiPluginSepaForm: FiatPluginSepaFormParams
+  guiPluginWebView: FiatPluginOpenWebViewParams
   rewardsCardDashboard: RewardsCardDashboardParams
   rewardsCardWelcome: RewardsCardWelcomeParams
 
@@ -268,6 +270,7 @@ export interface RouteParamList {
   settingsOverviewTab: {}
   spendingLimits: {}
   stakeModify: {
+    title: string
     stakePlugin: StakePlugin
     walletId: string
     stakePolicy: StakePolicy

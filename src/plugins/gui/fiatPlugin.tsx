@@ -8,6 +8,7 @@ import SafariView from 'react-native-safari-view'
 import { DisablePluginMap, NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { launchPaymentProto, LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
 import { addressWarnings } from '../../actions/ScanActions'
+import { trackConversionWithReferral } from '../../actions/TrackingActions'
 import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
@@ -15,8 +16,10 @@ import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { Airship, showError, showToast, showToastSpinner } from '../../components/services/AirshipInstance'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
+import { AccountReferral } from '../../types/ReferralTypes'
 import { AppParamList, NavigationBase } from '../../types/routerTypes'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
+import { TrackingEventName } from '../../util/tracking'
 import {
   FiatPaymentType,
   FiatPluginAddressFormParams,
@@ -29,8 +32,12 @@ import {
   FiatPluginWalletPickerResult
 } from './fiatPluginTypes'
 
+export const SendErrorNoTransaction = 'SendErrorNoTransaction'
+export const SendErrorBackPressed = 'SendErrorBackPressed'
+
 export const executePlugin = async (params: {
   account: EdgeAccount
+  accountReferral: AccountReferral
   deviceId: string
   direction: 'buy' | 'sell'
   disablePlugins?: NestedDisableMap
@@ -40,7 +47,7 @@ export const executePlugin = async (params: {
   providerId?: string
   regionCode: FiatPluginRegionCode
 }): Promise<void> => {
-  const { disablePlugins = {}, account, deviceId, direction, guiPlugin, navigation, paymentType, providerId, regionCode } = params
+  const { disablePlugins = {}, account, accountReferral, deviceId, direction, guiPlugin, navigation, paymentType, providerId, regionCode } = params
   const { defaultFiatAmount, forceFiatCurrencyCode, pluginId } = guiPlugin
 
   const tabSceneKey = direction === 'buy' ? 'buyTab' : 'sellTab'
@@ -60,6 +67,11 @@ export const executePlugin = async (params: {
       return await Airship.show(bridge => <ButtonsModal bridge={bridge} {...params} />)
     },
     showToastSpinner,
+    openWebView: async (params): Promise<void> => {
+      maybeNavigateToCorrectTabScene()
+      navigation.navigate('guiPluginWebView', params)
+    },
+
     openExternalWebView: async (params): Promise<void> => {
       if (Platform.OS === 'ios') await SafariView.show({ url: params.url })
       else await CustomTabs.openURL(params.url)
@@ -151,8 +163,11 @@ export const executePlugin = async (params: {
             } else if (edgeTransaction != null) {
               resolve(edgeTransaction)
             } else {
-              reject(new Error('Missing EdgeTransaction'))
+              reject(new Error(SendErrorNoTransaction))
             }
+          },
+          onBack: () => {
+            reject(new Error(SendErrorBackPressed))
           }
         })
       })
@@ -164,8 +179,23 @@ export const executePlugin = async (params: {
     setClipboard: async (value: string) => {
       Clipboard.setString(value)
     },
-    showToast: async (message: string) => {
-      showToast(message)
+    showToast: async (message: string, autoHideMs?: number) => {
+      showToast(message, autoHideMs)
+    },
+    trackConversion: async (
+      event: TrackingEventName,
+      opts: {
+        destCurrencyCode: string
+        destExchangeAmount: string
+        destPluginId?: string
+        sourceCurrencyCode: string
+        sourceExchangeAmount: string
+        sourcePluginId?: string
+        pluginId: string
+        orderId?: string
+      }
+    ) => {
+      await trackConversionWithReferral(event, opts, accountReferral)
     },
     exitScene: async () => {
       navigation.pop()

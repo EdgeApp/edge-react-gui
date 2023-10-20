@@ -61,7 +61,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               "text": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
@@ -174,7 +174,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               "text": undefined,
             }
           }
-          accessible={true}
+          accessible={false}
           focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}

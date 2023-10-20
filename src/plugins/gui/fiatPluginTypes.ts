@@ -10,6 +10,8 @@ import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList } from '../../types/routerTypes'
 import { EdgeTokenId } from '../../types/types'
+import { TrackingEventName } from '../../util/tracking'
+import { FiatPluginOpenWebViewParams } from './scenes/FiatPluginWebView'
 import { RewardsCardDashboardParams } from './scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from './scenes/RewardsCardWelcomeScene'
 
@@ -23,6 +25,7 @@ export const asFiatPaymentType = asValue(
   'fasterpayments',
   'googlepay',
   'iach',
+  'ideal',
   'interac',
   'iobank',
   'payid',
@@ -83,6 +86,7 @@ export interface FiatPluginEnterAmountResponse {
   value1: string
   value2: string
 }
+
 export interface FiatPluginOpenExternalWebViewParams {
   url: string
 }
@@ -97,6 +101,7 @@ export interface FiatPluginUi {
   addressWarnings: (parsedUri: any, currencyCode: string) => Promise<boolean>
   buttonModal: <Buttons extends { [key: string]: ButtonInfo }>(params: Omit<ButtonModalProps<Buttons>, 'bridge'>) => Promise<keyof Buttons | undefined>
   showToastSpinner: <T>(message: string, promise: Promise<T>) => Promise<T>
+  openWebView: (params: FiatPluginOpenWebViewParams) => Promise<void>
   openExternalWebView: (params: FiatPluginOpenExternalWebViewParams) => Promise<void>
   walletPicker: (params: { headerTitle: string; allowedAssets?: EdgeTokenId[]; showCreateWallet?: boolean }) => Promise<FiatPluginWalletPickerResult>
   showError: (error: Error) => Promise<void>
@@ -110,7 +115,21 @@ export interface FiatPluginUi {
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>
   sepaTransferInfo: (params: FiatPluginSepaTransferParams) => Promise<void>
   setClipboard: (value: string) => Promise<void>
-  showToast: (message: string) => Promise<void>
+  showToast: (message: string, autoHideMs?: number) => Promise<void>
+  trackConversion: (
+    event: TrackingEventName,
+    opts: {
+      destCurrencyCode: string
+      destExchangeAmount: string
+      destPluginId?: string
+      sourceCurrencyCode: string
+      sourceExchangeAmount: string
+      sourcePluginId?: string
+      pluginId: string
+      orderId?: string
+    }
+  ) => Promise<void>
+
   exitScene: () => {}
 }
 

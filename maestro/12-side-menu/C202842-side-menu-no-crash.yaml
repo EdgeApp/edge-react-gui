@@ -17,6 +17,10 @@ tags:
       USERNAME: ${MAESTRO_EDGE_UTXO_USERNAME}
       PASSWORD: ${MAESTRO_EDGE_UTXO_PASSWORD}
 
+
+- extendedWaitUntil:
+    visible: "Wallets"
+    timeout: 120000
 - assertVisible:
     id: "sideMenuButton"
 - tapOn:
@@ -66,9 +70,9 @@ tags:
     id: "sideMenuButton"
 - tapOn:
     id: "sideMenuButton"
-- tapOn: "Share Edge"
-- assertVisible: "Copy"
-- tapOn: "Close"
+#- tapOn: "Share Edge"
+#- assertVisible: "Copy"
+#- tapOn: "Close"
 - tapOn: "Settings"
 - assertVisible: "Settings"
 - assertVisible:

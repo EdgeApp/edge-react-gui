@@ -1,6 +1,9 @@
 ### CHANGELOG
 
-<!-- Replace line with entries for the CHANGELOG if any --> none
+Does this branch warrant an entry to the CHANGELOG?
+
+- [ ] Yes
+- [ ] No
 
 ### Dependencies
 
