@@ -324,6 +324,7 @@
   "invalid_custom_fee": "La commissione personalizzata minima è",
   "missing_username": "<No username>",
   "settings_account_title_cap": "Conto",
+  "settings_asset_settings": "Asset Settings",
   "settings_button_change_password": "Cambia la password",
   "settings_developer_mode": "Modalità sviluppatore",
   "settings_verbose_logging": "Log Dettagliati",
