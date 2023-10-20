@@ -166,6 +166,7 @@
   "fragment_wallets_get_seed_wallet": "Obter seed",
   "fragment_wallets_pause_wallet": "Pause Wallet",
   "fragment_wallets_unpause_wallet": "Unpause Wallet",
+  "fragment_wallets_wallet_paused": "Wallet Paused",
   "fragment_wallets_view_private_view_key": "Private View Key",
   "fragment_wallets_view_private_view_key_warning_s": "A private view key permite que o destinatário veja o saldo na sua carteira %1$s. Não compartilhe esta chave a menos que seja necessário, como para fins fiscais, contábeis ou razões similares.",
   "fragment_wallets_view_xpub": "Ver endereço XPub",
