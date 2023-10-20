@@ -166,6 +166,7 @@
   "fragment_wallets_get_seed_wallet": "シードを取得",
   "fragment_wallets_pause_wallet": "Pause Wallet",
   "fragment_wallets_unpause_wallet": "Unpause Wallet",
+  "fragment_wallets_wallet_paused": "Wallet Paused",
   "fragment_wallets_view_private_view_key": "プライベートビューキー",
   "fragment_wallets_view_private_view_key_warning_s": "プライベートビューキーにより、受信者は %1$s ウォレットの残高を確認できます。 税務目的、会計、または同様の理由で必要な場合を除き、このキーを共有しないでください。",
   "fragment_wallets_view_xpub": "拡張公開鍵(Xpub) アドレスを表示",
