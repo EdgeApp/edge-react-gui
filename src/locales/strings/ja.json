@@ -324,6 +324,7 @@
   "invalid_custom_fee": "最小カスタム手数料",
   "missing_username": "<No username>",
   "settings_account_title_cap": "アカウント",
+  "settings_asset_settings": "Asset Settings",
   "settings_button_change_password": "パスワードを変更",
   "settings_developer_mode": "開発者モード",
   "settings_verbose_logging": "詳細なログ",
