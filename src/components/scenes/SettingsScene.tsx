@@ -29,7 +29,6 @@ import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { secondsToDisplay } from '../../util/displayTime'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { TextDropdown } from '../common/TextDropdown'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { Space } from '../layout/Space'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
@@ -276,7 +275,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { account, contactsPermissionOn, isLocked, navigation, theme, username, handleClearLogs, handleSendLogs } = this.props
+    const { contactsPermissionOn, isLocked, navigation, theme, username, handleClearLogs, handleSendLogs } = this.props
     const iconSize = theme.rem(1.25)
 
     const autoLogout = secondsToDisplay(this.props.autoLogoutTimeInSeconds)
@@ -338,22 +337,10 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             onPress={this.handleSpamToggle}
           />
           <SettingsTappableRow label={lstrings.settings_notifications} onPress={this.handleNotificationSettings} />
-          {CURRENCY_SETTINGS_KEYS.map(pluginId => {
-            if (account.currencyConfig[pluginId] == null) return null
-            const { currencyInfo } = account.currencyConfig[pluginId]
-            const { displayName } = currencyInfo
-            const onPress = () =>
-              navigation.navigate('currencySettings', {
-                currencyInfo
-              })
-
-            return (
-              <SettingsTappableRow key={pluginId} label={displayName} onPress={onPress}>
-                <CryptoIcon marginRem={[0.5, 0, 0.5, 0.5]} pluginId={pluginId} sizeRem={1.25} />
-              </SettingsTappableRow>
-            )
-          })}
-
+          <SettingsTappableRow
+            label={lstrings.settings_asset_settings}
+            onPress={() => navigation.push('assetSettings', { currencySettingsKeys: CURRENCY_SETTINGS_KEYS })}
+          />
           <SettingsTappableRow label={lstrings.title_promotion_settings} onPress={this.handlePromotionSettings} />
           {ENV.ALLOW_DEVELOPER_MODE && (
             <SettingsSwitchRow

@@ -3,6 +3,7 @@
 ## Unreleased
 
 - changed: Change FlipInput styling to make the edit functionality more obvious
+- changed: Move asset-specific settings into their own settings page
 
 ## 3.20.0
 
