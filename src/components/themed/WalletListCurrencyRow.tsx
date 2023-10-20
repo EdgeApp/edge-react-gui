@@ -1,12 +1,15 @@
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
+import { lstrings } from '../../locales/strings'
+import { useSelector } from '../../types/reactRedux'
 import { triggerHaptic } from '../../util/haptic'
 import { CurrencyRow } from '../data/row/CurrencyRow'
 import { CustomAsset, CustomAssetRow } from '../data/row/CustomAssetRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { EdgeText } from './EdgeText'
 
 interface Props {
   customAsset?: CustomAsset
@@ -34,6 +37,8 @@ const WalletListCurrencyRowComponent = (props: Props) => {
   } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const pausedWallets = useSelector(state => state.ui.settings.userPausedWalletsSet)
+  const isPaused = pausedWallets != null && pausedWallets.has(wallet.id)
 
   // Currency code and wallet name for display:
   const currencyCode = customAsset?.currencyCode ?? token?.currencyCode ?? wallet.currencyInfo.currencyCode
@@ -50,13 +55,30 @@ const WalletListCurrencyRowComponent = (props: Props) => {
 
   return (
     <TouchableOpacity accessible={false} style={styles.row} onLongPress={handleLongPress} onPress={handlePress}>
-      {customAsset != null ? <CustomAssetRow customAsset={customAsset} /> : <CurrencyRow showRate={showRate} token={token} tokenId={tokenId} wallet={wallet} />}
+      {customAsset != null ? (
+        <CustomAssetRow customAsset={customAsset} />
+      ) : (
+        <CurrencyRow showRate={showRate && !isPaused} token={token} tokenId={tokenId} wallet={wallet} />
+      )}
+      {isPaused ? (
+        <View style={styles.overlayContainer}>
+          <EdgeText style={styles.overlayLabel}>{lstrings.fragment_wallets_wallet_paused}</EdgeText>
+        </View>
+      ) : null}
     </TouchableOpacity>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  // Layout:
+  overlayLabel: {
+    color: theme.overlayDisabledTextColor
+  },
+  overlayContainer: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    backgroundColor: theme.overlayDisabledColor,
+    justifyContent: 'center'
+  },
   row: {
     alignItems: 'center',
     flexDirection: 'row',

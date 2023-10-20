@@ -221,6 +221,8 @@ exports[`FioAddressList should render with loading props 1`] = `
               "outlineTextInputLabelColorDisabled": "#87939E",
               "outlineTextInputLabelColorFocused": "#00f1a2",
               "outlineTextInputTextColor": "#FFFFFF",
+              "overlayDisabledColor": "rgba(0, 0, 0, .5)",
+              "overlayDisabledTextColor": "#FFFFFF",
               "paymentTypeLogoApplePay": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoApplePay.png",
               },
@@ -672,6 +674,8 @@ exports[`FioAddressList should render with loading props 1`] = `
               "outlineTextInputLabelColorDisabled": "#87939E",
               "outlineTextInputLabelColorFocused": "#00f1a2",
               "outlineTextInputTextColor": "#FFFFFF",
+              "overlayDisabledColor": "rgba(0, 0, 0, .5)",
+              "overlayDisabledTextColor": "#FFFFFF",
               "paymentTypeLogoApplePay": {
                 "testUri": "../../../src/assets/images/paymentTypes/paymentTypeLogoApplePay.png",
               },

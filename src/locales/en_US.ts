@@ -222,6 +222,7 @@ const strings = {
   fragment_wallets_get_seed_wallet: 'Get Seed',
   fragment_wallets_pause_wallet: 'Pause Wallet',
   fragment_wallets_unpause_wallet: 'Unpause Wallet',
+  fragment_wallets_wallet_paused: 'Wallet Paused',
   fragment_wallets_view_private_view_key: 'Private View Key',
   fragment_wallets_view_private_view_key_warning_s: `The private view key allows the receiver to see the balance in your %1$s wallet. Do not share this key unless necessary, such as for tax purposes, accounting, or similar reasons.`,
   fragment_wallets_view_xpub: 'View XPub Address',
