@@ -324,6 +324,7 @@
   "invalid_custom_fee": "Tarifa mínima es",
   "missing_username": "<No username>",
   "settings_account_title_cap": "Cuenta",
+  "settings_asset_settings": "Asset Settings",
   "settings_button_change_password": "Cambiar contraseña",
   "settings_developer_mode": "Modo desarrollador",
   "settings_verbose_logging": "Registro Detallado",
