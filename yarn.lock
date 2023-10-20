@@ -7774,10 +7774,10 @@ edge-exchange-plugins@^0.21.11:
     utf8 "^3.0.0"
     xrpl "^2.10.0"
 
-edge-info-server@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/edge-info-server/-/edge-info-server-1.0.1.tgz#3cdb4c8e017fd3a674a145264291cb81d78ec404"
-  integrity sha512-/CrEQ7eSCOkPuFhrOGQm304WvyRQsrvgKIQSCMEjoiEO9yL83S5fTCrcbwDj5LY2t+fhRp5bKwXNlo2xOqzVJQ==
+edge-info-server@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/edge-info-server/-/edge-info-server-1.0.2.tgz#7454683a8c4e56cbcbb0e97aa7d6651c3f73f833"
+  integrity sha512-jtXuLLXsIf8Fmgq1maZ64Pt2lzjfSkgA/CTDRQ8i2tzOjci7JwYxsOKCf2gW6OOdoSovvFdJwWHNJvEldCDZbw==
   dependencies:
     cleaners "^0.3.16"
 
