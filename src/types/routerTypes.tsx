@@ -63,6 +63,7 @@ export interface RouteParamList {
   rewardsCardWelcome: RewardsCardWelcomeParams
 
   // Logged-in scenes:
+  assetSettings: {}
   changeMiningFee: {
     guiMakeSpendInfo: GuiMakeSpendInfo
     maxSpendSet: boolean
