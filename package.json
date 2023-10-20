@@ -189,7 +189,7 @@
     "react-native-svg": "^13.9.0",
     "react-native-vector-icons": "^7.1.0",
     "react-native-webview": "^13.2.2",
-    "react-native-zcash": "^0.6.3",
+    "react-native-zcash": "^0.6.4",
     "react-redux": "^8.1.1",
     "redux": "^4.2.1",
     "redux-flipper": "^2.0.1",
