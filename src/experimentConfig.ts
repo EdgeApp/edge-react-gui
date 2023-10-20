@@ -92,17 +92,19 @@ const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
  * This config value is available through the module's getter functions.
  */
 const experimentConfigPromise: Promise<ExperimentConfig> = (async (): Promise<ExperimentConfig> => {
+  let currentConfig: ExperimentConfig
   try {
     const experimentConfigJson = await experimentConfigDisklet.getText(LOCAL_EXPERIMENT_CONFIG)
-    return asExperimentConfig(JSON.parse(experimentConfigJson))
+    currentConfig = asExperimentConfig(JSON.parse(experimentConfigJson))
   } catch (err) {
-    console.debug('Experiment config not found/out of date. Regenerating...')
+    console.log('Experiment config not found/out of date. Regenerating...')
     // Not found or incompatible. Re-generate with random values according to
     // the defined distribution.
-    const generatedExperimentConfig = asExperimentConfig({})
-    await experimentConfigDisklet.setText(LOCAL_EXPERIMENT_CONFIG, JSON.stringify(generatedExperimentConfig))
-    return generatedExperimentConfig
+    currentConfig = asExperimentConfig({})
   }
+
+  await experimentConfigDisklet.setText(LOCAL_EXPERIMENT_CONFIG, JSON.stringify(currentConfig))
+  return currentConfig
 })()
 
 /**
@@ -117,7 +119,7 @@ export const getExperimentConfig = async (): Promise<ExperimentConfig> => {
   if (isMaestro()) return DEFAULT_EXPERIMENT_CONFIG // Test with forced defaults
   else if (ENV.EXPERIMENT_CONFIG_OVERRIDE != null && Object.keys(ENV.EXPERIMENT_CONFIG_OVERRIDE).length > 0) {
     try {
-      console.debug('exp cfg override')
+      console.log('ENV.EXPERIMENT_CONFIG_OVERRIDE set')
       return asExperimentConfig(ENV.EXPERIMENT_CONFIG_OVERRIDE)
     } catch (err) {
       console.error('Error applying ENV.EXPERIMENT_CONFIG_OVERRIDE: ', String(err))
