@@ -3,6 +3,7 @@
 ## Unreleased
 
 - added: "Paused Wallet" visual indicator on wallet list
+- added: Paybis sell to debit card
 - changed: Change FlipInput styling to make the edit functionality more obvious
 - changed: Move asset-specific settings into their own settings page
 

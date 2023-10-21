@@ -11,6 +11,17 @@
     "paymentTypeLogoKey": "bank"
   },
   {
+    "id": "debit",
+    "pluginId": "debit",
+    "paymentType": "credit",
+    "paymentTypes": ["credit"],
+    "title": "Bank Transfer via Debit Card",
+    "description": "Fee: 2.5%\nSettlement: 5 min - 24 hours",
+    "forCountries": ["US"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
     "id": "fasterpayments",
     "pluginId": "fasterpayments",
     "paymentType": "fasterpayments",
