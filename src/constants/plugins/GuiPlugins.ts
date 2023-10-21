@@ -71,6 +71,14 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     nativePlugin: amountQuoteFiatPlugin,
     displayName: 'Credit Card'
   },
+  debit: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    displayName: 'Debit Card'
+  },
   directtobank: {
     pluginId: 'amountquote',
     storeId: '',
