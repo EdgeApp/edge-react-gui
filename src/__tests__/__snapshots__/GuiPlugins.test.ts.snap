@@ -170,20 +170,6 @@ exports[`Production plugin data Buy plugins match snapshot on iOS + US 1`] = `
     "cryptoCodes": [],
     "deepPath": "",
     "deepQuery": {},
-    "description": "Fee: 4-5%
-Settlement: 1 - 4 days",
-    "paymentType": "iach",
-    "paymentTypeLogoKey": "bank",
-    "paymentTypes": [
-      "iach",
-    ],
-    "pluginId": "iach",
-    "title": "ACH Bank Transfer",
-  },
-  {
-    "cryptoCodes": [],
-    "deepPath": "",
-    "deepQuery": {},
     "description": "Fee: 5-7%
 Settlement: 10 - 30 minutes",
     "paymentType": "applepay",
@@ -243,19 +229,6 @@ Settlement: 5 min - 24 hours",
     ],
     "pluginId": "debit",
     "title": "Bank Transfer via Debit Card",
-  },
-  {
-    "cryptoCodes": [],
-    "deepPath": "",
-    "deepQuery": {},
-    "description": "Fee: 4-5% / Settlement: 1 - 4 days",
-    "partnerIconPath": "moonpay_symbol_prp.png",
-    "paymentTypeLogoKey": "bank",
-    "paymentTypes": [
-      "credit",
-    ],
-    "pluginId": "moonpay",
-    "title": "ACH Bank Transfer",
   },
   {
     "cryptoCodes": [

@@ -2,10 +2,13 @@
 
 ## Unreleased
 
+- added: Paybis buy/sell in Brazil, Columbia, and Mexico
 - added: "Paused Wallet" visual indicator on wallet list
 - added: Paybis sell to debit card
 - changed: Change FlipInput styling to make the edit functionality more obvious
 - changed: Move asset-specific settings into their own settings page
+- removed: Moonpay sell via ACH
+- removed: Banxa buy via Pix
 
 ## 3.20.0
 
