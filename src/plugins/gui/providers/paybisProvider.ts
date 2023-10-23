@@ -574,16 +574,11 @@ export const paybisProvider: FiatProviderFactory = {
                       await showUi.exitScene()
                       await openWebView()
                     } catch (e: any) {
-                      if (e.message === SendErrorBackPressed) {
-                        await showUi.exitScene()
-
-                        // Reopen the webivew on the Paybis payment screen
-                        await openWebView()
-                      } else if (e.message === SendErrorNoTransaction) {
+                      await showUi.exitScene()
+                      // Reopen the webivew on the Paybis payment screen
+                      await openWebView()
+                      if (e.message === SendErrorNoTransaction) {
                         await showUi.showToast(lstrings.fiat_plugin_sell_failed_to_send_try_again, NOT_SUCCESS_TOAST_HIDE_MS)
-                        await showUi.exitScene()
-                        // Reopen the webivew on the Paybis payment screen
-                        await openWebView()
                       } else {
                         await showUi.showError(e)
                       }
