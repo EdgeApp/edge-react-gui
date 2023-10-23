@@ -1,11 +1,12 @@
 import messaging from '@react-native-firebase/messaging'
 import { asMaybe } from 'cleaners'
-import { EdgeCurrencyInfo } from 'edge-core-js'
+import { EdgeContext, EdgeCurrencyInfo } from 'edge-core-js'
 import { getUniqueId } from 'react-native-device-info'
 import { base64 } from 'rfc4648'
 import { sprintf } from 'sprintf-js'
 
-import { asDevicePayload, DeviceUpdatePayload, NewPushEvent } from '../controllers/action-queue/types/pushApiTypes'
+import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
+import { asDevicePayload, DevicePayload, DeviceUpdatePayload, NewPushEvent } from '../controllers/action-queue/types/pushApiTypes'
 import { asPriceChangeTrigger } from '../controllers/action-queue/types/pushCleaners'
 import { PriceChangeTrigger } from '../controllers/action-queue/types/pushTypes'
 import { ENV } from '../env'
@@ -33,7 +34,7 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
   return async (dispatch, getState) => {
     const state = getState()
     const { defaultIsoFiat } = state.ui.settings
-    let v2Settings: ReturnType<typeof asDevicePayload> = {
+    let serverSettings: DevicePayload = {
       loginIds: [],
       events: [],
       ignoreMarketing: false,
@@ -59,32 +60,43 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
       }
       const response = await fetchPush('v2/device/', opts)
 
-      v2Settings = asDevicePayload(await response.text())
+      serverSettings = asDevicePayload(await response.text())
 
       const currencyWallets = state.core.account.currencyWallets
       const activeCurrencyInfos = getActiveWalletCurrencyInfos(currencyWallets)
 
       const createEvents: NewPushEvent[] = []
+      const removeEvents: string[] = []
 
-      if (v2Settings.events.length !== 0) {
+      if (serverSettings.events.length !== 0) {
         // v2 settings exist already, see if we need to add new ones
-        const missingInfos: { [pluginId: string]: EdgeCurrencyInfo } = {}
         for (const currencyInfo of activeCurrencyInfos) {
           if (
-            !v2Settings.events.some(event => {
-              if (event.trigger.type === 'price-change' && event.trigger.pluginId === currencyInfo.pluginId) {
-                // An event for this plugin exists already we need to check if the user is changing the default fiat currency
-                if (changeFiat && !event.trigger.currencyPair.includes(defaultIsoFiat)) return false
-                return true
-              } else {
-                return false
-              }
-            })
+            // Must not be deprecated
+            !SPECIAL_CURRENCY_INFO[currencyInfo.pluginId].keysOnlyMode &&
+            // Must not already be present with current fiat setting
+            !serverSettings.events.some(
+              event =>
+                event.trigger.type === 'price-change' &&
+                event.trigger.pluginId === currencyInfo.pluginId &&
+                (!changeFiat || event.trigger.currencyPair.includes(defaultIsoFiat))
+            )
           ) {
-            missingInfos[currencyInfo.pluginId] = currencyInfo
+            // Add new push event
+            createEvents.push(newPriceChangeEvent(currencyInfo, defaultIsoFiat, true, true))
           }
         }
-        Object.keys(missingInfos).forEach(pluginId => createEvents.push(newPriceChangeEvent(missingInfos[pluginId], defaultIsoFiat, true, true)))
+
+        // See if we need to remove any deprecated currencies (keys-only)
+        for (const event of serverSettings.events) {
+          const { trigger } = event
+          if (trigger.type === 'price-change') {
+            const currencyInfo = activeCurrencyInfos.find(currencyInfo => currencyInfo.pluginId === trigger.pluginId)
+            if (currencyInfo != null && SPECIAL_CURRENCY_INFO[currencyInfo.pluginId].keysOnlyMode) {
+              removeEvents.push(event.eventId)
+            }
+          }
+        }
       } else {
         // No v2 settings exist so let's check v1
         const userId = state.core.account.rootLoginId
@@ -125,8 +137,8 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
         }
       }
 
-      if (createEvents.length > 0) {
-        v2Settings = await dispatch(setDeviceSettings({ createEvents }))
+      if (createEvents.length > 0 || removeEvents.length > 0) {
+        serverSettings = await updateServerSettings(state.core.context, { createEvents, removeEvents })
       }
     } catch (e: any) {
       // If this fails we don't need to bother the user just log and move on.
@@ -135,12 +147,22 @@ export function registerNotificationsV2(changeFiat: boolean = false): ThunkActio
 
     dispatch({
       type: 'NOTIFICATION_SETTINGS_UPDATE',
-      data: serverSettingsToNotificationSettings(v2Settings)
+      data: serverSettingsToNotificationSettings(serverSettings)
     })
   }
 }
 
-export const serverSettingsToNotificationSettings = (serverSettings: ReturnType<typeof asDevicePayload>): NotificationSettings => {
+export function updateNotificationSettings(data: DeviceUpdatePayload): ThunkAction<Promise<void>> {
+  return async (dispatch, getState) => {
+    const state = getState()
+    dispatch({
+      type: 'NOTIFICATION_SETTINGS_UPDATE',
+      data: serverSettingsToNotificationSettings(await updateServerSettings(state.core.context, data))
+    })
+  }
+}
+
+const serverSettingsToNotificationSettings = (serverSettings: DevicePayload): NotificationSettings => {
   const data: NotificationSettings = {
     ignoreMarketing: serverSettings.ignoreMarketing,
     ignorePriceChanges: serverSettings.ignorePriceChanges,
@@ -163,32 +185,30 @@ export const serverSettingsToNotificationSettings = (serverSettings: ReturnType<
   return data
 }
 
-export function setDeviceSettings(data: DeviceUpdatePayload): ThunkAction<Promise<ReturnType<typeof asDevicePayload>>> {
-  return async (dispatch, getState) => {
-    const state = getState()
+async function updateServerSettings(context: EdgeContext, data: DeviceUpdatePayload): Promise<DevicePayload> {
+  const deviceId = context.clientId
+  const loginIds = context.localUsers.map(row => base64.stringify(base58.parse(row.loginId)))
+  const deviceToken = await messaging()
+    .getToken()
+    .catch(() => '')
 
-    const deviceToken = await messaging()
-      .getToken()
-      .catch(() => '')
-
-    const body = {
-      apiKey: ENV.AIRBITZ_API_KEY,
-      deviceId: state.core.context.clientId,
-      deviceToken,
-      data: { ...data, loginIds: state.core.context.localUsers.map(row => base64.stringify(base58.parse(row.loginId))) }
-    }
-    const opts = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    }
-
-    const response = await fetchPush('v2/device/update/', opts)
-
-    return asDevicePayload(await response.text())
+  const body = {
+    apiKey: ENV.AIRBITZ_API_KEY,
+    deviceId,
+    deviceToken,
+    data: { ...data, loginIds }
   }
+  const opts = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  }
+
+  const response = await fetchPush('v2/device/update/', opts)
+
+  return asDevicePayload(await response.text())
 }
 
 export const newPriceChangeEvent = (
