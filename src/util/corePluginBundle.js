@@ -2,7 +2,6 @@
 
 import 'core-js'
 import 'edge-currency-monero'
-import 'edge-exchange-plugins'
 
 import { setMemletConfig } from 'edge-currency-plugins'
 

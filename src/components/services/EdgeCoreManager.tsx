@@ -3,6 +3,7 @@ import detectBundler from 'detect-bundler'
 import { EdgeContext, EdgeContextOptions, EdgeCrashReporter, EdgeFakeWorld, EdgeNativeIo, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
 import { debugUri as accountbasedDebugUri, makePluginIo as makeAccountbasedIo, pluginUri as accountbasedUri } from 'edge-currency-accountbased'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
+import { debugUri as exchangeDebugUri, pluginUri as exchangeUri } from 'edge-exchange-plugins'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
@@ -113,6 +114,7 @@ export function EdgeCoreManager(props: Props) {
 
   const pluginUris = [
     ENV.DEBUG_ACCOUNTBASED ? accountbasedDebugUri : accountbasedUri,
+    ENV.DEBUG_EXCHANGES ? exchangeDebugUri : exchangeUri,
     ENV.DEBUG_PLUGINS ? 'http://localhost:8101/plugin-bundle.js' : 'edge-core/plugin-bundle.js'
   ]
 
