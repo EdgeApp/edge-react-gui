@@ -8,7 +8,7 @@ import { locale } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { EdgeTokenId, StringMap } from '../../../types/types'
 import { makeUuid } from '../../../util/utils'
-import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
+import { SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
 import {
   FiatProvider,
@@ -392,7 +392,7 @@ export const paybisProvider: FiatProviderFactory = {
           paymentMethod: direction === 'buy' ? paymentMethod : undefined,
           payoutMethod: direction === 'sell' ? paymentMethod : undefined
         }
-        const response = await paybisFetch({ method: 'POST', url, path: 'v2/quote', apiKey, bodyParams })
+        const response = await paybisFetch({ method: 'POST', url, path: 'v2/public/quote', apiKey, bodyParams })
         const { id: quoteId, paymentMethods, paymentMethodErrors, payoutMethods, payoutMethodErrors } = asQuote(response)
 
         const pmErrors = paymentMethodErrors ?? payoutMethodErrors
@@ -485,7 +485,7 @@ export const paybisProvider: FiatProviderFactory = {
               }
             }
 
-            const response = await paybisFetch({ method: 'POST', url, path: 'v2/request', apiKey, bodyParams })
+            const response = await paybisFetch({ method: 'POST', url, path: 'v2/public/request', apiKey, bodyParams })
             const { requestId } = response
 
             const widgetUrl = isWalletTestnet(coreWallet) ? WIDGET_URL_SANDBOX : WIDGET_URL
@@ -574,16 +574,11 @@ export const paybisProvider: FiatProviderFactory = {
                       await showUi.exitScene()
                       await openWebView()
                     } catch (e: any) {
-                      if (e.message === SendErrorBackPressed) {
-                        await showUi.exitScene()
-
-                        // Reopen the webivew on the Paybis payment screen
-                        await openWebView()
-                      } else if (e.message === SendErrorNoTransaction) {
+                      await showUi.exitScene()
+                      // Reopen the webivew on the Paybis payment screen
+                      await openWebView()
+                      if (e.message === SendErrorNoTransaction) {
                         await showUi.showToast(lstrings.fiat_plugin_sell_failed_to_send_try_again, NOT_SUCCESS_TOAST_HIDE_MS)
-                        await showUi.exitScene()
-                        // Reopen the webivew on the Paybis payment screen
-                        await openWebView()
                       } else {
                         await showUi.showError(e)
                       }
@@ -611,21 +606,19 @@ const paybisFetch = async (params: {
   path: string
   apiKey: string
   bodyParams?: object
-  queryParams?: object
+  queryParams?: JsonObject
 }): Promise<JsonObject> => {
-  const { method, url, path, apiKey, bodyParams, queryParams } = params
+  const { method, url, path, apiKey, bodyParams, queryParams = {} } = params
   const urlObj = new URL(url + '/' + path, true)
   const body = bodyParams != null ? JSON.stringify(bodyParams) : undefined
 
-  if (method === 'GET' && typeof queryParams === 'object') {
-    urlObj.set('query', queryParams)
-  }
+  queryParams.apikey = apiKey
+  urlObj.set('query', queryParams)
 
   const options: EdgeFetchOptions = {
     method,
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`
+      'Content-Type': 'application/json'
     }
   }
   if (body != null) {
@@ -644,7 +637,7 @@ const paybisFetch = async (params: {
 const initializeBuyPairs = async ({ url, apiKey }: InitializePairs): Promise<void> => {
   if (paybisPairs.buy == null) {
     const promises = [
-      paybisFetch({ method: 'GET', url, path: `v1/currency/pairs`, apiKey })
+      paybisFetch({ method: 'GET', url, path: `v2/public/currency/pairs/buy-crypto`, apiKey })
         .then(response => {
           paybisPairs.buy = asPaybisBuyPairs(response)
         })
@@ -700,7 +693,7 @@ const initializeBuyPairs = async ({ url, apiKey }: InitializePairs): Promise<voi
 const initializeSellPairs = async ({ url, apiKey }: InitializePairs): Promise<void> => {
   if (paybisPairs.sell == null) {
     const promises = [
-      paybisFetch({ method: 'GET', url, path: `v2/currency/pairs/sell-crypto`, apiKey })
+      paybisFetch({ method: 'GET', url, path: `v2/public/currency/pairs/sell-crypto`, apiKey })
         .then(response => {
           paybisPairs.sell = asPaybisSellPairs(response)
         })
