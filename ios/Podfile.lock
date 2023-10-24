@@ -22,6 +22,8 @@ PODS:
     - React-Core
   - edge-currency-accountbased (2.8.1):
     - React-Core
+  - edge-exchange-plugins (1.0.0):
+    - React-Core
   - edge-login-ui-rn (2.14.1):
     - React
   - FBLazyVector (0.71.11)
@@ -858,6 +860,7 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - edge-core-js (from `../node_modules/edge-core-js`)
   - edge-currency-accountbased (from `../node_modules/edge-currency-accountbased`)
+  - edge-exchange-plugins (from `../node_modules/edge-exchange-plugins`)
   - edge-login-ui-rn (from `../node_modules/edge-login-ui-rn`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
@@ -1041,6 +1044,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/edge-core-js"
   edge-currency-accountbased:
     :path: "../node_modules/edge-currency-accountbased"
+  edge-exchange-plugins:
+    :path: "../node_modules/edge-exchange-plugins"
   edge-login-ui-rn:
     :path: "../node_modules/edge-login-ui-rn"
   FBLazyVector:
@@ -1220,6 +1225,7 @@ SPEC CHECKSUMS:
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   edge-core-js: 48b390da31ef71c2ac09330ade6a187dc92b3edc
   edge-currency-accountbased: 72ecd349cc34652c0b401182aae89432a9b56f55
+  edge-exchange-plugins: c1021e5658c0633da4272082be2a6b09657d5f61
   edge-login-ui-rn: 7ecda4499b7cfba19b4f87775f7980d88a1b2d7a
   FBLazyVector: c511d4cd0210f416cb5c289bd5ae6b36d909b048
   FBReactNativeSpec: a911fb22def57aef1d74215e8b6b8761d25c1c54
