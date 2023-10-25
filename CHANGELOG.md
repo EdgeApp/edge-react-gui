@@ -9,6 +9,7 @@
 - changed: Change FlipInput styling to make the edit functionality more obvious
 - changed: Enable max spend for Filecoin
 - changed: Move asset-specific settings into their own settings page
+- changed: Experiment config probability distribution support percentage based values
 - removed: Moonpay sell via ACH
 - removed: Banxa buy via Pix
 

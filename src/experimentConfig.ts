@@ -26,14 +26,13 @@ const DEFAULT_EXPERIMENT_CONFIG: ExperimentConfig = {
 
 const experimentConfigDisklet = makeReactNativeDisklet()
 
-// The probability (0-1) of a feature config being set to the first value(s):
-// the configuration that differs from the default feature configuration.
+// The probability of an experiment config feature being set for a given key
 const experimentDistribution = {
-  swipeLastUsp: [0.5],
-  createAccountType: [0.5],
-  legacyLanding: [0],
-  createAccountText: [0.33, 0.33],
-  signupCaptcha: [0.5]
+  swipeLastUsp: [50, 50],
+  createAccountType: [50, 50],
+  legacyLanding: [100],
+  createAccountText: [33.33, 33.33, 33.33],
+  signupCaptcha: [50, 50]
 }
 
 /**
@@ -41,19 +40,31 @@ const experimentDistribution = {
  * determine which variant gets used.
  */
 const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution, configVals: T[]): T => {
-  const variantProbability = experimentDistribution[key]
+  const variantNominations = experimentDistribution[key]
 
-  if (variantProbability.length !== configVals.length - 1) {
+  if (variantNominations.length !== configVals.length) {
     console.error(`Misconfigured experimentDistribution for: '${key}'`)
   } else {
+    // Distribute the probability of each config value
+    const variantDenomination = variantNominations.reduce((sum, probability) => sum + probability, 0)
+    if (variantDenomination === 0) {
+      throw new Error(`Config values for '${key}' do not add up to 100%`)
+    } else if (variantDenomination > 101 || variantDenomination < 99) {
+      console.warn(`Config values for '${key}' do not add up to 100% +/- 1%`)
+    }
+    const distributedProbabilities = variantNominations.map(variantNomination => variantNomination / variantDenomination)
+
     // Generate a random number between 0 and 1
     const random = Math.random()
 
     // Check which index the random number falls into and return the configVal:
     let lowerBound = 0
-    for (let i = 0; i < variantProbability.length; i++) {
-      if (random >= lowerBound && random < variantProbability[i]) return configVals[i]
-      lowerBound += variantProbability[i]
+    let upperBound = distributedProbabilities[0]
+    for (let i = 0; i < distributedProbabilities.length; i++) {
+      if (random >= lowerBound && random < upperBound) return configVals[i]
+
+      lowerBound = upperBound
+      upperBound += distributedProbabilities[i]
     }
   }
 
