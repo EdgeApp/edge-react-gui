@@ -284,6 +284,7 @@ export interface RouteParamList {
   transactionDetails: {
     edgeTransaction: EdgeTransaction
     walletId: string
+    tokenId?: string
   }
   transactionList: TransactionListParams
   transactionsExport: {
