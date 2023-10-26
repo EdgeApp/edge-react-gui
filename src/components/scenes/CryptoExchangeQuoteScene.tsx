@@ -4,14 +4,13 @@ import React, { useEffect, useState } from 'react'
 import { ScrollView, SectionList, TouchableOpacity, ViewStyle } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { exchangeTimerExpired, getSwapInfo, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
+import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
-import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
 import { PoweredByCard } from '../cards/PoweredByCard'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
@@ -52,17 +51,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
-  const fromDenomination = useSelector(state => state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name)
-  const fromWalletCurrencyName = useSelector(state =>
-    state.cryptoExchange.fromWalletId != null ? state.core.account.currencyWallets[state.cryptoExchange.fromWalletId].currencyInfo.displayName : ''
-  )
   const pending = useSelector(state => state.cryptoExchange.shiftPendingTransaction)
-  const toDenomination = useSelector(state => state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name)
-  const toWalletCurrencyName = useSelector(state =>
-    state.cryptoExchange.toWalletId != null ? state.core.account.currencyWallets[state.cryptoExchange.toWalletId].currencyInfo.displayName : ''
-  )
-  // TODO: remove in favor of the correct text fns
-  const swapInfo = useSelector(state => getSwapInfo(state, selectedQuote))
 
   const [selectedQuote, setSelectedQuote] = useState(initialSelectedQuote)
   const [calledApprove, setCalledApprove] = useState(false)
@@ -95,8 +84,6 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
     ].filter(section => section.data.length > 0)
   }, [quoteFor, quotes, selectedQuote])
 
-  const { fee, fromDisplayAmount, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = swapInfo
-  const { fiatCurrencyCode } = request.fromWallet
   const { pluginId } = selectedQuote
 
   const swapConfig = account.swapConfig[pluginId]
@@ -203,29 +190,9 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
           <ScrollView contentContainerStyle={[{ paddingBottom: notificationHeight }, styles.container]}>
             <LineTextDivider title={lstrings.fragment_send_from_label} lowerCased />
             {showFeeWarning && <Alert marginRem={[0, 1, 1.5, 1]} title={lstrings.transaction_details_fee_warning} type="warning" />}
-            <ExchangeQuote
-              cryptoAmount={fromDisplayAmount}
-              currency={fromWalletCurrencyName}
-              currencyCode={fromDenomination}
-              fiatCurrencyAmount={fromFiat}
-              fiatCurrencyCode={fiatCurrencyCode.replace('iso:', '')}
-              isTop
-              miningFee={fee}
-              total={fromTotalFiat}
-              walletId={request.fromWallet.id}
-              walletName={getWalletName(request.fromWallet)}
-              showFeeWarning={showFeeWarning}
-            />
+            <ExchangeQuote quote={selectedQuote} fromTo="from" showFeeWarning={showFeeWarning} />
             <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
-            <ExchangeQuote
-              cryptoAmount={toDisplayAmount}
-              currency={toWalletCurrencyName}
-              currencyCode={toDenomination}
-              fiatCurrencyAmount={toFiat}
-              fiatCurrencyCode={request.toWallet.fiatCurrencyCode.replace('iso:', '')}
-              walletId={request.toWallet.id}
-              walletName={getWalletName(request.toWallet)}
-            />
+            <ExchangeQuote quote={selectedQuote} fromTo="to" />
             <PoweredByCard iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)} poweredByText={exchangeName} onPress={handlePoweredByTap} />
             {selectedQuote.isEstimate && (
               <Alert

@@ -1,12 +1,23 @@
 import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
 import { asDate, asObject, asOptional, asString, asUnknown } from 'cleaners'
-import { addEdgeCorePlugins, EdgeAccount, EdgeContext, EdgeSwapInfo, EdgeSwapQuote, lockEdgeCorePlugins, makeFakeEdgeWorld } from 'edge-core-js'
+import {
+  addEdgeCorePlugins,
+  EdgeAccount,
+  EdgeContext,
+  EdgeCurrencyWallet,
+  EdgeSwapInfo,
+  EdgeSwapQuote,
+  lockEdgeCorePlugins,
+  makeFakeEdgeWorld
+} from 'edge-core-js'
+import process from 'process'
 import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
 import { CryptoExchangeQuoteScene } from '../../components/scenes/CryptoExchangeQuoteScene'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
 import { makeFakePlugin } from '../../util/fake/fakeCurrencyPlugin'
+import { ethCurrencyInfo } from '../../util/fake/fakeEthInfo'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
 import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
@@ -22,6 +33,9 @@ const dummySwapInfo: EdgeSwapInfo = {
 
 let context: EdgeContext | undefined
 let account: EdgeAccount | undefined
+
+let btcWallet: EdgeCurrencyWallet | undefined
+let ethWallet: EdgeCurrencyWallet | undefined
 
 // For use later when we need tests that use EVM currencies
 // let ethWallet: EdgeCurrencyWallet | undefined
@@ -47,36 +61,34 @@ beforeAll(async () => {
   const fakeUsers = [dump.data]
 
   const allPlugins = {
-    bitcoin: makeFakePlugin(btcCurrencyInfo)
+    bitcoin: makeFakePlugin(btcCurrencyInfo),
+    ethereum: makeFakePlugin(ethCurrencyInfo)
   }
 
   addEdgeCorePlugins(allPlugins)
   lockEdgeCorePlugins()
 
   const world = await makeFakeEdgeWorld(fakeUsers, {})
-  context = await world.makeEdgeContext({ apiKey: '', appId: '', plugins: { bitcoin: true } })
+  context = await world.makeEdgeContext({ apiKey: '', appId: '', plugins: { bitcoin: true, ethereum: true } })
   account = await context.loginWithKey('bob', loginKey)
+  const btcInfo = await account.getFirstWalletInfo('wallet:bitcoin')
+  const ethInfo = await account.getFirstWalletInfo('wallet:ethereum')
+  if (btcInfo == null || ethInfo == null) {
+    console.error('Unable to get wallet infos')
+    process.exit(-1)
+  }
+  btcWallet = await account.waitForCurrencyWallet(btcInfo.id)
+  ethWallet = await account.waitForCurrencyWallet(ethInfo.id)
 })
 
 describe('CryptoExchangeQuoteScreenComponent', () => {
   it('should render with loading props', () => {
+    if (btcWallet == null || ethWallet == null) return
     const rootState: FakeState = { ...fakeRootState, core: { account } }
 
     const fakeRequest: any = {
-      fromWallet: {
-        fiatCurrencyCode: 'USD',
-        name: '',
-        currencyInfo: {
-          pluginId: 'bitcoin'
-        }
-      },
-      toWallet: {
-        fiatCurrencyCode: 'USD',
-        name: '',
-        currencyInfo: {
-          pluginId: 'bitcoin'
-        }
-      }
+      fromWallet: btcWallet,
+      toWallet: ethWallet
     }
 
     const quote: EdgeSwapQuote = {

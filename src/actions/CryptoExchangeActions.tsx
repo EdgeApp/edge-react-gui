@@ -17,7 +17,6 @@ import { sprintf } from 'sprintf-js'
 import { trackConversion } from '../actions/TrackingActions'
 import { InsufficientFeesModal } from '../components/modals/InsufficientFeesModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { formatFiatString } from '../hooks/useFiatText'
 import { formatNumber } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../selectors/DenominationSelectors'
@@ -159,7 +158,7 @@ async function fetchSwapQuotes(state: RootState, request: EdgeSwapRequest): Prom
 }
 
 // TODO: Use new hooks and utility methods for all conversions here
-export const getSwapInfo = (state: RootState, quote: EdgeSwapQuote): GuiSwapInfo => {
+export const getSwapInfo = async (state: RootState, quote: EdgeSwapQuote): Promise<GuiSwapInfo> => {
   // Currency conversion tools:
   // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
   const { request } = quote
@@ -183,20 +182,11 @@ export const getSwapInfo = (state: RootState, quote: EdgeSwapQuote): GuiSwapInfo
   const feeDisplayAmount = toFixed(feeTempAmount, 0, 6)
 
   // Format fiat fee:
-  const feeCryptoAmount = div(feeNativeAmount, feeDenomination.multiplier, DECIMAL_PRECISION)
-  const fiatAmount = convertCurrency(
-    state,
-    fromWallet.currencyInfo.currencyCode,
-    fromWallet.fiatCurrencyCode,
-    div(feeCryptoAmount, fromExchangeDenomination.multiplier, DECIMAL_PRECISION)
-  )
-  const feeFiatAmount = formatFiatString({
-    fiatAmount
-  })
+  const feeDenominatedAmount = await fromWallet.nativeToDenomination(feeNativeAmount, request.fromWallet.currencyInfo.currencyCode)
+  const feeFiatAmountRaw = parseFloat(convertCurrency(state, request.fromWallet.currencyInfo.currencyCode, fromWallet.fiatCurrencyCode, feeDenominatedAmount))
+  const feeFiatAmount = formatNumber(feeFiatAmountRaw || 0, { toFixed: 2 })
   const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${fromWallet.fiatCurrencyCode.replace('iso:', '')})`
-  const fromTotalFiat = formatNumber(add(fromBalanceInFiatRaw.toFixed(DECIMAL_PRECISION), parseFloat(feeFiatAmount).toFixed(DECIMAL_PRECISION)), {
-    toFixed: 2
-  })
+  const fromTotalFiat = formatNumber(add(fromBalanceInFiatRaw.toFixed(DECIMAL_PRECISION), feeFiatAmountRaw.toFixed(DECIMAL_PRECISION)), { toFixed: 2 })
 
   // Format to amount:
   const toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
@@ -306,7 +296,7 @@ export function shiftCryptoCurrency(navigation: NavigationBase, quote: EdgeSwapQ
     const { account } = state.core
     dispatch({ type: 'START_SHIFT_TRANSACTION' })
 
-    const { fromDisplayAmount, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = getSwapInfo(state, quote)
+    const { fromDisplayAmount, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = await getSwapInfo(state, quote)
     const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate, request } = quote
     // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
     const { toWallet, fromCurrencyCode = '', toCurrencyCode = '' } = request
