@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.21.0
+
 - added: Paybis buy/sell in Brazil, Columbia, and Mexico
 - added: EdgeTxAction information to Transaction List
 - added: "Paused Wallet" visual indicator on wallet list
@@ -52,7 +54,7 @@
 - fixed: Turning off 'Dark Mode' causes crash
 - removed: 'Add/Edit Tokens" option for token rows
 
-## 3.18.0 (2023-09+22)
+## 3.18.0 (2023-09-22)
 
 - added: Velodrome v2 staking poolsdded: Display memos in transaction details scene
 - added: Buy PEPE from Simplex
