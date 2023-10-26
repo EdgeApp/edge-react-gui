@@ -61,16 +61,17 @@ export function getQuoteForTransaction(navigation: NavigationBase, info: SetNati
     }
 
     navigation.navigate('exchangeQuoteProcessing', {
-      fetchSwapQuotePromise: fetchSwapQuote(state, request),
+      fetchSwapQuotesPromise: fetchSwapQuotes(state, request),
       onCancel: () => {
         navigation.goBack()
       },
-      onDone: swapInfo => {
+      onDone: quotes => {
         navigation.replace('exchangeQuote', {
-          swapInfo,
+          selectedQuote: quotes[0],
+          quotes,
           onApprove
         })
-        dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
+        dispatch({ type: 'UPDATE_SWAP_QUOTE', data: {} })
       },
       onError: async (error: any) => {
         navigation.navigate('exchangeTab', { screen: 'exchange' })
@@ -103,19 +104,20 @@ export function getQuoteForTransaction(navigation: NavigationBase, info: SetNati
   }
 }
 
-export function exchangeTimerExpired(navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void): ThunkAction<Promise<void>> {
+export function exchangeTimerExpired(navigation: NavigationBase, quote: EdgeSwapQuote, onApprove: () => void): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     navigation.replace('exchangeQuoteProcessing', {
-      fetchSwapQuotePromise: fetchSwapQuote(getState(), swapInfo.request),
+      fetchSwapQuotesPromise: fetchSwapQuotes(getState(), quote.request),
       onCancel: () => {
         navigation.navigate('exchangeTab', { screen: 'exchange' })
       },
-      onDone: swapInfo => {
+      onDone: quotes => {
         navigation.replace('exchangeQuote', {
-          swapInfo,
+          selectedQuote: quotes[0],
+          quotes,
           onApprove
         })
-        dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
+        dispatch({ type: 'UPDATE_SWAP_QUOTE', data: {} })
       },
       onError: async (error: any) => {
         navigation.navigate('exchangeTab', { screen: 'exchange' })
@@ -125,7 +127,7 @@ export function exchangeTimerExpired(navigation: NavigationBase, swapInfo: GuiSw
   }
 }
 
-async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promise<GuiSwapInfo> {
+async function fetchSwapQuotes(state: RootState, request: EdgeSwapRequest): Promise<EdgeSwapQuote[]> {
   const { account } = state.core
   const {
     exchangeInfo: {
@@ -145,15 +147,21 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   }
 
   // Get the quote:
-  const quote: EdgeSwapQuote = await account.fetchSwapQuote(request, {
+  const quotes: EdgeSwapQuote[] = await account.fetchSwapQuotes(request, {
     preferPluginId,
     preferType: preferredSwapPluginType,
     disabled: { ...activePlugins.disabled, ...disablePlugins },
     promoCodes: activePlugins.promoCodes
   })
 
+  return quotes
+}
+
+// TODO: Use new hooks and utility methods for all conversions here
+export const getSwapInfo = async (state: RootState, quote: EdgeSwapQuote): Promise<GuiSwapInfo> => {
   // Currency conversion tools:
   // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
+  const { request } = quote
   const { fromWallet, toWallet, fromCurrencyCode = '', toCurrencyCode = '' } = request
 
   // Format from amount:
@@ -192,9 +200,6 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   const toFiat = formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
 
   const swapInfo: GuiSwapInfo = {
-    quote,
-    request,
-
     fee,
     fromDisplayAmount,
     fromFiat,
@@ -285,14 +290,14 @@ function processSwapQuoteError(error: unknown): ThunkAction<void> {
   }
 }
 
-export function shiftCryptoCurrency(navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void): ThunkAction<Promise<void>> {
+export function shiftCryptoCurrency(navigation: NavigationBase, quote: EdgeSwapQuote, onApprove: () => void): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
     dispatch({ type: 'START_SHIFT_TRANSACTION' })
 
-    const { fromDisplayAmount, quote, request, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = swapInfo
-    const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate } = quote
+    const { fromDisplayAmount, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = await getSwapInfo(state, quote)
+    const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate, request } = quote
     // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
     const { toWallet, fromCurrencyCode = '', toCurrencyCode = '' } = request
     try {

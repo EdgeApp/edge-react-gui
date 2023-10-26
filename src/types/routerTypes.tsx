@@ -10,6 +10,8 @@ import { CreateWalletImportOptionsParams } from '../components/scenes/CreateWall
 import { CreateWalletImportParams } from '../components/scenes/CreateWalletImportScene'
 import { CreateWalletSelectCryptoParams } from '../components/scenes/CreateWalletSelectCryptoScene'
 import { CreateWalletSelectFiatParams } from '../components/scenes/CreateWalletSelectFiatScene'
+import { ExchangeQuoteProcessingParams } from '../components/scenes/CryptoExchangeQuoteProcessingScene'
+import { CryptoExchangeQuoteParams } from '../components/scenes/CryptoExchangeQuoteScene'
 import { FioCreateHandleParams } from '../components/scenes/Fio/FioCreateHandleScene'
 import { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
@@ -30,7 +32,7 @@ import { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWeb
 import { RewardsCardDashboardParams } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
-import { CreateWalletType, FeeOption, FioConnectionWalletItem, FioDomain, FioRequest, GuiMakeSpendInfo, GuiSwapInfo } from './types'
+import { CreateWalletType, FeeOption, FioConnectionWalletItem, FioDomain, FioRequest, GuiMakeSpendInfo } from './types'
 
 /**
  * Defines the acceptable route parameters for each scene key.
@@ -117,16 +119,8 @@ export interface RouteParamList {
     walletId: string
   }
   exchange: {}
-  exchangeQuote: {
-    swapInfo: GuiSwapInfo
-    onApprove: () => void
-  }
-  exchangeQuoteProcessing: {
-    fetchSwapQuotePromise: Promise<GuiSwapInfo>
-    onCancel: () => void
-    onError: (error: any) => Promise<void>
-    onDone: (swapInfo: GuiSwapInfo) => void
-  }
+  exchangeQuote: CryptoExchangeQuoteParams
+  exchangeQuoteProcessing: ExchangeQuoteProcessingParams
   exchangeSettings: {}
   exchangeSuccess: {}
   extraTab: undefined

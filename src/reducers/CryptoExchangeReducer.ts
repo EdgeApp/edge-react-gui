@@ -100,10 +100,6 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
     case 'UPDATE_SWAP_QUOTE': {
       return {
         ...state,
-        toNativeAmount: action.data.quote.toNativeAmount,
-        toDisplayAmount: action.data.toDisplayAmount,
-        fromNativeAmount: action.data.quote.fromNativeAmount,
-        fromDisplayAmount: action.data.fromDisplayAmount,
         insufficientError: false,
         genericShapeShiftError: null
       }

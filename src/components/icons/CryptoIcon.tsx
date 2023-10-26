@@ -42,7 +42,7 @@ const CryptoIconComponent = (props: Props) => {
   const wallet = walletId != null ? currencyWallets[walletId] : null
   const compromised = useSelector(state => {
     if (walletId == null) return 0
-    const { modalShown = 0 } = state.ui.settings.securityCheckedWallets[walletId] ?? {}
+    const { modalShown = 0 } = state.ui?.settings?.securityCheckedWallets?.[walletId] ?? {}
     return modalShown > 0
   })
 
