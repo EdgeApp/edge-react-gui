@@ -7,8 +7,8 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 
 export interface FiatPluginOpenWebViewParams {
   url: string
-  onClose: () => void
-  onUrlChange: (url: string) => void
+  onClose?: () => void
+  onUrlChange?: (url: string) => void
 }
 
 interface Props extends EdgeSceneProps<'guiPluginWebView'> {}
@@ -19,12 +19,12 @@ export function FiatPluginWebViewComponent(props: Props): JSX.Element {
 
   const handleNavigationStateChange = useHandler((event: WebViewNavigation) => {
     console.log('FiatPluginWebView navigation: ', event)
-    onUrlChange(event.url)
+    if (onUrlChange != null) onUrlChange(event.url)
   })
 
   React.useEffect(() => () => {
     // Cleanup code when scene unmounts
-    onClose()
+    if (onClose != null) onClose()
   })
 
   return (

@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 
-import { NotificationSettings, serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
+import { NotificationSettings, updateNotificationSettings } from '../../actions/NotificationActions'
 import { CryptoIcon } from '../../components/icons/CryptoIcon'
+import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -27,11 +28,7 @@ export const NotificationScene = (props: Props) => {
 
   const handlePressToggleSetting = async (toggleSetting: NotificationSettingToggleSetting) => {
     try {
-      const newSettings = await dispatch(setDeviceSettings({ [toggleSetting]: !settings[toggleSetting] }))
-      dispatch({
-        type: 'NOTIFICATION_SETTINGS_UPDATE',
-        data: serverSettingsToNotificationSettings(newSettings)
-      })
+      await dispatch(updateNotificationSettings({ [toggleSetting]: !settings[toggleSetting] }))
     } catch (e: any) {
       showError(`Failed to reach notification server: ${e}`)
     }
@@ -62,16 +59,20 @@ export const NotificationScene = (props: Props) => {
         />
         {pluginIds.map(pluginId => {
           const { currencyInfo } = currencyConfigs[pluginId]
+          const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
 
-          const onPress = () =>
-            !settings.ignorePriceChanges
-              ? navigation.navigate('currencyNotificationSettings', {
-                  currencyInfo
-                })
-              : undefined
+          const handlePress = () => {
+            if (!settings.ignorePriceChanges) {
+              navigation.navigate('currencyNotificationSettings', {
+                currencyInfo
+              })
+            }
+          }
+
+          if (keysOnlyMode) return null
 
           return (
-            <SettingsTappableRow disabled={settings.ignorePriceChanges} key={pluginId} label={currencyInfo.displayName} onPress={onPress}>
+            <SettingsTappableRow disabled={settings.ignorePriceChanges} key={pluginId} label={currencyInfo.displayName} onPress={handlePress}>
               <CryptoIcon pluginId={pluginId} />
             </SettingsTappableRow>
           )

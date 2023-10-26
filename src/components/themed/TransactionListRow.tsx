@@ -30,12 +30,13 @@ import { TransactionRow } from './TransactionRow'
 interface Props {
   navigation: NavigationBase
   wallet: EdgeCurrencyWallet
+  tokenId?: string
   currencyCode: string
   transaction: EdgeTransaction
 }
 
 export function TransactionListRow(props: Props) {
-  const { navigation, currencyCode, wallet, transaction } = props
+  const { navigation, currencyCode, wallet, tokenId, transaction } = props
   const { metadata } = transaction
   const { name, amountFiat: defaultAmountFiat = 0 } = metadata ?? {}
 
@@ -84,7 +85,8 @@ export function TransactionListRow(props: Props) {
     }
     navigation.push('transactionDetails', {
       edgeTransaction: transaction,
-      walletId: wallet.id
+      walletId: wallet.id,
+      tokenId
     })
   })
 

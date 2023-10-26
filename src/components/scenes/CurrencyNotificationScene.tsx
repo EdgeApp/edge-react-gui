@@ -2,8 +2,7 @@ import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { newPriceChangeEvent, serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
-import { NewPushEvent } from '../../controllers/action-queue/types/pushApiTypes'
+import { newPriceChangeEvent, updateNotificationSettings } from '../../actions/NotificationActions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { RootState } from '../../reducers/RootReducer'
@@ -24,52 +23,36 @@ export const CurrencyNotificationScene = (props: Props) => {
   const defaultIsoFiat = useSelector((state: RootState) => state.ui.settings.defaultIsoFiat)
   const settings = useSelector((state: RootState) => state.notificationSettings)
 
-  const toggleHourlySetting = useHandler(async () => {
-    const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !settings.plugins[pluginId].hourlyChange, !!settings.plugins[pluginId].dailyChange)
-    await updateSettings(newEvent)
-  })
+  const updateSettings = (settingChange: 'hourly' | 'daily') => async () => {
+    const hourly = settingChange === 'hourly' ? !settings.plugins[pluginId].hourlyChange : !!settings.plugins[pluginId].hourlyChange
+    const daily = settingChange === 'daily' ? !settings.plugins[pluginId].dailyChange : !!settings.plugins[pluginId].dailyChange
+    const event = newPriceChangeEvent(currencyInfo, defaultIsoFiat, hourly, daily)
+    try {
+      await dispatch(updateNotificationSettings({ createEvents: [event] }))
+    } catch (e: any) {
+      showError(`Failed to reach notification server: ${e}`)
+    }
+  }
 
-  const toggleDailySetting = useHandler(async () => {
-    const newEvent = newPriceChangeEvent(currencyInfo, defaultIsoFiat, !!settings.plugins[pluginId].hourlyChange, !settings.plugins[pluginId].dailyChange)
-    await updateSettings(newEvent)
-  })
-
-  const updateSettings = React.useCallback(
-    async (event: NewPushEvent) => {
-      try {
-        const newSettings = await dispatch(setDeviceSettings({ createEvents: [event] }))
-        dispatch({
-          type: 'NOTIFICATION_SETTINGS_UPDATE',
-          data: serverSettingsToNotificationSettings(newSettings)
-        })
-      } catch (e: any) {
-        showError(`Failed to reach notification server: ${e}`)
-      }
-    },
-    [dispatch]
-  )
-
-  const rows = React.useMemo(
-    () => [
-      <SettingsSwitchRow
-        key="hourly"
-        label={sprintf(lstrings.settings_currency_notifications_percent_change_hour, 3)}
-        value={settings.plugins[pluginId].hourlyChange != null}
-        onPress={toggleHourlySetting}
-      />,
-      <SettingsSwitchRow
-        key="daily"
-        label={sprintf(lstrings.settings_currency_notifications_percent_change_hours, 10, 24)}
-        value={settings.plugins[pluginId].dailyChange != null}
-        onPress={toggleDailySetting}
-      />
-    ],
-    [pluginId, settings, toggleDailySetting, toggleHourlySetting]
-  )
+  const handleHourlyPress = useHandler(updateSettings('hourly'))
+  const handleDailyPress = useHandler(updateSettings('daily'))
 
   return (
     <SceneWrapper background="theme" hasTabs={false}>
-      <ScrollView>{rows}</ScrollView>
+      <ScrollView>
+        <SettingsSwitchRow
+          key="hourly"
+          label={sprintf(lstrings.settings_currency_notifications_percent_change_hour, 3)}
+          value={settings.plugins[pluginId].hourlyChange != null}
+          onPress={handleHourlyPress}
+        />
+        <SettingsSwitchRow
+          key="daily"
+          label={sprintf(lstrings.settings_currency_notifications_percent_change_hours, 10, 24)}
+          value={settings.plugins[pluginId].dailyChange != null}
+          onPress={handleDailyPress}
+        />
+      </ScrollView>
     </SceneWrapper>
   )
 }

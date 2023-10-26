@@ -8,7 +8,7 @@ import { BlurView } from 'rn-id-blurview'
 
 import { showSendLogsModal } from '../../actions/LogActions'
 import { initializeAccount, logoutRequest } from '../../actions/LoginActions'
-import { serverSettingsToNotificationSettings, setDeviceSettings } from '../../actions/NotificationActions'
+import { updateNotificationSettings } from '../../actions/NotificationActions'
 import { cacheStyles, Theme, useTheme } from '../../components/services/ThemeContext'
 import { ENV } from '../../env'
 import { ExperimentConfig, getExperimentConfig } from '../../experimentConfig'
@@ -166,11 +166,7 @@ export function LoginSceneComponent(props: Props) {
 
     if (notificationPermissionsInfo) {
       try {
-        const newSettings = await dispatch(setDeviceSettings(notificationPermissionsInfo.notificationOptIns))
-        dispatch({
-          type: 'NOTIFICATION_SETTINGS_UPDATE',
-          data: serverSettingsToNotificationSettings(newSettings)
-        })
+        await dispatch(updateNotificationSettings(notificationPermissionsInfo.notificationOptIns))
       } catch (e) {
         trackError(e, 'LoginScene:onLogin:setDeviceSettings')
         console.error(e)

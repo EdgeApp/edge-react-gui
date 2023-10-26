@@ -6,8 +6,9 @@ import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { formatCategory, joinCategory, splitCategory } from '../../actions/CategoriesActions'
+import { formatCategory, getTxActionDisplayInfo, joinCategory, splitCategory } from '../../actions/CategoriesActions'
 import { playSendSound } from '../../actions/SoundActions'
+import { TX_ACTION_LABEL_MAP } from '../../constants/txActionConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { lstrings } from '../../locales/strings'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -52,27 +53,38 @@ interface State {
 class TransactionDetailsComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    const { edgeTransaction } = props.route.params
-    const { metadata = {} } = edgeTransaction
-    const { name = '', notes = '' } = metadata
+    const { wallet } = props
+    const { edgeTransaction, tokenId } = props.route.params
+    const { metadata } = edgeTransaction
     const isSentTransaction = edgeTransaction.nativeAmount.startsWith('-') || (eq(edgeTransaction.nativeAmount, '0') && edgeTransaction.isSend)
 
     const direction = isSentTransaction ? 'send' : 'receive'
-    const category = joinCategory(
-      splitCategory(
-        metadata.category,
-        // Pick the right default:
-        direction === 'receive' ? 'income' : 'expense'
-      )
-    )
+
+    // Choose a default category based on metadata or the txAction
+    const txActionInfo = getTxActionDisplayInfo(edgeTransaction, wallet, tokenId)
+    const txActionSplitCat = txActionInfo?.splitCategory
+    const txActionNotes = txActionInfo?.notes
+
+    const splitCat =
+      metadata?.category != null || txActionSplitCat == null
+        ? splitCategory(
+            metadata?.category,
+            // Pick the right default:
+            direction === 'receive' ? 'income' : 'expense'
+          )
+        : txActionSplitCat
+
+    const category = joinCategory(splitCat)
+
+    const notes = metadata?.notes == null ? txActionNotes : metadata.notes
 
     this.state = {
       acceleratedTx: null,
       bizId: 0,
       category,
-      name,
+      name: metadata?.name ?? '',
       direction,
-      notes
+      notes: notes ?? ''
     }
   }
 
@@ -189,11 +201,12 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
   render() {
     const { navigation, route, theme, thumbnailPath, wallet } = this.props
     const { edgeTransaction } = route.params
+    const { action } = edgeTransaction
     const { direction, acceleratedTx, name, notes, category } = this.state
     const styles = getStyles(theme)
 
     const personLabel = direction === 'receive' ? lstrings.transaction_details_sender : lstrings.transaction_details_recipient
-    const personName = name !== '' ? name : personLabel
+    const personName = action != null ? TX_ACTION_LABEL_MAP[action.type] : name !== '' ? name : personLabel
     const personHeader = sprintf(lstrings.transaction_details_person_name, personLabel)
 
     // spendTargets recipient addresses format

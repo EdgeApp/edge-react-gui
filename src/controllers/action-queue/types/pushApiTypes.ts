@@ -150,6 +150,7 @@ export const asDevicePayload = asPushServerResponse(
     loginIds: asArray(asBase64)
   })
 )
+export type DevicePayload = ReturnType<typeof asDevicePayload>
 
 /**
  * POST /v2/login response payload.

@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- added: Paybis buy/sell in Brazil, Columbia, and Mexico
+- added: EdgeTxAction information to Transaction List
+- added: "Paused Wallet" visual indicator on wallet list
+- added: Paybis sell to debit card
+- added: Signup captcha experiment.
+- changed: Change FlipInput styling to make the edit functionality more obvious
+- changed: Enable max spend for Filecoin
+- changed: Move asset-specific settings into their own settings page
+- changed: Experiment config probability distribution support percentage based values
+- fixed: Write updated experiment configs to disk
+- removed: Moonpay sell via ACH
+- removed: Banxa buy via Pix
+
 ## 3.20.0
 
 - added: Banxa purchase with iDEAL
@@ -11,6 +24,7 @@
 - changed: Banxa sell to use new widget
 - changed: Replace deprecated memo handling with `EdgeMemo` in SendScene2
 - changed: Re-enable Piratechain
+- changed: Remove price-change push notification subscriptions for keys-only currencies
 - fixed: Crash in react-native-linear-gradient when app built with Xcode 15
 
 ## 3.19.0
@@ -246,7 +260,7 @@
 - changed: Disable Firebase AD ID
 - changed: Upgrade to ESLint v8
 - removed: Unused React-based partner plugins
-- fixed: Rename "View Xpub address"  to "Private View Key" for Pirate Chain and Zcash
+- fixed: Rename "View Xpub address" to "Private View Key" for Pirate Chain and Zcash
 - fixed: Private view key modal warning text for other currencies besides Monero
 - fixed: Handle unhandled promises
 - fixed: Wallet list row sync circle component recycling
@@ -341,7 +355,7 @@
   - Fixed: Fix broken max-spend for zkSync
   - Deprecate WalletConnect v1
   - EVM/ALGO: Add parseWalletConnectV2Payload to parse out amounts from WalletConnect v2 payloads
-ZEC: Update checkpoints
+    ZEC: Update checkpoints
 - Upgrade edge-login-ui-rn to v2.3.3
   - fixed: Modal close button covering modal submit buttons while Android keyboard is open
   - fixed: Username availability check error would incorrectly show in some cases
@@ -841,6 +855,7 @@ ZEC: Update checkpoints
   - changed: Make sensitive account & wallet properties, like keys, non-enumerable.
   - changed: Use the pluginId as the wallet logging prefix, instead of the currency code.
 - Upgrade edge-currency-accountbased to v0.22.4
+
   - Convert library to React Native Module
     - This package will automatically install itself using React Native autolinking and no longer requires Webpack for integration
     - Plugins are broken out and can be loaded individually
@@ -867,6 +882,7 @@ ZEC: Update checkpoints
   - EVM: Remove recursion from getMaxSpendable
   - Replace remaining json-schema usage with cleaners
   - Update checkpoint files
+
 - Upgrade edge-currency-monero to v0.5.5
   - Add getMaxSpendable
   - Upgrade edge-core-js to v0.19.36
@@ -1321,7 +1337,7 @@ ZEC: Update checkpoints
   - LetsExchange: Fix min amount currency display
   - Upgrade edge-core-js to v0.19.23
 - Upgrade edge-login-ui-rn v0.10.7
-    changed: Update forget account description text
+  changed: Update forget account description text
   - changed: Update PIN description text
   - changed: Add titles for resecure password/pin scenes
   - changed: Add SKIP button for resecure password and pin scenes
@@ -1460,7 +1476,7 @@ ZEC: Update checkpoints
   - Fix FTM network fees test
   - Fix ftmInfo.js filename
   - Add timeout to getSupportedCurrencies test to prevent hanging
-Upgrade edge-currency-bitcoin to v4.9.23
+    Upgrade edge-currency-bitcoin to v4.9.23
   - DASH: Recognize the Instantlock for incoming Dash transactions
   - Work around Android PBKDF2 failures
 - Upgrade edge-currency-monero to v0.4.1
@@ -2278,7 +2294,7 @@ Upgrade edge-currency-bitcoin to v4.9.23
   - Upgrade to edge-core-js v0.17.29
   - Upgrade to Webpack 5
 - Upgrade edge-login-ui-rn to v0.9.0
-  - *Breaking change*: This release contains a breaking change that was not indicated in the minor version update:
+  - _Breaking change_: This release contains a breaking change that was not indicated in the minor version update:
     - rn: Prompt for notification permissions to support security features
   - rn: Update modal colors
 - Upgrade edge-currency-monero to v0.2.10
@@ -2979,7 +2995,8 @@ Upgrade edge-currency-bitcoin to v4.9.23
 - New transaction details screen
 - Enhanced deeplinking capabilities
 - Bug fixes and visual enhancements
-- ***BREAKING CHANGE*** Upgrade edge-core-js to v0.17.0
+- **_BREAKING CHANGE_** Upgrade edge-core-js to v0.17.0
+
   - This release also renames all `pluginName` instances to `pluginId`. This affects all plugin types, but the core contains compatibility code so old currency plugins continue working (but not for rate or swap plugins, which are easier to just upgrade).
   - Breaking changes to the swap API:
     - Return a new `EdgeSwapResult` structure from `EdgeSwapQuote.approve`. This now contains the `destinationAddress` and `orderId` that used to exist on the `EdgeSwapQuote` type.
@@ -2996,11 +3013,13 @@ Upgrade edge-currency-bitcoin to v4.9.23
     - Remove deprecated `EdgeIo.WebSocket`.
 
 - Upgrade edge-exchange-plugins to v0.10.2
+
   - Add Switchain swap plugin.
   - Pass promo codes to Changelly, ChangeNow, and Godex.
   - Fix ChangeNow on Android & add better logging.
 
 - Upgrade edge-currency-accountbased to v0.7.2
+
   - Add cleaners v0.2.0 type checking
   - Fix duplicate FIO address after registration
   - Reprioritize EOS Hyperion nodes to resolve transaction history view issue

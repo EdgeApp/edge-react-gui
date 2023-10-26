@@ -20,14 +20,11 @@ import {
   FiatProviderGetQuoteParams,
   FiatProviderQuote
 } from '../fiatProviderTypes'
+import { NOT_SUCCESS_TOAST_HIDE_MS, RETURN_URL_CANCEL, RETURN_URL_FAIL, RETURN_URL_SUCCESS } from './common'
 const providerId = 'banxa'
 const storeId = 'banxa'
 const partnerIcon = 'banxa.png'
 const pluginDisplayName = 'Banxa'
-const RETURN_URL_SUCCESS = 'https://edge.app/'
-const RETURN_URL_FAIL = 'https://edge.app/fail/'
-const RETURN_URL_CANCEL = 'https://edge.app/cancel/'
-const NOT_SUCCESS_TOAST_HIDE_MS = 5000
 
 const TESTNET_ADDRESS = 'bc1qv752cnr3rcht3yyfq2nn6nv7zwczqjmcm80y6w'
 let testnet = false
@@ -44,7 +41,6 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
     interac: true,
     iobank: true,
     payid: true,
-    pix: true,
     sepa: false, // Leave this to Bity for now
     turkishbank: true
   },
@@ -54,7 +50,6 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
     interac: true,
     iobank: true,
     payid: true,
-    pix: true,
     sepa: false, // Leave this to Bity for now
     turkishbank: true
   }

@@ -1,93 +1,162 @@
 import { div, gte } from 'biggystring'
-import { EdgeAccount } from 'edge-core-js/types'
-import * as React from 'react'
-import { ScrollView, TouchableOpacity } from 'react-native'
-import FastImage from 'react-native-fast-image'
-import IonIcon from 'react-native-vector-icons/Ionicons'
+import { EdgeSwapQuote } from 'edge-core-js'
+import React, { useEffect, useState } from 'react'
+import { ScrollView, SectionList, TouchableOpacity, ViewStyle } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
+import { useHandler } from '../../hooks/useHandler'
+import { useRowLayout } from '../../hooks/useRowLayout'
 import { lstrings } from '../../locales/strings'
-import { connect } from '../../types/reactRedux'
-import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
-import { GuiSwapInfo } from '../../types/types'
+import { useDispatch, useSelector } from '../../types/reactRedux'
+import { EdgeSceneProps } from '../../types/routerTypes'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
-import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
+import { PoweredByCard } from '../cards/PoweredByCard'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { SwapProviderRow } from '../data/row/SwapProviderRow'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal'
 import { CircleTimer } from '../progress-indicators/CircleTimer'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
-import { EdgeText } from '../themed/EdgeText'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent'
 import { LineTextDivider } from '../themed/LineTextDivider'
+import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Slider } from '../themed/Slider'
+import { ThemedModal } from '../themed/ThemedModal'
+import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
 
-interface OwnProps extends EdgeSceneProps<'exchangeQuote'> {}
-
-interface StateProps {
-  account: EdgeAccount
-  fromDenomination: string
-  fromWalletCurrencyName: string
-  pending: boolean
-  toDenomination: string
-  toWalletCurrencyName: string
+export interface CryptoExchangeQuoteParams {
+  selectedQuote: EdgeSwapQuote
+  quotes: EdgeSwapQuote[]
+  onApprove: () => void
 }
-interface DispatchProps {
-  shift: (navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void) => Promise<void>
-  timeExpired: (navigation: NavigationBase, swapInfo: GuiSwapInfo, onApprove: () => void) => Promise<void>
+
+interface Props extends EdgeSceneProps<'exchangeQuote'> {}
+
+interface Section {
+  title: { title: string; rightTitle: string }
+  data: EdgeSwapQuote[]
 }
-type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
-interface State {}
+export const CryptoExchangeQuoteScene = (props: Props) => {
+  const { route, navigation } = props
+  const { selectedQuote: initialSelectedQuote, quotes, onApprove } = route.params
 
-export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
-  // @ts-expect-error
-  calledApprove: true
+  const dispatch = useDispatch()
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
-  componentDidMount = () => {
-    const { route, account, timeExpired, navigation } = this.props
-    const { swapInfo, onApprove } = route.params
-    const { pluginId } = swapInfo.quote
+  const account = useSelector(state => state.core.account)
+  const pending = useSelector(state => state.cryptoExchange.shiftPendingTransaction)
+
+  const [selectedQuote, setSelectedQuote] = useState(initialSelectedQuote)
+  const [calledApprove, setCalledApprove] = useState(false)
+
+  const { request } = selectedQuote
+  const { quoteFor } = request
+
+  const scrollPadding = React.useMemo<ViewStyle>(
+    () => ({
+      paddingBottom: theme.rem(ModalFooter.bottomRem)
+    }),
+    [theme]
+  )
+
+  const sectionList = React.useMemo(() => {
+    const rightTitle = quoteFor === 'to' ? lstrings.quote_exchange_cost : lstrings.quote_payout_amount
+    return [
+      {
+        title: { title: lstrings.quote_selected_quote, rightTitle },
+        data: [selectedQuote]
+      },
+      {
+        title: { title: lstrings.quote_fixed_quotes, rightTitle },
+        data: [...quotes.filter((quote: EdgeSwapQuote) => !quote.isEstimate)]
+      },
+      {
+        title: { title: lstrings.quote_variable_quotes, rightTitle },
+        data: [...quotes.filter((quote: EdgeSwapQuote) => quote.isEstimate)]
+      }
+    ].filter(section => section.data.length > 0)
+  }, [quoteFor, quotes, selectedQuote])
+
+  const { pluginId } = selectedQuote
+
+  const swapConfig = account.swapConfig[pluginId]
+  const exchangeName = swapConfig?.swapInfo.displayName ?? '' // HACK: for unit tests to run
+  const feePercent = div(selectedQuote.networkFee.nativeAmount, selectedQuote.fromNativeAmount, 2)
+  const showFeeWarning = gte(feePercent, '0.05')
+
+  useEffect(() => {
     const swapConfig = account.swapConfig[pluginId]
 
     logEvent('Exchange_Shift_Quote')
     swapVerifyTerms(swapConfig)
       .then(async result => {
-        if (!result) await timeExpired(navigation, swapInfo, onApprove)
+        if (!result) await dispatch(exchangeTimerExpired(navigation, selectedQuote, onApprove))
       })
       .catch(err => showError(err))
+
+    return () => {
+      if (!calledApprove) selectedQuote.close().catch(err => showError(err))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const doShift = async () => {
+    setCalledApprove(true)
+    await dispatch(shiftCryptoCurrency(navigation, selectedQuote, onApprove))
   }
 
-  componentWillUnmount() {
-    const { route } = this.props
-    const { swapInfo } = route.params
-    const { quote } = swapInfo
-
-    if (!this.calledApprove) quote.close().catch(err => showError(err))
-  }
-
-  doShift = async () => {
-    const { shift, route, navigation } = this.props
-    const { swapInfo, onApprove } = route.params
-    this.calledApprove = true
-    await shift(navigation, swapInfo, onApprove)
-  }
-
-  renderTimer = () => {
-    const { timeExpired, route, navigation } = this.props
-    const { swapInfo, onApprove } = route.params
-    const { expirationDate } = swapInfo.quote
-
+  const renderTimer = () => {
+    const { expirationDate } = selectedQuote
     if (!expirationDate) return null
-    return <CircleTimer timeExpired={async () => await timeExpired(navigation, swapInfo, onApprove)} expiration={expirationDate} />
+    return <CircleTimer timeExpired={async () => await dispatch(exchangeTimerExpired(navigation, selectedQuote, onApprove))} expiration={expirationDate} />
   }
 
-  handleForEstimateExplanation = async () => {
+  const renderRow = useHandler((item: { item: EdgeSwapQuote; section: Section; index: number }) => {
+    const quote = item.item
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          setSelectedQuote(quote)
+          Airship.clear()
+        }}
+      >
+        <SwapProviderRow quote={quote} />
+      </TouchableOpacity>
+    )
+  })
+
+  const renderSectionHeader = useHandler((sectionObj: { section: Section }) => {
+    return <WalletListSectionHeader title={sectionObj.section.title.title} rightTitle={sectionObj.section.title.rightTitle} />
+  })
+
+  const handleItemLayout = useRowLayout()
+
+  const handlePoweredByTap = useHandler(async () => {
+    await Airship.show(bridge => (
+      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve()}>
+        <ModalTitle>{lstrings.quote_swap_provider}</ModalTitle>
+        <SectionList
+          style={styles.container}
+          contentContainerStyle={scrollPadding}
+          getItemLayout={handleItemLayout}
+          keyboardShouldPersistTaps="handled"
+          keyExtractor={(item, index) => item.swapInfo.displayName + index}
+          renderItem={renderRow}
+          renderSectionHeader={renderSectionHeader}
+          sections={sectionList}
+        />
+      </ThemedModal>
+    ))
+  })
+
+  const handleForEstimateExplanation = async () => {
     await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
@@ -98,8 +167,8 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     ))
   }
 
-  handleCanBePartialExplanation = async () => {
-    const { canBePartial, maxFulfillmentSeconds } = this.props.route.params.swapInfo.quote
+  const handleCanBePartialExplanation = async () => {
+    const { canBePartial, maxFulfillmentSeconds } = selectedQuote
     let canBePartialString: string | undefined
     if (canBePartial === true) {
       if (maxFulfillmentSeconds != null) {
@@ -113,135 +182,52 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
       <ButtonsModal bridge={bridge} title={lstrings.can_be_partial_quote_title} message={canBePartialString} buttons={{ ok: { label: lstrings.string_ok } }} />
     ))
   }
-
-  handlePoweredByTap = () => {
-    this.props.navigation.navigate('exchangeSettings', {})
-  }
-
-  render() {
-    const { account, fromDenomination, fromWalletCurrencyName, toDenomination, toWalletCurrencyName, pending, theme, route, navigation } = this.props
-    const { swapInfo } = route.params
-    const { fee, fromDisplayAmount, fromFiat, fromTotalFiat, toDisplayAmount, toFiat, quote, request } = swapInfo
-    const { fiatCurrencyCode } = request.fromWallet
-    const { pluginId } = quote
-    const swapConfig = account.swapConfig[pluginId]
-    const exchangeName = swapConfig.swapInfo.displayName
-    const feePercent = div(quote.networkFee.nativeAmount, quote.fromNativeAmount, 2)
-    const showFeeWarning = gte(feePercent, '0.05')
-    const styles = getStyles(theme)
-
-    return (
-      <NotificationSceneWrapper hasTabs navigation={navigation} background="theme">
-        {(gap, notificationHeight) => (
-          <>
-            <SceneHeader title={lstrings.title_exchange} underline withTopMargin />
-            <ScrollView contentContainerStyle={[{ paddingBottom: notificationHeight }, styles.container]}>
-              <LineTextDivider title={lstrings.fragment_send_from_label} lowerCased />
-              {showFeeWarning && <Alert marginRem={[0, 1, 1.5, 1]} title={lstrings.transaction_details_fee_warning} type="warning" />}
-              <ExchangeQuote
-                cryptoAmount={fromDisplayAmount}
-                currency={fromWalletCurrencyName}
-                currencyCode={fromDenomination}
-                fiatCurrencyAmount={fromFiat}
-                fiatCurrencyCode={fiatCurrencyCode.replace('iso:', '')}
-                isTop
-                miningFee={fee}
-                total={fromTotalFiat}
-                walletId={request.fromWallet.id}
-                walletName={getWalletName(request.fromWallet)}
-                showFeeWarning={showFeeWarning}
+  return (
+    <NotificationSceneWrapper hasTabs navigation={navigation} background="theme">
+      {(gap, notificationHeight) => (
+        <>
+          <SceneHeader title={lstrings.title_exchange} underline withTopMargin />
+          <ScrollView contentContainerStyle={[{ paddingBottom: notificationHeight }, styles.container]}>
+            <LineTextDivider title={lstrings.fragment_send_from_label} lowerCased />
+            {showFeeWarning && <Alert marginRem={[0, 1, 1.5, 1]} title={lstrings.transaction_details_fee_warning} type="warning" />}
+            <ExchangeQuote quote={selectedQuote} fromTo="from" showFeeWarning={showFeeWarning} />
+            <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
+            <ExchangeQuote quote={selectedQuote} fromTo="to" />
+            <PoweredByCard iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)} poweredByText={exchangeName} onPress={handlePoweredByTap} />
+            {selectedQuote.isEstimate && (
+              <Alert
+                title={lstrings.estimated_quote}
+                message={lstrings.estimated_exchange_message}
+                type="warning"
+                marginRem={[1, 1]}
+                onPress={handleForEstimateExplanation}
               />
-              <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
-              <ExchangeQuote
-                cryptoAmount={toDisplayAmount}
-                currency={toWalletCurrencyName}
-                currencyCode={toDenomination}
-                fiatCurrencyAmount={toFiat}
-                fiatCurrencyCode={request.toWallet.fiatCurrencyCode.replace('iso:', '')}
-                walletId={request.toWallet.id}
-                walletName={getWalletName(request.toWallet)}
+            )}
+            {selectedQuote.canBePartial === true && (
+              <Alert
+                title={lstrings.can_be_partial_quote_title}
+                message={lstrings.can_be_partial_quote_message}
+                type="warning"
+                marginRem={[1, 1]}
+                onPress={handleCanBePartialExplanation}
               />
-              <TouchableOpacity style={styles.pluginRowPoweredByRow} onPress={this.handlePoweredByTap}>
-                <EdgeText style={styles.footerText}>{lstrings.plugin_powered_by_space + ' '}</EdgeText>
-                <FastImage style={styles.partnerIconImage} resizeMode="contain" source={{ uri: getSwapPluginIconUri(quote.pluginId, theme) }} />
-                <EdgeText style={styles.footerText}>{' ' + exchangeName}</EdgeText>
-                <IonIcon name="chevron-forward" size={theme.rem(1)} color={theme.iconTappable} />
-              </TouchableOpacity>
-              {quote.isEstimate && (
-                <Alert
-                  title={lstrings.estimated_quote}
-                  message={lstrings.estimated_exchange_message}
-                  type="warning"
-                  marginRem={[1, 1]}
-                  onPress={this.handleForEstimateExplanation}
-                />
-              )}
-              {quote.canBePartial === true && (
-                <Alert
-                  title={lstrings.can_be_partial_quote_title}
-                  message={lstrings.can_be_partial_quote_message}
-                  type="warning"
-                  marginRem={[1, 1]}
-                  onPress={this.handleCanBePartialExplanation}
-                />
-              )}
+            )}
 
-              <Slider parentStyle={styles.slider} onSlidingComplete={this.doShift} disabled={pending} showSpinner={pending} />
-              {this.renderTimer()}
-            </ScrollView>
-          </>
-        )}
-      </NotificationSceneWrapper>
-    )
-  }
+            <Slider parentStyle={styles.slider} onSlidingComplete={doShift} disabled={pending} showSpinner={pending} />
+            {renderTimer()}
+          </ScrollView>
+        </>
+      )}
+    </NotificationSceneWrapper>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     paddingTop: theme.rem(0.5)
   },
-  footerText: {
-    fontSize: theme.rem(0.75),
-    color: theme.secondaryText
-  },
-  partnerIconImage: {
-    aspectRatio: 1,
-    width: theme.rem(0.75),
-    height: theme.rem(0.75)
-  },
-  pluginRowPoweredByRow: {
-    marginTop: theme.rem(1),
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    paddingRight: theme.rem(1),
-    alignItems: 'center'
-  },
   slider: {
     marginTop: theme.rem(0.5),
     marginBottom: theme.rem(1)
-  },
-  spacer: {
-    height: theme.rem(8)
   }
 }))
-
-export const CryptoExchangeQuote = connect<StateProps, DispatchProps, OwnProps>(
-  (state, { route: { params } }) => ({
-    account: state.core.account,
-    fromDenomination: state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
-    fromWalletCurrencyName:
-      state.cryptoExchange.fromWalletId != null ? state.core.account.currencyWallets[state.cryptoExchange.fromWalletId].currencyInfo.displayName : '',
-    pending: state.cryptoExchange.shiftPendingTransaction,
-    toDenomination: state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
-    toWalletCurrencyName:
-      state.cryptoExchange.toWalletId != null ? state.core.account.currencyWallets[state.cryptoExchange.toWalletId].currencyInfo.displayName : ''
-  }),
-  dispatch => ({
-    async shift(navigation, swapInfo, onApprove) {
-      await dispatch(shiftCryptoCurrency(navigation, swapInfo, onApprove))
-    },
-    async timeExpired(navigation, swapInfo, onApprove) {
-      await dispatch(exchangeTimerExpired(navigation, swapInfo, onApprove))
-    }
-  })
-)(withTheme(CryptoExchangeQuoteScreenComponent))

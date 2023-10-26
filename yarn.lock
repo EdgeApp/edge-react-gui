@@ -1464,7 +1464,7 @@
     "@ethersproject/logger" "^5.7.0"
     "@ethersproject/properties" "^5.7.0"
 
-"@ethersproject/address@5.7.0", "@ethersproject/address@^5.5.0", "@ethersproject/address@^5.7.0":
+"@ethersproject/address@5.7.0", "@ethersproject/address@^5.7.0":
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/address/-/address-5.7.0.tgz#19b56c4d74a3b0a46bfdbb6cfcc0a153fc697f37"
   integrity sha512-9wYhYt7aghVGo758POM5nqcOMaE168Q6aRLJZwUmiqSrAungkG74gSSeKEIR7ukixesdRZGPgVqme6vmxs1fkA==
@@ -1513,7 +1513,7 @@
   dependencies:
     "@ethersproject/bignumber" "^5.7.0"
 
-"@ethersproject/contracts@5.7.0", "@ethersproject/contracts@^5.5.0":
+"@ethersproject/contracts@5.7.0":
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/contracts/-/contracts-5.7.0.tgz#c305e775abd07e48aa590e1a877ed5c316f8bd1e"
   integrity sha512-5GJbzEU3X+d33CdfPhcyS+z8MzsTrBGk/sc+G+59+tPa9yFkl6HQ9D6L0QMgNTA9q8dT0XKxxkyp883XsQvbbg==
@@ -1616,7 +1616,7 @@
   dependencies:
     "@ethersproject/logger" "^5.7.0"
 
-"@ethersproject/providers@5.7.2", "@ethersproject/providers@^5.5.3":
+"@ethersproject/providers@5.7.2":
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/@ethersproject/providers/-/providers-5.7.2.tgz#f8b1a4f275d7ce58cf0a2eec222269a08beb18cb"
   integrity sha512-g34EWZ1WWAVgr4aptGlVBF8mhl3VWjv+8hoAnzStu8Ah22VHBsuGzP17eb6xDVRzw895G4W7vvx60lFFur/1Rg==
@@ -1684,7 +1684,7 @@
     elliptic "6.5.4"
     hash.js "1.1.7"
 
-"@ethersproject/solidity@5.7.0", "@ethersproject/solidity@^5.5.0":
+"@ethersproject/solidity@5.7.0":
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/solidity/-/solidity-5.7.0.tgz#5e9c911d8a2acce2a5ebb48a5e2e0af20b631cb8"
   integrity sha512-HmabMd2Dt/raavyaGukF4XxizWKhKQ24DoLtdNbBmNKUOPqwjsKQSdV9GQtj9CBEea9DlzETlVER1gYeXXBGaA==
@@ -7654,10 +7654,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-1.9.0.tgz#6e586a018cb73a73f0555f246b27e98362df2137"
-  integrity sha512-7Ggf4+r6zBEBQf+J3Qdt/yQcGX6vmH5jUKQUCqW2+eYWCshCziEGCuYbC5qLBXaoFTnsaw6KFKqRfdEOTDGuAw==
+edge-core-js@^1.11.0:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-1.11.0.tgz#cab8a4d73bba5b718a247b7f6fbcebcc12e88efe"
+  integrity sha512-+eLUq9dIiMAlOu/dNEDE4icOkrccbcH2YgpI/myOQEtA1SqBVrJt+dUAY6zVkeg1wZLLLpFPiriePNdgwptKrQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^4.0.0"
@@ -7679,10 +7679,10 @@ edge-core-js@^1.9.0:
     yaob "^0.3.11"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^2.7.2:
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-2.7.2.tgz#5a3b727beeb7db096bab1f09f6778b2bda10f54b"
-  integrity sha512-ob28iPc9Ihkpzt/hpPLiPbrzo/ezjucxbWEOJjI6EXn5svAm+YN8AG1KInz+xSLhTArJA7B88tMlWeuCfmHzAg==
+edge-currency-accountbased@^2.9.0:
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-2.9.0.tgz#0a7fb10352bd93da53089aa64bbe59c2a6efb04d"
+  integrity sha512-9nILz3l2seLzYPa7/cvpQFT+v8eqBRZqvZ86Qw8w2MZsg92mSAKz8uNJ+iJv+FVJfMSyj3g4XYI/aOp4ZvW1bw==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@ethereumjs/common" "^2.4.0"
@@ -7726,10 +7726,10 @@ edge-currency-monero@^1.1.1:
     buffer "^5.0.6"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-2.3.0.tgz#746577de8b7c6a5723e53d98e17e9ad06a632662"
-  integrity sha512-cqGPxWqvuhJh7EC2L8uWWDd8OKLGaVerUemDMx5RcVd43VHpGjrTWlqVzf0Tq2Wxwcop+UV5uYNME//Wj7tJiw==
+edge-currency-plugins@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-2.4.0.tgz#9e22ec2c8b63b13e5f4bcabf25f8d04a101f0df2"
+  integrity sha512-GtZSvPzALkiLEp1imcGe+XkKCdTQWIRZS7YSUFaChFLYgr5lLKvucBx0jG2KNq4lX7+jrVKtbfyiL3PdVkXq3Q==
   dependencies:
     "@bitcoin-js/tiny-secp256k1-asmjs" "^2.2.3"
     altcoin-js "^1.0.0"
@@ -7756,28 +7756,21 @@ edge-currency-plugins@^2.3.0:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^0.21.11:
-  version "0.21.11"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.21.11.tgz#0416a302cd0764daecb4fbff38604d8c08ea73ee"
-  integrity sha512-jaVtY6k04xhEP+odo3u+7hPYmNTnHeKBUqEnl81UXppfD3j6Kay1e/G2w44Nns4cMEcFPZy9O3vfWtF/Xi8TuA==
+edge-exchange-plugins@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-1.0.0.tgz#ebf1c68e735f6cde7f0146d64e3d06566614fa74"
+  integrity sha512-Wnn4Tl2s6AYxz4jipvQ8PUHuU7PYa2vMfYSp8TlHbxZ6ic2T5vKzpG3BBq2meqtyOifHzQjibkUTBu1qpi7d7Q==
   dependencies:
-    "@ethersproject/address" "^5.5.0"
-    "@ethersproject/contracts" "^5.5.0"
-    "@ethersproject/providers" "^5.5.3"
-    "@ethersproject/solidity" "^5.5.0"
     biggystring "^4.1.3"
     cleaners "^0.3.13"
-    esm "^3.2.4"
     ethers "^5.7.0"
-    hashjs "^1.2.0"
-    iso4217 "^0.2.0"
-    utf8 "^3.0.0"
+    regenerator-runtime "0.13.11"
     xrpl "^2.10.0"
 
-edge-info-server@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/edge-info-server/-/edge-info-server-1.0.1.tgz#3cdb4c8e017fd3a674a145264291cb81d78ec404"
-  integrity sha512-/CrEQ7eSCOkPuFhrOGQm304WvyRQsrvgKIQSCMEjoiEO9yL83S5fTCrcbwDj5LY2t+fhRp5bKwXNlo2xOqzVJQ==
+edge-info-server@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/edge-info-server/-/edge-info-server-1.0.2.tgz#7454683a8c4e56cbcbb0e97aa7d6651c3f73f833"
+  integrity sha512-jtXuLLXsIf8Fmgq1maZ64Pt2lzjfSkgA/CTDRQ8i2tzOjci7JwYxsOKCf2gW6OOdoSovvFdJwWHNJvEldCDZbw==
   dependencies:
     cleaners "^0.3.16"
 
@@ -8455,11 +8448,6 @@ eslint@^8.19.0:
     strip-ansi "^6.0.1"
     strip-json-comments "^3.1.0"
     text-table "^0.2.0"
-
-esm@^3.2.4:
-  version "3.2.4"
-  resolved "https://registry.yarnpkg.com/esm/-/esm-3.2.4.tgz#0b728b5d6043061bf552197407bf2c630717812b"
-  integrity sha512-wOuWtQCkkwD1WKQN/k3RsyGSSN+AmiUzdKftn8vaC+uV9JesYmQlODJxgXaaRz0LaaFIlUxZaUu5NPiUAjKAAA==
 
 espree@^9.5.2:
   version "9.5.2"
@@ -9805,11 +9793,6 @@ hash.js@1.1.7, hash.js@^1.0.0, hash.js@^1.0.3, hash.js@^1.1.7:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
 
-hashjs@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/hashjs/-/hashjs-1.2.0.tgz#a40e2d69de57826774643029c7b1bb4f2390baaa"
-  integrity sha1-pA4tad5Xgmd0ZDApx7G7TyOQuqo=
-
 hdkey@1.1.1, hdkey@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/hdkey/-/hdkey-1.1.1.tgz#c2b3bfd5883ff9529b72f2f08b28be0972a9f64a"
@@ -10582,11 +10565,6 @@ isexe@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==
-
-iso4217@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/iso4217/-/iso4217-0.2.0.tgz#139ce00ac0cf0d360e48b22215c797f016b2840d"
-  integrity sha1-E5zgCsDPDTYOSLIiFceX8BayhA0=
 
 iso8601-duration@1.3.0:
   version "1.3.0"
@@ -14206,7 +14184,7 @@ regenerate@^1.4.2:
   resolved "https://registry.yarnpkg.com/regenerate/-/regenerate-1.4.2.tgz#b9346d8827e8f5a32f7ba29637d398b69014848a"
   integrity sha512-zrceR/XhGYU/d/opr2EKO7aRHUeiBI8qjtfHqADTwZd6Szfy16la6kqD0MIUs5z5hx6AaKa+PixpPrR289+I0A==
 
-regenerator-runtime@0.13.2, regenerator-runtime@^0.11.0, regenerator-runtime@^0.13.11, regenerator-runtime@^0.13.2:
+regenerator-runtime@0.13.11, regenerator-runtime@0.13.2, regenerator-runtime@^0.11.0, regenerator-runtime@^0.13.11, regenerator-runtime@^0.13.2:
   version "0.13.2"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.2.tgz#32e59c9a6fb9b1a4aff09b4930ca2d4477343447"
   integrity sha512-S/TQAZJO+D3m9xeN1WTI8dLKBBiRgXBlTJvbWjCThHWZj9EvHK70Ff50/tYj2J/fvBY6JtFVwRuazHN2E7M9BA==
