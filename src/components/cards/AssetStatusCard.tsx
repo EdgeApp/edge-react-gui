@@ -30,6 +30,7 @@ export const AssetStatusCard = (props: { assetStatus: AssetStatus }) => {
     <StatusCard
       message={message}
       title={title}
+      testIds={{ title: 'statusCardTitle', message: 'statusCardMessage', close: 'statusCardClose' }}
       iconOrUri={
         // If not explicitly set, auto-fill if warning status.
         iconUrl == null ? (
@@ -57,7 +58,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   icon: {
     width: theme.rem(3),
     height: theme.rem(3),
-    marginRight: theme.rem(0.75),
-    marginLeft: theme.rem(-0.25)
+    marginRight: theme.rem(0.5)
   }
 }))
