@@ -7,7 +7,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { pickLanguage } from '../../locales/intl'
 import { openBrowserUri } from '../../util/WebUtils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { StatusCard } from './StatusCard'
+import { IconMessageCard } from './IconMessageCard'
 
 const DEFAULT_LANGUAGE = 'en_US'
 
@@ -27,7 +27,7 @@ export const AssetStatusCard = (props: { assetStatus: AssetStatus }) => {
   const message = localeStatusBody[messageLocale ?? 0]
 
   return isWithinDate ? (
-    <StatusCard
+    <IconMessageCard
       message={message}
       title={title}
       testIds={{ title: 'statusCardTitle', message: 'statusCardMessage', close: 'statusCardClose' }}

@@ -13,8 +13,10 @@
 - changed: Enable max spend for Filecoin
 - changed: Move asset-specific settings into their own settings page
 - changed: Experiment config probability distribution support percentage based values
+- changed: Added border to Promo Card
 - fixed: Write updated experiment configs to disk
 - fixed: Auto Logoff picker text color for Android Light OS theme
+- fixed: Fallback language selection for Asset Status Card
 - removed: Moonpay sell via ACH
 - removed: Banxa buy via Pix
 

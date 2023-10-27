@@ -18,7 +18,7 @@ interface Props {
   onPress?: () => void
 }
 
-export function StatusCard(props: Props) {
+export function IconMessageCard(props: Props) {
   const { iconOrUri, message, title, testIds, onPress = () => {}, onClose } = props
   const theme = useTheme()
   const styles = getStyles(theme)
