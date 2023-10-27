@@ -9,7 +9,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { bestOfMessages } from '../../util/ReferralHelpers'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { StatusCard } from './StatusCard'
+import { IconMessageCard } from './IconMessageCard'
 
 interface Props {
   navigation: NavigationBase
@@ -39,7 +39,7 @@ export function PromoCard(props: Props) {
   if (messageSummary == null) return null
   const { message } = messageSummary
   return (
-    <StatusCard
+    <IconMessageCard
       message={message.message}
       testIds={{ message: 'promoCard', close: 'closePromo' }}
       iconOrUri={message.iconUri != null ? <FastImage resizeMode="contain" source={{ uri: message.iconUri }} style={styles.icon} /> : null}
