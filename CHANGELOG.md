@@ -14,6 +14,7 @@
 - changed: Move asset-specific settings into their own settings page
 - changed: Experiment config probability distribution support percentage based values
 - fixed: Write updated experiment configs to disk
+- fixed: Auto Logoff picker text color for Android Light OS theme
 - removed: Moonpay sell via ACH
 - removed: Banxa buy via Pix
 
