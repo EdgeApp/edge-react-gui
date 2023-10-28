@@ -65,7 +65,7 @@ export function RadioListModal(props: Props) {
     )
   })
 
-  return <ListModal bridge={bridge} title={title} textInput={false} rowsData={items} rowComponent={renderRow} fullScreen={false} />
+  return <ListModal bridge={bridge} title={title} hideSearch rowsData={items} rowComponent={renderRow} fullScreen={false} />
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

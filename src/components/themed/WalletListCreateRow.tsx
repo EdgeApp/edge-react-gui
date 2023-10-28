@@ -101,7 +101,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
             <ListModal<EdgeCurrencyWallet>
               bridge={bridge}
               title={lstrings.select_wallet}
-              textInput={false}
+              hideSearch
               fullScreen={false}
               rowComponent={renderRow}
               rowsData={createWalletIds.map(walletId => currencyWallets[walletId])}

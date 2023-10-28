@@ -163,7 +163,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
               bridge={bridge}
               title={lstrings.select_wallet}
               message={sprintf(lstrings.create_wallet_select_wallet_for_assets, displayNames)}
-              textInput={false}
+              hideSearch
               fullScreen={false}
               rowComponent={renderRow}
               rowsData={existingWalletIds}

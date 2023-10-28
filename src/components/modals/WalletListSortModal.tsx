@@ -34,5 +34,7 @@ export const WalletListSortModal = ({ bridge, sortOption }: Props) => {
     )
   })
 
-  return <ListModal bridge={bridge} title={lstrings.wallet_list_sort_title} textInput={false} rowsData={options} rowComponent={renderRow} fullScreen={false} />
+  return (
+    <ListModal bridge={bridge} title={lstrings.wallet_list_sort_title} hideSearch={false} rowsData={options} rowComponent={renderRow} fullScreen={false} />
+  )
 }

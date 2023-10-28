@@ -12,6 +12,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
     }
   }
   fullScreen={false}
+  hideSearch={false}
   rowComponent={[Function]}
   rowsData={
     [
@@ -41,7 +42,6 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
       ],
     ]
   }
-  textInput={false}
   title="Sort Wallets"
 />
 `;

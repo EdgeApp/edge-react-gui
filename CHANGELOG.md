@@ -12,7 +12,9 @@
 - changed: Change FlipInput styling to make the edit functionality more obvious
 - changed: Enable max spend for Filecoin
 - changed: Move asset-specific settings into their own settings page
-- changed: Experiment config probability distribution support percentage based values
+- changed: Experiment config probability distribution support percentage based
+  values
+- changed: ListModal props updated: `textInput`->`hideSearch`
 - fixed: Write updated experiment configs to disk
 - fixed: Auto Logoff picker text color for Android Light OS theme
 - removed: Moonpay sell via ACH
