@@ -595,6 +595,8 @@
   "transaction_details_accelerate_transaction_slider_disabled": "トランザクションを加速できません",
   "transaction_details_accelerate_transaction_fee_too_low": "トランザクション手数料が低すぎます。手数料が更新されました。もう一度やり直してください。",
   "transaction_details_accelerate_transaction_sent": "トランザクションが加速されました。",
+  "transaction_details_accelerate_transaction_lower_amount_tx_title": "Lower Send Amount",
+  "transaction_details_accelerate_transaction_lower_amount_tx_message": "In order to accelerate this transaction, the recipient's amount will be lower due to insufficient balance to cover the new fee.",
   "transaction_details_exchange_details": "交換詳細",
   "transaction_details_exchange_service": "交換サービス",
   "transaction_details_exchange_order_id": "注文ID",
