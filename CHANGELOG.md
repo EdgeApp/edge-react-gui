@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: New 'Lower Send Amount' warning for transaction acceleration
+
 ## 3.21.0
 
 - added: Paybis buy/sell in Brazil, Columbia, and Mexico
