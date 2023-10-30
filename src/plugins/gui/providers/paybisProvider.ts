@@ -442,7 +442,7 @@ export const paybisProvider: FiatProviderFactory = {
 
         return {
           providerId,
-          partnerIcon: 'dummy.png',
+          partnerIcon,
           pluginDisplayName: 'Paybis',
           displayCurrencyCode,
           cryptoAmount,
