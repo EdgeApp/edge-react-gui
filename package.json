@@ -144,7 +144,7 @@
     "edge-currency-plugins": "^2.4.1",
     "edge-exchange-plugins": "^1.0.0",
     "edge-info-server": "^1.0.2",
-    "edge-login-ui-rn": "^2.15.0",
+    "edge-login-ui-rn": "^2.16.0",
     "ethers": "^5.6.0",
     "paraswap": "^5.2.0",
     "prompts": "^2.4.2",
