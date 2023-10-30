@@ -595,6 +595,8 @@
   "transaction_details_accelerate_transaction_slider_disabled": "Impossibile accelerare la transazione",
   "transaction_details_accelerate_transaction_fee_too_low": "La commissione di transazione accelerata è troppo bassa. La commissione è stata aggiornata. Riprova.",
   "transaction_details_accelerate_transaction_sent": "La tua transazione è stata accelerata.",
+  "transaction_details_accelerate_transaction_lower_amount_tx_title": "Lower Send Amount",
+  "transaction_details_accelerate_transaction_lower_amount_tx_message": "In order to accelerate this transaction, the recipient's amount will be lower due to insufficient balance to cover the new fee.",
   "transaction_details_exchange_details": "Dettagli Scambio",
   "transaction_details_exchange_service": "Servizio cambio valuta",
   "transaction_details_exchange_order_id": "ID ordine",
