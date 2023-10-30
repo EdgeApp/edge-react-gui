@@ -31,10 +31,10 @@ exports[`PromoCard should render 1`] = `
   onStartShouldSetResponder={[Function]}
   style={
     {
-      "marginBottom": 22,
-      "marginLeft": 22,
-      "marginRight": 22,
-      "marginTop": 22,
+      "marginBottom": 11,
+      "marginLeft": 11,
+      "marginRight": 11,
+      "marginTop": 11,
       "opacity": 1,
       "paddingBottom": 11,
       "paddingLeft": 11,
@@ -46,10 +46,7 @@ exports[`PromoCard should render 1`] = `
   <View
     style={
       {
-        "alignItems": "center",
-        "backgroundColor": "rgba(255, 255, 255, 0)",
-        "flexDirection": "row",
-        "padding": 11,
+        "width": "100%",
       }
     }
   >
@@ -57,115 +54,156 @@ exports[`PromoCard should render 1`] = `
       style={
         [
           {
-            "overflow": "hidden",
-          },
-          {
-            "height": 45,
-            "margin": 11,
-            "width": 45,
-          },
-        ]
-      }
-    >
-      <FastImageView
-        resizeMode="contain"
-        source={
-          {
-            "uri": "https://edge.app/favicon.ico",
-          }
-        }
-        style={
-          {
-            "bottom": 0,
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-          }
-        }
-      />
-    </View>
-    <Text
-      adjustsFontSizeToFit={true}
-      minimumFontScale={0.65}
-      numberOfLines={0}
-      style={
-        [
-          {
-            "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
-            "includeFontPadding": false,
-          },
-          {
-            "flex": 1,
-            "margin": 11,
+            "borderColor": "rgba(255, 255, 255, .1)",
+            "borderRadius": 4,
+            "borderWidth": 1,
           },
           null,
+          {
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+          },
+          {
+            "paddingBottom": 22,
+            "paddingLeft": 22,
+            "paddingRight": 22,
+            "paddingTop": 22,
+          },
         ]
       }
-      testID="promoCard"
     >
-      Show me
-    </Text>
-    <View
-      accessibilityState={
-        {
-          "busy": undefined,
-          "checked": undefined,
-          "disabled": undefined,
-          "expanded": undefined,
-          "selected": undefined,
-        }
-      }
-      accessibilityValue={
-        {
-          "max": undefined,
-          "min": undefined,
-          "now": undefined,
-          "text": undefined,
-        }
-      }
-      accessible={false}
-      collapsable={false}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      style={
-        {
-          "opacity": 1,
-        }
-      }
-    >
-      <Text
-        accessibilityHint="Close"
-        allowFontScaling={false}
+      <View
         style={
-          [
-            {
-              "color": "#00f1a2",
-              "fontSize": 22,
-            },
-            {
-              "padding": 11,
-            },
-            {
-              "fontFamily": "anticon",
-              "fontStyle": "normal",
-              "fontWeight": "normal",
-            },
-            {},
-          ]
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+          }
         }
-        testID="closePromo"
       >
-        
-      </Text>
+        <View
+          style={
+            [
+              {
+                "overflow": "hidden",
+              },
+              {
+                "height": 45,
+                "marginHorizontal": 11,
+                "width": 45,
+              },
+            ]
+          }
+        >
+          <FastImageView
+            resizeMode="contain"
+            source={
+              {
+                "uri": "https://edge.app/favicon.ico",
+              }
+            }
+            style={
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
+        </View>
+        <View
+          style={
+            {
+              "flex": 1,
+              "flexDirection": "column",
+              "padding": 11,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                undefined,
+                null,
+              ]
+            }
+            testID="promoCard"
+          >
+            Show me
+          </Text>
+        </View>
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={false}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "opacity": 1,
+            }
+          }
+        >
+          <Text
+            accessibilityHint="Close"
+            allowFontScaling={false}
+            style={
+              [
+                {
+                  "color": "#00f1a2",
+                  "fontSize": 22,
+                },
+                {
+                  "padding": 11,
+                },
+                {
+                  "fontFamily": "anticon",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                {},
+              ]
+            }
+            testID="closePromo"
+          >
+            
+          </Text>
+        </View>
+      </View>
     </View>
   </View>
 </View>
