@@ -53,7 +53,7 @@ exports[`AdvancedDetailsModal should render with loading props 1`] = `
     style={
       {
         "alignSelf": "flex-end",
-        "backgroundColor": "#121d25",
+        "backgroundColor": "#0D2145",
         "borderColor": "rgba(255, 255, 255, 0)",
         "borderTopLeftRadius": 22,
         "borderTopRightRadius": 22,
@@ -103,7 +103,7 @@ exports[`AdvancedDetailsModal should render with loading props 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -180,7 +180,7 @@ exports[`AdvancedDetailsModal should render with loading props 1`] = `
                         "fontSize": 12,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "height": 17,
                         "position": "absolute",
                         "right": 0,
@@ -207,12 +207,12 @@ exports[`AdvancedDetailsModal should render with loading props 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingBottom": 6,
                         "paddingRight": 22,
@@ -232,7 +232,7 @@ exports[`AdvancedDetailsModal should render with loading props 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -249,7 +249,7 @@ exports[`AdvancedDetailsModal should render with loading props 1`] = `
             <View
               style={
                 {
-                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomColor": "#e2722640",
                   "borderBottomWidth": 1,
                   "height": 1,
                   "marginLeft": 22,
@@ -310,12 +310,12 @@ exports[`AdvancedDetailsModal should render with loading props 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingBottom": 6,
                         "paddingRight": 22,
@@ -335,7 +335,7 @@ exports[`AdvancedDetailsModal should render with loading props 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -354,7 +354,7 @@ exports[`AdvancedDetailsModal should render with loading props 1`] = `
             <View
               style={
                 {
-                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomColor": "#e2722640",
                   "borderBottomWidth": 1,
                   "height": 1,
                   "marginLeft": 22,
@@ -408,7 +408,7 @@ exports[`AdvancedDetailsModal should render with loading props 1`] = `
         style={
           [
             {
-              "color": "#00f1a2",
+              "color": "#e27226",
               "fontSize": 28,
             },
             undefined,

@@ -4,8 +4,8 @@ exports[`CurrencySettings should render 1`] = `
 <BVLinearGradient
   colors={
     [
-      4278585612,
-      4279971643,
+      4280036943,
+      4280306288,
     ]
   }
   endPoint={
@@ -55,8 +55,8 @@ exports[`CurrencySettings should render 1`] = `
         <BVLinearGradient
           colors={
             [
-              4279377189,
-              4279377189,
+              4280036943,
+              4280036943,
             ]
           }
           endPoint={
@@ -88,7 +88,7 @@ exports[`CurrencySettings should render 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "textAlign": "left",
               }
@@ -131,7 +131,7 @@ exports[`CurrencySettings should render 1`] = `
               {
                 "color": "#FFFFFF",
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -141,7 +141,7 @@ exports[`CurrencySettings should render 1`] = `
             <Text
               style={
                 {
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                 }
               }
             >
@@ -155,7 +155,7 @@ exports[`CurrencySettings should render 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -180,7 +180,7 @@ exports[`CurrencySettings should render 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -208,7 +208,7 @@ exports[`CurrencySettings should render 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 28,
                       "marginHorizontal": 11,
                     },
@@ -260,7 +260,7 @@ exports[`CurrencySettings should render 1`] = `
               {
                 "color": "#FFFFFF",
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -270,7 +270,7 @@ exports[`CurrencySettings should render 1`] = `
             <Text
               style={
                 {
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                 }
               }
             >
@@ -284,7 +284,7 @@ exports[`CurrencySettings should render 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -309,7 +309,7 @@ exports[`CurrencySettings should render 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -337,7 +337,7 @@ exports[`CurrencySettings should render 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 28,
                       "marginHorizontal": 11,
                     },
@@ -389,7 +389,7 @@ exports[`CurrencySettings should render 1`] = `
               {
                 "color": "#FFFFFF",
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -399,7 +399,7 @@ exports[`CurrencySettings should render 1`] = `
             <Text
               style={
                 {
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                 }
               }
             >
@@ -413,7 +413,7 @@ exports[`CurrencySettings should render 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -438,7 +438,7 @@ exports[`CurrencySettings should render 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -466,7 +466,7 @@ exports[`CurrencySettings should render 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 28,
                       "marginHorizontal": 11,
                     },

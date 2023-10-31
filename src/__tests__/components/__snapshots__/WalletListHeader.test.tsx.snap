@@ -49,7 +49,7 @@ exports[`WalletListHeader should render with loading props 1`] = `
       <WithTheme(EdgeTextComponent)
         style={
           {
-            "color": "#00f1a2",
+            "color": "#e27226",
           }
         }
       >

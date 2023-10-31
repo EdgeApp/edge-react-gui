@@ -113,7 +113,7 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
             <WithTheme(EdgeTextComponent)
               style={
                 {
-                  "color": "#A4C7DF",
+                  "color": "#A5D4FF",
                 }
               }
             >
@@ -125,7 +125,7 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
               size={17}
               style={
                 {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "marginLeft": 11,
                 }
               }
@@ -157,7 +157,7 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
           <WithTheme(EdgeTextComponent)
             style={
               {
-                "color": "#A4C7DF",
+                "color": "#A5D4FF",
                 "flex": 1,
                 "fontSize": 17,
               }
@@ -213,7 +213,7 @@ exports[`FlipInputModalComponent should render with loading props 1`] = `
           <WithTheme(EdgeTextComponent)
             style={
               {
-                "color": "#A4C7DF",
+                "color": "#A5D4FF",
                 "flex": 1,
                 "fontSize": 17,
               }

@@ -4,8 +4,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
 <BVLinearGradient
   colors={
     [
-      4278585612,
-      4279971643,
+      4280036943,
+      4280306288,
     ]
   }
   endPoint={
@@ -94,12 +94,12 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
                 {
-                  "fontFamily": "Quicksand-Medium",
+                  "fontFamily": "NunitoSans-Bold",
                   "fontSize": 27,
                 },
                 null,
@@ -258,7 +258,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               [
                 {
                   "alignSelf": "flex-start",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "padding": 0,
                 },
@@ -303,7 +303,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               [
                 {
                   "color": "#E85466",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 17,
                 },
                 {
@@ -322,7 +322,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             [
               {
                 "bottom": -10,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 17,
                 "position": "absolute",
                 "right": 28,
@@ -394,7 +394,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "padding": 0,
               },
               {
@@ -804,23 +804,23 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             onStartShouldSetResponder={[Function]}
             style={
               {
-                "elevation": 2,
+                "elevation": 0,
                 "opacity": 1,
-                "shadowColor": "#FFFFFF",
+                "shadowColor": "#000000",
                 "shadowOffset": {
                   "height": 0,
                   "width": 0,
                 },
-                "shadowOpacity": 0.25,
-                "shadowRadius": 8,
+                "shadowOpacity": 0,
+                "shadowRadius": 0,
               }
             }
           >
             <BVLinearGradient
               colors={
                 [
-                  4278754931,
-                  4278251938,
+                  4280723937,
+                  4280723937,
                 ]
               }
               endPoint={
@@ -842,7 +842,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     "alignItems": "center",
                     "borderColor": "rgba(255, 255, 255, 0)",
                     "borderRadius": 6,
-                    "borderWidth": 0,
+                    "borderWidth": 1,
                     "flexDirection": "row",
                     "justifyContent": "center",
                     "minHeight": 67,
@@ -874,8 +874,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 numberOfLines={1}
                 style={
                   {
-                    "color": "#1b2f3b",
-                    "fontFamily": "Quicksand-Medium",
+                    "color": "#0D2145",
+                    "fontFamily": "NunitoSans-Bold",
                     "fontSize": 22,
                     "marginHorizontal": 0,
                     "paddingBottom": 11,

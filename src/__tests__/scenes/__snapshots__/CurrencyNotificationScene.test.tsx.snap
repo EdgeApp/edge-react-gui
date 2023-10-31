@@ -4,8 +4,8 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
 <BVLinearGradient
   colors={
     [
-      4278585612,
-      4279971643,
+      4280036943,
+      4280306288,
     ]
   }
   endPoint={
@@ -87,7 +87,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -114,7 +114,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -145,7 +145,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
                   onChange={[Function]}
                   onResponderTerminationRequest={[Function]}
                   onStartShouldSetResponder={[Function]}
-                  onTintColor="#00f1a2"
+                  onTintColor="#e27226"
                   style={
                     [
                       {
@@ -200,7 +200,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -227,7 +227,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -258,7 +258,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
                   onChange={[Function]}
                   onResponderTerminationRequest={[Function]}
                   onStartShouldSetResponder={[Function]}
-                  onTintColor="#00f1a2"
+                  onTintColor="#e27226"
                   style={
                     [
                       {
