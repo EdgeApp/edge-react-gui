@@ -13,8 +13,10 @@ import { readSyncedSettings, updateOneSetting, writeSyncedSettings } from '../..
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
 import buyPluginJsonRaw from '../../constants/plugins/buyPluginList.json'
+import buyPluginJsonOverrideRaw from '../../constants/plugins/buyPluginListOverride.json'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
 import sellPluginJsonRaw from '../../constants/plugins/sellPluginList.json'
+import sellPluginJsonOverrideRaw from '../../constants/plugins/sellPluginListOverride.json'
 import { ENV } from '../../env'
 import { lstrings } from '../../locales/strings'
 import { executePlugin } from '../../plugins/gui/fiatPlugin'
@@ -37,9 +39,12 @@ import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeConte
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 
+const buyRaw = buyPluginJsonOverrideRaw.length > 0 ? buyPluginJsonOverrideRaw : buyPluginJsonRaw
+const sellRaw = sellPluginJsonOverrideRaw.length > 0 ? sellPluginJsonOverrideRaw : sellPluginJsonRaw
+
 const buySellPlugins: BuySellPlugins = {
-  buy: asGuiPluginJson(buyPluginJsonRaw),
-  sell: asGuiPluginJson(sellPluginJsonRaw)
+  buy: asGuiPluginJson(buyRaw),
+  sell: asGuiPluginJson(sellRaw)
 }
 
 const paymentTypeLogosById = {
