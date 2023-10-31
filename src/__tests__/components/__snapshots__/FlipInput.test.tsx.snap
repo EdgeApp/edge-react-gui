@@ -146,8 +146,8 @@ exports[`FlipInputComponent should render with loading props 1`] = `
               <WithTheme(EdgeTextComponent)
                 style={
                   {
-                    "color": "#00f1a2",
-                    "fontFamily": "Quicksand-Medium",
+                    "color": "#e27226",
+                    "fontFamily": "NunitoSans-Bold",
                     "fontSize": 34,
                     "marginLeft": -2,
                   }
@@ -239,8 +239,8 @@ exports[`FlipInputComponent should render with loading props 1`] = `
               <WithTheme(EdgeTextComponent)
                 style={
                   {
-                    "color": "#00f1a2",
-                    "fontFamily": "Quicksand-Medium",
+                    "color": "#e27226",
+                    "fontFamily": "NunitoSans-Bold",
                     "fontSize": 34,
                     "marginLeft": -2,
                   }
@@ -286,7 +286,7 @@ exports[`FlipInputComponent should render with loading props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#00f1a2"
+        color="#e27226"
         name="exchange"
         size={39}
         style={

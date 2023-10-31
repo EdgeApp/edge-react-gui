@@ -16,7 +16,7 @@ exports[`LineTextDivider should render with loading props 1`] = `
   <View
     style={
       {
-        "borderBottomColor": "#A4C7DF",
+        "borderBottomColor": "#e27226",
         "borderBottomWidth": 1,
         "flex": 1,
       }
@@ -26,8 +26,8 @@ exports[`LineTextDivider should render with loading props 1`] = `
     style={
       [
         {
-          "color": "#A4C7DF",
-          "fontFamily": "Quicksand-Medium",
+          "color": "#A5D4FF",
+          "fontFamily": "NunitoSans-Bold",
           "fontSize": 22,
           "paddingHorizontal": 17,
         },
@@ -43,7 +43,7 @@ exports[`LineTextDivider should render with loading props 1`] = `
   <View
     style={
       {
-        "borderBottomColor": "#A4C7DF",
+        "borderBottomColor": "#e27226",
         "borderBottomWidth": 1,
         "flex": 1,
       }

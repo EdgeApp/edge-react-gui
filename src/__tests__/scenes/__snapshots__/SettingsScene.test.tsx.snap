@@ -4,8 +4,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
 <BVLinearGradient
   colors={
     [
-      4278585612,
-      4279971643,
+      4280036943,
+      4280306288,
     ]
   }
   endPoint={
@@ -55,8 +55,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         <BVLinearGradient
           colors={
             [
-              4279377189,
-              4279377189,
+              4280036943,
+              4280036943,
             ]
           }
           endPoint={
@@ -116,7 +116,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "textAlign": "left",
               }
@@ -160,7 +160,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -187,7 +187,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -213,7 +213,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -266,7 +266,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#87939E",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -293,7 +293,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -374,7 +374,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#87939E",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -401,7 +401,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -482,7 +482,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#87939E",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -509,7 +509,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -590,7 +590,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#87939E",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -617,7 +617,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -698,7 +698,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#87939E",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -725,7 +725,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -774,8 +774,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         <BVLinearGradient
           colors={
             [
-              4279377189,
-              4279377189,
+              4280036943,
+              4280036943,
             ]
           }
           endPoint={
@@ -835,7 +835,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "textAlign": "left",
               }
@@ -879,115 +879,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "paddingHorizontal": 11,
-                "textAlign": "left",
-              }
-            }
-          >
-            Exchange Settings
-          </Text>
-          <View>
-            <View
-              pending={false}
-              style={
-                [
-                  {
-                    "aspectRatio": 1,
-                    "position": "absolute",
-                    "width": "100%",
-                    "zIndex": 1,
-                  },
-                  {
-                    "opacity": 0,
-                  },
-                ]
-              }
-            >
-              <ActivityIndicator
-                color="#00f1a2"
-                style={
-                  {
-                    "height": 34,
-                    "marginHorizontal": 11,
-                  }
-                }
-              />
-            </View>
-            <View
-              pending={false}
-              style={
-                {
-                  "opacity": 1,
-                }
-              }
-            >
-              <Text
-                allowFontScaling={false}
-                style={
-                  [
-                    {
-                      "color": undefined,
-                      "fontSize": 12,
-                    },
-                    {
-                      "color": "#00f1a2",
-                      "fontSize": 22,
-                      "marginHorizontal": 11,
-                    },
-                    {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
-          </View>
-        </View>
-        <View
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0)",
-              "flexDirection": "row",
-              "marginBottom": 1,
-              "minHeight": 67,
-              "padding": 11,
-            }
-          }
-        >
-          <Text
-            style={
-              {
-                "color": "#FFFFFF",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1014,7 +906,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -1040,7 +932,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -1095,7 +987,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1122,7 +1014,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -1142,8 +1034,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               <Text
                 style={
                   {
-                    "color": "#00f1a2",
-                    "fontFamily": "Quicksand-Regular",
+                    "color": "#e27226",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "marginHorizontal": 11,
                   }
@@ -1189,7 +1081,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1216,7 +1108,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -1236,8 +1128,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               <Text
                 style={
                   {
-                    "color": "#00f1a2",
-                    "fontFamily": "Quicksand-Regular",
+                    "color": "#e27226",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "marginHorizontal": 11,
                   }
@@ -1283,7 +1175,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1310,7 +1202,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -1341,7 +1233,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   onChange={[Function]}
                   onResponderTerminationRequest={[Function]}
                   onStartShouldSetResponder={[Function]}
-                  onTintColor="#00f1a2"
+                  onTintColor="#e27226"
                   style={
                     [
                       {
@@ -1396,7 +1288,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1423,7 +1315,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -1454,7 +1346,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   onChange={[Function]}
                   onResponderTerminationRequest={[Function]}
                   onStartShouldSetResponder={[Function]}
-                  onTintColor="#00f1a2"
+                  onTintColor="#e27226"
                   style={
                     [
                       {
@@ -1509,7 +1401,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1536,7 +1428,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -1567,7 +1459,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   onChange={[Function]}
                   onResponderTerminationRequest={[Function]}
                   onStartShouldSetResponder={[Function]}
-                  onTintColor="#00f1a2"
+                  onTintColor="#e27226"
                   style={
                     [
                       {
@@ -1622,7 +1514,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1649,7 +1541,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -1675,7 +1567,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -1730,7 +1622,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1757,7 +1649,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -1783,7 +1675,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -1838,7 +1730,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -1865,7 +1757,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -1891,7 +1783,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -1946,120 +1838,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "paddingHorizontal": 11,
-                "textAlign": "left",
-              }
-            }
-          >
-            Developer Mode
-          </Text>
-          <View>
-            <View
-              pending={false}
-              style={
-                [
-                  {
-                    "aspectRatio": 1,
-                    "position": "absolute",
-                    "width": "100%",
-                    "zIndex": 1,
-                  },
-                  {
-                    "opacity": 0,
-                  },
-                ]
-              }
-            >
-              <ActivityIndicator
-                color="#00f1a2"
-                style={
-                  {
-                    "height": 34,
-                    "marginHorizontal": 11,
-                  }
-                }
-              />
-            </View>
-            <View
-              pending={false}
-              style={
-                {
-                  "opacity": 1,
-                }
-              }
-            >
-              <View
-                pointerEvents="none"
-                style={
-                  {
-                    "marginHorizontal": 11,
-                    "padding": 0,
-                  }
-                }
-              >
-                <RCTSwitch
-                  accessibilityRole="switch"
-                  onChange={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
-                  onTintColor="#00f1a2"
-                  style={
-                    [
-                      {
-                        "height": 31,
-                        "width": 51,
-                      },
-                      {
-                        "backgroundColor": "#87939E",
-                        "borderRadius": 16,
-                      },
-                    ]
-                  }
-                  tintColor="#87939E"
-                  value={true}
-                />
-              </View>
-            </View>
-          </View>
-        </View>
-        <View
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0)",
-              "flexDirection": "row",
-              "marginBottom": 1,
-              "minHeight": 67,
-              "padding": 11,
-            }
-          }
-        >
-          <Text
-            style={
-              {
-                "color": "#FFFFFF",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2086,7 +1865,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -2117,7 +1896,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   onChange={[Function]}
                   onResponderTerminationRequest={[Function]}
                   onStartShouldSetResponder={[Function]}
-                  onTintColor="#00f1a2"
+                  onTintColor="#e27226"
                   style={
                     [
                       {
@@ -2172,7 +1951,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2199,7 +1978,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -2225,7 +2004,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -2280,7 +2059,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2307,7 +2086,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -2333,7 +2112,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -2388,7 +2167,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2415,7 +2194,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -2441,7 +2220,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -2496,7 +2275,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -2523,7 +2302,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -2554,7 +2333,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   onChange={[Function]}
                   onResponderTerminationRequest={[Function]}
                   onStartShouldSetResponder={[Function]}
-                  onTintColor="#00f1a2"
+                  onTintColor="#e27226"
                   style={
                     [
                       {
@@ -2657,7 +2436,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 [
                   {
                     "alignItems": "center",
-                    "borderColor": "#00f1a2",
+                    "borderColor": "#e27226",
                     "borderRadius": 6,
                     "borderWidth": 1.5,
                     "flexDirection": "row",
@@ -2691,8 +2470,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 numberOfLines={1}
                 style={
                   {
-                    "color": "#00f1a2",
-                    "fontFamily": "Quicksand-Regular",
+                    "color": "#e27226",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "marginHorizontal": 0,
                     "paddingBottom": 11,
@@ -2806,8 +2585,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 numberOfLines={1}
                 style={
                   {
-                    "color": "#00f1a2",
-                    "fontFamily": "Quicksand-Regular",
+                    "color": "#e27226",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "marginHorizontal": 0,
                     "paddingBottom": 11,
@@ -2832,8 +2611,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
 <BVLinearGradient
   colors={
     [
-      4278585612,
-      4279971643,
+      4280036943,
+      4280306288,
     ]
   }
   endPoint={
@@ -2883,8 +2662,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         <BVLinearGradient
           colors={
             [
-              4279377189,
-              4279377189,
+              4280036943,
+              4280036943,
             ]
           }
           endPoint={
@@ -2944,7 +2723,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "textAlign": "left",
               }
@@ -2988,7 +2767,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -3015,7 +2794,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -3041,7 +2820,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -3094,7 +2873,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -3121,7 +2900,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -3147,7 +2926,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -3202,7 +2981,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -3229,7 +3008,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -3255,7 +3034,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -3310,7 +3089,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -3337,7 +3116,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -3363,7 +3142,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -3418,7 +3197,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -3445,7 +3224,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -3471,7 +3250,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -3526,7 +3305,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#E85466",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -3553,7 +3332,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -3579,7 +3358,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -3602,8 +3381,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         <BVLinearGradient
           colors={
             [
-              4279377189,
-              4279377189,
+              4280036943,
+              4280036943,
             ]
           }
           endPoint={
@@ -3663,7 +3442,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "textAlign": "left",
               }
@@ -3707,115 +3486,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "paddingHorizontal": 11,
-                "textAlign": "left",
-              }
-            }
-          >
-            Exchange Settings
-          </Text>
-          <View>
-            <View
-              pending={false}
-              style={
-                [
-                  {
-                    "aspectRatio": 1,
-                    "position": "absolute",
-                    "width": "100%",
-                    "zIndex": 1,
-                  },
-                  {
-                    "opacity": 0,
-                  },
-                ]
-              }
-            >
-              <ActivityIndicator
-                color="#00f1a2"
-                style={
-                  {
-                    "height": 34,
-                    "marginHorizontal": 11,
-                  }
-                }
-              />
-            </View>
-            <View
-              pending={false}
-              style={
-                {
-                  "opacity": 1,
-                }
-              }
-            >
-              <Text
-                allowFontScaling={false}
-                style={
-                  [
-                    {
-                      "color": undefined,
-                      "fontSize": 12,
-                    },
-                    {
-                      "color": "#00f1a2",
-                      "fontSize": 22,
-                      "marginHorizontal": 11,
-                    },
-                    {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
-          </View>
-        </View>
-        <View
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0)",
-              "flexDirection": "row",
-              "marginBottom": 1,
-              "minHeight": 67,
-              "padding": 11,
-            }
-          }
-        >
-          <Text
-            style={
-              {
-                "color": "#FFFFFF",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -3842,7 +3513,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -3868,7 +3539,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -3923,7 +3594,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -3950,7 +3621,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -3970,8 +3641,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               <Text
                 style={
                   {
-                    "color": "#00f1a2",
-                    "fontFamily": "Quicksand-Regular",
+                    "color": "#e27226",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "marginHorizontal": 11,
                   }
@@ -4017,7 +3688,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -4044,7 +3715,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -4064,8 +3735,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               <Text
                 style={
                   {
-                    "color": "#00f1a2",
-                    "fontFamily": "Quicksand-Regular",
+                    "color": "#e27226",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "marginHorizontal": 11,
                   }
@@ -4111,7 +3782,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -4138,7 +3809,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -4169,7 +3840,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   onChange={[Function]}
                   onResponderTerminationRequest={[Function]}
                   onStartShouldSetResponder={[Function]}
-                  onTintColor="#00f1a2"
+                  onTintColor="#e27226"
                   style={
                     [
                       {
@@ -4224,7 +3895,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -4251,7 +3922,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -4282,7 +3953,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   onChange={[Function]}
                   onResponderTerminationRequest={[Function]}
                   onStartShouldSetResponder={[Function]}
-                  onTintColor="#00f1a2"
+                  onTintColor="#e27226"
                   style={
                     [
                       {
@@ -4337,7 +4008,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -4364,7 +4035,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -4395,7 +4066,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   onChange={[Function]}
                   onResponderTerminationRequest={[Function]}
                   onStartShouldSetResponder={[Function]}
-                  onTintColor="#00f1a2"
+                  onTintColor="#e27226"
                   style={
                     [
                       {
@@ -4450,7 +4121,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -4477,7 +4148,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -4503,7 +4174,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -4558,7 +4229,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -4585,7 +4256,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -4611,7 +4282,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -4666,7 +4337,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -4693,7 +4364,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -4719,7 +4390,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -4774,120 +4445,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "paddingHorizontal": 11,
-                "textAlign": "left",
-              }
-            }
-          >
-            Developer Mode
-          </Text>
-          <View>
-            <View
-              pending={false}
-              style={
-                [
-                  {
-                    "aspectRatio": 1,
-                    "position": "absolute",
-                    "width": "100%",
-                    "zIndex": 1,
-                  },
-                  {
-                    "opacity": 0,
-                  },
-                ]
-              }
-            >
-              <ActivityIndicator
-                color="#00f1a2"
-                style={
-                  {
-                    "height": 34,
-                    "marginHorizontal": 11,
-                  }
-                }
-              />
-            </View>
-            <View
-              pending={false}
-              style={
-                {
-                  "opacity": 1,
-                }
-              }
-            >
-              <View
-                pointerEvents="none"
-                style={
-                  {
-                    "marginHorizontal": 11,
-                    "padding": 0,
-                  }
-                }
-              >
-                <RCTSwitch
-                  accessibilityRole="switch"
-                  onChange={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
-                  onTintColor="#00f1a2"
-                  style={
-                    [
-                      {
-                        "height": 31,
-                        "width": 51,
-                      },
-                      {
-                        "backgroundColor": "#87939E",
-                        "borderRadius": 16,
-                      },
-                    ]
-                  }
-                  tintColor="#87939E"
-                  value={true}
-                />
-              </View>
-            </View>
-          </View>
-        </View>
-        <View
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0)",
-              "flexDirection": "row",
-              "marginBottom": 1,
-              "minHeight": 67,
-              "padding": 11,
-            }
-          }
-        >
-          <Text
-            style={
-              {
-                "color": "#FFFFFF",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -4914,7 +4472,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -4945,7 +4503,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   onChange={[Function]}
                   onResponderTerminationRequest={[Function]}
                   onStartShouldSetResponder={[Function]}
-                  onTintColor="#00f1a2"
+                  onTintColor="#e27226"
                   style={
                     [
                       {
@@ -5000,7 +4558,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -5027,7 +4585,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -5053,7 +4611,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -5108,7 +4666,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -5135,7 +4693,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -5161,7 +4719,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -5216,7 +4774,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -5243,7 +4801,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -5269,7 +4827,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                       "fontSize": 12,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 22,
                       "marginHorizontal": 11,
                     },
@@ -5324,7 +4882,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#FFFFFF",
                 "flexGrow": 1,
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "paddingHorizontal": 11,
                 "textAlign": "left",
@@ -5351,7 +4909,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <ActivityIndicator
-                color="#00f1a2"
+                color="#e27226"
                 style={
                   {
                     "height": 34,
@@ -5382,7 +4940,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   onChange={[Function]}
                   onResponderTerminationRequest={[Function]}
                   onStartShouldSetResponder={[Function]}
-                  onTintColor="#00f1a2"
+                  onTintColor="#e27226"
                   style={
                     [
                       {
@@ -5485,7 +5043,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 [
                   {
                     "alignItems": "center",
-                    "borderColor": "#00f1a2",
+                    "borderColor": "#e27226",
                     "borderRadius": 6,
                     "borderWidth": 1.5,
                     "flexDirection": "row",
@@ -5519,8 +5077,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 numberOfLines={1}
                 style={
                   {
-                    "color": "#00f1a2",
-                    "fontFamily": "Quicksand-Regular",
+                    "color": "#e27226",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "marginHorizontal": 0,
                     "paddingBottom": 11,
@@ -5634,8 +5192,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 numberOfLines={1}
                 style={
                   {
-                    "color": "#00f1a2",
-                    "fontFamily": "Quicksand-Regular",
+                    "color": "#e27226",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "marginHorizontal": 0,
                     "paddingBottom": 11,

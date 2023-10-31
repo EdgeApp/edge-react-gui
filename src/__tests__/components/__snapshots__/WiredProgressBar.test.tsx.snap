@@ -12,7 +12,7 @@ exports[`ProgressBar should render with loading props 1`] = `
     style={
       [
         {
-          "backgroundColor": "#00f1a2",
+          "backgroundColor": "#e27226",
           "bottom": 0,
           "left": 0,
           "position": "absolute",

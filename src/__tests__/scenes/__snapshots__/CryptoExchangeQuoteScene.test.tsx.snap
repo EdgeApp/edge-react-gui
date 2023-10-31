@@ -4,8 +4,8 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
 <BVLinearGradient
   colors={
     [
-      4278585612,
-      4279971643,
+      4280036943,
+      4280306288,
     ]
   }
   endPoint={
@@ -83,12 +83,12 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               {
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 27,
               },
               null,
@@ -102,8 +102,8 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
     <BVLinearGradient
       colors={
         [
-          452984831,
-          452984831,
+          4293030438,
+          4293030438,
         ]
       }
       endPoint={
@@ -162,7 +162,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
           <View
             style={
               {
-                "borderBottomColor": "#A4C7DF",
+                "borderBottomColor": "#e27226",
                 "borderBottomWidth": 1,
                 "flex": 1,
               }
@@ -176,14 +176,14 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
                 [
                   {
-                    "color": "#A4C7DF",
-                    "fontFamily": "Quicksand-Medium",
+                    "color": "#A5D4FF",
+                    "fontFamily": "NunitoSans-Bold",
                     "fontSize": 22,
                     "paddingHorizontal": 17,
                   },
@@ -200,7 +200,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
           <View
             style={
               {
-                "borderBottomColor": "#A4C7DF",
+                "borderBottomColor": "#e27226",
                 "borderBottomWidth": 1,
                 "flex": 1,
               }
@@ -332,7 +332,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       r="24"
                       stroke={
                         {
-                          "payload": 4278251938,
+                          "payload": 4293030438,
                           "type": 0,
                         }
                       }
@@ -411,12 +411,12 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontFamily": "Quicksand-Medium",
+                          "fontFamily": "NunitoSans-Bold",
                         },
                         null,
                       ]
@@ -434,12 +434,12 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                       },
                       null,
@@ -503,7 +503,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -534,7 +534,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -578,7 +578,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -609,7 +609,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -643,7 +643,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
           <View
             style={
               {
-                "borderBottomColor": "#A4C7DF",
+                "borderBottomColor": "#e27226",
                 "borderBottomWidth": 1,
                 "flex": 1,
               }
@@ -657,14 +657,14 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
                 [
                   {
-                    "color": "#A4C7DF",
-                    "fontFamily": "Quicksand-Medium",
+                    "color": "#A5D4FF",
+                    "fontFamily": "NunitoSans-Bold",
                     "fontSize": 22,
                     "paddingHorizontal": 17,
                   },
@@ -681,7 +681,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
           <View
             style={
               {
-                "borderBottomColor": "#A4C7DF",
+                "borderBottomColor": "#e27226",
                 "borderBottomWidth": 1,
                 "flex": 1,
               }
@@ -813,7 +813,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       r="24"
                       stroke={
                         {
-                          "payload": 4278251938,
+                          "payload": 4293030438,
                           "type": 0,
                         }
                       }
@@ -892,12 +892,12 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontFamily": "Quicksand-Medium",
+                          "fontFamily": "NunitoSans-Bold",
                         },
                         null,
                       ]
@@ -915,12 +915,12 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                       },
                       null,
@@ -1084,7 +1084,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       <Text
                         style={
                           {
-                            "color": "#A4C7DF",
+                            "color": "#A5D4FF",
                             "fontSize": 17,
                           }
                         }
@@ -1094,7 +1094,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       <Text
                         style={
                           {
-                            "color": "#A4C7DF",
+                            "color": "#A5D4FF",
                             "fontSize": 17,
                           }
                         }
@@ -1124,7 +1124,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                     style={
                       [
                         {
-                          "color": "#00f1a2",
+                          "color": "#e27226",
                           "fontSize": 22,
                         },
                         undefined,
@@ -1220,7 +1220,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
@@ -1247,7 +1247,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                 [
                   {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
@@ -1284,7 +1284,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
             style={
               [
                 {
-                  "backgroundColor": "#2B333A",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -1301,7 +1301,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
               style={
                 [
                   {
-                    "backgroundColor": "#2B333A",
+                    "backgroundColor": "rgba(255, 255, 255, .05)",
                     "borderRadius": 27.5,
                     "bottom": 0,
                     "left": 0,
@@ -1320,7 +1320,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                 [
                   {
                     "alignItems": "center",
-                    "backgroundColor": "#00f1a2",
+                    "backgroundColor": "#26a9e1",
                     "borderRadius": 27.5,
                     "height": 55,
                     "justifyContent": "center",
@@ -1347,7 +1347,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       "fontSize": 34,
                     },
                     {
-                      "color": "#1b2f3b",
+                      "color": "#1C2E4F",
                       "fontSize": 51,
                     },
                     {
@@ -1370,7 +1370,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                 [
                   {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },

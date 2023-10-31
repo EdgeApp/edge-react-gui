@@ -25,7 +25,7 @@ exports[`Request should render with loaded props 1`] = `
       <WithTheme(EdgeTextComponent)
         style={
           {
-            "fontFamily": "Quicksand-Medium",
+            "fontFamily": "NunitoSans-Bold",
             "fontSize": 45,
           }
         }
@@ -36,7 +36,7 @@ exports[`Request should render with loaded props 1`] = `
         style={
           {
             "alignSelf": "flex-end",
-            "fontFamily": "Quicksand-Bold",
+            "fontFamily": "NunitoSans-Bold",
             "textAlign": "right",
           }
         }
@@ -71,7 +71,7 @@ exports[`Request should render with loaded props 1`] = `
         style={
           {
             "alignSelf": "flex-end",
-            "fontFamily": "Quicksand-Bold",
+            "fontFamily": "NunitoSans-Bold",
             "textAlign": "right",
           }
         }
@@ -127,7 +127,7 @@ exports[`Request should render with loaded props 1`] = `
         </WithTheme(EdgeTextComponent)>
         <Icon
           allowFontScaling={false}
-          color="#00f1a2"
+          color="#e27226"
           name="chevron-forward"
           size={34}
         />

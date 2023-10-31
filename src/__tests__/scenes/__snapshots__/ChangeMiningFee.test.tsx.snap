@@ -29,7 +29,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
         size={12}
         style={
           {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -47,7 +47,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
         size={12}
         style={
           {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -65,7 +65,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
         size={12}
         style={
           {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
@@ -83,7 +83,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
         size={12}
         style={
           {
-            "color": "#00f1a2",
+            "color": "#e27226",
             "fontSize": 28,
             "paddingHorizontal": 11,
           }
