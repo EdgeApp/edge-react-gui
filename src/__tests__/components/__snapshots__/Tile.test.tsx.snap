@@ -37,7 +37,7 @@ exports[`Tile should render with loading props 1`] = `
           size={12}
           style={
             {
-              "color": "#00f1a2",
+              "color": "#e27226",
               "height": 17,
               "position": "absolute",
               "right": 0,
@@ -51,7 +51,7 @@ exports[`Tile should render with loading props 1`] = `
           ellipsizeMode="tail"
           style={
             {
-              "color": "#A4C7DF",
+              "color": "#A5D4FF",
               "fontSize": 17,
               "paddingBottom": 6,
               "paddingRight": 22,
@@ -78,7 +78,7 @@ exports[`Tile should render with loading props 1`] = `
     <View
       style={
         {
-          "borderBottomColor": "rgba(255, 255, 255, .1)",
+          "borderBottomColor": "#e2722640",
           "borderBottomWidth": 1,
           "height": 1,
           "marginLeft": 22,

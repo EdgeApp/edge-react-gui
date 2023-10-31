@@ -60,7 +60,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
       }
     >
       <ActivityIndicator
-        color="#00f1a2"
+        color="#e27226"
       />
     </View>
     <MainButton

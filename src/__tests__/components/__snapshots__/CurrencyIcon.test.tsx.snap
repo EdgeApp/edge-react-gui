@@ -78,7 +78,7 @@ exports[`CryptoIcon should render with loading props 1`] = `
         r="24"
         stroke={
           {
-            "payload": 4278251938,
+            "payload": 4293030438,
             "type": 0,
           }
         }

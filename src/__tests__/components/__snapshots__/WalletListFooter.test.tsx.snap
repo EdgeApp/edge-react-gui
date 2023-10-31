@@ -4,7 +4,7 @@ exports[`WalletListFooter should render with loading props 1`] = `
 <View
   style={
     {
-      "borderTopColor": "rgba(255, 255, 255, .1)",
+      "borderTopColor": "#e2722640",
       "borderTopWidth": 1,
       "paddingVertical": 17,
     }
@@ -99,7 +99,7 @@ exports[`WalletListFooter should render with loading props 1`] = `
             [
               {
                 "alignItems": "center",
-                "borderColor": "#00f1a2",
+                "borderColor": "#e27226",
                 "borderRadius": 6,
                 "borderWidth": 1.5,
                 "flexDirection": "row",
@@ -133,8 +133,8 @@ exports[`WalletListFooter should render with loading props 1`] = `
             numberOfLines={1}
             style={
               {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "marginHorizontal": 0,
                 "paddingBottom": 11,
@@ -214,7 +214,7 @@ exports[`WalletListFooter should render with loading props 1`] = `
             [
               {
                 "alignItems": "center",
-                "borderColor": "#00f1a2",
+                "borderColor": "#e27226",
                 "borderRadius": 6,
                 "borderWidth": 1.5,
                 "flexDirection": "row",
@@ -248,8 +248,8 @@ exports[`WalletListFooter should render with loading props 1`] = `
             numberOfLines={1}
             style={
               {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "marginHorizontal": 0,
                 "paddingBottom": 11,

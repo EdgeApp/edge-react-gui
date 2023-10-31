@@ -53,7 +53,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
     style={
       {
         "alignSelf": "flex-end",
-        "backgroundColor": "#121d25",
+        "backgroundColor": "#0D2145",
         "borderColor": "rgba(255, 255, 255, 0)",
         "borderTopLeftRadius": 22,
         "borderTopRightRadius": 22,
@@ -100,7 +100,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Medium",
+              "fontFamily": "NunitoSans-Bold",
               "fontSize": 27,
               "marginVertical": 11,
             },
@@ -161,8 +161,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         style={
           {
             "alignItems": "center",
-            "backgroundColor": "#00f1a2",
-            "borderColor": "#00f1a2",
+            "backgroundColor": "#e27226",
+            "borderColor": "#e27226",
             "borderRadius": 4,
             "borderWidth": 1,
             "flexDirection": "row",
@@ -182,8 +182,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           numberOfLines={1}
           style={
             {
-              "color": "#06090c",
-              "fontFamily": "Quicksand-Bold",
+              "color": "#1C2E4F",
+              "fontFamily": "NunitoSans-Bold",
               "fontSize": 14,
               "marginHorizontal": 7,
             }
@@ -244,8 +244,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           numberOfLines={1}
           style={
             {
-              "color": "#00f1a2",
-              "fontFamily": "Quicksand-Bold",
+              "color": "#e27226",
+              "fontFamily": "NunitoSans-Bold",
               "fontSize": 14,
               "marginHorizontal": 7,
             }
@@ -306,8 +306,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           numberOfLines={1}
           style={
             {
-              "color": "#00f1a2",
-              "fontFamily": "Quicksand-Bold",
+              "color": "#e27226",
+              "fontFamily": "NunitoSans-Bold",
               "fontSize": 14,
               "marginHorizontal": 7,
             }
@@ -368,8 +368,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           numberOfLines={1}
           style={
             {
-              "color": "#00f1a2",
-              "fontFamily": "Quicksand-Bold",
+              "color": "#e27226",
+              "fontFamily": "NunitoSans-Bold",
               "fontSize": 14,
               "marginHorizontal": 7,
             }
@@ -527,7 +527,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             [
               {
                 "alignSelf": "flex-start",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "padding": 0,
               },
@@ -572,7 +572,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             [
               {
                 "color": "#E85466",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 17,
               },
               {
@@ -591,7 +591,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           [
             {
               "bottom": -10,
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 17,
               "position": "absolute",
               "right": 28,
@@ -699,7 +699,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               "color": "#FFFFFF",
               "flexGrow": 1,
               "flexShrink": 1,
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "padding": 0,
             },
             {
@@ -984,10 +984,10 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         <BVLinearGradient
           colors={
             [
-              1187109,
-              856825125,
-              3205635365,
-              4279377189,
+              860485,
+              856498501,
+              3205308741,
+              4279050565,
             ]
           }
           endPoint={
@@ -1065,7 +1065,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         style={
           [
             {
-              "color": "#00f1a2",
+              "color": "#e27226",
               "fontSize": 28,
             },
             undefined,
@@ -1138,7 +1138,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
     style={
       {
         "alignSelf": "flex-end",
-        "backgroundColor": "#121d25",
+        "backgroundColor": "#0D2145",
         "borderColor": "rgba(255, 255, 255, 0)",
         "borderTopLeftRadius": 22,
         "borderTopRightRadius": 22,
@@ -1185,7 +1185,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Medium",
+              "fontFamily": "NunitoSans-Bold",
               "fontSize": 27,
               "marginVertical": 11,
             },
@@ -1267,8 +1267,8 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           numberOfLines={1}
           style={
             {
-              "color": "#00f1a2",
-              "fontFamily": "Quicksand-Bold",
+              "color": "#e27226",
+              "fontFamily": "NunitoSans-Bold",
               "fontSize": 14,
               "marginHorizontal": 7,
             }
@@ -1329,8 +1329,8 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           numberOfLines={1}
           style={
             {
-              "color": "#00f1a2",
-              "fontFamily": "Quicksand-Bold",
+              "color": "#e27226",
+              "fontFamily": "NunitoSans-Bold",
               "fontSize": 14,
               "marginHorizontal": 7,
             }
@@ -1391,8 +1391,8 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           numberOfLines={1}
           style={
             {
-              "color": "#00f1a2",
-              "fontFamily": "Quicksand-Bold",
+              "color": "#e27226",
+              "fontFamily": "NunitoSans-Bold",
               "fontSize": 14,
               "marginHorizontal": 7,
             }
@@ -1432,8 +1432,8 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         style={
           {
             "alignItems": "center",
-            "backgroundColor": "#00f1a2",
-            "borderColor": "#00f1a2",
+            "backgroundColor": "#e27226",
+            "borderColor": "#e27226",
             "borderRadius": 4,
             "borderWidth": 1,
             "flexDirection": "row",
@@ -1453,8 +1453,8 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           numberOfLines={1}
           style={
             {
-              "color": "#06090c",
-              "fontFamily": "Quicksand-Bold",
+              "color": "#1C2E4F",
+              "fontFamily": "NunitoSans-Bold",
               "fontSize": 14,
               "marginHorizontal": 7,
             }
@@ -1612,7 +1612,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             [
               {
                 "alignSelf": "flex-start",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "padding": 0,
               },
@@ -1657,7 +1657,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             [
               {
                 "color": "#E85466",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 17,
               },
               {
@@ -1676,7 +1676,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           [
             {
               "bottom": -10,
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 17,
               "position": "absolute",
               "right": 28,
@@ -1721,7 +1721,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               "color": "#FFFFFF",
               "flexGrow": 1,
               "flexShrink": 1,
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "padding": 0,
             },
             {
@@ -2006,10 +2006,10 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         <BVLinearGradient
           colors={
             [
-              1187109,
-              856825125,
-              3205635365,
-              4279377189,
+              860485,
+              856498501,
+              3205308741,
+              4279050565,
             ]
           }
           endPoint={
@@ -2087,7 +2087,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         style={
           [
             {
-              "color": "#00f1a2",
+              "color": "#e27226",
               "fontSize": 28,
             },
             undefined,

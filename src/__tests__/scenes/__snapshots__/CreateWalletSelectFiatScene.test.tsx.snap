@@ -4,8 +4,8 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
 <BVLinearGradient
   colors={
     [
-      4278585612,
-      4279971643,
+      4280036943,
+      4280306288,
     ]
   }
   endPoint={
@@ -82,12 +82,12 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               {
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 27,
               },
               null,
@@ -196,7 +196,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                       "overflow": "hidden",
                     },
                     {
-                      "backgroundColor": "#1b2f3b",
+                      "backgroundColor": "#204A70",
                       "borderRadius": 22,
                       "height": 45,
                       "marginLeft": 6,
@@ -243,7 +243,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -262,12 +262,12 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "marginTop": 6,
                         "maxWidth": "85%",
@@ -313,7 +313,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -664,7 +664,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             [
               {
                 "alignItems": "center",
-                "borderColor": "#00f1a2",
+                "borderColor": "#e27226",
                 "borderRadius": 6,
                 "borderWidth": 1.5,
                 "flexDirection": "row",
@@ -698,8 +698,8 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             numberOfLines={1}
             style={
               {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "marginHorizontal": 0,
                 "paddingBottom": 11,
@@ -813,8 +813,8 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             numberOfLines={1}
             style={
               {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "marginHorizontal": 0,
                 "paddingBottom": 11,
