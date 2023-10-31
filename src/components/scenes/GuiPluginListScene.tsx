@@ -47,6 +47,8 @@ const buySellPlugins: BuySellPlugins = {
   sell: asGuiPluginJson(sellRaw)
 }
 
+const buySellPluginsJson = JSON.stringify(buySellPlugins)
+
 const paymentTypeLogosById = {
   applepay: 'paymentTypeLogoApplePay',
   auspost: 'paymentTypeLogoAuspost',
@@ -154,23 +156,56 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
   async updatePluginsNetwork(diskPlugins: BuySellPlugins | undefined) {
     const { coreDisklet } = this.props
-    let networkPlugins: BuySellPlugins
+    const diskPluginsJson = JSON.stringify(diskPlugins)
+
+    // Convert to and from JSON so we don't overwrite the default object
+    let currentPluginsJson = diskPlugins != null ? diskPluginsJson : buySellPluginsJson
+    const currentPlugins = asBuySellPlugins(JSON.parse(currentPluginsJson))
+
+    // Grab plugin settings that patch the json
     try {
-      const response = await fetchInfo(`v1/buySellPlugins/${config.appId ?? 'edge'}`)
+      const response = await fetchInfo(`v1/buySellPluginsPatch/${config.appId ?? 'edge'}`)
       const reply = await response.json()
-      networkPlugins = asBuySellPlugins(reply)
-      if (JSON.stringify(networkPlugins) !== JSON.stringify(diskPlugins)) {
-        await coreDisklet
-          .setText(PLUGIN_LIST_FILE, JSON.stringify(networkPlugins))
-          .then(() => (diskPlugins = networkPlugins))
-          .catch(e => console.error(e.message))
-        this.setPluginState(networkPlugins)
+      const networkPluginsPatch = asBuySellPlugins(reply) ?? {}
+      const directions: Array<'buy' | 'sell'> = ['buy', 'sell']
+      for (const direction of directions) {
+        const patches = networkPluginsPatch[direction]
+        if (patches == null) {
+          // Assign the defaults
+          currentPlugins[direction] = buySellPlugins[direction]
+          continue
+        }
+        const currentDirection = currentPlugins[direction] ?? []
+        if (currentPlugins[direction] == null) {
+          currentPlugins[direction] = currentDirection
+        }
+        for (const patch of patches) {
+          // Skip comment rows
+          if (typeof patch === 'string') continue
+
+          const { id } = patch
+          const matchingIndex = currentDirection.findIndex(plugin => typeof plugin !== 'string' && plugin.id === id)
+          if (matchingIndex > -1) {
+            currentDirection[matchingIndex] = patch
+          } else {
+            currentDirection.push(patch)
+          }
+        }
       }
     } catch (e: any) {
       console.log(e.message)
       // This is ok. We just use default values
     }
-    this.timeoutId = setTimeout(async () => await this.updatePluginsNetwork(diskPlugins), BUY_SELL_PLUGIN_REFRESH_INTERVAL)
+
+    currentPluginsJson = JSON.stringify(currentPlugins)
+    if (currentPlugins != null && currentPluginsJson !== diskPluginsJson) {
+      await coreDisklet
+        .setText(PLUGIN_LIST_FILE, currentPluginsJson)
+        .then(() => (diskPlugins = currentPlugins))
+        .catch(e => console.error(e.message))
+      this.setPluginState(currentPlugins)
+    }
+    this.timeoutId = setTimeout(async () => await this.updatePluginsNetwork(currentPlugins), BUY_SELL_PLUGIN_REFRESH_INTERVAL)
   }
 
   /**
