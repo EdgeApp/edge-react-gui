@@ -3,6 +3,7 @@
 ## Unreleased
 
 - added: New 'Lower Send Amount' warning for transaction acceleration
+- added: Allow buy/sell plugins local override and info server patching
 
 ## 3.21.0
 
