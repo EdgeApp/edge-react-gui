@@ -1,0 +1,16 @@
+[
+  {
+    "id": "coinhub-sell",
+    "pluginId": "coinhub",
+    "deepPath": "/sell-atms/",
+    "paymentTypes": [
+      "cash"
+    ],
+    "description": "Select Locations Only",
+    "title": "Cash via Bitcoin ATM",
+    "forCountries": [
+      "US"
+    ],
+    "paymentTypeLogoKey": "cash"
+  }
+]
