@@ -93,7 +93,7 @@ exports[`PromoCard should render 1`] = `
         [
           {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
@@ -148,7 +148,7 @@ exports[`PromoCard should render 1`] = `
         style={
           [
             {
-              "color": "#00f1a2",
+              "color": "#e27226",
               "fontSize": 22,
             },
             {

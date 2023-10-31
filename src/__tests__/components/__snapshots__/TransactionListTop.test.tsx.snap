@@ -176,7 +176,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 [
                   {
                     "alignSelf": "flex-start",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "padding": 0,
                   },
@@ -221,7 +221,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 [
                   {
                     "color": "#E85466",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 17,
                   },
                   {
@@ -240,7 +240,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               [
                 {
                   "bottom": -10,
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 17,
                   "position": "absolute",
                   "right": 28,
@@ -311,7 +311,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "padding": 0,
                 },
                 {
@@ -470,7 +470,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                       r="19"
                       stroke={
                         {
-                          "payload": 4278251938,
+                          "payload": 4293030438,
                           "type": 0,
                         }
                       }
@@ -529,7 +529,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
@@ -550,7 +550,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 style={
                   [
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 34,
                     },
                     undefined,
@@ -608,7 +608,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 style={
                   [
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 34,
                     },
                     undefined,
@@ -668,12 +668,12 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 [
                   {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
                   {
-                    "fontFamily": "Quicksand-Medium",
+                    "fontFamily": "NunitoSans-Bold",
                     "fontSize": 45,
                   },
                   null,
@@ -691,7 +691,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 [
                   {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
@@ -760,7 +760,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           style={
             [
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "fontSize": 22,
               },
               undefined,
@@ -784,13 +784,13 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "marginLeft": 6,
               },
@@ -845,7 +845,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           style={
             [
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "fontSize": 22,
               },
               undefined,
@@ -869,13 +869,13 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "marginLeft": 6,
               },
@@ -886,17 +886,6 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           Send
         </Text>
       </View>
-      <ActivityIndicator
-        color="#00f1a2"
-        style={
-          {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "justifyContent": "center",
-            "paddingRight": 22,
-          }
-        }
-      />
     </View>
     <View
       style={
@@ -1006,7 +995,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
@@ -1053,12 +1042,12 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         [
           {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
           {
-            "fontFamily": "Quicksand-Medium",
+            "fontFamily": "NunitoSans-Bold",
           },
           null,
         ]
@@ -1070,8 +1059,8 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
   <BVLinearGradient
     colors={
       [
-        452984831,
-        452984831,
+        4293030438,
+        4293030438,
       ]
     }
     endPoint={
@@ -1281,7 +1270,7 @@ exports[`TransactionListTop should render 1`] = `
                 [
                   {
                     "alignSelf": "flex-start",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "padding": 0,
                   },
@@ -1326,7 +1315,7 @@ exports[`TransactionListTop should render 1`] = `
                 [
                   {
                     "color": "#E85466",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 17,
                   },
                   {
@@ -1345,7 +1334,7 @@ exports[`TransactionListTop should render 1`] = `
               [
                 {
                   "bottom": -10,
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 17,
                   "position": "absolute",
                   "right": 28,
@@ -1416,7 +1405,7 @@ exports[`TransactionListTop should render 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "padding": 0,
                 },
                 {
@@ -1575,7 +1564,7 @@ exports[`TransactionListTop should render 1`] = `
                       r="19"
                       stroke={
                         {
-                          "payload": 4278251938,
+                          "payload": 4293030438,
                           "type": 0,
                         }
                       }
@@ -1634,7 +1623,7 @@ exports[`TransactionListTop should render 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
@@ -1655,7 +1644,7 @@ exports[`TransactionListTop should render 1`] = `
                 style={
                   [
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 34,
                     },
                     undefined,
@@ -1713,7 +1702,7 @@ exports[`TransactionListTop should render 1`] = `
                 style={
                   [
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 34,
                     },
                     undefined,
@@ -1773,12 +1762,12 @@ exports[`TransactionListTop should render 1`] = `
                 [
                   {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
                   {
-                    "fontFamily": "Quicksand-Medium",
+                    "fontFamily": "NunitoSans-Bold",
                     "fontSize": 45,
                   },
                   null,
@@ -1796,7 +1785,7 @@ exports[`TransactionListTop should render 1`] = `
                 [
                   {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
@@ -1865,7 +1854,7 @@ exports[`TransactionListTop should render 1`] = `
           style={
             [
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "fontSize": 22,
               },
               undefined,
@@ -1889,13 +1878,13 @@ exports[`TransactionListTop should render 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "marginLeft": 6,
               },
@@ -1950,7 +1939,7 @@ exports[`TransactionListTop should render 1`] = `
           style={
             [
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "fontSize": 22,
               },
               undefined,
@@ -1974,13 +1963,13 @@ exports[`TransactionListTop should render 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
                 "marginLeft": 6,
               },
@@ -1991,17 +1980,6 @@ exports[`TransactionListTop should render 1`] = `
           Send
         </Text>
       </View>
-      <ActivityIndicator
-        color="#00f1a2"
-        style={
-          {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "justifyContent": "center",
-            "paddingRight": 22,
-          }
-        }
-      />
     </View>
   </View>,
   <View
@@ -2034,12 +2012,12 @@ exports[`TransactionListTop should render 1`] = `
         [
           {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
           {
-            "fontFamily": "Quicksand-Medium",
+            "fontFamily": "NunitoSans-Bold",
           },
           null,
         ]
@@ -2051,8 +2029,8 @@ exports[`TransactionListTop should render 1`] = `
   <BVLinearGradient
     colors={
       [
-        452984831,
-        452984831,
+        4293030438,
+        4293030438,
       ]
     }
     endPoint={

@@ -93,7 +93,7 @@ exports[`TransactionListRow should render with loading props 1`] = `
               "shadowRadius": 11,
             },
             {
-              "backgroundColor": "#1b2f3b",
+              "backgroundColor": "#0D2145",
             },
           ]
         }
@@ -178,13 +178,13 @@ exports[`TransactionListRow should render with loading props 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               {
                 "flex": 1,
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
               },
               null,
             ]
@@ -200,13 +200,13 @@ exports[`TransactionListRow should render with loading props 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               {
                 "color": "#E85466",
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "marginLeft": 11,
                 "textAlign": "right",
               },
@@ -239,7 +239,7 @@ exports[`TransactionListRow should render with loading props 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
@@ -262,12 +262,12 @@ exports[`TransactionListRow should render with loading props 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               {
-                "color": "#A4C7DF",
+                "color": "#A5D4FF",
                 "fontSize": 17,
                 "textAlign": "right",
               },
