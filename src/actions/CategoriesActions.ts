@@ -266,7 +266,7 @@ export const getTxActionDisplayInfo = (
   tx: EdgeTransaction,
   wallet: EdgeCurrencyWallet,
   tokenId?: string
-): { splitCategory: SplitCategory; notes?: string } | undefined => {
+): { splitCategory: SplitCategory; notes?: string; direction: 'send' | 'receive' } | undefined => {
   const { action } = tx
   if (action == null) return
   const { type } = action
@@ -285,8 +285,9 @@ export const getTxActionDisplayInfo = (
       return {
         splitCategory: {
           category: 'exchange',
-          subcategory: sprintf(toFromStr, getCurrencyCode(wallet, otherAsset.tokenId))
-        }
+          subcategory: sprintf(toFromStr, getCurrencyCode(wallet, otherAsset?.tokenId))
+        },
+        direction: txSrcSameAsset ? 'receive' : 'send'
       }
     }
     case 'swapOrderPost':
@@ -294,14 +295,16 @@ export const getTxActionDisplayInfo = (
         splitCategory: {
           category: 'expense',
           subcategory: sprintf(lstrings.transaction_details_swap_order_post)
-        }
+        },
+        direction: 'send'
       }
     case 'swapOrderCancel':
       return {
         splitCategory: {
           category: 'expense',
           subcategory: sprintf(lstrings.transaction_details_swap_order_cancel)
-        }
+        },
+        direction: 'send'
       }
     case 'stake': {
       let subcategory
@@ -311,7 +314,7 @@ export const getTxActionDisplayInfo = (
         console.warn(`Unsupported number of assets for '${type}' EdgeTxActionSwapType`)
         return
       }
-      return { splitCategory: { category: 'transfer', subcategory } }
+      return { splitCategory: { category: 'transfer', subcategory }, direction: 'send' }
     }
     case 'stakeOrder': {
       let notes
@@ -323,7 +326,8 @@ export const getTxActionDisplayInfo = (
       }
       return {
         splitCategory: { category: 'expense', subcategory: lstrings.transaction_details_stake_order_subcat },
-        notes
+        notes,
+        direction: 'send'
       }
     }
     case 'unstake': {
@@ -334,7 +338,7 @@ export const getTxActionDisplayInfo = (
         console.error(`Unsupported number of assets for '${type}' EdgeTxActionSwapType`)
         return
       }
-      return { splitCategory: { category: 'transfer', subcategory } }
+      return { splitCategory: { category: 'transfer', subcategory }, direction: 'receive' }
     }
     case 'unstakeOrder': {
       let notes
@@ -346,7 +350,8 @@ export const getTxActionDisplayInfo = (
       }
       return {
         splitCategory: { category: 'expense', subcategory: lstrings.transaction_details_unstake_order },
-        notes
+        notes,
+        direction: 'send'
       }
     }
     default:
