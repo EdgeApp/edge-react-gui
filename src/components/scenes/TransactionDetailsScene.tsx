@@ -58,12 +58,15 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     const { metadata } = edgeTransaction
     const isSentTransaction = edgeTransaction.nativeAmount.startsWith('-') || (eq(edgeTransaction.nativeAmount, '0') && edgeTransaction.isSend)
 
-    const direction = isSentTransaction ? 'send' : 'receive'
-
     // Choose a default category based on metadata or the txAction
     const txActionInfo = getTxActionDisplayInfo(edgeTransaction, wallet, tokenId)
     const txActionSplitCat = txActionInfo?.splitCategory
     const txActionNotes = txActionInfo?.notes
+    const txActionDir = txActionInfo?.direction
+
+    // Determine direction from EdgeTransaction nativeAmount if not specified in
+    // txActionInfo
+    const direction = txActionDir ?? isSentTransaction ? 'send' : 'receive'
 
     const splitCat =
       metadata?.category != null || txActionSplitCat == null
