@@ -27,6 +27,7 @@ jest.mock('react-native/Libraries/Utilities/Platform', () => ({
   isTVOS: false,
   isTV: false,
   constants: {
+    osVersion: '17',
     reactNativeVersion: {
       major: 0,
       minor: 67
