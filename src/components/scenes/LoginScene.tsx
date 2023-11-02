@@ -4,6 +4,7 @@ import { NotificationPermissionsInfo } from 'edge-login-ui-rn/lib/types/ReduxTyp
 import * as React from 'react'
 import { Keyboard, StatusBar, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
+import { isMaestro } from 'react-native-is-maestro'
 import { BlurView } from 'rn-id-blurview'
 
 import { showSendLogsModal } from '../../actions/LogActions'
@@ -118,6 +119,7 @@ export function LoginSceneComponent(props: Props) {
   }, [account, dispatch, navigation, pendingDeepLink])
 
   const checkForUpdates = useHandler(async () => {
+    if (isMaestro()) return
     const response = await checkVersion()
     const skipUpdate = (await disklet.getText('ignoreUpdate.json').catch(() => '')) === response.version
     if (response.needsUpdate && !skipUpdate) {
@@ -184,6 +186,8 @@ export function LoginSceneComponent(props: Props) {
     setExperimentConfig(experimentConfig)
   }, [])
 
+  const inMaestro = isMaestro()
+
   return loggedIn || experimentConfig == null ? (
     <LoadingScene />
   ) : (
@@ -203,6 +207,7 @@ export function LoginSceneComponent(props: Props) {
         primaryLogo={theme.primaryLogo}
         primaryLogoCallback={handleSendLogs}
         recoveryLogin={passwordRecoveryKey}
+        skipOtpReminder={inMaestro}
         skipSecurityAlerts
         experimentConfig={experimentConfig}
         onComplete={maybeHandleComplete}
