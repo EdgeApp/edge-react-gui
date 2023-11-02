@@ -12,6 +12,7 @@
 - added: "Paused Wallet" visual indicator on wallet list
 - added: Paybis sell to debit card
 - added: Signup captcha experiment.
+- added: Re-enable Faster Payments buy support
 - changed: Change FlipInput styling to make the edit functionality more obvious
 - changed: Enable max spend for Filecoin
 - changed: Move asset-specific settings into their own settings page
