@@ -145,7 +145,7 @@ function TransactionListComponent(props: Props) {
 
   // Check for AssetStatuses from info server (known sync issues, etc):
   React.useEffect(() => {
-    fetchInfo(`v1/assetStatus/${pluginId}${tokenId == null ? '' : `_${tokenId}`}`)
+    fetchInfo(`v1/assetStatusCards/${pluginId}${tokenId == null ? '' : `_${tokenId}`}`)
       .then(async res => {
         const allAssetStatuses: AssetStatus[] = asArray(asAssetStatus)(await res.json())
         const version = getVersion()
