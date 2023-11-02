@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
+import { isMaestro } from 'react-native-is-maestro'
 
 import { updateWalletsSort } from '../../actions/WalletListActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -58,7 +59,7 @@ export function WalletListScene(props: Props) {
   // Show the password reminder on mount if required:
   useAsyncEffect(
     async () => {
-      if (needsPasswordCheck) {
+      if (needsPasswordCheck && !isMaestro()) {
         await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation} />)
       }
     },

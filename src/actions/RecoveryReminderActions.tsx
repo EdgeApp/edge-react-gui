@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { isMaestro } from 'react-native-is-maestro'
 
 import { writePasswordRecoveryReminders } from '../actions/SettingsActions'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
@@ -19,6 +20,7 @@ export function checkPasswordRecovery(navigation: NavigationBase): ThunkAction<v
     const state = getState()
     const { account } = state.core
     if (account.recoveryKey != null) return
+    if (isMaestro()) return
 
     const totalDollars = getTotalFiatAmountFromExchangeRates(state, 'iso:USD')
     const { passwordRecoveryRemindersShown } = state.ui.settings
