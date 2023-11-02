@@ -1,6 +1,7 @@
 import Bugsnag from '@bugsnag/react-native'
 import analytics from '@react-native-firebase/analytics'
 import { TrackingEventName as LoginTrackingEventName, TrackingValues as LoginTrackingValues } from 'edge-login-ui-rn/lib/util/analytics'
+import PostHog from 'posthog-react-native'
 import { getUniqueId, getVersion } from 'react-native-device-info'
 
 import { getFirstOpenInfo } from '../actions/FirstOpenActions'
@@ -9,7 +10,6 @@ import { ExperimentConfig, getExperimentConfig } from '../experimentConfig'
 import { fetchReferral } from './network'
 import { makeErrorLog } from './translateError'
 import { consify } from './utils'
-
 export type TrackingEventName =
   | 'Activate_Wallet_Cancel'
   | 'Activate_Wallet_Done'
@@ -79,6 +79,21 @@ if (ENV.USE_FIREBASE) {
     }
   }
 }
+// Set up the global Posthog analytics instance at boot
+if (ENV.POSTHOG_INIT) {
+  const { apiKey, apiHost } = ENV.POSTHOG_INIT
+
+  const posthogAsync: Promise<PostHog> = PostHog.initAsync(apiKey, {
+    host: apiHost
+  })
+
+  posthogAsync
+    .then(client => {
+      // @ts-expect-error
+      global.posthog = client
+    })
+    .catch(e => console.error(e))
+}
 
 /**
  * Track error to external reporting service (ie. Bugsnag)
@@ -138,7 +153,7 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}) 
 
       consify({ logEvent: { event, params } })
 
-      Promise.all([logToFirebase(event, params), logToUtilServer(event, params)]).catch(error => console.warn(error))
+      Promise.all([logToPosthog(event, params), logToFirebase(event, params), logToUtilServer(event, params)]).catch(error => console.warn(error))
     })
     .catch(console.error)
 }
@@ -158,6 +173,17 @@ async function logToFirebase(name: TrackingEventName, params: any) {
     // @ts-expect-error
     global.firebase.analytics().logEvent(name, params)
   }
+}
+
+/**
+ * Send a raw event to Posthog
+ */
+async function logToPosthog(event: TrackingEventName, values: TrackingValues) {
+  // @ts-expect-error
+  if (!global.posthog) return
+
+  // @ts-expect-error
+  global.posthog.capture(event, values)
 }
 
 /**
