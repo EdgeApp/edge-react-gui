@@ -176,7 +176,8 @@ export const asEnvConfig = asObject({
       affiliateFeeBasis: asOptional(asString, '50'),
       appId: asOptional(asString, 'edge'),
       ninerealmsClientId: asOptional(asString, ''),
-      thorname: asOptional(asString, 'ej')
+      thorname: asOptional(asString, 'ej'),
+      thorswapApiKey: asOptional(asString)
     }).withRest
   ),
   TOMB_SWAP_INIT: asCorePluginInit(
