@@ -298,6 +298,17 @@
     "deepPath": "/"
   },
   {
+    "id": "fasterpayments",
+    "pluginId": "fasterpayments",
+    "paymentType": "fasterpayments",
+    "paymentTypes": ["fasterpayments"],
+    "title": "Faster Payments",
+    "description": "Fee: 3%\nSettlement: Instant",
+    "forCountries": ["GB"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "fasterPayments"
+  },
+  {
     "id": "ideal",
     "pluginId": "ideal",
     "paymentType": "ideal",
