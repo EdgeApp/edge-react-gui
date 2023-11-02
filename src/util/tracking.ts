@@ -63,12 +63,15 @@ export interface TrackingValues extends LoginTrackingValues {
   sourcePluginId?: string // currency pluginId of dest asset
 }
 
-// Set up the global Firebase instance at boot:
+// Set up the global Firebase analytics instance at boot:
 if (ENV.USE_FIREBASE) {
   const inner = analytics()
-  // We require a conditional accessor operator because Jest tests will fail
-  // with an error at runtime.
-  inner.setUserId(getUniqueId())?.catch(err => console.error(err))
+  const setUserIdAsync = async () => {
+    const uniqueId = await getUniqueId()
+    await inner.setUserId(uniqueId)
+  }
+  setUserIdAsync().catch(e => console.error(e))
+
   // @ts-expect-error
   global.firebase = {
     analytics() {

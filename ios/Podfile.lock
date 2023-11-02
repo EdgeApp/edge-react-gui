@@ -607,7 +607,7 @@ PODS:
     - React
   - RNBootSplash (4.7.4):
     - React-Core
-  - RNCAsyncStorage (1.18.2):
+  - RNCAsyncStorage (1.19.4):
     - React-Core
   - RNCClipboard (1.10.0):
     - React-Core
@@ -615,7 +615,7 @@ PODS:
     - React-Core
   - RNDateTimePicker (7.2.0):
     - React-Core
-  - RNDeviceInfo (8.7.1):
+  - RNDeviceInfo (10.11.0):
     - React-Core
   - RNFastImage (8.5.11):
     - React-Core
@@ -1310,11 +1310,11 @@ SPEC CHECKSUMS:
   ReactCommon: 08723d2ed328c5cbcb0de168f231bc7bae7f8aa1
   rn-id-blurview: 42b72b8741b1624ef5052928ec7c04fcb345e198
   RNBootSplash: 0a92fb6bd3d265e23cded61faf3e9fda441d0a6b
-  RNCAsyncStorage: ddc4ee162bfd41b0d2c68bf2d95acd81dd7f1f93
+  RNCAsyncStorage: 3a8f7145d17cdd9f88e7b77666c94a09e4f759c8
   RNCClipboard: f1736c75ab85b627a4d57587edb4b60999c4dd80
   RNCPicker: 6d5d64e7b90c240c779ee0938ec433c11e2dd758
   RNDateTimePicker: 3942382593f104af226ad9c56e16166960c7ae30
-  RNDeviceInfo: aad3c663b25752a52bf8fce93f2354001dd185aa
+  RNDeviceInfo: bf8a32acbcb875f568217285d1793b0e8588c974
   RNFastImage: 1f2cab428712a4baaf78d6169eaec7f622556dd7
   RNFBAnalytics: 43558b1ae95a6d0fec9124f70c365b4f5ecc0907
   RNFBApp: 6f5c7b9931378efb467e08144959ff93172ac83b
