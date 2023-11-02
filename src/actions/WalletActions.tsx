@@ -15,7 +15,7 @@ import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { MapObject } from '../types/types'
-import { getCurrencyCode, getCurrencyInfos, getToken, makeCreateWalletType } from '../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getCurrencyInfos, getToken, isKeysOnlyPlugin, makeCreateWalletType } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { fetchInfo } from '../util/network'
 import { refreshConnectedWallets } from './FioActions'
@@ -42,7 +42,7 @@ export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivat
 
     // Manually un-pause the wallet, if necessary:
     const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
-    if (wallet.paused) wallet.changePaused(false).catch(showError)
+    if (wallet.paused && !isKeysOnlyPlugin(wallet.currencyInfo.pluginId)) wallet.changePaused(false).catch(showError)
 
     // XXX Still need a darn currencyCode. Hope to deprecate later
     const currencyCode = getCurrencyCode(wallet, tokenId)

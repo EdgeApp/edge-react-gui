@@ -128,6 +128,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     const { wallet, currencyCode } = this.props
     if (currencyCode == null) return
     if (wallet == null) return
+    if (isKeysOnlyPlugin(wallet.currencyInfo.pluginId)) return
 
     const receiveAddress = await wallet.getReceiveAddress()
     const addresses: AddressInfo[] = []
