@@ -25,7 +25,7 @@
 - removed: Moonpay sell via ACH
 - removed: Banxa buy via Pix
 
-## 3.20.0
+## 3.20.0 (2023-10-20)
 
 - added: Banxa purchase with iDEAL
 - added: Asset status card to remotely communicate known issues or important info
@@ -61,7 +61,7 @@
   - changed: Restrict ChangeHero trading to whitelisted plugins
   - changed: Replace deprecated currency codes in SwapCurrencyError with requests
 
-## 3.19.0
+## 3.19.0 (2023-10-06)
 
 - added: env.json experiment config override
 - added: Experiment config for "Create Account" and "Login" button labels
