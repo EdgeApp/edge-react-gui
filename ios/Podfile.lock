@@ -499,7 +499,7 @@ PODS:
     - React-Core
   - react-native-netinfo (8.3.0):
     - React-Core
-  - react-native-piratechain (0.4.0):
+  - react-native-piratechain (0.4.1):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -514,7 +514,7 @@ PODS:
     - ReactCommon/turbomodule/core
   - react-native-webview (13.2.2):
     - React-Core
-  - react-native-zcash (0.6.4):
+  - react-native-zcash (0.6.5):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -1290,11 +1290,11 @@ SPEC CHECKSUMS:
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408
   react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
-  react-native-piratechain: da117c2a088cb6af7b9aa0ec1dba8f78a490a526
+  react-native-piratechain: 7792ff8c70014bfff3c031643fc2ee800f841ccd
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: 68b07eabfb0d14547d36f6929c0e98d818064f02
   react-native-webview: b8ec89966713985111a14d6e4bf98d8b54bced0d
-  react-native-zcash: 0caf6a9d14eeaa5e267e27c9d7c214af87275050
+  react-native-zcash: 94d568a36387f8942e900f72089efe22332bff48
   React-perflogger: e706562ab7eb8eb590aa83a224d26fa13963d7f2
   React-RCTActionSheet: 57d4bd98122f557479a3359ad5dad8e109e20c5a
   React-RCTAnimation: ccf3ef00101ea74bda73a045d79a658b36728a60
