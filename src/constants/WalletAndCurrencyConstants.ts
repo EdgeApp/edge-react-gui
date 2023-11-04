@@ -1,4 +1,5 @@
-import { gte } from 'biggystring'
+import { gte, lt } from 'biggystring'
+import { Platform } from 'react-native'
 
 import { OutlinedTextInputProps } from '../components/themed/OutlinedTextInput'
 import { lstrings } from '../locales/strings'
@@ -648,6 +649,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'zs10xwzhkwm0ayzqn99q04l6hhyy76cu6mf6m8cu4xv4pdles7a3puh2cnv7w32qhzktrrsqpwy3n5',
     noChangeMiningFee: true,
     isImportKeySupported: true,
+    keysOnlyMode: Platform.OS === 'ios' ? lt(Platform.constants.osVersion, '15') : false,
     importKeyOptions: [
       {
         optionName: 'birthdayHeight',
