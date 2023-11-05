@@ -672,7 +672,7 @@
   "buy_crypto_modal_title": "空のウォレット",
   "buy_crypto_modal_message": "あなたの%sウォレットは空です。 %sを購入しますか、または別の暗号資産を%sに交換しますか？",
   "buy_parent_crypto_modal_message_2s": "このトランザクションを送信するには、%1$s%2$s が必要です。 %2$s を購入するか、別の暗号通貨を %2$s に交換しますか？",
-  "buy_crypto_decline": "現時点ではありません",
+  "buy_crypto_decline": "キャンセル",
   "buy_crypto_modal_buy_action": "%sを購入",
   "buy_crypto_modal_exchange": "取引所",
   "exchange_crypto_modal_message": "あなたの%sウォレットは空です。 別の暗号資産を%sに交換しますか？",
