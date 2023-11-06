@@ -4,6 +4,7 @@
 
 - added: New 'Lower Send Amount' warning for transaction acceleration
 - added: Allow buy/sell plugins local override and info server patching
+- changed: Disable max-spend for Filecoin wallets
 - changed: Don't show recovery, password, or otp reminders in Maestro
 
 ## 3.21.0
