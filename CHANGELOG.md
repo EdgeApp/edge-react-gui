@@ -6,6 +6,7 @@
 - added: Allow buy/sell plugins local override and info server patching
 - changed: Disable max-spend for Filecoin wallets
 - changed: Don't show recovery, password, or otp reminders in Maestro
+- fixed: Incorrectly filtering out transactions due to spam/dust filter
 
 ## 3.21.0
 

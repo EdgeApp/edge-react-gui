@@ -158,7 +158,7 @@ function TransactionListComponent(props: Props) {
           })
         )
       })
-      .catch(console.error)
+      .catch(e => console.log(String(e)))
   }, [pluginId, tokenId])
 
   // ---------------------------------------------------------------------------
