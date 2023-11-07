@@ -66,7 +66,7 @@ pipeline {
   agent none
 
   tools {
-    nodejs 'stable'
+    nodejs '18'
   }
   options {
     timestamps()
