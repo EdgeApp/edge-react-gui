@@ -20,7 +20,9 @@ describe('BuyCrypto', () => {
   it('should render with some props', () => {
     const fakeWallet: any = {
       id: 'my wallet',
-      currencyInfo: { pluginId: 'bitcoin', displayName: 'Bitcoin' }
+      currencyInfo: { pluginId: 'bitcoin', displayName: 'Bitcoin' },
+      watch: () => {},
+      syncRatio: 0.5
     }
 
     const renderer = TestRenderer.create(

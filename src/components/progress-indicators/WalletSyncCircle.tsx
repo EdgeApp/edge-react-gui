@@ -4,13 +4,10 @@ import { ViewStyle } from 'react-native'
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated'
 import Svg, { Circle } from 'react-native-svg'
 
+import { DONE_THRESHOLD, MAX_RATIO, MIN_RATIO, RESYNC_THRESHOLD } from '../../constants/WalletAndCurrencyConstants'
 import { useTheme } from '../services/ThemeContext'
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle)
-const MIN_RATIO = 0.02
-const MAX_RATIO = 0.95
-const RESYNC_THRESHOLD = 0.05
-const DONE_THRESHOLD = 0.999
 
 interface Props {
   // The diameter of the inner currency icon:
