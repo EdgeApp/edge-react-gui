@@ -66,7 +66,7 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     nativePlugin: amountQuoteFiatPlugin,
     displayName: 'Credit Card'
   },
-  columbiabank: {
+  colombiabank: {
     pluginId: 'amountquote',
     storeId: '',
     baseUri: '',
