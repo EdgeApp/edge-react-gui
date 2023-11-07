@@ -25,7 +25,17 @@ export class ClickableRowComponent extends React.PureComponent<Props & ThemeProp
     const styles = getStyles(theme)
     const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
     const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
-    const containerStyles = [styles.rowContainer, margin, padding, underline ? styles.underline : null, autoHeight ? styles.autoHeight : null]
+    const containerStyles = [
+      styles.rowContainer,
+      margin,
+      padding,
+      underline ? styles.underline : null,
+      autoHeight ? styles.autoHeight : null,
+      {
+        borderColor: 'white',
+        borderWidth: 0
+      }
+    ]
     if (gradient) {
       return (
         <LinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart} style={containerStyles}>

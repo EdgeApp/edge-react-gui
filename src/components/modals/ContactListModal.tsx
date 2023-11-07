@@ -42,7 +42,6 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
             <IonIcon style={styles.tileAvatarIcon} name="person" size={theme.rem(1.5)} />
           )
         }
-        paddingRem={[0, 1]}
         title={fullName}
         onPress={() => bridge.resolve({ contactName: fullName, thumbnailPath })}
       />

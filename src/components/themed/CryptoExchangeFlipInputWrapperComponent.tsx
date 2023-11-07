@@ -116,9 +116,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
           <View style={styles.containerSelectedWalletNotFocus}>
             <SelectableRow
               arrowTappable
-              autoWidth
-              icon={this.renderLogo()}
-              paddingRem={[0, 1]}
+              icon={<CryptoIcon sizeRem={1.75} walletId={this.props.walletId} tokenId={this.props.tokenId} />}
               title={
                 <EdgeText style={styles.iconText} numberOfLines={1}>
                   {guiWalletName + ': ' + displayDenomination}

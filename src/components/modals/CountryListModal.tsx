@@ -35,9 +35,7 @@ export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }:
     return (
       <SelectableRow
         arrowTappable
-        autoWidthContent
         icon={<FastImage source={source} style={styles.image} />}
-        paddingRem={[0, 1]}
         subTitle={alpha}
         title={name}
         onPress={() => bridge.resolve(alpha)}

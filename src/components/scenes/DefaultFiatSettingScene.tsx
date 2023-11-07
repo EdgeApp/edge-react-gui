@@ -60,12 +60,13 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
       return null
     }
 
+    const key = `currency_label_${data.item.value}`
+    const subTitle = lstrings[key as keyof typeof lstrings] ?? lstrings.currency_label_
+
     return (
       <SelectableRow
         icon={fiatCountry.logoUrl ? <FastImage source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
-        paddingRem={[0, 1]}
-        // @ts-expect-error
-        subTitle={lstrings[`currency_label_${data.item.value}`]}
+        subTitle={subTitle}
         title={data.item.value}
         onPress={() => this.onSelectFiat(data.item)}
       />
