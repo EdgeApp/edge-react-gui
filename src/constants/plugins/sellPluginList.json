@@ -33,11 +33,11 @@
     "paymentTypeLogoKey": "fasterPayments"
   },
   {
-    "id": "columbiabank",
-    "pluginId": "columbiabank",
-    "paymentType": "columbiabank",
-    "paymentTypes": ["columbiabank"],
-    "title": "Columbia Bank Transfer ",
+    "id": "colombiabank",
+    "pluginId": "colombiabank",
+    "paymentType": "colombiabank",
+    "paymentTypes": ["colombiabank"],
+    "title": "Colombia Bank Transfer ",
     "description": "Fee: ~7%\nSettlement: 5 min - 24 hours",
     "forCountries": ["CO"],
     "cryptoCodes": [],

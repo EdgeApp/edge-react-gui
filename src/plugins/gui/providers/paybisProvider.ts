@@ -36,7 +36,7 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
     pse: true
   },
   sell: {
-    columbiabank: true,
+    colombiabank: true,
     credit: true,
     mexicobank: true,
     pix: true
@@ -55,7 +55,7 @@ const asPaymentMethodId = asValue(
   // 'method-id-credit-card',
   'method-id-credit-card-out',
 
-  // Columbia
+  // Colombia
   'method-id_bridgerpay_directa24_pse',
   'method-id_bridgerpay_directa24_colombia_payout',
 
@@ -253,9 +253,9 @@ const EDGE_TO_PAYBIS_CURRENCY_MAP: StringMap = Object.entries(PAYBIS_TO_EDGE_CUR
 const PAYMENT_METHOD_MAP: { [Payment in PaymentMethodId]: FiatPaymentType } = {
   'method-id-credit-card-out': 'credit',
 
-  // Columbia
+  // Colombia
   'method-id_bridgerpay_directa24_pse': 'pse',
-  'method-id_bridgerpay_directa24_colombia_payout': 'columbiabank',
+  'method-id_bridgerpay_directa24_colombia_payout': 'colombiabank',
 
   // Mexico
   'method-id_bridgerpay_directa24_spei': 'spei',
@@ -274,7 +274,7 @@ const REVERSE_PAYMENT_METHOD_MAP: Partial<{ [Payment in FiatPaymentType]: Paymen
 
 const SELL_REVERSE_PAYMENT_METHOD_MAP: Partial<{ [Payment in FiatPaymentType]: PaymentMethodId }> = {
   credit: 'method-id-credit-card-out',
-  columbiabank: 'method-id_bridgerpay_directa24_colombia_payout',
+  colombiabank: 'method-id_bridgerpay_directa24_colombia_payout',
   mexicobank: 'method-id_bridgerpay_directa24_mexico_payout',
   pix: 'method-id_bridgerpay_directa24_pix_payout'
 }
