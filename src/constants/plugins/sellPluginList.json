@@ -38,7 +38,7 @@
     "paymentType": "columbiabank",
     "paymentTypes": ["columbiabank"],
     "title": "Columbia Bank Transfer ",
-    "description": "",
+    "description": "Fee: ~7%\nSettlement: 5 min - 24 hours",
     "forCountries": ["CO"],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
@@ -60,7 +60,7 @@
     "paymentType": "mexicobank",
     "paymentTypes": ["mexicobank"],
     "title": "Mexico Bank Transfer ",
-    "description": "",
+    "description": "Fee: ~6%\nSettlement: 5 min - 24 hours",
     "forCountries": ["MX"],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
@@ -71,7 +71,7 @@
     "paymentType": "pix",
     "paymentTypes": ["pix"],
     "title": "PIX ",
-    "description": "",
+    "description": "Fee: ~4.7%\nSettlement: 5 min - 24 hours",
     "forCountries": ["BR"],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "pix"
