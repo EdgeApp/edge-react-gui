@@ -20,7 +20,7 @@ export type FiatDirection = ReturnType<typeof asFiatDirection>
 
 export const asFiatPaymentType = asValue(
   'applepay',
-  'columbiabank',
+  'colombiabank',
   'credit',
   'directtobank',
   'fasterpayments',

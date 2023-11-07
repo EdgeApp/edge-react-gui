@@ -36,7 +36,7 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
     pse: true
   },
   sell: {
-    columbiabank: true,
+    colombiabank: true,
     credit: true,
     mexicobank: true,
     pix: true
@@ -55,26 +55,26 @@ const asPaymentMethodId = asValue(
   // 'method-id-credit-card',
   'method-id-credit-card-out',
 
-  // Columbia
+  // Colombia
   'method-id_bridgerpay_directa24_pse',
-  'method-id-bridgerpay_directa24_colombia_payout',
+  'method-id_bridgerpay_directa24_colombia_payout',
 
   // Mexico
   'method-id_bridgerpay_directa24_spei',
-  'method-id-bridgerpay_directa24_mexico_payout',
+  'method-id_bridgerpay_directa24_mexico_payout',
 
   // Brazil
   'method-id_bridgerpay_directa24_pix',
-  'method-id-bridgerpay_directa24_pix_payout'
+  'method-id_bridgerpay_directa24_pix_payout'
 
   // Unused
   // 'method-id-bank-transfer-out',
-  // 'method-id-bridgerpay_astropay_payout',
-  // 'method-id-bridgerpay_directa24_brazil_payout',
-  // 'method-id-bridgerpay_directa24_chile_payout',
-  // 'method-id-bridgerpay_directa24_ecuador_payout',
-  // 'method-id-bridgerpay_directa24_panama_payout',
-  // 'method-id-bridgerpay_directa24_peru_payout',
+  // 'method-id_bridgerpay_astropay_payout',
+  // 'method-id_bridgerpay_directa24_brazil_payout',
+  // 'method-id_bridgerpay_directa24_chile_payout',
+  // 'method-id_bridgerpay_directa24_ecuador_payout',
+  // 'method-id_bridgerpay_directa24_panama_payout',
+  // 'method-id_bridgerpay_directa24_peru_payout',
 )
 
 // To be used soon
@@ -253,17 +253,17 @@ const EDGE_TO_PAYBIS_CURRENCY_MAP: StringMap = Object.entries(PAYBIS_TO_EDGE_CUR
 const PAYMENT_METHOD_MAP: { [Payment in PaymentMethodId]: FiatPaymentType } = {
   'method-id-credit-card-out': 'credit',
 
-  // Columbia
+  // Colombia
   'method-id_bridgerpay_directa24_pse': 'pse',
-  'method-id-bridgerpay_directa24_colombia_payout': 'columbiabank',
+  'method-id_bridgerpay_directa24_colombia_payout': 'colombiabank',
 
   // Mexico
   'method-id_bridgerpay_directa24_spei': 'spei',
-  'method-id-bridgerpay_directa24_mexico_payout': 'mexicobank',
+  'method-id_bridgerpay_directa24_mexico_payout': 'mexicobank',
 
   // Brazil
   'method-id_bridgerpay_directa24_pix': 'pix',
-  'method-id-bridgerpay_directa24_pix_payout': 'pix'
+  'method-id_bridgerpay_directa24_pix_payout': 'pix'
 }
 
 const REVERSE_PAYMENT_METHOD_MAP: Partial<{ [Payment in FiatPaymentType]: PaymentMethodId }> = {
@@ -274,9 +274,9 @@ const REVERSE_PAYMENT_METHOD_MAP: Partial<{ [Payment in FiatPaymentType]: Paymen
 
 const SELL_REVERSE_PAYMENT_METHOD_MAP: Partial<{ [Payment in FiatPaymentType]: PaymentMethodId }> = {
   credit: 'method-id-credit-card-out',
-  columbiabank: 'method-id-bridgerpay_directa24_colombia_payout',
-  mexicobank: 'method-id-bridgerpay_directa24_mexico_payout',
-  pix: 'method-id-bridgerpay_directa24_pix_payout'
+  colombiabank: 'method-id_bridgerpay_directa24_colombia_payout',
+  mexicobank: 'method-id_bridgerpay_directa24_mexico_payout',
+  pix: 'method-id_bridgerpay_directa24_pix_payout'
 }
 
 const allowedCurrencyCodes: Record<FiatDirection, { [F in FiatPaymentType]?: FiatProviderAssetMap }> = {
