@@ -346,8 +346,8 @@
     "pluginId": "pix",
     "paymentType": "pix",
     "paymentTypes": ["pix"],
-    "description": "Fee: 3-4%\nSettlement: 5 min - 24 hours",
-    "title": "Pix",
+    "description": "Fee: ~3%\nSettlement: 5 min - 24 hours",
+    "title": "PIX",
     "// Do not enable until we have a Pix logo": "",
     "forCountries": ["BR"],
     "cryptoCodes": [],
@@ -359,7 +359,7 @@
     "paymentType": "pse",
     "paymentTypes": ["pse"],
     "title": "PSE Payment",
-    "description": "",
+    "description": "Fee: ~5%\nSettlement: 5 min - 24 hours",
     "forCountries": ["CO"],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
@@ -381,7 +381,7 @@
     "paymentType": "spei",
     "paymentTypes": ["spei"],
     "title": "SPEI Bank Transfer",
-    "description": "",
+    "description": "Fee: ~3.5%\nSettlement: 5 min - 24 hours",
     "forCountries": ["MX"],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
