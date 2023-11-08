@@ -1,5 +1,5 @@
 import { FlashList } from '@shopify/flash-list'
-import { lt } from 'biggystring'
+import { abs, lt } from 'biggystring'
 import { asArray } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { asAssetStatus, AssetStatus } from 'edge-info-server/types'
@@ -86,7 +86,7 @@ function TransactionListComponent(props: Props) {
     const out: ListItem[] = []
     for (const tx of transactions) {
       // Skip spam transactions:
-      if (!tx.isSend && spamThreshold != null && lt(tx.nativeAmount, spamThreshold)) {
+      if (!tx.isSend && spamThreshold != null && lt(abs(tx.nativeAmount), spamThreshold)) {
         continue
       }
 
@@ -158,7 +158,7 @@ function TransactionListComponent(props: Props) {
           })
         )
       })
-      .catch(console.error)
+      .catch(e => console.log(String(e)))
   }, [pluginId, tokenId])
 
   // ---------------------------------------------------------------------------
