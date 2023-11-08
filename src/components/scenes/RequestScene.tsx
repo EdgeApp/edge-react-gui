@@ -37,7 +37,6 @@ import { AddressQr } from '../themed/AddressQr'
 import { Carousel } from '../themed/Carousel'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
-import { FlipInput } from '../themed/FlipInput'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ShareButtons } from '../themed/ShareButtons'
@@ -85,7 +84,6 @@ interface AddressInfo {
 const inputAccessoryViewID: string = 'cancelHeaderId'
 
 export class RequestSceneComponent extends React.Component<Props, State> {
-  flipInput: React.ElementRef<typeof FlipInput> | null = null
   flipInputRef: React.RefObject<ExchangedFlipInputRef>
   unsubscribeAddressChanged: (() => void) | undefined
 
