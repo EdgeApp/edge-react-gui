@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.22.0
+
 - added: Posthog analytics support
 - added: New 'Lower Send Amount' warning for transaction acceleration
 - added: Allow buy/sell plugins local override and info server patching
