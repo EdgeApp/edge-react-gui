@@ -11,6 +11,17 @@
     "paymentTypeLogoKey": "bank"
   },
   {
+    "id": "debit",
+    "pluginId": "debit",
+    "paymentType": "credit",
+    "paymentTypes": ["credit"],
+    "title": "Bank Transfer via Debit Card",
+    "description": "Fee: 2.5%\nSettlement: 5 min - 24 hours",
+    "forCountries": ["US"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
     "id": "fasterpayments",
     "pluginId": "fasterpayments",
     "paymentType": "fasterpayments",
@@ -20,6 +31,17 @@
     "forCountries": ["GB"],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "fasterPayments"
+  },
+  {
+    "id": "colombiabank",
+    "pluginId": "colombiabank",
+    "paymentType": "colombiabank",
+    "paymentTypes": ["colombiabank"],
+    "title": "Colombia Bank Transfer ",
+    "description": "Fee: ~7%\nSettlement: 5 min - 24 hours",
+    "forCountries": ["CO"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
   },
   {
     "id": "interac",
@@ -33,15 +55,28 @@
     "paymentTypeLogoKey": "interac"
   },
   {
-    "id": "moonpay",
-    "pluginId": "moonpay",
-    "paymentTypes": ["credit"],
-    "description": "Fee: 4-5% / Settlement: 1 - 4 days",
-    "title": "ACH Bank Transfer",
-    "partnerIconPath": "moonpay_symbol_prp.png",
-    "forCountries": ["US"],
+    "id": "mexicobank",
+    "pluginId": "mexicobank",
+    "paymentType": "mexicobank",
+    "paymentTypes": ["mexicobank"],
+    "title": "Mexico Bank Transfer ",
+    "description": "Fee: ~6%\nSettlement: 5 min - 24 hours",
+    "forCountries": ["MX"],
+    "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },
+  {
+    "id": "pix",
+    "pluginId": "pix",
+    "paymentType": "pix",
+    "paymentTypes": ["pix"],
+    "title": "PIX ",
+    "description": "Fee: ~4.7%\nSettlement: 5 min - 24 hours",
+    "forCountries": ["BR"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "pix"
+  },
+
   {
     "id": "bits of gold",
     "pluginId": "bitsofgold",

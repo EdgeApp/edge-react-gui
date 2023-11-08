@@ -1,4 +1,3 @@
-import { eq } from 'biggystring'
 import * as React from 'react'
 import { Platform, ReturnKeyType, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, { AnimationCallback, Easing, interpolate, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
@@ -8,6 +7,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { formatNumberInput, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { useState } from '../../types/reactHooks'
+import { zeroString } from '../../util/utils'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -58,6 +58,8 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
   // primaryField is the index into the 2-tuple, 0 or 1
   const [primaryField, setPrimaryField] = useState<FieldNum>(forceFieldNum)
 
+  const [amountFocused, setAmountFocused] = useState(false)
+
   const frontAnimatedStyle = useAnimatedStyle(() => {
     const degrees = interpolate(animatedValue.value, [0, 0.5, 1], [0, 90, 90])
     return {
@@ -104,24 +106,36 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
       .catch(e => showError(e.message))
   })
 
+  const handleBottomFocus = useHandler(() => {
+    setAmountFocused(true)
+  })
+
+  const handleBottomBlur = useHandler(() => {
+    setAmountFocused(false)
+  })
+
   const bottomRow = useHandler((fieldNum: FieldNum) => {
-    const primaryAmount = amounts[fieldNum]
-    const amountBlank = eq(primaryAmount, '0') ? lstrings.string_amount : ''
-    const currencyNameStyle = amountBlank ? styles.bottomCurrencyMuted : styles.bottomCurrency
+    const zeroAmount = zeroString(amounts[fieldNum])
+    const primaryAmount = zeroAmount && !amountFocused ? '' : amounts[fieldNum]
+
+    const placeholderOrAmount = zeroAmount && !amountFocused ? lstrings.string_tap_to_edit : primaryAmount
+    const inputFieldStyle = amountFocused ? styles.bottomAmount : styles.bottomAmountTappable
+    const showBottomCurrency = amountFocused || !zeroAmount
+    const currencyNameStyle = amountFocused ? styles.bottomCurrency : styles.bottomCurrencyTappable
     const currencyName = fieldInfos[fieldNum].currencyName
 
     return (
       <View style={styles.bottomContainer} key="bottom">
         <View style={styles.valueContainer}>
           <NumericInput
-            style={styles.bottomAmount}
+            style={inputFieldStyle}
             value={primaryAmount}
             maxDecimals={fieldInfos[fieldNum].maxEntryDecimals}
             // HACK: For some reason there's no way to avoid the rightmost
             // visual cutoff of the 'Amount' string in Android. Pad with an
             // extra space.
-            placeholder={Platform.OS === 'android' ? amountBlank + ' ' : amountBlank}
-            placeholderTextColor={theme.deactivatedText}
+            placeholder={Platform.OS === 'android' ? placeholderOrAmount + ' ' : placeholderOrAmount}
+            placeholderTextColor={theme.iconTappable}
             onChangeText={onNumericInputChange}
             autoCorrect={false}
             editable={editable}
@@ -130,8 +144,10 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
             ref={inputRefs[fieldNum]}
             onSubmitEditing={onNext}
             inputAccessoryViewID={inputAccessoryViewID}
+            onFocus={handleBottomFocus}
+            onBlur={handleBottomBlur}
           />
-          <EdgeText style={currencyNameStyle}>{' ' + currencyName}</EdgeText>
+          {showBottomCurrency ? <EdgeText style={currencyNameStyle}>{' ' + currencyName}</EdgeText> : null}
         </View>
       </View>
     )
@@ -225,14 +241,21 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontFamily: theme.fontFaceMedium,
       fontSize: isIos ? theme.rem(1.5) : theme.rem(1.45)
     },
+    bottomAmountTappable: {
+      paddingRight: isIos ? 0 : theme.rem(0.25),
+      color: theme.iconTappable,
+      includeFontPadding: false,
+      fontFamily: theme.fontFaceMedium,
+      fontSize: isIos ? theme.rem(1.5) : theme.rem(1.45)
+    },
     bottomCurrency: {
       paddingTop: isIos ? theme.rem(0.125) : theme.rem(1),
       marginLeft: isIos ? 0 : -theme.rem(0.25)
     },
-    bottomCurrencyMuted: {
+    bottomCurrencyTappable: {
       paddingTop: isIos ? theme.rem(0.125) : theme.rem(1),
-      color: theme.deactivatedText,
-      marginLeft: isIos ? 0 : -theme.rem(0.25)
+      marginLeft: isIos ? 0 : -theme.rem(0.25),
+      color: theme.iconTappable
     }
   }
 })

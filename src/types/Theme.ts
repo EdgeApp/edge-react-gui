@@ -328,6 +328,10 @@ export interface Theme {
   underlayColor: string
   underlayOpacity: number
 
+  // TouchableHighlights overlay
+  overlayDisabledColor: string
+  overlayDisabledTextColor: string
+
   // Tutorials
   tutorialModalUnderlay: string
 
@@ -337,6 +341,11 @@ export interface Theme {
 
   // Picker Color
   pickerText: string
+
+  // Native Android components like Pickers need specific text colors that
+  // contrast with the OS light or dark theme
+  nativeComponentTextLight: string // Text color when Android theme is light
+  nativeComponentTextDark: string // Text color when Android theme is dark
 
   // Input Accessory
   inputAccessoryBackground: string

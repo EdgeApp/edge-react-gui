@@ -4,6 +4,7 @@ import { Platform } from 'react-native'
 
 import { connect } from '../../types/reactRedux'
 import { WalletListItem } from '../../types/types'
+import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { showError } from './AirshipInstance'
 
 interface StateProps {
@@ -110,8 +111,9 @@ export class WalletLifecycleComponent extends React.Component<Props> {
       const { token, tokenId, wallet, walletId } = walletItem
 
       // Ignore missing wallets, token rows, started wallets, already-booting
-      // wallets, and user-paused wallets:
+      // wallets, keysOnlyMode, and user-paused wallets:
       if (token != null || tokenId != null || wallet == null) continue
+      if (isKeysOnlyPlugin(wallet.currencyInfo.pluginId)) continue
       if (!wallet.paused) continue
       if (this.booting.find(boot => boot.walletId === walletId) != null) continue
       if (userPausedWalletsSet.has(walletId)) continue

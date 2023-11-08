@@ -1,31 +1,78 @@
+import { add, div } from 'biggystring'
+import { EdgeSwapQuote } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
+import { useCryptoText } from '../../hooks/useCryptoText'
+import { formatFiatString, useFiatText } from '../../hooks/useFiatText'
+import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 import { lstrings } from '../../locales/strings'
+import { convertCurrency } from '../../selectors/WalletSelectors'
+import { useSelector } from '../../types/reactRedux'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import { DECIMAL_PRECISION } from '../../util/utils'
 import { Card } from '../cards/Card'
-import { CryptoIcon } from '../icons/CryptoIcon'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { CurrencyRow } from '../data/row/CurrencyRow'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 interface Props {
-  isTop?: boolean | null
-  cryptoAmount: string
-  currency: string
-  currencyCode: string
-  fiatCurrencyCode: string
-  fiatCurrencyAmount: string
-  walletId: string
-  walletName: string
-  total?: string
-  miningFee?: string | null
+  fromTo: 'from' | 'to'
+  quote: EdgeSwapQuote
   showFeeWarning?: boolean | null
 }
-interface State {}
 
-export class ExchangeQuoteComponent extends React.PureComponent<Props & ThemeProps, State> {
-  renderRow = (label: React.ReactNode, value: React.ReactNode, style: any = {}) => {
-    const styles = getStyles(this.props.theme)
+export const ExchangeQuote = (props: Props) => {
+  const { fromTo, quote, showFeeWarning } = props
+  const { request, fromNativeAmount, toNativeAmount, networkFee } = quote
+  const { fromWallet, fromTokenId, toWallet, toTokenId } = request
+
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  const isFrom = fromTo === 'from'
+  const nativeAmount = isFrom ? fromNativeAmount : toNativeAmount
+
+  // Fees are assumed to be denominated in the native currency
+  const feeNativeAmount = networkFee.nativeAmount
+  const feeCryptoText = useCryptoText({ wallet: fromWallet, nativeAmount: feeNativeAmount, withSymbol: false })
+  const {
+    currencyCode: parentCurrencyCode,
+    denomination: parentDenomination,
+    isoFiatCurrencyCode
+  } = useTokenDisplayData({
+    wallet: fromWallet
+  })
+
+  const { currencyCode: fromCurrencyCode, denomination: fromDenomination } = useTokenDisplayData({
+    wallet: fromWallet,
+    tokenId: fromTokenId
+  })
+
+  const feeFiatText = useFiatText({
+    autoPrecision: true,
+    cryptoCurrencyCode: parentCurrencyCode,
+    cryptoExchangeMultiplier: parentDenomination.multiplier,
+    isoFiatCurrencyCode,
+    nativeCryptoAmount: feeNativeAmount,
+    hideFiatSymbol: true,
+    subCentTruncation: true
+  })
+
+  const feeFiatAmount = useSelector(state => {
+    const cryptoAmount = div(feeNativeAmount, parentDenomination.multiplier, DECIMAL_PRECISION)
+    return convertCurrency(state, parentCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
+  })
+
+  const fromFiatAmount = useSelector(state => {
+    const cryptoAmount = div(fromNativeAmount, fromDenomination.multiplier, DECIMAL_PRECISION)
+    return convertCurrency(state, fromCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
+  })
+
+  const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
+  const totalFiatText = `${formatFiatString({ fiatAmount: add(feeFiatAmount, fromFiatAmount) })} ${fiatCurrencyCode}`
+
+  const renderRow = (label: React.ReactNode, value: React.ReactNode, style: any = {}) => {
     return (
       <View style={[styles.row, style]}>
         <View style={styles.label}>{label}</View>
@@ -34,21 +81,23 @@ export class ExchangeQuoteComponent extends React.PureComponent<Props & ThemePro
     )
   }
 
-  renderBottom = () => {
-    const { theme, isTop, fiatCurrencyAmount, fiatCurrencyCode, total, miningFee, showFeeWarning } = this.props
-    if (isTop) {
-      const styles = getStyles(theme)
-      const totalText = `${total || fiatCurrencyAmount} ${fiatCurrencyCode}`
+  const renderBottom = () => {
+    if (fromTo === 'from') {
       const feeTextStyle = showFeeWarning ? styles.bottomWarningText : styles.bottomText
+
       return (
         <>
           <View>
-            {this.renderRow(<EdgeText style={feeTextStyle}>{lstrings.mining_fee}</EdgeText>, <EdgeText style={feeTextStyle}>{miningFee || '0'}</EdgeText>, {
-              ...sidesToMargin(mapSides(fixSides([0.75, 0, 0], 0), theme.rem))
-            })}
-            {this.renderRow(
+            {renderRow(
+              <EdgeText style={feeTextStyle}>{lstrings.mining_fee}</EdgeText>,
+              <EdgeText style={feeTextStyle}>{`${feeCryptoText} (${feeFiatText} ${fiatCurrencyCode})`}</EdgeText>,
+              {
+                ...sidesToMargin(mapSides(fixSides([0.75, 0, 0], 0), theme.rem))
+              }
+            )}
+            {renderRow(
               <EdgeText style={styles.bottomText}>{lstrings.string_total_amount}</EdgeText>,
-              <EdgeText style={styles.bottomText}>{totalText}</EdgeText>
+              <EdgeText style={styles.bottomText}>{totalFiatText}</EdgeText>
             )}
           </View>
         </>
@@ -57,69 +106,18 @@ export class ExchangeQuoteComponent extends React.PureComponent<Props & ThemePro
     return null
   }
 
-  render() {
-    const styles = getStyles(this.props.theme)
-    const cryptoAmount = `${this.props.cryptoAmount} ${this.props.currencyCode}`
-    const fiatAmount = `${this.props.fiatCurrencyAmount} ${this.props.fiatCurrencyCode}`
-
-    return (
-      <Card marginRem={[0, 1]}>
-        <View style={styles.container}>
-          <View style={styles.iconContainer}>
-            <CryptoIcon walletId={this.props.walletId} currencyCode={this.props.currencyCode} sizeRem={1.5} />
-          </View>
-          <View style={styles.contentContainer}>
-            {this.renderRow(
-              <EdgeText style={styles.contentTitle}>{this.props.currency}</EdgeText>,
-              <EdgeText style={styles.contentValue}>{cryptoAmount}</EdgeText>
-            )}
-            {this.renderRow(
-              <EdgeText style={styles.contentSubTitle}>{this.props.walletName}</EdgeText>,
-              <EdgeText style={styles.contentSubValue}>{fiatAmount}</EdgeText>
-            )}
-          </View>
-        </View>
-        {this.renderBottom()}
-      </Card>
-    )
-  }
+  return (
+    <Card marginRem={[0, 1]}>
+      <CurrencyRow wallet={isFrom ? fromWallet : toWallet} tokenId={isFrom ? fromTokenId : toTokenId} marginRem={0} nativeAmount={nativeAmount} />
+      {renderBottom()}
+    </Card>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    flex: 1,
-    flexDirection: 'row'
-  },
   row: {
     flexDirection: 'row',
     alignItems: 'center'
-  },
-  iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: theme.rem(1)
-  },
-  contentContainer: {
-    flex: 1,
-    flexDirection: 'column'
-  },
-  contentTitle: {
-    fontFamily: theme.fontFaceMedium
-  },
-  contentValue: {
-    fontFamily: theme.fontFaceMedium,
-    textAlign: 'right'
-  },
-  contentSubTitle: {
-    flex: 1,
-    marginTop: theme.rem(0.25),
-    fontSize: theme.rem(0.75),
-    color: theme.secondaryText
-  },
-  contentSubValue: {
-    marginTop: theme.rem(0.25),
-    fontSize: theme.rem(0.75),
-    color: theme.secondaryText
   },
   label: {
     flex: 1,
@@ -139,5 +137,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.warningText
   }
 }))
-
-export const ExchangeQuote = withTheme(ExchangeQuoteComponent)

@@ -1,19 +1,15 @@
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions'
 import { linkReferralWithCurrencies } from '../../actions/WalletListActions'
 import { useHandler } from '../../hooks/useHandler'
-import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { bestOfMessages } from '../../util/ReferralHelpers'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
-import { ButtonBox } from '../themed/ThemedButtons'
+import { IconMessageCard } from './IconMessageCard'
 
 interface Props {
   navigation: NavigationBase
@@ -43,44 +39,20 @@ export function PromoCard(props: Props) {
   if (messageSummary == null) return null
   const { message } = messageSummary
   return (
-    <ButtonBox marginRem={1} onPress={handlePress}>
-      <View style={styles.container}>
-        {message.iconUri != null ? <FastImage resizeMode="contain" source={{ uri: message.iconUri }} style={styles.icon} /> : null}
-        <EdgeText testID="promoCard" numberOfLines={0} style={styles.text}>
-          {message.message}
-        </EdgeText>
-        <TouchableOpacity accessible={false} onPress={handleClose}>
-          <AntDesignIcon
-            testID="closePromo"
-            name="close"
-            color={theme.iconTappable}
-            size={theme.rem(1)}
-            style={styles.close}
-            accessibilityHint={lstrings.close_hint}
-          />
-        </TouchableOpacity>
-      </View>
-    </ButtonBox>
+    <IconMessageCard
+      message={message.message}
+      testIds={{ message: 'promoCard', close: 'closePromo' }}
+      iconOrUri={message.iconUri != null ? <FastImage resizeMode="contain" source={{ uri: message.iconUri }} style={styles.icon} /> : null}
+      onPress={handlePress}
+      onClose={handleClose}
+    />
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: theme.tileBackground,
-    padding: theme.rem(0.5)
-  },
   icon: {
     width: theme.rem(2),
     height: theme.rem(2),
-    margin: theme.rem(0.5)
-  },
-  text: {
-    flex: 1,
-    margin: theme.rem(0.5)
-  },
-  close: {
-    padding: theme.rem(0.5)
+    marginHorizontal: theme.rem(0.5)
   }
 }))

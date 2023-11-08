@@ -7,7 +7,9 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { pickLanguage } from '../../locales/intl'
 import { openBrowserUri } from '../../util/WebUtils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { StatusCard } from './StatusCard'
+import { IconMessageCard } from './IconMessageCard'
+
+const DEFAULT_LANGUAGE = 'en_US'
 
 export const AssetStatusCard = (props: { assetStatus: AssetStatus }) => {
   const { statusType, localeStatusTitle, localeStatusBody, iconUrl, statusUrl, statusStartIsoDate, statusEndIsoDate } = props.assetStatus
@@ -17,17 +19,18 @@ export const AssetStatusCard = (props: { assetStatus: AssetStatus }) => {
   const curDate = new Date().toISOString()
   const isWithinDate = statusStartIsoDate != null && statusEndIsoDate != null && statusStartIsoDate <= curDate && statusEndIsoDate >= curDate
 
-  const [firstLocale = { languageTag: 'en_US' }] = getLocales()
+  const [firstLocale = { languageTag: DEFAULT_LANGUAGE }] = getLocales()
   const { languageTag } = firstLocale
-  const titleLocale = pickLanguage(languageTag, Object.keys(localeStatusTitle))
-  const messageLocale = pickLanguage(languageTag, Object.keys(localeStatusBody))
+  const titleLocale = pickLanguage(languageTag, Object.keys(localeStatusTitle)) ?? pickLanguage(DEFAULT_LANGUAGE, Object.keys(localeStatusTitle))
+  const messageLocale = pickLanguage(languageTag, Object.keys(localeStatusBody)) ?? pickLanguage(DEFAULT_LANGUAGE, Object.keys(localeStatusBody))
   const title = localeStatusTitle[titleLocale ?? 0]
   const message = localeStatusBody[messageLocale ?? 0]
 
   return isWithinDate ? (
-    <StatusCard
+    <IconMessageCard
       message={message}
       title={title}
+      testIds={{ title: 'statusCardTitle', message: 'statusCardMessage', close: 'statusCardClose' }}
       iconOrUri={
         // If not explicitly set, auto-fill if warning status.
         iconUrl == null ? (
@@ -55,7 +58,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   icon: {
     width: theme.rem(3),
     height: theme.rem(3),
-    marginRight: theme.rem(0.75),
-    marginLeft: theme.rem(-0.25)
+    marginRight: theme.rem(0.5)
   }
 }))

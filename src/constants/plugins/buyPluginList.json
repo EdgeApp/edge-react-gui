@@ -1,16 +1,5 @@
 [
   {
-    "id": "iach",
-    "pluginId": "iach",
-    "description": "Fee: 4-5%\nSettlement: 1 - 4 days",
-    "paymentType": "iach",
-    "paymentTypes": ["iach"],
-    "title": "ACH Bank Transfer",
-    "forCountries": ["US"],
-    "cryptoCodes": [],
-    "paymentTypeLogoKey": "bank"
-  },
-  {
     "id": "creditcard",
     "pluginId": "creditcard",
     "description": "Fee: 5-7%\nSettlement: 10 - 30 minutes",
@@ -309,6 +298,17 @@
     "deepPath": "/"
   },
   {
+    "id": "fasterpayments",
+    "pluginId": "fasterpayments",
+    "paymentType": "fasterpayments",
+    "paymentTypes": ["fasterpayments"],
+    "title": "Faster Payments",
+    "description": "Fee: 3%\nSettlement: Instant",
+    "forCountries": ["GB"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "fasterPayments"
+  },
+  {
     "id": "ideal",
     "pluginId": "ideal",
     "paymentType": "ideal",
@@ -346,12 +346,23 @@
     "pluginId": "pix",
     "paymentType": "pix",
     "paymentTypes": ["pix"],
-    "description": "Fee: 3-4%\nSettlement: 5 min - 24 hours",
-    "title": "Pix",
+    "description": "Fee: ~3%\nSettlement: 5 min - 24 hours",
+    "title": "PIX",
     "// Do not enable until we have a Pix logo": "",
     "forCountries": ["BR"],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "pix"
+  },
+  {
+    "id": "pse",
+    "pluginId": "pse",
+    "paymentType": "pse",
+    "paymentTypes": ["pse"],
+    "title": "PSE Payment",
+    "description": "Fee: ~5%\nSettlement: 5 min - 24 hours",
+    "forCountries": ["CO"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
   },
   {
     "id": "turkishbank",
@@ -361,6 +372,17 @@
     "title": "Turkish Bank Transfer",
     "description": "Fee: 8-9%\nSettlement: Instant - 1 hour",
     "forCountries": ["TR"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
+    "id": "spei",
+    "pluginId": "spei",
+    "paymentType": "spei",
+    "paymentTypes": ["spei"],
+    "title": "SPEI Bank Transfer",
+    "description": "Fee: ~3.5%\nSettlement: 5 min - 24 hours",
+    "forCountries": ["MX"],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },

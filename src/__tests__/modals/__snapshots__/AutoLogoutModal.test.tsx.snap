@@ -24,17 +24,6 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
     }
   >
     <Picker
-      itemStyle={
-        [
-          {
-            "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
-            "includeFontPadding": false,
-          },
-          null,
-        ]
-      }
       mode="dialog"
       onValueChange={[Function]}
       selectedValue={11}
@@ -45,7 +34,6 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
       }
     >
       <PickerItem
-        color="#FFFFFF"
         label="Disabled"
         value={0}
       />
@@ -346,17 +334,6 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
       />
     </Picker>
     <Picker
-      itemStyle={
-        [
-          {
-            "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
-            "includeFontPadding": false,
-          },
-          null,
-        ]
-      }
       mode="dialog"
       onValueChange={[Function]}
       selectedValue="seconds"

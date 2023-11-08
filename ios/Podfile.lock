@@ -18,11 +18,13 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (1.9.0):
+  - edge-core-js (1.11.0):
     - React-Core
-  - edge-currency-accountbased (2.7.2):
+  - edge-currency-accountbased (2.9.3):
     - React-Core
-  - edge-login-ui-rn (2.14.1):
+  - edge-exchange-plugins (1.0.1):
+    - React-Core
+  - edge-login-ui-rn (2.17.1):
     - React
   - FBLazyVector (0.71.11)
   - FBReactNativeSpec (0.71.11):
@@ -497,7 +499,7 @@ PODS:
     - React-Core
   - react-native-netinfo (8.3.0):
     - React-Core
-  - react-native-piratechain (0.4.0):
+  - react-native-piratechain (0.4.1):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -512,7 +514,7 @@ PODS:
     - ReactCommon/turbomodule/core
   - react-native-webview (13.2.2):
     - React-Core
-  - react-native-zcash (0.6.4):
+  - react-native-zcash (0.6.5):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -858,6 +860,7 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - edge-core-js (from `../node_modules/edge-core-js`)
   - edge-currency-accountbased (from `../node_modules/edge-currency-accountbased`)
+  - edge-exchange-plugins (from `../node_modules/edge-exchange-plugins`)
   - edge-login-ui-rn (from `../node_modules/edge-login-ui-rn`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
@@ -1041,6 +1044,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/edge-core-js"
   edge-currency-accountbased:
     :path: "../node_modules/edge-currency-accountbased"
+  edge-exchange-plugins:
+    :path: "../node_modules/edge-exchange-plugins"
   edge-login-ui-rn:
     :path: "../node_modules/edge-login-ui-rn"
   FBLazyVector:
@@ -1218,9 +1223,10 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  edge-core-js: 4cd9ce2265c6f937d3d54d0cd546555ac0c1c074
-  edge-currency-accountbased: f387351150eb88357fa11b451fd16599b65a1aa1
-  edge-login-ui-rn: 7ecda4499b7cfba19b4f87775f7980d88a1b2d7a
+  edge-core-js: 48b390da31ef71c2ac09330ade6a187dc92b3edc
+  edge-currency-accountbased: c3ccdd8e193847f5e5229ecf9217122b2728732a
+  edge-exchange-plugins: 7baa8f14b42e820b7c3cbe0eb4b2032660a536c8
+  edge-login-ui-rn: a7c217aa8f26777f1d9e21a0044d99bcfdc3d3c6
   FBLazyVector: c511d4cd0210f416cb5c289bd5ae6b36d909b048
   FBReactNativeSpec: a911fb22def57aef1d74215e8b6b8761d25c1c54
   Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
@@ -1284,11 +1290,11 @@ SPEC CHECKSUMS:
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408
   react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
-  react-native-piratechain: da117c2a088cb6af7b9aa0ec1dba8f78a490a526
+  react-native-piratechain: 7792ff8c70014bfff3c031643fc2ee800f841ccd
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: 68b07eabfb0d14547d36f6929c0e98d818064f02
   react-native-webview: b8ec89966713985111a14d6e4bf98d8b54bced0d
-  react-native-zcash: 0caf6a9d14eeaa5e267e27c9d7c214af87275050
+  react-native-zcash: 94d568a36387f8942e900f72089efe22332bff48
   React-perflogger: e706562ab7eb8eb590aa83a224d26fa13963d7f2
   React-RCTActionSheet: 57d4bd98122f557479a3359ad5dad8e109e20c5a
   React-RCTAnimation: ccf3ef00101ea74bda73a045d79a658b36728a60

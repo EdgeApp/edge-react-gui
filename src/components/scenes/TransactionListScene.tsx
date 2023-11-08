@@ -5,6 +5,7 @@ import { EdgeCurrencyWallet, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { asAssetStatus, AssetStatus } from 'edge-info-server/types'
 import * as React from 'react'
 import { RefreshControl } from 'react-native'
+import { getVersion } from 'react-native-device-info'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -52,7 +53,7 @@ function TransactionListComponent(props: Props) {
   const flashList = React.useRef<FlashList<ListItem>>(null)
   const [searching, setSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
-  const [assetStatuses, setAssetStatuses] = React.useState<AssetStatus[]>()
+  const [assetStatuses, setAssetStatuses] = React.useState<AssetStatus[]>([])
 
   // Selectors:
   const exchangeDenom = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
@@ -144,9 +145,18 @@ function TransactionListComponent(props: Props) {
 
   // Check for AssetStatuses from info server (known sync issues, etc):
   React.useEffect(() => {
-    fetchInfo(`v1/assetStatus/${pluginId}${tokenId == null ? '' : `_${tokenId}`}`)
+    fetchInfo(`v1/assetStatusCards/${pluginId}${tokenId == null ? '' : `_${tokenId}`}`)
       .then(async res => {
-        setAssetStatuses(asArray(asAssetStatus)(await res.json()))
+        const allAssetStatuses: AssetStatus[] = asArray(asAssetStatus)(await res.json())
+        const version = getVersion()
+
+        // Filter for assetStatuses relevant to this instance of the app
+        setAssetStatuses(
+          allAssetStatuses.filter(assetStatus => {
+            const { appId, appVersions } = assetStatus
+            return (appId == null || appId === config.appId) && (appVersions == null || appVersions.includes(version))
+          })
+        )
       })
       .catch(console.error)
   }, [pluginId, tokenId])
@@ -178,12 +188,10 @@ function TransactionListComponent(props: Props) {
           onSearchingChange={setSearching}
           onSearchTextChange={setSearchText}
         />
-        {assetStatuses != null && assetStatuses.length > 0
-          ? assetStatuses.map(assetStatus =>
-              assetStatus.appId == null || assetStatus.appId === config.appId ? (
-                <AssetStatusCard assetStatus={assetStatus} key={`${String(assetStatus.localeStatusTitle)}-${String(assetStatus.localeStatusBody)}`} />
-              ) : null
-            )
+        {assetStatuses.length > 0
+          ? assetStatuses.map(assetStatus => (
+              <AssetStatusCard assetStatus={assetStatus} key={`${String(assetStatus.localeStatusTitle)}-${String(assetStatus.localeStatusBody)}`} />
+            ))
           : null}
       </>
     )

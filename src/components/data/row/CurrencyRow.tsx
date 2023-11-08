@@ -16,6 +16,7 @@ import { IconDataRow } from './IconDataRow'
 
 interface Props {
   marginRem?: number[] | number
+  nativeAmount?: string
   showRate?: boolean
   token?: EdgeToken
   tokenId?: string
@@ -26,7 +27,7 @@ interface Props {
  * A view representing the data from a wallet, used for rows, cards, etc.
  */
 const CurrencyRowComponent = (props: Props) => {
-  const { marginRem, showRate = false, token, tokenId, wallet } = props
+  const { marginRem, nativeAmount, showRate = false, token, tokenId, wallet } = props
   const { pluginId } = wallet.currencyInfo
   const { showTokenNames = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
   const theme = useTheme()
@@ -39,7 +40,7 @@ const CurrencyRowComponent = (props: Props) => {
   // Wallet name for display:
   let name: React.ReactNode = useWalletName(wallet)
   const compromised = useSelector(state => {
-    const { modalShown = 0 } = state.ui.settings.securityCheckedWallets[wallet.id] ?? {}
+    const { modalShown = 0 } = state.ui?.settings?.securityCheckedWallets?.[wallet.id] ?? {}
     return modalShown > 0
   })
   if (compromised) {
@@ -55,8 +56,8 @@ const CurrencyRowComponent = (props: Props) => {
   const balance = useWalletBalance(wallet, tokenId)
   const icon = <CryptoIcon sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
   const tickerText = showRate && wallet != null ? <TickerText wallet={wallet} tokenId={tokenId} /> : null
-  const cryptoText = showBalance ? <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={balance} withSymbol /> : null
-  const fiatText = showBalance ? <FiatText nativeCryptoAmount={balance} tokenId={tokenId} wallet={wallet} /> : null
+  const cryptoText = showBalance ? <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol /> : null
+  const fiatText = showBalance ? <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} /> : null
 
   let displayCurrencyCode = currencyCode
   if (showTokenNames && tokenFromId != null) {

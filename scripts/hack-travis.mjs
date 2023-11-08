@@ -13,8 +13,18 @@ editFile('package.json', text =>
     .replace(/"eosjs-api".*/, '')
 )
 
+fs.writeFileSync(
+  'src/edge-currency-accountbased.d.ts',
+  `declare module 'edge-currency-accountbased' {
+  export function makePluginIo(): any
+  export const debugUri: string
+  export const pluginUri: string
+}
+`,
+  'utf8'
+)
+
 editFile('scripts/prepare.sh', text =>
   text //
-    .replace(/cp -r node_modules\/edge-currency-accountbased.*/g, '')
     .replace(/node .\/node_modules\/.bin\/webpack/, '')
 )

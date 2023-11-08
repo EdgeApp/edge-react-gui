@@ -12,7 +12,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
-import { getCurrencyCode, getCurrencyInfos } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getCurrencyInfos, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { showError } from '../services/AirshipInstance'
@@ -169,7 +169,7 @@ export function WalletListMenuModal(props: Props) {
     const result: Option[] = []
 
     const { pluginId } = wallet.currencyInfo
-    if (pausedWallets != null) {
+    if (pausedWallets != null && !isKeysOnlyPlugin(pluginId)) {
       result.push({
         label: pausedWallets.has(walletId) ? lstrings.fragment_wallets_unpause_wallet : lstrings.fragment_wallets_pause_wallet,
         value: 'togglePause'

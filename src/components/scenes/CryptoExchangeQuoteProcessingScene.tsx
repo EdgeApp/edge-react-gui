@@ -1,3 +1,4 @@
+import { EdgeSwapQuote } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
@@ -9,13 +10,20 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
+export interface ExchangeQuoteProcessingParams {
+  fetchSwapQuotesPromise: Promise<EdgeSwapQuote[]>
+  onCancel: () => void
+  onError: (error: any) => Promise<void>
+  onDone: (quotes: EdgeSwapQuote[]) => void
+}
+
 interface Props extends EdgeSceneProps<'exchangeQuoteProcessing'> {}
 
 export function CryptoExchangeQuoteProcessingScene(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { route } = props
-  const { fetchSwapQuotePromise, onCancel, onDone, onError } = route.params
+  const { fetchSwapQuotesPromise, onCancel, onDone, onError } = route.params
 
   const [isLongWait, setIsLongWait] = React.useState(false)
 
@@ -36,8 +44,8 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
 
   useAsyncEffect(async () => {
     try {
-      const swapinfo = await fetchSwapQuotePromise
-      if (mounted.current) onDone(swapinfo)
+      const quotes = await fetchSwapQuotesPromise
+      if (mounted.current) onDone(quotes)
     } catch (e: any) {
       await onError(e)
     }

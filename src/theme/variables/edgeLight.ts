@@ -328,6 +328,10 @@ export const edgeLight: Theme = {
   underlayColor: palette.white,
   underlayOpacity: 0.95,
 
+  // TouchableHighlights overlay
+  overlayDisabledColor: palette.blackOp50,
+  overlayDisabledTextColor: palette.white,
+
   // Tutorials
   tutorialModalUnderlay: palette.transparent,
 
@@ -337,6 +341,11 @@ export const edgeLight: Theme = {
 
   // Picker Color
   pickerText: palette.white,
+
+  // Native Android components like Pickers need specific text colors that
+  // contrast with the OS light or dark theme
+  nativeComponentTextLight: palette.black,
+  nativeComponentTextDark: palette.white,
 
   // Input Accessory
   inputAccessoryBackground: palette.white,

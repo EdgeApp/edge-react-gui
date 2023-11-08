@@ -38,6 +38,7 @@ import { HeaderTitle } from './navigation/HeaderTitle'
 import { ParamHeaderTitle } from './navigation/ParamHeaderTitle'
 import { SideMenuButton } from './navigation/SideMenuButton'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle'
+import { AssetSettingsScene as AssetSettingsSceneComponent } from './scenes/AssetSettingsScene'
 import { ChangeMiningFeeScene as ChangeMiningFeeSceneComponent } from './scenes/ChangeMiningFeeScene'
 import { ChangeMiningFeeScene2 as ChangeMiningFeeScene2Component } from './scenes/ChangeMiningFeeScene2'
 import { ChangePasswordScene as ChangePasswordSceneComponent } from './scenes/ChangePasswordScene'
@@ -53,7 +54,7 @@ import { CreateWalletImportScene as CreateWalletImportSceneComponent } from './s
 import { CreateWalletSelectCryptoScene as CreateWalletSelectCryptoSceneComponent } from './scenes/CreateWalletSelectCryptoScene'
 import { CreateWalletSelectFiatScene as CreateWalletSelectFiatSceneComponent } from './scenes/CreateWalletSelectFiatScene'
 import { CryptoExchangeQuoteProcessingScene as CryptoExchangeQuoteProcessingSceneComponent } from './scenes/CryptoExchangeQuoteProcessingScene'
-import { CryptoExchangeQuote as CryptoExchangeQuoteComponent } from './scenes/CryptoExchangeQuoteScene'
+import { CryptoExchangeQuoteScene as CryptoExchangeQuoteComponent } from './scenes/CryptoExchangeQuoteScene'
 import { CryptoExchangeSuccessScene as CryptoExchangeSuccessSceneComponent } from './scenes/CryptoExchangeSuccessScene'
 import { CurrencyNotificationScene as CurrencyNotificationSceneComponent } from './scenes/CurrencyNotificationScene'
 import { CurrencySettingsScene as CurrencySettingsSceneComponent } from './scenes/CurrencySettingsScene'
@@ -144,6 +145,7 @@ const CryptoExchangeQuoteProcessingScene = ifLoggedIn(CryptoExchangeQuoteProcess
 const CryptoExchangeScene = ifLoggedIn(CryptoExchangeSceneComponent)
 const CryptoExchangeSuccessScene = ifLoggedIn(CryptoExchangeSuccessSceneComponent)
 const CurrencyNotificationScene = ifLoggedIn(CurrencyNotificationSceneComponent)
+const AssetSettingsScene = ifLoggedIn(AssetSettingsSceneComponent)
 const CurrencySettingsScene = ifLoggedIn(CurrencySettingsSceneComponent)
 const DefaultFiatSettingScene = ifLoggedIn(DefaultFiatSettingSceneComponent)
 const EdgeLoginScene = ifLoggedIn(EdgeLoginSceneComponent)
@@ -422,6 +424,14 @@ const EdgeAppStack = () => {
         component={CurrencyNotificationScene}
         options={{
           headerTitle: props => <CurrencySettingsTitle />,
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="assetSettings"
+        component={AssetSettingsScene}
+        options={{
+          title: lstrings.settings_asset_settings,
           headerRight: () => null
         }}
       />

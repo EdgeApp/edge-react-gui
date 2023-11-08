@@ -1,152 +1,268 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ExchangeQuote should render with loading props 1`] = `
-<WithTheme(CardComponent)
-  marginRem={
-    [
-      0,
-      1,
-    ]
+<View
+  style={
+    {
+      "width": "100%",
+    }
   }
 >
   <View
     style={
-      {
-        "flex": 1,
-        "flexDirection": "row",
-      }
+      [
+        {
+          "borderColor": "rgba(255, 255, 255, .1)",
+          "borderRadius": 4,
+          "borderWidth": 1,
+        },
+        null,
+        {
+          "marginBottom": 0,
+          "marginLeft": 22,
+          "marginRight": 22,
+          "marginTop": 0,
+        },
+        {
+          "paddingBottom": 22,
+          "paddingLeft": 22,
+          "paddingRight": 22,
+          "paddingTop": 22,
+        },
+      ]
     }
   >
     <View
       style={
-        {
-          "alignItems": "center",
-          "justifyContent": "center",
-          "marginRight": 22,
-        }
-      }
-    >
-      <Memo(CryptoIconComponent)
-        currencyCode="BTC"
-        sizeRem={1.5}
-        walletId="123456789"
-      />
-    </View>
-    <View
-      style={
-        {
-          "flex": 1,
-          "flexDirection": "column",
-        }
+        [
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "center",
+          },
+          {
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+          },
+        ]
       }
     >
       <View
         style={
-          [
-            {
-              "alignItems": "center",
-              "flexDirection": "row",
-            },
-            {},
-          ]
+          {
+            "height": 45,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "width": 45,
+          }
+        }
+      >
+        <RNSVGSvgView
+          align="xMidYMid"
+          bbHeight="61"
+          bbWidth="61"
+          focusable={false}
+          height={61}
+          meetOrSlice={0}
+          minX={-8}
+          minY={-8}
+          style={
+            [
+              {
+                "backgroundColor": "transparent",
+                "borderWidth": 0,
+              },
+              {
+                "left": -8,
+                "position": "absolute",
+                "top": -8,
+                "transform": [
+                  {
+                    "rotateZ": "-90deg",
+                  },
+                ],
+              },
+              {
+                "flex": 0,
+                "height": 61,
+                "width": 61,
+              },
+            ]
+          }
+          vbHeight={61}
+          vbWidth={61}
+          width={61}
+        >
+          <RNSVGGroup
+            fill={
+              {
+                "payload": 4278190080,
+                "type": 0,
+              }
+            }
+          >
+            <RNSVGCircle
+              cx="22.5"
+              cy="22.5"
+              fill={
+                {
+                  "payload": 4278190080,
+                  "type": 0,
+                }
+              }
+              opacity={0}
+              propList={
+                [
+                  "stroke",
+                  "strokeWidth",
+                  "strokeDasharray",
+                  "strokeLinecap",
+                ]
+              }
+              r="24"
+              stroke={
+                {
+                  "payload": 4278251938,
+                  "type": 0,
+                }
+              }
+              strokeDasharray={
+                [
+                  "150.79644737231007",
+                  "150.79644737231007",
+                ]
+              }
+              strokeLinecap={1}
+              strokeWidth="4"
+            />
+          </RNSVGGroup>
+        </RNSVGSvgView>
+        <View
+          style={
+            [
+              {
+                "overflow": "hidden",
+              },
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+            ]
+          }
+        >
+          <FastImageView
+            resizeMode="cover"
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
+            }
+            style={
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
+        </View>
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+            "flexGrow": 1,
+            "flexShrink": 1,
+            "marginLeft": 22,
+            "marginRight": 6,
+          }
         }
       >
         <View
           style={
             {
               "alignItems": "center",
-              "flex": 1,
               "flexDirection": "row",
+              "justifyContent": "flex-start",
             }
           }
         >
-          <WithTheme(EdgeTextComponent)
+          <Text
+            accessible={true}
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
             style={
-              {
-                "fontFamily": "Quicksand-Medium",
-              }
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "fontFamily": "Quicksand-Medium",
+                },
+                null,
+              ]
             }
           >
             BTC
-          </WithTheme(EdgeTextComponent)>
+          </Text>
         </View>
-        <View
+        <Text
+          accessible={true}
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
           style={
-            {
-              "marginLeft": 6,
-              "textAlign": "right",
-            }
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#A4C7DF",
+                "fontSize": 17,
+              },
+              null,
+            ]
           }
         >
-          <WithTheme(EdgeTextComponent)
-            style={
-              {
-                "fontFamily": "Quicksand-Medium",
-                "textAlign": "right",
-              }
-            }
-          >
-            1 BTC
-          </WithTheme(EdgeTextComponent)>
-        </View>
+          My Bitcoin
+        </Text>
       </View>
       <View
         style={
-          [
-            {
-              "alignItems": "center",
-              "flexDirection": "row",
-            },
-            {},
-          ]
+          {
+            "alignItems": "flex-end",
+            "flexDirection": "column",
+          }
         }
       >
         <View
+          accessible={true}
           style={
             {
               "alignItems": "center",
-              "flex": 1,
               "flexDirection": "row",
+              "justifyContent": "flex-start",
             }
           }
-        >
-          <WithTheme(EdgeTextComponent)
-            style={
-              {
-                "color": "#A4C7DF",
-                "flex": 1,
-                "fontSize": 17,
-                "marginTop": 6,
-              }
-            }
-          >
-            myWallet
-          </WithTheme(EdgeTextComponent)>
-        </View>
-        <View
-          style={
-            {
-              "marginLeft": 6,
-              "textAlign": "right",
-            }
-          }
-        >
-          <WithTheme(EdgeTextComponent)
-            style={
-              {
-                "color": "#A4C7DF",
-                "fontSize": 17,
-                "marginTop": 6,
-              }
-            }
-          >
-            40000 USD
-          </WithTheme(EdgeTextComponent)>
-        </View>
+        />
       </View>
     </View>
-  </View>
-  <React.Fragment>
     <View>
       <View
         style={
@@ -173,16 +289,28 @@ exports[`ExchangeQuote should render with loading props 1`] = `
             }
           }
         >
-          <WithTheme(EdgeTextComponent)
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
             style={
-              {
-                "fontSize": 17,
-                "marginTop": 6,
-              }
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "fontSize": 17,
+                  "marginTop": 6,
+                },
+                null,
+              ]
             }
           >
             Max network fee
-          </WithTheme(EdgeTextComponent)>
+          </Text>
         </View>
         <View
           style={
@@ -192,16 +320,28 @@ exports[`ExchangeQuote should render with loading props 1`] = `
             }
           }
         >
-          <WithTheme(EdgeTextComponent)
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
             style={
-              {
-                "fontSize": 17,
-                "marginTop": 6,
-              }
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "fontSize": 17,
+                  "marginTop": 6,
+                },
+                null,
+              ]
             }
           >
-            1
-          </WithTheme(EdgeTextComponent)>
+            0.00000001 BTC (&lt;0.01 USD)
+          </Text>
         </View>
       </View>
       <View
@@ -224,16 +364,28 @@ exports[`ExchangeQuote should render with loading props 1`] = `
             }
           }
         >
-          <WithTheme(EdgeTextComponent)
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
             style={
-              {
-                "fontSize": 17,
-                "marginTop": 6,
-              }
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "fontSize": 17,
+                  "marginTop": 6,
+                },
+                null,
+              ]
             }
           >
             Total Amount
-          </WithTheme(EdgeTextComponent)>
+          </Text>
         </View>
         <View
           style={
@@ -243,19 +395,31 @@ exports[`ExchangeQuote should render with loading props 1`] = `
             }
           }
         >
-          <WithTheme(EdgeTextComponent)
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
             style={
-              {
-                "fontSize": 17,
-                "marginTop": 6,
-              }
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "fontSize": 17,
+                  "marginTop": 6,
+                },
+                null,
+              ]
             }
           >
-            40001 USD
-          </WithTheme(EdgeTextComponent)>
+            1.84 USD
+          </Text>
         </View>
       </View>
     </View>
-  </React.Fragment>
-</WithTheme(CardComponent)>
+  </View>
+</View>
 `;
