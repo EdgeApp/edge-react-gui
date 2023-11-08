@@ -595,6 +595,8 @@
   "transaction_details_accelerate_transaction_slider_disabled": "Não foi possível acelerar a transação",
   "transaction_details_accelerate_transaction_fee_too_low": "A taxa de transação acelerada está muito baixa. A taxa foi atualizada. Por favor, tente novamente.",
   "transaction_details_accelerate_transaction_sent": "A sua transação foi acelerada.",
+  "transaction_details_accelerate_transaction_lower_amount_tx_title": "Lower Send Amount",
+  "transaction_details_accelerate_transaction_lower_amount_tx_message": "In order to accelerate this transaction, the recipient's amount will be lower due to insufficient balance to cover the new fee.",
   "transaction_details_exchange_details": "Detalhes da Exchange",
   "transaction_details_exchange_service": "Serviços da Exchange",
   "transaction_details_exchange_order_id": "ID do Pedido",

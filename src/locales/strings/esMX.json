@@ -595,6 +595,8 @@
   "transaction_details_accelerate_transaction_slider_disabled": "No se puede acelerar la transacción",
   "transaction_details_accelerate_transaction_fee_too_low": "Accelerated transaction fee is too low. Fee has been updated. Please try again.",
   "transaction_details_accelerate_transaction_sent": "Tu transacción ha sido acelerada.",
+  "transaction_details_accelerate_transaction_lower_amount_tx_title": "Lower Send Amount",
+  "transaction_details_accelerate_transaction_lower_amount_tx_message": "In order to accelerate this transaction, the recipient's amount will be lower due to insufficient balance to cover the new fee.",
   "transaction_details_exchange_details": "Detalles de la casa de cambio",
   "transaction_details_exchange_service": "Servicios de casa de cambio",
   "transaction_details_exchange_order_id": "Número de pedido",
