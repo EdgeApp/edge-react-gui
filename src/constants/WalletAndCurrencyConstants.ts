@@ -94,7 +94,8 @@ export const WALLET_TYPE_ORDER = [
   'wallet:avalanche',
   'wallet:binancesmartchain',
   'wallet:liberland',
-  'wallet:liberlandtestnet'
+  'wallet:liberlandtestnet',
+  'wallet:thorchainrune'
 ]
 
 // Put these in reverse order of preference
@@ -428,6 +429,13 @@ export const SPECIAL_CURRENCY_INFO: {
     // will share / copy public address instead of URI on Request scene
     isUriEncodedStructure: true,
     dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX',
+    isImportKeySupported: true
+  },
+  thorchainrune: {
+    initWalletName: lstrings.string_first_thorchainrune_wallet_name,
+    chainCode: 'RUNE',
+    noChangeMiningFee: true,
+    dummyPublicAddress: 'thor1mj5j3eke6m9tcvmn8lwwxdrputyvax45lqawch',
     isImportKeySupported: true
   },
   binance: {
