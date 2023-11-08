@@ -2,7 +2,9 @@ import * as React from 'react'
 import { ActivityIndicator, Text, TouchableOpacity, ViewStyle } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
+import Animated from 'react-native-reanimated'
 
+import { fadeInDownAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { usePendingPress } from '../../hooks/usePendingPress'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -89,17 +91,19 @@ export function MainButton(props: Props) {
   }
 
   return (
-    <TouchableOpacity disabled={disabled || pending} style={buttonShadow} onPress={handlePress}>
-      <LinearGradient colors={colors} start={start} end={end} style={[touchableStyle, dynamicStyles, styles.linearGradient]}>
-        {pending ? null : children}
-        {pending || label == null ? null : (
-          <Text adjustsFontSizeToFit minimumFontScale={0.75} numberOfLines={1} style={textStyle}>
-            {label}
-          </Text>
-        )}
-        {!pending && !spinner ? null : <ActivityIndicator color={spinnerColor} style={styles.spinner} />}
-      </LinearGradient>
-    </TouchableOpacity>
+    <Animated.View layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
+      <TouchableOpacity disabled={disabled || pending} style={buttonShadow} onPress={handlePress}>
+        <LinearGradient colors={colors} start={start} end={end} style={[touchableStyle, dynamicStyles, styles.linearGradient]}>
+          {pending ? null : children}
+          {pending || label == null ? null : (
+            <Text adjustsFontSizeToFit minimumFontScale={0.75} numberOfLines={1} style={textStyle}>
+              {label}
+            </Text>
+          )}
+          {!pending && !spinner ? null : <ActivityIndicator color={spinnerColor} style={styles.spinner} />}
+        </LinearGradient>
+      </TouchableOpacity>
+    </Animated.View>
   )
 }
 

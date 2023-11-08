@@ -4,6 +4,7 @@ import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, { Easing, runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import Entypo from 'react-native-vector-icons/Entypo'
 
+import { fadeInDownAnimation, LAYOUT_ANIMATION } from '../../constants/animationConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
@@ -90,7 +91,7 @@ export const SafeSlider = (props: Props) => {
   })
 
   return (
-    <View style={[parentStyle, styles.sliderContainer]}>
+    <Animated.View style={[parentStyle, styles.sliderContainer]} layout={LAYOUT_ANIMATION} entering={fadeInDownAnimation()}>
       <View style={[styles.slider, sliderDisabled ? styles.disabledSlider : null, widthStyle]}>
         <Animated.View style={[styles.progress, progressStyle]} />
 
@@ -105,7 +106,7 @@ export const SafeSlider = (props: Props) => {
           <EdgeText style={sliderDisabled ? [styles.textOverlay, styles.textOverlayDisabled] : styles.textOverlay}>{sliderText}</EdgeText>
         )}
       </View>
-    </View>
+    </Animated.View>
   )
 }
 
