@@ -268,7 +268,7 @@ export const newPriceChangeEvent = (
 }
 
 export const fetchLegacySettings = async (userId: string, currencyCode: string) => {
-  const deviceId = getUniqueId()
+  const deviceId = await getUniqueId()
   const deviceIdEncoded = encodeURIComponent(deviceId)
   const encodedUserId = encodeURIComponent(userId)
   return await legacyGet(`user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`)

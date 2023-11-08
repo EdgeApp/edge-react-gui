@@ -205,6 +205,12 @@ export const asEnvConfig = asObject({
   USE_FAKE_CORE: asOptional(asBoolean, false),
   USE_FIREBASE: asOptional(asBoolean, true),
   USE_WELCOME_SCREENS: asOptional(asBoolean, true), // Used by whitelabels
+  POSTHOG_INIT: asOptional(
+    asObject({
+      apiKey: asOptional(asString, ''),
+      apiHost: asOptional(asString, '')
+    })
+  ),
 
   YOLO_DEEP_LINK: asNullable(asString),
   YOLO_PASSWORD: asNullable(asString),
