@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 3.22.0
+
+- added: Posthog analytics support
+- added: New 'Lower Send Amount' warning for transaction acceleration
+- added: Allow buy/sell plugins local override and info server patching
+- changed: Disable max-spend for Filecoin wallets
+- changed: Don't show recovery, password, or otp reminders in Maestro
+- fixed: Incorrectly filtering out transactions due to spam/dust filter
+
 ## 3.21.0
 
 - added: Paybis buy/sell in Brazil, Columbia, and Mexico
@@ -22,19 +31,43 @@
 - removed: Moonpay sell via ACH
 - removed: Banxa buy via Pix
 
-## 3.20.0
+## 3.20.0 (2023-10-20)
 
 - added: Banxa purchase with iDEAL
 - added: Asset status card to remotely communicate known issues or important info
 - added: Paybis buy with credit card
+- added: Support Zcash Spend Before Sync
+- added: Zcash transparent funds autoshielding
 - changed: 'legacyLanding' experiment config set to 0% probability
 - changed: Banxa sell to use new widget
 - changed: Replace deprecated memo handling with `EdgeMemo` in SendScene2
 - changed: Re-enable Piratechain
 - changed: Remove price-change push notification subscriptions for keys-only currencies
+- changed: Support Zcash Unified Addresses
 - fixed: Crash in react-native-linear-gradient when app built with Xcode 15
+- Upgrade edge-core-js to v1.9.0
+  - added: Support optimized login syncing, checking to see if our credentials are up-to-date before performing a periodic login.
+  - added: Export cleaners for server types and testing data types.
+  - deprecated: EdgeContext.listRecoveryQuestionChoices. The GUI provides its own localized strings now.
+- Upgrade edge-currency-accountbased to v2.7.2
+  - added: Add deprecated memoType to zcashInfo for backwards compatibility
+  - added: Add Zcash autoshield support
+  - added: EdgeTxAction tagging to TRX freeze/unfreeze contract call transactions
+  - added: Support for importing XLM wallets via 12/24-word mnemonic seed phrase
+  - changed: Update address explorer url (Zcash)
+  - changed: Upgrade react-native-piratechain to v0.4.0
+  - changed: Upgrade react-native-zcash to v0.6.2
+  - changed: Use Zcash types directly from react-native-zcash
+  - fixed: Account for possible 0-date transaction listerner race-condition
+  - fixed: Filecoin returns a more stable spendable balance from getMaxSpendable
+  - fixed: More accurate Filecoin fee estimation for makeSpend
+  - fixed: Set synchronizer to null in killEngine so it can be properly restarted (Zcash)
+- Upgrade edge-exchange-plugins to v0.21.11
+  - added: Enable Zcash receiving on Godex
+  - changed: Restrict ChangeHero trading to whitelisted plugins
+  - changed: Replace deprecated currency codes in SwapCurrencyError with requests
 
-## 3.19.0
+## 3.19.0 (2023-10-06)
 
 - added: env.json experiment config override
 - added: Experiment config for "Create Account" and "Login" button labels

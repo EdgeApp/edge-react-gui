@@ -20,9 +20,9 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (1.11.0):
     - React-Core
-  - edge-currency-accountbased (2.9.3):
+  - edge-currency-accountbased (2.9.4):
     - React-Core
-  - edge-exchange-plugins (1.0.1):
+  - edge-exchange-plugins (1.0.2):
     - React-Core
   - edge-login-ui-rn (2.17.1):
     - React
@@ -607,7 +607,7 @@ PODS:
     - React
   - RNBootSplash (4.7.4):
     - React-Core
-  - RNCAsyncStorage (1.18.2):
+  - RNCAsyncStorage (1.19.4):
     - React-Core
   - RNCClipboard (1.10.0):
     - React-Core
@@ -615,7 +615,7 @@ PODS:
     - React-Core
   - RNDateTimePicker (7.2.0):
     - React-Core
-  - RNDeviceInfo (8.7.1):
+  - RNDeviceInfo (10.11.0):
     - React-Core
   - RNFastImage (8.5.11):
     - React-Core
@@ -1224,8 +1224,8 @@ SPEC CHECKSUMS:
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   edge-core-js: 48b390da31ef71c2ac09330ade6a187dc92b3edc
-  edge-currency-accountbased: c3ccdd8e193847f5e5229ecf9217122b2728732a
-  edge-exchange-plugins: 7baa8f14b42e820b7c3cbe0eb4b2032660a536c8
+  edge-currency-accountbased: 945252c9c7417898bd6c5fe7b32c0f5b1cb1c446
+  edge-exchange-plugins: a36b9096c5bf9979e2f6274e3ce7702884bae5fb
   edge-login-ui-rn: a7c217aa8f26777f1d9e21a0044d99bcfdc3d3c6
   FBLazyVector: c511d4cd0210f416cb5c289bd5ae6b36d909b048
   FBReactNativeSpec: a911fb22def57aef1d74215e8b6b8761d25c1c54
@@ -1310,11 +1310,11 @@ SPEC CHECKSUMS:
   ReactCommon: 08723d2ed328c5cbcb0de168f231bc7bae7f8aa1
   rn-id-blurview: 42b72b8741b1624ef5052928ec7c04fcb345e198
   RNBootSplash: 0a92fb6bd3d265e23cded61faf3e9fda441d0a6b
-  RNCAsyncStorage: ddc4ee162bfd41b0d2c68bf2d95acd81dd7f1f93
+  RNCAsyncStorage: 3a8f7145d17cdd9f88e7b77666c94a09e4f759c8
   RNCClipboard: f1736c75ab85b627a4d57587edb4b60999c4dd80
   RNCPicker: 6d5d64e7b90c240c779ee0938ec433c11e2dd758
   RNDateTimePicker: 3942382593f104af226ad9c56e16166960c7ae30
-  RNDeviceInfo: aad3c663b25752a52bf8fce93f2354001dd185aa
+  RNDeviceInfo: bf8a32acbcb875f568217285d1793b0e8588c974
   RNFastImage: 1f2cab428712a4baaf78d6169eaec7f622556dd7
   RNFBAnalytics: 43558b1ae95a6d0fec9124f70c365b4f5ecc0907
   RNFBApp: 6f5c7b9931378efb467e08144959ff93172ac83b
