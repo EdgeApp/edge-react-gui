@@ -12,7 +12,7 @@ import { Card } from '../cards/Card'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
-import { ExchangedFlipInput, ExchangedFlipInputAmounts } from './ExchangedFlipInput'
+import { ExchangedFlipInput2, ExchangedFlipInputAmounts } from './ExchangedFlipInput2'
 import { MainButton } from './MainButton'
 import { SelectableRow } from './SelectableRow'
 
@@ -136,22 +136,34 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
         {this.state?.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage ?? ''}</EdgeText> : null}
         {this.renderBalance()}
         <Card marginRem={[0, 1]}>
-          <ExchangedFlipInput
+          <ExchangedFlipInput2
             onNext={onNext}
             onFocus={this.props.onFocus}
             onBlur={this.props.onBlur}
             headerText={this.props.headerText}
             headerCallback={this.launchSelector}
-            primaryCurrencyInfo={primaryCurrencyInfo}
-            secondaryCurrencyInfo={secondaryCurrencyInfo}
-            exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
-            overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
-            onExchangeAmountChanged={this.onExchangeAmountChanged}
-            onError={this.onError}
+            // primaryCurrencyInfo={primaryCurrencyInfo}
+            // secondaryCurrencyInfo={secondaryCurrencyInfo}
+            // exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
+            // overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
+            // onExchangeAmountChanged={this.onExchangeAmountChanged}
+            // onError={this.onError}
             keyboardVisible={false}
-            isFiatOnTop
+            forceField="fiat"
             isFocus={false}
           />
+
+          {/* forceField="crypto"
+              headerCallback={this.handleOpenWalletListModal}
+              headerText={flipInputHeaderText}
+              inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : undefined}
+              keyboardVisible={false}
+              onAmountChanged={this.onExchangeAmountChanged}
+              ref={this.flipInputRef}
+              returnKeyType={this.state.isFioMode ? 'next' : 'done'}
+              tokenId={primaryCurrencyInfo.tokenId}
+              walletId={wallet.id} */}
+
           {children}
         </Card>
       </>
