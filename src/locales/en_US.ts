@@ -1407,7 +1407,6 @@ const strings = {
   buy_sell_quote_input_title: 'Input',
   buy_sell_quote_output_title: 'Output',
   bank_transfer_reference: 'Reference',
-  sepa_form_title: 'Enter Bank Info',
   sepa_transfer_prompt_s:
     'Your order %1$s has been submitted!\n\nPlease save the order details below for your records and instruct your bank to make the payment with the information in the Payment Details section.',
 
