@@ -31,7 +31,6 @@ describe('CryptoExchangeComponent', () => {
             exchangeCurrencyCode: 'BTC'
           } as any
         }
-        fromFiatToCrypto="500"
         toWalletId=""
         toFiatCurrencyCode="USD"
         toIsoFiatCurrencyCode="iso:USD"
@@ -51,7 +50,6 @@ describe('CryptoExchangeComponent', () => {
             }
           } as any
         }
-        toFiatToCrypto="500"
         pluginId="ChangeNow"
         fromCurrencyCode="BTC"
         toCurrencyCode="ETH"

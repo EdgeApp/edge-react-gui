@@ -41,6 +41,8 @@ export interface Props {
   inputAccessoryViewID?: string
   headerCallback?: () => void
   onAmountChanged: (amounts: ExchangedFlipInputAmounts) => unknown
+  onBlur?: () => void
+  onFocus?: () => void
   onNext?: () => void
 }
 
@@ -58,6 +60,8 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
   const {
     walletId,
     tokenId,
+    onBlur,
+    onFocus,
     onNext,
     startNativeAmount,
     onAmountChanged,
@@ -210,6 +214,8 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
       </TouchableOpacity>
 
       <FlipInput2
+        onBlur={onBlur}
+        onFocus={onFocus}
         onNext={onNext}
         ref={flipInputRef}
         convertValue={convertValue}

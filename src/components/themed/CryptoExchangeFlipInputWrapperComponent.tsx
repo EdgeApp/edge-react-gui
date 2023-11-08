@@ -12,7 +12,7 @@ import { Card } from '../cards/Card'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
-import { ExchangedFlipInput, ExchangedFlipInputAmounts } from './ExchangedFlipInput'
+import { ExchangedFlipInput2, ExchangedFlipInputAmounts } from './ExchangedFlipInput2'
 import { MainButton } from './MainButton'
 import { SelectableRow } from './SelectableRow'
 
@@ -23,8 +23,7 @@ interface OwnProps {
   primaryCurrencyInfo: GuiCurrencyInfo
   secondaryCurrencyInfo: GuiCurrencyInfo
   tokenId?: string
-  fiatPerCrypto: string
-  overridePrimaryExchangeAmount: string
+  overridePrimaryNativeAmount: string
   isFocused: boolean
   isThinking?: boolean
   focusMe: () => void
@@ -48,7 +47,7 @@ interface State {
 type Props = OwnProps & StateProps & ThemeProps
 
 export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props, State> {
-  onExchangeAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
+  onAmountsChanged = (amounts: ExchangedFlipInputAmounts) => {
     this.props.onCryptoExchangeAmountChanged(amounts)
   }
 
@@ -91,7 +90,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
   }
 
   render() {
-    const { onNext, primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, name, overridePrimaryExchangeAmount, children, theme } = this.props
+    const { onNext, primaryCurrencyInfo, secondaryCurrencyInfo, name, overridePrimaryNativeAmount, children, theme } = this.props
     const styles = getStyles(theme)
 
     if (this.props.isThinking) {
@@ -134,21 +133,17 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
         {this.state?.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage ?? ''}</EdgeText> : null}
         {this.renderBalance()}
         <Card marginRem={[0, 1]}>
-          <ExchangedFlipInput
+          <ExchangedFlipInput2
             onNext={onNext}
             onFocus={this.props.onFocus}
             onBlur={this.props.onBlur}
             headerText={this.props.headerText}
             headerCallback={this.launchSelector}
-            primaryCurrencyInfo={primaryCurrencyInfo}
-            secondaryCurrencyInfo={secondaryCurrencyInfo}
-            exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
-            overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
-            onExchangeAmountChanged={this.onExchangeAmountChanged}
-            onError={this.onError}
+            onAmountChanged={this.onAmountsChanged}
+            startNativeAmount={overridePrimaryNativeAmount}
             keyboardVisible={false}
-            isFiatOnTop
-            isFocus={false}
+            forceField="fiat"
+            walletId={this.props.walletId}
           />
           {children}
         </Card>
@@ -233,7 +228,7 @@ export const CryptoExchangeFlipInputWrapper = connect<StateProps, {}, OwnProps>(
 
     const tokenId = getTokenId(state.core.account, wallet.currencyInfo.pluginId, displayCurrencyCode)
 
-    return { name: name ?? '', cryptoAmount: cryptoAmount, tokenId }
+    return { name: name ?? '', cryptoAmount, tokenId }
   },
   dispatch => ({})
 )(withTheme(CryptoExchangeFlipInputWrapperComponent))

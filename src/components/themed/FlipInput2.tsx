@@ -28,6 +28,8 @@ export interface FlipInputFieldInfo {
 }
 
 export interface Props {
+  onBlur?: () => void
+  onFocus?: () => void
   onNext?: () => void
   convertValue: (sourceFieldNum: FieldNum, value: string) => Promise<string | undefined>
   startAmounts: [string, string]
@@ -49,7 +51,19 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
   const styles = getStyles(theme)
   const inputRefs = [React.useRef<TextInput>(null), React.useRef<TextInput>(null)]
 
-  const { startAmounts, fieldInfos, keyboardVisible, returnKeyType = 'done', onNext, inputAccessoryViewID, convertValue, forceFieldNum = 0, editable } = props
+  const {
+    startAmounts,
+    fieldInfos,
+    keyboardVisible,
+    returnKeyType = 'done',
+    onBlur,
+    onFocus,
+    onNext,
+    inputAccessoryViewID,
+    convertValue,
+    forceFieldNum = 0,
+    editable
+  } = props
   const animatedValue = useSharedValue(forceFieldNum)
 
   // `amounts` is always a 2-tuple
@@ -108,10 +122,12 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
 
   const handleBottomFocus = useHandler(() => {
     setAmountFocused(true)
+    if (onFocus != null) onFocus()
   })
 
   const handleBottomBlur = useHandler(() => {
     setAmountFocused(false)
+    if (onBlur != null) onBlur()
   })
 
   const bottomRow = useHandler((fieldNum: FieldNum) => {
