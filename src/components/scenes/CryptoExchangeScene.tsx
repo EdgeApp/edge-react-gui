@@ -386,8 +386,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   mainScrollView: {
-    flex: 1,
-    marginBottom: theme.rem(1)
+    flex: 1
   },
   scrollViewContentContainer: {
     alignItems: 'center',
