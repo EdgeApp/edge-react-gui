@@ -12,6 +12,7 @@ import { connect } from '../../../types/reactRedux'
 import { RootState } from '../../../types/reduxTypes'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { EdgeTokenId } from '../../../types/types'
+import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getRegInfo } from '../../../util/FioAddressUtils'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -21,6 +22,7 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeC
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { Tile } from '../../tiles/Tile'
+import { SendScene2Params } from '../SendScene2'
 
 interface StateProps {
   account: EdgeAccount
@@ -28,6 +30,7 @@ interface StateProps {
   fioPlugin?: EdgeCurrencyConfig
   fioWallets: EdgeCurrencyWallet[]
   fioDisplayDenomination: EdgeDenomination
+  pluginId: string
   isConnected: boolean
 }
 
@@ -126,9 +129,10 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
   }
 
   proceed = async (walletId: string, paymentCurrencyCode: string) => {
-    const { isConnected, state, navigation, route } = this.props
+    const { isConnected, state, navigation, pluginId, route } = this.props
     const { selectedWallet, fioAddress } = route.params
     const { feeValue, paymentInfo: allPaymentInfo } = this.state
+    const { account } = state.core
 
     if (isConnected) {
       if (paymentCurrencyCode === FIO_STR) {
@@ -144,21 +148,33 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
       } else {
         this.props.onSelectWallet(walletId, paymentCurrencyCode)
 
-        const wallet = state.core.account.currencyWallets[walletId]
+        const wallet = account.currencyWallets[walletId]
         const exchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, paymentCurrencyCode)
         let nativeAmount = mul(allPaymentInfo[paymentCurrencyCode].amount, exchangeDenomination.multiplier)
         nativeAmount = toFixed(nativeAmount, 0, 0)
 
-        const guiMakeSpendInfo = {
-          currencyCode: paymentCurrencyCode,
-          nativeAmount,
-          publicAddress: allPaymentInfo[paymentCurrencyCode].address,
-          metadata: {
-            name: lstrings.fio_address_register_metadata_name,
-            notes: `${lstrings.title_fio_address_confirmation}\n${fioAddress}`
-          },
+        const tokenId = getTokenId(account, pluginId, paymentCurrencyCode)
+        const sendParams: SendScene2Params = {
+          walletId,
+          tokenId,
           dismissAlert: true,
-          lockInputs: true,
+          lockTilesMap: {
+            address: true,
+            amount: true,
+            wallet: true
+          },
+          spendInfo: {
+            spendTargets: [
+              {
+                nativeAmount,
+                publicAddress: allPaymentInfo[paymentCurrencyCode].address
+              }
+            ],
+            metadata: {
+              name: lstrings.fio_address_register_metadata_name,
+              notes: `${lstrings.title_fio_address_confirmation}\n${fioAddress}`
+            }
+          },
           onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
             if (error) {
               setTimeout(() => {
@@ -174,12 +190,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
             }
           }
         }
-
-        navigation.navigate('send', {
-          guiMakeSpendInfo,
-          selectedWalletId: walletId,
-          selectedCurrencyCode: paymentCurrencyCode
-        })
+        navigation.navigate('send2', sendParams)
       }
     } else {
       showError(lstrings.fio_network_alert_text)
@@ -274,6 +285,7 @@ export const FioAddressRegisterSelectWalletScene = connect<StateProps, DispatchP
     fioPlugin: state.core.account.currencyConfig.fio,
     fioDisplayDenomination: getDisplayDenomination(state, params.selectedWallet.currencyInfo.pluginId, FIO_STR),
     defaultFiatCode: state.ui.settings.defaultIsoFiat,
+    pluginId: params.selectedWallet.currencyInfo.pluginId,
     isConnected: state.network.isConnected
   }),
   dispatch => ({

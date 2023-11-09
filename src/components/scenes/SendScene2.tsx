@@ -64,6 +64,7 @@ interface Props extends EdgeSceneProps<'send2'> {}
 export interface SendScene2Params {
   walletId: string
   tokenId?: string
+  dismissAlert?: boolean
   isoExpireDate?: string
   minNativeAmount?: string
   spendInfo?: EdgeSpendInfo
@@ -123,6 +124,7 @@ const SendComponent = (props: Props) => {
   const {
     walletId: initWalletId = '',
     tokenId: tokenIdProp,
+    dismissAlert = false,
     spendInfo: initSpendInfo,
     isoExpireDate,
     minNativeAmount: initMinNativeAmount,
@@ -826,13 +828,15 @@ const SendComponent = (props: Props) => {
           walletId
         })
       }
-      Alert.alert(lstrings.transaction_success, lstrings.transaction_success_message, [
-        {
-          onPress() {},
-          style: 'default',
-          text: lstrings.string_ok
-        }
-      ])
+      if (!dismissAlert) {
+        Alert.alert(lstrings.transaction_success, lstrings.transaction_success_message, [
+          {
+            onPress() {},
+            style: 'default',
+            text: lstrings.string_ok
+          }
+        ])
+      }
     } catch (e: any) {
       resetSlider()
       console.log(e)
