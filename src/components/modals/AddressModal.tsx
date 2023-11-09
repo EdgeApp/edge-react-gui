@@ -1,6 +1,5 @@
 import { FlashList } from '@shopify/flash-list'
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
-import { ethers } from 'ethers'
 import * as React from 'react'
 import { ActivityIndicator, Image, TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -166,13 +165,8 @@ export class AddressModalComponent extends React.Component<Props, State> {
   }
 
   fetchEnsAddress = async (domain: string): Promise<string> => {
-    const chainId = 1 // Hard-coded to Ethereum mainnet
-    const network = ethers.providers.getNetwork(chainId)
-    if (network.name === 'unknown') {
-      throw new ResolutionError('UnsupportedDomain', { domain })
-    }
-    const ethersProvider = ethers.getDefaultProvider(network)
-    const address = await ethersProvider.resolveName(domain)
+    const ethPlugin: EdgeCurrencyConfig = this.props.account.currencyConfig.ethereum
+    const address = await ethPlugin.otherMethods.resolveEnsName(domain)
     if (address == null) throw new ResolutionError('UnregisteredDomain', { domain })
     return address
   }
