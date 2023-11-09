@@ -483,6 +483,7 @@ export const SPECIAL_CURRENCY_INFO: {
     }
   },
   fio: {
+    allowZeroTx: true,
     initWalletName: lstrings.string_first_fio_wallet_name,
     chainCode: 'FIO',
     dummyPublicAddress: 'FIO4uX8tSuBZyHJmpPfc5Q6WrZ9eXd33wdgfWvfJ2fjGsg9yH4Dkd',

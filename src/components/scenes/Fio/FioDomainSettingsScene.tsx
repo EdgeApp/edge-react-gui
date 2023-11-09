@@ -7,7 +7,6 @@ import { formatDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
-import { GuiMakeSpendInfo } from '../../../types/types'
 import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioDomain, setDomainVisibility } from '../../../util/FioAddressUtils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
@@ -18,6 +17,7 @@ import { ClickableText } from '../../themed/ClickableText'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { Tile } from '../../tiles/Tile'
+import { SendScene2Params } from '../SendScene2'
 
 interface State {
   showRenew: boolean
@@ -123,26 +123,22 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     const { route } = this.props
     const { fioDomainName, fioWallet } = route.params
 
-    const guiMakeSpendInfo: GuiMakeSpendInfo = {
-      nativeAmount: '',
-      currencyCode: fioWallet.currencyInfo.currencyCode,
-      otherParams: {
-        action: {
-          name: 'transferFioDomain',
-          params: { fioDomain: fioDomainName, maxFee: transferFee }
+    const sendParams: SendScene2Params = {
+      spendInfo: {
+        spendTargets: [{ nativeAmount: '', publicAddress: '' }],
+        otherParams: {
+          action: {
+            name: 'transferFioDomain',
+            params: { fioDomain: fioDomainName, maxFee: transferFee }
+          }
         }
       },
       onDone: err => {
         if (!err) {
           this.afterTransferSuccess().catch(err => showError(err))
         }
-      }
-    }
-
-    navigation.navigate('send', {
-      guiMakeSpendInfo,
-      selectedWalletId: fioWallet.id,
-      selectedCurrencyCode: fioWallet.currencyInfo.currencyCode,
+      },
+      walletId: fioWallet.id,
       lockTilesMap: {
         wallet: true
       },
@@ -151,7 +147,9 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
         fioAddressSelect: true
       },
       infoTiles: [{ label: lstrings.fio_domain_to_transfer, value: `@${fioDomainName}` }]
-    })
+    }
+
+    navigation.navigate('send2', sendParams)
   }
 
   render() {
