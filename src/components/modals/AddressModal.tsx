@@ -48,11 +48,12 @@ interface DispatchProps {
 
 interface State {
   uri: string
-  statusLabel: string
-  fieldError: string | undefined
+  validLabel: string | undefined
+  errorLabel: string | undefined
   cryptoAddress?: string
   fioAddresses: FioAddresses
   filteredFioAddresses: string[]
+  showSpinner: boolean
 }
 
 type Props = StateProps & OwnProps & DispatchProps & ThemeProps
@@ -65,11 +66,12 @@ export class AddressModalComponent extends React.Component<Props, State> {
     this.fioCheckQueue = 0
     this.state = {
       uri: '',
-      statusLabel: lstrings.fragment_send_address,
+      validLabel: undefined,
       cryptoAddress: undefined,
-      fieldError: undefined,
+      errorLabel: undefined,
       fioAddresses: { addresses: {} },
-      filteredFioAddresses: []
+      filteredFioAddresses: [],
+      showSpinner: false
     }
   }
 
@@ -94,14 +96,6 @@ export class AddressModalComponent extends React.Component<Props, State> {
       this.setState({ fioAddresses: await getFioAddressCache(account) })
       this.filterFioAddresses('')
     }
-  }
-
-  setStatusLabel = (status: string) => {
-    this.setState({ statusLabel: status })
-  }
-
-  setCryptoAddress = (address?: string) => {
-    this.setState({ cryptoAddress: address })
   }
 
   filterFioAddresses = (uri: string): void => {
@@ -131,6 +125,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
   }
 
   onChangeTextDelayed = async (domain: string) => {
+    this.setState({ errorLabel: undefined, validLabel: undefined })
     try {
       const { currencyCode } = this.props
       if (this.checkIfDomain(domain)) {
@@ -178,36 +173,36 @@ export class AddressModalComponent extends React.Component<Props, State> {
     }
     const ethersProvider = ethers.getDefaultProvider(network)
     const address = await ethersProvider.resolveName(domain)
-    if (!address) throw new ResolutionError('UnregisteredDomain', { domain })
+    if (address == null) throw new ResolutionError('UnregisteredDomain', { domain })
     return address
   }
 
   resolveAddress = async (domain: string, currencyTicker: string) => {
+    this.setState({ errorLabel: undefined })
     if (!domain) return
+    this.setState({ showSpinner: true })
     try {
-      this.setStatusLabel(lstrings.resolving)
+      this.setState({ errorLabel: undefined, validLabel: lstrings.resolving })
       let addr: string
       if (this.checkIfUnstoppableDomain(domain)) addr = await this.fetchUnstoppableDomainAddress(domain, currencyTicker)
       else if (this.checkIfEnsDomain(domain)) addr = await this.fetchEnsAddress(domain)
       else {
         throw new ResolutionError('UnsupportedDomain', { domain })
       }
-      this.setStatusLabel(addr)
-      this.setCryptoAddress(addr)
+      this.setState({ cryptoAddress: addr, validLabel: addr })
     } catch (err: any) {
+      this.setState({ cryptoAddress: undefined, validLabel: undefined })
+
       if (err instanceof ResolutionError) {
         const message = sprintf(lstrings[err.code], domain, currencyTicker)
-        if (domain === '') this.setStatusLabel(lstrings.fragment_send_address)
-        else {
-          this.setStatusLabel(message)
-          this.setCryptoAddress(undefined)
-        }
+        this.setState({ errorLabel: message })
       }
     }
+    this.setState({ showSpinner: false })
   }
 
   checkFioPubAddressQueue(uri: string) {
-    this.setStatusLabel(lstrings.resolving)
+    this.setState({ validLabel: lstrings.resolving })
     this.fioCheckQueue++
     setTimeout(async () => {
       // do not check if user continue typing fio address
@@ -219,16 +214,15 @@ export class AddressModalComponent extends React.Component<Props, State> {
         const { currencyCode, coreWallet, fioPlugin } = this.props
         if (!fioPlugin) return
         await checkPubAddress(fioPlugin, uri.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
-        this.setStatusLabel(lstrings.fragment_send_address)
+        this.setState({ validLabel: undefined })
       } catch (e: any) {
-        this.setStatusLabel(lstrings.fragment_send_address)
-        return this.setState({ fieldError: e.message })
+        this.setState({ validLabel: undefined, errorLabel: e.message })
       }
     }, 1000)
   }
 
   checkFioAddressExistQueue = (fioAddress: string) => {
-    this.setStatusLabel(lstrings.resolving)
+    this.setState({ validLabel: lstrings.resolving })
     this.fioCheckQueue++
     setTimeout(async () => {
       // do not check if user continue typing fio address
@@ -240,21 +234,18 @@ export class AddressModalComponent extends React.Component<Props, State> {
         const { fioPlugin } = this.props
         if (!fioPlugin) return
         const doesAccountExist = await fioPlugin.otherMethods.doesAccountExist(fioAddress)
-        this.setStatusLabel(lstrings.fragment_send_address)
+        this.setState({ validLabel: undefined })
         if (!doesAccountExist) {
-          return this.setState({ fieldError: lstrings.err_no_address_title })
+          this.setState({ errorLabel: lstrings.err_no_address_title })
         }
       } catch (e: any) {
-        this.setStatusLabel(lstrings.fragment_send_address)
-        return this.setState({ fieldError: e.message })
+        this.setState({ validLabel: undefined, errorLabel: e.message })
       }
     }, 1000)
   }
 
   checkIfFioAddress = async (uri: string) => {
     const { useUserFioAddressesOnly, checkAddressConnected } = this.props
-    this.setState({ fieldError: undefined })
-
     if (await this.isFioAddressValid(uri)) {
       if (useUserFioAddressesOnly) return
       if (checkAddressConnected) {
@@ -304,9 +295,9 @@ export class AddressModalComponent extends React.Component<Props, State> {
   }
 
   handleSubmit = () => {
-    const { uri, cryptoAddress, fieldError } = this.state
+    const { uri, cryptoAddress, errorLabel } = this.state
     const submitData = cryptoAddress || uri
-    if (fieldError != null) return
+    if (errorLabel != null) return
     this.props.bridge.resolve(submitData)
   }
 
@@ -314,7 +305,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
   keyExtractor = (item: string, index: number) => index.toString()
 
   render() {
-    const { uri, statusLabel, fieldError, filteredFioAddresses } = this.state
+    const { uri, validLabel, errorLabel, showSpinner, filteredFioAddresses } = this.state
     const { title, userFioAddressesLoading, theme } = this.props
     const styles = getStyles(theme)
 
@@ -328,12 +319,14 @@ export class AddressModalComponent extends React.Component<Props, State> {
             autoCorrect={false}
             returnKeyType="search"
             autoCapitalize="none"
-            label={statusLabel}
+            label={lstrings.fragment_send_address}
             onChangeText={this.onChangeTextDelayed}
             onSubmitEditing={this.handleSubmit}
             value={uri}
             marginRem={[0, 1]}
-            error={fieldError}
+            error={errorLabel}
+            valid={validLabel}
+            showSpinner={showSpinner}
           />
           {!userFioAddressesLoading ? (
             <FlashList
