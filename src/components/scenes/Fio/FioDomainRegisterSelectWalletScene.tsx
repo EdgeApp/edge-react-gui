@@ -12,7 +12,7 @@ import { config } from '../../../theme/appConfig'
 import { connect } from '../../../types/reactRedux'
 import { RootState } from '../../../types/reduxTypes'
 import { EdgeSceneProps } from '../../../types/routerTypes'
-import { GuiMakeSpendInfo } from '../../../types/types'
+import { EdgeTokenId, GuiMakeSpendInfo } from '../../../types/types'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getDomainRegInfo } from '../../../util/FioAddressUtils'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -41,6 +41,7 @@ interface DispatchProps {
 
 interface LocalState {
   loading: boolean
+  supportedAssets: EdgeTokenId[]
   supportedCurrencies: { [currencyCode: string]: boolean }
   paymentInfo: { [currencyCode: string]: { amount: string; address: string } }
   activationCost: number
@@ -59,6 +60,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     loading: false,
     activationCost: 800,
     feeValue: 0,
+    supportedAssets: [],
     supportedCurrencies: {},
     paymentInfo: {}
   }
@@ -73,13 +75,13 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     const { fioDomain, selectedWallet } = route.params
     if (fioPlugin != null) {
       try {
-        const { activationCost, feeValue, supportedCurrencies, paymentInfo } = await getDomainRegInfo(
+        const { activationCost, feeValue, supportedAssets, supportedCurrencies, paymentInfo } = await getDomainRegInfo(
           fioPlugin,
           fioDomain,
           selectedWallet,
           fioDisplayDenomination
         )
-        this.setState({ activationCost, feeValue, supportedCurrencies, paymentInfo })
+        this.setState({ activationCost, feeValue, supportedAssets, supportedCurrencies, paymentInfo })
       } catch (e: any) {
         showError(e)
         this.setState({ errorMessage: e.message })
@@ -98,16 +100,10 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   }
 
   selectWallet = async () => {
-    const { supportedCurrencies } = this.state
+    const { supportedAssets } = this.state
 
-    const allowedCurrencyCodes: string[] = []
-    for (const currency of Object.keys(supportedCurrencies)) {
-      if (supportedCurrencies[currency]) {
-        allowedCurrencyCodes.push(currency)
-      }
-    }
     const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={[{ pluginId: 'fio' }]} />
+      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={supportedAssets} />
     ))
     if (walletId && currencyCode) {
       this.setState({ paymentWallet: { id: walletId, currencyCode } })

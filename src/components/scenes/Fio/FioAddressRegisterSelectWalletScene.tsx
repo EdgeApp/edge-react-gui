@@ -11,6 +11,7 @@ import { config } from '../../../theme/appConfig'
 import { connect } from '../../../types/reactRedux'
 import { RootState } from '../../../types/reduxTypes'
 import { EdgeSceneProps } from '../../../types/routerTypes'
+import { EdgeTokenId } from '../../../types/types'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getRegInfo } from '../../../util/FioAddressUtils'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -38,6 +39,7 @@ interface DispatchProps {
 
 interface LocalState {
   loading: boolean
+  supportedAssets: EdgeTokenId[]
   supportedCurrencies: { [currencyCode: string]: boolean }
   paymentInfo: { [currencyCode: string]: { amount: string; address: string } }
   activationCost: number
@@ -56,6 +58,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     loading: false,
     activationCost: 40,
     feeValue: 0,
+    supportedAssets: [],
     supportedCurrencies: {},
     paymentInfo: {}
   }
@@ -70,7 +73,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     const { fioAddress, selectedWallet, selectedDomain, isFallback } = route.params
     if (this.props.fioPlugin) {
       try {
-        const { activationCost, feeValue, supportedCurrencies, paymentInfo } = await getRegInfo(
+        const { activationCost, feeValue, supportedAssets, supportedCurrencies, paymentInfo } = await getRegInfo(
           this.props.fioPlugin,
           fioAddress,
           selectedWallet,
@@ -78,7 +81,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
           fioDisplayDenomination,
           isFallback
         )
-        this.setState({ activationCost, feeValue, supportedCurrencies, paymentInfo })
+        this.setState({ activationCost, feeValue, supportedAssets, supportedCurrencies, paymentInfo })
       } catch (e: any) {
         showError(e)
         this.setState({ errorMessage: e.message })
@@ -112,16 +115,10 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
   }
 
   selectWallet = async () => {
-    const { supportedCurrencies } = this.state
+    const { supportedAssets } = this.state
 
-    const allowedCurrencyCodes: string[] = []
-    for (const currency of Object.keys(supportedCurrencies)) {
-      if (supportedCurrencies[currency]) {
-        allowedCurrencyCodes.push(currency)
-      }
-    }
     const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={[{ pluginId: 'fio' }]} />
+      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={supportedAssets} />
     ))
     if (walletId && currencyCode) {
       this.setState({ paymentWallet: { id: walletId, currencyCode } })
