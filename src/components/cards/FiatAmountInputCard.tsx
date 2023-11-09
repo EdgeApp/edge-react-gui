@@ -5,10 +5,9 @@ import * as React from 'react'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
-import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../util/utils'
+import { DECIMAL_PRECISION, sanitizeDecimalAmount, truncateDecimals, zeroString } from '../../util/utils'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship } from '../services/AirshipInstance'
-import { sanitizeDecimalAmount } from '../themed/FlipInput'
 import { UnderlinedNumInputCard } from './UnderlinedNumInputCard'
 
 interface Props {
