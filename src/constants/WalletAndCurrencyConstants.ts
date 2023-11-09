@@ -15,6 +15,12 @@ export const MAX_CRYPTO_AMOUNT_CHARACTERS = 10 // includes both whole and fracti
 export const FIAT_PRECISION = 2
 const UTXO_MAX_SPEND_TARGETS = 32
 
+// Sync status consts
+export const MIN_RATIO = 0.02
+export const MAX_RATIO = 0.95
+export const RESYNC_THRESHOLD = 0.05
+export const DONE_THRESHOLD = 0.999
+
 // Translations for custom fee keys:
 export const FEE_STRINGS = {
   gasLimit: lstrings.gasLimit,

@@ -13,48 +13,30 @@ interface Props {
   subTitle?: string
   icon?: React.ReactNode
   autoHeight?: boolean
-  autoWidth?: boolean
-  autoWidthContent?: boolean
   arrowTappable?: boolean
   underline?: boolean
 
   marginRem?: number[] | number
-  paddingRem?: number[] | number
 }
 
 export class SelectableRowComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
-    const {
-      icon,
-      title,
-      subTitle,
-      arrowTappable,
-      underline,
-      autoHeight,
-      autoWidth = false,
-      autoWidthContent = autoWidth,
-      marginRem,
-      paddingRem,
-      onPress,
-      theme
-    } = this.props
+    const { icon, title, subTitle, arrowTappable, underline, autoHeight, marginRem, onPress, theme } = this.props
     const styles = getStyles(theme)
 
     return (
-      <ClickableRow autoHeight={autoHeight} marginRem={marginRem} paddingRem={paddingRem} underline={underline} onPress={onPress}>
-        <View style={[styles.rowContainer, autoWidth ? styles.autoWidth : null]}>
-          <View style={autoWidthContent ? styles.iconTitleContainerAutoWidth : styles.iconTitleContainer}>
-            {icon}
-            <View style={[styles.title, autoWidthContent ? styles.titleAutoWidth : null]}>
-              <EdgeText>{title}</EdgeText>
-              {subTitle ? (
-                <EdgeText style={styles.subTitle} numberOfLines={2}>
-                  {subTitle}
-                </EdgeText>
-              ) : null}
-            </View>
+      <ClickableRow autoHeight={autoHeight} marginRem={marginRem} paddingRem={[0, 0.5]} underline={underline} onPress={onPress}>
+        <View style={styles.rowContainer}>
+          <View style={styles.iconContainer}>{icon}</View>
+          <View style={styles.textContainer}>
+            <EdgeText>{title}</EdgeText>
+            {subTitle ? (
+              <EdgeText style={styles.subTitle} numberOfLines={2}>
+                {subTitle}
+              </EdgeText>
+            ) : null}
           </View>
-          <IonIcon size={theme.rem(1.5)} color={arrowTappable ? theme.iconTappable : theme.icon} name="chevron-forward-outline" style={styles.iconStyle} />
+          <IonIcon size={theme.rem(1.5)} color={arrowTappable ? theme.iconTappable : theme.icon} name="chevron-forward-outline" style={styles.chevron} />
         </View>
       </ClickableRow>
     )
@@ -68,38 +50,22 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between'
   },
-  autoWidth: {
-    width: 'auto',
-    maxWidth: '100%'
+  iconContainer: {
+    margin: theme.rem(0.5)
   },
-  iconTitleContainer: {
+  textContainer: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  iconTitleContainerAutoWidth: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  title: {
-    width: '100%',
     flexDirection: 'column',
-    marginLeft: theme.rem(1.25)
-  },
-  titleAutoWidth: {
-    width: 'auto',
-    maxWidth: '75%',
-    marginLeft: theme.rem(0.75),
-    marginRight: theme.rem(0.75)
+    alignItems: 'flex-start',
+    margin: theme.rem(0.5)
   },
   subTitle: {
-    maxWidth: '85%',
     color: theme.secondaryText,
     fontSize: theme.rem(0.75),
     marginTop: theme.rem(0.25)
   },
-  iconStyle: {
-    marginRight: theme.rem(-0.5)
+  chevron: {
+    marginHorizontal: theme.rem(0)
   }
 }))
 

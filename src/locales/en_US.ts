@@ -207,6 +207,7 @@ const strings = {
   fragment_transaction_list_unconfirmed_rbf: 'Awaiting confirmation, may be cancelled',
   fragment_transaction_list_transaction: 'Transactions',
   transaction_list_buy_crypto_message: 'Buy %s',
+  transaction_list_loading_txs: 'Loading Transactions…',
   transaction_list_no_tx_yet: 'No transactions yet',
   transaction_list_no_tx_support_yet: 'Transaction history is not yet supported',
   transaction_list_search: 'Search Transactions',
@@ -345,6 +346,7 @@ const strings = {
   help_site_more_info_text: 'More info on %1$s',
   help_terms_of_service_text: 'Understand your obligations and risks associated with our platform',
   loading: 'Loading…',
+  percent_complete_1s: '%1$s Complete',
   validating: 'Validating…',
   high_fee_warning_confirm_send: 'Confirm Send',
   mining_fee_custom_label_choice: 'Custom',
@@ -1405,7 +1407,6 @@ const strings = {
   buy_sell_quote_input_title: 'Input',
   buy_sell_quote_output_title: 'Output',
   bank_transfer_reference: 'Reference',
-  sepa_form_title: 'Enter Bank Info',
   sepa_transfer_prompt_s:
     'Your order %1$s has been submitted!\n\nPlease save the order details below for your records and instruct your bank to make the payment with the information in the Payment Details section.',
 

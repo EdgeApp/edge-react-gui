@@ -103,16 +103,14 @@ export const WcConnectScene = (props: Props) => {
 
   const renderWalletSelect = () => {
     if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
-      return <SelectableRow arrowTappable paddingRem={[0, 1]} title={lstrings.wc_confirm_select_wallet} onPress={handleWalletListModal} />
+      return <SelectableRow arrowTappable title={lstrings.wc_confirm_select_wallet} onPress={handleWalletListModal} />
     } else {
       const walletNameStr = truncateString(walletName || '', MAX_ADDRESS_CHARACTERS)
       const walletImage = (
         <CryptoIcon tokenId={getTokenId(account, wallet.currencyInfo.pluginId, selectedWallet.currencyCode)} walletId={selectedWallet.walletId} />
       )
       const walletAddressStr = truncateString(walletAddress, MAX_ADDRESS_CHARACTERS, true)
-      return (
-        <SelectableRow arrowTappable icon={walletImage} paddingRem={[0, 1]} subTitle={walletAddressStr} title={walletNameStr} onPress={handleWalletListModal} />
-      )
+      return <SelectableRow arrowTappable icon={walletImage} subTitle={walletAddressStr} title={walletNameStr} onPress={handleWalletListModal} />
     }
   }
 

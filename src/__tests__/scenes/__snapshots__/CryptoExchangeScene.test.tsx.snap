@@ -28,7 +28,6 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
     style={
       {
         "flex": 1,
-        "marginBottom": 22,
       }
     }
     viewIsInsideTabBar={false}

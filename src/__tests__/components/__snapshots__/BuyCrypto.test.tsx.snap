@@ -124,12 +124,35 @@ exports[`BuyCrypto should render with some props 1`] = `
           },
           {
             "fontSize": 28,
+            "textAlign": "center",
           },
           null,
         ]
       }
     >
-      No transactions yet
+      Loading Transactions…
+    </Text>
+    <Text
+      adjustsFontSizeToFit={true}
+      minimumFontScale={0.65}
+      numberOfLines={1}
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          {
+            "color": "#A4C7DF",
+            "textAlign": "center",
+          },
+          null,
+        ]
+      }
+    >
+      50% Complete
     </Text>
   </View>,
 ]

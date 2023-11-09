@@ -178,12 +178,12 @@ export class SwapSettings extends React.Component<Props, State> {
       <SceneWrapper background="theme" hasTabs={false}>
         <ScrollView contentContainerStyle={{ paddingBottom: this.props.theme.rem(4) }}>
           <SettingsSubHeader label={lstrings.settings_exchange_instruction} />
+          <SettingsHeaderRow label={lstrings.swap_preferred_header} />
+          {this.renderPreferredArea()}
           <SettingsHeaderRow label={lstrings.swap_options_header_decentralized} />
           {this.sortedDexIds.map(pluginId => this.renderPlugin(pluginId))}
           <SettingsHeaderRow label={lstrings.swap_options_header_centralized} />
           {this.sortedCexIds.map(pluginId => this.renderPlugin(pluginId))}
-          <SettingsHeaderRow label={lstrings.swap_preferred_header} />
-          {this.renderPreferredArea()}
         </ScrollView>
       </SceneWrapper>
     )
