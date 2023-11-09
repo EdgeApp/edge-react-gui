@@ -1231,6 +1231,7 @@
   "buy_sell_quote_input_title": "入力",
   "buy_sell_quote_output_title": "出力",
   "bank_transfer_reference": "参照",
+  "sepa_form_title": "Enter Bank Info",
   "sepa_transfer_prompt_s": "ご注文 %1$s が送信されました！\n\n以下の注文詳細を記録として保存し、支払いの詳細セクションに記載されている情報を使用して、銀行に支払いを行うよう指示してください。",
   "backup_account": "アカウントをバックアップ",
   "backup_delete_confirm_message": "バックアップせずにアカウントを削除してもよろしいですか？ このアカウントのウォレットと取引を復元することはできません！",
