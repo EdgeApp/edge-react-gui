@@ -1231,6 +1231,7 @@
   "buy_sell_quote_input_title": "Input",
   "buy_sell_quote_output_title": "Output",
   "bank_transfer_reference": "Referência",
+  "sepa_form_title": "Enter Bank Info",
   "sepa_transfer_prompt_s": "O seu pedido %1$s foi enviado!\n\nSalve os detalhes do pedido abaixo para os seus registros e instrua o seu banco a efetuar o pagamento com as informações na seção Detalhes de pagamento.",
   "backup_account": "Backup da Conta",
   "backup_delete_confirm_message": "Tem certeza de que deseja excluir esta conta sem antes fazer o backup? Você NÃO poderá recuperar carteiras e transações para esta conta!",
