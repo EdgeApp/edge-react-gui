@@ -1231,6 +1231,7 @@
   "buy_sell_quote_input_title": "Input",
   "buy_sell_quote_output_title": "Output",
   "bank_transfer_reference": "Riferimento",
+  "sepa_form_title": "Enter Bank Info",
   "sepa_transfer_prompt_s": "Il tuo ordine %1$s è stato inviato!\n\nPer favore salva i dettagli dell'ordine qui sotto per i tuoi record e chiedi alla tua banca di effettuare il pagamento con le informazioni che trovi nella sezione Dettagli Pagamento.",
   "backup_account": "Backup dell'account",
   "backup_delete_confirm_message": "Sei sicuro di voler eliminare questo account senza prima eseguire il backup? NON potrai recuperare i portafogli e le transazioni per questo account!",
