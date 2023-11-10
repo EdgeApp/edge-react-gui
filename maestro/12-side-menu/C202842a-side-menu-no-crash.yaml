@@ -8,7 +8,7 @@
 appId: ${MAESTRO_APP_ID}
 tags:
 - android
-- C202856a
+- C202842a
 ---
 - runFlow:
     file: ../common/launch-cleared.yaml
