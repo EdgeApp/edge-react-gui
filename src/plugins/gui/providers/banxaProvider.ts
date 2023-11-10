@@ -1,6 +1,6 @@
 // import { div, gt, lt, mul, toFixed } from 'biggystring'
 import { gt, lt } from 'biggystring'
-import { asArray, asMaybe, asNumber, asObject, asString, asValue } from 'cleaners'
+import { asArray, asEither, asMaybe, asNumber, asObject, asString, asValue } from 'cleaners'
 import URL from 'url-parse'
 
 import { SendScene2Params } from '../../../components/scenes/SendScene2'
@@ -159,11 +159,22 @@ const asBanxaQuote = asObject({
   checkout_url: asString
 })
 
-const asBanxaQuoteResponse = asObject({
-  data: asObject({
-    order: asBanxaQuote
+const asBanxaError = asObject({
+  errors: asObject({
+    // code: asNumber,
+    // status: asNumber,
+    title: asString
   })
 })
+
+const asBanxaQuoteResponse = asEither(
+  asObject({
+    data: asObject({
+      order: asBanxaQuote
+    })
+  }),
+  asBanxaError
+)
 
 const asBanxaOrderStatus = asValue(
   'pendingPayment',
@@ -490,6 +501,10 @@ export const banxaProvider: FiatProviderFactory = {
             }
             const response = await banxaFetch({ method: 'POST', url, hmacUser, path: 'api/orders', apiKey, bodyParams })
             const banxaQuote = asBanxaQuoteResponse(response)
+
+            if ('errors' in banxaQuote) {
+              throw new Error(banxaQuote.errors.title)
+            }
 
             let interval: ReturnType<typeof setInterval> | undefined
             let insideInterval = false
