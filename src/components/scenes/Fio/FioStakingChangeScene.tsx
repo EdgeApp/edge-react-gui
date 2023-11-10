@@ -1,4 +1,4 @@
-import { add, gt } from 'biggystring'
+import { add, eq, gt } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
@@ -19,10 +19,11 @@ import { MapObject } from '../../../types/types'
 import { convertNativeToDenomination } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
-import { FlipInputModal, FlipInputModalResult } from '../../modals/FlipInputModal'
+import { FlipInputModal2, FlipInputModalResult } from '../../modals/FlipInputModal2'
 import { Airship, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
+import { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
 import { ModalMessage, ModalTitle } from '../../themed/ModalParts'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
@@ -32,6 +33,8 @@ import { Tile } from '../../tiles/Tile'
 interface Props extends EdgeSceneProps<'fioStakingChange'> {
   wallet: EdgeCurrencyWallet
 }
+
+type PartialAmounts = Pick<ExchangedFlipInputAmounts, 'nativeAmount' | 'exchangeAmount'>
 
 type StakingBalances = MapObject<{
   native: string
@@ -92,7 +95,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
     }
   }
 
-  const onAmountChanged = (nativeAmount: string, exchangeAmount: string) => {
+  const onAmountsChanged = ({ exchangeAmount, nativeAmount }: PartialAmounts) => {
     setExchangeAmount(exchangeAmount)
     setNativeAmount(nativeAmount)
   }
@@ -114,7 +117,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
             }
           })
           .then(nativeAmount => {
-            onAmountChanged(nativeAmount, add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0'))
+            onAmountsChanged({ nativeAmount, exchangeAmount: add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0') })
           })
         break
       }
@@ -122,7 +125,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
         const nativeAmt = stakingBalances[`${currencyCode}${STAKING_BALANCES.staked}`].native
         currencyWallet
           .nativeToDenomination(nativeAmt, 'FIO')
-          .then(exchangeAmt => onAmountChanged(nativeAmt, exchangeAmt))
+          .then(exchangeAmt => onAmountsChanged({ nativeAmount: nativeAmt, exchangeAmount: exchangeAmt }))
           .catch(e => console.error(e))
         break
       }
@@ -154,14 +157,12 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
 
   const handleAmount = () => {
     Airship.show<FlipInputModalResult>(bridge => (
-      <FlipInputModal
+      <FlipInputModal2
         bridge={bridge}
-        navigation={navigation}
-        walletId={walletId}
-        currencyCode={currencyCode}
+        wallet={currencyWallet}
         onFeesChange={onFeesChange}
-        onAmountChanged={onAmountChanged}
-        overrideExchangeAmount={exchangeAmount}
+        onAmountsChanged={onAmountsChanged}
+        startNativeAmount={eq(nativeAmount, '0') ? undefined : nativeAmount}
         onMaxSet={onMaxSet}
       />
     )).catch(error => setError(error))

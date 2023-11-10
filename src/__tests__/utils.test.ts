@@ -1,7 +1,6 @@
 import { describe, expect, test } from '@jest/globals'
 import { log10 } from 'biggystring'
 
-import { sanitizeDecimalAmount } from '../components/themed/FlipInput'
 import { getDisplayDenomination } from '../selectors/DenominationSelectors'
 import {
   convertNativeToDenomination,
@@ -16,6 +15,7 @@ import {
   precisionAdjust,
   roundedFee,
   roundUpToLeastSignificant,
+  sanitizeDecimalAmount,
   truncateDecimals,
   zerosAfterDecimal
 } from '../util/utils'

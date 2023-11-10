@@ -24,7 +24,7 @@ import { Airship, showError, showWarning } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
 import { CryptoExchangeFlipInputWrapper } from '../themed/CryptoExchangeFlipInputWrapperComponent'
-import { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput'
+import { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput2'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { MainButton } from '../themed/MainButton'
 import { MiniButton } from '../themed/MiniButton'
@@ -44,14 +44,12 @@ interface StateProps {
   fromWalletName: string
   fromExchangeAmount: string
   fromWalletPrimaryInfo: GuiCurrencyInfo
-  fromFiatToCrypto: string
   toWalletId: string
   toFiatCurrencyCode: string
   toIsoFiatCurrencyCode: string
   toWalletName: string
   toExchangeAmount: string
   toWalletPrimaryInfo: GuiCurrencyInfo
-  toFiatToCrypto: string
   pluginId: string
 
   // The following props are used to populate the confirmation modal
@@ -75,7 +73,7 @@ interface DispatchProps {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 interface State {
-  whichWalletFocus: 'from' | 'to' // Which wallet FlipInput was last focused and edited
+  whichWalletFocus: 'from' | 'to' // Which wallet FlipInput2 was last focused and edited
   fromExchangeAmount: string
   toExchangeAmount: string
   fromAmountNative: string
@@ -351,8 +349,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             headerText={fromHeaderText}
             primaryCurrencyInfo={this.props.fromWalletPrimaryInfo}
             secondaryCurrencyInfo={fromSecondaryInfo}
-            fiatPerCrypto={this.props.fromFiatToCrypto}
-            overridePrimaryExchangeAmount={this.state.fromExchangeAmount}
+            overridePrimaryNativeAmount={this.state.fromAmountNative}
             launchWalletSelector={this.launchFromWalletSelector}
             onCryptoExchangeAmountChanged={this.fromAmountChanged}
             isFocused={isFromFocused}
@@ -368,8 +365,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             headerText={toHeaderText}
             primaryCurrencyInfo={this.props.toWalletPrimaryInfo}
             secondaryCurrencyInfo={toSecondaryInfo}
-            fiatPerCrypto={this.props.toFiatToCrypto}
-            overridePrimaryExchangeAmount={this.state.toExchangeAmount}
+            overridePrimaryNativeAmount={this.state.toAmountNative}
             launchWalletSelector={this.launchToWalletSelector}
             onCryptoExchangeAmountChanged={this.toAmountChanged}
             isFocused={isToFocused}
