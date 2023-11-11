@@ -1,3 +1,4 @@
+import { abs, sub } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTransaction, EdgeTxSwap } from 'edge-core-js'
 import * as React from 'react'
 import { Linking, Platform, View } from 'react-native'
@@ -89,7 +90,8 @@ export function SwapDetailsTiles(props: Props) {
   )
   if (destinationDenomination == null) return null
 
-  const sourceAmount = convertNativeToDisplay(walletDefaultDenom.multiplier)(spendTargets[0].nativeAmount)
+  const sourceNativeAmount = sub(abs(transaction.nativeAmount), transaction.networkFee)
+  const sourceAmount = convertNativeToDisplay(walletDefaultDenom.multiplier)(sourceNativeAmount)
   const destinationAmount = convertNativeToDisplay(destinationDenomination.multiplier)(swapData.payoutNativeAmount)
   const destinationCurrencyCode = destinationDenomination.name
 
