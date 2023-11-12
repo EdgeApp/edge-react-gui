@@ -141,7 +141,10 @@ export function AccountCallbackManager(props: Props) {
   // Do the expensive work with rate limiting:
   useAsyncEffect(
     async () => {
-      setDirty(notDirty)
+      setDirty(dirty => ({
+        ...dirty,
+        walletList: false
+      }))
 
       // Update wallets:
       if (dirty.walletList) {
@@ -150,7 +153,17 @@ export function AccountCallbackManager(props: Props) {
         await dispatch(updateWalletsRequest())
         await snooze(1000)
       }
+    },
+    [dirty.walletList],
+    'AccountCallbackManager:walletList'
+  )
 
+  useAsyncEffect(
+    async () => {
+      setDirty(dirty => ({
+        ...dirty,
+        rates: false
+      }))
       // Update exchange rates:
       if (dirty.rates) {
         datelog('Updating exchange rates')
@@ -158,8 +171,8 @@ export function AccountCallbackManager(props: Props) {
         await snooze(1000)
       }
     },
-    [dirty],
-    'AccountCallbackManager'
+    [dirty.rates],
+    'AccountCallbackManager:rates'
   )
 
   return null

@@ -3,6 +3,7 @@
 ## Unreleased
 
 - fixed: Various margin styling alignments
+- fixed: Long delay updating exchange rates after login
 
 ## 3.22.0
 
