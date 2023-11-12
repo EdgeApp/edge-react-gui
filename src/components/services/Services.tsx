@@ -124,6 +124,8 @@ export function Services(props: Props) {
     REFRESH_INFO_SERVER_MS
   )
 
+  const startLoanManager = ENV.BETA_FEATURES && account != null
+
   return (
     <>
       {ENV.BETA_FEATURES ? <ActionQueueService /> : null}
@@ -134,7 +136,7 @@ export function Services(props: Props) {
       {account == null ? null : <SortedWalletList account={account} />}
       <EdgeContextCallbackManager navigation={navigation} />
       <PermissionsManager />
-      {account == null ? null : <LoanManagerService account={account} />}
+      {startLoanManager ? <LoanManagerService account={account} /> : null}
       <NetworkActivity />
       <PasswordReminderService />
       {account == null ? null : <WalletConnectService account={account} />}
