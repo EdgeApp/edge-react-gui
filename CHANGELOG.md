@@ -4,6 +4,7 @@
 
 - fixed: Various margin styling alignments
 - fixed: Long delay updating exchange rates after login
+- fixed: Do not count paused wallets for progress ratio
 
 ## 3.22.0
 
