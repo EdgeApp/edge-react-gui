@@ -33,6 +33,7 @@ export function FiatPluginWebViewComponent(props: Props): JSX.Element {
         allowUniversalAccessFromFileURLs
         geolocationEnabled
         javaScriptEnabled
+        allowsInlineMediaPlayback
         mediaPlaybackRequiresUserAction={false}
         source={{ uri: url }}
         onNavigationStateChange={handleNavigationStateChange}
