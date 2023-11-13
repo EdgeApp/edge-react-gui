@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 3.21.1
+
+- fixed: Use allowsInlineMediaPlayback for webview to fix KYC widgets
+
 ## 3.21.0
 
 - added: Paybis buy/sell in Brazil, Columbia, and Mexico
