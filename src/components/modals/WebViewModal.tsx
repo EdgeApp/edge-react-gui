@@ -29,7 +29,7 @@ export const WebViewModal = (props: Props) => {
       <ModalTitle center paddingRem={[0, 1, 1]}>
         {title}
       </ModalTitle>
-      <WebView ref={webviewRef} source={{ uri }} />
+      <WebView ref={webviewRef} allowsInlineMediaPlayback source={{ uri }} />
     </ThemedModal>
   )
 }

@@ -188,6 +188,7 @@ export function EdgeProviderComponent(props: Props): JSX.Element {
     <WebView
       allowFileAccess
       allowUniversalAccessFromFileURLs
+      allowsInlineMediaPlayback
       geolocationEnabled
       injectedJavaScript={javascript}
       javaScriptEnabled

@@ -34,6 +34,7 @@ export function ExtraTabScene(props: Props) {
     <SceneWrapper background="legacy" hasTabs avoidKeyboard>
       <WebView
         allowFileAccess
+        allowsInlineMediaPlayback
         allowUniversalAccessFromFileURLs
         geolocationEnabled
         javaScriptEnabled
