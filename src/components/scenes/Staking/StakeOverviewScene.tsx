@@ -15,6 +15,7 @@ import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { FillLoader } from '../../progress-indicators/FillLoader'
+import { Shimmer } from '../../progress-indicators/Shimmer'
 import { showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { MainButton } from '../../themed/MainButton'
@@ -141,6 +142,16 @@ const StakeOverviewSceneComponent = (props: Props) => {
           stakeProviderInfo={stakePolicy.stakeProviderInfo}
         />
       </View>
+      {stakePosition == null ? (
+        <>
+          <View style={styles.shimmer}>
+            <Shimmer isShown />
+          </View>
+          <View style={styles.shimmer}>
+            <Shimmer isShown />
+          </View>
+        </>
+      ) : null}
       <FlashList
         data={[...stakeAllocations, ...rewardAllocations]}
         renderItem={renderCFAT}
@@ -189,6 +200,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'flex-start',
     paddingTop: theme.rem(0.5)
+  },
+  shimmer: {
+    height: theme.rem(3),
+    marginLeft: theme.rem(1),
+    marginHorizontal: theme.rem(1),
+    marginVertical: theme.rem(0.5)
   },
   icon: {
     height: theme.rem(1.5),
