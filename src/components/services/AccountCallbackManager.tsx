@@ -13,7 +13,7 @@ import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { stakeMetadataCache } from '../../plugins/stake-plugins/metadataCache'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { snooze } from '../../util/utils'
+import { datelog, snooze } from '../../util/utils'
 import { Airship } from './AirshipInstance'
 
 interface Props {
@@ -141,25 +141,38 @@ export function AccountCallbackManager(props: Props) {
   // Do the expensive work with rate limiting:
   useAsyncEffect(
     async () => {
-      setDirty(notDirty)
+      setDirty(dirty => ({
+        ...dirty,
+        walletList: false
+      }))
 
       // Update wallets:
       if (dirty.walletList) {
         // Update all wallets (hammer mode):
-        console.log('Updating wallet list')
+        datelog('Updating wallet list')
         await dispatch(updateWalletsRequest())
         await snooze(1000)
       }
+    },
+    [dirty.walletList],
+    'AccountCallbackManager:walletList'
+  )
 
+  useAsyncEffect(
+    async () => {
+      setDirty(dirty => ({
+        ...dirty,
+        rates: false
+      }))
       // Update exchange rates:
       if (dirty.rates) {
-        console.log('Updating exchange rates')
+        datelog('Updating exchange rates')
         await dispatch(updateExchangeRates())
         await snooze(1000)
       }
     },
-    [dirty],
-    'AccountCallbackManager'
+    [dirty.rates],
+    'AccountCallbackManager:rates'
   )
 
   return null

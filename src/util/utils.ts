@@ -589,7 +589,7 @@ export const formatLargeNumberString = (num: number): string => {
 }
 
 export const consify = (arg: any) => console.log(JSON.stringify(arg, null, 2))
-
+export const datelog = (...args: any) => console.log(`${new Date().toISOString().slice(11, 23)}:`, args)
 export const makeUuid = () => {
   return v4({ random: Array.from({ length: 16 }, () => Math.floor(Math.random() * 16)) })
 }
