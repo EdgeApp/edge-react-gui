@@ -143,6 +143,15 @@ type Savers = ReturnType<typeof asSavers>
 type Pools = ReturnType<typeof asPools>
 type ExchangeInfo = ReturnType<typeof asThorchainExchangeInfo>
 type InboundAddresses = ReturnType<typeof asInboundAddresses>
+interface StakePositionWithPoolsParams {
+  asset: string
+  currencyCode: string
+  primaryAddress: string
+  pluginId: string
+  pools: Pools
+  savers: Savers
+  wallet: EdgeCurrencyWallet
+}
 
 const utxoInfo: PolicyCurrencyInfo = {
   type: 'utxo',
@@ -303,10 +312,15 @@ const getStakePosition = async (opts: EdgeGuiPluginOptions, request: StakePositi
   const policy = getPolicyFromId(stakePolicyId)
   const { currencyCode } = policy.stakeAssets[0]
   const { primaryAddress } = await getPrimaryAddress(account, wallet, currencyCode)
-  return await getStakePositionInner(opts, request, primaryAddress)
+  const params = await getStakePositionInner(opts, request, primaryAddress)
+  return await getStakePositionWithPools(params)
 }
 
-const getStakePositionInner = async (opts: EdgeGuiPluginOptions, request: StakePositionRequest, primaryAddress: string): Promise<StakePosition> => {
+const getStakePositionInner = async (
+  opts: EdgeGuiPluginOptions,
+  request: StakePositionRequest,
+  primaryAddress: string
+): Promise<StakePositionWithPoolsParams> => {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
   const { account, stakePolicyId, wallet } = request
   const policy = getPolicyFromId(stakePolicyId)
@@ -335,6 +349,11 @@ const getStakePositionInner = async (opts: EdgeGuiPluginOptions, request: StakeP
   const poolsJson = await poolsResponse.json()
   pools = asPools(poolsJson)
 
+  return { asset, currencyCode, primaryAddress, pluginId, pools, savers, wallet }
+}
+
+const getStakePositionWithPools = async (params: StakePositionWithPoolsParams): Promise<StakePosition> => {
+  const { asset, currencyCode, primaryAddress, pluginId, pools, savers, wallet } = params
   const saver = savers.find(s => s.asset_address.toLowerCase() === primaryAddress.toLowerCase())
   const pool = pools.find(p => p.asset === asset)
   let stakedAmount = '0'
@@ -851,7 +870,8 @@ const estimateUnstakeFee = async (
   const primaryAddress = bigSaver.asset_address
 
   const stakePositionRequest: StakePositionRequest = { stakePolicyId, wallet, account }
-  const stakePosition = await getStakePositionInner(opts, stakePositionRequest, primaryAddress)
+  const params = await getStakePositionInner(opts, stakePositionRequest, primaryAddress)
+  const stakePosition = await getStakePositionWithPools(params)
   const { allocations } = stakePosition
 
   const addressBalance = nativeAmount
