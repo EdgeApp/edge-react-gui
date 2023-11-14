@@ -1,4 +1,4 @@
-import { add, div, gt, lt, max, mul, sub, toFixed } from 'biggystring'
+import { add, div, eq, gt, lt, max, mul, sub, toFixed } from 'biggystring'
 import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString } from 'cleaners'
 import { EdgeAccount, EdgeCurrencyWallet, EdgeMemo, InsufficientFundsError } from 'edge-core-js'
 
@@ -139,6 +139,7 @@ const asThorNodePool = asObject({
 })
 const asThorNodePools = asArray(asThorNodePool)
 
+type Saver = ReturnType<typeof asSaver>
 type Savers = ReturnType<typeof asSavers>
 type Pools = ReturnType<typeof asPools>
 type ExchangeInfo = ReturnType<typeof asThorchainExchangeInfo>
@@ -150,6 +151,7 @@ interface StakePositionWithPoolsParams {
   pluginId: string
   pools: Pools
   savers: Savers
+  saver?: Saver // Don't bother looking to match from Savers if this is passed in
   wallet: EdgeCurrencyWallet
 }
 
@@ -354,7 +356,7 @@ const getStakePositionInner = async (
 
 const getStakePositionWithPools = async (params: StakePositionWithPoolsParams): Promise<StakePosition> => {
   const { asset, currencyCode, primaryAddress, pluginId, pools, savers, wallet } = params
-  const saver = savers.find(s => s.asset_address.toLowerCase() === primaryAddress.toLowerCase())
+  const saver = params.saver ?? savers.find(s => s.asset_address.toLowerCase() === primaryAddress.toLowerCase())
   const pool = pools.find(p => p.asset === asset)
   let stakedAmount = '0'
   let earnedAmount = '0'
@@ -857,21 +859,41 @@ const estimateUnstakeFee = async (
 ): Promise<string> => {
   const { currencyCode, nativeAmount, stakePolicyId, wallet, account } = request
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
-  const saversResponse = await fetchWaterfall(thornodeServers, `thorchain/pool/${asset}/savers`, { headers: { 'x-client-id': ninerealmsClientId } })
-  if (!saversResponse.ok) {
-    const responseText = await saversResponse.text()
-    throw new Error(`Thorchain could not fetch /pool/savers: ${responseText}`)
-  }
-  const saversJson = await saversResponse.json()
-  const savers = asSavers(saversJson)
-
-  if (savers.length === 0) throw new Error('Cannot estimate unstake fee: No savers found')
-  const bigSaver = savers.reduce((prev, current) => (gt(current.units, prev.units) ? current : prev))
-  const primaryAddress = bigSaver.asset_address
 
   const stakePositionRequest: StakePositionRequest = { stakePolicyId, wallet, account }
-  const params = await getStakePositionInner(opts, stakePositionRequest, primaryAddress)
-  const stakePosition = await getStakePositionWithPools(params)
+  const params = await getStakePositionInner(opts, stakePositionRequest, 'dummyAddress')
+  const { savers } = params
+  if (savers.length === 0) throw new Error('Cannot estimate unstake fee: No savers found')
+
+  // Loop over all the Savers and find the one that has a position just higher
+  // than the requested stake amount
+  let stakePosition
+  let primaryAddress = ''
+  let bestNativeAmount = '0'
+  for (const saver of savers) {
+    primaryAddress = saver.asset_address
+    stakePosition = await getStakePositionWithPools({ ...params, saver, primaryAddress })
+    const { allocations } = stakePosition
+    for (const alloc of allocations) {
+      if (alloc.allocationType !== 'staked') continue
+      if (lt(alloc.nativeAmount, nativeAmount)) continue
+
+      if (eq(bestNativeAmount, '0') || lt(alloc.nativeAmount, bestNativeAmount)) {
+        bestNativeAmount = alloc.nativeAmount
+        break
+      }
+    }
+
+    // Early exit once we have a position that's no more than 10x larger than the
+    // requested stake amount. Continuing could cost 10s of seconds to complete
+    const bestAmtMultiplier = div(bestNativeAmount, nativeAmount, DIVIDE_PRECISION)
+    if (lt(bestAmtMultiplier, '10')) {
+      break
+    }
+  }
+  if (eq(bestNativeAmount, '0')) throw new Error('Could not find sufficient current staker to estimate unstake')
+  if (stakePosition == null) throw new Error('Could not get stakePosition. Should not happen')
+
   const { allocations } = stakePosition
 
   const addressBalance = nativeAmount
