@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Animated, Easing, View } from 'react-native'
 
 import { connect } from '../../types/reactRedux'
+import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 
 interface StateProps {
@@ -13,6 +14,9 @@ interface State {
 }
 
 type Props = StateProps & ThemeProps
+
+const SHOW_UNSYNCED = false
+const SHOW_UNSYNCED_RATIO = 0.9
 
 export class ProgressBarComponent extends React.PureComponent<Props, State> {
   animation: Animated.Value
@@ -75,16 +79,51 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const WiredProgressBar = connect<StateProps, {}, {}>(
   state => {
+    const { userPausedWalletsSet } = state.ui.settings
     const walletsForProgress = state.ui.wallets.walletLoadingProgress
     const walletIds = Object.keys(walletsForProgress)
     if (walletIds.length === 0) return { progress: 0 }
 
     let sum = 0
+    let numPausedWallets = 0
+    const unsyncedWallets: Array<{
+      id: string
+      name: string
+      plugin: string
+    }> = []
     for (const walletId of walletIds) {
+      const wallet = state.core.account.currencyWallets[walletId]
+      if (wallet == null) return { progress: 0 }
+
+      const paused = userPausedWalletsSet?.has(walletId)
+      const keysOnly = isKeysOnlyPlugin(wallet.currencyInfo.pluginId)
+
+      if (paused === true || keysOnly) {
+        numPausedWallets++
+        continue
+      }
+
       sum += walletsForProgress[walletId]
+      if (walletsForProgress[walletId] !== 1) {
+        unsyncedWallets.push({
+          id: walletId,
+          plugin: wallet.currencyInfo.pluginId,
+          name: wallet.name ?? 'NO_NAME'
+        })
+      }
     }
-    let ratio = sum / walletIds.length
+    const numRunningWallets = walletIds.length - numPausedWallets
+
+    let ratio = sum / numRunningWallets
     if (ratio > 0.99999) ratio = 1
+
+    if (SHOW_UNSYNCED && ratio > SHOW_UNSYNCED_RATIO) {
+      console.log(`PROGRESS: ${sum}/${numRunningWallets} = ${ratio}`)
+      for (const w of unsyncedWallets) {
+        const { id, plugin, name } = w
+        console.log(`UNSYNCED: ${plugin} ${name} ${id.slice(0, 5)}`)
+      }
+    }
     return { progress: ratio * 100 }
   },
   dispatch => ({})
