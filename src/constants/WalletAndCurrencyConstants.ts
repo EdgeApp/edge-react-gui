@@ -350,6 +350,16 @@ export const SPECIAL_CURRENCY_INFO: {
     isPaymentProtocolSupported: false,
     noMaxSpend: true
   },
+  filecoinfevm: {
+    initWalletName: lstrings.string_first_filecoin_fevm_wallet_name,
+    chainCode: 'FIL',
+    allowZeroTx: false,
+    displayBuyCrypto: false,
+    isImportKeySupported: true,
+    isStakingSupported: false,
+    isCustomTokensSupported: false,
+    isPaymentProtocolSupported: false
+  },
   tron: {
     initWalletName: lstrings.string_first_tron_wallet_name,
     chainCode: 'TRX',

@@ -10,6 +10,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   hedera: true,
   eos: true,
   filecoin: true,
+  filecoinfevm: true,
   telos: true,
   wax: true,
   polkadot: true,
