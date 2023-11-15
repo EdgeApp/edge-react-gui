@@ -1,6 +1,6 @@
 import * as NavigationCore from '@react-navigation/core'
 import { StackActionHelpers } from '@react-navigation/native'
-import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
+import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, JsonObject, OtpError } from 'edge-core-js'
 import { InitialRouteName } from 'edge-login-ui-rn'
 
 import { CoinRankingDetailsParams } from '../components/scenes/CoinRankingDetailsScene'
@@ -17,6 +17,7 @@ import { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
 import { MigrateWalletItem } from '../components/scenes/MigrateWalletSelectCryptoScene'
 import { SendScene2Params } from '../components/scenes/SendScene2'
+import { TransactionDetailsParams } from '../components/scenes/TransactionDetailsScene'
 import { TransactionListParams } from '../components/scenes/TransactionListScene'
 import { WcConnectionsParams } from '../components/scenes/WcConnectionsScene'
 import { WcConnectParams } from '../components/scenes/WcConnectScene'
@@ -273,11 +274,7 @@ export interface RouteParamList {
   stakeOptions: { stakePlugins: StakePlugin[]; currencyCode: string; stakePolicies: StakePolicy[]; walletId: string }
   stakeOverview: { stakePlugin: StakePlugin; stakePolicy: StakePolicy; walletId: string }
   testScene: {}
-  transactionDetails: {
-    edgeTransaction: EdgeTransaction
-    walletId: string
-    tokenId?: string
-  }
+  transactionDetails: TransactionDetailsParams
   transactionList: TransactionListParams
   transactionsExport: {
     sourceWallet: EdgeCurrencyWallet

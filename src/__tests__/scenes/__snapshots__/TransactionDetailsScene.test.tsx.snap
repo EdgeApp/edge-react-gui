@@ -870,27 +870,6 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 Notes
               </Text>
-              <Text
-                adjustsFontSizeToFit={true}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={3}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#FFFFFF",
-                      "fontSize": 22,
-                    },
-                    null,
-                  ]
-                }
-              />
             </View>
           </View>
           <View
@@ -2078,27 +2057,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 Notes
               </Text>
-              <Text
-                adjustsFontSizeToFit={true}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={3}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#FFFFFF",
-                      "fontSize": 22,
-                    },
-                    null,
-                  ]
-                }
-              />
             </View>
           </View>
           <View

@@ -88,7 +88,7 @@ describe('TransactionDetailsScene', () => {
               txid: 'this is the txid',
               walletId: fakeCoreWallet.id
             },
-            walletId: fakeCoreWallet.id
+            wallet: fakeCoreWallet
           })}
         />
       </FakeProviders>
@@ -121,7 +121,7 @@ describe('TransactionDetailsScene', () => {
               txid: 'this is the txid',
               walletId: fakeCoreWallet.id
             },
-            walletId: fakeCoreWallet.id
+            wallet: fakeCoreWallet
           })}
         />
       </FakeProviders>

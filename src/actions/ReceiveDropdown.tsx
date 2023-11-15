@@ -71,7 +71,7 @@ export function showReceiveDropdown(navigation: NavigationBase, transaction: Edg
 
           navigation.navigate('transactionDetails', {
             edgeTransaction: transaction,
-            walletId
+            wallet
           })
         }}
       />

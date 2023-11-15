@@ -825,7 +825,7 @@ const SendComponent = (props: Props) => {
       } else {
         navigation.replace('transactionDetails', {
           edgeTransaction: broadcastedTx,
-          walletId
+          wallet: coreWallet
         })
       }
       if (!dismissAlert) {

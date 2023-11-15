@@ -85,7 +85,7 @@ export function TransactionListRow(props: Props) {
     }
     navigation.push('transactionDetails', {
       edgeTransaction: transaction,
-      walletId: wallet.id,
+      wallet,
       tokenId
     })
   })

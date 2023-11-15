@@ -368,7 +368,7 @@ export function signBroadcastAndSave(
       } else {
         navigation.replace('transactionDetails', {
           edgeTransaction: edgeSignedTransaction,
-          walletId: wallet.id
+          wallet
         })
       }
     } catch (e: any) {
