@@ -1,4 +1,4 @@
 module.exports = {
   presets: ['module:metro-react-native-babel-preset'],
-  plugins: ['react-native-reanimated/plugin']
+  plugins: [require('@babel/plugin-transform-export-namespace-from'), 'react-native-reanimated/plugin']
 }
