@@ -4,10 +4,12 @@
 
 ## 3.22.0
 
+- added: Support for Thorchain Savers EVM token deposits
 - added: Add THORChain (RUNE)
 - added: Posthog analytics support
 - added: New 'Lower Send Amount' warning for transaction acceleration
 - added: Allow buy/sell plugins local override and info server patching
+- changed: Use memos for Thorchain Savers withdrawals
 - changed: Disable max-spend for Filecoin wallets
 - changed: Disabled signupCaptcha experiment
 - changed: Don't show recovery, password, or otp reminders in Maestro
