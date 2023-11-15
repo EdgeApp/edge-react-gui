@@ -5,25 +5,25 @@ exports[`ClickableRow should render with loading props 1`] = `
   accessible={false}
   onLongPress={[Function]}
   onPress={[Function]}
-  underlayColor="#06090c"
+  underlayColor="rgb(0,35,45)"
 >
   <LinearGradient
     colors={
       [
-        "#06090c",
-        "#1b2f3b",
+        "rgb(0,35,45)",
+        "rgb(10, 13, 15)",
       ]
     }
     end={
       {
-        "x": 1,
-        "y": 0,
+        "x": 0,
+        "y": 0.4,
       }
     }
     start={
       {
         "x": 0,
-        "y": 0,
+        "y": 0.1,
       }
     }
     style={

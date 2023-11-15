@@ -48,16 +48,16 @@ exports[`FioAddressList should render with loading props 1`] = `
             {
               "addButtonFont": "Quicksand-Medium",
               "backgroundGradientColors": [
-                "#06090c",
-                "#1b2f3b",
+                "rgb(0,35,45)",
+                "rgb(10, 13, 15)",
               ],
               "backgroundGradientEnd": {
-                "x": 1,
-                "y": 0,
+                "x": 0,
+                "y": 0.4,
               },
               "backgroundGradientStart": {
                 "x": 0,
-                "y": 0,
+                "y": 0.1,
               },
               "backgroundImage": undefined,
               "backgroundImageServerUrls": [
@@ -503,16 +503,16 @@ exports[`FioAddressList should render with loading props 1`] = `
             {
               "addButtonFont": "Quicksand-Medium",
               "backgroundGradientColors": [
-                "#06090c",
-                "#1b2f3b",
+                "rgb(0,35,45)",
+                "rgb(10, 13, 15)",
               ],
               "backgroundGradientEnd": {
-                "x": 1,
-                "y": 0,
+                "x": 0,
+                "y": 0.4,
               },
               "backgroundGradientStart": {
                 "x": 0,
-                "y": 0,
+                "y": 0.1,
               },
               "backgroundImage": undefined,
               "backgroundImageServerUrls": [

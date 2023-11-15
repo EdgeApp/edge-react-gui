@@ -66,7 +66,13 @@ const palette = {
   QuicksandRegular: 'Quicksand-Regular',
   QuicksandMedium: 'Quicksand-Medium',
   QuicksandSemiBold: 'Quicksand-SemiBold',
-  QuicksandBold: 'Quicksand-Bold'
+  QuicksandBold: 'Quicksand-Bold',
+
+  // UI4 palette
+  darkTeal: 'rgb(0,35,45)',
+  veryDarkTeal: 'rgb(10, 13, 15)',
+
+  teal: 'rgb(22, 50, 58)'
 }
 
 const deviceWidth = Dimensions.get('window').width
@@ -93,9 +99,9 @@ export const edgeDark: Theme = {
 
   // Background
   // backgroundGradientColors: [palette.navyAqua, palette.navyAquaDarker], // For vertical gradient
-  backgroundGradientColors: [palette.darkestNavy, palette.darkAqua],
-  backgroundGradientStart: { x: 0, y: 0 },
-  backgroundGradientEnd: { x: 1, y: 0 },
+  backgroundGradientColors: [palette.darkTeal, palette.veryDarkTeal],
+  backgroundGradientStart: { x: 0, y: 0.1 },
+  backgroundGradientEnd: { x: 0, y: 0.4 },
   backgroundImageServerUrls: ['https://content.edge.app'],
   backgroundImage: undefined,
   backgroundLoadingOverlay: 'rgba(123,123,123,.2)',

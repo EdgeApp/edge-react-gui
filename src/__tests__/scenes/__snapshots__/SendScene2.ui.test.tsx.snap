@@ -4,21 +4,21 @@ exports[`SendScene2 1 spendTarget 1`] = `
 <BVLinearGradient
   colors={
     [
-      4278585612,
-      4279971643,
+      4278199085,
+      4278848783,
     ]
   }
   endPoint={
     {
-      "x": 1,
-      "y": 0,
+      "x": 0,
+      "y": 0.4,
     }
   }
   locations={null}
   startPoint={
     {
       "x": 0,
-      "y": 0,
+      "y": 0.1,
     }
   }
   style={
@@ -794,21 +794,21 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
 <BVLinearGradient
   colors={
     [
-      4278585612,
-      4279971643,
+      4278199085,
+      4278848783,
     ]
   }
   endPoint={
     {
-      "x": 1,
-      "y": 0,
+      "x": 0,
+      "y": 0.4,
     }
   }
   locations={null}
   startPoint={
     {
       "x": 0,
-      "y": 0,
+      "y": 0.1,
     }
   }
   style={
@@ -1794,21 +1794,21 @@ exports[`SendScene2 2 spendTargets 1`] = `
 <BVLinearGradient
   colors={
     [
-      4278585612,
-      4279971643,
+      4278199085,
+      4278848783,
     ]
   }
   endPoint={
     {
-      "x": 1,
-      "y": 0,
+      "x": 0,
+      "y": 0.4,
     }
   }
   locations={null}
   startPoint={
     {
       "x": 0,
-      "y": 0,
+      "y": 0.1,
     }
   }
   style={
@@ -2716,21 +2716,21 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
 <BVLinearGradient
   colors={
     [
-      4278585612,
-      4279971643,
+      4278199085,
+      4278848783,
     ]
   }
   endPoint={
     {
-      "x": 1,
-      "y": 0,
+      "x": 0,
+      "y": 0.4,
     }
   }
   locations={null}
   startPoint={
     {
       "x": 0,
-      "y": 0,
+      "y": 0.1,
     }
   }
   style={
@@ -3508,21 +3508,21 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
 <BVLinearGradient
   colors={
     [
-      4278585612,
-      4279971643,
+      4278199085,
+      4278848783,
     ]
   }
   endPoint={
     {
-      "x": 1,
-      "y": 0,
+      "x": 0,
+      "y": 0.4,
     }
   }
   locations={null}
   startPoint={
     {
       "x": 0,
-      "y": 0,
+      "y": 0.1,
     }
   }
   style={
@@ -4278,21 +4278,21 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
 <BVLinearGradient
   colors={
     [
-      4278585612,
-      4279971643,
+      4278199085,
+      4278848783,
     ]
   }
   endPoint={
     {
-      "x": 1,
-      "y": 0,
+      "x": 0,
+      "y": 0.4,
     }
   }
   locations={null}
   startPoint={
     {
       "x": 0,
-      "y": 0,
+      "y": 0.1,
     }
   }
   style={
@@ -4918,21 +4918,21 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
 <BVLinearGradient
   colors={
     [
-      4278585612,
-      4279971643,
+      4278199085,
+      4278848783,
     ]
   }
   endPoint={
     {
-      "x": 1,
-      "y": 0,
+      "x": 0,
+      "y": 0.4,
     }
   }
   locations={null}
   startPoint={
     {
       "x": 0,
-      "y": 0,
+      "y": 0.1,
     }
   }
   style={
@@ -5813,21 +5813,21 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
 <BVLinearGradient
   colors={
     [
-      4278585612,
-      4279971643,
+      4278199085,
+      4278848783,
     ]
   }
   endPoint={
     {
-      "x": 1,
-      "y": 0,
+      "x": 0,
+      "y": 0.4,
     }
   }
   locations={null}
   startPoint={
     {
       "x": 0,
-      "y": 0,
+      "y": 0.1,
     }
   }
   style={
@@ -6681,21 +6681,21 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
 <BVLinearGradient
   colors={
     [
-      4278585612,
-      4279971643,
+      4278199085,
+      4278848783,
     ]
   }
   endPoint={
     {
-      "x": 1,
-      "y": 0,
+      "x": 0,
+      "y": 0.4,
     }
   }
   locations={null}
   startPoint={
     {
       "x": 0,
-      "y": 0,
+      "y": 0.1,
     }
   }
   style={
@@ -7522,21 +7522,21 @@ exports[`SendScene2 Render SendScene 1`] = `
 <BVLinearGradient
   colors={
     [
-      4278585612,
-      4279971643,
+      4278199085,
+      4278848783,
     ]
   }
   endPoint={
     {
-      "x": 1,
-      "y": 0,
+      "x": 0,
+      "y": 0.4,
     }
   }
   locations={null}
   startPoint={
     {
       "x": 0,
-      "y": 0,
+      "y": 0.1,
     }
   }
   style={
