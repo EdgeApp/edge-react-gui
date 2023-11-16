@@ -391,5 +391,8 @@ export const edgeDark: Theme = {
   fioAddressLogo: fioAddressLogo,
   walletListSlideTutorialImage: walletListSlidingTutorial,
 
-  guiPluginLogoMoonpay: guiPluginLogoMoonpay
+  guiPluginLogoMoonpay: guiPluginLogoMoonpay,
+
+  // UI 4.0:
+  touchHighlightUi4: palette.lightGrayOp75
 }
