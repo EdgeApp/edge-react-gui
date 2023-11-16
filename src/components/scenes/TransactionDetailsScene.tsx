@@ -32,9 +32,9 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { SwapDetailsTiles } from '../tiles/SwapDetailsTiles'
 import { CardUi4 } from '../ui4/CardUi4'
 import { RowUi4 } from '../ui4/RowUi4'
+import { SwapDetailsCard } from '../ui4/SwapDetailsCard'
 import { TxCryptoAmountRow } from '../ui4/TxCryptoAmountRow'
 
 interface Props extends EdgeSceneProps<'transactionDetails'> {}
@@ -309,7 +309,7 @@ export const TransactionDetailsScene = (props: Props) => {
         {transaction.spendTargets == null ? null : <RowUi4 type="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
       </CardUi4>
 
-      {transaction.swapData == null ? null : <SwapDetailsTiles swapData={transaction.swapData} transaction={transaction} wallet={wallet} />}
+      {transaction.swapData == null ? null : <SwapDetailsCard swapData={transaction.swapData} transaction={transaction} wallet={wallet} />}
 
       <TouchableWithoutFeedback onPress={openAdvancedDetails}>
         <EdgeText style={styles.textAdvancedTransaction}>{lstrings.transaction_details_view_advanced_data}</EdgeText>
