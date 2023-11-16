@@ -356,7 +356,7 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: false,
     displayBuyCrypto: false,
     isImportKeySupported: true,
-    isStakingSupported: false,
+    isStakingSupported: true,
     isCustomTokensSupported: false,
     isPaymentProtocolSupported: false
   },
