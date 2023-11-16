@@ -414,11 +414,15 @@ exports[`TransactionDetailsScene should render 1`] = `
           <View
             accessibilityState={
               {
-                "busy": undefined,
-                "checked": undefined,
                 "disabled": false,
-                "expanded": undefined,
-                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
               }
             }
             accessible={false}
@@ -437,51 +441,18 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
-                  "marginTop": 22,
-                  "paddingBottom": 22,
-                  "paddingHorizontal": 22,
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 6,
                 }
               }
             >
               <View
                 style={
-                  [
-                    {
-                      "flex": 1,
-                    },
-                    {
-                      "paddingLeft": 6,
-                    },
-                  ]
+                  {
+                    "flex": 1,
+                  }
                 }
               >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": undefined,
-                        "fontSize": 12,
-                      },
-                      {
-                        "color": "#00f1a2",
-                        "height": 17,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 6,
-                        "width": 17,
-                      },
-                      {
-                        "fontFamily": "FontAwesome",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
-                    ]
-                  }
-                >
-                  
-                </Text>
                 <Text
                   adjustsFontSizeToFit={false}
                   ellipsizeMode="tail"
@@ -555,26 +526,63 @@ exports[`TransactionDetailsScene should render 1`] = `
                   </Text>
                 </View>
               </View>
-            </View>
-            <View
-              style={
-                {
-                  "borderBottomColor": "rgba(255, 255, 255, .1)",
-                  "borderBottomWidth": 1,
-                  "height": 1,
-                  "marginLeft": 22,
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                  }
                 }
-              }
-            />
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 22,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
+                      },
+                      {
+                        "fontFamily": "FontAwesome",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+            </View>
           </View>
+          <View
+            style={
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginHorizontal": 11,
+              }
+            }
+          />
           <View
             accessibilityState={
               {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": true,
-                "expanded": undefined,
-                "selected": undefined,
+                "disabled": false,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
               }
             }
             accessible={false}
@@ -593,22 +601,16 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
-                  "marginTop": 22,
-                  "paddingBottom": 22,
-                  "paddingHorizontal": 22,
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 6,
                 }
               }
             >
               <View
                 style={
-                  [
-                    {
-                      "flex": 1,
-                    },
-                    {
-                      "paddingLeft": 6,
-                    },
-                  ]
+                  {
+                    "flex": 1,
+                  }
                 }
               >
                 <Text
@@ -710,17 +712,15 @@ exports[`TransactionDetailsScene should render 1`] = `
                   </Text>
                 </View>
               </View>
-            </View>
-            <View
-              style={
-                {
-                  "borderBottomColor": "rgba(255, 255, 255, .1)",
-                  "borderBottomWidth": 1,
-                  "height": 1,
-                  "marginLeft": 22,
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                  }
                 }
-              }
-            />
+              />
+            </View>
           </View>
         </View>
       </View>
@@ -1776,11 +1776,15 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           <View
             accessibilityState={
               {
-                "busy": undefined,
-                "checked": undefined,
                 "disabled": false,
-                "expanded": undefined,
-                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
               }
             }
             accessible={false}
@@ -1799,51 +1803,18 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
-                  "marginTop": 22,
-                  "paddingBottom": 22,
-                  "paddingHorizontal": 22,
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 6,
                 }
               }
             >
               <View
                 style={
-                  [
-                    {
-                      "flex": 1,
-                    },
-                    {
-                      "paddingLeft": 6,
-                    },
-                  ]
+                  {
+                    "flex": 1,
+                  }
                 }
               >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": undefined,
-                        "fontSize": 12,
-                      },
-                      {
-                        "color": "#00f1a2",
-                        "height": 17,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 6,
-                        "width": 17,
-                      },
-                      {
-                        "fontFamily": "FontAwesome",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
-                    ]
-                  }
-                >
-                  
-                </Text>
                 <Text
                   adjustsFontSizeToFit={false}
                   ellipsizeMode="tail"
@@ -1917,26 +1888,63 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   </Text>
                 </View>
               </View>
-            </View>
-            <View
-              style={
-                {
-                  "borderBottomColor": "rgba(255, 255, 255, .1)",
-                  "borderBottomWidth": 1,
-                  "height": 1,
-                  "marginLeft": 22,
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                  }
                 }
-              }
-            />
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 22,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
+                      },
+                      {
+                        "fontFamily": "FontAwesome",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+            </View>
           </View>
+          <View
+            style={
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginHorizontal": 11,
+              }
+            }
+          />
           <View
             accessibilityState={
               {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": true,
-                "expanded": undefined,
-                "selected": undefined,
+                "disabled": false,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
               }
             }
             accessible={false}
@@ -1955,22 +1963,16 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
-                  "marginTop": 22,
-                  "paddingBottom": 22,
-                  "paddingHorizontal": 22,
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 6,
                 }
               }
             >
               <View
                 style={
-                  [
-                    {
-                      "flex": 1,
-                    },
-                    {
-                      "paddingLeft": 6,
-                    },
-                  ]
+                  {
+                    "flex": 1,
+                  }
                 }
               >
                 <Text
@@ -2072,17 +2074,15 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   </Text>
                 </View>
               </View>
-            </View>
-            <View
-              style={
-                {
-                  "borderBottomColor": "rgba(255, 255, 255, .1)",
-                  "borderBottomWidth": 1,
-                  "height": 1,
-                  "marginLeft": 22,
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                  }
                 }
-              }
-            />
+              />
+            </View>
           </View>
         </View>
       </View>
