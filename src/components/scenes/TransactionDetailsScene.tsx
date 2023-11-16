@@ -25,9 +25,10 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SwapDetailsTiles } from '../tiles/SwapDetailsTiles'
-import { Tile } from '../tiles/Tile'
 import { TransactionCryptoAmountTile } from '../tiles/TransactionCryptoAmountTile'
 import { TransactionFiatTiles } from '../tiles/TransactionFiatTiles'
+import { CardUi4 } from '../ui4/CardUi4'
+import { RowUi4 } from '../ui4/RowUi4'
 
 interface Props extends EdgeSceneProps<'transactionDetails'> {
   wallet: EdgeCurrencyWallet
@@ -194,8 +195,8 @@ const TransactionDetailsComponent = (props: Props) => {
 
   return (
     <NotificationSceneWrapper navigation={navigation} hasTabs scroll>
-      <View style={styles.tilesContainer}>
-        <Tile type="editable" title={personHeader} onPress={openPersonInput}>
+      <CardUi4>
+        <RowUi4 type="editable" title={personHeader} onPress={openPersonInput}>
           <View style={styles.tileRow}>
             {thumbnailPath ? (
               <FastImage style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
@@ -204,34 +205,44 @@ const TransactionDetailsComponent = (props: Props) => {
             )}
             <EdgeText>{personName}</EdgeText>
           </View>
-        </Tile>
+        </RowUi4>
+      </CardUi4>
+
+      <CardUi4>
         <TransactionCryptoAmountTile transaction={transaction} wallet={wallet} />
         <TransactionFiatTiles transaction={transaction} wallet={wallet} onMetadataEdit={onSaveTxDetails} />
-        <Tile type="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput}>
-          <EdgeText style={styles.tileCategory}>{categoriesText}</EdgeText>
-        </Tile>
-        {transaction.spendTargets && <Tile type="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
-        {transaction.swapData == null ? null : <SwapDetailsTiles swapData={transaction.swapData} transaction={transaction} wallet={wallet} />}
-        {acceleratedTx == null ? null : <Tile type="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={openAccelerateModel} />}
-        <Tile type="editable" title={lstrings.transaction_details_notes_title} body={notes} onPress={openNotesInput} />
-        {transaction.memos?.map((memo, i) =>
-          memo.hidden === true ? null : <Tile body={memo.value} key={`memo${i}`} title={getMemoTitle(memo.memoName)} type="copy" />
+        {acceleratedTx == null ? null : (
+          <RowUi4 type="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={openAccelerateModel} />
         )}
-        <TouchableWithoutFeedback onPress={openAdvancedDetails}>
-          <EdgeText style={styles.textAdvancedTransaction}>{lstrings.transaction_details_view_advanced_data}</EdgeText>
-        </TouchableWithoutFeedback>
-        <MainButton onPress={navigation.pop} label={lstrings.string_done_cap} marginRem={[0, 2, 2]} type="secondary" />
-      </View>
+      </CardUi4>
+
+      <CardUi4>
+        <RowUi4 type="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput}>
+          <EdgeText style={styles.tileCategory}>{categoriesText}</EdgeText>
+        </RowUi4>
+        <RowUi4 type="editable" title={lstrings.transaction_details_notes_title} body={notes ?? ''} onPress={openNotesInput} />
+        {transaction.memos?.map((memo, i) =>
+          memo.hidden === true ? null : <RowUi4 body={memo.value} key={`memo${i}`} title={getMemoTitle(memo.memoName)} type="copy" />
+        )}
+      </CardUi4>
+
+      {transaction.spendTargets == null ? null : (
+        <CardUi4>
+          <RowUi4 type="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />
+        </CardUi4>
+      )}
+
+      {transaction.swapData == null ? null : <SwapDetailsTiles swapData={transaction.swapData} transaction={transaction} wallet={wallet} />}
+
+      <TouchableWithoutFeedback onPress={openAdvancedDetails}>
+        <EdgeText style={styles.textAdvancedTransaction}>{lstrings.transaction_details_view_advanced_data}</EdgeText>
+      </TouchableWithoutFeedback>
+      <MainButton onPress={navigation.pop} label={lstrings.string_done_cap} marginRem={[0, 2, 2]} type="secondary" />
     </NotificationSceneWrapper>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  tilesContainer: {
-    flex: 1,
-    width: '100%',
-    flexDirection: 'column'
-  },
   tileRow: {
     flexDirection: 'row',
     alignItems: 'center'
