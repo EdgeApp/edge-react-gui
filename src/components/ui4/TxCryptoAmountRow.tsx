@@ -7,7 +7,7 @@ import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { convertNativeToDisplay, truncateDecimals } from '../../util/utils'
-import { Tile } from '../tiles/Tile'
+import { RowUi4 } from './RowUi4'
 
 interface Props {
   transaction: EdgeTransaction
@@ -18,7 +18,7 @@ interface Props {
  * Renders the crypto amount for a transaction object.
  * Used on the transaction details scene.
  */
-export function TransactionCryptoAmountTile(props: Props) {
+export function TxCryptoAmountRow(props: Props) {
   const { transaction, wallet } = props
   const { currencyInfo } = wallet
   const { currencyCode, nativeAmount, networkFee, swapData } = transaction
@@ -70,5 +70,5 @@ export function TransactionCryptoAmountTile(props: Props) {
     return `${symbolString} ${absoluteAmount}`
   }, [currencyCode, currencyInfo, nativeAmount, networkFee, swapData, walletDefaultDenom])
 
-  return <Tile type="static" title={sprintf(lstrings.transaction_details_crypto_amount, currencyName)} body={text} />
+  return <RowUi4 type="static" title={sprintf(lstrings.transaction_details_crypto_amount, currencyName)} body={text} />
 }
