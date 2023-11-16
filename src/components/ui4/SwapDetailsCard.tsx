@@ -17,7 +17,8 @@ import { RawTextModal } from '../modals/RawTextModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { Tile } from './Tile'
+import { CardUi4 } from './CardUi4'
+import { RowUi4 } from './RowUi4'
 
 interface Props {
   swapData: EdgeTxSwap
@@ -25,7 +26,7 @@ interface Props {
   wallet: EdgeCurrencyWallet
 }
 
-export function SwapDetailsTiles(props: Props) {
+export function SwapDetailsCard(props: Props) {
   const { swapData, transaction, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -119,21 +120,21 @@ export function SwapDetailsTiles(props: Props) {
   }
 
   return (
-    <>
-      <Tile type="touchable" title={lstrings.transaction_details_exchange_details} onPress={handleExchangeDetails}>
+    <CardUi4>
+      <RowUi4 type="touchable" title={lstrings.transaction_details_exchange_details} onPress={handleExchangeDetails}>
         <View style={styles.tileColumn}>
           <EdgeText style={styles.tileTextBottom}>{lstrings.title_exchange + ' ' + sourceAmount + ' ' + symbolString}</EdgeText>
           <EdgeText style={styles.tileTextBottom}>{lstrings.string_to_capitalize + ' ' + destinationAmount + ' ' + destinationCurrencyCode}</EdgeText>
           <EdgeText style={styles.tileTextBottom}>{swapData.isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote}</EdgeText>
         </View>
-      </Tile>
+      </RowUi4>
       {orderUri == null ? null : (
-        <Tile type="touchable" title={lstrings.transaction_details_exchange_status_page} onPress={handleLink} body={swapData.orderUri} />
+        <RowUi4 type="touchable" title={lstrings.transaction_details_exchange_status_page} onPress={handleLink} body={swapData.orderUri} />
       )}
       {plugin.supportEmail == null ? null : (
-        <Tile type="touchable" title={lstrings.transaction_details_exchange_support} onPress={handleEmail} body={swapData.plugin.supportEmail} />
+        <RowUi4 type="touchable" title={lstrings.transaction_details_exchange_support} onPress={handleEmail} body={swapData.plugin.supportEmail} />
       )}
-    </>
+    </CardUi4>
   )
 }
 
