@@ -394,5 +394,8 @@ export interface Theme {
   guiPluginLogoMoonpay: ImageProp
 
   // UI 4.0:
+  cardBackgroundUi4: string
+  cardRadiusUi4: number
+
   touchHighlightUi4: string
 }

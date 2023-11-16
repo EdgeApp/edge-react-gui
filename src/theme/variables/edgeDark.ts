@@ -66,7 +66,10 @@ const palette = {
   QuicksandRegular: 'Quicksand-Regular',
   QuicksandMedium: 'Quicksand-Medium',
   QuicksandSemiBold: 'Quicksand-SemiBold',
-  QuicksandBold: 'Quicksand-Bold'
+  QuicksandBold: 'Quicksand-Bold',
+
+  // UI4 palette
+  teal: 'rgb(22, 50, 58)'
 }
 
 const deviceWidth = Dimensions.get('window').width
@@ -394,5 +397,8 @@ export const edgeDark: Theme = {
   guiPluginLogoMoonpay: guiPluginLogoMoonpay,
 
   // UI 4.0:
+  cardBackgroundUi4: palette.teal,
+  cardRadiusUi4: 1,
+
   touchHighlightUi4: palette.lightGrayOp75
 }
