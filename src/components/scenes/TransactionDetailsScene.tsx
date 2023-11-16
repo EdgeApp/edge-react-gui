@@ -34,9 +34,9 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SwapDetailsTiles } from '../tiles/SwapDetailsTiles'
-import { TransactionCryptoAmountTile } from '../tiles/TransactionCryptoAmountTile'
 import { CardUi4 } from '../ui4/CardUi4'
 import { RowUi4 } from '../ui4/RowUi4'
+import { TxCryptoAmountRow } from '../ui4/TxCryptoAmountRow'
 
 interface Props extends EdgeSceneProps<'transactionDetails'> {
   wallet: EdgeCurrencyWallet
@@ -276,7 +276,7 @@ const TransactionDetailsComponent = (props: Props) => {
       </CardUi4>
 
       <CardUi4>
-        <TransactionCryptoAmountTile transaction={transaction} wallet={wallet} />
+        <TxCryptoAmountRow transaction={transaction} wallet={wallet} />
         <RowUi4 type="editable" title={sprintf(lstrings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={handleEdit}>
           <View style={styles.tileRow}>
             <EdgeText>{fiatSymbol + ' '}</EdgeText>
