@@ -42,12 +42,25 @@ export const executePlugin = async (params: {
   direction: 'buy' | 'sell'
   disablePlugins?: NestedDisableMap
   guiPlugin: GuiPlugin
+  longPress?: boolean
   navigation: NavigationBase
   paymentType?: FiatPaymentType
   providerId?: string
   regionCode: FiatPluginRegionCode
 }): Promise<void> => {
-  const { disablePlugins = {}, account, accountReferral, deviceId, direction, guiPlugin, navigation, paymentType, providerId, regionCode } = params
+  const {
+    disablePlugins = {},
+    account,
+    accountReferral,
+    deviceId,
+    direction,
+    guiPlugin,
+    longPress = false,
+    navigation,
+    paymentType,
+    providerId,
+    regionCode
+  } = params
   const { defaultFiatAmount, forceFiatCurrencyCode, pluginId } = guiPlugin
 
   const tabSceneKey = direction === 'buy' ? 'buyTab' : 'sellTab'
@@ -214,6 +227,7 @@ export const executePlugin = async (params: {
     account,
     deviceId,
     disablePlugins: filteredDisablePlugins,
+    longPress,
     guiPlugin,
     showUi
   })
