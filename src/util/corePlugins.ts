@@ -11,6 +11,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   eos: true,
   filecoin: true,
   filecoinfevm: true,
+  filecoinfevmcalibration: true,
   telos: true,
   wax: true,
   polkadot: true,

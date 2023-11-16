@@ -360,6 +360,16 @@ export const SPECIAL_CURRENCY_INFO: {
     isCustomTokensSupported: false,
     isPaymentProtocolSupported: false
   },
+  filecoinfevmcalibration: {
+    initWalletName: lstrings.string_first_filecoin_fevm_calibratio_wallet_name,
+    chainCode: 'tFIL',
+    allowZeroTx: false,
+    displayBuyCrypto: false,
+    isImportKeySupported: true,
+    isStakingSupported: true,
+    isCustomTokensSupported: false,
+    isPaymentProtocolSupported: false
+  },
   tron: {
     initWalletName: lstrings.string_first_tron_wallet_name,
     chainCode: 'TRX',

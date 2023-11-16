@@ -512,6 +512,7 @@ const strings = {
   string_first_ethereum_pow_wallet_name: 'My Ethereum POW',
   string_first_filecoin_wallet_name: 'My Filecoin',
   string_first_filecoin_fevm_wallet_name: 'My Filecoin FEVM',
+  string_first_filecoin_fevm_calibratio_wallet_name: 'My Filecoin FEVM (Calibration)',
   string_first_bitcoin_wallet_name: 'My Bitcoin',
   string_first_bitcoin_testnet_wallet_name: 'My Bitcoin Testnet',
   string_first_bitcoincash_wallet_name: 'My Bitcoin Cash',
