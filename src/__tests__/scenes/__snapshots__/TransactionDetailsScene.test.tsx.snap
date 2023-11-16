@@ -49,151 +49,789 @@ exports[`TransactionDetailsScene should render 1`] = `
   >
     <View>
       <View
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         style={
           {
-            "flex": 1,
-            "flexDirection": "column",
-            "width": "100%",
+            "backgroundColor": "rgb(22, 50, 58)",
+            "borderRadius": 22,
+            "flexDirection": "row",
+            "margin": 11,
+            "padding": 11,
           }
         }
       >
         <View
-          accessibilityState={
+          style={
             {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
+              "flex": 1,
+              "flexDirection": "column",
             }
           }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
         >
           <View
-            style={
+            accessibilityState={
               {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "marginTop": 22,
-                "paddingBottom": 22,
-                "paddingHorizontal": 22,
+                "disabled": false,
               }
             }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
           >
             <View
               style={
-                [
-                  {
-                    "flex": 1,
-                  },
-                  {
-                    "paddingLeft": 6,
-                  },
-                ]
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 6,
+                }
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  [
-                    {
-                      "color": undefined,
-                      "fontSize": 12,
-                    },
-                    {
-                      "color": "#00f1a2",
-                      "height": 17,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 6,
-                      "width": 17,
-                    },
-                    {
-                      "fontFamily": "FontAwesome",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
-              <Text
-                adjustsFontSizeToFit={false}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#A4C7DF",
-                      "fontSize": 17,
-                      "paddingBottom": 6,
-                      "paddingRight": 22,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Sender Name
-              </Text>
               <View
                 style={
                   {
-                    "alignItems": "center",
-                    "flexDirection": "row",
+                    "flex": 1,
                   }
                 }
               >
+                <Text
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                        "paddingBottom": 6,
+                        "paddingRight": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Sender Name
+                </Text>
                 <View
                   style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      [
+                        {
+                          "overflow": "hidden",
+                        },
+                        {
+                          "borderRadius": 22,
+                          "height": 45,
+                          "marginRight": 11,
+                          "width": 45,
+                        },
+                      ]
+                    }
+                  >
+                    <FastImageView
+                      resizeMode="cover"
+                      source={
+                        {
+                          "uri": "thumb/nail/path",
+                        }
+                      }
+                      style={
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
+                      }
+                    />
+                  </View>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    timmy
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
                     [
                       {
-                        "overflow": "hidden",
+                        "color": undefined,
+                        "fontSize": 22,
                       },
                       {
-                        "borderRadius": 22,
-                        "height": 45,
-                        "marginRight": 11,
-                        "width": 45,
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
                       },
+                      {
+                        "fontFamily": "FontAwesome",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
                     ]
                   }
                 >
-                  <FastImageView
-                    resizeMode="cover"
-                    source={
+                  
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "backgroundColor": "rgb(22, 50, 58)",
+            "borderRadius": 22,
+            "flexDirection": "row",
+            "margin": 11,
+            "padding": 11,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "flex": 1,
+              "flexDirection": "column",
+            }
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": true,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "marginTop": 22,
+                  "paddingBottom": 22,
+                  "paddingHorizontal": 22,
+                }
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "flex": 1,
+                    },
+                    {
+                      "paddingLeft": 6,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
                       {
-                        "uri": "thumb/nail/path",
-                      }
-                    }
-                    style={
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
                       {
-                        "bottom": 0,
-                        "left": 0,
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                        "paddingBottom": 6,
+                        "paddingRight": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Bitcoin Amount
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={3}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#FFFFFF",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  ₿ 0.123
+                </Text>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginLeft": 22,
+                }
+              }
+            />
+          </View>
+          <View
+            style={
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginHorizontal": 11,
+              }
+            }
+          />
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "marginTop": 22,
+                  "paddingBottom": 22,
+                  "paddingHorizontal": 22,
+                }
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "flex": 1,
+                    },
+                    {
+                      "paddingLeft": 6,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 12,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "height": 17,
                         "position": "absolute",
                         "right": 0,
-                        "top": 0,
-                      }
+                        "top": 6,
+                        "width": 17,
+                      },
+                      {
+                        "fontFamily": "FontAwesome",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                        "paddingBottom": 6,
+                        "paddingRight": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Amount in USD
+                </Text>
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
                     }
-                  />
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    $ 
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    0.00
+                  </Text>
                 </View>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginLeft": 22,
+                }
+              }
+            />
+          </View>
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": true,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "marginTop": 22,
+                  "paddingBottom": 22,
+                  "paddingHorizontal": 22,
+                }
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "flex": 1,
+                    },
+                    {
+                      "paddingLeft": 6,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                        "paddingBottom": 6,
+                        "paddingRight": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Amount at Current Price
+                </Text>
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    $ 
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "flex": 1,
+                          "fontSize": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    1230.00
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#77C513",
+                          "fontSize": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    0%
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginLeft": 22,
+                }
+              }
+            />
+          </View>
+        </View>
+      </View>
+      <View
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "backgroundColor": "rgb(22, 50, 58)",
+            "borderRadius": 22,
+            "flexDirection": "row",
+            "margin": 11,
+            "padding": 11,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "flex": 1,
+              "flexDirection": "column",
+            }
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "disabled": false,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 6,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "flex": 1,
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                        "paddingBottom": 6,
+                        "paddingRight": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Category
+                </Text>
                 <Text
                   adjustsFontSizeToFit={true}
                   minimumFontScale={0.65}
@@ -206,273 +844,48 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
-                      undefined,
+                      {
+                        "color": "#FFFFFF",
+                        "marginVertical": 6,
+                      },
                       null,
                     ]
                   }
                 >
-                  timmy
+                  Income
                 </Text>
               </View>
-            </View>
-          </View>
-          <View
-            style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginLeft": 22,
-              }
-            }
-          />
-        </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": true,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
-          <View
-            style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "marginTop": 22,
-                "paddingBottom": 22,
-                "paddingHorizontal": 22,
-              }
-            }
-          >
-            <View
-              style={
-                [
-                  {
-                    "flex": 1,
-                  },
-                  {
-                    "paddingLeft": 6,
-                  },
-                ]
-              }
-            >
-              <Text
-                adjustsFontSizeToFit={false}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#A4C7DF",
-                      "fontSize": 17,
-                      "paddingBottom": 6,
-                      "paddingRight": 22,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Bitcoin Amount
-              </Text>
-              <Text
-                adjustsFontSizeToFit={true}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={3}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#FFFFFF",
-                      "fontSize": 22,
-                    },
-                    null,
-                  ]
-                }
-              >
-                ₿ 0.123
-              </Text>
-            </View>
-          </View>
-          <View
-            style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginLeft": 22,
-              }
-            }
-          />
-        </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
-          <View
-            style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "marginTop": 22,
-                "paddingBottom": 22,
-                "paddingHorizontal": 22,
-              }
-            }
-          >
-            <View
-              style={
-                [
-                  {
-                    "flex": 1,
-                  },
-                  {
-                    "paddingLeft": 6,
-                  },
-                ]
-              }
-            >
-              <Text
-                allowFontScaling={false}
-                style={
-                  [
-                    {
-                      "color": undefined,
-                      "fontSize": 12,
-                    },
-                    {
-                      "color": "#00f1a2",
-                      "height": 17,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 6,
-                      "width": 17,
-                    },
-                    {
-                      "fontFamily": "FontAwesome",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
-              <Text
-                adjustsFontSizeToFit={false}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#A4C7DF",
-                      "fontSize": 17,
-                      "paddingBottom": 6,
-                      "paddingRight": 22,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Amount in USD
-              </Text>
               <View
                 style={
                   {
                     "alignItems": "center",
-                    "flexDirection": "row",
+                    "justifyContent": "center",
                   }
                 }
               >
                 <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                  allowFontScaling={false}
                   style={
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "color": undefined,
                         "fontSize": 22,
-                        "includeFontPadding": false,
                       },
-                      undefined,
-                      null,
-                    ]
-                  }
-                >
-                  $ 
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
                       },
-                      undefined,
-                      null,
+                      {
+                        "fontFamily": "FontAwesome",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
                     ]
                   }
                 >
-                  0.00
+                  
                 </Text>
               </View>
             </View>
@@ -483,564 +896,326 @@ exports[`TransactionDetailsScene should render 1`] = `
                 "borderBottomColor": "rgba(255, 255, 255, .1)",
                 "borderBottomWidth": 1,
                 "height": 1,
-                "marginLeft": 22,
+                "marginHorizontal": 11,
               }
             }
           />
-        </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": true,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
           <View
-            style={
+            accessibilityState={
               {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "marginTop": 22,
-                "paddingBottom": 22,
-                "paddingHorizontal": 22,
+                "disabled": false,
               }
             }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
           >
             <View
               style={
-                [
-                  {
-                    "flex": 1,
-                  },
-                  {
-                    "paddingLeft": 6,
-                  },
-                ]
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 6,
+                }
               }
             >
-              <Text
-                adjustsFontSizeToFit={false}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={1}
+              <View
                 style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#A4C7DF",
-                      "fontSize": 17,
-                      "paddingBottom": 6,
-                      "paddingRight": 22,
-                    },
-                    null,
-                  ]
+                  {
+                    "flex": 1,
+                  }
                 }
               >
-                Amount at Current Price
-              </Text>
+                <Text
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                        "paddingBottom": 6,
+                        "paddingRight": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Notes
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={3}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#FFFFFF",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ]
+                  }
+                />
+              </View>
               <View
                 style={
                   {
                     "alignItems": "center",
-                    "flexDirection": "row",
+                    "justifyContent": "center",
                   }
                 }
               >
                 <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                  allowFontScaling={false}
                   style={
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "color": undefined,
                         "fontSize": 22,
-                        "includeFontPadding": false,
                       },
-                      undefined,
-                      null,
+                      {
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
+                      },
+                      {
+                        "fontFamily": "FontAwesome",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
                     ]
                   }
                 >
-                  $ 
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#FFFFFF",
-                        "flex": 1,
-                        "fontSize": 22,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  1230.00
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#77C513",
-                        "fontSize": 22,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  0%
+                  
                 </Text>
               </View>
             </View>
           </View>
-          <View
-            style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginLeft": 22,
-              }
-            }
-          />
         </View>
-        <View
-          accessibilityState={
+      </View>
+      <View
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "backgroundColor": "rgb(22, 50, 58)",
+            "borderRadius": 22,
+            "flexDirection": "row",
+            "margin": 11,
+            "padding": 11,
+          }
+        }
+      />
+      <Text
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessible={true}
+        adjustsFontSizeToFit={true}
+        focusable={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          [
             {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#00f1a2",
+              "fontSize": 22,
+              "marginVertical": 28,
+              "textAlign": "center",
+              "width": "100%",
+            },
+            null,
+          ]
+        }
+      >
+        View Advanced Transaction Data
+      </Text>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "elevation": 0,
+            "opacity": 1,
+            "shadowColor": "#000000",
+            "shadowOffset": {
+              "height": 0,
+              "width": 0,
+            },
+            "shadowOpacity": 0,
+            "shadowRadius": 0,
+          }
+        }
+      >
+        <BVLinearGradient
+          colors={
+            [
+              16777215,
+              16777215,
+            ]
+          }
+          endPoint={
+            {
+              "x": 1,
+              "y": 1,
             }
           }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
-          <View
-            style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "marginTop": 22,
-                "paddingBottom": 22,
-                "paddingHorizontal": 22,
-              }
-            }
-          >
-            <View
-              style={
-                [
-                  {
-                    "flex": 1,
-                  },
-                  {
-                    "paddingLeft": 6,
-                  },
-                ]
-              }
-            >
-              <Text
-                allowFontScaling={false}
-                style={
-                  [
-                    {
-                      "color": undefined,
-                      "fontSize": 12,
-                    },
-                    {
-                      "color": "#00f1a2",
-                      "height": 17,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 6,
-                      "width": 17,
-                    },
-                    {
-                      "fontFamily": "FontAwesome",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
-              <Text
-                adjustsFontSizeToFit={false}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#A4C7DF",
-                      "fontSize": 17,
-                      "paddingBottom": 6,
-                      "paddingRight": 22,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Category
-              </Text>
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#FFFFFF",
-                      "marginVertical": 6,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Income
-              </Text>
-            </View>
-          </View>
-          <View
-            style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginLeft": 22,
-              }
-            }
-          />
-        </View>
-        <View
-          accessibilityState={
+          locations={null}
+          startPoint={
             {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
+              "x": 0,
+              "y": 0,
             }
           }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
-          <View
-            style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "marginTop": 22,
-                "paddingBottom": 22,
-                "paddingHorizontal": 22,
-              }
-            }
-          >
-            <View
-              style={
-                [
-                  {
-                    "flex": 1,
-                  },
-                  {
-                    "paddingLeft": 6,
-                  },
-                ]
-              }
-            >
-              <Text
-                allowFontScaling={false}
-                style={
-                  [
-                    {
-                      "color": undefined,
-                      "fontSize": 12,
-                    },
-                    {
-                      "color": "#00f1a2",
-                      "height": 17,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 6,
-                      "width": 17,
-                    },
-                    {
-                      "fontFamily": "FontAwesome",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
-              <Text
-                adjustsFontSizeToFit={false}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#A4C7DF",
-                      "fontSize": 17,
-                      "paddingBottom": 6,
-                      "paddingRight": 22,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Notes
-              </Text>
-            </View>
-          </View>
-          <View
-            style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginLeft": 22,
-              }
-            }
-          />
-        </View>
-        <Text
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessible={true}
-          adjustsFontSizeToFit={true}
-          focusable={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
           style={
             [
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
+                "alignItems": "center",
+                "borderColor": "#00f1a2",
+                "borderRadius": 6,
+                "borderWidth": 1.5,
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "minHeight": 67,
+                "minWidth": 202,
               },
               {
-                "color": "#00f1a2",
-                "fontSize": 22,
-                "marginVertical": 28,
-                "textAlign": "center",
-                "width": "100%",
+                "alignSelf": "auto",
+                "marginBottom": 45,
+                "marginLeft": 45,
+                "marginRight": 45,
+                "marginTop": 0,
+                "opacity": 1,
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+                "paddingTop": 0,
               },
-              null,
+              {
+                "borderRadius": 6,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+              },
             ]
           }
         >
-          View Advanced Transaction Data
-        </Text>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "elevation": 0,
-              "opacity": 1,
-              "shadowColor": "#000000",
-              "shadowOffset": {
-                "height": 0,
-                "width": 0,
-              },
-              "shadowOpacity": 0,
-              "shadowRadius": 0,
-            }
-          }
-        >
-          <BVLinearGradient
-            colors={
-              [
-                16777215,
-                16777215,
-              ]
-            }
-            endPoint={
-              {
-                "x": 1,
-                "y": 1,
-              }
-            }
-            locations={null}
-            startPoint={
-              {
-                "x": 0,
-                "y": 0,
-              }
-            }
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.75}
+            numberOfLines={1}
             style={
-              [
-                {
-                  "alignItems": "center",
-                  "borderColor": "#00f1a2",
-                  "borderRadius": 6,
-                  "borderWidth": 1.5,
-                  "flexDirection": "row",
-                  "justifyContent": "center",
-                  "minHeight": 67,
-                  "minWidth": 202,
-                },
-                {
-                  "alignSelf": "auto",
-                  "marginBottom": 45,
-                  "marginLeft": 45,
-                  "marginRight": 45,
-                  "marginTop": 0,
-                  "opacity": 1,
-                  "paddingBottom": 0,
-                  "paddingLeft": 0,
-                  "paddingRight": 0,
-                  "paddingTop": 0,
-                },
-                {
-                  "borderRadius": 6,
-                  "paddingLeft": 0,
-                  "paddingRight": 0,
-                },
-              ]
+              {
+                "color": "#00f1a2",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "marginHorizontal": 0,
+                "paddingBottom": 11,
+                "paddingLeft": 17,
+                "paddingRight": 17,
+                "paddingTop": 11,
+              }
             }
           >
-            <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.75}
-              numberOfLines={1}
-              style={
-                {
-                  "color": "#00f1a2",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "marginHorizontal": 0,
-                  "paddingBottom": 11,
-                  "paddingLeft": 17,
-                  "paddingRight": 17,
-                  "paddingTop": 11,
-                }
-              }
-            >
-              Done
-            </Text>
-          </BVLinearGradient>
-        </View>
+            Done
+          </Text>
+        </BVLinearGradient>
       </View>
     </View>
   </RCTScrollView>
@@ -1236,151 +1411,789 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
   >
     <View>
       <View
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         style={
           {
-            "flex": 1,
-            "flexDirection": "column",
-            "width": "100%",
+            "backgroundColor": "rgb(22, 50, 58)",
+            "borderRadius": 22,
+            "flexDirection": "row",
+            "margin": 11,
+            "padding": 11,
           }
         }
       >
         <View
-          accessibilityState={
+          style={
             {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
+              "flex": 1,
+              "flexDirection": "column",
             }
           }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
         >
           <View
-            style={
+            accessibilityState={
               {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "marginTop": 22,
-                "paddingBottom": 22,
-                "paddingHorizontal": 22,
+                "disabled": false,
               }
             }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
           >
             <View
               style={
-                [
-                  {
-                    "flex": 1,
-                  },
-                  {
-                    "paddingLeft": 6,
-                  },
-                ]
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 6,
+                }
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  [
-                    {
-                      "color": undefined,
-                      "fontSize": 12,
-                    },
-                    {
-                      "color": "#00f1a2",
-                      "height": 17,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 6,
-                      "width": 17,
-                    },
-                    {
-                      "fontFamily": "FontAwesome",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
-              <Text
-                adjustsFontSizeToFit={false}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#A4C7DF",
-                      "fontSize": 17,
-                      "paddingBottom": 6,
-                      "paddingRight": 22,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Recipient Name
-              </Text>
               <View
                 style={
                   {
-                    "alignItems": "center",
-                    "flexDirection": "row",
+                    "flex": 1,
                   }
                 }
               >
+                <Text
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                        "paddingBottom": 6,
+                        "paddingRight": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Recipient Name
+                </Text>
                 <View
                   style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      [
+                        {
+                          "overflow": "hidden",
+                        },
+                        {
+                          "borderRadius": 22,
+                          "height": 45,
+                          "marginRight": 11,
+                          "width": 45,
+                        },
+                      ]
+                    }
+                  >
+                    <FastImageView
+                      resizeMode="cover"
+                      source={
+                        {
+                          "uri": "thumb/nail/path",
+                        }
+                      }
+                      style={
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
+                      }
+                    />
+                  </View>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    timmy
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
                     [
                       {
-                        "overflow": "hidden",
+                        "color": undefined,
+                        "fontSize": 22,
                       },
                       {
-                        "borderRadius": 22,
-                        "height": 45,
-                        "marginRight": 11,
-                        "width": 45,
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
                       },
+                      {
+                        "fontFamily": "FontAwesome",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
                     ]
                   }
                 >
-                  <FastImageView
-                    resizeMode="cover"
-                    source={
+                  
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "backgroundColor": "rgb(22, 50, 58)",
+            "borderRadius": 22,
+            "flexDirection": "row",
+            "margin": 11,
+            "padding": 11,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "flex": 1,
+              "flexDirection": "column",
+            }
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": true,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "marginTop": 22,
+                  "paddingBottom": 22,
+                  "paddingHorizontal": 22,
+                }
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "flex": 1,
+                    },
+                    {
+                      "paddingLeft": 6,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
                       {
-                        "uri": "thumb/nail/path",
-                      }
-                    }
-                    style={
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
                       {
-                        "bottom": 0,
-                        "left": 0,
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                        "paddingBottom": 6,
+                        "paddingRight": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Bitcoin Amount
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={3}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#FFFFFF",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  ₿ 0.12299999 (+ 0 fee)
+                </Text>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginLeft": 22,
+                }
+              }
+            />
+          </View>
+          <View
+            style={
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginHorizontal": 11,
+              }
+            }
+          />
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "marginTop": 22,
+                  "paddingBottom": 22,
+                  "paddingHorizontal": 22,
+                }
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "flex": 1,
+                    },
+                    {
+                      "paddingLeft": 6,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 12,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "height": 17,
                         "position": "absolute",
                         "right": 0,
-                        "top": 0,
-                      }
+                        "top": 6,
+                        "width": 17,
+                      },
+                      {
+                        "fontFamily": "FontAwesome",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                        "paddingBottom": 6,
+                        "paddingRight": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Amount in USD
+                </Text>
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
                     }
-                  />
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    $ 
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    6392.93
+                  </Text>
                 </View>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginLeft": 22,
+                }
+              }
+            />
+          </View>
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": true,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "marginTop": 22,
+                  "paddingBottom": 22,
+                  "paddingHorizontal": 22,
+                }
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "flex": 1,
+                    },
+                    {
+                      "paddingLeft": 6,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                        "paddingBottom": 6,
+                        "paddingRight": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Amount at Current Price
+                </Text>
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    $ 
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "flex": 1,
+                          "fontSize": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    1230.00
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#E85466",
+                          "fontSize": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    - 80.76%
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginLeft": 22,
+                }
+              }
+            />
+          </View>
+        </View>
+      </View>
+      <View
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "backgroundColor": "rgb(22, 50, 58)",
+            "borderRadius": 22,
+            "flexDirection": "row",
+            "margin": 11,
+            "padding": 11,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "flex": 1,
+              "flexDirection": "column",
+            }
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "disabled": false,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 6,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "flex": 1,
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                        "paddingBottom": 6,
+                        "paddingRight": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Category
+                </Text>
                 <Text
                   adjustsFontSizeToFit={true}
                   minimumFontScale={0.65}
@@ -1393,273 +2206,48 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
-                      undefined,
+                      {
+                        "color": "#FFFFFF",
+                        "marginVertical": 6,
+                      },
                       null,
                     ]
                   }
                 >
-                  timmy
+                  Expense
                 </Text>
               </View>
-            </View>
-          </View>
-          <View
-            style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginLeft": 22,
-              }
-            }
-          />
-        </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": true,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
-          <View
-            style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "marginTop": 22,
-                "paddingBottom": 22,
-                "paddingHorizontal": 22,
-              }
-            }
-          >
-            <View
-              style={
-                [
-                  {
-                    "flex": 1,
-                  },
-                  {
-                    "paddingLeft": 6,
-                  },
-                ]
-              }
-            >
-              <Text
-                adjustsFontSizeToFit={false}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#A4C7DF",
-                      "fontSize": 17,
-                      "paddingBottom": 6,
-                      "paddingRight": 22,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Bitcoin Amount
-              </Text>
-              <Text
-                adjustsFontSizeToFit={true}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={3}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#FFFFFF",
-                      "fontSize": 22,
-                    },
-                    null,
-                  ]
-                }
-              >
-                ₿ 0.12299999 (+ 0 fee)
-              </Text>
-            </View>
-          </View>
-          <View
-            style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginLeft": 22,
-              }
-            }
-          />
-        </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
-          <View
-            style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "marginTop": 22,
-                "paddingBottom": 22,
-                "paddingHorizontal": 22,
-              }
-            }
-          >
-            <View
-              style={
-                [
-                  {
-                    "flex": 1,
-                  },
-                  {
-                    "paddingLeft": 6,
-                  },
-                ]
-              }
-            >
-              <Text
-                allowFontScaling={false}
-                style={
-                  [
-                    {
-                      "color": undefined,
-                      "fontSize": 12,
-                    },
-                    {
-                      "color": "#00f1a2",
-                      "height": 17,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 6,
-                      "width": 17,
-                    },
-                    {
-                      "fontFamily": "FontAwesome",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
-              <Text
-                adjustsFontSizeToFit={false}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#A4C7DF",
-                      "fontSize": 17,
-                      "paddingBottom": 6,
-                      "paddingRight": 22,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Amount in USD
-              </Text>
               <View
                 style={
                   {
                     "alignItems": "center",
-                    "flexDirection": "row",
+                    "justifyContent": "center",
                   }
                 }
               >
                 <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                  allowFontScaling={false}
                   style={
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "color": undefined,
                         "fontSize": 22,
-                        "includeFontPadding": false,
                       },
-                      undefined,
-                      null,
-                    ]
-                  }
-                >
-                  $ 
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
                       },
-                      undefined,
-                      null,
+                      {
+                        "fontFamily": "FontAwesome",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
                     ]
                   }
                 >
-                  6392.93
+                  
                 </Text>
               </View>
             </View>
@@ -1670,564 +2258,326 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 "borderBottomColor": "rgba(255, 255, 255, .1)",
                 "borderBottomWidth": 1,
                 "height": 1,
-                "marginLeft": 22,
+                "marginHorizontal": 11,
               }
             }
           />
-        </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": true,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
           <View
-            style={
+            accessibilityState={
               {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "marginTop": 22,
-                "paddingBottom": 22,
-                "paddingHorizontal": 22,
+                "disabled": false,
               }
             }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
           >
             <View
               style={
-                [
-                  {
-                    "flex": 1,
-                  },
-                  {
-                    "paddingLeft": 6,
-                  },
-                ]
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 6,
+                }
               }
             >
-              <Text
-                adjustsFontSizeToFit={false}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={1}
+              <View
                 style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#A4C7DF",
-                      "fontSize": 17,
-                      "paddingBottom": 6,
-                      "paddingRight": 22,
-                    },
-                    null,
-                  ]
+                  {
+                    "flex": 1,
+                  }
                 }
               >
-                Amount at Current Price
-              </Text>
+                <Text
+                  adjustsFontSizeToFit={false}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#A4C7DF",
+                        "fontSize": 17,
+                        "paddingBottom": 6,
+                        "paddingRight": 22,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Notes
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  ellipsizeMode="tail"
+                  minimumFontScale={0.65}
+                  numberOfLines={3}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#FFFFFF",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ]
+                  }
+                />
+              </View>
               <View
                 style={
                   {
                     "alignItems": "center",
-                    "flexDirection": "row",
+                    "justifyContent": "center",
                   }
                 }
               >
                 <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                  allowFontScaling={false}
                   style={
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "color": undefined,
                         "fontSize": 22,
-                        "includeFontPadding": false,
                       },
-                      undefined,
-                      null,
+                      {
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
+                      },
+                      {
+                        "fontFamily": "FontAwesome",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
                     ]
                   }
                 >
-                  $ 
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#FFFFFF",
-                        "flex": 1,
-                        "fontSize": 22,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  1230.00
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#E85466",
-                        "fontSize": 22,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  - 80.76%
+                  
                 </Text>
               </View>
             </View>
           </View>
-          <View
-            style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginLeft": 22,
-              }
-            }
-          />
         </View>
-        <View
-          accessibilityState={
+      </View>
+      <View
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "backgroundColor": "rgb(22, 50, 58)",
+            "borderRadius": 22,
+            "flexDirection": "row",
+            "margin": 11,
+            "padding": 11,
+          }
+        }
+      />
+      <Text
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessible={true}
+        adjustsFontSizeToFit={true}
+        focusable={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          [
             {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#00f1a2",
+              "fontSize": 22,
+              "marginVertical": 28,
+              "textAlign": "center",
+              "width": "100%",
+            },
+            null,
+          ]
+        }
+      >
+        View Advanced Transaction Data
+      </Text>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "elevation": 0,
+            "opacity": 1,
+            "shadowColor": "#000000",
+            "shadowOffset": {
+              "height": 0,
+              "width": 0,
+            },
+            "shadowOpacity": 0,
+            "shadowRadius": 0,
+          }
+        }
+      >
+        <BVLinearGradient
+          colors={
+            [
+              16777215,
+              16777215,
+            ]
+          }
+          endPoint={
+            {
+              "x": 1,
+              "y": 1,
             }
           }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
-          <View
-            style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "marginTop": 22,
-                "paddingBottom": 22,
-                "paddingHorizontal": 22,
-              }
-            }
-          >
-            <View
-              style={
-                [
-                  {
-                    "flex": 1,
-                  },
-                  {
-                    "paddingLeft": 6,
-                  },
-                ]
-              }
-            >
-              <Text
-                allowFontScaling={false}
-                style={
-                  [
-                    {
-                      "color": undefined,
-                      "fontSize": 12,
-                    },
-                    {
-                      "color": "#00f1a2",
-                      "height": 17,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 6,
-                      "width": 17,
-                    },
-                    {
-                      "fontFamily": "FontAwesome",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
-              <Text
-                adjustsFontSizeToFit={false}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#A4C7DF",
-                      "fontSize": 17,
-                      "paddingBottom": 6,
-                      "paddingRight": 22,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Category
-              </Text>
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#FFFFFF",
-                      "marginVertical": 6,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Expense
-              </Text>
-            </View>
-          </View>
-          <View
-            style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginLeft": 22,
-              }
-            }
-          />
-        </View>
-        <View
-          accessibilityState={
+          locations={null}
+          startPoint={
             {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
+              "x": 0,
+              "y": 0,
             }
           }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
-          <View
-            style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "marginTop": 22,
-                "paddingBottom": 22,
-                "paddingHorizontal": 22,
-              }
-            }
-          >
-            <View
-              style={
-                [
-                  {
-                    "flex": 1,
-                  },
-                  {
-                    "paddingLeft": 6,
-                  },
-                ]
-              }
-            >
-              <Text
-                allowFontScaling={false}
-                style={
-                  [
-                    {
-                      "color": undefined,
-                      "fontSize": 12,
-                    },
-                    {
-                      "color": "#00f1a2",
-                      "height": 17,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 6,
-                      "width": 17,
-                    },
-                    {
-                      "fontFamily": "FontAwesome",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
-              <Text
-                adjustsFontSizeToFit={false}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#A4C7DF",
-                      "fontSize": 17,
-                      "paddingBottom": 6,
-                      "paddingRight": 22,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Notes
-              </Text>
-            </View>
-          </View>
-          <View
-            style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginLeft": 22,
-              }
-            }
-          />
-        </View>
-        <Text
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessible={true}
-          adjustsFontSizeToFit={true}
-          focusable={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
           style={
             [
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
+                "alignItems": "center",
+                "borderColor": "#00f1a2",
+                "borderRadius": 6,
+                "borderWidth": 1.5,
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "minHeight": 67,
+                "minWidth": 202,
               },
               {
-                "color": "#00f1a2",
-                "fontSize": 22,
-                "marginVertical": 28,
-                "textAlign": "center",
-                "width": "100%",
+                "alignSelf": "auto",
+                "marginBottom": 45,
+                "marginLeft": 45,
+                "marginRight": 45,
+                "marginTop": 0,
+                "opacity": 1,
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+                "paddingTop": 0,
               },
-              null,
+              {
+                "borderRadius": 6,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+              },
             ]
           }
         >
-          View Advanced Transaction Data
-        </Text>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "elevation": 0,
-              "opacity": 1,
-              "shadowColor": "#000000",
-              "shadowOffset": {
-                "height": 0,
-                "width": 0,
-              },
-              "shadowOpacity": 0,
-              "shadowRadius": 0,
-            }
-          }
-        >
-          <BVLinearGradient
-            colors={
-              [
-                16777215,
-                16777215,
-              ]
-            }
-            endPoint={
-              {
-                "x": 1,
-                "y": 1,
-              }
-            }
-            locations={null}
-            startPoint={
-              {
-                "x": 0,
-                "y": 0,
-              }
-            }
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.75}
+            numberOfLines={1}
             style={
-              [
-                {
-                  "alignItems": "center",
-                  "borderColor": "#00f1a2",
-                  "borderRadius": 6,
-                  "borderWidth": 1.5,
-                  "flexDirection": "row",
-                  "justifyContent": "center",
-                  "minHeight": 67,
-                  "minWidth": 202,
-                },
-                {
-                  "alignSelf": "auto",
-                  "marginBottom": 45,
-                  "marginLeft": 45,
-                  "marginRight": 45,
-                  "marginTop": 0,
-                  "opacity": 1,
-                  "paddingBottom": 0,
-                  "paddingLeft": 0,
-                  "paddingRight": 0,
-                  "paddingTop": 0,
-                },
-                {
-                  "borderRadius": 6,
-                  "paddingLeft": 0,
-                  "paddingRight": 0,
-                },
-              ]
+              {
+                "color": "#00f1a2",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "marginHorizontal": 0,
+                "paddingBottom": 11,
+                "paddingLeft": 17,
+                "paddingRight": 17,
+                "paddingTop": 11,
+              }
             }
           >
-            <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.75}
-              numberOfLines={1}
-              style={
-                {
-                  "color": "#00f1a2",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "marginHorizontal": 0,
-                  "paddingBottom": 11,
-                  "paddingLeft": 17,
-                  "paddingRight": 17,
-                  "paddingTop": 11,
-                }
-              }
-            >
-              Done
-            </Text>
-          </BVLinearGradient>
-        </View>
+            Done
+          </Text>
+        </BVLinearGradient>
       </View>
     </View>
   </RCTScrollView>
