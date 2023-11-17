@@ -11,7 +11,10 @@
 - changed: Disable max-spend for Filecoin wallets
 - changed: Don't show recovery, password, or otp reminders in Maestro
 - fixed: Incorrectly filtering out transactions due to spam/dust filter
-- fixed: Performance issue from LoanManagerService running while not in beta mode
+- fixed: Performance issue from LoanManagerService running while not in beta
+  mode
+- fixed: isFirstOpen analytics param reporting the previously saved value
+  instead of forcing to false after first open
 
 ## 3.21.0
 
