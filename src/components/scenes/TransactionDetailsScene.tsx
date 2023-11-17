@@ -22,6 +22,7 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { convertNativeToExchange } from '../../util/utils'
 import { getMemoTitle } from '../../util/validateMemos'
+import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { AccelerateTxModal } from '../modals/AccelerateTxModal'
@@ -31,7 +32,6 @@ import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { MainButton } from '../themed/MainButton'
 import { AdvancedDetailsCard } from '../ui4/AdvancedDetailsCard'
 import { CardUi4 } from '../ui4/CardUi4'
 import { RowUi4 } from '../ui4/RowUi4'
@@ -312,7 +312,14 @@ const TransactionDetailsComponent = (props: Props) => {
 
       <AdvancedDetailsCard transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />
 
-      <MainButton onPress={navigation.pop} label={lstrings.string_done_cap} marginRem={[0, 2, 2]} type="secondary" />
+      <ButtonsContainer
+        layout="column"
+        primary={{
+          onPress: navigation.pop,
+          label: lstrings.string_done_cap
+        }}
+        scrollMargin
+      />
     </NotificationSceneWrapper>
   )
 }
