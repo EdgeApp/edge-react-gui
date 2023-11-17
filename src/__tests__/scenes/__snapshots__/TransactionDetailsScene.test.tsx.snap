@@ -675,7 +675,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                         },
                         {
                           "color": "#FFFFFF",
-                          "flex": 1,
                           "fontSize": 22,
                         },
                         null,
@@ -704,7 +703,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       ]
                     }
                   >
-                    0%
+                     (0%)
                   </Text>
                 </View>
               </View>
@@ -2146,7 +2145,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     ]
                   }
                 >
-                  ₿ 0.12299999 (+ 0 fee)
+                  ₿ 0.12299999 (+0 fee)
                 </Text>
               </View>
               <View
@@ -2437,7 +2436,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         },
                         {
                           "color": "#FFFFFF",
-                          "flex": 1,
                           "fontSize": 22,
                         },
                         null,
@@ -2466,7 +2464,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       ]
                     }
                   >
-                    - 80.76%
+                     (-80.75%)
                   </Text>
                 </View>
               </View>
