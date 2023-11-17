@@ -1,7 +1,7 @@
 import { abs, eq } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableWithoutFeedback, View } from 'react-native'
+import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -25,7 +25,6 @@ import { getMemoTitle } from '../../util/validateMemos'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { AccelerateTxModal } from '../modals/AccelerateTxModal'
-import { AdvancedDetailsModal } from '../modals/AdvancedDetailsModal'
 import { CategoryModal } from '../modals/CategoryModal'
 import { ContactListModal, ContactModalResult } from '../modals/ContactListModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -33,6 +32,7 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
+import { AdvancedDetailsCard } from '../ui4/AdvancedDetailsCard'
 import { CardUi4 } from '../ui4/CardUi4'
 import { RowUi4 } from '../ui4/RowUi4'
 import { SwapDetailsCard } from '../ui4/SwapDetailsCard'
@@ -51,7 +51,7 @@ export interface TransactionDetailsParams {
 const TransactionDetailsComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { edgeTransaction: transaction, tokenId, walletId } = route.params
-  const { metadata = {}, action, nativeAmount, date, currencyCode } = transaction
+  const { metadata = {}, action, nativeAmount, date, currencyCode, txid } = transaction
   const { currencyInfo } = wallet
 
   const theme = useTheme()
@@ -223,12 +223,6 @@ const TransactionDetailsComponent = (props: Props) => {
     }
   }
 
-  const openAdvancedDetails = () => {
-    Airship.show(bridge => (
-      <AdvancedDetailsModal bridge={bridge} transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />
-    )).catch(err => showError(err))
-  }
-
   const onSaveTxDetails = (newDetails: Partial<EdgeMetadata>) => {
     const { name, notes, bizId, category, amountFiat } = { ...localMetadata, ...newDetails }
     transaction.metadata = {
@@ -292,6 +286,7 @@ const TransactionDetailsComponent = (props: Props) => {
             </EdgeText>
           </View>
         </RowUi4>
+        <RowUi4 type="copy" title={lstrings.transaction_details_tx_id_modal_title} body={txid} />
         {acceleratedTx == null ? null : (
           <RowUi4 type="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={openAccelerateModel} />
         )}
@@ -315,9 +310,8 @@ const TransactionDetailsComponent = (props: Props) => {
 
       {transaction.swapData == null ? null : <SwapDetailsCard swapData={transaction.swapData} transaction={transaction} wallet={wallet} />}
 
-      <TouchableWithoutFeedback onPress={openAdvancedDetails}>
-        <EdgeText style={styles.textAdvancedTransaction}>{lstrings.transaction_details_view_advanced_data}</EdgeText>
-      </TouchableWithoutFeedback>
+      <AdvancedDetailsCard transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />
+
       <MainButton onPress={navigation.pop} label={lstrings.string_done_cap} marginRem={[0, 2, 2]} type="secondary" />
     </NotificationSceneWrapper>
   )

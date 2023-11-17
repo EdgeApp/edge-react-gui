@@ -2,16 +2,14 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
-import { AdvancedDetailsModal } from '../../components/modals/AdvancedDetailsModal'
-import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
+import { AdvancedDetailsCard } from '../../components/ui4/AdvancedDetailsCard'
 import { FakeProviders } from '../../util/fake/FakeProviders'
 
-describe('AdvancedDetailsModal', () => {
+describe('AdvancedDetailsCard', () => {
   it('should render with loading props', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <AdvancedDetailsModal
-          bridge={fakeAirshipBridge}
+        <AdvancedDetailsCard
           transaction={{
             blockHeight: 0,
             currencyCode: 'BCH',
