@@ -4,6 +4,7 @@
 
 - added: Support for Thorchain Savers EVM token deposits
 - changed: Use memos for Thorchain Savers withdrawals
+- changed: Restyle Transaction Details Scene
 - fixed: Various margin styling alignments
 - fixed: Long delay updating exchange rates after login
 - fixed: Do not count paused wallets for progress ratio

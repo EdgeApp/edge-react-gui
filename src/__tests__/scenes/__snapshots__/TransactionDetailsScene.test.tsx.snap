@@ -1118,7 +1118,9 @@ exports[`TransactionDetailsScene should render 1`] = `
                       null,
                     ]
                   }
-                />
+                >
+                  N/A
+                </Text>
               </View>
               <View
                 style={
@@ -2879,7 +2881,9 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       null,
                     ]
                   }
-                />
+                >
+                  N/A
+                </Text>
               </View>
               <View
                 style={
