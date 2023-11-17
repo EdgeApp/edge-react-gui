@@ -259,7 +259,7 @@ export const TransactionDetailsScene = (props: Props) => {
   const categoriesText = formatCategory(splitCategory(category))
 
   return (
-    <NotificationSceneWrapper navigation={navigation} hasTabs scroll>
+    <NotificationSceneWrapper navigation={navigation} hasTabs scroll padding={theme.rem(0.5)}>
       <CardUi4>
         <RowUi4 type="editable" title={personHeader} onPress={openPersonInput}>
           <View style={styles.tileRow}>

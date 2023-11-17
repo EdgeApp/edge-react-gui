@@ -90,7 +90,7 @@ export const NotificationSceneWrapper = (props: NotificationSceneWrapperProps): 
         <Animated.View style={[styles.scene, { ...gap, maxHeight: keyboardAnimation, padding }]}>{finalChildren}</Animated.View>
       ) : scroll ? (
         <ScrollView
-          style={{ position: 'absolute', ...gap }}
+          style={{ position: 'absolute', padding, ...gap }}
           keyboardShouldPersistTaps={keyboardShouldPersistTaps}
           contentContainerStyle={{ paddingBottom: notificationHeight }}
         >

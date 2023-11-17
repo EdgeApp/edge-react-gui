@@ -41,6 +41,7 @@ exports[`TransactionDetailsScene should render 1`] = `
       {
         "bottom": 0,
         "left": 0,
+        "padding": 11,
         "position": "absolute",
         "right": 0,
         "top": 64,
@@ -1399,6 +1400,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
       {
         "bottom": 0,
         "left": 0,
+        "padding": 11,
         "position": "absolute",
         "right": 0,
         "top": 64,
