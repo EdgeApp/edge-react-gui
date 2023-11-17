@@ -1,4 +1,4 @@
-import { mul, toFixed } from 'biggystring'
+import { gt, mul, toFixed } from 'biggystring'
 import { format } from 'date-fns'
 import { getLocales, getNumberFormatSettings } from 'react-native-localize'
 
@@ -281,12 +281,13 @@ export const trimEnd = (val: string): string => {
 export const toPercentString = (
   percentVal: string | number,
   opts?: {
+    intlOpts?: IntlNumberFormatOptionsType
     maxPrecision?: number
     minPrecision?: number
-    intlOpts?: IntlNumberFormatOptionsType
+    plusSign?: boolean
   }
 ): string => {
-  const { maxPrecision = 1, minPrecision = 0, intlOpts } = opts ?? {}
+  const { maxPrecision = 1, minPrecision = 0, intlOpts, plusSign = false } = opts ?? {}
 
   if (typeof percentVal === 'string') {
     // Remove negative sign
@@ -297,7 +298,8 @@ export const toPercentString = (
     }
   }
   const percentString = mul('100', String(percentVal))
-  return `${formatNumber(toFixed(percentString, minPrecision, maxPrecision), intlOpts)}%`
+  const signStr = plusSign && gt(percentString, '0') ? '+' : ''
+  return `${signStr}${formatNumber(toFixed(percentString, minPrecision, maxPrecision), intlOpts)}%`
 }
 
 const normalizeLang = (l: string) => l.replace('-', '').replace('_', '').toLowerCase()

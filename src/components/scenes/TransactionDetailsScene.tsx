@@ -15,6 +15,7 @@ import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useHistoricalRate } from '../../hooks/useHistoricalRate'
 import { useWatch } from '../../hooks/useWatch'
+import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
@@ -116,21 +117,21 @@ const TransactionDetailsComponent = (props: Props) => {
   const historicFiat = historicRate * Number(absExchangeAmount)
 
   // Figure out which amount to show:
-  const displayFiat = metadata.amountFiat == null || metadata.amountFiat === 0 ? historicFiat : Math.abs(metadata.amountFiat)
+  const originalFiat = metadata.amountFiat == null || metadata.amountFiat === 0 ? historicFiat : Math.abs(metadata.amountFiat)
 
   // Percent difference:
-  const percentChange = displayFiat === 0 ? 0 : (100 * (currentFiat - displayFiat)) / displayFiat
+  const percentChange = originalFiat === 0 ? 0 : (currentFiat - originalFiat) / originalFiat
 
   // Convert to text:
+  const originalFiatText = displayFiatAmount(originalFiat)
   const currentFiatText = displayFiatAmount(currentFiat)
-  const displayFiatText = displayFiatAmount(displayFiat)
-  const percentText = abs(percentChange.toFixed(2))
+  const percentText = toPercentString(percentChange, { plusSign: true, maxPrecision: 2 })
 
   const handleEdit = useHandler(() => {
     Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
-        initialValue={displayFiatText}
+        initialValue={originalFiatText}
         inputLabel={fiatCurrencyCode}
         returnKeyType="done"
         keyboardType="numeric"
@@ -278,16 +279,16 @@ const TransactionDetailsComponent = (props: Props) => {
         <RowUi4 type="editable" title={sprintf(lstrings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={handleEdit}>
           <View style={styles.tileRow}>
             <EdgeText>{fiatSymbol + ' '}</EdgeText>
-            <EdgeText>{displayFiatText}</EdgeText>
+            <EdgeText>{originalFiatText}</EdgeText>
           </View>
         </RowUi4>
         <RowUi4 type="default" title={lstrings.transaction_details_amount_current_price}>
           <View style={styles.tileRow}>
             <EdgeText>{fiatSymbol + ' '}</EdgeText>
             <EdgeText style={styles.tileTextPrice}>{currentFiatText}</EdgeText>
-            <EdgeText style={percentChange >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>
-              {(percentChange >= 0 ? percentText : `- ${percentText}`) + '%'}
-            </EdgeText>
+            {originalFiatText === currentFiatText ? null : (
+              <EdgeText style={percentChange >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>{` (${percentText})`}</EdgeText>
+            )}
           </View>
         </RowUi4>
         <RowUi4 type="copy" title={lstrings.transaction_details_tx_id_modal_title} body={txid} />
@@ -348,7 +349,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.primaryText
   },
   tileTextPrice: {
-    flex: 1,
     color: theme.primaryText,
     fontSize: theme.rem(1)
   },

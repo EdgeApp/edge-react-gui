@@ -717,8 +717,8 @@ const strings = {
   category_modal_title: 'Choose a Category',
   transaction_details_notes_title: 'Notes',
   back_button_tap_again_to_exit: 'Please tap BACK again to log out',
-  fragment_tx_detail_mining_fee_with_symbol: '+ %1$s fee',
-  fragment_tx_detail_mining_fee_with_denom: '+ %1$f %2$s fee',
+  fragment_tx_detail_mining_fee_with_symbol: '+%1$s fee',
+  fragment_tx_detail_mining_fee_with_denom: '+%1$f %2$s fee',
   confirm_password_text: 'Confirm Password',
 
   // OTP settings scene:
