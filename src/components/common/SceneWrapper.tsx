@@ -101,7 +101,7 @@ export const NotificationSceneWrapper = (props: NotificationSceneWrapperProps): 
       )
 
     // Render the notifications:
-    const notifications = isLightAccount ? <NotificationView navigation={navigation} /> : null
+    const notifications = <NotificationView navigation={navigation} />
 
     // Render the background, if any:
     if (background === 'none')

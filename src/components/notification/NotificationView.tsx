@@ -44,7 +44,8 @@ const NotificationCardsContainer = styled(View)(theme => ({
   alignSelf: 'center',
   height: theme.rem(3.5),
   marginHorizontal: theme.rem(0.5),
-  bottom: theme.rem(0.5),
+  justifyContent: 'flex-end',
+  bottom: theme.rem(0.25),
   position: 'absolute'
 }))
 
