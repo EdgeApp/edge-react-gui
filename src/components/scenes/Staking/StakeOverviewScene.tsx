@@ -26,6 +26,12 @@ interface Props extends EdgeSceneProps<'stakeOverview'> {
   wallet: EdgeCurrencyWallet
 }
 
+export interface StakeOverviewParams {
+  stakePlugin: StakePlugin
+  stakePolicy: StakePolicy
+  walletId: string
+}
+
 interface DenomMap {
   [cc: string]: EdgeDenomination
 }

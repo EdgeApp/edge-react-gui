@@ -17,6 +17,7 @@ import { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
 import { MigrateWalletItem } from '../components/scenes/MigrateWalletSelectCryptoScene'
 import { SendScene2Params } from '../components/scenes/SendScene2'
+import { StakeOverviewParams } from '../components/scenes/Staking/StakeOverviewScene'
 import { TransactionListParams } from '../components/scenes/TransactionListScene'
 import { WcConnectionsParams } from '../components/scenes/WcConnectionsScene'
 import { WcConnectParams } from '../components/scenes/WcConnectScene'
@@ -271,7 +272,7 @@ export interface RouteParamList {
     modification: ChangeQuoteRequest['action']
   }
   stakeOptions: { stakePlugins: StakePlugin[]; currencyCode: string; stakePolicies: StakePolicy[]; walletId: string }
-  stakeOverview: { stakePlugin: StakePlugin; stakePolicy: StakePolicy; walletId: string }
+  stakeOverview: StakeOverviewParams
   testScene: {}
   transactionDetails: {
     edgeTransaction: EdgeTransaction
