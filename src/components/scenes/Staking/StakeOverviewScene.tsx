@@ -4,8 +4,9 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { lstrings } from '../../../locales/strings'
-import { ChangeQuoteRequest, PositionAllocation, StakePosition } from '../../../plugins/stake-plugins/types'
+import { ChangeQuoteRequest, PositionAllocation, StakePlugin, StakePolicy, StakePosition } from '../../../plugins/stake-plugins/types'
 import { getDisplayDenominationFromState } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
@@ -29,6 +30,7 @@ interface Props extends EdgeSceneProps<'stakeOverview'> {
 export interface StakeOverviewParams {
   stakePlugin: StakePlugin
   stakePolicy: StakePolicy
+  stakePosition?: StakePosition
   walletId: string
 }
 
@@ -38,7 +40,7 @@ interface DenomMap {
 
 const StakeOverviewSceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
-  const { stakePolicy, stakePlugin } = route.params
+  const { stakePolicy, stakePosition: startingStakePosition, stakePlugin } = route.params
   const { stakePolicyId } = stakePolicy
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -55,7 +57,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   // Hooks
   const [stakeAllocations, setStakeAllocations] = React.useState<PositionAllocation[]>([])
   const [rewardAllocations, setRewardAllocations] = React.useState<PositionAllocation[]>([])
-  const [stakePosition, setStakePosition] = React.useState<StakePosition | undefined>()
+  const [stakePosition, setStakePosition] = React.useState<StakePosition | undefined>(startingStakePosition)
 
   // Background loop to force fetchStakePosition updates
   const [updateCounter, setUpdateCounter] = React.useState<number>(0)
@@ -67,26 +69,23 @@ const StakeOverviewSceneComponent = (props: Props) => {
     return () => clearInterval(interval)
   }, [])
 
-  React.useEffect(() => {
-    let abort = false
-    stakePlugin
-      .fetchStakePosition({ stakePolicyId, wallet, account })
-      .then(async stakePosition => {
-        if (abort) return
+  useAsyncEffect(async () => {
+    let sp: StakePosition
+    try {
+      if (stakePosition == null) {
+        sp = await stakePlugin.fetchStakePosition({ stakePolicyId, wallet, account })
+        setStakePosition(sp)
+      } else {
         const guiAllocations = getPositionAllocations(stakePosition)
         setStakeAllocations(guiAllocations.staked)
         setRewardAllocations(guiAllocations.earned)
         setStakePosition(stakePosition)
-      })
-      .catch(err => {
-        showError(err)
-        console.error(err)
-      })
-
-    return () => {
-      abort = true
+      }
+    } catch (err) {
+      showError(err)
+      console.error(err)
     }
-  }, [account, stakePlugin, stakePolicyId, updateCounter, wallet])
+  }, [account, stakePlugin, stakePolicyId, stakePosition, updateCounter, wallet])
 
   // Handlers
   const handleModifyPress = (modification: ChangeQuoteRequest['action'] | 'unstakeAndClaim') => () => {

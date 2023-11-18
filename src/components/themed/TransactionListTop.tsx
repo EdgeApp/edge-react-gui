@@ -16,7 +16,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
-import { PositionAllocation, StakePlugin, StakePolicy } from '../../plugins/stake-plugins/types'
+import { PositionAllocation, StakePlugin, StakePolicy, StakePositionMap } from '../../plugins/stake-plugins/types'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -68,6 +68,7 @@ interface State {
   input: string
   stakePolicies: StakePolicy[] | null
   stakePlugins: StakePlugin[] | null
+  stakePositionMap: StakePositionMap
   lockedNativeAmount: string
 }
 
@@ -82,7 +83,8 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       input: '',
       lockedNativeAmount: '0',
       stakePolicies: null,
-      stakePlugins: null
+      stakePlugins: null,
+      stakePositionMap: {}
     }
   }
 
@@ -130,29 +132,32 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   updatePositions = async ({ stakePlugins = [], stakePolicies = [] }: { stakePlugins?: StakePlugin[]; stakePolicies?: StakePolicy[] }) => {
     let lockedNativeAmount = '0'
+    const stakePositionMap: StakePositionMap = {}
     for (const stakePolicy of stakePolicies) {
+      let total: string | undefined
       const { stakePolicyId } = stakePolicy
       const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy)
       if (stakePlugin == null) continue
-      const amount = await stakePlugin
-        .fetchStakePosition({
+      try {
+        const stakePosition = await stakePlugin.fetchStakePosition({
           stakePolicyId,
           wallet: this.props.wallet,
           account: this.props.account
         })
-        .then(async stakePosition => {
-          const { staked, earned } = getPositionAllocations(stakePosition)
-          return this.getTotalPosition(this.props.currencyCode, [...staked, ...earned])
-        })
-        .catch(err => {
-          console.error(err)
-          const { displayName } = stakePolicy.stakeProviderInfo
-          showWarning(`${displayName}: ${lstrings.stake_unable_to_query_locked}`)
-        })
-      if (amount == null) return
 
-      lockedNativeAmount = add(lockedNativeAmount, amount)
+        stakePositionMap[stakePolicy.stakePolicyId] = stakePosition
+        const { staked, earned } = getPositionAllocations(stakePosition)
+        total = this.getTotalPosition(this.props.currencyCode, [...staked, ...earned])
+      } catch (err) {
+        console.error(err)
+        const { displayName } = stakePolicy.stakeProviderInfo
+        showWarning(`${displayName}: ${lstrings.stake_unable_to_query_locked}`)
+        continue
+      }
+
+      lockedNativeAmount = add(lockedNativeAmount, total)
     }
+    this.setState({ stakePositionMap })
     this.setState({ lockedNativeAmount })
   }
 
@@ -350,9 +355,12 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           stakePolicies
         })
       } else if (stakePolicies.length === 1) {
-        const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicies[0])
+        const [stakePolicy] = stakePolicies
+        const { stakePolicyId } = stakePolicy
+        const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy)
         // Transition to next scene immediately
-        if (stakePlugin != null) navigation.push('stakeOverview', { stakePlugin, walletId: wallet.id, stakePolicy: stakePolicies[0] })
+        const stakePosition = this.state.stakePositionMap[stakePolicyId]
+        if (stakePlugin != null) navigation.push('stakeOverview', { stakePlugin, walletId: wallet.id, stakePolicy: stakePolicy, stakePosition })
       }
     }
   }
@@ -532,6 +540,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
   // Staking Box
   stakingBoxContainer: {
+    height: theme.rem(1.25),
+    minWidth: theme.rem(18),
+    maxWidth: '70%',
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between'
