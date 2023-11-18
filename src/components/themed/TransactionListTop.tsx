@@ -24,12 +24,12 @@ import { NavigationProp } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
-import { convertNativeToDenomination } from '../../util/utils'
+import { convertNativeToDenomination, datelog } from '../../util/utils'
 import { VisaCardCard } from '../cards/VisaCardCard'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship, showError, showWarning } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
@@ -151,7 +151,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       } catch (err) {
         console.error(err)
         const { displayName } = stakePolicy.stakeProviderInfo
-        showWarning(`${displayName}: ${lstrings.stake_unable_to_query_locked}`)
+        datelog(`${displayName}: ${lstrings.stake_unable_to_query_locked}`)
         continue
       }
 
