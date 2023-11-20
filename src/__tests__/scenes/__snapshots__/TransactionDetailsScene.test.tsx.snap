@@ -1158,7 +1158,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             resizeMode="cover"
             source={
               {
-                "uri": "https://content.edge.app/lightAccount/icon-notif.png",
+                "uri": "https://content.edge.app/notifications/icon-warning.png",
               }
             }
             style={
@@ -2392,7 +2392,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             resizeMode="cover"
             source={
               {
-                "uri": "https://content.edge.app/lightAccount/icon-notif.png",
+                "uri": "https://content.edge.app/notifications/icon-warning.png",
               }
             }
             style={

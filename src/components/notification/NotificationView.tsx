@@ -6,7 +6,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { getLightAccountIconUri } from '../../util/CdnUris'
+import { getThemedIconUri } from '../../util/CdnUris'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
 import { NotificationCard } from './NotificationCard'
@@ -30,7 +30,7 @@ const NotificationViewComponent = (props: Props) => {
     <NotificationCardsContainer>
       {isBackupWarningShown ? (
         <NotificationCard
-          iconUri={getLightAccountIconUri(theme, 'icon-notif')}
+          iconUri={getThemedIconUri(theme, 'notifications/icon-warning')}
           title={lstrings.backup_title}
           message={lstrings.backup_warning_message}
           onPress={handlePress}
