@@ -1084,7 +1084,6 @@ exports[`TransactionDetailsScene should render 1`] = `
             "alignItems": "center",
             "backgroundColor": "#121d25",
             "borderRadius": 11,
-            "elevation": 6,
             "flexDirection": "row",
             "justifyContent": "center",
             "margin": 6,
@@ -1134,6 +1133,7 @@ exports[`TransactionDetailsScene should render 1`] = `
           {
             "alignItems": "center",
             "flexDirection": "row",
+            "flexShrink": 1,
             "justifyContent": "center",
             "margin": 6,
             "opacity": 1,
@@ -1172,7 +1172,14 @@ exports[`TransactionDetailsScene should render 1`] = `
             }
           />
         </View>
-        <View>
+        <View
+          style={
+            {
+              "flexShrink": 1,
+              "width": "100%",
+            }
+          }
+        >
           <Text
             adjustsFontSizeToFit={true}
             minimumFontScale={0.65}
@@ -2311,7 +2318,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             "alignItems": "center",
             "backgroundColor": "#121d25",
             "borderRadius": 11,
-            "elevation": 6,
             "flexDirection": "row",
             "justifyContent": "center",
             "margin": 6,
@@ -2361,6 +2367,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           {
             "alignItems": "center",
             "flexDirection": "row",
+            "flexShrink": 1,
             "justifyContent": "center",
             "margin": 6,
             "opacity": 1,
@@ -2399,7 +2406,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             }
           />
         </View>
-        <View>
+        <View
+          style={
+            {
+              "flexShrink": 1,
+              "width": "100%",
+            }
+          }
+        >
           <Text
             adjustsFontSizeToFit={true}
             minimumFontScale={0.65}

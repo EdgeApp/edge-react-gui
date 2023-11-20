@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { Platform, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
@@ -65,10 +65,17 @@ const NotificationCardComponent = (props: Props) => {
     <Animated.View style={[styles.cardContainer, animatedStyle]}>
       <Contents onPress={handlePress}>
         <Icon source={{ uri: iconUri }} />
-        <View>
+        <TextView>
           <TitleText>{title}</TitleText>
-          <MessageText numberOfLines={3}>{message}</MessageText>
-        </View>
+          {/* Android font scaling is too aggressive. 
+              Android prioritizes font shrinking much more before trying to add
+              newlines, while iOS prioritizes newlines before shrinking text.
+              We already use smaller text here so we shouldn't shrink it
+              more */}
+          <MessageText numberOfLines={3} disableFontScaling={Platform.OS === 'android'}>
+            {message}
+          </MessageText>
+        </TextView>
       </Contents>
       {onClose != null ? (
         <CloseButton onPress={handleClose}>
@@ -81,16 +88,22 @@ const NotificationCardComponent = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   cardContainer: {
+    ...Platform.select({
+      ios: {
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.7,
+        shadowRadius: theme.rem(0.5)
+      },
+      android: {
+        elevation: 5
+      }
+    }),
     alignItems: 'center',
     backgroundColor: theme.modal,
     borderRadius: theme.rem(0.5),
-    elevation: 6,
     flexDirection: 'row',
     justifyContent: 'center',
     padding: theme.rem(0.5),
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.7,
-    shadowRadius: theme.rem(0.5),
     margin: theme.rem(0.25)
   }
 }))
@@ -114,7 +127,13 @@ const MessageText = styled(EdgeText)(theme => ({
   fontSize: theme.rem(0.75)
 }))
 
+const TextView = styled(View)(theme => ({
+  flexShrink: 1,
+  width: '100%'
+}))
+
 const Contents = styled(TouchableOpacity)((theme: Theme) => ({
+  flexShrink: 1,
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
