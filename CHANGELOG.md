@@ -7,6 +7,7 @@
 - fixed: Various margin styling alignments
 - fixed: Long delay updating exchange rates after login
 - fixed: Do not count paused wallets for progress ratio
+- fixed: ENS name resolution intermittently failing
 
 ## 3.22.0
 
