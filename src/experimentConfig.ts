@@ -1,4 +1,4 @@
-import { asObject, asOptional, asValue, Cleaner } from 'cleaners'
+import { asMaybe, asObject, asOptional, asValue, Cleaner } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
 import { CreateAccountType } from 'edge-login-ui-rn'
 import { isMaestro } from 'react-native-is-maestro'
@@ -84,7 +84,7 @@ const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
     asValue('signUp', 'getStarted', 'createAccount'),
     generateExperimentConfigVal('createAccountText', ['signUp', 'getStarted', 'createAccount'])
   ),
-  signupCaptcha: asOptional(asValue('withCaptcha', 'withoutCaptcha'), generateExperimentConfigVal('signupCaptcha', ['withCaptcha', 'withoutCaptcha']))
+  signupCaptcha: asMaybe(asValue('withoutCaptcha'), 'withoutCaptcha')
 })
 
 /**

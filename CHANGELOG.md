@@ -9,6 +9,7 @@
 - added: New 'Lower Send Amount' warning for transaction acceleration
 - added: Allow buy/sell plugins local override and info server patching
 - changed: Disable max-spend for Filecoin wallets
+- changed: Disabled signupCaptcha experiment
 - changed: Don't show recovery, password, or otp reminders in Maestro
 - fixed: Incorrectly filtering out transactions due to spam/dust filter
 - fixed: Performance issue from LoanManagerService running while not in beta
