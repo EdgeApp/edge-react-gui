@@ -34,6 +34,8 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   tezos: true,
   solana: ENV.SOLANA_INIT,
   celo: true,
+  coreum: true,
+  osmosis: true,
   thorchainrune: ENV.THORCHAIN_INIT,
   tron: true,
   zksync: true,
