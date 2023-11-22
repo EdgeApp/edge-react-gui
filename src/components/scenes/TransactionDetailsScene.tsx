@@ -255,15 +255,19 @@ export const TransactionDetailsScene = (props: Props) => {
   return (
     <NotificationSceneWrapper navigation={navigation} hasTabs scroll padding={theme.rem(0.5)}>
       <CardUi4>
-        <RowUi4 type="editable" title={personHeader} onPress={openPersonInput}>
-          <View style={styles.tileRow}>
-            {thumbnailPath ? (
+        <RowUi4
+          type="editable"
+          icon={
+            thumbnailPath ? (
               <FastImage style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
             ) : (
               <IonIcon style={styles.tileAvatarIcon} name="person" size={theme.rem(2)} />
-            )}
-            <EdgeText>{personName}</EdgeText>
-          </View>
+            )
+          }
+          title={personHeader}
+          onPress={openPersonInput}
+        >
+          <EdgeText>{personName}</EdgeText>
         </RowUi4>
       </CardUi4>
 

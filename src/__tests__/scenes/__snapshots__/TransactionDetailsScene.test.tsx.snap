@@ -128,6 +128,47 @@ exports[`TransactionDetailsScene should render 1`] = `
               <View
                 style={
                   {
+                    "marginRight": 11,
+                  }
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "overflow": "hidden",
+                      },
+                      {
+                        "borderRadius": 22,
+                        "height": 45,
+                        "marginRight": 11,
+                        "width": 45,
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="cover"
+                    source={
+                      {
+                        "uri": "thumb/nail/path",
+                      }
+                    }
+                    style={
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+              </View>
+              <View
+                style={
+                  {
                     "flex": 1,
                   }
                 }
@@ -157,67 +198,25 @@ exports[`TransactionDetailsScene should render 1`] = `
                 >
                   Sender Name
                 </Text>
-                <View
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
                   style={
-                    {
-                      "alignItems": "center",
-                      "flexDirection": "row",
-                    }
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      undefined,
+                      null,
+                    ]
                   }
                 >
-                  <View
-                    style={
-                      [
-                        {
-                          "overflow": "hidden",
-                        },
-                        {
-                          "borderRadius": 22,
-                          "height": 45,
-                          "marginRight": 11,
-                          "width": 45,
-                        },
-                      ]
-                    }
-                  >
-                    <FastImageView
-                      resizeMode="cover"
-                      source={
-                        {
-                          "uri": "thumb/nail/path",
-                        }
-                      }
-                      style={
-                        {
-                          "bottom": 0,
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        }
-                      }
-                    />
-                  </View>
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    minimumFontScale={0.65}
-                    numberOfLines={1}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        undefined,
-                        null,
-                      ]
-                    }
-                  >
-                    timmy
-                  </Text>
-                </View>
+                  timmy
+                </Text>
               </View>
               <View
                 style={
@@ -1891,6 +1890,47 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               <View
                 style={
                   {
+                    "marginRight": 11,
+                  }
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "overflow": "hidden",
+                      },
+                      {
+                        "borderRadius": 22,
+                        "height": 45,
+                        "marginRight": 11,
+                        "width": 45,
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="cover"
+                    source={
+                      {
+                        "uri": "thumb/nail/path",
+                      }
+                    }
+                    style={
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+              </View>
+              <View
+                style={
+                  {
                     "flex": 1,
                   }
                 }
@@ -1920,67 +1960,25 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 >
                   Recipient Name
                 </Text>
-                <View
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
                   style={
-                    {
-                      "alignItems": "center",
-                      "flexDirection": "row",
-                    }
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      undefined,
+                      null,
+                    ]
                   }
                 >
-                  <View
-                    style={
-                      [
-                        {
-                          "overflow": "hidden",
-                        },
-                        {
-                          "borderRadius": 22,
-                          "height": 45,
-                          "marginRight": 11,
-                          "width": 45,
-                        },
-                      ]
-                    }
-                  >
-                    <FastImageView
-                      resizeMode="cover"
-                      source={
-                        {
-                          "uri": "thumb/nail/path",
-                        }
-                      }
-                      style={
-                        {
-                          "bottom": 0,
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        }
-                      }
-                    />
-                  </View>
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    minimumFontScale={0.65}
-                    numberOfLines={1}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        undefined,
-                        null,
-                      ]
-                    }
-                  >
-                    timmy
-                  </Text>
-                </View>
+                  timmy
+                </Text>
               </View>
               <View
                 style={
