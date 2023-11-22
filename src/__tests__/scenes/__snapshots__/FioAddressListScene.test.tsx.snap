@@ -453,6 +453,9 @@ exports[`FioAddressList should render with loading props 1`] = `
               "tutorialModalUnderlay": "rgba(255, 255, 255, 0)",
               "underlayColor": "#FFFFFF",
               "underlayOpacity": 0.95,
+              "units": {
+                "rem": 22.473239436619718,
+              },
               "walletListBackground": "#121d25",
               "walletListMutedBackground": "#121d25",
               "walletListSlideTutorialImage": {
@@ -908,6 +911,9 @@ exports[`FioAddressList should render with loading props 1`] = `
               "tutorialModalUnderlay": "rgba(255, 255, 255, 0)",
               "underlayColor": "#FFFFFF",
               "underlayOpacity": 0.95,
+              "units": {
+                "rem": 22.473239436619718,
+              },
               "walletListBackground": "#121d25",
               "walletListMutedBackground": "#121d25",
               "walletListSlideTutorialImage": {

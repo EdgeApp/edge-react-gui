@@ -52,6 +52,9 @@ export const textNoShadow: TextShadowParams = {
 export interface Theme {
   // The app scaling factor, which is the height of "normal" text:
   rem: (size: number) => number
+  units: {
+    rem: number
+  }
 
   // Prefer using at the Primary button style when there is only one button option on a
   // scene or modal. Edge prefers the Secondary button style and uses the Primary button sparingly

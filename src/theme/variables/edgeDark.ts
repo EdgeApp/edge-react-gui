@@ -73,8 +73,12 @@ const deviceWidth = Dimensions.get('window').width
 
 export const edgeDark: Theme = {
   rem(size: number): number {
-    return Math.round(scale(16) * size)
+    return Math.round(edgeDark.units.rem * size)
   },
+  units: {
+    rem: scale(16)
+  },
+
   isDark: true,
   preferPrimaryButton: true,
 
