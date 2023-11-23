@@ -19,6 +19,7 @@ import {
 } from '../types'
 
 const MIN_TRX_STAKE = '1000000' // 1 TRX
+const WITHDRAW_PREFIX = 'WITHDRAWEXPIREUNFREEZE_'
 
 const stakeProviderInfo: StakeProviderInfo = {
   displayName: lstrings.stake_resource_display_name,
@@ -243,66 +244,50 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
       const rewardAsset = policy.rewardAssets[0].internalCurrencyCode ?? policy.rewardAssets[0].currencyCode
       const balanceTrx = wallet.balances[currencyCode] ?? '0'
       const canStake = gt(balanceTrx, '0')
-      const stakedAmountRaw = wallet.stakingStatus.stakedAmounts.find(amount => amount.otherParams?.type === rewardAsset)
-      const stakedAmount = asMaybe(asTronStakedAmount)(stakedAmountRaw)
-      if (stakedAmount == null) {
-        return {
-          allocations: [
-            {
-              pluginId,
-              currencyCode,
-              allocationType: 'staked',
-              nativeAmount: '0'
-            }
-          ],
-          canStake,
-          canUnstake: false,
-          canUnstakeAndClaim: false,
-          canClaim: false
-        }
-      }
-
-      const {
-        nativeAmount: stakedNativeAmount,
-        otherParams: { type: stakedType },
-        unlockDate
-      } = stakedAmount
-      const locktime = unlockDate != null ? new Date(unlockDate) : undefined
-      const allocations: PositionAllocation[] = [
-        {
-          pluginId,
-          currencyCode,
-          allocationType: 'staked',
-          nativeAmount: stakedNativeAmount,
-          locktime
-        }
-      ]
-
       let canClaim = false
+      const allocations: PositionAllocation[] = []
 
-      for (const amount of wallet.stakingStatus.stakedAmounts) {
+      for (const stakedAmountRaw of wallet.stakingStatus.stakedAmounts) {
+        const stakedAmount = asMaybe(asTronStakedAmount)(stakedAmountRaw)
+        if (stakedAmount == null) continue
+
         const {
           nativeAmount,
           otherParams: { type },
           unlockDate
-        } = asTronStakedAmount(amount)
-        if (unlockDate == null || type !== `WITHDRAWEXPIREUNFREEZE_${stakedType}`) continue
-        if (new Date(unlockDate) < new Date()) {
-          canClaim = true
+        } = stakedAmount
+        if (type !== rewardAsset && type !== `${WITHDRAW_PREFIX}${rewardAsset}`) continue
+
+        const locktime = unlockDate != null ? new Date(unlockDate) : undefined
+        let allocationType: PositionAllocation['allocationType'] = 'staked'
+        if (unlockDate != null && type === `${WITHDRAW_PREFIX}${rewardAsset}`) {
+          allocationType = 'earned'
+          if (unlockDate < new Date()) {
+            canClaim = true
+          }
         }
         allocations.push({
           pluginId,
-          currencyCode: 'TRX',
-          allocationType: 'earned',
-          nativeAmount: nativeAmount,
-          locktime: unlockDate
+          currencyCode,
+          allocationType,
+          nativeAmount,
+          locktime
+        })
+      }
+
+      if (allocations.length === 0) {
+        allocations.push({
+          pluginId,
+          currencyCode,
+          allocationType: 'staked',
+          nativeAmount: '0'
         })
       }
 
       return {
         allocations,
         canStake,
-        canUnstake: gt(stakedNativeAmount, '0'),
+        canUnstake: allocations.some(alloc => alloc.allocationType === 'staked' && gt(alloc.nativeAmount, '0')),
         canUnstakeAndClaim: false,
         canClaim
       }
