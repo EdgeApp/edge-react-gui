@@ -197,8 +197,8 @@ const strings = {
   fragment_transaction_exchange: 'Exchange',
   fragment_transaction_expense: 'Expense',
   fragment_transaction_income: 'Income',
-  fragment_transaction_list_receive_prefix: 'Received ',
-  fragment_transaction_list_sent_prefix: 'Sent ',
+  transaction_received_1s: 'Received %1$s',
+  transaction_sent_1s: 'Sent %1$s',
   fragment_transaction_transfer: 'Transfer',
   fragment_wallet_unconfirmed: 'Pending',
   fragment_transaction_list_tx_dropped: 'Dropped',
@@ -353,6 +353,7 @@ const strings = {
   mining_fee_high_label_choice: 'High',
   mining_fee_low_label_choice: 'Low',
   mining_fee_standard_label_choice: 'Optimal',
+  received: 'Received',
   request_deprecated_header: 'Support for %1$s has been deprecated.',
   request_deprecated_currency_code:
     'Please extract the private keys and import into a %1$s supporting wallet. If you need assistance please submit a support ticket below.',
@@ -384,6 +385,7 @@ const strings = {
   send_confirmation_fee_modal_alert_message_fragment:
     'The network is currently congested. Transactions fees may be more expensive (%s) and may take longer than usual to confirm.',
   send_confirmation_fee_modal_alert_message_fragment_eth: 'Using too low of a fee can result in a failed transaction and loss of the fee spent.',
+  sent: 'Sent',
   transaction_failure: 'Transaction Failure',
   transaction_failure_message: '%s.',
   transaction_success: 'Transaction Success',

@@ -106,7 +106,7 @@ export function TransactionListRow(props: Props) {
       ? TX_ACTION_LABEL_MAP[action.type]
       : transaction.metadata && transaction.metadata.name
       ? transaction.metadata.name
-      : (isSentTransaction ? lstrings.fragment_transaction_list_sent_prefix : lstrings.fragment_transaction_list_receive_prefix) + selectedCurrencyName
+      : sprintf(isSentTransaction ? lstrings.transaction_sent_1s : lstrings.transaction_received_1s, selectedCurrencyName)
 
   // Icon & Thumbnail
   const thumbnailPath = useContactThumbnail(name)

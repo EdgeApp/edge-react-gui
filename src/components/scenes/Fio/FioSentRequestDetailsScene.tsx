@@ -50,7 +50,7 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
     const styles = getStyles(this.props.theme)
     let statusLabel = <EdgeText style={styles.status}>{lstrings.fragment_wallet_unconfirmed}</EdgeText>
     if (status === 'sent_to_blockchain') {
-      statusLabel = <EdgeText style={[styles.status, styles.statusReceived]}>{lstrings.fragment_transaction_list_receive_prefix}</EdgeText>
+      statusLabel = <EdgeText style={[styles.status, styles.statusReceived]}>{lstrings.received}</EdgeText>
     } else if (status === 'rejected') {
       statusLabel = <EdgeText style={[styles.status, styles.statusRejected]}>{lstrings.fio_reject_status}</EdgeText>
     }
