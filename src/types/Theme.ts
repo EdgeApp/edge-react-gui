@@ -451,4 +451,11 @@ export interface Theme {
   shadowColorUi4: string
 
   touchHighlightUi4: string
+
+  txDirBgReceiveUi4: string
+  txDirBgSendUi4: string
+  txDirBgSwapUi4: string
+  txDirFgReceiveUi4: string
+  txDirFgSendUi4: string
+  txDirFgSwapUi4: string
 }

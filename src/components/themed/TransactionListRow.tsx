@@ -73,9 +73,6 @@ export function TransactionListRow(props: Props) {
   // Required Confirmations
   const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
 
-  // Thumbnail
-  const thumbnailPath = useContactThumbnail(name)
-
   // CryptoAmount
   const rateKey = `${currencyCode}_${fiatCurrencyCode}`
   const exchangeRate: string = useSelector(state => state.exchangeRates[rateKey])
@@ -103,30 +100,43 @@ export function TransactionListRow(props: Props) {
 
   const fiatAmountString = `${fiatSymbol} ${fiatAmount}`
 
-  // Transaction Text and Icon
-  let transactionText, transactionIcon, transactionStyle
-  if (isSentTransaction) {
-    transactionText =
-      action != null
-        ? TX_ACTION_LABEL_MAP[action.type]
-        : transaction.metadata && transaction.metadata.name
-        ? transaction.metadata.name
-        : lstrings.fragment_transaction_list_sent_prefix + selectedCurrencyName
-    transactionIcon = <Ionicons name="arrow-up" size={theme.rem(1.25)} color={theme.negativeText} style={styles.iconArrows} />
-    transactionStyle = styles.iconSent
-  } else {
-    transactionText =
-      action != null
-        ? TX_ACTION_LABEL_MAP[action.type]
-        : transaction.metadata && transaction.metadata.name
-        ? transaction.metadata.name
-        : lstrings.fragment_transaction_list_receive_prefix + selectedCurrencyName
-    transactionIcon = <Ionicons name="arrow-down" size={theme.rem(1.25)} color={theme.positiveText} style={styles.iconArrows} />
-    transactionStyle = styles.iconRequest
-  }
+  // Transaction Title
+  const transactionTitle =
+    action != null
+      ? TX_ACTION_LABEL_MAP[action.type]
+      : transaction.metadata && transaction.metadata.name
+      ? transaction.metadata.name
+      : (isSentTransaction ? lstrings.fragment_transaction_list_sent_prefix : lstrings.fragment_transaction_list_receive_prefix) + selectedCurrencyName
+
+  // Icon & Thumbnail
+  const thumbnailPath = useContactThumbnail(name)
+
+  const isSwapIcon = (action != null && (action.type === 'swap' || action.type === 'swapOrderFill')) || transaction.swapData != null
+  const arrowIconName = isSwapIcon ? 'swap-horizontal' : isSentTransaction ? 'arrow-up' : 'arrow-down'
+  const arrowIconSize = thumbnailPath ? theme.rem(1) : theme.rem(1.25)
+  const arrowIconColor = isSwapIcon ? theme.txDirFgSwapUi4 : isSentTransaction ? theme.txDirFgSendUi4 : theme.txDirFgReceiveUi4
+  const arrowContainerStyle = [
+    thumbnailPath ? styles.arrowIconOverlayContainer : styles.arrowIconContainer,
+    isSwapIcon ? styles.arrowIconContainerSwap : isSentTransaction ? styles.arrowIconContainerSend : styles.arrowIconContainerReceive
+  ]
+  const arrowIcon = (
+    <View style={arrowContainerStyle}>
+      <Ionicons name={arrowIconName} size={arrowIconSize} color={arrowIconColor} style={styles.icon} />
+    </View>
+  )
+
+  const icon = thumbnailPath ? (
+    <View style={styles.contactContainer}>
+      <FastImage style={styles.contactImage} source={{ uri: thumbnailPath }} />
+      {arrowIcon}
+    </View>
+  ) : (
+    arrowIcon
+  )
 
   // Pending Text and Style
   const currentConfirmations = transaction.confirmations
+
   const pendingText =
     currentConfirmations === 'confirmed'
       ? unixToLocaleDateTime(transaction.date).time
@@ -169,25 +179,16 @@ export function TransactionListRow(props: Props) {
     Share.open(shareOptions).catch(e => showError(e))
   })
 
-  const icon = (
-    <View style={styles.iconContainer}>
-      <View style={[styles.iconArrowsContainer, transactionStyle, thumbnailPath ? null : styles.iconArrowsContainerBackground]}>
-        {thumbnailPath ? null : transactionIcon}
-      </View>
-      <FastImage style={styles.icon} source={{ uri: thumbnailPath }} />
-    </View>
-  )
-
   return (
     <CardUi4 icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
       <RowUi4>
-        <View style={styles.transactionRow}>
-          <EdgeText style={styles.transactionText}>{transactionText}</EdgeText>
+        <View style={styles.row}>
+          <EdgeText style={styles.transactionText}>{transactionTitle}</EdgeText>
           <EdgeText style={isSentTransaction ? styles.negativeCryptoAmount : styles.positiveCryptoAmount}>{cryptoAmountString}</EdgeText>
         </View>
       </RowUi4>
       <RowUi4>
-        <View style={styles.transactionRow}>
+        <View style={styles.row}>
           <View style={styles.categoryAndTimeContainer}>
             {categoryText && <EdgeText style={styles.category}>{categoryText}</EdgeText>}
             <EdgeText style={pendingStyle}>{pendingText}</EdgeText>
@@ -200,60 +201,60 @@ export function TransactionListRow(props: Props) {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  iconContainer: {
-    marginRight: theme.rem(1)
+  icon: {
+    // Shadow styles for Android
+    textShadowColor: 'rgba(0, 0, 0, 0.7)',
+    textShadowOffset: { width: -1, height: 2 },
+    textShadowRadius: 1,
+    // Shadow styles for iOS
+    shadowColor: 'rgba(0, 0, 0, 0.7)',
+    shadowOffset: { width: -1, height: 2 },
+    shadowOpacity: 0.7,
+    shadowRadius: 1
   },
-  iconArrowsContainer: {
+  contactContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     width: theme.rem(2),
     height: theme.rem(2),
-    borderWidth: theme.mediumLineWidth,
-    borderRadius: theme.rem(0.75),
-    zIndex: 1
+    borderRadius: theme.rem(1.25)
   },
-  iconArrowsContainerBackground: {
-    backgroundColor: theme.transactionListIconBackground
-  },
-  iconSent: {
-    borderColor: theme.negativeText,
-    shadowColor: theme.negativeText,
-    shadowOffset: {
-      width: 0,
-      height: 0
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: theme.rem(0.5),
-    elevation: 3
-  },
-  iconRequest: {
-    borderColor: theme.positiveText,
-    shadowColor: theme.positiveText,
-    shadowOffset: {
-      width: 0,
-      height: 0
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: theme.rem(0.5),
-    elevation: 3
-  },
-  icon: {
+  contactImage: {
     position: 'absolute',
+    width: '100%',
+    height: '100%',
+    borderRadius: theme.rem(1)
+  },
+  arrowIconOverlayContainer: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: theme.rem(1.25),
+    height: theme.rem(1.25),
+    borderRadius: theme.rem(1.25 / 2),
+    bottom: -theme.rem(0.35),
+    right: -theme.rem(0.35)
+  },
+  arrowIconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
     width: theme.rem(2),
     height: theme.rem(2),
-    borderRadius: theme.rem(0.75)
+    borderRadius: theme.rem(1.25)
   },
-  // Some of the react-native-vector-icon icons does have surrounding white space and leans towards the left.
-  // Tested some other icons also like the AntDesign and MaterialIcons and have similar problems.
-  // Needed to be replaced by a custom icon to remove hack.
-  iconArrows: {
-    marginLeft: 1
+  // Pad the containers to account for vector icons having an off-center origin
+  arrowIconContainerSend: {
+    paddingTop: 1,
+    backgroundColor: theme.txDirBgSendUi4
   },
-  transactionContainer: {
-    flex: 1,
-    justifyContent: 'center'
+  arrowIconContainerSwap: {
+    backgroundColor: theme.txDirBgSwapUi4
   },
-  transactionRow: {
+  arrowIconContainerReceive: {
+    paddingBottom: 2,
+    backgroundColor: theme.txDirBgReceiveUi4
+  },
+  row: {
     flexDirection: 'row'
   },
   transactionText: {

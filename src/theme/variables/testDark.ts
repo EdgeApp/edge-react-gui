@@ -78,7 +78,12 @@ const palette = {
   veryDarkTeal: 'rgb(10, 13, 15)',
 
   teal: 'rgb(22, 50, 58)',
-  blackOp65: 'rgba(0, 0, 0, .65)'
+  blackOp65: 'rgba(0, 0, 0, .65)',
+  redOp60: 'rgba(232, 84, 102, .6)',
+  grayOp70: 'rgba(135, 147, 158, .7)',
+  greenOp60: 'rgba(119, 197, 19, .6)',
+  lightGreen: '#75C649',
+  lightRed: '#E84D65'
 }
 
 const deviceWidth = Dimensions.get('window').width
@@ -524,5 +529,12 @@ export const testDark: Theme = {
 
   shadowColorUi4: palette.black,
 
-  touchHighlightUi4: palette.lightGrayOp75
+  touchHighlightUi4: palette.lightGrayOp75,
+
+  txDirBgReceiveUi4: palette.greenOp60,
+  txDirBgSendUi4: palette.redOp60,
+  txDirBgSwapUi4: palette.grayOp70,
+  txDirFgReceiveUi4: palette.lightGreen,
+  txDirFgSendUi4: palette.lightRed,
+  txDirFgSwapUi4: palette.lightGray
 }
