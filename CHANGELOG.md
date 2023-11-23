@@ -13,6 +13,7 @@
 - changed: Disable max-spend for Filecoin wallets
 - changed: Disabled signupCaptcha experiment
 - changed: Don't show recovery, password, or otp reminders in Maestro
+- changed: Disable light accounts temporarily for this release
 - fixed: Incorrectly filtering out transactions due to spam/dust filter
 - fixed: Performance issue from LoanManagerService running while not in beta
   mode
