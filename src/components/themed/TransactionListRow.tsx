@@ -89,7 +89,7 @@ export function TransactionListRow(props: Props) {
   const cryptoExchangeAmount = div(abs(transaction.nativeAmount ?? '0'), exchangeDenomination.multiplier, DECIMAL_PRECISION)
   const cryptoAmountFormat = formatNumber(decimalOrZero(truncateDecimals(cryptoAmount, maxConversionDecimals), maxConversionDecimals))
 
-  const cryptoAmountString = `${isSentTransaction ? '-' : '+'} ${denominationSymbol ? denominationSymbol + ' ' : ''}${cryptoAmountFormat}`
+  const cryptoAmountString = `${isSentTransaction ? '-' : '+'}${denominationSymbol ? denominationSymbol + ' ' : ''}${cryptoAmountFormat}`
 
   // Fiat Amount
   const isoDate = new Date(transaction.date * 1000).toISOString()
@@ -98,7 +98,7 @@ export function TransactionListRow(props: Props) {
   const fiatAmount = displayFiatAmount(amountFiat)
   const fiatSymbol = getSymbolFromCurrency(nonIsoFiatCurrencyCode)
 
-  const fiatAmountString = `${fiatSymbol} ${fiatAmount}`
+  const fiatAmountString = `${fiatSymbol}${fiatAmount}`
 
   // Transaction Title
   const transactionTitle =
@@ -136,21 +136,21 @@ export function TransactionListRow(props: Props) {
 
   // Pending Text and Style
   const currentConfirmations = transaction.confirmations
+  const isConfirmed = currentConfirmations === 'confirmed'
 
-  const pendingText =
-    currentConfirmations === 'confirmed'
-      ? unixToLocaleDateTime(transaction.date).time
-      : !isSentTransaction && canReplaceByFee && currentConfirmations === 'unconfirmed'
-      ? lstrings.fragment_transaction_list_unconfirmed_rbf
-      : currentConfirmations === 'unconfirmed'
-      ? lstrings.fragment_wallet_unconfirmed
-      : currentConfirmations === 'dropped'
-      ? lstrings.fragment_transaction_list_tx_dropped
-      : typeof currentConfirmations === 'number'
-      ? sprintf(lstrings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
-      : lstrings.fragment_transaction_list_tx_synchronizing
+  const unconfirmedOrTimeText = isConfirmed
+    ? unixToLocaleDateTime(transaction.date).time
+    : !isSentTransaction && canReplaceByFee && currentConfirmations === 'unconfirmed'
+    ? lstrings.fragment_transaction_list_unconfirmed_rbf
+    : currentConfirmations === 'unconfirmed'
+    ? lstrings.fragment_wallet_unconfirmed
+    : currentConfirmations === 'dropped'
+    ? lstrings.fragment_transaction_list_tx_dropped
+    : typeof currentConfirmations === 'number'
+    ? sprintf(lstrings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
+    : lstrings.fragment_transaction_list_tx_synchronizing
 
-  const pendingStyle = currentConfirmations === 'confirmed' ? styles.completedTime : styles.partialTime
+  const unconfirmedOrTimeStyle = isConfirmed ? styles.secondaryText : styles.unconfirmedText
 
   // Transaction Category
   const defaultCategory = !isSentTransaction ? 'income' : 'expense'
@@ -183,19 +183,20 @@ export function TransactionListRow(props: Props) {
     <CardUi4 icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
       <RowUi4>
         <View style={styles.row}>
-          <EdgeText style={styles.transactionText}>{transactionTitle}</EdgeText>
-          <EdgeText style={isSentTransaction ? styles.negativeCryptoAmount : styles.positiveCryptoAmount}>{cryptoAmountString}</EdgeText>
+          <EdgeText style={styles.titleText}>{transactionTitle}</EdgeText>
+          <EdgeText style={styles.titleText}>{cryptoAmountString}</EdgeText>
         </View>
-      </RowUi4>
-      <RowUi4>
         <View style={styles.row}>
-          <View style={styles.categoryAndTimeContainer}>
-            {categoryText && <EdgeText style={styles.category}>{categoryText}</EdgeText>}
-            <EdgeText style={pendingStyle}>{pendingText}</EdgeText>
-          </View>
+          <EdgeText style={unconfirmedOrTimeStyle}>{unconfirmedOrTimeText}</EdgeText>
           <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
         </View>
       </RowUi4>
+
+      {categoryText == null ? null : (
+        <RowUi4>
+          <EdgeText style={styles.secondaryText}>{categoryText}</EdgeText>
+        </RowUi4>
+      )}
     </CardUi4>
   )
 }
@@ -255,46 +256,26 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.txDirBgReceiveUi4
   },
   row: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
-  transactionText: {
-    flex: 1,
-    fontFamily: theme.fontFaceMedium
-  },
-  positiveCryptoAmount: {
-    marginLeft: theme.rem(0.5),
+  titleText: {
+    alignSelf: 'center',
     fontFamily: theme.fontFaceMedium,
-    color: theme.positiveText,
-    textAlign: 'right'
-  },
-  negativeCryptoAmount: {
-    marginLeft: theme.rem(0.5),
-    fontFamily: theme.fontFaceMedium,
-    color: theme.negativeText,
-    textAlign: 'right'
+    flexShrink: 1,
+    maxWidth: '60%'
   },
   fiatAmount: {
     fontSize: theme.rem(0.75),
     color: theme.secondaryText,
     textAlign: 'right'
   },
-  categoryAndTimeContainer: {
-    flex: 1
-  },
-  category: {
+  secondaryText: {
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
   },
-  partialTime: {
+  unconfirmedText: {
     fontSize: theme.rem(0.75),
     color: theme.warningText
-  },
-  pendingTime: {
-    fontSize: theme.rem(0.75),
-    color: theme.dangerText
-  },
-  completedTime: {
-    fontSize: theme.rem(0.75),
-    color: theme.secondaryText
   }
 }))

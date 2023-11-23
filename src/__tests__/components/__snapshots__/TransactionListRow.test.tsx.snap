@@ -26,7 +26,6 @@ exports[`TransactionListRow should render with loading props 1`] = `
   onStartShouldSetResponder={[Function]}
   style={
     {
-      "backgroundColor": "rgb(22, 50, 58)",
       "borderRadius": 22,
       "flexDirection": "row",
       "margin": 11,
@@ -34,6 +33,41 @@ exports[`TransactionListRow should render with loading props 1`] = `
     }
   }
 >
+  <BVLinearGradient
+    colors={
+      [
+        452984831,
+        452984831,
+      ]
+    }
+    endPoint={
+      {
+        "x": 1,
+        "y": 1,
+      }
+    }
+    locations={null}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "borderRadius": 22,
+        },
+      ]
+    }
+  />
   <View
     style={
       {
@@ -150,6 +184,7 @@ exports[`TransactionListRow should render with loading props 1`] = `
             style={
               {
                 "flexDirection": "row",
+                "justifyContent": "space-between",
               }
             }
           >
@@ -166,8 +201,10 @@ exports[`TransactionListRow should render with loading props 1`] = `
                     "includeFontPadding": false,
                   },
                   {
-                    "flex": 1,
+                    "alignSelf": "center",
+                    "flexShrink": 1,
                     "fontFamily": "Quicksand-Medium",
+                    "maxWidth": "60%",
                   },
                   null,
                 ]
@@ -188,118 +225,48 @@ exports[`TransactionListRow should render with loading props 1`] = `
                     "includeFontPadding": false,
                   },
                   {
-                    "color": "#E85466",
+                    "alignSelf": "center",
+                    "flexShrink": 1,
                     "fontFamily": "Quicksand-Medium",
-                    "marginLeft": 11,
-                    "textAlign": "right",
+                    "maxWidth": "60%",
                   },
                   null,
                 ]
               }
             >
-              - ₿ 0.001
+              -₿ 0.001
             </Text>
           </View>
-        </View>
-        <View
-          style={
-            {
-              "alignItems": "center",
-              "justifyContent": "center",
-            }
-          }
-        />
-      </View>
-    </View>
-    <View
-      style={
-        {
-          "borderBottomColor": "rgba(255, 255, 255, .1)",
-          "borderBottomWidth": 1,
-          "height": 1,
-          "marginHorizontal": 11,
-        }
-      }
-    />
-    <View
-      accessibilityState={
-        {
-          "disabled": false,
-        }
-      }
-      accessibilityValue={
-        {
-          "max": undefined,
-          "min": undefined,
-          "now": undefined,
-          "text": undefined,
-        }
-      }
-      accessible={false}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-    >
-      <View
-        style={
-          {
-            "alignItems": "center",
-            "backgroundColor": "rgba(255, 255, 255, 0)",
-            "flexDirection": "row",
-            "paddingHorizontal": 11,
-            "paddingVertical": 6,
-          }
-        }
-      >
-        <View
-          style={
-            {
-              "flex": 1,
-            }
-          }
-        >
           <View
             style={
               {
                 "flexDirection": "row",
+                "justifyContent": "space-between",
               }
             }
           >
-            <View
+            <Text
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.65}
+              numberOfLines={1}
               style={
-                {
-                  "flex": 1,
-                }
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#F1AA19",
+                    "fontSize": 17,
+                  },
+                  null,
+                ]
               }
             >
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#F1AA19",
-                      "fontSize": 17,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Synchronizing
-              </Text>
-            </View>
+              Synchronizing
+            </Text>
             <Text
               adjustsFontSizeToFit={true}
               minimumFontScale={0.65}
@@ -321,7 +288,7 @@ exports[`TransactionListRow should render with loading props 1`] = `
                 ]
               }
             >
-              $ 0.00
+              $0.00
             </Text>
           </View>
         </View>
