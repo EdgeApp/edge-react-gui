@@ -24,6 +24,7 @@
   mode
 - fixed: isFirstOpen analytics param reporting the previously saved value
   instead of forcing to false after first open
+- fixed: Support for stablecoins in Paybis sell to debit card
 
 ## 3.21.0
 
