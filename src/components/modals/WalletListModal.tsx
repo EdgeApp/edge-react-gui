@@ -128,11 +128,11 @@ export function WalletListModal(props: Props) {
   const handlePaymentMethodPress = useHandler((fiatAccountId: string) => () => {
     bridge.resolve({ fiatAccountId })
   })
-  const handleWalletListPress = useHandler((walletId: string, currencyCode: string, _tokenId?: string, customAsset?: CustomAsset) => {
+  const handleWalletListPress = useHandler((walletId: string, currencyCode: string, tokenId?: string, customAsset?: CustomAsset) => {
     if (walletId === '') {
       handleCancel()
       showError(lstrings.network_alert_title)
-    } else bridge.resolve({ walletId, currencyCode, customAsset })
+    } else bridge.resolve({ walletId, currencyCode, customAsset, tokenId })
   })
   const handleSearchClear = useHandler(() => {
     setSearchText('')
