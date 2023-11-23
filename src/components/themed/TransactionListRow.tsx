@@ -20,7 +20,6 @@ import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { triggerHaptic } from '../../util/haptic'
 import {
   DECIMAL_PRECISION,
   decimalOrZero,
@@ -33,7 +32,8 @@ import {
 } from '../../util/utils'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { ClickableRow } from './ClickableRow'
+import { CardUi4 } from '../ui4/CardUi4'
+import { RowUi4 } from '../ui4/RowUi4'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -154,7 +154,6 @@ export function TransactionListRow(props: Props) {
     if (transaction == null) {
       return showError(lstrings.transaction_details_error_invalid)
     }
-    triggerHaptic('impactLight')
     navigation.push('transactionDetails', {
       edgeTransaction: transaction,
       walletId: wallet.id,
@@ -163,7 +162,6 @@ export function TransactionListRow(props: Props) {
   })
 
   const handleLongPress = useHandler(() => {
-    triggerHaptic('impactLight')
     const url = sprintf(currencyInfo.transactionExplorer, transaction.txid)
     const shareOptions = {
       url
@@ -171,19 +169,24 @@ export function TransactionListRow(props: Props) {
     Share.open(shareOptions).catch(e => showError(e))
   })
 
-  return (
-    <ClickableRow paddingRem={[0, 1]} onPress={handlePress} onLongPress={handleLongPress}>
-      <View style={styles.iconContainer}>
-        <View style={[styles.iconArrowsContainer, transactionStyle, thumbnailPath ? null : styles.iconArrowsContainerBackground]}>
-          {thumbnailPath ? null : transactionIcon}
-        </View>
-        <FastImage style={styles.icon} source={{ uri: thumbnailPath }} />
+  const icon = (
+    <View style={styles.iconContainer}>
+      <View style={[styles.iconArrowsContainer, transactionStyle, thumbnailPath ? null : styles.iconArrowsContainerBackground]}>
+        {thumbnailPath ? null : transactionIcon}
       </View>
-      <View style={styles.transactionContainer}>
+      <FastImage style={styles.icon} source={{ uri: thumbnailPath }} />
+    </View>
+  )
+
+  return (
+    <CardUi4 icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
+      <RowUi4>
         <View style={styles.transactionRow}>
           <EdgeText style={styles.transactionText}>{transactionText}</EdgeText>
           <EdgeText style={isSentTransaction ? styles.negativeCryptoAmount : styles.positiveCryptoAmount}>{cryptoAmountString}</EdgeText>
         </View>
+      </RowUi4>
+      <RowUi4>
         <View style={styles.transactionRow}>
           <View style={styles.categoryAndTimeContainer}>
             {categoryText && <EdgeText style={styles.category}>{categoryText}</EdgeText>}
@@ -191,8 +194,8 @@ export function TransactionListRow(props: Props) {
           </View>
           <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
         </View>
-      </View>
-    </ClickableRow>
+      </RowUi4>
+    </CardUi4>
   )
 }
 
