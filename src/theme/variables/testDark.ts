@@ -417,5 +417,7 @@ export const testDark: Theme = {
   cardBackgroundUi4: palette.teal,
   cardRadiusRemUi4: 1,
 
-  touchHighlightUi4: palette.lightGrayOp75
+  touchHighlightUi4: palette.lightGrayOp75,
+
+  negativeTextMutedUi4: palette.gray,
 }

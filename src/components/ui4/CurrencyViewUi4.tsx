@@ -11,8 +11,8 @@ import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CryptoText } from '../text/CryptoText'
 import { FiatText } from '../text/FiatText'
-import { TickerText } from '../text/TickerText'
 import { EdgeText } from '../themed/EdgeText'
+import { AssetChangeTextUi4 } from './AssetChangeTextUi4'
 import { SplitRowView } from './SplitRowView'
 
 interface Props {
@@ -60,7 +60,7 @@ const CurrencyViewUi4Component = (props: Props) => {
   const [denomination] = denominations
 
   const icon = <CryptoIcon sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
-  const tickerText = showRate && wallet != null ? <TickerText wallet={wallet} tokenId={tokenId} /> : null
+  const tickerText = showRate && wallet != null ? <AssetChangeTextUi4 wallet={wallet} tokenId={tokenId} style={styles.primaryText} /> : null
   const cryptoText = showBalance ? <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol /> : null
   const fiatBalanceText = showBalance ? <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} /> : null
   const fiatRateText = <FiatText nativeCryptoAmount={denomination.multiplier} tokenId={tokenId} wallet={wallet} />

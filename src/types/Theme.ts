@@ -398,4 +398,6 @@ export interface Theme {
   cardRadiusRemUi4: number
 
   touchHighlightUi4: string
+
+  negativeTextMutedUi4: string
 }

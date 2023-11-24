@@ -397,5 +397,7 @@ export const edgeLight: Theme = {
   cardBackgroundUi4: palette.mutedGray,
   cardRadiusRemUi4: 1,
 
-  touchHighlightUi4: palette.lightGrayOp75
+  touchHighlightUi4: palette.lightGrayOp75,
+
+  negativeTextMutedUi4: palette.gray,
 }
