@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Add Pokt RPCs as option for Fantom
 - added: Support for Thorchain Savers EVM token deposits
 - changed: Use memos for Thorchain Savers withdrawals
 - fixed: Various margin styling alignments
