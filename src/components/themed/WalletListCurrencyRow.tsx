@@ -1,15 +1,16 @@
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import * as React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
-import { CurrencyRow } from '../data/row/CurrencyRow'
 import { CustomAsset, CustomAssetRow } from '../data/row/CustomAssetRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { CardUi4 } from '../ui4/CardUi4'
+import { CurrencyViewUi4 } from '../ui4/CurrencyViewUi4'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -54,31 +55,25 @@ const WalletListCurrencyRowComponent = (props: Props) => {
     if (onLongPress != null) onLongPress()
   })
 
-  return (
+  return customAsset != null ? (
+    // TODO: Update to UI4
     <TouchableOpacity accessible={false} style={styles.row} onLongPress={handleLongPress} onPress={handlePress}>
-      {customAsset != null ? (
-        <CustomAssetRow customAsset={customAsset} />
-      ) : (
-        <CurrencyRow showRate={showRate && !isPaused} token={token} tokenId={tokenId} wallet={wallet} />
-      )}
-      {isPaused ? (
-        <View style={styles.overlayContainer}>
-          <EdgeText style={styles.overlayLabel}>{lstrings.fragment_wallets_wallet_paused}</EdgeText>
-        </View>
-      ) : null}
+      <CustomAssetRow customAsset={customAsset} />
     </TouchableOpacity>
+  ) : (
+    <CardUi4
+      overlay={isPaused ? <EdgeText style={styles.overlayLabel}>{lstrings.fragment_wallets_wallet_paused}</EdgeText> : null}
+      onLongPress={handleLongPress}
+      onPress={handlePress}
+    >
+      <CurrencyViewUi4 showRate={showRate && !isPaused} token={token} tokenId={tokenId} wallet={wallet} />
+    </CardUi4>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   overlayLabel: {
     color: theme.overlayDisabledTextColor
-  },
-  overlayContainer: {
-    ...StyleSheet.absoluteFillObject,
-    alignItems: 'center',
-    backgroundColor: theme.overlayDisabledColor,
-    justifyContent: 'center'
   },
   row: {
     alignItems: 'center',
