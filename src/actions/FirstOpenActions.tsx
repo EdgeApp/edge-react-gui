@@ -26,6 +26,7 @@ export const getFirstOpenInfo = async (): Promise<FirstOpenInfo> => {
     try {
       firstOpenText = await firstOpenDisklet.getText(FIRST_OPEN)
       firstOpenInfo = asFirstOpenInfo(JSON.parse(firstOpenText))
+      firstOpenInfo.isFirstOpen = 'false'
     } catch (error: any) {
       // Generate new values.
       firstOpenInfo = {

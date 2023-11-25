@@ -1,4 +1,4 @@
-import { asObject, asOptional, asValue, Cleaner } from 'cleaners'
+import { asMaybe, asObject, asOptional, asValue, Cleaner } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
 import { CreateAccountType } from 'edge-login-ui-rn'
 import { isMaestro } from 'react-native-is-maestro'
@@ -29,7 +29,7 @@ const experimentConfigDisklet = makeReactNativeDisklet()
 // The probability of an experiment config feature being set for a given key
 const experimentDistribution = {
   swipeLastUsp: [50, 50],
-  createAccountType: [50, 50],
+  createAccountType: [100],
   legacyLanding: [100],
   createAccountText: [33.33, 33.33, 33.33],
   signupCaptcha: [50, 50]
@@ -78,13 +78,13 @@ const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution
 // behavior/appearance.
 const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
   swipeLastUsp: asOptional(asValue('true', 'false'), generateExperimentConfigVal('swipeLastUsp', ['true', 'false'])),
-  createAccountType: asOptional(asValue('light', 'full'), generateExperimentConfigVal('createAccountType', ['light', 'full'])),
-  legacyLanding: asOptional(asValue('uspLanding'), 'uspLanding'),
+  createAccountType: asMaybe(asValue('full'), 'full'),
+  legacyLanding: asMaybe(asValue('uspLanding'), 'uspLanding'),
   createAccountText: asOptional(
     asValue('signUp', 'getStarted', 'createAccount'),
     generateExperimentConfigVal('createAccountText', ['signUp', 'getStarted', 'createAccount'])
   ),
-  signupCaptcha: asOptional(asValue('withCaptcha', 'withoutCaptcha'), generateExperimentConfigVal('signupCaptcha', ['withCaptcha', 'withoutCaptcha']))
+  signupCaptcha: asMaybe(asValue('withoutCaptcha'), 'withoutCaptcha')
 })
 
 /**

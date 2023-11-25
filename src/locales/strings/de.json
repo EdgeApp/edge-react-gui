@@ -595,6 +595,8 @@
   "transaction_details_accelerate_transaction_slider_disabled": "Transaktion kann nicht beschleunigt werden",
   "transaction_details_accelerate_transaction_fee_too_low": "Accelerated transaction fee is too low. Fee has been updated. Please try again.",
   "transaction_details_accelerate_transaction_sent": "Your transaction has been accelerated.",
+  "transaction_details_accelerate_transaction_lower_amount_tx_title": "Lower Send Amount",
+  "transaction_details_accelerate_transaction_lower_amount_tx_message": "In order to accelerate this transaction, the recipient's amount will be lower due to insufficient balance to cover the new fee.",
   "transaction_details_exchange_details": "Börsendetails",
   "transaction_details_exchange_service": "Exchange-Service",
   "transaction_details_exchange_order_id": "Order ID",

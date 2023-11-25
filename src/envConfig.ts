@@ -176,7 +176,8 @@ export const asEnvConfig = asObject({
       affiliateFeeBasis: asOptional(asString, '50'),
       appId: asOptional(asString, 'edge'),
       ninerealmsClientId: asOptional(asString, ''),
-      thorname: asOptional(asString, 'ej')
+      thorname: asOptional(asString, 'ej'),
+      thorswapApiKey: asOptional(asString)
     }).withRest
   ),
   TOMB_SWAP_INIT: asCorePluginInit(
@@ -204,6 +205,12 @@ export const asEnvConfig = asObject({
   USE_FAKE_CORE: asOptional(asBoolean, false),
   USE_FIREBASE: asOptional(asBoolean, true),
   USE_WELCOME_SCREENS: asOptional(asBoolean, true), // Used by whitelabels
+  POSTHOG_INIT: asOptional(
+    asObject({
+      apiKey: asOptional(asString, ''),
+      apiHost: asOptional(asString, '')
+    })
+  ),
 
   YOLO_DEEP_LINK: asNullable(asString),
   YOLO_PASSWORD: asNullable(asString),

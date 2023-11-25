@@ -1,3 +1,4 @@
+import { abs, lt, sub } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import React, { PureComponent } from 'react'
 import { Text, View } from 'react-native'
@@ -8,6 +9,7 @@ import { getDisplayDenominationFromState, getExchangeDenominationFromState } fro
 import { connect } from '../../types/reactRedux'
 import { GuiExchangeRates } from '../../types/types'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
+import { WarningCard } from '../cards/WarningCard'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { Slider } from '../themed/Slider'
@@ -105,6 +107,7 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
     const oldFee = this.getTxFeeDisplay(replacedTx)
     const newFee = this.getTxFeeDisplay(acceleratedTx)
 
+    const isLowerAmount = lt(getTxSendAmount(acceleratedTx), getTxSendAmount(replacedTx))
     const isSending = status === 'sending'
 
     return (
@@ -115,6 +118,13 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
           <Tile type="static" title={lstrings.transaction_details_accelerate_transaction_old_fee_title} body={oldFee} />
           {newFee == null ? null : <Tile type="static" title={lstrings.transaction_details_accelerate_transaction_new_fee_title} body={newFee} />}
         </View>
+        {isLowerAmount ? (
+          <WarningCard
+            title={lstrings.transaction_details_accelerate_transaction_lower_amount_tx_title}
+            points={[lstrings.transaction_details_accelerate_transaction_lower_amount_tx_message]}
+            marginRem={[1.5, 1]}
+          />
+        ) : null}
         {error == null ? null : (
           <View style={styles.error}>
             <Text style={styles.errorText} numberOfLines={3}>
@@ -169,3 +179,11 @@ export const AccelerateTxModal = connect<StateProps, DispatchProps, OwnProps>(
     }
   })
 )(withTheme(AccelerateTxModalComponent))
+
+function getTxSendAmount(edgeTransaction: EdgeTransaction): string {
+  // Transaction amounts are negative for send transactions
+  const nativeAmount = abs(edgeTransaction.nativeAmount)
+  // Parent network fee is used for token sends
+  const feeAmount = edgeTransaction.parentNetworkFee ?? edgeTransaction.networkFee
+  return sub(nativeAmount, feeAmount)
+}
