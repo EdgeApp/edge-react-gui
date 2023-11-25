@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { TouchableHighlight, View } from 'react-native'
+import { StyleSheet, TouchableHighlight, View } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { triggerHaptic } from '../../util/haptic'
@@ -12,6 +12,7 @@ export type CardType = 'default' | 'warning' | 'error'
 interface Props {
   children: React.ReactNode | React.ReactNode[]
   icon?: React.ReactNode
+  overlay?: React.ReactNode
   onLongPress?: () => Promise<void> | void
   onPress?: () => Promise<void> | void
   // cardType?: CardType // TODO
@@ -22,7 +23,7 @@ interface Props {
  * aligned in a column layout. Adds no dividers if only one child is given.
  */
 export const CardUi4 = (props: Props) => {
-  const { children, icon, onLongPress, onPress } = props
+  const { children, icon, overlay, onLongPress, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -60,6 +61,7 @@ export const CardUi4 = (props: Props) => {
       <>
         {icon == null ? null : <View style={styles.iconContainer}>{icon}</View>}
         <SectionView>{children}</SectionView>
+        {overlay == null ? null : <View style={styles.overlayContainer}>{overlay}</View>}
       </>
     </TouchableHighlight>
   )
@@ -74,6 +76,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: theme.rem(0.5),
     padding: theme.rem(0.5),
     flexDirection: 'row'
+  },
+  overlayContainer: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    backgroundColor: theme.cardDisabledOverlayUi4,
+    borderRadius: theme.rem(theme.cardRadiusRemUi4),
+    justifyContent: 'center',
+    margin: 2,
+    pointerEvents: 'none'
   },
   iconContainer: {
     margin: theme.rem(0.25),

@@ -62,7 +62,10 @@ const palette = {
   QuicksandRegular: 'Quicksand-Regular',
   QuicksandMedium: 'Quicksand-Medium',
   QuicksandSemiBold: 'Quicksand-SemiBold',
-  QuicksandBold: 'Quicksand-Bold'
+  QuicksandBold: 'Quicksand-Bold',
+
+  // UI4 palette
+  blackOp65: 'rgba(0, 0, 0, .65)'
 }
 
 const deviceWidth = Dimensions.get('window').width
@@ -396,6 +399,7 @@ export const edgeLight: Theme = {
   // UI 4.0:
   cardBackgroundUi4: palette.mutedGray,
   cardRadiusRemUi4: 1,
+  cardDisabledOverlayUi4: palette.blackOp65,
 
   touchHighlightUi4: palette.lightGrayOp75,
 

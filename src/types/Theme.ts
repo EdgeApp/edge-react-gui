@@ -397,6 +397,7 @@ export interface Theme {
   // UI 4.0:
   cardBackgroundUi4: string
   cardRadiusRemUi4: number
+  cardDisabledOverlayUi4: string
 
   touchHighlightUi4: string
 
