@@ -420,4 +420,7 @@ export const testDark: Theme = {
   touchHighlightUi4: palette.lightGrayOp75,
 
   negativeTextMutedUi4: palette.gray,
+
+  // TODO: Update with an appropriate API after Skia integration
+  shadowColorUi4: palette.black
 }
