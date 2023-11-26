@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useEffect } from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 
 import { PoweredByCard } from '../../../components/cards/PoweredByCard'
 import { NotificationSceneWrapper } from '../../../components/common/SceneWrapper'
@@ -21,6 +22,9 @@ export interface FiatPluginEnterAmountParams {
   headerTitle: string
   label1: string
   label2: string
+  iconUrl1: string
+  iconUrl2: string
+  onPressIcon?: (event: { fieldNum: number }) => Promise<void>
   onChangeText?: (event: { fieldNum: number; value: string }, stateManager: StateManager<EnterAmountState>) => Promise<void>
   convertValue: (sourceFieldNum: number, value: string, stateManager: StateManager<EnterAmountState>) => Promise<string | undefined>
   onPoweredByClick: (stateManager: StateManager<EnterAmountState>) => Promise<void>
@@ -61,7 +65,20 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { navigation, route } = props
-  const { initState, headerIconUri, headerTitle, onSubmit, convertValue, onPoweredByClick, onChangeText = () => {}, label1, label2 } = route.params
+  const {
+    iconUrl1,
+    iconUrl2,
+    onPressIcon,
+    initState,
+    headerIconUri,
+    headerTitle,
+    onSubmit,
+    convertValue,
+    onPoweredByClick,
+    onChangeText = () => {},
+    label1,
+    label2
+  } = route.params
   const lastUsed = React.useRef<number>(1)
 
   const stateManager = useStateManager<EnterAmountState>({ ...defaultEnterAmountState, ...initState })
@@ -127,6 +144,13 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     statusTextStyle = styles.textError
   }
 
+  const handleOnPressIcon1 = useHandler(() => {
+    if (onPressIcon != null) onPressIcon({ fieldNum: 1 }).catch(e => console.error(String(e)))
+  })
+  const handleOnPressIcon2 = useHandler(() => {
+    if (onPressIcon != null) onPressIcon({ fieldNum: 2 }).catch(e => console.error(String(e)))
+  })
+
   const poweredByIconPath = poweredBy != null ? getPartnerIconUri(poweredBy.poweredByIcon) : undefined
   return (
     <NotificationSceneWrapper navigation={navigation} scroll keyboardShouldPersistTaps="handled" background="theme">
@@ -135,32 +159,46 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
       </SceneHeader>
       <View style={styles.container}>
         <View style={styles.textFields}>
-          <OutlinedTextInput
-            numeric
-            maxDecimals={2}
-            autoCorrect={false}
-            autoFocus
-            autoCapitalize="none"
-            keyboardType="decimal-pad"
-            label={label1}
-            onChangeText={handleChangeText1}
-            onSubmitEditing={handleSubmit}
-            showSpinner={spinner1}
-            value={value1 ?? '0'}
-          />
-          <OutlinedTextInput
-            numeric
-            maxDecimals={6}
-            autoCorrect={false}
-            autoFocus={false}
-            autoCapitalize="none"
-            keyboardType="decimal-pad"
-            label={label2}
-            onChangeText={handleChangeText2}
-            onSubmitEditing={handleSubmit}
-            showSpinner={spinner2}
-            value={value2 ?? '0'}
-          />
+          <View style={styles.inputRow}>
+            <TouchableOpacity style={styles.iconRow} onPressOut={handleOnPressIcon1}>
+              <FastImage source={{ uri: iconUrl1 }} style={styles.iconRow} />
+            </TouchableOpacity>
+            <View style={styles.inputField}>
+              <OutlinedTextInput
+                numeric
+                maxDecimals={2}
+                autoCorrect={false}
+                autoFocus
+                autoCapitalize="none"
+                keyboardType="decimal-pad"
+                label={label1}
+                onChangeText={handleChangeText1}
+                onSubmitEditing={handleSubmit}
+                showSpinner={spinner1}
+                value={value1 ?? '0'}
+              />
+            </View>
+          </View>
+          <View style={styles.inputRow}>
+            <TouchableOpacity style={styles.iconRow} onPressOut={handleOnPressIcon2}>
+              <FastImage source={{ uri: iconUrl2 }} style={styles.iconRow} />
+            </TouchableOpacity>
+            <View style={styles.inputField}>
+              <OutlinedTextInput
+                numeric
+                maxDecimals={6}
+                autoCorrect={false}
+                autoFocus={false}
+                autoCapitalize="none"
+                keyboardType="decimal-pad"
+                label={label2}
+                onChangeText={handleChangeText2}
+                onSubmitEditing={handleSubmit}
+                showSpinner={spinner2}
+                value={value2 ?? '0'}
+              />
+            </View>
+          </View>
         </View>
         {statusText != null ? <Text style={statusTextStyle}>{statusText.content}</Text> : null}
         {poweredBy != null ? <PoweredByCard iconUri={poweredByIconPath} poweredByText={poweredBy.poweredByText} onPress={handlePoweredByPress} /> : null}
@@ -185,6 +223,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'column',
     minWidth: theme.rem(15),
     maxWidth: theme.rem(20)
+  },
+  inputField: {
+    flex: 5
+  },
+  inputRow: {
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  iconRow: {
+    height: theme.rem(1.5),
+    width: theme.rem(1.5)
   },
   text: {
     color: theme.primaryText,

@@ -1,5 +1,5 @@
 import { eq, round } from 'biggystring'
-import { asArray, asDate, asMaybe, asObject, asOptional, asString, asValue } from 'cleaners'
+import { asArray, asDate, asEither, asMaybe, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeFetchOptions, EdgeSpendInfo, JsonObject } from 'edge-core-js'
 import URL from 'url-parse'
 
@@ -162,6 +162,11 @@ const asQuotePaymentErrors = asObject({
   })
 })
 
+const asQuoteError = asObject({
+  code: asString,
+  message: asString
+})
+
 const asQuote = asObject({
   id: asString, // "4ddd2465-4713-40b3-84d2-9a08d7bdcd09",
   currencyCodeTo: asString, // "BTC",
@@ -176,6 +181,8 @@ const asQuote = asObject({
   paymentMethodErrors: asOptional(asArray(asQuotePaymentErrors)),
   payoutMethodErrors: asOptional(asArray(asQuotePaymentErrors))
 })
+
+const asQuoteFull = asEither(asQuoteError, asQuote)
 
 const asPaymentDetails = asObject({
   invoice: asString,
@@ -356,6 +363,7 @@ export const paybisProvider: FiatProviderFactory = {
         const paybisCc = EDGE_TO_PAYBIS_CURRENCY_MAP[`${currencyPluginId}_${tokenId ?? ''}`]
 
         if (paymentMethod == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
+        if (paybisCc == null) throw new FiatProviderError({ providerId, errorType: 'assetUnsupported', displayCurrencyCode })
 
         let currencyCodeFrom
         let currencyCodeTo
@@ -392,8 +400,29 @@ export const paybisProvider: FiatProviderFactory = {
           paymentMethod: direction === 'buy' ? paymentMethod : undefined,
           payoutMethod: direction === 'sell' ? paymentMethod : undefined
         }
-        const response = await paybisFetch({ method: 'POST', url, path: 'v2/public/quote', apiKey, bodyParams })
-        const { id: quoteId, paymentMethods, paymentMethodErrors, payoutMethods, payoutMethodErrors } = asQuote(response)
+        const response = await paybisFetch({ method: 'POST', url, path: 'v2/public/quote', apiKey, bodyParams }).catch(e => {
+          try {
+            const json = JSON.parse(String(e.message))
+            return json
+          } catch (err) {
+            throw e
+          }
+        })
+        const quote = asQuoteFull(response)
+        if ('code' in quote) {
+          const { code, message } = quote
+
+          if (code === 'QUOTE_PAYMENT_METHOD_NOT_FOUND') {
+            // const maxMatch = e.error.message.match(/^Amount must be less than (\d+\.\d+) ([A-Z]+)/)
+            const match = message.match(/^Could not find payment methods for quote with from currency code: ([A-Z]+), currency code to ([A-Z]+)/)
+            if (match != null) {
+              throw new FiatProviderError({ providerId, errorType: 'assetUnsupported', displayCurrencyCode: fiat })
+            }
+          }
+          throw new Error(String(response))
+        }
+
+        const { id: quoteId, paymentMethods, paymentMethodErrors, payoutMethods, payoutMethodErrors } = quote
 
         const pmErrors = paymentMethodErrors ?? payoutMethodErrors
         if (pmErrors != null) {

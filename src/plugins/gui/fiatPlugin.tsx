@@ -10,6 +10,7 @@ import { launchPaymentProto, LaunchPaymentProtoParams } from '../../actions/Paym
 import { addressWarnings } from '../../actions/ScanActions'
 import { trackConversionWithReferral } from '../../actions/TrackingActions'
 import { ButtonsModal } from '../../components/modals/ButtonsModal'
+import { FiatListModal } from '../../components/modals/FiatListModal'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
@@ -18,6 +19,7 @@ import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AccountReferral } from '../../types/ReferralTypes'
 import { AppParamList, NavigationBase } from '../../types/routerTypes'
+import { GuiFiatType } from '../../types/types'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
 import { TrackingEventName } from '../../util/tracking'
 import {
@@ -75,6 +77,10 @@ export const executePlugin = async (params: {
     openExternalWebView: async (params): Promise<void> => {
       if (Platform.OS === 'ios') await SafariView.show({ url: params.url })
       else await CustomTabs.openURL(params.url)
+    },
+    fiatPicker: async (): Promise<GuiFiatType> => {
+      const out = await Airship.show<GuiFiatType>(bridge => <FiatListModal bridge={bridge} />)
+      return out
     },
     walletPicker: async (params): Promise<FiatPluginWalletPickerResult> => {
       const { headerTitle, allowedAssets, showCreateWallet } = params

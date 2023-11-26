@@ -1342,6 +1342,7 @@ const strings = {
   fiat_plugin_sell_amount_under_limit: 'Minimum sell amount is %s',
   fiat_plugin_sell_amount_under_undef_limit: 'Sell amount is under minimum',
   fiat_plugin_asset_unsupported: 'Asset Unsupported',
+  fiat_plugin_asset_unsupported_choose_different_s: '%s Unsupported. Please choose a different currency',
   fiat_plugin_payment_unsupported: 'Payment Method Unsupported',
   fiat_plugin_buy_region_restricted: 'Region restricted from purchasing %s',
   fiat_plugin_buy_no_quote: 'Unable to get purchase quote',

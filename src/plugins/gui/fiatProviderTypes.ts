@@ -36,7 +36,7 @@ export type FiatProviderQuoteErrorTypes = FiatProviderQuoteErrorTypesLimit | Fia
 // errorAmount must be in units of the provided FiatProviderGetQuoteParams.exchangeAmount as determined by
 // amountType
 export type FiatProviderQuoteError =
-  | { providerId: string; errorType: FiatProviderQuoteErrorTypesOther }
+  | { providerId: string; errorType: FiatProviderQuoteErrorTypesOther; displayCurrencyCode?: string }
   | { providerId: string; errorType: FiatProviderQuoteErrorTypesLimit; errorAmount?: number; displayCurrencyCode?: string }
   | { providerId: string; errorType: FiatProviderQuoteErrorTypesRegion; displayCurrencyCode: string }
 

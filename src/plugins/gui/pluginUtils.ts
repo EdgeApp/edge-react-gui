@@ -19,9 +19,9 @@ export const createStore = (storeId: string, store: EdgeDataStore): FiatProvider
 const ERROR_PRIORITIES: { [errorType in FiatProviderQuoteErrorTypes]: number } = {
   underLimit: 1,
   overLimit: 2,
-  paymentUnsupported: 3,
+  assetUnsupported: 3,
   regionRestricted: 4,
-  assetUnsupported: 5
+  paymentUnsupported: 5
 }
 
 export const getRateFromQuote = (quote: FiatProviderQuote, fiatCode: string): string => {
@@ -61,9 +61,10 @@ export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: str
 }
 
 const getErrorText = (error: FiatProviderQuoteError, currencyCode: string, direction: FiatDirection): string => {
+  const { errorType, displayCurrencyCode } = error
   let errorText = ''
 
-  switch (error.errorType) {
+  switch (errorType) {
     case 'underLimit':
       if (direction === 'buy') {
         errorText =
@@ -103,7 +104,11 @@ const getErrorText = (error: FiatProviderQuoteError, currencyCode: string, direc
       )
       break
     case 'assetUnsupported':
-      errorText = lstrings.fiat_plugin_asset_unsupported
+      if (displayCurrencyCode) {
+        errorText = sprintf(lstrings.fiat_plugin_asset_unsupported_choose_different_s, displayCurrencyCode)
+      } else {
+        errorText = lstrings.fiat_plugin_asset_unsupported
+      }
       break
     default:
       errorText = 'Unknown error type'

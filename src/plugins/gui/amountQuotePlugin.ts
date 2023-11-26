@@ -2,11 +2,12 @@ import { div, eq, gt, toFixed } from 'biggystring'
 import { asNumber, asObject } from 'cleaners'
 import { sprintf } from 'sprintf-js'
 
+import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { formatNumber, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { EdgeTokenId } from '../../types/types'
-import { getPartnerIconUri } from '../../util/CdnUris'
+import { getCurrencyIconUris, getPartnerIconUri } from '../../util/CdnUris'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../util/network'
 import { logEvent } from '../../util/tracking'
@@ -136,15 +137,31 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
       logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
+      const { logoUrl = '' } = FIAT_COUNTRY[displayFiatCurrencyCode] ?? {}
+      const { symbolImage = '' } = getCurrencyIconUris(currencyPluginId, tokenId) ?? {}
+
       // Navigate to scene to have user enter amount
       showUi.enterAmount({
         headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),
+        iconUrl1: logoUrl,
+        iconUrl2: symbolImage,
         initState: {
           value1: defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
         },
         label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
         label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),
         async onChangeText() {},
+        async onPressIcon({ fieldNum }) {
+          if (fieldNum === 1) {
+            const { label, value } = await showUi.fiatPicker()
+          } else {
+            const newWallet = await showUi.walletPicker({
+              headerTitle: direction === 'buy' ? lstrings.fiat_plugin_select_asset_to_purchase : lstrings.fiat_plugin_select_asset_to_sell,
+              allowedAssets,
+              showCreateWallet: direction === 'buy'
+            })
+          }
+        },
         async convertValue(sourceFieldNum, value, stateManager) {
           if (!isValidInput(value)) {
             stateManager.update({ statusText: { content: lstrings.create_wallet_invalid_input, textType: 'error' } })

@@ -9,7 +9,7 @@ import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList } from '../../types/routerTypes'
-import { EdgeTokenId } from '../../types/types'
+import { EdgeTokenId, GuiFiatType } from '../../types/types'
 import { TrackingEventName } from '../../util/tracking'
 import { FiatPluginOpenWebViewParams } from './scenes/FiatPluginWebView'
 import { RewardsCardDashboardParams } from './scenes/RewardsCardDashboardScene'
@@ -107,6 +107,7 @@ export interface FiatPluginUi {
   showToastSpinner: <T>(message: string, promise: Promise<T>) => Promise<T>
   openWebView: (params: FiatPluginOpenWebViewParams) => Promise<void>
   openExternalWebView: (params: FiatPluginOpenExternalWebViewParams) => Promise<void>
+  fiatPicker: () => Promise<GuiFiatType>
   walletPicker: (params: { headerTitle: string; allowedAssets?: EdgeTokenId[]; showCreateWallet?: boolean }) => Promise<FiatPluginWalletPickerResult>
   showError: (error: Error) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
