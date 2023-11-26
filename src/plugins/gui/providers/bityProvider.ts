@@ -22,6 +22,8 @@ const providerId = 'bity'
 const storeId = 'com.bity'
 const partnerIcon = 'logoBity.png'
 const pluginDisplayName = 'Bity'
+const providerDisplayName = pluginDisplayName
+const supportEmail = 'support@bity.com'
 const supportedPaymentType: FiatPaymentType = 'sepa'
 const partnerFee = 0.005
 
@@ -451,7 +453,7 @@ export const bityProvider: FiatProviderFactory = {
                 if (isBuy) {
                   await completeBuyOrder(approveQuoteRes, showUi)
                 } else {
-                  await completeSellOrder(approveQuoteRes, coreWallet, showUi)
+                  await completeSellOrder(approveQuoteRes, coreWallet, showUi, fiatCurrencyCode)
                 }
 
                 showUi.exitScene()
@@ -477,9 +479,16 @@ const addToAllowedCurrencies = (pluginId: string, currency: BityCurrency, curren
  * Transition to the send scene pre-populted with the payment address from the
  * previously opened/approved sell order
  */
-const completeSellOrder = async (approveQuoteRes: BityApproveQuoteResponse, coreWallet: EdgeCurrencyWallet, showUi: FiatPluginUi) => {
-  const { input, id, payment_details: paymentDetails } = asBitySellApproveQuoteResponse(approveQuoteRes)
+const completeSellOrder = async (
+  approveQuoteRes: BityApproveQuoteResponse,
+  coreWallet: EdgeCurrencyWallet,
+  showUi: FiatPluginUi,
+  fiatCurrencyCode: string,
+  tokenId?: string
+) => {
+  const { input, id, payment_details: paymentDetails, output } = asBitySellApproveQuoteResponse(approveQuoteRes)
   const { amount: inputAmount, currency: inputCurrencyCode } = input
+  const { amount: fiatAmount } = output
 
   const nativeAmount = await coreWallet.denominationToNative(inputAmount, inputCurrencyCode)
 
@@ -490,6 +499,27 @@ const completeSellOrder = async (approveQuoteRes: BityApproveQuoteResponse, core
   }
 
   const spendInfo: EdgeSpendInfo = {
+    savedAction: {
+      type: 'sell',
+      orderId: id,
+      orderUri: '',
+      isEstimate: true,
+      fiatPlugin: {
+        providerId,
+        providerDisplayName,
+        supportEmail
+      },
+      payinAddress: paymentDetails.crypto_address,
+      cryptoAsset: {
+        pluginId: coreWallet.currencyInfo.pluginId,
+        tokenId,
+        nativeAmount
+      },
+      fiatAsset: {
+        fiatCurrencyCode,
+        fiatAmount
+      }
+    },
     currencyCode: inputCurrencyCode,
     spendTargets: [
       {

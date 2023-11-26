@@ -1,6 +1,6 @@
 import { eq, round } from 'biggystring'
 import { asArray, asDate, asMaybe, asObject, asOptional, asString, asValue } from 'cleaners'
-import { EdgeFetchOptions, EdgeSpendInfo, JsonObject } from 'edge-core-js'
+import { EdgeFetchOptions, EdgeSpendInfo, EdgeTxActionFiat, JsonObject } from 'edge-core-js'
 import URL from 'url-parse'
 
 import { SendScene2Params } from '../../../components/scenes/SendScene2'
@@ -26,6 +26,8 @@ const providerId = 'paybis'
 const storeId = 'paybis'
 const partnerIcon = 'paybis.png'
 const pluginDisplayName = 'Paybis'
+const providerDisplayName = pluginDisplayName
+const supportEmail = 'support@paybis.com'
 
 type AllowedPaymentTypes = Record<FiatDirection, { [Payment in FiatPaymentType]?: boolean }>
 
@@ -526,8 +528,31 @@ export const paybisProvider: FiatProviderFactory = {
                       console.log(`  tokenId: ${tokenId}`)
                       const nativeAmount = await coreWallet.denominationToNative(amount, displayCurrencyCode)
 
+                      const savedAction: EdgeTxActionFiat = {
+                        type: 'sell',
+                        orderId: invoice,
+                        orderUri: '',
+                        isEstimate: true,
+                        fiatPlugin: {
+                          providerId,
+                          providerDisplayName,
+                          supportEmail
+                        },
+                        payinAddress: depositAddress,
+                        cryptoAsset: {
+                          pluginId: coreWallet.currencyInfo.pluginId,
+                          tokenId,
+                          nativeAmount
+                        },
+                        fiatAsset: {
+                          fiatCurrencyCode,
+                          fiatAmount
+                        }
+                      }
+
                       // Launch the SendScene to make payment
                       const spendInfo: EdgeSpendInfo = {
+                        savedAction,
                         spendTargets: [
                           {
                             nativeAmount,
