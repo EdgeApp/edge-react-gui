@@ -299,20 +299,18 @@ export function shiftCryptoCurrency(navigation: NavigationBase, quote: EdgeSwapQ
     const { fromDisplayAmount, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = await getSwapInfo(state, quote)
     const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate, request } = quote
     // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
-    const { toWallet, fromCurrencyCode = '', toCurrencyCode = '' } = request
+    const { toWallet, toCurrencyCode = '' } = request
     try {
       logEvent('Exchange_Shift_Start')
-      const { swapInfo } = account.swapConfig[pluginId]
 
       // Build the category string:
       const isTransfer = pluginId === 'transfer'
       const toWalletName = getWalletName(toWallet)
-      const name = isTransfer ? toWalletName : swapInfo.displayName
       const swapType = isTransfer ? 'transfer' : 'exchange'
       const swapTarget = isTransfer ? toWalletName : toCurrencyCode
-      const category = `${swapType}:${fromCurrencyCode} ${lstrings.word_to_in_convert_from_to_string} ${swapTarget}`
+      const category = `${swapType}:${sprintf(lstrings.transaction_details_swap_to_subcat_1s, swapTarget)}`
 
-      const result: EdgeSwapResult = await quote.approve({ metadata: { name, category } })
+      const result: EdgeSwapResult = await quote.approve({ metadata: { category } })
 
       logActivity(`Swap Exchange Executed: ${account.username}`)
       logActivity(`
