@@ -10,6 +10,7 @@ import thunk from 'redux-thunk'
 import { loadDeviceReferral } from '../../actions/DeviceReferralActions'
 import { ENV } from '../../env'
 import { rootReducer } from '../../reducers/RootReducer'
+import { StateProviders } from '../../state/StateProvider'
 import { Dispatch, RootState, Store } from '../../types/reduxTypes'
 import { loginStatusChecker } from '../../util/middleware/loginStatusChecker'
 import { perfLogger } from '../../util/middleware/perfLogger'
@@ -62,16 +63,18 @@ export function Providers(props: Props) {
 
   return (
     <Provider store={store}>
-      <LoginUiProvider
-        // @ts-expect-error
-        themeOverride={theme}
-      >
-        <MenuProvider>
-          <Airship>
-            <Main />
-          </Airship>
-        </MenuProvider>
-      </LoginUiProvider>
+      <StateProviders>
+        <LoginUiProvider
+          // @ts-expect-error
+          themeOverride={theme}
+        >
+          <MenuProvider>
+            <Airship>
+              <Main />
+            </Airship>
+          </MenuProvider>
+        </LoginUiProvider>
+      </StateProviders>
     </Provider>
   )
 }

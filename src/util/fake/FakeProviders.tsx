@@ -5,6 +5,7 @@ import { applyMiddleware, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
 import { rootReducer, RootState } from '../../reducers/RootReducer'
+import { StateProviders } from '../../state/StateProvider'
 
 type DeepPartial<T> = T extends object
   ? {
@@ -25,7 +26,9 @@ export function FakeProviders(props: Props) {
   const store = React.useMemo(() => createStore(rootReducer, initialState as any, applyMiddleware(thunk)), [initialState])
   return (
     <SafeAreaProvider initialMetrics={initialMetrics}>
-      <Provider store={store}>{children}</Provider>
+      <StateProviders>
+        <Provider store={store}>{children}</Provider>
+      </StateProviders>
     </SafeAreaProvider>
   )
 }
