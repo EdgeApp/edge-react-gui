@@ -2,6 +2,7 @@ import { Disklet } from 'disklet'
 import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeSpendInfo, EdgeSwapPluginType, EdgeTransaction } from 'edge-core-js'
 
 import { ExchangeInfo } from '../actions/ExchangeInfoActions'
+import { MenuSearchActions } from '../actions/MenuSearchActions'
 import { NotificationSettings } from '../actions/NotificationActions'
 import { PasswordReminderTime, SecurityCheckedWallets } from '../actions/SettingsActions'
 import { SortOption } from '../components/modals/WalletListSortModal'
@@ -160,3 +161,4 @@ export type Action =
    */
   | ActionQueueAction
   | LoanManagerActions
+  | MenuSearchActions

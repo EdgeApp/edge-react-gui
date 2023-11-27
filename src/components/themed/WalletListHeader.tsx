@@ -9,13 +9,12 @@ import { PromoCard } from '../cards/PromoCard'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { WiredBalanceBox } from '../themed/WiredBalanceBox'
-import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
+import { OutlinedTextInputRef } from './OutlinedTextInput'
 
 interface OwnProps {
   navigation: NavigationBase
   sorting: boolean
   searching: boolean
-  searchText: string
   openSortModal: () => void
   onChangeSearchText: (search: string) => void
   onChangeSearchingState: (searching: boolean) => void
@@ -46,30 +45,11 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { navigation, sorting, searching, searchText, theme } = this.props
+    const { navigation, sorting, searching, theme } = this.props
     const styles = getStyles(theme)
 
     return (
       <>
-        <View style={styles.searchContainer}>
-          <View style={{ flex: 1, flexDirection: 'column' }}>
-            <OutlinedTextInput
-              returnKeyType="search"
-              label={lstrings.wallet_list_wallet_search}
-              onChangeText={this.handleOnChangeText}
-              value={searchText}
-              onFocus={this.handleTextFieldFocus}
-              ref={this.textInput}
-              marginRem={[0, 0, 1]}
-              searchIcon
-            />
-          </View>
-          {searching && (
-            <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
-              <EdgeText style={{ color: theme.textLink }}>{lstrings.string_done_cap}</EdgeText>
-            </TouchableOpacity>
-          )}
-        </View>
         {!searching && <WiredBalanceBox />}
         {!sorting && !searching && (
           <View style={styles.headerContainer}>
@@ -112,18 +92,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   addButton: {
     marginRight: theme.rem(0.5)
-  },
-
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: theme.rem(0.5),
-    marginHorizontal: theme.rem(1)
-  },
-  searchDoneButton: {
-    justifyContent: 'center',
-    paddingLeft: theme.rem(0.75),
-    paddingBottom: theme.rem(1)
   }
 }))
 

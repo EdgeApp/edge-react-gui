@@ -4,6 +4,7 @@
 
 - added: Add Pokt RPCs as option for Fantom
 - added: Support for Thorchain Savers EVM token deposits
+- changed: New dynamic wallet list search bar and menu tabs
 - changed: Use memos for Thorchain Savers withdrawals
 - fixed: Various margin styling alignments
 - fixed: Long delay updating exchange rates after login

@@ -1,9 +1,11 @@
 import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
 import { RefreshControl } from 'react-native'
+import Animated from 'react-native-reanimated'
 
 import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
+import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
@@ -27,6 +29,8 @@ interface Props {
   onRefresh?: () => void
   onReset?: () => void
 }
+
+const AnimatedFlashList = Animated.createAnimatedComponent(FlashList)
 
 /**
  * The main wallet list used in a scene.
@@ -108,8 +112,10 @@ function WalletListSwipeableComponent(props: Props) {
   const flatListContentOffset = React.useMemo(() => ({ x: 0, y: searching ? 0 : theme.rem(4.5) }), [searching])
   const data = React.useMemo(() => [...searchedWalletList, ...createWalletList], [searchedWalletList, createWalletList])
 
+  const handleScroll = useSceneScrollHandler()
+
   return (
-    <FlashList
+    <AnimatedFlashList
       estimatedItemSize={theme.rem(4.25)}
       contentOffset={flatListContentOffset}
       contentContainerStyle={{ paddingBottom: overscroll }}
@@ -119,6 +125,7 @@ function WalletListSwipeableComponent(props: Props) {
       ListHeaderComponent={header}
       refreshControl={refreshControl}
       renderItem={renderRow}
+      onScroll={handleScroll}
     />
   )
 }

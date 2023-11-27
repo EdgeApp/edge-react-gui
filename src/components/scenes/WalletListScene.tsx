@@ -15,8 +15,10 @@ import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { SceneDrawer } from '../themed/SceneDrawer'
 import { WalletListFooter } from '../themed/WalletListFooter'
 import { WalletListHeader } from '../themed/WalletListHeader'
+import { WalletListSearch } from '../themed/WalletListSearch'
 import { WalletListSortable } from '../themed/WalletListSortable'
 import { WalletListSwipeable } from '../themed/WalletListSwipeable'
 import { WiredProgressBar } from '../themed/WiredProgressBar'
@@ -30,8 +32,8 @@ export function WalletListScene(props: Props) {
   const dispatch = useDispatch()
 
   const [sorting, setSorting] = React.useState(false)
-  const [searching, setSearching] = React.useState(false)
-  const [searchText, setSearchText] = React.useState('')
+  const isSearching = useSelector(state => state.menuSearch.isSearching)
+  const searchText = useSelector(state => state.menuSearch.searchText)
 
   const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
   const sortOption = useSelector(state => state.ui.settings.walletsSort)
@@ -47,13 +49,22 @@ export function WalletListScene(props: Props) {
   })
 
   const handleRefresh = useHandler(() => {
-    setSearching(true)
+    dispatch({
+      type: 'MENU_SEARCH/SET_IS_SEARCHING',
+      data: true
+    })
   })
 
   // Turn off searching mode when a wallet is selected
-  const handlReset = useHandler(() => {
-    setSearchText('')
-    setSearching(false)
+  const handleReset = useHandler(() => {
+    dispatch({
+      type: 'MENU_SEARCH/SET_TEXT',
+      data: ''
+    })
+    dispatch({
+      type: 'MENU_SEARCH/SET_IS_SEARCHING',
+      data: false
+    })
   })
 
   // Show the password reminder on mount if required:
@@ -78,14 +89,13 @@ export function WalletListScene(props: Props) {
       <WalletListHeader
         navigation={navigation}
         sorting={sorting}
-        searching={searching}
-        searchText={searchText}
+        searching={isSearching}
         openSortModal={handleSort}
-        onChangeSearchText={setSearchText}
-        onChangeSearchingState={setSearching}
+        onChangeSearchText={() => {}}
+        onChangeSearchingState={() => {}}
       />
     )
-  }, [handleSort, navigation, searchText, searching, sorting])
+  }, [handleSort, navigation, isSearching, sorting])
 
   const handlePressDone = useHandler(() => setSorting(false))
 
@@ -107,16 +117,19 @@ export function WalletListScene(props: Props) {
               <WalletListSwipeable
                 key="fullList"
                 header={header}
-                footer={searching ? undefined : footer}
+                footer={isSearching ? undefined : footer}
                 navigation={navigation}
                 overscroll={notificationHeight}
-                searching={searching}
+                searching={isSearching}
                 searchText={searchText}
                 onRefresh={handleRefresh}
-                onReset={handlReset}
+                onReset={handleReset}
               />
               <WalletListSortable key="sortList" />
             </CrossFade>
+            <SceneDrawer>
+              <WalletListSearch />
+            </SceneDrawer>
           </View>
         </>
       )}

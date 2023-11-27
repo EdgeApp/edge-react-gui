@@ -10,6 +10,7 @@ import { GuiContact, GuiExchangeRates, WalletListItem } from '../types/types'
 import { account, AccountState } from './AccountReducer'
 import { core, CoreState } from './CoreReducer'
 import { cryptoExchange, CryptoExchangeState } from './CryptoExchangeReducer'
+import { menuSearch, MenuSearchState } from './MenuSearchReducer'
 import { network, NetworkState } from './NetworkReducer'
 import { permissions, PermissionsState } from './PermissionsReducer'
 import { ui, UiState } from './uiReducer'
@@ -36,6 +37,8 @@ export interface RootState {
 
   // The user's sorted wallet list:
   readonly sortedWalletList: WalletListItem[]
+
+  readonly menuSearch: MenuSearchState
 
   // Nested reducers:
   readonly account: AccountState
@@ -124,6 +127,7 @@ export const rootReducer = combineReducers<RootState, Action>({
   core,
   cryptoExchange,
   loanManager,
+  menuSearch,
   permissions,
   ui,
   network

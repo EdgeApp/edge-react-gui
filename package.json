@@ -189,6 +189,7 @@
     "react-native-sound": "^0.11.0",
     "react-native-store-review": "^0.4.1",
     "react-native-svg": "^13.9.0",
+    "react-native-ui-lib": "^7.10.0",
     "react-native-vector-icons": "^7.1.0",
     "react-native-webview": "^13.2.2",
     "react-native-zcash": "^0.6.5",

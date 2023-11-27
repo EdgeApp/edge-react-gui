@@ -15,7 +15,6 @@ describe('WalletListHeader', () => {
         navigation={fakeNavigation}
         sorting
         searching
-        searchText="string"
         openSortModal={() => undefined}
         onChangeSearchText={() => undefined}
         onChangeSearchingState={searching => undefined}

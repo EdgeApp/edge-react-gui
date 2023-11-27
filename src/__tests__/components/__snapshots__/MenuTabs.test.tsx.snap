@@ -1,7 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`MenuTabs should render with loading props 1`] = `
-<View>
+<View
+  style={
+    {
+      "height": 75.5,
+      "justifyContent": "flex-end",
+      "overflow": "visible",
+    }
+  }
+>
   <BVLinearGradient
     colors={
       [
@@ -57,13 +65,16 @@ exports[`MenuTabs should render with loading props 1`] = `
         "y": 0,
       }
     }
-    style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "justifyContent": "center",
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "center",
+        }
       }
-    }
-  />
+    />
+  </BVLinearGradient>
 </View>
 `;

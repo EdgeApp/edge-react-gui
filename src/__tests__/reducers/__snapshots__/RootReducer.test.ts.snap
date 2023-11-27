@@ -82,6 +82,10 @@ exports[`initialState 1`] = `
     "loanAccounts": {},
     "syncRatio": 0,
   },
+  "menuSearch": {
+    "isSearching": false,
+    "searchText": "",
+  },
   "network": {
     "isConnected": true,
   },
