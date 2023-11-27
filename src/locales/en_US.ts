@@ -685,6 +685,7 @@ const strings = {
   transaction_details_exchange_support_request: '%s Support Request',
   transaction_details_fee_warning: 'High Network Fees',
   transaction_details_swap: 'Swap Funds',
+  transaction_details_swap_from_to_s: 'Swap %1$s to %2$s',
   transaction_details_swap_order_cancel: 'Swap Order Canceled',
   transaction_details_swap_order_post: 'Swap Order Opened',
   transaction_details_swap_order_fill: 'Swap Order Filled',
@@ -1333,6 +1334,7 @@ const strings = {
   fiat_plugin_select_asset_to_sell: 'Select Asset to Sell',
   fiat_plugin_buy_currencycode: 'Buy %s', // TODO: string key convention
   fiat_plugin_sell_currencycode_s: 'Sell %s',
+  fiat_plugin_sell_network_fee: 'Sell Network Fee',
   fiat_plugin_amount_currencycode: 'Amount %s',
   fiat_plugin_buy_amount_over_limit: 'Max purchase amount is %s',
   fiat_plugin_buy_amount_over_undef_limit: 'Purchase amount is over maximum',

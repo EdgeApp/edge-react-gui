@@ -1,5 +1,5 @@
 import { eq } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -10,6 +10,7 @@ import { formatCategory, splitCategory } from '../../actions/CategoriesActions'
 import { TX_ACTION_LABEL_MAP } from '../../constants/txActionConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { getDisplayCurrency } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { unixToLocaleDateTime } from '../../util/utils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -17,6 +18,7 @@ import { ClickableRow } from './ClickableRow'
 import { EdgeText } from './EdgeText'
 
 interface Props {
+  account: EdgeAccount
   cryptoAmount: string
   denominationSymbol?: string
   fiatAmount: string
@@ -32,6 +34,7 @@ interface Props {
 
 const TransactionRowComponent = (props: Props) => {
   const {
+    account,
     cryptoAmount,
     denominationSymbol,
     fiatAmount,
@@ -49,7 +52,7 @@ const TransactionRowComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   const { canReplaceByFee = false } = wallet.currencyInfo
-  const { action } = transaction
+  const { action: chainAction, savedAction, swapData } = transaction
 
   const isSentTransaction = transaction.nativeAmount.startsWith('-') || (eq(transaction.nativeAmount, '0') && transaction.isSend)
 
@@ -58,24 +61,38 @@ const TransactionRowComponent = (props: Props) => {
 
   // Transaction Text and Icon
   let transactionText, transactionIcon, transactionStyle
+  const { metadata } = transaction
+
   if (isSentTransaction) {
-    transactionText =
-      action != null
-        ? TX_ACTION_LABEL_MAP[action.type]
-        : transaction.metadata && transaction.metadata.name
-        ? transaction.metadata.name
-        : lstrings.fragment_transaction_list_sent_prefix + selectedCurrencyName
+    transactionText = lstrings.fragment_transaction_list_sent_prefix + selectedCurrencyName
     transactionIcon = <Ionicons name="arrow-up" size={theme.rem(1.25)} color={theme.negativeText} style={styles.iconArrows} />
     transactionStyle = styles.iconSent
   } else {
-    transactionText =
-      action != null
-        ? TX_ACTION_LABEL_MAP[action.type]
-        : transaction.metadata && transaction.metadata.name
-        ? transaction.metadata.name
-        : lstrings.fragment_transaction_list_receive_prefix + selectedCurrencyName
+    transactionText = lstrings.fragment_transaction_list_receive_prefix + selectedCurrencyName
     transactionIcon = <Ionicons name="arrow-down" size={theme.rem(1.25)} color={theme.positiveText} style={styles.iconArrows} />
     transactionStyle = styles.iconRequest
+  }
+
+  if (swapData != null) {
+    const { payoutCurrencyCode } = swapData
+    transactionText = sprintf(lstrings.transaction_details_swap_from_to_s, selectedCurrencyName, payoutCurrencyCode)
+  }
+
+  const action = savedAction ?? chainAction
+
+  if (action != null) {
+    transactionText = TX_ACTION_LABEL_MAP[action.type]
+    const { type } = action
+    if (type === 'sell' || type === 'buy') {
+      const { pluginId: cryptoPluginId, tokenId: cryptoTokenId } = action.cryptoAsset
+      const { displayName } = getDisplayCurrency(account, cryptoPluginId, cryptoTokenId)
+      transactionText = sprintf(transactionText, displayName)
+    }
+  }
+
+  // User added metadata takes priority so override if present
+  if (metadata != null && metadata.name != null) {
+    transactionText = metadata.name
   }
 
   // Pending Text and Style

@@ -11,7 +11,7 @@ export const TX_ACTION_LABEL_MAP: Record<EdgeTxActionSwapType | EdgeTxActionStak
   stakeOrder: lstrings.transaction_details_stake_order,
   unstake: lstrings.transaction_details_unstake,
   unstakeOrder: lstrings.transaction_details_unstake_order,
-  buy: '',
-  sell: '',
-  sellNetworkFee: ''
+  buy: lstrings.fiat_plugin_buy_currencycode,
+  sell: lstrings.fiat_plugin_sell_currencycode_s,
+  sellNetworkFee: lstrings.fiat_plugin_sell_network_fee
 }

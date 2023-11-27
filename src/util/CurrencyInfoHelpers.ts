@@ -124,6 +124,19 @@ export const getCurrencyCode = (wallet: EdgeCurrencyWallet, tokenId?: string): s
 }
 
 /**
+ * Get the currencyCode associated with a tokenId
+ */
+export const getDisplayCurrency = (account: EdgeAccount, pluginId: string, tokenId?: string): { currencyCode: string; displayName: string } => {
+  const plugin = account.currencyConfig[pluginId]
+  if (plugin == null) {
+    console.error('ERROR: getDisplayCurrency Missing plugin')
+    return { currencyCode: 'ERROR', displayName: 'ERROR' }
+  }
+  const { currencyCode, displayName } = tokenId != null ? plugin.allTokens[tokenId] : plugin.currencyInfo
+  return { currencyCode, displayName }
+}
+
+/**
  * If we have a currency code, guess the pluginId and tokenId from that.
  * @deprecated Use getTokenId when you know the pluginId for sure.
  */

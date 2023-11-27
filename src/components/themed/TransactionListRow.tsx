@@ -44,6 +44,7 @@ export function TransactionListRow(props: Props) {
   const nonIsoFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
   const currencyInfo = wallet.currencyInfo
 
+  const account = useSelector(state => state.core.account)
   const displayDenomination = useSelector(state => getDisplayDenomination(state, currencyInfo.pluginId, currencyCode))
   const exchangeDenomination = useSelector(state => getExchangeDenomination(state, currencyInfo.pluginId, currencyCode))
   const fiatDenomination = getDenomFromIsoCode(nonIsoFiatCurrencyCode)
@@ -100,6 +101,7 @@ export function TransactionListRow(props: Props) {
 
   return (
     <TransactionRow
+      account={account}
       cryptoAmount={cryptoAmountFormat}
       denominationSymbol={displayDenomination.symbol}
       fiatAmount={displayFiatAmount(amountFiat)}
