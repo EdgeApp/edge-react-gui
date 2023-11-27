@@ -9,7 +9,7 @@ import { lstrings } from '../../../locales/strings'
 import { EdgeTokenId, StringMap } from '../../../types/types'
 import { makeUuid } from '../../../util/utils'
 import { SendErrorNoTransaction } from '../fiatPlugin'
-import { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
+import { FiatDirection, FiatPaymentType, SaveTxMetadataParams } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
@@ -584,7 +584,7 @@ export const paybisProvider: FiatProviderFactory = {
                           address: true
                         }
                       }
-                      await showUi.send(sendParams)
+                      const tx = await showUi.send(sendParams)
                       await showUi.trackConversion('Sell_Success', {
                         destCurrencyCode: fiatCurrencyCode,
                         destExchangeAmount: fiatAmount,
@@ -594,6 +594,20 @@ export const paybisProvider: FiatProviderFactory = {
                         pluginId: providerId,
                         orderId: invoice
                       })
+
+                      // Save separate metadata/action for token transaction fee
+                      if (tokenId != null) {
+                        const params: SaveTxMetadataParams = {
+                          walletId: coreWallet.id,
+                          tokenId,
+                          txid: tx.txid,
+                          metadata: {
+                            category: `expense:${lstrings.wc_smartcontract_network_fee}`
+                          },
+                          savedAction: { ...savedAction, type: 'sellNetworkFee' }
+                        }
+                        await showUi.saveTxMetadata(params)
+                      }
 
                       // Route back to the original URL to show Paybis confirmation screen
                       await showUi.exitScene()

@@ -18,6 +18,7 @@ import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AccountReferral } from '../../types/ReferralTypes'
 import { AppParamList, NavigationBase } from '../../types/routerTypes'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
 import { TrackingEventName } from '../../util/tracking'
 import {
@@ -29,7 +30,8 @@ import {
   FiatPluginSepaTransferParams,
   FiatPluginStartParams,
   FiatPluginUi,
-  FiatPluginWalletPickerResult
+  FiatPluginWalletPickerResult,
+  SaveTxMetadataParams
 } from './fiatPluginTypes'
 
 export const SendErrorNoTransaction = 'SendErrorNoTransaction'
@@ -146,6 +148,19 @@ export const executePlugin = async (params: {
           }
         })
       })
+    },
+    saveTxMetadata: async ({ txid, walletId, tokenId, metadata, savedAction }: SaveTxMetadataParams) => {
+      const wallet = account.currencyWallets[walletId]
+      if (wallet == null) throw new Error(`Unknown walletId:${walletId}`)
+
+      if (metadata != null) {
+        const ccode = getCurrencyCode(wallet, tokenId ?? undefined)
+        if (ccode == null) throw new Error(`Invalid tokenId:${tokenId}`)
+        await wallet.saveTxMetadata(txid, ccode, metadata)
+      }
+      if (savedAction != null) {
+        await wallet.saveTxAction(txid, tokenId, savedAction)
+      }
     },
     send: async (params: SendScene2Params) => {
       // Always avoid the scam warning with plugins since we trust our plugins
