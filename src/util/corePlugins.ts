@@ -31,7 +31,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   rsk: true,
   stellar: true,
   tezos: true,
-  solana: true,
+  solana: ENV.SOLANA_INIT,
   celo: true,
   thorchainrune: ENV.THORCHAIN_INIT,
   tron: true,

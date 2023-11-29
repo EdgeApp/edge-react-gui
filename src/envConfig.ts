@@ -161,6 +161,11 @@ export const asEnvConfig = asObject({
       affiliateId: asOptional(asString, '')
     }).withRest
   ),
+  SOLANA_INIT: asCorePluginInit(
+    asObject({
+      poktPortalApiKey: asOptional(asString, '')
+    }).withRest
+  ),
   SPOOKY_SWAP_INIT: asCorePluginInit(
     asObject({
       quiknodeApiKey: asOptional(asString, '')
