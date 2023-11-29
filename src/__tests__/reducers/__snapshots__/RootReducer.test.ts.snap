@@ -187,6 +187,7 @@ exports[`initialState 1`] = `
         "ourReceiveAddresses": [],
         "parentNetworkFee": "",
         "signedTx": "",
+        "tokenId": null,
         "txid": "",
         "walletId": "",
       },

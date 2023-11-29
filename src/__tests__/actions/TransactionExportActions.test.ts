@@ -11,6 +11,7 @@ const edgeTxs: EdgeTransaction[] = [
   {
     blockHeight: 500000,
     currencyCode: 'BTC',
+    tokenId: null,
     date: 1524476980,
     deviceDescription: 'iphone12',
     isSend: false,
@@ -32,6 +33,7 @@ const edgeTxs: EdgeTransaction[] = [
   {
     blockHeight: 500000,
     currencyCode: 'BTC',
+    tokenId: null,
     date: 1524576980,
     deviceDescription: 'iphone12',
     isSend: true,
@@ -53,6 +55,7 @@ const edgeTxs: EdgeTransaction[] = [
   {
     blockHeight: 500000,
     currencyCode: 'BTC',
+    tokenId: null,
     date: 1524676980,
     deviceDescription: 'iphone12',
     memos: [],
@@ -73,6 +76,7 @@ const edgeTxs: EdgeTransaction[] = [
   {
     blockHeight: 500000,
     currencyCode: 'BTC',
+    tokenId: null,
     date: 1524776980,
     deviceDescription: 'iphone12',
     memos: [],
@@ -93,6 +97,7 @@ const edgeTxs: EdgeTransaction[] = [
   {
     blockHeight: 500000,
     currencyCode: 'USDC',
+    tokenId: 'somecontractaddress',
     date: 1524876980,
     deviceDescription: 'iphone12',
     isSend: true,
@@ -114,6 +119,7 @@ const edgeTxs: EdgeTransaction[] = [
   {
     blockHeight: 500000,
     currencyCode: 'BTC',
+    tokenId: null,
     date: 1524976980,
     deviceDescription: 'iphone12',
     memos: [],
@@ -134,6 +140,7 @@ const edgeTxs: EdgeTransaction[] = [
   {
     blockHeight: 500000,
     currencyCode: 'BTC',
+    tokenId: null,
     date: 1525076980,
     deviceDescription: 'iphone12',
     isSend: true,

@@ -551,6 +551,7 @@ function cleanTx(tx: EdgeTransaction): EdgeTransaction {
     blockHeight: tx.blockHeight,
     confirmations: tx.confirmations,
     currencyCode: tx.currencyCode,
+    tokenId: tx.tokenId,
     date: tx.date,
     // feeRateUsed: tx.feeRateUsed,
     isSend: tx.isSend,

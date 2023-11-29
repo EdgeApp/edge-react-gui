@@ -76,6 +76,7 @@ describe('TransactionDetailsScene', () => {
             edgeTransaction: {
               blockHeight: 0,
               currencyCode: 'BTC',
+              tokenId: null,
               date: 1535752780.947, // 2018-08-31T21:59:40.947Z
               isSend: false,
               memos: [],
@@ -106,6 +107,7 @@ describe('TransactionDetailsScene', () => {
             edgeTransaction: {
               blockHeight: 0,
               currencyCode: 'BTC',
+              tokenId: null,
               date: 1535752780.947, // 2018-08-31T21:59:40.947Z
               isSend: true,
               memos: [],

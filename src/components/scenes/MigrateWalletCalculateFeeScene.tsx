@@ -83,6 +83,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
       const fakeEdgeTransaction: EdgeTransaction = {
         blockHeight: 0,
         currencyCode,
+        tokenId: tokenId ?? null,
         date: 0,
         memos: [],
         isSend: true,

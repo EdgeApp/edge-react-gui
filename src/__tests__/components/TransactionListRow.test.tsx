@@ -50,6 +50,7 @@ describe('TransactionListRow', () => {
           transaction={{
             blockHeight: 10,
             currencyCode: 'BTC',
+            tokenId: null,
             date: 123456789,
             nativeAmount: '-100001',
             isSend: true,

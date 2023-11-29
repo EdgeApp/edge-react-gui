@@ -1,4 +1,4 @@
-import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString, asTuple, asUnknown, asValue, Cleaner } from 'cleaners'
+import { asArray, asBoolean, asEither, asNull, asNumber, asObject, asOptional, asString, asTuple, asUnknown, asValue, Cleaner } from 'cleaners'
 import { EdgeMemo, EdgeMetadata, EdgeNetworkFee, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 
 import {
@@ -48,6 +48,7 @@ const asEdgeTransaction = asObject<EdgeTransaction>({
   walletId: asString,
 
   currencyCode: asString,
+  tokenId: asEither(asString, asNull),
   nativeAmount: asString,
 
   // Fees:

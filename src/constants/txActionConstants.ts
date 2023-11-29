@@ -1,8 +1,8 @@
-import { EdgeTxActionStakeType, EdgeTxActionSwapType } from 'edge-core-js'
+import { EdgeTxActionFiatType, EdgeTxActionStakeType, EdgeTxActionSwapType } from 'edge-core-js'
 
 import { lstrings } from '../locales/strings'
 
-export const TX_ACTION_LABEL_MAP: Record<EdgeTxActionSwapType | EdgeTxActionStakeType, string> = {
+export const TX_ACTION_LABEL_MAP: Record<EdgeTxActionSwapType | EdgeTxActionStakeType | EdgeTxActionFiatType, string> = {
   swap: lstrings.transaction_details_swap,
   swapOrderPost: lstrings.transaction_details_swap_order_post,
   swapOrderFill: lstrings.transaction_details_swap_order_fill,
@@ -10,5 +10,8 @@ export const TX_ACTION_LABEL_MAP: Record<EdgeTxActionSwapType | EdgeTxActionStak
   stake: lstrings.transaction_details_stake,
   stakeOrder: lstrings.transaction_details_stake_order,
   unstake: lstrings.transaction_details_unstake,
-  unstakeOrder: lstrings.transaction_details_unstake_order
+  unstakeOrder: lstrings.transaction_details_unstake_order,
+  buy: '',
+  sell: '',
+  sellNetworkFee: ''
 }

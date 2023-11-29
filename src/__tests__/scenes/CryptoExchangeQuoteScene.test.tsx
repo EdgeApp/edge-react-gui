@@ -107,6 +107,7 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
           transaction: {
             blockHeight: 500000,
             currencyCode: 'BTC',
+            tokenId: null,
             date: 1524476980,
             deviceDescription: 'iphone12',
             isSend: false,

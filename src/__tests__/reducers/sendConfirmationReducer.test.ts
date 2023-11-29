@@ -33,6 +33,7 @@ describe('sendConfirmation reducer', () => {
         const transaction: EdgeTransaction = {
           blockHeight: 0,
           currencyCode: 'BCH',
+          tokenId: null,
           date: 0,
           isSend: true,
           memos: [],
@@ -71,6 +72,7 @@ describe('sendConfirmation reducer', () => {
         const transaction: EdgeTransaction = {
           blockHeight: 0,
           currencyCode: 'BCH',
+          tokenId: null,
           date: 0,
           isSend: true,
           memos: [],
@@ -120,6 +122,7 @@ describe('sendConfirmation reducer', () => {
         const transaction: EdgeTransaction = {
           blockHeight: 0,
           currencyCode: 'BCH',
+          tokenId: null,
           date: 0,
           isSend: true,
           memos: [],

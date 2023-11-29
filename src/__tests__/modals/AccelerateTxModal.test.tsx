@@ -24,6 +24,7 @@ describe('AccelerateTxModalComponent', () => {
         replacedTx={{
           blockHeight: 0,
           currencyCode: 'BTC',
+          tokenId: null,
           date: 0,
           isSend: true,
           memos: [],
@@ -38,6 +39,7 @@ describe('AccelerateTxModalComponent', () => {
         acceleratedTx={{
           blockHeight: 0,
           currencyCode: 'BTC',
+          tokenId: null,
           date: 0,
           isSend: true,
           memos: [],

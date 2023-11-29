@@ -32,6 +32,7 @@ export interface SendConfirmationState {
 export const initialTransaction: EdgeTransaction = {
   blockHeight: -1,
   currencyCode: '',
+  tokenId: null,
   date: 0,
   isSend: true,
   memos: [],

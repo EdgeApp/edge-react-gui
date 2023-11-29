@@ -277,6 +277,7 @@ class FakeCurrencyEngine {
     return {
       blockHeight: 0,
       currencyCode,
+      tokenId: null,
       date: defaultTx.date,
       feeRateUsed: { fakePrice: 0 },
       memos: [],
