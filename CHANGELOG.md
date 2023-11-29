@@ -4,6 +4,7 @@
 
 - added: Add Pokt RPCs as option for Fantom
 - added: Support for Thorchain Savers EVM token deposits
+- changed: USP/Legacy Landing probability set to 50/50
 - changed: Use memos for Thorchain Savers withdrawals
 - fixed: Various margin styling alignments
 - fixed: Long delay updating exchange rates after login
