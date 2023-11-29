@@ -1,12 +1,19 @@
 export type Imperative = (scope: any) => any
 export type Executor = (imperative: Imperative) => any
 
-export function makeBuilder(executor: Executor) {
+export interface Builder {
+  build: (imperative?: Imperative) => Builder
+  run: () => Promise<void>
+  inspect: () => string
+}
+
+export function makeBuilder(executor: Executor): Builder {
   const imperatives: Imperative[] = []
-  function build(imperative?: Imperative) {
+  function build(imperative?: Imperative): Builder {
     if (imperative != null) imperatives.push(imperative)
     return {
       build,
+      inspect,
       run
     }
   }
@@ -23,7 +30,7 @@ export function makeBuilder(executor: Executor) {
 
   return {
     build,
-    run,
-    inspect
+    inspect,
+    run
   }
 }
