@@ -1,10 +1,12 @@
 import * as React from 'react'
 import { View } from 'react-native'
+import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { getThemedIconUri } from '../../util/CdnUris'
 import { styled } from '../hoc/styled'
@@ -18,13 +20,63 @@ interface Props {
 const NotificationViewComponent = (props: Props) => {
   const { navigation } = props
   const theme = useTheme()
+  const dispatch = useDispatch()
 
-  const activeUsername = useSelector(state => state.core.account.username)
-  const isBackupWarningShown = activeUsername == null
+  const account = useSelector(state => state.core.account)
+  const detectedTokensRedux = useSelector(state => state.core.enabledDetectedTokens)
+  const wallets = useWatch(account, 'currencyWallets')
+
+  const isBackupWarningShown = account.username == null
+
+  const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
 
   const handlePress = useHandler(async () => {
     await showBackupModal({ navigation })
   })
+
+  // Show a tokens detected notification per walletId found in newTokens
+  React.useEffect(() => {
+    const newNotifs: React.JSX.Element[] = []
+    Object.keys(wallets).forEach(walletId => {
+      const newTokens = detectedTokensRedux[walletId]
+
+      const dismissNewTokens = (walletId: string) => {
+        dispatch({
+          type: 'CORE/DISMISS_NEW_TOKENS',
+          data: { walletId }
+        })
+      }
+
+      if (newTokens != null && newTokens.length > 0) {
+        const { name, currencyInfo } = wallets[walletId]
+
+        newNotifs.push(
+          <NotificationCard
+            key={walletId}
+            iconUri={getThemedIconUri(theme, 'notifications/icon-info')}
+            title={lstrings.notif_tokens_detected_title}
+            message={
+              name == null || name.trim() === ''
+                ? sprintf(lstrings.notif_tokens_detected_on_address_1s, currencyInfo.currencyCode)
+                : sprintf(lstrings.notif_tokens_detected_on_wallet_name_1s, name)
+            }
+            onPress={() => {
+              dismissNewTokens(walletId)
+              // TODO: Would be helpful to highlight to the user which tokens
+              // were just enabled on the next scene. Flashing rows?
+              navigation.navigate('manageTokens', {
+                walletId
+              })
+            }}
+            onClose={() => dismissNewTokens(walletId)}
+          />
+        )
+      }
+
+      setAutoDetectTokenCards(newNotifs)
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detectedTokensRedux, handlePress, theme])
 
   return (
     <NotificationCardsContainer>
@@ -36,6 +88,7 @@ const NotificationViewComponent = (props: Props) => {
           onPress={handlePress}
         />
       ) : null}
+      {autoDetectTokenCards.length > 0 ? autoDetectTokenCards : null}
     </NotificationCardsContainer>
   )
 }

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Automatically enable tokens with balances
 - added: Add Pokt RPCs as option for Fantom
 - added: GLIF Infinity Pool staking plugin for Filecoin FEVM currency
 - added: Support for Thorchain Savers EVM token deposits
