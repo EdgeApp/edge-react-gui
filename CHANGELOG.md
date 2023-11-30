@@ -8,6 +8,10 @@
 - changed: Block Buy/Sell/Receive for Light Accounts
 - changed: Free FIO handle modal visual design
 - changed: Scene layout to support transparent and blurred header and tab-bar
+- changed: Bity and Paybis plugins to use EdgeTxAction for sell transactions
+- changed: Do not write tx.metadata in fiat sell transactions
+- changed: Use new EdgeTransaction.savedAction to show extended transaction info in tx list and tx details
+- changed: Use new EdgeTxAction data for Thorchain and Tron stake plugins
 - fixed: USP vs legacy landing experiment distribution
 - fixed: Paybis sell from Tron USDT
 - fixed: Remove `minWidth` style from stake option card
