@@ -476,6 +476,7 @@ export const SPECIAL_CURRENCY_INFO: {
     fioChainCode: 'BSC',
     allowZeroTx: true,
     isImportKeySupported: true,
+    isStakingSupported: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isCustomTokensSupported: true,
     walletConnectV2ChainId: {

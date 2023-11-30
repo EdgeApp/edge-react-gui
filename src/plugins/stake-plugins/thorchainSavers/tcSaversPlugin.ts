@@ -119,6 +119,7 @@ const tcChainCodePluginIdMap: StringMap = {
   AVAX: 'avalanche',
   BTC: 'bitcoin',
   BCH: 'bitcoincash',
+  BSC: 'binancesmartchain',
   DOGE: 'dogecoin',
   ETH: 'ethereum',
   LTC: 'litecoin'
@@ -174,6 +175,7 @@ const evmInfo: PolicyCurrencyInfo = {
 
 const policyCurrencyInfos: { [pluginId: string]: PolicyCurrencyInfo } = {
   avalanche: evmInfo,
+  binancesmartchain: evmInfo,
   bitcoin: utxoInfo,
   bitcoincash: utxoInfo,
   dogecoin: { ...utxoInfo, minAmount: '100000000' },
@@ -206,6 +208,7 @@ const MAINNET_CODE_TRANSCRIPTION: { [cc: string]: string } = {
   bitcoin: 'BTC',
   bitcoincash: 'BCH',
   binancechain: 'BNB',
+  binancesmartchain: 'BSC',
   litecoin: 'LTC',
   ethereum: 'ETH',
   dogecoin: 'DOGE',
