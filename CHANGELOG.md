@@ -10,6 +10,9 @@
 - added: BSC staking on Thorchain Savers
 - changed: USP/Legacy Landing probability set to 50/50
 - changed: Use memos for Thorchain Savers withdrawals
+- changed: Bity and Paybis plugins to use savedAction for sell transactions
+- changed: Do not write tx.metadata in fiat sell transactions
+- changed: Use new EdgeTransaction.savedAction to show extended transaction info in tx list and tx details
 - fixed: Various margin styling alignments
 - fixed: Long delay updating exchange rates after login
 - fixed: Unable to claim unstaked TRX funds in some circumstances
