@@ -69,7 +69,20 @@ exports[`FioAddressList should render with loading props 1`] = `
               "cameraOverlayColor": "#000000",
               "cameraOverlayOpEnd": 0.3,
               "cameraOverlayOpStart": 0.7,
-              "cardBackgroundUi4": "rgb(22, 50, 58)",
+              "cardBackgroundUi4": {
+                "colors": [
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
+                ],
+                "end": {
+                  "x": 1,
+                  "y": 1,
+                },
+                "start": {
+                  "x": 0,
+                  "y": 0,
+                },
+              },
               "cardBorder": 1,
               "cardBorderColor": "rgba(255, 255, 255, .1)",
               "cardBorderRadius": 4,
@@ -156,6 +169,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               "iconLoadingOverlay": "rgba(255, 255, 255, .75)",
               "iconServerBaseUri": "https://content.edge.app",
               "iconTappable": "#00f1a2",
+              "iconTappableAltUi4": "#FFFFFF",
               "inputAccessoryBackground": "#FFFFFF",
               "inputAccessoryText": "#0073D9",
               "isDark": true,
@@ -530,7 +544,20 @@ exports[`FioAddressList should render with loading props 1`] = `
               "cameraOverlayColor": "#000000",
               "cameraOverlayOpEnd": 0.3,
               "cameraOverlayOpStart": 0.7,
-              "cardBackgroundUi4": "rgb(22, 50, 58)",
+              "cardBackgroundUi4": {
+                "colors": [
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
+                ],
+                "end": {
+                  "x": 1,
+                  "y": 1,
+                },
+                "start": {
+                  "x": 0,
+                  "y": 0,
+                },
+              },
               "cardBorder": 1,
               "cardBorderColor": "rgba(255, 255, 255, .1)",
               "cardBorderRadius": 4,
@@ -617,6 +644,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               "iconLoadingOverlay": "rgba(255, 255, 255, .75)",
               "iconServerBaseUri": "https://content.edge.app",
               "iconTappable": "#00f1a2",
+              "iconTappableAltUi4": "#FFFFFF",
               "inputAccessoryBackground": "#FFFFFF",
               "inputAccessoryText": "#0073D9",
               "isDark": true,
