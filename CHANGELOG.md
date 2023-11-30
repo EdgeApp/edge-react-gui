@@ -9,6 +9,7 @@
 - changed: Use memos for Thorchain Savers withdrawals
 - fixed: Various margin styling alignments
 - fixed: Long delay updating exchange rates after login
+- fixed: Unable to claim unstaked TRX funds in some circumstances
 - fixed: Do not count paused wallets for progress ratio
 - fixed: ENS name resolution intermittently failing
 
