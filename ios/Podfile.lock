@@ -506,12 +506,8 @@ PODS:
     - SQLite.swift (~> 0.12)
   - react-native-safari-view (1.0.0):
     - React
-  - react-native-safe-area-context (4.6.4):
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
+  - react-native-safe-area-context (4.7.4):
     - React-Core
-    - ReactCommon/turbomodule/core
   - react-native-webview (13.2.2):
     - React-Core
   - react-native-zcash (0.6.5):
@@ -607,7 +603,7 @@ PODS:
     - React
   - RNBootSplash (4.7.4):
     - React-Core
-  - RNCAsyncStorage (1.19.4):
+  - RNCAsyncStorage (1.21.0):
     - React-Core
   - RNCClipboard (1.10.0):
     - React-Core
@@ -1293,7 +1289,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
   react-native-piratechain: 76770831cf1233051db907b0d2fd4e4203cac75c
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
-  react-native-safe-area-context: 68b07eabfb0d14547d36f6929c0e98d818064f02
+  react-native-safe-area-context: 2cd91d532de12acdb0a9cbc8d43ac72a8e4c897c
   react-native-webview: b8ec89966713985111a14d6e4bf98d8b54bced0d
   react-native-zcash: 94d568a36387f8942e900f72089efe22332bff48
   React-perflogger: e706562ab7eb8eb590aa83a224d26fa13963d7f2
@@ -1311,7 +1307,7 @@ SPEC CHECKSUMS:
   ReactCommon: 08723d2ed328c5cbcb0de168f231bc7bae7f8aa1
   rn-id-blurview: 42b72b8741b1624ef5052928ec7c04fcb345e198
   RNBootSplash: 0a92fb6bd3d265e23cded61faf3e9fda441d0a6b
-  RNCAsyncStorage: 3a8f7145d17cdd9f88e7b77666c94a09e4f759c8
+  RNCAsyncStorage: 618d03a5f52fbccb3d7010076bc54712844c18ef
   RNCClipboard: f1736c75ab85b627a4d57587edb4b60999c4dd80
   RNCPicker: 6d5d64e7b90c240c779ee0938ec433c11e2dd758
   RNDateTimePicker: 3942382593f104af226ad9c56e16166960c7ae30
