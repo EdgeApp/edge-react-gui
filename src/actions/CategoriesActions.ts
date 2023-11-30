@@ -5,6 +5,7 @@ import { showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
+import { cleanFiatCurrencyCode } from '../util/CurrencyWalletHelpers'
 
 export type Category = 'transfer' | 'exchange' | 'expense' | 'income'
 
@@ -267,7 +268,8 @@ export const getTxActionDisplayInfo = (
   wallet: EdgeCurrencyWallet,
   tokenId?: string
 ): { splitCategory: SplitCategory; notes?: string; direction: 'send' | 'receive' } | undefined => {
-  const { action } = tx
+  const { action: chainAction, savedAction } = tx
+  const action = savedAction ?? chainAction
   if (action == null) return
   const { type } = action
 
@@ -351,6 +353,28 @@ export const getTxActionDisplayInfo = (
       return {
         splitCategory: { category: 'expense', subcategory: lstrings.transaction_details_unstake_order },
         notes,
+        direction: 'send'
+      }
+    }
+    case 'buy': {
+      const { fiatAsset } = action
+      const { fiatCurrencyCode } = cleanFiatCurrencyCode(fiatAsset.fiatCurrencyCode)
+      return {
+        splitCategory: { category: 'exchange', subcategory: sprintf(lstrings.transaction_details_swap_from_subcat_1s, fiatCurrencyCode) },
+        direction: 'receive'
+      }
+    }
+    case 'sell': {
+      const { fiatAsset } = action
+      const { fiatCurrencyCode } = cleanFiatCurrencyCode(fiatAsset.fiatCurrencyCode)
+      return {
+        splitCategory: { category: 'exchange', subcategory: sprintf(lstrings.transaction_details_swap_to_subcat_1s, fiatCurrencyCode) },
+        direction: 'send'
+      }
+    }
+    case 'sellNetworkFee': {
+      return {
+        splitCategory: { category: 'expense', subcategory: lstrings.wc_smartcontract_network_fee },
         direction: 'send'
       }
     }

@@ -1,5 +1,5 @@
 import { eq } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableWithoutFeedback, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -11,7 +11,9 @@ import { playSendSound } from '../../actions/SoundActions'
 import { TX_ACTION_LABEL_MAP } from '../../constants/txActionConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { lstrings } from '../../locales/strings'
+import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { getDisplayCurrency } from '../../util/CurrencyInfoHelpers'
 import { getMemoTitle } from '../../util/validateMemos'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -35,6 +37,7 @@ interface OwnProps extends EdgeSceneProps<'transactionDetails'> {
 
 interface StateProps {
   thumbnailPath?: string
+  account: EdgeAccount
 }
 type Props = OwnProps & StateProps & ThemeProps
 
@@ -202,15 +205,31 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
 
   // Render
   render() {
-    const { navigation, route, theme, thumbnailPath, wallet } = this.props
+    const { account, navigation, route, theme, thumbnailPath, wallet } = this.props
     const { edgeTransaction } = route.params
-    const { action } = edgeTransaction
+    const { action: chainAction, savedAction } = edgeTransaction
     const { direction, acceleratedTx, name, notes, category } = this.state
     const styles = getStyles(theme)
 
+    const action = savedAction ?? chainAction
+
     const personLabel = direction === 'receive' ? lstrings.transaction_details_sender : lstrings.transaction_details_recipient
-    const personName = action != null ? TX_ACTION_LABEL_MAP[action.type] : name !== '' ? name : personLabel
     const personHeader = sprintf(lstrings.transaction_details_person_name, personLabel)
+    let personName
+    if (name !== '') {
+      personName = name
+    } else {
+      if (action != null) {
+        personName = TX_ACTION_LABEL_MAP[action.type]
+        if (action.type === 'buy' || action.type === 'sell') {
+          const { pluginId: cryptoPluginId, tokenId: cryptoTokenId } = action.cryptoAsset
+          const { displayName } = getDisplayCurrency(account, cryptoPluginId, cryptoTokenId)
+          personName = sprintf(personName, displayName)
+        }
+      } else {
+        personName = personLabel
+      }
+    }
 
     // spendTargets recipient addresses format
     let recipientsAddresses = ''
@@ -296,6 +315,7 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
   const { navigation, route, wallet } = props
   const { edgeTransaction } = route.params
   const theme = useTheme()
+  const account = useSelector(state => state.core.account)
 
   const { metadata } = edgeTransaction
 
@@ -303,7 +323,7 @@ export const TransactionDetailsScene = withWallet((props: OwnProps) => {
 
   return (
     <NotificationSceneWrapper navigation={navigation} hasTabs scroll>
-      <TransactionDetailsComponent navigation={navigation} route={route} theme={theme} thumbnailPath={thumbnailPath} wallet={wallet} />
+      <TransactionDetailsComponent navigation={navigation} route={route} theme={theme} thumbnailPath={thumbnailPath} wallet={wallet} account={account} />
     </NotificationSceneWrapper>
   )
 })

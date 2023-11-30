@@ -22,6 +22,18 @@ export function getWalletFiat(wallet: EdgeCurrencyWallet): { fiatCurrencyCode: s
   return { fiatCurrencyCode: fiatCurrencyCode.replace('iso:', ''), isoFiatCurrencyCode: fiatCurrencyCode }
 }
 
+/**
+ * Takes any form of fiat currency code and returns a version with and without
+ * the "iso:" prefix
+ */
+export function cleanFiatCurrencyCode(fiatCurrencyCode: string): { fiatCurrencyCode: string; isoFiatCurrencyCode: string } {
+  if (fiatCurrencyCode.startsWith('iso:')) {
+    return { fiatCurrencyCode: fiatCurrencyCode.replace('iso:', ''), isoFiatCurrencyCode: fiatCurrencyCode }
+  } else {
+    return { fiatCurrencyCode, isoFiatCurrencyCode: `iso:${fiatCurrencyCode}` }
+  }
+}
+
 export const getAvailableBalance = (wallet: EdgeCurrencyWallet, tokenCode?: string): string => {
   const { currencyCode, pluginId } = wallet.currencyInfo
   const cCode = tokenCode ?? currencyCode
