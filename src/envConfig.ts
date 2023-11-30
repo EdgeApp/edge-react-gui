@@ -143,6 +143,7 @@ export const asEnvConfig = asObject({
     }).withRest
   ),
   KOVAN_INIT: asCorePluginInit(asEvmApiKeys),
+  GOERLI_INIT: asCorePluginInit(asEvmApiKeys),
   LETSEXCHANGE_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')

@@ -22,6 +22,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   ethereumpow: ENV.ETHEREUM_POW_INIT,
   fantom: ENV.FANTOM_INIT,
   fio: ENV.FIO_INIT,
+  goerli: ENV.GOERLI_INIT,
   kovan: ENV.KOVAN_INIT,
   optimism: ENV.OPTIMISM_INIT,
   pulsechain: ENV.PULSECHAIN_INIT,
