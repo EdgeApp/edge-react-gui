@@ -595,15 +595,12 @@ export const paybisProvider: FiatProviderFactory = {
                         orderId: invoice
                       })
 
-                      // Save separate metadata/action for token transaction fee
+                      // Save separate action for token transaction fee
                       if (tokenId != null) {
                         const params: SaveTxMetadataParams = {
                           walletId: coreWallet.id,
                           tokenId,
                           txid: tx.txid,
-                          metadata: {
-                            category: `expense:${lstrings.wc_smartcontract_network_fee}`
-                          },
                           savedAction: { ...savedAction, type: 'sellNetworkFee' }
                         }
                         await showUi.saveTxMetadata(params)

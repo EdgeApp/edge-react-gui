@@ -525,11 +525,7 @@ const completeSellOrder = async (
         nativeAmount,
         publicAddress: paymentDetails.crypto_address
       }
-    ],
-    metadata: {
-      category: `Exchange: ${inputCurrencyCode} to EUR`,
-      notes: `${pluginDisplayName} ${lstrings.transaction_details_exchange_order_id}: ${id}`
-    }
+    ]
   }
   await showUi.send({ walletId: coreWallet.id, spendInfo })
 }
