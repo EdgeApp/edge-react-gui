@@ -29,6 +29,7 @@ export const asEnvConfig = asObject({
   // API keys:
   AIRBITZ_API_KEY: asOptional(asString, ''),
   BUGSNAG_API_KEY: asOptional(asString, 'a0000000000000000000000000000000'),
+  COINGECKO_API_KEY: asOptional(asString, 'a0000000000000000000000000000000'),
   IP_API_KEY: asOptional(asString, ''),
 
   // GUI plugin options:
