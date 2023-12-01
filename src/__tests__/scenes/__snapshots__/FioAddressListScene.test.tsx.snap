@@ -65,6 +65,113 @@ exports[`FioAddressList should render with loading props 1`] = `
               ],
               "backgroundLoadingOverlay": "rgba(123,123,123,.2)",
               "buttonBorderRadiusRem": 0.25,
+              "buttonBorderRadiusRemUi4": 2,
+              "buttonFontSizeRemUi4": 1,
+              "buttonPrimaryUi4": {
+                "containerStyle": {
+                  "borderColor": "#00f1a2",
+                  "borderWidth": 1,
+                },
+                "gradientProps": {
+                  "colors": [
+                    "#089e73",
+                    "#00f1a2",
+                  ],
+                  "end": {
+                    "x": 1,
+                    "y": 0,
+                  },
+                  "start": {
+                    "x": 0,
+                    "y": 0,
+                  },
+                },
+                "shadowParams": {
+                  "elevation": 2,
+                  "shadowColor": "#FFFFFF",
+                  "shadowOffset": {
+                    "height": 1,
+                    "width": 0,
+                  },
+                  "shadowOpacity": 0.25,
+                  "shadowRadius": 8,
+                },
+                "spinnerColor": "#FFFFFF",
+                "textStyle": {
+                  "color": "#000000",
+                  "fontFamily": "Quicksand-Medium",
+                },
+              },
+              "buttonSecondaryUi4": {
+                "containerStyle": {
+                  "borderColor": "#00f1a2",
+                  "borderWidth": 1,
+                },
+                "gradientProps": {
+                  "colors": [
+                    "#089e73",
+                    "#00f1a2",
+                  ],
+                  "end": {
+                    "x": 1,
+                    "y": 0,
+                  },
+                  "start": {
+                    "x": 0,
+                    "y": 0,
+                  },
+                },
+                "shadowParams": {
+                  "elevation": 2,
+                  "shadowColor": "#FFFFFF",
+                  "shadowOffset": {
+                    "height": 1,
+                    "width": 0,
+                  },
+                  "shadowOpacity": 0.25,
+                  "shadowRadius": 8,
+                },
+                "spinnerColor": "#FFFFFF",
+                "textStyle": {
+                  "color": "#000000",
+                  "fontFamily": "Quicksand-Medium",
+                },
+              },
+              "buttonTertiaryUi4": {
+                "containerStyle": {
+                  "borderColor": "#00f1a2",
+                  "borderWidth": 1,
+                },
+                "gradientProps": {
+                  "colors": [
+                    "#089e73",
+                    "#00f1a2",
+                  ],
+                  "end": {
+                    "x": 1,
+                    "y": 0,
+                  },
+                  "start": {
+                    "x": 0,
+                    "y": 0,
+                  },
+                },
+                "shadowParams": {
+                  "elevation": 2,
+                  "shadowColor": "#FFFFFF",
+                  "shadowOffset": {
+                    "height": 1,
+                    "width": 0,
+                  },
+                  "shadowOpacity": 0.25,
+                  "shadowRadius": 8,
+                },
+                "spinnerColor": "#FFFFFF",
+                "textStyle": {
+                  "color": "#000000",
+                  "fontFamily": "Quicksand-Medium",
+                },
+              },
               "buySellCustomPluginModalIcon": "#121d25",
               "cameraOverlayColor": "#000000",
               "cameraOverlayOpEnd": 0.3,
@@ -540,6 +647,113 @@ exports[`FioAddressList should render with loading props 1`] = `
               ],
               "backgroundLoadingOverlay": "rgba(123,123,123,.2)",
               "buttonBorderRadiusRem": 0.25,
+              "buttonBorderRadiusRemUi4": 2,
+              "buttonFontSizeRemUi4": 1,
+              "buttonPrimaryUi4": {
+                "containerStyle": {
+                  "borderColor": "#00f1a2",
+                  "borderWidth": 1,
+                },
+                "gradientProps": {
+                  "colors": [
+                    "#089e73",
+                    "#00f1a2",
+                  ],
+                  "end": {
+                    "x": 1,
+                    "y": 0,
+                  },
+                  "start": {
+                    "x": 0,
+                    "y": 0,
+                  },
+                },
+                "shadowParams": {
+                  "elevation": 2,
+                  "shadowColor": "#FFFFFF",
+                  "shadowOffset": {
+                    "height": 1,
+                    "width": 0,
+                  },
+                  "shadowOpacity": 0.25,
+                  "shadowRadius": 8,
+                },
+                "spinnerColor": "#FFFFFF",
+                "textStyle": {
+                  "color": "#000000",
+                  "fontFamily": "Quicksand-Medium",
+                },
+              },
+              "buttonSecondaryUi4": {
+                "containerStyle": {
+                  "borderColor": "#00f1a2",
+                  "borderWidth": 1,
+                },
+                "gradientProps": {
+                  "colors": [
+                    "#089e73",
+                    "#00f1a2",
+                  ],
+                  "end": {
+                    "x": 1,
+                    "y": 0,
+                  },
+                  "start": {
+                    "x": 0,
+                    "y": 0,
+                  },
+                },
+                "shadowParams": {
+                  "elevation": 2,
+                  "shadowColor": "#FFFFFF",
+                  "shadowOffset": {
+                    "height": 1,
+                    "width": 0,
+                  },
+                  "shadowOpacity": 0.25,
+                  "shadowRadius": 8,
+                },
+                "spinnerColor": "#FFFFFF",
+                "textStyle": {
+                  "color": "#000000",
+                  "fontFamily": "Quicksand-Medium",
+                },
+              },
+              "buttonTertiaryUi4": {
+                "containerStyle": {
+                  "borderColor": "#00f1a2",
+                  "borderWidth": 1,
+                },
+                "gradientProps": {
+                  "colors": [
+                    "#089e73",
+                    "#00f1a2",
+                  ],
+                  "end": {
+                    "x": 1,
+                    "y": 0,
+                  },
+                  "start": {
+                    "x": 0,
+                    "y": 0,
+                  },
+                },
+                "shadowParams": {
+                  "elevation": 2,
+                  "shadowColor": "#FFFFFF",
+                  "shadowOffset": {
+                    "height": 1,
+                    "width": 0,
+                  },
+                  "shadowOpacity": 0.25,
+                  "shadowRadius": 8,
+                },
+                "spinnerColor": "#FFFFFF",
+                "textStyle": {
+                  "color": "#000000",
+                  "fontFamily": "Quicksand-Medium",
+                },
+              },
               "buySellCustomPluginModalIcon": "#121d25",
               "cameraOverlayColor": "#000000",
               "cameraOverlayOpEnd": 0.3,

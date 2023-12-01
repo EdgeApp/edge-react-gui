@@ -398,6 +398,81 @@ export const edgeDark: Theme = {
   guiPluginLogoMoonpay: guiPluginLogoMoonpay,
 
   // UI 4.0:
+  buttonBorderRadiusRemUi4: 2,
+  buttonFontSizeRemUi4: 1,
+
+  buttonPrimaryUi4: {
+    textStyle: {
+      fontFamily: palette.QuicksandMedium,
+      color: palette.black
+    },
+    gradientProps: {
+      colors: [palette.darkMint, palette.edgeMint],
+      end: { x: 1, y: 0 },
+      start: { x: 0, y: 0 }
+    },
+    shadowParams: {
+      shadowColor: palette.white,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+      elevation: 2
+    },
+    containerStyle: {
+      borderColor: palette.edgeMint,
+      borderWidth: 1
+    },
+    spinnerColor: palette.white
+  },
+
+  buttonSecondaryUi4: {
+    textStyle: {
+      fontFamily: palette.QuicksandMedium,
+      color: palette.black
+    },
+    gradientProps: {
+      colors: [palette.darkMint, palette.edgeMint],
+      end: { x: 1, y: 0 },
+      start: { x: 0, y: 0 }
+    },
+    shadowParams: {
+      shadowColor: palette.white,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+      elevation: 2
+    },
+    containerStyle: {
+      borderColor: palette.edgeMint,
+      borderWidth: 1
+    },
+    spinnerColor: palette.white
+  },
+
+  buttonTertiaryUi4: {
+    textStyle: {
+      fontFamily: palette.QuicksandMedium,
+      color: palette.black
+    },
+    gradientProps: {
+      colors: [palette.darkMint, palette.edgeMint],
+      end: { x: 1, y: 0 },
+      start: { x: 0, y: 0 }
+    },
+    shadowParams: {
+      shadowColor: palette.white,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+      elevation: 2
+    },
+    containerStyle: {
+      borderColor: palette.edgeMint,
+      borderWidth: 1
+    },
+    spinnerColor: palette.white
+  },
+
   cardBackgroundUi4: {
     colors: [palette.whiteOp10, palette.whiteOp10],
     end: { x: 1, y: 1 },

@@ -28,6 +28,20 @@ interface TextShadowParams {
   textShadowRadius: number
 }
 
+interface ButtomParamsUi4 {
+  textStyle: {
+    fontFamily: string
+    color: string
+  }
+  gradientProps: ThemeGradientParams
+  shadowParams: ThemeShadowParams // TODO: Address android/ios inconsistencies with lib
+  containerStyle: {
+    borderColor: string
+    borderWidth: number
+  }
+  spinnerColor: string
+}
+
 const asGradientCoords = asObject({
   x: asNumber,
   y: asNumber
@@ -400,6 +414,13 @@ export interface Theme {
   guiPluginLogoMoonpay: ImageProp
 
   // UI 4.0:
+  buttonBorderRadiusRemUi4: number
+  buttonFontSizeRemUi4: number
+
+  buttonPrimaryUi4: ButtomParamsUi4
+  buttonSecondaryUi4: ButtomParamsUi4
+  buttonTertiaryUi4: ButtomParamsUi4
+
   cardBackgroundUi4: ThemeGradientParams
   cardDisabledOverlayUi4: string
   cardRadiusRemUi4: number
