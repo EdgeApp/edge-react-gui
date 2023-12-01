@@ -111,9 +111,11 @@ export function SwapDetailsTiles(props: Props) {
       lstrings.transaction_details_exchange_destination_wallet
     }: ${destinationWalletName}${newline}${isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote}${newline}${newline}${
       lstrings.transaction_details_exchange_exchange_address
-    }:${newline}  ${exchangeAddresses}${newline}${lstrings.transaction_details_exchange_exchange_unique_id}:${newline}  ${uniqueIdentifier}${newline}${
-      lstrings.transaction_details_exchange_payout_address
-    }:${newline}  ${payoutAddress}${newline}${lstrings.transaction_details_exchange_refund_address}:${newline}  ${refundAddress || ''}${newline}`
+    }:${newline}${exchangeAddresses}${newline}${newline}${
+      lstrings.transaction_details_exchange_exchange_unique_id
+    }:${newline}${uniqueIdentifier}${newline}${newline}${lstrings.transaction_details_exchange_payout_address}:${newline}${payoutAddress}${newline}${newline}${
+      lstrings.transaction_details_exchange_refund_address
+    }:${newline}${refundAddress || ''}${newline}`
   }
 
   return (
