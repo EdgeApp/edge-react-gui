@@ -1,6 +1,5 @@
-import React from 'react'
 import { LayoutChangeEvent } from 'react-native'
-import { runOnJS, useAnimatedReaction, useSharedValue, withTiming } from 'react-native-reanimated'
+import { useAnimatedReaction, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import { withContextProvider } from '../components/hoc/withContextProvider'
 import { useHandler } from '../hooks/useHandler'
@@ -22,94 +21,87 @@ export const [SceneDrawerProvider, SceneDrawerContext] = withContextProvider(() 
 export const useSceneDrawerState = makeUseContextValue(SceneDrawerContext)
 
 export const useDrawerOpenRatio = () => {
-  const sceneScrollContext = useSceneScrollContext()
+  const { scrollBeginEvent, scrollEndEvent, scrollMomentumBeginEvent, scrollMomentumEndEvent, scrollY } = useSceneScrollContext()
 
+  const scrollYStart = useSharedValue<number | undefined>(undefined)
+  const snapTo = useSharedValue<number | undefined>(undefined)
   const { drawerHeight, drawerOpenRatio, drawerOpenRatioStart, isRatioDisabled, setIsRatioDisabled } = useSceneDrawerState()
 
-  // Use a timeout delay to allow for momentum events to interfere with snap behavior
-  const snapDrawerToEdgeTimeoutIdRef = React.useRef<NodeJS.Timeout | string | number | undefined>()
-
-  // Snaps drawer to a specific ratio and resets the ratio start
-  function snapDrawerToRatio(ratio: number) {
-    'worklet'
-
-    drawerOpenRatio.value = withTiming(ratio, { duration: 300 }, () => {
-      drawerOpenRatioStart.value = drawerOpenRatio.value
-    })
-  }
-
-  function snapDrawerToRatioTimeout() {
-    snapDrawerToEdgeTimeoutIdRef.current = setTimeout(() => {
-      const ratio = Math.round(drawerOpenRatio.value)
-      snapDrawerToRatio(ratio)
-    }, 100)
-  }
-
   function resetDrawerRatio() {
-    // Timeout prevents scroll events triggered from renders from interfering
-    // with timing animation.
-    setTimeout(() => {
-      drawerOpenRatio.value = withTiming(1, { duration: 300 })
-    }, 300)
+    snapTo.value = 1
   }
 
   // Scroll event subscriptions:
-  useSharedEvent(sceneScrollContext.scrollBeginEvent, () => {
+  useSharedEvent(scrollBeginEvent, nativeEvent => {
     'worklet'
-
+    scrollYStart.value = nativeEvent?.contentOffset.y
     drawerOpenRatioStart.value = drawerOpenRatio.value
   })
-  useSharedEvent(sceneScrollContext.scrollEndEvent, () => {
+  useSharedEvent(scrollEndEvent, () => {
     'worklet'
-    runOnJS(clearTimeout)(snapDrawerToEdgeTimeoutIdRef.current)
-    snapDrawerToEdgeTimeoutIdRef.current = undefined
-    runOnJS(snapDrawerToRatioTimeout)()
+    if (scrollYStart.value != null) {
+      scrollYStart.value = undefined
+      snapTo.value = Math.round(drawerOpenRatio.value)
+    }
   })
-  useSharedEvent(sceneScrollContext.scrollMomentumBeginEvent, () => {
+  useSharedEvent(scrollMomentumBeginEvent, nativeEvent => {
     'worklet'
-
-    runOnJS(clearTimeout)(snapDrawerToEdgeTimeoutIdRef.current)
-    snapDrawerToEdgeTimeoutIdRef.current = undefined
+    scrollYStart.value = nativeEvent?.contentOffset.y
     drawerOpenRatioStart.value = drawerOpenRatio.value
   })
-  useSharedEvent(sceneScrollContext.scrollMomentumEndEvent, () => {
+  useSharedEvent(scrollMomentumEndEvent, () => {
     'worklet'
-
-    snapDrawerToRatio(Math.round(drawerOpenRatio.value))
+    if (scrollYStart.value != null) {
+      scrollYStart.value = undefined
+      snapTo.value = Math.round(drawerOpenRatio.value)
+    }
   })
 
   useAnimatedReaction(
     () => {
-      'worklet'
-
-      const scrollYDelta = sceneScrollContext.scrollYDelta.value
-
+      // Drawer height is not ready
       if (drawerHeight.value === 0) return drawerOpenRatio.value
 
+      // Scrolling hasn't started yet
+      if (scrollYStart.value == null) return
+
+      const scrollYDelta = scrollY.value - scrollYStart.value
       const ratioDelta = scrollYDelta / drawerHeight.value / 2 // Constant is to lower jumpy-ness
 
       return Math.min(1, Math.max(0, drawerOpenRatioStart.value - ratioDelta))
     },
     (currentValue, previousValue) => {
-      'worklet'
-
       if (currentValue == null) return
       if (previousValue == null) return
       if (currentValue === previousValue) return
-      if (snapDrawerToEdgeTimeoutIdRef.current != null) return
 
       if (currentValue > previousValue && currentValue > 0.3) {
-        snapDrawerToRatio(1)
+        snapTo.value = 1
+        scrollYStart.value = scrollY.value
+        drawerOpenRatioStart.value = 1
         return
       }
       if (currentValue < previousValue && currentValue < 0.7) {
-        snapDrawerToRatio(0)
+        snapTo.value = 0
+        scrollYStart.value = scrollY.value
+        drawerOpenRatioStart.value = 0
         return
       }
 
+      snapTo.value = undefined
       drawerOpenRatio.value = currentValue
     },
-    [sceneScrollContext, drawerOpenRatioStart.value]
+    []
+  )
+
+  useAnimatedReaction(
+    () => snapTo.value,
+    (currentValue, previousValue) => {
+      if (currentValue === previousValue) return
+      if (currentValue == null) return
+
+      drawerOpenRatio.value = withTiming(currentValue, { duration: 300 })
+    }
   )
 
   const handleDrawerLayout = useHandler((event: LayoutChangeEvent) => {
@@ -121,11 +113,9 @@ export const useDrawerOpenRatio = () => {
   return {
     drawerHeight,
     drawerOpenRatio,
-    drawerOpenRatioStart,
     isRatioDisabled,
     setIsRatioDisabled,
     handleDrawerLayout,
-    resetDrawerRatio,
-    snapDrawerToRatio
+    resetDrawerRatio
   }
 }
