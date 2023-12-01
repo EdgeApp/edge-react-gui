@@ -30,7 +30,7 @@ export function SwapDetailsTiles(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { currencyCode, spendTargets = [] } = transaction
+  const { currencyCode, memos = [], spendTargets = [] } = transaction
   const { currencyInfo } = wallet
   const walletName = useWalletName(wallet)
   const walletDefaultDenom = useSelector(state =>
@@ -99,7 +99,7 @@ export function SwapDetailsTiles(props: Props) {
     currencyInfo.currencyCode === transaction.currencyCode && walletDefaultDenom.symbol != null ? walletDefaultDenom.symbol : transaction.currencyCode
 
   const createExchangeDataString = (newline: string = '\n') => {
-    const uniqueIdentifier = spendTargets[0].uniqueIdentifier ?? ''
+    const uniqueIdentifier = memos.map((memo, index) => `${memo.value}${index + 1 !== memos.length ? newline : ''}`).toString()
     const exchangeAddresses = spendTargets.map((target, index) => `${target.publicAddress}${index + 1 !== spendTargets.length ? newline : ''}`).toString()
     const { dateTime } = unixToLocaleDateTime(transaction.date)
 

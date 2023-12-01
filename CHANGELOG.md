@@ -13,6 +13,7 @@
 - fixed: Unable to claim unstaked TRX funds in some circumstances
 - fixed: Do not count paused wallets for progress ratio
 - fixed: ENS name resolution intermittently failing
+- fixed: Error on exchange details from RUNE swaps
 
 ## 3.22.0
 
