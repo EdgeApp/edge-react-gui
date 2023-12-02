@@ -1,6 +1,6 @@
 import { eq, round } from 'biggystring'
 import { asArray, asDate, asMaybe, asObject, asOptional, asString, asValue } from 'cleaners'
-import { EdgeFetchOptions, EdgeSpendInfo, JsonObject } from 'edge-core-js'
+import { EdgeAssetAction, EdgeFetchOptions, EdgeSpendInfo, EdgeTxActionFiat, JsonObject } from 'edge-core-js'
 import URL from 'url-parse'
 
 import { SendScene2Params } from '../../../components/scenes/SendScene2'
@@ -26,6 +26,8 @@ const providerId = 'paybis'
 const storeId = 'paybis'
 const partnerIcon = 'paybis.png'
 const pluginDisplayName = 'Paybis'
+const providerDisplayName = pluginDisplayName
+const supportEmail = 'support@paybis.com'
 
 type AllowedPaymentTypes = Record<FiatDirection, { [Payment in FiatPaymentType]?: boolean }>
 
@@ -529,9 +531,36 @@ export const paybisProvider: FiatProviderFactory = {
                       console.log(`  tokenId: ${tokenId}`)
                       const nativeAmount = await coreWallet.denominationToNative(amount, displayCurrencyCode)
 
+                      const assetAction: EdgeAssetAction = {
+                        assetActionType: 'sell'
+                      }
+                      const savedAction: EdgeTxActionFiat = {
+                        actionType: 'fiat',
+                        orderId: invoice,
+                        orderUri: `${widgetUrl}?requestId=${requestId}`,
+                        isEstimate: true,
+                        fiatPlugin: {
+                          providerId,
+                          providerDisplayName,
+                          supportEmail
+                        },
+                        payinAddress: depositAddress,
+                        cryptoAsset: {
+                          pluginId: coreWallet.currencyInfo.pluginId,
+                          tokenId,
+                          nativeAmount
+                        },
+                        fiatAsset: {
+                          fiatCurrencyCode,
+                          fiatAmount
+                        }
+                      }
+
                       // Launch the SendScene to make payment
                       const spendInfo: EdgeSpendInfo = {
                         tokenId,
+                        assetAction,
+                        savedAction,
                         spendTargets: [
                           {
                             nativeAmount,

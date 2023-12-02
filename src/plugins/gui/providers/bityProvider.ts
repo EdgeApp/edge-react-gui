@@ -1,12 +1,11 @@
 import { lt, toFixed } from 'biggystring'
 import { asArray, asEither, asMaybe, asNumber, asObject, asString, asValue } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeSpendInfo } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeSpendInfo, EdgeTokenId } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../../locales/strings'
 import { HomeAddress, SepaInfo } from '../../../types/FormTypes'
 import { StringMap } from '../../../types/types'
-import { getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import { FiatPaymentType, FiatPluginUi } from '../fiatPluginTypes'
 import {
   FiatProvider,
@@ -23,6 +22,8 @@ const providerId = 'bity'
 const storeId = 'com.bity'
 const partnerIcon = 'logoBity.png'
 const pluginDisplayName = 'Bity'
+const providerDisplayName = pluginDisplayName
+const supportEmail = 'support@bity.com'
 const supportedPaymentType: FiatPaymentType = 'sepa'
 const partnerFee = 0.005
 
@@ -346,6 +347,7 @@ export const bityProvider: FiatProviderFactory = {
           paymentTypes,
           regionCode,
           pluginId,
+          tokenId,
           displayCurrencyCode
         } = params
         const isBuy = direction === 'buy'
@@ -452,7 +454,7 @@ export const bityProvider: FiatProviderFactory = {
                 if (isBuy) {
                   await completeBuyOrder(approveQuoteRes, showUi)
                 } else {
-                  await completeSellOrder(approveQuoteRes, coreWallet, showUi)
+                  await completeSellOrder(approveQuoteRes, coreWallet, showUi, fiatCurrencyCode, tokenId)
                 }
 
                 showUi.exitScene()
@@ -478,9 +480,16 @@ const addToAllowedCurrencies = (pluginId: string, currency: BityCurrency, curren
  * Transition to the send scene pre-populted with the payment address from the
  * previously opened/approved sell order
  */
-const completeSellOrder = async (approveQuoteRes: BityApproveQuoteResponse, coreWallet: EdgeCurrencyWallet, showUi: FiatPluginUi) => {
-  const { input, id, payment_details: paymentDetails } = asBitySellApproveQuoteResponse(approveQuoteRes)
+const completeSellOrder = async (
+  approveQuoteRes: BityApproveQuoteResponse,
+  coreWallet: EdgeCurrencyWallet,
+  showUi: FiatPluginUi,
+  fiatCurrencyCode: string,
+  tokenId: EdgeTokenId
+) => {
+  const { input, id, payment_details: paymentDetails, output } = asBitySellApproveQuoteResponse(approveQuoteRes)
   const { amount: inputAmount, currency: inputCurrencyCode } = input
+  const { amount: fiatAmount } = output
 
   const nativeAmount = await coreWallet.denominationToNative(inputAmount, inputCurrencyCode)
 
@@ -490,10 +499,31 @@ const completeSellOrder = async (approveQuoteRes: BityApproveQuoteResponse, core
     throw new Error('Bity: Could not find input denomination: ' + inputCurrencyCode)
   }
 
-  const tokenId = getWalletTokenId(coreWallet, inputCurrencyCode)
-
   const spendInfo: EdgeSpendInfo = {
     tokenId,
+    assetAction: {
+      assetActionType: 'sell'
+    },
+    savedAction: {
+      actionType: 'fiat',
+      orderId: id,
+      isEstimate: true,
+      fiatPlugin: {
+        providerId,
+        providerDisplayName,
+        supportEmail
+      },
+      payinAddress: paymentDetails.crypto_address,
+      cryptoAsset: {
+        pluginId: coreWallet.currencyInfo.pluginId,
+        tokenId,
+        nativeAmount
+      },
+      fiatAsset: {
+        fiatCurrencyCode,
+        fiatAmount
+      }
+    },
     spendTargets: [
       {
         nativeAmount,
