@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../../locales/strings'
-import { StakePolicy } from '../../../plugins/stake-plugins/types'
+import { StakePlugin, StakePolicy } from '../../../plugins/stake-plugins/types'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getTokenId } from '../../../util/CurrencyInfoHelpers'
@@ -21,6 +21,13 @@ import { SceneHeader } from '../../themed/SceneHeader'
 
 interface Props extends EdgeSceneProps<'stakeOptions'> {
   wallet: EdgeCurrencyWallet
+}
+
+export interface StakeOptionsParams {
+  stakePlugins: StakePlugin[]
+  currencyCode: string
+  stakePolicies: StakePolicy[]
+  walletId: string
 }
 
 const StakeOptionsSceneComponent = (props: Props) => {
