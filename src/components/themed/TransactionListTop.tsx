@@ -335,7 +335,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   handleStakePress = () => {
     triggerHaptic('impactLight')
     const { currencyCode, wallet, navigation } = this.props
-    const { stakePlugins, stakePolicies } = this.state
+    const { stakePlugins, stakePolicies, stakePositionMap } = this.state
 
     // Handle FIO staking
     if (currencyCode === 'FIO') {
@@ -352,14 +352,15 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           walletId: wallet.id,
           currencyCode,
           stakePlugins,
-          stakePolicies
+          stakePolicies,
+          stakePositionMap
         })
       } else if (stakePolicies.length === 1) {
         const [stakePolicy] = stakePolicies
         const { stakePolicyId } = stakePolicy
         const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy)
         // Transition to next scene immediately
-        const stakePosition = this.state.stakePositionMap[stakePolicyId]
+        const stakePosition = stakePositionMap[stakePolicyId]
         if (stakePlugin != null) navigation.push('stakeOverview', { stakePlugin, walletId: wallet.id, stakePolicy: stakePolicy, stakePosition })
       }
     }

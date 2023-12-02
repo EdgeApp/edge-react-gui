@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../../locales/strings'
-import { StakePlugin, StakePolicy } from '../../../plugins/stake-plugins/types'
+import { StakePlugin, StakePolicy, StakePositionMap } from '../../../plugins/stake-plugins/types'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getTokenId } from '../../../util/CurrencyInfoHelpers'
@@ -27,12 +27,13 @@ export interface StakeOptionsParams {
   stakePlugins: StakePlugin[]
   currencyCode: string
   stakePolicies: StakePolicy[]
+  stakePositionMap: StakePositionMap
   walletId: string
 }
 
 const StakeOptionsSceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
-  const { stakePlugins, walletId, currencyCode, stakePolicies } = route.params
+  const { stakePlugins, walletId, currencyCode, stakePolicies, stakePositionMap } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -45,8 +46,11 @@ const StakeOptionsSceneComponent = (props: Props) => {
   //
 
   const handleStakeOptionPress = (stakePolicy: StakePolicy) => {
+    const { stakePolicyId } = stakePolicy
     const stakePlugin = getPluginFromPolicy(stakePlugins, stakePolicy)
-    if (stakePlugin != null) navigation.navigate('stakeOverview', { stakePlugin, walletId, stakePolicy })
+    // Transition to next scene immediately
+    const stakePosition = stakePositionMap[stakePolicyId]
+    if (stakePlugin != null) navigation.push('stakeOverview', { stakePlugin, walletId: wallet.id, stakePolicy: stakePolicy, stakePosition })
   }
 
   //
