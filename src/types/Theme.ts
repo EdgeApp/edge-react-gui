@@ -392,4 +392,10 @@ export interface Theme {
   walletListSlideTutorialImage: ImageProp
 
   guiPluginLogoMoonpay: ImageProp
+
+  // UI 4.0:
+  cardBackgroundUi4: string
+  cardRadiusRemUi4: number
+
+  touchHighlightUi4: string
 }

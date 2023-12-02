@@ -391,5 +391,11 @@ export const edgeLight: Theme = {
   fioAddressLogo: fioAddressLogo,
   walletListSlideTutorialImage: walletListSlidingTutorial,
 
-  guiPluginLogoMoonpay: guiPluginLogoMoonpay
+  guiPluginLogoMoonpay: guiPluginLogoMoonpay,
+
+  // UI 4.0:
+  cardBackgroundUi4: palette.mutedGray,
+  cardRadiusRemUi4: 1,
+
+  touchHighlightUi4: palette.lightGrayOp75
 }
