@@ -62,6 +62,14 @@ export type Action =
       type: 'CORE/CONTEXT/ADD_CONTEXT'
       data: { context: EdgeContext; disklet: Disklet }
     }
+  | {
+      type: 'CORE/NEW_TOKENS'
+      data: { walletId: string; enablingTokenIds: string[] }
+    }
+  | {
+      type: 'CORE/DISMISS_NEW_TOKENS'
+      data: { walletId: string }
+    }
   | { type: 'DEEP_LINK_RECEIVED'; data: DeepLink }
   | { type: 'DEVICE_REFERRAL_LOADED'; data: DeviceReferral }
   | { type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'; data: { exchangeRates: GuiExchangeRates } }

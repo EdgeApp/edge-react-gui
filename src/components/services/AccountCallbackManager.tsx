@@ -130,6 +130,11 @@ export function AccountCallbackManager(props: Props) {
         console.log(`${walletPrefix(wallet)}: onTransactionsChanged: ${transactions.map(tx => tx.txid).join(' ')}`)
       }),
 
+      wallet.on('enabledDetectedTokens', enablingTokenIds => {
+        console.log(`${walletPrefix(wallet)}: onNewTokens: ${JSON.stringify(enablingTokenIds)}`)
+        dispatch({ type: 'CORE/NEW_TOKENS', data: { walletId: wallet.id, enablingTokenIds } })
+      }),
+
       // These ones defer their work until later:
       wallet.watch('balances', () => setRatesDirty()),
       wallet.watch('enabledTokenIds', () => setRatesDirty())
