@@ -531,7 +531,7 @@ export const paybisProvider: FiatProviderFactory = {
                       const savedAction: EdgeTxActionFiat = {
                         type: 'sell',
                         orderId: invoice,
-                        orderUri: '',
+                        orderUri: `${widgetUrl}?requestId=${requestId}`,
                         isEstimate: true,
                         fiatPlugin: {
                           providerId,

@@ -502,7 +502,6 @@ const completeSellOrder = async (
     savedAction: {
       type: 'sell',
       orderId: id,
-      orderUri: '',
       isEstimate: true,
       fiatPlugin: {
         providerId,
