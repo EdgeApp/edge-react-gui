@@ -8,7 +8,7 @@ import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 
 export type Category = 'transfer' | 'exchange' | 'expense' | 'income'
 
-export interface SplitCategory {
+export interface EdgeCategory {
   category: Category
   subcategory: string
 }
@@ -58,7 +58,7 @@ export function setNewSubcategory(newSubcategory: string): ThunkAction<Promise<v
  * The category must fit our enum type, or we will use a fallback.
  * The subcategory can be localized and freely edited.
  */
-export function splitCategory(fullCategory: string = '', defaultCategory: Category = 'income'): SplitCategory {
+export function splitCategory(fullCategory: string = '', defaultCategory: Category = 'income'): EdgeCategory {
   if (fullCategory.length > 0 && !fullCategory.includes(':')) {
     fullCategory += ':'
   }
@@ -83,14 +83,14 @@ export function splitCategory(fullCategory: string = '', defaultCategory: Catego
  * Combine the category and subcategory into a single string,
  * with the correct capitalization.
  */
-export function joinCategory(split: SplitCategory): string {
+export function joinCategory(split: EdgeCategory): string {
   return prefixes[split.category] + split.subcategory
 }
 
 /**
  * Localizes a category string for display.
  */
-export function formatCategory(split: SplitCategory): string {
+export function formatCategory(split: EdgeCategory): string {
   if (split.subcategory === '') return displayCategories[split.category]
   return `${displayCategories[split.category]}: ${split.subcategory}`
 }
@@ -266,7 +266,7 @@ export const getTxActionDisplayInfo = (
   tx: EdgeTransaction,
   wallet: EdgeCurrencyWallet,
   tokenId: EdgeTokenId
-): { splitCategory: SplitCategory; notes?: string; direction: 'send' | 'receive' } | undefined => {
+): { edgeCategory: EdgeCategory; notes?: string; direction: 'send' | 'receive' } | undefined => {
   const { assetAction, chainAction, chainAssetAction, savedAction } = tx
   const action = savedAction ?? chainAction
   const assetAct = assetAction ?? chainAssetAction
@@ -289,7 +289,7 @@ export const getTxActionDisplayInfo = (
           const otherAsset = txSrcSameAsset ? action.toAsset : action.fromAsset
 
           return {
-            splitCategory: {
+            edgeCategory: {
               category: 'exchange',
               subcategory: sprintf(toFromStr, getCurrencyCode(wallet, otherAsset?.tokenId))
             },
@@ -298,7 +298,7 @@ export const getTxActionDisplayInfo = (
         }
         case 'swapOrderPost':
           return {
-            splitCategory: {
+            edgeCategory: {
               category: 'expense',
               subcategory: sprintf(lstrings.transaction_details_swap_order_post)
             },
@@ -306,7 +306,7 @@ export const getTxActionDisplayInfo = (
           }
         case 'swapOrderCancel':
           return {
-            splitCategory: {
+            edgeCategory: {
               category: 'expense',
               subcategory: sprintf(lstrings.transaction_details_swap_order_cancel)
             },
@@ -327,7 +327,7 @@ export const getTxActionDisplayInfo = (
             console.warn(`Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`)
             return
           }
-          return { splitCategory: { category: 'transfer', subcategory }, direction: 'send' }
+          return { edgeCategory: { category: 'transfer', subcategory }, direction: 'send' }
         }
         case 'stakeOrder': {
           let notes
@@ -339,7 +339,7 @@ export const getTxActionDisplayInfo = (
             return
           }
           return {
-            splitCategory: { category: 'expense', subcategory: lstrings.transaction_details_stake_order_subcat },
+            edgeCategory: { category: 'expense', subcategory: lstrings.transaction_details_stake_order_subcat },
             notes,
             direction: 'send'
           }
@@ -353,7 +353,7 @@ export const getTxActionDisplayInfo = (
             console.error(`Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`)
             return
           }
-          return { splitCategory: { category: 'transfer', subcategory }, direction: 'receive' }
+          return { edgeCategory: { category: 'transfer', subcategory }, direction: 'receive' }
         }
         case 'unstakeOrder': {
           let notes
@@ -365,7 +365,7 @@ export const getTxActionDisplayInfo = (
             return
           }
           return {
-            splitCategory: { category: 'expense', subcategory: lstrings.transaction_details_unstake_order },
+            edgeCategory: { category: 'expense', subcategory: lstrings.transaction_details_unstake_order },
             notes,
             direction: 'send'
           }

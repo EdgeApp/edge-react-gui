@@ -58,17 +58,15 @@ const TransactionDetailsComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const thumbnailPath = useContactThumbnail(metadata?.name)
-
-  const isSentTransaction = transaction.nativeAmount.startsWith('-') || (eq(transaction.nativeAmount, '0') && transaction.isSend)
-
   // Choose a default category based on metadata or the txAction
   const txActionInfo = getTxActionDisplayInfo(transaction, wallet, tokenId)
-  const txActionSplitCat = txActionInfo?.splitCategory
+  const txActionSplitCat = txActionInfo?.edgeCategory
   const txActionNotes = txActionInfo?.notes
   const txActionDir = txActionInfo?.direction
 
+  const isSentTransaction = transaction.nativeAmount.startsWith('-') || (eq(transaction.nativeAmount, '0') && transaction.isSend)
+
   // Determine direction from transaction nativeAmount if not specified in
-  // txActionInfo
   const direction = txActionDir ?? isSentTransaction ? 'send' : 'receive'
 
   const splitCat =
