@@ -301,7 +301,12 @@ const TransactionDetailsComponent = (props: Props) => {
         <RowUi4 type="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput}>
           <EdgeText style={styles.tileCategory}>{categoriesText}</EdgeText>
         </RowUi4>
-        <RowUi4 type="editable" title={lstrings.transaction_details_notes_title} body={notes ?? ''} onPress={openNotesInput} />
+        <RowUi4
+          type="editable"
+          title={lstrings.transaction_details_notes_title}
+          body={notes == null || notes.trim() === '' ? lstrings.transaction_details_empty_note_placeholder : notes}
+          onPress={openNotesInput}
+        />
         {transaction.memos?.map((memo, i) =>
           memo.hidden === true ? null : <RowUi4 body={memo.value} key={`memo${i}`} title={getMemoTitle(memo.memoName)} type="copy" />
         )}
