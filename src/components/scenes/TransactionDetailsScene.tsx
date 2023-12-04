@@ -52,14 +52,14 @@ export interface TransactionDetailsParams {
 const TransactionDetailsComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { edgeTransaction: transaction, walletId } = route.params
-  const { currencyCode, metadata = {}, chainAssetAction, nativeAmount, date, tokenId, txid } = transaction
+  const { currencyCode, metadata = {}, chainAssetAction, nativeAmount, date, txid } = transaction
   const { currencyInfo } = wallet
 
   const theme = useTheme()
   const styles = getStyles(theme)
   const thumbnailPath = useContactThumbnail(metadata?.name)
   // Choose a default category based on metadata or the txAction
-  const txActionInfo = getTxActionDisplayInfo(transaction, wallet, tokenId)
+  const txActionInfo = getTxActionDisplayInfo(transaction, wallet)
   const txActionSplitCat = txActionInfo?.edgeCategory
   const txActionNotes = txActionInfo?.notes
   const txActionDir = txActionInfo?.direction

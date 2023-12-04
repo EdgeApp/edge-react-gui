@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeAssetAmount, EdgeCurrencyWallet, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeAssetAmount, EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { showError } from '../components/services/AirshipInstance'
@@ -264,10 +264,9 @@ export const defaultCategories = [
  */
 export const getTxActionDisplayInfo = (
   tx: EdgeTransaction,
-  wallet: EdgeCurrencyWallet,
-  tokenId: EdgeTokenId
+  wallet: EdgeCurrencyWallet
 ): { edgeCategory: EdgeCategory; notes?: string; direction: 'send' | 'receive' } | undefined => {
-  const { assetAction, chainAction, chainAssetAction, savedAction } = tx
+  const { assetAction, chainAction, chainAssetAction, savedAction, tokenId } = tx
   const action = savedAction ?? chainAction
   const assetAct = assetAction ?? chainAssetAction
 
