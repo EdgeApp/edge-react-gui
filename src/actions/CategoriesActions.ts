@@ -7,6 +7,7 @@ import { TX_ACTION_LABEL_MAP } from '../constants/txActionConstants'
 import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
+import { cleanFiatCurrencyCode } from '../util/CurrencyWalletHelpers'
 
 export type Category = 'transfer' | 'exchange' | 'expense' | 'income'
 
@@ -354,7 +355,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, wallet: EdgeCurrency
             break
           }
           default:
-            console.error(`Unsupported EdgeTxAction type: '${assetActionType}'`)
+            console.error(`Unsupported EdgeTxAction assetAction:assetActionType: '${assetAction}:${assetActionType}'`)
         }
         break
       }
@@ -413,12 +414,40 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, wallet: EdgeCurrency
             break
           }
           default:
-            console.error(`Unsupported EdgeTxAction type: '${assetActionType}'`)
+            console.error(`Unsupported EdgeTxAction assetAction:assetActionType: '${assetAction}:${assetActionType}'`)
+        }
+        break
+      }
+      case 'fiat': {
+        switch (assetActionType) {
+          case 'buy': {
+            payeeText = sprintf(payeeText, currencyName)
+            const { fiatAsset } = action
+            const { fiatCurrencyCode } = cleanFiatCurrencyCode(fiatAsset.fiatCurrencyCode)
+            edgeCategory = { category: 'exchange', subcategory: sprintf(lstrings.transaction_details_swap_from_subcat_1s, fiatCurrencyCode) }
+            direction = 'receive'
+            break
+          }
+          case 'sell': {
+            payeeText = sprintf(payeeText, currencyName)
+            const { fiatAsset } = action
+            const { fiatCurrencyCode } = cleanFiatCurrencyCode(fiatAsset.fiatCurrencyCode)
+            edgeCategory = { category: 'exchange', subcategory: sprintf(lstrings.transaction_details_swap_to_subcat_1s, fiatCurrencyCode) }
+            direction = 'send'
+            break
+          }
+          case 'sellNetworkFee': {
+            edgeCategory = { category: 'expense', subcategory: lstrings.wc_smartcontract_network_fee }
+            direction = 'send'
+            break
+          }
+          default:
+            console.error(`Unsupported EdgeTxAction assetAction:assetActionType: '${assetAction}:${assetActionType}'`)
         }
         break
       }
       default:
-        console.error(`Unsupported EdgeTxAction actionType: '${actionType}'`)
+        console.error(`Unsupported EdgeTxAction assetAction: '${assetAction}'`)
     }
   }
   const savedData: EdgeMetadata = {
