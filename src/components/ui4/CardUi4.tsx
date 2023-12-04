@@ -10,7 +10,7 @@ import { SectionView } from './SectionView'
 export type CardType = 'default' | 'warning' | 'error'
 
 interface Props {
-  children: React.ReactNode | React.ReactNode[]
+  children?: React.ReactNode | React.ReactNode[]
   icon?: React.ReactNode
   onLongPress?: () => Promise<void> | void
   onPress?: () => Promise<void> | void

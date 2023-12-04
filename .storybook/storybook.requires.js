@@ -38,7 +38,7 @@ if (parameters) {
 
 const getStories = () => {
   return {
-    "./src/components/buttons/MinimalButton.stories.tsx": require("../src/components/buttons/MinimalButton.stories.tsx"),
+    "./src/components/ui4/CardUI4.stories.tsx": require("../src/components/ui4/CardUI4.stories.tsx"),
   };
 };
 
