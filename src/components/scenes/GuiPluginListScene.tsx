@@ -227,7 +227,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   /**
    * Launch the provided plugin, including pre-flight checks.
    */
-  async openPlugin(listRow: GuiPluginRow) {
+  async openPlugin(listRow: GuiPluginRow, longPress: boolean = false) {
     const { accountReferral, countryCode, deviceId, disablePlugins, navigation, account } = this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
@@ -272,6 +272,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         direction,
         disablePlugins: disableProviders,
         guiPlugin: plugin,
+        longPress,
         navigation,
         paymentType,
         regionCode: { countryCode }
@@ -324,7 +325,11 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     return (
       <View style={styles.pluginRowContainer}>
-        <TouchableOpacity accessible={false} onPress={async () => await this.openPlugin(item).catch(showError)}>
+        <TouchableOpacity
+          accessible={false}
+          onPress={async () => await this.openPlugin(item).catch(showError)}
+          onLongPress={async () => await this.openPlugin(item, true).catch(showError)}
+        >
           <View style={styles.pluginRowLogoAndInfo}>
             <Image
               style={styles.logo}

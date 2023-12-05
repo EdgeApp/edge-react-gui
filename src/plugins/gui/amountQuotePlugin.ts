@@ -39,10 +39,41 @@ const providerFactories = [banxaProvider, bityProvider, moonpayProvider, paybisP
 const DEFAULT_FIAT_AMOUNT = '500'
 
 export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
-  const { account, guiPlugin, showUi } = params
+  const { account, guiPlugin, longPress = false, showUi } = params
   const { pluginId } = guiPlugin
 
   const assetPromises: Array<Promise<FiatProviderAssetMap>> = []
+
+  if (longPress) {
+    const rowText = await showUi.listModal({
+      title: 'Clear Provider Data Store',
+      items: providerFactories.map(f => ({ icon: '', name: f.providerId }))
+    })
+    if (rowText != null) {
+      const factory = providerFactories.find(pf => pf.providerId === rowText)
+      if (factory != null) {
+        const { storeId } = factory
+        await account.dataStore.deleteStore(storeId)
+        const result = await showUi.buttonModal({
+          buttons: {
+            delete: { label: lstrings.string_delete, type: 'primary' },
+            cancel: { label: lstrings.string_cancel, type: 'secondary' }
+          },
+          title: 'Clear Data Store',
+          message: `Are you sure you want to clear data store of provider ${rowText}??\n\nThis cannot be undone.`
+        })
+        if (result === 'delete') {
+          await showUi.buttonModal({
+            buttons: {
+              ok: { label: lstrings.string_ok, type: 'primary' }
+            },
+            title: 'Data Store Cleared',
+            message: `Provider ${rowText} data store has been cleared`
+          })
+        }
+      }
+    }
+  }
 
   const providers = await initializeProviders(providerFactories, params)
   if (providers.length === 0) throw new Error('No enabled amountQuoteFiatPlugin providers')

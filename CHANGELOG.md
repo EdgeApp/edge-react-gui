@@ -8,6 +8,7 @@
 - added: Support for Thorchain Savers EVM token deposits
 - added: Add Solana init options
 - added: BSC staking on Thorchain Savers
+- added: Ability to clear datastore of fiat providers
 - changed: USP/Legacy Landing probability set to 50/50
 - changed: Use memos for Thorchain Savers withdrawals
 - changed: Allow wallet creation in WalletConnect wallet picker
