@@ -625,7 +625,11 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isCustomTokensSupported: true
+    isCustomTokensSupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '250'
+    }
   },
   hedera: {
     initWalletName: lstrings.string_first_hedera_wallet_name,
