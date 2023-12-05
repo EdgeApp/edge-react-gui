@@ -101,6 +101,8 @@ export const WALLET_TYPE_ORDER = [
   'wallet:binancesmartchain',
   'wallet:liberland',
   'wallet:liberlandtestnet',
+  'wallet:coreum',
+  'wallet:osmosis',
   'wallet:thorchainrune'
 ]
 
@@ -455,6 +457,18 @@ export const SPECIAL_CURRENCY_INFO: {
     // will share / copy public address instead of URI on Request scene
     isUriEncodedStructure: true,
     dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX',
+    isImportKeySupported: true
+  },
+  coreum: {
+    initWalletName: lstrings.string_first_coreum_wallet_name,
+    chainCode: 'CORE',
+    dummyPublicAddress: 'core18rv2a6cjkk3lnayy29hez6s2ftpe9llqnce2vu',
+    isImportKeySupported: true
+  },
+  osmosis: {
+    initWalletName: lstrings.string_first_osmosis_wallet_name,
+    chainCode: 'OSMO',
+    dummyPublicAddress: 'osmo156hdwk3gx4wkq0r5m0s3ag2yj5pawfeudml34a',
     isImportKeySupported: true
   },
   thorchainrune: {
