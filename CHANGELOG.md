@@ -14,6 +14,7 @@
 - added: New FilledTextInput component
 - added: New SimpleTextInput component
 - added: Support for Thorchain Savers EVM token deposits
+- added: Transaction support for zkSync
 - added: Add Solana init options
 - added: BSC staking on Thorchain Savers
 - added: Ability to clear datastore of fiat providers
