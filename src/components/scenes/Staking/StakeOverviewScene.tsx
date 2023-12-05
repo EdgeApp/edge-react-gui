@@ -4,8 +4,9 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { lstrings } from '../../../locales/strings'
-import { ChangeQuoteRequest, PositionAllocation, StakePosition } from '../../../plugins/stake-plugins/types'
+import { ChangeQuoteRequest, PositionAllocation, StakePlugin, StakePolicy, StakePosition } from '../../../plugins/stake-plugins/types'
 import { getDisplayDenominationFromState } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
@@ -15,6 +16,7 @@ import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { FillLoader } from '../../progress-indicators/FillLoader'
+import { Shimmer } from '../../progress-indicators/Shimmer'
 import { showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { MainButton } from '../../themed/MainButton'
@@ -25,13 +27,20 @@ interface Props extends EdgeSceneProps<'stakeOverview'> {
   wallet: EdgeCurrencyWallet
 }
 
+export interface StakeOverviewParams {
+  stakePlugin: StakePlugin
+  stakePolicy: StakePolicy
+  stakePosition?: StakePosition
+  walletId: string
+}
+
 interface DenomMap {
   [cc: string]: EdgeDenomination
 }
 
 const StakeOverviewSceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
-  const { stakePolicy, stakePlugin } = route.params
+  const { stakePolicy, stakePosition: startingStakePosition, stakePlugin } = route.params
   const { stakePolicyId } = stakePolicy
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -48,7 +57,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   // Hooks
   const [stakeAllocations, setStakeAllocations] = React.useState<PositionAllocation[]>([])
   const [rewardAllocations, setRewardAllocations] = React.useState<PositionAllocation[]>([])
-  const [stakePosition, setStakePosition] = React.useState<StakePosition | undefined>()
+  const [stakePosition, setStakePosition] = React.useState<StakePosition | undefined>(startingStakePosition)
 
   // Background loop to force fetchStakePosition updates
   const [updateCounter, setUpdateCounter] = React.useState<number>(0)
@@ -60,26 +69,23 @@ const StakeOverviewSceneComponent = (props: Props) => {
     return () => clearInterval(interval)
   }, [])
 
-  React.useEffect(() => {
-    let abort = false
-    stakePlugin
-      .fetchStakePosition({ stakePolicyId, wallet, account })
-      .then(async stakePosition => {
-        if (abort) return
+  useAsyncEffect(async () => {
+    let sp: StakePosition
+    try {
+      if (stakePosition == null) {
+        sp = await stakePlugin.fetchStakePosition({ stakePolicyId, wallet, account })
+        setStakePosition(sp)
+      } else {
         const guiAllocations = getPositionAllocations(stakePosition)
         setStakeAllocations(guiAllocations.staked)
         setRewardAllocations(guiAllocations.earned)
         setStakePosition(stakePosition)
-      })
-      .catch(err => {
-        showError(err)
-        console.error(err)
-      })
-
-    return () => {
-      abort = true
+      }
+    } catch (err) {
+      showError(err)
+      console.error(err)
     }
-  }, [account, stakePlugin, stakePolicyId, updateCounter, wallet])
+  }, [account, stakePlugin, stakePolicyId, stakePosition, updateCounter, wallet])
 
   // Handlers
   const handleModifyPress = (modification: ChangeQuoteRequest['action'] | 'unstakeAndClaim') => () => {
@@ -141,6 +147,16 @@ const StakeOverviewSceneComponent = (props: Props) => {
           stakeProviderInfo={stakePolicy.stakeProviderInfo}
         />
       </View>
+      {stakePosition == null ? (
+        <>
+          <View style={styles.shimmer}>
+            <Shimmer isShown />
+          </View>
+          <View style={styles.shimmer}>
+            <Shimmer isShown />
+          </View>
+        </>
+      ) : null}
       <FlashList
         data={[...stakeAllocations, ...rewardAllocations]}
         renderItem={renderCFAT}
@@ -189,6 +205,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'flex-start',
     paddingTop: theme.rem(0.5)
+  },
+  shimmer: {
+    height: theme.rem(3),
+    marginLeft: theme.rem(1),
+    marginHorizontal: theme.rem(1),
+    marginVertical: theme.rem(0.5)
   },
   icon: {
     height: theme.rem(1.5),
