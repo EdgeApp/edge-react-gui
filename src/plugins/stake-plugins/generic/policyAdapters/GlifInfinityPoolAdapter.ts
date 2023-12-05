@@ -204,15 +204,30 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
 
       const { walletAddress, walletSigner } = await workflowUtils(wallet)
 
-      const [stakeAssetBalance, poolTokenBalance] = await Promise.all([
-        // Get stake asset balance:
-        walletSigner.getBalance(),
-        // Get pool token balance:
-        poolTokenContract.connect(walletSigner).balanceOf(walletAddress)
-      ])
+      // Get stake asset balance:
+      const stakeAssetBalance = await walletSigner.getBalance()
+
+      // Get pool token balance:
+      const poolTokenBalance = await poolTokenContract
+        .connect(walletSigner)
+        .balanceOf(walletAddress)
+        .catch(err => {
+          if (String(err).includes('Transaction reverted without a reason string')) {
+            return BigNumber.from(0)
+          }
+          throw err
+        })
 
       // This is the value you get back in the reward token from the pool token:
-      const redemptionValue = await poolContract.connect(walletSigner).previewRedeem(poolTokenBalance)
+      const redemptionValue = await poolContract
+        .connect(walletSigner)
+        .previewRedeem(poolTokenBalance)
+        .catch(err => {
+          if (String(err).includes('Transaction reverted without a reason string')) {
+            return BigNumber.from(0)
+          }
+          throw err
+        })
 
       // The only allocation is the amount staked:
       const allocations: PositionAllocation[] = [
