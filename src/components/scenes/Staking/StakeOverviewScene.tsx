@@ -160,7 +160,9 @@ const StakeOverviewSceneComponent = (props: Props) => {
       <FlashList
         data={[...stakeAllocations, ...rewardAllocations]}
         renderItem={renderCFAT}
-        keyExtractor={(allocation: PositionAllocation) => allocation.currencyCode + allocation.allocationType}
+        keyExtractor={(allocation: PositionAllocation) =>
+          `${allocation.allocationType}${allocation.currencyCode}${allocation.nativeAmount}${getAllocationLocktimeMessage(allocation)}`
+        }
       />
       <MainButton
         label={lstrings.stake_stake_more_funds}
