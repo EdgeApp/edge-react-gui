@@ -145,7 +145,7 @@
     "edge-currency-monero": "^1.1.1",
     "edge-currency-plugins": "^2.5.1",
     "edge-exchange-plugins": "^1.2.0",
-    "edge-info-server": "^1.0.2",
+    "edge-info-server": "^1.2.0",
     "edge-login-ui-rn": "^2.17.3",
     "ethers": "^5.7.2",
     "paraswap": "^5.2.0",
