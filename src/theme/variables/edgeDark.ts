@@ -69,7 +69,8 @@ const palette = {
   QuicksandBold: 'Quicksand-Bold',
 
   // UI4 palette
-  teal: 'rgb(22, 50, 58)'
+  teal: 'rgb(22, 50, 58)',
+  blackOp65: 'rgba(0, 0, 0, .65)'
 }
 
 const deviceWidth = Dimensions.get('window').width
@@ -399,6 +400,12 @@ export const edgeDark: Theme = {
   // UI 4.0:
   cardBackgroundUi4: palette.teal,
   cardRadiusRemUi4: 1,
+  cardDisabledOverlayUi4: palette.blackOp65,
 
-  touchHighlightUi4: palette.lightGrayOp75
+  touchHighlightUi4: palette.lightGrayOp75,
+
+  negativeTextMutedUi4: palette.gray,
+
+  // TODO: Update with an appropriate API after Skia integration
+  shadowColorUi4: palette.black
 }

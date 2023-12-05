@@ -2,6 +2,7 @@ import { asNumber, asObject } from 'cleaners'
 
 export type ImageProp = { uri: string } | number
 
+// TODO: Shadow API to be updated after Skia integration
 interface ThemeShadowParams {
   shadowColor: string
   shadowOffset: {
@@ -396,6 +397,12 @@ export interface Theme {
   // UI 4.0:
   cardBackgroundUi4: string
   cardRadiusRemUi4: number
+  cardDisabledOverlayUi4: string
 
   touchHighlightUi4: string
+
+  negativeTextMutedUi4: string
+
+  // TODO: Update with an appropriate API after Skia integration
+  shadowColorUi4: string
 }
