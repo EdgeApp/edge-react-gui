@@ -23,6 +23,7 @@
 - fixed: Do not count paused wallets for progress ratio
 - fixed: ENS name resolution intermittently failing
 - fixed: Error on exchange details from RUNE swaps
+- removed: Staking on Fantom
 
 ## 3.22.0
 
