@@ -143,6 +143,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
             startNativeAmount={overridePrimaryNativeAmount}
             keyboardVisible={false}
             forceField="fiat"
+            tokenId={this.props.tokenId}
             walletId={this.props.walletId}
           />
           {children}
