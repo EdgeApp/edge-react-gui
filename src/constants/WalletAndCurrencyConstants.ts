@@ -397,6 +397,15 @@ export const SPECIAL_CURRENCY_INFO: {
       reference: '42'
     }
   },
+  goerli: {
+    initWalletName: lstrings.string_first_ethereum_wallet_name,
+    chainCode: 'ETH',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    isImportKeySupported: true,
+    isCustomTokensSupported: true,
+    isPaymentProtocolSupported: false
+  },
   ethereumclassic: {
     initWalletName: lstrings.string_first_ethereum_classic_wallet_name,
     chainCode: 'ETC',
@@ -469,6 +478,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_osmosis_wallet_name,
     chainCode: 'OSMO',
     dummyPublicAddress: 'osmo156hdwk3gx4wkq0r5m0s3ag2yj5pawfeudml34a',
+    isCustomTokensSupported: true,
     isImportKeySupported: true
   },
   thorchainrune: {
@@ -501,6 +511,7 @@ export const SPECIAL_CURRENCY_INFO: {
   solana: {
     initWalletName: lstrings.string_first_solana_wallet_name,
     chainCode: 'SOL',
+    isCustomTokensSupported: true,
     isImportKeySupported: true,
     dummyPublicAddress: 'DEd1rkRyr5bRkJHgaAKMSYjYC1KMz3Hc5bSs4Jiwt29x',
     noChangeMiningFee: true
