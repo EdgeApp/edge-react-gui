@@ -8041,10 +8041,10 @@ edge-info-server@^1.2.0:
   dependencies:
     cleaners "^0.3.16"
 
-edge-login-ui-rn@^2.17.3:
-  version "2.17.3"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-2.17.3.tgz#4a283a2c59e346ac0e75451d21817e7bdea8dfd4"
-  integrity sha512-qhZKrZibIVBI/yZvyV1ReTx1a4nMkViLvRBWrNg72VMiT7ZSnP0cnHQfuvfJyO9st5+z3UHtDSzlEFsOCcGHeQ==
+edge-login-ui-rn@^2.18.0:
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-2.18.0.tgz#d24943bbcad0957484950ddbe38ceab17928dfab"
+  integrity sha512-hWd1h/uPf6UL29EgEGY3ztAmKemZjXTAZHZ7ndwJ60TPrdo6CQ0Enr35+MqMZ3njGIdJkfgGy8JlhsyySUZX/Q==
   dependencies:
     base-x "^4.0.0"
     cleaners "^0.3.12"
