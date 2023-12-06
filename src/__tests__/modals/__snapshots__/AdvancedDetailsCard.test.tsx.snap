@@ -2,35 +2,20 @@
 
 exports[`AdvancedDetailsCard should render with loading props 1`] = `
 <View
-  accessibilityState={
-    {
-      "disabled": false,
-    }
-  }
-  accessibilityValue={
-    {
-      "max": undefined,
-      "min": undefined,
-      "now": undefined,
-      "text": undefined,
-    }
-  }
-  accessible={false}
-  focusable={true}
-  onClick={[Function]}
-  onResponderGrant={[Function]}
-  onResponderMove={[Function]}
-  onResponderRelease={[Function]}
-  onResponderTerminate={[Function]}
-  onResponderTerminationRequest={[Function]}
-  onStartShouldSetResponder={[Function]}
   style={
-    {
-      "borderRadius": 22,
-      "flexDirection": "row",
-      "margin": 11,
-      "padding": 11,
-    }
+    [
+      {
+        "borderRadius": 22,
+        "flex": 1,
+        "padding": 11,
+      },
+      {
+        "marginBottom": 11,
+        "marginLeft": 11,
+        "marginRight": 11,
+        "marginTop": 11,
+      },
+    ]
   }
 >
   <BVLinearGradient
@@ -54,128 +39,116 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
       }
     }
     style={
-      [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "borderRadius": 22,
-        },
-      ]
+      {
+        "borderRadius": 22,
+        "bottom": 0,
+        "left": 0,
+        "overflow": "hidden",
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   />
   <View
-    style={
+    accessibilityState={
       {
-        "flex": 1,
-        "flexDirection": "column",
+        "disabled": false,
       }
     }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
   >
     <View
-      accessibilityState={
+      style={
         {
-          "disabled": false,
+          "alignItems": "center",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+          "paddingHorizontal": 11,
+          "paddingVertical": 6,
         }
       }
-      accessibilityValue={
-        {
-          "max": undefined,
-          "min": undefined,
-          "now": undefined,
-          "text": undefined,
-        }
-      }
-      accessible={false}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
     >
       <View
         style={
           {
-            "alignItems": "center",
-            "backgroundColor": "rgba(255, 255, 255, 0)",
-            "flexDirection": "row",
-            "paddingHorizontal": 11,
-            "paddingVertical": 6,
+            "flex": 1,
           }
         }
       >
-        <View
+        <Text
+          adjustsFontSizeToFit={false}
+          ellipsizeMode="tail"
+          minimumFontScale={0.65}
+          numberOfLines={1}
           style={
-            {
-              "flex": 1,
-            }
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#A4C7DF",
+                "fontSize": 17,
+                "paddingBottom": 6,
+                "paddingRight": 22,
+              },
+              null,
+            ]
           }
         >
-          <Text
-            adjustsFontSizeToFit={false}
-            ellipsizeMode="tail"
-            minimumFontScale={0.65}
-            numberOfLines={1}
-            style={
-              [
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#A4C7DF",
-                  "fontSize": 17,
-                  "paddingBottom": 6,
-                  "paddingRight": 22,
-                },
-                null,
-              ]
-            }
-          >
-            My Receive Addresses
-          </Text>
-          <Text
-            adjustsFontSizeToFit={true}
-            ellipsizeMode="tail"
-            minimumFontScale={0.65}
-            numberOfLines={3}
-            style={
-              [
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                },
-                null,
-              ]
-            }
-          >
-            123123123
-          </Text>
-        </View>
-        <View
+          My Receive Addresses
+        </Text>
+        <Text
+          adjustsFontSizeToFit={true}
+          ellipsizeMode="tail"
+          minimumFontScale={0.65}
+          numberOfLines={3}
           style={
-            {
-              "alignItems": "center",
-              "justifyContent": "center",
-            }
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              },
+              null,
+            ]
           }
-        />
+        >
+          123123123
+        </Text>
       </View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "justifyContent": "center",
+          }
+        }
+      />
     </View>
   </View>
 </View>
