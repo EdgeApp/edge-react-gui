@@ -17,11 +17,13 @@ interface IntlNumberFormatOptionsType {
   noGrouping?: boolean
 }
 
-const EN_US_LOCALE: IntlLocaleType = {
+export const EN_US_LOCALE: IntlLocaleType = {
   localeIdentifier: 'en_US',
   decimalSeparator: '.',
   groupingSeparator: ','
 }
+
+export const DEFAULT_LOCALE_ID = EN_US_LOCALE.localeIdentifier
 
 const DEFAULT_DATE_FMT: string = 'PPP' // April 29th, 1453
 export const SHORT_DATE_FMT: string = 'PP' // Apr 29, 1453
@@ -300,10 +302,36 @@ export const toPercentString = (
 
 const normalizeLang = (l: string) => l.replace('-', '').replace('_', '').toLowerCase()
 
-// Given a language code, ie 'en_US', 'en-US', 'en-us', 'en'. Pick the language that closest matches
+/** Given a language code, ie 'en_US', 'en-US', 'en-us', 'en'. Pick the language
+ * that closest matches
+ */
 export const pickLanguage = (lang: string, languages: string[]): string | undefined => {
   const match = languages.find(l => normalizeLang(l) === normalizeLang(lang))
   if (match != null) return match
 
-  return languages.find(l => normalizeLang(l.slice(0, 2)) === normalizeLang(lang.slice(0, 2)))
+  const normalizedMatch = languages.find(l => normalizeLang(l.slice(0, 2)) === normalizeLang(lang.slice(0, 2)))
+
+  return normalizedMatch
+}
+
+/**
+ * Picks either a localized string or uses whatever is defined under 'en_US' (or
+ * similar tag) as the fallback default string
+ */
+export const getLocaleOrDefaultString = (localizedStrings: { [localeId: string]: string }): string | undefined => {
+  const [firstLocale = { languageTag: DEFAULT_LOCALE_ID }] = getLocales()
+  const { languageTag } = firstLocale
+  const localizedStringKeys = Object.keys(localizedStrings)
+
+  let localeId = pickLanguage(languageTag, localizedStringKeys)
+  if (localeId == null && languageTag !== DEFAULT_LOCALE_ID) {
+    // Fallback to the default locale if we aren't already on it
+    localeId = pickLanguage(DEFAULT_LOCALE_ID, localizedStringKeys)
+  }
+
+  if (localeId == null) {
+    console.error('Could not find a string match for the default locale: ', DEFAULT_LOCALE_ID)
+  } else {
+    return localizedStrings[localeId]
+  }
 }

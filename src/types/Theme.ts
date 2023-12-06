@@ -2,7 +2,12 @@ import { asNumber, asObject } from 'cleaners'
 
 export type ImageProp = { uri: string } | number
 
-// TODO: Shadow API to be updated after Skia integration
+interface ThemeGradientParams {
+  colors: string[]
+  start: GradientCoords
+  end: GradientCoords
+}
+
 interface ThemeShadowParams {
   shadowColor: string
   shadowOffset: {
@@ -21,6 +26,20 @@ interface TextShadowParams {
     height: number
   }
   textShadowRadius: number
+}
+
+interface ButtomParamsUi4 {
+  textStyle: {
+    fontFamily: string
+    color: string
+  }
+  gradientProps: ThemeGradientParams
+  shadowParams: ThemeShadowParams // TODO: Address android/ios inconsistencies with lib
+  containerStyle: {
+    borderColor: string
+    borderWidth: number
+  }
+  spinnerColor: string
 }
 
 const asGradientCoords = asObject({
@@ -395,14 +414,22 @@ export interface Theme {
   guiPluginLogoMoonpay: ImageProp
 
   // UI 4.0:
-  cardBackgroundUi4: string
-  cardRadiusRemUi4: number
-  cardDisabledOverlayUi4: string
+  buttonBorderRadiusRemUi4: number
+  buttonFontSizeRemUi4: number
 
-  touchHighlightUi4: string
+  buttonPrimaryUi4: ButtomParamsUi4
+  buttonSecondaryUi4: ButtomParamsUi4
+  buttonTertiaryUi4: ButtomParamsUi4
+
+  cardBackgroundUi4: ThemeGradientParams
+  cardDisabledOverlayUi4: string
+  cardRadiusRemUi4: number
+
+  iconTappableAltUi4: string
 
   negativeTextMutedUi4: string
 
-  // TODO: Update with an appropriate API after Skia integration
   shadowColorUi4: string
+
+  touchHighlightUi4: string
 }

@@ -397,14 +397,94 @@ export const edgeLight: Theme = {
   guiPluginLogoMoonpay: guiPluginLogoMoonpay,
 
   // UI 4.0:
-  cardBackgroundUi4: palette.mutedGray,
-  cardRadiusRemUi4: 1,
-  cardDisabledOverlayUi4: palette.blackOp65,
+  buttonBorderRadiusRemUi4: 2,
+  buttonFontSizeRemUi4: 1,
 
-  touchHighlightUi4: palette.lightGrayOp75,
+  buttonPrimaryUi4: {
+    textStyle: {
+      fontFamily: palette.QuicksandMedium,
+      color: palette.black
+    },
+    gradientProps: {
+      colors: [palette.edgeMint, palette.edgeMint],
+      end: { x: 1, y: 0 },
+      start: { x: 0, y: 0 }
+    },
+    shadowParams: {
+      shadowColor: palette.white,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+      elevation: 2
+    },
+    containerStyle: {
+      borderColor: palette.edgeMint,
+      borderWidth: 1
+    },
+    spinnerColor: palette.white
+  },
+
+  buttonSecondaryUi4: {
+    textStyle: {
+      fontFamily: palette.QuicksandMedium,
+      color: palette.black
+    },
+    gradientProps: {
+      colors: [palette.edgeMint, palette.edgeMint],
+      end: { x: 1, y: 0 },
+      start: { x: 0, y: 0 }
+    },
+    shadowParams: {
+      shadowColor: palette.white,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+      elevation: 2
+    },
+    containerStyle: {
+      borderColor: palette.edgeMint,
+      borderWidth: 1
+    },
+    spinnerColor: palette.white
+  },
+
+  buttonTertiaryUi4: {
+    textStyle: {
+      fontFamily: palette.QuicksandMedium,
+      color: palette.black
+    },
+    gradientProps: {
+      colors: [palette.edgeMint, palette.edgeMint],
+      end: { x: 1, y: 0 },
+      start: { x: 0, y: 0 }
+    },
+    shadowParams: {
+      shadowColor: palette.white,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+      elevation: 2
+    },
+    containerStyle: {
+      borderColor: palette.edgeMint,
+      borderWidth: 1
+    },
+    spinnerColor: palette.white
+  },
+
+  cardBackgroundUi4: {
+    colors: [palette.lightGrayOp75, palette.lightGrayOp75],
+    end: { x: 1, y: 1 },
+    start: { x: 0, y: 0 }
+  },
+  cardDisabledOverlayUi4: palette.blackOp65,
+  cardRadiusRemUi4: 1,
+
+  iconTappableAltUi4: palette.black,
 
   negativeTextMutedUi4: palette.gray,
 
-  // TODO: Update with an appropriate API after Skia integration
-  shadowColorUi4: palette.gray
+  shadowColorUi4: palette.gray,
+
+  touchHighlightUi4: palette.lightGrayOp75
 }
