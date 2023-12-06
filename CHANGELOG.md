@@ -16,6 +16,7 @@
 - changed: Allow wallet creation in WalletConnect wallet picker
 - changed: Improve transition to stake overview scene with preloaded data
 - changed: Remove warning dropdown if stake positions fail to load
+- changed: 'Create Account' button text always set to "Get Started"
 - fixed: Various margin styling alignments
 - fixed: Long delay updating exchange rates after login
 - fixed: Unable to claim unstaked TRX funds in some circumstances
