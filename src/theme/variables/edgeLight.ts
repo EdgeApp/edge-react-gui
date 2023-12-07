@@ -72,6 +72,8 @@ const palette = {
   lightGreen: '#75C649',
   lightRed: '#E84D65',
 
+  graySecondary: '#636363',
+
   warningOuter: '#772a0f',
   warningInner: '#835d22',
   errorOuter: '#94472e',
@@ -456,20 +458,14 @@ export const edgeLight: Theme = {
   buttonSecondaryUi4: {
     textStyle: {
       fontFamily: palette.QuicksandMedium,
-      color: palette.black
+      color: palette.white
     },
     gradientProps: {
-      colors: [palette.edgeMint, palette.edgeMint],
+      colors: [palette.graySecondary, palette.graySecondary],
       end: { x: 1, y: 0 },
       start: { x: 0, y: 0 }
     },
-    shadowParams: {
-      shadowColor: palette.white,
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.25,
-      shadowRadius: 8,
-      elevation: 2
-    },
+    shadowParams: themeNoShadow,
     containerStyle: {
       borderColor: palette.edgeMint,
       borderWidth: 1

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ActivityIndicator, Text, TouchableOpacity, ViewStyle } from 'react-native'
+import { ActivityIndicator, Platform, Text, TouchableOpacity, ViewStyle } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
@@ -79,20 +79,23 @@ export function ButtonUi4(props: Props) {
     ...sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
   }
 
+  const androidAdjust = Platform.OS === 'android' ? styles.androidAdjust : null
+  const textShadow = Platform.OS === 'ios' ? theme.shadowTextIosUi4 : theme.shadowTextAndroidUi4
+
   // Show a spinner if waiting on the onPress promise OR if the spinner prop is
   // manually enabled.
   const hideContent = pending || spinner
 
   const maybeText =
     label == null ? null : (
-      <Text adjustsFontSizeToFit minimumFontScale={0.75} numberOfLines={1} style={textStyle}>
+      <Text adjustsFontSizeToFit minimumFontScale={0.75} numberOfLines={1} style={[textStyle, textShadow]}>
         {label}
       </Text>
     )
 
   return (
     <TouchableOpacity disabled={disabled || pending} style={[buttonShadow, styles.borderRadiusCommon]} onPress={handlePress}>
-      <LinearGradient {...gradientProps} style={[styles.gradientLayoutCommon, dynamicGradientStyles, styles.borderRadiusCommon]}>
+      <LinearGradient {...gradientProps} style={[styles.gradientLayoutCommon, dynamicGradientStyles, styles.borderRadiusCommon, androidAdjust]}>
         {hideContent ? null : children}
         {hideContent ? null : maybeText}
         {!hideContent ? null : <ActivityIndicator color={spinnerColor} style={styles.spinnerCommon} />}
@@ -109,6 +112,9 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 
   return {
+    androidAdjust: {
+      paddingBottom: 3
+    },
     primaryText: {
       ...commonTextViewStyle,
       ...theme.buttonPrimaryUi4.textStyle,

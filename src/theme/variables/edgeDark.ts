@@ -77,6 +77,8 @@ const palette = {
   lightGreen: '#75C649',
   lightRed: '#E84D65',
 
+  graySecondary: '#636363',
+
   warningOuter: '#772a0f',
   warningInner: '#835d22',
   errorOuter: '#94472e',
@@ -457,18 +459,18 @@ export const edgeDark: Theme = {
   buttonSecondaryUi4: {
     textStyle: {
       fontFamily: palette.QuicksandMedium,
-      color: palette.black
+      color: palette.white
     },
     gradientProps: {
-      colors: [palette.darkMint, palette.edgeMint],
+      colors: [palette.graySecondary, palette.graySecondary],
       end: { x: 1, y: 0 },
       start: { x: 0, y: 0 }
     },
     shadowParams: {
-      shadowColor: palette.white,
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.25,
-      shadowRadius: 8,
+      shadowColor: palette.black,
+      shadowOffset: { width: -1.5, height: 1.5 },
+      shadowOpacity: 0.5,
+      shadowRadius: 2,
       elevation: 2
     },
     containerStyle: {
@@ -525,6 +527,22 @@ export const edgeDark: Theme = {
   negativeTextMutedUi4: palette.gray,
 
   shadowColorUi4: palette.black,
+  shadowTextIosUi4: {
+    textShadowColor: '#00000098',
+    textShadowOffset: {
+      width: 0,
+      height: 0
+    },
+    textShadowRadius: 3
+  },
+  shadowTextAndroidUi4: {
+    textShadowColor: '#00000098',
+    textShadowOffset: {
+      width: 0,
+      height: 0
+    },
+    textShadowRadius: 10
+  },
 
   touchHighlightUi4: palette.lightGrayOp75,
 

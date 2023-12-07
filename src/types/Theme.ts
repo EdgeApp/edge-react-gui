@@ -451,6 +451,8 @@ export interface Theme {
   negativeTextMutedUi4: string
 
   shadowColorUi4: string
+  shadowTextIosUi4: TextShadowParams
+  shadowTextAndroidUi4: TextShadowParams
 
   touchHighlightUi4: string
 
