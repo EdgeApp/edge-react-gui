@@ -18,13 +18,13 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (1.11.0):
+  - edge-core-js (1.13.1):
     - React-Core
-  - edge-currency-accountbased (2.11.2-tc2):
+  - edge-currency-accountbased (2.17.1):
     - React-Core
-  - edge-exchange-plugins (1.1.0):
+  - edge-exchange-plugins (1.2.0):
     - React-Core
-  - edge-login-ui-rn (2.17.1):
+  - edge-login-ui-rn (2.18.0):
     - React
   - FBLazyVector (0.71.11)
   - FBReactNativeSpec (0.71.11):
@@ -640,7 +640,8 @@ PODS:
     - React-Core
   - RNFS (2.20.0):
     - React-Core
-  - RNGestureHandler (2.12.0):
+  - RNGestureHandler (2.13.4):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - RNLocalize (3.0.2):
     - React-Core
@@ -651,7 +652,7 @@ PODS:
     - ZXingObjC
   - RNReactNativeHapticFeedback (1.14.0):
     - React-Core
-  - RNReanimated (3.3.0):
+  - RNReanimated (3.5.4):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -1223,10 +1224,10 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  edge-core-js: 48b390da31ef71c2ac09330ade6a187dc92b3edc
-  edge-currency-accountbased: b611b7fd5543a1ef127d6469ded327c5a2d80b3b
-  edge-exchange-plugins: 44b5a058363092043b6f72c70c844795a53a84e6
-  edge-login-ui-rn: a7c217aa8f26777f1d9e21a0044d99bcfdc3d3c6
+  edge-core-js: 916fe4f3082117d39b1d54f2175ea7c4570c68d6
+  edge-currency-accountbased: a5aa1d61ddc9366ba25221619929788e51f15f4f
+  edge-exchange-plugins: e2008f08c875821c72e93d7094a451bef3ed1b05
+  edge-login-ui-rn: 175053a604754f99ed302c5b94dd24e7fdeabf4e
   FBLazyVector: c511d4cd0210f416cb5c289bd5ae6b36d909b048
   FBReactNativeSpec: a911fb22def57aef1d74215e8b6b8761d25c1c54
   Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
@@ -1322,12 +1323,12 @@ SPEC CHECKSUMS:
   RNFBRemoteConfig: 837617c42142be01e0c3f9bc6a0c0e7330131206
   RNFlashList: 8ec7f7454721145fe84566bb9e88bcf58981c9fe
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
-  RNGestureHandler: dec4645026e7401a0899f2846d864403478ff6a5
+  RNGestureHandler: 6e46dde1f87e5f018a54fe5d40cd0e0b942b49ee
   RNLocalize: dbea38dcb344bf80ff18a1757b1becf11f70cae4
   RNPermissions: d9db16f082ce2e09908e58c925189e2637d2786b
   RNQrGenerator: 90461ba3ca88c1d38ef73da50fade35d9648215d
   RNReactNativeHapticFeedback: 1e3efeca9628ff9876ee7cdd9edec1b336913f8c
-  RNReanimated: 9976fbaaeb8a188c36026154c844bf374b3b7eeb
+  RNReanimated: be07c7ae209074d0e8a84cf38b7909457ac59a32
   RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb
   RNShare: 0fec82bd2e67d09f895937ccb4f5a097e714dec2
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0

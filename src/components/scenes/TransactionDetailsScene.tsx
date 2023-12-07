@@ -21,7 +21,7 @@ import { CategoryModal } from '../modals/CategoryModal'
 import { ContactListModal, ContactModalResult } from '../modals/ContactListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SwapDetailsTiles } from '../tiles/SwapDetailsTiles'
@@ -29,127 +29,109 @@ import { Tile } from '../tiles/Tile'
 import { TransactionCryptoAmountTile } from '../tiles/TransactionCryptoAmountTile'
 import { TransactionFiatTiles } from '../tiles/TransactionFiatTiles'
 
-interface OwnProps extends EdgeSceneProps<'transactionDetails'> {
+interface Props extends EdgeSceneProps<'transactionDetails'> {
   wallet: EdgeCurrencyWallet
 }
 
-interface StateProps {
-  thumbnailPath?: string
-}
-type Props = OwnProps & StateProps & ThemeProps
-
-interface State {
-  acceleratedTx: EdgeTransaction | null
-  direction: string
-
-  // EdgeMetadata:
-  bizId: number
-  category: string
-  name: string
-  notes: string
+export interface TransactionDetailsParams {
+  edgeTransaction: EdgeTransaction
+  walletId: string
+  tokenId?: string
 }
 
-// Only exported for unit-testing purposes
-class TransactionDetailsComponent extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    const { wallet } = props
-    const { edgeTransaction, tokenId } = props.route.params
-    const { metadata } = edgeTransaction
-    const isSentTransaction = edgeTransaction.nativeAmount.startsWith('-') || (eq(edgeTransaction.nativeAmount, '0') && edgeTransaction.isSend)
+const TransactionDetailsComponent = (props: Props) => {
+  const { navigation, route, wallet } = props
+  const { edgeTransaction: transaction, tokenId, walletId } = route.params
+  const { metadata, action } = transaction
 
-    // Choose a default category based on metadata or the txAction
-    const txActionInfo = getTxActionDisplayInfo(edgeTransaction, wallet, tokenId)
-    const txActionSplitCat = txActionInfo?.splitCategory
-    const txActionNotes = txActionInfo?.notes
-    const txActionDir = txActionInfo?.direction
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  const thumbnailPath = useContactThumbnail(metadata?.name)
 
-    // Determine direction from EdgeTransaction nativeAmount if not specified in
-    // txActionInfo
-    const direction = txActionDir ?? isSentTransaction ? 'send' : 'receive'
+  const isSentTransaction = transaction.nativeAmount.startsWith('-') || (eq(transaction.nativeAmount, '0') && transaction.isSend)
 
-    const splitCat =
-      metadata?.category != null || txActionSplitCat == null
-        ? splitCategory(
-            metadata?.category,
-            // Pick the right default:
-            direction === 'receive' ? 'income' : 'expense'
-          )
-        : txActionSplitCat
+  // Choose a default category based on metadata or the txAction
+  const txActionInfo = getTxActionDisplayInfo(transaction, wallet, tokenId)
+  const txActionSplitCat = txActionInfo?.splitCategory
+  const txActionNotes = txActionInfo?.notes
+  const txActionDir = txActionInfo?.direction
 
-    const category = joinCategory(splitCat)
+  // Determine direction from transaction nativeAmount if not specified in
+  // txActionInfo
+  const direction = txActionDir ?? isSentTransaction ? 'send' : 'receive'
 
-    const notes = metadata?.notes == null ? txActionNotes : metadata.notes
+  const splitCat =
+    metadata?.category != null || txActionSplitCat == null
+      ? splitCategory(
+          metadata?.category,
+          // Pick the right default:
+          direction === 'receive' ? 'income' : 'expense'
+        )
+      : txActionSplitCat
 
-    this.state = {
-      acceleratedTx: null,
-      bizId: 0,
-      category,
-      name: metadata?.name ?? '',
-      direction,
-      notes: notes ?? ''
-    }
-  }
+  const category = joinCategory(splitCat)
 
-  async componentDidMount() {
-    const { route } = this.props
-    const { edgeTransaction } = route.params
+  const notes = metadata?.notes == null ? txActionNotes : metadata.notes
 
+  const [localMetadata, setLocalMetadata] = React.useState<EdgeMetadata>({
+    bizId: 0,
+    category,
+    name: metadata?.name ?? '',
+    notes: notes ?? ''
+  })
+  const [acceleratedTx, setAcceleratedTx] = React.useState<null | EdgeTransaction>(null)
+
+  const { name = '' } = localMetadata
+
+  React.useEffect(() => {
     // Try accelerating transaction to check if transaction can be accelerated
-    this.makeAcceleratedTx(edgeTransaction)
-      .then(acceleratedTx => {
-        this.setState({ acceleratedTx })
-      })
-      .catch(_err => {})
-  }
+    if (typeof wallet.accelerate === 'function') {
+      wallet
+        .accelerate(transaction)
+        .then(acceleratedTx => {
+          setAcceleratedTx(acceleratedTx)
+        })
+        .catch(_err => {})
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  async makeAcceleratedTx(transaction: EdgeTransaction): Promise<EdgeTransaction | null> {
-    const { wallet } = this.props
-
-    return await wallet.accelerate(transaction)
-  }
-
-  openPersonInput = async () => {
-    const personLabel = this.state.direction === 'receive' ? lstrings.transaction_details_payer : lstrings.transaction_details_payee
+  const openPersonInput = async () => {
+    const personLabel = direction === 'receive' ? lstrings.transaction_details_payer : lstrings.transaction_details_payee
     const person = await Airship.show<ContactModalResult | undefined>(bridge => (
-      <ContactListModal bridge={bridge} contactType={personLabel} contactName={this.state.name} />
+      <ContactListModal bridge={bridge} contactType={personLabel} contactName={name} />
     ))
-    if (person != null) this.onSaveTxDetails({ name: person.contactName })
+    if (person != null) onSaveTxDetails({ name: person.contactName })
   }
 
-  openCategoryInput = async () => {
-    const { category: initialCategory } = this.state
-    const category = await Airship.show<string | undefined>(bridge => <CategoryModal bridge={bridge} initialCategory={initialCategory} />)
-    if (category == null) return
-    this.onSaveTxDetails({ category })
+  const openCategoryInput = async () => {
+    const newCategory = await Airship.show<string | undefined>(bridge => <CategoryModal bridge={bridge} initialCategory={category} />)
+    if (newCategory == null) return
+    onSaveTxDetails({ category: newCategory })
   }
 
-  openNotesInput = async () => {
+  const openNotesInput = async () => {
     const notes = await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
-        initialValue={this.state.notes}
+        initialValue={notes}
         inputLabel={lstrings.transaction_details_notes_title}
         multiline
         submitLabel={lstrings.string_save}
         title={lstrings.transaction_details_notes_title}
       />
     ))
-    if (notes != null) this.onSaveTxDetails({ notes })
+    if (notes != null) onSaveTxDetails({ notes })
   }
 
-  openAccelerateModel = async () => {
-    const { acceleratedTx } = this.state
-    const { edgeTransaction } = this.props.route.params
-    const { navigation, wallet } = this.props
-
+  const openAccelerateModel = async () => {
     if (acceleratedTx == null) {
       throw new Error('Missing accelerated transaction data.')
     }
 
     try {
       const signedTx = await Airship.show<EdgeTransaction | null>(bridge => (
-        <AccelerateTxModal bridge={bridge} acceleratedTx={acceleratedTx} replacedTx={edgeTransaction} wallet={wallet} />
+        <AccelerateTxModal bridge={bridge} acceleratedTx={acceleratedTx} replacedTx={transaction} wallet={wallet} />
       ))
 
       if (signedTx != null) {
@@ -159,13 +141,13 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
         navigation.pop()
         navigation.push('transactionDetails', {
           edgeTransaction: signedTx,
-          walletId: wallet.id
+          walletId
         })
       }
     } catch (err: any) {
       if (err?.message === 'transaction underpriced') {
-        const newAcceleratedTx = await this.makeAcceleratedTx(acceleratedTx)
-        this.setState({ acceleratedTx: newAcceleratedTx })
+        const newAcceleratedTx = await wallet.accelerate(acceleratedTx)
+        setAcceleratedTx(newAcceleratedTx)
         showError(lstrings.transaction_details_accelerate_transaction_fee_too_low)
         return
       }
@@ -173,20 +155,14 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
     }
   }
 
-  openAdvancedDetails = () => {
-    const { wallet, route } = this.props
-    const { edgeTransaction } = route.params
-
+  const openAdvancedDetails = () => {
     Airship.show(bridge => (
-      <AdvancedDetailsModal bridge={bridge} transaction={edgeTransaction} url={sprintf(wallet.currencyInfo.transactionExplorer, edgeTransaction.txid)} />
+      <AdvancedDetailsModal bridge={bridge} transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />
     )).catch(err => showError(err))
   }
 
-  onSaveTxDetails = (newDetails: Partial<EdgeMetadata>) => {
-    const { route, wallet } = this.props
-    const { edgeTransaction: transaction } = route.params
-
-    const { name, notes, bizId, category, amountFiat } = { ...this.state, ...newDetails }
+  const onSaveTxDetails = (newDetails: Partial<EdgeMetadata>) => {
+    const { name, notes, bizId, category, amountFiat } = { ...localMetadata, ...newDetails }
     transaction.metadata = {
       name,
       category,
@@ -197,36 +173,29 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
 
     wallet.saveTxMetadata(transaction.txid, transaction.currencyCode, transaction.metadata).catch(error => showError(error))
 
-    this.setState({ ...this.state, ...newDetails })
+    setLocalMetadata({ ...localMetadata, ...newDetails })
   }
 
-  // Render
-  render() {
-    const { navigation, route, theme, thumbnailPath, wallet } = this.props
-    const { edgeTransaction } = route.params
-    const { action } = edgeTransaction
-    const { direction, acceleratedTx, name, notes, category } = this.state
-    const styles = getStyles(theme)
+  const personLabel = direction === 'receive' ? lstrings.transaction_details_sender : lstrings.transaction_details_recipient
+  const personName = action != null ? TX_ACTION_LABEL_MAP[action.type] : name !== '' ? name : personLabel
+  const personHeader = sprintf(lstrings.transaction_details_person_name, personLabel)
 
-    const personLabel = direction === 'receive' ? lstrings.transaction_details_sender : lstrings.transaction_details_recipient
-    const personName = action != null ? TX_ACTION_LABEL_MAP[action.type] : name !== '' ? name : personLabel
-    const personHeader = sprintf(lstrings.transaction_details_person_name, personLabel)
-
-    // spendTargets recipient addresses format
-    let recipientsAddresses = ''
-    if (edgeTransaction.spendTargets) {
-      const { spendTargets } = edgeTransaction
-      for (let i = 0; i < spendTargets.length; i++) {
-        const newLine = i + 1 < spendTargets.length ? '\n' : ''
-        recipientsAddresses = `${recipientsAddresses}${spendTargets[i].publicAddress}${newLine}`
-      }
+  // spendTargets recipient addresses format
+  let recipientsAddresses = ''
+  if (transaction.spendTargets != null) {
+    const { spendTargets } = transaction
+    for (let i = 0; i < spendTargets.length; i++) {
+      const newLine = i + 1 < spendTargets.length ? '\n' : ''
+      recipientsAddresses = `${recipientsAddresses}${spendTargets[i].publicAddress}${newLine}`
     }
+  }
 
-    const categoriesText = formatCategory(splitCategory(category))
+  const categoriesText = formatCategory(splitCategory(category))
 
-    return (
+  return (
+    <NotificationSceneWrapper navigation={navigation} hasTabs scroll>
       <View style={styles.tilesContainer}>
-        <Tile type="editable" title={personHeader} onPress={this.openPersonInput}>
+        <Tile type="editable" title={personHeader} onPress={openPersonInput}>
           <View style={styles.tileRow}>
             {thumbnailPath ? (
               <FastImage style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
@@ -236,27 +205,25 @@ class TransactionDetailsComponent extends React.Component<Props, State> {
             <EdgeText>{personName}</EdgeText>
           </View>
         </Tile>
-        <TransactionCryptoAmountTile transaction={edgeTransaction} wallet={wallet} />
-        <TransactionFiatTiles transaction={edgeTransaction} wallet={wallet} onMetadataEdit={this.onSaveTxDetails} />
-        <Tile type="editable" title={lstrings.transaction_details_category_title} onPress={this.openCategoryInput}>
+        <TransactionCryptoAmountTile transaction={transaction} wallet={wallet} />
+        <TransactionFiatTiles transaction={transaction} wallet={wallet} onMetadataEdit={onSaveTxDetails} />
+        <Tile type="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput}>
           <EdgeText style={styles.tileCategory}>{categoriesText}</EdgeText>
         </Tile>
-        {edgeTransaction.spendTargets && <Tile type="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
-        {edgeTransaction.swapData == null ? null : <SwapDetailsTiles swapData={edgeTransaction.swapData} transaction={edgeTransaction} wallet={wallet} />}
-        {acceleratedTx == null ? null : (
-          <Tile type="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={this.openAccelerateModel} />
-        )}
-        <Tile type="editable" title={lstrings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
-        {edgeTransaction.memos?.map((memo, i) =>
+        {transaction.spendTargets && <Tile type="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
+        {transaction.swapData == null ? null : <SwapDetailsTiles swapData={transaction.swapData} transaction={transaction} wallet={wallet} />}
+        {acceleratedTx == null ? null : <Tile type="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={openAccelerateModel} />}
+        <Tile type="editable" title={lstrings.transaction_details_notes_title} body={notes} onPress={openNotesInput} />
+        {transaction.memos?.map((memo, i) =>
           memo.hidden === true ? null : <Tile body={memo.value} key={`memo${i}`} title={getMemoTitle(memo.memoName)} type="copy" />
         )}
-        <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
+        <TouchableWithoutFeedback onPress={openAdvancedDetails}>
           <EdgeText style={styles.textAdvancedTransaction}>{lstrings.transaction_details_view_advanced_data}</EdgeText>
         </TouchableWithoutFeedback>
         <MainButton onPress={navigation.pop} label={lstrings.string_done_cap} marginRem={[0, 2, 2]} type="secondary" />
       </View>
-    )
-  }
+    </NotificationSceneWrapper>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -292,18 +259,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const TransactionDetailsScene = withWallet((props: OwnProps) => {
-  const { navigation, route, wallet } = props
-  const { edgeTransaction } = route.params
-  const theme = useTheme()
-
-  const { metadata } = edgeTransaction
-
-  const thumbnailPath = useContactThumbnail(metadata?.name)
-
-  return (
-    <NotificationSceneWrapper navigation={navigation} hasTabs scroll>
-      <TransactionDetailsComponent navigation={navigation} route={route} theme={theme} thumbnailPath={thumbnailPath} wallet={wallet} />
-    </NotificationSceneWrapper>
-  )
-})
+export const TransactionDetailsScene = withWallet(TransactionDetailsComponent)

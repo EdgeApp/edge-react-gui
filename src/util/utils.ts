@@ -22,7 +22,7 @@ import {
   getSymbolFromCurrency,
   SPECIAL_CURRENCY_INFO
 } from '../constants/WalletAndCurrencyConstants'
-import { toLocaleDate, toLocaleDateTime, toLocaleTime } from '../locales/intl'
+import { toLocaleDate, toLocaleDateTime, toLocaleTime, truncateDecimalsPeriod } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { RootState } from '../types/reduxTypes'
@@ -117,6 +117,17 @@ export const decimalOrZero = (input: string, decimalPlaces: number): string => {
       return truncatedToDecimals.replace(/0+$/, '') // then return the truncation
     }
   }
+}
+
+export const sanitizeDecimalAmount = (amount: string, maxEntryDecimals: number): string => {
+  // Replace all commas into periods
+  amount = amount.replace(',', '.')
+
+  // Remove characters except numbers and decimal separator
+  amount = amount.replace(/[^0-9.]/g, '')
+
+  // Trunctuate decimals to limited decimal entries, also remove additional periods
+  return truncateDecimalsPeriod(amount, maxEntryDecimals)
 }
 
 export const removeHexPrefix = (s: string) => s.replace(/^0x/, '')
@@ -578,7 +589,7 @@ export const formatLargeNumberString = (num: number): string => {
 }
 
 export const consify = (arg: any) => console.log(JSON.stringify(arg, null, 2))
-
+export const datelog = (...args: any) => console.log(`${new Date().toISOString().slice(11, 23)}:`, args)
 export const makeUuid = () => {
   return v4({ random: Array.from({ length: 16 }, () => Math.floor(Math.random() * 16)) })
 }

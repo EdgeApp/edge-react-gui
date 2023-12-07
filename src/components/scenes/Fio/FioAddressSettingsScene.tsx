@@ -5,7 +5,6 @@ import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
-import { GuiMakeSpendInfo } from '../../../types/types'
 import { addBundledTxs, getAddBundledTxsFee, getTransferFee } from '../../../util/FioAddressUtils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
@@ -15,6 +14,7 @@ import { ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { Tile } from '../../tiles/Tile'
+import { SendScene2Params } from '../SendScene2'
 
 interface LocalState {
   showAddBundledTxs: boolean
@@ -110,26 +110,22 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     if (!transferFee) return showError(lstrings.fio_get_fee_err_msg)
     this.cancelOperation()
 
-    const guiMakeSpendInfo: GuiMakeSpendInfo = {
-      nativeAmount: '',
-      currencyCode: fioWallet.currencyInfo.currencyCode,
-      otherParams: {
-        action: {
-          name: 'transferFioAddress',
-          params: { fioAddress: fioAddressName, maxFee: transferFee }
+    const sendParams: SendScene2Params = {
+      spendInfo: {
+        spendTargets: [{ nativeAmount: '', publicAddress: '' }],
+        otherParams: {
+          action: {
+            name: 'transferFioAddress',
+            params: { fioAddress: fioAddressName, maxFee: transferFee }
+          }
         }
       },
       onDone: err => {
         if (!err) {
           this.afterTransferSuccess().catch(err => showError(err))
         }
-      }
-    }
-
-    navigation.navigate('send', {
-      guiMakeSpendInfo,
-      selectedWalletId: fioWallet.id,
-      selectedCurrencyCode: fioWallet.currencyInfo.currencyCode,
+      },
+      walletId: fioWallet.id,
       lockTilesMap: {
         wallet: true
       },
@@ -138,7 +134,9 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
         fioAddressSelect: true
       },
       infoTiles: [{ label: lstrings.fio_address_to_transfer, value: fioAddressName }]
-    })
+    }
+
+    navigation.navigate('send2', sendParams)
   }
 
   render() {

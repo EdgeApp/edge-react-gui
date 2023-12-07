@@ -1,4 +1,4 @@
-import { gt, toFixed } from 'biggystring'
+import { eq, gt, toFixed } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
@@ -19,7 +19,7 @@ import { zeroString } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
-import { FlipInputModal, FlipInputModalResult } from '../../modals/FlipInputModal'
+import { FlipInputModal2, FlipInputModalResult } from '../../modals/FlipInputModal2'
 import { FlashNotification } from '../../navigation/FlashNotification'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { Airship, showError } from '../../services/AirshipInstance'
@@ -188,7 +188,7 @@ const StakeModifySceneComponent = (props: Props) => {
     }
   }
 
-  const handleShowFlipInputModal = (currencyCode: string) => () => {
+  const handleShowFlipInputModal = (currencyCode: string, tokenId?: string) => () => {
     const header = modification === 'stake' ? lstrings.stake_modal_modify_stake_title : lstrings.stake_modal_modify_unstake_title
 
     // TODO: Max button needs to be enabled after max calculation for
@@ -197,12 +197,12 @@ const StakeModifySceneComponent = (props: Props) => {
     const hideMaxButton = existingStaked.length > 1 || (disableMaxStake ?? false)
 
     Airship.show<FlipInputModalResult>(bridge => (
-      <FlipInputModal
+      <FlipInputModal2
         bridge={bridge}
-        navigation={navigation}
-        walletId={wallet.id}
-        currencyCode={currencyCode}
-        onAmountChanged={() => {}}
+        wallet={wallet}
+        tokenId={tokenId}
+        startNativeAmount={eq(changeQuoteRequest.nativeAmount, '0') ? undefined : changeQuoteRequest.nativeAmount}
+        onAmountsChanged={() => {}}
         onMaxSet={handleMaxButtonPress(currencyCode)}
         headerText={sprintf(header, getWalletName(wallet))}
         hideMaxButton={hideMaxButton}
@@ -210,7 +210,7 @@ const StakeModifySceneComponent = (props: Props) => {
     ))
       .then(({ nativeAmount, exchangeAmount }) => {
         // set the modified amount
-        if (nativeAmount !== '0') setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: currencyCode, nativeAmount: nativeAmount })
+        if (nativeAmount !== '0') setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode, nativeAmount })
       })
       .catch(error => showError(error))
   }
@@ -270,6 +270,7 @@ const StakeModifySceneComponent = (props: Props) => {
 
   const renderEditableQuoteAmountRow = (allocationType: 'stake' | 'unstake' | 'claim', asset: { pluginId: string; currencyCode: string }) => {
     const { pluginId, currencyCode } = asset
+    const tokenId = getTokenId(account, pluginId, currencyCode)
     const quoteAllocation: QuoteAllocation | undefined =
       changeQuote != null
         ? changeQuote.allocations.find(
@@ -308,7 +309,7 @@ const StakeModifySceneComponent = (props: Props) => {
         exchangeDenomination={quoteDenom}
         displayDenomination={quoteDenom}
         lockInputs={isClaim || (!!mustMaxUnstake && allocationType === 'unstake')}
-        onPress={handleShowFlipInputModal(quoteCurrencyCode)}
+        onPress={handleShowFlipInputModal(currencyCode, tokenId)}
       />
     )
   }

@@ -252,78 +252,81 @@ export const AddressFormScene = React.memo((props: Props) => {
   return (
     <NotificationSceneWrapper navigation={navigation} background="theme">
       {(gap, notificationHeight) => (
-        <KeyboardAwareScrollView
-          keyboardShouldPersistTaps="handled"
-          extraScrollHeight={theme.rem(2.75)}
-          enableAutomaticScroll
-          enableOnAndroid
-          contentContainerStyle={{ paddingBottom: notificationHeight }}
-        >
+        <>
           <SceneHeader title={headerTitle} underline withTopMargin />
-          <EdgeText style={styles.formSectionTitle}>{lstrings.home_address_title}</EdgeText>
-          <GuiFormField
-            fieldType="address"
-            autofocus
-            label={lstrings.form_field_title_address_line_1}
-            value={formData.address}
-            fieldRef={rAddressInput}
-            onChangeText={handleChangeAddress}
-            onFocus={handleShowAddressHints}
-            onBlur={handleHideAddressHints}
-          />
-          <Animated.View style={[Platform.OS === 'ios' ? styles.dropContainer : styles.dropContainerAndroid, aDropContainerStyle]}>
-            <ScrollView keyboardShouldPersistTaps="always" nestedScrollEnabled>
-              {searchResults.map(searchResult => {
-                const displaySearchResult = `${searchResult.address}\n${searchResult.city}, ${searchResult.state}, ${countryCode}`
-                return (
-                  <TouchableOpacity key={searchResults.indexOf(searchResult)} onPress={addressHintPress(searchResult)}>
-                    <View style={styles.rowContainer} onLayout={handleHintLayout}>
-                      <EdgeText style={styles.addressHintText} numberOfLines={2}>
-                        {displaySearchResult}
-                      </EdgeText>
-                    </View>
-                  </TouchableOpacity>
-                )
-              })}
-            </ScrollView>
-          </Animated.View>
-          <GuiFormField
-            fieldType="address2"
-            label={lstrings.form_field_title_address_line_2}
-            value={formData.address2}
-            onChangeText={handleChangeAddress2}
-            onBlur={handleHideAddressHints}
-          />
-          <GuiFormField
-            fieldType="city"
-            label={lstrings.form_field_title_address_city}
-            value={formData.city}
-            onChangeText={handleChangeCity}
-            onBlur={handleHideAddressHints}
-          />
-          <GuiFormField
-            fieldType="state"
-            label={lstrings.form_field_title_address_state_province_region}
-            value={formData.state}
-            onChangeText={handleChangeState}
-            onBlur={handleHideAddressHints}
-          />
-          <GuiFormField
-            fieldType="postalcode"
-            returnKeyType="done"
-            label={lstrings.form_field_title_address_zip_postal_code}
-            value={formData.postalCode}
-            onChangeText={handleChangePostalCode}
-            onBlur={handleHideAddressHints}
-          />
-          <MainButton
-            label={lstrings.string_next_capitalized}
-            marginRem={[1, 0.5, 1, 0.5]}
-            type="secondary"
-            disabled={disableNextButton}
-            onPress={handleSubmit}
-          />
-        </KeyboardAwareScrollView>
+          <View style={styles.container}>
+            <KeyboardAwareScrollView
+              keyboardShouldPersistTaps="handled"
+              extraScrollHeight={theme.rem(2.75)}
+              enableAutomaticScroll
+              enableOnAndroid
+              contentContainerStyle={{ paddingBottom: notificationHeight }}
+            >
+              <GuiFormField
+                fieldType="address"
+                autofocus
+                label={lstrings.form_field_title_address_line_1}
+                value={formData.address}
+                fieldRef={rAddressInput}
+                onChangeText={handleChangeAddress}
+                onFocus={handleShowAddressHints}
+                onBlur={handleHideAddressHints}
+              />
+              <Animated.View style={[Platform.OS === 'ios' ? styles.dropContainer : styles.dropContainerAndroid, aDropContainerStyle]}>
+                <ScrollView keyboardShouldPersistTaps="always" nestedScrollEnabled>
+                  {searchResults.map(searchResult => {
+                    const displaySearchResult = `${searchResult.address}\n${searchResult.city}, ${searchResult.state}, ${countryCode}`
+                    return (
+                      <TouchableOpacity key={searchResults.indexOf(searchResult)} onPress={addressHintPress(searchResult)}>
+                        <View style={styles.rowContainer} onLayout={handleHintLayout}>
+                          <EdgeText style={styles.addressHintText} numberOfLines={2}>
+                            {displaySearchResult}
+                          </EdgeText>
+                        </View>
+                      </TouchableOpacity>
+                    )
+                  })}
+                </ScrollView>
+              </Animated.View>
+              <GuiFormField
+                fieldType="address2"
+                label={lstrings.form_field_title_address_line_2}
+                value={formData.address2}
+                onChangeText={handleChangeAddress2}
+                onBlur={handleHideAddressHints}
+              />
+              <GuiFormField
+                fieldType="city"
+                label={lstrings.form_field_title_address_city}
+                value={formData.city}
+                onChangeText={handleChangeCity}
+                onBlur={handleHideAddressHints}
+              />
+              <GuiFormField
+                fieldType="state"
+                label={lstrings.form_field_title_address_state_province_region}
+                value={formData.state}
+                onChangeText={handleChangeState}
+                onBlur={handleHideAddressHints}
+              />
+              <GuiFormField
+                fieldType="postalcode"
+                returnKeyType="done"
+                label={lstrings.form_field_title_address_zip_postal_code}
+                value={formData.postalCode}
+                onChangeText={handleChangePostalCode}
+                onBlur={handleHideAddressHints}
+              />
+              <MainButton
+                label={lstrings.string_next_capitalized}
+                marginRem={[1, 0.5, 1, 0.5]}
+                type="secondary"
+                disabled={disableNextButton}
+                onPress={handleSubmit}
+              />
+            </KeyboardAwareScrollView>
+          </View>
+        </>
       )}
     </NotificationSceneWrapper>
   )
@@ -345,6 +348,10 @@ const getStyles = cacheStyles((theme: Theme) => {
     addressHintText: {
       marginHorizontal: theme.rem(0.5),
       marginVertical: theme.rem(0.25)
+    },
+    container: {
+      marginHorizontal: theme.rem(0.5),
+      marginTop: theme.rem(1)
     },
     dropContainer: {
       top: theme.rem(10.25),

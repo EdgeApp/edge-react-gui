@@ -27,6 +27,7 @@ export interface OutlinedTextInputProps {
   value: string
   error?: string
   label?: string
+  valid?: string
   numeric?: boolean
   minDecimals?: number
   maxDecimals?: number
@@ -85,6 +86,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
   const {
     // Contents:
     error,
+    valid,
     label,
     value,
     numeric,
@@ -120,6 +122,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
   const styles = getStyles(theme)
 
   const hasError = error != null
+  const hasValid = valid != null
   const hasLabel = label != null
   const hasValue = value !== ''
 
@@ -166,17 +169,17 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
   const [counterWidth, setCounterWidth] = React.useState(0)
   const handleCounterLayout = (event: LayoutChangeEvent) => setCounterWidth(event.nativeEvent.layout.width)
 
+  // Animates between 0 and 1 based our error or validity state:
+  const subtextAnimation = useSharedValue(0)
+  React.useEffect(() => {
+    subtextAnimation.value = withTiming(hasError || hasValid ? 1 : 0)
+  }, [subtextAnimation, hasError, hasValid])
+
   // Animates between 0 and 1 based our disabled state:
   const disabledAnimation = useSharedValue(0)
   React.useEffect(() => {
     disabledAnimation.value = withTiming(disabled ? 1 : 0)
   }, [disabledAnimation, disabled])
-
-  // Animates between 0 and 1 based our error state:
-  const errorAnimation = useSharedValue(0)
-  React.useEffect(() => {
-    errorAnimation.value = withTiming(hasError ? 1 : 0)
-  }, [errorAnimation, hasError])
 
   // Animates between 0 and 1 based on focus:
   const baseDuration = 300
@@ -257,10 +260,10 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
       getIterpolatedColor(
         theme.outlineTextInputBorderColor,
         theme.outlineTextInputBorderColorFocused,
-        theme.dangerText,
+        hasError ? theme.dangerText : theme.outlineTextInputBorderColorFocused,
         theme.outlineTextInputBorderColorDisabled
       ),
-    [theme]
+    [theme, hasError]
   )
 
   const getLabelColor = React.useMemo(
@@ -268,36 +271,36 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
       getIterpolatedColor(
         theme.outlineTextInputLabelColor,
         theme.outlineTextInputLabelColorFocused,
-        theme.dangerText,
+        hasError ? theme.dangerText : theme.outlineTextInputBorderColorFocused,
         theme.outlineTextInputLabelColorDisabled
       ),
-    [theme]
+    [theme, hasError]
   )
 
   const bottomStyle = useAnimatedStyle(() => {
     const counterProgress = hasValue ? 1 : focusAnimation.value
     return {
-      borderColor: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value),
+      borderColor: getBorderColor(subtextAnimation.value, focusAnimation.value, disabledAnimation.value),
       right: maxLength !== undefined ? counterRight + counterProgress * (2 * counterPadding + counterWidth) : cornerPadding
     }
   })
   const leftStyle = useAnimatedStyle(() => ({
-    borderColor: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value)
+    borderColor: getBorderColor(subtextAnimation.value, focusAnimation.value, disabledAnimation.value)
   }))
   const rightStyle = useAnimatedStyle(() => ({
-    borderColor: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value)
+    borderColor: getBorderColor(subtextAnimation.value, focusAnimation.value, disabledAnimation.value)
   }))
   const topStyle = useAnimatedStyle(() => {
     const counterProgress = hasLabel ? (hasValue ? 1 : focusAnimation.value) : 0
     return {
-      borderColor: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value),
+      borderColor: getBorderColor(subtextAnimation.value, focusAnimation.value, disabledAnimation.value),
       left: labelLeft + counterProgress * (2 * labelPadding + labelWidth * (1 - labelShrink)) - topLineRerenderTrigger
     }
   })
   const labelStyle = useAnimatedStyle(() => {
     const labelProgressAlt = hasValue ? 1 : focusAnimationAlt.value
     return {
-      color: getLabelColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value),
+      color: getLabelColor(subtextAnimation.value, focusAnimation.value, disabledAnimation.value),
       transform: [
         { translateX: labelProgressAlt * labelTranslateX },
         { translateY: labelProgressAlt * labelTranslateY },
@@ -308,15 +311,11 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
   const counterStyle = useAnimatedStyle(() => {
     const counterProgress = hasValue ? 1 : focusAnimation.value
     return {
-      color: interpolateColor(errorAnimation.value, [0, 1], [theme.secondaryText, theme.dangerText]),
+      color: interpolateColor(subtextAnimation.value, [0, 1], [theme.secondaryText, theme.dangerText]),
       opacity: counterProgress,
       transform: [{ translateX: (1 - counterProgress) * counterTranslateX }, { scale: counterProgress }]
     }
   })
-  const errorStyle = useAnimatedStyle(() => ({
-    opacity: errorAnimation.value
-  }))
-
   const prefixStyle = useAnimatedStyle(() => {
     const labelProgressAlt = hasValue ? 1 : focusAnimationAlt.value
     return {
@@ -325,9 +324,11 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
       transform: [{ translateY: (1 - labelProgressAlt) * prefixTranslateY }, { scale: labelProgressAlt }]
     }
   })
-
+  const subtextStyle = useAnimatedStyle(() => ({
+    opacity: subtextAnimation.value
+  }))
   const showPasswordLineStyle = useAnimatedStyle(() => ({
-    backgroundColor: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value),
+    backgroundColor: getBorderColor(subtextAnimation.value, focusAnimation.value, disabledAnimation.value),
     transform: [
       { rotateZ: '45deg' },
       {
@@ -339,7 +340,7 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
   const AnimatedIonIcon = Animated.createAnimatedComponent(IonIcon)
   const eyeIconStyle = useAnimatedStyle(() => {
     return {
-      color: getBorderColor(errorAnimation.value, focusAnimation.value, disabledAnimation.value)
+      color: getBorderColor(subtextAnimation.value, focusAnimation.value, disabledAnimation.value)
     }
   })
 
@@ -365,8 +366,8 @@ export const OutlinedTextInput = React.forwardRef<OutlinedTextInputRef, Outlined
           </Animated.Text>
         </View>
         <View style={styles.footerContainer}>
-          <Animated.Text accessible numberOfLines={2} style={[styles.errorText, errorStyle]} testID={`${testID}.subText`}>
-            {error}
+          <Animated.Text accessible numberOfLines={2} style={[hasError ? styles.errorText : styles.validText, subtextStyle]} testID={`${testID}.subText`}>
+            {error ?? valid}
           </Animated.Text>
         </View>
         <Animated.Text accessible numberOfLines={1} style={[styles.counterText, counterStyle]} onLayout={handleCounterLayout} testID={`${testID}.charLimit`}>
@@ -596,6 +597,10 @@ const getStyles = cacheStyles((theme: Theme) => {
     errorText: {
       ...footerTextCommon,
       color: theme.dangerText
+    },
+    validText: {
+      ...footerTextCommon,
+      color: theme.outlineTextInputLabelColorFocused
     },
 
     // The counter text splits the bottom right border line:

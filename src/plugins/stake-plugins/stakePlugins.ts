@@ -1,5 +1,7 @@
 import { ENV } from '../../env'
 import { makeTronStakePlugin } from './currency/tronStakePlugin'
+import { makeGenericStakePlugin } from './generic/GenericStakePlugin'
+import { genericPlugins } from './generic/pluginInfo'
 import { makeTcSaversPlugin } from './thorchainSavers/tcSaversPlugin'
 import { StakePlugin } from './types'
 import { makeUniV2StakePlugin } from './uniswapV2/uniV2Plugin'
@@ -26,7 +28,8 @@ export const makeStakePlugins = async (): Promise<void> => {
     }),
     makeTronStakePlugin().catch(e => {
       console.warn(e.message)
-    })
+    }),
+    ...genericPlugins.map(async genericPlugin => await makeGenericStakePlugin(genericPlugin)(/* INIT OPTIONS */))
   ]
 
   const results = await Promise.all(promises)

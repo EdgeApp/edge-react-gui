@@ -31,10 +31,10 @@ import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { GuiExchangeRates } from '../../types/types'
+import { FioRequest, GuiExchangeRates } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { addToFioAddressCache, checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE, recordSend } from '../../util/FioAddressUtils'
+import { addToFioAddressCache, checkRecordSendFee, FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM, FIO_NO_BUNDLED_ERR_CODE, recordSend } from '../../util/FioAddressUtils'
 import { logActivity } from '../../util/logger'
 import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, zeroString } from '../../util/utils'
 import { getMemoError, getMemoLabel, getMemoTitle } from '../../util/validateMemos'
@@ -64,6 +64,7 @@ interface Props extends EdgeSceneProps<'send2'> {}
 export interface SendScene2Params {
   walletId: string
   tokenId?: string
+  dismissAlert?: boolean
   isoExpireDate?: string
   minNativeAmount?: string
   spendInfo?: EdgeSpendInfo
@@ -81,8 +82,7 @@ export interface SendScene2Params {
     scamWarning?: boolean
   }
   infoTiles?: Array<{ label: string; value: string }>
-  // fioAddress?: string // TODO: Implement specifying fio address
-  // fioPendingRequest?: FioRequest // TODO: Implement specifying a fio payment request
+  fioPendingRequest?: FioRequest
   onBack?: () => void
   onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
   beforeTransaction?: () => Promise<void>
@@ -123,6 +123,8 @@ const SendComponent = (props: Props) => {
   const {
     walletId: initWalletId = '',
     tokenId: tokenIdProp,
+    dismissAlert = false,
+    fioPendingRequest,
     spendInfo: initSpendInfo,
     isoExpireDate,
     minNativeAmount: initMinNativeAmount,
@@ -150,10 +152,10 @@ const SendComponent = (props: Props) => {
   const [pinValue, setPinValue] = useState<string | undefined>(undefined)
   const [spendingLimitExceeded, setSpendingLimitExceeded] = useState<boolean>(false)
   const [fioSender, setFioSender] = useState<FioSenderInfo>({
-    fioAddress: '',
+    fioAddress: fioPendingRequest?.payer_fio_address ?? '',
     fioWallet: null,
     fioError: '',
-    memo: '',
+    memo: fioPendingRequest?.content.memo ?? '',
     memoError: ''
   })
 
@@ -545,7 +547,7 @@ const SendComponent = (props: Props) => {
         onMemoChange={handleMemoChange}
         coreWallet={coreWallet}
         currencyCode={currencyCode}
-        // fioRequest={fioPendingRequest}
+        fioRequest={fioPendingRequest}
         isSendUsingFioAddress={fioTarget}
       />
     )
@@ -679,24 +681,25 @@ const SendComponent = (props: Props) => {
       return
     }
 
-    // if (guiMakeSpendInfo.fioPendingRequest != null) {
-    // const { fioPendingRequest: pendingRequest } = guiMakeSpendInfo
-    // try {
-    //   await recordSend(fioWallet, fioAddress, {
-    //     fioRequestId: pendingRequest.fio_request_id,
-    //     payeeFioAddress: pendingRequest.payee_fio_address,
-    //     payerPublicAddress: pendingRequest.payer_fio_public_key,
-    //     payeePublicAddress: pendingRequest.content.payee_public_address,
-    //     amount: pendingRequest.content.amount,
-    //     currencyCode: pendingRequest.content.token_code.toUpperCase(),
-    //     chainCode: pendingRequest.content.chain_code.toUpperCase(),
-    //     txid: edgeSignedTransaction.txid,
-    //     memo
-    //   })
-    // } catch (e: any) {
-    //   const message = e?.message ?? ''
-    //   message.includes(FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM) ? showError(lstrings.fio_fee_exceeds_supplied_maximum_record_obt_data) : showError(e)
-    // }
+    if (fioPendingRequest != null) {
+      try {
+        await recordSend(fioWallet, fioSender.fioAddress, {
+          fioRequestId: fioPendingRequest.fio_request_id,
+          payeeFioAddress: fioPendingRequest.payee_fio_address,
+          payerPublicAddress: fioPendingRequest.payer_fio_public_key,
+          payeePublicAddress: fioPendingRequest.content.payee_public_address,
+          amount: fioPendingRequest.content.amount,
+          currencyCode: fioPendingRequest.content.token_code.toUpperCase(),
+          chainCode: fioPendingRequest.content.chain_code.toUpperCase(),
+          txid,
+          memo: fioSender.memo
+        })
+      } catch (e: any) {
+        const message = String(e)
+        message.includes(FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM) ? showError(lstrings.fio_fee_exceeds_supplied_maximum_record_obt_data) : showError(e)
+      }
+      return
+    }
 
     await recordSend(fioWallet, payerFioAddress, {
       amount: nativeAmount != null ? div(nativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION) : '0',
@@ -711,9 +714,6 @@ const SendComponent = (props: Props) => {
   }
 
   const handleSliderComplete = useHandler(async (resetSlider: () => void) => {
-    // TODO:
-    // 1. FIO functionality
-
     if (edgeTransaction == null) return
     if (pinSpendingLimitsEnabled && spendingLimitExceeded) {
       const isAuthorized = await account.checkPin(pinValue ?? '')
@@ -732,7 +732,9 @@ const SendComponent = (props: Props) => {
     }
 
     try {
-      if (fioSender?.fioWallet != null && fioSender?.fioAddress != null) {
+      // Check the OBT data fee and error if we are sending to a FIO address but NOT if we are paying
+      // a FIO request since we want to make sure that can go through.
+      if (fioSender.fioWallet != null && fioSender.fioAddress !== '' && fioPendingRequest == null) {
         await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
       }
 
@@ -823,16 +825,18 @@ const SendComponent = (props: Props) => {
       } else {
         navigation.replace('transactionDetails', {
           edgeTransaction: broadcastedTx,
-          walletId
+          walletId: coreWallet.id
         })
       }
-      Alert.alert(lstrings.transaction_success, lstrings.transaction_success_message, [
-        {
-          onPress() {},
-          style: 'default',
-          text: lstrings.string_ok
-        }
-      ])
+      if (!dismissAlert) {
+        Alert.alert(lstrings.transaction_success, lstrings.transaction_success_message, [
+          {
+            onPress() {},
+            style: 'default',
+            text: lstrings.string_ok
+          }
+        ])
+      }
     } catch (e: any) {
       resetSlider()
       console.log(e)

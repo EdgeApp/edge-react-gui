@@ -59,6 +59,10 @@ exports[`TransactionListRow should render with loading props 1`] = `
         },
         null,
         null,
+        {
+          "borderColor": "white",
+          "borderWidth": 0,
+        },
       ]
     }
   >

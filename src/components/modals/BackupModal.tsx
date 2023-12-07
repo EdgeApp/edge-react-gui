@@ -7,7 +7,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
-import { getLightAccountIconUri } from '../../util/CdnUris'
+import { getThemedIconUri } from '../../util/CdnUris'
 import { openBrowserUri } from '../../util/WebUtils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -58,7 +58,7 @@ export const BackupModal = (props: { bridge: AirshipBridge<BackupModalResult | u
       <View style={styles.container}>
         <FastImage
           style={styles.image}
-          source={{ uri: getLightAccountIconUri(theme, showForgetAccountVariant ? 'hero-backup-warning' : 'hero-backup-info') }}
+          source={{ uri: getThemedIconUri(theme, `lightAccount/${showForgetAccountVariant ? 'hero-backup-warning' : 'hero-backup-info'}`) }}
         />
         <EdgeText style={styles.header} numberOfLines={2}>
           {lstrings.backup_title}

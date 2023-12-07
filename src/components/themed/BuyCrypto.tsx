@@ -3,8 +3,10 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { DONE_THRESHOLD, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
+import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { NavigationBase } from '../../types/routerTypes'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -27,6 +29,8 @@ export const BuyCrypto = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const syncRatio = useWatch(wallet, 'syncRatio')
+
   const handlePress = useHandler(() => {
     navigation.navigate('buyTab', { screen: 'pluginListBuy' })
   })
@@ -47,7 +51,14 @@ export const BuyCrypto = (props: Props) => {
         </ButtonBox>
       )}
       <View style={styles.noTransactionContainer}>
-        <EdgeText style={styles.noTransactionText}>{lstrings.transaction_list_no_tx_yet}</EdgeText>
+        {syncRatio < DONE_THRESHOLD ? (
+          <>
+            <EdgeText style={styles.noTransactionText}>{lstrings.transaction_list_loading_txs}</EdgeText>
+            <EdgeText style={styles.transactionsLoadingText}>{sprintf(lstrings.percent_complete_1s, toPercentString(syncRatio))}</EdgeText>
+          </>
+        ) : (
+          <EdgeText style={styles.noTransactionText}>{lstrings.transaction_list_no_tx_yet}</EdgeText>
+        )}
       </View>
     </>
   )
@@ -65,7 +76,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center'
   },
-
   buyCryptoText: {
     fontFamily: theme.fontFaceMedium,
     marginVertical: theme.rem(0.25)
@@ -77,6 +87,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginVertical: theme.rem(0.5)
   },
   noTransactionText: {
-    fontSize: theme.rem(1.25)
+    fontSize: theme.rem(1.25),
+    textAlign: 'center'
+  },
+  transactionsLoadingText: {
+    color: theme.secondaryText,
+    textAlign: 'center'
   }
 }))

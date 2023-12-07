@@ -102,7 +102,6 @@ import { ChangeRecoveryScene as ChangeRecoverySceneComponent } from './scenes/Pa
 import { PromotionSettingsScene as PromotionSettingsSceneComponent } from './scenes/PromotionSettingsScene'
 import { RequestScene as RequestSceneComponent } from './scenes/RequestScene'
 import { SecurityAlertsScene as SecurityAlertsSceneComponent } from './scenes/SecurityAlertsScene'
-import { SendScene as SendSceneComponent } from './scenes/SendScene'
 import { SendScene2 as SendScene2Component } from './scenes/SendScene2'
 import { SettingsScene as SettingsSceneComponent } from './scenes/SettingsScene'
 import { SpendingLimitsScene as SpendingLimitsSceneComponent } from './scenes/SpendingLimitsScene'
@@ -188,7 +187,6 @@ const OtpSettingsScene = ifLoggedIn(OtpSettingsSceneComponent)
 const PromotionSettingsScene = ifLoggedIn(PromotionSettingsSceneComponent)
 const RequestScene = ifLoggedIn(RequestSceneComponent)
 const SecurityAlertsScene = ifLoggedIn(SecurityAlertsSceneComponent)
-const SendScene = ifLoggedIn(SendSceneComponent)
 const SendScene2 = ifLoggedIn(SendScene2Component)
 const SettingsScene = ifLoggedIn(SettingsSceneComponent)
 const SpendingLimitsScene = ifLoggedIn(SpendingLimitsSceneComponent)
@@ -723,7 +721,6 @@ const EdgeAppStack = () => {
         }}
       />
       <Stack.Screen name="securityAlerts" component={SecurityAlertsScene} options={{ headerShown: false }} />
-      <Stack.Screen name="send" component={SendScene} />
       <Stack.Screen name="send2" component={SendScene2} />
       <Stack.Screen
         name="settingsOverview"

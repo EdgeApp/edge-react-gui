@@ -306,7 +306,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
             style={
               [
                 {
-                  "color": "#E85466",
+                  "color": "#00f1a2",
                   "fontFamily": "Quicksand-Regular",
                   "fontSize": 17,
                 },

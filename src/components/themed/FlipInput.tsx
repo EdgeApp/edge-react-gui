@@ -6,9 +6,9 @@ import { Menu, MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-nat
 import Reamimated, { useAnimatedStyle, withDelay, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
 
 import { Fontello } from '../../assets/vector'
-import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl'
+import { formatNumberInput, prettifyNumber, truncateDecimals } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { DECIMAL_PRECISION, truncateDecimals as truncateDecimalsUtils, zeroString } from '../../util/utils'
+import { DECIMAL_PRECISION, sanitizeDecimalAmount, truncateDecimals as truncateDecimalsUtils, zeroString } from '../../util/utils'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme, withTheme } from '../services/ThemeContext'
@@ -83,17 +83,6 @@ interface Amounts {
   primaryDisplayAmount: string
   secondaryDecimalAmount: string
   secondaryDisplayAmount: string
-}
-
-export const sanitizeDecimalAmount = (amount: string, maxEntryDecimals: number): string => {
-  // Replace all commas into periods
-  amount = amount.replace(',', '.')
-
-  // Remove characters except numbers and decimal separator
-  amount = amount.replace(/[^0-9.]/g, '')
-
-  // Trunctuate decimals to limited decimal entries, also remove additional periods
-  return truncateDecimalsPeriod(amount, maxEntryDecimals)
 }
 
 const checkKeyPress = (keyPressed: string, decimalAmount: string) => {

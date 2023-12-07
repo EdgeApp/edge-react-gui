@@ -161,7 +161,6 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     return (
       <SelectableRow
         icon={fiatCountry.logoUrl ? <FastImage source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
-        paddingRem={[0, 1]}
         subTitle={subTitle}
         title={fiat.value}
         onPress={renderSelectFiatTypeModal}

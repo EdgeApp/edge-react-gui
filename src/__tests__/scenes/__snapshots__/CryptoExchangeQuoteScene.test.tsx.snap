@@ -1393,5 +1393,17 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       </View>
     </RCTScrollView>
   </View>
+  <View
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 6,
+        "height": 79,
+        "justifyContent": "flex-end",
+        "marginHorizontal": 11,
+        "position": "absolute",
+      }
+    }
+  />
 </BVLinearGradient>
 `;

@@ -48,6 +48,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
       onChangeText={[Function]}
       onSubmitEditing={[Function]}
       returnKeyType="search"
+      showSpinner={false}
       value=""
     />
     <View

@@ -1,16 +1,12 @@
 import { AssetStatus } from 'edge-info-server/types'
 import * as React from 'react'
 import { Platform } from 'react-native'
-import { getLocales } from 'react-native-localize'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { pickLanguage } from '../../locales/intl'
+import { getLocaleOrDefaultString } from '../../locales/intl'
 import { openBrowserUri } from '../../util/WebUtils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { IconMessageCard } from './IconMessageCard'
-
-const DEFAULT_LANGUAGE = 'en_US'
-
 export const AssetStatusCard = (props: { assetStatus: AssetStatus }) => {
   const { statusType, localeStatusTitle, localeStatusBody, iconUrl, statusUrl, statusStartIsoDate, statusEndIsoDate } = props.assetStatus
   const theme = useTheme()
@@ -19,14 +15,13 @@ export const AssetStatusCard = (props: { assetStatus: AssetStatus }) => {
   const curDate = new Date().toISOString()
   const isWithinDate = statusStartIsoDate != null && statusEndIsoDate != null && statusStartIsoDate <= curDate && statusEndIsoDate >= curDate
 
-  const [firstLocale = { languageTag: DEFAULT_LANGUAGE }] = getLocales()
-  const { languageTag } = firstLocale
-  const titleLocale = pickLanguage(languageTag, Object.keys(localeStatusTitle)) ?? pickLanguage(DEFAULT_LANGUAGE, Object.keys(localeStatusTitle))
-  const messageLocale = pickLanguage(languageTag, Object.keys(localeStatusBody)) ?? pickLanguage(DEFAULT_LANGUAGE, Object.keys(localeStatusBody))
-  const title = localeStatusTitle[titleLocale ?? 0]
-  const message = localeStatusBody[messageLocale ?? 0]
+  const titleLocale = getLocaleOrDefaultString(localeStatusTitle)
+  const messageLocale = getLocaleOrDefaultString(localeStatusBody)
+  const title = titleLocale == null ? null : localeStatusTitle[titleLocale]
+  const message = messageLocale == null ? null : localeStatusBody[messageLocale]
+  const isValidText = title != null && message != null
 
-  return isWithinDate ? (
+  return isWithinDate && isValidText ? (
     <IconMessageCard
       message={message}
       title={title}

@@ -28,7 +28,6 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
     style={
       {
         "flex": 1,
-        "marginBottom": 22,
       }
     }
     viewIsInsideTabBar={false}
@@ -39,14 +38,13 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
     />
     <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
       buttonText="Select Source Wallet"
-      fiatPerCrypto="500"
       focusMe={[Function]}
       headerText="Exchange from BTC Wallet"
       isFocused={true}
       launchWalletSelector={[Function]}
       onCryptoExchangeAmountChanged={[Function]}
       onNext={[Function]}
-      overridePrimaryExchangeAmount=""
+      overridePrimaryNativeAmount=""
       primaryCurrencyInfo={
         {
           "displayCurrencyCode": "BTC",
@@ -91,14 +89,13 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
     />
     <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
       buttonText="Select Receiving Wallet"
-      fiatPerCrypto="500"
       focusMe={[Function]}
       headerText="Exchange to ETH Wallet"
       isFocused={false}
       launchWalletSelector={[Function]}
       onCryptoExchangeAmountChanged={[Function]}
       onNext={[Function]}
-      overridePrimaryExchangeAmount="1000"
+      overridePrimaryNativeAmount=""
       primaryCurrencyInfo={
         {
           "displayCurrencyCode": "ETH",

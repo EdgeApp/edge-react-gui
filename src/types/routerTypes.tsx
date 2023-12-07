@@ -1,6 +1,6 @@
 import * as NavigationCore from '@react-navigation/core'
 import { StackActionHelpers } from '@react-navigation/native'
-import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, JsonObject, OtpError } from 'edge-core-js'
+import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, JsonObject, OtpError } from 'edge-core-js'
 import { InitialRouteName } from 'edge-login-ui-rn'
 
 import { CoinRankingDetailsParams } from '../components/scenes/CoinRankingDetailsScene'
@@ -16,14 +16,16 @@ import { FioCreateHandleParams } from '../components/scenes/Fio/FioCreateHandleS
 import { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
 import { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
 import { MigrateWalletItem } from '../components/scenes/MigrateWalletSelectCryptoScene'
-import { SendSceneParams } from '../components/scenes/SendScene'
 import { SendScene2Params } from '../components/scenes/SendScene2'
+import { StakeOptionsParams } from '../components/scenes/Staking/StakeOptionsScene'
+import { StakeOverviewParams } from '../components/scenes/Staking/StakeOverviewScene'
+import { TransactionDetailsParams } from '../components/scenes/TransactionDetailsScene'
 import { TransactionListParams } from '../components/scenes/TransactionListScene'
 import { WcConnectionsParams } from '../components/scenes/WcConnectionsScene'
 import { WcConnectParams } from '../components/scenes/WcConnectScene'
 import { WcDisconnectParams } from '../components/scenes/WcDisconnectScene'
 import { WebViewSceneParams } from '../components/scenes/WebViewScene'
-import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput'
+import { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput2'
 import { PaymentMethod } from '../controllers/action-queue/PaymentMethod'
 import { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
 import { FiatPluginAddressFormParams, FiatPluginSepaFormParams, FiatPluginSepaTransferParams } from '../plugins/gui/fiatPluginTypes'
@@ -259,7 +261,6 @@ export interface RouteParamList {
     data?: 'sweepPrivateKey' | 'loginQR'
   } // TODO
   securityAlerts: {}
-  send: SendSceneParams
   send2: SendScene2Params
   settingsOverview: {}
   settingsOverviewTab: {}
@@ -272,14 +273,10 @@ export interface RouteParamList {
     stakePosition: StakePosition
     modification: ChangeQuoteRequest['action']
   }
-  stakeOptions: { stakePlugins: StakePlugin[]; currencyCode: string; stakePolicies: StakePolicy[]; walletId: string }
-  stakeOverview: { stakePlugin: StakePlugin; stakePolicy: StakePolicy; walletId: string }
+  stakeOptions: StakeOptionsParams
+  stakeOverview: StakeOverviewParams
   testScene: {}
-  transactionDetails: {
-    edgeTransaction: EdgeTransaction
-    walletId: string
-    tokenId?: string
-  }
+  transactionDetails: TransactionDetailsParams
   transactionList: TransactionListParams
   transactionsExport: {
     sourceWallet: EdgeCurrencyWallet
