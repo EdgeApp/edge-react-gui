@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 3.23.0
+
 - added: Add Coreum (CORE)
 - added: Add Osmosis (OSMO)
 - added: Automatically enable tokens with balances
@@ -26,7 +28,7 @@
 - fixed: Error on exchange details from RUNE swaps
 - removed: Staking on Fantom
 
-## 3.22.0
+## 3.22.0 (2023-11-26)
 
 - added: Add THORChain (RUNE)
 - added: Posthog analytics support
@@ -43,7 +45,7 @@
   instead of forcing to false after first open
 - fixed: Support for stablecoins in Paybis sell to debit card
 
-## 3.21.0
+## 3.21.0 (2023-11-07)
 
 - added: Paybis buy/sell in Brazil, Columbia, and Mexico
 - added: EdgeTxAction information to Transaction List
