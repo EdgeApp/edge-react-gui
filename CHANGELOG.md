@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Remove `minWidth` style from stake option card
+
 ## 3.23.0
 
 - added: Add Coreum (CORE)
