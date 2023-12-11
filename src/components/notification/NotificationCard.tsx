@@ -6,22 +6,27 @@ import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
+import { getThemedIconUri } from '../../util/CdnUris'
 import { styled } from '../hoc/styled'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
-  iconUri: string
-  title: string
   message: string
+  title: string
+  type: 'warning' | 'info'
+  iconUri?: string
+
   onPress: () => void | Promise<void>
   onClose?: () => void | Promise<void>
 }
 
 const NotificationCardComponent = (props: Props) => {
-  const { iconUri, title, message, onClose, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  const { title, type, message, onClose, onPress } = props
+  const { iconUri = type === 'warning' ? getThemedIconUri(theme, 'notifications/icon-warning') : getThemedIconUri(theme, 'notifications/icon-info') } = props
 
   const opacity = useSharedValue(1)
   const [visible, setVisible] = React.useState(true)
@@ -66,13 +71,13 @@ const NotificationCardComponent = (props: Props) => {
       <Contents onPress={handlePress}>
         <Icon source={{ uri: iconUri }} />
         <TextView>
-          <TitleText>{title}</TitleText>
+          <TitleText type={type}>{title}</TitleText>
           {/* Android font scaling is too aggressive. 
               Android prioritizes font shrinking much more before trying to add
               newlines, while iOS prioritizes newlines before shrinking text.
               We already use smaller text here so we shouldn't shrink it
               more */}
-          <MessageText numberOfLines={3} disableFontScaling={Platform.OS === 'android'}>
+          <MessageText type={type} numberOfLines={3} disableFontScaling={Platform.OS === 'android'}>
             {message}
           </MessageText>
         </TextView>
@@ -114,15 +119,15 @@ const Icon = styled(FastImage)(theme => ({
   marginRight: theme.rem(0.25)
 }))
 
-const TitleText = styled(EdgeText)(theme => ({
-  color: theme.warningIcon,
+const TitleText = styled(EdgeText)<{ type: 'warning' | 'info' }>(theme => props => ({
+  color: props.type === 'warning' ? theme.warningIcon : theme.primaryText,
   marginHorizontal: theme.rem(0.25),
   fontSize: theme.rem(0.75),
   fontFamily: theme.fontFaceBold
 }))
 
-const MessageText = styled(EdgeText)(theme => ({
-  color: theme.warningIcon,
+const MessageText = styled(EdgeText)<{ type: 'warning' | 'info' }>(theme => props => ({
+  color: props.type === 'warning' ? theme.warningIcon : theme.secondaryText,
   marginHorizontal: theme.rem(0.25),
   fontSize: theme.rem(0.75)
 }))

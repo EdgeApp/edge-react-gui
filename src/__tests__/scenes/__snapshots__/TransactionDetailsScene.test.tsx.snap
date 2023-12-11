@@ -1180,6 +1180,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 null,
               ]
             }
+            type="warning"
           >
             Back Up Your Account
           </Text>
@@ -1203,6 +1204,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 null,
               ]
             }
+            type="warning"
           >
             Without a backup, you risk losing your funds!
           </Text>
@@ -2393,6 +2395,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 null,
               ]
             }
+            type="warning"
           >
             Back Up Your Account
           </Text>
@@ -2416,6 +2419,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 null,
               ]
             }
+            type="warning"
           >
             Without a backup, you risk losing your funds!
           </Text>
