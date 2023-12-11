@@ -8,7 +8,6 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { getThemedIconUri } from '../../util/CdnUris'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
 import { NotificationCard } from './NotificationCard'
@@ -53,7 +52,7 @@ const NotificationViewComponent = (props: Props) => {
         newNotifs.push(
           <NotificationCard
             key={walletId}
-            iconUri={getThemedIconUri(theme, 'notifications/icon-info')}
+            type="info"
             title={lstrings.notif_tokens_detected_title}
             message={
               name == null || name.trim() === ''
@@ -81,12 +80,7 @@ const NotificationViewComponent = (props: Props) => {
   return (
     <NotificationCardsContainer>
       {isBackupWarningShown ? (
-        <NotificationCard
-          iconUri={getThemedIconUri(theme, 'notifications/icon-warning')}
-          title={lstrings.backup_title}
-          message={lstrings.backup_warning_message}
-          onPress={handlePress}
-        />
+        <NotificationCard type="warning" title={lstrings.backup_title} message={lstrings.backup_warning_message} onPress={handlePress} />
       ) : null}
       {autoDetectTokenCards.length > 0 ? autoDetectTokenCards : null}
     </NotificationCardsContainer>
