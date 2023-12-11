@@ -365,6 +365,25 @@ export const edgeLight: Theme = {
   outlineTextInputLabelColorDisabled: palette.gray,
   outlineTextInputLabelColorFocused: palette.edgeBlue,
 
+  // Simple Text Input
+  textInputTextColor: palette.gray,
+  textInputTextColorDisabled: palette.white,
+  textInputTextColorFocused: palette.white,
+  textInputBackgroundColor: palette.edgeNavy,
+  textInputBackgroundColorDisabled: palette.edgeNavy,
+  textInputBackgroundColorFocused: palette.edgeNavy,
+  textInputBorderColor: palette.mutedBlue,
+  textInputBorderColorDisabled: palette.gray,
+  textInputBorderColorFocused: palette.edgeMint,
+  textInputBorderRadius: 100,
+  textInputBorderWidth: 1,
+  textInputIconColor: palette.mutedBlue,
+  textInputIconColorDisabled: palette.gray,
+  textInputIconColorFocused: palette.edgeMint,
+  textInputPlaceholderColor: palette.gray,
+  textInputPlaceholderColorDisabled: palette.gray,
+  textInputPlaceholderColorFocused: palette.edgeMint,
+
   // Animation
   fadeDisable: palette.gray,
 

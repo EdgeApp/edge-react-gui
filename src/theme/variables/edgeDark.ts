@@ -366,6 +366,25 @@ export const edgeDark: Theme = {
   outlineTextInputLabelColorDisabled: palette.gray,
   outlineTextInputLabelColorFocused: palette.edgeMint,
 
+  // Simple Text Input
+  textInputTextColor: palette.white,
+  textInputTextColorDisabled: palette.gray,
+  textInputTextColorFocused: palette.white,
+  textInputBackgroundColor: palette.darkAqua,
+  textInputBackgroundColorDisabled: palette.darkAqua,
+  textInputBackgroundColorFocused: palette.darkAqua,
+  textInputBorderColor: palette.transparent,
+  textInputBorderColorDisabled: palette.gray,
+  textInputBorderColorFocused: palette.edgeMint,
+  textInputBorderRadius: 100,
+  textInputBorderWidth: 1,
+  textInputIconColor: palette.gray,
+  textInputIconColorDisabled: palette.gray,
+  textInputIconColorFocused: palette.edgeMint,
+  textInputPlaceholderColor: palette.gray,
+  textInputPlaceholderColorDisabled: palette.gray,
+  textInputPlaceholderColorFocused: palette.edgeMint,
+
   // Animation
   fadeDisable: palette.gray,
 

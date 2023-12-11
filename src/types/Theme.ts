@@ -382,6 +382,25 @@ export interface Theme {
   outlineTextInputLabelColorDisabled: string
   outlineTextInputLabelColorFocused: string
 
+  // Text Input
+  textInputTextColor: string
+  textInputTextColorDisabled: string
+  textInputTextColorFocused: string
+  textInputBackgroundColor: string
+  textInputBackgroundColorDisabled: string
+  textInputBackgroundColorFocused: string
+  textInputBorderWidth: number
+  textInputBorderColor: string
+  textInputBorderColorDisabled: string
+  textInputBorderColorFocused: string
+  textInputBorderRadius: number
+  textInputIconColor: string
+  textInputIconColorDisabled: string
+  textInputIconColorFocused: string
+  textInputPlaceholderColor: string
+  textInputPlaceholderColorDisabled: string
+  textInputPlaceholderColorFocused: string
+
   // Animation
   fadeDisable: string
 
