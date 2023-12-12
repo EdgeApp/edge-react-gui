@@ -11,6 +11,7 @@
 - fixed: Paybis sell from Tron USDT
 - fixed: Remove `minWidth` style from stake option card
 - fixed: Send scene no-longer accesses clipboard immediately
+- fixed: Don't pass pendingTxs with spendInfo in migrate flow
 
 ## 3.23.0
 
