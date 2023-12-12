@@ -21,6 +21,7 @@ const filecoinCalibrationPolicyConfig: Array<StakePolicyConfig<StakeAdapterConfi
       simpleRampContractAddress: '0xbf3dE3D08A8C93fFB87A02E3Cb9758746450246e',
       yieldInfoEndpoint: `https://pools-metrics.vercel.app/api/v0/apy?chainID=314159`
     },
+    disableMaxStake: true,
     hideClaimAction: true,
     hideUnstakeAndClaimAction: true,
     stakeAssets: [{ pluginId: 'filecoinfevmcalibration', currencyCode: 'tFIL' }],
