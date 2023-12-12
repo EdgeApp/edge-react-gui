@@ -3,6 +3,7 @@ import Animated, { AnimatedProps, SharedValue, useAnimatedStyle } from 'react-na
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { IconProps as VectorIconProps } from 'react-native-vector-icons/Icon'
 
+import { Fontello } from '../../assets/vector'
 import { useTheme } from '../services/ThemeContext'
 
 //
@@ -59,9 +60,13 @@ function makeFontIcon(IconComponent: React.ComponentType<VectorIconProps>, name:
 //
 
 const AnimatedAntDesignIcon = Animated.createAnimatedComponent(AntDesignIcon)
+const AnimatedFontello = Animated.createAnimatedComponent(Fontello)
 
 export const CloseIcon = makeFontIcon(AntDesignIcon, 'close')
 export const CloseIconAnimated = makeAnimatedFontIcon(AnimatedAntDesignIcon, 'close')
+
+export const FlipIcon = makeFontIcon(Fontello, 'exchange')
+export const FlipIconAnimated = makeAnimatedFontIcon(AnimatedFontello, 'exchange')
 
 export const SearchIcon = makeFontIcon(AntDesignIcon, 'search1')
 export const SearchIconAnimated = makeAnimatedFontIcon(AnimatedAntDesignIcon, 'search1')
