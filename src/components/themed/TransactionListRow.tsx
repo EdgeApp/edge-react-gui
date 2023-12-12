@@ -20,7 +20,6 @@ import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { triggerHaptic } from '../../util/haptic'
 import {
   DECIMAL_PRECISION,
   decimalOrZero,
@@ -33,7 +32,8 @@ import {
 } from '../../util/utils'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { ClickableRow } from './ClickableRow'
+import { CardUi4 } from '../ui4/CardUi4'
+import { RowUi4 } from '../ui4/RowUi4'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -73,9 +73,6 @@ export function TransactionListRow(props: Props) {
   // Required Confirmations
   const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
 
-  // Thumbnail
-  const thumbnailPath = useContactThumbnail(name)
-
   // CryptoAmount
   const rateKey = `${currencyCode}_${fiatCurrencyCode}`
   const exchangeRate: string = useSelector(state => state.exchangeRates[rateKey])
@@ -92,7 +89,7 @@ export function TransactionListRow(props: Props) {
   const cryptoExchangeAmount = div(abs(transaction.nativeAmount ?? '0'), exchangeDenomination.multiplier, DECIMAL_PRECISION)
   const cryptoAmountFormat = formatNumber(decimalOrZero(truncateDecimals(cryptoAmount, maxConversionDecimals), maxConversionDecimals))
 
-  const cryptoAmountString = `${isSentTransaction ? '-' : '+'} ${denominationSymbol ? denominationSymbol + ' ' : ''}${cryptoAmountFormat}`
+  const cryptoAmountString = `${isSentTransaction ? '-' : '+'}${denominationSymbol ? denominationSymbol + ' ' : ''}${cryptoAmountFormat}`
 
   // Fiat Amount
   const isoDate = new Date(transaction.date * 1000).toISOString()
@@ -101,46 +98,59 @@ export function TransactionListRow(props: Props) {
   const fiatAmount = displayFiatAmount(amountFiat)
   const fiatSymbol = getSymbolFromCurrency(nonIsoFiatCurrencyCode)
 
-  const fiatAmountString = `${fiatSymbol} ${fiatAmount}`
+  const fiatAmountString = `${fiatSymbol}${fiatAmount}`
 
-  // Transaction Text and Icon
-  let transactionText, transactionIcon, transactionStyle
-  if (isSentTransaction) {
-    transactionText =
-      action != null
-        ? TX_ACTION_LABEL_MAP[action.type]
-        : transaction.metadata && transaction.metadata.name
-        ? transaction.metadata.name
-        : lstrings.fragment_transaction_list_sent_prefix + selectedCurrencyName
-    transactionIcon = <Ionicons name="arrow-up" size={theme.rem(1.25)} color={theme.negativeText} style={styles.iconArrows} />
-    transactionStyle = styles.iconSent
-  } else {
-    transactionText =
-      action != null
-        ? TX_ACTION_LABEL_MAP[action.type]
-        : transaction.metadata && transaction.metadata.name
-        ? transaction.metadata.name
-        : lstrings.fragment_transaction_list_receive_prefix + selectedCurrencyName
-    transactionIcon = <Ionicons name="arrow-down" size={theme.rem(1.25)} color={theme.positiveText} style={styles.iconArrows} />
-    transactionStyle = styles.iconRequest
-  }
+  // Transaction Title
+  const transactionTitle =
+    action != null
+      ? TX_ACTION_LABEL_MAP[action.type]
+      : transaction.metadata && transaction.metadata.name
+      ? transaction.metadata.name
+      : sprintf(isSentTransaction ? lstrings.transaction_sent_1s : lstrings.transaction_received_1s, selectedCurrencyName)
+
+  // Icon & Thumbnail
+  const thumbnailPath = useContactThumbnail(name)
+
+  const isSwapIcon = (action != null && (action.type === 'swap' || action.type === 'swapOrderFill')) || transaction.swapData != null
+  const arrowIconName = isSwapIcon ? 'swap-horizontal' : isSentTransaction ? 'arrow-up' : 'arrow-down'
+  const arrowIconSize = thumbnailPath ? theme.rem(1) : theme.rem(1.25)
+  const arrowIconColor = isSwapIcon ? theme.txDirFgSwapUi4 : isSentTransaction ? theme.txDirFgSendUi4 : theme.txDirFgReceiveUi4
+  const arrowContainerStyle = [
+    thumbnailPath ? styles.arrowIconOverlayContainer : styles.arrowIconContainer,
+    isSwapIcon ? styles.arrowIconContainerSwap : isSentTransaction ? styles.arrowIconContainerSend : styles.arrowIconContainerReceive
+  ]
+  const arrowIcon = (
+    <View style={arrowContainerStyle}>
+      <Ionicons name={arrowIconName} size={arrowIconSize} color={arrowIconColor} style={styles.icon} />
+    </View>
+  )
+
+  const icon = thumbnailPath ? (
+    <View style={styles.contactContainer}>
+      <FastImage style={styles.contactImage} source={{ uri: thumbnailPath }} />
+      {arrowIcon}
+    </View>
+  ) : (
+    arrowIcon
+  )
 
   // Pending Text and Style
   const currentConfirmations = transaction.confirmations
-  const pendingText =
-    currentConfirmations === 'confirmed'
-      ? unixToLocaleDateTime(transaction.date).time
-      : !isSentTransaction && canReplaceByFee && currentConfirmations === 'unconfirmed'
-      ? lstrings.fragment_transaction_list_unconfirmed_rbf
-      : currentConfirmations === 'unconfirmed'
-      ? lstrings.fragment_wallet_unconfirmed
-      : currentConfirmations === 'dropped'
-      ? lstrings.fragment_transaction_list_tx_dropped
-      : typeof currentConfirmations === 'number'
-      ? sprintf(lstrings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
-      : lstrings.fragment_transaction_list_tx_synchronizing
+  const isConfirmed = currentConfirmations === 'confirmed'
 
-  const pendingStyle = currentConfirmations === 'confirmed' ? styles.completedTime : styles.partialTime
+  const unconfirmedOrTimeText = isConfirmed
+    ? unixToLocaleDateTime(transaction.date).time
+    : !isSentTransaction && canReplaceByFee && currentConfirmations === 'unconfirmed'
+    ? lstrings.fragment_transaction_list_unconfirmed_rbf
+    : currentConfirmations === 'unconfirmed'
+    ? lstrings.fragment_wallet_unconfirmed
+    : currentConfirmations === 'dropped'
+    ? lstrings.fragment_transaction_list_tx_dropped
+    : typeof currentConfirmations === 'number'
+    ? sprintf(lstrings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
+    : lstrings.fragment_transaction_list_tx_synchronizing
+
+  const unconfirmedOrTimeStyle = isConfirmed ? styles.secondaryText : styles.unconfirmedText
 
   // Transaction Category
   const defaultCategory = !isSentTransaction ? 'income' : 'expense'
@@ -154,7 +164,6 @@ export function TransactionListRow(props: Props) {
     if (transaction == null) {
       return showError(lstrings.transaction_details_error_invalid)
     }
-    triggerHaptic('impactLight')
     navigation.push('transactionDetails', {
       edgeTransaction: transaction,
       walletId: wallet.id,
@@ -163,7 +172,6 @@ export function TransactionListRow(props: Props) {
   })
 
   const handleLongPress = useHandler(() => {
-    triggerHaptic('impactLight')
     const url = sprintf(currencyInfo.transactionExplorer, transaction.txid)
     const shareOptions = {
       url
@@ -172,125 +180,102 @@ export function TransactionListRow(props: Props) {
   })
 
   return (
-    <ClickableRow paddingRem={[0, 1]} onPress={handlePress} onLongPress={handleLongPress}>
-      <View style={styles.iconContainer}>
-        <View style={[styles.iconArrowsContainer, transactionStyle, thumbnailPath ? null : styles.iconArrowsContainerBackground]}>
-          {thumbnailPath ? null : transactionIcon}
+    <CardUi4 icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
+      <RowUi4>
+        <View style={styles.row}>
+          <EdgeText style={styles.titleText}>{transactionTitle}</EdgeText>
+          <EdgeText style={styles.titleText}>{cryptoAmountString}</EdgeText>
         </View>
-        <FastImage style={styles.icon} source={{ uri: thumbnailPath }} />
-      </View>
-      <View style={styles.transactionContainer}>
-        <View style={styles.transactionRow}>
-          <EdgeText style={styles.transactionText}>{transactionText}</EdgeText>
-          <EdgeText style={isSentTransaction ? styles.negativeCryptoAmount : styles.positiveCryptoAmount}>{cryptoAmountString}</EdgeText>
-        </View>
-        <View style={styles.transactionRow}>
-          <View style={styles.categoryAndTimeContainer}>
-            {categoryText && <EdgeText style={styles.category}>{categoryText}</EdgeText>}
-            <EdgeText style={pendingStyle}>{pendingText}</EdgeText>
-          </View>
+        <View style={styles.row}>
+          <EdgeText style={unconfirmedOrTimeStyle}>{unconfirmedOrTimeText}</EdgeText>
           <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
         </View>
-      </View>
-    </ClickableRow>
+      </RowUi4>
+
+      {categoryText == null ? null : (
+        <RowUi4>
+          <EdgeText style={styles.secondaryText}>{categoryText}</EdgeText>
+        </RowUi4>
+      )}
+    </CardUi4>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  iconContainer: {
-    marginRight: theme.rem(1)
+  icon: {
+    // Shadow styles for Android
+    textShadowColor: 'rgba(0, 0, 0, 0.7)',
+    textShadowOffset: { width: -1, height: 2 },
+    textShadowRadius: 1,
+    // Shadow styles for iOS
+    shadowColor: 'rgba(0, 0, 0, 0.7)',
+    shadowOffset: { width: -1, height: 2 },
+    shadowOpacity: 0.7,
+    shadowRadius: 1
   },
-  iconArrowsContainer: {
+  contactContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     width: theme.rem(2),
     height: theme.rem(2),
-    borderWidth: theme.mediumLineWidth,
-    borderRadius: theme.rem(0.75),
-    zIndex: 1
+    borderRadius: theme.rem(1.25)
   },
-  iconArrowsContainerBackground: {
-    backgroundColor: theme.transactionListIconBackground
-  },
-  iconSent: {
-    borderColor: theme.negativeText,
-    shadowColor: theme.negativeText,
-    shadowOffset: {
-      width: 0,
-      height: 0
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: theme.rem(0.5),
-    elevation: 3
-  },
-  iconRequest: {
-    borderColor: theme.positiveText,
-    shadowColor: theme.positiveText,
-    shadowOffset: {
-      width: 0,
-      height: 0
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: theme.rem(0.5),
-    elevation: 3
-  },
-  icon: {
+  contactImage: {
     position: 'absolute',
+    width: '100%',
+    height: '100%',
+    borderRadius: theme.rem(1)
+  },
+  arrowIconOverlayContainer: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: theme.rem(1.25),
+    height: theme.rem(1.25),
+    borderRadius: theme.rem(1.25 / 2),
+    bottom: -theme.rem(0.35),
+    right: -theme.rem(0.35)
+  },
+  arrowIconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
     width: theme.rem(2),
     height: theme.rem(2),
-    borderRadius: theme.rem(0.75)
+    borderRadius: theme.rem(1.25)
   },
-  // Some of the react-native-vector-icon icons does have surrounding white space and leans towards the left.
-  // Tested some other icons also like the AntDesign and MaterialIcons and have similar problems.
-  // Needed to be replaced by a custom icon to remove hack.
-  iconArrows: {
-    marginLeft: 1
+  // Pad the containers to account for vector icons having an off-center origin
+  arrowIconContainerSend: {
+    paddingTop: 1,
+    backgroundColor: theme.txDirBgSendUi4
   },
-  transactionContainer: {
-    flex: 1,
-    justifyContent: 'center'
+  arrowIconContainerSwap: {
+    backgroundColor: theme.txDirBgSwapUi4
   },
-  transactionRow: {
-    flexDirection: 'row'
+  arrowIconContainerReceive: {
+    paddingBottom: 2,
+    backgroundColor: theme.txDirBgReceiveUi4
   },
-  transactionText: {
-    flex: 1,
-    fontFamily: theme.fontFaceMedium
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
-  positiveCryptoAmount: {
-    marginLeft: theme.rem(0.5),
+  titleText: {
+    alignSelf: 'center',
     fontFamily: theme.fontFaceMedium,
-    color: theme.positiveText,
-    textAlign: 'right'
-  },
-  negativeCryptoAmount: {
-    marginLeft: theme.rem(0.5),
-    fontFamily: theme.fontFaceMedium,
-    color: theme.negativeText,
-    textAlign: 'right'
+    flexShrink: 1,
+    maxWidth: '60%'
   },
   fiatAmount: {
     fontSize: theme.rem(0.75),
     color: theme.secondaryText,
     textAlign: 'right'
   },
-  categoryAndTimeContainer: {
-    flex: 1
-  },
-  category: {
+  secondaryText: {
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
   },
-  partialTime: {
+  unconfirmedText: {
     fontSize: theme.rem(0.75),
     color: theme.warningText
-  },
-  pendingTime: {
-    fontSize: theme.rem(0.75),
-    color: theme.dangerText
-  },
-  completedTime: {
-    fontSize: theme.rem(0.75),
-    color: theme.secondaryText
   }
 }))

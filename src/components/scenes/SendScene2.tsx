@@ -774,7 +774,7 @@ const SendComponent = (props: Props) => {
       }
 
       if (payeeName != null && fioSender != null) {
-        let fioNotes = `${lstrings.fragment_transaction_list_sent_prefix}${lstrings.fragment_send_from_label.toLowerCase()} ${fioSender.fioAddress}\n`
+        let fioNotes = sprintf(`${lstrings.sent}\n`, `${lstrings.fragment_send_from_label.toLowerCase()} ${fioSender.fioAddress}`)
         fioNotes += fioSender.memo ? `\n${lstrings.fio_sender_memo_label}: ${fioSender.memo}\n` : ''
         if (notes.length > 1) {
           fioNotes += notes.join('\n')

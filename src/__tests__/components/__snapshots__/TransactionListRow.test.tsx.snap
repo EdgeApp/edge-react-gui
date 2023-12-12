@@ -4,11 +4,7 @@ exports[`TransactionListRow should render with loading props 1`] = `
 <View
   accessibilityState={
     {
-      "busy": undefined,
-      "checked": undefined,
-      "disabled": undefined,
-      "expanded": undefined,
-      "selected": undefined,
+      "disabled": false,
     }
   }
   accessibilityValue={
@@ -20,7 +16,6 @@ exports[`TransactionListRow should render with loading props 1`] = `
     }
   }
   accessible={false}
-  collapsable={false}
   focusable={true}
   onClick={[Function]}
   onResponderGrant={[Function]}
@@ -31,200 +26,150 @@ exports[`TransactionListRow should render with loading props 1`] = `
   onStartShouldSetResponder={[Function]}
   style={
     {
-      "opacity": 1,
+      "borderRadius": 22,
+      "flexDirection": "row",
+      "margin": 11,
+      "padding": 11,
     }
   }
 >
-  <View
+  <BVLinearGradient
+    colors={
+      [
+        452984831,
+        452984831,
+      ]
+    }
+    endPoint={
+      {
+        "x": 1,
+        "y": 1,
+      }
+    }
+    locations={null}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
     style={
       [
         {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "height": 96,
-          "justifyContent": "center",
-          "paddingHorizontal": 22,
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
         },
         {
-          "marginBottom": 0,
-          "marginLeft": 0,
-          "marginRight": 0,
-          "marginTop": 0,
-        },
-        {
-          "paddingBottom": 0,
-          "paddingLeft": 22,
-          "paddingRight": 22,
-          "paddingTop": 0,
-        },
-        null,
-        null,
-        {
-          "borderColor": "white",
-          "borderWidth": 0,
+          "borderRadius": 22,
         },
       ]
+    }
+  />
+  <View
+    style={
+      {
+        "alignContent": "center",
+        "justifyContent": "center",
+        "margin": 6,
+      }
     }
   >
     <View
       style={
-        {
-          "marginRight": 22,
-        }
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 28,
+            "height": 45,
+            "justifyContent": "center",
+            "width": 45,
+          },
+          {
+            "backgroundColor": "rgba(232, 84, 102, .6)",
+            "paddingTop": 1,
+          },
+        ]
       }
     >
-      <View
+      <Text
+        allowFontScaling={false}
         style={
           [
             {
-              "alignItems": "center",
-              "borderRadius": 17,
-              "borderWidth": 2,
-              "height": 45,
-              "justifyContent": "center",
-              "width": 45,
-              "zIndex": 1,
+              "color": "#E84D65",
+              "fontSize": 28,
             },
             {
-              "borderColor": "#E85466",
-              "elevation": 3,
-              "shadowColor": "#E85466",
+              "shadowColor": "rgba(0, 0, 0, 0.7)",
               "shadowOffset": {
-                "height": 0,
-                "width": 0,
+                "height": 2,
+                "width": -1,
               },
-              "shadowOpacity": 0.3,
-              "shadowRadius": 11,
+              "shadowOpacity": 0.7,
+              "shadowRadius": 1,
+              "textShadowColor": "rgba(0, 0, 0, 0.7)",
+              "textShadowOffset": {
+                "height": 2,
+                "width": -1,
+              },
+              "textShadowRadius": 1,
             },
             {
-              "backgroundColor": "#1b2f3b",
+              "fontFamily": "Ionicons",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
             },
+            {},
           ]
         }
       >
-        <Text
-          allowFontScaling={false}
-          style={
-            [
-              {
-                "color": "#E85466",
-                "fontSize": 28,
-              },
-              {
-                "marginLeft": 1,
-              },
-              {
-                "fontFamily": "Ionicons",
-                "fontStyle": "normal",
-                "fontWeight": "normal",
-              },
-              {},
-            ]
-          }
-        >
-          
-        </Text>
-      </View>
-      <View
-        style={
-          [
-            {
-              "overflow": "hidden",
-            },
-            {
-              "borderRadius": 17,
-              "height": 45,
-              "position": "absolute",
-              "width": 45,
-            },
-          ]
-        }
-      >
-        <FastImageView
-          resizeMode="cover"
-          source={
-            {
-              "uri": undefined,
-            }
-          }
-          style={
-            {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
-          }
-        />
-      </View>
+        
+      </Text>
     </View>
+  </View>
+  <View
+    style={
+      {
+        "flex": 1,
+        "flexDirection": "column",
+      }
+    }
+  >
     <View
-      style={
+      accessibilityState={
         {
-          "flex": 1,
-          "justifyContent": "center",
+          "disabled": false,
         }
       }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
     >
       <View
         style={
           {
+            "alignItems": "center",
+            "backgroundColor": "rgba(255, 255, 255, 0)",
             "flexDirection": "row",
-          }
-        }
-      >
-        <Text
-          adjustsFontSizeToFit={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
-          style={
-            [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
-              {
-                "flex": 1,
-                "fontFamily": "Quicksand-Medium",
-              },
-              null,
-            ]
-          }
-        >
-          Sent Bitcoin
-        </Text>
-        <Text
-          adjustsFontSizeToFit={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
-          style={
-            [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
-              {
-                "color": "#E85466",
-                "fontFamily": "Quicksand-Medium",
-                "marginLeft": 11,
-                "textAlign": "right",
-              },
-              null,
-            ]
-          }
-        >
-          - ₿ 0.001
-        </Text>
-      </View>
-      <View
-        style={
-          {
-            "flexDirection": "row",
+            "paddingHorizontal": 11,
+            "paddingVertical": 6,
           }
         }
       >
@@ -235,52 +180,126 @@ exports[`TransactionListRow should render with loading props 1`] = `
             }
           }
         >
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
+          <View
             style={
-              [
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#F1AA19",
-                  "fontSize": 17,
-                },
-                null,
-              ]
+              {
+                "flexDirection": "row",
+                "justifyContent": "space-between",
+              }
             }
           >
-            Synchronizing
-          </Text>
+            <Text
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.65}
+              numberOfLines={1}
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "alignSelf": "center",
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Medium",
+                    "maxWidth": "60%",
+                  },
+                  null,
+                ]
+              }
+            >
+              Sent Bitcoin
+            </Text>
+            <Text
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.65}
+              numberOfLines={1}
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "alignSelf": "center",
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Medium",
+                    "maxWidth": "60%",
+                  },
+                  null,
+                ]
+              }
+            >
+              -₿ 0.001
+            </Text>
+          </View>
+          <View
+            style={
+              {
+                "flexDirection": "row",
+                "justifyContent": "space-between",
+              }
+            }
+          >
+            <Text
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.65}
+              numberOfLines={1}
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#F1AA19",
+                    "fontSize": 17,
+                  },
+                  null,
+                ]
+              }
+            >
+              Synchronizing
+            </Text>
+            <Text
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.65}
+              numberOfLines={1}
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#A4C7DF",
+                    "fontSize": 17,
+                    "textAlign": "right",
+                  },
+                  null,
+                ]
+              }
+            >
+              $0.00
+            </Text>
+          </View>
         </View>
-        <Text
-          adjustsFontSizeToFit={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
+        <View
           style={
-            [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
-              {
-                "color": "#A4C7DF",
-                "fontSize": 17,
-                "textAlign": "right",
-              },
-              null,
-            ]
+            {
+              "alignItems": "center",
+              "justifyContent": "center",
+            }
           }
-        >
-          $ 0.00
-        </Text>
+        />
       </View>
     </View>
   </View>

@@ -76,7 +76,7 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
     let label = lstrings.fragment_wallet_unconfirmed
     if (status === 'sent_to_blockchain') {
       statusStyle = styles.requestDetailsReceivedTx
-      label = lstrings.fragment_transaction_list_receive_prefix
+      label = lstrings.fragment_request_subtitle
     } else if (status === 'rejected') {
       statusStyle = styles.requestPending
       label = lstrings.fio_reject_status

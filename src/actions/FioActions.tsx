@@ -1,5 +1,6 @@
 import { EdgeAccount, EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
+import { sprintf } from 'sprintf-js'
 
 import { FioExpiredModal } from '../components/modals/FioExpiredModal'
 import { Airship } from '../components/services/AirshipInstance'
@@ -88,7 +89,7 @@ export function checkFioObtData(wallet: EdgeCurrencyWallet, transactions: EdgeTr
         if (obtForTx == null) return
 
         if (edgeMetadata.notes == null) edgeMetadata.notes = ''
-        let fioNotes = `${lstrings.fragment_transaction_list_sent_prefix}${lstrings.word_to_in_convert_from_to_string} ${obtForTx.payee_fio_address}`
+        let fioNotes = sprintf(lstrings.transaction_sent_1s, `${lstrings.word_to_in_convert_from_to_string} ${obtForTx.payee_fio_address}`)
         if (obtForTx.content.memo != null && obtForTx.content.memo !== '') fioNotes += `\n${lstrings.fio_sender_memo_label}: ${obtForTx.content.memo}`
         edgeMetadata.notes = `${fioNotes}\n${edgeMetadata.notes || ''}`
         edgeMetadata.name = obtForTx.payer_fio_address

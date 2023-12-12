@@ -295,7 +295,7 @@ export function signBroadcastAndSave(
         edgeMetadata.amountFiat = amountFiat
       }
       if (payeeFioAddress != null && fioSender != null) {
-        let fioNotes = `${lstrings.fragment_transaction_list_sent_prefix}${lstrings.fragment_send_from_label.toLowerCase()} ${fioSender.fioAddress}`
+        let fioNotes = sprintf(lstrings.transaction_sent_1s, `${lstrings.fragment_send_from_label.toLowerCase()} ${fioSender.fioAddress}`)
         fioNotes += fioSender.memo ? `\n${lstrings.fio_sender_memo_label}: ${fioSender.memo}` : ''
         edgeMetadata.notes = `${fioNotes}\n${edgeMetadata.notes || ''}`
       }
