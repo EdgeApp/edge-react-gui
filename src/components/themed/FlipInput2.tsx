@@ -54,7 +54,7 @@ export interface Props {
   editable?: boolean
 }
 
-const FLIP_DURATION = 500
+const FLIP_DURATION = 300
 const flipField = (fieldNum: FieldNum): FieldNum => {
   return fieldNum === 0 ? 1 : 0
 }
