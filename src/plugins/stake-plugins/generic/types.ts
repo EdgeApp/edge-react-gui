@@ -18,6 +18,7 @@ export interface StakePolicyConfig<AdapterConfig> {
 
   // Config options:
   adapterConfig: AdapterConfig
+  disableMaxStake?: boolean
   hideClaimAction?: boolean
   hideUnstakeAction?: boolean
   hideUnstakeAndClaimAction?: boolean

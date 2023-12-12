@@ -75,6 +75,7 @@ const makePolicyAdapter = (policyInfo: StakePolicyConfig<StakeAdapterConfig>): S
 
 const makeStakePolicy = async (policyConfig: StakePolicyConfig<StakeAdapterConfig>, policyAdapter: StakePolicyAdapter): Promise<StakePolicy> => {
   const {
+    disableMaxStake = false,
     hideClaimAction = false,
     hideUnstakeAction = false,
     hideUnstakeAndClaimAction = false,
@@ -91,6 +92,7 @@ const makeStakePolicy = async (policyConfig: StakePolicyConfig<StakeAdapterConfi
     stakePolicyId,
     stakeProviderInfo,
     apy,
+    disableMaxStake,
     hideClaimAction,
     hideUnstakeAction,
     hideUnstakeAndClaimAction,
