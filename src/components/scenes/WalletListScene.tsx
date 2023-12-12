@@ -16,6 +16,7 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { WalletListHeader } from '../themed/WalletListHeader'
+import { WalletListSearch } from '../themed/WalletListSearch'
 import { WalletListSortable } from '../themed/WalletListSortable'
 import { WalletListSwipeable } from '../themed/WalletListSwipeable'
 import { WiredProgressBar } from '../themed/WiredProgressBar'
@@ -29,7 +30,7 @@ export function WalletListScene(props: Props) {
   const dispatch = useDispatch()
 
   const [sorting, setSorting] = React.useState(false)
-  const [searching, setSearching] = React.useState(false)
+  const [isSearching, setIsSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
 
   const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
@@ -46,13 +47,25 @@ export function WalletListScene(props: Props) {
   })
 
   const handleRefresh = useHandler(() => {
-    setSearching(true)
+    setIsSearching(true)
   })
 
-  // Turn off searching mode when a wallet is selected
-  const handlReset = useHandler(() => {
+  const handleReset = useHandler(() => {
     setSearchText('')
-    setSearching(false)
+    setIsSearching(false)
+  })
+
+  const handleStartSearching = useHandler(() => {
+    setIsSearching(true)
+  })
+
+  const handleDoneSearching = useHandler(() => {
+    setSearchText('')
+    setIsSearching(false)
+  })
+
+  const handleChangeText = useHandler((value: string) => {
+    setSearchText(value)
   })
 
   // Show the password reminder on mount if required:
@@ -70,23 +83,25 @@ export function WalletListScene(props: Props) {
   // rendering -------------------------------------------------------------
 
   const header = React.useMemo(() => {
-    return (
-      <WalletListHeader
-        navigation={navigation}
-        sorting={sorting}
-        searching={searching}
-        searchText={searchText}
-        openSortModal={handleSort}
-        onChangeSearchText={setSearchText}
-        onChangeSearchingState={setSearching}
-      />
-    )
-  }, [handleSort, navigation, searchText, searching, sorting])
+    return <WalletListHeader navigation={navigation} sorting={sorting} searching={isSearching} openSortModal={handleSort} />
+  }, [handleSort, navigation, isSearching, sorting])
 
   const handlePressDone = useHandler(() => setSorting(false))
 
+  const renderDrawer = () => {
+    return (
+      <WalletListSearch
+        isSearching={isSearching}
+        searchText={searchText}
+        onStartSearching={handleStartSearching}
+        onDoneSearching={handleDoneSearching}
+        onChangeText={handleChangeText}
+      />
+    )
+  }
+
   return (
-    <SceneWrapper hasTabs hasHeader hasNotifications padding={theme.rem(0.5)}>
+    <SceneWrapper avoidKeyboard hasTabs hasHeader hasNotifications padding={theme.rem(0.5)} renderDrawer={renderDrawer}>
       {({ insetStyles }) => (
         <>
           <WiredProgressBar />
@@ -106,10 +121,10 @@ export function WalletListScene(props: Props) {
                 footer={undefined}
                 navigation={navigation}
                 insetStyles={insetStyles}
-                searching={searching}
+                searching={isSearching}
                 searchText={searchText}
                 onRefresh={handleRefresh}
-                onReset={handlReset}
+                onReset={handleReset}
               />
               <WalletListSortable key="sortList" />
             </CrossFade>

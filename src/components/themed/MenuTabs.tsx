@@ -25,6 +25,7 @@ import { VectorIcon } from './VectorIcon'
 const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_map'
 
 export const MAX_TAB_BAR_HEIGHT = 92
+export const MIN_TAB_BAR_HEIGHT = 74
 
 const title: { readonly [key: string]: string } = {
   homeTab: lstrings.title_home,
@@ -56,15 +57,13 @@ export const MenuTabs = (props: BottomTabBarProps) => {
     [state.routes]
   )
 
-  const insets = useSafeAreaInsets()
-
   const activeTabRoute = state.routes[activeTabFullIndex]
   const activeTabIndex = routes.findIndex(route => route.name === activeTabRoute.name)
 
-  const { drawerOpenRatio, handleDrawerLayout, isRatioDisabled = false, resetDrawerRatio } = useDrawerOpenRatio()
+  const { drawerOpenRatio, resetDrawerRatio } = useDrawerOpenRatio()
 
   return (
-    <ContainerLinearGradient bottom={insets.bottom} colors={colors} start={start} end={end} onLayout={handleDrawerLayout}>
+    <ContainerLinearGradient colors={colors} start={start} end={end}>
       <BlurView blurType={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} overlayColor="#00000000" />
       <LinearGradient colors={colors} start={start} end={end}>
         <Tabs>
@@ -77,7 +76,6 @@ export const MenuTabs = (props: BottomTabBarProps) => {
               isActive={activeTabIndex === index}
               drawerOpenRatio={drawerOpenRatio}
               resetDrawerRatio={resetDrawerRatio}
-              isRatioDisabled={isRatioDisabled}
             />
           ))}
         </Tabs>
@@ -86,7 +84,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   )
 }
 
-const ContainerLinearGradient = styled(LinearGradient)<{ bottom: number; height?: number }>({
+const ContainerLinearGradient = styled(LinearGradient)({
   position: 'absolute',
   left: 0,
   right: 0,
@@ -107,15 +105,13 @@ const Tab = ({
   drawerOpenRatio,
   resetDrawerRatio,
   currentName,
-  isRatioDisabled,
   navigation
 }: {
   isActive: boolean
   currentName: string
   route: BottomTabBarProps['state']['routes'][number]
-  drawerOpenRatio: SharedValue<number> | undefined
+  drawerOpenRatio: SharedValue<number>
   resetDrawerRatio: () => void
-  isRatioDisabled: boolean
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>
 }) => {
   const theme = useTheme()
@@ -166,34 +162,25 @@ const Tab = ({
   return (
     <TabContainer accessible={false} insetBottom={insets.bottom} key={route.key} onPress={handleOnPress}>
       {icon[route.name]}
-      <Label
-        accessible
-        numberOfLines={1}
-        adjustsFontSizeToFit
-        minimumFontScale={0.65}
-        isActive={isActive}
-        openRatio={drawerOpenRatio}
-        isRatioDisabled={isRatioDisabled}
-      >
+      <Label accessible numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.65} isActive={isActive} openRatio={drawerOpenRatio}>
         {title[route.name]}
       </Label>
     </TabContainer>
   )
 }
 
-const TabContainer = styled(TouchableOpacity)<{ insetBottom: number }>(theme => props => ({
+const TabContainer = styled(TouchableOpacity)<{ insetBottom: number }>(theme => ({ insetBottom }) => ({
   flex: 1,
   paddingTop: theme.rem(0.75),
-  paddingBottom: Math.max(theme.rem(0.75), props.insetBottom),
+  paddingBottom: Math.max(theme.rem(0.75), insetBottom),
   justifyContent: 'center',
   alignItems: 'center'
 }))
 
 const Label = styled(Animated.Text)<{
   isActive: boolean
-  isRatioDisabled: boolean
-  openRatio: SharedValue<number> | undefined
-}>(theme => ({ isActive, isRatioDisabled, openRatio }) => {
+  openRatio: SharedValue<number>
+}>(theme => ({ isActive, openRatio }) => {
   const rem = theme.rem(1)
   return [
     {
@@ -207,9 +194,10 @@ const Label = styled(Animated.Text)<{
     },
     useAnimatedStyle(() => {
       'worklet'
+      if (openRatio == null) return {}
       return {
-        height: isRatioDisabled ? undefined : openRatio == null ? undefined : rem * openRatio.value,
-        opacity: isRatioDisabled ? undefined : openRatio == null ? undefined : openRatio.value
+        height: rem * openRatio.value,
+        opacity: openRatio.value
       }
     })
   ]

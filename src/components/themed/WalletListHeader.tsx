@@ -7,49 +7,22 @@ import { lstrings } from '../../locales/strings'
 import { NavigationBase } from '../../types/routerTypes'
 import { PromoCard } from '../cards/PromoCard'
 import { EdgeAnim } from '../common/EdgeAnim'
-import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
 import { BalanceCardUi4 } from '../ui4/BalanceCardUi4'
 import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
-import { SimpleTextInput, SimpleTextInputRef } from './SimpleTextInput'
 
 interface OwnProps {
   navigation: NavigationBase
   sorting: boolean
   searching: boolean
-  searchText: string
   openSortModal: () => void
-  onChangeSearchText: (search: string) => void
-  onChangeSearchingState: (searching: boolean) => void
 }
 
 type Props = OwnProps & ThemeProps
 
 export class WalletListHeaderComponent extends React.PureComponent<Props> {
-  textInput = React.createRef<SimpleTextInputRef>()
-
-  componentDidUpdate(prevProps: Props) {
-    if (!prevProps.searching && this.props.searching && this.textInput.current) {
-      this.textInput.current.focus()
-    }
-  }
-
-  handleOnChangeText = (input: string) => this.props.onChangeSearchText(input)
-
-  handleTextFieldFocus = () => {
-    this.props.onChangeSearchingState(true)
-  }
-
-  handleSearchDone = () => {
-    this.props.onChangeSearchingState(false)
-    if (this.textInput.current) {
-      this.textInput.current.clear()
-    }
-  }
-
   render() {
-    const { navigation, sorting, searching, searchText, theme } = this.props
+    const { navigation, sorting, searching, theme } = this.props
     const styles = getStyles(theme)
 
     const addSortButtons = (
@@ -65,24 +38,6 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
 
     return (
       <>
-        <View style={styles.searchContainer}>
-          <View style={{ flex: 1, flexDirection: 'column' }}>
-            <SimpleTextInput
-              returnKeyType="search"
-              placeholder={lstrings.wallet_list_wallet_search}
-              onChangeText={this.handleOnChangeText}
-              value={searchText}
-              onFocus={this.handleTextFieldFocus}
-              ref={this.textInput}
-              iconComponent={SearchIconAnimated}
-            />
-          </View>
-          {searching && (
-            <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
-              <EdgeText style={{ color: theme.textLink }}>{lstrings.string_done_cap}</EdgeText>
-            </TouchableOpacity>
-          )}
-        </View>
         {searching ? null : (
           <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
             <BalanceCardUi4 navigation={navigation} />
@@ -112,18 +67,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   addButton: {
     marginRight: theme.rem(0.5)
-  },
-
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: theme.rem(0.5),
-    marginHorizontal: theme.rem(0.5)
-  },
-  searchDoneButton: {
-    justifyContent: 'center',
-    paddingLeft: theme.rem(0.75)
   }
 }))
 

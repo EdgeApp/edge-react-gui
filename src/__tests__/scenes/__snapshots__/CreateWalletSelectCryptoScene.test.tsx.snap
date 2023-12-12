@@ -1026,6 +1026,32 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         </View>
       </View>
     </View>
+    <View
+      drawerOpenRatio={
+        {
+          "value": 1,
+        }
+      }
+      isKeyboardOpen={true}
+      onLayout={[Function]}
+      style={
+        [
+          {
+            "alignItems": "stretch",
+            "bottom": 0,
+            "flexDirection": "column",
+            "justifyContent": "flex-start",
+            "left": 0,
+            "overflow": "hidden",
+            "position": "absolute",
+            "right": 0,
+          },
+          {
+            "bottom": 0,
+          },
+        ]
+      }
+    />
   </View>,
 ]
 `;

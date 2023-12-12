@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { LayoutChangeEvent, Platform } from 'react-native'
 import { runOnJS, useAnimatedReaction, useSharedValue, withTiming } from 'react-native-reanimated'
 
@@ -9,20 +9,21 @@ import { createStateProvider } from './createStateProvider'
 import { useSceneScrollContext } from './SceneScrollState'
 
 export const [SceneDrawerProvider, useSceneDrawerState] = createStateProvider(() => {
-  const [isRatioDisabled, setIsRatioDisabled] = useState(false)
-  const drawerHeight = useSharedValue(0)
+  const [keepOpen, setKeepOpen] = useState(false)
+  const [tabDrawerHeight, setTabDrawerHeight] = useState<number | undefined>(undefined)
   const drawerOpenRatio = useSharedValue(1)
   const drawerOpenRatioStart = useSharedValue(1)
 
   return useMemo(
     () => ({
-      drawerHeight,
       drawerOpenRatio,
       drawerOpenRatioStart,
-      isRatioDisabled,
-      setIsRatioDisabled
+      keepOpen,
+      setKeepOpen,
+      tabDrawerHeight,
+      setTabDrawerHeight
     }),
-    [drawerHeight, drawerOpenRatio, drawerOpenRatioStart, isRatioDisabled]
+    [drawerOpenRatio, drawerOpenRatioStart, keepOpen, tabDrawerHeight]
   )
 })
 
@@ -31,7 +32,7 @@ export const useDrawerOpenRatio = () => {
 
   const scrollYStart = useSharedValue<number | undefined>(undefined)
   const snapTo = useSharedValue<number | undefined>(undefined)
-  const { drawerHeight, drawerOpenRatio, drawerOpenRatioStart, isRatioDisabled, setIsRatioDisabled } = useSceneDrawerState()
+  const { drawerOpenRatio, drawerOpenRatioStart, keepOpen, setKeepOpen, tabDrawerHeight = 1 } = useSceneDrawerState()
 
   function resetDrawerRatio() {
     snapTo.value = 1
@@ -83,14 +84,14 @@ export const useDrawerOpenRatio = () => {
 
   useAnimatedReaction(
     () => {
-      // Drawer height is not ready
-      if (drawerHeight.value === 0) return drawerOpenRatio.value
+      // Keep it open when disabled
+      if (keepOpen) return 1
 
       // Scrolling hasn't started yet
       if (scrollYStart.value == null) return
 
       const scrollYDelta = scrollY.value - scrollYStart.value
-      const ratioDelta = scrollYDelta / drawerHeight.value / 2 // Constant is to lower jumpy-ness
+      const ratioDelta = scrollYDelta / tabDrawerHeight // Constant is to lower jumpy-ness
 
       return Math.min(1, Math.max(0, drawerOpenRatioStart.value - ratioDelta))
     },
@@ -115,31 +116,55 @@ export const useDrawerOpenRatio = () => {
       snapTo.value = undefined
       drawerOpenRatio.value = currentValue
     },
-    []
+    [keepOpen, tabDrawerHeight]
   )
 
   useAnimatedReaction(
-    () => snapTo.value,
+    () => {
+      // Keep it open when disabled
+      if (keepOpen) return 1
+
+      return snapTo.value
+    },
     (currentValue, previousValue) => {
       if (currentValue === previousValue) return
       if (currentValue == null) return
 
       drawerOpenRatio.value = withTiming(currentValue, { duration: 300 })
-    }
+    },
+    [keepOpen]
   )
 
-  const handleDrawerLayout = useHandler((event: LayoutChangeEvent) => {
-    // Only handle the initial layout (re-layout is not yet supported):
-    if (drawerHeight.value !== 0) return
-    drawerHeight.value = event.nativeEvent.layout.height
+  return {
+    drawerOpenRatio,
+    resetDrawerRatio,
+
+    keepOpen,
+    setKeepOpen
+  }
+}
+
+export const useLayoutHeightInTabBar = (): ((event: LayoutChangeEvent) => void) => {
+  const { setTabDrawerHeight } = useSceneDrawerState()
+
+  const [layoutHeight, setLayoutHeight] = useState<number | undefined>(undefined)
+
+  // One-time layout measurement handler:
+  const handleLayout = useHandler((event: LayoutChangeEvent) => {
+    if (layoutHeight == null) {
+      const layoutHeight = event.nativeEvent.layout.height
+      setLayoutHeight((prev = 0) => prev + layoutHeight)
+    }
   })
 
-  return {
-    drawerHeight,
-    drawerOpenRatio,
-    isRatioDisabled,
-    setIsRatioDisabled,
-    handleDrawerLayout,
-    resetDrawerRatio
-  }
+  // Add/subtract container height to the tab-bar height when mounted/unmounted
+  useEffect(() => {
+    if (layoutHeight == null) return
+    setTabDrawerHeight((prev = 0) => prev + layoutHeight)
+    return () => {
+      setTabDrawerHeight((prev = 0) => prev - layoutHeight)
+    }
+  }, [layoutHeight, setTabDrawerHeight])
+
+  return handleLayout
 }
