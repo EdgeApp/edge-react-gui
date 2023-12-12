@@ -1,7 +1,7 @@
-import { eq } from 'biggystring'
+import { abs, eq } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableWithoutFeedback, View } from 'react-native'
+import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -9,25 +9,35 @@ import { sprintf } from 'sprintf-js'
 import { formatCategory, getTxActionDisplayInfo, joinCategory, splitCategory } from '../../actions/CategoriesActions'
 import { playSendSound } from '../../actions/SoundActions'
 import { TX_ACTION_LABEL_MAP } from '../../constants/txActionConstants'
+import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
+import { displayFiatAmount } from '../../hooks/useFiatText'
+import { useHandler } from '../../hooks/useHandler'
+import { useHistoricalRate } from '../../hooks/useHistoricalRate'
+import { useWatch } from '../../hooks/useWatch'
+import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
+import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { convertNativeToExchange } from '../../util/utils'
 import { getMemoTitle } from '../../util/validateMemos'
+import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { AccelerateTxModal } from '../modals/AccelerateTxModal'
-import { AdvancedDetailsModal } from '../modals/AdvancedDetailsModal'
 import { CategoryModal } from '../modals/CategoryModal'
 import { ContactListModal, ContactModalResult } from '../modals/ContactListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { MainButton } from '../themed/MainButton'
-import { SwapDetailsTiles } from '../tiles/SwapDetailsTiles'
-import { Tile } from '../tiles/Tile'
-import { TransactionCryptoAmountTile } from '../tiles/TransactionCryptoAmountTile'
-import { TransactionFiatTiles } from '../tiles/TransactionFiatTiles'
+import { AdvancedDetailsCard } from '../ui4/AdvancedDetailsCard'
+import { CardUi4 } from '../ui4/CardUi4'
+import { RowUi4 } from '../ui4/RowUi4'
+import { SwapDetailsCard } from '../ui4/SwapDetailsCard'
+import { TxCryptoAmountRow } from '../ui4/TxCryptoAmountRow'
 
 interface Props extends EdgeSceneProps<'transactionDetails'> {
   wallet: EdgeCurrencyWallet
@@ -42,7 +52,8 @@ export interface TransactionDetailsParams {
 const TransactionDetailsComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { edgeTransaction: transaction, tokenId, walletId } = route.params
-  const { metadata, action } = transaction
+  const { metadata = {}, action, nativeAmount, date, currencyCode, txid } = transaction
+  const { currencyInfo } = wallet
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -82,6 +93,64 @@ const TransactionDetailsComponent = (props: Props) => {
   const [acceleratedTx, setAcceleratedTx] = React.useState<null | EdgeTransaction>(null)
 
   const { name = '' } = localMetadata
+
+  // #region Crypto Fiat Rows
+
+  // Look up wallet stuff:
+  const isoFiatCurrencyCode = useWatch(wallet, 'fiatCurrencyCode')
+  const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
+  const fiatSymbol = getSymbolFromCurrency(fiatCurrencyCode)
+
+  // Look up transaction stuff:
+  const absoluteAmount = abs(nativeAmount)
+
+  // Look up the current price:
+  const exchangeDenom = useSelector(state => getExchangeDenomination(state, currencyInfo.pluginId, currencyCode))
+  const absExchangeAmount = convertNativeToExchange(exchangeDenom.multiplier)(absoluteAmount)
+  const currentFiat = useSelector(state =>
+    parseFloat(convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, absExchangeAmount))
+  )
+
+  // Look up the historical price:
+  const isoDate = new Date(date * 1000).toISOString()
+  const historicRate = useHistoricalRate(`${currencyCode}_${isoFiatCurrencyCode}`, isoDate)
+  const historicFiat = historicRate * Number(absExchangeAmount)
+
+  // Figure out which amount to show:
+  const originalFiat = metadata.amountFiat == null || metadata.amountFiat === 0 ? historicFiat : Math.abs(metadata.amountFiat)
+
+  // Percent difference:
+  const percentChange = originalFiat === 0 ? 0 : (currentFiat - originalFiat) / originalFiat
+
+  // Convert to text:
+  const originalFiatText = displayFiatAmount(originalFiat)
+  const currentFiatText = displayFiatAmount(currentFiat)
+  const percentText = toPercentString(percentChange, { plusSign: true, maxPrecision: 2 })
+
+  const handleEdit = useHandler(() => {
+    Airship.show<string | undefined>(bridge => (
+      <TextInputModal
+        bridge={bridge}
+        initialValue={originalFiatText}
+        inputLabel={fiatCurrencyCode}
+        returnKeyType="done"
+        keyboardType="numeric"
+        submitLabel={lstrings.string_save}
+        title={sprintf(lstrings.transaction_details_amount_in_fiat, fiatCurrencyCode)}
+      />
+    ))
+      .then(async inputText => {
+        if (inputText == null) return
+        const amountFiat = parseFloat(inputText.replace(',', '.'))
+
+        // Check for NaN, Infinity, and 0:
+        if (amountFiat === 0 || JSON.stringify(amountFiat) === 'null') return
+        await onSaveTxDetails({ amountFiat })
+      })
+      .catch(showError)
+  })
+
+  // #endregion Crypto Fiat Rows
 
   React.useEffect(() => {
     // Try accelerating transaction to check if transaction can be accelerated
@@ -155,12 +224,6 @@ const TransactionDetailsComponent = (props: Props) => {
     }
   }
 
-  const openAdvancedDetails = () => {
-    Airship.show(bridge => (
-      <AdvancedDetailsModal bridge={bridge} transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />
-    )).catch(err => showError(err))
-  }
-
   const onSaveTxDetails = (newDetails: Partial<EdgeMetadata>) => {
     const { name, notes, bizId, category, amountFiat } = { ...localMetadata, ...newDetails }
     transaction.metadata = {
@@ -193,45 +256,85 @@ const TransactionDetailsComponent = (props: Props) => {
   const categoriesText = formatCategory(splitCategory(category))
 
   return (
-    <NotificationSceneWrapper navigation={navigation} hasTabs scroll>
-      <View style={styles.tilesContainer}>
-        <Tile type="editable" title={personHeader} onPress={openPersonInput}>
-          <View style={styles.tileRow}>
-            {thumbnailPath ? (
+    <NotificationSceneWrapper navigation={navigation} hasTabs scroll padding={theme.rem(0.5)}>
+      <CardUi4>
+        <RowUi4
+          type="editable"
+          icon={
+            thumbnailPath ? (
               <FastImage style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
             ) : (
               <IonIcon style={styles.tileAvatarIcon} name="person" size={theme.rem(2)} />
-            )}
-            <EdgeText>{personName}</EdgeText>
+            )
+          }
+          title={personHeader}
+          onPress={openPersonInput}
+        >
+          <EdgeText>{personName}</EdgeText>
+        </RowUi4>
+      </CardUi4>
+
+      <CardUi4>
+        <TxCryptoAmountRow transaction={transaction} wallet={wallet} />
+        <RowUi4 type="editable" title={sprintf(lstrings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={handleEdit}>
+          <View style={styles.tileRow}>
+            <EdgeText>{fiatSymbol + ' '}</EdgeText>
+            <EdgeText>{originalFiatText}</EdgeText>
           </View>
-        </Tile>
-        <TransactionCryptoAmountTile transaction={transaction} wallet={wallet} />
-        <TransactionFiatTiles transaction={transaction} wallet={wallet} onMetadataEdit={onSaveTxDetails} />
-        <Tile type="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput}>
-          <EdgeText style={styles.tileCategory}>{categoriesText}</EdgeText>
-        </Tile>
-        {transaction.spendTargets && <Tile type="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
-        {transaction.swapData == null ? null : <SwapDetailsTiles swapData={transaction.swapData} transaction={transaction} wallet={wallet} />}
-        {acceleratedTx == null ? null : <Tile type="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={openAccelerateModel} />}
-        <Tile type="editable" title={lstrings.transaction_details_notes_title} body={notes} onPress={openNotesInput} />
-        {transaction.memos?.map((memo, i) =>
-          memo.hidden === true ? null : <Tile body={memo.value} key={`memo${i}`} title={getMemoTitle(memo.memoName)} type="copy" />
+        </RowUi4>
+        <RowUi4 type="default" title={lstrings.transaction_details_amount_current_price}>
+          <View style={styles.tileRow}>
+            <EdgeText>{fiatSymbol + ' '}</EdgeText>
+            <EdgeText style={styles.tileTextPrice}>{currentFiatText}</EdgeText>
+            {originalFiatText === currentFiatText ? null : (
+              <EdgeText style={percentChange >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>{` (${percentText})`}</EdgeText>
+            )}
+          </View>
+        </RowUi4>
+        <RowUi4 type="copy" title={lstrings.transaction_details_tx_id_modal_title} body={txid} />
+        {acceleratedTx == null ? null : (
+          <RowUi4 type="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={openAccelerateModel} />
         )}
-        <TouchableWithoutFeedback onPress={openAdvancedDetails}>
-          <EdgeText style={styles.textAdvancedTransaction}>{lstrings.transaction_details_view_advanced_data}</EdgeText>
-        </TouchableWithoutFeedback>
-        <MainButton onPress={navigation.pop} label={lstrings.string_done_cap} marginRem={[0, 2, 2]} type="secondary" />
-      </View>
+      </CardUi4>
+
+      <CardUi4>
+        <RowUi4 type="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput}>
+          <EdgeText style={styles.tileCategory}>{categoriesText}</EdgeText>
+        </RowUi4>
+        <RowUi4
+          type="editable"
+          title={lstrings.transaction_details_notes_title}
+          body={notes == null || notes.trim() === '' ? lstrings.transaction_details_empty_note_placeholder : notes}
+          onPress={openNotesInput}
+        />
+        {transaction.memos?.map((memo, i) =>
+          memo.hidden === true ? null : <RowUi4 body={memo.value} key={`memo${i}`} title={getMemoTitle(memo.memoName)} type="copy" />
+        )}
+      </CardUi4>
+
+      {transaction.spendTargets == null ? null : (
+        <CardUi4>
+          <RowUi4 type="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />
+        </CardUi4>
+      )}
+
+      {transaction.swapData == null ? null : <SwapDetailsCard swapData={transaction.swapData} transaction={transaction} wallet={wallet} />}
+
+      <AdvancedDetailsCard transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />
+
+      <ButtonsContainer
+        layout="column"
+        primary={{
+          onPress: navigation.pop,
+          label: lstrings.string_done_cap
+        }}
+        scrollMargin
+      />
     </NotificationSceneWrapper>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  tilesContainer: {
-    flex: 1,
-    width: '100%',
-    flexDirection: 'column'
-  },
   tileRow: {
     flexDirection: 'row',
     alignItems: 'center'
@@ -249,6 +352,18 @@ const getStyles = cacheStyles((theme: Theme) => ({
   tileCategory: {
     marginVertical: theme.rem(0.25),
     color: theme.primaryText
+  },
+  tileTextPrice: {
+    color: theme.primaryText,
+    fontSize: theme.rem(1)
+  },
+  tileTextPriceChangeUp: {
+    color: theme.positiveText,
+    fontSize: theme.rem(1)
+  },
+  tileTextPriceChangeDown: {
+    color: theme.negativeText,
+    fontSize: theme.rem(1)
   },
   textAdvancedTransaction: {
     color: theme.textLink,

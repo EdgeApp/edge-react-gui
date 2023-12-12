@@ -675,6 +675,7 @@ const strings = {
   transaction_details_accelerate_transaction_sent: 'Your transaction has been accelerated.',
   transaction_details_accelerate_transaction_lower_amount_tx_title: 'Lower Send Amount',
   transaction_details_accelerate_transaction_lower_amount_tx_message: `In order to accelerate this transaction, the recipient's amount will be lower due to insufficient balance to cover the new fee.`,
+  transaction_details_empty_note_placeholder: 'Tap to Add Note (Optional)',
   transaction_details_exchange_details: 'Exchange Details',
   transaction_details_exchange_service: 'Exchange Service',
   transaction_details_exchange_order_id: 'Order ID',
@@ -717,8 +718,8 @@ const strings = {
   category_modal_title: 'Choose a Category',
   transaction_details_notes_title: 'Notes',
   back_button_tap_again_to_exit: 'Please tap BACK again to log out',
-  fragment_tx_detail_mining_fee_with_symbol: '+ %1$s fee',
-  fragment_tx_detail_mining_fee_with_denom: '+ %1$f %2$s fee',
+  fragment_tx_detail_mining_fee_with_symbol: '+%1$s fee',
+  fragment_tx_detail_mining_fee_with_denom: '+%1$f %2$s fee',
   confirm_password_text: 'Confirm Password',
 
   // OTP settings scene:
@@ -1410,7 +1411,7 @@ const strings = {
   bank_info_title: 'Bank Info',
   home_address_title: 'Home Address',
   input_output_currency: 'Currency',
-  n_a: 'n/a',
+  n_a: 'N/A',
   payment_details: 'Payment Details',
   buy_sell_quote_input_title: 'Input',
   buy_sell_quote_output_title: 'Output',

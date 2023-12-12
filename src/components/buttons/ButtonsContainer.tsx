@@ -7,6 +7,7 @@ import { styled } from '../hoc/styled'
 import { MainButton, MainButtonType } from '../themed/MainButton'
 
 const BUTTON_MARGINS = [0.5, 0]
+const BUTTON_MARGINS_SCROLL = [0.5, 0, 5, 0]
 
 export interface ButtonInfo {
   label: string
@@ -23,6 +24,9 @@ interface Props {
   // The component is always visible if fade is unset.
   fade?: boolean
 
+  // Give extra margin when used in a scroll view
+  scrollMargin?: boolean
+
   // ButtonInfos
   primary?: ButtonInfo
   secondary?: ButtonInfo
@@ -36,34 +40,36 @@ interface Props {
 /**
  * A consistently styled view for displaying button layouts.
  */
-export const ButtonsContainer = React.memo(({ absolute = false, fade, primary, secondary, secondary2, escape, layout = 'column' }: Props) => {
-  const [fadeVisibleHack, setFadeVisibleHack] = React.useState(false)
+export const ButtonsContainer = React.memo(
+  ({ absolute = false, fade, scrollMargin = false, primary, secondary, secondary2, escape, layout = 'column' }: Props) => {
+    const [fadeVisibleHack, setFadeVisibleHack] = React.useState(false)
 
-  const fadeStyle = useFadeAnimation(fadeVisibleHack, { noFadeIn: fade == null })
+    const fadeStyle = useFadeAnimation(fadeVisibleHack, { noFadeIn: fade == null })
 
-  const renderButton = (type: MainButtonType, buttonProps?: ButtonInfo) => {
-    if (buttonProps == null) return null
-    const { label, onPress, disabled } = buttonProps
-    return <MainButton label={label} onPress={onPress} type={type} marginRem={BUTTON_MARGINS} disabled={disabled} />
+    const renderButton = (type: MainButtonType, buttonProps?: ButtonInfo) => {
+      if (buttonProps == null) return null
+      const { label, onPress, disabled } = buttonProps
+      return <MainButton label={label} onPress={onPress} type={type} marginRem={scrollMargin ? BUTTON_MARGINS_SCROLL : BUTTON_MARGINS} disabled={disabled} />
+    }
+
+    // HACK: Workaround for useFadeAnimation not working if visible=true is set
+    // immediately
+    React.useEffect(() => {
+      setFadeVisibleHack(fade == null ? true : fade)
+    }, [fade])
+
+    return (
+      <Animated.View style={fadeStyle}>
+        <StyledButtonContainer absolute={absolute} layout={layout}>
+          {renderButton('primary', primary)}
+          {renderButton('secondary', secondary2)}
+          {renderButton('secondary', secondary)}
+          {renderButton('escape', escape)}
+        </StyledButtonContainer>
+      </Animated.View>
+    )
   }
-
-  // HACK: Workaround for useFadeAnimation not working if visible=true is set
-  // immediately
-  React.useEffect(() => {
-    setFadeVisibleHack(fade == null ? true : fade)
-  }, [fade])
-
-  return (
-    <Animated.View style={fadeStyle}>
-      <StyledButtonContainer absolute={absolute} layout={layout}>
-        {renderButton('primary', primary)}
-        {renderButton('secondary', secondary2)}
-        {renderButton('secondary', secondary)}
-        {renderButton('escape', escape)}
-      </StyledButtonContainer>
-    </Animated.View>
-  )
-})
+)
 
 const StyledButtonContainer = styled(View)<{ absolute: boolean; layout: 'row' | 'column' }>(theme => props => {
   const isRowLayout = props.layout === 'row'
