@@ -383,7 +383,7 @@ export const edgeDark: Theme = {
   textInputBackgroundColor: palette.darkAqua,
   textInputBackgroundColorDisabled: palette.darkAqua,
   textInputBackgroundColorFocused: palette.darkAqua,
-  textInputBorderColor: palette.transparent,
+  textInputBorderColor: `${palette.edgeMint}00`,
   textInputBorderColorDisabled: palette.gray,
   textInputBorderColorFocused: palette.edgeMint,
   textInputBorderRadius: 100,
