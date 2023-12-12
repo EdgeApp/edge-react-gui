@@ -26,6 +26,7 @@ export interface FlipInputFieldInfo {
   // number of decimals as the user types.
   maxEntryDecimals: number
 }
+export type FlipInputFieldInfos = [FlipInputFieldInfo, FlipInputFieldInfo]
 
 export interface Props {
   onBlur?: () => void
@@ -36,7 +37,7 @@ export interface Props {
   forceFieldNum?: FieldNum
   keyboardVisible?: boolean
   inputAccessoryViewID?: string
-  fieldInfos: FlipInputFieldInfo[]
+  fieldInfos: FlipInputFieldInfos
   returnKeyType?: ReturnKeyType
   editable?: boolean
 }
