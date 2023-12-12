@@ -765,7 +765,7 @@ const getPaymentIdLimit = (direction: FiatDirection, fiat: string, banxaCoin: st
   } catch (e) {}
 }
 
-// Takes an EdgeTokenId and returns the corresponding Banxa chain code and coin code
+// Takes an EdgeAsset and returns the corresponding Banxa chain code and coin code
 const edgeToBanxaCrypto = (pluginId: string, direction: FiatDirection, displayCurrencyCode: string): { banxaChain: string; banxaCoin: string } => {
   const tokens = allowedCurrencyCodes[direction].crypto[pluginId]
   if (tokens == null) throw new Error(`edgeToBanxaCrypto ${pluginId} not allowed`)

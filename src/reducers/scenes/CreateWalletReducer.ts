@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux'
 
 import { Action } from '../../types/reduxActions'
-import { EdgeTokenId } from '../../types/types'
+import { EdgeAsset } from '../../types/types'
 
 export interface HandleActivationInfo {
-  supportedAssets: EdgeTokenId[]
+  supportedAssets: EdgeAsset[]
   activationCost: string
 }
 

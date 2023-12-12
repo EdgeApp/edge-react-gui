@@ -17,7 +17,7 @@ import { lstrings } from '../../locales/strings'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { Dispatch } from '../../types/reduxTypes'
 import { NavigationBase } from '../../types/routerTypes'
-import { EdgeTokenId, MapObject } from '../../types/types'
+import { EdgeAsset, MapObject } from '../../types/types'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -455,7 +455,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
  * Accepts plain currency codes, such as "ETH" or "REP",
  * scoped currency codes like "ETH-REP",
  * objects like `{ pluginId: 'ethereum', currencyCode: 'REP' }`,
- * and regular EdgeTokenId objects.
+ * and regular EdgeAsset objects.
  *
  * There is a similar routine for the `WalletListModal`,
  * but we can delete that one once the app updates internally.
@@ -464,15 +464,15 @@ export class EdgeProviderServer implements EdgeProviderMethods {
  */
 export function upgradeExtendedCurrencyCodes(
   currencyConfigMap: CurrencyConfigMap,
-  fixCurrencyCodes: { [badString: string]: EdgeTokenId } = {},
+  fixCurrencyCodes: { [badString: string]: EdgeAsset } = {},
   currencyCodes?: ExtendedCurrencyCode[]
-): EdgeTokenId[] | undefined {
+): EdgeAsset[] | undefined {
   if (currencyCodes == null || currencyCodes.length === 0) return
 
   // Grab all relevant tokens from the account:
   const codeLookup = makeCurrencyCodeTable(currencyConfigMap)
 
-  const out: EdgeTokenId[] = []
+  const out: EdgeAsset[] = []
   for (const code of currencyCodes) {
     if (typeof code === 'string') {
       const fixed = fixCurrencyCodes[code]
@@ -523,7 +523,7 @@ export function upgradeExtendedCurrencyCodes(
   return out
 }
 
-function unfixCurrencyCode(fixCurrencyCodes: { [badString: string]: EdgeTokenId } = {}, pluginId: string, tokenId?: string): string | undefined {
+function unfixCurrencyCode(fixCurrencyCodes: { [badString: string]: EdgeAsset } = {}, pluginId: string, tokenId?: string): string | undefined {
   return Object.keys(fixCurrencyCodes).find(uid => fixCurrencyCodes[uid].pluginId === pluginId && fixCurrencyCodes[uid].tokenId === tokenId)
 }
 

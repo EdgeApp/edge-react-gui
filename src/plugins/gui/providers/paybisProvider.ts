@@ -6,7 +6,7 @@ import URL from 'url-parse'
 import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { locale } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
-import { EdgeTokenId, StringMap } from '../../../types/types'
+import { EdgeAsset, StringMap } from '../../../types/types'
 import { makeUuid } from '../../../util/utils'
 import { SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
@@ -203,7 +203,7 @@ interface PaybisPairs {
 
 const paybisPairs: PaybisPairs = { buy: undefined, sell: undefined }
 
-interface ExtendedTokenId extends EdgeTokenId {
+interface ExtendedTokenId extends EdgeAsset {
   currencyCode?: string
 }
 

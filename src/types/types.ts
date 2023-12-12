@@ -340,7 +340,7 @@ export interface WalletListItem {
   walletId: string
 }
 
-export interface EdgeTokenId {
+export interface EdgeAsset {
   pluginId: string
   tokenId?: string
 }

@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 import { Space } from '../../components/layout/Space'
 import { showError } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
-import { EdgeTokenId } from '../../types/types'
+import { EdgeAsset } from '../../types/types'
 import { logActivity } from '../../util/logger'
 import { runWithTimeout, snooze } from '../../util/utils'
 import { openBrowserUri } from '../../util/WebUtils'
@@ -46,7 +46,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
   // Get supported crypto assets:
   const supportedAssetMap = await provider.getSupportedAssets({ direction: 'sell', paymentTypes: [], regionCode: { countryCode: 'US' } })
-  const allowedAssets: EdgeTokenId[] = Object.keys(supportedAssetMap.crypto).map(pluginId => ({ pluginId }))
+  const allowedAssets: EdgeAsset[] = Object.keys(supportedAssetMap.crypto).map(pluginId => ({ pluginId }))
 
   //
   // Helpers:

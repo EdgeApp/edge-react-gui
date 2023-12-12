@@ -19,7 +19,7 @@ import {
   PaymentProtoVerificationResponse
 } from '../types/PaymentProtoTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { EdgeTokenId, StringMap } from '../types/types'
+import { EdgeAsset, StringMap } from '../types/types'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
 
 export interface LaunchPaymentProtoParams {
@@ -119,7 +119,7 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
   const paymentId = optionsResponse.paymentId
   const options = optionsResponse.paymentOptions
   const isTestPaymentProto = uri.toLowerCase().includes('test.bitpay.com')
-  const paymentAssets: EdgeTokenId[] = []
+  const paymentAssets: EdgeAsset[] = []
   const paymentCurrencies: string[] = []
 
   for (const option of options) {

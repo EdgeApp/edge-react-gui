@@ -12,7 +12,7 @@ import { config } from '../../../theme/appConfig'
 import { connect } from '../../../types/reactRedux'
 import { RootState } from '../../../types/reduxTypes'
 import { EdgeSceneProps } from '../../../types/routerTypes'
-import { EdgeTokenId } from '../../../types/types'
+import { EdgeAsset } from '../../../types/types'
 import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getDomainRegInfo } from '../../../util/FioAddressUtils'
@@ -44,7 +44,7 @@ interface DispatchProps {
 
 interface LocalState {
   loading: boolean
-  supportedAssets: EdgeTokenId[]
+  supportedAssets: EdgeAsset[]
   supportedCurrencies: { [currencyCode: string]: boolean }
   paymentInfo: { [currencyCode: string]: { amount: string; address: string } }
   activationCost: number

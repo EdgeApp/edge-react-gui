@@ -9,7 +9,7 @@ import { executePlugin } from '../plugins/gui/fiatPlugin'
 import { DeepLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { EdgeTokenId } from '../types/types'
+import { EdgeAsset } from '../types/types'
 import { getTokenId } from '../util/CurrencyInfoHelpers'
 import { base58ToUuid } from '../util/utils'
 import { activatePromotion } from './AccountReferralActions'
@@ -221,7 +221,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       }
 
       const allowedWalletIds = matchingWalletIdsAndUris.map(wid => wid.walletId)
-      const assets: EdgeTokenId[] = matchingWalletIdsAndUris.map(({ currencyCode: cc, tokenId, walletId }) => {
+      const assets: EdgeAsset[] = matchingWalletIdsAndUris.map(({ currencyCode: cc, tokenId, walletId }) => {
         const wallet = currencyWallets[walletId]
         const { pluginId } = wallet.currencyInfo
 
