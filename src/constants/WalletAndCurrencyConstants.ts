@@ -453,7 +453,6 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: true,
     isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
-    isTransactionListUnsupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '324'
