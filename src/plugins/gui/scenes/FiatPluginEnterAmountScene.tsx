@@ -60,7 +60,7 @@ const defaultEnterAmountState: EnterAmountState = {
 export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { navigation, route } = props
+  const { route } = props
   const { initState, headerIconUri, headerTitle, onSubmit, convertValue, onPoweredByClick, onChangeText = () => {}, label1, label2 } = route.params
   const lastUsed = React.useRef<number>(1)
 
@@ -129,7 +129,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
 
   const poweredByIconPath = poweredBy != null ? getPartnerIconUri(poweredBy.poweredByIcon) : undefined
   return (
-    <NotificationSceneWrapper navigation={navigation} scroll keyboardShouldPersistTaps="handled" background="theme">
+    <NotificationSceneWrapper scroll keyboardShouldPersistTaps="handled" background="theme">
       <SceneHeader style={styles.sceneHeader} title={headerTitle} underline withTopMargin>
         {headerIcon}
       </SceneHeader>

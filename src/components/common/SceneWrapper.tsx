@@ -1,4 +1,5 @@
 import { getDefaultHeaderHeight } from '@react-navigation/elements'
+import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { Animated, ScrollView, StyleSheet, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -48,14 +49,10 @@ interface SceneWrapperProps {
   scroll?: boolean
 }
 
-interface NotificationSceneWrapperProps extends SceneWrapperProps {
-  navigation: NavigationBase
-}
-
 /**
  * A SceneWrapper with a possible notification view at the bottom.
  */
-export const NotificationSceneWrapper = (props: NotificationSceneWrapperProps): JSX.Element => {
+export const NotificationSceneWrapper = (props: SceneWrapperProps): JSX.Element => {
   const {
     avoidKeyboard = false,
     background = 'theme',
@@ -64,7 +61,6 @@ export const NotificationSceneWrapper = (props: NotificationSceneWrapperProps): 
     hasHeader = true,
     hasTabs = false,
     keyboardShouldPersistTaps,
-    navigation,
     padding = 0,
     scroll = false
   } = props
@@ -72,6 +68,7 @@ export const NotificationSceneWrapper = (props: NotificationSceneWrapperProps): 
   const activeUsername = useSelector(state => state.core.account.username)
   const isLightAccount = activeUsername == null
 
+  const navigation = useNavigation<NavigationBase>()
   const theme = useTheme()
   const notificationHeight = isLightAccount ? theme.rem(4) : 0
 
@@ -100,22 +97,19 @@ export const NotificationSceneWrapper = (props: NotificationSceneWrapperProps): 
         <View style={[styles.scene, { ...gap, padding, paddingBottom: isFuncChildren ? undefined : notificationHeight }]}>{finalChildren}</View>
       )
 
-    // Render the notifications:
-    const notifications = <NotificationView navigation={navigation} />
-
     // Render the background, if any:
     if (background === 'none')
       return (
         <>
           {scene}
-          {notifications}
+          <NotificationView navigation={navigation} />
         </>
       )
     return (
       <LinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart} style={styles.gradient}>
         {background !== 'legacy' ? null : <View style={[styles.legacyBackground, { top: gap.top + bodySplit }]} />}
         {scene}
-        {notifications}
+        <NotificationView navigation={navigation} />
       </LinearGradient>
     )
   }

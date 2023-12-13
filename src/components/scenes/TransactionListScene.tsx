@@ -248,7 +248,7 @@ function TransactionListComponent(props: Props) {
   })
 
   return (
-    <NotificationSceneWrapper navigation={navigation} hasTabs>
+    <NotificationSceneWrapper hasTabs>
       {(gap, notificationHeight) => (
         <>
           <LinearGradient colors={[backgroundGradientColor, '#00000000']} start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }} style={StyleSheet.absoluteFill} />

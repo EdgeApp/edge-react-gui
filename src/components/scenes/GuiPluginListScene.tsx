@@ -501,7 +501,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   }
 
   return (
-    <NotificationSceneWrapper navigation={navigation} background="theme" hasTabs>
+    <NotificationSceneWrapper background="theme" hasTabs>
       {(gap, notificationHeight) => (
         <GuiPluginList
           navigation={navigation}

@@ -55,7 +55,7 @@ const asKmootValidProperties = asObject({
 export const AddressFormScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { navigation, route } = props
+  const { route } = props
   const { countryCode, headerTitle, /* headerIconUri, */ onSubmit } = route.params
   const disklet = useSelector(state => state.core.disklet)
   const dropdownBorderColor = React.useMemo(() => [theme.iconDeactivated, theme.iconTappable], [theme])
@@ -250,7 +250,7 @@ export const AddressFormScene = React.memo((props: Props) => {
       key !== 'address2' && formData[key].trim() === ''
   )
   return (
-    <NotificationSceneWrapper navigation={navigation} background="theme">
+    <NotificationSceneWrapper background="theme">
       {(gap, notificationHeight) => (
         <>
           <SceneHeader title={headerTitle} underline withTopMargin />

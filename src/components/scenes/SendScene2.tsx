@@ -986,7 +986,7 @@ const SendComponent = (props: Props) => {
     disabledText = lstrings.spending_limits_enter_pin
   }
   return (
-    <NotificationSceneWrapper navigation={navigation} background="theme">
+    <NotificationSceneWrapper background="theme">
       {(gap, notificationHeight) => (
         <>
           <StyledKeyboardAwareScrollView

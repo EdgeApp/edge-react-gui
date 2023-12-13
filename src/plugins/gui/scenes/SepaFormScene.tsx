@@ -22,7 +22,7 @@ export const SepaFormScene = React.memo((props: Props) => {
   const styles = getStyles(theme)
 
   // TODO: headerIconUri
-  const { navigation, route } = props
+  const { route } = props
   const { headerTitle, onSubmit } = route.params
   const disklet = useSelector(state => state.core.disklet)
 
@@ -58,7 +58,7 @@ export const SepaFormScene = React.memo((props: Props) => {
   }, [])
 
   return (
-    <NotificationSceneWrapper navigation={navigation} background="theme">
+    <NotificationSceneWrapper background="theme">
       {(gap, notificationHeight) => (
         <>
           <SceneHeader title={headerTitle} underline withTopMargin />

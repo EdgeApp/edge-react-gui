@@ -75,7 +75,7 @@ const COLUMN_RIGHT_DATA_KEYS: Array<keyof CoinRankingData> = [
 const CoinRankingDetailsSceneComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { navigation, route } = props
+  const { route } = props
   const { coinRankingData } = route.params
   const { currencyCode, currencyName } = coinRankingData
   const currencyCodeUppercase = currencyCode.toUpperCase()
@@ -165,7 +165,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   }
 
   return (
-    <NotificationSceneWrapper navigation={navigation} background="theme" scroll>
+    <NotificationSceneWrapper background="theme" scroll>
       <View style={styles.container}>
         <EdgeAnim style={styles.titleContainer} enter={{ type: 'fadeInLeft' }}>
           <FastImage style={styles.icon} source={imageUrlObject} />

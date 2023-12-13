@@ -72,7 +72,7 @@ export const HomeSceneUi4 = (props: Props) => {
   )
 
   return (
-    <NotificationSceneWrapper navigation={navigation} scroll hasTabs>
+    <NotificationSceneWrapper scroll hasTabs>
       <View style={styles.tempMargin}>
         <SectionView extendRight>
           <>

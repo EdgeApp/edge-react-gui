@@ -85,7 +85,7 @@ export function WalletListScene(props: Props) {
   const handlePressDone = useHandler(() => setSorting(false))
 
   return (
-    <NotificationSceneWrapper navigation={navigation} hasTabs padding={theme.rem(0.5)}>
+    <NotificationSceneWrapper hasTabs padding={theme.rem(0.5)}>
       {(gap, notificationHeight) => (
         <>
           <WiredProgressBar />

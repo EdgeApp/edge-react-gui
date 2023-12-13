@@ -22,7 +22,7 @@ interface Props extends EdgeSceneProps<'guiPluginInfoDisplay'> {}
 export const InfoDisplayScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { route, navigation } = props
+  const { route } = props
   // TODO: headerIconUri
   const { headerTitle, transferInfo, promptMessage, onDone } = route.params
 
@@ -122,7 +122,7 @@ export const InfoDisplayScene = React.memo((props: Props) => {
     ))
 
   return (
-    <NotificationSceneWrapper navigation={navigation} scroll background="theme">
+    <NotificationSceneWrapper scroll background="theme">
       <SceneHeader title={headerTitle} underline withTopMargin />
       <View style={styles.promptContainer}>
         <EdgeText numberOfLines={12}>{promptMessage}</EdgeText>

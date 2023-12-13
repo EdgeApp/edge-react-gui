@@ -257,7 +257,7 @@ const TransactionDetailsComponent = (props: Props) => {
   const categoriesText = formatCategory(splitCategory(category))
 
   return (
-    <NotificationSceneWrapper navigation={navigation} hasTabs scroll padding={theme.rem(0.5)}>
+    <NotificationSceneWrapper hasTabs scroll padding={theme.rem(0.5)}>
       <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
         <CardUi4>
           <RowUi4
