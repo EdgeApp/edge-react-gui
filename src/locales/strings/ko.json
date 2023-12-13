@@ -319,7 +319,7 @@
   "send_confirmation_fee_modal_alert_title": "고액 수수료 경고",
   "send_confirmation_fee_modal_alert_message_fragment": "The network is currently congested. Transactions fees may be more expensive (%s) and may take longer than usual to confirm.",
   "send_confirmation_fee_modal_alert_message_fragment_eth": "Using too low of a fee can result in a failed transaction and loss of the fee spent.",
-  "Sent": "Sent",
+  "sent": "Sent",
   "transaction_failure": "거래 실패",
   "transaction_failure_message": "%s",
   "transaction_success": "거래 성공",
