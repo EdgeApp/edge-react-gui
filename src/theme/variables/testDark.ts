@@ -522,22 +522,19 @@ export const testDark: Theme = {
     spinnerColor: palette.white
   },
 
-  cardBackgroundUi4: {
-    colors: [palette.whiteOp10, palette.whiteOp10],
-    end: { x: 1, y: 1 },
-    start: { x: 0, y: 0 }
-  },
-  cardBackgroundWarningUi4: {
+  // Basic Card Styles
+  cardBaseColorUi4: palette.whiteOp10,
+  cardGradientWarningUi4: {
     colors: [palette.warningOuter, palette.warningInner, palette.warningInner, palette.warningOuter],
     end: { x: 0.9, y: 0 },
     start: { x: 0, y: 0.9 }
   },
-  cardBackgroundErrorUi4: {
+  cardGradientErrorUi4: {
     colors: [palette.errorOuter, palette.errorInner, palette.errorInner, palette.errorOuter],
     end: { x: 0.9, y: 0 },
     start: { x: 0, y: 0.9 }
   },
-  cardDisabledOverlayUi4: palette.blackOp65,
+  cardOverlayDisabledUi4: palette.blackOp65,
   cardRadiusRemUi4: 1,
 
   iconTappableAltUi4: palette.white,

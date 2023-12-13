@@ -8206,30 +8206,10 @@ exports[`SendScene2 Render SendScene 1`] = `
             ]
           }
         >
-          <BVLinearGradient
-            colors={
-              [
-                4285999631,
-                4286799138,
-                4286799138,
-                4285999631,
-              ]
-            }
-            endPoint={
-              {
-                "x": 0.9,
-                "y": 0,
-              }
-            }
-            locations={null}
-            startPoint={
-              {
-                "x": 0,
-                "y": 0.9,
-              }
-            }
+          <View
             style={
               {
+                "backgroundColor": "rgba(255, 255, 255, .1)",
                 "borderRadius": 22,
                 "bottom": 0,
                 "left": 0,
@@ -8239,7 +8219,40 @@ exports[`SendScene2 Render SendScene 1`] = `
                 "top": 0,
               }
             }
-          />
+          >
+            <BVLinearGradient
+              colors={
+                [
+                  4285999631,
+                  4286799138,
+                  4286799138,
+                  4285999631,
+                ]
+              }
+              endPoint={
+                {
+                  "x": 0.9,
+                  "y": 0,
+                }
+              }
+              locations={null}
+              startPoint={
+                {
+                  "x": 0,
+                  "y": 0.9,
+                }
+              }
+              style={
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+          </View>
           <View
             style={
               {

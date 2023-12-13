@@ -53,7 +53,7 @@ export function AlertCardUi4(props: Props) {
   }
 
   return (
-    <CardUi4 underlayBackground={type === 'error' ? theme.cardBackgroundErrorUi4 : theme.cardBackgroundWarningUi4} marginRem={marginRem} onPress={onPress}>
+    <CardUi4 gradientBackground={type === 'error' ? theme.cardGradientErrorUi4 : theme.cardGradientWarningUi4} marginRem={marginRem} onPress={onPress}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <IonIcon

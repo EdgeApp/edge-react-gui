@@ -18,28 +18,10 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
     ]
   }
 >
-  <BVLinearGradient
-    colors={
-      [
-        452984831,
-        452984831,
-      ]
-    }
-    endPoint={
-      {
-        "x": 1,
-        "y": 1,
-      }
-    }
-    locations={null}
-    startPoint={
-      {
-        "x": 0,
-        "y": 0,
-      }
-    }
+  <View
     style={
       {
+        "backgroundColor": "rgba(255, 255, 255, .1)",
         "borderRadius": 22,
         "bottom": 0,
         "left": 0,
