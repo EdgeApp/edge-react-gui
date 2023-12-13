@@ -319,7 +319,7 @@
   "send_confirmation_fee_modal_alert_title": "高額警告",
   "send_confirmation_fee_modal_alert_message_fragment": "ネットワークは現在混雑しています。取引手数料は (%s) より高価で、確認には通常よりも時間がかかる場合があります。",
   "send_confirmation_fee_modal_alert_message_fragment_eth": "手数料が低すぎると、取引が失敗し、手数料に使用した分を失う可能性があります。",
-  "Sent": "Sent",
+  "sent": "Sent",
   "transaction_failure": "トランザクションが失敗しました",
   "transaction_failure_message": "%s",
   "transaction_success": "トランザクションが成功しました",
