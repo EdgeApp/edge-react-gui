@@ -22,13 +22,13 @@ import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
-import { Alert } from '../themed/Alert'
 import { CryptoExchangeFlipInputWrapper } from '../themed/CryptoExchangeFlipInputWrapperComponent'
 import { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput2'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { MainButton } from '../themed/MainButton'
 import { MiniButton } from '../themed/MiniButton'
 import { SceneHeader } from '../themed/SceneHeader'
+import { AlertCardUi4 } from '../ui4/AlertCardUi4'
 
 interface OwnProps extends EdgeSceneProps<'exchange'> {}
 
@@ -257,21 +257,21 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     const primaryNativeBalance = fromWalletBalances[fromCurrencyCode] ?? '0'
 
     if (minimumPopupModals != null && primaryNativeBalance < minimumPopupModals.minimumNativeBalance) {
-      return <Alert marginRem={[1.5, 1]} title={lstrings.request_minimum_notification_title} message={minimumPopupModals.alertMessage} type="warning" />
+      return <AlertCardUi4 marginRem={[1.5, 1]} title={lstrings.request_minimum_notification_title} body={minimumPopupModals.alertMessage} type="warning" />
     }
 
     if (insufficient || genericError != null) {
       const title = genericError != null ? lstrings.exchange_generic_error_title : insufficient ? lstrings.exchange_insufficient_funds_title : ''
       const message = genericError != null ? genericError : insufficient ? lstrings.exchange_insufficient_funds_message : ''
-      return <Alert marginRem={[1.5, 1]} title={title} message={message} type="error" />
+      return <AlertCardUi4 marginRem={[1.5, 1]} title={title} body={message} type="error" />
     }
 
     if (this.checkExceedsAmount()) {
       return (
-        <Alert
+        <AlertCardUi4
           marginRem={[1.5, 1]}
           title={lstrings.exchange_insufficient_funds_title}
-          message={lstrings.exchange_insufficient_funds_below_balance}
+          body={lstrings.exchange_insufficient_funds_below_balance}
           type="error"
         />
       )

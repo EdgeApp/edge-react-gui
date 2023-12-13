@@ -3,6 +3,7 @@
 ## Unreleased
 
 - fixed: Remove `minWidth` style from stake option card
+- changed: Update various scenes with UI4 components
 
 ## 3.23.0
 

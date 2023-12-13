@@ -8111,11 +8111,9 @@ exports[`SendScene2 Render SendScene 1`] = `
           style={
             [
               {
-                "alignSelf": "stretch",
-                "borderColor": "#F1AA19",
-                "borderRadius": 4,
-                "borderWidth": 1,
-                "margin": 22,
+                "borderRadius": 22,
+                "flex": 1,
+                "padding": 11,
               },
               {
                 "marginBottom": 34,
@@ -8123,50 +8121,272 @@ exports[`SendScene2 Render SendScene 1`] = `
                 "marginRight": 22,
                 "marginTop": 34,
               },
-              {
-                "paddingBottom": 22,
-                "paddingLeft": 22,
-                "paddingRight": 22,
-                "paddingTop": 22,
-              },
             ]
           }
         >
+          <BVLinearGradient
+            colors={
+              [
+                4285999631,
+                4286799138,
+                4286799138,
+                4285999631,
+              ]
+            }
+            endPoint={
+              {
+                "x": 0.9,
+                "y": 0,
+              }
+            }
+            locations={null}
+            startPoint={
+              {
+                "x": 0,
+                "y": 0.9,
+              }
+            }
+            style={
+              {
+                "borderRadius": 22,
+                "bottom": 0,
+                "left": 0,
+                "overflow": "hidden",
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
           <View
             style={
               {
-                "alignItems": "center",
-                "display": "flex",
-                "flexDirection": "row",
+                "margin": 11,
               }
             }
           >
-            <Text
-              allowFontScaling={false}
+            <View
               style={
-                [
-                  {
-                    "color": "#F1AA19",
-                    "fontSize": 18,
-                  },
-                  {
-                    "marginRight": 11,
-                  },
-                  {
-                    "fontFamily": "Ionicons",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  {},
-                ]
+                {
+                  "alignItems": "center",
+                  "display": "flex",
+                  "flexDirection": "row",
+                }
               }
             >
-              
-            </Text>
+              <Text
+                allowFontScaling={false}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontSize": 28,
+                    },
+                    {
+                      "marginRight": 4,
+                    },
+                    {
+                      "fontFamily": "Ionicons",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={0}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "fontFamily": "Quicksand-Medium",
+                      "marginLeft": 4,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Scam Warning
+              </Text>
+            </View>
+            <View
+              style={
+                {
+                  "marginTop": 11,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "fontSize": 17,
+                        "marginLeft": 4,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  • 
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={0}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "fontSize": 17,
+                        "marginLeft": 4,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Edge will not give financial advice.
+                </Text>
+              </View>
+              <View
+                style={
+                  {
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "fontSize": 17,
+                        "marginLeft": 4,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  • 
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={0}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "fontSize": 17,
+                        "marginLeft": 4,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Cryptocurrency transactions are irreversible.
+                </Text>
+              </View>
+              <View
+                style={
+                  {
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "fontSize": 17,
+                        "marginLeft": 4,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  • 
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={0}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "fontSize": 17,
+                        "marginLeft": 4,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Do not send money to people or organizations you do not know.
+                </Text>
+              </View>
+            </View>
             <Text
               adjustsFontSizeToFit={true}
               minimumFontScale={0.65}
-              numberOfLines={1}
+              numberOfLines={10}
               style={
                 [
                   {
@@ -8176,218 +8396,17 @@ exports[`SendScene2 Render SendScene 1`] = `
                     "includeFontPadding": false,
                   },
                   {
-                    "color": "#F1AA19",
-                    "fontFamily": "Quicksand-Bold",
                     "fontSize": 17,
-                    "marginLeft": 6,
+                    "marginHorizontal": 6,
+                    "marginTop": 11,
                   },
                   null,
                 ]
               }
             >
-              Scam Warning
+              If you have any questions or concerns regarding this send, please contact support@edge.app
             </Text>
           </View>
-          <View
-            style={
-              {
-                "marginTop": 11,
-              }
-            }
-          >
-            <View
-              style={
-                {
-                  "flexDirection": "row",
-                }
-              }
-            >
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#F1AA19",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 17,
-                      "marginLeft": 4,
-                    },
-                    null,
-                  ]
-                }
-              >
-                • 
-              </Text>
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={0}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#F1AA19",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 17,
-                      "marginLeft": 4,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Edge will not give financial advice.
-              </Text>
-            </View>
-            <View
-              style={
-                {
-                  "flexDirection": "row",
-                }
-              }
-            >
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#F1AA19",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 17,
-                      "marginLeft": 4,
-                    },
-                    null,
-                  ]
-                }
-              >
-                • 
-              </Text>
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={0}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#F1AA19",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 17,
-                      "marginLeft": 4,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Cryptocurrency transactions are irreversible.
-              </Text>
-            </View>
-            <View
-              style={
-                {
-                  "flexDirection": "row",
-                }
-              }
-            >
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#F1AA19",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 17,
-                      "marginLeft": 4,
-                    },
-                    null,
-                  ]
-                }
-              >
-                • 
-              </Text>
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={0}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#F1AA19",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 17,
-                      "marginLeft": 4,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Do not send money to people or organizations you do not know.
-              </Text>
-            </View>
-          </View>
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.65}
-            numberOfLines={0}
-            style={
-              [
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#F1AA19",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 17,
-                  "marginTop": 22,
-                },
-                null,
-              ]
-            }
-          >
-            If you have any questions or concerns regarding this send, please contact support@edge.app
-          </Text>
         </View>
       </View>
     </RCTScrollView>
