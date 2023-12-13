@@ -319,7 +319,7 @@
   "send_confirmation_fee_modal_alert_title": "Aviso de Taxa Alta",
   "send_confirmation_fee_modal_alert_message_fragment": "A rede está congestionada no momento. As taxas de transação podem ser mais caras (%s) e podem levar mais tempo do que o normal para confirmar.",
   "send_confirmation_fee_modal_alert_message_fragment_eth": "O uso de uma taxa muito baixa pode resultar em falha na transação e na perda da taxa gasta.",
-  "Sent": "Sent",
+  "sent": "Sent",
   "transaction_failure": "Falha na Transação",
   "transaction_failure_message": "%s.",
   "transaction_success": "Transação bem sucedida",
