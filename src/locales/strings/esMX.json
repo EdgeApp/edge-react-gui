@@ -319,7 +319,7 @@
   "send_confirmation_fee_modal_alert_title": "Aviso de comisiones altas",
   "send_confirmation_fee_modal_alert_message_fragment": "La red está congestionada actualmente. Las comisiones por transacciones pueden ser más caras (%s) y pueden tardar más de lo habitual en ser confirmadas.",
   "send_confirmation_fee_modal_alert_message_fragment_eth": "El uso de una tarifa demasiado baja puede resultar en una transacción fallida y pérdida de la comisión gastada.",
-  "Sent": "Sent",
+  "sent": "Sent",
   "transaction_failure": "Fallo en la transacción",
   "transaction_failure_message": "%s.",
   "transaction_success": "Transacción Exitosa",
