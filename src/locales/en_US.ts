@@ -1455,6 +1455,12 @@ const strings = {
 
   // #endregion Transfer Modal
 
+  // #endregion Home
+
+  view_assets: 'View Assets',
+
+  // #region Home
+
   // Currency Labels
   currency_label_AFN: 'Afghani',
   currency_label_ALL: 'Lek',
