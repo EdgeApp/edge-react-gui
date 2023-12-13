@@ -31,7 +31,7 @@ export function ExtraTabScene(props: Props) {
   }
 
   return (
-    <SceneWrapper background="legacy" hasTabs avoidKeyboard>
+    <SceneWrapper hasTabs avoidKeyboard>
       <WebView
         allowFileAccess
         allowsInlineMediaPlayback

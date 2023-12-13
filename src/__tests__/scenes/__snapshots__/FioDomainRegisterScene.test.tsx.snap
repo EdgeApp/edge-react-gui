@@ -3,7 +3,6 @@
 exports[`FioDomainRegister should render with loading props 1`] = `
 <SceneWrapper
   background="theme"
-  bodySplit={34}
 >
   <Memo(SceneHeaderComponent)
     style={

@@ -5,7 +5,6 @@ import { Animated, ScrollView, StyleSheet, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { THEME } from '../../theme/variables/airbitz'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { NotificationView } from '../notification/NotificationView'
@@ -14,7 +13,6 @@ import { KeyboardTracker } from './KeyboardTracker'
 
 type BackgroundOptions =
   | 'theme' // Whatever the current theme specifies (default)
-  | 'legacy' // Seprate dark header and white content areas
   | 'none' // Do not render any background elements
 
 interface SceneWrapperProps {
@@ -32,9 +30,6 @@ interface SceneWrapperProps {
 
   // Background options:
   background?: BackgroundOptions
-
-  // Extra header area to insert above the body background:
-  bodySplit?: number
 
   // True if this scene has a header (with back button & such):
   hasHeader?: boolean
@@ -56,7 +51,6 @@ export const NotificationSceneWrapper = (props: SceneWrapperProps): JSX.Element 
   const {
     avoidKeyboard = false,
     background = 'theme',
-    bodySplit = 0,
     children,
     hasHeader = true,
     hasTabs = false,
@@ -107,7 +101,6 @@ export const NotificationSceneWrapper = (props: SceneWrapperProps): JSX.Element 
       )
     return (
       <LinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart} style={styles.gradient}>
-        {background !== 'legacy' ? null : <View style={[styles.legacyBackground, { top: gap.top + bodySplit }]} />}
         {scene}
         <NotificationView navigation={navigation} />
       </LinearGradient>
@@ -144,7 +137,6 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const {
     avoidKeyboard = false,
     background = 'theme',
-    bodySplit = 0,
     children,
     hasHeader = true,
     hasTabs = false,
@@ -176,7 +168,6 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     if (background === 'none') return scene
     return (
       <LinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart} style={styles.gradient}>
-        {background !== 'legacy' ? null : <View style={[styles.legacyBackground, { top: gap.top + bodySplit }]} />}
         {scene}
       </LinearGradient>
     )
@@ -200,17 +191,6 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  legacyBackground: {
-    // Layout:
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-
-    // Visuals:
-    backgroundColor: THEME.COLORS.GRAY_4
-  },
-
   gradient: {
     // Layout:
     position: 'absolute',
