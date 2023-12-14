@@ -61,6 +61,7 @@ export interface TrackingValues extends LoginTrackingValues {
   sourceCurrencyCode?: string
   sourceExchangeAmount?: string
   sourcePluginId?: string // currency pluginId of dest asset
+  numAccounts?: number // Number of full accounts saved on the device
 }
 
 // Set up the global Firebase analytics instance at boot:

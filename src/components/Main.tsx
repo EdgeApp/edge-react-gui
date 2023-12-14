@@ -15,6 +15,7 @@ import { CryptoExchangeScene as CryptoExchangeSceneComponent } from '../componen
 import { ENV } from '../env'
 import { getExperimentConfigValue } from '../experimentConfig'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
+import { useMount } from '../hooks/useMount'
 import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
@@ -243,14 +244,16 @@ export const Main = () => {
     }
   }, [theme])
 
-  React.useEffect(() => {
-    logEvent('Start_App')
+  const localUsers = useSelector(state => state.core.context.localUsers)
+
+  useMount(() => {
+    logEvent('Start_App', { numAccounts: localUsers.length })
 
     // Used to re-enable animations to login scene:
     setTimeout(() => {
       setHasInitialScenesLoaded(true)
     }, 0)
-  }, [])
+  })
 
   // Wait for the experiment config to initialize before rendering anything
   useAsyncEffect(async () => {
