@@ -1,5 +1,5 @@
 import { Disklet } from 'disklet'
-import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeSpendInfo, EdgeSwapPluginType, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeSwapPluginType } from 'edge-core-js'
 
 import { ExchangeInfo } from '../actions/ExchangeInfoActions'
 import { NotificationSettings } from '../actions/NotificationActions'
@@ -14,18 +14,7 @@ import { AccountInitPayload, SettingsState } from '../reducers/scenes/SettingsRe
 import { TweakSource } from '../util/ReferralHelpers'
 import { DeepLink } from './DeepLinkTypes'
 import { AccountReferral, DeviceReferral, Promotion, ReferralCache } from './ReferralTypes'
-import {
-  FioAddress,
-  FioDomain,
-  GuiContact,
-  GuiCurrencyInfo,
-  GuiExchangeRates,
-  GuiMakeSpendInfo,
-  MostRecentWallet,
-  SpendAuthType,
-  SpendingLimits,
-  WalletListItem
-} from './types'
+import { FioAddress, FioDomain, GuiContact, GuiCurrencyInfo, GuiExchangeRates, MostRecentWallet, SpendingLimits, WalletListItem } from './types'
 
 // Actions with no payload:
 type NoDataActionName =
@@ -45,8 +34,6 @@ type NoDataActionName =
   | 'SPAM_FILTER_ON'
   | 'SPAM_FILTER_OFF'
   | 'START_SHIFT_TRANSACTION'
-  | 'UI/SEND_CONFIRMATION/RESET'
-  | 'UI/SEND_CONFIRMATION/TOGGLE_CRYPTO_ON_TOP'
   | 'FIO/EXPIRED_REMINDER_SHOWN'
 
 export type Action =
@@ -102,27 +89,6 @@ export type Action =
   | {
       type: 'UPDATE_FIO_WALLETS'
       data: { fioWallets: EdgeCurrencyWallet[] }
-    }
-  | { type: 'UI/SEND_CONFIRMATION/NEW_PIN'; data: { pin: string } }
-  | {
-      type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO'
-      data: {
-        spendInfo: EdgeSpendInfo
-        authRequired: SpendAuthType
-      }
-    }
-  | {
-      type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION'
-      data: {
-        error: Error | null
-        forceUpdateGui: boolean
-        guiMakeSpendInfo: GuiMakeSpendInfo
-        transaction: EdgeTransaction | null
-      }
-    }
-  | {
-      type: 'UI/SEND_CONFIRMATION/SET_MAX_SPEND'
-      data: boolean
     }
   | { type: 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS'; data: { isTouchEnabled: boolean } }
   | { type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY'; data: { isAccountBalanceVisible: boolean } }

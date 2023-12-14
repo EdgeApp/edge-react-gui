@@ -40,7 +40,6 @@ import { ParamHeaderTitle } from './navigation/ParamHeaderTitle'
 import { SideMenuButton } from './navigation/SideMenuButton'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle'
 import { AssetSettingsScene as AssetSettingsSceneComponent } from './scenes/AssetSettingsScene'
-import { ChangeMiningFeeScene as ChangeMiningFeeSceneComponent } from './scenes/ChangeMiningFeeScene'
 import { ChangeMiningFeeScene2 as ChangeMiningFeeScene2Component } from './scenes/ChangeMiningFeeScene2'
 import { ChangePasswordScene as ChangePasswordSceneComponent } from './scenes/ChangePasswordScene'
 import { ChangePinScene as ChangePinSceneComponent } from './scenes/ChangePinScene'
@@ -124,7 +123,6 @@ import { useTheme } from './services/ThemeContext'
 import { MenuTabs } from './themed/MenuTabs'
 import { SideMenu } from './themed/SideMenu'
 
-const ChangeMiningFeeScene = ifLoggedIn(ChangeMiningFeeSceneComponent)
 const ChangeMiningFeeScene2 = ifLoggedIn(ChangeMiningFeeScene2Component)
 const ChangePasswordScene = ifLoggedIn(ChangePasswordSceneComponent)
 const ChangePinScene = ifLoggedIn(ChangePinSceneComponent)
@@ -333,13 +331,6 @@ const EdgeAppStack = () => {
         }}
       />
 
-      <Stack.Screen
-        name="changeMiningFee"
-        component={ChangeMiningFeeScene}
-        options={{
-          headerRight: () => <HeaderTextButton type="help" />
-        }}
-      />
       <Stack.Screen
         name="changeMiningFee2"
         component={ChangeMiningFeeScene2}
