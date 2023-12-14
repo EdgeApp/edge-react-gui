@@ -61,15 +61,15 @@ export const useSpaceStyle = (props: SpaceProps): ViewStyle => {
   const theme = useTheme()
   const { around, horizontal, vertical, top, bottom, left, right, expand: fill = false, sideways = false } = props
 
-  const topFill = boolify(around, vertical, top)
-  const bottomFill = boolify(around, vertical, bottom)
-  const leftFill = boolify(around, horizontal, left)
-  const rightFill = boolify(around, horizontal, right)
+  const topFill = boolify(top, vertical, around)
+  const bottomFill = boolify(bottom, vertical, around)
+  const leftFill = boolify(left, horizontal, around)
+  const rightFill = boolify(right, horizontal, around)
 
-  const topUnits = numberify(around, vertical, top)
-  const bottomUnits = numberify(around, vertical, bottom)
-  const leftUnits = numberify(around, horizontal, left)
-  const rightUnits = numberify(around, horizontal, right)
+  const topUnits = numberify(top, vertical, around)
+  const bottomUnits = numberify(bottom, vertical, around)
+  const leftUnits = numberify(left, horizontal, around)
+  const rightUnits = numberify(right, horizontal, around)
 
   // Margins:
   const marginTop = theme.rem(topUnits)
