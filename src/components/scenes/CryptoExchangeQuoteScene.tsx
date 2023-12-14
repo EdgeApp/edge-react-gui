@@ -20,7 +20,6 @@ import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal'
 import { CircleTimer } from '../progress-indicators/CircleTimer'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { Alert } from '../themed/Alert'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { ModalFooter, ModalTitle } from '../themed/ModalParts'
@@ -28,6 +27,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { Slider } from '../themed/Slider'
 import { ThemedModal } from '../themed/ThemedModal'
 import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
+import { AlertCardUi4 } from '../ui4/AlertCardUi4'
 
 export interface CryptoExchangeQuoteParams {
   selectedQuote: EdgeSwapQuote
@@ -189,29 +189,31 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
           <SceneHeader title={lstrings.title_exchange} underline withTopMargin />
           <ScrollView contentContainerStyle={[{ paddingBottom: notificationHeight }, styles.container]}>
             <LineTextDivider title={lstrings.fragment_send_from_label} lowerCased />
-            {showFeeWarning && <Alert marginRem={[0, 1, 1.5, 1]} title={lstrings.transaction_details_fee_warning} type="warning" />}
+            {showFeeWarning ? <AlertCardUi4 marginRem={[0, 1, 1.5, 1]} title={lstrings.transaction_details_fee_warning} type="warning" /> : null}
             <ExchangeQuote quote={selectedQuote} fromTo="from" showFeeWarning={showFeeWarning} />
             <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
             <ExchangeQuote quote={selectedQuote} fromTo="to" />
             <PoweredByCard iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)} poweredByText={exchangeName} onPress={handlePoweredByTap} />
-            {selectedQuote.isEstimate && (
-              <Alert
+            {selectedQuote.isEstimate ? (
+              <AlertCardUi4
+                // TODO: Rework margins/padding on non-UI4 components on this scene so this margin isn't needed.
+                marginRem={1}
                 title={lstrings.estimated_quote}
-                message={lstrings.estimated_exchange_message}
+                body={lstrings.estimated_exchange_message}
                 type="warning"
-                marginRem={[1, 1]}
                 onPress={handleForEstimateExplanation}
               />
-            )}
-            {selectedQuote.canBePartial === true && (
-              <Alert
+            ) : null}
+            {selectedQuote.canBePartial ? (
+              <AlertCardUi4
+                // TODO: Rework margins/padding on non-UI4 components on this scene so this margin isn't needed.
+                marginRem={1}
                 title={lstrings.can_be_partial_quote_title}
-                message={lstrings.can_be_partial_quote_message}
+                body={lstrings.can_be_partial_quote_message}
                 type="warning"
-                marginRem={[1, 1]}
                 onPress={handleCanBePartialExplanation}
               />
-            )}
+            ) : null}
 
             <Slider parentStyle={styles.slider} onSlidingComplete={doShift} disabled={pending} showSpinner={pending} />
             {renderTimer()}

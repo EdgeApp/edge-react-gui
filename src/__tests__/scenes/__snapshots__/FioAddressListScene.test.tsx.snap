@@ -176,6 +176,22 @@ exports[`FioAddressList should render with loading props 1`] = `
               "cameraOverlayColor": "#000000",
               "cameraOverlayOpEnd": 0.3,
               "cameraOverlayOpStart": 0.7,
+              "cardBackgroundErrorUi4": {
+                "colors": [
+                  "#94472e",
+                  "#962c32",
+                  "#962c32",
+                  "#94472e",
+                ],
+                "end": {
+                  "x": 0.9,
+                  "y": 0,
+                },
+                "start": {
+                  "x": 0,
+                  "y": 0.9,
+                },
+              },
               "cardBackgroundUi4": {
                 "colors": [
                   "rgba(255, 255, 255, .1)",
@@ -188,6 +204,22 @@ exports[`FioAddressList should render with loading props 1`] = `
                 "start": {
                   "x": 0,
                   "y": 0,
+                },
+              },
+              "cardBackgroundWarningUi4": {
+                "colors": [
+                  "#772a0f",
+                  "#835d22",
+                  "#835d22",
+                  "#772a0f",
+                ],
+                "end": {
+                  "x": 0.9,
+                  "y": 0,
+                },
+                "start": {
+                  "x": 0,
+                  "y": 0.9,
                 },
               },
               "cardBorder": 1,
@@ -781,6 +813,22 @@ exports[`FioAddressList should render with loading props 1`] = `
               "cameraOverlayColor": "#000000",
               "cameraOverlayOpEnd": 0.3,
               "cameraOverlayOpStart": 0.7,
+              "cardBackgroundErrorUi4": {
+                "colors": [
+                  "#94472e",
+                  "#962c32",
+                  "#962c32",
+                  "#94472e",
+                ],
+                "end": {
+                  "x": 0.9,
+                  "y": 0,
+                },
+                "start": {
+                  "x": 0,
+                  "y": 0.9,
+                },
+              },
               "cardBackgroundUi4": {
                 "colors": [
                   "rgba(255, 255, 255, .1)",
@@ -793,6 +841,22 @@ exports[`FioAddressList should render with loading props 1`] = `
                 "start": {
                   "x": 0,
                   "y": 0,
+                },
+              },
+              "cardBackgroundWarningUi4": {
+                "colors": [
+                  "#772a0f",
+                  "#835d22",
+                  "#835d22",
+                  "#772a0f",
+                ],
+                "end": {
+                  "x": 0.9,
+                  "y": 0,
+                },
+                "start": {
+                  "x": 0,
+                  "y": 0.9,
                 },
               },
               "cardBorder": 1,

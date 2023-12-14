@@ -1,43 +1,56 @@
 import * as React from 'react'
-import { StyleSheet, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import LinearGradient, { LinearGradientProps } from 'react-native-linear-gradient'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
 import { triggerHaptic } from '../../util/haptic'
+import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SectionView } from './SectionView'
 
-export type CardType = 'default' | 'warning' | 'error'
-
 interface Props {
-  children: React.ReactNode | React.ReactNode[] // Top layer
+  // Top layer:
+  overlay?: React.ReactNode // Rendered above/on top of children
 
+  // children & icon share the same 2nd layer:
+  children: React.ReactNode | React.ReactNode[]
   icon?: React.ReactNode
-  overlay?: React.ReactNode
 
-  // These two override the default theme background:
-  underlayForeground?: React.ReactNode // Middle layer, e.g. embedded images as part of the background
-  underlayBackground?: LinearGradientProps // Bottom layer gradient
+  // DO NOT USE after a scene is fully UI4! Margins should all align without adjustment.
+  marginRem?: number[] | number
 
-  onClose?: () => Promise<void> | void
+  underlayForeground?: React.ReactNode // 3rd layer, e.g. embedded images as part of the background
+  underlayBackground?: LinearGradientProps // Bottom-most layer
+
+  // Options:
+  sections?: boolean // Automatic section dividers, only if chilren is multiple nodes
+  onClose?: () => Promise<void> | void // If specified, adds a close button, absolutely positioned in the top right
+
+  // Touchable area for the following span the entire card:
   onLongPress?: () => Promise<void> | void
   onPress?: () => Promise<void> | void
-  // cardType?: CardType // TODO
 }
 
 /**
- * Rounded card that automatically adds horizontal dividers between each child,
- * aligned in a column layout. Adds no dividers if only one child is given.
+ * Rounded card
  *
- * The background is divided into two 'underlay' props.
- * If unspecified, defaults to the theme-defined background.
+ * sections: Automatically adds horizontal dividers between each child, aligned
+ * in a column layout. Adds no dividers if only one child is given.
+ *
+ * underlayForeground/underlayBackground: For specifying a complex background
+ * that can include embedded images or any other component.
+ *
+ * onClose: If specified, adds a close button
  */
 export const CardUi4 = (props: Props) => {
-  const { children, icon, overlay, underlayForeground, underlayBackground, onClose, onLongPress, onPress } = props
+  const { children, icon, marginRem, overlay, sections, underlayForeground, underlayBackground, onClose, onLongPress, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  const margin = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
+  const isPressable = onPress != null || onLongPress != null
 
   const handlePress = useHandler(async () => {
     if (onPress != null) {
@@ -65,48 +78,60 @@ export const CardUi4 = (props: Props) => {
     triggerHaptic('impactLight')
   })
 
-  return (
-    <TouchableHighlight
-      accessible={false}
-      onPress={handlePress}
-      onLongPress={handleLongPress}
-      disabled={handlePress == null && handleLongPress == null}
-      underlayColor={theme.touchHighlightUi4}
-      style={styles.cardContainer}
-    >
-      <>
-        <LinearGradient {...theme.cardBackgroundUi4} {...underlayBackground} style={[StyleSheet.absoluteFill, styles.backgroundFill]}>
-          {underlayForeground}
-        </LinearGradient>
-        {icon == null ? null : <View style={styles.iconContainer}>{icon}</View>}
-        <SectionView>{children}</SectionView>
-        {onClose == null ? null : (
-          <TouchableOpacity style={styles.cornerContainer} onPress={handleClose}>
-            <AntDesignIcon color={theme.iconTappableAltUi4} name="close" size={theme.rem(1.25)} />
-          </TouchableOpacity>
-        )}
-        {overlay == null ? null : <View style={styles.overlayContainer}>{overlay}</View>}
-      </>
-    </TouchableHighlight>
+  const underlay = (
+    <LinearGradient {...(underlayBackground ?? theme.cardBackgroundUi4)} style={styles.backgroundFill}>
+      {underlayForeground}
+    </LinearGradient>
+  )
+
+  const maybeIcon = icon == null ? null : <View style={styles.iconContainer}>{icon}</View>
+
+  const content = sections ? <SectionView>{children}</SectionView> : children
+
+  const maybeCloseButton =
+    onClose == null ? null : (
+      <TouchableOpacity style={styles.cornerContainer} onPress={handleClose}>
+        <AntDesignIcon color={theme.iconTappableAltUi4} name="close" size={theme.rem(1.25)} />
+      </TouchableOpacity>
+    )
+
+  const maybeOverlay = overlay == null ? null : <View style={styles.overlayContainer}>{overlay}</View>
+
+  const allContent = (
+    <>
+      {underlay}
+      {maybeIcon}
+      {content}
+      {maybeCloseButton}
+      {maybeOverlay}
+    </>
+  )
+
+  return isPressable ? (
+    <TouchableOpacity accessible={false} onPress={handlePress} onLongPress={handleLongPress} style={[styles.cardContainer, margin]}>
+      {allContent}
+    </TouchableOpacity>
+  ) : (
+    <View style={[styles.cardContainer, margin]}>{allContent}</View>
   )
 }
 
-// TODO: Adjust margin/padding so everything combines with correct layout no
-// matter the combination of UI4 components.
 const getStyles = cacheStyles((theme: Theme) => ({
   backgroundFill: {
-    borderRadius: theme.rem(theme.cardRadiusRemUi4)
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: theme.rem(theme.cardRadiusRemUi4),
+    overflow: 'hidden'
   },
   cardContainer: {
     borderRadius: theme.rem(theme.cardRadiusRemUi4),
-    margin: theme.rem(0.5),
     padding: theme.rem(0.5),
-    flexDirection: 'row'
+    flex: 1
   },
   cornerContainer: {
-    margin: theme.rem(0.25),
-    justifyContent: 'flex-start',
-    alignContent: 'center'
+    margin: theme.rem(1),
+    top: 0,
+    right: 0,
+    position: 'absolute'
   },
   overlayContainer: {
     ...StyleSheet.absoluteFillObject,

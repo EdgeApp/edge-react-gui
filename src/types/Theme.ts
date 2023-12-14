@@ -441,6 +441,8 @@ export interface Theme {
   buttonTertiaryUi4: ButtomParamsUi4
 
   cardBackgroundUi4: ThemeGradientParams
+  cardBackgroundWarningUi4: ThemeGradientParams
+  cardBackgroundErrorUi4: ThemeGradientParams
   cardDisabledOverlayUi4: string
   cardRadiusRemUi4: number
 

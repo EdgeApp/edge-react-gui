@@ -38,7 +38,6 @@ import { addToFioAddressCache, checkRecordSendFee, FIO_FEE_EXCEEDS_SUPPLIED_MAXI
 import { logActivity } from '../../util/logger'
 import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, zeroString } from '../../util/utils'
 import { getMemoError, getMemoLabel, getMemoTitle } from '../../util/validateMemos'
-import { WarningCard } from '../cards/WarningCard'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -58,6 +57,7 @@ import { CountdownTile } from '../tiles/CountdownTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
 import { Tile } from '../tiles/Tile'
+import { AlertCardUi4 } from '../ui4/AlertCardUi4'
 
 interface Props extends EdgeSceneProps<'send2'> {}
 
@@ -659,11 +659,13 @@ const SendComponent = (props: Props) => {
       const scamFooter = sprintf(lstrings.warning_scam_footer_s, config.supportEmail)
 
       return (
-        <WarningCard
-          title={lstrings.warning_scam_title}
-          points={[scamMessage, lstrings.warning_scam_message_irreversibility, lstrings.warning_scam_message_unknown_recipients]}
-          footer={scamFooter}
+        <AlertCardUi4
+          // TODO: Rework margins/padding on non-UI4 components on this scene so this margin isn't needed.
           marginRem={[1.5, 1]}
+          title={lstrings.warning_scam_title}
+          type="warning"
+          body={[scamMessage, lstrings.warning_scam_message_irreversibility, lstrings.warning_scam_message_unknown_recipients]}
+          footer={scamFooter}
         />
       )
     }

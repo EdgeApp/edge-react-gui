@@ -75,7 +75,12 @@ const palette = {
   grayOp70: 'rgba(135, 147, 158, .7)',
   greenOp60: 'rgba(119, 197, 19, .6)',
   lightGreen: '#75C649',
-  lightRed: '#E84D65'
+  lightRed: '#E84D65',
+
+  warningOuter: '#772a0f',
+  warningInner: '#835d22',
+  errorOuter: '#94472e',
+  errorInner: '#962c32'
 }
 
 const deviceWidth = Dimensions.get('window').width
@@ -501,6 +506,16 @@ export const edgeDark: Theme = {
     colors: [palette.whiteOp10, palette.whiteOp10],
     end: { x: 1, y: 1 },
     start: { x: 0, y: 0 }
+  },
+  cardBackgroundWarningUi4: {
+    colors: [palette.warningOuter, palette.warningInner, palette.warningInner, palette.warningOuter],
+    end: { x: 0.9, y: 0 },
+    start: { x: 0, y: 0.9 }
+  },
+  cardBackgroundErrorUi4: {
+    colors: [palette.errorOuter, palette.errorInner, palette.errorInner, palette.errorOuter],
+    end: { x: 0.9, y: 0 },
+    start: { x: 0, y: 0.9 }
   },
   cardDisabledOverlayUi4: palette.blackOp65,
   cardRadiusRemUi4: 1,
