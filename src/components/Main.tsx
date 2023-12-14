@@ -15,6 +15,7 @@ import { CryptoExchangeScene as CryptoExchangeSceneComponent } from '../componen
 import { ENV } from '../env'
 import { getExperimentConfigValue } from '../experimentConfig'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
+import { useWatch } from '../hooks/useWatch'
 import { lstrings } from '../locales/strings'
 import { AddressFormScene } from '../plugins/gui/scenes/AddressFormScene'
 import { FiatPluginEnterAmountScene as FiatPluginEnterAmountSceneComponent } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
@@ -243,13 +244,17 @@ export const Main = () => {
     }
   }, [theme])
 
+  const context = useSelector(state => state.core.context)
+  const localUsers = useWatch(context, 'localUsers')
+
   React.useEffect(() => {
-    logEvent('Start_App')
+    logEvent('Start_App', { numAccounts: localUsers.length })
 
     // Used to re-enable animations to login scene:
     setTimeout(() => {
       setHasInitialScenesLoaded(true)
     }, 0)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Wait for the experiment config to initialize before rendering anything
