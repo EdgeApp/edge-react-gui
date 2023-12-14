@@ -3,8 +3,9 @@ import { EdgeCurrencyWallet } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { showFullScreenSpinner } from '../components/modals/AirshipFullScreenSpinner'
-import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../constants/WalletAndCurrencyConstants'
+import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
+import { getFioStakingBalances } from './stakeUtils'
 
 /**
  * Safely get a wallet name, returning a fallback when the name is null.
@@ -27,8 +28,9 @@ export const getAvailableBalance = (wallet: EdgeCurrencyWallet, tokenCode?: stri
   const cCode = tokenCode ?? currencyCode
   let balance = wallet.balances[cCode] ?? '0'
   if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) {
-    const lockedBalance = wallet.balances[`${cCode}${STAKING_BALANCES.locked}`] ?? '0'
-    balance = sub(balance, lockedBalance)
+    // Special case for FIO mainnet (no token)
+    const { locked } = getFioStakingBalances(wallet.stakingStatus)
+    balance = sub(balance, locked)
   }
   return balance
 }
