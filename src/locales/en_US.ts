@@ -1455,11 +1455,16 @@ const strings = {
 
   // #endregion Transfer Modal
 
-  // #endregion Home
+  // #region Home
 
+  title_home: 'Home',
   view_assets: 'View Assets',
 
-  // #region Home
+  buy_crypto: 'Buy Crypto',
+  sell_crypto: 'Sell Crypto',
+  swap_crypto: 'Swap Crypto',
+
+  // #endregion Home
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

@@ -447,9 +447,16 @@ export interface Theme {
   cardOverlayDisabledUi4: string
   cardRadiusRemUi4: number
 
+  // Special Home Scene Tiled Cards
+  buyCardGradientUi4: ThemeGradientParams
+  sellCardGradientUi4: ThemeGradientParams
+  fioCardGradientUi4: ThemeGradientParams
+  swapCardGradientUi4: ThemeGradientParams
+
   iconTappableAltUi4: string
 
   negativeTextMutedUi4: string
+  secondaryTextUi4: string
 
   shadowColorUi4: string
   shadowTextIosUi4: TextShadowParams
