@@ -1,6 +1,6 @@
 import { asValue } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
-import { EdgeTokenId, EdgeTransaction } from 'edge-core-js/types'
+import { EdgeAssetAction, EdgeMetadata, EdgeTokenId, EdgeTransaction, EdgeTxAction } from 'edge-core-js/types'
 
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
@@ -102,6 +102,20 @@ export interface FiatPluginWalletPickerResult {
   currencyCode: string
 }
 
+export interface SaveTxMetadataParams {
+  txid: string
+  walletId: string
+  tokenId: EdgeTokenId
+  metadata?: EdgeMetadata
+}
+
+export interface SaveTxActionParams {
+  txid: string
+  walletId: string
+  tokenId: EdgeTokenId
+  savedAction: EdgeTxAction
+  assetAction: EdgeAssetAction
+}
 export interface FiatPluginUi {
   addressWarnings: (parsedUri: any, currencyCode: string) => Promise<boolean>
   buttonModal: <Buttons extends { [key: string]: ButtonInfo }>(params: Omit<ButtonModalProps<Buttons>, 'bridge'>) => Promise<keyof Buttons | undefined>
@@ -115,6 +129,8 @@ export interface FiatPluginUi {
   addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress>
   rewardsCardDashboard: (params: RewardsCardDashboardParams) => Promise<void>
   rewardsCardWelcome: (params: RewardsCardWelcomeParams) => Promise<void>
+  saveTxAction: (params: SaveTxActionParams) => Promise<void>
+  saveTxMetadata: (params: SaveTxMetadataParams) => Promise<void>
   send: (params: SendScene2Params) => Promise<EdgeTransaction>
   sendPaymentProto: (params: { uri: string; params: LaunchPaymentProtoParams }) => Promise<void>
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>

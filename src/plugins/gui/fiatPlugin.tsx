@@ -29,7 +29,9 @@ import {
   FiatPluginSepaTransferParams,
   FiatPluginStartParams,
   FiatPluginUi,
-  FiatPluginWalletPickerResult
+  FiatPluginWalletPickerResult,
+  SaveTxActionParams,
+  SaveTxMetadataParams
 } from './fiatPluginTypes'
 
 export const SendErrorNoTransaction = 'SendErrorNoTransaction'
@@ -159,6 +161,19 @@ export const executePlugin = async (params: {
           }
         })
       })
+    },
+    saveTxMetadata: async ({ txid, walletId, tokenId, metadata }: SaveTxMetadataParams) => {
+      const wallet = account.currencyWallets[walletId]
+      if (wallet == null) throw new Error(`Unknown walletId:${walletId}`)
+
+      if (metadata != null) {
+        await wallet.saveTxMetadata({ txid, tokenId, metadata })
+      }
+    },
+    saveTxAction: async ({ txid, walletId, tokenId, assetAction, savedAction }: SaveTxActionParams) => {
+      const wallet = account.currencyWallets[walletId]
+      if (wallet == null) throw new Error(`Unknown walletId:${walletId}`)
+      await wallet.saveTxAction({ txid, tokenId, assetAction, savedAction })
     },
     send: async (params: SendScene2Params) => {
       // Always avoid the scam warning with plugins since we trust our plugins

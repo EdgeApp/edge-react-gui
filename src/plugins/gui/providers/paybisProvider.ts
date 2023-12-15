@@ -9,7 +9,7 @@ import { lstrings } from '../../../locales/strings'
 import { EdgeAsset, StringMap } from '../../../types/types'
 import { makeUuid } from '../../../util/utils'
 import { SendErrorNoTransaction } from '../fiatPlugin'
-import { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
+import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
@@ -592,7 +592,7 @@ export const paybisProvider: FiatProviderFactory = {
                           address: true
                         }
                       }
-                      await showUi.send(sendParams)
+                      const tx = await showUi.send(sendParams)
                       await showUi.trackConversion('Sell_Success', {
                         destCurrencyCode: fiatCurrencyCode,
                         destExchangeAmount: fiatAmount,
@@ -602,6 +602,18 @@ export const paybisProvider: FiatProviderFactory = {
                         pluginId: providerId,
                         orderId: invoice
                       })
+
+                      // Save separate metadata/action for token transaction fee
+                      if (tokenId != null) {
+                        const params: SaveTxActionParams = {
+                          walletId: coreWallet.id,
+                          tokenId,
+                          txid: tx.txid,
+                          savedAction,
+                          assetAction: { ...assetAction, assetActionType: 'sell' }
+                        }
+                        await showUi.saveTxAction(params)
+                      }
 
                       // Route back to the original URL to show Paybis confirmation screen
                       await showUi.exitScene()
