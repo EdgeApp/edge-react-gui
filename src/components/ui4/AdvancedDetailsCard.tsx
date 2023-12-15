@@ -75,7 +75,7 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
     }
 
     return (
-      <CardUi4>
+      <CardUi4 sections>
         {url != null && url !== '' && (
           <RowUi4
             type="touchable"
