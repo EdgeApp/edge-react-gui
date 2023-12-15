@@ -12,7 +12,7 @@ import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
 import { ButtonsContainer } from '../buttons/ButtonsContainer'
@@ -62,7 +62,7 @@ export const CreateWalletAccountSelectScene = (props: Props) => {
     `${activationCost} ${selectedWalletType.currencyCode}`
   )
   const confirmMessageSyntax = sprintf(lstrings.create_wallet_account_make_payment_2s, selectedWalletType.currencyCode, existingCoreWallet.name)
-  const { tokenId } = guessFromCurrencyCode(account, { currencyCode: selectedWalletType.currencyCode })
+  const tokenId = getTokenId(account, existingCoreWallet.currencyInfo.pluginId, selectedWalletType.currencyCode)
 
   const [isCreatingWallet, setIsCreatingWallet] = React.useState(true)
   const [walletId, setWalletId] = React.useState('')

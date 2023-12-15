@@ -6,7 +6,6 @@ import compromisedIcon from '../../assets/images/compromisedIcon.png'
 import { useWatch } from '../../hooks/useWatch'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyIconUris } from '../../util/CdnUris'
-import { guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { WalletSyncCircle } from '../progress-indicators/WalletSyncCircle'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -24,13 +23,10 @@ interface Props {
   // Styling props
   marginRem?: number | number[]
   sizeRem?: number
-
-  /** @deprecated Provide tokenId instead. */
-  currencyCode?: string
 }
 
 const CryptoIconComponent = (props: Props) => {
-  const { currencyCode, hideSecondary = false, marginRem, mono = false, sizeRem = 2, walletId } = props
+  const { hideSecondary = false, marginRem, mono = false, sizeRem = 2, tokenId, walletId } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -46,17 +42,7 @@ const CryptoIconComponent = (props: Props) => {
     return modalShown > 0
   })
 
-  // If we have a wallet, get the pluginId from it in case it's missing
-  let { pluginId = wallet?.currencyInfo.pluginId, tokenId } = props
-
-  // ---------------------------------------------------------------------
-  // HACK to maintain Backward compatibility for now
-  // ---------------------------------------------------------------------
-  const ids = guessFromCurrencyCode(account, { currencyCode, pluginId, tokenId })
-  pluginId = ids.pluginId
-  tokenId = ids.tokenId
-
-  // //////////////////////////////////////////////////////////////////////////////// //
+  const { pluginId = wallet?.currencyInfo.pluginId } = props
 
   // Primary Currency icon
   const primaryCurrencyIcon = React.useMemo(() => {
