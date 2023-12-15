@@ -3,6 +3,7 @@
 ## Unreleased
 
 - fixed: Remove `minWidth` style from stake option card
+- fixed: Send scene no-longer accesses clipboard immediately
 - changed: Update various scenes with UI4 components
 
 ## 3.23.0
