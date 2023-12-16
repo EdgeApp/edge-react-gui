@@ -1,14 +1,13 @@
-import { abs, div, eq, gt, log10 } from 'biggystring'
+import { abs, div, gt, log10 } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
+import { StyleProp, View, ViewStyle } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Share from 'react-native-share'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { formatCategory, splitCategory } from '../../actions/CategoriesActions'
-import { TX_ACTION_LABEL_MAP } from '../../constants/txActionConstants'
+import { formatCategory, getTxActionDisplayInfo } from '../../actions/CategoriesActions'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { displayFiatAmount } from '../../hooks/useFiatText'
@@ -47,13 +46,10 @@ export function TransactionListRow(props: Props) {
   const styles = getStyles(theme)
 
   const { navigation, wallet, transaction } = props
-  const { tokenId } = transaction
   const { canReplaceByFee = false } = wallet.currencyInfo
-  const { metadata = {}, chainAssetAction, currencyCode } = transaction
-  const { category, name } = metadata
-  const defaultAmountFiat = metadata.exchangeAmount?.[wallet.fiatCurrencyCode] ?? 0
 
-  const isSentTransaction = transaction.nativeAmount.startsWith('-') || (eq(transaction.nativeAmount, '0') && transaction.isSend)
+  const { metadata = {}, currencyCode } = transaction
+  const defaultAmountFiat = metadata.exchangeAmount?.[wallet.fiatCurrencyCode] ?? 0
 
   const fiatCurrencyCode = useWatch(wallet, 'fiatCurrencyCode')
   const nonIsoFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
@@ -64,9 +60,6 @@ export function TransactionListRow(props: Props) {
   const fiatDenomination = getDenomFromIsoCode(nonIsoFiatCurrencyCode)
   const denominationSymbol = displayDenomination.symbol
 
-  const { displayName = currencyCode } = tokenId == null ? currencyInfo : wallet.currencyConfig.allTokens[tokenId]
-
-  // Required Confirmations
   const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
 
   // CryptoAmount
@@ -81,6 +74,10 @@ export function TransactionListRow(props: Props) {
     })
     maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(log10(displayDenomination.multiplier), precisionAdjustValue)
   }
+
+  const { direction, edgeCategory, payeeText } = getTxActionDisplayInfo(transaction, wallet)
+  const isSentTransaction = direction === 'send'
+
   const cryptoAmount = div(abs(transaction.nativeAmount ?? '0'), displayDenomination.multiplier, DECIMAL_PRECISION)
   const cryptoExchangeAmount = div(abs(transaction.nativeAmount ?? '0'), exchangeDenomination.multiplier, DECIMAL_PRECISION)
   const cryptoAmountFormat = formatNumber(decimalOrZero(truncateDecimals(cryptoAmount, maxConversionDecimals), maxConversionDecimals))
@@ -96,27 +93,37 @@ export function TransactionListRow(props: Props) {
 
   const fiatAmountString = `${fiatSymbol}${fiatAmount}`
 
-  // Transaction Title
-  const transactionTitle =
-    chainAssetAction != null
-      ? TX_ACTION_LABEL_MAP[chainAssetAction.assetActionType]
-      : name != null && name !== ''
-      ? name
-      : sprintf(isSentTransaction ? lstrings.transaction_sent_1s : lstrings.transaction_received_1s, displayName)
+  // Transaction Text and Icon
+  let arrowContainerStyle: StyleProp<ViewStyle> = []
+  let arrowIconName, arrowIconColor, arrowIconSize
+
+  // Assign defaults if transaction is just basic send/recv
+  if (isSentTransaction) {
+    arrowIconName = 'arrow-up'
+    arrowIconColor = theme.txDirFgSendUi4
+    arrowContainerStyle = [styles.arrowIconContainerSend]
+  } else {
+    arrowIconName = 'arrow-down'
+    arrowIconColor = theme.txDirFgReceiveUi4
+    arrowContainerStyle = [styles.arrowIconContainerReceive]
+  }
+
+  if (edgeCategory.category === 'exchange') {
+    arrowIconName = 'swap-horizontal'
+    arrowIconColor = theme.txDirFgSwapUi4
+    arrowContainerStyle = [styles.arrowIconContainerSwap]
+  }
 
   // Icon & Thumbnail
-  const thumbnailPath = useContactThumbnail(name)
+  const thumbnailPath = useContactThumbnail(payeeText)
+  if (thumbnailPath != null) {
+    arrowIconSize = theme.rem(1)
+    arrowContainerStyle.push(styles.arrowIconOverlayContainer)
+  } else {
+    arrowIconSize = theme.rem(1.25)
+    arrowContainerStyle.push(styles.arrowIconContainer)
+  }
 
-  const isSwapIcon =
-    (chainAssetAction != null && (chainAssetAction.assetActionType === 'swap' || chainAssetAction.assetActionType === 'swapOrderFill')) ||
-    transaction.swapData != null
-  const arrowIconName = isSwapIcon ? 'swap-horizontal' : isSentTransaction ? 'arrow-up' : 'arrow-down'
-  const arrowIconSize = thumbnailPath ? theme.rem(1) : theme.rem(1.25)
-  const arrowIconColor = isSwapIcon ? theme.txDirFgSwapUi4 : isSentTransaction ? theme.txDirFgSendUi4 : theme.txDirFgReceiveUi4
-  const arrowContainerStyle = [
-    thumbnailPath ? styles.arrowIconOverlayContainer : styles.arrowIconContainer,
-    isSwapIcon ? styles.arrowIconContainerSwap : isSentTransaction ? styles.arrowIconContainerSend : styles.arrowIconContainerReceive
-  ]
   const arrowIcon = (
     <View style={arrowContainerStyle}>
       <Ionicons name={arrowIconName} size={arrowIconSize} color={arrowIconColor} style={styles.icon} />
@@ -151,10 +158,10 @@ export function TransactionListRow(props: Props) {
   const unconfirmedOrTimeStyle = isConfirmed ? styles.secondaryText : styles.unconfirmedText
 
   // Transaction Category
-  const defaultCategory = !isSentTransaction ? 'income' : 'expense'
-  let categoryText: string | undefined
-  if (category != null && category !== '') {
-    categoryText = formatCategory(splitCategory(category, defaultCategory))
+  let categoryText
+  // Only show a category text if the category is not a standard 'income:' or 'expense:'
+  if (edgeCategory.subcategory !== '' || (edgeCategory.category.toLowerCase() !== 'income' && edgeCategory.category.toLowerCase() !== 'expense')) {
+    categoryText = formatCategory(edgeCategory)
   }
 
   const handlePress = useHandler(() => {
@@ -180,7 +187,7 @@ export function TransactionListRow(props: Props) {
       <SectionView dividerVerticalRem={[0.2, 0.5]} marginRem={[0.25, 0]}>
         <>
           <View style={styles.row}>
-            <EdgeText style={styles.titleText}>{transactionTitle}</EdgeText>
+            <EdgeText style={styles.titleText}>{payeeText}</EdgeText>
             <EdgeText style={styles.titleText}>{cryptoAmountString}</EdgeText>
           </View>
           <View style={styles.row}>

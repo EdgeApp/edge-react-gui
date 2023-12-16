@@ -94,7 +94,7 @@ export function joinCategory(split: EdgeCategory): string {
  */
 export function formatCategory(split: EdgeCategory): string {
   if (split.subcategory === '') return displayCategories[split.category]
-  return `${displayCategories[split.category]}: ${split.subcategory}`
+  return `${displayCategories[split.category]}:${split.subcategory}`
 }
 
 /**
@@ -268,7 +268,7 @@ export const getTxActionDisplayInfo = (
   tx: EdgeTransaction,
   wallet: EdgeCurrencyWallet
 ): { edgeCategory: EdgeCategory; payeeText: string; notes?: string; direction: 'send' | 'receive' } => {
-  const { assetAction, chainAction, chainAssetAction, savedAction, tokenId } = tx
+  const { assetAction, chainAction, chainAssetAction, metadata, savedAction, swapData, tokenId } = tx
   const { currencyConfig, currencyInfo } = wallet
 
   const currencyName = tokenId == null ? currencyInfo.displayName : currencyConfig.allTokens[tokenId].displayName
@@ -285,8 +285,6 @@ export const getTxActionDisplayInfo = (
   let direction: 'send' | 'receive' | undefined
   let notes: string | undefined
 
-  const { metadata } = tx
-
   // Default text for send or receive
   if (isSentTransaction) {
     payeeText = sprintf(lstrings.transaction_sent_1s, currencyName)
@@ -302,6 +300,12 @@ export const getTxActionDisplayInfo = (
       category: 'income',
       subcategory: ''
     }
+  }
+
+  // Override with swapData
+  if (swapData != null) {
+    const { payoutCurrencyCode } = swapData
+    payeeText = sprintf(lstrings.transaction_details_swap_to_subcat_1s, payoutCurrencyCode)
   }
 
   if (action != null && assetAct != null) {
