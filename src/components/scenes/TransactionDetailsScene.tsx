@@ -1,4 +1,4 @@
-import { abs, eq } from 'biggystring'
+import { abs } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
@@ -52,41 +52,26 @@ export interface TransactionDetailsParams {
 const TransactionDetailsComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { edgeTransaction: transaction, walletId } = route.params
-  const { currencyCode, metadata = {}, chainAssetAction, nativeAmount, date, txid } = transaction
+  const { currencyCode, chainAssetAction, metadata, nativeAmount, date, txid } = transaction
   const { currencyInfo } = wallet
 
   const theme = useTheme()
   const styles = getStyles(theme)
-  const thumbnailPath = useContactThumbnail(metadata?.name)
   // Choose a default category based on metadata or the txAction
   const txActionInfo = getTxActionDisplayInfo(transaction, wallet)
-  const txActionSplitCat = txActionInfo?.edgeCategory
-  const txActionNotes = txActionInfo?.notes
-  const txActionDir = txActionInfo?.direction
+  const direction = txActionInfo?.direction
+  const thumbnailPath = useContactThumbnail(txActionInfo.payeeText)
 
-  const isSentTransaction = transaction.nativeAmount.startsWith('-') || (eq(transaction.nativeAmount, '0') && transaction.isSend)
+  const category = joinCategory(txActionInfo.edgeCategory)
 
-  // Determine direction from transaction nativeAmount if not specified in
-  const direction = txActionDir ?? isSentTransaction ? 'send' : 'receive'
-
-  const splitCat =
-    metadata?.category != null || txActionSplitCat == null
-      ? splitCategory(
-          metadata?.category ?? undefined,
-          // Pick the right default:
-          direction === 'receive' ? 'income' : 'expense'
-        )
-      : txActionSplitCat
-
-  const category = joinCategory(splitCat)
-
-  const notes = metadata?.notes == null ? txActionNotes : metadata.notes
+  // const notes = metadata?.notes == null ? txActionNotes : metadata.notes
 
   const [localMetadata, setLocalMetadata] = React.useState<EdgeMetadata>({
+    exchangeAmount: metadata?.exchangeAmount,
     bizId: 0,
     category,
-    name: metadata?.name ?? '',
-    notes: notes ?? ''
+    name: txActionInfo.payeeText ?? '',
+    notes: txActionInfo.notes ?? ''
   })
   const [acceleratedTx, setAcceleratedTx] = React.useState<null | EdgeTransaction>(null)
 
@@ -115,7 +100,7 @@ const TransactionDetailsComponent = (props: Props) => {
   const historicFiat = historicRate * Number(absExchangeAmount)
 
   // Figure out which amount to show:
-  const metadataFiat = metadata.exchangeAmount?.[wallet.fiatCurrencyCode]
+  const metadataFiat = localMetadata.exchangeAmount?.[wallet.fiatCurrencyCode]
   const originalFiat = metadataFiat == null || metadataFiat === 0 ? historicFiat : Math.abs(metadataFiat)
 
   // Percent difference:
@@ -315,7 +300,7 @@ const TransactionDetailsComponent = (props: Props) => {
           <RowUi4
             rightButtonType="editable"
             title={lstrings.transaction_details_notes_title}
-            body={notes == null || notes.trim() === '' ? lstrings.transaction_details_empty_note_placeholder : notes}
+            body={localMetadata.notes == null || localMetadata.notes.trim() === '' ? lstrings.transaction_details_empty_note_placeholder : localMetadata.notes}
             onPress={openNotesInput}
           />
           {transaction.memos?.map((memo, i) =>
@@ -323,7 +308,6 @@ const TransactionDetailsComponent = (props: Props) => {
           )}
         </CardUi4>
       </EdgeAnim>
-
       {transaction.spendTargets == null ? null : (
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 60 }}>
           <CardUi4>
