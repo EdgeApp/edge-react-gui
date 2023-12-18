@@ -15,7 +15,7 @@ import Animated, {
 
 import { useHandler } from '../../hooks/useHandler'
 import { styled, styledWithRef } from '../hoc/styled'
-import { AnimatedIconComponent, CloseIconAnimated, SearchIconAnimated } from '../icons/ThemedIcons'
+import { AnimatedIconComponent, CloseIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
@@ -28,7 +28,7 @@ export interface SimpleTextInputProps {
   placeholder?: string
 
   // Appearance:
-  iconComponent?: AnimatedIconComponent | null
+  icon?: AnimatedIconComponent
   scale?: SharedValue<number>
 
   // Callbacks:
@@ -74,7 +74,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
     value,
 
     // Appearance:
-    iconComponent,
+    icon: Icon,
     scale: scaleProp,
 
     // Callbacks:
@@ -94,8 +94,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   const theme = useTheme()
   const themeRem = theme.rem(1)
 
-  const LeftIcon = iconComponent ?? SearchIconAnimated
-  const hasIcon = LeftIcon != null
+  const hasIcon = Icon != null
   const hasValue = value !== ''
 
   // Imperative methods:
@@ -168,7 +167,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   return (
     <TouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
       <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale}>
-        <SideContainer size={leftIconSize}>{LeftIcon == null ? null : <LeftIcon color={iconColor} size={leftIconSize} />}</SideContainer>
+        <SideContainer size={leftIconSize}>{Icon == null ? null : <Icon color={iconColor} size={leftIconSize} />}</SideContainer>
 
         <InputField
           accessible

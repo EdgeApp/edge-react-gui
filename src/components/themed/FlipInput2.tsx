@@ -1,16 +1,28 @@
 import * as React from 'react'
-import { Platform, ReturnKeyType, TextInput, TouchableWithoutFeedback, View } from 'react-native'
-import Animated, { AnimationCallback, Easing, interpolate, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import { useMemo } from 'react'
+import { Platform, ReturnKeyType, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import Animated, {
+  AnimationCallback,
+  Easing,
+  interpolate,
+  interpolateColor,
+  runOnJS,
+  SharedValue,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withTiming
+} from 'react-native-reanimated'
 
-import { Fontello } from '../../assets/vector'
 import { useHandler } from '../../hooks/useHandler'
 import { formatNumberInput, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { useState } from '../../types/reactHooks'
 import { zeroString } from '../../util/utils'
+import { styled, styledWithRef } from '../hoc/styled'
+import { FlipIcon } from '../icons/ThemedIcons'
 import { showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from './EdgeText'
+import { useTheme } from '../services/ThemeContext'
 import { NumericInput } from './NumericInput'
 import { ButtonBox } from './ThemedButtons'
 
@@ -26,6 +38,7 @@ export interface FlipInputFieldInfo {
   // number of decimals as the user types.
   maxEntryDecimals: number
 }
+export type FlipInputFieldInfos = [FlipInputFieldInfo, FlipInputFieldInfo]
 
 export interface Props {
   onBlur?: () => void
@@ -36,19 +49,18 @@ export interface Props {
   forceFieldNum?: FieldNum
   keyboardVisible?: boolean
   inputAccessoryViewID?: string
-  fieldInfos: FlipInputFieldInfo[]
+  fieldInfos: FlipInputFieldInfos
   returnKeyType?: ReturnKeyType
   editable?: boolean
 }
 
-const FLIP_DURATION = 500
+const FLIP_DURATION = 300
 const flipField = (fieldNum: FieldNum): FieldNum => {
   return fieldNum === 0 ? 1 : 0
 }
 
 export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, ref) => {
   const theme = useTheme()
-  const styles = getStyles(theme)
   const inputRefs = [React.useRef<TextInput>(null), React.useRef<TextInput>(null)]
 
   const {
@@ -73,19 +85,7 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
   const [primaryField, setPrimaryField] = useState<FieldNum>(forceFieldNum)
 
   const [amountFocused, setAmountFocused] = useState(false)
-
-  const frontAnimatedStyle = useAnimatedStyle(() => {
-    const degrees = interpolate(animatedValue.value, [0, 0.5, 1], [0, 90, 90])
-    return {
-      transform: [{ rotateX: `${degrees}deg` }]
-    }
-  })
-  const backAnimatedStyle = useAnimatedStyle(() => {
-    const degrees = interpolate(animatedValue.value, [0, 0.5, 1], [90, 90, 0])
-    return {
-      transform: [{ rotateX: `${degrees}deg` }]
-    }
-  })
+  const focusAnimation = useSharedValue(0)
 
   const onToggleFlipInput = useHandler(() => {
     const otherField = primaryField === 1 ? 0 : 1
@@ -122,36 +122,36 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
 
   const handleBottomFocus = useHandler(() => {
     setAmountFocused(true)
+    focusAnimation.value = withTiming(1, { duration: 300 })
     if (onFocus != null) onFocus()
   })
 
   const handleBottomBlur = useHandler(() => {
     setAmountFocused(false)
+    focusAnimation.value = withDelay(120, withTiming(0, { duration: 300 }))
     if (onBlur != null) onBlur()
   })
 
-  const bottomRow = useHandler((fieldNum: FieldNum) => {
+  const renderBottomRow = (fieldNum: FieldNum) => {
     const zeroAmount = zeroString(amounts[fieldNum])
     const primaryAmount = zeroAmount && !amountFocused ? '' : amounts[fieldNum]
 
     const placeholderOrAmount = zeroAmount && !amountFocused ? lstrings.string_tap_to_edit : primaryAmount
-    const inputFieldStyle = amountFocused ? styles.bottomAmount : styles.bottomAmountTappable
     const showBottomCurrency = amountFocused || !zeroAmount
-    const currencyNameStyle = amountFocused ? styles.bottomCurrency : styles.bottomCurrencyTappable
     const currencyName = fieldInfos[fieldNum].currencyName
 
     return (
-      <View style={styles.bottomContainer} key="bottom">
-        <View style={styles.valueContainer}>
-          <NumericInput
-            style={inputFieldStyle}
+      <BottomContainerView key="bottom">
+        <ValueContainerView>
+          <AmountAnimatedNumericInput
             value={primaryAmount}
+            focusAnimation={focusAnimation}
             maxDecimals={fieldInfos[fieldNum].maxEntryDecimals}
             // HACK: For some reason there's no way to avoid the rightmost
             // visual cutoff of the 'Amount' string in Android. Pad with an
             // extra space.
             placeholder={Platform.OS === 'android' ? placeholderOrAmount + ' ' : placeholderOrAmount}
-            placeholderTextColor={theme.iconTappable}
+            placeholderTextColor={theme.textInputPlaceholderColor}
             onChangeText={onNumericInputChange}
             autoCorrect={false}
             editable={editable}
@@ -163,13 +163,13 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
             onFocus={handleBottomFocus}
             onBlur={handleBottomBlur}
           />
-          {showBottomCurrency ? <EdgeText style={currencyNameStyle}>{' ' + currencyName}</EdgeText> : null}
-        </View>
-      </View>
+          {showBottomCurrency ? <CurrencySymbolAnimatedText focusAnimation={focusAnimation}>{' ' + currencyName}</CurrencySymbolAnimatedText> : null}
+        </ValueContainerView>
+      </BottomContainerView>
     )
-  })
+  }
 
-  const topRow = useHandler((fieldNum: FieldNum) => {
+  const renderTopRow = (fieldNum: FieldNum) => {
     let topText = amounts[fieldNum]
     if (isValidInput(topText)) {
       topText = formatNumberInput(topText, { minDecimals: 0, maxDecimals: fieldInfos[fieldNum].maxEntryDecimals })
@@ -179,10 +179,12 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
     topText = `${topText} ${fieldInfo.currencyName}`
     return (
       <TouchableWithoutFeedback onPress={onToggleFlipInput} key="top">
-        <EdgeText>{topText}</EdgeText>
+        <PlaceholderText numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.65}>
+          {topText}
+        </PlaceholderText>
       </TouchableWithoutFeedback>
     )
-  })
+  }
 
   React.useImperativeHandle(ref, () => ({
     setAmounts: amounts => {
@@ -192,86 +194,151 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
 
   return (
     <>
-      <View style={styles.flipInputContainer}>
-        <View style={styles.flipInput}>
-          <Animated.View style={[styles.flipInputFront, frontAnimatedStyle]} pointerEvents={flipField(primaryField) ? 'auto' : 'none'}>
-            {topRow(1)}
-            {bottomRow(0)}
-          </Animated.View>
-          <Animated.View style={[styles.flipInputFront, styles.flipContainerBack, backAnimatedStyle]} pointerEvents={primaryField ? 'auto' : 'none'}>
-            {topRow(0)}
-            {bottomRow(1)}
-          </Animated.View>
-        </View>
-        <ButtonBox onPress={onToggleFlipInput} paddingRem={[0.5, 0, 0.5, 1]}>
-          <Fontello style={styles.flipIcon} name="exchange" color={theme.iconTappable} size={theme.rem(1.5)} />
+      <ContainerView>
+        <InnerView focusAnimation={focusAnimation}>
+          <FrontAnimatedView animatedValue={animatedValue} pointerEvents={flipField(primaryField) ? 'auto' : 'none'}>
+            {renderTopRow(1)}
+            {renderBottomRow(0)}
+          </FrontAnimatedView>
+          <BackAnimatedView animatedValue={animatedValue} pointerEvents={primaryField ? 'auto' : 'none'}>
+            {renderTopRow(0)}
+            {renderBottomRow(1)}
+          </BackAnimatedView>
+        </InnerView>
+        <ButtonBox onPress={onToggleFlipInput} paddingRem={[0.5, 0, 0.5, 0.5]}>
+          <FlipIcon color={theme.iconTappable} size={theme.rem(1.5)} />
         </ButtonBox>
-      </View>
+      </ContainerView>
     </>
   )
 })
 
-const getStyles = cacheStyles((theme: Theme) => {
-  const isIos = Platform.OS === 'ios'
-  return {
-    // Flip Input
-    flipInputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center'
-    },
-    flipInput: {
-      flex: 1,
-      paddingRight: theme.rem(0.5)
-    },
-    flipInputFront: {
-      backfaceVisibility: 'hidden'
-    },
-    flipContainerBack: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0
-    },
-    flipIcon: {
-      marginRight: -theme.rem(0.125)
-    },
+const AnimatedNumericInput = Animated.createAnimatedComponent(NumericInput)
 
-    // Top Amount
-    bottomContainer: {
+const ContainerView = styled(View)({
+  flexDirection: 'row',
+  alignItems: 'center'
+})
+
+const InnerView = styled(Animated.View)<{
+  focusAnimation: SharedValue<number>
+}>(theme => ({ focusAnimation }) => {
+  const interpolateInputBackgroundColor = useAnimatedColorInterpolateFn(theme.textInputBackgroundColor, theme.textInputBackgroundColorFocused)
+  const interpolateOutlineColor = useAnimatedColorInterpolateFn(theme.textInputBorderColor, theme.textInputBorderColorFocused)
+  return [
+    {
+      alignItems: 'center',
+      borderWidth: theme.textInputBorderWidth,
+      borderRadius: theme.rem(0.5),
+      flex: 1,
       flexDirection: 'row',
-      marginRight: theme.rem(1.5),
-      minHeight: theme.rem(2)
+      overflow: 'hidden'
     },
-    valueContainer: {
-      flexDirection: 'row',
-      marginRight: theme.rem(0.5),
-      marginLeft: isIos ? 0 : -6,
-      marginTop: isIos ? 0 : -theme.rem(0.75),
-      marginBottom: isIos ? 0 : -theme.rem(1)
-    },
-    bottomAmount: {
+    useAnimatedStyle(() => ({
+      backgroundColor: interpolateInputBackgroundColor(focusAnimation),
+      borderColor: interpolateOutlineColor(focusAnimation)
+    }))
+  ]
+})
+
+const FrontAnimatedView = styled(Animated.View)<{ animatedValue: SharedValue<number> }>(theme => ({ animatedValue }) => [
+  {
+    backfaceVisibility: 'hidden',
+    paddingHorizontal: theme.rem(1),
+    paddingVertical: theme.rem(0.5)
+  },
+  useAnimatedStyle(() => {
+    const degrees = interpolate(animatedValue.value, [0, 0.5, 1], [0, 90, 90])
+    return {
+      transform: [{ rotateX: `${degrees}deg` }]
+    }
+  })
+])
+
+const BackAnimatedView = styled(Animated.View)<{ animatedValue: SharedValue<number> }>(theme => ({ animatedValue }) => [
+  {
+    backfaceVisibility: 'hidden',
+    paddingHorizontal: theme.rem(1),
+    paddingVertical: theme.rem(0.5),
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0
+  },
+  useAnimatedStyle(() => {
+    const degrees = interpolate(animatedValue.value, [0, 0.5, 1], [90, 90, 0])
+    return {
+      transform: [{ rotateX: `${degrees}deg` }]
+    }
+  })
+])
+
+const PlaceholderText = styled(Text)(theme => () => [
+  {
+    color: theme.textInputPlaceholderColor,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(0.8),
+    includeFontPadding: false
+  }
+])
+
+const AmountAnimatedNumericInput = styledWithRef(AnimatedNumericInput)<{ focusAnimation: SharedValue<number> }>(theme => ({ focusAnimation }) => {
+  const isIos = Platform.OS === 'ios'
+  const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused)
+  return [
+    {
       paddingRight: isIos ? 0 : theme.rem(0.25),
-      color: theme.primaryText,
       includeFontPadding: false,
       fontFamily: theme.fontFaceMedium,
       fontSize: isIos ? theme.rem(1.5) : theme.rem(1.45)
     },
-    bottomAmountTappable: {
-      paddingRight: isIos ? 0 : theme.rem(0.25),
-      color: theme.iconTappable,
+    useAnimatedStyle(() => ({
+      color: interpolateTextColor(focusAnimation)
+    }))
+  ]
+})
+const CurrencySymbolAnimatedText = styled(Animated.Text)<{ focusAnimation: SharedValue<number> }>(theme => ({ focusAnimation }) => {
+  const isIos = Platform.OS === 'ios'
+  const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused)
+  return [
+    {
+      fontFamily: theme.fontFaceDefault,
+      fontSize: theme.rem(1),
       includeFontPadding: false,
-      fontFamily: theme.fontFaceMedium,
-      fontSize: isIos ? theme.rem(1.5) : theme.rem(1.45)
-    },
-    bottomCurrency: {
       paddingTop: isIos ? theme.rem(0.125) : theme.rem(1),
       marginLeft: isIos ? 0 : -theme.rem(0.25)
     },
-    bottomCurrencyTappable: {
-      paddingTop: isIos ? theme.rem(0.125) : theme.rem(1),
-      marginLeft: isIos ? 0 : -theme.rem(0.25),
-      color: theme.iconTappable
-    }
+    useAnimatedStyle(() => ({
+      color: interpolateTextColor(focusAnimation)
+    }))
+  ]
+})
+
+const BottomContainerView = styled(View)(theme => ({
+  flexDirection: 'row',
+  marginRight: theme.rem(1.5),
+  minHeight: theme.rem(2)
+}))
+
+const ValueContainerView = styled(View)(theme => {
+  const isIos = Platform.OS === 'ios'
+  return {
+    flexDirection: 'row',
+    marginRight: theme.rem(0.5),
+    marginLeft: isIos ? 0 : -6,
+    marginTop: isIos ? 0 : -theme.rem(0.75),
+    marginBottom: isIos ? 0 : -theme.rem(1)
   }
 })
+
+function useAnimatedColorInterpolateFn(fromColor: string, toColor: string) {
+  const interpolateFn = useMemo(() => {
+    return (focusValue: SharedValue<number>) => {
+      'worklet'
+      return interpolateColor(focusValue.value, [0, 1], [fromColor, toColor])
+    }
+  }, [fromColor, toColor])
+
+  return interpolateFn
+}

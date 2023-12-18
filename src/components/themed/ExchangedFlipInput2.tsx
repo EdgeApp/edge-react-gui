@@ -13,7 +13,7 @@ import { DECIMAL_PRECISION, getDenomFromIsoCode, maxPrimaryCurrencyConversionDec
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
-import { FieldNum, FlipInput2, FlipInputFieldInfo, FlipInputRef } from './FlipInput2'
+import { FieldNum, FlipInput2, FlipInputFieldInfos, FlipInputRef } from './FlipInput2'
 import { RightChevronButton } from './ThemedButtons'
 
 export type ExchangeFlipInputFields = 'fiat' | 'crypto'
@@ -96,7 +96,7 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
     exchangeSecondaryToPrimaryRatio: exchangeRates[`${cryptoCurrencyCode}_${fiatCurrencyCode}`]
   })
   const cryptoMaxPrecision = maxPrimaryCurrencyConversionDecimals(log10(cryptoDisplayDenom.multiplier), precisionAdjustVal)
-  const fieldInfos: FlipInputFieldInfo[] = [
+  const fieldInfos: FlipInputFieldInfos = [
     { currencyName: cryptoDisplayDenom.name, maxEntryDecimals: log10(cryptoDisplayDenom.multiplier) },
     { currencyName: fiatDenom.name.replace('iso:', ''), maxEntryDecimals: log10(fiatDenom.multiplier) }
   ]

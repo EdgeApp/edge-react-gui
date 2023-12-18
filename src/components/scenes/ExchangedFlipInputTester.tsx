@@ -7,12 +7,13 @@ import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useState } from '../../types/reactHooks'
 import { consify } from '../../util/utils'
 import { Card } from '../cards/Card'
+import { Space } from '../layout/Space'
 import { FlipInputModal2, FlipInputModalResult } from '../modals/FlipInputModal2'
 import { Airship } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
 import { MainButton } from '../themed/MainButton'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
+import { SimpleTextInput } from '../themed/SimpleTextInput'
 
 export function ExchangedFlipInputTester(props: {}) {
   const theme = useTheme()
@@ -88,11 +89,19 @@ export function ExchangedFlipInputTester(props: {}) {
           onAmountChanged={onAmountChanged}
         />
       </Card>
-      <OutlinedTextInput value={value0} onChangeText={onChangeText0} autoFocus={false} />
+      <Space vertical={1}>
+        <SimpleTextInput value={value0} onChangeText={onChangeText0} autoFocus={false} placeholder="Crypto Amount" />
+      </Space>
       <MainButton label="Set Crypto Amt" onPress={onPress0} />
-      <OutlinedTextInput value={value1} onChangeText={onChangeText1} autoFocus={false} />
-      <MainButton label="Set Fiat Amt" onPress={onPress1} />
-      <MainButton label="Launch FlipInputModal2" onPress={handleFlipInputModal} />
+      <Space vertical={1}>
+        <SimpleTextInput value={value1} onChangeText={onChangeText1} autoFocus={false} placeholder="Fiat Amount" />
+      </Space>
+      <Space vertical={0.5}>
+        <MainButton label="Set Fiat Amt" onPress={onPress1} />
+      </Space>
+      <Space vertical={0.5}>
+        <MainButton label="Launch FlipInputModal2" onPress={handleFlipInputModal} />
+      </Space>
     </View>
   )
 }
