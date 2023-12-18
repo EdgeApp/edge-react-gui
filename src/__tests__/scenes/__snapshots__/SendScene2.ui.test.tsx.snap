@@ -8092,6 +8092,88 @@ exports[`SendScene2 Render SendScene 1`] = `
                       Scan
                     </Text>
                   </View>
+                  <View
+                    accessibilityState={
+                      {
+                        "busy": undefined,
+                        "checked": undefined,
+                        "disabled": undefined,
+                        "expanded": undefined,
+                        "selected": undefined,
+                      }
+                    }
+                    accessibilityValue={
+                      {
+                        "max": undefined,
+                        "min": undefined,
+                        "now": undefined,
+                        "text": undefined,
+                      }
+                    }
+                    accessible={true}
+                    collapsable={false}
+                    focusable={true}
+                    onClick={[Function]}
+                    onResponderGrant={[Function]}
+                    onResponderMove={[Function]}
+                    onResponderRelease={[Function]}
+                    onResponderTerminate={[Function]}
+                    onResponderTerminationRequest={[Function]}
+                    onStartShouldSetResponder={[Function]}
+                    style={
+                      {
+                        "alignItems": "center",
+                        "flex": 1,
+                        "flexDirection": "column",
+                        "opacity": 1,
+                      }
+                    }
+                  >
+                    <Text
+                      allowFontScaling={false}
+                      style={
+                        [
+                          {
+                            "color": "#00f1a2",
+                            "fontSize": 45,
+                          },
+                          undefined,
+                          {
+                            "fontFamily": "FontAwesome5Free-Regular",
+                            "fontStyle": "normal",
+                            "fontWeight": "normal",
+                          },
+                          {
+                            "fontWeight": "400",
+                          },
+                        ]
+                      }
+                    >
+                      
+                    </Text>
+                    <Text
+                      adjustsFontSizeToFit={true}
+                      minimumFontScale={0.65}
+                      numberOfLines={1}
+                      style={
+                        [
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                            "includeFontPadding": false,
+                          },
+                          {
+                            "color": "#00f1a2",
+                            "fontSize": 17,
+                          },
+                          null,
+                        ]
+                      }
+                    >
+                      Paste
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>

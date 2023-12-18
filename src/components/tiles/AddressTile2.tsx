@@ -2,7 +2,7 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import { ethers } from 'ethers'
 import * as React from 'react'
-import { AppState, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -67,7 +67,6 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   const styles = getStyles(theme)
 
   // State:
-  const [clipboard, setClipboard] = React.useState('')
   const [loading, setLoading] = React.useState(false)
 
   // Selectors:
@@ -163,24 +162,15 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
     }
   })
 
-  const checkClipboard = useHandler(async () => {
+  const handlePasteFromClipboard = useHandler(async () => {
+    const clipboard = await Clipboard.getString()
     try {
-      setLoading(true)
-      const uri = await Clipboard.getString()
-
       // Will throw in case uri is invalid
-      await coreWallet.parseUri(uri, currencyCode)
-      setClipboard(uri)
-      setLoading(false)
-    } catch (e: any) {
-      // Failure is acceptable
-      setClipboard('')
-      setLoading(false)
+      await coreWallet.parseUri(clipboard, currencyCode)
+      await changeAddress(clipboard)
+    } catch (error) {
+      showError(error)
     }
-  })
-
-  const handlePasteFromClipboard = useHandler(() => {
-    changeAddress(clipboard).catch(err => showError(err))
   })
 
   const handleScan = useHandler(() => {
@@ -246,7 +236,6 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
 
   const handleTilePress = useHandler(async () => {
     if (!lockInputs && !!recipientAddress) {
-      await checkClipboard()
       resetSendTransaction()
     }
   })
@@ -254,15 +243,6 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   // ---------------------------------------------------------------------------
   // Side-Effects
   // ---------------------------------------------------------------------------
-
-  React.useEffect(() => {
-    const cleanup = AppState.addEventListener('change', appState => {
-      if (appState === 'active') checkClipboard().catch(err => showError(err))
-    })
-    checkClipboard().catch(err => showError(err))
-
-    return () => cleanup.remove()
-  }, [checkClipboard])
 
   useMount(() => {
     if (isCameraOpen) handleScan()
@@ -278,7 +258,6 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   // Rendering
   // ---------------------------------------------------------------------------
 
-  const copyMessage = clipboard !== '' ? `${lstrings.string_paste}: ${clipboard}` : null
   const tileType = loading ? 'loading' : !!recipientAddress && !lockInputs ? 'delete' : 'static'
 
   return (
@@ -300,12 +279,10 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
               <FontAwesome5 name="expand" size={theme.rem(2)} color={theme.iconTappable} />
               <EdgeText style={styles.buttonText}>{lstrings.scan_as_in_scan_barcode}</EdgeText>
             </TouchableOpacity>
-            {copyMessage ? (
-              <TouchableOpacity style={styles.buttonContainer} onPress={handlePasteFromClipboard}>
-                <FontAwesome5 name="clipboard" size={theme.rem(2)} color={theme.iconTappable} />
-                <EdgeText style={styles.buttonText}>{lstrings.string_paste}</EdgeText>
-              </TouchableOpacity>
-            ) : null}
+            <TouchableOpacity style={styles.buttonContainer} onPress={handlePasteFromClipboard}>
+              <FontAwesome5 name="clipboard" size={theme.rem(2)} color={theme.iconTappable} />
+              <EdgeText style={styles.buttonText}>{lstrings.string_paste}</EdgeText>
+            </TouchableOpacity>
           </View>
         )}
         {recipientAddress == null || recipientAddress === '' ? null : (
