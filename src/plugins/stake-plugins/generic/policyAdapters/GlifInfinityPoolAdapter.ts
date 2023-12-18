@@ -163,7 +163,7 @@ export const makeGlifInfinityPoolAdapter = (policyConfig: StakePolicyConfig<Glif
       // Withdraw liquidity
       txs.push(
         await simpleRampContract.connect(walletSigner).populateTransaction.withdrawF(requestNativeAmount, walletAddress, walletAddress, BigNumber.from(0), {
-          gasLimit: 5000000,
+          gasLimit: 10000000,
           maxFeePerGas,
           maxPriorityFeePerGas,
           nonce: nextNonce(),
