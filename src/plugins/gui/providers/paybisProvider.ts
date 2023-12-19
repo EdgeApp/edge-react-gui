@@ -220,6 +220,7 @@ const PAYBIS_TO_EDGE_CURRENCY_MAP: Record<string, ExtendedTokenId> = {
   BTC: { pluginId: 'bitcoin' },
   'BTC-TESTNET': { pluginId: 'bitcointestnet', currencyCode: 'TESTBTC' },
   DOGE: { pluginId: 'dogecoin' },
+  ETH: { pluginId: 'ethereum' },
   LTC: { pluginId: 'litecoin' },
   DOT: { pluginId: 'polkadot' },
   'MATIC-POLYGON': { pluginId: 'polygon', currencyCode: 'MATIC' },
