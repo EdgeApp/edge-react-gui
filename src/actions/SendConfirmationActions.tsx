@@ -569,7 +569,7 @@ const getSpendInfo = (state: RootState, newSpendInfo: GuiMakeSpendInfo = {}, sel
     spendTargets,
     networkFeeOption: newSpendInfo.networkFeeOption || getNetworkFeeOption(state),
     customNetworkFee: newSpendInfo.customNetworkFee ? { ...getCustomNetworkFee(state), ...newSpendInfo.customNetworkFee } : getCustomNetworkFee(state),
-    otherParams: newSpendInfo.otherParams || {}
+    otherParams: newSpendInfo.otherParams
   }
 }
 
