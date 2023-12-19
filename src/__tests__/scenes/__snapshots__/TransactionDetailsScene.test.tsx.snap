@@ -371,13 +371,18 @@ exports[`TransactionDetailsScene should render 1`] = `
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginHorizontal": 11,
+                  "marginVertical": 11,
+                },
+                {
+                  "marginVertical": 0,
+                },
+              ]
             }
           />
           <View
@@ -549,13 +554,18 @@ exports[`TransactionDetailsScene should render 1`] = `
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginHorizontal": 11,
+                  "marginVertical": 11,
+                },
+                {
+                  "marginVertical": 0,
+                },
+              ]
             }
           />
           <View
@@ -678,13 +688,18 @@ exports[`TransactionDetailsScene should render 1`] = `
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginHorizontal": 11,
+                  "marginVertical": 11,
+                },
+                {
+                  "marginVertical": 0,
+                },
+              ]
             }
           />
           <View
@@ -1015,13 +1030,18 @@ exports[`TransactionDetailsScene should render 1`] = `
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginHorizontal": 11,
+                  "marginVertical": 11,
+                },
+                {
+                  "marginVertical": 0,
+                },
+              ]
             }
           />
           <View
@@ -1279,13 +1299,18 @@ exports[`TransactionDetailsScene should render 1`] = `
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginHorizontal": 11,
+                  "marginVertical": 11,
+                },
+                {
+                  "marginVertical": 0,
+                },
+              ]
             }
           />
           <View
@@ -2123,13 +2148,18 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginHorizontal": 11,
+                  "marginVertical": 11,
+                },
+                {
+                  "marginVertical": 0,
+                },
+              ]
             }
           />
           <View
@@ -2301,13 +2331,18 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginHorizontal": 11,
+                  "marginVertical": 11,
+                },
+                {
+                  "marginVertical": 0,
+                },
+              ]
             }
           />
           <View
@@ -2430,13 +2465,18 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginHorizontal": 11,
+                  "marginVertical": 11,
+                },
+                {
+                  "marginVertical": 0,
+                },
+              ]
             }
           />
           <View
@@ -2767,13 +2807,18 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginHorizontal": 11,
+                  "marginVertical": 11,
+                },
+                {
+                  "marginVertical": 0,
+                },
+              ]
             }
           />
           <View
@@ -3031,13 +3076,18 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                  "marginHorizontal": 11,
+                  "marginVertical": 11,
+                },
+                {
+                  "marginVertical": 0,
+                },
+              ]
             }
           />
           <View

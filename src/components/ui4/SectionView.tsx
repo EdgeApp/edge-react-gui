@@ -5,14 +5,18 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   children: React.ReactNode | React.ReactNode[]
+  wideSpacing?: boolean // For scene-level usage where wider spacing is required
 }
 
 /**
  * View that automatically adds horizontal dividers between each child, aligned
  * in a column layout. Adds no dividers if only one child is given.
+ *
+ * wideSpacing is meant for sectioning out a scene where more spacing is needed
+ * between sections.
  */
 export const SectionView = (props: Props): JSX.Element | null => {
-  const { children } = props
+  const { children, wideSpacing = false } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -35,7 +39,7 @@ export const SectionView = (props: Props): JSX.Element | null => {
               return (
                 <>
                   {child}
-                  <View style={styles.divider} />
+                  <View style={[styles.divider, { marginVertical: theme.rem(wideSpacing ? 0.5 : 0) }]} />
                 </>
               )
             }
