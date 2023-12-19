@@ -1457,12 +1457,13 @@ const strings = {
 
   // #region Home
 
-  title_home: 'Home',
-  view_assets: 'View Assets',
-
   buy_crypto: 'Buy Crypto',
+  see_all: 'See All',
   sell_crypto: 'Sell Crypto',
   swap_crypto: 'Swap Crypto',
+  title_home: 'Home',
+  title_learn: 'Learn',
+  view_assets: 'View Assets',
 
   // #endregion Home
 

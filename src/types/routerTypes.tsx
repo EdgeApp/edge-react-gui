@@ -191,6 +191,7 @@ export interface RouteParamList {
     currencyCode: string
     walletId: string
   }
+  home: {}
   loanDashboard: {}
   loanDetails: {
     loanAccountId: string
