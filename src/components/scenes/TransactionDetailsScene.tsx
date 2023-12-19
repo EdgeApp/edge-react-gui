@@ -56,9 +56,10 @@ const TransactionDetailsComponent = (props: Props) => {
   const { currencyInfo } = wallet
 
   const theme = useTheme()
+  const account = useSelector(state => state.core.account)
   const styles = getStyles(theme)
   // Choose a default category based on metadata or the txAction
-  const { direction, mergedData, savedData } = getTxActionDisplayInfo(transaction, wallet)
+  const { direction, mergedData, savedData } = getTxActionDisplayInfo(transaction, account, wallet)
 
   const thumbnailPath = useContactThumbnail(mergedData.name)
 

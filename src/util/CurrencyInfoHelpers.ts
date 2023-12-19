@@ -142,6 +142,14 @@ export const getCurrencyCode = (wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId
   return currencyCode
 }
 
+/**
+ * Get the currencyCode associated with a tokenId
+ */
+export const getCurrencyCodeWithAccount = (account: EdgeAccount, pluginId: string, tokenId: EdgeTokenId): string => {
+  const { currencyCode } = tokenId != null ? account.currencyConfig[pluginId].allTokens[tokenId] : account.currencyConfig[pluginId].currencyInfo
+  return currencyCode
+}
+
 export const getToken = (wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): EdgeToken | undefined => {
   if (tokenId == null) {
     // Either special handling should be done by the caller, or the workflow should not allow this to execute.

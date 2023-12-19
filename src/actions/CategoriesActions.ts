@@ -6,7 +6,7 @@ import { showError } from '../components/services/AirshipInstance'
 import { TX_ACTION_LABEL_MAP } from '../constants/txActionConstants'
 import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
-import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
+import { getCurrencyCodeWithAccount } from '../util/CurrencyInfoHelpers'
 import { cleanFiatCurrencyCode } from '../util/CurrencyWalletHelpers'
 
 export type Category = 'transfer' | 'exchange' | 'expense' | 'income'
@@ -273,7 +273,7 @@ export interface ActionDisplayInfo {
   mergedData: EdgeMetadata
 }
 
-export const getTxActionDisplayInfo = (tx: EdgeTransaction, wallet: EdgeCurrencyWallet): ActionDisplayInfo => {
+export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount, wallet: EdgeCurrencyWallet): ActionDisplayInfo => {
   const { assetAction, chainAction, chainAssetAction, metadata, savedAction, swapData, tokenId } = tx
   const { currencyConfig, currencyInfo } = wallet
 
@@ -282,7 +282,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, wallet: EdgeCurrency
   const action = savedAction ?? chainAction
   const assetAct = assetAction ?? chainAssetAction
 
-  const getCurrencyCodes = (assets: EdgeAssetAmount[]) => assets.map(asset => getCurrencyCode(wallet, asset.tokenId))
+  const getCurrencyCodes = (assets: EdgeAssetAmount[]) => assets.map(asset => getCurrencyCodeWithAccount(account, asset.pluginId, asset.tokenId))
 
   const isSentTransaction = tx.nativeAmount.startsWith('-') || (eq(tx.nativeAmount, '0') && tx.isSend)
 
@@ -332,7 +332,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, wallet: EdgeCurrency
 
             edgeCategory = {
               category: 'exchange',
-              subcategory: sprintf(toFromStr, getCurrencyCode(wallet, otherAsset?.tokenId))
+              subcategory: sprintf(toFromStr, getCurrencyCodeWithAccount(account, otherAsset.pluginId, otherAsset.tokenId))
             }
             direction = txSrcSameAsset ? 'receive' : 'send'
             break

@@ -55,6 +55,7 @@ export function TransactionListRow(props: Props) {
   const nonIsoFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
   const currencyInfo = wallet.currencyInfo
 
+  const account = useSelector(state => state.core.account)
   const displayDenomination = useSelector(state => getDisplayDenomination(state, currencyInfo.pluginId, currencyCode))
   const exchangeDenomination = useSelector(state => getExchangeDenomination(state, currencyInfo.pluginId, currencyCode))
   const fiatDenomination = getDenomFromIsoCode(nonIsoFiatCurrencyCode)
@@ -75,7 +76,7 @@ export function TransactionListRow(props: Props) {
     maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(log10(displayDenomination.multiplier), precisionAdjustValue)
   }
 
-  const { direction, mergedData } = getTxActionDisplayInfo(transaction, wallet)
+  const { direction, mergedData } = getTxActionDisplayInfo(transaction, account, wallet)
   const { category, name } = mergedData
   const isSentTransaction = direction === 'send'
 
