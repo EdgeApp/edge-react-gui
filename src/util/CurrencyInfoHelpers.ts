@@ -123,37 +123,6 @@ export const getCurrencyCode = (wallet: EdgeCurrencyWallet, tokenId?: string): s
   return currencyCode
 }
 
-/**
- * If we have a currency code, guess the pluginId and tokenId from that.
- * @deprecated Use getTokenId when you know the pluginId for sure.
- */
-export const guessFromCurrencyCode = (account: EdgeAccount, opts: { currencyCode?: string; pluginId?: string; tokenId?: string }) => {
-  let { pluginId, tokenId } = opts
-  const { currencyCode } = opts
-
-  if (currencyCode == null) return { pluginId, tokenId }
-
-  // If you already have a main network code but not a tokenId, check if you are a token and get the right tokenId
-  if (pluginId != null && tokenId == null) {
-    tokenId = getTokenId(account, pluginId, currencyCode)
-  }
-
-  // If we don't have a pluginId, try to get one for a main network first
-  if (pluginId == null) {
-    pluginId = Object.keys(account.currencyConfig).find(id => account.currencyConfig[id].currencyInfo.currencyCode === currencyCode)
-  }
-
-  // If we still don't have a pluginId, try to get a pluginId and tokenId for a token
-  if (pluginId == null) {
-    pluginId = Object.keys(account.currencyConfig).find(id => {
-      tokenId = getTokenId(account, id, currencyCode)
-      return tokenId != null
-    })
-  }
-
-  return { pluginId, tokenId }
-}
-
 export const getToken = (wallet: EdgeCurrencyWallet, tokenId?: string): EdgeToken | undefined => {
   if (tokenId == null) {
     // Either special handling should be done by the caller, or the workflow should not allow this to execute.

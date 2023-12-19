@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import fioLogo from '../../../assets/images/fio/fio_logo.png'
-import { getSymbolFromCurrency, STAKING_BALANCES } from '../../../constants/WalletAndCurrencyConstants'
+import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useWatch } from '../../../hooks/useWatch'
 import { formatNumber, formatTimeDate } from '../../../locales/intl'
@@ -15,6 +15,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../../select
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
+import { getFioStakingBalances } from '../../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
@@ -71,13 +72,17 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
     setLocks(
       stakingStatus.stakedAmounts
         .filter(({ unlockDate }) => unlockDate != null && new Date(unlockDate).getTime() >= new Date().getTime())
-        .map(({ nativeAmount, unlockDate }) => ({
-          // @ts-expect-error Flow does not understand that unlockDate here can't be undefined
-          id: new Date(unlockDate).toDateString(),
-          // @ts-expect-error Flow does not understand that unlockDate here can't be undefined
-          title: sprintf(lstrings.staking_locked_title, formatTimeDate(new Date(unlockDate), true)),
-          amount: formatNumber(add(convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount), '0'))
-        }))
+        .map(({ nativeAmount, unlockDate }) => {
+          const displayAmount = convertNativeToDenomination(currencyDenomination.multiplier)(nativeAmount)
+          const formattedAmount = formatNumber(displayAmount)
+          return {
+            // @ts-expect-error Flow does not understand that unlockDate here can't be undefined
+            id: new Date(unlockDate).toDateString(),
+            // @ts-expect-error Flow does not understand that unlockDate here can't be undefined
+            title: sprintf(lstrings.staking_locked_title, formatTimeDate(new Date(unlockDate), true)),
+            amount: formattedAmount
+          }
+        })
     )
   }, [stakingStatus, currencyDenomination])
 
@@ -163,15 +168,14 @@ export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnPro
     } = ownProps
     const currencyWallet = state.core.account.currencyWallets[walletId]
 
-    const stakingCurrencyCode = `${currencyCode}${STAKING_BALANCES.staked}`
+    const { staked } = getFioStakingBalances(currencyWallet.stakingStatus)
+    const stakedNativeAmount = staked
 
     const currencyDenomination = getDisplayDenomination(state, currencyWallet.currencyInfo.pluginId, currencyCode)
-    const stakingCryptoAmountFormat = formatNumber(
-      add(convertNativeToDenomination(currencyDenomination.multiplier)(currencyWallet.balances[stakingCurrencyCode] ?? '0'), '0')
-    )
+    const stakingCryptoAmountFormat = formatNumber(add(convertNativeToDenomination(currencyDenomination.multiplier)(stakedNativeAmount), '0'))
 
     const defaultDenomination = getExchangeDenomination(state, currencyWallet.currencyInfo.pluginId, currencyCode)
-    const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(currencyWallet.balances[stakingCurrencyCode] ?? '0')
+    const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(stakedNativeAmount ?? '0')
     const stakingFiatBalance = convertCurrency(state, currencyCode, currencyWallet.fiatCurrencyCode, stakingDefaultCryptoAmount)
     const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 

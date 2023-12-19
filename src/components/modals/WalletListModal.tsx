@@ -13,7 +13,7 @@ import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { BooleanMap, EdgeTokenId } from '../../types/types'
+import { BooleanMap, EdgeAsset } from '../../types/types'
 import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { CustomAsset } from '../data/row/CustomAssetRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
@@ -46,11 +46,11 @@ interface Props {
   navigation: NavigationBase
 
   // Filtering:
-  allowedAssets?: EdgeTokenId[]
+  allowedAssets?: EdgeAsset[]
   allowedWalletIds?: string[]
   allowKeysOnlyMode?: boolean
   customAssets?: CustomAsset[]
-  excludeAssets?: EdgeTokenId[]
+  excludeAssets?: EdgeAsset[]
   excludeWalletIds?: string[]
   filterActivation?: boolean
 
@@ -61,7 +61,7 @@ interface Props {
   showCreateWallet?: boolean
 }
 
-const KeysOnlyModeTokenIds: EdgeTokenId[] = Object.keys(SPECIAL_CURRENCY_INFO)
+const KeysOnlyModeTokenIds: EdgeAsset[] = Object.keys(SPECIAL_CURRENCY_INFO)
   .filter(pluginId => isKeysOnlyPlugin(pluginId))
   .map(pluginId => ({
     pluginId
@@ -276,7 +276,7 @@ export const pickWallet = async ({
 }: {
   account: EdgeAccount
   allowedWalletIds?: string[]
-  assets?: EdgeTokenId[]
+  assets?: EdgeAsset[]
   headerTitle?: string
   navigation: NavigationBase
   showCreateWallet?: boolean

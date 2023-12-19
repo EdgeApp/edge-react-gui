@@ -34,7 +34,7 @@ import { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWeb
 import { RewardsCardDashboardParams } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
-import { CreateWalletType, FeeOption, FioConnectionWalletItem, FioDomain, FioRequest, GuiMakeSpendInfo } from './types'
+import { CreateWalletType, FeeOption, FioConnectionWalletItem, FioDomain, FioRequest } from './types'
 
 /**
  * Defines the acceptable route parameters for each scene key.
@@ -68,12 +68,6 @@ export interface RouteParamList {
 
   // Logged-in scenes:
   assetSettings: {}
-  changeMiningFee: {
-    guiMakeSpendInfo: GuiMakeSpendInfo
-    maxSpendSet: boolean
-    onSubmit: (networkFeeOption: FeeOption, customNetworkFee: JsonObject) => void
-    wallet: EdgeCurrencyWallet
-  }
   changeMiningFee2: {
     spendInfo: EdgeSpendInfo
     maxSpendSet: boolean

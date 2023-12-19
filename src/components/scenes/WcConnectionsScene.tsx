@@ -13,7 +13,7 @@ import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { EdgeTokenId, WcConnectionInfo } from '../../types/types'
+import { EdgeAsset, WcConnectionInfo } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ScanModal } from '../modals/ScanModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -169,10 +169,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const getProposalNamespaceCompatibleEdgeTokenIds = (
-  proposal: Web3WalletTypes.SessionProposal,
-  currencyConfig: EdgeAccount['currencyConfig']
-): EdgeTokenId[] => {
+const getProposalNamespaceCompatibleEdgeTokenIds = (proposal: Web3WalletTypes.SessionProposal, currencyConfig: EdgeAccount['currencyConfig']): EdgeAsset[] => {
   // The type definition implies optionalNamespaces will be present but is actually unchecked and not all dapps provide it
   const { requiredNamespaces, optionalNamespaces = {} } = proposal.params
 
@@ -194,7 +191,7 @@ const getProposalNamespaceCompatibleEdgeTokenIds = (
   const optionalChainIds: Set<string> = requiredChainIds.size === 0 ? getChainIdsFromNamespaces(optionalNamespaces) : new Set()
 
   let hasWalletForRequiredNamespace = false
-  const edgeTokenIdMap = new Map<string, EdgeTokenId>()
+  const edgeTokenIdMap = new Map<string, EdgeAsset>()
   for (const pluginId of Object.keys(currencyConfig)) {
     const chainId = SPECIAL_CURRENCY_INFO[pluginId].walletConnectV2ChainId
     if (chainId == null) continue

@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 import { formatNumber, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
-import { EdgeTokenId } from '../../types/types'
+import { EdgeAsset } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../util/network'
@@ -116,7 +116,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
       const assetArray = await showUi.showToastSpinner(lstrings.fiat_plugin_fetching_assets, ps)
 
-      const allowedAssets: EdgeTokenId[] = []
+      const allowedAssets: EdgeAsset[] = []
       const allowedFiats: { [fiatCurrencyCode: string]: boolean } = {}
       for (const assetMap of assetArray) {
         if (assetMap == null) continue

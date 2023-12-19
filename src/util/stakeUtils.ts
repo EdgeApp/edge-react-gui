@@ -1,4 +1,5 @@
-import { EdgeCurrencyInfo } from 'edge-core-js'
+import { add } from 'biggystring'
+import { EdgeCurrencyInfo, EdgeStakingStatus } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { formatTimeDate } from '../locales/intl'
@@ -85,4 +86,35 @@ export const getPolicyIconUris = (
 
 export const getPluginFromPolicy = (stakePlugins: StakePlugin[], stakePolicy: StakePolicy): StakePlugin | undefined => {
   return stakePlugins.find(plugin => plugin.getPolicies().find(policy => policy.stakePolicyId === stakePolicy.stakePolicyId))
+}
+
+/**
+ * FIO specific staking util functions. FIO still uses a direct connection
+ * to the FIO plugin for staking info instead of the newer staking plugin
+ * architecture. Extract balance info using the stakingStatus similar to how
+ * the tronStakePlugin does for BANDWIDTH and ENERYGY
+ */
+
+/**
+ * `locked` signifies total locked balance that is not spendable
+ * `staked` signifies subset of locked balance that is locked
+ */
+export type FioStakingBalanceType = 'staked' | 'locked'
+export type FioStakingBalances = Record<FioStakingBalanceType, string>
+
+export const getFioStakingBalances = (stakingStatus?: EdgeStakingStatus): FioStakingBalances => {
+  const stakingBalances: FioStakingBalances = {
+    staked: '0',
+    locked: '0'
+  }
+
+  for (const stakedAmount of stakingStatus?.stakedAmounts ?? []) {
+    const type = stakedAmount.otherParams?.type
+    if (type === 'STAKED') {
+      stakingBalances.staked = add(stakingBalances.staked, stakedAmount.nativeAmount)
+    } else if (type === 'LOCKED') {
+      stakingBalances.locked = add(stakingBalances.locked, stakedAmount.nativeAmount)
+    }
+  }
+  return stakingBalances
 }

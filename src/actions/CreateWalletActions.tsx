@@ -14,7 +14,7 @@ import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { EdgeTokenId } from '../types/types'
+import { EdgeAsset } from '../types/types'
 import { logActivity } from '../util/logger'
 import { filterNull } from '../util/safeFilters'
 import { logEvent, TrackingEventName } from '../util/tracking'
@@ -70,7 +70,7 @@ export function fetchAccountActivationInfo(walletType: string): ThunkAction<Prom
       ])
 
       // Translate ambiguous currency codes:
-      const supportedAssets: EdgeTokenId[] = []
+      const supportedAssets: EdgeAsset[] = []
       for (const currency of Object.keys(supportedCurrencies.result)) {
         // Handle special cases:
         if (currency === 'FTC') continue

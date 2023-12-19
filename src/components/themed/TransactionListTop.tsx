@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { Fontello } from '../../assets/vector'
-import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
+import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
-import { getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
+import { getFioStakingBalances, getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
 import { convertNativeToDenomination, datelog } from '../../util/utils'
 import { VisaCardCard } from '../cards/VisaCardCard'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -245,7 +245,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
    * spinner.
    */
   renderStakedBalance() {
-    const { theme, currencyCode, wallet, displayDenomination, exchangeDenomination, exchangeRate } = this.props
+    const { theme, wallet, displayDenomination, exchangeDenomination, exchangeRate } = this.props
     const styles = getStyles(theme)
 
     if (SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]?.isStakingSupported !== true) return null
@@ -253,7 +253,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const fiatCurrencyCode = wallet.fiatCurrencyCode.replace(/^iso:/, '')
     const fiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode)
 
-    const walletBalanceLocked = wallet.balances[`${currencyCode}${STAKING_BALANCES.locked}`] ?? '0'
+    const { locked } = getFioStakingBalances(wallet.stakingStatus)
+
+    const walletBalanceLocked = locked
     const nativeLocked = add(walletBalanceLocked, this.state.lockedNativeAmount)
     if (nativeLocked === '0') return null
 

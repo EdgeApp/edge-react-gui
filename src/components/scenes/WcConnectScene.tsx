@@ -16,7 +16,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { EdgeTokenId } from '../../types/types'
+import { EdgeAsset } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { truncateString } from '../../util/utils'
 import { Card } from '../cards/Card'
@@ -35,7 +35,7 @@ interface Props extends EdgeSceneProps<'wcConnect'> {}
 
 export interface WcConnectParams {
   proposal: Web3WalletTypes.SessionProposal
-  edgeTokenIds: EdgeTokenId[]
+  edgeTokenIds: EdgeAsset[]
 }
 
 export const WcConnectScene = (props: Props) => {

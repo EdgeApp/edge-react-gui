@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import fioLogo from '../../../assets/images/fio/fio_logo.png'
-import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../../constants/WalletAndCurrencyConstants'
+import { SPECIAL_CURRENCY_INFO } from '../../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { formatNumber, formatTimeDate, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
@@ -15,7 +15,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../../select
 import { convertCurrencyFromExchangeRates } from '../../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
-import { MapObject } from '../../../types/types'
+import { FioStakingBalanceType, getFioStakingBalances } from '../../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
@@ -35,12 +35,6 @@ interface Props extends EdgeSceneProps<'fioStakingChange'> {
 }
 
 type PartialAmounts = Pick<ExchangedFlipInputAmounts, 'nativeAmount' | 'exchangeAmount'>
-
-type StakingBalances = MapObject<{
-  native: string
-  crypto: string
-  fiat: string
-}>
 
 export const FioStakingChangeScene = withWallet((props: Props) => {
   const theme = useTheme()
@@ -68,18 +62,35 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
 
   const dispatch = useDispatch()
   const currencyPlugin = useSelector(state => state.core.account.currencyConfig[pluginId])
-  const stakingBalances: StakingBalances = {}
 
   const currencyDenomination = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode))
   const defaultDenomination = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
   const exchangeRates = useSelector(state => state.exchangeRates)
   const fioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
 
-  if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) {
-    for (const cCodeKey in STAKING_BALANCES) {
-      const stakingCurrencyCode = `${currencyCode}${STAKING_BALANCES[cCodeKey]}`
+  interface StakingDisplay {
+    native: string
+    crypto: string
+    fiat: string
+  }
 
-      const stakingNativeAmount = currencyWallet.balances[stakingCurrencyCode] ?? '0'
+  const stakingBalances: Record<FioStakingBalanceType, StakingDisplay> = {
+    staked: {
+      native: '0',
+      crypto: '0',
+      fiat: '0'
+    },
+    locked: {
+      native: '0',
+      crypto: '0',
+      fiat: '0'
+    }
+  }
+  if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) {
+    const balances = getFioStakingBalances(currencyWallet.stakingStatus)
+    const stakeTypes = Object.keys(balances) as FioStakingBalanceType[]
+    for (const stakedType of stakeTypes) {
+      const stakingNativeAmount = balances[stakedType]
       const stakingCryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(stakingNativeAmount)
       const stakingCryptoAmountFormat = formatNumber(add(stakingCryptoAmount, '0'))
 
@@ -87,7 +98,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
       const stakingFiatBalance = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, currencyWallet.fiatCurrencyCode, stakingDefaultCryptoAmount)
       const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
-      stakingBalances[stakingCurrencyCode] = {
+      stakingBalances[stakedType] = {
         native: stakingNativeAmount,
         crypto: stakingCryptoAmountFormat,
         fiat: stakingFiatBalanceFormat
@@ -122,7 +133,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
         break
       }
       case 'remove': {
-        const nativeAmt = stakingBalances[`${currencyCode}${STAKING_BALANCES.staked}`].native
+        const nativeAmt = stakingBalances.staked.native
         currencyWallet
           .nativeToDenomination(nativeAmt, 'FIO')
           .then(exchangeAmt => onAmountsChanged({ nativeAmount: nativeAmt, exchangeAmount: exchangeAmt }))

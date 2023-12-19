@@ -9,7 +9,7 @@ import { useRowLayout } from '../../hooks/useRowLayout'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { EdgeTokenId, FlatListItem, WalletListItem } from '../../types/types'
+import { EdgeAsset, FlatListItem, WalletListItem } from '../../types/types'
 import { getCreateWalletTypes, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { assetOverrides } from '../../util/serverState'
 import { normalizeForSearch } from '../../util/utils'
@@ -26,9 +26,9 @@ interface Props {
   navigation: NavigationBase
 
   // Filtering:
-  allowedAssets?: EdgeTokenId[]
+  allowedAssets?: EdgeAsset[]
   allowedWalletIds?: string[]
-  excludeAssets?: EdgeTokenId[]
+  excludeAssets?: EdgeAsset[]
   excludeWalletIds?: string[]
   filterActivation?: boolean
 
@@ -254,8 +254,8 @@ export function WalletList(props: Props) {
 interface CreateWalletListOpts {
   filteredWalletList?: WalletListItem[]
   filterActivation?: boolean
-  allowedAssets?: EdgeTokenId[]
-  excludeAssets?: EdgeTokenId[]
+  allowedAssets?: EdgeAsset[]
+  excludeAssets?: EdgeAsset[]
 }
 
 export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletListOpts = {}): WalletCreateItem[] => {
@@ -301,7 +301,7 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
   }
 
   // Filter this list:
-  const existingWallets: EdgeTokenId[] = []
+  const existingWallets: EdgeAsset[] = []
   for (const { wallet, tokenId } of filteredWalletList) {
     if (wallet == null) continue
     existingWallets.push({
@@ -330,7 +330,7 @@ export const filterWalletCreateItemListBySearchText = (createWalletList: WalletC
   return out
 }
 
-function checkFilterWallet(details: EdgeTokenId, allowedAssets?: EdgeTokenId[], excludeAssets?: EdgeTokenId[]): boolean {
+function checkFilterWallet(details: EdgeAsset, allowedAssets?: EdgeAsset[], excludeAssets?: EdgeAsset[]): boolean {
   if (allowedAssets != null && !hasAsset(allowedAssets, details)) {
     return false
   }
@@ -343,7 +343,7 @@ function checkFilterWallet(details: EdgeTokenId, allowedAssets?: EdgeTokenId[], 
 /**
  * Returns true if the asset array includes the given asset.
  */
-function hasAsset(assets: EdgeTokenId[], target: EdgeTokenId): boolean {
+function hasAsset(assets: EdgeAsset[], target: EdgeAsset): boolean {
   for (const asset of assets) {
     if (asset.pluginId === target.pluginId && asset.tokenId === target.tokenId) {
       return true

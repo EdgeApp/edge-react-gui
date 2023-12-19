@@ -13,7 +13,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { ThunkAction } from '../../types/reduxTypes'
-import { guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { logEvent, TrackingEventName } from '../../util/tracking'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { ListModal } from '../modals/ListModal'
@@ -27,7 +27,7 @@ export interface WalletListCreateRowProps {
   trackingEventFailed?: TrackingEventName
   trackingEventSuccess?: TrackingEventName
   createWalletIds?: string[]
-  pluginId?: string
+  pluginId: string
   walletType?: string
 
   onPress?: (walletId: string, currencyCode: string) => void
@@ -35,7 +35,7 @@ export interface WalletListCreateRowProps {
 
 export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) => {
   const {
-    currencyCode = '',
+    currencyCode,
     currencyName = '',
     trackingEventFailed,
     trackingEventSuccess,
@@ -54,7 +54,8 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { tokenId } = guessFromCurrencyCode(account, { currencyCode, pluginId })
+  const tokenId = getTokenId(account, pluginId, currencyCode)
+
   const networkName = pluginId != null && tokenId != null ? ` (${account.currencyConfig[pluginId].currencyInfo.displayName})` : ''
 
   const handlePress = useHandler(() => {

@@ -1,5 +1,5 @@
 import { asBoolean, asMaybe, asNumber, asObject, asString } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeSpendTarget, EdgeToken, EdgeTransaction, JsonObject } from 'edge-core-js/types'
+import { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeToken } from 'edge-core-js/types'
 
 import { LocaleStringKey } from '../locales/en_US'
 import { RootState } from './reduxTypes'
@@ -247,27 +247,6 @@ export interface FioObtRecord {
 
 export type FeeOption = 'custom' | 'high' | 'low' | 'standard'
 
-export interface GuiMakeSpendInfo {
-  currencyCode?: string
-  metadata?: any
-  nativeAmount?: string
-  networkFeeOption?: FeeOption
-  customNetworkFee?: JsonObject
-  publicAddress?: string
-  spendTargets?: EdgeSpendTarget[]
-  lockInputs?: boolean
-  uniqueIdentifier?: string
-  otherParams?: JsonObject
-  dismissAlert?: boolean
-  fioAddress?: string
-  fioPendingRequest?: FioRequest
-  isSendUsingFioAddress?: boolean
-  onBack?: () => void
-  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
-  beforeTransaction?: () => Promise<void>
-  alternateBroadcast?: (edgeTransaction: EdgeTransaction) => Promise<EdgeTransaction>
-}
-
 export interface WcConnectionInfo {
   dAppName: string
   dAppUrl: string
@@ -340,7 +319,7 @@ export interface WalletListItem {
   walletId: string
 }
 
-export interface EdgeTokenId {
+export interface EdgeAsset {
   pluginId: string
   tokenId?: string
 }

@@ -3,7 +3,7 @@ import { Platform } from 'react-native'
 
 import { OutlinedTextInputProps } from '../components/themed/OutlinedTextInput'
 import { lstrings } from '../locales/strings'
-import { StringMap, WalletConnectChainId } from '../types/types'
+import { WalletConnectChainId } from '../types/types'
 
 export const MAX_TOKEN_CODE_CHARACTERS = 7
 
@@ -977,11 +977,6 @@ export const FIAT_CODES_SYMBOLS: { [code: string]: string } = {
   YER: '﷼',
   ZAR: 'R',
   ZMW: 'ZK'
-}
-
-export const STAKING_BALANCES: StringMap = {
-  staked: ':STAKED',
-  locked: ':LOCKED'
 }
 
 export const FIO_WALLET_TYPE = 'wallet:fio'
