@@ -13,7 +13,7 @@ import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
 import { AssetChangeTextUi4 } from './AssetChangeTextUi4'
 import { CryptoIconUi4 } from './CryptoIconUi4'
-import { SplitRowView } from './SplitRowView'
+import { SplitRowsView } from './SplitRowsView'
 
 interface Props {
   nativeAmount?: string
@@ -108,7 +108,7 @@ const CurrencyViewUi4Component = (props: Props) => {
     <View style={styles.container}>
       <View style={styles.iconContainer}>{icon}</View>
       <View style={styles.innerContainer}>
-        <SplitRowView>{rows}</SplitRowView>
+        <SplitRowsView>{rows}</SplitRowsView>
       </View>
     </View>
   )
