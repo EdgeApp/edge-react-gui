@@ -180,7 +180,7 @@ export function TransactionListRow(props: Props) {
   })
 
   return (
-    <CardUi4 icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
+    <CardUi4 icon={icon} onPress={handlePress} onLongPress={handleLongPress} sections>
       <RowUi4>
         <View style={styles.row}>
           <EdgeText style={styles.titleText}>{transactionTitle}</EdgeText>

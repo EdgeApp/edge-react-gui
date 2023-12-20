@@ -51,28 +51,12 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
     }
   />
   <View
-    accessibilityState={
+    style={
       {
-        "disabled": false,
+        "flex": 1,
+        "flexDirection": "column",
       }
     }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={false}
-    focusable={true}
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
   >
     <View
       style={

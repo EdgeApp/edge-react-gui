@@ -97,15 +97,25 @@ export const CardUi4 = (props: Props) => {
 
   const maybeOverlay = overlay == null ? null : <View style={styles.overlayContainer}>{overlay}</View>
 
-  const allContent = (
-    <>
-      {underlay}
-      {maybeIcon}
-      {content}
-      {maybeCloseButton}
-      {maybeOverlay}
-    </>
-  )
+  const allContent =
+    icon == null ? (
+      <>
+        {underlay}
+        {content}
+        {maybeCloseButton}
+        {maybeOverlay}
+      </>
+    ) : (
+      <>
+        {underlay}
+        <View style={styles.rowContainer}>
+          {maybeIcon}
+          {content}
+        </View>
+        {maybeCloseButton}
+        {maybeOverlay}
+      </>
+    )
 
   return isPressable ? (
     <TouchableOpacity accessible={false} onPress={handlePress} onLongPress={handleLongPress} style={[styles.cardContainer, margin]}>
@@ -141,6 +151,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center',
     margin: 2,
     pointerEvents: 'none'
+  },
+  rowContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   iconContainer: {
     margin: theme.rem(0.25),

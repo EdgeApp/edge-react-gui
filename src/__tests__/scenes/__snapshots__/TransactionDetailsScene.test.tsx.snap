@@ -99,166 +99,141 @@ exports[`TransactionDetailsScene should render 1`] = `
           }
         />
         <View
-          accessibilityState={
+          style={
             {
-              "disabled": false,
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "paddingHorizontal": 11,
+              "paddingVertical": 6,
             }
           }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
         >
           <View
             style={
               {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
+                "marginRight": 11,
               }
             }
           >
             <View
               style={
-                {
-                  "marginRight": 11,
-                }
+                [
+                  {
+                    "overflow": "hidden",
+                  },
+                  {
+                    "borderRadius": 22,
+                    "height": 45,
+                    "marginRight": 11,
+                    "width": 45,
+                  },
+                ]
               }
             >
-              <View
-                style={
-                  [
-                    {
-                      "overflow": "hidden",
-                    },
-                    {
-                      "borderRadius": 22,
-                      "height": 45,
-                      "marginRight": 11,
-                      "width": 45,
-                    },
-                  ]
-                }
-              >
-                <FastImageView
-                  resizeMode="cover"
-                  source={
-                    {
-                      "uri": "thumb/nail/path",
-                    }
+              <FastImageView
+                resizeMode="cover"
+                source={
+                  {
+                    "uri": "thumb/nail/path",
                   }
-                  style={
-                    {
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    }
+                }
+                style={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
                   }
-                />
-              </View>
-            </View>
-            <View
-              style={
-                {
-                  "flex": 1,
                 }
+              />
+            </View>
+          </View>
+          <View
+            style={
+              {
+                "flex": 1,
+              }
+            }
+          >
+            <Text
+              adjustsFontSizeToFit={false}
+              ellipsizeMode="tail"
+              minimumFontScale={0.65}
+              numberOfLines={1}
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#A4C7DF",
+                    "fontSize": 17,
+                    "paddingBottom": 6,
+                    "paddingRight": 22,
+                  },
+                  null,
+                ]
               }
             >
-              <Text
-                adjustsFontSizeToFit={false}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#A4C7DF",
-                      "fontSize": 17,
-                      "paddingBottom": 6,
-                      "paddingRight": 22,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Sender Name
-              </Text>
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    undefined,
-                    null,
-                  ]
-                }
-              >
-                timmy
-              </Text>
-            </View>
-            <View
+              Sender Name
+            </Text>
+            <Text
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.65}
+              numberOfLines={1}
               style={
-                {
-                  "alignItems": "center",
-                  "justifyContent": "center",
-                }
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  undefined,
+                  null,
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  [
-                    {
-                      "color": undefined,
-                      "fontSize": 22,
-                    },
-                    {
-                      "color": "#00f1a2",
-                      "marginLeft": 11,
-                      "textAlign": "center",
-                    },
-                    {
-                      "fontFamily": "FontAwesome",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              timmy
+            </Text>
+          </View>
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+              }
+            }
+          >
+            <Text
+              allowFontScaling={false}
+              style={
+                [
+                  {
+                    "color": undefined,
+                    "fontSize": 22,
+                  },
+                  {
+                    "color": "#00f1a2",
+                    "marginLeft": 11,
+                    "textAlign": "center",
+                  },
+                  {
+                    "fontFamily": "FontAwesome",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  {},
+                ]
+              }
+            >
+              
+            </Text>
           </View>
         </View>
       </View>
@@ -312,28 +287,12 @@ exports[`TransactionDetailsScene should render 1`] = `
           }
         />
         <View
-          accessibilityState={
+          style={
             {
-              "disabled": false,
+              "flex": 1,
+              "flexDirection": "column",
             }
           }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
         >
           <View
             style={
@@ -411,31 +370,16 @@ exports[`TransactionDetailsScene should render 1`] = `
               }
             />
           </View>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "disabled": false,
+          <View
+            style={
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginHorizontal": 11,
+              }
             }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
+          />
           <View
             style={
               {
@@ -561,31 +505,16 @@ exports[`TransactionDetailsScene should render 1`] = `
               </Text>
             </View>
           </View>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "disabled": false,
+          <View
+            style={
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginHorizontal": 11,
+              }
             }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
+          />
           <View
             style={
               {
@@ -711,31 +640,16 @@ exports[`TransactionDetailsScene should render 1`] = `
               }
             />
           </View>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "disabled": false,
+          <View
+            style={
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginHorizontal": 11,
+              }
             }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
+          />
           <View
             style={
               {
@@ -889,28 +803,12 @@ exports[`TransactionDetailsScene should render 1`] = `
           }
         />
         <View
-          accessibilityState={
+          style={
             {
-              "disabled": false,
+              "flex": 1,
+              "flexDirection": "column",
             }
           }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
         >
           <View
             style={
@@ -1012,31 +910,16 @@ exports[`TransactionDetailsScene should render 1`] = `
               </Text>
             </View>
           </View>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "disabled": false,
+          <View
+            style={
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginHorizontal": 11,
+              }
             }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
+          />
           <View
             style={
               {
@@ -1190,28 +1073,12 @@ exports[`TransactionDetailsScene should render 1`] = `
           }
         />
         <View
-          accessibilityState={
+          style={
             {
-              "disabled": false,
+              "flex": 1,
+              "flexDirection": "column",
             }
           }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
         >
           <View
             style={
@@ -1289,31 +1156,16 @@ exports[`TransactionDetailsScene should render 1`] = `
               }
             />
           </View>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "disabled": false,
+          <View
+            style={
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginHorizontal": 11,
+              }
             }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
+          />
           <View
             style={
               {
@@ -1835,166 +1687,141 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           }
         />
         <View
-          accessibilityState={
+          style={
             {
-              "disabled": false,
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flexDirection": "row",
+              "paddingHorizontal": 11,
+              "paddingVertical": 6,
             }
           }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
         >
           <View
             style={
               {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
+                "marginRight": 11,
               }
             }
           >
             <View
               style={
-                {
-                  "marginRight": 11,
-                }
+                [
+                  {
+                    "overflow": "hidden",
+                  },
+                  {
+                    "borderRadius": 22,
+                    "height": 45,
+                    "marginRight": 11,
+                    "width": 45,
+                  },
+                ]
               }
             >
-              <View
-                style={
-                  [
-                    {
-                      "overflow": "hidden",
-                    },
-                    {
-                      "borderRadius": 22,
-                      "height": 45,
-                      "marginRight": 11,
-                      "width": 45,
-                    },
-                  ]
-                }
-              >
-                <FastImageView
-                  resizeMode="cover"
-                  source={
-                    {
-                      "uri": "thumb/nail/path",
-                    }
+              <FastImageView
+                resizeMode="cover"
+                source={
+                  {
+                    "uri": "thumb/nail/path",
                   }
-                  style={
-                    {
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    }
+                }
+                style={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
                   }
-                />
-              </View>
-            </View>
-            <View
-              style={
-                {
-                  "flex": 1,
                 }
+              />
+            </View>
+          </View>
+          <View
+            style={
+              {
+                "flex": 1,
+              }
+            }
+          >
+            <Text
+              adjustsFontSizeToFit={false}
+              ellipsizeMode="tail"
+              minimumFontScale={0.65}
+              numberOfLines={1}
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#A4C7DF",
+                    "fontSize": 17,
+                    "paddingBottom": 6,
+                    "paddingRight": 22,
+                  },
+                  null,
+                ]
               }
             >
-              <Text
-                adjustsFontSizeToFit={false}
-                ellipsizeMode="tail"
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#A4C7DF",
-                      "fontSize": 17,
-                      "paddingBottom": 6,
-                      "paddingRight": 22,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Recipient Name
-              </Text>
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    undefined,
-                    null,
-                  ]
-                }
-              >
-                timmy
-              </Text>
-            </View>
-            <View
+              Recipient Name
+            </Text>
+            <Text
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.65}
+              numberOfLines={1}
               style={
-                {
-                  "alignItems": "center",
-                  "justifyContent": "center",
-                }
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  undefined,
+                  null,
+                ]
               }
             >
-              <Text
-                allowFontScaling={false}
-                style={
-                  [
-                    {
-                      "color": undefined,
-                      "fontSize": 22,
-                    },
-                    {
-                      "color": "#00f1a2",
-                      "marginLeft": 11,
-                      "textAlign": "center",
-                    },
-                    {
-                      "fontFamily": "FontAwesome",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              timmy
+            </Text>
+          </View>
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+              }
+            }
+          >
+            <Text
+              allowFontScaling={false}
+              style={
+                [
+                  {
+                    "color": undefined,
+                    "fontSize": 22,
+                  },
+                  {
+                    "color": "#00f1a2",
+                    "marginLeft": 11,
+                    "textAlign": "center",
+                  },
+                  {
+                    "fontFamily": "FontAwesome",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  {},
+                ]
+              }
+            >
+              
+            </Text>
           </View>
         </View>
       </View>
@@ -2048,28 +1875,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           }
         />
         <View
-          accessibilityState={
+          style={
             {
-              "disabled": false,
+              "flex": 1,
+              "flexDirection": "column",
             }
           }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
         >
           <View
             style={
@@ -2147,31 +1958,16 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               }
             />
           </View>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "disabled": false,
+          <View
+            style={
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginHorizontal": 11,
+              }
             }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
+          />
           <View
             style={
               {
@@ -2297,31 +2093,16 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               </Text>
             </View>
           </View>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "disabled": false,
+          <View
+            style={
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginHorizontal": 11,
+              }
             }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
+          />
           <View
             style={
               {
@@ -2447,31 +2228,16 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               }
             />
           </View>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "disabled": false,
+          <View
+            style={
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginHorizontal": 11,
+              }
             }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
+          />
           <View
             style={
               {
@@ -2625,28 +2391,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           }
         />
         <View
-          accessibilityState={
+          style={
             {
-              "disabled": false,
+              "flex": 1,
+              "flexDirection": "column",
             }
           }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
         >
           <View
             style={
@@ -2748,31 +2498,16 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               </Text>
             </View>
           </View>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "disabled": false,
+          <View
+            style={
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginHorizontal": 11,
+              }
             }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
+          />
           <View
             style={
               {
@@ -2926,28 +2661,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           }
         />
         <View
-          accessibilityState={
+          style={
             {
-              "disabled": false,
+              "flex": 1,
+              "flexDirection": "column",
             }
           }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
         >
           <View
             style={
@@ -3025,31 +2744,16 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               }
             />
           </View>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "disabled": false,
+          <View
+            style={
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+                "marginHorizontal": 11,
+              }
             }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-        >
+          />
           <View
             style={
               {

@@ -274,7 +274,7 @@ const TransactionDetailsComponent = (props: Props) => {
         </RowUi4>
       </CardUi4>
 
-      <CardUi4>
+      <CardUi4 sections>
         <TxCryptoAmountRow transaction={transaction} wallet={wallet} />
         <RowUi4 type="editable" title={sprintf(lstrings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={handleEdit}>
           <View style={styles.tileRow}>
@@ -297,7 +297,7 @@ const TransactionDetailsComponent = (props: Props) => {
         )}
       </CardUi4>
 
-      <CardUi4>
+      <CardUi4 sections>
         <RowUi4 type="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput}>
           <EdgeText style={styles.tileCategory}>{categoriesText}</EdgeText>
         </RowUi4>

@@ -118,7 +118,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    margin: theme.rem(0.5),
+    marginHorizontal: theme.rem(0.5),
+    marginVertical: theme.rem(0.25),
     flex: 1
   },
   iconContainer: {
@@ -127,8 +128,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   innerContainer: {
     flexDirection: 'column',
     justifyContent: 'space-between',
-    flex: 1,
-    marginLeft: theme.rem(0.25)
+    flex: 1
   },
   primaryText: {
     fontSize: theme.rem(0.75)

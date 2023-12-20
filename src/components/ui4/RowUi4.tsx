@@ -1,6 +1,6 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
-import { ActivityIndicator, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
@@ -67,6 +67,35 @@ export const RowUi4 = (props: Props) => {
     }
   })
 
+  const content = (
+    <View style={styles.container}>
+      {icon == null ? null : <View style={styles.iconContainer}>{icon}</View>}
+      <View style={styles.content}>
+        {title == null ? null : (
+          <EdgeText disableFontScaling ellipsizeMode="tail" style={error ? styles.textHeaderError : styles.textHeader}>
+            {title}
+          </EdgeText>
+        )}
+        {children == null ? (
+          body == null ? null : (
+            <EdgeText style={styles.textBody} numberOfLines={numberOfLines} ellipsizeMode="tail">
+              {body}
+            </EdgeText>
+          )
+        ) : (
+          children
+        )}
+      </View>
+      <View style={styles.rightButtonContainer}>
+        {type === 'touchable' && <FontAwesome5 name="chevron-right" style={styles.tappableIcon} size={theme.rem(1)} />}
+        {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.tappableIcon} size={theme.rem(1)} />}
+        {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.tappableIcon} size={theme.rem(1)} />}
+        {type === 'delete' && <FontAwesomeIcon name="times" style={styles.tappableIcon} size={theme.rem(1)} />}
+        {type === 'questionable' && <SimpleLineIcons name="question" style={styles.tappableIcon} size={theme.rem(1)} />}
+      </View>
+    </View>
+  )
+
   return type === 'loading' ? (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -74,41 +103,12 @@ export const RowUi4 = (props: Props) => {
         <ActivityIndicator style={styles.loader} color={theme.primaryText} size="large" />
       </View>
     </View>
+  ) : type === 'touchable' ? (
+    <TouchableOpacity accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={handlePress == null && handleLongPress == null}>
+      {content}
+    </TouchableOpacity>
   ) : (
-    <TouchableHighlight
-      accessible={false}
-      onPress={handlePress}
-      onLongPress={handleLongPress}
-      disabled={handlePress == null && handleLongPress == null}
-      underlayColor={theme.touchHighlightUi4}
-    >
-      <View style={styles.container}>
-        {icon == null ? null : <View style={styles.iconContainer}>{icon}</View>}
-        <View style={styles.content}>
-          {title == null ? null : (
-            <EdgeText disableFontScaling ellipsizeMode="tail" style={error ? styles.textHeaderError : styles.textHeader}>
-              {title}
-            </EdgeText>
-          )}
-          {children == null ? (
-            body == null ? null : (
-              <EdgeText style={styles.textBody} numberOfLines={numberOfLines} ellipsizeMode="tail">
-                {body}
-              </EdgeText>
-            )
-          ) : (
-            children
-          )}
-        </View>
-        <View style={styles.rightButtonContainer}>
-          {type === 'touchable' && <FontAwesome5 name="chevron-right" style={styles.tappableIcon} size={theme.rem(1)} />}
-          {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.tappableIcon} size={theme.rem(1)} />}
-          {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.tappableIcon} size={theme.rem(1)} />}
-          {type === 'delete' && <FontAwesomeIcon name="times" style={styles.tappableIcon} size={theme.rem(1)} />}
-          {type === 'questionable' && <SimpleLineIcons name="question" style={styles.tappableIcon} size={theme.rem(1)} />}
-        </View>
-      </View>
-    </TouchableHighlight>
+    content
   )
 }
 
