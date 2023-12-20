@@ -113,6 +113,7 @@ export const asEnvConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
+  COREUM_INIT: asCorePluginInit(asBoolean),
   ETHEREUM_INIT: asCorePluginInit(asEvmApiKeys),
   ETHEREUM_POW_INIT: asCorePluginInit(asEvmApiKeys),
   EXOLIX_INIT: asCorePluginInit(
@@ -155,6 +156,7 @@ export const asEnvConfig = asObject({
     }).withRest
   ),
   OPTIMISM_INIT: asCorePluginInit(asEvmApiKeys),
+  OSMOSIS_INIT: asCorePluginInit(asBoolean),
   PULSECHAIN_INIT: asCorePluginInit(asEvmApiKeys),
 
   POLYGON_INIT: asCorePluginInit(asEvmApiKeys),
