@@ -54,6 +54,10 @@ exports[`ClickableRow should render with loading props 1`] = `
         {
           "height": "auto",
         },
+        {
+          "borderColor": "white",
+          "borderWidth": 0,
+        },
       ]
     }
   >

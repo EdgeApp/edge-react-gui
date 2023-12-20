@@ -57,16 +57,14 @@ export const HelpModal = (props: Props) => {
   const styles = getStyles(theme)
   const versionText = `${lstrings.help_version} ${versionNumber}`
   const buildText = `${lstrings.help_build} ${buildNumber}`
-  const optionMarginRem = [0.75, 0, 0.5, 1]
-  const optionPaddingRem = [0, 1, 1, 0]
   const helpModalTitle = sprintf(lstrings.help_modal_title_thanks, config.appName)
   const helpSiteMoreInfoText = sprintf(lstrings.help_site_more_info_text, config.appName)
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]}>
+    <ThemedModal bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]} scroll>
       <View style={styles.titleContainer}>
         <Image source={theme.primaryLogo} style={styles.logo} resizeMode="contain" />
-        <ModalTitle center paddingRem={[0, 1, 1]}>
+        <ModalTitle center paddingRem={[0, 1]}>
           {helpModalTitle}
         </ModalTitle>
       </View>
@@ -74,8 +72,6 @@ export const HelpModal = (props: Props) => {
       <SelectableRow
         arrowTappable
         icon={<Fontello name="help_idea" color={theme.iconTappable} size={theme.rem(1.5)} />}
-        marginRem={optionMarginRem}
-        paddingRem={optionPaddingRem}
         subTitle={lstrings.help_knowledge_base_text}
         title={lstrings.help_knowledge_base}
         underline
@@ -85,8 +81,6 @@ export const HelpModal = (props: Props) => {
       <SelectableRow
         arrowTappable
         icon={<Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />}
-        marginRem={optionMarginRem}
-        paddingRem={optionPaddingRem}
         subTitle={lstrings.help_support_text}
         title={lstrings.help_support}
         underline
@@ -96,8 +90,6 @@ export const HelpModal = (props: Props) => {
       <SelectableRow
         arrowTappable
         icon={<Fontello name="help_call" color={theme.iconTappable} size={theme.rem(1.5)} />}
-        marginRem={optionMarginRem}
-        paddingRem={optionPaddingRem}
         subTitle={lstrings.help_call_text}
         title={lstrings.help_call}
         underline
@@ -107,8 +99,6 @@ export const HelpModal = (props: Props) => {
       <SelectableRow
         arrowTappable
         icon={<Fontello name="globe" color={theme.iconTappable} size={theme.rem(1.5)} />}
-        marginRem={optionMarginRem}
-        paddingRem={optionPaddingRem}
         subTitle={helpSiteMoreInfoText}
         title={sprintf(lstrings.help_visit_site, config.appName)}
         underline
@@ -117,8 +107,6 @@ export const HelpModal = (props: Props) => {
       <SelectableRow
         arrowTappable
         icon={<Fontello name="doc-text" color={theme.iconTappable} size={theme.rem(1.5)} />}
-        marginRem={optionMarginRem}
-        paddingRem={optionPaddingRem}
         subTitle={lstrings.help_terms_of_service_text}
         title={lstrings.title_terms_of_service}
         onPress={() => handleSitePress(lstrings.title_terms_of_service, config.termsOfServiceSite)}

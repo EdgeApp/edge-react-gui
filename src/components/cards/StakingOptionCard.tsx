@@ -78,8 +78,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       paddingTop: theme.rem(2),
       paddingBottom: theme.rem(1),
       borderBottomWidth: theme.thinLineWidth,
-      borderColor: theme.lineDivider,
-      minWidth: theme.rem(15)
+      borderColor: theme.lineDivider
     },
     icon: {
       top: theme.rem(-1.5)

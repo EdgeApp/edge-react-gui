@@ -2,7 +2,37 @@
 
 ## Unreleased
 
-## 3.22.0 (2023-11-24)
+## 3.23.0
+
+- added: Add Coreum (CORE)
+- added: Add Osmosis (OSMO)
+- added: Automatically enable tokens with balances
+- added: Add Pokt RPCs as option for Fantom
+- added: GLIF Infinity Pool staking plugin for Filecoin FEVM currency
+- added: Support for Thorchain Savers EVM token deposits
+- added: Add Solana init options
+- added: BSC staking on Thorchain Savers
+- added: Ability to clear datastore of fiat providers
+- added: 'numAccounts' tracking parameter to report number of locally saved accounts
+- added: Ethereum support through Paybis
+- changed: USP/Legacy Landing probability set to 50/50
+- changed: Use memos for Thorchain Savers withdrawals
+- changed: Allow wallet creation in WalletConnect wallet picker
+- changed: Improve transition to stake overview scene with preloaded data
+- changed: Remove warning dropdown if stake positions fail to load
+- changed: 'Create Account' button text always set to "Get Started"
+- changed: Token management scene now always sorts enabled tokens on top
+- fixed: Various margin styling alignments
+- fixed: Long delay updating exchange rates after login
+- fixed: Unable to claim unstaked TRX funds in some circumstances
+- fixed: Fix duplicate keys in `StakeOverviewScene` allocations list
+- fixed: Do not count paused wallets for progress ratio
+- fixed: ENS name resolution intermittently failing
+- fixed: Error on exchange details from RUNE swaps
+- fixed: Remove `minWidth` style from stake option card
+- removed: Staking on Fantom
+
+## 3.22.0 (2023-11-26)
 
 - added: Support for Thorchain Savers EVM token deposits
 - added: Add THORChain (RUNE)

@@ -133,7 +133,7 @@ const CoinRankRowComponent = (props: Props) => {
   numDecimals = getNumDecimals(percentChangeRaw, 2)
 
   const decimalChangeRaw = div(String(percentChangeRaw), '100', DECIMAL_PRECISION)
-  const percentChangeString = toPercentString(decimalChangeRaw, { noGrouping: true })
+  const percentChangeString = toPercentString(decimalChangeRaw, { intlOpts: { noGrouping: true } })
   const negative = lt(percentChangeString, '0')
 
   // Calculate price string

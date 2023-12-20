@@ -2,7 +2,7 @@
 // Stake Policy
 // -----------------------------------------------------------------------------
 
-import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeAccount, EdgeCorePluginOptions, EdgeCurrencyWallet } from 'edge-core-js'
 
 // -----------------------------------------------------------------------------
 // Errors
@@ -103,6 +103,10 @@ export interface StakePolicy {
   deprecated?: boolean
 }
 
+export interface StakePositionMap {
+  [policyId: string]: StakePosition
+}
+
 // -----------------------------------------------------------------------------
 // Change Quote
 // -----------------------------------------------------------------------------
@@ -197,3 +201,5 @@ export interface StakePlugin {
   fetchChangeQuote: (request: ChangeQuoteRequest) => Promise<ChangeQuote>
   fetchStakePosition: (request: StakePositionRequest) => Promise<StakePosition>
 }
+
+export type StakePluginFactory = (opts?: EdgeCorePluginOptions) => Promise<StakePlugin>

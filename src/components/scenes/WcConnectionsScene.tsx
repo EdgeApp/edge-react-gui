@@ -1,6 +1,6 @@
 import { ProposalTypes } from '@walletconnect/types'
 import { Web3WalletTypes } from '@walletconnect/web3wallet'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -10,7 +10,6 @@ import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstant
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useMount } from '../../hooks/useMount'
 import { useWalletConnect } from '../../hooks/useWalletConnect'
-import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -38,7 +37,6 @@ export const WcConnectionsScene = (props: Props) => {
   const [connecting, setConnecting] = React.useState(false)
 
   const account = useSelector(state => state.core.account)
-  const currencyWallets = useWatch(account, 'currencyWallets')
   const walletConnect = useWalletConnect()
 
   useMount(() => {
@@ -55,7 +53,7 @@ export const WcConnectionsScene = (props: Props) => {
     setConnecting(true)
     try {
       const proposal = await walletConnect.initSession(qrResult)
-      const edgeTokenIds = getProposalNamespaceCompatibleEdgeTokenIds(proposal, currencyWallets)
+      const edgeTokenIds = getProposalNamespaceCompatibleEdgeTokenIds(proposal, account.currencyConfig)
       navigation.navigate('wcConnect', { proposal, edgeTokenIds })
     } catch (error: any) {
       showError(error)
@@ -173,9 +171,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const getProposalNamespaceCompatibleEdgeTokenIds = (
   proposal: Web3WalletTypes.SessionProposal,
-  currencyWallets: {
-    [walletId: string]: EdgeCurrencyWallet
-  }
+  currencyConfig: EdgeAccount['currencyConfig']
 ): EdgeTokenId[] => {
   // The type definition implies optionalNamespaces will be present but is actually unchecked and not all dapps provide it
   const { requiredNamespaces, optionalNamespaces = {} } = proposal.params
@@ -199,12 +195,10 @@ const getProposalNamespaceCompatibleEdgeTokenIds = (
 
   let hasWalletForRequiredNamespace = false
   const edgeTokenIdMap = new Map<string, EdgeTokenId>()
-  for (const walletId of Object.keys(currencyWallets)) {
-    const wallet = currencyWallets[walletId]
-    const chainId = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
+  for (const pluginId of Object.keys(currencyConfig)) {
+    const chainId = SPECIAL_CURRENCY_INFO[pluginId].walletConnectV2ChainId
     if (chainId == null) continue
 
-    const { pluginId } = wallet.currencyInfo
     const chainIdString = `${chainId.namespace}:${chainId.reference}`
     if (requiredChainIds.has(chainIdString)) {
       hasWalletForRequiredNamespace = true

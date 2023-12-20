@@ -147,6 +147,10 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
             arrowTappable
             autoHeight
             underline={index !== options.length - 1}
+            // HACK: ThemedModal has 1 rem padding all around, making it
+            // impossible to use components expecting split 0.5rem
+            // margin/padding.
+            marginRem={[0, -0.5, 0, -0.5]}
           />
         )
       })}
@@ -157,6 +161,8 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
 export const styles = cacheStyles((theme: Theme) => ({
   iconContainer: {
     flexDirection: 'row',
-    paddingVertical: theme.rem(0.75)
+    paddingVertical: theme.rem(0.75),
+    width: theme.rem(2.5),
+    marginHorizontal: theme.rem(0)
   }
 }))

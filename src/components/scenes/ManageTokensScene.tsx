@@ -51,22 +51,35 @@ function ManageTokensSceneComponent(props: Props) {
   // Sort the token list:
   const sortedTokenIds = React.useMemo(() => {
     // Make a table of preferred tokenId's:
-    const preferredIds = new Set<string>()
+    const preferredIdSet = new Set<string>()
     for (const currencyCode of PREFERRED_TOKENS) {
       const tokenId = Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === currencyCode)
-      if (tokenId != null) preferredIds.add(tokenId)
+      if (tokenId != null) preferredIdSet.add(tokenId)
     }
 
     return Object.keys(allTokens).sort((id1, id2) => {
       const token1 = allTokens[id1]
       const token2 = allTokens[id2]
-      if (preferredIds.has(id1) && !preferredIds.has(id2)) return -1
-      if (!preferredIds.has(id1) && preferredIds.has(id2)) return 1
+
+      const isToken1Enabled = enabledTokenSet.has(id1)
+      const isToken2Enabled = enabledTokenSet.has(id2)
+      const isToken1Preferred = preferredIdSet.has(id1)
+      const isToken2Preferred = preferredIdSet.has(id2)
+
+      // Sort enabled tokens first
+      if (isToken1Enabled && !isToken2Enabled) return -1
+      if (!isToken1Enabled && isToken2Enabled) return 1
+
+      // Then sort preferred tokens
+      if (isToken1Preferred && !isToken2Preferred) return -1
+      if (!isToken1Preferred && isToken2Preferred) return 1
+
+      // Finally, sort by currency code
       if (token1.currencyCode < token2.currencyCode) return -1
       if (token1.currencyCode > token2.currencyCode) return 1
       return 0
     })
-  }, [allTokens])
+  }, [allTokens, enabledTokenSet])
 
   // Filter the list of tokens based on the search term:
   const filteredTokenIds = React.useMemo(() => {

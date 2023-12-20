@@ -220,7 +220,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               style={
                 [
                   {
-                    "color": "#E85466",
+                    "color": "#00f1a2",
                     "fontFamily": "Quicksand-Regular",
                     "fontSize": 17,
                   },
@@ -1325,7 +1325,7 @@ exports[`TransactionListTop should render 1`] = `
               style={
                 [
                   {
-                    "color": "#E85466",
+                    "color": "#00f1a2",
                     "fontFamily": "Quicksand-Regular",
                     "fontSize": 17,
                   },

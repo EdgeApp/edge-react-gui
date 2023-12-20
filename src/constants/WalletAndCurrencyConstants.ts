@@ -15,6 +15,12 @@ export const MAX_CRYPTO_AMOUNT_CHARACTERS = 10 // includes both whole and fracti
 export const FIAT_PRECISION = 2
 const UTXO_MAX_SPEND_TARGETS = 32
 
+// Sync status consts
+export const MIN_RATIO = 0.02
+export const MAX_RATIO = 0.95
+export const RESYNC_THRESHOLD = 0.05
+export const DONE_THRESHOLD = 0.999
+
 // Translations for custom fee keys:
 export const FEE_STRINGS = {
   gasLimit: lstrings.gasLimit,
@@ -95,6 +101,8 @@ export const WALLET_TYPE_ORDER = [
   'wallet:binancesmartchain',
   'wallet:liberland',
   'wallet:liberlandtestnet',
+  'wallet:coreum',
+  'wallet:osmosis',
   'wallet:thorchainrune'
 ]
 
@@ -344,6 +352,28 @@ export const SPECIAL_CURRENCY_INFO: {
     isPaymentProtocolSupported: false,
     noMaxSpend: true
   },
+  filecoinfevm: {
+    initWalletName: lstrings.string_first_filecoin_fevm_wallet_name,
+    chainCode: 'FIL',
+    allowZeroTx: false,
+    displayBuyCrypto: false,
+    isImportKeySupported: true,
+    isStakingSupported: true,
+    isTransactionListUnsupported: true,
+    isCustomTokensSupported: false,
+    isPaymentProtocolSupported: false
+  },
+  filecoinfevmcalibration: {
+    initWalletName: lstrings.string_first_filecoin_fevm_calibratio_wallet_name,
+    chainCode: 'tFIL',
+    allowZeroTx: false,
+    displayBuyCrypto: false,
+    isImportKeySupported: true,
+    isStakingSupported: true,
+    isTransactionListUnsupported: true,
+    isCustomTokensSupported: false,
+    isPaymentProtocolSupported: false
+  },
   tron: {
     initWalletName: lstrings.string_first_tron_wallet_name,
     chainCode: 'TRX',
@@ -368,6 +398,15 @@ export const SPECIAL_CURRENCY_INFO: {
       namespace: 'eip155',
       reference: '42'
     }
+  },
+  goerli: {
+    initWalletName: lstrings.string_first_ethereum_wallet_name,
+    chainCode: 'ETH',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    isImportKeySupported: true,
+    isCustomTokensSupported: true,
+    isPaymentProtocolSupported: false
   },
   ethereumclassic: {
     initWalletName: lstrings.string_first_ethereum_classic_wallet_name,
@@ -431,6 +470,19 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX',
     isImportKeySupported: true
   },
+  coreum: {
+    initWalletName: lstrings.string_first_coreum_wallet_name,
+    chainCode: 'CORE',
+    dummyPublicAddress: 'core18rv2a6cjkk3lnayy29hez6s2ftpe9llqnce2vu',
+    isImportKeySupported: true
+  },
+  osmosis: {
+    initWalletName: lstrings.string_first_osmosis_wallet_name,
+    chainCode: 'OSMO',
+    dummyPublicAddress: 'osmo156hdwk3gx4wkq0r5m0s3ag2yj5pawfeudml34a',
+    isCustomTokensSupported: true,
+    isImportKeySupported: true
+  },
   thorchainrune: {
     initWalletName: lstrings.string_first_thorchainrune_wallet_name,
     chainCode: 'RUNE',
@@ -450,6 +502,7 @@ export const SPECIAL_CURRENCY_INFO: {
     fioChainCode: 'BSC',
     allowZeroTx: true,
     isImportKeySupported: true,
+    isStakingSupported: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isCustomTokensSupported: true,
     walletConnectV2ChainId: {
@@ -460,6 +513,7 @@ export const SPECIAL_CURRENCY_INFO: {
   solana: {
     initWalletName: lstrings.string_first_solana_wallet_name,
     chainCode: 'SOL',
+    isCustomTokensSupported: true,
     isImportKeySupported: true,
     dummyPublicAddress: 'DEd1rkRyr5bRkJHgaAKMSYjYC1KMz3Hc5bSs4Jiwt29x',
     noChangeMiningFee: true
@@ -477,6 +531,7 @@ export const SPECIAL_CURRENCY_INFO: {
     }
   },
   fio: {
+    allowZeroTx: true,
     initWalletName: lstrings.string_first_fio_wallet_name,
     chainCode: 'FIO',
     dummyPublicAddress: 'FIO4uX8tSuBZyHJmpPfc5Q6WrZ9eXd33wdgfWvfJ2fjGsg9yH4Dkd',
@@ -596,8 +651,11 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isStakingSupported: true,
-    isCustomTokensSupported: true
+    isCustomTokensSupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '250'
+    }
   },
   hedera: {
     initWalletName: lstrings.string_first_hedera_wallet_name,

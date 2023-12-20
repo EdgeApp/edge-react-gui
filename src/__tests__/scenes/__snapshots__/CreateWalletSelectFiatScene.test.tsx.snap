@@ -158,34 +158,33 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
               },
               {
                 "paddingBottom": 0,
-                "paddingLeft": 22,
-                "paddingRight": 22,
+                "paddingLeft": 11,
+                "paddingRight": 11,
                 "paddingTop": 0,
               },
               null,
               null,
+              {
+                "borderColor": "white",
+                "borderWidth": 0,
+              },
             ]
           }
         >
           <View
             style={
-              [
-                {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                  "justifyContent": "space-between",
-                  "width": "100%",
-                },
-                null,
-              ]
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "justifyContent": "space-between",
+                "width": "100%",
+              }
             }
           >
             <View
               style={
                 {
-                  "alignItems": "center",
-                  "flex": 1,
-                  "flexDirection": "row",
+                  "margin": 11,
                 }
               }
             >
@@ -223,62 +222,59 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                   }
                 />
               </View>
-              <View
+            </View>
+            <View
+              style={
+                {
+                  "alignItems": "flex-start",
+                  "flex": 1,
+                  "flexDirection": "column",
+                  "margin": 11,
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
                 style={
                   [
                     {
-                      "flexDirection": "column",
-                      "marginLeft": 28,
-                      "width": "100%",
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    undefined,
+                    null,
+                  ]
+                }
+              >
+                USD
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={2}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#A4C7DF",
+                      "fontSize": 17,
+                      "marginTop": 6,
                     },
                     null,
                   ]
                 }
               >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      undefined,
-                      null,
-                    ]
-                  }
-                >
-                  USD
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={2}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#A4C7DF",
-                        "fontSize": 17,
-                        "marginTop": 6,
-                        "maxWidth": "85%",
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  United States Dollar
-                </Text>
-              </View>
+                United States Dollar
+              </Text>
             </View>
             <Text
               allowFontScaling={false}
@@ -289,7 +285,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     "fontSize": 34,
                   },
                   {
-                    "marginRight": -11,
+                    "marginHorizontal": 0,
                   },
                   {
                     "fontFamily": "Ionicons",

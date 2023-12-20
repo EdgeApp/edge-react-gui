@@ -145,6 +145,7 @@ export interface FiatPluginFactoryArgs {
   account: EdgeAccount
   deviceId: string
   disablePlugins: DisablePluginMap
+  longPress?: boolean
   guiPlugin: GuiPlugin
   showUi: FiatPluginUi
 }

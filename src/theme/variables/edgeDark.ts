@@ -66,7 +66,11 @@ const palette = {
   QuicksandRegular: 'Quicksand-Regular',
   QuicksandMedium: 'Quicksand-Medium',
   QuicksandSemiBold: 'Quicksand-SemiBold',
-  QuicksandBold: 'Quicksand-Bold'
+  QuicksandBold: 'Quicksand-Bold',
+
+  // UI4 palette
+  teal: 'rgb(22, 50, 58)',
+  blackOp65: 'rgba(0, 0, 0, .65)'
 }
 
 const deviceWidth = Dimensions.get('window').width
@@ -391,5 +395,97 @@ export const edgeDark: Theme = {
   fioAddressLogo: fioAddressLogo,
   walletListSlideTutorialImage: walletListSlidingTutorial,
 
-  guiPluginLogoMoonpay: guiPluginLogoMoonpay
+  guiPluginLogoMoonpay: guiPluginLogoMoonpay,
+
+  // UI 4.0:
+  buttonBorderRadiusRemUi4: 2,
+  buttonFontSizeRemUi4: 1,
+
+  buttonPrimaryUi4: {
+    textStyle: {
+      fontFamily: palette.QuicksandMedium,
+      color: palette.black
+    },
+    gradientProps: {
+      colors: [palette.darkMint, palette.edgeMint],
+      end: { x: 1, y: 0 },
+      start: { x: 0, y: 0 }
+    },
+    shadowParams: {
+      shadowColor: palette.white,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+      elevation: 2
+    },
+    containerStyle: {
+      borderColor: palette.edgeMint,
+      borderWidth: 1
+    },
+    spinnerColor: palette.white
+  },
+
+  buttonSecondaryUi4: {
+    textStyle: {
+      fontFamily: palette.QuicksandMedium,
+      color: palette.black
+    },
+    gradientProps: {
+      colors: [palette.darkMint, palette.edgeMint],
+      end: { x: 1, y: 0 },
+      start: { x: 0, y: 0 }
+    },
+    shadowParams: {
+      shadowColor: palette.white,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+      elevation: 2
+    },
+    containerStyle: {
+      borderColor: palette.edgeMint,
+      borderWidth: 1
+    },
+    spinnerColor: palette.white
+  },
+
+  buttonTertiaryUi4: {
+    textStyle: {
+      fontFamily: palette.QuicksandMedium,
+      color: palette.black
+    },
+    gradientProps: {
+      colors: [palette.darkMint, palette.edgeMint],
+      end: { x: 1, y: 0 },
+      start: { x: 0, y: 0 }
+    },
+    shadowParams: {
+      shadowColor: palette.white,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+      elevation: 2
+    },
+    containerStyle: {
+      borderColor: palette.edgeMint,
+      borderWidth: 1
+    },
+    spinnerColor: palette.white
+  },
+
+  cardBackgroundUi4: {
+    colors: [palette.whiteOp10, palette.whiteOp10],
+    end: { x: 1, y: 1 },
+    start: { x: 0, y: 0 }
+  },
+  cardDisabledOverlayUi4: palette.blackOp65,
+  cardRadiusRemUi4: 1,
+
+  iconTappableAltUi4: palette.white,
+
+  negativeTextMutedUi4: palette.gray,
+
+  shadowColorUi4: palette.black,
+
+  touchHighlightUi4: palette.lightGrayOp75
 }

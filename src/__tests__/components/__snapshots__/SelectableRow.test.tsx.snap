@@ -3,45 +3,43 @@
 exports[`SelectableRowComponent should render with loading props 1`] = `
 <WithTheme(ClickableRowComponent)
   onPress={[Function]}
+  paddingRem={
+    [
+      0,
+      0.5,
+    ]
+  }
 >
   <View
     style={
-      [
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "justifyContent": "space-between",
-          "width": "100%",
-        },
-        null,
-      ]
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "justifyContent": "space-between",
+        "width": "100%",
+      }
     }
   >
     <View
       style={
         {
-          "alignItems": "center",
+          "margin": 11,
+        }
+      }
+    />
+    <View
+      style={
+        {
+          "alignItems": "flex-start",
           "flex": 1,
-          "flexDirection": "row",
+          "flexDirection": "column",
+          "margin": 11,
         }
       }
     >
-      <View
-        style={
-          [
-            {
-              "flexDirection": "column",
-              "marginLeft": 28,
-              "width": "100%",
-            },
-            null,
-          ]
-        }
-      >
-        <WithTheme(EdgeTextComponent)>
-          title
-        </WithTheme(EdgeTextComponent)>
-      </View>
+      <WithTheme(EdgeTextComponent)>
+        title
+      </WithTheme(EdgeTextComponent)>
     </View>
     <Icon
       allowFontScaling={false}
@@ -50,7 +48,7 @@ exports[`SelectableRowComponent should render with loading props 1`] = `
       size={34}
       style={
         {
-          "marginRight": -11,
+          "marginHorizontal": 0,
         }
       }
     />

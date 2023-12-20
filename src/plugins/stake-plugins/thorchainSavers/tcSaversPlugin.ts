@@ -1,8 +1,10 @@
 import { add, div, eq, gt, lt, max, mul, sub, toFixed } from 'biggystring'
 import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString } from 'cleaners'
 import { EdgeAccount, EdgeCurrencyWallet, EdgeMemo, EdgeSpendInfo, EdgeTransaction, InsufficientFundsError } from 'edge-core-js'
+import { sprintf } from 'sprintf-js'
 
 import { asMaybeContractLocation } from '../../../components/scenes/EditTokenScene'
+import { lstrings } from '../../../locales/strings'
 import { StringMap } from '../../../types/types'
 import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getHistoricalRate } from '../../../util/exchangeRates'
@@ -172,6 +174,7 @@ const evmInfo: PolicyCurrencyInfo = {
 
 const policyCurrencyInfos: { [pluginId: string]: PolicyCurrencyInfo } = {
   avalanche: evmInfo,
+  binancesmartchain: evmInfo,
   bitcoin: utxoInfo,
   bitcoincash: utxoInfo,
   dogecoin: { ...utxoInfo, minAmount: '100000000' },
@@ -204,6 +207,7 @@ const MAINNET_CODE_TRANSCRIPTION: { [cc: string]: string } = {
   bitcoin: 'BTC',
   bitcoincash: 'BCH',
   binancechain: 'BNB',
+  binancesmartchain: 'BSC',
   litecoin: 'LTC',
   ethereum: 'ETH',
   dogecoin: 'DOGE',
@@ -555,7 +559,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     // 2. Only use UTXOs from the primary address (index 0)
     // 3. Force change to go to the primary address
     otherParams: { outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
-    metadata: { name: 'Thorchain Savers', category: 'Transfer:Staking' }
+    metadata: { name: 'Thorchain Savers', category: `Transfer:Thorchain Savers ${sprintf(lstrings.transaction_details_stake_subcat_1s, currencyCode)}` }
   }
 
   if (isEvm && !isToken) {
@@ -596,7 +600,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
           nativeAmount: nativeAmount
         }
       ],
-      metadata: { name: 'Thorchain Savers', category: 'Expense:Network Fee' },
+      metadata: { name: 'Thorchain Savers', category: `Expense:${lstrings.wc_smartcontract_network_fee}` },
       otherParams: { forceChangeAddress }
     }
 
@@ -633,8 +637,8 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
         }
       ],
       metadata: {
-        name: 'Thorchain',
-        category: 'expense:Token Approval'
+        name: 'Thorchain Savers',
+        category: `Expense:${lstrings.transaction_details_token_approval_subcat}`
       }
     }
     approvalTx = await wallet.makeSpend(spendInfo)
@@ -845,7 +849,11 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
   const spendInfo: EdgeSpendInfo = {
     spendTargets: [{ publicAddress: poolAddress, nativeAmount: sendNativeAmount }],
     otherParams: { outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
-    metadata: { name: 'Thorchain Savers', category: 'Expense:Withdraw Stake Request' },
+    metadata: {
+      name: 'Thorchain Savers',
+      category: `Expense:${sprintf(lstrings.transaction_details_unstake_order_subcat)}`,
+      notes: sprintf(lstrings.transaction_details_unstake_order_notes_1s, currencyCode)
+    },
     memos: [
       {
         type: memoType,
@@ -933,7 +941,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
               nativeAmount: add(networkFee, sendNativeAmount)
             }
           ],
-          metadata: { name: 'Thorchain Savers', category: 'Expense:Network Fee' },
+          metadata: { name: 'Thorchain Savers', category: `Expense:${lstrings.wc_smartcontract_network_fee}` },
           otherParams: { forceChangeAddress }
         })
         const signedTx = await wallet.signTx(tx)

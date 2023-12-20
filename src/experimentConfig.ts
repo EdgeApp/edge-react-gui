@@ -12,7 +12,6 @@ export interface ExperimentConfig {
   swipeLastUsp: 'true' | 'false'
   createAccountType: CreateAccountType
   legacyLanding: 'legacyLanding' | 'uspLanding'
-  createAccountText: 'signUp' | 'getStarted' | 'createAccount'
   signupCaptcha: 'withCaptcha' | 'withoutCaptcha'
 }
 
@@ -20,7 +19,6 @@ const DEFAULT_EXPERIMENT_CONFIG: ExperimentConfig = {
   swipeLastUsp: 'false',
   createAccountType: 'full',
   legacyLanding: 'uspLanding',
-  createAccountText: 'createAccount',
   signupCaptcha: 'withoutCaptcha'
 }
 
@@ -30,8 +28,7 @@ const experimentConfigDisklet = makeReactNativeDisklet()
 const experimentDistribution = {
   swipeLastUsp: [50, 50],
   createAccountType: [100],
-  legacyLanding: [100],
-  createAccountText: [33.33, 33.33, 33.33],
+  legacyLanding: [50, 50],
   signupCaptcha: [50, 50]
 }
 
@@ -79,11 +76,7 @@ const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution
 const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
   swipeLastUsp: asOptional(asValue('true', 'false'), generateExperimentConfigVal('swipeLastUsp', ['true', 'false'])),
   createAccountType: asMaybe(asValue('full'), 'full'),
-  legacyLanding: asMaybe(asValue('uspLanding'), 'uspLanding'),
-  createAccountText: asOptional(
-    asValue('signUp', 'getStarted', 'createAccount'),
-    generateExperimentConfigVal('createAccountText', ['signUp', 'getStarted', 'createAccount'])
-  ),
+  legacyLanding: asMaybe(asValue('uspLanding'), generateExperimentConfigVal('legacyLanding', ['legacyLanding', 'uspLanding'])),
   signupCaptcha: asMaybe(asValue('withoutCaptcha'), 'withoutCaptcha')
 })
 

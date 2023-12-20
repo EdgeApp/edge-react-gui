@@ -56,7 +56,6 @@ export const FiatListModal = (props: Props) => {
             <View style={styles.image} />
           )
         }
-        paddingRem={[0, 1]}
         subTitle={subTitle}
         title={item.value}
         onPress={() => bridge.resolve(item)}

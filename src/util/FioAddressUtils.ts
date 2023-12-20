@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { FIO_STR, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { CcWalletMap } from '../reducers/FioReducer'
-import { BooleanMap, FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, StringMap } from '../types/types'
+import { BooleanMap, EdgeTokenId, FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, MapObject, StringMap } from '../types/types'
 import { getWalletName } from './CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals } from './utils'
 
@@ -645,6 +645,7 @@ export const getRegInfo = async (
   displayDenomination: EdgeDenomination,
   isFallback: boolean = false
 ): Promise<{
+  supportedAssets: EdgeTokenId[]
   supportedCurrencies: { [currencyCode: string]: boolean }
   activationCost: number
   feeValue: number
@@ -665,6 +666,7 @@ export const getRegInfo = async (
     return {
       activationCost,
       feeValue,
+      supportedAssets: [{ pluginId: 'fio' }],
       supportedCurrencies: { [FIO_STR]: true },
       paymentInfo: {
         [FIO_STR]: {
@@ -698,6 +700,7 @@ export const getDomainRegInfo = async (
   selectedWallet: EdgeCurrencyWallet,
   displayDenomination: EdgeDenomination
 ): Promise<{
+  supportedAssets: EdgeTokenId[]
   supportedCurrencies: { [currencyCode: string]: boolean }
   activationCost: number
   feeValue: number
@@ -732,6 +735,7 @@ const buyAddressRequest = async (
   selectedWallet: EdgeCurrencyWallet,
   activationCost: number
 ): Promise<{
+  supportedAssets: EdgeTokenId[]
   supportedCurrencies: { [currencyCode: string]: boolean }
   activationCost: number
   paymentInfo: PaymentInfo
@@ -753,9 +757,14 @@ const buyAddressRequest = async (
         }
       }
 
+      const supportedAssets: EdgeTokenId[] = []
       for (const currencyKey of Object.keys(buyAddressResponse.success.charge.pricing)) {
         const currencyCode = buyAddressResponse.success.charge.pricing[currencyKey].currency
         supportedCurrencies[currencyCode] = true
+        const asset = fioToEdgeMap[currencyKey]
+        if (asset != null) {
+          supportedAssets.push(asset)
+        }
 
         paymentInfo[currencyCode] = {
           amount: buyAddressResponse.success.charge.pricing[currencyKey].amount,
@@ -765,6 +774,7 @@ const buyAddressRequest = async (
 
       return {
         activationCost,
+        supportedAssets,
         supportedCurrencies,
         paymentInfo
       }
@@ -985,4 +995,16 @@ export const convertEdgeToFIOCodes = (pluginId: string, edgeChainCode: string, e
   const fioTokenCode = edgeTokenCode === edgeChainCode ? fioChainCode : edgeTokenCode
 
   return { fioChainCode, fioTokenCode }
+}
+
+export const fioToEdgeMap: MapObject<EdgeTokenId> = {
+  bitcoin: { pluginId: 'bitcoin' },
+  bitcoincash: { pluginId: 'bitcoincash' },
+  dai: { pluginId: 'ethereum', tokenId: '6b175474e89094c44da98b954eedeac495271d0f' },
+  dogecoin: { pluginId: 'dogecoin' },
+  ethereum: { pluginId: 'ethereum' },
+  litecoin: { pluginId: 'litecoin' },
+  polygon: { pluginId: 'polygon' },
+  tether: { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' },
+  usdc: { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' }
 }

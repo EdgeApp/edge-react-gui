@@ -9,11 +9,11 @@ import { removeHexPrefix } from './utils'
  * New user FIO handle signup flow
  */
 export const getFioNewHandleImage = (theme: Theme) => {
-  return `${theme.iconServerBaseUri}/FIO/fioNewHandle.png`
+  return getThemedIconUri(theme, 'FIO/fioNewHandle')
 }
 
 export const getFioCustomizeHandleImage = (theme: Theme) => {
-  return `${theme.iconServerBaseUri}/FIO/fioCustomizeHandle.png`
+  return getThemedIconUri(theme, 'FIO/fioCustomizeHandle')
 }
 
 /**
@@ -67,8 +67,8 @@ export function getPartnerIconUri(partnerIconPath: string) {
 }
 
 /**
- * Light Account Icons
+ * Themed Icons
  */
-export const getLightAccountIconUri = (theme: Theme, iconName: string) => {
-  return `${theme.iconServerBaseUri}/lightAccount/${iconName}.png`
+export const getThemedIconUri = (theme: Theme, path: string) => {
+  return `${theme.iconServerBaseUri}/${path}.png`
 }

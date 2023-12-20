@@ -29,6 +29,7 @@ export const asEnvConfig = asObject({
   // API keys:
   AIRBITZ_API_KEY: asOptional(asString, ''),
   BUGSNAG_API_KEY: asOptional(asString, 'a0000000000000000000000000000000'),
+  COINGECKO_API_KEY: asOptional(asString, 'a0000000000000000000000000000000'),
   IP_API_KEY: asOptional(asString, ''),
 
   // GUI plugin options:
@@ -112,6 +113,7 @@ export const asEnvConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
+  COREUM_INIT: asCorePluginInit(asBoolean),
   ETHEREUM_INIT: asCorePluginInit(asEvmApiKeys),
   ETHEREUM_POW_INIT: asCorePluginInit(asEvmApiKeys),
   EXOLIX_INIT: asCorePluginInit(
@@ -142,6 +144,7 @@ export const asEnvConfig = asObject({
     }).withRest
   ),
   KOVAN_INIT: asCorePluginInit(asEvmApiKeys),
+  GOERLI_INIT: asCorePluginInit(asEvmApiKeys),
   LETSEXCHANGE_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
@@ -153,12 +156,18 @@ export const asEnvConfig = asObject({
     }).withRest
   ),
   OPTIMISM_INIT: asCorePluginInit(asEvmApiKeys),
+  OSMOSIS_INIT: asCorePluginInit(asBoolean),
   PULSECHAIN_INIT: asCorePluginInit(asEvmApiKeys),
 
   POLYGON_INIT: asCorePluginInit(asEvmApiKeys),
   SIDESHIFT_INIT: asCorePluginInit(
     asObject({
       affiliateId: asOptional(asString, '')
+    }).withRest
+  ),
+  SOLANA_INIT: asCorePluginInit(
+    asObject({
+      poktPortalApiKey: asOptional(asString, '')
     }).withRest
   ),
   SPOOKY_SWAP_INIT: asCorePluginInit(
