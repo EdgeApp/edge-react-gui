@@ -1,5 +1,6 @@
 import { ChangeQuote, ChangeQuoteRequest, StakePlugin, StakePluginFactory, StakePolicy, StakePolicyFilter, StakePosition, StakePositionRequest } from '../types'
 import { GlifInfinityPoolAdapterConfig, makeGlifInfinityPoolAdapter } from './policyAdapters/GlifInfinityPoolAdapter'
+import { makeTarotPoolAdapter, TarotPoolAdapterConfig } from './policyAdapters/TarotPoolAdaptor'
 import { StakeAdapterConfig, StakePolicyAdapter } from './policyAdapters/types'
 import { StakePluginInfo, StakePolicyConfig } from './types'
 
@@ -69,10 +70,15 @@ export const makeGenericStakePlugin =
 function isPolicyInfoForGlifInfinityPool(policyInfo: StakePolicyConfig<StakeAdapterConfig>): policyInfo is StakePolicyConfig<GlifInfinityPoolAdapterConfig> {
   return policyInfo.adapterConfig.type === 'glif-infinity-pool'
 }
+function isPolicyInfoForTarotPool(policyInfo: StakePolicyConfig<StakeAdapterConfig>): policyInfo is StakePolicyConfig<TarotPoolAdapterConfig> {
+  return policyInfo.adapterConfig.type === 'tarot-velodrome-pool'
+}
 
 const makePolicyAdapter = (policyInfo: StakePolicyConfig<StakeAdapterConfig>): StakePolicyAdapter => {
   if (isPolicyInfoForGlifInfinityPool(policyInfo)) {
     return makeGlifInfinityPoolAdapter(policyInfo)
+  } else if (isPolicyInfoForTarotPool(policyInfo)) {
+    return makeTarotPoolAdapter(policyInfo)
   } else {
     throw new Error('Unknown policyInfo')
   }

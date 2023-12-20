@@ -1299,6 +1299,7 @@ const strings = {
   stake_change_unstake_success: 'Funds successfully unstaked',
   stake_change_claim_success: 'Claim transactions sent successfully',
   stake_disabled_slider: 'Enter Amount',
+  stake_warning_multiple_transactions: 'Staking requires multiple transactions to confirm and may take 20 seconds or more to complete',
   stake_warning_stake:
     'Staking funds will block you from claiming rewards for 16 hours and withdrawing your staked funds for 36 hours.\n\nEvery interaction (stake, unstake, claim rewards) will reset both timers.',
   stake_warning_claim:
