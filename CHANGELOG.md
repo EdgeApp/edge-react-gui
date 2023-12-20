@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: `minerTip` to `feeRateUsed` processing
 - fixed: Remove `minWidth` style from stake option card
 - fixed: Send scene no-longer accesses clipboard immediately
 - changed: Update various scenes with UI4 components
