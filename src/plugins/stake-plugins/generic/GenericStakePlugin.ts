@@ -82,7 +82,12 @@ const makeStakePolicy = async (policyConfig: StakePolicyConfig<StakeAdapterConfi
     isStablePool,
     stakeProviderInfo,
     stakeAssets,
-    rewardAssets
+    rewardAssets,
+    deprecated = false,
+    claimWarning = null,
+    stakeWarning = null,
+    unstakeWarning = null,
+    mustMaxUnstake = false
   } = policyConfig
   const stakePolicyId = policyConfig.stakePolicyId
   const defaultYieldType = isStablePool != null ? (isStablePool ? 'stable' : 'variable') : undefined
@@ -98,6 +103,11 @@ const makeStakePolicy = async (policyConfig: StakePolicyConfig<StakeAdapterConfi
     hideUnstakeAndClaimAction,
     yieldType,
     stakeAssets,
-    rewardAssets
+    rewardAssets,
+    mustMaxUnstake,
+    deprecated,
+    claimWarning,
+    stakeWarning,
+    unstakeWarning
   }
 }

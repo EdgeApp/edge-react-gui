@@ -23,6 +23,11 @@ export interface StakePolicyConfig<AdapterConfig> {
   hideUnstakeAction?: boolean
   hideUnstakeAndClaimAction?: boolean
   isStablePool?: boolean
+  mustMaxUnstake?: boolean
+  deprecated?: boolean
+  claimWarning?: string | null
+  stakeWarning?: string | null
+  unstakeWarning?: string | null
 
   // Assets:
   stakeAssets: AssetId[]
