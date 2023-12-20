@@ -53,6 +53,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   divider: {
     height: theme.thinLineWidth,
     marginHorizontal: theme.rem(0.5),
+    marginVertical: theme.rem(0.5),
     borderBottomWidth: theme.thinLineWidth,
     borderBottomColor: theme.lineDivider
   }

@@ -158,6 +158,7 @@ exports[`TransactionListRow should render with loading props 1`] = `
           {
             "alignItems": "center",
             "backgroundColor": "rgba(255, 255, 255, 0)",
+            "flex": 1,
             "flexDirection": "row",
             "paddingHorizontal": 11,
             "paddingVertical": 6,
@@ -283,14 +284,6 @@ exports[`TransactionListRow should render with loading props 1`] = `
             </Text>
           </View>
         </View>
-        <View
-          style={
-            {
-              "alignItems": "center",
-              "justifyContent": "center",
-            }
-          }
-        />
       </View>
     </View>
   </View>
