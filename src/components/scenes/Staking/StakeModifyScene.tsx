@@ -391,28 +391,25 @@ const StakeModifySceneComponent = (props: Props) => {
   }
 
   const renderWarning = () => {
-    // Warnings are only shown for single asset staking
-    let warningMessage = null
-    if (existingAllocations.staked.length === 1 && changeQuote !== null) {
-      const modStakedAmount =
-        changeQuoteAllocations.find(allocation => allocation.allocationType === 'stake' && gt(allocation.nativeAmount, '0'))?.nativeAmount || '0'
-      const stakedAmount = existingAllocations.staked[0]?.nativeAmount ?? '0'
+    let warningMessage: string | null = null
 
-      const isRemainingStakedAmount = gt(stakedAmount, modStakedAmount)
-
-      if (modification === 'stake') {
-        if (stakeWarning === null) return null
-        warningMessage = stakeWarning ?? lstrings.stake_warning_stake
-      }
-      if (modification === 'claim') {
-        if (claimWarning === null) return null
-        warningMessage = claimWarning ?? lstrings.stake_warning_claim
-      }
-      if (modification === 'unstake') {
-        if (unstakeWarning === null) return null
-        warningMessage = unstakeWarning ?? isRemainingStakedAmount ? lstrings.stake_warning_unstake : null
-      }
+    switch (modification) {
+      case 'stake':
+        if (stakeWarning == null) return null
+        warningMessage = stakeWarning
+        break
+      case 'claim':
+        if (claimWarning == null) return null
+        warningMessage = claimWarning
+        break
+      case 'unstake':
+        if (unstakeWarning == null) return null
+        warningMessage = unstakeWarning
+        break
+      default:
+        return null
     }
+
     return warningMessage == null ? null : (
       <Alert marginRem={[0, 1, 1, 1]} title={lstrings.wc_smartcontract_warning_title} message={warningMessage} numberOfLines={0} type="warning" />
     )
