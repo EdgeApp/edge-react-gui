@@ -7,6 +7,7 @@ import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-sa
 
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { maybeComponent } from '../hoc/maybeComponent'
 import { NotificationView } from '../notification/NotificationView'
 import { useTheme } from '../services/ThemeContext'
 import { KeyboardTracker } from './KeyboardTracker'
@@ -78,40 +79,36 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const frame = useSafeAreaFrame()
   const insets = useSafeAreaInsets()
 
-  const renderScene = (gap: EdgeInsets, keyboardAnimation: Animated.Value | null, keyboardHeight: number): JSX.Element => {
-    // Render the scene container:
+  const renderScene = (gap: EdgeInsets, keyboardAnimation: Animated.Value | undefined, keyboardHeight: number): JSX.Element => {
     // If function children, the caller handles the insets and overscroll
+    const hasKeyboardAnimation = keyboardAnimation != null
     const isFuncChildren = typeof children === 'function'
 
-    const finalChildren = isFuncChildren ? children({ ...gap, bottom: keyboardHeight }, notificationHeight) : children
-    const scene =
-      keyboardAnimation != null ? (
-        <Animated.View style={[styles.scene, { ...gap, maxHeight: keyboardAnimation, padding }]}>{finalChildren}</Animated.View>
-      ) : scroll ? (
-        <ScrollView
-          style={{ position: 'absolute', padding, ...gap }}
-          keyboardShouldPersistTaps={keyboardShouldPersistTaps}
-          contentContainerStyle={{ paddingBottom: notificationHeight }}
-        >
-          {finalChildren}
-        </ScrollView>
-      ) : (
-        <View style={[styles.scene, { ...gap, padding, paddingBottom: isFuncChildren ? undefined : notificationHeight }]}>{finalChildren}</View>
-      )
-
-    // Render the background, if any:
-    if (background === 'none')
-      return (
-        <>
-          {scene}
-          {hasNotifications ? <NotificationView navigation={navigation} /> : null}
-        </>
-      )
     return (
-      <LinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart} style={styles.gradient}>
-        {scene}
-        {hasNotifications ? <NotificationView navigation={navigation} /> : null}
-      </LinearGradient>
+      <MaybeLinearGradient
+        when={background === 'theme'}
+        colors={theme.backgroundGradientColors}
+        end={theme.backgroundGradientEnd}
+        start={theme.backgroundGradientStart}
+        style={styles.gradient}
+      >
+        <MaybeAnimatedView when={hasKeyboardAnimation} style={[styles.scene, { ...gap, maxHeight: keyboardAnimation, padding }]}>
+          <MaybeScrollView
+            when={scroll && !hasKeyboardAnimation}
+            style={{ position: 'absolute', padding, ...gap }}
+            keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+            contentContainerStyle={{ paddingBottom: notificationHeight }}
+          >
+            <MaybeView
+              when={!scroll && !hasKeyboardAnimation}
+              style={[styles.scene, { ...gap, padding, paddingBottom: isFuncChildren ? undefined : notificationHeight }]}
+            >
+              {isFuncChildren ? children({ ...gap, bottom: keyboardHeight }, notificationHeight) : children}
+              {hasNotifications ? <NotificationView navigation={navigation} /> : null}
+            </MaybeView>
+          </MaybeScrollView>
+        </MaybeAnimatedView>
+      </MaybeLinearGradient>
     )
   }
 
@@ -128,7 +125,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
       {(keyboardAnimation, keyboardLayout) => renderScene(gap, keyboardAnimation, downValue - keyboardLayout)}
     </KeyboardTracker>
   ) : (
-    renderScene(gap, null, 0)
+    renderScene(gap, undefined, 0)
   )
 }
 
@@ -152,3 +149,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start'
   }
 })
+
+const MaybeAnimatedView = maybeComponent(Animated.View)
+const MaybeLinearGradient = maybeComponent(LinearGradient)
+const MaybeScrollView = maybeComponent(ScrollView)
+const MaybeView = maybeComponent(View)
