@@ -20,8 +20,7 @@ export interface MapObject<T> {
 
 export interface GuiCurrencyInfo {
   walletId: string
-  pluginId?: string
-  tokenId?: string
+  tokenId: string | undefined
   displayCurrencyCode: string
   exchangeCurrencyCode: string
   displayDenomination: EdgeDenomination
@@ -111,6 +110,7 @@ export interface CurrencyConverter {
 
 export const emptyCurrencyInfo: GuiCurrencyInfo = {
   walletId: '',
+  tokenId: undefined,
   displayCurrencyCode: '',
   exchangeCurrencyCode: '',
   displayDenomination: {

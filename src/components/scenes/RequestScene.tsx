@@ -560,7 +560,6 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
 
     const primaryCurrencyInfo: GuiCurrencyInfo = {
       walletId: walletId,
-      pluginId,
       tokenId,
       displayCurrencyCode: currencyCode,
       displayDenomination: primaryDisplayDenomination,

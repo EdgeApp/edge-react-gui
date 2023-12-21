@@ -11,6 +11,7 @@ import { getExchangeRate, getSelectedCurrencyWallet } from '../../../selectors/W
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../../types/types'
+import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import {
   addToFioAddressCache,
   checkPubAddress,
@@ -354,6 +355,7 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
 
     const primaryCurrencyInfo: GuiCurrencyInfo = {
       walletId: state.ui.wallets.selectedWalletId,
+      tokenId: getTokenId(account, selectedWallet.currencyInfo.pluginId, currencyCode),
       displayCurrencyCode: currencyCode,
       displayDenomination: primaryDisplayDenomination,
       exchangeCurrencyCode: primaryExchangeCurrencyCode,
