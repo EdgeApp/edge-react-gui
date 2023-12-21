@@ -596,6 +596,7 @@
   "transaction_details_advance_details_satpervbyte": "Sats / VByte",
   "transaction_details_advance_details_gasprice": "Gaspreis Gwei",
   "transaction_details_advance_details_gaslimit": "Gaslimit",
+  "transaction_details_advance_details_minertip": "Miner Tip Gwei",
   "transaction_details_accelerate_transaction_header": "Transaktion beschleunigen",
   "transaction_details_accelerate_transaction_instructional": "Dies wird Ihre Transaktion mit der doppelten Gebühr erneut senden, um sie für die Bestätigung des Netzwerks zu priorisieren. Bitte überprüfen Sie den neuen Gebührenbetrag, bevor Sie ihn bestätigen.",
   "confirm_finish": "Bestätigen & Beenden",
