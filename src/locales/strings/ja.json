@@ -596,6 +596,7 @@
   "transaction_details_advance_details_satpervbyte": "Sats / VByte",
   "transaction_details_advance_details_gasprice": "Gweiでのガス価格",
   "transaction_details_advance_details_gaslimit": "ガスリミット",
+  "transaction_details_advance_details_minertip": "Miner Tip Gwei",
   "transaction_details_accelerate_transaction_header": "トランザクションを加速",
   "transaction_details_accelerate_transaction_instructional": "ネットワーク承認での優先のため手数料を倍増させてトランザクションを再送します。決定する前に新しい手数料金額を確認してください。",
   "confirm_finish": "決定＆終了",
