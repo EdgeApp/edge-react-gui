@@ -1,11 +1,12 @@
 import '@ethersproject/shims'
 
-import { eq } from 'biggystring'
+import { add, ceil, div, eq, mul } from 'biggystring'
 import { EdgeCurrencyWallet, InsufficientFundsError } from 'edge-core-js'
 import { BigNumber, ethers } from 'ethers'
 
 import {
   Erc20__factory,
+  OptimismFeeOracle__factory,
   TarotBorrowable__factory,
   TarotCollateral__factory,
   TarotRouter__factory,
@@ -84,7 +85,66 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
   } = adapterConfig
   const provider = new ethers.providers.FallbackProvider(rpcProviderUrls.map(url => new ethers.providers.JsonRpcProvider(url)))
 
+  // L1 fee utils ported from edge-currency-accountbased:
+
+  let l1RollupParams = {
+    gasPriceL1Wei: '1000000000',
+    gasPricel1BaseFeeMethod: '0x519b4bd3',
+    maxGasPriceL1Multiplier: '1.25',
+    fixedOverhead: '2100',
+    dynamicOverhead: '1000000',
+    oracleContractAddress: '0x420000000000000000000000000000000000000F',
+    dynamicOverheadMethod: '0xf45e65d800000000000000000000000000000000000000000000000000000000',
+    proxyContract: '0xc0d3C0d3C0d3c0D3C0D3C0d3C0d3C0D3C0D3000f'
+  }
+  async function updateL1RollupParams(): Promise<void> {
+    try {
+      const oracleContract = OptimismFeeOracle__factory.connect(l1RollupParams.proxyContract, provider)
+      const scalar = await oracleContract.scalar()
+      const feeRes = await oracleContract.l1BaseFee()
+      const bigNumberSafeGasPriceMultiplier = mul(l1RollupParams.maxGasPriceL1Multiplier, '100')
+      const bigNumberSafeGasPriceDivisor = '100'
+
+      l1RollupParams = {
+        ...l1RollupParams,
+        dynamicOverhead: scalar.toString(),
+        gasPriceL1Wei: feeRes.mul(bigNumberSafeGasPriceMultiplier).div(bigNumberSafeGasPriceDivisor).toString()
+      }
+    } catch (e: any) {
+      console.warn('makeTarotPoolAdapter Failed to update L1RollupParams', e)
+    }
+  }
+  const calcL1RollupFees = (populatedTx: ethers.PopulatedTransaction): string => {
+    const txCopy = { ...populatedTx }
+    delete txCopy.customData
+
+    const unsignedRawTxData = ethers.utils.serializeTransaction(txCopy)
+    const unsignedRawTxBytesArray = unsignedRawTxData.match(/(.{1,2})/g)
+    if (unsignedRawTxBytesArray == null) {
+      throw new Error('Invalid rawTx string')
+    }
+
+    let rawTxCost = 0
+    for (let i = 0; i < unsignedRawTxBytesArray.length; i++) {
+      if (unsignedRawTxBytesArray[i] === '00') {
+        rawTxCost += 4 // cost for zero byte
+      } else {
+        rawTxCost += 16 // cost for non-zero byte
+      }
+    }
+
+    const { dynamicOverhead, fixedOverhead, gasPriceL1Wei } = l1RollupParams
+    const MAX_SIGNATURE_COST = '1040' // (32 + 32 + 1) * 16 max cost for adding r, s, v signatures to raw transaction
+
+    const gasUsed = add(add(rawTxCost.toString(), fixedOverhead), MAX_SIGNATURE_COST)
+    const scalar = div(dynamicOverhead, '1000000', 18)
+    const total = ceil(mul(mul(gasPriceL1Wei, gasUsed), scalar), 0)
+
+    return total
+  }
+
   async function prepareChangeQuote(walletSigner: EdgeWalletSigner, txs: ChainableTransaction[], allocations: QuoteAllocation[]): Promise<ChangeQuote> {
+    await updateL1RollupParams()
     let networkFee = BigNumber.from(0)
 
     for (const makeTx of txs) {
@@ -96,6 +156,7 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
       }
       const gasLimit = populatedTx.gasLimit
       const maxFeePerGas = BigNumber.from(populatedTx.gasPrice ?? 0)
+      networkFee = networkFee.add(calcL1RollupFees(populatedTx))
       networkFee = networkFee.add(gasLimit.mul(maxFeePerGas))
     }
 
