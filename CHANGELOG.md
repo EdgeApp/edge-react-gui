@@ -3,6 +3,7 @@
 ## 3.23.1
 
 - fixed: Paybis sell from Tron USDT
+- fixed: Fix accelerate for EIP-1559 transactions
 
 ## 3.23.0
 
