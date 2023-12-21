@@ -67,6 +67,8 @@ export const RowUi4 = (props: Props) => {
     }
   })
 
+  const isTouchable = type !== 'default' && type !== 'loading'
+
   const content = (
     <View style={styles.container}>
       {icon == null ? null : <View style={styles.iconContainer}>{icon}</View>}
@@ -86,13 +88,18 @@ export const RowUi4 = (props: Props) => {
           children
         )}
       </View>
-      <View style={styles.rightButtonContainer}>
-        {type === 'touchable' && <FontAwesome5 name="chevron-right" style={styles.tappableIcon} size={theme.rem(1)} />}
-        {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.tappableIcon} size={theme.rem(1)} />}
-        {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.tappableIcon} size={theme.rem(1)} />}
-        {type === 'delete' && <FontAwesomeIcon name="times" style={styles.tappableIcon} size={theme.rem(1)} />}
-        {type === 'questionable' && <SimpleLineIcons name="question" style={styles.tappableIcon} size={theme.rem(1)} />}
-      </View>
+      {isTouchable ? (
+        <>
+          <View style={styles.tappableIconMargin} />
+          <TouchableOpacity style={styles.tappableIconContainer} accessible={false} onPress={handlePress} onLongPress={handleLongPress}>
+            {type === 'touchable' ? <FontAwesome5 name="chevron-right" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
+            {type === 'editable' ? <FontAwesomeIcon name="edit" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
+            {type === 'copy' ? <FontAwesomeIcon name="copy" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
+            {type === 'delete' ? <FontAwesomeIcon name="times" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
+            {type === 'questionable' ? <SimpleLineIcons name="question" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
+          </TouchableOpacity>
+        </>
+      ) : null}
     </View>
   )
 
@@ -103,10 +110,6 @@ export const RowUi4 = (props: Props) => {
         <ActivityIndicator style={styles.loader} color={theme.primaryText} size="large" />
       </View>
     </View>
-  ) : type === 'touchable' ? (
-    <TouchableOpacity accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={handlePress == null && handleLongPress == null}>
-      {content}
-    </TouchableOpacity>
   ) : (
     content
   )
@@ -120,22 +123,40 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingHorizontal: theme.rem(0.5),
     paddingVertical: theme.rem(0.25),
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    flex: 1
   },
   content: {
     flex: 1
   },
   iconContainer: {
-    marginRight: theme.rem(0.5)
-  },
-  rightButtonContainer: {
-    justifyContent: 'center',
-    alignItems: 'center'
+    marginRight: theme.rem(0.25)
   },
   tappableIcon: {
     color: theme.iconTappable,
     marginLeft: theme.rem(0.5),
     textAlign: 'center'
+  },
+  tappableIconContainer: {
+    // Positioned absolutely with constant width to increase tappable area
+    // overlapping the content, improving ease of tappability.
+    position: 'absolute',
+    right: 0,
+    width: theme.rem(3),
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingRight: theme.rem(0.5)
+  },
+  tappableIconMargin: {
+    // Extra invisible space to align the content when the right tappable icon
+    // is visible, since the right tappable icon + TouchableOpaicty is
+    // positioned absolutely.
+    // Using this instead of negative margins on tappableIconContainer to make
+    // it more clear what the spacing is without taking into account the
+    // children styling of tappableIconContainer.
+    width: theme.rem(1.5),
+    height: '100%'
   },
   textHeader: {
     color: theme.secondaryText,
