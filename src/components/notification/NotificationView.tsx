@@ -25,7 +25,7 @@ const NotificationViewComponent = (props: Props) => {
   const detectedTokensRedux = useSelector(state => state.core.enabledDetectedTokens)
   const wallets = useWatch(account, 'currencyWallets')
 
-  const isBackupWarningShown = account.username == null
+  const isBackupWarningShown = account.id != null && account.username == null
 
   const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
 

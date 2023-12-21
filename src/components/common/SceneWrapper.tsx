@@ -34,6 +34,9 @@ interface SceneWrapperProps {
   // True if this scene has a header (with back button & such):
   hasHeader?: boolean
 
+  // This enables notifications in the scene
+  hasNotifications?: boolean
+
   // True if this scene has a bottom tab bar:
   hasTabs?: boolean
 
@@ -53,6 +56,7 @@ export const NotificationSceneWrapper = (props: SceneWrapperProps): JSX.Element 
     background = 'theme',
     children,
     hasHeader = true,
+    hasNotifications = true,
     hasTabs = false,
     keyboardShouldPersistTaps,
     padding = 0,
@@ -96,13 +100,13 @@ export const NotificationSceneWrapper = (props: SceneWrapperProps): JSX.Element 
       return (
         <>
           {scene}
-          <NotificationView navigation={navigation} />
+          {hasNotifications ? <NotificationView navigation={navigation} /> : null}
         </>
       )
     return (
       <LinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart} style={styles.gradient}>
         {scene}
-        <NotificationView navigation={navigation} />
+        {hasNotifications ? <NotificationView navigation={navigation} /> : null}
       </LinearGradient>
     )
   }
@@ -139,12 +143,20 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     background = 'theme',
     children,
     hasHeader = true,
+    hasNotifications = false,
     hasTabs = false,
     keyboardShouldPersistTaps,
     padding = 0,
     scroll = false
   } = props
+
+  const accountId = useSelector(state => state.core.account.id)
+  const activeUsername = useSelector(state => state.core.account.username)
+  const isLightAccount = accountId != null && activeUsername == null
+
+  const navigation = useNavigation<NavigationBase>()
   const theme = useTheme()
+  const notificationHeight = isLightAccount ? theme.rem(4) : 0
 
   // Subscribe to the window size:
   const frame = useSafeAreaFrame()
@@ -152,23 +164,37 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
 
   const renderScene = (gap: EdgeInsets, keyboardAnimation: Animated.Value | null, keyboardHeight: number): JSX.Element => {
     // Render the scene container:
-    const finalChildren = typeof children === 'function' ? children({ ...gap, bottom: keyboardHeight }, 0) : children
+    // If function children, the caller handles the insets and overscroll
+    const isFuncChildren = typeof children === 'function'
+
+    const finalChildren = isFuncChildren ? children({ ...gap, bottom: keyboardHeight }, notificationHeight) : children
     const scene =
       keyboardAnimation != null ? (
         <Animated.View style={[styles.scene, { ...gap, maxHeight: keyboardAnimation, padding }]}>{finalChildren}</Animated.View>
       ) : scroll ? (
-        <ScrollView style={{ position: 'absolute', ...gap }} keyboardShouldPersistTaps={keyboardShouldPersistTaps} contentContainerStyle={{ padding }}>
+        <ScrollView
+          style={{ position: 'absolute', ...gap }}
+          keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+          contentContainerStyle={{ paddingBottom: notificationHeight }}
+        >
           {finalChildren}
         </ScrollView>
       ) : (
-        <View style={[styles.scene, { ...gap, padding }]}>{finalChildren}</View>
+        <View style={[styles.scene, { ...gap, padding, paddingBottom: isFuncChildren ? undefined : notificationHeight }]}>{finalChildren}</View>
       )
 
     // Render the background, if any:
-    if (background === 'none') return scene
+    if (background === 'none')
+      return (
+        <>
+          {scene}
+          {hasNotifications ? <NotificationView navigation={navigation} /> : null}
+        </>
+      )
     return (
       <LinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart} style={styles.gradient}>
         {scene}
+        {hasNotifications ? <NotificationView navigation={navigation} /> : null}
       </LinearGradient>
     )
   }

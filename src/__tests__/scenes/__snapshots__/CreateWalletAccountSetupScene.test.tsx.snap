@@ -34,7 +34,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
   <RCTScrollView
     contentContainerStyle={
       {
-        "padding": 0,
+        "paddingBottom": 0,
       }
     }
     style={
