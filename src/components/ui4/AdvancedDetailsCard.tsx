@@ -10,6 +10,7 @@ import { RowUi4 } from './RowUi4'
 const localizedFeeText = {
   satPerVByte: lstrings.transaction_details_advance_details_satpervbyte,
   gasPrice: lstrings.transaction_details_advance_details_gasprice,
+  minerTip: lstrings.transaction_details_advance_details_minertip,
   gasLimit: lstrings.transaction_details_advance_details_gaslimit
 }
 
