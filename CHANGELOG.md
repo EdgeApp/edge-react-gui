@@ -1,13 +1,11 @@
 # edge-react-gui
 
-## Unreleased
+## 3.23.1
 
-- fixed: Remove `minWidth` style from stake option card
+- fixed: Paybis sell from Tron USDT
 
 ## 3.23.0
 
-- added: Add Coreum (CORE)
-- added: Add Osmosis (OSMO)
 - added: Automatically enable tokens with balances
 - added: Add Pokt RPCs as option for Fantom
 - added: GLIF Infinity Pool staking plugin for Filecoin FEVM currency
