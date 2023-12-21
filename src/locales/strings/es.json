@@ -596,6 +596,7 @@
   "transaction_details_advance_details_satpervbyte": "Sats / VByte",
   "transaction_details_advance_details_gasprice": "Precio gas Gwei",
   "transaction_details_advance_details_gaslimit": "Límite de gas",
+  "transaction_details_advance_details_minertip": "Miner Tip Gwei",
   "transaction_details_accelerate_transaction_header": "Acelerar transacción",
   "transaction_details_accelerate_transaction_instructional": "Esto reenviará tu transacción con su comisión doblada para ayudar a priorizar la confirmación de la red. Por favor revise la nueva cantidad de comisión antes de confirmar.",
   "confirm_finish": "Confirmar y terminar",
