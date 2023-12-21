@@ -22,7 +22,7 @@ import { GuiCurrencyInfo } from '../../types/types'
 import { getTokenId, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
-import { convertNativeToDenomination, getDenomFromIsoCode, truncateDecimals, zeroString } from '../../util/utils'
+import { convertNativeToDenomination, truncateDecimals, zeroString } from '../../util/utils'
 import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { AddressModal } from '../modals/AddressModal'
@@ -52,7 +52,6 @@ interface StateProps {
   isConnected: boolean
   showBalance: boolean
   primaryCurrencyInfo?: GuiCurrencyInfo
-  secondaryCurrencyInfo?: GuiCurrencyInfo
 }
 
 interface DispatchProps {
@@ -289,10 +288,10 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { currencyCode, exchangeSecondaryToPrimaryRatio, wallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
+    const { currencyCode, exchangeSecondaryToPrimaryRatio, wallet, primaryCurrencyInfo, theme } = this.props
     const styles = getStyles(theme)
 
-    if (currencyCode == null || primaryCurrencyInfo == null || secondaryCurrencyInfo == null || exchangeSecondaryToPrimaryRatio == null || wallet == null) {
+    if (currencyCode == null || primaryCurrencyInfo == null || exchangeSecondaryToPrimaryRatio == null || wallet == null) {
       return <ActivityIndicator color={theme.primaryText} style={styles.loader} size="large" />
     }
 
@@ -556,10 +555,7 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     const { pluginId } = wallet.currencyInfo
     const primaryDisplayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
     const primaryExchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
-    const secondaryExchangeDenomination = getDenomFromIsoCode(wallet.fiatCurrencyCode.replace('iso:', ''))
-    const secondaryDisplayDenomination = secondaryExchangeDenomination
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
-    const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
     const tokenId = getTokenId(state.core.account, pluginId, currencyCode)
 
     const primaryCurrencyInfo: GuiCurrencyInfo = {
@@ -571,13 +567,6 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
       exchangeCurrencyCode: primaryExchangeCurrencyCode,
       exchangeDenomination: primaryExchangeDenomination
     }
-    const secondaryCurrencyInfo: GuiCurrencyInfo = {
-      walletId: walletId,
-      displayCurrencyCode: wallet.fiatCurrencyCode.replace('iso:', ''),
-      displayDenomination: secondaryDisplayDenomination,
-      exchangeCurrencyCode: secondaryExchangeCurrencyCode,
-      exchangeDenomination: secondaryExchangeDenomination
-    }
     const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
     const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
     const fioAddressesExist = !!state.ui.fioAddress.fioAddresses.length
@@ -588,7 +577,6 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
       wallet,
       exchangeSecondaryToPrimaryRatio,
       primaryCurrencyInfo,
-      secondaryCurrencyInfo,
       fioAddressesExist,
       isConnected: state.network.isConnected,
       showBalance: state.ui.settings.isAccountBalanceVisible

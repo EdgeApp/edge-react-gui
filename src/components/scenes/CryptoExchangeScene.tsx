@@ -11,13 +11,12 @@ import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
-import { getWalletFiat, getWalletName } from '../../util/CurrencyWalletHelpers'
-import { DECIMAL_PRECISION, getDenomFromIsoCode, zeroString } from '../../util/utils'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { DECIMAL_PRECISION, zeroString } from '../../util/utils'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
@@ -39,14 +38,10 @@ interface StateProps {
   // The following props are used to populate the CryptoExchangeFlipInputs
   fromWalletId: string
   fromWalletBalances: { [code: string]: string }
-  fromFiatCurrencyCode: string
-  fromIsoFiatCurrencyCode: string
   fromWalletName: string
   fromExchangeAmount: string
   fromWalletPrimaryInfo: GuiCurrencyInfo
   toWalletId: string
-  toFiatCurrencyCode: string
-  toIsoFiatCurrencyCode: string
   toWalletName: string
   toExchangeAmount: string
   toWalletPrimaryInfo: GuiCurrencyInfo
@@ -84,12 +79,9 @@ interface State {
 const defaultFromWalletInfo = {
   fromCurrencyCode: '',
   fromWalletBalances: {},
-  fromFiatCurrencyCode: '',
-  fromIsoFiatCurrencyCode: '',
   fromWalletName: '',
   fromWalletPrimaryInfo: emptyCurrencyInfo,
   fromExchangeAmount: '',
-  fromFiatToCrypto: '1',
   fromWalletId: '',
   pluginId: '',
   hasMaxSpend: false
@@ -97,13 +89,10 @@ const defaultFromWalletInfo = {
 
 const defaultToWalletInfo = {
   toCurrencyCode: '',
-  toFiatCurrencyCode: '',
-  toIsoFiatCurrencyCode: '',
   toWalletName: '',
   toWalletPrimaryInfo: emptyCurrencyInfo,
   toExchangeAmount: '',
-  toWalletId: '',
-  toFiatToCrypto: '1'
+  toWalletId: ''
 }
 
 const defaultState = {
@@ -301,34 +290,9 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { fromFiatCurrencyCode, fromIsoFiatCurrencyCode, fromWalletName, toFiatCurrencyCode, toIsoFiatCurrencyCode, toWalletName, theme, overscroll } =
-      this.props
+    const { fromWalletName, toWalletName, theme, overscroll } = this.props
     const styles = getStyles(theme)
-    let fromSecondaryInfo: GuiCurrencyInfo
-    if (fromFiatCurrencyCode !== '') {
-      fromSecondaryInfo = {
-        walletId: defaultFromWalletInfo.fromWalletId,
-        displayCurrencyCode: fromFiatCurrencyCode,
-        exchangeCurrencyCode: fromIsoFiatCurrencyCode,
-        displayDenomination: getDenomFromIsoCode(fromFiatCurrencyCode),
-        exchangeDenomination: getDenomFromIsoCode(fromFiatCurrencyCode)
-      }
-    } else {
-      fromSecondaryInfo = emptyCurrencyInfo
-    }
 
-    let toSecondaryInfo: GuiCurrencyInfo
-    if (toFiatCurrencyCode !== '') {
-      toSecondaryInfo = {
-        walletId: defaultToWalletInfo.toWalletId,
-        displayCurrencyCode: toFiatCurrencyCode,
-        exchangeCurrencyCode: toIsoFiatCurrencyCode,
-        displayDenomination: getDenomFromIsoCode(toFiatCurrencyCode),
-        exchangeDenomination: getDenomFromIsoCode(toFiatCurrencyCode)
-      }
-    } else {
-      toSecondaryInfo = emptyCurrencyInfo
-    }
     const isFromFocused = this.state.whichWalletFocus === 'from'
     const isToFocused = this.state.whichWalletFocus === 'to'
     const fromHeaderText = sprintf(lstrings.exchange_from_wallet, fromWalletName)
@@ -348,7 +312,6 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             buttonText={lstrings.select_src_wallet}
             headerText={fromHeaderText}
             primaryCurrencyInfo={this.props.fromWalletPrimaryInfo}
-            secondaryCurrencyInfo={fromSecondaryInfo}
             overridePrimaryNativeAmount={this.state.fromAmountNative}
             launchWalletSelector={this.launchFromWalletSelector}
             onCryptoExchangeAmountChanged={this.fromAmountChanged}
@@ -364,7 +327,6 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             buttonText={lstrings.select_recv_wallet}
             headerText={toHeaderText}
             primaryCurrencyInfo={this.props.toWalletPrimaryInfo}
-            secondaryCurrencyInfo={toSecondaryInfo}
             overridePrimaryNativeAmount={this.state.toAmountNative}
             launchWalletSelector={this.launchToWalletSelector}
             onCryptoExchangeAmountChanged={this.toAmountChanged}
@@ -396,7 +358,6 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   const theme = useTheme()
 
   const account = useSelector(state => state.core.account)
-  const exchangeRates = useSelector(state => state.exchangeRates)
   const currencyWallets = useSelector(state => state.core.account.currencyWallets)
   const cryptoExchange = useSelector(state => state.cryptoExchange)
   const exchangeInfo = useSelector(state => state.ui.exchangeInfo)
@@ -418,7 +379,6 @@ export const CryptoExchangeScene = (props: OwnProps) => {
     } = fromWalletPrimaryInfo
 
     const fromWalletName = getWalletName(currencyWallets[fromWalletId])
-    const { fiatCurrencyCode: fromFiatCurrencyCode, isoFiatCurrencyCode: fromIsoFiatCurrencyCode } = getWalletFiat(currencyWallets[fromWalletId])
     const {
       currencyInfo: { pluginId },
       balances: fromWalletBalances
@@ -428,12 +388,9 @@ export const CryptoExchangeScene = (props: OwnProps) => {
       fromWalletId,
       fromWalletName,
       fromWalletBalances,
-      fromFiatCurrencyCode,
-      fromIsoFiatCurrencyCode,
       fromCurrencyCode: exchangeCurrencyCode,
       fromWalletPrimaryInfo,
       fromExchangeAmount: div(fromNativeAmount, multiplier, DECIMAL_PRECISION),
-      fromFiatToCrypto: convertCurrencyFromExchangeRates(exchangeRates, exchangeCurrencyCode, fromIsoFiatCurrencyCode, '1'),
       pluginId,
       hasMaxSpend: getSpecialCurrencyInfo(pluginId).noMaxSpend !== true
     })
@@ -447,17 +404,13 @@ export const CryptoExchangeScene = (props: OwnProps) => {
       exchangeCurrencyCode
     } = toWalletPrimaryInfo
     const toWalletName = getWalletName(currencyWallets[toWalletId])
-    const { fiatCurrencyCode: toFiatCurrencyCode, isoFiatCurrencyCode: toIsoFiatCurrencyCode } = getWalletFiat(currencyWallets[toWalletId])
 
     Object.assign(result, {
       toWalletId,
       toWalletName,
       toCurrencyCode: exchangeCurrencyCode,
-      toFiatCurrencyCode,
-      toIsoFiatCurrencyCode,
       toWalletPrimaryInfo,
-      toExchangeAmount: div(toNativeAmount, multiplier, DECIMAL_PRECISION),
-      toFiatToCrypto: convertCurrencyFromExchangeRates(exchangeRates, exchangeCurrencyCode, toIsoFiatCurrencyCode, '1')
+      toExchangeAmount: div(toNativeAmount, multiplier, DECIMAL_PRECISION)
     })
   }
 

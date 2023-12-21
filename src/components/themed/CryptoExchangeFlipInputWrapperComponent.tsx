@@ -21,7 +21,6 @@ interface OwnProps {
   buttonText: string
   headerText: string
   primaryCurrencyInfo: GuiCurrencyInfo
-  secondaryCurrencyInfo: GuiCurrencyInfo
   tokenId?: string
   overridePrimaryNativeAmount: string
   isFocused: boolean
@@ -90,7 +89,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
   }
 
   render() {
-    const { onNext, primaryCurrencyInfo, secondaryCurrencyInfo, name, overridePrimaryNativeAmount, children, theme } = this.props
+    const { onNext, primaryCurrencyInfo, name, overridePrimaryNativeAmount, children, theme } = this.props
     const styles = getStyles(theme)
 
     if (this.props.isThinking) {
@@ -103,7 +102,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
       )
     }
 
-    if (this.props.walletId === '' || primaryCurrencyInfo == null || secondaryCurrencyInfo == null) {
+    if (this.props.walletId === '' || primaryCurrencyInfo == null) {
       return <MainButton label={this.props.buttonText} type="secondary" onPress={this.launchSelector} />
     }
     const guiWalletName = name ?? ''

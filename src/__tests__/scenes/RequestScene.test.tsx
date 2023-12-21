@@ -19,7 +19,6 @@ describe('Request', () => {
         wallet={null as any}
         exchangeSecondaryToPrimaryRatio={null as any}
         primaryCurrencyInfo={null as any}
-        secondaryCurrencyInfo={null as any}
         theme={getTheme()}
         refreshAllFioAddresses={async () => {}}
         onSelectWallet={async (walletId, currencyCode) => {}}
@@ -48,7 +47,6 @@ describe('Request', () => {
         wallet={fakeWallet}
         exchangeSecondaryToPrimaryRatio={{} as any}
         primaryCurrencyInfo={{ displayDenomination: { multiplier: '100000000' }, exchangeDenomination: { multiplier: '100000000' } } as any}
-        secondaryCurrencyInfo={{} as any}
         theme={getTheme()}
         refreshAllFioAddresses={async () => {}}
         onSelectWallet={async (walletId, currencyCode) => {}}
