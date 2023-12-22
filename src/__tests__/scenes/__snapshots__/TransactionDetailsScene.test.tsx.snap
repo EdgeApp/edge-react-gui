@@ -248,7 +248,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 "paddingRight": 11,
                 "position": "absolute",
                 "right": 0,
-                "width": 67,
+                "width": "100%",
               }
             }
           >
@@ -553,7 +553,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "paddingRight": 11,
                   "position": "absolute",
                   "right": 0,
-                  "width": 67,
+                  "width": "100%",
                 }
               }
             >
@@ -836,7 +836,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "paddingRight": 11,
                   "position": "absolute",
                   "right": 0,
-                  "width": 67,
+                  "width": "100%",
                 }
               }
             >
@@ -1037,7 +1037,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "paddingRight": 11,
                   "position": "absolute",
                   "right": 0,
-                  "width": 67,
+                  "width": "100%",
                 }
               }
             >
@@ -1191,7 +1191,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "paddingRight": 11,
                   "position": "absolute",
                   "right": 0,
-                  "width": 67,
+                  "width": "100%",
                 }
               }
             >
@@ -1473,7 +1473,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "paddingRight": 11,
                   "position": "absolute",
                   "right": 0,
-                  "width": 67,
+                  "width": "100%",
                 }
               }
             >
@@ -2072,7 +2072,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 "paddingRight": 11,
                 "position": "absolute",
                 "right": 0,
-                "width": 67,
+                "width": "100%",
               }
             }
           >
@@ -2377,7 +2377,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "paddingRight": 11,
                   "position": "absolute",
                   "right": 0,
-                  "width": 67,
+                  "width": "100%",
                 }
               }
             >
@@ -2660,7 +2660,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "paddingRight": 11,
                   "position": "absolute",
                   "right": 0,
-                  "width": 67,
+                  "width": "100%",
                 }
               }
             >
@@ -2861,7 +2861,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "paddingRight": 11,
                   "position": "absolute",
                   "right": 0,
-                  "width": 67,
+                  "width": "100%",
                 }
               }
             >
@@ -3015,7 +3015,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "paddingRight": 11,
                   "position": "absolute",
                   "right": 0,
-                  "width": 67,
+                  "width": "100%",
                 }
               }
             >
@@ -3297,7 +3297,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "paddingRight": 11,
                   "position": "absolute",
                   "right": 0,
-                  "width": 67,
+                  "width": "100%",
                 }
               }
             >

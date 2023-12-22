@@ -142,7 +142,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     // overlapping the content, improving ease of tappability.
     position: 'absolute',
     right: 0,
-    width: theme.rem(3),
+    width: '100%',
     height: '100%',
     justifyContent: 'center',
     alignItems: 'flex-end',
