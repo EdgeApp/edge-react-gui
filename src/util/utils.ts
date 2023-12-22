@@ -26,7 +26,7 @@ import { toLocaleDate, toLocaleDateTime, toLocaleTime, truncateDecimalsPeriod } 
 import { lstrings } from '../locales/strings'
 import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { RootState } from '../types/reduxTypes'
-import { GuiDenomination, GuiExchangeRates, GuiFiatType } from '../types/types'
+import { GuiExchangeRates, GuiFiatType } from '../types/types'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers'
 import { getTokenId } from './CurrencyInfoHelpers'
 import { base58 } from './encoding'
@@ -167,7 +167,7 @@ export const getNewArrayWithItem = (array: any[], item: any) => (!array.includes
 
 const restrictedCurrencyCodes = ['BTC']
 
-export function getDenomFromIsoCode(currencyCode: string): GuiDenomination {
+export function getDenomFromIsoCode(currencyCode: string): EdgeDenomination {
   if (restrictedCurrencyCodes.findIndex(item => item === currencyCode) !== -1) {
     return {
       name: '',
@@ -176,7 +176,7 @@ export function getDenomFromIsoCode(currencyCode: string): GuiDenomination {
     }
   }
   const symbol = getSymbolFromCurrency(currencyCode)
-  const denom: GuiDenomination = {
+  const denom: EdgeDenomination = {
     name: currencyCode,
     symbol,
     multiplier: '100'

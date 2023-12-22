@@ -23,7 +23,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../selectors/De
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo } from '../types/types'
+import { GuiCurrencyInfo, GuiSwapInfo } from '../types/types'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
 import { bestOfPlugins } from '../util/ReferralHelpers'
@@ -368,8 +368,8 @@ export function selectWalletForExchange(walletId: string, currencyCode: string, 
     const { currencyCode: chainCc, pluginId } = wallet.currencyInfo
     const cc = currencyCode || chainCc
     const balanceMessage = await getBalanceMessage(state, walletId, cc)
-    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, cc)
-    const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, cc)
+    const primaryDisplayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, cc)
+    const primaryExchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, cc)
     const primaryInfo: GuiCurrencyInfo = {
       walletId,
       pluginId,

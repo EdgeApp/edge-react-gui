@@ -10,7 +10,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../../select
 import { getExchangeRate, getSelectedCurrencyWallet } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
-import { emptyCurrencyInfo, GuiCurrencyInfo, GuiDenomination } from '../../../types/types'
+import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../../types/types'
 import {
   addToFioAddressCache,
   checkPubAddress,
@@ -350,10 +350,10 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
       }
     }
 
-    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, selectedWallet.currencyInfo.pluginId, currencyCode)
-    const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, selectedWallet.currencyInfo.pluginId, currencyCode)
-    const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(selectedWallet.fiatCurrencyCode.replace('iso:', ''))
-    const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
+    const primaryDisplayDenomination = getDisplayDenomination(state, selectedWallet.currencyInfo.pluginId, currencyCode)
+    const primaryExchangeDenomination = getExchangeDenomination(state, selectedWallet.currencyInfo.pluginId, currencyCode)
+    const secondaryExchangeDenomination = getDenomFromIsoCode(selectedWallet.fiatCurrencyCode.replace('iso:', ''))
+    const secondaryDisplayDenomination = secondaryExchangeDenomination
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
     const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
 

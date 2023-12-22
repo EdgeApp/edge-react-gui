@@ -18,7 +18,7 @@ import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
-import { GuiCurrencyInfo, GuiDenomination } from '../../types/types'
+import { GuiCurrencyInfo } from '../../types/types'
 import { getTokenId, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
@@ -554,10 +554,10 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     }
 
     const { pluginId } = wallet.currencyInfo
-    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
-    const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
-    const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(wallet.fiatCurrencyCode.replace('iso:', ''))
-    const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
+    const primaryDisplayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+    const primaryExchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+    const secondaryExchangeDenomination = getDenomFromIsoCode(wallet.fiatCurrencyCode.replace('iso:', ''))
+    const secondaryDisplayDenomination = secondaryExchangeDenomination
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
     const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
     const tokenId = getTokenId(state.core.account, pluginId, currencyCode)

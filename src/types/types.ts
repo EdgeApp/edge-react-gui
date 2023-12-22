@@ -18,15 +18,14 @@ export interface MapObject<T> {
   [key: string]: T
 }
 
-export type GuiDenomination = EdgeDenomination
 export interface GuiCurrencyInfo {
   walletId: string
   pluginId?: string
   tokenId?: string
   displayCurrencyCode: string
   exchangeCurrencyCode: string
-  displayDenomination: GuiDenomination
-  exchangeDenomination: GuiDenomination
+  displayDenomination: EdgeDenomination
+  exchangeDenomination: EdgeDenomination
 }
 
 export interface GuiContact {
