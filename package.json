@@ -1,6 +1,6 @@
 {
   "name": "edge-react-gui",
-  "version": "3.23.0",
+  "version": "3.23.1",
   "private": true,
   "description": "Edge Wallet React GUI",
   "homepage": "https://edge.app",
@@ -141,7 +141,7 @@
     "detect-bundler": "^1.1.0",
     "disklet": "^0.5.2",
     "edge-core-js": "^1.13.1",
-    "edge-currency-accountbased": "^2.18.4",
+    "edge-currency-accountbased": "^2.18.5",
     "edge-currency-monero": "^1.1.1",
     "edge-currency-plugins": "^2.5.1",
     "edge-exchange-plugins": "^1.2.0",
