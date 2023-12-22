@@ -120,7 +120,7 @@ export function SwapDetailsCard(props: Props) {
   }
 
   return (
-    <CardUi4>
+    <CardUi4 sections>
       <RowUi4 type="touchable" title={lstrings.transaction_details_exchange_details} onPress={handleExchangeDetails}>
         <View style={styles.tileColumn}>
           <EdgeText style={styles.tileTextBottom}>{lstrings.title_exchange + ' ' + sourceAmount + ' ' + symbolString}</EdgeText>
