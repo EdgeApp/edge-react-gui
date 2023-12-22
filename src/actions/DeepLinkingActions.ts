@@ -155,7 +155,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     case 'azteco': {
       if (!allWalletsLoaded) return false
       const result = await pickWallet({ account, assets: [{ pluginId: 'bitcoin' }], navigation, showCreateWallet: true })
-      if (result == null) {
+      if (result?.type !== 'wallet') {
         // pickWallet returning undefined means user has no matching wallet.
         // This should never happen. Even if the user doesn't have a bitcoin wallet, they will be presented with
         // the option to create one.
@@ -235,7 +235,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       }
 
       // User backed out of choosing a wallet
-      if (walletListResult.walletId == null) return true
+      if (walletListResult.type !== 'wallet') return true
       const widUri = matchingWalletIdsAndUris.find(({ walletId }) => walletId === walletListResult.walletId)
 
       if (widUri == null) {

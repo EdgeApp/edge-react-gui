@@ -295,8 +295,9 @@ export class FioAddressRegister extends React.Component<Props, State> {
   selectFioWallet = async () => {
     await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={[{ pluginId: 'fio' }]} />
-    )).then(({ walletId, currencyCode }: WalletListResult) => {
-      if (walletId && currencyCode) {
+    )).then(result => {
+      if (result?.type === 'wallet') {
+        const { walletId } = result
         this.handleFioWalletChange(walletId)
       }
     })

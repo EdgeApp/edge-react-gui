@@ -281,8 +281,8 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
       />
     ))
       .then(async result => {
-        const { walletId, currencyCode } = result
-        if (walletId != null && currencyCode != null) {
+        if (result?.type === 'wallet') {
+          const { walletId, currencyCode } = result
           await this.props.onSelectWallet(walletId, currencyCode, whichWallet)
         }
       })

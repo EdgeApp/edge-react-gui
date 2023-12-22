@@ -82,10 +82,11 @@ export const WcConnectScene = (props: Props) => {
   }
 
   const handleWalletListModal = useHandler(async () => {
-    const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
+    const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} allowedAssets={edgeTokenIds} showCreateWallet navigation={navigation} />
     ))
-    if (walletId && currencyCode) {
+    if (result?.type === 'wallet') {
+      const { walletId, currencyCode } = result
       const wallet = account.currencyWallets[walletId]
       const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
       await dispatch(selectWalletToken({ navigation, walletId, tokenId }))

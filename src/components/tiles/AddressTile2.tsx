@@ -221,9 +221,9 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
         excludeWalletIds={[coreWallet.id]}
       />
     ))
-      .then(async walletList => {
-        const { walletId } = walletList
-        if (walletId == null) return
+      .then(async result => {
+        if (result?.type !== 'wallet') return
+        const { walletId } = result
         const wallet = currencyWallets[walletId]
 
         // Prefer segwit address if the selected wallet has one

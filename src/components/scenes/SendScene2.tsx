@@ -380,8 +380,8 @@ const SendComponent = (props: Props) => {
 
   const handleWalletPress = useHandler(() => {
     Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.fio_src_wallet} navigation={navigation} />)
-      .then((result: WalletListResult) => {
-        if (result.walletId == null || result.currencyCode == null) {
+      .then(result => {
+        if (result?.type !== 'wallet') {
           return
         }
         setWalletId(result.walletId)

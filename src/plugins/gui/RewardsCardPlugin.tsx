@@ -136,7 +136,6 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
   const showNewCardEnterAmount = async (walletListResult: FiatPluginWalletPickerResult) => {
     const { walletId, currencyCode, tokenId } = walletListResult
-    if (walletId == null || currencyCode == null) return
 
     const wallet = account.currencyWallets[walletId]
     if (wallet == null) return await showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
@@ -230,12 +229,12 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   }
 
   const showNewCardWalletListModal = async () => {
-    const walletListResult: FiatPluginWalletPickerResult = await showUi.walletPicker({
+    const result = await showUi.walletPicker({
       headerTitle: lstrings.select_wallet_to_purchase_card_title,
       allowedAssets,
       showCreateWallet: false
     })
-    await showNewCardEnterAmount(walletListResult)
+    if (result != null) await showNewCardEnterAmount(result)
   }
 
   const showWelcome = async () => {

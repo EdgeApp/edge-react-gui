@@ -80,8 +80,9 @@ export const CreateWalletAccountSelectScene = (props: Props) => {
     Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} navigation={props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={supportedAssets} />
     ))
-      .then(async ({ walletId, currencyCode }: WalletListResult) => {
-        if (walletId && currencyCode) {
+      .then(async result => {
+        if (result?.type === 'wallet') {
+          const { walletId, currencyCode } = result
           dispatch({ type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: '' })
           setWalletId(walletId)
           const createdWalletInstance = await handleRenameAndReturnWallet()

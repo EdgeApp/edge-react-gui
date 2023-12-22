@@ -250,23 +250,24 @@ export const LoanCreateScene = (props: Props) => {
         filterActivation
       />
     ))
-      .then(async ({ walletId, currencyCode, isBankSignupRequest, fiatAccountId }) => {
-        if (isBankSignupRequest) {
+      .then(async result => {
+        if (result?.type === 'bankSignupRequest') {
           // Open bank plugin for new user signup
           navigation.navigate('pluginView', {
             plugin: guiPlugins.wyre,
             deepPath: '',
             deepQuery: {}
           })
-        } else if (fiatAccountId != null) {
+        } else if (result?.type === 'wyre') {
+          const { fiatAccountId } = result
           // Set a hard-coded intermediate AAVE loan destination asset (USDC) to
           // use for the bank sell step that comes after the initial loan
           setDestBankId(fiatAccountId)
           setDestWallet(borrowEngineWallet)
           setDestTokenId(hardDestTokenAddr)
-        } else if (walletId != null && currencyCode != null) {
+        } else if (result?.type === 'wallet') {
+          const { walletId, currencyCode, tokenId } = result
           const selectedWallet = wallets[walletId]
-          const tokenId = getTokenId(account, selectedWallet.currencyInfo.pluginId, currencyCode)
           if (isSrc) {
             setSrcWalletId(walletId)
             setSrcTokenId(tokenId)

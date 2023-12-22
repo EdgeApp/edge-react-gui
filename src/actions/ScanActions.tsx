@@ -96,8 +96,9 @@ export const doRequestAddress = async (navigation: NavigationBase, account: Edge
 
     await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} navigation={navigation} headerTitle={lstrings.select_wallet} allowedAssets={tokenId} showCreateWallet />
-    )).then(async ({ walletId, currencyCode }) => {
-      if (walletId != null && currencyCode != null) {
+    )).then(async result => {
+      if (result?.type === 'wallet') {
+        const { walletId, currencyCode } = result
         const { currencyWallets } = account
         const wallet = currencyWallets[walletId]
 

@@ -89,12 +89,12 @@ export const executePlugin = async (params: {
       if (Platform.OS === 'ios') await SafariView.show({ url: params.url })
       else await CustomTabs.openURL(params.url)
     },
-    walletPicker: async (params): Promise<FiatPluginWalletPickerResult> => {
+    walletPicker: async (params): Promise<FiatPluginWalletPickerResult | undefined> => {
       const { headerTitle, allowedAssets, showCreateWallet } = params
-      const walletListResult = await Airship.show<WalletListResult>(bridge => (
+      const result = await Airship.show<WalletListResult>(bridge => (
         <WalletListModal bridge={bridge} navigation={navigation} headerTitle={headerTitle} allowedAssets={allowedAssets} showCreateWallet={showCreateWallet} />
       ))
-      return walletListResult
+      if (result?.type === 'wallet') return result
     },
     showError: async (e: Error): Promise<void> => showError(e),
     listModal: async (params: FiatPluginListModalParams): Promise<string | undefined> => {
