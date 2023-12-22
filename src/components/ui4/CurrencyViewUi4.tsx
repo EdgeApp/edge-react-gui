@@ -17,7 +17,6 @@ import { SplitRowsView } from './SplitRowsView'
 
 interface Props {
   nativeAmount?: string
-  showRate?: boolean
   token?: EdgeToken
   tokenId?: string
   wallet: EdgeCurrencyWallet
@@ -27,7 +26,7 @@ interface Props {
  * A view representing the data from a wallet, used for rows, cards, etc.
  */
 const CurrencyViewUi4Component = (props: Props) => {
-  const { nativeAmount, showRate = false, token, tokenId, wallet } = props
+  const { nativeAmount, token, tokenId, wallet } = props
   const { currencyConfig, currencyInfo } = wallet
   const { pluginId } = currencyInfo
   const { showTokenNames = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
@@ -60,7 +59,7 @@ const CurrencyViewUi4Component = (props: Props) => {
   const [denomination] = denominations
 
   const icon = <CryptoIconUi4 sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
-  const tickerText = showRate && wallet != null ? <AssetChangeTextUi4 wallet={wallet} tokenId={tokenId} style={styles.primaryText} /> : null
+  const tickerText = wallet != null ? <AssetChangeTextUi4 wallet={wallet} tokenId={tokenId} style={styles.primaryText} /> : null
   const cryptoText = showBalance ? <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol /> : null
   const fiatBalanceText = showBalance ? <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} /> : null
   const fiatRateText = <FiatText nativeCryptoAmount={denomination.multiplier} tokenId={tokenId} wallet={wallet} />

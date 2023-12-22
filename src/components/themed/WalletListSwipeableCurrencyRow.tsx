@@ -138,7 +138,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
       onRightSwipe={handleSend}
       slopOpts={slopOpts}
     >
-      <WalletListCurrencyRow showRate token={token} tokenId={tokenId} wallet={wallet} onLongPress={handleMenu} onPress={handleSelect} />
+      <WalletListCurrencyRow token={token} tokenId={tokenId} wallet={wallet} onLongPress={handleMenu} onPress={handleSelect} />
     </SwipeableRow>
   )
 }

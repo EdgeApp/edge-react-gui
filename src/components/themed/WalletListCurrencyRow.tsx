@@ -15,7 +15,6 @@ import { EdgeText } from './EdgeText'
 
 interface Props {
   customAsset?: CustomAsset
-  showRate?: boolean
   token?: EdgeToken
   tokenId?: string
   wallet: EdgeCurrencyWallet
@@ -28,7 +27,6 @@ interface Props {
 const WalletListCurrencyRowComponent = (props: Props) => {
   const {
     customAsset,
-    showRate = false,
     token,
     tokenId,
     wallet,
@@ -66,7 +64,7 @@ const WalletListCurrencyRowComponent = (props: Props) => {
       onLongPress={handleLongPress}
       onPress={handlePress}
     >
-      <CurrencyViewUi4 showRate={showRate && !isPaused} token={token} tokenId={tokenId} wallet={wallet} />
+      <CurrencyViewUi4 token={token} tokenId={tokenId} wallet={wallet} />
     </CardUi4>
   )
 }
