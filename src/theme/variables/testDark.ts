@@ -173,6 +173,10 @@ export const testDark: Theme = {
 
   // Header
   headerIcon: fioAddressLogo,
+  headerBackground: [palette.edgeNavy, palette.edgeNavy],
+  headerBackgroundStart: { x: 0, y: 0 },
+  headerBackgroundEnd: { x: 1, y: 1 },
+  headerOutlineColors: [palette.edgeNavy, palette.edgeMint],
 
   // Buttons
   // Should add palette when pressed

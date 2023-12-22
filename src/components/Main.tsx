@@ -35,6 +35,7 @@ import { BackButton } from './navigation/BackButton'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle'
 import { EdgeLogoHeader } from './navigation/EdgeLogoHeader'
 import { PluginBackButton } from './navigation/GuiPluginBackButton'
+import { HeaderBackground } from './navigation/HeaderBackground'
 import { HeaderTextButton } from './navigation/HeaderTextButton'
 import { HeaderTitle } from './navigation/HeaderTitle'
 import { ParamHeaderTitle } from './navigation/ParamHeaderTitle'
@@ -220,6 +221,7 @@ const defaultScreenOptions: StackNavigationOptions = {
   headerShown: true,
   headerMode,
   headerTitleAlign: 'center',
+  headerBackground: HeaderBackground,
   headerTransparent: true
 }
 const firstSceneScreenOptions: StackNavigationOptions = {

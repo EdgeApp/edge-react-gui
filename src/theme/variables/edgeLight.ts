@@ -167,6 +167,10 @@ export const edgeLight: Theme = {
 
   // Header
   headerIcon: edgeMark,
+  headerBackground: [palette.white, palette.white],
+  headerBackgroundStart: { x: 0, y: 0 },
+  headerBackgroundEnd: { x: 1, y: 1 },
+  headerOutlineColors: [palette.white, palette.white],
 
   // Buttons
   // Should add palette when pressed

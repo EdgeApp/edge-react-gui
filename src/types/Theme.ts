@@ -170,6 +170,10 @@ export interface Theme {
 
   // Header
   headerIcon: ImageProp
+  headerBackground: string[]
+  headerBackgroundStart: GradientCoords
+  headerBackgroundEnd: GradientCoords
+  headerOutlineColors: string[]
 
   // Buttons
   buttonBorderRadiusRem: number

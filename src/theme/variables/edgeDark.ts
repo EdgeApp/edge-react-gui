@@ -175,6 +175,10 @@ export const edgeDark: Theme = {
 
   // Header
   headerIcon: edgeMark,
+  headerBackground: [palette.darkestNavy, `${palette.darkAqua}cc`],
+  headerBackgroundStart: { x: 0, y: 0 },
+  headerBackgroundEnd: { x: 0, y: 1 },
+  headerOutlineColors: [palette.darkAqua, palette.darkAqua],
 
   // Buttons
   // Should add palette when pressed
