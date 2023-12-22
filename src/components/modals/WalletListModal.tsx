@@ -61,7 +61,7 @@ interface Props {
   showCreateWallet?: boolean
 }
 
-const KeysOnlyModeTokenIds: EdgeAsset[] = Object.keys(SPECIAL_CURRENCY_INFO)
+const keysOnlyModeAssets: EdgeAsset[] = Object.keys(SPECIAL_CURRENCY_INFO)
   .filter(pluginId => isKeysOnlyPlugin(pluginId))
   .map(pluginId => ({
     pluginId
@@ -115,7 +115,7 @@ export function WalletListModal(props: Props) {
   // Prevent plugins that are "watch only" from being used unless it's explicitly allowed
   const walletListExcludeAssets = React.useMemo(() => {
     const result = excludeAssets
-    return allowKeysOnlyMode ? result : KeysOnlyModeTokenIds.concat(result ?? [])
+    return allowKeysOnlyMode ? result : keysOnlyModeAssets.concat(result ?? [])
   }, [allowKeysOnlyMode, excludeAssets])
 
   // #endregion Init
