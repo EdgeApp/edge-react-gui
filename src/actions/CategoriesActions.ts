@@ -1,5 +1,5 @@
 import { eq } from 'biggystring'
-import { EdgeAccount, EdgeAssetAmount, EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeAssetAmount, EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { showError } from '../components/services/AirshipInstance'
@@ -264,10 +264,15 @@ export const defaultCategories = [
  * Given an EdgeTxAction, returns the display value for pre-filling the
  * 'Category' and 'Notes' tiles, if they are not already user-modified.
  */
-export const getTxActionDisplayInfo = (
-  tx: EdgeTransaction,
-  wallet: EdgeCurrencyWallet
-): { edgeCategory: EdgeCategory; payeeText: string; notes?: string; direction: 'send' | 'receive' } => {
+
+export interface ActionDisplayInfo {
+  direction: 'send' | 'receive'
+  userData: EdgeMetadata
+  savedData: EdgeMetadata
+  mergedData: EdgeMetadata
+}
+
+export const getTxActionDisplayInfo = (tx: EdgeTransaction, wallet: EdgeCurrencyWallet): ActionDisplayInfo => {
   const { assetAction, chainAction, chainAssetAction, metadata, savedAction, swapData, tokenId } = tx
   const { currencyConfig, currencyInfo } = wallet
 
@@ -281,8 +286,8 @@ export const getTxActionDisplayInfo = (
   const isSentTransaction = tx.nativeAmount.startsWith('-') || (eq(tx.nativeAmount, '0') && tx.isSend)
 
   let payeeText: string | undefined
-  let edgeCategory: EdgeCategory | undefined
-  let direction: 'send' | 'receive' | undefined
+  let edgeCategory: EdgeCategory
+  let direction: 'send' | 'receive'
   let notes: string | undefined
 
   // Default text for send or receive
@@ -416,22 +421,28 @@ export const getTxActionDisplayInfo = (
         console.error(`Unsupported EdgeTxAction actionType: '${actionType}'`)
     }
   }
+  const savedData: EdgeMetadata = {
+    name: payeeText,
+    category: joinCategory(edgeCategory),
+    notes
+  }
+
+  let userData: EdgeMetadata = {}
   // User added metadata takes priority so override if present
   if (metadata != null) {
-    payeeText = metadata.name ?? payeeText
-    notes = metadata.notes ?? notes
+    userData = metadata
+  }
 
-    const defaultCategory = !isSentTransaction ? 'income' : 'expense'
-    const category = metadata?.category
-    if (category != null && category !== '') {
-      edgeCategory = splitCategory(category, defaultCategory)
-    }
+  const mergedData: EdgeMetadata = {
+    name: userData.name ?? savedData.name,
+    category: userData.category ?? savedData.category,
+    notes: userData.notes ?? savedData.notes
   }
 
   return {
-    payeeText,
-    edgeCategory,
     direction,
-    notes
+    savedData,
+    userData,
+    mergedData
   }
 }

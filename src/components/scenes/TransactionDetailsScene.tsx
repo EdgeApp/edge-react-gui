@@ -1,14 +1,13 @@
 import { abs } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeMetadata, EdgeMetadataChange, EdgeSaveTxMetadataOptions, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { formatCategory, getTxActionDisplayInfo, joinCategory, splitCategory } from '../../actions/CategoriesActions'
+import { formatCategory, getTxActionDisplayInfo, splitCategory } from '../../actions/CategoriesActions'
 import { playSendSound } from '../../actions/SoundActions'
-import { TX_ACTION_LABEL_MAP } from '../../constants/txActionConstants'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { displayFiatAmount } from '../../hooks/useFiatText'
@@ -21,6 +20,7 @@ import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { matchJson } from '../../util/matchJson'
 import { convertNativeToExchange } from '../../util/utils'
 import { getMemoTitle } from '../../util/validateMemos'
 import { ButtonsContainer } from '../buttons/ButtonsContainer'
@@ -52,30 +52,24 @@ export interface TransactionDetailsParams {
 const TransactionDetailsComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { edgeTransaction: transaction, walletId } = route.params
-  const { currencyCode, chainAssetAction, metadata, nativeAmount, date, txid } = transaction
+  const { currencyCode, metadata, nativeAmount, date, txid } = transaction
   const { currencyInfo } = wallet
 
   const theme = useTheme()
   const styles = getStyles(theme)
   // Choose a default category based on metadata or the txAction
-  const txActionInfo = getTxActionDisplayInfo(transaction, wallet)
-  const direction = txActionInfo?.direction
-  const thumbnailPath = useContactThumbnail(txActionInfo.payeeText)
+  const { direction, mergedData, savedData } = getTxActionDisplayInfo(transaction, wallet)
 
-  const category = joinCategory(txActionInfo.edgeCategory)
-
-  // const notes = metadata?.notes == null ? txActionNotes : metadata.notes
+  const thumbnailPath = useContactThumbnail(mergedData.name)
 
   const [localMetadata, setLocalMetadata] = React.useState<EdgeMetadata>({
     exchangeAmount: metadata?.exchangeAmount,
     bizId: 0,
-    category,
-    name: txActionInfo.payeeText ?? '',
-    notes: txActionInfo.notes ?? ''
+    category: mergedData?.category,
+    name: mergedData.name ?? '',
+    notes: mergedData.notes ?? ''
   })
   const [acceleratedTx, setAcceleratedTx] = React.useState<null | EdgeTransaction>(null)
-
-  const name = localMetadata.name ?? ''
 
   // #region Crypto Fiat Rows
 
@@ -125,10 +119,15 @@ const TransactionDetailsComponent = (props: Props) => {
     ))
       .then(async inputText => {
         if (inputText == null) return
+        if (inputText === '') {
+          // Setting amountFiat to 0 will cause GUI to load dynamic exchange rate
+          inputText = '0'
+        }
         const amountFiat = parseFloat(inputText.replace(',', '.'))
 
         // Check for NaN, Infinity, and 0:
-        if (amountFiat === 0 || JSON.stringify(amountFiat) === 'null') return
+        if (JSON.stringify(amountFiat) === 'null') return
+
         await onSaveTxDetails({ exchangeAmount: { [wallet.fiatCurrencyCode]: amountFiat } })
       })
       .catch(showError)
@@ -150,15 +149,14 @@ const TransactionDetailsComponent = (props: Props) => {
   }, [])
 
   const openPersonInput = async () => {
-    const personLabel = direction === 'receive' ? lstrings.transaction_details_payer : lstrings.transaction_details_payee
     const person = await Airship.show<ContactModalResult | undefined>(bridge => (
-      <ContactListModal bridge={bridge} contactType={personLabel} contactName={name} />
+      <ContactListModal bridge={bridge} contactType={personLabel} contactName={localMetadata.name ?? ''} />
     ))
     if (person != null) onSaveTxDetails({ name: person.contactName })
   }
 
   const openCategoryInput = async () => {
-    const newCategory = await Airship.show<string | undefined>(bridge => <CategoryModal bridge={bridge} initialCategory={category} />)
+    const newCategory = await Airship.show<string | undefined>(bridge => <CategoryModal bridge={bridge} initialCategory={localMetadata.category ?? ''} />)
     if (newCategory == null) return
     onSaveTxDetails({ category: newCategory })
   }
@@ -167,7 +165,7 @@ const TransactionDetailsComponent = (props: Props) => {
     const notes = await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
-        initialValue={notes}
+        initialValue={localMetadata.notes}
         inputLabel={lstrings.transaction_details_notes_title}
         multiline
         submitLabel={lstrings.string_save}
@@ -209,29 +207,75 @@ const TransactionDetailsComponent = (props: Props) => {
   }
 
   const onSaveTxDetails = (newDetails: Partial<EdgeMetadata>) => {
-    const mergedMetadata = {
-      ...localMetadata,
-      ...newDetails,
-      exchangeAmount: {
-        ...localMetadata.exchangeAmount,
-        ...newDetails.exchangeAmount
+    const newValues: EdgeMetadata = { ...localMetadata, ...newDetails, exchangeAmount: { ...localMetadata.exchangeAmount, ...newDetails.exchangeAmount } }
+    const { name, notes, category, exchangeAmount } = newValues
+
+    let newName, newCategory, newNotes, newExchangeAmount
+    let changed = false
+
+    if (name !== localMetadata.name) {
+      changed = true
+      if (name === savedData.name || name === '') {
+        // The updated name matches data from savedAction or chainAction so delete
+        // any user edited metadata so we just fallback. Also applies to category and
+        // notes.
+        newName = null
+        newDetails.name = savedData.name
+      } else {
+        newName = name
       }
     }
-    transaction.metadata = mergedMetadata
 
-    wallet
-      .saveTxMetadata({
-        txid: transaction.txid,
-        tokenId: transaction.tokenId,
-        metadata: transaction.metadata
-      })
-      .catch(error => showError(error))
+    if (category !== localMetadata.category) {
+      changed = true
+      const lowerCat = category?.toLowerCase()
+      if (category === savedData.category || (lowerCat === 'income:' && direction === 'receive') || (lowerCat === 'expense:' && direction === 'send')) {
+        newCategory = null
+        newDetails.category = savedData.category
+      } else {
+        newCategory = category
+      }
+    }
 
-    setLocalMetadata(mergedMetadata)
+    if (notes !== localMetadata.notes) {
+      changed = true
+      if (notes === savedData.notes || notes === '') {
+        newNotes = null
+        newDetails.notes = savedData.notes
+      } else {
+        newNotes = notes
+      }
+    }
+
+    if (!matchJson(exchangeAmount, localMetadata.exchangeAmount)) {
+      changed = true
+      newExchangeAmount = exchangeAmount
+    }
+
+    if (!changed) {
+      console.log('EXIT onSaveTxDetails no change')
+      return
+    }
+    const metadata: EdgeMetadataChange = {
+      name: newName,
+      category: newCategory,
+      notes: newNotes,
+      exchangeAmount: newExchangeAmount
+    }
+
+    const saveTxMetadataParams: EdgeSaveTxMetadataOptions = {
+      txid: transaction.txid,
+      tokenId: transaction.tokenId,
+      metadata: metadata
+    }
+
+    wallet.saveTxMetadata(saveTxMetadataParams).catch(error => showError(error))
+
+    setLocalMetadata(newValues)
   }
 
   const personLabel = direction === 'receive' ? lstrings.transaction_details_sender : lstrings.transaction_details_recipient
-  const personName = chainAssetAction != null ? TX_ACTION_LABEL_MAP[chainAssetAction.assetActionType] : name !== '' ? name : personLabel
+  const personName = localMetadata.name ?? personLabel
   const personHeader = sprintf(lstrings.transaction_details_person_name, personLabel)
 
   // spendTargets recipient addresses format
@@ -244,7 +288,7 @@ const TransactionDetailsComponent = (props: Props) => {
     }
   }
 
-  const categoriesText = formatCategory(splitCategory(category))
+  const categoriesText = formatCategory(splitCategory(localMetadata.category ?? undefined))
 
   return (
     <SceneWrapper hasNotifications hasTabs scroll padding={theme.rem(0.5)}>

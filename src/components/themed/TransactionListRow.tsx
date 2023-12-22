@@ -7,7 +7,7 @@ import Share from 'react-native-share'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { formatCategory, getTxActionDisplayInfo } from '../../actions/CategoriesActions'
+import { formatCategory, getTxActionDisplayInfo, splitCategory } from '../../actions/CategoriesActions'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { displayFiatAmount } from '../../hooks/useFiatText'
@@ -75,7 +75,8 @@ export function TransactionListRow(props: Props) {
     maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(log10(displayDenomination.multiplier), precisionAdjustValue)
   }
 
-  const { direction, edgeCategory, payeeText } = getTxActionDisplayInfo(transaction, wallet)
+  const { direction, mergedData } = getTxActionDisplayInfo(transaction, wallet)
+  const { category, name } = mergedData
   const isSentTransaction = direction === 'send'
 
   const cryptoAmount = div(abs(transaction.nativeAmount ?? '0'), displayDenomination.multiplier, DECIMAL_PRECISION)
@@ -108,6 +109,8 @@ export function TransactionListRow(props: Props) {
     arrowContainerStyle = [styles.arrowIconContainerReceive]
   }
 
+  const edgeCategory = splitCategory(category ?? '')
+
   if (edgeCategory.category === 'exchange') {
     arrowIconName = 'swap-horizontal'
     arrowIconColor = theme.txDirFgSwapUi4
@@ -115,7 +118,7 @@ export function TransactionListRow(props: Props) {
   }
 
   // Icon & Thumbnail
-  const thumbnailPath = useContactThumbnail(payeeText)
+  const thumbnailPath = useContactThumbnail(name)
   if (thumbnailPath != null) {
     arrowIconSize = theme.rem(1)
     arrowContainerStyle.push(styles.arrowIconOverlayContainer)
@@ -187,7 +190,7 @@ export function TransactionListRow(props: Props) {
       <SectionView dividerVerticalRem={[0.2, 0.5]} marginRem={[0.25, 0]}>
         <>
           <View style={styles.row}>
-            <EdgeText style={styles.titleText}>{payeeText}</EdgeText>
+            <EdgeText style={styles.titleText}>{name}</EdgeText>
             <EdgeText style={styles.titleText}>{cryptoAmountString}</EdgeText>
           </View>
           <View style={styles.row}>
