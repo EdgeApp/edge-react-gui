@@ -69,7 +69,7 @@ const palette = {
   QuicksandBold: 'Quicksand-Bold',
 
   // UI4 palette
-  skyBlue: '#53BFD1',
+  skyBlue: '#3dd9f4',
   blackOp65: 'rgba(0, 0, 0, .65)',
   redOp60: 'rgba(232, 84, 102, .6)',
   grayOp70: 'rgba(135, 147, 158, .7)',

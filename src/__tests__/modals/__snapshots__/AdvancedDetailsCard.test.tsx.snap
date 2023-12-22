@@ -37,6 +37,7 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
       {
         "flex": 1,
         "flexDirection": "column",
+        "marginVertical": 6,
       }
     }
   >

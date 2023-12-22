@@ -26,7 +26,7 @@ export const SectionHeader = (props: Props) => {
       {{
         left: <EdgeText style={styles.headerText}>{leftText}</EdgeText>,
         right: (
-          <TouchableOpacity onPress={onRightPress}>
+          <TouchableOpacity onPress={onRightPress} style={styles.rightTappableContainer}>
             <EdgeText style={styles.tappableText}>{rightText}</EdgeText>
           </TouchableOpacity>
         )
@@ -36,11 +36,18 @@ export const SectionHeader = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  rightTappableContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    marginTop: theme.rem(0.5)
+  },
   headerText: {
+    marginTop: theme.rem(0.5),
     marginLeft: theme.rem(1)
   },
   tappableText: {
     color: theme.iconTappable,
+    fontSize: theme.rem(0.75),
     marginRight: theme.rem(1),
     textAlign: 'right'
   }

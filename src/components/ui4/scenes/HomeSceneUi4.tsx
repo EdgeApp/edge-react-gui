@@ -113,68 +113,70 @@ export const HomeSceneUi4 = (props: Props) => {
   )
 
   return (
-    <NotificationSceneWrapper navigation={navigation} scroll hasTabs padding={theme.rem(TEMP_PADDING_REM)}>
-      <SectionView wideSpacing>
-        <>
-          <BalanceCardUi4 navigation={navigation} />
-          <View style={styles.homeRowContainer}>
-            <HomeCardUi4
-              title={lstrings.buy_crypto}
-              footer="lorem ipsum dolor sit amet"
-              gradientBackground={theme.buyCardGradientUi4}
-              nodeBackground={
-                <View style={styles.backgroundContainer}>
-                  <FastImage source={{ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto') }} style={styles.backgroundImage} resizeMode="stretch" />
-                </View>
-              }
-              onPress={handleBuyPress}
-            />
-            <HomeCardUi4
-              title={lstrings.sell_crypto}
-              footer="lorem ipsum dolor sit amet"
-              gradientBackground={theme.sellCardGradientUi4}
-              nodeBackground={<>{/* TODO */}</>}
-              onPress={handleSellPress}
-            />
-          </View>
-          <View style={styles.homeRowContainer}>
-            <HomeCardUi4
-              title={lstrings.title_fio_names}
-              footer="lorem ipsum dolor sit amet"
-              gradientBackground={theme.fioCardGradientUi4}
-              nodeBackground={
-                <View style={styles.backgroundContainer}>
-                  <FastImage source={{ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-fio') }} style={styles.backgroundImage} resizeMode="stretch" />
-                </View>
-              }
-              onPress={handleFioPress}
-            />
-            <HomeCardUi4
-              title={lstrings.swap_crypto}
-              footer="lorem ipsum dolor sit amet"
-              gradientBackground={theme.swapCardGradientUi4}
-              nodeBackground={<>{/* TODO */}</>}
-              onPress={handleSwapPress}
-            />
-          </View>
-        </>
-        <>
-          <SectionHeader leftText={lstrings.title_markets} rightText={lstrings.see_all} onRightPress={() => navigation.navigate('marketsTab', {})} />
-          <MarketsCardUi4 navigation={navigation} numRows={5} />
-        </>
-        <>
-          <SectionHeader leftText={lstrings.title_learn} />
-          {blogData == null || blogData.length === 0 ? null : (
-            <View style={styles.carouselContainer}>
-              <CarouselUi4 height={theme.rem(13)} width={screenWidth}>
-                {blogData.map((blogPost, index) => (
-                  <BlogCard blogPost={blogPost} key={`${JSON.stringify(blogPost.localeTitle)}-${index}`} />
-                ))}
-              </CarouselUi4>
+    <NotificationSceneWrapper navigation={navigation} scroll hasTabs>
+      <View style={styles.tempMargin}>
+        <SectionView extendRight>
+          <>
+            <BalanceCardUi4 navigation={navigation} />
+            <View style={styles.homeRowContainer}>
+              <HomeCardUi4
+                title={lstrings.buy_crypto}
+                footer="lorem ipsum dolor sit amet"
+                gradientBackground={theme.buyCardGradientUi4}
+                nodeBackground={
+                  <View style={styles.backgroundContainer}>
+                    <FastImage source={{ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto') }} style={styles.backgroundImage} resizeMode="stretch" />
+                  </View>
+                }
+                onPress={handleBuyPress}
+              />
+              <HomeCardUi4
+                title={lstrings.sell_crypto}
+                footer="lorem ipsum dolor sit amet"
+                gradientBackground={theme.sellCardGradientUi4}
+                nodeBackground={<>{/* TODO */}</>}
+                onPress={handleSellPress}
+              />
             </View>
-          )}
-        </>
-      </SectionView>
+            <View style={styles.homeRowContainer}>
+              <HomeCardUi4
+                title={lstrings.title_fio_names}
+                footer="lorem ipsum dolor sit amet"
+                gradientBackground={theme.fioCardGradientUi4}
+                nodeBackground={
+                  <View style={styles.backgroundContainer}>
+                    <FastImage source={{ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-fio') }} style={styles.backgroundImage} resizeMode="stretch" />
+                  </View>
+                }
+                onPress={handleFioPress}
+              />
+              <HomeCardUi4
+                title={lstrings.swap_crypto}
+                footer="lorem ipsum dolor sit amet"
+                gradientBackground={theme.swapCardGradientUi4}
+                nodeBackground={<>{/* TODO */}</>}
+                onPress={handleSwapPress}
+              />
+            </View>
+          </>
+          <>
+            <SectionHeader leftText={lstrings.title_markets} rightText={lstrings.see_all} onRightPress={() => navigation.navigate('marketsTab', {})} />
+            <MarketsCardUi4 navigation={navigation} numRows={5} />
+          </>
+          <>
+            <SectionHeader leftText={lstrings.title_learn} />
+            {blogData == null || blogData.length === 0 ? null : (
+              <View style={styles.carouselContainer}>
+                <CarouselUi4 height={theme.rem(13)} width={screenWidth}>
+                  {blogData.map((blogPost, index) => (
+                    <BlogCard blogPost={blogPost} key={`${JSON.stringify(blogPost.localeTitle)}-${index}`} />
+                  ))}
+                </CarouselUi4>
+              </View>
+            )}
+          </>
+        </SectionView>
+      </View>
     </NotificationSceneWrapper>
   )
 }
@@ -197,5 +199,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   carouselContainer: {
     left: theme.rem(-TEMP_PADDING_REM) // Need to fudge this to cancel out the scene's padding
+  },
+
+  // We plan to remove dividers that extend all the way to the right in the
+  // future. In the interim, setting a margin instead of a SceneWrapper padding
+  // lets us do that.
+  tempMargin: {
+    margin: theme.rem(TEMP_PADDING_REM)
   }
 }))

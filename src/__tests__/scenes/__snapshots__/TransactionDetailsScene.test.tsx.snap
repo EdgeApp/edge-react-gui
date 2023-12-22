@@ -297,6 +297,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             {
               "flex": 1,
               "flexDirection": "column",
+              "marginVertical": 6,
             }
           }
         >
@@ -376,11 +377,9 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "borderBottomColor": "rgba(255, 255, 255, .1)",
                   "borderBottomWidth": 1,
                   "height": 1,
-                  "marginHorizontal": 11,
-                  "marginVertical": 11,
                 },
                 {
-                  "marginVertical": 0,
+                  "margin": 11,
                 },
               ]
             }
@@ -559,11 +558,9 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "borderBottomColor": "rgba(255, 255, 255, .1)",
                   "borderBottomWidth": 1,
                   "height": 1,
-                  "marginHorizontal": 11,
-                  "marginVertical": 11,
                 },
                 {
-                  "marginVertical": 0,
+                  "margin": 11,
                 },
               ]
             }
@@ -693,11 +690,9 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "borderBottomColor": "rgba(255, 255, 255, .1)",
                   "borderBottomWidth": 1,
                   "height": 1,
-                  "marginHorizontal": 11,
-                  "marginVertical": 11,
                 },
                 {
-                  "marginVertical": 0,
+                  "margin": 11,
                 },
               ]
             }
@@ -883,6 +878,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             {
               "flex": 1,
               "flexDirection": "column",
+              "marginVertical": 6,
             }
           }
         >
@@ -1035,11 +1031,9 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "borderBottomColor": "rgba(255, 255, 255, .1)",
                   "borderBottomWidth": 1,
                   "height": 1,
-                  "marginHorizontal": 11,
-                  "marginVertical": 11,
                 },
                 {
-                  "marginVertical": 0,
+                  "margin": 11,
                 },
               ]
             }
@@ -1225,6 +1219,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             {
               "flex": 1,
               "flexDirection": "column",
+              "marginVertical": 6,
             }
           }
         >
@@ -1304,11 +1299,9 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "borderBottomColor": "rgba(255, 255, 255, .1)",
                   "borderBottomWidth": 1,
                   "height": 1,
-                  "marginHorizontal": 11,
-                  "marginVertical": 11,
                 },
                 {
-                  "marginVertical": 0,
+                  "margin": 11,
                 },
               ]
             }
@@ -2074,6 +2067,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             {
               "flex": 1,
               "flexDirection": "column",
+              "marginVertical": 6,
             }
           }
         >
@@ -2153,11 +2147,9 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "borderBottomColor": "rgba(255, 255, 255, .1)",
                   "borderBottomWidth": 1,
                   "height": 1,
-                  "marginHorizontal": 11,
-                  "marginVertical": 11,
                 },
                 {
-                  "marginVertical": 0,
+                  "margin": 11,
                 },
               ]
             }
@@ -2336,11 +2328,9 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "borderBottomColor": "rgba(255, 255, 255, .1)",
                   "borderBottomWidth": 1,
                   "height": 1,
-                  "marginHorizontal": 11,
-                  "marginVertical": 11,
                 },
                 {
-                  "marginVertical": 0,
+                  "margin": 11,
                 },
               ]
             }
@@ -2470,11 +2460,9 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "borderBottomColor": "rgba(255, 255, 255, .1)",
                   "borderBottomWidth": 1,
                   "height": 1,
-                  "marginHorizontal": 11,
-                  "marginVertical": 11,
                 },
                 {
-                  "marginVertical": 0,
+                  "margin": 11,
                 },
               ]
             }
@@ -2660,6 +2648,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             {
               "flex": 1,
               "flexDirection": "column",
+              "marginVertical": 6,
             }
           }
         >
@@ -2812,11 +2801,9 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "borderBottomColor": "rgba(255, 255, 255, .1)",
                   "borderBottomWidth": 1,
                   "height": 1,
-                  "marginHorizontal": 11,
-                  "marginVertical": 11,
                 },
                 {
-                  "marginVertical": 0,
+                  "margin": 11,
                 },
               ]
             }
@@ -3002,6 +2989,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             {
               "flex": 1,
               "flexDirection": "column",
+              "marginVertical": 6,
             }
           }
         >
@@ -3081,11 +3069,9 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "borderBottomColor": "rgba(255, 255, 255, .1)",
                   "borderBottomWidth": 1,
                   "height": 1,
-                  "marginHorizontal": 11,
-                  "marginVertical": 11,
                 },
                 {
-                  "marginVertical": 0,
+                  "margin": 11,
                 },
               ]
             }
