@@ -75,7 +75,7 @@ const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution
 // behavior/appearance.
 const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
   swipeLastUsp: asOptional(asValue('true', 'false'), generateExperimentConfigVal('swipeLastUsp', ['true', 'false'])),
-  createAccountType: asMaybe(asValue('full'), 'full'),
+  createAccountType: asMaybe(asValue('full', 'light'), generateExperimentConfigVal('createAccountType', ['full', 'light'])),
   legacyLanding: asMaybe(asValue('uspLanding'), generateExperimentConfigVal('legacyLanding', ['legacyLanding', 'uspLanding'])),
   signupCaptcha: asMaybe(asValue('withoutCaptcha'), 'withoutCaptcha')
 })
