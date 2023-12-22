@@ -110,20 +110,18 @@ export interface CurrencyConverter {
   convertCurrency: (state: RootState, currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
 }
 
-export const emptyGuiDenomination: GuiDenomination = {
-  name: '',
-  symbol: '',
-  multiplier: '',
-  // @ts-expect-error
-  precision: 0,
-  currencyCode: ''
-}
 export const emptyCurrencyInfo: GuiCurrencyInfo = {
   walletId: '',
   displayCurrencyCode: '',
   exchangeCurrencyCode: '',
-  displayDenomination: emptyGuiDenomination,
-  exchangeDenomination: emptyGuiDenomination
+  displayDenomination: {
+    name: '',
+    multiplier: '1'
+  },
+  exchangeDenomination: {
+    name: '',
+    multiplier: '1'
+  }
 }
 
 const asPasswordReminder = asObject({
