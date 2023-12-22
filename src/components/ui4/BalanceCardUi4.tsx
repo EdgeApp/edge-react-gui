@@ -68,7 +68,7 @@ export const BalanceCardUi4 = (props: Props) => {
           <View style={styles.titleSubContainer}>
             <EdgeText style={textShadow}>{lstrings.fragment_wallets_balance_text}</EdgeText>
             <IonIcon
-              name={isBalanceVisible ? 'eye-outline' : 'eye-off-outline'}
+              name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'}
               style={[styles.eyeIcon, textShadow]}
               color={theme.iconTappable}
               size={theme.rem(1)}
@@ -83,9 +83,8 @@ export const BalanceCardUi4 = (props: Props) => {
           </EdgeText>
         )}
       </TouchableOpacity>
-      <TouchableOpacity style={styles.chevronContainer} onPress={handleViewAssets}>
+      <TouchableOpacity style={styles.rightButtonContainer} onPress={handleViewAssets}>
         <EdgeText style={[styles.tappableText, textShadow]}>{lstrings.view_assets}</EdgeText>
-        <IonIcon size={theme.rem(1.25)} style={[styles.chevronIcon, textShadow]} color={theme.iconTappable} name="chevron-forward-outline" />
       </TouchableOpacity>
 
       <ButtonsViewUi4
@@ -117,15 +116,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
 
-  chevronContainer: {
+  rightButtonContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     position: 'absolute',
-    top: theme.rem(1) - 2, // Adjust for chevron's bounding box and left title
+    top: theme.rem(1) + 5, // Fudge factor to align with the larger text on the left
     right: theme.rem(1)
   },
   tappableText: {
-    fontSize: theme.rem(0.75)
+    fontSize: theme.rem(0.75),
+    color: theme.iconTappable
   },
 
   // These two icons have different bounding boxes. Adjusted to match
@@ -134,15 +135,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginLeft: theme.rem(0.25),
     marginRight: theme.rem(0)
   },
-  chevronIcon: {
-    alignSelf: 'center',
-    marginTop: 2,
-    marginRight: -5
-  },
 
   balanceText: {
     marginTop: theme.rem(0.5),
-    marginBottom: theme.rem(1),
+    marginBottom: theme.rem(0.5),
     fontSize: theme.rem(1.75),
     fontFamily: theme.fontFaceMedium
   },

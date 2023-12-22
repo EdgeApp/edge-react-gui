@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View } from 'react-native'
+import { View, ViewStyle } from 'react-native'
 import Animated from 'react-native-reanimated'
 
 import { useFadeAnimation } from '../../hooks/animations/useFadeAnimation'
@@ -64,15 +64,44 @@ export const ButtonsViewUi4 = React.memo(({ absolute = false, fade, primary, sec
 })
 
 const StyledButtonContainer = styled(View)<{ absolute: boolean; layout: 'row' | 'column' }>(theme => props => {
-  const isRowLayout = props.layout === 'row'
+  const { absolute, layout } = props
+  const isRowLayout = layout === 'row'
+
+  const marginSize = theme.rem(0.5)
+
+  const baseStyle: ViewStyle = {
+    margin: marginSize
+  }
+
+  const absoluteStyle: ViewStyle = absolute
+    ? {
+        position: 'absolute',
+        bottom: 0,
+        left: marginSize,
+        right: marginSize
+      }
+    : {}
+
+  const rowStyle: ViewStyle = isRowLayout
+    ? {
+        flex: 1,
+        flexDirection: 'row-reverse',
+        justifyContent: 'center',
+        marginHorizontal: 0
+      }
+    : {}
+
+  const columnStyle: ViewStyle = !isRowLayout
+    ? {
+        flexDirection: 'column',
+        justifyContent: 'space-between'
+      }
+    : {}
+
   return {
-    position: props.absolute ? 'absolute' : undefined,
-    bottom: props.absolute ? 0 : undefined,
-    left: props.absolute ? theme.rem(0.5) : undefined,
-    right: props.absolute ? theme.rem(0.5) : undefined,
-    flexDirection: isRowLayout ? 'row-reverse' : 'column',
-    justifyContent: 'space-between',
-    margin: theme.rem(0.5),
-    marginHorizontal: theme.rem(0.5)
+    ...baseStyle,
+    ...absoluteStyle,
+    ...rowStyle,
+    ...columnStyle
   }
 })

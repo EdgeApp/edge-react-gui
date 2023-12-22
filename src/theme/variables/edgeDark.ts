@@ -78,7 +78,7 @@ const palette = {
   lightRed: '#E84D65',
 
   // Button
-  graySecondary: '#636363',
+  graySecondary: 'hsla(0, 0%, 100%, 0.20)',
 
   // Gradients
   warningOuter: '#772a0f',

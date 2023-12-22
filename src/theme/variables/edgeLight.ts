@@ -72,7 +72,7 @@ const palette = {
   lightGreen: '#75C649',
   lightRed: '#E84D65',
 
-  graySecondary: '#636363',
+  graySecondary: 'hsla(0, 0%, 100%, 0.20)',
 
   warningOuter: '#772a0f',
   warningInner: '#835d22',
