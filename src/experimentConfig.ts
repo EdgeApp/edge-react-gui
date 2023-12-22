@@ -1,4 +1,4 @@
-import { asMaybe, asObject, asOptional, asValue, Cleaner } from 'cleaners'
+import { asMaybe, asObject, asValue, Cleaner } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
 import { CreateAccountType } from 'edge-login-ui-rn'
 import { isMaestro } from 'react-native-is-maestro'
@@ -74,9 +74,9 @@ const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution
 // behavior/appearance, while the last value represents unchanged
 // behavior/appearance.
 const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
-  swipeLastUsp: asOptional(asValue('true', 'false'), generateExperimentConfigVal('swipeLastUsp', ['true', 'false'])),
+  swipeLastUsp: asMaybe(asValue('true', 'false'), generateExperimentConfigVal('swipeLastUsp', ['true', 'false'])),
   createAccountType: asMaybe(asValue('full', 'light'), generateExperimentConfigVal('createAccountType', ['full', 'light'])),
-  legacyLanding: asMaybe(asValue('uspLanding'), generateExperimentConfigVal('legacyLanding', ['legacyLanding', 'uspLanding'])),
+  legacyLanding: asMaybe(asValue('uspLanding', 'legacyLanding'), generateExperimentConfigVal('legacyLanding', ['legacyLanding', 'uspLanding'])),
   signupCaptcha: asMaybe(asValue('withoutCaptcha'), 'withoutCaptcha')
 })
 

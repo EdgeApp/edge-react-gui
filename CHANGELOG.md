@@ -3,10 +3,12 @@
 ## Unreleased
 
 - added: `minerTip` to `feeRateUsed` processing
+- changed: Update various scenes with UI4 components
+- changed: Light account re-enabled at 50% distribution
+- fixed: USP vs legacy landing experiment distribution
 - fixed: Paybis sell from Tron USDT
 - fixed: Remove `minWidth` style from stake option card
 - fixed: Send scene no-longer accesses clipboard immediately
-- changed: Update various scenes with UI4 components
 
 ## 3.23.0
 
