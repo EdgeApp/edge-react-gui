@@ -2,12 +2,13 @@ import { BottomTabBarProps, BottomTabNavigationEventMap } from '@react-navigatio
 import { NavigationHelpers, ParamListBase } from '@react-navigation/native'
 import * as React from 'react'
 import { useMemo } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
+import { BlurView } from 'rn-id-blurview'
 
 import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { Fontello } from '../../assets/vector/index'
@@ -61,11 +62,14 @@ export const MenuTabs = (props: BottomTabBarProps) => {
 
   return (
     <ContainerLinearGradient bottom={insets.bottom} colors={colors} start={start} end={end}>
-      <Tabs>
-        {routes.map((route, index: number) => (
-          <Tab currentName={routes[activeTabIndex].name} navigation={navigation} key={route.name} route={route} isActive={activeTabIndex === index} />
-        ))}
-      </Tabs>
+      <BlurView blurType={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} overlayColor="#00000000" />
+      <LinearGradient colors={colors} start={start} end={end}>
+        <Tabs>
+          {routes.map((route, index: number) => (
+            <Tab currentName={routes[activeTabIndex].name} navigation={navigation} key={route.name} route={route} isActive={activeTabIndex === index} />
+          ))}
+        </Tabs>
+      </LinearGradient>
     </ContainerLinearGradient>
   )
 }

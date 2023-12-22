@@ -30,6 +30,7 @@ import { scale } from '../../util/scaling'
 const palette = {
   white: '#FFFFFF',
   black: '#000000',
+  blackTransparent: '#00000000',
   darkestNavy: '#06090c',
 
   darkMint: '#089e73',
@@ -175,10 +176,10 @@ export const edgeDark: Theme = {
 
   // Header
   headerIcon: edgeMark,
-  headerBackground: [palette.darkestNavy, `${palette.darkAqua}cc`],
+  headerBackground: [palette.black, palette.blackTransparent],
   headerBackgroundStart: { x: 0, y: 0 },
-  headerBackgroundEnd: { x: 0, y: 1 },
-  headerOutlineColors: [palette.darkAqua, palette.darkAqua],
+  headerBackgroundEnd: { x: 0, y: 0.5 },
+  headerOutlineColors: [palette.transparent, palette.transparent],
 
   // Buttons
   // Should add palette when pressed

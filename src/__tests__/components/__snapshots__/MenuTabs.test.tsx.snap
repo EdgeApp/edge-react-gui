@@ -33,14 +33,50 @@ exports[`MenuTabs should render with loading props 1`] = `
     }
   }
 >
-  <View
+  <BlurView
+    blurAmount={10}
+    blurType="dark"
+    overlayColor="#00000000"
     style={
       {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "justifyContent": "center",
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
       }
     }
   />
+  <BVLinearGradient
+    colors={
+      [
+        0,
+        4278190080,
+      ]
+    }
+    endPoint={
+      {
+        "x": 0,
+        "y": 1,
+      }
+    }
+    locations={null}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0.5,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "center",
+        }
+      }
+    />
+  </BVLinearGradient>
 </BVLinearGradient>
 `;
