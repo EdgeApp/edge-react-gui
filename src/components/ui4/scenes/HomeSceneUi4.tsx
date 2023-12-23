@@ -26,57 +26,6 @@ interface Props extends EdgeSceneProps<'home'> {}
 
 const TEMP_PADDING_REM = 0.5 // To be built-in to SceneWrapper when fully UI4
 
-const DUMMY_BLOG_DATA = [
-  {
-    localeTitle: {
-      en: 'Latest Edge News 1',
-      es: 'Que es Thorchain'
-    },
-    localeBody: {
-      en: 'My blog body text\nlorem ipsum',
-      es: 'El texto principal de mi blog'
-    },
-    localeBlogUrl: {
-      en: 'https://edge.app/whatisthorchain',
-      es: 'https://edge.app/whatisthorchain?lang=es'
-    },
-    lightImageUrl: 'https://edge.app/images/tc-dark.png',
-    darkImageUrl: 'https://nyc3.digitaloceanspaces.com/edgecontent/UI4/testBlogImg.png'
-  },
-  {
-    localeTitle: {
-      en: 'Latest Edge News 2',
-      es: 'Que es Thorchain'
-    },
-    localeBody: {
-      en: 'My blog body text\nlorem ipsum',
-      es: 'El texto principal de mi blog'
-    },
-    localeBlogUrl: {
-      en: 'https://edge.app/whatisthorchain',
-      es: 'https://edge.app/whatisthorchain?lang=es'
-    },
-    lightImageUrl: 'https://edge.app/images/tc-dark.png',
-    darkImageUrl: 'https://nyc3.digitaloceanspaces.com/edgecontent/UI4/testBlogImg.png'
-  },
-  {
-    localeTitle: {
-      en: 'Latest Edge News 3',
-      es: 'Que es Thorchain'
-    },
-    localeBody: {
-      en: 'My blog body text\nlorem ipsum',
-      es: 'El texto principal de mi blog'
-    },
-    localeBlogUrl: {
-      en: 'https://edge.app/whatisthorchain',
-      es: 'https://edge.app/whatisthorchain?lang=es'
-    },
-    lightImageUrl: 'https://edge.app/images/tc-dark.png',
-    darkImageUrl: 'https://nyc3.digitaloceanspaces.com/edgecontent/UI4/testBlogImg.png'
-  }
-]
-
 export const HomeSceneUi4 = (props: Props) => {
   const { navigation } = props
   const theme = useTheme()
@@ -98,8 +47,8 @@ export const HomeSceneUi4 = (props: Props) => {
     navigation.navigate('exchangeTab', {})
   })
 
-  // TODO: Replace dummy data with info server data
-  const blogData = DUMMY_BLOG_DATA
+  // TODO: Reimplement after info server is published
+  const blogData: any[] = []
 
   // Show the password reminder on mount if required:
   useAsyncEffect(
@@ -163,9 +112,10 @@ export const HomeSceneUi4 = (props: Props) => {
             <SectionHeader leftText={lstrings.title_markets} rightText={lstrings.see_all} onRightPress={() => navigation.navigate('marketsTab', {})} />
             <MarketsCardUi4 navigation={navigation} numRows={5} />
           </>
-          <>
-            <SectionHeader leftText={lstrings.title_learn} />
-            {blogData == null || blogData.length === 0 ? null : (
+          {/* TODO: Reimplement after info server is published */}
+          {blogData == null || blogData.length === 0 ? null : (
+            <>
+              <SectionHeader leftText={lstrings.title_learn} />
               <View style={styles.carouselContainer}>
                 <CarouselUi4 height={theme.rem(13)} width={screenWidth}>
                   {blogData.map((blogPost, index) => (
@@ -173,8 +123,8 @@ export const HomeSceneUi4 = (props: Props) => {
                   ))}
                 </CarouselUi4>
               </View>
-            )}
-          </>
+            </>
+          )}
         </SectionView>
       </View>
     </NotificationSceneWrapper>
