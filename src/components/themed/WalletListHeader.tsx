@@ -8,7 +8,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { PromoCard } from '../cards/PromoCard'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { WiredBalanceBox } from '../themed/WiredBalanceBox'
+import { BalanceCardUi4 } from '../ui4/BalanceCardUi4'
 import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
 
@@ -82,8 +82,8 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
             </TouchableOpacity>
           )}
         </View>
-        {!searching && <WiredBalanceBox />}
-        {!sorting && !searching && <SectionHeaderUi4 leftTitle={lstrings.title_wallets} rightNode={addSortButtons} />}
+        {searching ? null : <BalanceCardUi4 navigation={navigation} />}
+        {sorting || searching ? null : <SectionHeaderUi4 leftTitle={lstrings.title_wallets} rightNode={addSortButtons} />}
 
         {searching ? null : <PromoCard navigation={navigation} />}
       </>
