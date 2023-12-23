@@ -55,13 +55,18 @@ exports[`TransactionDetailsScene should render 1`] = `
             {
               "borderRadius": 22,
               "flex": 1,
-              "padding": 11,
             },
             {
               "marginBottom": 11,
               "marginLeft": 11,
               "marginRight": 11,
               "marginTop": 11,
+            },
+            {
+              "paddingBottom": 11,
+              "paddingLeft": 11,
+              "paddingRight": 11,
+              "paddingTop": 11,
             },
           ]
         }
@@ -82,14 +87,20 @@ exports[`TransactionDetailsScene should render 1`] = `
         />
         <View
           style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0)",
-              "flex": 1,
-              "flexDirection": "row",
-              "paddingHorizontal": 11,
-              "paddingVertical": 6,
-            }
+            [
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flex": 1,
+                "flexDirection": "row",
+              },
+              {
+                "marginBottom": 0,
+                "marginLeft": 0,
+                "marginRight": 0,
+                "marginTop": 0,
+              },
+            ]
           }
         >
           <View
@@ -156,7 +167,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                   {
                     "color": "#A4C7DF",
                     "fontSize": 17,
-                    "paddingBottom": 6,
                     "paddingRight": 22,
                   },
                   null,
@@ -227,7 +237,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                 "height": "100%",
                 "justifyContent": "center",
                 "opacity": 1,
-                "paddingRight": 11,
                 "position": "absolute",
                 "right": 0,
                 "width": "100%",
@@ -267,13 +276,18 @@ exports[`TransactionDetailsScene should render 1`] = `
             {
               "borderRadius": 22,
               "flex": 1,
-              "padding": 11,
             },
             {
               "marginBottom": 11,
               "marginLeft": 11,
               "marginRight": 11,
               "marginTop": 11,
+            },
+            {
+              "paddingBottom": 11,
+              "paddingLeft": 11,
+              "paddingRight": 11,
+              "paddingTop": 11,
             },
           ]
         }
@@ -294,23 +308,33 @@ exports[`TransactionDetailsScene should render 1`] = `
         />
         <View
           style={
-            {
-              "flex": 1,
-              "flexDirection": "column",
-              "marginVertical": 6,
-            }
+            [
+              {
+                "flex": 1,
+                "flexDirection": "column",
+              },
+              {
+                "marginVertical": 0,
+              },
+            ]
           }
         >
           <View
             style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flex": 1,
+                  "flexDirection": "row",
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
             <View
@@ -336,7 +360,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                     {
                       "color": "#A4C7DF",
                       "fontSize": 17,
-                      "paddingBottom": 6,
                       "paddingRight": 22,
                     },
                     null,
@@ -386,14 +409,20 @@ exports[`TransactionDetailsScene should render 1`] = `
           />
           <View
             style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flex": 1,
+                  "flexDirection": "row",
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
             <View
@@ -419,7 +448,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                     {
                       "color": "#A4C7DF",
                       "fontSize": 17,
-                      "paddingBottom": 6,
                       "paddingRight": 22,
                     },
                     null,
@@ -518,7 +546,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "height": "100%",
                   "justifyContent": "center",
                   "opacity": 1,
-                  "paddingRight": 11,
                   "position": "absolute",
                   "right": 0,
                   "width": "100%",
@@ -567,14 +594,20 @@ exports[`TransactionDetailsScene should render 1`] = `
           />
           <View
             style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flex": 1,
+                  "flexDirection": "row",
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
             <View
@@ -600,7 +633,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                     {
                       "color": "#A4C7DF",
                       "fontSize": 17,
-                      "paddingBottom": 6,
                       "paddingRight": 22,
                     },
                     null,
@@ -699,14 +731,20 @@ exports[`TransactionDetailsScene should render 1`] = `
           />
           <View
             style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flex": 1,
+                  "flexDirection": "row",
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
             <View
@@ -732,7 +770,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                     {
                       "color": "#A4C7DF",
                       "fontSize": 17,
-                      "paddingBottom": 6,
                       "paddingRight": 22,
                     },
                     null,
@@ -774,13 +811,18 @@ exports[`TransactionDetailsScene should render 1`] = `
             {
               "borderRadius": 22,
               "flex": 1,
-              "padding": 11,
             },
             {
               "marginBottom": 11,
               "marginLeft": 11,
               "marginRight": 11,
               "marginTop": 11,
+            },
+            {
+              "paddingBottom": 11,
+              "paddingLeft": 11,
+              "paddingRight": 11,
+              "paddingTop": 11,
             },
           ]
         }
@@ -801,23 +843,33 @@ exports[`TransactionDetailsScene should render 1`] = `
         />
         <View
           style={
-            {
-              "flex": 1,
-              "flexDirection": "column",
-              "marginVertical": 6,
-            }
+            [
+              {
+                "flex": 1,
+                "flexDirection": "column",
+              },
+              {
+                "marginVertical": 0,
+              },
+            ]
           }
         >
           <View
             style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flex": 1,
+                  "flexDirection": "row",
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
             <View
@@ -843,7 +895,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                     {
                       "color": "#A4C7DF",
                       "fontSize": 17,
-                      "paddingBottom": 6,
                       "paddingRight": 22,
                     },
                     null,
@@ -917,7 +968,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "height": "100%",
                   "justifyContent": "center",
                   "opacity": 1,
-                  "paddingRight": 11,
                   "position": "absolute",
                   "right": 0,
                   "width": "100%",
@@ -966,14 +1016,20 @@ exports[`TransactionDetailsScene should render 1`] = `
           />
           <View
             style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flex": 1,
+                  "flexDirection": "row",
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
             <View
@@ -999,7 +1055,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                     {
                       "color": "#A4C7DF",
                       "fontSize": 17,
-                      "paddingBottom": 6,
                       "paddingRight": 22,
                     },
                     null,
@@ -1074,7 +1129,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "height": "100%",
                   "justifyContent": "center",
                   "opacity": 1,
-                  "paddingRight": 11,
                   "position": "absolute",
                   "right": 0,
                   "width": "100%",
@@ -1115,13 +1169,18 @@ exports[`TransactionDetailsScene should render 1`] = `
             {
               "borderRadius": 22,
               "flex": 1,
-              "padding": 11,
             },
             {
               "marginBottom": 11,
               "marginLeft": 11,
               "marginRight": 11,
               "marginTop": 11,
+            },
+            {
+              "paddingBottom": 11,
+              "paddingLeft": 11,
+              "paddingRight": 11,
+              "paddingTop": 11,
             },
           ]
         }
@@ -1142,23 +1201,33 @@ exports[`TransactionDetailsScene should render 1`] = `
         />
         <View
           style={
-            {
-              "flex": 1,
-              "flexDirection": "column",
-              "marginVertical": 6,
-            }
+            [
+              {
+                "flex": 1,
+                "flexDirection": "column",
+              },
+              {
+                "marginVertical": 0,
+              },
+            ]
           }
         >
           <View
             style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flex": 1,
+                  "flexDirection": "row",
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
             <View
@@ -1184,7 +1253,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                     {
                       "color": "#A4C7DF",
                       "fontSize": 17,
-                      "paddingBottom": 6,
                       "paddingRight": 22,
                     },
                     null,
@@ -1234,14 +1302,20 @@ exports[`TransactionDetailsScene should render 1`] = `
           />
           <View
             style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flex": 1,
+                  "flexDirection": "row",
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
             <View
@@ -1267,7 +1341,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                     {
                       "color": "#A4C7DF",
                       "fontSize": 17,
-                      "paddingBottom": 6,
                       "paddingRight": 22,
                     },
                     null,
@@ -1677,13 +1750,18 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             {
               "borderRadius": 22,
               "flex": 1,
-              "padding": 11,
             },
             {
               "marginBottom": 11,
               "marginLeft": 11,
               "marginRight": 11,
               "marginTop": 11,
+            },
+            {
+              "paddingBottom": 11,
+              "paddingLeft": 11,
+              "paddingRight": 11,
+              "paddingTop": 11,
             },
           ]
         }
@@ -1704,14 +1782,20 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         />
         <View
           style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0)",
-              "flex": 1,
-              "flexDirection": "row",
-              "paddingHorizontal": 11,
-              "paddingVertical": 6,
-            }
+            [
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flex": 1,
+                "flexDirection": "row",
+              },
+              {
+                "marginBottom": 0,
+                "marginLeft": 0,
+                "marginRight": 0,
+                "marginTop": 0,
+              },
+            ]
           }
         >
           <View
@@ -1778,7 +1862,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   {
                     "color": "#A4C7DF",
                     "fontSize": 17,
-                    "paddingBottom": 6,
                     "paddingRight": 22,
                   },
                   null,
@@ -1849,7 +1932,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 "height": "100%",
                 "justifyContent": "center",
                 "opacity": 1,
-                "paddingRight": 11,
                 "position": "absolute",
                 "right": 0,
                 "width": "100%",
@@ -1889,13 +1971,18 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             {
               "borderRadius": 22,
               "flex": 1,
-              "padding": 11,
             },
             {
               "marginBottom": 11,
               "marginLeft": 11,
               "marginRight": 11,
               "marginTop": 11,
+            },
+            {
+              "paddingBottom": 11,
+              "paddingLeft": 11,
+              "paddingRight": 11,
+              "paddingTop": 11,
             },
           ]
         }
@@ -1916,23 +2003,33 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         />
         <View
           style={
-            {
-              "flex": 1,
-              "flexDirection": "column",
-              "marginVertical": 6,
-            }
+            [
+              {
+                "flex": 1,
+                "flexDirection": "column",
+              },
+              {
+                "marginVertical": 0,
+              },
+            ]
           }
         >
           <View
             style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flex": 1,
+                  "flexDirection": "row",
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
             <View
@@ -1958,7 +2055,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     {
                       "color": "#A4C7DF",
                       "fontSize": 17,
-                      "paddingBottom": 6,
                       "paddingRight": 22,
                     },
                     null,
@@ -2008,14 +2104,20 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           />
           <View
             style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flex": 1,
+                  "flexDirection": "row",
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
             <View
@@ -2041,7 +2143,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     {
                       "color": "#A4C7DF",
                       "fontSize": 17,
-                      "paddingBottom": 6,
                       "paddingRight": 22,
                     },
                     null,
@@ -2140,7 +2241,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "height": "100%",
                   "justifyContent": "center",
                   "opacity": 1,
-                  "paddingRight": 11,
                   "position": "absolute",
                   "right": 0,
                   "width": "100%",
@@ -2189,14 +2289,20 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           />
           <View
             style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flex": 1,
+                  "flexDirection": "row",
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
             <View
@@ -2222,7 +2328,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     {
                       "color": "#A4C7DF",
                       "fontSize": 17,
-                      "paddingBottom": 6,
                       "paddingRight": 22,
                     },
                     null,
@@ -2321,14 +2426,20 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           />
           <View
             style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flex": 1,
+                  "flexDirection": "row",
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
             <View
@@ -2354,7 +2465,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     {
                       "color": "#A4C7DF",
                       "fontSize": 17,
-                      "paddingBottom": 6,
                       "paddingRight": 22,
                     },
                     null,
@@ -2396,13 +2506,18 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             {
               "borderRadius": 22,
               "flex": 1,
-              "padding": 11,
             },
             {
               "marginBottom": 11,
               "marginLeft": 11,
               "marginRight": 11,
               "marginTop": 11,
+            },
+            {
+              "paddingBottom": 11,
+              "paddingLeft": 11,
+              "paddingRight": 11,
+              "paddingTop": 11,
             },
           ]
         }
@@ -2423,23 +2538,33 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         />
         <View
           style={
-            {
-              "flex": 1,
-              "flexDirection": "column",
-              "marginVertical": 6,
-            }
+            [
+              {
+                "flex": 1,
+                "flexDirection": "column",
+              },
+              {
+                "marginVertical": 0,
+              },
+            ]
           }
         >
           <View
             style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flex": 1,
+                  "flexDirection": "row",
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
             <View
@@ -2465,7 +2590,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     {
                       "color": "#A4C7DF",
                       "fontSize": 17,
-                      "paddingBottom": 6,
                       "paddingRight": 22,
                     },
                     null,
@@ -2539,7 +2663,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "height": "100%",
                   "justifyContent": "center",
                   "opacity": 1,
-                  "paddingRight": 11,
                   "position": "absolute",
                   "right": 0,
                   "width": "100%",
@@ -2588,14 +2711,20 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           />
           <View
             style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flex": 1,
+                  "flexDirection": "row",
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
             <View
@@ -2621,7 +2750,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     {
                       "color": "#A4C7DF",
                       "fontSize": 17,
-                      "paddingBottom": 6,
                       "paddingRight": 22,
                     },
                     null,
@@ -2696,7 +2824,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "height": "100%",
                   "justifyContent": "center",
                   "opacity": 1,
-                  "paddingRight": 11,
                   "position": "absolute",
                   "right": 0,
                   "width": "100%",
@@ -2737,13 +2864,18 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             {
               "borderRadius": 22,
               "flex": 1,
-              "padding": 11,
             },
             {
               "marginBottom": 11,
               "marginLeft": 11,
               "marginRight": 11,
               "marginTop": 11,
+            },
+            {
+              "paddingBottom": 11,
+              "paddingLeft": 11,
+              "paddingRight": 11,
+              "paddingTop": 11,
             },
           ]
         }
@@ -2764,23 +2896,33 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         />
         <View
           style={
-            {
-              "flex": 1,
-              "flexDirection": "column",
-              "marginVertical": 6,
-            }
+            [
+              {
+                "flex": 1,
+                "flexDirection": "column",
+              },
+              {
+                "marginVertical": 0,
+              },
+            ]
           }
         >
           <View
             style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flex": 1,
+                  "flexDirection": "row",
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
             <View
@@ -2806,7 +2948,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     {
                       "color": "#A4C7DF",
                       "fontSize": 17,
-                      "paddingBottom": 6,
                       "paddingRight": 22,
                     },
                     null,
@@ -2856,14 +2997,20 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           />
           <View
             style={
-              {
-                "alignItems": "center",
-                "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 11,
-                "paddingVertical": 6,
-              }
+              [
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flex": 1,
+                  "flexDirection": "row",
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 0,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           >
             <View
@@ -2889,7 +3036,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     {
                       "color": "#A4C7DF",
                       "fontSize": 17,
-                      "paddingBottom": 6,
                       "paddingRight": 22,
                     },
                     null,

@@ -8,6 +8,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
+import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -31,14 +32,19 @@ interface Props {
   title?: string
   onLongPress?: () => Promise<void> | void
   onPress?: () => Promise<void> | void
+
+  /** @deprecated Only to be used during the UI4 transition */
+  marginRem?: number[] | number
 }
 
 export const RowUi4 = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { body, title, children, maximumHeight = 'medium', error, icon, loading, onLongPress, onPress } = props
+  const { body, title, children, maximumHeight = 'medium', error, icon, loading, marginRem, onLongPress, onPress } = props
   const { rightButtonType = onLongPress == null && onPress == null ? 'none' : 'touchable' } = props
+
+  const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
 
   const numberOfLines = textHeights[maximumHeight]
 
@@ -110,11 +116,11 @@ export const RowUi4 = (props: Props) => {
 
   // The entire row dims on tap if not handled by the right action icon button
   return isTappable && !rightButtonVisible ? (
-    <TouchableOpacity style={styles.container} accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={loading}>
+    <TouchableOpacity style={[styles.container, margin]} accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={loading}>
       {content}
     </TouchableOpacity>
   ) : (
-    <View style={styles.container}>{content}</View>
+    <View style={[styles.container, margin]}>{content}</View>
   )
 }
 
@@ -123,8 +129,6 @@ export const RowUi4 = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     backgroundColor: theme.tileBackground,
-    paddingHorizontal: theme.rem(0.5),
-    paddingVertical: theme.rem(0.25),
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1
@@ -148,8 +152,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: '100%',
     height: '100%',
     justifyContent: 'center',
-    alignItems: 'flex-end',
-    paddingRight: theme.rem(0.5)
+    alignItems: 'flex-end'
   },
   tappableIconMargin: {
     // Extra invisible space to align the content when the right tappable icon
@@ -164,7 +167,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   textHeader: {
     color: theme.secondaryText,
     fontSize: theme.rem(0.75),
-    paddingBottom: theme.rem(0.25),
     paddingRight: theme.rem(1)
   },
   textHeaderError: {

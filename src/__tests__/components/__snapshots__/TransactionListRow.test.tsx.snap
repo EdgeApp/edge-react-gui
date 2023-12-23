@@ -38,7 +38,10 @@ exports[`TransactionListRow should render with loading props 1`] = `
       "marginRight": 11,
       "marginTop": 11,
       "opacity": 1,
-      "padding": 11,
+      "paddingBottom": 22,
+      "paddingLeft": 22,
+      "paddingRight": 22,
+      "paddingTop": 22,
     }
   }
 >
@@ -129,23 +132,33 @@ exports[`TransactionListRow should render with loading props 1`] = `
     </View>
     <View
       style={
-        {
-          "flex": 1,
-          "flexDirection": "column",
-          "marginVertical": 6,
-        }
+        [
+          {
+            "flex": 1,
+            "flexDirection": "column",
+          },
+          {
+            "marginVertical": 11,
+          },
+        ]
       }
     >
       <View
         style={
-          {
-            "alignItems": "center",
-            "backgroundColor": "rgba(255, 255, 255, 0)",
-            "flex": 1,
-            "flexDirection": "row",
-            "paddingHorizontal": 11,
-            "paddingVertical": 6,
-          }
+          [
+            {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, 0)",
+              "flex": 1,
+              "flexDirection": "row",
+            },
+            {
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
+            },
+          ]
         }
       >
         <View

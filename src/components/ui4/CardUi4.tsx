@@ -5,7 +5,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
 import { triggerHaptic } from '../../util/haptic'
-import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SectionView } from './SectionView'
@@ -22,8 +22,10 @@ interface Props {
   gradientBackground?: LinearGradientProps // 3rd layer
   nodeBackground?: React.ReactNode // 4th layer, anything goes
 
-  // DO NOT USE after a scene is fully UI4! Margins should all align without adjustment.
+  /** @deprecated Only to be used during the UI4 transition */
   marginRem?: number[] | number
+  /** @deprecated Only to be used during the UI4 transition */
+  paddingRem?: number[] | number
 
   // Options:
   sections?: boolean // Automatic section dividers, only if chilren are multiple nodes
@@ -46,11 +48,13 @@ interface Props {
  * onClose: If specified, adds a close button
  */
 export const CardUi4 = (props: Props) => {
-  const { children, icon, marginRem, overlay, sections, gradientBackground, nodeBackground, onClose, onLongPress, onPress } = props
+  const { children, icon, marginRem, paddingRem, overlay, sections, gradientBackground, nodeBackground, onClose, onLongPress, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
+
+  const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0.5), theme.rem))
   const isPressable = onPress != null || onLongPress != null
 
   const handlePress = useHandler(async () => {
@@ -120,11 +124,11 @@ export const CardUi4 = (props: Props) => {
     )
 
   return isPressable ? (
-    <TouchableOpacity accessible={false} onPress={handlePress} onLongPress={handleLongPress} style={[styles.cardContainer, margin]}>
+    <TouchableOpacity accessible={false} onPress={handlePress} onLongPress={handleLongPress} style={[styles.cardContainer, margin, padding]}>
       {allContent}
     </TouchableOpacity>
   ) : (
-    <View style={[styles.cardContainer, margin]}>{allContent}</View>
+    <View style={[styles.cardContainer, margin, padding]}>{allContent}</View>
   )
 }
 
@@ -137,7 +141,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   cardContainer: {
     borderRadius: theme.rem(theme.cardRadiusRemUi4),
-    padding: theme.rem(0.5),
     flex: 1
   },
   cornerContainer: {
