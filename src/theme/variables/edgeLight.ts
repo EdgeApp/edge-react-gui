@@ -72,10 +72,17 @@ const palette = {
   lightGreen: '#75C649',
   lightRed: '#E84D65',
 
+  graySecondary: 'hsla(0, 0%, 100%, 0.20)',
+
   warningOuter: '#772a0f',
   warningInner: '#835d22',
   errorOuter: '#94472e',
-  errorInner: '#962c32'
+  errorInner: '#962c32',
+
+  orangeOp24: '#fc9e733d',
+  lightBlueOp24: '#4ea5bc3d',
+  purpleOp24: '#4123b73d',
+  pinkOp24: '#db37a03d'
 }
 
 const deviceWidth = Dimensions.get('window').width
@@ -456,20 +463,14 @@ export const edgeLight: Theme = {
   buttonSecondaryUi4: {
     textStyle: {
       fontFamily: palette.QuicksandMedium,
-      color: palette.black
+      color: palette.white
     },
     gradientProps: {
-      colors: [palette.edgeMint, palette.edgeMint],
+      colors: [palette.graySecondary, palette.graySecondary],
       end: { x: 1, y: 0 },
       start: { x: 0, y: 0 }
     },
-    shadowParams: {
-      shadowColor: palette.white,
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.25,
-      shadowRadius: 8,
-      elevation: 2
-    },
+    shadowParams: themeNoShadow,
     containerStyle: {
       borderColor: palette.edgeMint,
       borderWidth: 1
@@ -501,23 +502,42 @@ export const edgeLight: Theme = {
     spinnerColor: palette.white
   },
 
-  cardBackgroundUi4: {
-    colors: [palette.lightGrayOp75, palette.lightGrayOp75],
-    end: { x: 1, y: 1 },
-    start: { x: 0, y: 0 }
-  },
-  cardBackgroundWarningUi4: {
+  // Basic Card Styles
+  cardBaseColorUi4: palette.whiteOp10,
+  cardGradientWarningUi4: {
     colors: [palette.warningOuter, palette.warningInner, palette.warningInner, palette.warningOuter],
     end: { x: 0.9, y: 0 },
     start: { x: 0, y: 0.9 }
   },
-  cardBackgroundErrorUi4: {
+  cardGradientErrorUi4: {
     colors: [palette.errorOuter, palette.errorInner, palette.errorInner, palette.errorOuter],
     end: { x: 0.9, y: 0 },
     start: { x: 0, y: 0.9 }
   },
-  cardDisabledOverlayUi4: palette.blackOp65,
+  cardOverlayDisabledUi4: palette.blackOp65,
   cardRadiusRemUi4: 1,
+
+  // Special Home Scene Tiled Cards
+  buyCardGradientUi4: {
+    colors: [palette.orangeOp24, palette.transparent],
+    end: { x: 0, y: 1 },
+    start: { x: 1, y: 0 }
+  },
+  sellCardGradientUi4: {
+    colors: [palette.lightBlueOp24, palette.transparent],
+    end: { x: 0, y: 1 },
+    start: { x: 1, y: 0 }
+  },
+  fioCardGradientUi4: {
+    colors: [palette.purpleOp24, palette.transparent],
+    end: { x: 0, y: 1 },
+    start: { x: 1, y: 0 }
+  },
+  swapCardGradientUi4: {
+    colors: [palette.pinkOp24, palette.transparent],
+    end: { x: 0, y: 1 },
+    start: { x: 1, y: 0 }
+  },
 
   iconTappableAltUi4: palette.black,
 

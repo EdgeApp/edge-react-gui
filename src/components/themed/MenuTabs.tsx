@@ -21,7 +21,7 @@ const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_m
 
 const title: { readonly [key: string]: string } = {
   marketsTab: lstrings.title_markets,
-  walletsTab: lstrings.title_wallets,
+  walletsTab: lstrings.title_home, // TODO: update after UI4 tabs
   buyTab: lstrings.title_buy,
   sellTab: lstrings.title_sell,
   exchangeTab: lstrings.title_exchange,
@@ -58,7 +58,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
     const currentName = routes[activeTabIndex].name
     switch (route) {
       case 'walletsTab':
-        return navigation.navigate('walletsTab', currentName === 'walletsTab' ? { screen: 'walletList' } : {})
+        return navigation.navigate('home', currentName === 'walletsTab' ? { screen: 'home' } : {}) // TODO: update after UI4 tabs
       case 'buyTab':
         return navigation.navigate('buyTab', currentName === 'buyTab' ? { screen: 'pluginListBuy' } : {})
       case 'sellTab':
@@ -85,7 +85,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
           const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
           const icon: { readonly [key: string]: JSX.Element } = {
             marketsTab: <Foundation name="list-number" size={theme.rem(1.25)} color={color} />,
-            walletsTab: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
+            walletsTab: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />, // TODO: update after UI4 tabs
             buyTab: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
             sellTab: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
             exchangeTab: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />,

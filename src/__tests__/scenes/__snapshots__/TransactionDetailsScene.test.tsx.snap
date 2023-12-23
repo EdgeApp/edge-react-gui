@@ -66,28 +66,10 @@ exports[`TransactionDetailsScene should render 1`] = `
           ]
         }
       >
-        <BVLinearGradient
-          colors={
-            [
-              452984831,
-              452984831,
-            ]
-          }
-          endPoint={
-            {
-              "x": 1,
-              "y": 1,
-            }
-          }
-          locations={null}
-          startPoint={
-            {
-              "x": 0,
-              "y": 0,
-            }
-          }
+        <View
           style={
             {
+              "backgroundColor": "rgba(255, 255, 255, .1)",
               "borderRadius": 22,
               "bottom": 0,
               "left": 0,
@@ -296,28 +278,10 @@ exports[`TransactionDetailsScene should render 1`] = `
           ]
         }
       >
-        <BVLinearGradient
-          colors={
-            [
-              452984831,
-              452984831,
-            ]
-          }
-          endPoint={
-            {
-              "x": 1,
-              "y": 1,
-            }
-          }
-          locations={null}
-          startPoint={
-            {
-              "x": 0,
-              "y": 0,
-            }
-          }
+        <View
           style={
             {
+              "backgroundColor": "rgba(255, 255, 255, .1)",
               "borderRadius": 22,
               "bottom": 0,
               "left": 0,
@@ -333,6 +297,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             {
               "flex": 1,
               "flexDirection": "column",
+              "marginVertical": 6,
             }
           }
         >
@@ -407,13 +372,16 @@ exports[`TransactionDetailsScene should render 1`] = `
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                },
+                {
+                  "margin": 11,
+                },
+              ]
             }
           />
           <View
@@ -585,13 +553,16 @@ exports[`TransactionDetailsScene should render 1`] = `
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                },
+                {
+                  "margin": 11,
+                },
+              ]
             }
           />
           <View
@@ -714,13 +685,16 @@ exports[`TransactionDetailsScene should render 1`] = `
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                },
+                {
+                  "margin": 11,
+                },
+              ]
             }
           />
           <View
@@ -885,28 +859,10 @@ exports[`TransactionDetailsScene should render 1`] = `
           ]
         }
       >
-        <BVLinearGradient
-          colors={
-            [
-              452984831,
-              452984831,
-            ]
-          }
-          endPoint={
-            {
-              "x": 1,
-              "y": 1,
-            }
-          }
-          locations={null}
-          startPoint={
-            {
-              "x": 0,
-              "y": 0,
-            }
-          }
+        <View
           style={
             {
+              "backgroundColor": "rgba(255, 255, 255, .1)",
               "borderRadius": 22,
               "bottom": 0,
               "left": 0,
@@ -922,6 +878,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             {
               "flex": 1,
               "flexDirection": "column",
+              "marginVertical": 6,
             }
           }
         >
@@ -1069,13 +1026,16 @@ exports[`TransactionDetailsScene should render 1`] = `
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                },
+                {
+                  "margin": 11,
+                },
+              ]
             }
           />
           <View
@@ -1240,28 +1200,10 @@ exports[`TransactionDetailsScene should render 1`] = `
           ]
         }
       >
-        <BVLinearGradient
-          colors={
-            [
-              452984831,
-              452984831,
-            ]
-          }
-          endPoint={
-            {
-              "x": 1,
-              "y": 1,
-            }
-          }
-          locations={null}
-          startPoint={
-            {
-              "x": 0,
-              "y": 0,
-            }
-          }
+        <View
           style={
             {
+              "backgroundColor": "rgba(255, 255, 255, .1)",
               "borderRadius": 22,
               "bottom": 0,
               "left": 0,
@@ -1277,6 +1219,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             {
               "flex": 1,
               "flexDirection": "column",
+              "marginVertical": 6,
             }
           }
         >
@@ -1351,13 +1294,16 @@ exports[`TransactionDetailsScene should render 1`] = `
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                },
+                {
+                  "margin": 11,
+                },
+              ]
             }
           />
           <View
@@ -1890,28 +1836,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           ]
         }
       >
-        <BVLinearGradient
-          colors={
-            [
-              452984831,
-              452984831,
-            ]
-          }
-          endPoint={
-            {
-              "x": 1,
-              "y": 1,
-            }
-          }
-          locations={null}
-          startPoint={
-            {
-              "x": 0,
-              "y": 0,
-            }
-          }
+        <View
           style={
             {
+              "backgroundColor": "rgba(255, 255, 255, .1)",
               "borderRadius": 22,
               "bottom": 0,
               "left": 0,
@@ -2120,28 +2048,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           ]
         }
       >
-        <BVLinearGradient
-          colors={
-            [
-              452984831,
-              452984831,
-            ]
-          }
-          endPoint={
-            {
-              "x": 1,
-              "y": 1,
-            }
-          }
-          locations={null}
-          startPoint={
-            {
-              "x": 0,
-              "y": 0,
-            }
-          }
+        <View
           style={
             {
+              "backgroundColor": "rgba(255, 255, 255, .1)",
               "borderRadius": 22,
               "bottom": 0,
               "left": 0,
@@ -2157,6 +2067,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             {
               "flex": 1,
               "flexDirection": "column",
+              "marginVertical": 6,
             }
           }
         >
@@ -2231,13 +2142,16 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                },
+                {
+                  "margin": 11,
+                },
+              ]
             }
           />
           <View
@@ -2409,13 +2323,16 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                },
+                {
+                  "margin": 11,
+                },
+              ]
             }
           />
           <View
@@ -2538,13 +2455,16 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                },
+                {
+                  "margin": 11,
+                },
+              ]
             }
           />
           <View
@@ -2709,28 +2629,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           ]
         }
       >
-        <BVLinearGradient
-          colors={
-            [
-              452984831,
-              452984831,
-            ]
-          }
-          endPoint={
-            {
-              "x": 1,
-              "y": 1,
-            }
-          }
-          locations={null}
-          startPoint={
-            {
-              "x": 0,
-              "y": 0,
-            }
-          }
+        <View
           style={
             {
+              "backgroundColor": "rgba(255, 255, 255, .1)",
               "borderRadius": 22,
               "bottom": 0,
               "left": 0,
@@ -2746,6 +2648,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             {
               "flex": 1,
               "flexDirection": "column",
+              "marginVertical": 6,
             }
           }
         >
@@ -2893,13 +2796,16 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                },
+                {
+                  "margin": 11,
+                },
+              ]
             }
           />
           <View
@@ -3064,28 +2970,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           ]
         }
       >
-        <BVLinearGradient
-          colors={
-            [
-              452984831,
-              452984831,
-            ]
-          }
-          endPoint={
-            {
-              "x": 1,
-              "y": 1,
-            }
-          }
-          locations={null}
-          startPoint={
-            {
-              "x": 0,
-              "y": 0,
-            }
-          }
+        <View
           style={
             {
+              "backgroundColor": "rgba(255, 255, 255, .1)",
               "borderRadius": 22,
               "bottom": 0,
               "left": 0,
@@ -3101,6 +2989,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             {
               "flex": 1,
               "flexDirection": "column",
+              "marginVertical": 6,
             }
           }
         >
@@ -3175,13 +3064,16 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           </View>
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "height": 1,
-                "marginHorizontal": 11,
-                "marginVertical": 11,
-              }
+              [
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "height": 1,
+                },
+                {
+                  "margin": 11,
+                },
+              ]
             }
           />
           <View

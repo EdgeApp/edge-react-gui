@@ -5,14 +5,21 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   children: React.ReactNode | React.ReactNode[]
+
+  // For scene-level usage where we want the line to extend all the way to the
+  // right
+  extendRight?: boolean
 }
 
 /**
  * View that automatically adds horizontal dividers between each child, aligned
  * in a column layout. Adds no dividers if only one child is given.
+ *
+ * wideSpacing is meant for sectioning out a scene where more spacing is needed
+ * between sections.
  */
 export const SectionView = (props: Props): JSX.Element | null => {
-  const { children } = props
+  const { children, extendRight = false } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -35,7 +42,7 @@ export const SectionView = (props: Props): JSX.Element | null => {
               return (
                 <>
                   {child}
-                  <View style={styles.divider} />
+                  <View style={[styles.divider, extendRight ? styles.dividerMarginScene : styles.dividerMarginCard]} />
                 </>
               )
             }
@@ -48,13 +55,20 @@ export const SectionView = (props: Props): JSX.Element | null => {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flexDirection: 'column',
-    flex: 1
+    flex: 1,
+    marginVertical: theme.rem(0.25)
   },
   divider: {
     height: theme.thinLineWidth,
-    marginHorizontal: theme.rem(0.5),
-    marginVertical: theme.rem(0.5),
     borderBottomWidth: theme.thinLineWidth,
     borderBottomColor: theme.lineDivider
+  },
+  dividerMarginScene: {
+    marginVertical: theme.rem(0.5),
+    marginLeft: theme.rem(1),
+    marginRight: -theme.rem(0.5)
+  },
+  dividerMarginCard: {
+    margin: theme.rem(0.5)
   }
 }))

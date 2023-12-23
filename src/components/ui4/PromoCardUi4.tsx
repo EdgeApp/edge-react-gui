@@ -45,8 +45,8 @@ export function PromoCardUi4Component(props: Props) {
   return (
     <CardUi4
       onClose={handleClose}
-      underlayBackground={{ colors: backgroundGradientColors, start: backgroundGradientStart, end: backgroundGradientEnd }}
-      underlayForeground={
+      gradientBackground={{ colors: backgroundGradientColors, start: backgroundGradientStart, end: backgroundGradientEnd }}
+      nodeBackground={
         <View style={styles.backgroundContainer}>
           <FastImage
             source={{

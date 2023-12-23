@@ -18,14 +18,15 @@ interface Props {
   children: React.ReactNode | React.ReactNode[]
   icon?: React.ReactNode
 
+  // Everything else underneath, in order:
+  gradientBackground?: LinearGradientProps // 3rd layer
+  nodeBackground?: React.ReactNode // 4th layer, anything goes
+
   // DO NOT USE after a scene is fully UI4! Margins should all align without adjustment.
   marginRem?: number[] | number
 
-  underlayForeground?: React.ReactNode // 3rd layer, e.g. embedded images as part of the background
-  underlayBackground?: LinearGradientProps // Bottom-most layer
-
   // Options:
-  sections?: boolean // Automatic section dividers, only if chilren is multiple nodes
+  sections?: boolean // Automatic section dividers, only if chilren are multiple nodes
   onClose?: () => Promise<void> | void // If specified, adds a close button, absolutely positioned in the top right
 
   // Touchable area for the following span the entire card:
@@ -39,13 +40,13 @@ interface Props {
  * sections: Automatically adds horizontal dividers between each child, aligned
  * in a column layout. Adds no dividers if only one child is given.
  *
- * underlayForeground/underlayBackground: For specifying a complex background
+ * gradientBackground/nodeBackground: For specifying a complex background
  * that can include embedded images or any other component.
  *
  * onClose: If specified, adds a close button
  */
 export const CardUi4 = (props: Props) => {
-  const { children, icon, marginRem, overlay, sections, underlayForeground, underlayBackground, onClose, onLongPress, onPress } = props
+  const { children, icon, marginRem, overlay, sections, gradientBackground, nodeBackground, onClose, onLongPress, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -78,10 +79,11 @@ export const CardUi4 = (props: Props) => {
     triggerHaptic('impactLight')
   })
 
-  const underlay = (
-    <LinearGradient {...(underlayBackground ?? theme.cardBackgroundUi4)} style={styles.backgroundFill}>
-      {underlayForeground}
-    </LinearGradient>
+  const background = (
+    <View style={styles.backgroundFill}>
+      {nodeBackground}
+      {gradientBackground == null ? null : <LinearGradient {...gradientBackground} style={StyleSheet.absoluteFill} />}
+    </View>
   )
 
   const maybeIcon = icon == null ? null : <View style={styles.iconContainer}>{icon}</View>
@@ -100,14 +102,14 @@ export const CardUi4 = (props: Props) => {
   const allContent =
     icon == null ? (
       <>
-        {underlay}
+        {background}
         {content}
         {maybeCloseButton}
         {maybeOverlay}
       </>
     ) : (
       <>
-        {underlay}
+        {background}
         <View style={styles.rowContainer}>
           {maybeIcon}
           {content}
@@ -130,6 +132,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   backgroundFill: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: theme.rem(theme.cardRadiusRemUi4),
+    backgroundColor: theme.cardBaseColorUi4,
     overflow: 'hidden'
   },
   cardContainer: {
@@ -146,7 +149,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   overlayContainer: {
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
-    backgroundColor: theme.cardDisabledOverlayUi4,
+    backgroundColor: theme.cardOverlayDisabledUi4,
     borderRadius: theme.rem(theme.cardRadiusRemUi4),
     justifyContent: 'center',
     margin: 2,

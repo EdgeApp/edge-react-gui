@@ -440,17 +440,27 @@ export interface Theme {
   buttonSecondaryUi4: ButtomParamsUi4
   buttonTertiaryUi4: ButtomParamsUi4
 
-  cardBackgroundUi4: ThemeGradientParams
-  cardBackgroundWarningUi4: ThemeGradientParams
-  cardBackgroundErrorUi4: ThemeGradientParams
-  cardDisabledOverlayUi4: string
+  // Basic Card Styles
+  cardBaseColorUi4: string
+  cardGradientWarningUi4: ThemeGradientParams
+  cardGradientErrorUi4: ThemeGradientParams
+  cardOverlayDisabledUi4: string
   cardRadiusRemUi4: number
+
+  // Special Home Scene Tiled Cards
+  buyCardGradientUi4: ThemeGradientParams
+  sellCardGradientUi4: ThemeGradientParams
+  fioCardGradientUi4: ThemeGradientParams
+  swapCardGradientUi4: ThemeGradientParams
 
   iconTappableAltUi4: string
 
   negativeTextMutedUi4: string
+  secondaryTextUi4: string
 
   shadowColorUi4: string
+  shadowTextIosUi4: TextShadowParams
+  shadowTextAndroidUi4: TextShadowParams
 
   touchHighlightUi4: string
 

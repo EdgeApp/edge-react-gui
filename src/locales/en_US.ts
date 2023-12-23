@@ -1455,6 +1455,18 @@ const strings = {
 
   // #endregion Transfer Modal
 
+  // #region Home
+
+  buy_crypto: 'Buy Crypto',
+  see_all: 'See All',
+  sell_crypto: 'Sell Crypto',
+  swap_crypto: 'Swap Crypto',
+  title_home: 'Home',
+  title_learn: 'Learn',
+  view_assets: 'View Assets',
+
+  // #endregion Home
+
   // Currency Labels
   currency_label_AFN: 'Afghani',
   currency_label_ALL: 'Lek',

@@ -4,7 +4,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { ClickableRow } from '../themed/ClickableRow'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -16,8 +16,9 @@ interface FioNameProps {
   onPress: () => void
 }
 
-const FioName = (props: FioNameProps & ThemeProps) => {
-  const { name, expiration, bundledTxs, onPress, icon, theme } = props
+export const FioNameRow = (props: FioNameProps) => {
+  const { name, expiration, bundledTxs, onPress, icon } = props
+  const theme = useTheme()
   const styles = getStyles(theme)
 
   const renderSubTitle = () => {
@@ -47,8 +48,6 @@ const FioName = (props: FioNameProps & ThemeProps) => {
     </ClickableRow>
   )
 }
-
-export const FioNameRow = withTheme(FioName)
 
 const getStyles = cacheStyles((theme: Theme) => ({
   lastItem: {

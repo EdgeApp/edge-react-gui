@@ -12,6 +12,7 @@ import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
 import { logoutRequest } from '../actions/LoginActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CryptoExchangeScene as CryptoExchangeSceneComponent } from '../components/scenes/CryptoExchangeScene'
+import { HomeSceneUi4 as HomeSceneUi4Component } from '../components/ui4/scenes/HomeSceneUi4'
 import { ENV } from '../env'
 import { getExperimentConfigValue } from '../experimentConfig'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
@@ -203,6 +204,7 @@ const WcConnectionsScene = ifLoggedIn(WcConnectionsSceneComponent)
 const WcConnectScene = ifLoggedIn(WcConnectSceneComponent)
 const WcDisconnectScene = ifLoggedIn(WcDisconnectSceneComponent)
 const WebViewScene = ifLoggedIn(WebViewSceneComponent)
+const HomeSceneUi4 = ifLoggedIn(HomeSceneUi4Component)
 
 const Drawer = createDrawerNavigator<AppParamList>()
 const Stack = createStackNavigator<AppParamList>()
@@ -598,6 +600,7 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
+      <Stack.Screen name="walletList" component={WalletListScene} />
       <Stack.Screen
         name="loanClose"
         component={LoanCloseScene}
@@ -789,7 +792,7 @@ const EdgeTabs = () => {
 
 const EdgeWalletsTabScreen = () => {
   return (
-    <Stack.Navigator initialRouteName="walletList" screenOptions={defaultScreenOptions}>
+    <Stack.Navigator initialRouteName="home" screenOptions={defaultScreenOptions}>
       <Stack.Screen
         name="transactionDetails"
         component={TransactionDetailsScene}
@@ -798,7 +801,7 @@ const EdgeWalletsTabScreen = () => {
         }}
       />
       <Stack.Screen name="transactionList" component={TransactionList} />
-      <Stack.Screen name="walletList" component={WalletListScene} options={firstSceneScreenOptions} />
+      <Stack.Screen name="home" component={HomeSceneUi4} options={firstSceneScreenOptions} />
     </Stack.Navigator>
   )
 }
