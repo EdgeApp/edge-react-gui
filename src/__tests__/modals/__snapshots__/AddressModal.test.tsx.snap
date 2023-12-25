@@ -64,14 +64,8 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
     </View>
     <MainButton
       label="Submit"
-      marginRem={
-        [
-          0,
-          4,
-        ]
-      }
       onPress={[Function]}
-      type="secondary"
+      type="primary"
     />
   </View>
 </ThemedModal>

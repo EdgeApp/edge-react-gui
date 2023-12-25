@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FioAddressSettingsComponent should render with loading props 1`] = `
-<SceneWrapper
-  background="theme"
->
+<SceneWrapper>
   <RowUi4
     body="MyFioAddress"
     title="FIO Crypto Handle"
