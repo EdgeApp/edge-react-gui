@@ -7,13 +7,18 @@ exports[`BalanceCard should render with loading props 1`] = `
       {
         "borderRadius": 22,
         "flex": 1,
-        "padding": 11,
       },
       {
         "marginBottom": 11,
         "marginLeft": 11,
         "marginRight": 11,
         "marginTop": 11,
+      },
+      {
+        "paddingBottom": 11,
+        "paddingLeft": 11,
+        "paddingRight": 11,
+        "paddingTop": 11,
       },
     ]
   }

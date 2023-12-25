@@ -82,7 +82,7 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
             </TouchableOpacity>
           )}
         </View>
-        {searching ? null : <BalanceCardUi4 navigation={navigation} />}
+        {searching ? null : <BalanceCardUi4 navigation={navigation} hideShowAssets />}
         {sorting || searching ? null : <SectionHeaderUi4 leftTitle={lstrings.title_wallets} rightNode={addSortButtons} />}
 
         {searching ? null : <PromoCard navigation={navigation} />}
@@ -92,11 +92,6 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  headerContainer: {
-    flexDirection: 'row',
-    marginTop: theme.rem(0.5),
-    marginHorizontal: theme.rem(1)
-  },
   buttonsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -110,7 +105,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: theme.rem(0.5),
-    marginHorizontal: theme.rem(1)
+    marginHorizontal: theme.rem(0.5)
   },
   searchDoneButton: {
     justifyContent: 'center',

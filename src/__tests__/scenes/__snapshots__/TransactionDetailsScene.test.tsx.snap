@@ -95,10 +95,10 @@ exports[`TransactionDetailsScene should render 1`] = `
                 "flexDirection": "row",
               },
               {
-                "marginBottom": 0,
-                "marginLeft": 0,
-                "marginRight": 0,
-                "marginTop": 0,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
               },
             ]
           }
@@ -329,10 +329,10 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -417,10 +417,10 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -602,10 +602,10 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -739,10 +739,10 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -864,10 +864,10 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -1024,10 +1024,10 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -1222,10 +1222,10 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -1310,10 +1310,10 @@ exports[`TransactionDetailsScene should render 1`] = `
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -1790,10 +1790,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 "flexDirection": "row",
               },
               {
-                "marginBottom": 0,
-                "marginLeft": 0,
-                "marginRight": 0,
-                "marginTop": 0,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
               },
             ]
           }
@@ -2024,10 +2024,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -2112,10 +2112,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -2297,10 +2297,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -2434,10 +2434,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -2559,10 +2559,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -2719,10 +2719,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -2917,10 +2917,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -3005,10 +3005,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }

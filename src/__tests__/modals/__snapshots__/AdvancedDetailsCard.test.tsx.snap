@@ -60,10 +60,10 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
             "flexDirection": "row",
           },
           {
-            "marginBottom": 0,
-            "marginLeft": 0,
-            "marginRight": 0,
-            "marginTop": 0,
+            "marginBottom": 11,
+            "marginLeft": 11,
+            "marginRight": 11,
+            "marginTop": 11,
           },
         ]
       }
