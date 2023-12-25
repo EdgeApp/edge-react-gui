@@ -33,7 +33,7 @@ import {
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CardUi4 } from '../ui4/CardUi4'
-import { RowUi4 } from '../ui4/RowUi4'
+import { SectionView } from '../ui4/SectionView'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -180,23 +180,24 @@ export function TransactionListRow(props: Props) {
   })
 
   return (
-    <CardUi4 icon={icon} onPress={handlePress} onLongPress={handleLongPress} sections>
-      <RowUi4>
-        <View style={styles.row}>
-          <EdgeText style={styles.titleText}>{transactionTitle}</EdgeText>
-          <EdgeText style={styles.titleText}>{cryptoAmountString}</EdgeText>
-        </View>
-        <View style={styles.row}>
-          <EdgeText style={unconfirmedOrTimeStyle}>{unconfirmedOrTimeText}</EdgeText>
-          <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
-        </View>
-      </RowUi4>
-
-      {categoryText == null ? null : (
-        <RowUi4>
-          <EdgeText style={styles.secondaryText}>{categoryText}</EdgeText>
-        </RowUi4>
-      )}
+    <CardUi4 icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
+      <SectionView dividerVerticalRem={[0.2, 0.5]} marginRem={[0.25, 0]}>
+        <>
+          <View style={styles.row}>
+            <EdgeText style={styles.titleText}>{transactionTitle}</EdgeText>
+            <EdgeText style={styles.titleText}>{cryptoAmountString}</EdgeText>
+          </View>
+          <View style={styles.row}>
+            <EdgeText style={unconfirmedOrTimeStyle}>{unconfirmedOrTimeText}</EdgeText>
+            <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
+          </View>
+        </>
+        {categoryText == null ? null : (
+          <View style={styles.row}>
+            <EdgeText style={styles.secondaryText}>{categoryText}</EdgeText>
+          </View>
+        )}
+      </SectionView>
     </CardUi4>
   )
 }
@@ -257,7 +258,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginHorizontal: theme.rem(0.5)
   },
   titleText: {
     alignSelf: 'center',
