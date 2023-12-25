@@ -58,6 +58,7 @@ import { CountdownTile } from '../tiles/CountdownTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
 import { AlertCardUi4 } from '../ui4/AlertCardUi4'
+import { CardUi4 } from '../ui4/CardUi4'
 import { RowUi4 } from '../ui4/RowUi4'
 
 // TODO: Check contentPadding
@@ -531,6 +532,8 @@ const SendComponent = (props: Props) => {
   const renderSelectFioAddress = () => {
     if (hiddenFeaturesMap.fioAddressSelect) return null
     const fioTarget = spendInfo.spendTargets.some(target => target.otherParams?.fioAddress != null)
+    if (!fioTarget) return null
+
     return (
       <SelectFioAddress2
         navigation={navigation}
@@ -654,8 +657,7 @@ const SendComponent = (props: Props) => {
 
       return (
         <AlertCardUi4
-          // TODO: Rework margins/padding on non-UI4 components on this scene so this margin isn't needed.
-          marginRem={[1.5, 1]}
+          marginRem={[1.5, 0.5]}
           title={lstrings.warning_scam_title}
           type="warning"
           body={[scamMessage, lstrings.warning_scam_message_irreversibility, lstrings.warning_scam_message_unknown_recipients]}
@@ -981,7 +983,7 @@ const SendComponent = (props: Props) => {
     disabledText = lstrings.spending_limits_enter_pin
   }
   return (
-    <SceneWrapper background="theme" hasNotifications>
+    <SceneWrapper background="theme" hasNotifications padding={theme.rem(0.5)}>
       {({ insetStyles }) => (
         <>
           <StyledKeyboardAwareScrollView
@@ -990,17 +992,21 @@ const SendComponent = (props: Props) => {
             extraScrollHeight={theme.rem(2.75)}
             enableOnAndroid
           >
-            {renderSelectedWallet()}
-            {renderAddressAmountPairs()}
-            {renderAddAddress()}
-            {renderTimeout()}
-            {renderError()}
-            {renderFees()}
-            {renderMetadataNotes()}
-            {renderSelectFioAddress()}
-            {renderUniqueIdentifier()}
-            {renderInfoTiles()}
-            {renderAuthentication()}
+            <CardUi4>{renderSelectedWallet()}</CardUi4>
+            <CardUi4 sections>
+              {renderAddressAmountPairs()}
+              {renderAddAddress()}
+              {renderTimeout()}
+              {renderError()}
+            </CardUi4>
+            <CardUi4 sections>
+              {renderFees()}
+              {renderMetadataNotes()}
+              {renderSelectFioAddress()}
+              {renderUniqueIdentifier()}
+              {renderInfoTiles()}
+              {renderAuthentication()}
+            </CardUi4>
             {renderScamWarning()}
           </StyledKeyboardAwareScrollView>
           <StyledSliderView notificationHeight={insetStyles.paddingBottom}>
