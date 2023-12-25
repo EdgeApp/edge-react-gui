@@ -17,7 +17,7 @@ import { EdgeText } from '../../themed/EdgeText'
 import { FormError } from '../../themed/FormError'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { Tile } from '../../tiles/Tile'
+import { RowUi4 } from '../../ui4/RowUi4'
 
 interface LocalState {
   selectedWallet: EdgeCurrencyWallet | null
@@ -224,8 +224,8 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     const { selectedWallet } = this.state
     if (fioWallets && fioWallets.length > 1) {
       return (
-        <Tile
-          type="touchable"
+        <RowUi4
+          rightButtonType="touchable"
           title={lstrings.title_fio_connect_to_wallet}
           onPress={this.onWalletPress}
           body={selectedWallet == null ? lstrings.fio_address_register_no_wallet_name : getWalletName(selectedWallet)}
@@ -265,12 +265,12 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
           </EdgeText>
 
           <View onLayout={this.fieldViewOnLayout}>
-            <Tile type="editable" title={lstrings.fio_domain_choose_label} onPress={this.onDomainPress}>
+            <RowUi4 rightButtonType="editable" title={lstrings.fio_domain_choose_label} onPress={this.onDomainPress}>
               <View style={styles.domainView}>
                 <EdgeText style={styles.domainText}>{fioDomain}</EdgeText>
                 <EdgeText style={styles.loadingText}>{loading ? `(${lstrings.loading})` : ''}</EdgeText>
               </View>
-            </Tile>
+            </RowUi4>
           </View>
 
           <FormError style={styles.error} isVisible={!!chooseHandleErrorMessage}>

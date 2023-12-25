@@ -24,7 +24,7 @@ import { EdgeText } from '../../themed/EdgeText'
 import { FormError } from '../../themed/FormError'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { Tile } from '../../tiles/Tile'
+import { RowUi4 } from '../../ui4/RowUi4'
 
 interface State {
   selectedWallet: EdgeCurrencyWallet | null
@@ -352,7 +352,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
     if (fioWallets && fioWallets.length > 1) {
       const title = `${selectedWallet == null ? lstrings.fio_address_register_no_wallet_name : getWalletName(selectedWallet)}`
-      return <Tile type="touchable" title={`${lstrings.title_fio_connect_to_wallet}`} onPress={this.selectFioWallet} body={title} />
+      return <RowUi4 rightButtonType="touchable" title={`${lstrings.title_fio_connect_to_wallet}`} onPress={this.selectFioWallet} body={title} />
     }
   }
 
@@ -415,7 +415,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
             </View>
 
             <View onLayout={this.fieldViewOnLayout}>
-              <Tile type="editable" title={lstrings.fio_address_choose_label} onPress={this.editAddressPressed}>
+              <RowUi4 rightButtonType="editable" title={lstrings.fio_address_choose_label} onPress={this.editAddressPressed}>
                 <View style={styles.addressTileBody}>
                   {fioAddress ? (
                     <EdgeText style={styles.fioAddressName}>{fioAddress}</EdgeText>
@@ -424,9 +424,9 @@ export class FioAddressRegister extends React.Component<Props, State> {
                   )}
                   {this.renderLoader()}
                 </View>
-              </Tile>
-              <Tile
-                type="touchable"
+              </RowUi4>
+              <RowUi4
+                rightButtonType="touchable"
                 title={lstrings.fio_address_choose_domain_label}
                 onPress={this.selectFioDomain}
                 body={domainsLoading ? lstrings.loading : `${FIO_ADDRESS_DELIMITER}${selectedDomain.name}`}

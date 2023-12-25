@@ -28,7 +28,7 @@ import { TextInputModal } from '../../modals/TextInputModal'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { Slider } from '../../themed/Slider'
-import { Tile } from '../../tiles/Tile'
+import { RowUi4 } from '../../ui4/RowUi4'
 
 interface StateProps {
   exchangeSecondaryToPrimaryRatio: string
@@ -300,15 +300,15 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
     return (
       <SceneWrapper background="theme">
-        <Tile type="editable" title={lstrings.fio_confirm_request_from} body={fioAddressFrom} onPress={this.onAddressFromPressed} />
-        <Tile
-          type="editable"
+        <RowUi4 rightButtonType="editable" title={lstrings.fio_confirm_request_from} body={fioAddressFrom} onPress={this.onAddressFromPressed} />
+        <RowUi4
+          rightButtonType="editable"
           title={lstrings.fio_confirm_request_to}
           body={settingFioAddressTo ? lstrings.resolving : fioAddressTo}
           onPress={this.onAddressToPressed}
         />
-        <Tile type="static" title={lstrings.fio_confirm_request_amount} body={`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`} />
-        <Tile type="editable" title={lstrings.fio_confirm_request_memo} body={memo} onPress={this.onMemoPressed} />
+        <RowUi4 title={lstrings.fio_confirm_request_amount} body={`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`} />
+        <RowUi4 rightButtonType="editable" title={lstrings.fio_confirm_request_memo} body={memo} onPress={this.onMemoPressed} />
         <View style={styles.sliderContainer}>
           {fioAddressFrom.length > 0 && fioAddressTo.length > 0 && showSlider ? (
             <Slider onSlidingComplete={this.onConfirm} disabled={loading} showSpinner={loading} disabledText={lstrings.loading} />

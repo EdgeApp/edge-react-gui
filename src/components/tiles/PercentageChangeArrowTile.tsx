@@ -5,7 +5,7 @@ import { View, ViewStyle } from 'react-native'
 import { Card } from '../cards/Card'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { Tile } from './Tile'
+import { RowUi4 } from '../ui4/RowUi4'
 
 interface Props {
   title: string
@@ -34,7 +34,7 @@ const PercentageChangeArrowTileComponent = (props: Props) => {
   }
 
   return (
-    <Tile type="static" title={title}>
+    <RowUi4 title={title}>
       <Card marginRem={[0.5, 1, 0, 1]} paddingRem={[0.5, 1, 0.5, 1]}>
         <View style={styles.container}>
           <EdgeText style={{ color: currentValueColor }}>{currentValueString}</EdgeText>
@@ -42,7 +42,7 @@ const PercentageChangeArrowTileComponent = (props: Props) => {
           <EdgeText style={{ color: futureValueColor }}>{futureValueString}</EdgeText>
         </View>
       </Card>
-    </Tile>
+    </RowUi4>
   )
 }
 

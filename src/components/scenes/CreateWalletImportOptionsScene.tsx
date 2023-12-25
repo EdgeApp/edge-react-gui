@@ -19,7 +19,7 @@ import { MainButton } from '../themed/MainButton'
 import { ModalMessage } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
 import { WalletCreateItem } from '../themed/WalletList'
-import { Tile } from '../tiles/Tile'
+import { RowUi4 } from '../ui4/RowUi4'
 
 export interface CreateWalletImportOptionsParams {
   createWalletList: WalletCreateItem[]
@@ -157,8 +157,8 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
 
           return (
             <View key={key} style={styles.optionInput}>
-              <Tile
-                type="editable"
+              <RowUi4
+                rightButtonType="editable"
                 title={opt.displayName}
                 maximumHeight="large"
                 onPress={async () => await handleEditValue(value, pluginId, opt)}
@@ -182,7 +182,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
                     {lstrings.fragment_required}
                   </EdgeText>
                 </View>
-              </Tile>
+              </RowUi4>
             </View>
           )
         })}

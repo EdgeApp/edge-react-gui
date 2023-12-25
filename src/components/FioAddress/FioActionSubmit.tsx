@@ -16,7 +16,7 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { Slider } from '../themed/Slider'
-import { Tile } from '../tiles/Tile'
+import { RowUi4 } from '../ui4/RowUi4'
 
 type ActionResult =
   | {
@@ -187,15 +187,14 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     const balanceText = `${balance ? balance.toFixed(2) : '0'} ${balance ? lstrings.fio_address_confirm_screen_fio_label : ''}`
     return (
       <>
-        <Tile
-          type="static"
+        <RowUi4
           title={lstrings.fio_action_fee_label}
           body={displayFee ? `${displayFee} ${lstrings.fio_address_confirm_screen_fio_label}` : lstrings.fio_address_confirm_screen_free_label}
         />
         {displayFee ? (
-          <Tile type="static" title={lstrings.fio_address_confirm_screen_balance_label}>
+          <RowUi4 title={lstrings.fio_address_confirm_screen_balance_label}>
             <EdgeText style={displayFee > balance ? styles.balanceTitleDisabled : styles.balanceTitle}>{balanceText}</EdgeText>
-          </Tile>
+          </RowUi4>
         ) : null}
       </>
     )
@@ -211,7 +210,12 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
         {feeLoading && <ActivityIndicator color={theme.iconTappable} style={styles.loader} size="small" />}
         {title ? <EdgeText style={styles.actionTitle}>{title}</EdgeText> : null}
         {showPaymentWalletPicker && fioWallets.length > 1 ? (
-          <Tile type="editable" title={lstrings.select_wallet} onPress={this.handleWalletPress} body={paymentWallet ? getWalletName(paymentWallet) : ''} />
+          <RowUi4
+            rightButtonType="editable"
+            title={lstrings.select_wallet}
+            onPress={this.handleWalletPress}
+            body={paymentWallet ? getWalletName(paymentWallet) : ''}
+          />
         ) : null}
         {this.renderFeeAndBalance()}
         <View style={styles.spacer} />

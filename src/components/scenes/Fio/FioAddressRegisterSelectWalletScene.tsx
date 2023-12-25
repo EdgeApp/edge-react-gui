@@ -21,7 +21,7 @@ import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
-import { Tile } from '../../tiles/Tile'
+import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
 interface StateProps {
@@ -209,11 +209,11 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
 
     return (
       <>
-        <Tile type="static" title={lstrings.fio_address_register_form_field_label} body={fioAddress} />
+        <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddress} />
         {!selectedDomain.walletId && (
-          <Tile type="touchable" title={lstrings.create_wallet_account_select_wallet} body={walletName} onPress={this.onWalletPress} />
+          <RowUi4 rightButtonType="touchable" title={lstrings.create_wallet_account_select_wallet} body={walletName} onPress={this.onWalletPress} />
         )}
-        <Tile type="static" title={lstrings.create_wallet_account_amount_due} body={costStr} />
+        <RowUi4 title={lstrings.create_wallet_account_amount_due} body={costStr} />
         {!loading && ((paymentWallet && paymentWallet.id) || selectedDomain.walletId !== '') && (
           <MainButton disabled={nextDisabled} onPress={this.onNextPress} label={lstrings.string_next_capitalized} marginRem={1} type="secondary" />
         )}
