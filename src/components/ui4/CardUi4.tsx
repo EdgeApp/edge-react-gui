@@ -83,6 +83,9 @@ export const CardUi4 = (props: Props) => {
     triggerHaptic('impactLight')
   })
 
+  const nonNullChildren = React.Children.toArray(children).filter(child => child != null && React.isValidElement(child))
+  if (nonNullChildren.length === 0) return null
+
   const background = (
     <View style={styles.backgroundFill}>
       {nodeBackground}
