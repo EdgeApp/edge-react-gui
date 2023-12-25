@@ -58,7 +58,7 @@ export const MarketsCardUi4 = (props: Props) => {
         key={key}
         icon={imageUrl == null ? null : <FastImage style={styles.icon} source={{ uri: imageUrl }} />}
         onPress={() => navigation.navigate('coinRankingDetails', { coinRankingData: coinRow })}
-        type="default"
+        rightButtonType="none"
       >
         <View style={styles.row}>
           <EdgeText>{currencyCode.toUpperCase() ?? 'N/A'}</EdgeText>
@@ -115,7 +115,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   icon: {
     width: theme.rem(2),
     height: theme.rem(2),
-    margin: theme.rem(0.25)
+    marginRight: theme.rem(0.25)
   },
   row: {
     flexDirection: 'row',

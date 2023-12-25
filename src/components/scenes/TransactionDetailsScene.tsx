@@ -259,7 +259,7 @@ const TransactionDetailsComponent = (props: Props) => {
     <NotificationSceneWrapper navigation={navigation} hasTabs scroll padding={theme.rem(0.5)}>
       <CardUi4>
         <RowUi4
-          type="editable"
+          rightButtonType="editable"
           icon={
             thumbnailPath ? (
               <FastImage style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
@@ -276,13 +276,13 @@ const TransactionDetailsComponent = (props: Props) => {
 
       <CardUi4 sections>
         <TxCryptoAmountRow transaction={transaction} wallet={wallet} />
-        <RowUi4 type="editable" title={sprintf(lstrings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={handleEdit}>
+        <RowUi4 rightButtonType="editable" title={sprintf(lstrings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={handleEdit}>
           <View style={styles.tileRow}>
             <EdgeText>{fiatSymbol + ' '}</EdgeText>
             <EdgeText>{originalFiatText}</EdgeText>
           </View>
         </RowUi4>
-        <RowUi4 type="default" title={lstrings.transaction_details_amount_current_price}>
+        <RowUi4 rightButtonType="none" title={lstrings.transaction_details_amount_current_price}>
           <View style={styles.tileRow}>
             <EdgeText>{fiatSymbol + ' '}</EdgeText>
             <EdgeText style={styles.tileTextPrice}>{currentFiatText}</EdgeText>
@@ -291,30 +291,30 @@ const TransactionDetailsComponent = (props: Props) => {
             )}
           </View>
         </RowUi4>
-        <RowUi4 type="copy" title={lstrings.transaction_details_tx_id_modal_title} body={txid} />
+        <RowUi4 rightButtonType="copy" title={lstrings.transaction_details_tx_id_modal_title} body={txid} />
         {acceleratedTx == null ? null : (
-          <RowUi4 type="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={openAccelerateModel} />
+          <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={openAccelerateModel} />
         )}
       </CardUi4>
 
       <CardUi4 sections>
-        <RowUi4 type="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput}>
+        <RowUi4 rightButtonType="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput}>
           <EdgeText style={styles.tileCategory}>{categoriesText}</EdgeText>
         </RowUi4>
         <RowUi4
-          type="editable"
+          rightButtonType="editable"
           title={lstrings.transaction_details_notes_title}
           body={notes == null || notes.trim() === '' ? lstrings.transaction_details_empty_note_placeholder : notes}
           onPress={openNotesInput}
         />
         {transaction.memos?.map((memo, i) =>
-          memo.hidden === true ? null : <RowUi4 body={memo.value} key={`memo${i}`} title={getMemoTitle(memo.memoName)} type="copy" />
+          memo.hidden === true ? null : <RowUi4 body={memo.value} key={`memo${i}`} title={getMemoTitle(memo.memoName)} rightButtonType="copy" />
         )}
       </CardUi4>
 
       {transaction.spendTargets == null ? null : (
         <CardUi4>
-          <RowUi4 type="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />
+          <RowUi4 rightButtonType="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />
         </CardUi4>
       )}
 

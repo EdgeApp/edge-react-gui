@@ -18,31 +18,32 @@ const textHeights = {
   large: 0
 }
 
-export type RowType = 'copy' | 'editable' | 'questionable' | 'loading' | 'default' | 'touchable' | 'delete'
+export type RowActionIcon = 'copy' | 'editable' | 'questionable' | 'none' | 'touchable' | 'delete'
 
 interface Props {
   body?: string
   children?: React.ReactNode
   error?: boolean
+  icon?: React.ReactNode
+  loading?: boolean
+  maximumHeight?: 'small' | 'medium' | 'large'
+  rightButtonType?: RowActionIcon
+  title?: string
   onLongPress?: () => Promise<void> | void
   onPress?: () => Promise<void> | void
-  title?: string
-  type?: RowType
-  maximumHeight?: 'small' | 'medium' | 'large'
-  icon?: React.ReactNode
 }
 
 export const RowUi4 = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { body, title, children, maximumHeight = 'medium', error, icon, onLongPress, onPress } = props
-  const { type = onLongPress == null && onPress == null ? 'default' : 'touchable' } = props
+  const { body, title, children, maximumHeight = 'medium', error, icon, loading, onLongPress, onPress } = props
+  const { rightButtonType = onLongPress == null && onPress == null ? 'none' : 'touchable' } = props
 
   const numberOfLines = textHeights[maximumHeight]
 
   const handlePress = useHandler(async () => {
-    if (type === 'copy' && body != null) {
+    if (rightButtonType === 'copy' && body != null) {
       triggerHaptic('impactLight')
       Clipboard.setString(body)
       showToast(lstrings.fragment_copied)
@@ -67,10 +68,11 @@ export const RowUi4 = (props: Props) => {
     }
   })
 
-  const isTouchable = type !== 'default' && type !== 'loading'
+  const rightButtonVisible = rightButtonType !== 'none'
+  const isTappable = onPress != null || onLongPress != null
 
   const content = (
-    <View style={styles.container}>
+    <>
       {icon == null ? null : <View style={styles.iconContainer}>{icon}</View>}
       <View style={styles.content}>
         {title == null ? null : (
@@ -78,40 +80,41 @@ export const RowUi4 = (props: Props) => {
             {title}
           </EdgeText>
         )}
-        {children == null ? (
-          body == null ? null : (
-            <EdgeText style={styles.textBody} numberOfLines={numberOfLines} ellipsizeMode="tail">
-              {body}
-            </EdgeText>
-          )
-        ) : (
+        {loading ? (
+          <ActivityIndicator style={styles.loader} color={theme.primaryText} size="large" />
+        ) : children != null ? (
           children
-        )}
+        ) : body != null ? (
+          <EdgeText style={styles.textBody} numberOfLines={numberOfLines} ellipsizeMode="tail">
+            {body}
+          </EdgeText>
+        ) : null}
       </View>
-      {isTouchable ? (
-        <>
-          <View style={styles.tappableIconMargin} />
-          <TouchableOpacity style={styles.tappableIconContainer} accessible={false} onPress={handlePress} onLongPress={handleLongPress}>
-            {type === 'touchable' ? <FontAwesome5 name="chevron-right" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
-            {type === 'editable' ? <FontAwesomeIcon name="edit" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
-            {type === 'copy' ? <FontAwesomeIcon name="copy" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
-            {type === 'delete' ? <FontAwesomeIcon name="times" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
-            {type === 'questionable' ? <SimpleLineIcons name="question" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
-          </TouchableOpacity>
-        </>
-      ) : null}
-    </View>
+      {
+        // If right action icon button is visible, only the icon dims on row tap
+        isTappable && rightButtonVisible ? (
+          <>
+            <View style={styles.tappableIconMargin} />
+            <TouchableOpacity style={styles.tappableIconContainer} accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={loading}>
+              {rightButtonType === 'touchable' ? <FontAwesome5 name="chevron-right" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
+              {rightButtonType === 'editable' ? <FontAwesomeIcon name="edit" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
+              {rightButtonType === 'copy' ? <FontAwesomeIcon name="copy" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
+              {rightButtonType === 'delete' ? <FontAwesomeIcon name="times" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
+              {rightButtonType === 'questionable' ? <SimpleLineIcons name="question" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
+            </TouchableOpacity>
+          </>
+        ) : null
+      }
+    </>
   )
 
-  return type === 'loading' ? (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <EdgeText style={styles.textHeader}>{title}</EdgeText>
-        <ActivityIndicator style={styles.loader} color={theme.primaryText} size="large" />
-      </View>
-    </View>
+  // The entire row dims on tap if not handled by the right action icon button
+  return isTappable && !rightButtonVisible ? (
+    <TouchableOpacity style={styles.container} accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={loading}>
+      {content}
+    </TouchableOpacity>
   ) : (
-    content
+    <View style={styles.container}>{content}</View>
   )
 }
 
