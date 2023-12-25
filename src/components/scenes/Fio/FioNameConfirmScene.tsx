@@ -98,7 +98,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             buttons={{ ok: { label: lstrings.string_ok_cap } }}
           />
         ))
-        navigation.navigate('walletsTab', { screen: 'walletList' })
+        navigation.navigate('homeTab', { screen: 'home' })
       } else {
         // no free domains
         showError(lstrings.fio_get_fee_err_msg)

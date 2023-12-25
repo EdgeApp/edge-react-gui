@@ -233,7 +233,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
         label={!done ? undefined : lstrings.string_done_cap}
         type="secondary"
         marginRem={[1]}
-        onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
+        onPress={() => navigation.navigate('homeTab', { screen: 'walletList' })}
         alignSelf="center"
       />
     )

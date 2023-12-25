@@ -51,7 +51,7 @@ export interface RouteParamList {
   gettingStarted: {}
 
   // Tabs
-  walletsTab: {}
+  homeTab: {}
   buyTab: {}
   sellTab: {}
   exchangeTab: {}
