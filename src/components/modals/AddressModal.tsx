@@ -337,7 +337,8 @@ export class AddressModalComponent extends React.Component<Props, State> {
               <ActivityIndicator color={this.props.theme.iconTappable} />
             </View>
           )}
-          <MainButton label={lstrings.submit} marginRem={[0, 4]} type="secondary" onPress={this.handleSubmit} />
+          {/* TODO: Style ButtonsViewUi4 for Modals */}
+          <MainButton label={lstrings.submit} type="primary" onPress={this.handleSubmit} />
         </View>
       </ThemedModal>
     )
