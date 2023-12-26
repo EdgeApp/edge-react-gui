@@ -16,7 +16,6 @@ import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION } from '../../util/utils'
-import { Card } from '../cards/Card'
 import { ExchangeRate2 } from '../common/ExchangeRate2'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
@@ -24,6 +23,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
 import { MiniButton } from '../themed/MiniButton'
 import { ThemedModal } from '../themed/ThemedModal'
+import { CardUi4 } from '../ui4/CardUi4'
 
 export interface FlipInputModalResult {
   nativeAmount: string
@@ -190,7 +190,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
 
   const renderFlipInput = () => {
     return (
-      <Card>
+      <CardUi4>
         <ExchangedFlipInput2
           ref={exchangedFlipInputRef}
           walletId={wallet.id}
@@ -205,7 +205,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
         {getSpecialCurrencyInfo(pluginId).noMaxSpend !== true && hideMaxButton !== true ? (
           <MiniButton alignSelf="center" label={lstrings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={handleSendMaxAmount} />
         ) : null}
-      </Card>
+      </CardUi4>
     )
   }
 

@@ -5,7 +5,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../locales/strings'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { Card } from './Card'
+import { CardUi4 } from '../ui4/CardUi4'
 
 interface Props {
   poweredByText: string
@@ -22,7 +22,7 @@ export const PoweredByCard = (props: Props) => {
   return (
     <View style={styles.cardContainer}>
       <TouchableOpacity onPress={onPress}>
-        <Card paddingRem={0.5}>
+        <CardUi4 paddingRem={0.5}>
           <View style={styles.poweredByContainer}>
             <FastImage style={styles.poweredByIcon} source={iconSrc} resizeMode="contain" />
 
@@ -38,7 +38,7 @@ export const PoweredByCard = (props: Props) => {
 
             <IonIcon name="chevron-forward" size={theme.rem(1)} color={theme.iconTappable} />
           </View>
-        </Card>
+        </CardUi4>
       </TouchableOpacity>
     </View>
   )

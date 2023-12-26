@@ -22,7 +22,7 @@ import { Theme } from '../../../types/Theme'
 import { FlatListItem } from '../../../types/types'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getCurrencyInfos } from '../../../util/CurrencyInfoHelpers'
-import { Card } from '../../cards/Card'
+import { CardUi4 } from '../../ui4/CardUi4'
 import { LoanSummaryCard } from '../../cards/LoanSummaryCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { Space } from '../../layout/Space'
@@ -161,9 +161,9 @@ export const LoanDashboardScene = (props: Props) => {
     return (
       <>
         {isNewLoanLoading ? (
-          <Card marginRem={[0, 0.5, 0, 0.5, 0]}>
+          <CardUi4 marginRem={[0, 0.5, 0, 0.5, 0]}>
             <FillLoader />
-          </Card>
+          </CardUi4>
         ) : null}
         {isLoansLoading ? (
           <Space around={1}>

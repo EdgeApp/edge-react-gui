@@ -14,13 +14,13 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
-import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { IconDataRow } from '../data/row/IconDataRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { CardUi4 } from '../ui4/CardUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 export interface AccountPaymentParams {
@@ -122,14 +122,14 @@ export const CreateWalletAccountSelectScene = (props: Props) => {
 
       <View style={styles.selectPaymentLower}>
         {isRenderSelect ? (
-          <Card>
+          <CardUi4>
             <View style={styles.paymentCostArea}>
               <EdgeText>{lstrings.create_wallet_account_amount_due}</EdgeText>
               <EdgeText style={styles.paymentRight}>
                 {activationCost} {selectedWalletType.currencyCode}
               </EdgeText>
             </View>
-          </Card>
+          </CardUi4>
         ) : (
           <IconDataRow
             icon={<CryptoIconUi4 pluginId={paymentWallet.currencyInfo.pluginId} sizeRem={2} />}

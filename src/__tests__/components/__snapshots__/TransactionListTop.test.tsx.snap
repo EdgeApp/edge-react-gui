@@ -841,126 +841,130 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
     </View>
     <View
       style={
-        {
-          "width": "100%",
-        }
+        [
+          {
+            "borderRadius": 16,
+            "flex": 1,
+          },
+          {
+            "marginBottom": -11,
+            "marginLeft": 11,
+            "marginRight": 11,
+            "marginTop": 22,
+          },
+          {
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "paddingRight": 0,
+            "paddingTop": 0,
+          },
+        ]
       }
     >
       <View
         style={
-          [
-            {
-              "borderColor": "rgba(255, 255, 255, .1)",
-              "borderRadius": 16,
-              "borderWidth": 1,
-            },
-            null,
-            {
-              "marginBottom": -11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 22,
-            },
-            {
-              "paddingBottom": 0,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 0,
-            },
-          ]
+          {
+            "backgroundColor": "rgba(255, 255, 255, .1)",
+            "borderRadius": 16,
+            "bottom": 0,
+            "left": 0,
+            "overflow": "hidden",
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "opacity": 1,
+            "padding": 11,
+          }
         }
       >
         <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
           style={
-            {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "opacity": 1,
-              "padding": 11,
-            }
+            [
+              {
+                "overflow": "hidden",
+              },
+              {
+                "height": 45,
+                "margin": 11,
+                "width": 45,
+              },
+            ]
           }
         >
-          <View
-            style={
-              [
-                {
-                  "overflow": "hidden",
-                },
-                {
-                  "height": 45,
-                  "margin": 11,
-                  "width": 45,
-                },
-              ]
-            }
-          >
-            <FastImageView
-              resizeMode="contain"
-              source={
-                {
-                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                }
+          <FastImageView
+            resizeMode="contain"
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
               }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.65}
-            numberOfLines={0}
-            style={
-              [
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                {
-                  "marginLeft": 11,
-                },
-                null,
-              ]
             }
-          >
-            Buy Prepaid Visa® Cards
-          </Text>
+            style={
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
         </View>
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={0}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "marginLeft": 11,
+              },
+              null,
+            ]
+          }
+        >
+          Buy Prepaid Visa® Cards
+        </Text>
       </View>
     </View>
   </View>,

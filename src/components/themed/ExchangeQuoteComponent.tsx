@@ -11,9 +11,9 @@ import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { DECIMAL_PRECISION } from '../../util/utils'
-import { Card } from '../cards/Card'
 import { CurrencyRow } from '../data/row/CurrencyRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { CardUi4 } from '../ui4/CardUi4'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -107,10 +107,10 @@ export const ExchangeQuote = (props: Props) => {
   }
 
   return (
-    <Card marginRem={[0, 1]}>
+    <CardUi4 marginRem={[0, 1]}>
       <CurrencyRow wallet={isFrom ? fromWallet : toWallet} tokenId={isFrom ? fromTokenId : toTokenId} marginRem={0} nativeAmount={nativeAmount} />
       {renderBottom()}
-    </Card>
+    </CardUi4>
   )
 }
 

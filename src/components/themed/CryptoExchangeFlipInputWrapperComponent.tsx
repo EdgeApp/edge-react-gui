@@ -8,14 +8,13 @@ import { connect } from '../../types/reactRedux'
 import { GuiCurrencyInfo } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { convertNativeToDenomination } from '../../util/utils'
-import { Card } from '../cards/Card'
-
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { CardUi4 } from '../ui4/CardUi4'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts } from './ExchangedFlipInput2'
 import { MainButton } from './MainButton'
 import { SelectableRow } from './SelectableRow'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface OwnProps {
   walletId: string
@@ -111,7 +110,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
 
     if (!this.props.isFocused) {
       return (
-        <Card marginRem={[0, 1]} paddingRem={0}>
+        <CardUi4 marginRem={[0, 1]} paddingRem={0}>
           <View style={styles.containerSelectedWalletNotFocus}>
             <SelectableRow
               arrowTappable
@@ -124,7 +123,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
               onPress={this.focusMe}
             />
           </View>
-        </Card>
+        </CardUi4>
       )
     }
 
@@ -132,7 +131,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
       <>
         {this.state?.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage ?? ''}</EdgeText> : null}
         {this.renderBalance()}
-        <Card marginRem={[0, 1]}>
+        <CardUi4 marginRem={[0, 1]}>
           <ExchangedFlipInput2
             onNext={onNext}
             onFocus={this.props.onFocus}
@@ -147,7 +146,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
             walletId={this.props.walletId}
           />
           {children}
-        </Card>
+        </CardUi4>
       </>
     )
   }

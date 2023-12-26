@@ -29,7 +29,6 @@ import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { enableToken } from '../../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../../util/utils'
-import { Card } from '../../cards/Card'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
 import { TappableAccountCard } from '../../cards/TappableAccountCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -43,6 +42,7 @@ import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { AprCard } from '../../tiles/AprCard'
+import { CardUi4 } from '../../ui4/CardUi4'
 
 interface Props extends EdgeSceneProps<'loanCreate'> {}
 
@@ -378,7 +378,7 @@ export const LoanCreateScene = (props: Props) => {
 
           {/* Collateral Amount Required / Collateral Amount */}
           <EdgeText style={styles.textTitle}>{lstrings.loan_collateral_required}</EdgeText>
-          <Card marginRem={[0, 0.5, 0.5, 0.5]}>
+          <CardUi4 marginRem={[0, 0.5, 0.5, 0.5]}>
             {srcWallet == null || destWallet == null ? (
               <EdgeText style={[styles.textInitial, { margin: theme.rem(0.5) }]}>
                 {srcWallet == null ? lstrings.loan_select_source_collateral : lstrings.loan_select_receiving_wallet}
@@ -386,7 +386,7 @@ export const LoanCreateScene = (props: Props) => {
             ) : (
               <CryptoFiatAmountRow nativeAmount={totalRequiredCollateralNativeAmount} tokenId={srcTokenId} wallet={srcWallet} marginRem={0.25} />
             )}
-          </Card>
+          </CardUi4>
 
           {/* Insufficient Collateral Warning Card */}
           {renderWarning()}
