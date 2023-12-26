@@ -18,15 +18,13 @@ export interface MapObject<T> {
   [key: string]: T
 }
 
-export type GuiDenomination = EdgeDenomination
 export interface GuiCurrencyInfo {
   walletId: string
-  pluginId?: string
-  tokenId?: string
+  tokenId: string | undefined
   displayCurrencyCode: string
   exchangeCurrencyCode: string
-  displayDenomination: GuiDenomination
-  exchangeDenomination: GuiDenomination
+  displayDenomination: EdgeDenomination
+  exchangeDenomination: EdgeDenomination
 }
 
 export interface GuiContact {
@@ -110,20 +108,19 @@ export interface CurrencyConverter {
   convertCurrency: (state: RootState, currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
 }
 
-export const emptyGuiDenomination: GuiDenomination = {
-  name: '',
-  symbol: '',
-  multiplier: '',
-  // @ts-expect-error
-  precision: 0,
-  currencyCode: ''
-}
 export const emptyCurrencyInfo: GuiCurrencyInfo = {
   walletId: '',
+  tokenId: undefined,
   displayCurrencyCode: '',
   exchangeCurrencyCode: '',
-  displayDenomination: emptyGuiDenomination,
-  exchangeDenomination: emptyGuiDenomination
+  displayDenomination: {
+    name: '',
+    multiplier: '1'
+  },
+  exchangeDenomination: {
+    name: '',
+    multiplier: '1'
+  }
 }
 
 const asPasswordReminder = asObject({

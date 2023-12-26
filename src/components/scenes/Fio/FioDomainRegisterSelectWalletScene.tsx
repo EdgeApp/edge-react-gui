@@ -105,10 +105,11 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   selectWallet = async () => {
     const { supportedAssets } = this.state
 
-    const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
+    const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={supportedAssets} />
     ))
-    if (walletId && currencyCode) {
+    if (result?.type === 'wallet') {
+      const { walletId, currencyCode } = result
       this.setState({ paymentWallet: { id: walletId, currencyCode } })
     }
   }

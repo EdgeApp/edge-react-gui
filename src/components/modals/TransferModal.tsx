@@ -50,10 +50,11 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
     Airship.clear()
   })
   const handleSend = useHandler(async () => {
-    const { walletId, tokenId } = await Airship.show<WalletListResult>(bridge => (
+    const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet_to_send_from} navigation={navigation} />
     ))
-    if (walletId != null) {
+    if (result?.type === 'wallet') {
+      const { walletId, tokenId } = result
       navigation.push('send2', { walletId, tokenId, hiddenFeaturesMap: { scamWarning: false } })
     }
     Airship.clear()
@@ -61,11 +62,12 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
 
   const handleReceive = useHandler(async () => {
     Airship.clear()
-    const { walletId, tokenId } = await Airship.show<WalletListResult>(bridge => (
+    const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} headerTitle={lstrings.select_receive_asset} navigation={navigation} showCreateWallet />
     ))
 
-    if (walletId != null) {
+    if (result?.type === 'wallet') {
+      const { walletId, tokenId } = result
       await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
       navigation.navigate('request', {})
     }

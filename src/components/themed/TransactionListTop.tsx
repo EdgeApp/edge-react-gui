@@ -166,9 +166,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     triggerHaptic('impactLight')
     Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={navigation} />)
-      .then((result: WalletListResult) => {
-        const { currencyCode, walletId } = result
-        if (walletId != null && currencyCode != null) {
+      .then(result => {
+        if (result?.type === 'wallet') {
+          const { currencyCode, walletId } = result
           const wallet = account.currencyWallets[walletId]
           if (wallet == null) return
           const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)

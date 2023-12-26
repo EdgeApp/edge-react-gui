@@ -158,14 +158,13 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
     selectedWallet = wallet
     selectedCurrencyCode = currencyCode
   } else {
-    const walletListResult = await pickWallet({ account, assets: paymentAssets, navigation })
-    if (walletListResult == null) {
+    const result = await pickWallet({ account, assets: paymentAssets, navigation })
+    if (result?.type !== 'wallet') {
       throw new PaymentProtoError('NoPaymentOption', { text: paymentCurrencies.join(', ') })
     }
-
-    const { walletId } = walletListResult
+    const { walletId, currencyCode } = result
     selectedWallet = currencyWallets[walletId ?? '']
-    selectedCurrencyCode = walletListResult.currencyCode
+    selectedCurrencyCode = currencyCode
   }
   if (selectedWallet == null) return
 

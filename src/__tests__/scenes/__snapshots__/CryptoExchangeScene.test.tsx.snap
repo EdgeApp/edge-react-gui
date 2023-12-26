@@ -51,23 +51,6 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
           "exchangeCurrencyCode": "BTC",
         }
       }
-      secondaryCurrencyInfo={
-        {
-          "displayCurrencyCode": "USD",
-          "displayDenomination": {
-            "multiplier": "100",
-            "name": "USD",
-            "symbol": "$",
-          },
-          "exchangeCurrencyCode": "iso:USD",
-          "exchangeDenomination": {
-            "multiplier": "100",
-            "name": "USD",
-            "symbol": "$",
-          },
-          "walletId": "",
-        }
-      }
       walletId=""
     >
       <MiniButton
@@ -108,23 +91,6 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
             "multiplier": "10000000",
             "name": "Gwei",
           },
-        }
-      }
-      secondaryCurrencyInfo={
-        {
-          "displayCurrencyCode": "USD",
-          "displayDenomination": {
-            "multiplier": "100",
-            "name": "USD",
-            "symbol": "$",
-          },
-          "exchangeCurrencyCode": "iso:USD",
-          "exchangeDenomination": {
-            "multiplier": "100",
-            "name": "USD",
-            "symbol": "$",
-          },
-          "walletId": "",
         }
       }
       walletId=""

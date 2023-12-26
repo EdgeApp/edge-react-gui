@@ -21,8 +21,6 @@ describe('CryptoExchangeComponent', () => {
         exchangeInfo={initialState}
         fromWalletId=""
         fromWalletBalances={[''] as any}
-        fromFiatCurrencyCode="USD"
-        fromIsoFiatCurrencyCode="iso:USD"
         fromWalletName="BTC Wallet"
         fromExchangeAmount="1000"
         fromWalletPrimaryInfo={
@@ -32,8 +30,6 @@ describe('CryptoExchangeComponent', () => {
           } as any
         }
         toWalletId=""
-        toFiatCurrencyCode="USD"
-        toIsoFiatCurrencyCode="iso:USD"
         toWalletName="ETH Wallet"
         toExchangeAmount="1000"
         toWalletPrimaryInfo={

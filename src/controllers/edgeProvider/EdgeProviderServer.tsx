@@ -102,12 +102,12 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       throw new Error('No allowed assets specified')
     }
 
-    const selectedWallet = await Airship.show<WalletListResult>(bridge => (
+    const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} navigation={this._navigation} showCreateWallet allowedAssets={allowedAssets} headerTitle={lstrings.choose_your_wallet} />
     ))
+    if (result?.type === 'wallet') {
+      const { walletId, currencyCode } = result
 
-    const { walletId, currencyCode } = selectedWallet
-    if (walletId && currencyCode) {
       this._selectedWallet = account.currencyWallets[walletId]
       if (this._selectedWallet == null) throw new Error(`Missing wallet for walletId`)
       const chainCode = this._selectedWallet.currencyInfo.currencyCode
@@ -139,7 +139,6 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       }
       return returnCurrencyCode
     }
-
     throw new Error(lstrings.user_closed_modal_no_wallet)
   }
 

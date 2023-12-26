@@ -119,8 +119,9 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.fio_src_wallet} allowedAssets={[{ pluginId: 'fio' }]} />
     ))
-      .then(({ walletId, currencyCode }: WalletListResult) => {
-        if (walletId && currencyCode) {
+      .then(result => {
+        if (result?.type === 'wallet') {
+          const { walletId } = result
           this.props.currencyWallets[walletId] &&
             this.setState({ paymentWallet: this.props.currencyWallets[walletId] }, () => {
               this.setBalance()

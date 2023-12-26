@@ -14,7 +14,7 @@ import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { BooleanMap, EdgeAsset } from '../../types/types'
-import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getTokenId, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { CustomAsset } from '../data/row/CustomAssetRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -28,18 +28,20 @@ import { WalletList } from '../themed/WalletList'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 import { ButtonsModal } from './ButtonsModal'
 
-export interface WalletListResult {
-  currencyCode?: string
-  tokenId?: string
-  walletId?: string
-
-  // Wyre buy/sell
-  isBankSignupRequest?: boolean
-  fiatAccountId?: string
-
-  // Custom asset selection
-  customAsset?: CustomAsset
-}
+export type WalletListResult =
+  | {
+      type: 'wallet'
+      walletId: string
+      tokenId: string | undefined
+      /** @deprecated Use tokenId instead */
+      currencyCode: string
+    }
+  | { type: 'wyre'; fiatAccountId: string }
+  | { type: 'bankSignupRequest' }
+  | { type: 'custom'; customAsset?: CustomAsset }
+  // User cancelled.
+  // This is consistent with other modals that return `T | undefined`:
+  | undefined
 
 interface Props {
   bridge: AirshipBridge<WalletListResult>
@@ -61,7 +63,7 @@ interface Props {
   showCreateWallet?: boolean
 }
 
-const KeysOnlyModeTokenIds: EdgeAsset[] = Object.keys(SPECIAL_CURRENCY_INFO)
+const keysOnlyModeAssets: EdgeAsset[] = Object.keys(SPECIAL_CURRENCY_INFO)
   .filter(pluginId => isKeysOnlyPlugin(pluginId))
   .map(pluginId => ({
     pluginId
@@ -115,7 +117,7 @@ export function WalletListModal(props: Props) {
   // Prevent plugins that are "watch only" from being used unless it's explicitly allowed
   const walletListExcludeAssets = React.useMemo(() => {
     const result = excludeAssets
-    return allowKeysOnlyMode ? result : KeysOnlyModeTokenIds.concat(result ?? [])
+    return allowKeysOnlyMode ? result : keysOnlyModeAssets.concat(result ?? [])
   }, [allowKeysOnlyMode, excludeAssets])
 
   // #endregion Init
@@ -123,16 +125,20 @@ export function WalletListModal(props: Props) {
   // #region Handlers
 
   const handleCancel = useHandler(() => {
-    bridge.resolve({})
+    bridge.resolve(undefined)
   })
   const handlePaymentMethodPress = useHandler((fiatAccountId: string) => () => {
-    bridge.resolve({ fiatAccountId })
+    bridge.resolve({ type: 'wyre', fiatAccountId })
   })
   const handleWalletListPress = useHandler((walletId: string, currencyCode: string, tokenId?: string, customAsset?: CustomAsset) => {
     if (walletId === '') {
       handleCancel()
       showError(lstrings.network_alert_title)
-    } else bridge.resolve({ walletId, currencyCode, customAsset, tokenId })
+    } else if (customAsset != null) {
+      bridge.resolve({ type: 'custom', customAsset })
+    } else if (walletId != null && currencyCode != null) {
+      bridge.resolve({ type: 'wallet', walletId, currencyCode, tokenId })
+    }
   })
   const handleSearchClear = useHandler(() => {
     setSearchText('')
@@ -153,7 +159,7 @@ export function WalletListModal(props: Props) {
         }}
       />
     ))
-    if (result === 'continue') await bridge.resolve({ isBankSignupRequest: true })
+    if (result === 'continue') await bridge.resolve({ type: 'bankSignupRequest' })
   })
 
   // #endregion Handlers
@@ -280,7 +286,7 @@ export const pickWallet = async ({
   headerTitle?: string
   navigation: NavigationBase
   showCreateWallet?: boolean
-}): Promise<WalletListResult | undefined> => {
+}): Promise<WalletListResult> => {
   const { currencyWallets } = account
 
   const walletIdMap: BooleanMap = {}
@@ -315,7 +321,8 @@ export const pickWallet = async ({
   if (assets != null && matchingAssets.length === 1 && Object.keys(walletIdMap).length === 1) {
     // Only one matching wallet and asset. Auto pick the wallet
     const [walletId, currencyCode] = Object.keys(walletIdMap)[0].split(':')
-    return { walletId, currencyCode }
+    const tokenId = getTokenId(account, currencyWallets[walletId].currencyInfo.pluginId, currencyCode)
+    return { type: 'wallet', walletId, currencyCode, tokenId }
   } else {
     const walletListResult = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal

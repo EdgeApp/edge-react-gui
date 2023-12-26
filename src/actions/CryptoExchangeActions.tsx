@@ -23,7 +23,8 @@ import { getDisplayDenomination, getExchangeDenomination } from '../selectors/De
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo } from '../types/types'
+import { GuiCurrencyInfo, GuiSwapInfo } from '../types/types'
+import { getTokenId } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
 import { bestOfPlugins } from '../util/ReferralHelpers'
@@ -365,14 +366,14 @@ export function selectWalletForExchange(walletId: string, currencyCode: string, 
   return async (dispatch, getState) => {
     const state = getState()
     const wallet = state.core.account.currencyWallets[walletId]
-    const { currencyCode: chainCc, pluginId } = wallet.currencyInfo
+    const { currencyCode: chainCc } = wallet.currencyInfo
     const cc = currencyCode || chainCc
     const balanceMessage = await getBalanceMessage(state, walletId, cc)
-    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, cc)
-    const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, cc)
+    const primaryDisplayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, cc)
+    const primaryExchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, cc)
     const primaryInfo: GuiCurrencyInfo = {
       walletId,
-      pluginId,
+      tokenId: getTokenId(state.core.account, wallet.currencyInfo.pluginId, cc),
       displayCurrencyCode: cc,
       exchangeCurrencyCode: cc,
       displayDenomination: primaryDisplayDenomination,

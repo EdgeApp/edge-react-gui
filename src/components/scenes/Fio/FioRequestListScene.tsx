@@ -376,10 +376,11 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const tokenId = getTokenId(account, pluginId, tokenCode)
     const allowedAssets = [{ pluginId, tokenId }]
 
-    const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
+    const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.fio_src_wallet} allowedAssets={allowedAssets} />
     ))
-    if (walletId && currencyCode) {
+    if (result?.type === 'wallet') {
+      const { walletId, currencyCode } = result
       onSelectWallet(walletId, currencyCode)
       await this.sendCrypto(selectedFioPendingRequest, walletId, currencyCode)
     }
