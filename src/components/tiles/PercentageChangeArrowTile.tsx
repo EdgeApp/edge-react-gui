@@ -2,9 +2,9 @@ import { mul, toFixed } from 'biggystring'
 import * as React from 'react'
 import { View, ViewStyle } from 'react-native'
 
-import { Card } from '../cards/Card'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { CardUi4 } from '../ui4/CardUi4'
 import { RowUi4 } from '../ui4/RowUi4'
 
 interface Props {
@@ -35,13 +35,13 @@ const PercentageChangeArrowTileComponent = (props: Props) => {
 
   return (
     <RowUi4 title={title}>
-      <Card marginRem={[0.5, 1, 0, 1]} paddingRem={[0.5, 1, 0.5, 1]}>
+      <CardUi4 marginRem={[0.5, 1, 0, 1]} paddingRem={[0.5, 1, 0.5, 1]}>
         <View style={styles.container}>
           <EdgeText style={{ color: currentValueColor }}>{currentValueString}</EdgeText>
           {renderArrow()}
           <EdgeText style={{ color: futureValueColor }}>{futureValueString}</EdgeText>
         </View>
-      </Card>
+      </CardUi4>
     </RowUi4>
   )
 }

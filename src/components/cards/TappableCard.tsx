@@ -4,7 +4,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { Card } from './Card'
+import { CardUi4 } from '../ui4/CardUi4'
 
 interface Props {
   children: React.ReactNode
@@ -33,9 +33,9 @@ const TappableCardComponent = ({ children, disabled = false, onPress, ...cardPro
   )
 
   return (
-    <Card {...cardProps}>
+    <CardUi4 {...cardProps}>
       {disabled ? renderTouchableChildren() : <TouchableOpacity onPress={disabled ? undefined : onPress}>{renderTouchableChildren()}</TouchableOpacity>}
-    </Card>
+    </CardUi4>
   )
 }
 

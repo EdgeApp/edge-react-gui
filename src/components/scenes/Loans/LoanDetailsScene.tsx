@@ -25,7 +25,7 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { GuiExchangeRates } from '../../../types/types'
 import { getToken } from '../../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, zeroString } from '../../../util/utils'
-import { Card } from '../../cards/Card'
+import { CardUi4 } from '../../ui4/CardUi4'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
 import { TappableCard } from '../../cards/TappableCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -108,14 +108,14 @@ export const LoanDetailsSceneComponent = (props: Props) => {
     if (runningProgramMessage != null && runningProgramEdge != null) {
       return (
         <TouchableOpacity onPress={() => handleProgramStatusCardPress(runningProgramEdge)}>
-          <Card marginRem={[0, 0, 1]}>
+          <CardUi4 marginRem={[0, 0, 1]}>
             <Space sideways>
               <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
               <EdgeText style={styles.programStatusText} numberOfLines={2}>
                 {runningProgramMessage}
               </EdgeText>
             </Space>
-          </Card>
+          </CardUi4>
         </TouchableOpacity>
       )
     } else return null
@@ -239,7 +239,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
             if (zeroString(debt.nativeAmount)) return null
             const aprText = sprintf(lstrings.loan_apr_s, toPercentString(debt.apr))
             return (
-              <Card key={debt.tokenId} marginRem={[0, 0, 1]}>
+              <CardUi4 key={debt.tokenId} marginRem={[0, 0, 1]}>
                 <Space sideways>
                   <Space right={1}>
                     <CryptoIcon hideSecondary pluginId={pluginId} tokenId={debt.tokenId} />
@@ -251,7 +251,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
                     <EdgeText style={styles.breakdownSubText}>{aprText}</EdgeText>
                   </Space>
                 </Space>
-              </Card>
+              </CardUi4>
             )
           })}
         </Space>

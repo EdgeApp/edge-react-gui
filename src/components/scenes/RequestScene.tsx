@@ -23,7 +23,6 @@ import { getTokenId, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { convertNativeToDenomination, truncateDecimals, zeroString } from '../../util/utils'
-import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -40,6 +39,7 @@ import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef }
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ShareButtons } from '../themed/ShareButtons'
+import { CardUi4 } from '../ui4/CardUi4'
 
 interface OwnProps extends EdgeSceneProps<'request'> {}
 
@@ -334,7 +334,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
           </View>
           {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}
 
-          <Card>
+          <CardUi4>
             <ExchangedFlipInput2
               forceField="crypto"
               headerCallback={this.handleOpenWalletListModal}
@@ -347,7 +347,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
               tokenId={primaryCurrencyInfo.tokenId}
               walletId={wallet.id}
             />
-          </Card>
+          </CardUi4>
 
           <Carousel
             items={this.state.addresses}
