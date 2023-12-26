@@ -1181,7 +1181,10 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
               "marginRight": 22,
               "marginTop": 22,
               "opacity": 1,
-              "padding": 11,
+              "paddingBottom": 11,
+              "paddingLeft": 11,
+              "paddingRight": 11,
+              "paddingTop": 11,
             }
           }
         >

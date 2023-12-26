@@ -19,7 +19,7 @@ import { BlogCard } from '../BlogCard'
 import { CarouselUi4 } from '../CarouselUi4'
 import { HomeCardUi4 } from '../HomeCardUi4'
 import { MarketsCardUi4 } from '../MarketsCardUi4'
-import { SectionHeader } from '../SectionHeader'
+import { SectionHeaderUi4 } from '../SectionHeaderUi4'
 import { SectionView } from '../SectionView'
 
 interface Props extends EdgeSceneProps<'home'> {}
@@ -109,13 +109,13 @@ export const HomeSceneUi4 = (props: Props) => {
             </View>
           </>
           <>
-            <SectionHeader leftText={lstrings.title_markets} rightText={lstrings.see_all} onRightPress={() => navigation.navigate('marketsTab', {})} />
+            <SectionHeaderUi4 leftTitle={lstrings.title_markets} rightNode={lstrings.see_all} onRightPress={() => navigation.navigate('marketsTab', {})} />
             <MarketsCardUi4 navigation={navigation} numRows={5} />
           </>
           {/* TODO: Reimplement after info server is published */}
           {blogData == null || blogData.length === 0 ? null : (
             <>
-              <SectionHeader leftText={lstrings.title_learn} />
+              <SectionHeaderUi4 leftTitle={lstrings.title_learn} />
               <View style={styles.carouselContainer}>
                 <CarouselUi4 height={theme.rem(13)} width={screenWidth}>
                   {blogData.map((blogPost, index) => (

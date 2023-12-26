@@ -121,7 +121,7 @@ export function SwapDetailsCard(props: Props) {
 
   return (
     <CardUi4 sections>
-      <RowUi4 type="touchable" title={lstrings.transaction_details_exchange_details} onPress={handleExchangeDetails}>
+      <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_exchange_details} onPress={handleExchangeDetails}>
         <View style={styles.tileColumn}>
           <EdgeText style={styles.tileTextBottom}>{lstrings.title_exchange + ' ' + sourceAmount + ' ' + symbolString}</EdgeText>
           <EdgeText style={styles.tileTextBottom}>{lstrings.string_to_capitalize + ' ' + destinationAmount + ' ' + destinationCurrencyCode}</EdgeText>
@@ -129,10 +129,10 @@ export function SwapDetailsCard(props: Props) {
         </View>
       </RowUi4>
       {orderUri == null ? null : (
-        <RowUi4 type="touchable" title={lstrings.transaction_details_exchange_status_page} onPress={handleLink} body={swapData.orderUri} />
+        <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_exchange_status_page} onPress={handleLink} body={swapData.orderUri} />
       )}
       {plugin.supportEmail == null ? null : (
-        <RowUi4 type="touchable" title={lstrings.transaction_details_exchange_support} onPress={handleEmail} body={swapData.plugin.supportEmail} />
+        <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_exchange_support} onPress={handleEmail} body={swapData.plugin.supportEmail} />
       )}
     </CardUi4>
   )

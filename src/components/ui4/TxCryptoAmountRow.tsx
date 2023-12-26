@@ -70,5 +70,5 @@ export function TxCryptoAmountRow(props: Props) {
     return `${symbolString} ${absoluteAmount}`
   }, [currencyCode, currencyInfo, nativeAmount, networkFee, swapData, walletDefaultDenom])
 
-  return <RowUi4 type="default" title={sprintf(lstrings.transaction_details_crypto_amount, currencyName)} body={text} />
+  return <RowUi4 rightButtonType="none" title={sprintf(lstrings.transaction_details_crypto_amount, currencyName)} body={text} />
 }

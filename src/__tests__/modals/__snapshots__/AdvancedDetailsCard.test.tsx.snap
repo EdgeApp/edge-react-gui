@@ -7,13 +7,18 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
       {
         "borderRadius": 22,
         "flex": 1,
-        "padding": 11,
       },
       {
         "marginBottom": 11,
         "marginLeft": 11,
         "marginRight": 11,
         "marginTop": 11,
+      },
+      {
+        "paddingBottom": 11,
+        "paddingLeft": 11,
+        "paddingRight": 11,
+        "paddingTop": 11,
       },
     ]
   }
@@ -34,23 +39,33 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
   />
   <View
     style={
-      {
-        "flex": 1,
-        "flexDirection": "column",
-        "marginVertical": 6,
-      }
+      [
+        {
+          "flex": 1,
+          "flexDirection": "column",
+        },
+        {
+          "marginVertical": 0,
+        },
+      ]
     }
   >
     <View
       style={
-        {
-          "alignItems": "center",
-          "backgroundColor": "rgba(255, 255, 255, 0)",
-          "flex": 1,
-          "flexDirection": "row",
-          "paddingHorizontal": 11,
-          "paddingVertical": 6,
-        }
+        [
+          {
+            "alignItems": "center",
+            "backgroundColor": "rgba(255, 255, 255, 0)",
+            "flex": 1,
+            "flexDirection": "row",
+          },
+          {
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+          },
+        ]
       }
     >
       <View
@@ -76,7 +91,6 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
               {
                 "color": "#A4C7DF",
                 "fontSize": 17,
-                "paddingBottom": 6,
                 "paddingRight": 22,
               },
               null,

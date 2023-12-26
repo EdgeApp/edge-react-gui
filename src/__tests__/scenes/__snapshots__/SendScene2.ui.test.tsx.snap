@@ -8195,13 +8195,18 @@ exports[`SendScene2 Render SendScene 1`] = `
               {
                 "borderRadius": 22,
                 "flex": 1,
-                "padding": 11,
               },
               {
                 "marginBottom": 34,
                 "marginLeft": 22,
                 "marginRight": 22,
                 "marginTop": 34,
+              },
+              {
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
               },
             ]
           }

@@ -79,7 +79,7 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
       <CardUi4 sections>
         {url != null && url !== '' && (
           <RowUi4
-            type="touchable"
+            rightButtonType="touchable"
             title={lstrings.transaction_details_view_advanced_data}
             body={lstrings.transaction_details_advance_details_show_explorer}
             onPress={this.openUrl}
@@ -88,17 +88,17 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
         {receiveAddressesString != null && <RowUi4 title={lstrings.my_receive_addresses_title} body={receiveAddressesString} />}
         {networkFeeOption != null && <RowUi4 title={lstrings.transaction_details_advance_details_fee_setting} body={this.renderFeeOptions()} />}
         {feeRateUsed != null && <RowUi4 title={lstrings.transaction_details_advance_details_fee_used} body={this.renderFees(feeRateUsed)} />}
-        {txSecret != null && <RowUi4 type="copy" title={lstrings.transaction_details_advance_details_txSecret} body={txSecret} />}
+        {txSecret != null && <RowUi4 rightButtonType="copy" title={lstrings.transaction_details_advance_details_txSecret} body={txSecret} />}
         {txSecret != null && recipientAddress !== '' && txid !== '' && (
           <RowUi4
-            type="touchable"
+            rightButtonType="touchable"
             title={lstrings.transaction_details_advance_details_payment_proof}
             body={lstrings.transaction_details_advance_details_show_explorer}
             onPress={this.openProveUrl}
           />
         )}
         {signedTx != null && signedTx !== '' ? (
-          <RowUi4 type="copy" title={lstrings.transaction_details_advance_details_raw_txbytes} body={signedTx} maximumHeight="small" />
+          <RowUi4 rightButtonType="copy" title={lstrings.transaction_details_advance_details_raw_txbytes} body={signedTx} maximumHeight="small" />
         ) : null}
 
         {deviceDescription != null && <RowUi4 title={lstrings.transaction_details_advance_details_device} body={deviceDescription} />}
