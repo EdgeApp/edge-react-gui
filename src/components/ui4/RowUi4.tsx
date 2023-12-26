@@ -44,7 +44,7 @@ export const RowUi4 = (props: Props) => {
   const { body, title, children, maximumHeight = 'medium', error, icon, loading, marginRem, onLongPress, onPress } = props
   const { rightButtonType = onLongPress == null && onPress == null ? 'none' : 'touchable' } = props
 
-  const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
+  const margin = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
 
   const numberOfLines = textHeights[maximumHeight]
 

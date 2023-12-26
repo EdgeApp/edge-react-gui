@@ -8,7 +8,8 @@ import { NavigationBase } from '../../types/routerTypes'
 import { PromoCard } from '../cards/PromoCard'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { WiredBalanceBox } from '../themed/WiredBalanceBox'
+import { BalanceCardUi4 } from '../ui4/BalanceCardUi4'
+import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
 
 interface OwnProps {
@@ -49,6 +50,17 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
     const { navigation, sorting, searching, searchText, theme } = this.props
     const styles = getStyles(theme)
 
+    const addSortButtons = (
+      <View key="defaultButtons" style={styles.buttonsContainer}>
+        <TouchableOpacity accessible={false} style={styles.addButton} onPress={() => navigation.push('createWalletSelectCrypto', {})}>
+          <Ionicon testID="addButton" accessibilityHint={lstrings.wallet_list_add_wallet} color={theme.iconTappable} name="md-add" size={theme.rem(1.5)} />
+        </TouchableOpacity>
+        <TouchableOpacity accessible={false} onPress={this.props.openSortModal}>
+          <Fontello testID="sortButton" accessibilityHint={lstrings.sort_wallets_hint} color={theme.iconTappable} name="sort" size={theme.rem(1.5)} />
+        </TouchableOpacity>
+      </View>
+    )
+
     return (
       <>
         <View style={styles.searchContainer}>
@@ -70,26 +82,9 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
             </TouchableOpacity>
           )}
         </View>
-        {!searching && <WiredBalanceBox />}
-        {!sorting && !searching && (
-          <View style={styles.headerContainer}>
-            <EdgeText style={styles.headerText}>{lstrings.title_wallets}</EdgeText>
-            <View key="defaultButtons" style={styles.headerButtonsContainer}>
-              <TouchableOpacity accessible={false} style={styles.addButton} onPress={() => navigation.push('createWalletSelectCrypto', {})}>
-                <Ionicon
-                  testID="addButton"
-                  accessibilityHint={lstrings.wallet_list_add_wallet}
-                  color={theme.iconTappable}
-                  name="md-add"
-                  size={theme.rem(1.5)}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity accessible={false} onPress={this.props.openSortModal}>
-                <Fontello testID="sortButton" accessibilityHint={lstrings.sort_wallets_hint} color={theme.iconTappable} name="sort" size={theme.rem(1.5)} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
+        {searching ? null : <BalanceCardUi4 navigation={navigation} hideShowAssets />}
+        {sorting || searching ? null : <SectionHeaderUi4 leftTitle={lstrings.title_wallets} rightNode={addSortButtons} />}
+
         {searching ? null : <PromoCard navigation={navigation} />}
       </>
     )
@@ -97,15 +92,7 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  headerContainer: {
-    flexDirection: 'row',
-    marginTop: theme.rem(0.5),
-    marginHorizontal: theme.rem(1)
-  },
-  headerText: {
-    flex: 1
-  },
-  headerButtonsContainer: {
+  buttonsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center'
@@ -118,7 +105,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: theme.rem(0.5),
-    marginHorizontal: theme.rem(1)
+    marginHorizontal: theme.rem(0.5)
   },
   searchDoneButton: {
     justifyContent: 'center',
