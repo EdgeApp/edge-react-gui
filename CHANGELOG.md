@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 3.23.2
+
+- fixed: Spend regression for non-EIP-1559 transactions
+
 ## 3.23.1
 
 - fixed: Paybis sell from Tron USDT
