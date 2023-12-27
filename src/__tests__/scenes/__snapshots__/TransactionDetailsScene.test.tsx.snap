@@ -34,7 +34,7 @@ exports[`TransactionDetailsScene should render 1`] = `
   <RCTScrollView
     contentContainerStyle={
       {
-        "paddingBottom": 90,
+        "paddingBottom": 0,
       }
     }
     style={
@@ -1602,7 +1602,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
   <RCTScrollView
     contentContainerStyle={
       {
-        "paddingBottom": 90,
+        "paddingBottom": 0,
       }
     }
     style={

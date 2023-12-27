@@ -5,7 +5,7 @@ import { Platform, ScrollView, TouchableOpacity, View, ViewStyle } from 'react-n
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Animated, { Easing, interpolateColor, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated'
 
-import { NotificationSceneWrapper } from '../../../components/common/SceneWrapper'
+import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { FilledTextInputRef } from '../../../components/themed/FilledTextInput'
@@ -250,7 +250,7 @@ export const AddressFormScene = React.memo((props: Props) => {
       key !== 'address2' && formData[key].trim() === ''
   )
   return (
-    <NotificationSceneWrapper background="theme">
+    <SceneWrapper background="theme" hasNotifications>
       {(gap, notificationHeight) => (
         <>
           <SceneHeader title={headerTitle} underline withTopMargin />
@@ -328,7 +328,7 @@ export const AddressFormScene = React.memo((props: Props) => {
           </View>
         </>
       )}
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 })
 

@@ -31,7 +31,7 @@ import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { fetchInfo } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { base58ToUuid } from '../../util/utils'
-import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { CountryListModal } from '../modals/CountryListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -501,7 +501,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   }
 
   return (
-    <NotificationSceneWrapper background="theme" hasTabs>
+    <SceneWrapper background="theme" hasTabs hasNotifications>
       {(gap, notificationHeight) => (
         <GuiPluginList
           navigation={navigation}
@@ -519,6 +519,6 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
           contentContainerStyle={{ paddingBottom: notificationHeight }}
         />
       )}
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 })

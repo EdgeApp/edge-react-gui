@@ -12,7 +12,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { formatLargeNumberString as formatLargeNumber } from '../../util/utils'
 import { SwipeChart } from '../charts/SwipeChart'
 import { EdgeAnim } from '../common/EdgeAnim'
-import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -165,7 +165,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   }
 
   return (
-    <NotificationSceneWrapper background="theme" scroll>
+    <SceneWrapper background="theme" scroll hasNotifications>
       <View style={styles.container}>
         <EdgeAnim style={styles.titleContainer} enter={{ type: 'fadeInLeft' }}>
           <FastImage style={styles.icon} source={imageUrlObject} />
@@ -177,7 +177,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
           <View style={styles.column}>{renderRows(coinRankingData, COLUMN_RIGHT_DATA_KEYS)}</View>
         </View>
       </View>
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 }
 

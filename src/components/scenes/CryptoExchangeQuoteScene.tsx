@@ -13,7 +13,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { logEvent } from '../../util/tracking'
 import { PoweredByCard } from '../cards/PoweredByCard'
-import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { SwapProviderRow } from '../data/row/SwapProviderRow'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal'
@@ -183,7 +183,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
     ))
   }
   return (
-    <NotificationSceneWrapper hasTabs background="theme">
+    <SceneWrapper hasTabs background="theme" hasNotifications>
       {(gap, notificationHeight) => (
         <>
           <SceneHeader title={lstrings.title_exchange} underline withTopMargin />
@@ -220,7 +220,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
           </ScrollView>
         </>
       )}
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 }
 

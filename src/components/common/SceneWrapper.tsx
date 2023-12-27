@@ -48,94 +48,10 @@ interface SceneWrapperProps {
 }
 
 /**
- * A SceneWrapper with a possible notification view at the bottom.
- */
-export const NotificationSceneWrapper = (props: SceneWrapperProps): JSX.Element => {
-  const {
-    avoidKeyboard = false,
-    background = 'theme',
-    children,
-    hasHeader = true,
-    hasNotifications = true,
-    hasTabs = false,
-    keyboardShouldPersistTaps,
-    padding = 0,
-    scroll = false
-  } = props
-
-  const activeUsername = useSelector(state => state.core.account.username)
-  const isLightAccount = activeUsername == null
-
-  const navigation = useNavigation<NavigationBase>()
-  const theme = useTheme()
-  const notificationHeight = isLightAccount ? theme.rem(4) : 0
-
-  // Subscribe to the window size:
-  const frame = useSafeAreaFrame()
-  const insets = useSafeAreaInsets()
-
-  const renderScene = (gap: EdgeInsets, keyboardAnimation: Animated.Value | null, keyboardHeight: number): JSX.Element => {
-    // Render the scene container:
-    // If function children, the caller handles the insets and overscroll
-    const isFuncChildren = typeof children === 'function'
-
-    const finalChildren = isFuncChildren ? children({ ...gap, bottom: keyboardHeight }, notificationHeight) : children
-    const scene =
-      keyboardAnimation != null ? (
-        <Animated.View style={[styles.scene, { ...gap, maxHeight: keyboardAnimation, padding }]}>{finalChildren}</Animated.View>
-      ) : scroll ? (
-        <ScrollView
-          style={{ position: 'absolute', padding, ...gap }}
-          keyboardShouldPersistTaps={keyboardShouldPersistTaps}
-          contentContainerStyle={{ paddingBottom: notificationHeight }}
-        >
-          {finalChildren}
-        </ScrollView>
-      ) : (
-        <View style={[styles.scene, { ...gap, padding, paddingBottom: isFuncChildren ? undefined : notificationHeight }]}>{finalChildren}</View>
-      )
-
-    // Render the background, if any:
-    if (background === 'none')
-      return (
-        <>
-          {scene}
-          {hasNotifications ? <NotificationView navigation={navigation} /> : null}
-        </>
-      )
-    return (
-      <LinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart} style={styles.gradient}>
-        {scene}
-        {hasNotifications ? <NotificationView navigation={navigation} /> : null}
-      </LinearGradient>
-    )
-  }
-
-  const gap: EdgeInsets = {
-    ...insets,
-    bottom: hasTabs ? 0 : insets.bottom,
-    top: insets.top + (hasHeader ? getDefaultHeaderHeight(frame, false, 0) : 0)
-  }
-  const downValue = frame.height - gap.top
-  const upValue = (keyboardHeight: number) => downValue - keyboardHeight
-
-  return avoidKeyboard ? (
-    <KeyboardTracker downValue={downValue} upValue={upValue}>
-      {(keyboardAnimation, keyboardLayout) => renderScene(gap, keyboardAnimation, downValue - keyboardLayout)}
-    </KeyboardTracker>
-  ) : (
-    renderScene(gap, null, 0)
-  )
-}
-
-/**
  * Wraps a normal stacked scene, creating a perfectly-sized box
  * that avoids the header, tab bar, and notifications (if any).
  *
  * Also draws a common gradient background under the scene.
- *
- * TODO: Eventually deprecate this as scenes integrate the
- * NotificationSceneWrapper instead
  */
 export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const {

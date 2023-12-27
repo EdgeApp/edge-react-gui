@@ -12,7 +12,7 @@ import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getUi4ImageUri } from '../../../util/CdnUris'
 import { EdgeAnim } from '../../common/EdgeAnim'
-import { NotificationSceneWrapper } from '../../common/SceneWrapper'
+import { SceneWrapper } from '../../common/SceneWrapper'
 import { PasswordReminderModal } from '../../modals/PasswordReminderModal'
 import { Airship } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
@@ -72,7 +72,7 @@ export const HomeSceneUi4 = (props: Props) => {
   )
 
   return (
-    <NotificationSceneWrapper scroll hasTabs>
+    <SceneWrapper hasNotifications hasTabs scroll>
       <View style={styles.tempMargin}>
         <SectionView extendRight>
           <>
@@ -148,7 +148,7 @@ export const HomeSceneUi4 = (props: Props) => {
           <SupportCardUi4 title={lstrings.title_support} body={lstrings.body_support} buttonText={lstrings.button_support} url={config.supportContactSite} />
         </SectionView>
       </View>
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 }
 

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-import { NotificationSceneWrapper } from '../../../components/common/SceneWrapper'
+import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { MainButton } from '../../../components/themed/MainButton'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
@@ -58,7 +58,7 @@ export const SepaFormScene = React.memo((props: Props) => {
   }, [])
 
   return (
-    <NotificationSceneWrapper background="theme">
+    <SceneWrapper background="theme" hasNotifications>
       {(gap, notificationHeight) => (
         <>
           <SceneHeader title={headerTitle} underline withTopMargin />
@@ -84,7 +84,7 @@ export const SepaFormScene = React.memo((props: Props) => {
           </View>
         </>
       )}
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 })
 

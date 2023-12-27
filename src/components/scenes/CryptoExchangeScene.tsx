@@ -17,7 +17,7 @@ import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, zeroString } from '../../util/utils'
-import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
@@ -424,7 +424,7 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   })
 
   return (
-    <NotificationSceneWrapper hasTabs>
+    <SceneWrapper hasTabs hasNotifications>
       {(gap, notificationHeight) => (
         <CryptoExchangeComponent
           route={route}
@@ -440,6 +440,6 @@ export const CryptoExchangeScene = (props: OwnProps) => {
           overscroll={notificationHeight}
         />
       )}
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 }

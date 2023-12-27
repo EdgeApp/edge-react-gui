@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { Image, Text, View } from 'react-native'
 
 import { PoweredByCard } from '../../../components/cards/PoweredByCard'
-import { NotificationSceneWrapper } from '../../../components/common/SceneWrapper'
+import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { showError } from '../../../components/services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { FilledTextInput } from '../../../components/themed/FilledTextInput'
@@ -129,7 +129,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
 
   const poweredByIconPath = poweredBy != null ? getPartnerIconUri(poweredBy.poweredByIcon) : undefined
   return (
-    <NotificationSceneWrapper scroll keyboardShouldPersistTaps="handled" background="theme">
+    <SceneWrapper scroll keyboardShouldPersistTaps="handled" background="theme" hasNotifications>
       <SceneHeader style={styles.sceneHeader} title={headerTitle} underline withTopMargin>
         {headerIcon}
       </SceneHeader>
@@ -166,7 +166,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
         {poweredBy != null ? <PoweredByCard iconUri={poweredByIconPath} poweredByText={poweredBy.poweredByText} onPress={handlePoweredByPress} /> : null}
         <MainButton disabled={spinner1 || spinner2} label={lstrings.string_next_capitalized} marginRem={[1, 0]} type="secondary" onPress={handleSubmit} />
       </View>
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 })
 

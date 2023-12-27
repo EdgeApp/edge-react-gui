@@ -22,7 +22,7 @@ import { fetchInfo } from '../../util/network'
 import { calculateSpamThreshold, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { AssetStatusCard } from '../cards/AssetStatusCard'
 import { EdgeAnim } from '../common/EdgeAnim'
-import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
@@ -248,7 +248,7 @@ function TransactionListComponent(props: Props) {
   })
 
   return (
-    <NotificationSceneWrapper hasTabs>
+    <SceneWrapper hasNotifications hasTabs>
       {(gap, notificationHeight) => (
         <>
           <LinearGradient colors={[backgroundGradientColor, '#00000000']} start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }} style={StyleSheet.absoluteFill} />
@@ -276,7 +276,7 @@ function TransactionListComponent(props: Props) {
           )}
         </>
       )}
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 }
 

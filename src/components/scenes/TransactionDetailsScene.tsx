@@ -25,7 +25,7 @@ import { convertNativeToExchange } from '../../util/utils'
 import { getMemoTitle } from '../../util/validateMemos'
 import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { EdgeAnim } from '../common/EdgeAnim'
-import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { AccelerateTxModal } from '../modals/AccelerateTxModal'
 import { CategoryModal } from '../modals/CategoryModal'
@@ -257,7 +257,7 @@ const TransactionDetailsComponent = (props: Props) => {
   const categoriesText = formatCategory(splitCategory(category))
 
   return (
-    <NotificationSceneWrapper hasTabs scroll padding={theme.rem(0.5)}>
+    <SceneWrapper hasNotifications hasTabs scroll padding={theme.rem(0.5)}>
       <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
         <CardUi4>
           <RowUi4
@@ -343,7 +343,7 @@ const TransactionDetailsComponent = (props: Props) => {
           scrollMargin
         />
       </EdgeAnim>
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 }
 
