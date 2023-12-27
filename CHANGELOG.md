@@ -7,6 +7,7 @@
 - changed: Light account re-enabled at 50% distribution
 - changed: Block Buy/Sell/Receive for Light Accounts
 - changed: Free FIO handle modal visual design
+- changed: New dynamic menu tabs that responds to scene scroll
 - changed: Scene layout to support transparent and blurred header and tab-bar
 - changed: Bity and Paybis plugins to use EdgeTxAction for sell transactions
 - changed: Do not write tx.metadata in fiat sell transactions

@@ -4,7 +4,7 @@ import * as React from 'react'
 import { useMemo } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import Animated from 'react-native-reanimated'
+import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
@@ -15,6 +15,7 @@ import { Fontello } from '../../assets/vector/index'
 import { useHandler } from '../../hooks/useHandler'
 import { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
+import { useDrawerOpenRatio } from '../../state/SceneDrawerState'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { styled } from '../hoc/styled'
@@ -60,13 +61,24 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const activeTabRoute = state.routes[activeTabFullIndex]
   const activeTabIndex = routes.findIndex(route => route.name === activeTabRoute.name)
 
+  const { drawerOpenRatio, handleDrawerLayout, isRatioDisabled = false, resetDrawerRatio } = useDrawerOpenRatio()
+
   return (
-    <ContainerLinearGradient bottom={insets.bottom} colors={colors} start={start} end={end}>
+    <ContainerLinearGradient bottom={insets.bottom} colors={colors} start={start} end={end} onLayout={handleDrawerLayout}>
       <BlurView blurType={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} overlayColor="#00000000" />
       <LinearGradient colors={colors} start={start} end={end}>
         <Tabs>
           {routes.map((route, index: number) => (
-            <Tab currentName={routes[activeTabIndex].name} navigation={navigation} key={route.name} route={route} isActive={activeTabIndex === index} />
+            <Tab
+              currentName={routes[activeTabIndex].name}
+              navigation={navigation}
+              key={route.name}
+              route={route}
+              isActive={activeTabIndex === index}
+              drawerOpenRatio={drawerOpenRatio}
+              resetDrawerRatio={resetDrawerRatio}
+              isRatioDisabled={isRatioDisabled}
+            />
           ))}
         </Tabs>
       </LinearGradient>
@@ -92,12 +104,18 @@ const Tabs = styled(View)({
 const Tab = ({
   route,
   isActive,
+  drawerOpenRatio,
+  resetDrawerRatio,
   currentName,
+  isRatioDisabled,
   navigation
 }: {
   isActive: boolean
   currentName: string
   route: BottomTabBarProps['state']['routes'][number]
+  drawerOpenRatio: SharedValue<number> | undefined
+  resetDrawerRatio: () => void
+  isRatioDisabled: boolean
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>
 }) => {
   const theme = useTheme()
@@ -117,6 +135,8 @@ const Tab = ({
   }
 
   const handleOnPress = useHandler(() => {
+    resetDrawerRatio()
+
     switch (route.name) {
       case 'homeTab':
         return navigation.navigate('home', currentName === 'homeTab' ? { screen: 'home' } : {})
@@ -146,7 +166,15 @@ const Tab = ({
   return (
     <TabContainer accessible={false} insetBottom={insets.bottom} key={route.key} onPress={handleOnPress}>
       {icon[route.name]}
-      <Label accessible numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.65} isActive={isActive}>
+      <Label
+        accessible
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.65}
+        isActive={isActive}
+        openRatio={drawerOpenRatio}
+        isRatioDisabled={isRatioDisabled}
+      >
         {title[route.name]}
       </Label>
     </TabContainer>
@@ -163,7 +191,10 @@ const TabContainer = styled(TouchableOpacity)<{ insetBottom: number }>(theme => 
 
 const Label = styled(Animated.Text)<{
   isActive: boolean
-}>(theme => ({ isActive }) => {
+  isRatioDisabled: boolean
+  openRatio: SharedValue<number> | undefined
+}>(theme => ({ isActive, isRatioDisabled, openRatio }) => {
+  const rem = theme.rem(1)
   return [
     {
       // Copied from EdgeText
@@ -173,6 +204,13 @@ const Label = styled(Animated.Text)<{
       color: isActive ? theme.tabBarIconHighlighted : theme.tabBarIcon,
       fontSize: theme.rem(0.75),
       marginTop: theme.rem(2 / 16)
-    }
+    },
+    useAnimatedStyle(() => {
+      'worklet'
+      return {
+        height: isRatioDisabled ? undefined : openRatio == null ? undefined : rem * openRatio.value,
+        opacity: isRatioDisabled ? undefined : openRatio == null ? undefined : openRatio.value
+      }
+    })
   ]
 })

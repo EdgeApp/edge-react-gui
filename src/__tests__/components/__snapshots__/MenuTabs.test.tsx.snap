@@ -16,6 +16,7 @@ exports[`MenuTabs should render with loading props 1`] = `
     }
   }
   locations={null}
+  onLayout={[Function]}
   startPoint={
     {
       "x": 0,

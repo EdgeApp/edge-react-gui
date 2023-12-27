@@ -5,6 +5,7 @@ import { useMemo } from 'react'
 import { Animated, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import { useDrawerOpenRatio } from '../../state/SceneDrawerState'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { maybeComponent } from '../hoc/maybeComponent'
@@ -90,6 +91,8 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const activeUsername = useSelector(state => state.core.account.username)
   const isLightAccount = accountId != null && activeUsername == null
 
+  const { drawerHeight } = useDrawerOpenRatio()
+
   const navigation = useNavigation<NavigationBase>()
   const theme = useTheme()
   const windowDimensions = useWindowDimensions()
@@ -134,7 +137,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     const insetStyles: InsetStyles = {
       paddingTop: insets.top,
       paddingRight: insets.right,
-      paddingBottom: insets.bottom,
+      paddingBottom: insets.bottom + drawerHeight.value,
       paddingLeft: insets.left
     }
 
