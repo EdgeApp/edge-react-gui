@@ -7,8 +7,8 @@ import { EdgeText } from '../themed/EdgeText'
 import { SplitRowsView } from './SplitRowsView'
 
 interface Props {
-  leftTitle: string
-  rightNode?: string | React.ReactNode
+  left: string | React.ReactNode
+  right?: string | React.ReactNode
 
   /** @deprecated Only to be used during the UI4 transition */
   marginRem?: number[] | number
@@ -24,21 +24,21 @@ interface Props {
  * be rendered as green tappable text, else it's up to the caller to decide.
  **/
 export const SectionHeaderUi4 = (props: Props) => {
-  const { leftTitle, rightNode, marginRem = [0.5, 1, 0, 1], onRightPress } = props
+  const { left, right, marginRem = [0.5, 1, 0, 1], onRightPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
     <SplitRowsView marginRem={marginRem}>
       {{
-        left: <EdgeText>{leftTitle}</EdgeText>,
+        left: typeof left === 'string' ? <EdgeText>{left}</EdgeText> : left,
         right:
-          typeof rightNode === 'string' && onRightPress != null ? (
+          typeof right === 'string' && onRightPress != null ? (
             <TouchableOpacity onPress={onRightPress} style={styles.rightTappableContainer}>
-              <EdgeText style={styles.tappableText}>{rightNode}</EdgeText>
+              <EdgeText style={styles.tappableText}>{right}</EdgeText>
             </TouchableOpacity>
           ) : (
-            rightNode
+            right
           )
       }}
     </SplitRowsView>

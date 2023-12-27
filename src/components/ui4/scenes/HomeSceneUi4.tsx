@@ -112,13 +112,13 @@ export const HomeSceneUi4 = (props: Props) => {
             </View>
           </>
           <>
-            <SectionHeaderUi4 leftTitle={lstrings.title_markets} rightNode={lstrings.see_all} onRightPress={() => navigation.navigate('marketsTab', {})} />
+            <SectionHeaderUi4 left={lstrings.title_markets} right={lstrings.see_all} onRightPress={() => navigation.navigate('marketsTab', {})} />
             <MarketsCardUi4 navigation={navigation} numRows={5} />
           </>
           {/* TODO: Reimplement after info server is published */}
           {blogData == null || blogData.length === 0 ? null : (
             <>
-              <SectionHeaderUi4 leftTitle={lstrings.title_learn} />
+              <SectionHeaderUi4 left={lstrings.title_learn} />
               <View style={styles.carouselContainer}>
                 <CarouselUi4 height={theme.rem(13)} width={screenWidth}>
                   {blogData.map((blogPost, index) => (

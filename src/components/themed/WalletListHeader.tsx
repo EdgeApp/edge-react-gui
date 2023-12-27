@@ -83,7 +83,7 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
           )}
         </View>
         {searching ? null : <BalanceCardUi4 navigation={navigation} />}
-        {sorting || searching ? null : <SectionHeaderUi4 leftTitle={lstrings.title_wallets} rightNode={addSortButtons} />}
+        {sorting || searching ? null : <SectionHeaderUi4 left={lstrings.title_wallets} right={addSortButtons} />}
 
         {searching ? null : <PromoCard navigation={navigation} />}
       </>
