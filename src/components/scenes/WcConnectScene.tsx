@@ -17,7 +17,7 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { truncateString } from '../../util/utils'
 import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -63,7 +63,7 @@ export const WcConnectScene = (props: Props) => {
   }, [proposal])
 
   useAsyncEffect(async () => {
-    const r = await wallet.getReceiveAddress()
+    const r = await wallet.getReceiveAddress({ tokenId: null })
     setWalletAddress(r.publicAddress)
   }, [wallet])
 
@@ -88,7 +88,7 @@ export const WcConnectScene = (props: Props) => {
     if (result?.type === 'wallet') {
       const { walletId, currencyCode } = result
       const wallet = account.currencyWallets[walletId]
-      const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+      const tokenId = getTokenIdForced(account, wallet.currencyInfo.pluginId, currencyCode)
       await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
       setSelectedWallet({ walletId, currencyCode })
     }
@@ -108,7 +108,7 @@ export const WcConnectScene = (props: Props) => {
     } else {
       const walletNameStr = truncateString(walletName || '', MAX_ADDRESS_CHARACTERS)
       const walletImage = (
-        <CryptoIcon pluginId={wallet.currencyInfo.pluginId} tokenId={getTokenId(account, wallet.currencyInfo.pluginId, selectedWallet.currencyCode)} />
+        <CryptoIcon pluginId={wallet.currencyInfo.pluginId} tokenId={getTokenIdForced(account, wallet.currencyInfo.pluginId, selectedWallet.currencyCode)} />
       )
       const walletAddressStr = truncateString(walletAddress, MAX_ADDRESS_CHARACTERS, true)
       return <SelectableRow arrowTappable icon={walletImage} subTitle={walletAddressStr} title={walletNameStr} onPress={handleWalletListModal} />

@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 import { formatFiatString } from '../../hooks/useFiatText'
@@ -16,7 +16,7 @@ interface Props {
 
   // Crypto amount props
   nativeCryptoAmount?: string
-  tokenId?: string
+  tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
 }
 

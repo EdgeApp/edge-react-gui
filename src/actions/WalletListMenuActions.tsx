@@ -1,4 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard'
+import { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -39,7 +40,7 @@ export function walletListMenuAction(
   navigation: NavigationProp<'walletList'> | NavigationProp<'transactionList'>,
   walletId: string,
   option: WalletListMenuKey,
-  tokenId?: string
+  tokenId: EdgeTokenId
 ): ThunkAction<Promise<void>> {
   const switchString = option.startsWith('split') ? 'split' : option
 
@@ -97,7 +98,7 @@ export function walletListMenuAction(
         if (tokenId == null) {
           if (fioAddress) {
             additionalMsg = lstrings.fragmet_wallets_delete_fio_extra_message_mobile
-          } else if (wallet.currencyInfo.metaTokens.length > 0) {
+          } else if (Object.keys(wallet.currencyConfig.allTokens).length > 0) {
             additionalMsg = lstrings.fragmet_wallets_delete_eth_extra_message
           }
         } else {

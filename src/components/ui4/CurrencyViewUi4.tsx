@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Text, View } from 'react-native'
 
@@ -18,7 +18,7 @@ import { SplitRowsView } from './SplitRowsView'
 interface Props {
   nativeAmount?: string
   token?: EdgeToken
-  tokenId?: string
+  tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
 
   // Callbacks

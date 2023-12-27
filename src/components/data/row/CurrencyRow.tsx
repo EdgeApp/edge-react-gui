@@ -19,7 +19,7 @@ interface Props {
   nativeAmount?: string
   showRate?: boolean
   token?: EdgeToken
-  tokenId?: EdgeTokenId
+  tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
 }
 

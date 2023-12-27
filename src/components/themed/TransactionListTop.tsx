@@ -1,5 +1,5 @@
 import { add, gt, mul, round } from 'biggystring'
-import { EdgeAccount, EdgeBalances, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
+import { EdgeAccount, EdgeBalanceMap, EdgeCurrencyWallet, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -44,7 +44,7 @@ interface OwnProps {
   isLightAccount: boolean
 
   // Wallet identity:
-  tokenId: string | undefined
+  tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
 
   // Scene state:
@@ -57,7 +57,7 @@ interface OwnProps {
 
 interface StateProps {
   account: EdgeAccount
-  balances: EdgeBalances
+  balanceMap: EdgeBalanceMap
   currencyCode: string
   displayDenomination: EdgeDenomination
   exchangeDenomination: EdgeDenomination
@@ -191,14 +191,13 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   renderBalanceBox = () => {
-    const { balances, currencyCode, displayDenomination, exchangeDenomination, exchangeRate, isAccountBalanceVisible, theme, tokenId, wallet, walletName } =
-      this.props
+    const { balanceMap, displayDenomination, exchangeDenomination, exchangeRate, isAccountBalanceVisible, theme, tokenId, wallet, walletName } = this.props
     const styles = getStyles(theme)
 
     const fiatCurrencyCode = wallet.fiatCurrencyCode.replace(/^iso:/, '')
     const fiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode)
 
-    const nativeBalance = balances[currencyCode] ?? '0'
+    const nativeBalance = balanceMap.get(tokenId) ?? '0'
     const cryptoAmount = convertNativeToDenomination(displayDenomination.multiplier)(nativeBalance) // convert to correct denomination
     const cryptoAmountFormat = formatNumber(add(cryptoAmount, '0'))
 
@@ -350,13 +349,13 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   handleStakePress = () => {
     triggerHaptic('impactLight')
-    const { currencyCode, wallet, navigation } = this.props
+    const { currencyCode, wallet, navigation, tokenId } = this.props
     const { stakePlugins, stakePolicies, stakePositionMap } = this.state
 
     // Handle FIO staking
     if (currencyCode === 'FIO') {
       navigation.push('fioStakingOverview', {
-        currencyCode,
+        tokenId,
         walletId: wallet.id
       })
     }
@@ -586,7 +585,7 @@ export function TransactionListTop(props: OwnProps) {
   const activeUsername = useSelector(state => state.core.account.username)
 
   const walletName = useWalletName(wallet)
-  const balances = useWatch(wallet, 'balances')
+  const balanceMap = useWatch(wallet, 'balanceMap')
 
   const handleBalanceVisibility = useHandler(() => {
     dispatch(toggleAccountBalanceVisibility())
@@ -596,7 +595,7 @@ export function TransactionListTop(props: OwnProps) {
     <TransactionListTopComponent
       {...props}
       account={account}
-      balances={balances}
+      balanceMap={balanceMap}
       currencyCode={currencyCode}
       displayDenomination={displayDenomination}
       exchangeDenomination={exchangeDenomination}

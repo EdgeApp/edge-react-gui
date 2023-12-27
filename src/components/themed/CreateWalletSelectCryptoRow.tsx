@@ -1,3 +1,4 @@
+import { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 
@@ -15,7 +16,7 @@ interface Props {
 
   // Icon currency:
   pluginId: string
-  tokenId?: string
+  tokenId: EdgeTokenId
 
   // Callbacks:
   onPress?: () => Promise<void> | void

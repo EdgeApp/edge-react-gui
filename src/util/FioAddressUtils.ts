@@ -135,7 +135,7 @@ export const setFioExpiredCheckToDisklet = async (lastChecks: { [fioName: string
 export const fioMakeSpend = async (fioWallet: EdgeCurrencyWallet, actionName: string, params: unknown): Promise<EdgeTransaction> => {
   const fakeSpendTarget = { publicAddress: '', nativeAmount: '0' }
   const spendInfo: EdgeSpendInfo = {
-    currencyCode: 'FIO',
+    tokenId: null,
     spendTargets: [fakeSpendTarget],
     otherParams: {
       action: {
@@ -198,7 +198,7 @@ const isWalletConnected = async (
         return true
       }
     }
-    const receiveAddress = await wallet.getReceiveAddress()
+    const receiveAddress = await wallet.getReceiveAddress({ tokenId: null })
     if (connectedAddress === receiveAddress.publicAddress) return true
   } catch (e: any) {
     //
@@ -469,14 +469,17 @@ export const checkPubAddress = async (fioPlugin: EdgeCurrencyConfig, fioAddress:
     const { public_address: publicAddress } = await fioPlugin.otherMethods.getConnectedPublicAddress(fioAddress.toLowerCase(), chainCode, tokenCode)
     return publicAddress
   } catch (e: any) {
-    if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
-      throw new FioError(lstrings.fio_error_invalid_address, fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS)
+    if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings?.errorCodes.INVALID_FIO_ADDRESS) {
+      throw new FioError(lstrings.fio_error_invalid_address, fioPlugin.currencyInfo.defaultSettings?.errorCodes.INVALID_FIO_ADDRESS)
     }
-    if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_EXIST) {
-      throw new FioError(lstrings.send_fio_request_error_addr_not_exist, fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_EXIST)
+    if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings?.errorCodes.FIO_ADDRESS_IS_NOT_EXIST) {
+      throw new FioError(lstrings.send_fio_request_error_addr_not_exist, fioPlugin.currencyInfo.defaultSettings?.errorCodes.FIO_ADDRESS_IS_NOT_EXIST)
     }
-    if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_LINKED) {
-      throw new FioError(sprintf(lstrings.err_address_not_linked_title, tokenCode), fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_LINKED)
+    if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings?.errorCodes.FIO_ADDRESS_IS_NOT_LINKED) {
+      throw new FioError(
+        sprintf(lstrings.err_address_not_linked_title, tokenCode),
+        fioPlugin.currencyInfo.defaultSettings?.errorCodes.FIO_ADDRESS_IS_NOT_LINKED
+      )
     }
     throw new Error(lstrings.fio_connect_wallets_err)
   }
@@ -615,7 +618,7 @@ export const checkIsDomainPublic = async (fioPlugin: EdgeCurrencyConfig, domain:
   try {
     isDomainPublic = fioPlugin.otherMethods ? await fioPlugin.otherMethods.isDomainPublic(domain) : false
   } catch (e: any) {
-    if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_DOMAIN_IS_NOT_EXIST) {
+    if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings?.errorCodes.FIO_DOMAIN_IS_NOT_EXIST) {
       throw new Error(lstrings.fio_get_reg_info_domain_err_msg)
     }
 
@@ -666,7 +669,7 @@ export const getRegInfo = async (
     return {
       activationCost,
       feeValue,
-      supportedAssets: [{ pluginId: 'fio' }],
+      supportedAssets: [{ pluginId: 'fio', tokenId: null }],
       supportedCurrencies: { [FIO_STR]: true },
       paymentInfo: {
         [FIO_STR]: {
@@ -679,7 +682,7 @@ export const getRegInfo = async (
   }
   // todo: temporary commented to use fallback referral code by default.
   // const referralCode = isFallback ? fioPlugin.currencyInfo.defaultSettings.fallbackRef : fioPlugin.currencyInfo.defaultSettings.defaultRef
-  const reqResult = await buyAddressRequest(fioPlugin, fioAddress, fioPlugin.currencyInfo.defaultSettings.fallbackRef, selectedWallet, activationCost)
+  const reqResult = await buyAddressRequest(fioPlugin, fioAddress, fioPlugin.currencyInfo.defaultSettings?.fallbackRef, selectedWallet, activationCost)
   return {
     ...reqResult,
     feeValue
@@ -717,7 +720,7 @@ export const getDomainRegInfo = async (
     throw new Error(lstrings.fio_get_fee_err_msg)
   }
 
-  const reqResult = await buyAddressRequest(fioPlugin, fioDomain, fioPlugin.currencyInfo.defaultSettings.defaultRef, selectedWallet, activationCost)
+  const reqResult = await buyAddressRequest(fioPlugin, fioDomain, fioPlugin.currencyInfo.defaultSettings?.defaultRef, selectedWallet, activationCost)
   return {
     ...reqResult,
     feeValue
@@ -781,12 +784,12 @@ const buyAddressRequest = async (
     }
   } catch (e: any) {
     const errorMessages = {
-      [fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS]: lstrings.fio_error_invalid_address,
-      [fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_DOMAIN_IS_NOT_EXIST]: lstrings.fio_get_reg_info_domain_err_msg,
-      [fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_DOMAIN_IS_NOT_PUBLIC]: lstrings.fio_address_register_domain_is_not_public,
-      [fioPlugin.currencyInfo.defaultSettings.errorCodes.SERVER_ERROR]: lstrings.fio_get_reg_info_err_msg,
-      [fioPlugin.currencyInfo.defaultSettings.errorCodes.ALREADY_SENT_REGISTRATION_REQ_FOR_DOMAIN]: lstrings.fio_get_reg_info_already_sent_err_msg,
-      [fioPlugin.currencyInfo.defaultSettings.errorCodes.ALREADY_REGISTERED]: lstrings.fio_address_register_screen_not_available
+      [fioPlugin.currencyInfo.defaultSettings?.errorCodes.INVALID_FIO_ADDRESS]: lstrings.fio_error_invalid_address,
+      [fioPlugin.currencyInfo.defaultSettings?.errorCodes.FIO_DOMAIN_IS_NOT_EXIST]: lstrings.fio_get_reg_info_domain_err_msg,
+      [fioPlugin.currencyInfo.defaultSettings?.errorCodes.FIO_DOMAIN_IS_NOT_PUBLIC]: lstrings.fio_address_register_domain_is_not_public,
+      [fioPlugin.currencyInfo.defaultSettings?.errorCodes.SERVER_ERROR]: lstrings.fio_get_reg_info_err_msg,
+      [fioPlugin.currencyInfo.defaultSettings?.errorCodes.ALREADY_SENT_REGISTRATION_REQ_FOR_DOMAIN]: lstrings.fio_get_reg_info_already_sent_err_msg,
+      [fioPlugin.currencyInfo.defaultSettings?.errorCodes.ALREADY_REGISTERED]: lstrings.fio_address_register_screen_not_available
     }
     if (e.labelCode && errorMessages[e.labelCode]) {
       throw new Error(errorMessages[e.labelCode])
@@ -998,13 +1001,13 @@ export const convertEdgeToFIOCodes = (pluginId: string, edgeChainCode: string, e
 }
 
 export const fioToEdgeMap: MapObject<EdgeAsset> = {
-  bitcoin: { pluginId: 'bitcoin' },
-  bitcoincash: { pluginId: 'bitcoincash' },
+  bitcoin: { pluginId: 'bitcoin', tokenId: null },
+  bitcoincash: { pluginId: 'bitcoincash', tokenId: null },
   dai: { pluginId: 'ethereum', tokenId: '6b175474e89094c44da98b954eedeac495271d0f' },
-  dogecoin: { pluginId: 'dogecoin' },
-  ethereum: { pluginId: 'ethereum' },
-  litecoin: { pluginId: 'litecoin' },
-  polygon: { pluginId: 'polygon' },
+  dogecoin: { pluginId: 'dogecoin', tokenId: null },
+  ethereum: { pluginId: 'ethereum', tokenId: null },
+  litecoin: { pluginId: 'litecoin', tokenId: null },
+  polygon: { pluginId: 'polygon', tokenId: null },
   tether: { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' },
   usdc: { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' }
 }

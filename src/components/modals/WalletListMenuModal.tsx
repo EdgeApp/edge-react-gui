@@ -1,3 +1,4 @@
+import { EdgeTokenId } from 'edge-core-js'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -30,7 +31,7 @@ interface Props {
   navigation: NavigationProp<'walletList'> | NavigationProp<'transactionList'>
 
   // Wallet identity:
-  tokenId?: string
+  tokenId: EdgeTokenId
   walletId: string
 }
 

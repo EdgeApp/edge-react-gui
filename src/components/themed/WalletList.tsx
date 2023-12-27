@@ -1,5 +1,5 @@
 import { FlashList } from '@shopify/flash-list'
-import { EdgeAccount } from 'edge-core-js'
+import { EdgeAccount, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { SectionList, ViewStyle } from 'react-native'
 
@@ -10,7 +10,7 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset, FlatListItem, WalletListItem } from '../../types/types'
-import { getCreateWalletTypes, getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getCreateWalletTypes, getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { assetOverrides } from '../../util/serverState'
 import { normalizeForSearch } from '../../util/utils'
 import { showError } from '../services/AirshipInstance'
@@ -39,7 +39,7 @@ interface Props {
   createWalletId?: string
 
   // Callbacks:
-  onPress?: (walletId: string, currencyCode: string, tokenId?: string) => void
+  onPress?: (walletId: string, tokenId: EdgeTokenId) => void
 }
 
 export interface WalletCreateItem {
@@ -47,7 +47,7 @@ export interface WalletCreateItem {
   currencyCode: string
   displayName: string
   pluginId: string
-  tokenId?: string // Used for creating tokens
+  tokenId: EdgeTokenId // Used for creating tokens
   walletType?: string // Used for creating wallets
   createWalletIds?: string[]
 }
@@ -93,12 +93,10 @@ export function WalletList(props: Props) {
   const handlePress = React.useMemo(
     () =>
       onPress ??
-      ((walletId: string, currencyCode: string) => {
-        const wallet = account.currencyWallets[walletId]
-        const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+      ((walletId: string, tokenId: EdgeTokenId) => {
         dispatch(selectWalletToken({ navigation, walletId, tokenId })).catch(err => showError(err))
       }),
-    [account, dispatch, navigation, onPress]
+    [dispatch, navigation, onPress]
   )
 
   // Filter the common wallet list:
@@ -266,11 +264,13 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
   const createWalletCurrencies = getCreateWalletTypes(account, filterActivation)
   for (const createWalletCurrency of createWalletCurrencies) {
     const { currencyCode, currencyName, pluginId, walletType } = createWalletCurrency
+    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
     walletList.push({
       key: `create-${walletType}-${pluginId}`,
       currencyCode,
       displayName: currencyName,
       pluginId,
+      tokenId,
       walletType
     })
   }

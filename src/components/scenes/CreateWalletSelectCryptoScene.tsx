@@ -143,6 +143,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
               return (
                 <CreateWalletSelectCryptoRow
                   pluginId={pluginId}
+                  tokenId={null}
                   walletName=""
                   onPress={() => {
                     bridge.resolve(PLACEHOLDER_WALLET_ID)
@@ -153,7 +154,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             }
 
             const wallet = currencyWallets[walletId]
-            return <WalletListCurrencyRow wallet={wallet} onPress={walletId => bridge.resolve(walletId)} />
+            return <WalletListCurrencyRow wallet={wallet} tokenId={null} onPress={walletId => bridge.resolve(walletId)} />
           }
 
           const displayNames = newTokenItems

@@ -11,5 +11,5 @@ export const TotalDebtCollateralTile = (props: { title: string; wallet: EdgeCurr
   // Floor totalFiatAmount value at '0'
   const totalFiatAmount = max('0', useTotalFiatAmount(wallet, debtsOrCollaterals))
 
-  return <FiatAmountTile title={title} fiatAmount={totalFiatAmount} wallet={wallet} />
+  return <FiatAmountTile title={title} fiatAmount={totalFiatAmount} wallet={wallet} tokenId={null} />
 }

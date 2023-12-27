@@ -4,16 +4,14 @@ import * as React from 'react'
 /**
  * Subscribes to a specific balance within a wallet.
  */
-export function useWalletBalance(wallet: EdgeCurrencyWallet, tokenId?: EdgeTokenId): string {
+export function useWalletBalance(wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): string {
   // The core still reports balances by currency code:
-  const token = tokenId == null ? null : wallet.currencyConfig.allTokens[tokenId]
-  const { currencyCode } = token == null ? wallet.currencyInfo : token
-  const [out, setOut] = React.useState<string>(wallet.balances[currencyCode] ?? '0')
+  const [out, setOut] = React.useState<string>(wallet.balanceMap.get(tokenId) ?? '0')
 
   React.useEffect(() => {
-    setOut(wallet.balances[currencyCode] ?? '0')
-    return wallet.watch('balances', balances => setOut(balances[currencyCode] ?? '0'))
-  }, [wallet, currencyCode])
+    setOut(wallet.balanceMap.get(tokenId) ?? '0')
+    return wallet.watch('balanceMap', balances => setOut(wallet.balanceMap.get(tokenId) ?? '0'))
+  }, [wallet, tokenId])
 
   return out
 }

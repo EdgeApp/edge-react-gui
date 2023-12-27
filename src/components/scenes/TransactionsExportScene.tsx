@@ -1,5 +1,5 @@
 import { asBoolean, asObject, asString } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Platform, ScrollView } from 'react-native'
 import RNFS from 'react-native-fs'
@@ -12,7 +12,7 @@ import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { DateModal } from '../modals/DateModal'
@@ -38,7 +38,7 @@ interface StateProps {
   multiplier: string
   exchangeMultiplier: string
   parentMultiplier: string
-  tokenId: string | undefined
+  tokenId: EdgeTokenId
 }
 
 interface DispatchProps {
@@ -104,11 +104,13 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   async componentDidMount(): Promise<void> {
     try {
       const { sourceWallet } = this.props.route.params
-      const { tokenId = sourceWallet.currencyInfo.currencyCode } = this.props
+      const { tokenId } = this.props
       const { disklet } = sourceWallet
       const result = await disklet.getText(EXPORT_TX_INFO_FILE)
       const exportTxInfoMap = asExportTxInfoMap(JSON.parse(result))
-      const { isExportBitwave, isExportCsv, isExportQbo } = exportTxInfoMap[tokenId]
+      const tokenCurrencyCode = tokenId ?? sourceWallet.currencyInfo.currencyCode
+
+      const { isExportBitwave, isExportCsv, isExportQbo } = exportTxInfoMap[tokenCurrencyCode]
       this.setState({
         isExportBitwave,
         isExportCsv,
@@ -209,14 +211,15 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     const { exchangeMultiplier, multiplier, parentMultiplier, route } = this.props
     const { sourceWallet, currencyCode } = route.params
     const { isExportBitwave, isExportQbo, isExportCsv, startDate, endDate } = this.state
-    const { tokenId = sourceWallet.currencyInfo.currencyCode } = this.props
+    const { tokenId } = this.props
+    const tokenCurrencyCode = tokenId ?? sourceWallet.currencyInfo.currencyCode
 
     let exportTxInfo: ExportTxInfo | undefined
     let exportTxInfoMap: ExportTxInfoMap | undefined
     try {
       const result = await sourceWallet.disklet.getText(EXPORT_TX_INFO_FILE)
       exportTxInfoMap = asExportTxInfoMap(JSON.parse(result))
-      exportTxInfo = exportTxInfoMap[tokenId]
+      exportTxInfo = exportTxInfoMap[tokenCurrencyCode]
     } catch (e) {
       console.log(`Could not read ${EXPORT_TX_INFO_FILE} ${String(e)}. Failure is ok`)
     }
@@ -250,7 +253,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
       if (exportTxInfoMap == null) {
         exportTxInfoMap = {}
       }
-      exportTxInfoMap[tokenId] = {
+      exportTxInfoMap[tokenCurrencyCode] = {
         bitwaveAccountId: accountId,
         isExportBitwave,
         isExportQbo,
@@ -285,7 +288,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
       .replace(/[-\s]+/g, '-') // Collapse spaces & dashes
 
     const txs = await sourceWallet.getTransactions({
-      currencyCode,
+      tokenId,
       startDate,
       endDate
     })
@@ -382,7 +385,7 @@ export const TransactionsExportScene = connect<StateProps, DispatchProps, OwnPro
     multiplier: getDisplayDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.currencyCode).multiplier,
     exchangeMultiplier: getExchangeDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.currencyCode).multiplier,
     parentMultiplier: getExchangeDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.sourceWallet.currencyInfo.currencyCode).multiplier,
-    tokenId: getTokenId(state.core.account, params.sourceWallet.currencyInfo.pluginId, params.currencyCode)
+    tokenId: getTokenIdForced(state.core.account, params.sourceWallet.currencyInfo.pluginId, params.currencyCode)
   }),
   dispatch => ({
     updateTxsFiatDispatch: async (wallet: EdgeCurrencyWallet, currencyCode: string, txs: EdgeTransaction[]) =>

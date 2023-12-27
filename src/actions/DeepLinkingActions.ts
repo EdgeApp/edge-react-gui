@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeParsedUri, EdgeTokenId } from 'edge-core-js'
 
 import { launchPriceChangeBuySellSwapModal } from '../components/modals/PriceChangeBuySellSwapModal'
 import { pickWallet } from '../components/modals/WalletListModal'
@@ -10,7 +10,6 @@ import { DeepLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { EdgeAsset } from '../types/types'
-import { getTokenId } from '../util/CurrencyInfoHelpers'
 import { base58ToUuid } from '../util/utils'
 import { activatePromotion } from './AccountReferralActions'
 import { launchPaymentProto } from './PaymentProtoActions'
@@ -154,7 +153,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
 
     case 'azteco': {
       if (!allWalletsLoaded) return false
-      const result = await pickWallet({ account, assets: [{ pluginId: 'bitcoin' }], navigation, showCreateWallet: true })
+      const result = await pickWallet({ account, assets: [{ pluginId: 'bitcoin', tokenId: null }], navigation, showCreateWallet: true })
       if (result?.type !== 'wallet') {
         // pickWallet returning undefined means user has no matching wallet.
         // This should never happen. Even if the user doesn't have a bitcoin wallet, they will be presented with
@@ -189,21 +188,14 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     }
 
     case 'other': {
-      const matchingWalletIdsAndUris: Array<{ walletId: string; parsedUri: EdgeParsedUri; currencyCode?: string; tokenId?: string }> = []
+      const matchingWalletIdsAndUris: Array<{ walletId: string; parsedUri: EdgeParsedUri; currencyCode?: string; tokenId: EdgeTokenId }> = []
 
       // Try to parse with all wallets
       for (const wallet of Object.values(currencyWallets)) {
         const parsedUri = await wallet.parseUri(link.uri).catch(e => undefined)
         if (parsedUri != null) {
-          if (parsedUri.currencyCode != null && parsedUri.currencyCode !== wallet.currencyInfo.currencyCode) {
-            // Check if the user has this token enabled
-            const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, parsedUri.currencyCode)
-            if (tokenId != null) {
-              matchingWalletIdsAndUris.push({ currencyCode: parsedUri.currencyCode, walletId: wallet.id, parsedUri, tokenId })
-            }
-          } else {
-            matchingWalletIdsAndUris.push({ currencyCode: parsedUri.currencyCode, walletId: wallet.id, parsedUri })
-          }
+          const { tokenId = null } = parsedUri
+          matchingWalletIdsAndUris.push({ currencyCode: parsedUri.currencyCode, walletId: wallet.id, parsedUri, tokenId })
         }
       }
 
@@ -225,7 +217,6 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
         const wallet = currencyWallets[walletId]
         const { pluginId } = wallet.currencyInfo
 
-        if (cc == null) return { pluginId }
         return { pluginId, tokenId }
       })
       const walletListResult = await pickWallet({ account, allowedWalletIds, assets, navigation })
@@ -260,7 +251,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
 }
 
 async function launchAzteco(navigation: NavigationBase, edgeWallet: EdgeCurrencyWallet, uri: string): Promise<void> {
-  const address = await edgeWallet.getReceiveAddress()
+  const address = await edgeWallet.getReceiveAddress({ tokenId: null })
   const response = await fetch(`${uri}${address.publicAddress}`)
   if (response.ok) {
     showToast(lstrings.azteco_success)

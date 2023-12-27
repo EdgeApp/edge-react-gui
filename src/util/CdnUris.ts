@@ -1,3 +1,5 @@
+import { EdgeTokenId } from 'edge-core-js'
+
 import { EDGE_CONTENT_SERVER_URI } from '../constants/CdnConstants'
 import { BorrowPluginInfo } from '../plugins/borrow-plugins/types'
 import { edgeDark } from '../theme/variables/edgeDark'
@@ -46,8 +48,9 @@ export interface CurrencyIcons {
   symbolImageDarkMono: string
 }
 
-export function getCurrencyIconUris(pluginId: string, contractAddress: string = pluginId): CurrencyIcons {
-  const currencyPath = `${pluginId}/${removeHexPrefix(contractAddress)}`.toLowerCase()
+export function getCurrencyIconUris(pluginId: string, tokenId: EdgeTokenId): CurrencyIcons {
+  const iconFile = tokenId ?? pluginId
+  const currencyPath = `${pluginId}/${removeHexPrefix(iconFile)}`.toLowerCase()
   return {
     symbolImage: `${edgeLight.iconServerBaseUri}/currencyIconsV3/${currencyPath}.png`,
     symbolImageDarkMono: `${edgeDark.iconServerBaseUri}/currencyIconsV3/${currencyPath}_dark.png`

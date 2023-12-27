@@ -17,7 +17,7 @@ interface Props {
 
   // Amount to show:
   nativeCryptoAmount: string
-  tokenId?: EdgeTokenId
+  tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
 }
 

@@ -391,6 +391,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "displayName": "Ethereum",
                 "key": "create-undefined-ethereum",
                 "pluginId": "ethereum",
+                "tokenId": null,
                 "walletType": undefined,
               },
               {
@@ -443,6 +444,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "displayName": "Ethereum",
                   "key": "create-undefined-ethereum",
                   "pluginId": "ethereum",
+                  "tokenId": null,
                   "walletType": undefined,
                 },
                 {
@@ -563,6 +565,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     "displayName": "Ethereum",
                     "key": "create-undefined-ethereum",
                     "pluginId": "ethereum",
+                    "tokenId": null,
                     "walletType": undefined,
                   },
                   {

@@ -1,5 +1,5 @@
 import { abs, div, gt, lt, mul, sub } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { TextStyle } from 'react-native'
 
@@ -12,7 +12,7 @@ import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
   wallet: EdgeCurrencyWallet
-  tokenId?: string
+  tokenId: EdgeTokenId
   style?: TextStyle
 }
 

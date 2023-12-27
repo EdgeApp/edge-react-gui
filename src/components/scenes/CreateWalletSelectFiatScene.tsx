@@ -184,6 +184,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
       return (
         <CreateWalletSelectCryptoRow
           pluginId={pluginId}
+          tokenId={tokenId}
           walletName={walletName}
           onPress={async () => await handleEditWalletName(key, walletName)}
           rightSide={chevron}

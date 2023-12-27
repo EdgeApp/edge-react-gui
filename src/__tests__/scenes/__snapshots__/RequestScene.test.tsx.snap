@@ -76,7 +76,7 @@ exports[`Request should render with loaded props 1`] = `
         }
       >
         <WithTheme(EdgeTextComponent)>
-          You have 0 undefined
+          You have 0.000012 undefined
         </WithTheme(EdgeTextComponent)>
       </TouchableOpacity>
       <WithTheme(EdgeTextComponent)
@@ -91,10 +91,11 @@ exports[`Request should render with loaded props 1`] = `
         <FiatText
           appendFiatCurrencyCode={true}
           nativeCryptoAmount="100000000"
+          tokenId={null}
           wallet={
             {
-              "balances": {
-                "BTC": "1234",
+              "balanceMap": Map {
+                null => "1234",
               },
               "currencyInfo": {
                 "displayName": "Bitcoin",
@@ -121,6 +122,7 @@ exports[`Request should render with loaded props 1`] = `
           keyboardVisible={false}
           onAmountChanged={[Function]}
           returnKeyType="done"
+          tokenId={null}
         />
       </WithTheme(CardComponent)>
     </EdgeAnim>

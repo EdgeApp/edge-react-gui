@@ -9,7 +9,6 @@ import { lstrings } from '../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { getTokenId } from '../util/CurrencyInfoHelpers'
 import { calculateSpamThreshold, convertNativeToDisplay, zeroString } from '../util/utils'
 import { playReceiveSound } from './SoundActions'
 import { selectWalletToken } from './WalletActions'
@@ -21,7 +20,7 @@ let receiveDropdownShowing = false
  */
 export function showReceiveDropdown(navigation: NavigationBase, transaction: EdgeTransaction): ThunkAction<void> {
   return (dispatch, getState) => {
-    const { currencyCode, nativeAmount, walletId } = transaction
+    const { currencyCode, nativeAmount, tokenId, walletId } = transaction
 
     // Grab the matching wallet:
     const state = getState()
@@ -30,7 +29,6 @@ export function showReceiveDropdown(navigation: NavigationBase, transaction: Edg
     if (wallet == null) return
 
     const { currencyInfo, fiatCurrencyCode } = wallet
-    const tokenId = getTokenId(account, currencyInfo.pluginId, currencyCode)
 
     // Never stack dropdowns:
     if (receiveDropdownShowing) return

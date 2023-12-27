@@ -359,6 +359,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                 "displayName": "Bitcoin (no Segwit)",
                 "key": "create-wallet:bitcoin-bip44-bitcoin",
                 "pluginId": "bitcoin",
+                "tokenId": null,
                 "walletType": "wallet:bitcoin-bip44",
               },
               {
@@ -366,6 +367,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                 "displayName": "Ethereum",
                 "key": "create-wallet:ethereum-ethereum",
                 "pluginId": "ethereum",
+                "tokenId": null,
                 "walletType": "wallet:ethereum",
               },
               {
@@ -388,6 +390,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                   "displayName": "Bitcoin (no Segwit)",
                   "key": "create-wallet:bitcoin-bip44-bitcoin",
                   "pluginId": "bitcoin",
+                  "tokenId": null,
                   "walletType": "wallet:bitcoin-bip44",
                 },
                 {
@@ -395,6 +398,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                   "displayName": "Ethereum",
                   "key": "create-wallet:ethereum-ethereum",
                   "pluginId": "ethereum",
+                  "tokenId": null,
                   "walletType": "wallet:ethereum",
                 },
                 {
@@ -476,6 +480,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     "displayName": "Bitcoin (no Segwit)",
                     "key": "create-wallet:bitcoin-bip44-bitcoin",
                     "pluginId": "bitcoin",
+                    "tokenId": null,
                     "walletType": "wallet:bitcoin-bip44",
                   },
                   {
@@ -483,6 +488,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                     "displayName": "Ethereum",
                     "key": "create-wallet:ethereum-ethereum",
                     "pluginId": "ethereum",
+                    "tokenId": null,
                     "walletType": "wallet:ethereum",
                   },
                   {

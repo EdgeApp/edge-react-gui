@@ -95,7 +95,7 @@ export const LoanDashboardScene = (props: Props) => {
     let newLoanWallet
 
     if (hardPluginWalletIds.length > 1) {
-      const allowedAssets = SUPPORTED_WALLET_PLUGIN_IDS.map(pluginId => ({ pluginId }))
+      const allowedAssets = SUPPORTED_WALLET_PLUGIN_IDS.map(pluginId => ({ pluginId, tokenId: null }))
 
       // Only show the wallet picker if the user owns more than one polygon wallet.
       const result = await Airship.show<WalletListResult>(bridge => (

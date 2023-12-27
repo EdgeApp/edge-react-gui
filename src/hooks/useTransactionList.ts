@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 
 import { showError } from '../components/services/AirshipInstance'
@@ -19,7 +19,7 @@ interface Output {
  * so call the `requestMore` method to request more transactions,
  * until `atEnd` becomes true.
  */
-export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: string | undefined, searchString?: string): Output {
+export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId, searchString?: string): Output {
   const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
 
   const requestMore = React.useRef(() => {})

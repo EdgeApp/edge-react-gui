@@ -1,6 +1,6 @@
 import { asValue } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
-import { EdgeTransaction } from 'edge-core-js/types'
+import { EdgeTokenId, EdgeTransaction } from 'edge-core-js/types'
 
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
@@ -97,7 +97,7 @@ export interface FiatPluginOpenExternalWebViewParams {
 
 export interface FiatPluginWalletPickerResult {
   walletId: string
-  tokenId: string | undefined
+  tokenId: EdgeTokenId
   /** @deprecated Use tokenId instead */
   currencyCode: string
 }

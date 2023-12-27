@@ -35,13 +35,14 @@ export const ExchangeQuote = (props: Props) => {
 
   // Fees are assumed to be denominated in the native currency
   const feeNativeAmount = networkFee.nativeAmount
-  const feeCryptoText = useCryptoText({ wallet: fromWallet, nativeAmount: feeNativeAmount, withSymbol: false })
+  const feeCryptoText = useCryptoText({ wallet: fromWallet, nativeAmount: feeNativeAmount, tokenId: null, withSymbol: false })
   const {
     currencyCode: parentCurrencyCode,
     denomination: parentDenomination,
     isoFiatCurrencyCode
   } = useTokenDisplayData({
-    wallet: fromWallet
+    wallet: fromWallet,
+    tokenId: null
   })
 
   const { currencyCode: fromCurrencyCode, denomination: fromDenomination } = useTokenDisplayData({

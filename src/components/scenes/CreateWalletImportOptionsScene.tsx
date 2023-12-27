@@ -145,7 +145,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
     return (
       <View style={styles.optionContainer}>
         <View style={styles.optionHeader}>
-          <CryptoIcon sizeRem={1.25} pluginId={pluginId} />
+          <CryptoIcon sizeRem={1.25} pluginId={pluginId} tokenId={null} />
           <EdgeText style={styles.pluginIdText}>{currencyConfig[pluginId].currencyInfo.displayName}</EdgeText>
         </View>
         {arr.map(opt => {

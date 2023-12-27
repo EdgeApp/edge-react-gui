@@ -39,8 +39,6 @@ import { EdgeText } from './EdgeText'
 interface Props {
   navigation: NavigationBase
   wallet: EdgeCurrencyWallet
-  tokenId?: string
-  currencyCode: string
   transaction: EdgeTransaction
 }
 
@@ -48,9 +46,10 @@ export function TransactionListRow(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { navigation, currencyCode, wallet, tokenId, transaction } = props
+  const { navigation, wallet, transaction } = props
+  const { tokenId } = transaction
   const { canReplaceByFee = false } = wallet.currencyInfo
-  const { metadata = {}, action } = transaction
+  const { metadata = {}, chainAssetAction, currencyCode } = transaction
   const { category, name } = metadata
   const defaultAmountFiat = metadata.exchangeAmount?.[wallet.fiatCurrencyCode] ?? 0
 
@@ -91,7 +90,7 @@ export function TransactionListRow(props: Props) {
   // Fiat Amount
   const isoDate = new Date(transaction.date * 1000).toISOString()
   const historicalRate = useHistoricalRate(`${currencyCode}_${fiatCurrencyCode}`, isoDate)
-  const amountFiat = defaultAmountFiat > 0 ? defaultAmountFiat : historicalRate * Number(cryptoExchangeAmount)
+  const amountFiat = (defaultAmountFiat ?? 0) > 0 ? defaultAmountFiat ?? 0 : historicalRate * Number(cryptoExchangeAmount)
   const fiatAmount = displayFiatAmount(amountFiat)
   const fiatSymbol = getSymbolFromCurrency(nonIsoFiatCurrencyCode)
 
@@ -99,8 +98,8 @@ export function TransactionListRow(props: Props) {
 
   // Transaction Title
   const transactionTitle =
-    action != null
-      ? TX_ACTION_LABEL_MAP[action.type]
+    chainAssetAction != null
+      ? TX_ACTION_LABEL_MAP[chainAssetAction.assetActionType]
       : name != null && name !== ''
       ? name
       : sprintf(isSentTransaction ? lstrings.transaction_sent_1s : lstrings.transaction_received_1s, displayName)
@@ -108,7 +107,9 @@ export function TransactionListRow(props: Props) {
   // Icon & Thumbnail
   const thumbnailPath = useContactThumbnail(name)
 
-  const isSwapIcon = (action != null && (action.type === 'swap' || action.type === 'swapOrderFill')) || transaction.swapData != null
+  const isSwapIcon =
+    (chainAssetAction != null && (chainAssetAction.assetActionType === 'swap' || chainAssetAction.assetActionType === 'swapOrderFill')) ||
+    transaction.swapData != null
   const arrowIconName = isSwapIcon ? 'swap-horizontal' : isSentTransaction ? 'arrow-up' : 'arrow-down'
   const arrowIconSize = thumbnailPath ? theme.rem(1) : theme.rem(1.25)
   const arrowIconColor = isSwapIcon ? theme.txDirFgSwapUi4 : isSentTransaction ? theme.txDirFgSendUi4 : theme.txDirFgReceiveUi4
@@ -162,8 +163,7 @@ export function TransactionListRow(props: Props) {
     }
     navigation.push('transactionDetails', {
       edgeTransaction: transaction,
-      walletId: wallet.id,
-      tokenId
+      walletId: wallet.id
     })
   })
 

@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeNetworkFee, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeNetworkFee, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
 import { Subscriber } from 'yaob'
 
 import { PendingTxMap } from '../../controllers/action-queue/types'
@@ -9,7 +9,7 @@ import { PendingTxMap } from '../../controllers/action-queue/types'
 
 // Borrow more:
 export interface BorrowRequest {
-  tokenId?: string
+  tokenId: EdgeTokenId
   nativeAmount: string
 
   // Optional source for the funds which will borrow on behalf of the borrow engine's currencyWallet
@@ -18,17 +18,17 @@ export interface BorrowRequest {
 
 // Make payment:
 export interface RepayRequest {
-  tokenId?: string
+  tokenId: EdgeTokenId
   nativeAmount: string
 
   // Optional source for the funds which will repay on behalf of the borrow engine's currencyWallet
   fromWallet?: EdgeCurrencyWallet
-  fromTokenId?: string
+  fromTokenId: EdgeTokenId
 }
 
 // Deposit collateral:
 export interface DepositRequest {
-  tokenId?: string
+  tokenId: EdgeTokenId
   nativeAmount: string
 
   // Optional source for the funds which will deposit on behalf of the borrow engine's currencyWallet
@@ -37,7 +37,7 @@ export interface DepositRequest {
 
 // Withdraw collateral:
 export interface WithdrawRequest {
-  tokenId?: string
+  tokenId: EdgeTokenId
   nativeAmount: string
 
   // Optional destination for the funds
@@ -73,12 +73,12 @@ export type BorrowActionId = 'loan-create' | 'loan-deposit' | 'loan-borrow' | 'l
 // -----------------------------------------------------------------------------
 
 export interface BorrowCollateral {
-  tokenId?: string
+  tokenId: EdgeTokenId
   nativeAmount: string
 }
 
 export interface BorrowDebt {
-  tokenId?: string
+  tokenId: EdgeTokenId
   nativeAmount: string
   apr: number
 }
@@ -112,7 +112,7 @@ export interface BorrowEngine {
   // Utilities:
 
   // Returns the APR for borrow a particular token
-  getAprQuote: (tokenId?: string) => Promise<number>
+  getAprQuote: (tokenId: EdgeTokenId) => Promise<number>
 
   // Calculates projected LTV after making a debt or collateral modification
   calculateProjectedLtv: (request: CalculateLtvRequest) => Promise<string>

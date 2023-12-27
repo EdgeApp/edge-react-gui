@@ -117,7 +117,12 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
 
   handleWalletPress = () => {
     Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.fio_src_wallet} allowedAssets={[{ pluginId: 'fio' }]} />
+      <WalletListModal
+        bridge={bridge}
+        navigation={this.props.navigation}
+        headerTitle={lstrings.fio_src_wallet}
+        allowedAssets={[{ pluginId: 'fio', tokenId: null }]}
+      />
     ))
       .then(result => {
         if (result?.type === 'wallet') {

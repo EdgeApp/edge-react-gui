@@ -16,7 +16,7 @@ import { lstrings } from '../../locales/strings'
 import { PaymentProtoError } from '../../types/PaymentProtoError'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getTokenId, getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
 import { AddressModal } from '../modals/AddressModal'
@@ -98,7 +98,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
         fioAddress = address.toLowerCase()
         address = publicAddress
       } catch (e: any) {
-        if (!e.code || e.code !== fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
+        if (!e.code || e.code !== fioPlugin.currencyInfo.defaultSettings?.errorCodes.INVALID_FIO_ADDRESS) {
           setLoading(false)
           return showError(e)
         }
@@ -217,7 +217,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
         bridge={bridge}
         headerTitle={lstrings.your_wallets}
         navigation={navigation}
-        allowedAssets={[{ pluginId, tokenId: getTokenId(account, pluginId, currencyCode) }]}
+        allowedAssets={[{ pluginId, tokenId: getTokenIdForced(account, pluginId, currencyCode) }]}
         excludeWalletIds={[coreWallet.id]}
       />
     ))
@@ -227,7 +227,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
         const wallet = currencyWallets[walletId]
 
         // Prefer segwit address if the selected wallet has one
-        const { segwitAddress, publicAddress } = await wallet.getReceiveAddress()
+        const { segwitAddress, publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
         const address = segwitAddress != null ? segwitAddress : publicAddress
         await changeAddress(address)
       })

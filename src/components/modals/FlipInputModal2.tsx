@@ -1,5 +1,5 @@
 import { div, log10, toFixed } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { memo, useState } from 'react'
 import { Dimensions, Platform, TouchableWithoutFeedback, View } from 'react-native'
@@ -32,7 +32,7 @@ export interface FlipInputModalResult {
 }
 
 export interface SetFeesParams {
-  feeTokenId?: string
+  feeTokenId: EdgeTokenId
   feeNativeAmount: string
 }
 export interface FlipInputModalRef {
@@ -46,11 +46,11 @@ type FeeStyleTypes = 'dangerText' | 'warningText'
 interface Props {
   bridge: AirshipBridge<FlipInputModalResult>
   wallet: EdgeCurrencyWallet
-  tokenId?: string
+  tokenId: EdgeTokenId
   startNativeAmount?: string
   forceField?: ExchangeFlipInputFields
   // Fees
-  feeTokenId?: string
+  feeTokenId: EdgeTokenId
   feeNativeAmount?: string
   feeStyle?: FeeStyleTypes
   onFeesChange?: () => void
@@ -82,9 +82,9 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
 
   const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
 
-  const balances = useWatch(wallet, 'balances')
+  const balanceMap = useWatch(wallet, 'balanceMap')
   const currencyCode = getCurrencyCode(wallet, tokenId)
-  const [feeTokenId, setFeeTokenId] = useState<string | undefined>(startingFeeTokenId)
+  const [feeTokenId, setFeeTokenId] = useState<EdgeTokenId>(startingFeeTokenId)
   const [feeNativeAmount, setFeeNativeAmount] = useState<string>(startingFeeNativeAmount)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [amounts, setAmounts] = useState<ExchangedFlipInputAmounts>({
@@ -151,7 +151,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
 
   const renderBalance = () => {
     const { multiplier, name } = displayDenom
-    const balanceCrypto = balances[currencyCode] ?? '0'
+    const balanceCrypto = balanceMap.get(tokenId) ?? '0'
     const balance = `${formatNumber(div(balanceCrypto, multiplier, DECIMAL_PRECISION))} ${name} (`
     const parenString = ')'
     return (
@@ -181,7 +181,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
         </View>
         <EdgeText style={feeTextStyle}>
           {feeCryptoText}
-          <FiatText nativeCryptoAmount={feeNativeAmount} wallet={wallet} maxPrecision={2} subCentTruncation />
+          <FiatText nativeCryptoAmount={feeNativeAmount} wallet={wallet} maxPrecision={2} subCentTruncation tokenId={feeTokenId} />
           {parenString}
         </EdgeText>
       </View>

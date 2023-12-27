@@ -73,7 +73,7 @@ export const NotificationScene = (props: Props) => {
 
           return (
             <SettingsTappableRow disabled={settings.ignorePriceChanges} key={pluginId} label={currencyInfo.displayName} onPress={handlePress}>
-              <CryptoIcon pluginId={pluginId} />
+              <CryptoIcon pluginId={pluginId} tokenId={null} />
             </SettingsTappableRow>
           )
         })}

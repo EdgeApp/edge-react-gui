@@ -13,7 +13,7 @@ import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { UriQueryMap } from '../../types/WebTypes'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { makePluginUri } from '../../util/GuiPluginTools'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { setPluginScene } from '../navigation/GuiPluginBackButton'
@@ -113,7 +113,7 @@ export function EdgeProviderComponent(props: Props): JSX.Element {
   // Build our EdgeProvider instance one time:
   const [edgeProvider] = React.useState(() => {
     const selectedWallet = account.currencyWallets[selectedWalletId]
-    const selectedTokenId = selectedWallet == null ? undefined : getTokenId(account, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode)
+    const selectedTokenId = selectedWallet == null ? null : getTokenIdForced(account, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode)
     return new EdgeProviderServer({
       account,
       dispatch,

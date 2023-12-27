@@ -39,7 +39,7 @@ describe('WalletListSortableRow', () => {
     const fakeWallet: any = {
       currencyInfo: fakeCurrencyInfo,
       name: 'Test wallet',
-      balances: {}
+      balanceMap: new Map()
     }
 
     const renderer = TestRenderer.create(

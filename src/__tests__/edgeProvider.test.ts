@@ -23,12 +23,16 @@ describe('upgradeExtendedCurrencyCodes', () => {
       // As well, BSC is not an actual currencyCode so it won't be included either. BSC can only be specified using object
       // params with pluginId = binancesmartchain
       const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, ['BTC', 'ETH', 'MATIC', 'BNB', 'DOGE', 'BSC'])
-      expect(result).toEqual([{ pluginId: 'bitcoin' }, { pluginId: 'ethereum' }, { pluginId: 'dogecoin' }])
+      expect(result).toEqual([
+        { pluginId: 'bitcoin', tokenId: null },
+        { pluginId: 'ethereum', tokenId: null },
+        { pluginId: 'dogecoin', tokenId: null }
+      ])
     })
     test('single code tokens', () => {
       const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, ['BTC', 'USDC', 'REP', 'USDT'])
       expect(result).toEqual([
-        { pluginId: 'bitcoin' },
+        { pluginId: 'bitcoin', tokenId: null },
         { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' },
         { pluginId: 'ethereum', tokenId: '1985365e9f78359a9b6ad760e32412f4a445e862' },
         { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' }
@@ -37,7 +41,7 @@ describe('upgradeExtendedCurrencyCodes', () => {
     test('double code tokens', () => {
       const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, ['BTC', 'MATIC-USDC', 'ETH-REP', 'ETH-USDT'])
       expect(result).toEqual([
-        { pluginId: 'bitcoin' },
+        { pluginId: 'bitcoin', tokenId: null },
         { pluginId: 'polygon', tokenId: '2791bca1f2de4661ed88a30c99a7a9449aa84174' },
         { pluginId: 'ethereum', tokenId: '1985365e9f78359a9b6ad760e32412f4a445e862' },
         { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' }
@@ -45,14 +49,14 @@ describe('upgradeExtendedCurrencyCodes', () => {
     })
     test('object list', () => {
       const result = upgradeExtendedCurrencyCodes(currencyConfig, undefined, [
-        { pluginId: 'bitcoin', tokenId: undefined, currencyCode: undefined },
-        { pluginId: 'polygon', tokenId: undefined, currencyCode: 'USDC' },
-        { pluginId: 'ethereum', tokenId: undefined, currencyCode: 'REP' },
-        { pluginId: 'ethereum', tokenId: undefined, currencyCode: 'USDT' },
-        { pluginId: 'ethereum', tokenId: undefined, currencyCode: 'MATIC' }
+        { pluginId: 'bitcoin', tokenId: null },
+        { pluginId: 'polygon', currencyCode: 'USDC' },
+        { pluginId: 'ethereum', currencyCode: 'REP' },
+        { pluginId: 'ethereum', currencyCode: 'USDT' },
+        { pluginId: 'ethereum', currencyCode: 'MATIC' }
       ])
       expect(result).toEqual([
-        { pluginId: 'bitcoin' },
+        { pluginId: 'bitcoin', tokenId: null },
         { pluginId: 'polygon', tokenId: '2791bca1f2de4661ed88a30c99a7a9449aa84174' },
         { pluginId: 'ethereum', tokenId: '1985365e9f78359a9b6ad760e32412f4a445e862' },
         { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' },
@@ -66,7 +70,7 @@ describe('upgradeExtendedCurrencyCodes', () => {
         ['BTC', 'USDC', 'REP', 'USDTERC20']
       )
       expect(result).toEqual([
-        { pluginId: 'bitcoin' },
+        { pluginId: 'bitcoin', tokenId: null },
         { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' },
         { pluginId: 'ethereum', tokenId: '1985365e9f78359a9b6ad760e32412f4a445e862' },
         { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' }

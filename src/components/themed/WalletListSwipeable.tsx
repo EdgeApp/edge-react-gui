@@ -6,7 +6,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { InsetStyles } from '../common/SceneWrapper'
 import { searchWalletList } from '../services/SortedWalletList'
@@ -60,7 +60,7 @@ function WalletListSwipeableComponent(props: Props) {
 
   const handleCreateWallet = useHandler(async (walletId, currencyCode) => {
     const wallet = account.currencyWallets[walletId]
-    const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+    const tokenId = getTokenIdForced(account, wallet.currencyInfo.pluginId, currencyCode)
     dispatch(selectWalletToken({ navigation, walletId, tokenId }))
       .then(() => navigation.navigate('transactionList', { walletId, tokenId }))
       .finally(onReset)

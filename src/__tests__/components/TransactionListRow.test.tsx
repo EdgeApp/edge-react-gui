@@ -46,7 +46,6 @@ describe('TransactionListRow', () => {
         <TransactionListRow
           navigation={fakeNavigation}
           wallet={fakeWallet}
-          currencyCode="BTC"
           transaction={{
             blockHeight: 10,
             currencyCode: 'BTC',

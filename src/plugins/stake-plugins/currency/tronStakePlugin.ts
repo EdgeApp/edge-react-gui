@@ -3,6 +3,7 @@ import { asDate, asMaybe, asObject, asString } from 'cleaners'
 import { EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { lstrings } from '../../../locales/strings'
+import { getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import {
   ChangeQuote,
   ChangeQuoteRequest,
@@ -160,7 +161,7 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
       const resource = policy.rewardAssets[0].internalCurrencyCode ?? policy.rewardAssets[0].currencyCode
       const spendTargets = [
         {
-          publicAddress: (await wallet.getReceiveAddress()).publicAddress
+          publicAddress: (await wallet.getReceiveAddress({ tokenId: null })).publicAddress
         }
       ]
 
@@ -173,6 +174,7 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
           }
 
           const spendInfo: EdgeSpendInfo = {
+            tokenId: null,
             spendTargets,
             otherParams: {
               type: 'addV2',
@@ -184,6 +186,7 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
         }
         case 'unstake': {
           const spendInfo: EdgeSpendInfo = {
+            tokenId: null,
             spendTargets,
             otherParams: {
               type: 'removeV2',
@@ -195,6 +198,7 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
         }
         case 'claim': {
           const spendInfo: EdgeSpendInfo = {
+            tokenId: null,
             spendTargets,
             otherParams: {
               type: 'withdrawExpireUnfreeze'
@@ -242,7 +246,8 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
 
       const policy = getPolicyFromId(stakePolicyId)
       const rewardAsset = policy.rewardAssets[0].internalCurrencyCode ?? policy.rewardAssets[0].currencyCode
-      const balanceTrx = wallet.balances[currencyCode] ?? '0'
+      const tokenId = getWalletTokenId(wallet, currencyCode)
+      const balanceTrx = wallet.balanceMap.get(tokenId) ?? '0'
       const canStake = gt(balanceTrx, '0')
       let canClaim = false
       const allocations: PositionAllocation[] = []
@@ -318,9 +323,10 @@ const fetchChangeQuoteV1 = async (request: ChangeQuoteRequest): Promise<ChangeQu
   const isStake = action === 'stake'
 
   const spendInfo: EdgeSpendInfo = {
+    tokenId: null,
     spendTargets: [
       {
-        publicAddress: (await wallet.getReceiveAddress()).publicAddress
+        publicAddress: (await wallet.getReceiveAddress({ tokenId: null })).publicAddress
       }
     ],
     otherParams: {
@@ -364,7 +370,8 @@ const fetchStakePositionV1 = async (request: StakePositionRequest): Promise<Stak
   const rewardAsset = policy.rewardAssets[0].currencyCode
   const stakedAmount = wallet.stakingStatus.stakedAmounts.find(amount => amount.otherParams?.type === rewardAsset)
   const nativeAmount = stakedAmount?.nativeAmount ?? '0'
-  const balanceTrx = wallet.balances[currencyCode] ?? '0'
+  const tokenId = getWalletTokenId(wallet, currencyCode)
+  const balanceTrx = wallet.balanceMap.get(tokenId) ?? '0'
   const locktime = stakedAmount?.unlockDate != null ? new Date(stakedAmount.unlockDate) : undefined
 
   return {

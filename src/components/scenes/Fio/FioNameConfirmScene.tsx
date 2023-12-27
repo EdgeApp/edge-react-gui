@@ -54,14 +54,14 @@ class FioNameConfirm extends React.PureComponent<Props> {
         const response = await fioPlugin.otherMethods.buyAddressRequest(
           {
             address: fioName,
-            referralCode: fioPlugin.currencyInfo.defaultSettings.defaultRef,
+            referralCode: fioPlugin.currencyInfo.defaultSettings?.defaultRef,
             publicKey: ownerPublicKey
           },
           true
         )
         if (response.error) {
           if (response.errorCode && response.errorCode === ONE_FREE_ADDRESS_PER_DOMAIN_ERROR && response.code === 400) {
-            const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings.fallbackRef)
+            const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings?.fallbackRef)
             // @ts-expect-error
             const domainExists = publicDomains.find(domain => domain.domain === fioName.split(FIO_ADDRESS_DELIMITER)[1])
             if (domainExists && !domainExists.free) {

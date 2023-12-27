@@ -23,8 +23,11 @@ describe('WalletListModal', () => {
 
   it("Should upgrade currency codes to token ID's", () => {
     const data: { [code: string]: EdgeAsset[] } = {
-      ETH: [{ pluginId: 'ethereum' }],
-      BNB: [{ pluginId: 'binance' }, { pluginId: 'ethereum', tokenId: '1234abcd' }]
+      ETH: [{ pluginId: 'ethereum', tokenId: null }],
+      BNB: [
+        { pluginId: 'binance', tokenId: null },
+        { pluginId: 'ethereum', tokenId: '1234abcd' }
+      ]
     }
     function lookup(currencyCode: string): EdgeAsset[] {
       return data[currencyCode.toUpperCase()] ?? []
@@ -32,15 +35,18 @@ describe('WalletListModal', () => {
 
     // Check ambiguous currency codes:
     expect(upgradeCurrencyCodes(lookup, ['ETH', 'BNB'])).toEqual([
-      { pluginId: 'ethereum' },
-      { pluginId: 'binance' },
+      { pluginId: 'ethereum', tokenId: null },
+      { pluginId: 'binance', tokenId: null },
       { pluginId: 'ethereum', tokenId: '1234abcd' }
     ])
 
     // Check scoped currency codes:
-    expect(upgradeCurrencyCodes(lookup, ['ETH', 'ETH-BNB'])).toEqual([{ pluginId: 'ethereum' }, { pluginId: 'ethereum', tokenId: '1234abcd' }])
+    expect(upgradeCurrencyCodes(lookup, ['ETH', 'ETH-BNB'])).toEqual([
+      { pluginId: 'ethereum', tokenId: null },
+      { pluginId: 'ethereum', tokenId: '1234abcd' }
+    ])
 
     // Check missing currency codes:
-    expect(upgradeCurrencyCodes(lookup, ['ETH', 'LOL'])).toEqual([{ pluginId: 'ethereum' }])
+    expect(upgradeCurrencyCodes(lookup, ['ETH', 'LOL'])).toEqual([{ pluginId: 'ethereum', tokenId: null }])
   })
 })

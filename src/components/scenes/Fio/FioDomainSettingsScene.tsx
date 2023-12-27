@@ -124,7 +124,9 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     const { fioDomainName, fioWallet } = route.params
 
     const sendParams: SendScene2Params = {
+      tokenId: null,
       spendInfo: {
+        tokenId: null,
         spendTargets: [{ nativeAmount: '', publicAddress: '' }],
         otherParams: {
           action: {

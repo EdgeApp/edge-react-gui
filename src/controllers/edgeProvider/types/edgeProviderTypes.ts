@@ -1,12 +1,8 @@
 import { EdgeMetadata, EdgeNetworkFee, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 
-export type ExtendedCurrencyCode =
-  | string
-  | {
-      pluginId: string
-      tokenId?: string
-      currencyCode?: string
-    }
+import { asExtendedCurrencyCode } from './edgeProviderCleaners'
+
+export type ExtendedCurrencyCode = ReturnType<typeof asExtendedCurrencyCode>
 
 export interface WalletDetails {
   name: string

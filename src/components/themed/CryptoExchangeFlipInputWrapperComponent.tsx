@@ -1,4 +1,5 @@
 import { add } from 'biggystring'
+import { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
@@ -6,7 +7,7 @@ import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { GuiCurrencyInfo } from '../../types/types'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { convertNativeToDenomination } from '../../util/utils'
 import { Card } from '../cards/Card'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -21,7 +22,6 @@ interface OwnProps {
   buttonText: string
   headerText: string
   primaryCurrencyInfo: GuiCurrencyInfo
-  tokenId?: string
   overridePrimaryNativeAmount: string
   isFocused: boolean
   isThinking?: boolean
@@ -37,6 +37,7 @@ interface OwnProps {
 interface StateProps {
   name?: string
   cryptoAmount?: string
+  tokenId: EdgeTokenId
 }
 
 interface State {
@@ -217,16 +218,16 @@ export const CryptoExchangeFlipInputWrapper = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => {
     const { currencyWallets } = state.core.account
     const wallet = currencyWallets[ownProps.walletId]
-    if (wallet == null) return {}
+    if (wallet == null) return { tokenId: null }
 
-    const { balances, name } = wallet
-
+    const { balanceMap, name } = wallet
     const { displayCurrencyCode, displayDenomination } = ownProps.primaryCurrencyInfo
-    const balance = balances?.[displayCurrencyCode] ?? '0'
+
+    const tokenId = getTokenIdForced(state.core.account, wallet.currencyInfo.pluginId, displayCurrencyCode)
+
+    const balance = balanceMap.get(tokenId) ?? '0'
     const cryptoAmountRaw: string = convertNativeToDenomination(displayDenomination.multiplier)(balance)
     const cryptoAmount = formatNumber(add(cryptoAmountRaw, '0'))
-
-    const tokenId = getTokenId(state.core.account, wallet.currencyInfo.pluginId, displayCurrencyCode)
 
     return { name: name ?? '', cryptoAmount, tokenId }
   },

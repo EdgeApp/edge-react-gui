@@ -132,7 +132,7 @@ export function AccountCallbackManager(props: Props) {
       }),
 
       // These ones defer their work until later:
-      wallet.watch('balances', () => setRatesDirty()),
+      wallet.watch('balanceMap', () => setRatesDirty()),
       wallet.watch('enabledTokenIds', () => setRatesDirty())
     ]
 

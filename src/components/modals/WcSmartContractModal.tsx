@@ -11,6 +11,7 @@ import { FlashNotification } from '../../components/navigation/FlashNotification
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
+import { asEdgeTokenId } from '../../types/types'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -43,10 +44,10 @@ export const WcSmartContractModal = (props: Props) => {
 
   const amountCurrencyCode = getCurrencyCode(wallet, tokenId)
 
-  const { currencyCode: feeCurrencyCode, displayName: feeDisplayName, pluginId, metaTokens } = wallet.currencyInfo
+  const { currencyCode: feeCurrencyCode, displayName: feeDisplayName, pluginId } = wallet.currencyInfo
 
   const feeCurrencyStr = `${feeDisplayName} (${feeCurrencyCode})`
-  const feeCurrencyBalance = wallet.balances[feeCurrencyCode]
+  const feeCurrencyBalance = wallet.balanceMap.get(null) ?? '0'
 
   const amountDenom = useDisplayDenom(pluginId, amountCurrencyCode)
   const feeDenom = useDisplayDenom(pluginId, feeCurrencyCode)
@@ -134,8 +135,7 @@ export const WcSmartContractModal = (props: Props) => {
     }
   }
 
-  const contractAddress = metaTokens.find(token => token.currencyCode === amountCurrencyCode)?.contractAddress
-  const walletImageUri = getCurrencyIconUris(pluginId, contractAddress).symbolImage
+  const walletImageUri = getCurrencyIconUris(pluginId, tokenId).symbolImage
   const slider = isInsufficientBal ? null : (
     <SafeSlider parentStyle={styles.slider} onSlidingComplete={handleSubmit} disabledText={lstrings.send_confirmation_slide_to_confirm} disabled={false} />
   )
@@ -164,10 +164,16 @@ export const WcSmartContractModal = (props: Props) => {
           <EdgeText>{dAppName}</EdgeText>
         </IconTile>
         {zeroString(networkFee) ? null : (
-          <CryptoFiatAmountTile title={lstrings.wc_smartcontract_network_fee} nativeCryptoAmount={networkFee} denomination={feeDenom} walletId={wallet.id} />
+          <CryptoFiatAmountTile
+            title={lstrings.wc_smartcontract_network_fee}
+            nativeCryptoAmount={networkFee}
+            denomination={feeDenom}
+            tokenId={null}
+            walletId={wallet.id}
+          />
         )}
         {zeroString(totalNativeCrypto) ? null : (
-          <FiatAmountTile title={lstrings.wc_smartcontract_max_total} nativeCryptoAmount={totalNativeCrypto} wallet={wallet} />
+          <FiatAmountTile title={lstrings.wc_smartcontract_max_total} nativeCryptoAmount={totalNativeCrypto} tokenId={null} wallet={wallet} />
         )}
         {slider}
       </ScrollView>
@@ -245,7 +251,7 @@ export const asWcSmartContractModalProps = asObject({
   }),
   nativeAmount: asString,
   networkFee: asString,
-  tokenId: asOptional(asString),
+  tokenId: asEdgeTokenId,
   topic: asString,
   requestId: asNumber,
   payload: asUnknown

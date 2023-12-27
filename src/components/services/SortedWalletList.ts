@@ -6,6 +6,7 @@ import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { useWatch } from '../../hooks/useWatch'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { GuiExchangeRates, WalletListItem } from '../../types/types'
+import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { normalizeForSearch } from '../../util/utils'
 
@@ -54,6 +55,7 @@ export function SortedWalletList(props: Props) {
     // Add the wallet itself:
     wallets.push({
       key: wallet == null ? `${walletId}-loading` : walletId,
+      tokenId: null,
       wallet,
       walletId
     })
@@ -224,7 +226,8 @@ function getFiat(item: WalletListItem, exchangeRates: GuiExchangeRates): number 
     currencyCode,
     denominations: [denomination]
   } = token != null ? token : wallet.currencyInfo
-  const nativeBalance = wallet.balances[currencyCode] ?? '0'
+  const tokenId = getWalletTokenId(wallet, currencyCode)
+  const nativeBalance = wallet.balanceMap.get(tokenId) ?? '0'
 
   // Find the rate:
   const rate = exchangeRates[`${currencyCode}_${wallet.fiatCurrencyCode}`] ?? '0'

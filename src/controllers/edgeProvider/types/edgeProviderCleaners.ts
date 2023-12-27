@@ -1,17 +1,17 @@
 import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString, asTuple, asUnknown, asValue, Cleaner } from 'cleaners'
 import { EdgeMemo, EdgeMetadata, EdgeNetworkFee, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 
+import { asEdgeAsset, asEdgeCurrencyCode, asEdgeTokenId } from '../../../types/types'
 import {
   EdgeGetWalletHistoryResult,
   EdgeProviderDeepLink,
   EdgeProviderMethods,
   EdgeProviderSpendTarget,
   EdgeRequestSpendOptions,
-  ExtendedCurrencyCode,
   WalletDetails
 } from './edgeProviderTypes'
 
-const asEdgeMetadata = asObject<EdgeMetadata>({
+const asEdgeMetadata = asObject<EdgeMetadata & { amountFiat?: number }>({
   amountFiat: asOptional(asNumber),
   bizId: asOptional(asNumber),
   category: asOptional(asString),
@@ -46,8 +46,8 @@ const asEdgeMemo = asObject<EdgeMemo>({
 
 const asEdgeTransaction = asObject<EdgeTransaction>({
   walletId: asString,
+  tokenId: asEdgeTokenId,
   currencyCode: asString,
-  tokenId: asOptional(asString, null),
 
   // Amounts:
   nativeAmount: asString,
@@ -67,14 +67,7 @@ const asEdgeTransaction = asObject<EdgeTransaction>({
   txid: asString
 })
 
-const asExtendedCurrencyCode: Cleaner<ExtendedCurrencyCode> = asEither(
-  asString,
-  asObject({
-    pluginId: asString,
-    tokenId: asOptional(asString),
-    currencyCode: asOptional(asString)
-  })
-)
+export const asExtendedCurrencyCode = asEither(asString, asEdgeAsset, asEdgeCurrencyCode)
 
 const asWalletDetails = asObject<WalletDetails>({
   name: asString,

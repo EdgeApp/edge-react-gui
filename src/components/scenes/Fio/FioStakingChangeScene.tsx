@@ -15,6 +15,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../../select
 import { convertCurrencyFromExchangeRates } from '../../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
+import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { FioStakingBalanceType, getFioStakingBalances } from '../../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -41,7 +42,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   const {
     wallet: currencyWallet,
     route: {
-      params: { change, currencyCode, walletId }
+      params: { change, tokenId, walletId }
     },
     navigation
   } = props
@@ -62,7 +63,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
 
   const dispatch = useDispatch()
   const currencyPlugin = useSelector(state => state.core.account.currencyConfig[pluginId])
-
+  const currencyCode = getCurrencyCode(currencyWallet, tokenId)
   const currencyDenomination = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode))
   const defaultDenomination = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
   const exchangeRates = useSelector(state => state.exchangeRates)
@@ -116,7 +117,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
       case 'add': {
         await currencyWallet
           .getMaxSpendable({
-            currencyCode,
+            tokenId,
             spendTargets: [{ publicAddress: '' }],
             otherParams: {
               action: {
@@ -171,6 +172,8 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
       <FlipInputModal2
         bridge={bridge}
         wallet={currencyWallet}
+        tokenId={null}
+        feeTokenId={null}
         onFeesChange={onFeesChange}
         onAmountsChanged={onAmountsChanged}
         startNativeAmount={eq(nativeAmount, '0') ? undefined : nativeAmount}
@@ -240,6 +243,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
     const { [change]: actionName } = SPECIAL_CURRENCY_INFO[pluginId]?.stakeActions ?? { [change]: '' }
     currencyWallet
       .makeSpend({
+        tokenId: null,
         spendTargets: [
           {
             nativeAmount,

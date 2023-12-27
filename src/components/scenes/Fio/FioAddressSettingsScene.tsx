@@ -111,7 +111,9 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     this.cancelOperation()
 
     const sendParams: SendScene2Params = {
+      tokenId: null,
       spendInfo: {
+        tokenId: null,
         spendTargets: [{ nativeAmount: '', publicAddress: '' }],
         otherParams: {
           action: {

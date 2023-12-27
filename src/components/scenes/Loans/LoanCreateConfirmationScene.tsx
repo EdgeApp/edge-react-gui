@@ -50,7 +50,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
 
   const clientId = useSelector(state => state.core.context.clientId)
   const executionContext = useExecutionContext()
-  const borrowWalletNativeBalance = useWalletBalance(borrowEngineWallet)
+  const borrowWalletNativeBalance = useWalletBalance(borrowEngineWallet, null)
   const isCrossChainSrc = srcWallet.id !== borrowEngineWallet.id
 
   const existingLoanAccount = useSelector(state => selectLoanAccount(state, borrowEngineWallet.id))
@@ -73,7 +73,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
     const source: LoanAsset = {
       wallet: srcWallet,
       nativeAmount: nativeSrcAmount,
-      ...(srcTokenId != null ? { tokenId: srcTokenId } : {})
+      tokenId: srcTokenId
     }
 
     const destination: LoanAsset = {
@@ -127,6 +127,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
         fromWalletId: srcWallet.id,
         fromTokenId: srcTokenId,
         toWalletId: borrowEngineWallet.id,
+        toTokenId: null,
         nativeAmount: feeNativeAmount,
         expectedPayoutNativeAmount: feeDeficitNativeAmount,
         amountFor: 'to'

@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -24,7 +24,7 @@ export const ioniaPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId
 
 interface Props {
   wallet: EdgeCurrencyWallet
-  tokenId?: string
+  tokenId: EdgeTokenId
   navigation: NavigationProp<'transactionList'>
 }
 

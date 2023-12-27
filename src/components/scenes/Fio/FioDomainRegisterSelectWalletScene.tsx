@@ -13,7 +13,7 @@ import { connect } from '../../../types/reactRedux'
 import { RootState } from '../../../types/reduxTypes'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { EdgeAsset } from '../../../types/types'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getDomainRegInfo } from '../../../util/FioAddressUtils'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -142,7 +142,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
         let nativeAmount = mul(allPaymentInfo[paymentCurrencyCode].amount, exchangeDenomination.multiplier)
         nativeAmount = toFixed(nativeAmount, 0, 0)
 
-        const tokenId = getTokenId(account, pluginId, paymentCurrencyCode)
+        const tokenId = getTokenIdForced(account, pluginId, paymentCurrencyCode)
         const sendParams: SendScene2Params = {
           walletId,
           tokenId,
@@ -153,6 +153,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
             wallet: true
           },
           spendInfo: {
+            tokenId,
             spendTargets: [
               {
                 nativeAmount,
