@@ -52,51 +52,43 @@ exports[`CurrencySettings should render 1`] = `
   >
     <RCTScrollView>
       <View>
-        <BVLinearGradient
-          colors={
-            [
-              4279377189,
-              4279377189,
-            ]
-          }
-          endPoint={
-            {
-              "x": 1,
-              "y": 1,
-            }
-          }
-          locations={null}
-          startPoint={
-            {
-              "x": 0,
-              "y": 0,
-            }
-          }
+        <View
           style={
             {
               "alignItems": "center",
               "flexDirection": "row",
-              "justifyContent": "flex-start",
-              "minHeight": 62,
-              "padding": 22,
+              "justifyContent": "flex-end",
+              "margin": 11,
             }
           }
         >
           <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
             style={
-              {
-                "color": "#FFFFFF",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "Quicksand-Medium",
-                "fontSize": 22,
-                "textAlign": "left",
-              }
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 22,
+                  "textAlign": "left",
+                },
+                null,
+              ]
             }
           >
             Denominations
           </Text>
-        </BVLinearGradient>
+        </View>
         <View
           accessibilityValue={
             {

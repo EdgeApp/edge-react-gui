@@ -1,7 +1,7 @@
 import { EdgeAccount, EdgeContext, EdgeLogType } from 'edge-core-js'
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { Platform, ScrollView } from 'react-native'
+import { Platform } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -29,7 +29,6 @@ import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { secondsToDisplay } from '../../util/displayTime'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { TextDropdown } from '../common/TextDropdown'
-import { Space } from '../layout/Space'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -39,7 +38,9 @@ import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsLabelRow } from '../settings/SettingsLabelRow'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
-import { MainButton } from '../themed/MainButton'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { CardUi4 } from '../ui4/CardUi4'
+import { SectionView } from '../ui4/SectionView'
 
 interface OwnProps extends EdgeSceneProps<'settingsOverview'> {}
 
@@ -288,85 +289,105 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     const autoLogoutRightText = autoLogout.value === 0 ? lstrings.string_disable : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
     const isLightAccount = username == null
 
+    // TODO: Update RowUi4 to support these settings row types
     return (
-      <SceneWrapper background="theme" hasTabs={false}>
-        <ScrollView>
-          <SettingsHeaderRow
-            icon={<FontAwesomeIcon color={theme.icon} name="user-o" size={iconSize} />}
-            label={`${lstrings.settings_account_title_cap}: ${username ?? lstrings.missing_username}`}
-          />
-          {isLightAccount ? (
-            <SettingsTappableRow label={lstrings.backup_account} onPress={this.handleUpgrade} />
-          ) : (
-            <>
-              <SettingsTappableRow
-                action={isLocked ? 'lock' : 'unlock'}
-                label={isLocked ? lstrings.settings_button_unlock_settings : lstrings.settings_button_lock_settings}
-                onPress={this.handleUnlock}
-              />
-              <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_change_password} onPress={this.handleChangePassword} />
-              <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_pin} onPress={this.handleChangePin} />
-              <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
-              <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_password_recovery} onPress={this.handleChangeRecovery} />
-              <SettingsTappableRow disabled={this.props.isLocked} dangerous label={lstrings.delete_account_title} onPress={this.handleDeleteAccount} />
-            </>
-          )}
-
-          <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} label={lstrings.settings_options_title_cap} />
-          {config.disableSwaps !== true ? <SettingsTappableRow label={lstrings.settings_exchange_settings} onPress={this.handleExchangeSettings} /> : null}
-          <SettingsTappableRow label={lstrings.spending_limits} onPress={this.handleSpendingLimits} />
-          <SettingsLabelRow right={autoLogoutRightText} label={lstrings.settings_title_auto_logoff} onPress={this.handleAutoLogout} />
-          <SettingsLabelRow right={this.props.defaultFiat.replace('iso:', '')} label={lstrings.settings_title_currency} onPress={this.handleDefaultFiat} />
-
-          {isLightAccount ? null : (
-            <SettingsSwitchRow key="pinRelogin" label={lstrings.settings_title_pin_login} value={this.props.pinLoginEnabled} onPress={this.handlePinToggle} />
-          )}
-          {this.props.supportsTouchId && !isLightAccount && (
-            <SettingsSwitchRow key="useTouchID" label={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this.handleTouchIdToggle} />
-          )}
-
-          <SettingsSwitchRow
-            label={lstrings.settings_button_contacts_access_permission}
-            value={contactsPermissionOn}
-            onPress={this.handleContactsAccessToggle}
-          />
-          <SettingsSwitchRow
-            key="spamFilter"
-            label={lstrings.settings_hide_spam_transactions}
-            value={this.props.spamFilterOn}
-            onPress={this.handleSpamToggle}
-          />
-          <SettingsTappableRow label={lstrings.settings_notifications} onPress={this.handleNotificationSettings} />
-          <SettingsTappableRow
-            label={lstrings.settings_asset_settings}
-            onPress={() => navigation.push('assetSettings', { currencySettingsKeys: CURRENCY_SETTINGS_KEYS })}
-          />
-          <SettingsTappableRow label={lstrings.title_promotion_settings} onPress={this.handlePromotionSettings} />
-          {ENV.ALLOW_DEVELOPER_MODE && (
-            <SettingsSwitchRow
-              key="developerMode"
-              label={lstrings.settings_developer_mode}
-              value={this.props.developerModeOn}
-              onPress={this.handleDeveloperToggle}
+      <SceneWrapper background="theme" hasTabs={false} scroll>
+        <SectionView extendRight marginRem={0.5}>
+          <>
+            <SettingsHeaderRow
+              icon={<FontAwesomeIcon color={theme.icon} name="user-o" size={iconSize} />}
+              label={`${lstrings.settings_account_title_cap}: ${username ?? lstrings.missing_username}`}
             />
-          )}
-          {this.props.developerModeOn && (
-            <SettingsSwitchRow key="darkTheme" label={lstrings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
-          )}
-          <SettingsTappableRow label={lstrings.restore_wallets_modal_title} onPress={async () => await this.props.showRestoreWalletsModal(navigation)} />
-          <SettingsTappableRow label={lstrings.migrate_wallets_title} onPress={() => navigation.push('migrateWalletSelectCrypto', {})} />
-          <SettingsTappableRow label={lstrings.title_terms_of_service} onPress={this.handleTermsOfService} />
-          <SettingsSwitchRow
-            key="verboseLogging"
-            label={lstrings.settings_verbose_logging}
-            value={this.state.defaultLogLevel === 'info'}
-            onPress={this.handleVerboseLoggingToggle}
-          />
-          <Space around={2}>
-            <MainButton alignSelf="center" label={lstrings.settings_button_export_logs} type="secondary" onPress={handleSendLogs} />
-            <MainButton alignSelf="center" label={lstrings.settings_button_clear_logs} marginRem={[1, 0, 0, 0]} type="escape" onPress={handleClearLogs} />
-          </Space>
-        </ScrollView>
+            {isLightAccount ? (
+              <CardUi4>
+                <SettingsTappableRow label={lstrings.backup_account} onPress={this.handleUpgrade} />
+              </CardUi4>
+            ) : (
+              <CardUi4 sections>
+                <SettingsTappableRow
+                  action={isLocked ? 'lock' : 'unlock'}
+                  label={isLocked ? lstrings.settings_button_unlock_settings : lstrings.settings_button_lock_settings}
+                  onPress={this.handleUnlock}
+                />
+                <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_change_password} onPress={this.handleChangePassword} />
+                <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_pin} onPress={this.handleChangePin} />
+                <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
+                <SettingsTappableRow disabled={this.props.isLocked} label={lstrings.settings_button_password_recovery} onPress={this.handleChangeRecovery} />
+                <SettingsTappableRow disabled={this.props.isLocked} dangerous label={lstrings.delete_account_title} onPress={this.handleDeleteAccount} />
+              </CardUi4>
+            )}
+          </>
+          <>
+            <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} label={lstrings.settings_options_title_cap} />
+            <CardUi4 sections>
+              {config.disableSwaps !== true ? <SettingsTappableRow label={lstrings.settings_exchange_settings} onPress={this.handleExchangeSettings} /> : null}
+              <SettingsTappableRow label={lstrings.spending_limits} onPress={this.handleSpendingLimits} />
+              <SettingsLabelRow right={autoLogoutRightText} label={lstrings.settings_title_auto_logoff} onPress={this.handleAutoLogout} />
+              <SettingsLabelRow right={this.props.defaultFiat.replace('iso:', '')} label={lstrings.settings_title_currency} onPress={this.handleDefaultFiat} />
+
+              {isLightAccount ? null : (
+                <SettingsSwitchRow
+                  key="pinRelogin"
+                  label={lstrings.settings_title_pin_login}
+                  value={this.props.pinLoginEnabled}
+                  onPress={this.handlePinToggle}
+                />
+              )}
+              {this.props.supportsTouchId && !isLightAccount && (
+                <SettingsSwitchRow key="useTouchID" label={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this.handleTouchIdToggle} />
+              )}
+
+              <SettingsSwitchRow
+                label={lstrings.settings_button_contacts_access_permission}
+                value={contactsPermissionOn}
+                onPress={this.handleContactsAccessToggle}
+              />
+              <SettingsSwitchRow
+                key="spamFilter"
+                label={lstrings.settings_hide_spam_transactions}
+                value={this.props.spamFilterOn}
+                onPress={this.handleSpamToggle}
+              />
+              <SettingsTappableRow label={lstrings.settings_notifications} onPress={this.handleNotificationSettings} />
+              <SettingsTappableRow
+                label={lstrings.settings_asset_settings}
+                onPress={() => navigation.push('assetSettings', { currencySettingsKeys: CURRENCY_SETTINGS_KEYS })}
+              />
+              <SettingsTappableRow label={lstrings.title_promotion_settings} onPress={this.handlePromotionSettings} />
+              {ENV.ALLOW_DEVELOPER_MODE && (
+                <SettingsSwitchRow
+                  key="developerMode"
+                  label={lstrings.settings_developer_mode}
+                  value={this.props.developerModeOn}
+                  onPress={this.handleDeveloperToggle}
+                />
+              )}
+              {this.props.developerModeOn && (
+                <SettingsSwitchRow key="darkTheme" label={lstrings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
+              )}
+              <SettingsTappableRow label={lstrings.restore_wallets_modal_title} onPress={async () => await this.props.showRestoreWalletsModal(navigation)} />
+              <SettingsTappableRow label={lstrings.migrate_wallets_title} onPress={() => navigation.push('migrateWalletSelectCrypto', {})} />
+              <SettingsTappableRow label={lstrings.title_terms_of_service} onPress={this.handleTermsOfService} />
+              <SettingsSwitchRow
+                key="verboseLogging"
+                label={lstrings.settings_verbose_logging}
+                value={this.state.defaultLogLevel === 'info'}
+                onPress={this.handleVerboseLoggingToggle}
+              />
+            </CardUi4>
+          </>
+        </SectionView>
+        <ButtonsViewUi4
+          layout="column"
+          primary={{
+            onPress: handleSendLogs,
+            label: lstrings.settings_button_export_logs
+          }}
+          secondary={{
+            onPress: handleClearLogs,
+            label: lstrings.settings_button_clear_logs
+          }}
+        />
       </SceneWrapper>
     )
   }
