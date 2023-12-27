@@ -130,8 +130,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     backgroundColor: theme.tileBackground,
     flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1
+    alignItems: 'center'
   },
   content: {
     flex: 1

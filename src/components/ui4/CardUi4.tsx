@@ -143,8 +143,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     overflow: 'hidden'
   },
   cardContainer: {
-    borderRadius: theme.rem(theme.cardRadiusRemUi4),
-    flex: 1
+    borderRadius: theme.rem(theme.cardRadiusRemUi4)
   },
   cornerContainer: {
     margin: theme.rem(1),
