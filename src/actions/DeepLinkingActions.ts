@@ -269,5 +269,5 @@ async function launchAzteco(navigation: NavigationBase, edgeWallet: EdgeCurrency
   } else {
     showError(lstrings.azteco_service_unavailable)
   }
-  navigation.navigate('walletsTab', { screen: 'walletList' })
+  navigation.navigate('homeTab', { screen: 'home' })
 }
