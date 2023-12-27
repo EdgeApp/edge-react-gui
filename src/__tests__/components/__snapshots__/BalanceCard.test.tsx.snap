@@ -265,15 +265,19 @@ exports[`BalanceCard should render with loading props 1`] = `
                 "marginHorizontal": 11,
               },
               {
-                "alignSelf": "stretch",
-                "borderRadius": 45,
-                "flex": 1,
-              },
-              {
                 "alignSelf": "auto",
                 "opacity": 1,
               },
               null,
+              {
+                "alignSelf": "stretch",
+                "borderRadius": 45,
+              },
+              undefined,
+              undefined,
+              {
+                "flex": 1,
+              },
             ]
           }
         >
@@ -373,15 +377,19 @@ exports[`BalanceCard should render with loading props 1`] = `
                 "marginHorizontal": 11,
               },
               {
-                "alignSelf": "stretch",
-                "borderRadius": 45,
-                "flex": 1,
-              },
-              {
                 "alignSelf": "auto",
                 "opacity": 1,
               },
               null,
+              {
+                "alignSelf": "stretch",
+                "borderRadius": 45,
+              },
+              undefined,
+              undefined,
+              {
+                "flex": 1,
+              },
             ]
           }
         >
