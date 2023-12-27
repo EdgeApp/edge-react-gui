@@ -26,6 +26,9 @@ interface Props {
   // If this is set, the component will insert a text node after its children:
   label?: string
 
+  // Parent container layout
+  layout?: 'row' | 'column' // TODO: Support specific "single" layout
+
   // True to show a spinner after the contents:
   spinner?: boolean
 
@@ -37,7 +40,7 @@ interface Props {
  * A stand-alone button to perform the primary action in a modal or scene.
  */
 export function ButtonUi4(props: Props) {
-  const { alignSelf = 'auto', children, disabled = false, label, onPress, type = 'primary', spinner = false } = props
+  const { layout = 'row', alignSelf = 'auto', children, disabled = false, label, onPress, type = 'primary', spinner = false } = props
 
   // `onPress` promise logic:
   const [pending, handlePress] = usePendingPress(onPress)
@@ -81,9 +84,11 @@ export function ButtonUi4(props: Props) {
       </Text>
     )
 
+  const finalContainerCommon = [styles.containerCommon, layout === 'row' ? undefined : styles.containerColumn]
+
   return (
-    <TouchableOpacity disabled={disabled || pending} style={styles.containerCommon} onPress={handlePress}>
-      <LinearGradient {...gradientProps} style={[styles.gradientLayoutCommon, styles.containerCommon, dynamicGradientStyles, androidAdjust]}>
+    <TouchableOpacity disabled={disabled || pending} style={finalContainerCommon} onPress={handlePress}>
+      <LinearGradient {...gradientProps} style={[styles.gradientLayoutCommon, dynamicGradientStyles, androidAdjust, ...finalContainerCommon]}>
         {hideContent ? null : children}
         {hideContent ? null : maybeText}
         {!hideContent ? null : <ActivityIndicator color={spinnerColor} style={styles.spinnerCommon} />}
@@ -102,6 +107,9 @@ const getStyles = cacheStyles((theme: Theme) => {
   return {
     androidAdjust: {
       paddingBottom: 3
+    },
+    containerColumn: {
+      marginVertical: theme.rem(0.25)
     },
     primaryText: {
       ...commonTextViewStyle,

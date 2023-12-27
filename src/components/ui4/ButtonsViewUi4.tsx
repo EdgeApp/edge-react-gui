@@ -28,7 +28,7 @@ interface Props {
   tertiary?: ButtonInfo
 
   // Row or column button layout. Defaults to column layout.
-  layout: 'row' | 'column'
+  layout?: 'row' | 'column'
 }
 
 /**
@@ -42,7 +42,7 @@ export const ButtonsViewUi4 = React.memo(({ absolute = false, fade, primary, sec
   const renderButton = (type: ButtonTypeUi4, buttonProps?: ButtonInfo) => {
     if (buttonProps == null) return null
     const { label, onPress, disabled } = buttonProps
-    return <ButtonUi4 label={label} onPress={onPress} type={type} disabled={disabled} />
+    return <ButtonUi4 layout={layout} label={label} onPress={onPress} type={type} disabled={disabled} />
   }
 
   // HACK: Workaround for useFadeAnimation not working if visible=true is set
@@ -94,7 +94,8 @@ const StyledButtonContainer = styled(View)<{ absolute: boolean; layout: 'row' | 
   const columnStyle: ViewStyle = !isRowLayout
     ? {
         flexDirection: 'column',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        marginBottom: theme.rem(3)
       }
     : {}
 
