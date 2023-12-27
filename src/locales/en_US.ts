@@ -626,6 +626,7 @@ const strings = {
   title_settings: 'Settings',
   title_promotion_settings: 'Promotion Settings',
   title_terms_of_service: 'Terms of Service',
+  title_assets: 'Assets',
   title_markets: 'Markets',
   title_wallets: 'Wallets',
   title_buy: 'Buy',

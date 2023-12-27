@@ -780,7 +780,8 @@ const EdgeTabs = () => {
         headerShown: false
       }}
     >
-      <Tab.Screen name="homeTab" component={EdgeHomeScreen} />
+      <Tab.Screen name="homeTab" component={EdgeHomeTabScreen} />
+      <Tab.Screen name="walletsTab" component={EdgeWalletsTabScreen} />
       <Tab.Screen name="buyTab" component={EdgeBuyTabScreen} />
       <Tab.Screen name="sellTab" component={EdgeSellTabScreen} />
       <Tab.Screen name="exchangeTab" component={EdgeExchangeTabScreen} />
@@ -789,9 +790,17 @@ const EdgeTabs = () => {
   )
 }
 
-const EdgeHomeScreen = () => {
+const EdgeHomeTabScreen = () => {
   return (
     <Stack.Navigator initialRouteName="home" screenOptions={defaultScreenOptions}>
+      <Stack.Screen name="home" component={HomeSceneUi4} options={firstSceneScreenOptions} />
+    </Stack.Navigator>
+  )
+}
+
+const EdgeWalletsTabScreen = () => {
+  return (
+    <Stack.Navigator initialRouteName="walletList" screenOptions={defaultScreenOptions}>
       <Stack.Screen
         name="transactionDetails"
         component={TransactionDetailsScene}
@@ -801,7 +810,6 @@ const EdgeHomeScreen = () => {
       />
       <Stack.Screen name="walletList" component={WalletListScene} />
       <Stack.Screen name="transactionList" component={TransactionList} />
-      <Stack.Screen name="home" component={HomeSceneUi4} options={firstSceneScreenOptions} />
     </Stack.Navigator>
   )
 }
