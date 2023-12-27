@@ -19,14 +19,14 @@ import { CardUi4 } from './CardUi4'
 
 interface Props {
   navigation: NavigationBase
-  hideShowAssets?: boolean
+  onViewAssetsPress?: () => void
 }
 
 /**
  * Card that displays balance, deposit/send buttons, and a link to view assets
  */
 export const BalanceCardUi4 = (props: Props) => {
-  const { navigation, hideShowAssets = false } = props
+  const { navigation, onViewAssetsPress } = props
 
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -48,10 +48,6 @@ export const BalanceCardUi4 = (props: Props) => {
 
   const handleToggleAccountBalanceVisibility = useHandler(() => {
     dispatch(toggleAccountBalanceVisibility())
-  })
-
-  const handleViewAssets = useHandler(() => {
-    navigation.navigate('walletList', {})
   })
 
   const handleSend = useHandler(() => {
@@ -84,8 +80,8 @@ export const BalanceCardUi4 = (props: Props) => {
           </EdgeText>
         )}
       </TouchableOpacity>
-      {hideShowAssets ? null : (
-        <TouchableOpacity style={styles.rightButtonContainer} onPress={handleViewAssets}>
+      {onViewAssetsPress == null ? null : (
+        <TouchableOpacity style={styles.rightButtonContainer} onPress={onViewAssetsPress}>
           <EdgeText style={[styles.tappableText, textShadow]}>{lstrings.view_assets}</EdgeText>
         </TouchableOpacity>
       )}

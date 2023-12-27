@@ -142,6 +142,10 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
       .catch(err => showError(err))
   }
 
+  const handleMarketsPress = () => {
+    navigation.navigate('marketsTab', { screen: 'coinRanking' })
+  }
+
   const handleShareApp = () => {
     const message = `${sprintf(lstrings.share_subject, config.appName)}\n\n${lstrings.share_message}\n\n`
 
@@ -232,6 +236,11 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
       pressHandler: () => handleScanQr(),
       iconName: 'control-panel-scan-qr',
       title: lstrings.drawer_scan_qr_send
+    },
+    {
+      pressHandler: () => handleMarketsPress(),
+      iconNameFontAwesome: 'chart-line',
+      title: lstrings.title_markets
     },
     ...(ENV.BETA_FEATURES ? [{ pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: lstrings.drawer_borrow_dollars }] : []),
     { pressHandler: handleShareApp, iconName: 'control-panel-share', title: lstrings.string_share + ' ' + config.appName },

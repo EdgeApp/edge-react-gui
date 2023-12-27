@@ -52,6 +52,7 @@ export interface RouteParamList {
 
   // Tabs
   homeTab: {}
+  walletsTab: {}
   buyTab: {}
   sellTab: {}
   exchangeTab: {}
