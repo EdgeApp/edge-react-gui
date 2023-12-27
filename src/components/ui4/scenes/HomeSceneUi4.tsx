@@ -46,6 +46,9 @@ export const HomeSceneUi4 = (props: Props) => {
   const handleSwapPress = useHandler(() => {
     navigation.navigate('exchangeTab', {})
   })
+  const handleViewAssetsPress = useHandler(() => {
+    navigation.navigate('walletsTab', {})
+  })
 
   // TODO: Reimplement after info server is published
   const blogData: any[] = []
@@ -66,7 +69,7 @@ export const HomeSceneUi4 = (props: Props) => {
       <View style={styles.tempMargin}>
         <SectionView extendRight>
           <>
-            <BalanceCardUi4 navigation={navigation} />
+            <BalanceCardUi4 onViewAssetsPress={handleViewAssetsPress} navigation={navigation} />
             <View style={styles.homeRowContainer}>
               <HomeCardUi4
                 title={lstrings.buy_crypto}

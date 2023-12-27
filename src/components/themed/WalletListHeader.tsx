@@ -82,7 +82,7 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
             </TouchableOpacity>
           )}
         </View>
-        {searching ? null : <BalanceCardUi4 navigation={navigation} hideShowAssets />}
+        {searching ? null : <BalanceCardUi4 navigation={navigation} />}
         {sorting || searching ? null : <SectionHeaderUi4 leftTitle={lstrings.title_wallets} rightNode={addSortButtons} />}
 
         {searching ? null : <PromoCard navigation={navigation} />}
