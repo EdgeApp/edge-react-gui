@@ -97,7 +97,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -134,14 +133,13 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 {
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flex": 1,
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -281,7 +279,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -332,14 +329,13 @@ exports[`SendScene2 1 spendTarget 1`] = `
                     {
                       "alignItems": "center",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
-                      "flex": 1,
                       "flexDirection": "row",
                     },
                     {
-                      "marginBottom": 0,
-                      "marginLeft": 0,
-                      "marginRight": 0,
-                      "marginTop": 0,
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
                     },
                   ]
                 }
@@ -490,14 +486,13 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -658,7 +653,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -708,14 +702,13 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -1108,7 +1101,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -1145,14 +1137,13 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 {
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flex": 1,
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -1292,7 +1283,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -1343,14 +1333,13 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     {
                       "alignItems": "center",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
-                      "flex": 1,
                       "flexDirection": "row",
                     },
                     {
-                      "marginBottom": 0,
-                      "marginLeft": 0,
-                      "marginRight": 0,
-                      "marginTop": 0,
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
                     },
                   ]
                 }
@@ -1501,14 +1490,13 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -1669,7 +1657,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -1719,14 +1706,13 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -1880,14 +1866,13 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -1968,14 +1953,13 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -2295,7 +2279,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -2332,14 +2315,13 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 {
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flex": 1,
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -2479,7 +2461,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -2529,14 +2510,13 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -2691,14 +2671,13 @@ exports[`SendScene2 2 spendTargets 1`] = `
                     {
                       "alignItems": "center",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
-                      "flex": 1,
                       "flexDirection": "row",
                     },
                     {
-                      "marginBottom": 0,
-                      "marginLeft": 0,
-                      "marginRight": 0,
-                      "marginTop": 0,
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
                     },
                   ]
                 }
@@ -2849,14 +2828,13 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -3017,7 +2995,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -3067,14 +3044,13 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -3467,7 +3443,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -3504,14 +3479,13 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 {
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flex": 1,
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -3651,7 +3625,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -3701,14 +3674,13 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -3862,14 +3834,13 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -4030,7 +4001,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -4080,14 +4050,13 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -4480,7 +4449,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -4517,14 +4485,13 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 {
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flex": 1,
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -4664,7 +4631,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -4714,14 +4680,13 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -4876,14 +4841,13 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                     {
                       "alignItems": "center",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
-                      "flex": 1,
                       "flexDirection": "row",
                     },
                     {
-                      "marginBottom": 0,
-                      "marginLeft": 0,
-                      "marginRight": 0,
-                      "marginTop": 0,
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
                     },
                   ]
                 }
@@ -5021,7 +4985,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -5071,14 +5034,13 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -5471,7 +5433,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -5508,14 +5469,13 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 {
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flex": 1,
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -5655,7 +5615,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -5705,14 +5664,13 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -5853,7 +5811,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -5903,14 +5860,13 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -6303,7 +6259,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -6340,14 +6295,13 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 {
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flex": 1,
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -6487,7 +6441,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -6537,14 +6490,13 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -6725,12 +6677,11 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                     "opacity": 1,
                   }
                 }
@@ -6808,14 +6759,13 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -6976,7 +6926,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -7026,14 +6975,13 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -7426,7 +7374,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -7463,14 +7410,13 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 {
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flex": 1,
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -7610,7 +7556,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -7686,12 +7631,11 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 {
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flex": 1,
                   "flexDirection": "row",
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                   "opacity": 1,
                 }
               }
@@ -7773,14 +7717,13 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                     {
                       "alignItems": "center",
                       "backgroundColor": "rgba(255, 255, 255, 0)",
-                      "flex": 1,
                       "flexDirection": "row",
                     },
                     {
-                      "marginBottom": 0,
-                      "marginLeft": 0,
-                      "marginRight": 0,
-                      "marginTop": 0,
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
                     },
                   ]
                 }
@@ -7931,14 +7874,13 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -8026,7 +7968,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -8076,14 +8017,13 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -8476,7 +8416,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -8513,14 +8452,13 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 {
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flex": 1,
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -8660,7 +8598,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -8736,12 +8673,11 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 {
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flex": 1,
                   "flexDirection": "row",
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                   "opacity": 1,
                 }
               }
@@ -8849,12 +8785,11 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                     "opacity": 1,
                   }
                 }
@@ -8932,14 +8867,13 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -9027,7 +8961,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -9077,14 +9010,13 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
                   },
                   {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                   },
                 ]
               }
@@ -9477,7 +9409,6 @@ exports[`SendScene2 Render SendScene 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -9514,14 +9445,13 @@ exports[`SendScene2 Render SendScene 1`] = `
                 {
                   "alignItems": "center",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flex": 1,
                   "flexDirection": "row",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -9661,7 +9591,6 @@ exports[`SendScene2 Render SendScene 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 11,
@@ -9738,12 +9667,11 @@ exports[`SendScene2 Render SendScene 1`] = `
                   {
                     "alignItems": "center",
                     "backgroundColor": "rgba(255, 255, 255, 0)",
-                    "flex": 1,
                     "flexDirection": "row",
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
                     "opacity": 1,
                   }
                 }
@@ -10044,7 +9972,6 @@ exports[`SendScene2 Render SendScene 1`] = `
             [
               {
                 "borderRadius": 22,
-                "flex": 1,
               },
               {
                 "marginBottom": 34,

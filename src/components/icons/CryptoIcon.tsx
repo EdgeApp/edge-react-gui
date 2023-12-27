@@ -26,7 +26,7 @@ interface Props {
 }
 
 const CryptoIconComponent = (props: Props) => {
-  const { hideSecondary = false, marginRem, mono = false, sizeRem = 2, tokenId, walletId } = props
+  const { hideSecondary = false, marginRem = [0, 0.5, 0, 0], mono = false, sizeRem = 2, tokenId, walletId } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)

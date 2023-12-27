@@ -94,7 +94,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
             "height": 45,
             "marginBottom": 0,
             "marginLeft": 0,
-            "marginRight": 0,
+            "marginRight": 11,
             "marginTop": 0,
             "width": 45,
           }

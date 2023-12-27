@@ -2,7 +2,6 @@ import { div, gt, gte } from 'biggystring'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Keyboard } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
 import { getQuoteForTransaction, selectWalletForExchange, SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
@@ -20,7 +19,7 @@ import { DECIMAL_PRECISION, zeroString } from '../../util/utils'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
+import { ThemeProps, useTheme } from '../services/ThemeContext'
 import { CryptoExchangeFlipInputWrapper } from '../themed/CryptoExchangeFlipInputWrapperComponent'
 import { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput2'
 import { LineTextDivider } from '../themed/LineTextDivider'
@@ -57,8 +56,6 @@ interface StateProps {
   // Errors
   insufficient: boolean
   genericError: string | null
-
-  overscroll: number
 }
 interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => Promise<void>
@@ -290,8 +287,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { fromWalletName, toWalletName, theme, overscroll } = this.props
-    const styles = getStyles(theme)
+    const { fromWalletName, toWalletName } = this.props
 
     const isFromFocused = this.state.whichWalletFocus === 'from'
     const isToFocused = this.state.whichWalletFocus === 'to'
@@ -301,56 +297,40 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     return (
       <>
         <SceneHeader title={lstrings.title_exchange} underline />
-        <KeyboardAwareScrollView
-          style={styles.mainScrollView}
-          keyboardShouldPersistTaps="always"
-          contentContainerStyle={[{ paddingBottom: overscroll }, styles.scrollViewContentContainer]}
+        <LineTextDivider title={lstrings.fragment_send_from_label} lowerCased />
+        <CryptoExchangeFlipInputWrapper
+          walletId={this.props.fromWalletId}
+          buttonText={lstrings.select_src_wallet}
+          headerText={fromHeaderText}
+          primaryCurrencyInfo={this.props.fromWalletPrimaryInfo}
+          overridePrimaryNativeAmount={this.state.fromAmountNative}
+          launchWalletSelector={this.launchFromWalletSelector}
+          onCryptoExchangeAmountChanged={this.fromAmountChanged}
+          isFocused={isFromFocused}
+          focusMe={this.focusFromWallet}
+          onNext={this.handleNext}
         >
-          <LineTextDivider title={lstrings.fragment_send_from_label} lowerCased />
-          <CryptoExchangeFlipInputWrapper
-            walletId={this.props.fromWalletId}
-            buttonText={lstrings.select_src_wallet}
-            headerText={fromHeaderText}
-            primaryCurrencyInfo={this.props.fromWalletPrimaryInfo}
-            overridePrimaryNativeAmount={this.state.fromAmountNative}
-            launchWalletSelector={this.launchFromWalletSelector}
-            onCryptoExchangeAmountChanged={this.fromAmountChanged}
-            isFocused={isFromFocused}
-            focusMe={this.focusFromWallet}
-            onNext={this.handleNext}
-          >
-            {this.props.hasMaxSpend ? <MiniButton alignSelf="center" label={lstrings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleMax} /> : null}
-          </CryptoExchangeFlipInputWrapper>
-          <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
-          <CryptoExchangeFlipInputWrapper
-            walletId={this.props.toWalletId}
-            buttonText={lstrings.select_recv_wallet}
-            headerText={toHeaderText}
-            primaryCurrencyInfo={this.props.toWalletPrimaryInfo}
-            overridePrimaryNativeAmount={this.state.toAmountNative}
-            launchWalletSelector={this.launchToWalletSelector}
-            onCryptoExchangeAmountChanged={this.toAmountChanged}
-            isFocused={isToFocused}
-            focusMe={this.focusToWallet}
-            onNext={this.handleNext}
-          />
-          {this.renderAlert()}
-          {this.renderButton()}
-        </KeyboardAwareScrollView>
+          {this.props.hasMaxSpend ? <MiniButton alignSelf="center" label={lstrings.string_max_cap} marginRem={1} onPress={this.handleMax} /> : null}
+        </CryptoExchangeFlipInputWrapper>
+        <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
+        <CryptoExchangeFlipInputWrapper
+          walletId={this.props.toWalletId}
+          buttonText={lstrings.select_recv_wallet}
+          headerText={toHeaderText}
+          primaryCurrencyInfo={this.props.toWalletPrimaryInfo}
+          overridePrimaryNativeAmount={this.state.toAmountNative}
+          launchWalletSelector={this.launchToWalletSelector}
+          onCryptoExchangeAmountChanged={this.toAmountChanged}
+          isFocused={isToFocused}
+          focusMe={this.focusToWallet}
+          onNext={this.handleNext}
+        />
+        {this.renderAlert()}
+        {this.renderButton()}
       </>
     )
   }
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  mainScrollView: {
-    flex: 1
-  },
-  scrollViewContentContainer: {
-    alignItems: 'center',
-    paddingTop: theme.rem(0.5)
-  }
-}))
 
 export const CryptoExchangeScene = (props: OwnProps) => {
   const dispatch = useDispatch()
@@ -424,22 +404,19 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   })
 
   return (
-    <NotificationSceneWrapper navigation={navigation} hasTabs>
-      {(gap, notificationHeight) => (
-        <CryptoExchangeComponent
-          route={route}
-          onSelectWallet={handleSelectWallet}
-          getQuoteForTransaction={handleGetQuoteForTransaction}
-          theme={theme}
-          navigation={navigation}
-          account={account}
-          {...result}
-          exchangeInfo={exchangeInfo}
-          insufficient={insufficient}
-          genericError={genericError}
-          overscroll={notificationHeight}
-        />
-      )}
+    <NotificationSceneWrapper navigation={navigation} hasTabs scroll avoidKeyboard keyboardShouldPersistTaps="always" padding={theme.rem(0.5)}>
+      <CryptoExchangeComponent
+        route={route}
+        onSelectWallet={handleSelectWallet}
+        getQuoteForTransaction={handleGetQuoteForTransaction}
+        theme={theme}
+        navigation={navigation}
+        account={account}
+        {...result}
+        exchangeInfo={exchangeInfo}
+        insufficient={insufficient}
+        genericError={genericError}
+      />
     </NotificationSceneWrapper>
   )
 }

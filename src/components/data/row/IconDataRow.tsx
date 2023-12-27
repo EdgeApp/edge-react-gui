@@ -61,7 +61,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexGrow: 1,
     flexShrink: 1,
     marginRight: theme.rem(0.25),
-    marginLeft: theme.rem(1)
+    marginLeft: theme.rem(0.5)
   },
   container: {
     alignItems: 'center',

@@ -93,7 +93,7 @@ exports[`Request should render with loaded props 1`] = `
         />
       </WithTheme(EdgeTextComponent)>
     </View>
-    <WithTheme(CardComponent)>
+    <CardUi4>
       <Memo
         forceField="crypto"
         headerCallback={[Function]}
@@ -102,7 +102,7 @@ exports[`Request should render with loaded props 1`] = `
         onAmountChanged={[Function]}
         returnKeyType="done"
       />
-    </WithTheme(CardComponent)>
+    </CardUi4>
     <Carousel
       items={[]}
       keyExtractor={[Function]}

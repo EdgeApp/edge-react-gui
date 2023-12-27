@@ -15,7 +15,6 @@ describe('CryptoExchangeComponent', () => {
 
     const actual = renderer.render(
       <CryptoExchangeComponent
-        overscroll={0}
         {...fakeSceneProps('exchange', {})}
         account={fakeAccount}
         exchangeInfo={initialState}

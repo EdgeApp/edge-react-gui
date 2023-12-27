@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../locales/strings'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CardUi4 } from '../ui4/CardUi4'
+import { RowUi4 } from '../ui4/RowUi4'
 
 interface Props {
   poweredByText: string
@@ -19,47 +19,31 @@ export const PoweredByCard = (props: Props) => {
   const styles = getStyles(theme)
   const iconSrc = iconUri == null ? {} : { uri: iconUri }
 
+  // TODO:
+  // 1. This font styling doesn't match existing title+body text rows.
+  // 3. Consider redesign of this card. Suggest title='Powered by:'
+  //    body=poweredByText (tap to change is self-explanatory per the card's
+  //    appearance)
+
   return (
-    <View style={styles.cardContainer}>
-      <TouchableOpacity onPress={onPress}>
-        <CardUi4 paddingRem={0.5}>
-          <View style={styles.poweredByContainer}>
-            <FastImage style={styles.poweredByIcon} source={iconSrc} resizeMode="contain" />
-
-            <View style={styles.poweredByContainerColumn}>
-              <View style={styles.poweredByContainerRow}>
-                <Text style={styles.poweredByText}>{lstrings.plugin_powered_by_space}</Text>
-                <Text style={styles.poweredByText}>{poweredByText}</Text>
-              </View>
-              <View style={styles.poweredByContainerRow}>
-                <Text style={styles.tapToChangeText}>{lstrings.tap_to_change_provider}</Text>
-              </View>
-            </View>
-
-            <IonIcon name="chevron-forward" size={theme.rem(1)} color={theme.iconTappable} />
-          </View>
-        </CardUi4>
-      </TouchableOpacity>
-    </View>
+    <CardUi4>
+      <RowUi4 onPress={onPress} icon={<FastImage style={styles.poweredByIcon} source={iconSrc} />}>
+        <View style={styles.poweredByContainerRow}>
+          <Text style={styles.poweredByText}>{lstrings.plugin_powered_by_space}</Text>
+          <Text style={styles.poweredByText}>{poweredByText}</Text>
+        </View>
+        <View style={styles.poweredByContainerRow}>
+          <Text style={styles.tapToChangeText}>{lstrings.tap_to_change_provider}</Text>
+        </View>
+      </RowUi4>
+    </CardUi4>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  cardContainer: {
-    paddingTop: theme.rem(1),
-    paddingBottom: theme.rem(1),
-    alignItems: 'center'
-  },
   poweredByContainerRow: {
-    flexDirection: 'row'
-  },
-  poweredByContainerColumn: {
-    paddingHorizontal: theme.rem(0.5),
-    flexDirection: 'column'
-  },
-  poweredByContainer: {
     flexDirection: 'row',
-    alignItems: 'center'
+    marginHorizontal: theme.rem(0.5)
   },
   poweredByText: {
     fontSize: theme.rem(0.75),

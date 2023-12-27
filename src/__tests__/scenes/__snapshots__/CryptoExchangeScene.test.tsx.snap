@@ -6,95 +6,62 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
     title="Exchange"
     underline={true}
   />
-  <KeyboardAwareScrollView
-    contentContainerStyle={
-      [
-        {
-          "paddingBottom": 0,
-        },
-        {
-          "alignItems": "center",
-          "paddingTop": 11,
-        },
-      ]
-    }
-    enableAutomaticScroll={true}
-    enableOnAndroid={false}
-    enableResetScrollToCoords={true}
-    extraHeight={75}
-    extraScrollHeight={0}
-    keyboardOpeningTime={250}
-    keyboardShouldPersistTaps="always"
-    style={
+  <Memo(LineTextDividerComponent)
+    lowerCased={true}
+    title="From"
+  />
+  <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
+    buttonText="Select Source Wallet"
+    focusMe={[Function]}
+    headerText="Exchange from BTC Wallet"
+    isFocused={true}
+    launchWalletSelector={[Function]}
+    onCryptoExchangeAmountChanged={[Function]}
+    onNext={[Function]}
+    overridePrimaryNativeAmount=""
+    primaryCurrencyInfo={
       {
-        "flex": 1,
+        "displayCurrencyCode": "BTC",
+        "exchangeCurrencyCode": "BTC",
       }
     }
-    viewIsInsideTabBar={false}
+    walletId=""
   >
-    <Memo(LineTextDividerComponent)
-      lowerCased={true}
-      title="From"
+    <MiniButton
+      alignSelf="center"
+      label="MAX"
+      marginRem={1}
+      onPress={[Function]}
     />
-    <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
-      buttonText="Select Source Wallet"
-      focusMe={[Function]}
-      headerText="Exchange from BTC Wallet"
-      isFocused={true}
-      launchWalletSelector={[Function]}
-      onCryptoExchangeAmountChanged={[Function]}
-      onNext={[Function]}
-      overridePrimaryNativeAmount=""
-      primaryCurrencyInfo={
-        {
-          "displayCurrencyCode": "BTC",
-          "exchangeCurrencyCode": "BTC",
-        }
+  </Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))>
+  <Memo(LineTextDividerComponent)
+    lowerCased={true}
+    title="To"
+  />
+  <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
+    buttonText="Select Receiving Wallet"
+    focusMe={[Function]}
+    headerText="Exchange to ETH Wallet"
+    isFocused={false}
+    launchWalletSelector={[Function]}
+    onCryptoExchangeAmountChanged={[Function]}
+    onNext={[Function]}
+    overridePrimaryNativeAmount=""
+    primaryCurrencyInfo={
+      {
+        "displayCurrencyCode": "ETH",
+        "displayDenomination": {
+          "multiplier": "100000000",
+          "name": "Ethereum",
+        },
+        "exchangeCurrencyCode": "ETH",
+        "exchangeDenomination": {
+          "multiplier": "10000000",
+          "name": "Gwei",
+        },
       }
-      walletId=""
-    >
-      <MiniButton
-        alignSelf="center"
-        label="MAX"
-        marginRem={
-          [
-            1.2,
-            0,
-            0,
-          ]
-        }
-        onPress={[Function]}
-      />
-    </Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))>
-    <Memo(LineTextDividerComponent)
-      lowerCased={true}
-      title="To"
-    />
-    <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
-      buttonText="Select Receiving Wallet"
-      focusMe={[Function]}
-      headerText="Exchange to ETH Wallet"
-      isFocused={false}
-      launchWalletSelector={[Function]}
-      onCryptoExchangeAmountChanged={[Function]}
-      onNext={[Function]}
-      overridePrimaryNativeAmount=""
-      primaryCurrencyInfo={
-        {
-          "displayCurrencyCode": "ETH",
-          "displayDenomination": {
-            "multiplier": "100000000",
-            "name": "Ethereum",
-          },
-          "exchangeCurrencyCode": "ETH",
-          "exchangeDenomination": {
-            "multiplier": "10000000",
-            "name": "Gwei",
-          },
-        }
-      }
-      walletId=""
-    />
-  </KeyboardAwareScrollView>
+    }
+    walletId=""
+  />
 </React.Fragment>
 `;

@@ -183,7 +183,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
     ))
   }
   return (
-    <NotificationSceneWrapper hasTabs navigation={navigation} background="theme">
+    <NotificationSceneWrapper hasTabs navigation={navigation} background="theme" padding={theme.rem(0.5)}>
       {(gap, notificationHeight) => (
         <>
           <SceneHeader title={lstrings.title_exchange} underline withTopMargin />
@@ -197,7 +197,6 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
             {selectedQuote.isEstimate ? (
               <AlertCardUi4
                 // TODO: Rework margins/padding on non-UI4 components on this scene so this margin isn't needed.
-                marginRem={1}
                 title={lstrings.estimated_quote}
                 body={lstrings.estimated_exchange_message}
                 type="warning"
@@ -207,7 +206,6 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
             {selectedQuote.canBePartial ? (
               <AlertCardUi4
                 // TODO: Rework margins/padding on non-UI4 components on this scene so this margin isn't needed.
-                marginRem={1}
                 title={lstrings.can_be_partial_quote_title}
                 body={lstrings.can_be_partial_quote_message}
                 type="warning"
@@ -229,7 +227,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingTop: theme.rem(0.5)
   },
   slider: {
-    marginTop: theme.rem(0.5),
+    marginTop: theme.rem(2),
     marginBottom: theme.rem(1)
   }
 }))
