@@ -650,6 +650,7 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
+      <Stack.Screen name="marketsTab" component={EdgeMarketsTabScreen} />
       <Stack.Screen name="migrateWalletCalculateFee" component={MigrateWalletCalculateFeeScene} />
       <Stack.Screen
         name="migrateWalletCompletion"
@@ -783,7 +784,6 @@ const EdgeTabs = () => {
       <Tab.Screen name="buyTab" component={EdgeBuyTabScreen} />
       <Tab.Screen name="sellTab" component={EdgeSellTabScreen} />
       <Tab.Screen name="exchangeTab" component={EdgeExchangeTabScreen} />
-      <Tab.Screen name="marketsTab" component={EdgeMarketsTabScreen} />
       <Tab.Screen name="extraTab" component={ExtraTabScene} />
     </Tab.Navigator>
   )

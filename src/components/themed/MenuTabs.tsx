@@ -4,7 +4,6 @@ import { useMemo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import Foundation from 'react-native-vector-icons/Foundation'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index'
@@ -20,7 +19,6 @@ import { VectorIcon } from './VectorIcon'
 const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_map'
 
 const title: { readonly [key: string]: string } = {
-  marketsTab: lstrings.title_markets,
   homeTab: lstrings.title_home, // TODO: update after UI4 tabs
   buyTab: lstrings.title_buy,
   sellTab: lstrings.title_sell,
@@ -65,8 +63,6 @@ export const MenuTabs = (props: BottomTabBarProps) => {
         return navigation.navigate('sellTab', currentName === 'sellTab' ? { screen: 'pluginListSell' } : {})
       case 'exchangeTab':
         return navigation.navigate('exchangeTab', currentName === 'exchangeTab' ? { screen: 'exchange' } : {})
-      case 'marketsTab':
-        return navigation.navigate('marketsTab', currentName === 'marketsTab' ? { screen: 'coinRanking' } : {})
       case 'extraTab':
         return navigation.navigate('extraTab')
     }
@@ -84,7 +80,6 @@ export const MenuTabs = (props: BottomTabBarProps) => {
         {routes.map((route, index: number) => {
           const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
           const icon: { readonly [key: string]: JSX.Element } = {
-            marketsTab: <Foundation name="list-number" size={theme.rem(1.25)} color={color} />,
             homeTab: <Ionicon name="home-outline" size={theme.rem(1.25)} color={color} />, // TODO: update after UI4 tabs
             buyTab: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
             sellTab: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
