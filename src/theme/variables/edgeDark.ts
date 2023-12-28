@@ -260,10 +260,10 @@ export const edgeDark: Theme = {
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 4,
 
-  tabBarBackground: [palette.navyAqua, palette.navyAqua],
-  tabBarBackgroundStart: { x: 0, y: 0 },
-  tabBarBackgroundEnd: { x: 1, y: 1 },
-  tabBarTopOutlineColors: [palette.navyAqua, palette.navyAqua],
+  tabBarBackground: [`${palette.black}00`, palette.black],
+  tabBarBackgroundStart: { x: 0, y: 0.5 },
+  tabBarBackgroundEnd: { x: 0, y: 1 },
+  tabBarTopOutlineColors: [`${palette.white}22`, `${palette.white}22`],
   tabBarIcon: palette.white,
   tabBarIconHighlighted: palette.edgeMint,
 

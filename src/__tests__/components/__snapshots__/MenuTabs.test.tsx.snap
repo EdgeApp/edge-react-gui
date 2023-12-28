@@ -1,62 +1,39 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`MenuTabs should render with loading props 1`] = `
-<View>
-  <BVLinearGradient
-    colors={
-      [
-        4279377189,
-        4279377189,
-      ]
+<BVLinearGradient
+  bottom={0}
+  colors={
+    [
+      0,
+      4278190080,
+    ]
+  }
+  endPoint={
+    {
+      "x": 0,
+      "y": 1,
     }
-    endPoint={
-      {
-        "x": 1,
-        "y": 0.5,
-      }
+  }
+  locations={null}
+  startPoint={
+    {
+      "x": 0,
+      "y": 0.5,
     }
-    locations={null}
-    startPoint={
-      {
-        "x": 0,
-        "y": 0.5,
-      }
+  }
+  style={
+    {
+      "bottom": 0,
+      "justifyContent": "flex-end",
+      "left": 0,
+      "overflow": "visible",
+      "position": "absolute",
+      "right": 0,
     }
-    style={
-      [
-        {
-          "alignSelf": "stretch",
-          "height": 1,
-        },
-        {
-          "marginBottom": 0,
-          "marginLeft": 0,
-          "marginRight": -22,
-          "marginTop": 0,
-        },
-      ]
-    }
-  />
-  <BVLinearGradient
-    colors={
-      [
-        4279377189,
-        4279377189,
-      ]
-    }
-    endPoint={
-      {
-        "x": 1,
-        "y": 1,
-      }
-    }
-    locations={null}
-    startPoint={
-      {
-        "x": 0,
-        "y": 0,
-      }
-    }
+  }
+>
+  <View
     style={
       {
         "alignItems": "center",
@@ -65,5 +42,5 @@ exports[`MenuTabs should render with loading props 1`] = `
       }
     }
   />
-</View>
+</BVLinearGradient>
 `;
