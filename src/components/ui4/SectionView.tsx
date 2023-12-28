@@ -15,7 +15,7 @@ interface Props {
   marginRem?: number[] | number
 
   /** @deprecated Only to be used during the UI4 transition */
-  dividerVerticalRem?: number[] | number
+  dividerMarginRem?: number[] | number
 }
 
 const DEFAULT_MARGIN_REM = 0.5
@@ -28,14 +28,14 @@ const DEFAULT_MARGIN_REM = 0.5
  * between sections.
  */
 export const SectionView = (props: Props): JSX.Element | null => {
-  const { children, extendRight = false, marginRem, dividerVerticalRem } = props
+  const { children, extendRight = false, marginRem, dividerMarginRem } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const margin = marginRem != null ? sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem)) : extendRight ? styles.marginScene : styles.marginCard
   const dividerMargin =
-    dividerVerticalRem != null
-      ? sidesToMargin(mapSides(fixSides(dividerVerticalRem, 0), theme.rem))
+    dividerMarginRem != null
+      ? sidesToMargin(mapSides(fixSides(dividerMarginRem, 0), theme.rem))
       : extendRight
       ? styles.dividerMarginScene
       : styles.dividerMarginCard
