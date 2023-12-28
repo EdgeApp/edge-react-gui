@@ -314,8 +314,12 @@ const SideContainer = styled(Animated.View)<{ scale: SharedValue<number> }>(them
   ]
 })
 
-const InnerContainer = styled(Animated.View)(() => ({
-  flex: 1
+const InnerContainer = styled(Animated.View)(theme => ({
+  flex: 1,
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginTop: theme.rem(0.4),
+  marginBottom: -theme.rem(0.4)
 }))
 
 const Placeholder = styled(Animated.View)<{ shift: SharedValue<number> }>(theme => ({ shift }) => {
@@ -323,6 +327,7 @@ const Placeholder = styled(Animated.View)<{ shift: SharedValue<number> }>(theme 
   return [
     {
       position: 'absolute',
+      top: -theme.rem(0.4),
       alignItems: 'center',
       justifyContent: 'center',
       paddingHorizontal: theme.rem(0.5),
@@ -374,8 +379,6 @@ const InputField = styledWithRef(AnimatedTextInput)<{
 
   return [
     {
-      position: 'relative',
-      top: theme.rem(0.4),
       color: theme.textInputBackgroundColor,
       flexGrow: 1,
       flexShrink: 1,
