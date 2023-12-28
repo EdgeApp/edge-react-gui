@@ -1,7 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CryptoExchangeComponent should render with loading props 1`] = `
-<React.Fragment>
+<View
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      {
+        "paddingTop": 0,
+      },
+    ]
+  }
+>
   <Memo(SceneHeaderComponent)
     title="Exchange"
     underline={true}
@@ -14,7 +25,6 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
         },
         {
           "alignItems": "center",
-          "paddingTop": 11,
         },
       ]
     }
@@ -96,5 +106,5 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       walletId=""
     />
   </KeyboardAwareScrollView>
-</React.Fragment>
+</View>
 `;

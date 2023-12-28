@@ -8,6 +8,7 @@ import { NavigationProp } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { EdgeAnim } from '../common/EdgeAnim'
+import { InsetStyles } from '../common/SceneWrapper'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
 import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from './WalletList'
@@ -21,7 +22,7 @@ interface Props {
   navigation: NavigationProp<'walletList'>
   searching: boolean
   searchText: string
-  overscroll?: number
+  insetStyles?: InsetStyles
 
   // Callbacks:
   onRefresh?: () => void
@@ -38,7 +39,7 @@ function WalletListSwipeableComponent(props: Props) {
     navigation,
     searching,
     searchText,
-    overscroll = 0,
+    insetStyles,
 
     // Callbacks:
     onRefresh,
@@ -120,7 +121,7 @@ function WalletListSwipeableComponent(props: Props) {
   return (
     <FlatList
       contentOffset={flatListContentOffset}
-      contentContainerStyle={{ paddingBottom: overscroll }}
+      contentContainerStyle={insetStyles}
       data={data}
       keyboardShouldPersistTaps="handled"
       ListFooterComponent={footer}

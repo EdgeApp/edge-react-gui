@@ -85,8 +85,8 @@ export function WalletListScene(props: Props) {
   const handlePressDone = useHandler(() => setSorting(false))
 
   return (
-    <SceneWrapper hasTabs hasNotifications padding={theme.rem(0.5)}>
-      {(gap, notificationHeight) => (
+    <SceneWrapper hasTabs background="theme" hasHeader hasNotifications padding={theme.rem(0.5)}>
+      {({ insetStyles }) => (
         <>
           <WiredProgressBar />
           {sorting && (
@@ -104,7 +104,7 @@ export function WalletListScene(props: Props) {
                 header={header}
                 footer={undefined}
                 navigation={navigation}
-                overscroll={notificationHeight}
+                insetStyles={insetStyles}
                 searching={searching}
                 searchText={searchText}
                 onRefresh={handleRefresh}

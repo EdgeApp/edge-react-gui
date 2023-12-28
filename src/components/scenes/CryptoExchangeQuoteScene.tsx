@@ -183,11 +183,11 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
     ))
   }
   return (
-    <SceneWrapper hasTabs background="theme" hasNotifications>
-      {(gap, notificationHeight) => (
+    <SceneWrapper hasTabs hasNotifications background="theme">
+      {({ insetStyles }) => (
         <>
           <SceneHeader title={lstrings.title_exchange} underline withTopMargin />
-          <ScrollView contentContainerStyle={[{ paddingBottom: notificationHeight }, styles.container]}>
+          <ScrollView contentContainerStyle={[insetStyles, styles.container]}>
             <LineTextDivider title={lstrings.fragment_send_from_label} lowerCased />
             {showFeeWarning ? <AlertCardUi4 marginRem={[0, 1, 1.5, 1]} title={lstrings.transaction_details_fee_warning} type="warning" /> : null}
             <ExchangeQuote quote={selectedQuote} fromTo="from" showFeeWarning={showFeeWarning} />

@@ -22,7 +22,7 @@ import { VectorIcon } from './VectorIcon'
 
 const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_map'
 
-export const TAB_BAR_TOTAL_HEIGHT = 93
+export const MAX_TAB_BAR_HEIGHT = 92
 
 const title: { readonly [key: string]: string } = {
   homeTab: lstrings.title_home,

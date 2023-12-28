@@ -1,51 +1,56 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TransactionDetailsScene should render 1`] = `
-<BVLinearGradient
-  colors={
-    [
-      4278585612,
-      4279971643,
-    ]
-  }
-  endPoint={
-    {
-      "x": 1,
-      "y": 0,
+[
+  <BVLinearGradient
+    colors={
+      [
+        4278585612,
+        4279971643,
+      ]
     }
-  }
-  locations={null}
-  startPoint={
-    {
-      "x": 0,
-      "y": 0,
-    }
-  }
-  style={
-    {
-      "bottom": 0,
-      "left": 0,
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
-    }
-  }
->
-  <RCTScrollView
-    contentContainerStyle={
+    endPoint={
       {
-        "paddingBottom": 0,
+        "x": 1,
+        "y": 0,
+      }
+    }
+    locations={null}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
       }
     }
     style={
       {
         "bottom": 0,
         "left": 0,
-        "padding": 11,
         "position": "absolute",
         "right": 0,
-        "top": 64,
+        "top": 0,
       }
+    }
+  />,
+  <RCTScrollView
+    contentContainerStyle={
+      {
+        "paddingBottom": 92,
+        "paddingLeft": 0,
+        "paddingRight": 0,
+        "paddingTop": 64,
+      }
+    }
+    style={
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "padding": 11,
+        },
+      ]
     }
   >
     <View>
@@ -1564,56 +1569,61 @@ exports[`TransactionDetailsScene should render 1`] = `
         }
       />
     </View>
-  </RCTScrollView>
-</BVLinearGradient>
+  </RCTScrollView>,
+]
 `;
 
 exports[`TransactionDetailsScene should render with negative nativeAmount and fiatAmount 1`] = `
-<BVLinearGradient
-  colors={
-    [
-      4278585612,
-      4279971643,
-    ]
-  }
-  endPoint={
-    {
-      "x": 1,
-      "y": 0,
+[
+  <BVLinearGradient
+    colors={
+      [
+        4278585612,
+        4279971643,
+      ]
     }
-  }
-  locations={null}
-  startPoint={
-    {
-      "x": 0,
-      "y": 0,
-    }
-  }
-  style={
-    {
-      "bottom": 0,
-      "left": 0,
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
-    }
-  }
->
-  <RCTScrollView
-    contentContainerStyle={
+    endPoint={
       {
-        "paddingBottom": 0,
+        "x": 1,
+        "y": 0,
+      }
+    }
+    locations={null}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
       }
     }
     style={
       {
         "bottom": 0,
         "left": 0,
-        "padding": 11,
         "position": "absolute",
         "right": 0,
-        "top": 64,
+        "top": 0,
       }
+    }
+  />,
+  <RCTScrollView
+    contentContainerStyle={
+      {
+        "paddingBottom": 92,
+        "paddingLeft": 0,
+        "paddingRight": 0,
+        "paddingTop": 64,
+      }
+    }
+    style={
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "padding": 11,
+        },
+      ]
     }
   >
     <View>
@@ -3132,6 +3142,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         }
       />
     </View>
-  </RCTScrollView>
-</BVLinearGradient>
+  </RCTScrollView>,
+]
 `;

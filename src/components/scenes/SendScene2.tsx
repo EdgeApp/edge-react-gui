@@ -987,11 +987,11 @@ const SendComponent = (props: Props) => {
   }
   return (
     <SceneWrapper background="theme" hasNotifications>
-      {(gap, notificationHeight) => (
+      {({ insetStyles }) => (
         <>
           <StyledKeyboardAwareScrollView
-            notificationHeight={notificationHeight}
-            contentContainerStyle={{ paddingBottom: theme.rem(1) + notificationHeight }}
+            notificationHeight={insetStyles.paddingBottom}
+            contentContainerStyle={{ paddingTop: insetStyles.paddingTop, paddingBottom: theme.rem(1) + insetStyles.paddingBottom }}
             extraScrollHeight={theme.rem(2.75)}
             enableOnAndroid
           >
@@ -1008,7 +1008,7 @@ const SendComponent = (props: Props) => {
             {renderAuthentication()}
             {renderScamWarning()}
           </StyledKeyboardAwareScrollView>
-          <StyledSliderView notificationHeight={notificationHeight}>
+          <StyledSliderView notificationHeight={insetStyles.paddingBottom}>
             {showSlider && <SafeSlider disabledText={disabledText} onSlidingComplete={handleSliderComplete} disabled={disableSlider} />}
           </StyledSliderView>
         </>

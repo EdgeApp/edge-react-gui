@@ -1,36 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SendScene2 1 spendTarget 1`] = `
-<BVLinearGradient
-  colors={
-    [
-      4278585612,
-      4279971643,
-    ]
-  }
-  endPoint={
-    {
-      "x": 1,
-      "y": 0,
+[
+  <BVLinearGradient
+    colors={
+      [
+        4278585612,
+        4279971643,
+      ]
     }
-  }
-  locations={null}
-  startPoint={
-    {
-      "x": 0,
-      "y": 0,
+    endPoint={
+      {
+        "x": 1,
+        "y": 0,
+      }
     }
-  }
-  style={
-    {
-      "bottom": 0,
-      "left": 0,
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
+    locations={null}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
     }
-  }
->
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />,
   <View
     style={
       [
@@ -38,16 +39,12 @@ exports[`SendScene2 1 spendTarget 1`] = `
           "alignItems": "stretch",
           "flexDirection": "column",
           "justifyContent": "flex-start",
-          "position": "absolute",
         },
         {
-          "bottom": 0,
-          "left": 0,
-          "padding": 0,
-          "paddingBottom": undefined,
-          "right": 0,
-          "top": 64,
+          "height": 1334,
+          "width": 750,
         },
+        {},
       ]
     }
   >
@@ -56,6 +53,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
+          "paddingTop": 64,
         }
       }
       contentInset={
@@ -798,41 +796,42 @@ exports[`SendScene2 1 spendTarget 1`] = `
         }
       }
     />
-  </View>
-</BVLinearGradient>
+  </View>,
+]
 `;
 
 exports[`SendScene2 1 spendTarget with info tiles 1`] = `
-<BVLinearGradient
-  colors={
-    [
-      4278585612,
-      4279971643,
-    ]
-  }
-  endPoint={
-    {
-      "x": 1,
-      "y": 0,
+[
+  <BVLinearGradient
+    colors={
+      [
+        4278585612,
+        4279971643,
+      ]
     }
-  }
-  locations={null}
-  startPoint={
-    {
-      "x": 0,
-      "y": 0,
+    endPoint={
+      {
+        "x": 1,
+        "y": 0,
+      }
     }
-  }
-  style={
-    {
-      "bottom": 0,
-      "left": 0,
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
+    locations={null}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
     }
-  }
->
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />,
   <View
     style={
       [
@@ -840,16 +839,12 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
           "alignItems": "stretch",
           "flexDirection": "column",
           "justifyContent": "flex-start",
-          "position": "absolute",
         },
         {
-          "bottom": 0,
-          "left": 0,
-          "padding": 0,
-          "paddingBottom": undefined,
-          "right": 0,
-          "top": 64,
+          "height": 1334,
+          "width": 750,
         },
+        {},
       ]
     }
   >
@@ -858,6 +853,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
+          "paddingTop": 64,
         }
       }
       contentInset={
@@ -1810,41 +1806,42 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
         }
       }
     />
-  </View>
-</BVLinearGradient>
+  </View>,
+]
 `;
 
 exports[`SendScene2 2 spendTargets 1`] = `
-<BVLinearGradient
-  colors={
-    [
-      4278585612,
-      4279971643,
-    ]
-  }
-  endPoint={
-    {
-      "x": 1,
-      "y": 0,
+[
+  <BVLinearGradient
+    colors={
+      [
+        4278585612,
+        4279971643,
+      ]
     }
-  }
-  locations={null}
-  startPoint={
-    {
-      "x": 0,
-      "y": 0,
+    endPoint={
+      {
+        "x": 1,
+        "y": 0,
+      }
     }
-  }
-  style={
-    {
-      "bottom": 0,
-      "left": 0,
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
+    locations={null}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
     }
-  }
->
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />,
   <View
     style={
       [
@@ -1852,16 +1849,12 @@ exports[`SendScene2 2 spendTargets 1`] = `
           "alignItems": "stretch",
           "flexDirection": "column",
           "justifyContent": "flex-start",
-          "position": "absolute",
         },
         {
-          "bottom": 0,
-          "left": 0,
-          "padding": 0,
-          "paddingBottom": undefined,
-          "right": 0,
-          "top": 64,
+          "height": 1334,
+          "width": 750,
         },
+        {},
       ]
     }
   >
@@ -1870,6 +1863,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
+          "paddingTop": 64,
         }
       }
       contentInset={
@@ -2744,41 +2738,42 @@ exports[`SendScene2 2 spendTargets 1`] = `
         }
       }
     />
-  </View>
-</BVLinearGradient>
+  </View>,
+]
 `;
 
 exports[`SendScene2 2 spendTargets hide tiles 1`] = `
-<BVLinearGradient
-  colors={
-    [
-      4278585612,
-      4279971643,
-    ]
-  }
-  endPoint={
-    {
-      "x": 1,
-      "y": 0,
+[
+  <BVLinearGradient
+    colors={
+      [
+        4278585612,
+        4279971643,
+      ]
     }
-  }
-  locations={null}
-  startPoint={
-    {
-      "x": 0,
-      "y": 0,
+    endPoint={
+      {
+        "x": 1,
+        "y": 0,
+      }
     }
-  }
-  style={
-    {
-      "bottom": 0,
-      "left": 0,
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
+    locations={null}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
     }
-  }
->
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />,
   <View
     style={
       [
@@ -2786,16 +2781,12 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
           "alignItems": "stretch",
           "flexDirection": "column",
           "justifyContent": "flex-start",
-          "position": "absolute",
         },
         {
-          "bottom": 0,
-          "left": 0,
-          "padding": 0,
-          "paddingBottom": undefined,
-          "right": 0,
-          "top": 64,
+          "height": 1334,
+          "width": 750,
         },
+        {},
       ]
     }
   >
@@ -2804,6 +2795,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
+          "paddingTop": 64,
         }
       }
       contentInset={
@@ -3548,41 +3540,42 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
         }
       }
     />
-  </View>
-</BVLinearGradient>
+  </View>,
+]
 `;
 
 exports[`SendScene2 2 spendTargets hide tiles 2`] = `
-<BVLinearGradient
-  colors={
-    [
-      4278585612,
-      4279971643,
-    ]
-  }
-  endPoint={
-    {
-      "x": 1,
-      "y": 0,
+[
+  <BVLinearGradient
+    colors={
+      [
+        4278585612,
+        4279971643,
+      ]
     }
-  }
-  locations={null}
-  startPoint={
-    {
-      "x": 0,
-      "y": 0,
+    endPoint={
+      {
+        "x": 1,
+        "y": 0,
+      }
     }
-  }
-  style={
-    {
-      "bottom": 0,
-      "left": 0,
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
+    locations={null}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
     }
-  }
->
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />,
   <View
     style={
       [
@@ -3590,16 +3583,12 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
           "alignItems": "stretch",
           "flexDirection": "column",
           "justifyContent": "flex-start",
-          "position": "absolute",
         },
         {
-          "bottom": 0,
-          "left": 0,
-          "padding": 0,
-          "paddingBottom": undefined,
-          "right": 0,
-          "top": 64,
+          "height": 1334,
+          "width": 750,
         },
+        {},
       ]
     }
   >
@@ -3608,6 +3597,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
+          "paddingTop": 64,
         }
       }
       contentInset={
@@ -4330,41 +4320,42 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
         }
       }
     />
-  </View>
-</BVLinearGradient>
+  </View>,
+]
 `;
 
 exports[`SendScene2 2 spendTargets hide tiles 3`] = `
-<BVLinearGradient
-  colors={
-    [
-      4278585612,
-      4279971643,
-    ]
-  }
-  endPoint={
-    {
-      "x": 1,
-      "y": 0,
+[
+  <BVLinearGradient
+    colors={
+      [
+        4278585612,
+        4279971643,
+      ]
     }
-  }
-  locations={null}
-  startPoint={
-    {
-      "x": 0,
-      "y": 0,
+    endPoint={
+      {
+        "x": 1,
+        "y": 0,
+      }
     }
-  }
-  style={
-    {
-      "bottom": 0,
-      "left": 0,
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
+    locations={null}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
     }
-  }
->
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />,
   <View
     style={
       [
@@ -4372,16 +4363,12 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
           "alignItems": "stretch",
           "flexDirection": "column",
           "justifyContent": "flex-start",
-          "position": "absolute",
         },
         {
-          "bottom": 0,
-          "left": 0,
-          "padding": 0,
-          "paddingBottom": undefined,
-          "right": 0,
-          "top": 64,
+          "height": 1334,
+          "width": 750,
         },
+        {},
       ]
     }
   >
@@ -4390,6 +4377,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
+          "paddingTop": 64,
         }
       }
       contentInset={
@@ -4982,41 +4970,42 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
         }
       }
     />
-  </View>
-</BVLinearGradient>
+  </View>,
+]
 `;
 
 exports[`SendScene2 2 spendTargets lock tiles 1`] = `
-<BVLinearGradient
-  colors={
-    [
-      4278585612,
-      4279971643,
-    ]
-  }
-  endPoint={
-    {
-      "x": 1,
-      "y": 0,
+[
+  <BVLinearGradient
+    colors={
+      [
+        4278585612,
+        4279971643,
+      ]
     }
-  }
-  locations={null}
-  startPoint={
-    {
-      "x": 0,
-      "y": 0,
+    endPoint={
+      {
+        "x": 1,
+        "y": 0,
+      }
     }
-  }
-  style={
-    {
-      "bottom": 0,
-      "left": 0,
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
+    locations={null}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
     }
-  }
->
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />,
   <View
     style={
       [
@@ -5024,16 +5013,12 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
           "alignItems": "stretch",
           "flexDirection": "column",
           "justifyContent": "flex-start",
-          "position": "absolute",
         },
         {
-          "bottom": 0,
-          "left": 0,
-          "padding": 0,
-          "paddingBottom": undefined,
-          "right": 0,
-          "top": 64,
+          "height": 1334,
+          "width": 750,
         },
+        {},
       ]
     }
   >
@@ -5042,6 +5027,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
+          "paddingTop": 64,
         }
       }
       contentInset={
@@ -5889,41 +5875,42 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
         }
       }
     />
-  </View>
-</BVLinearGradient>
+  </View>,
+]
 `;
 
 exports[`SendScene2 2 spendTargets lock tiles 2`] = `
-<BVLinearGradient
-  colors={
-    [
-      4278585612,
-      4279971643,
-    ]
-  }
-  endPoint={
-    {
-      "x": 1,
-      "y": 0,
+[
+  <BVLinearGradient
+    colors={
+      [
+        4278585612,
+        4279971643,
+      ]
     }
-  }
-  locations={null}
-  startPoint={
-    {
-      "x": 0,
-      "y": 0,
+    endPoint={
+      {
+        "x": 1,
+        "y": 0,
+      }
     }
-  }
-  style={
-    {
-      "bottom": 0,
-      "left": 0,
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
+    locations={null}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
     }
-  }
->
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />,
   <View
     style={
       [
@@ -5931,16 +5918,12 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           "alignItems": "stretch",
           "flexDirection": "column",
           "justifyContent": "flex-start",
-          "position": "absolute",
         },
         {
-          "bottom": 0,
-          "left": 0,
-          "padding": 0,
-          "paddingBottom": undefined,
-          "right": 0,
-          "top": 64,
+          "height": 1334,
+          "width": 750,
         },
+        {},
       ]
     }
   >
@@ -5949,6 +5932,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
+          "paddingTop": 64,
         }
       }
       contentInset={
@@ -6769,41 +6753,42 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
         }
       }
     />
-  </View>
-</BVLinearGradient>
+  </View>,
+]
 `;
 
 exports[`SendScene2 2 spendTargets lock tiles 3`] = `
-<BVLinearGradient
-  colors={
-    [
-      4278585612,
-      4279971643,
-    ]
-  }
-  endPoint={
-    {
-      "x": 1,
-      "y": 0,
+[
+  <BVLinearGradient
+    colors={
+      [
+        4278585612,
+        4279971643,
+      ]
     }
-  }
-  locations={null}
-  startPoint={
-    {
-      "x": 0,
-      "y": 0,
+    endPoint={
+      {
+        "x": 1,
+        "y": 0,
+      }
     }
-  }
-  style={
-    {
-      "bottom": 0,
-      "left": 0,
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
+    locations={null}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
     }
-  }
->
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />,
   <View
     style={
       [
@@ -6811,16 +6796,12 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
           "alignItems": "stretch",
           "flexDirection": "column",
           "justifyContent": "flex-start",
-          "position": "absolute",
         },
         {
-          "bottom": 0,
-          "left": 0,
-          "padding": 0,
-          "paddingBottom": undefined,
-          "right": 0,
-          "top": 64,
+          "height": 1334,
+          "width": 750,
         },
+        {},
       ]
     }
   >
@@ -6829,6 +6810,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
+          "paddingTop": 64,
         }
       }
       contentInset={
@@ -7622,41 +7604,42 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
         }
       }
     />
-  </View>
-</BVLinearGradient>
+  </View>,
+]
 `;
 
 exports[`SendScene2 Render SendScene 1`] = `
-<BVLinearGradient
-  colors={
-    [
-      4278585612,
-      4279971643,
-    ]
-  }
-  endPoint={
-    {
-      "x": 1,
-      "y": 0,
+[
+  <BVLinearGradient
+    colors={
+      [
+        4278585612,
+        4279971643,
+      ]
     }
-  }
-  locations={null}
-  startPoint={
-    {
-      "x": 0,
-      "y": 0,
+    endPoint={
+      {
+        "x": 1,
+        "y": 0,
+      }
     }
-  }
-  style={
-    {
-      "bottom": 0,
-      "left": 0,
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
+    locations={null}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
     }
-  }
->
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />,
   <View
     style={
       [
@@ -7664,16 +7647,12 @@ exports[`SendScene2 Render SendScene 1`] = `
           "alignItems": "stretch",
           "flexDirection": "column",
           "justifyContent": "flex-start",
-          "position": "absolute",
         },
         {
-          "bottom": 0,
-          "left": 0,
-          "padding": 0,
-          "paddingBottom": undefined,
-          "right": 0,
-          "top": 64,
+          "height": 1334,
+          "width": 750,
         },
+        {},
       ]
     }
   >
@@ -7682,6 +7661,7 @@ exports[`SendScene2 Render SendScene 1`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
+          "paddingTop": 64,
         }
       }
       contentInset={
@@ -8534,6 +8514,6 @@ exports[`SendScene2 Render SendScene 1`] = `
         }
       }
     />
-  </View>
-</BVLinearGradient>
+  </View>,
+]
 `;

@@ -203,9 +203,9 @@ const CoinRankingComponent = (props: Props) => {
 
   return (
     <SceneWrapper background="theme" hasTabs hasNotifications>
-      {(gap, notificationHeight) => (
+      {({ insetStyles }) => (
         <>
-          <View style={styles.searchContainer}>
+          <View style={[styles.searchContainer, { paddingTop: insetStyles.paddingTop }]}>
             <View style={styles.searchTextInputContainer}>
               <SimpleTextInput
                 returnKeyType="search"
@@ -247,7 +247,7 @@ const CoinRankingComponent = (props: Props) => {
             renderItem={renderItem}
             onEndReachedThreshold={1}
             onEndReached={handleEndReached}
-            contentContainerStyle={{ paddingBottom: notificationHeight }}
+            contentContainerStyle={{ paddingBottom: insetStyles.paddingBottom }}
           />
         </>
       )}

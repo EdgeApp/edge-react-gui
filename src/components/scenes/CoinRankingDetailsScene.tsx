@@ -165,7 +165,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   }
 
   return (
-    <SceneWrapper background="theme" scroll hasNotifications>
+    <SceneWrapper background="theme" hasTabs hasNotifications scroll>
       <View style={styles.container}>
         <EdgeAnim style={styles.titleContainer} enter={{ type: 'fadeInLeft' }}>
           <FastImage style={styles.icon} source={imageUrlObject} />

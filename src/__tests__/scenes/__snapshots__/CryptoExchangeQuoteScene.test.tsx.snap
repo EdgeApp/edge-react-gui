@@ -1,36 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`] = `
-<BVLinearGradient
-  colors={
-    [
-      4278585612,
-      4279971643,
-    ]
-  }
-  endPoint={
-    {
-      "x": 1,
-      "y": 0,
+[
+  <BVLinearGradient
+    colors={
+      [
+        4278585612,
+        4279971643,
+      ]
     }
-  }
-  locations={null}
-  startPoint={
-    {
-      "x": 0,
-      "y": 0,
+    endPoint={
+      {
+        "x": 1,
+        "y": 0,
+      }
     }
-  }
-  style={
-    {
-      "bottom": 0,
-      "left": 0,
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
+    locations={null}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
     }
-  }
->
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />,
   <View
     style={
       [
@@ -38,16 +39,12 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
           "alignItems": "stretch",
           "flexDirection": "column",
           "justifyContent": "flex-start",
-          "position": "absolute",
         },
         {
-          "bottom": 0,
-          "left": 0,
-          "padding": 0,
-          "paddingBottom": undefined,
-          "right": 0,
-          "top": 64,
+          "height": 1334,
+          "width": 750,
         },
+        {},
       ]
     }
   >
@@ -138,7 +135,10 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       contentContainerStyle={
         [
           {
-            "paddingBottom": 0,
+            "paddingBottom": 92,
+            "paddingLeft": 0,
+            "paddingRight": 0,
+            "paddingTop": 64,
           },
           {
             "paddingTop": 11,
@@ -1578,6 +1578,6 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
         }
       }
     />
-  </View>
-</BVLinearGradient>
+  </View>,
+]
 `;

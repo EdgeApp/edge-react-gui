@@ -249,7 +249,7 @@ function TransactionListComponent(props: Props) {
 
   return (
     <SceneWrapper hasNotifications hasTabs>
-      {(gap, notificationHeight) => (
+      {({ insetStyles }) => (
         <>
           <LinearGradient colors={[backgroundGradientColor, '#00000000']} start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }} style={StyleSheet.absoluteFill} />
           {SHOW_FLIP_INPUT_TESTER ? (
@@ -257,7 +257,7 @@ function TransactionListComponent(props: Props) {
           ) : (
             <FlashList
               ref={flashList}
-              contentContainerStyle={{ paddingBottom: notificationHeight }}
+              contentContainerStyle={insetStyles}
               data={listItems}
               estimatedItemSize={theme.rem(4.25)}
               getItemType={getItemType}
