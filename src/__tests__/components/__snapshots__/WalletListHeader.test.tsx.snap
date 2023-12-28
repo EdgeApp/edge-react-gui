@@ -7,6 +7,7 @@ exports[`WalletListHeader should render with loading props 1`] = `
       {
         "alignItems": "center",
         "flexDirection": "row",
+        "justifyContent": "center",
         "marginHorizontal": 11,
         "marginTop": 11,
       }
@@ -21,18 +22,11 @@ exports[`WalletListHeader should render with loading props 1`] = `
       }
     >
       <ForwardRef
-        label="Search Wallets"
-        marginRem={
-          [
-            0,
-            0,
-            1,
-          ]
-        }
+        iconComponent={[Function]}
         onChangeText={[Function]}
         onFocus={[Function]}
+        placeholder="Search Wallets"
         returnKeyType="search"
-        searchIcon={true}
         value="string"
       />
     </View>
@@ -41,7 +35,6 @@ exports[`WalletListHeader should render with loading props 1`] = `
       style={
         {
           "justifyContent": "center",
-          "paddingBottom": 22,
           "paddingLeft": 17,
         }
       }

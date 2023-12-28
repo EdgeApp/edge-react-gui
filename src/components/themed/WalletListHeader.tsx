@@ -6,11 +6,12 @@ import { Fontello } from '../../assets/vector/index'
 import { lstrings } from '../../locales/strings'
 import { NavigationBase } from '../../types/routerTypes'
 import { PromoCard } from '../cards/PromoCard'
+import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { BalanceCardUi4 } from '../ui4/BalanceCardUi4'
 import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
-import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
+import { SimpleTextInput, SimpleTextInputRef } from './SimpleTextInput'
 
 interface OwnProps {
   navigation: NavigationBase
@@ -25,7 +26,7 @@ interface OwnProps {
 type Props = OwnProps & ThemeProps
 
 export class WalletListHeaderComponent extends React.PureComponent<Props> {
-  textInput = React.createRef<OutlinedTextInputRef>()
+  textInput = React.createRef<SimpleTextInputRef>()
 
   componentDidUpdate(prevProps: Props) {
     if (!prevProps.searching && this.props.searching && this.textInput.current) {
@@ -65,15 +66,14 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
       <>
         <View style={styles.searchContainer}>
           <View style={{ flex: 1, flexDirection: 'column' }}>
-            <OutlinedTextInput
+            <SimpleTextInput
               returnKeyType="search"
-              label={lstrings.wallet_list_wallet_search}
+              placeholder={lstrings.wallet_list_wallet_search}
               onChangeText={this.handleOnChangeText}
               value={searchText}
               onFocus={this.handleTextFieldFocus}
               ref={this.textInput}
-              marginRem={[0, 0, 1]}
-              searchIcon
+              iconComponent={SearchIconAnimated}
             />
           </View>
           {searching && (
@@ -104,13 +104,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: theme.rem(0.5),
     marginHorizontal: theme.rem(0.5)
   },
   searchDoneButton: {
     justifyContent: 'center',
-    paddingLeft: theme.rem(0.75),
-    paddingBottom: theme.rem(1)
+    paddingLeft: theme.rem(0.75)
   }
 }))
 
