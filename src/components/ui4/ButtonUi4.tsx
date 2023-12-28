@@ -27,7 +27,7 @@ interface Props {
   label?: string
 
   // Parent container layout
-  layout?: 'row' | 'column' // TODO: Support specific "single" layout
+  layout?: 'row' | 'column' | 'solo'
 
   // True to show a spinner after the contents:
   spinner?: boolean
@@ -40,7 +40,7 @@ interface Props {
  * A stand-alone button to perform the primary action in a modal or scene.
  */
 export function ButtonUi4(props: Props) {
-  const { layout = 'row', alignSelf = 'auto', children, disabled = false, label, onPress, type = 'primary', spinner = false } = props
+  const { layout = 'solo', alignSelf = 'auto', children, disabled = false, label, onPress, type = 'primary', spinner = false } = props
 
   // `onPress` promise logic:
   const [pending, handlePress] = usePendingPress(onPress)
@@ -84,7 +84,11 @@ export function ButtonUi4(props: Props) {
       </Text>
     )
 
-  const finalContainerCommon = [styles.containerCommon, layout === 'row' ? undefined : styles.containerColumn]
+  const containerColumn = layout === 'column' ? styles.containerColumn : undefined
+  const containerSolo = layout === 'solo' ? styles.containerSolo : undefined
+  const containerRow = layout === 'row' ? styles.containerRow : undefined
+
+  const finalContainerCommon = [styles.containerCommon, containerColumn, containerSolo, containerRow]
 
   return (
     <TouchableOpacity disabled={disabled || pending} style={finalContainerCommon} onPress={handlePress}>
@@ -109,7 +113,14 @@ const getStyles = cacheStyles((theme: Theme) => {
       paddingBottom: 3
     },
     containerColumn: {
-      marginVertical: theme.rem(0.25)
+      marginVertical: theme.rem(0.25),
+      flex: 1
+    },
+    containerSolo: {
+      paddingHorizontal: theme.rem(1)
+    },
+    containerRow: {
+      flex: 1
     },
     primaryText: {
       ...commonTextViewStyle,
@@ -152,8 +163,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     containerCommon: {
       borderRadius: theme.rem(theme.buttonBorderRadiusRemUi4),
-      alignSelf: 'stretch',
-      flex: 1
+      alignSelf: 'stretch'
     },
     gradientLayoutCommon: {
       alignItems: 'center',

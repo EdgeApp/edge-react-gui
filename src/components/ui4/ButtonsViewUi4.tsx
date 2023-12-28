@@ -27,8 +27,12 @@ interface Props {
   secondary2?: ButtonInfo // A secondary-styled button in the primary position (right/top side)
   tertiary?: ButtonInfo
 
-  // Row or column button layout. Defaults to column layout.
-  layout?: 'row' | 'column'
+  // Arrangement of the button(s). Defaults to 'column' or 'solo' depending on
+  // number of ButtonInfos given
+  layout?:
+    | 'row' // Buttons are stacked side by side horizontally, taking up 50% of the available space each.
+    | 'column' // Buttons stacked on top of each other vertically, taking up 100% of the available space each. TODO: Consider doing something fancier like measuring the longest label width instead of always 100% each (default for mutli-button props)
+    | 'solo' // A single centered button whose size is determined by label length (default for single-button props)
 }
 
 /**
@@ -36,6 +40,8 @@ interface Props {
  */
 export const ButtonsViewUi4 = React.memo(({ absolute = false, fade, primary, secondary, secondary2, tertiary, layout = 'column' }: Props) => {
   const [fadeVisibleHack, setFadeVisibleHack] = React.useState(false)
+
+  if ([primary, secondary, secondary2, tertiary].length === 1) layout = 'solo'
 
   const fadeStyle = useFadeAnimation(fadeVisibleHack, { noFadeIn: fade == null })
 
@@ -63,9 +69,9 @@ export const ButtonsViewUi4 = React.memo(({ absolute = false, fade, primary, sec
   )
 })
 
-const StyledButtonContainer = styled(View)<{ absolute: boolean; layout: 'row' | 'column' }>(theme => props => {
+const StyledButtonContainer = styled(View)<{ absolute: boolean; layout: 'row' | 'column' | 'solo' }>(theme => props => {
   const { absolute, layout } = props
-  const isRowLayout = layout === 'row'
+  const isRowLayout = layout === 'row' || layout === 'solo'
 
   const marginSize = theme.rem(0.5)
 
@@ -95,7 +101,7 @@ const StyledButtonContainer = styled(View)<{ absolute: boolean; layout: 'row' | 
     ? {
         flexDirection: 'column',
         justifyContent: 'space-between',
-        marginBottom: theme.rem(3)
+        marginBottom: theme.rem(3) // Extra padding to allow scrolling the buttons further from the hard-to-tap bottom edge
       }
     : {}
 
