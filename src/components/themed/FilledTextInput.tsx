@@ -41,10 +41,15 @@ export interface FilledTextInputProps {
   onFocus?: () => void
 
   // Other React Native TextInput properties:
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' // Defaults to 'sentences'
+  autoCorrect?: boolean // Defaults to 'true'
+  blurOnSubmit?: boolean // Defaults to 'true'
+  inputAccessoryViewID?: string
   keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad' // Defaults to 'default'
   maxLength?: number
   onSubmitEditing?: () => void
   returnKeyType?: FilledTextInputReturnKeyType // Defaults to 'done'
+  secureTextEntry?: boolean // Defaults to 'false'
   testID?: string
 
   // Unless 'autoFocus' is passed explicitly in the props, Search Bars 'autoFocus' and 'regular' text inputs don't.
@@ -88,10 +93,15 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     onSubmitEditing,
 
     // TextInput:
+    autoCapitalize,
+    autoCorrect,
     autoFocus = false,
     blurOnClear = false,
+    blurOnSubmit,
     disabled = false,
+    inputAccessoryViewID,
     maxLength,
+    secureTextEntry,
     testID
   } = props
   const theme = useTheme()
@@ -216,6 +226,12 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               onFocus={handleFocus}
               onSubmitEditing={handleSubmitEditing}
               maxLength={maxLength}
+              // Other Props:
+              autoCapitalize={autoCapitalize}
+              autoCorrect={autoCorrect}
+              blurOnSubmit={blurOnSubmit}
+              inputAccessoryViewID={inputAccessoryViewID}
+              secureTextEntry={secureTextEntry}
             />
           </InnerContainer>
 
