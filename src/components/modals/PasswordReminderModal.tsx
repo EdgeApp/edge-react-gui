@@ -9,8 +9,8 @@ import { NavigationBase } from '../../types/routerTypes'
 import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { showError, showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface OwnProps {
@@ -85,10 +85,10 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
           <ModalMessage>{lstrings.password_reminder_you_will_need_your_password}</ModalMessage>
           <ModalMessage>{lstrings.password_reminder_enter_password_below}</ModalMessage>
         </ScrollView>
-        <OutlinedTextInput
+        <FilledTextInput
           autoFocus={false}
           error={errorMessage}
-          label={lstrings.password}
+          placeholder={lstrings.password}
           onChangeText={this.handleChangeText}
           onSubmitEditing={this.handleSubmit}
           secureTextEntry
