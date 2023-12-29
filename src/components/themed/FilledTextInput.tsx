@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useMemo, useState } from 'react'
-import { TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import { TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, {
   interpolate,
   interpolateColor,
@@ -15,7 +15,7 @@ import Animated, {
 
 import { useHandler } from '../../hooks/useHandler'
 import { styled, styledWithRef } from '../hoc/styled'
-import { AnimatedIconComponent, CloseIconAnimated } from '../icons/ThemedIcons'
+import { AnimatedIconComponent, CloseIconAnimated, EyeIconAnimated, EyeOffIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
@@ -110,6 +110,10 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   const LeftIcon = iconComponent
   const hasIcon = LeftIcon != null
   const hasValue = value !== ''
+
+  // Show/Hide password input:
+  const [hidePassword, setHidePassword] = React.useState(secureTextEntry ?? false)
+  const handleHidePassword = () => setHidePassword(!hidePassword)
 
   const [errorMessage, setErrorMessage] = useState<string>()
 
@@ -231,9 +235,17 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               autoCorrect={autoCorrect}
               blurOnSubmit={blurOnSubmit}
               inputAccessoryViewID={inputAccessoryViewID}
-              secureTextEntry={secureTextEntry}
+              secureTextEntry={hidePassword}
             />
           </InnerContainer>
+
+          {secureTextEntry ? (
+            <TouchableWithoutFeedback testID={`${testID}.eyeIcon`} onPress={handleHidePassword}>
+              <IconContainer>
+                {hidePassword ? <EyeOffIconAnimated accessible color={iconColor} /> : <EyeIconAnimated accessible color={iconColor} />}
+              </IconContainer>
+            </TouchableWithoutFeedback>
+          ) : null}
 
           <TouchableOpacity accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
             <SideContainer scale={rightIconSize}>
@@ -284,6 +296,10 @@ const Container = styled(Animated.View)<{
     }))
   ]
 })
+
+const IconContainer = styled(View)(theme => ({
+  paddingHorizontal: theme.rem(0.25)
+}))
 
 const SideContainer = styled(Animated.View)<{ scale: SharedValue<number> }>(theme => ({ scale }) => {
   return [
