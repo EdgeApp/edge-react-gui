@@ -15,11 +15,13 @@ import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { CryptoIcon } from '../icons/CryptoIcon'
+import { SearchIconAnimated } from '../icons/ThemedIcons'
+import { Space } from '../layout/Space'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { ManageTokensRow } from '../themed/ManageTokensRow'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Title } from '../themed/Title'
 
@@ -123,14 +125,15 @@ function ManageTokensSceneComponent(props: Props) {
       <SceneHeader underline>
         <Title leftIcon={<CryptoIcon sizeRem={1.5} walletId={wallet.id} />} text={walletName} />
         <EdgeText style={styles.subTitle}>{lstrings.managetokens_top_instructions}</EdgeText>
-        <OutlinedTextInput
-          label={lstrings.search_tokens}
-          marginRem={[1, 0, 0, 0]}
-          returnKeyType="search"
-          searchIcon
-          value={searchValue}
-          onChangeText={setSearchValue}
-        />
+        <Space top={1}>
+          <FilledTextInput
+            placeholder={lstrings.search_tokens}
+            returnKeyType="search"
+            iconComponent={SearchIconAnimated}
+            value={searchValue}
+            onChangeText={setSearchValue}
+          />
+        </Space>
       </SceneHeader>
       <FlashList estimatedItemSize={theme.rem(4.25)} data={filteredTokenIds} extraData={extraData} keyExtractor={keyExtractor} renderItem={renderRow} />
       {!isCustomTokensSupported ? null : (
