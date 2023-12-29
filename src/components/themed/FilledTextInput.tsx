@@ -35,6 +35,7 @@ export interface FilledTextInputProps {
   maxDecimals?: number
 
   // Appearance:
+  clearIcon?: boolean
   iconComponent?: AnimatedIconComponent | null
   multiline?: boolean // Defaults to 'false'
   scale?: SharedValue<number>
@@ -95,6 +96,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     maxDecimals,
 
     // Appearance:
+    clearIcon = true,
     iconComponent,
     multiline = false,
     scale: scaleProp,
@@ -261,11 +263,13 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
             </TouchableWithoutFeedback>
           ) : null}
 
-          <TouchableOpacity accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
-            <SideContainer scale={rightIconSize}>
-              <CloseIconAnimated color={iconColor} size={rightIconSize} />
-            </SideContainer>
-          </TouchableOpacity>
+          {clearIcon ? (
+            <TouchableOpacity accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
+              <SideContainer scale={rightIconSize}>
+                <CloseIconAnimated color={iconColor} size={rightIconSize} />
+              </SideContainer>
+            </TouchableOpacity>
+          ) : null}
         </Container>
       </TouchableWithoutFeedback>
       <MessagesContainer>
