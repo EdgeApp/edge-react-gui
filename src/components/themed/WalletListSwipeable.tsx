@@ -1,6 +1,5 @@
-import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
-import { RefreshControl } from 'react-native'
+import { FlatList, RefreshControl } from 'react-native'
 
 import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
@@ -109,8 +108,7 @@ function WalletListSwipeableComponent(props: Props) {
   const data = React.useMemo(() => [...searchedWalletList, ...createWalletList], [searchedWalletList, createWalletList])
 
   return (
-    <FlashList
-      estimatedItemSize={theme.rem(4.25)}
+    <FlatList
       contentOffset={flatListContentOffset}
       contentContainerStyle={{ paddingBottom: overscroll }}
       data={data}
