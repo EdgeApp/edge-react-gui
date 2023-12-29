@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { ActivityIndicator, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, {
   interpolate,
@@ -26,9 +26,8 @@ export type FilledTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | '
 export interface FilledTextInputProps {
   // Contents:
   value: string
+  error?: string
   placeholder?: string
-
-  validate?: (value: string) => boolean
 
   // Appearance:
   iconComponent?: AnimatedIconComponent | null
@@ -81,6 +80,7 @@ export interface FilledTextInputRef {
 export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextInputProps>((props: FilledTextInputProps, ref) => {
   const {
     // Contents:
+    error,
     placeholder,
     value,
 
@@ -120,8 +120,6 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   // Show/Hide password input:
   const [hidePassword, setHidePassword] = React.useState(secureTextEntry ?? false)
   const handleHidePassword = () => setHidePassword(!hidePassword)
-
-  const [errorMessage, setErrorMessage] = useState<string>()
 
   // Imperative methods:
   const inputRef = useAnimatedRef<TextInput>()
@@ -165,16 +163,6 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     if (onBlur != null) onBlur()
   })
   const handleChangeText = useHandler((value: string) => {
-    setErrorMessage(undefined)
-    if (props.validate != null) {
-      try {
-        if (!props.validate(value)) {
-          return
-        }
-      } catch (error) {
-        setErrorMessage(String(error))
-      }
-    }
     if (props.onChangeText != null) props.onChangeText(value)
   })
   const handleClearPress = useHandler(() => {
@@ -264,7 +252,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
         </Container>
       </TouchableWithoutFeedback>
       <MessagesContainer>
-        <Message danger>{errorMessage}</Message>
+        <Message danger>{error}</Message>
         <Message>{charactersLeft}</Message>
       </MessagesContainer>
     </>
