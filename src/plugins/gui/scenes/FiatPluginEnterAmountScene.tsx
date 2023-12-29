@@ -6,8 +6,8 @@ import { PoweredByCard } from '../../../components/cards/PoweredByCard'
 import { NotificationSceneWrapper } from '../../../components/common/SceneWrapper'
 import { showError } from '../../../components/services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
+import { FilledTextInput } from '../../../components/themed/FilledTextInput'
 import { MainButton } from '../../../components/themed/MainButton'
-import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
@@ -135,27 +135,27 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
       </SceneHeader>
       <View style={styles.container}>
         <View style={styles.textFields}>
-          <OutlinedTextInput
+          <FilledTextInput
             numeric
             maxDecimals={2}
             autoCorrect={false}
             autoFocus
             autoCapitalize="none"
             keyboardType="decimal-pad"
-            label={label1}
+            placeholder={label1}
             onChangeText={handleChangeText1}
             onSubmitEditing={handleSubmit}
             showSpinner={spinner1}
             value={value1 ?? '0'}
           />
-          <OutlinedTextInput
+          <FilledTextInput
             numeric
             maxDecimals={6}
             autoCorrect={false}
             autoFocus={false}
             autoCapitalize="none"
             keyboardType="decimal-pad"
-            label={label2}
+            placeholder={label2}
             onChangeText={handleChangeText2}
             onSubmitEditing={handleSubmit}
             showSpinner={spinner2}
