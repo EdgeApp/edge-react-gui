@@ -327,6 +327,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               }
             }
             accessible={true}
+            animated={true}
             autoCapitalize="none"
             autoCorrect={false}
             autoFocus={false}

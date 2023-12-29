@@ -300,6 +300,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 }
               }
               accessible={true}
+              animated={true}
               autoCapitalize="none"
               autoCorrect={false}
               autoFocus={true}

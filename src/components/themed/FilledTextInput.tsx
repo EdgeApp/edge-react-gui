@@ -18,6 +18,7 @@ import { styled, styledWithRef } from '../hoc/styled'
 import { AnimatedIconComponent, CloseIconAnimated, EyeIconAnimated, EyeOffIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
+import { NumericInput } from './NumericInput'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
@@ -29,6 +30,9 @@ export interface FilledTextInputProps {
   error?: string
   valid?: string
   placeholder?: string
+  numeric?: boolean
+  minDecimals?: number
+  maxDecimals?: number
 
   // Appearance:
   iconComponent?: AnimatedIconComponent | null
@@ -86,6 +90,9 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     placeholder,
     valid,
     value,
+    numeric,
+    minDecimals,
+    maxDecimals,
 
     // Appearance:
     iconComponent,
@@ -193,6 +200,8 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   // Character Limit:
   const charactersLeft = maxLength === undefined ? '' : `${maxLength - value.length}`
 
+  const InputComponent = numeric ? StyledNumericInput : StyledAnimatedTextInput
+
   return (
     <>
       <TouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
@@ -209,8 +218,9 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
             )}
 
             {prefix == null ? null : <PrefixAnimatedText visibility={focusValue}>{prefix}</PrefixAnimatedText>}
-            <InputField
+            <InputComponent
               accessible
+              animated
               ref={inputRef}
               keyboardType={props.keyboardType}
               returnKeyType={props.returnKeyType}
@@ -218,6 +228,8 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               autoFocus={autoFocus}
               disableAnimation={disableAnimation}
               focusAnimation={focusAnimation}
+              minDecimals={minDecimals}
+              maxDecimals={maxDecimals}
               multiline={multiline}
               selectionColor={theme.textInputTextColor}
               testID={`${testID}.textInput`}
@@ -414,7 +426,32 @@ const PlaceholderText = styled(Animated.Text)<{
   ]
 })
 
-const InputField = styledWithRef(AnimatedTextInput)<{
+const StyledAnimatedTextInput = styledWithRef(AnimatedTextInput)<{
+  disableAnimation: SharedValue<number>
+  focusAnimation: SharedValue<number>
+  scale: SharedValue<number>
+}>(theme => ({ disableAnimation, focusAnimation, scale }) => {
+  const rem = theme.rem(1)
+  const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused, theme.textInputTextColorDisabled)
+
+  return [
+    {
+      color: theme.textInputBackgroundColor,
+      flexGrow: 1,
+      flexShrink: 1,
+      fontFamily: theme.fontFaceDefault,
+      paddingHorizontal: theme.rem(0.5),
+      paddingVertical: 0,
+      margin: 0
+    },
+    useAnimatedStyle(() => ({
+      color: interpolateTextColor(focusAnimation, disableAnimation),
+      fontSize: scale.value * rem
+    }))
+  ]
+})
+
+const StyledNumericInput = styledWithRef(NumericInput)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
   scale: SharedValue<number>
