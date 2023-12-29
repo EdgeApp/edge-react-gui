@@ -7,10 +7,11 @@ import Share, { ShareOptions } from 'react-native-share'
 import { MultiLogOutput, sendLogs } from '../../actions/LogActions'
 import { lstrings } from '../../locales/strings'
 import { WarningCard } from '../cards/WarningCard'
+import { Space } from '../layout/Space'
 import { showToast } from '../services/AirshipInstance'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 interface Props {
   bridge: AirshipBridge<void>
@@ -75,16 +76,17 @@ export const LogsModal = (props: Props) => {
       <ModalTitle>{lstrings.settings_button_export_logs}</ModalTitle>
       {!isDangerous ? null : <WarningCard key="warning" title={lstrings.string_warning} footer={lstrings.settings_modal_send_unsafe} marginRem={0.5} />}
       {isDangerous ? null : <ModalMessage>{lstrings.settings_modal_export_logs_message}</ModalMessage>}
-      <OutlinedTextInput
-        autoCorrect
-        autoFocus={false}
-        label={lstrings.settings_modal_send_logs_label}
-        marginRem={1}
-        maxLength={1000}
-        onChangeText={setUserMessage}
-        returnKeyType="done"
-        value={userMessage}
-      />
+      <Space around={1}>
+        <FilledTextInput
+          autoCorrect
+          autoFocus={false}
+          placeholder={lstrings.settings_modal_send_logs_label}
+          maxLength={1000}
+          onChangeText={setUserMessage}
+          returnKeyType="done"
+          value={userMessage}
+        />
+      </Space>
       {isDangerous ? null : (
         <MainButton label={lstrings.settings_button_send_logs} marginRem={0.5} type="primary" onPress={handleSend} disabled={isDangerous} />
       )}

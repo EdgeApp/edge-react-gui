@@ -13,8 +13,8 @@ import { MinimalButton } from '../buttons/MinimalButton'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { ModalFooter, ModalFooterFade, ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props {
@@ -136,11 +136,11 @@ export function CategoryModal(props: Props) {
           <MinimalButton key={item} highlighted={category === item} label={displayCategories[item]} onPress={() => setCategory(item)} />
         ))}
       </View>
-      <OutlinedTextInput
+      <FilledTextInput
         autoFocus
         returnKeyType="done"
         autoCapitalize="words"
-        label={lstrings.sub_category_label}
+        placeholder={lstrings.sub_category_label}
         onChangeText={setSubcategory}
         onSubmitEditing={handleSubmit}
         value={subcategory}
