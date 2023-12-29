@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useMemo, useState } from 'react'
-import { Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, {
   interpolate,
   interpolateColor,
@@ -33,6 +33,7 @@ export interface FilledTextInputProps {
   // Appearance:
   iconComponent?: AnimatedIconComponent | null
   scale?: SharedValue<number>
+  showSpinner?: boolean
   prefix?: string // Text input is left-left justified with a persistent prefix
   suffix?: string // Text input is right-right justified with a persistent suffix
 
@@ -86,6 +87,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     // Appearance:
     iconComponent,
     scale: scaleProp,
+    showSpinner = false,
     prefix,
     suffix,
 
@@ -245,6 +247,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
             {suffix == null ? null : <SuffixText>{suffix}</SuffixText>}
           </InnerContainer>
 
+          {showSpinner ? <ActivityIndicator /> : null}
           {secureTextEntry ? (
             <TouchableWithoutFeedback testID={`${testID}.eyeIcon`} onPress={handleHidePassword}>
               <IconContainer>
