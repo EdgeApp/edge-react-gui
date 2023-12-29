@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useMemo, useState } from 'react'
-import { TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, {
   interpolate,
   interpolateColor,
@@ -33,6 +33,8 @@ export interface FilledTextInputProps {
   // Appearance:
   iconComponent?: AnimatedIconComponent | null
   scale?: SharedValue<number>
+  prefix?: string // Text input is left-left justified with a persistent prefix
+  suffix?: string // Text input is right-right justified with a persistent suffix
 
   // Callbacks:
   onBlur?: () => void
@@ -84,6 +86,8 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     // Appearance:
     iconComponent,
     scale: scaleProp,
+    prefix,
+    suffix,
 
     // Callbacks:
     onBlur,
@@ -190,7 +194,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   const interpolateIconColor = useAnimatedColorInterpolateFn(theme.textInputIconColor, theme.textInputIconColorFocused, theme.textInputIconColorDisabled)
   const iconColor = useDerivedValue(() => interpolateIconColor(focusAnimation, disableAnimation))
 
-  const placeholderShift = useDerivedValue(() => (hasValue ? 1 : focusAnimation.value), [hasValue])
+  const focusValue = useDerivedValue(() => (hasValue ? 1 : focusAnimation.value), [hasValue])
 
   // Character Limit:
   const charactersLeft = maxLength === undefined ? '' : `${maxLength - value.length}`
@@ -201,15 +205,16 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
         <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale}>
           <SideContainer scale={leftIconSize}>{LeftIcon == null ? null : <LeftIcon color={iconColor} size={leftIconSize} />}</SideContainer>
 
-          <InnerContainer>
+          <InnerContainer focusValue={focusValue} hasPlaceholder={placeholder != null}>
             {placeholder == null ? null : (
-              <Placeholder shift={placeholderShift}>
-                <PlaceholderText disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale} shift={placeholderShift}>
+              <Placeholder shift={focusValue}>
+                <PlaceholderText disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale} shift={focusValue}>
                   {placeholder}
                 </PlaceholderText>
               </Placeholder>
             )}
 
+            {prefix == null ? null : <PrefixAnimatedText visibility={focusValue}>{prefix}</PrefixAnimatedText>}
             <InputField
               accessible
               ref={inputRef}
@@ -237,6 +242,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               inputAccessoryViewID={inputAccessoryViewID}
               secureTextEntry={hidePassword}
             />
+            {suffix == null ? null : <SuffixText>{suffix}</SuffixText>}
           </InnerContainer>
 
           {secureTextEntry ? (
@@ -314,12 +320,51 @@ const SideContainer = styled(Animated.View)<{ scale: SharedValue<number> }>(them
   ]
 })
 
-const InnerContainer = styled(Animated.View)(theme => ({
-  flex: 1,
-  flexDirection: 'row',
-  alignItems: 'center',
-  marginTop: theme.rem(0.4),
-  marginBottom: -theme.rem(0.4)
+const InnerContainer = styled(Animated.View)<{
+  focusValue: SharedValue<number>
+  hasPlaceholder: boolean
+}>(theme => ({ hasPlaceholder, focusValue }) => {
+  const rem = theme.rem(1)
+  return [
+    {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    useAnimatedStyle(() => {
+      const shiftValue = interpolate(focusValue.value, [0, 1], [0, rem * 0.4])
+      return {
+        marginTop: hasPlaceholder ? shiftValue : undefined,
+        marginBottom: hasPlaceholder ? -shiftValue : undefined
+      }
+    })
+  ]
+})
+
+const PrefixAnimatedText = styled(Animated.Text)<{ visibility: SharedValue<number> }>(theme => ({ visibility }) => {
+  const rem = theme.rem(1)
+  const isAndroid = Platform.OS === 'android'
+  return [
+    {
+      color: theme.secondaryText,
+      fontFamily: theme.fontFaceDefault,
+      includeFontPadding: false
+    },
+    useAnimatedStyle(() => {
+      return {
+        opacity: visibility.value,
+        top: isAndroid ? -1 : 0,
+        transform: [{ translateY: (1 - visibility.value) * rem }, { scale: visibility.value }]
+      }
+    })
+  ]
+})
+
+const SuffixText = styled(EdgeText)(theme => ({
+  color: theme.secondaryText,
+  fontFamily: theme.fontFaceDefault,
+  includeFontPadding: false,
+  marginRight: theme.rem(1)
 }))
 
 const Placeholder = styled(Animated.View)<{ shift: SharedValue<number> }>(theme => ({ shift }) => {
@@ -327,7 +372,6 @@ const Placeholder = styled(Animated.View)<{ shift: SharedValue<number> }>(theme 
   return [
     {
       position: 'absolute',
-      top: -theme.rem(0.4),
       alignItems: 'center',
       justifyContent: 'center',
       paddingHorizontal: theme.rem(0.5),
@@ -335,7 +379,7 @@ const Placeholder = styled(Animated.View)<{ shift: SharedValue<number> }>(theme 
       margin: 0
     },
     useAnimatedStyle(() => ({
-      transform: [{ translateY: interpolate(shift.value, [0, 1], [0, -0.7 * rem]) }]
+      transform: [{ translateY: interpolate(shift.value, [0, 1], [0, -1.2 * rem]) }]
     }))
   ]
 })
