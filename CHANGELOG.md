@@ -5,6 +5,7 @@
 - added: `minerTip` to `feeRateUsed` processing
 - changed: Update various scenes with UI4 components
 - changed: Light account re-enabled at 50% distribution
+- changed: Free FIO handle modal visual design
 - fixed: USP vs legacy landing experiment distribution
 - fixed: Paybis sell from Tron USDT
 - fixed: Remove `minWidth` style from stake option card

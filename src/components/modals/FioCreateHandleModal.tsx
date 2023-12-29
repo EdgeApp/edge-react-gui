@@ -41,12 +41,9 @@ export const FioCreateHandleModal = (props: Props) => {
     <ThemedModal bridge={bridge} closeButton={false} onCancel={handleCancel}>
       <View style={styles.container}>
         <FastImage source={{ uri: getFioNewHandleImage(theme) }} style={styles.icon} />
-        <GetFioHandleTitle>{parseMarkedText(lstrings.fio_free_handle_title_m)}</GetFioHandleTitle>
-        <EdgeText style={styles.message} numberOfLines={4} disableFontScaling>
-          {lstrings.fio_free_handle_congrats}
-        </EdgeText>
+        <GetFioHandleTitle>{parseMarkedText(lstrings.fio_free_web3_handle_title_m)}</GetFioHandleTitle>
         <EdgeText style={styles.message} numberOfLines={8} disableFontScaling>
-          {lstrings.fio_free_handle_message}
+          {lstrings.fio_free_web3_handle_message}
         </EdgeText>
       </View>
       {showPleaseWait ? (
@@ -64,8 +61,7 @@ const GetFioHandleTitle = styled(Text)(theme => ({
   color: theme.primaryText,
   fontSize: theme.rem(1.75),
   fontFamily: theme.fontFaceDefault,
-  fontWeight: 'bold',
-  marginBottom: theme.rem(1),
+  marginBottom: theme.rem(2),
   textAlign: 'center'
 }))
 
@@ -74,23 +70,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: theme.rem(1),
-    paddingVertical: theme.rem(3)
+    paddingVertical: theme.rem(2)
   },
   icon: {
-    width: theme.rem(10),
-    height: theme.rem(10),
-    marginBottom: theme.rem(1)
-  },
-  title: {
-    color: theme.primaryText,
-    fontSize: theme.rem(1.75),
-    fontWeight: 'bold',
-    marginBottom: theme.rem(1),
-    textAlign: 'center'
+    width: theme.rem(15),
+    height: theme.rem(15),
+    marginBottom: theme.rem(3)
   },
   message: {
     fontSize: theme.rem(1),
-    textAlign: 'center'
+    textAlign: 'center',
+    marginBottom: theme.rem(0.5)
   },
   waitMessage: {
     fontSize: theme.rem(0.75),
