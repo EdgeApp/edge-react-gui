@@ -9,11 +9,12 @@ import { lstrings } from '../../locales/strings'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { FeeOption } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { Space } from '../layout/Space'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { SettingsRadioRow } from '../settings/SettingsRadioRow'
 import { Alert } from '../themed/Alert'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 
 interface OwnProps extends EdgeSceneProps<'changeMiningFee2'> {}
@@ -58,7 +59,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
     }
   }
 
-  getCustomFormat(): string[] | undefined {
+  getCustomFormat(): Array<keyof typeof FEE_STRINGS> | undefined {
     const { route } = this.props
     const { wallet } = route.params
     if (wallet.currencyInfo.defaultSettings != null) {
@@ -122,18 +123,16 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
     )
   }
 
-  renderCustomFeeTextInput(customFormat: string[]) {
-    const { theme } = this.props
-    const styles = getStyles(theme)
+  renderCustomFeeTextInput(customFormat: Array<keyof typeof FEE_STRINGS>) {
     const { networkFeeOption, customNetworkFee } = this.state
     if (networkFeeOption !== 'custom') return null
 
     return (
-      <View style={styles.view}>
+      <Space around={1}>
         {customFormat.map(key => (
-          <OutlinedTextInput
-            autoFocus={false}
+          <FilledTextInput
             key={key}
+            autoFocus={false}
             autoCorrect={false}
             onChangeText={text =>
               this.setState({
@@ -141,14 +140,12 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
               })
             }
             value={customNetworkFee[key]}
-            // @ts-expect-error
-            label={FEE_STRINGS[key] || key}
+            placeholder={FEE_STRINGS[key] || key}
             returnKeyType="search"
-            marginRem={[1.75, 1.75]}
             keyboardType="numeric"
           />
         ))}
-      </View>
+      </Space>
     )
   }
 
