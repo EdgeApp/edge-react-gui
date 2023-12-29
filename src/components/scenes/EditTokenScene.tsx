@@ -18,7 +18,7 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 
 interface Props extends EdgeSceneProps<'editToken'> {
@@ -147,38 +147,34 @@ function EditTokenSceneComponent(props: Props) {
     <SceneWrapper avoidKeyboard>
       <SceneHeader title={tokenId == null ? lstrings.title_add_token : lstrings.title_edit_token} underline />
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
-        <OutlinedTextInput
+        <FilledTextInput
           autoCapitalize="characters"
           autoCorrect={false}
           autoFocus={false}
-          label={lstrings.addtoken_currency_code_input_text}
-          marginRem={marginRem}
+          placeholder={lstrings.addtoken_currency_code_input_text}
           value={currencyCode}
           onChangeText={setCurrencyCode}
         />
-        <OutlinedTextInput
+        <FilledTextInput
           autoCapitalize="words"
           autoCorrect={false}
           autoFocus={false}
-          label={lstrings.addtoken_name_input_text}
-          marginRem={marginRem}
+          placeholder={lstrings.addtoken_name_input_text}
           value={displayName}
           onChangeText={setDisplayName}
         />
-        <OutlinedTextInput
+        <FilledTextInput
           autoCorrect={false}
           autoFocus={false}
-          label={lstrings.addtoken_contract_address_input_text}
-          marginRem={marginRem}
+          placeholder={lstrings.addtoken_contract_address_input_text}
           value={contractAddress}
           onChangeText={setContractAddress}
         />
-        <OutlinedTextInput
+        <FilledTextInput
           autoCorrect={false}
           autoFocus={false}
           keyboardType="numeric"
-          label={lstrings.addtoken_denomination_input_text}
-          marginRem={marginRem}
+          placeholder={lstrings.addtoken_denomination_input_text}
           value={decimalPlaces}
           onChangeText={setDecimalPlaces}
         />
@@ -210,9 +206,6 @@ async function showMessage(message: string): Promise<void> {
     />
   ))
 }
-
-// Nicely spaces the visual elements on the page:
-const marginRem = [0.5, 0.5, 1]
 
 const getStyles = cacheStyles((theme: Theme) => ({
   scroll: {
