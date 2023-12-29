@@ -15,11 +15,12 @@ import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { CoinRankRow } from '../data/row/CoinRankRow'
+import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
-import { OutlinedTextInput, OutlinedTextInputRef } from '../themed/OutlinedTextInput'
+import { SimpleTextInput, SimpleTextInputRef } from '../themed/SimpleTextInput'
 
 const coinRanking: CoinRanking = { coinRankingDatas: [] }
 
@@ -54,7 +55,7 @@ const CoinRankingComponent = (props: Props) => {
   const [lastUsedFiat, setLastUsedFiat] = useState<string>(defaultIsoFiat)
 
   const mounted = React.useRef<boolean>(true)
-  const textInput = React.useRef<OutlinedTextInputRef>(null)
+  const textInput = React.useRef<SimpleTextInputRef>(null)
   const timeoutHandler = React.useRef<Timeout | undefined>()
 
   const [requestDataSize, setRequestDataSize] = useState<number>(QUERY_PAGE_SIZE)
@@ -203,16 +204,15 @@ const CoinRankingComponent = (props: Props) => {
         <>
           <View style={styles.searchContainer}>
             <View style={styles.searchTextInputContainer}>
-              <OutlinedTextInput
+              <SimpleTextInput
                 returnKeyType="search"
-                label={lstrings.search_assets}
+                placeholder={lstrings.search_assets}
                 onChangeText={handleOnChangeText}
                 value={searchText ?? ''}
                 onFocus={handleTextFieldFocus}
                 onSubmitEditing={handleSubmit}
                 ref={textInput}
-                marginRem={0}
-                searchIcon
+                iconComponent={SearchIconAnimated}
               />
             </View>
             {searching && (
