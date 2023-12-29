@@ -28,7 +28,7 @@ export interface SimpleTextInputProps {
   placeholder?: string
 
   // Appearance:
-  icon?: AnimatedIconComponent
+  iconComponent?: AnimatedIconComponent
   scale?: SharedValue<number>
 
   // Callbacks:
@@ -74,7 +74,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
     value,
 
     // Appearance:
-    icon: Icon,
+    iconComponent: Icon,
     scale: scaleProp,
 
     // Callbacks:
