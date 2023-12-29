@@ -84,11 +84,12 @@ export function ButtonUi4(props: Props) {
       </Text>
     )
 
-  const containerColumn = layout === 'column' ? styles.containerColumn : undefined
-  const containerSolo = layout === 'solo' ? styles.containerSolo : undefined
-  const containerRow = layout === 'row' ? styles.containerRow : undefined
+  const containerStyle: ViewStyle[] = [styles.containerCommon]
+  if (layout === 'column') containerStyle.push(styles.containerColumn)
+  if (layout === 'row') containerStyle.push(styles.containerRow)
+  if (layout === 'solo') containerStyle.push(styles.containerSolo)
 
-  const finalContainerCommon = [styles.containerCommon, containerColumn, containerSolo, containerRow]
+  const finalContainerCommon = [styles.containerCommon, containerStyle]
 
   return (
     <TouchableOpacity disabled={disabled || pending} style={finalContainerCommon} onPress={handlePress}>

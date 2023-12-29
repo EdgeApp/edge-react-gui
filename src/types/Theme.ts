@@ -444,6 +444,7 @@ export interface Theme {
   cardBaseColorUi4: string
   cardGradientWarningUi4: ThemeGradientParams
   cardGradientErrorUi4: ThemeGradientParams
+  cardGradientLearnUi4: ThemeGradientParams
   cardOverlayDisabledUi4: string
   cardRadiusRemUi4: number
 

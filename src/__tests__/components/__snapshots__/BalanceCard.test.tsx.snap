@@ -273,11 +273,15 @@ exports[`BalanceCard should render with loading props 1`] = `
                 "alignSelf": "stretch",
                 "borderRadius": 45,
               },
-              undefined,
-              undefined,
-              {
-                "flex": 1,
-              },
+              [
+                {
+                  "alignSelf": "stretch",
+                  "borderRadius": 45,
+                },
+                {
+                  "flex": 1,
+                },
+              ],
             ]
           }
         >
@@ -385,11 +389,15 @@ exports[`BalanceCard should render with loading props 1`] = `
                 "alignSelf": "stretch",
                 "borderRadius": 45,
               },
-              undefined,
-              undefined,
-              {
-                "flex": 1,
-              },
+              [
+                {
+                  "alignSelf": "stretch",
+                  "borderRadius": 45,
+                },
+                {
+                  "flex": 1,
+                },
+              ],
             ]
           }
         >

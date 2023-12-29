@@ -7,6 +7,7 @@ import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
+import { config } from '../../../theme/appConfig'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getUi4ImageUri } from '../../../util/CdnUris'
@@ -21,6 +22,7 @@ import { HomeCardUi4 } from '../HomeCardUi4'
 import { MarketsCardUi4 } from '../MarketsCardUi4'
 import { SectionHeaderUi4 } from '../SectionHeaderUi4'
 import { SectionView } from '../SectionView'
+import { SupportCardUi4 } from '../SupportCardUi4'
 
 interface Props extends EdgeSceneProps<'home'> {}
 
@@ -128,6 +130,7 @@ export const HomeSceneUi4 = (props: Props) => {
               </View>
             </>
           )}
+          <SupportCardUi4 title={lstrings.title_support} body={lstrings.body_support} buttonText={lstrings.button_support} url={config.supportContactSite} />
         </SectionView>
       </View>
     </NotificationSceneWrapper>
