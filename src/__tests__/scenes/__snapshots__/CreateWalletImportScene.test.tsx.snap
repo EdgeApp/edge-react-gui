@@ -463,29 +463,6 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       >
         <Text
           adjustsFontSizeToFit={true}
-          danger={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
-          style={
-            [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
-              [
-                {
-                  "color": "#E85466",
-                  "fontSize": 18,
-                },
-              ],
-              null,
-            ]
-          }
-        />
-        <Text
-          adjustsFontSizeToFit={true}
           minimumFontScale={0.65}
           numberOfLines={1}
           style={

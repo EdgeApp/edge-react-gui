@@ -27,6 +27,7 @@ export interface FilledTextInputProps {
   // Contents:
   value: string
   error?: string
+  valid?: string
   placeholder?: string
 
   // Appearance:
@@ -82,6 +83,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     // Contents:
     error,
     placeholder,
+    valid,
     value,
 
     // Appearance:
@@ -252,7 +254,8 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
         </Container>
       </TouchableWithoutFeedback>
       <MessagesContainer>
-        <Message danger>{error}</Message>
+        {valid ? <Message>{valid}</Message> : null}
+        {error ? <Message danger>{error}</Message> : null}
         <Message>{charactersLeft}</Message>
       </MessagesContainer>
     </>
