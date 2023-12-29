@@ -209,38 +209,34 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     return (
       <View style={styles.balanceBoxContainer}>
-        <View style={styles.balanceBoxRow}>
-          <View style={styles.balanceBoxBalanceContainer}>
-            <View style={styles.balanceBoxWalletNameCurrencyContainer}>
-              <TouchableOpacity accessible={false} style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
-                <CryptoIconUi4 sizeRem={1.5} tokenId={tokenId} walletId={wallet.id} onIconColor={this.props.onIconColor} />
-                <EdgeText accessible style={styles.balanceBoxWalletName}>
-                  {walletName}
-                </EdgeText>
-                <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
-              </TouchableOpacity>
-              <TouchableOpacity testID="gearIcon" onPress={this.handleMenu} style={styles.settingsIcon}>
-                <Fontello accessibilityHint={lstrings.wallet_settings_label} color={theme.iconTappable} name="control-panel-settings" size={theme.rem(1.5)} />
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity accessible={false} onPress={this.props.toggleBalanceVisibility}>
-              {isAccountBalanceVisible ? (
-                <>
-                  <EdgeText accessible style={styles.balanceBoxCurrency} minimumFontScale={0.3}>
-                    {cryptoAmountFormat + ' ' + displayDenomination.name}
-                  </EdgeText>
-                  <EdgeText accessible style={styles.balanceFiatBalance}>
-                    {fiatSymbol + fiatBalanceFormat + ' ' + fiatCurrencyCode}
-                  </EdgeText>
-                </>
-              ) : (
-                <EdgeText accessible style={styles.balanceFiatShow}>
-                  {lstrings.string_show_balance}
-                </EdgeText>
-              )}
-            </TouchableOpacity>
-          </View>
+        <View style={styles.balanceBoxWalletNameCurrencyContainer}>
+          <TouchableOpacity accessible={false} style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
+            <CryptoIconUi4 sizeRem={1.5} tokenId={tokenId} walletId={wallet.id} onIconColor={this.props.onIconColor} />
+            <EdgeText accessible style={styles.balanceBoxWalletName}>
+              {walletName}
+            </EdgeText>
+            <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
+          </TouchableOpacity>
+          <TouchableOpacity testID="gearIcon" onPress={this.handleMenu} style={styles.settingsIcon}>
+            <Fontello accessibilityHint={lstrings.wallet_settings_label} color={theme.iconTappable} name="control-panel-settings" size={theme.rem(1.5)} />
+          </TouchableOpacity>
         </View>
+        <TouchableOpacity accessible={false} onPress={this.props.toggleBalanceVisibility}>
+          {isAccountBalanceVisible ? (
+            <>
+              <EdgeText accessible style={styles.balanceBoxCurrency} minimumFontScale={0.3}>
+                {cryptoAmountFormat + ' ' + displayDenomination.name}
+              </EdgeText>
+              <EdgeText accessible style={styles.balanceFiatBalance}>
+                {fiatSymbol + fiatBalanceFormat + ' ' + fiatCurrencyCode}
+              </EdgeText>
+            </>
+          ) : (
+            <EdgeText accessible style={styles.balanceFiatShow}>
+              {lstrings.string_show_balance}
+            </EdgeText>
+          )}
+        </TouchableOpacity>
       </View>
     )
   }
@@ -482,12 +478,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // Balance Box
   balanceBoxContainer: {
     marginTop: theme.rem(1.5)
-  },
-  balanceBoxRow: {
-    flexDirection: 'row'
-  },
-  balanceBoxBalanceContainer: {
-    flex: 1
   },
   balanceBoxWalletNameCurrencyContainer: {
     flexDirection: 'row',

@@ -62,15 +62,13 @@ export const BalanceCardUi4 = (props: Props) => {
     <CardUi4>
       <TouchableOpacity style={styles.balanceContainer} onPress={handleToggleAccountBalanceVisibility}>
         <View style={styles.titleContainer}>
-          <View style={styles.titleSubContainer}>
-            <EdgeText style={textShadow}>{lstrings.fragment_wallets_balance_text}</EdgeText>
-            <IonIcon
-              name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'}
-              style={[styles.eyeIcon, textShadow]}
-              color={theme.iconTappable}
-              size={theme.rem(1)}
-            />
-          </View>
+          <EdgeText style={textShadow}>{lstrings.fragment_wallets_balance_text}</EdgeText>
+          <IonIcon
+            name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'}
+            style={[styles.eyeIcon, textShadow]}
+            color={theme.iconTappable}
+            size={theme.rem(1)}
+          />
         </View>
         {!exchangeRatesReady ? (
           <EdgeText style={textShadow}>{lstrings.exchange_rates_loading}</EdgeText>
@@ -106,11 +104,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: theme.rem(0.5)
   },
   titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  titleSubContainer: {
     flexDirection: 'row',
     alignItems: 'center'
   },
