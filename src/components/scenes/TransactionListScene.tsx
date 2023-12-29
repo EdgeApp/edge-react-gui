@@ -62,6 +62,8 @@ function TransactionListComponent(props: Props) {
   const exchangeDenom = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
   const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${wallet.fiatCurrencyCode}`])
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
+  const activeUsername = useSelector(state => state.core.account.username)
+  const isLightAccount = activeUsername == null
 
   // Watchers:
   const enabledTokenIds = useWatch(wallet, 'enabledTokenIds')
@@ -188,6 +190,7 @@ function TransactionListComponent(props: Props) {
           searching={searching}
           tokenId={tokenId}
           wallet={wallet}
+          isLightAccount={isLightAccount}
           onIconColor={setIconColor}
           onSearchingChange={setSearching}
           onSearchTextChange={setSearchText}
@@ -199,7 +202,7 @@ function TransactionListComponent(props: Props) {
           : null}
       </>
     )
-  }, [assetStatuses, listItems.length, navigation, searching, tokenId, wallet])
+  }, [assetStatuses, isLightAccount, listItems.length, navigation, searching, tokenId, wallet])
 
   const emptyComponent = React.useMemo(() => {
     if (isTransactionListUnsupported) {

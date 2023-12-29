@@ -2,6 +2,7 @@ import { add, gt, mul, round } from 'biggystring'
 import { EdgeAccount, EdgeBalances, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -26,6 +27,7 @@ import { triggerHaptic } from '../../util/haptic'
 import { getFioStakingBalances, getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
 import { convertNativeToDenomination, datelog } from '../../util/utils'
 import { VisaCardCard } from '../cards/VisaCardCard'
+import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupForTransferModal'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -37,6 +39,8 @@ import { SceneHeader } from './SceneHeader'
 
 interface OwnProps {
   navigation: NavigationProp<'transactionList'>
+
+  isLightAccount: boolean
 
   // Wallet identity:
   tokenId: string | undefined
@@ -313,10 +317,22 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleRequest = (): void => {
-    const { navigation } = this.props
+    const { navigation, isLightAccount } = this.props
 
     triggerHaptic('impactLight')
-    navigation.push('request', {})
+    if (isLightAccount) {
+      Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
+        return <BackupForTransferModal bridge={bridge} />
+      })
+        .then((userSel?: BackupForTransferModalResult) => {
+          if (userSel === 'upgrade') {
+            navigation.navigate('upgradeUsername', {})
+          }
+        })
+        .catch(error => showError(error))
+    } else {
+      navigation.push('request', {})
+    }
   }
 
   handleSend = (): void => {
@@ -577,6 +593,7 @@ export function TransactionListTop(props: OwnProps) {
   const exchangeDenomination = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
   const exchangeRate = useSelector(state => getExchangeRate(state, currencyCode, wallet.fiatCurrencyCode))
   const isAccountBalanceVisible = useSelector(state => state.ui.settings.isAccountBalanceVisible)
+  const activeUsername = useSelector(state => state.core.account.username)
 
   const walletName = useWalletName(wallet)
   const balances = useWatch(wallet, 'balances')
@@ -598,6 +615,7 @@ export function TransactionListTop(props: OwnProps) {
       isAccountBalanceVisible={isAccountBalanceVisible}
       toggleBalanceVisibility={handleBalanceVisibility}
       theme={theme}
+      isLightAccount={activeUsername == null}
     />
   )
 }
