@@ -26,11 +26,11 @@ import { triggerHaptic } from '../../util/haptic'
 import { getFioStakingBalances, getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
 import { convertNativeToDenomination, datelog } from '../../util/utils'
 import { VisaCardCard } from '../cards/VisaCardCard'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
 import { SceneHeader } from './SceneHeader'
@@ -45,6 +45,7 @@ interface OwnProps {
   // Scene state:
   isEmpty: boolean
   searching: boolean
+  onIconColor?: (color: string) => void
   onSearchingChange: (isSearching: boolean) => void
   onSearchTextChange: (searchString: string) => void
 }
@@ -207,7 +208,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           <View style={styles.balanceBoxBalanceContainer}>
             <View style={styles.balanceBoxWalletNameCurrencyContainer}>
               <TouchableOpacity accessible={false} style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
-                <CryptoIcon sizeRem={1.5} tokenId={tokenId} walletId={wallet.id} />
+                <CryptoIconUi4 sizeRem={1.5} tokenId={tokenId} walletId={wallet.id} onIconColor={this.props.onIconColor} />
                 <EdgeText accessible style={styles.balanceBoxWalletName}>
                   {walletName}
                 </EdgeText>

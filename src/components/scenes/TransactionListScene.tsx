@@ -4,8 +4,9 @@ import { asArray } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { asAssetStatus, AssetStatus } from 'edge-info-server/types'
 import * as React from 'react'
-import { RefreshControl } from 'react-native'
+import { RefreshControl, StyleSheet } from 'react-native'
 import { getVersion } from 'react-native-device-info'
+import { LinearGradient } from 'react-native-linear-gradient'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -54,6 +55,8 @@ function TransactionListComponent(props: Props) {
   const [searching, setSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
   const [assetStatuses, setAssetStatuses] = React.useState<AssetStatus[]>([])
+  const [iconColor, setIconColor] = React.useState<string>()
+  const backgroundGradientColor = iconColor == null ? '#00000000' : `${iconColor}44`
 
   // Selectors:
   const exchangeDenom = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
@@ -185,6 +188,7 @@ function TransactionListComponent(props: Props) {
           searching={searching}
           tokenId={tokenId}
           wallet={wallet}
+          onIconColor={setIconColor}
           onSearchingChange={setSearching}
           onSearchTextChange={setSearchText}
         />
@@ -230,9 +234,10 @@ function TransactionListComponent(props: Props) {
   })
 
   return (
-    <NotificationSceneWrapper navigation={navigation} hasTabs scroll>
+    <NotificationSceneWrapper navigation={navigation} hasTabs>
       {(gap, notificationHeight) => (
         <>
+          <LinearGradient colors={[backgroundGradientColor, '#00000000']} start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }} style={StyleSheet.absoluteFill} />
           {SHOW_FLIP_INPUT_TESTER ? (
             <ExchangedFlipInputTester />
           ) : (

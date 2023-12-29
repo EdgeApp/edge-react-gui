@@ -487,6 +487,23 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 </RNSVGSvgView>
                 <View
                   style={
+                    {
+                      "backgroundColor": "#000000",
+                      "borderRadius": 17,
+                      "height": 34,
+                      "shadowColor": "#000000",
+                      "shadowOffset": {
+                        "height": 3,
+                        "width": -3,
+                      },
+                      "shadowOpacity": 0.6,
+                      "shadowRadius": 4,
+                      "width": 34,
+                    }
+                  }
+                />
+                <View
+                  style={
                     [
                       {
                         "overflow": "hidden",
@@ -1590,6 +1607,23 @@ exports[`TransactionListTop should render 1`] = `
                     />
                   </RNSVGGroup>
                 </RNSVGSvgView>
+                <View
+                  style={
+                    {
+                      "backgroundColor": "#000000",
+                      "borderRadius": 17,
+                      "height": 34,
+                      "shadowColor": "#000000",
+                      "shadowOffset": {
+                        "height": 3,
+                        "width": -3,
+                      },
+                      "shadowOpacity": 0.6,
+                      "shadowRadius": 4,
+                      "width": 34,
+                    }
+                  }
+                />
                 <View
                   style={
                     [
