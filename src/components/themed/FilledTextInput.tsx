@@ -32,6 +32,7 @@ export interface FilledTextInputProps {
 
   // Appearance:
   iconComponent?: AnimatedIconComponent | null
+  multiline?: boolean // Defaults to 'false'
   scale?: SharedValue<number>
   showSpinner?: boolean
   prefix?: string // Text input is left-left justified with a persistent prefix
@@ -88,6 +89,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
 
     // Appearance:
     iconComponent,
+    multiline = false,
     scale: scaleProp,
     showSpinner = false,
     prefix,
@@ -194,7 +196,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   return (
     <>
       <TouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
-        <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale}>
+        <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} multiline={multiline} scale={scale}>
           <SideContainer scale={leftIconSize}>{LeftIcon == null ? null : <LeftIcon color={iconColor} size={leftIconSize} />}</SideContainer>
 
           <InnerContainer focusValue={focusValue} hasPlaceholder={placeholder != null}>
@@ -216,6 +218,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               autoFocus={autoFocus}
               disableAnimation={disableAnimation}
               focusAnimation={focusAnimation}
+              multiline={multiline}
               selectionColor={theme.textInputTextColor}
               testID={`${testID}.textInput`}
               textAlignVertical="top"
@@ -265,8 +268,9 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
 const Container = styled(Animated.View)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
+  multiline: boolean
   scale: SharedValue<number>
-}>(theme => ({ disableAnimation, focusAnimation, scale }) => {
+}>(theme => ({ disableAnimation, focusAnimation, multiline, scale }) => {
   const rem = theme.rem(1)
   const interpolateInputBackgroundColor = useAnimatedColorInterpolateFn(
     theme.textInputBackgroundColor,
@@ -281,7 +285,8 @@ const Container = styled(Animated.View)<{
 
   return [
     {
-      alignItems: 'center',
+      flex: multiline ? 1 : undefined,
+      alignItems: multiline ? 'stretch' : 'center',
       borderWidth: theme.textInputBorderWidth,
       borderRadius: theme.rem(0.5),
       flexDirection: 'row',
@@ -323,7 +328,8 @@ const InnerContainer = styled(Animated.View)<{
     {
       flex: 1,
       flexDirection: 'row',
-      alignItems: 'center'
+      alignItems: 'flex-start',
+      alignSelf: 'flex-start'
     },
     useAnimatedStyle(() => {
       const shiftValue = interpolate(focusValue.value, [0, 1], [0, rem * 0.4])
@@ -366,6 +372,7 @@ const Placeholder = styled(Animated.View)<{ shift: SharedValue<number> }>(theme 
   return [
     {
       position: 'absolute',
+      top: 0,
       alignItems: 'center',
       justifyContent: 'center',
       paddingHorizontal: theme.rem(0.5),

@@ -401,6 +401,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         }
       }
       focusable={true}
+      multiline={false}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -419,6 +420,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             "alignItems": "center",
             "borderRadius": 11,
             "borderWidth": 1,
+            "flex": undefined,
             "flexDirection": "row",
             "paddingHorizontal": 22,
           },
@@ -461,7 +463,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         style={
           [
             {
-              "alignItems": "center",
+              "alignItems": "flex-start",
+              "alignSelf": "flex-start",
               "flex": 1,
               "flexDirection": "row",
             },
@@ -487,6 +490,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 "paddingHorizontal": 11,
                 "paddingVertical": 0,
                 "position": "absolute",
+                "top": 0,
               },
               {
                 "transform": [
@@ -556,6 +560,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               "value": 0,
             }
           }
+          multiline={false}
           onBlur={[Function]}
           onChangeText={[Function]}
           onFocus={[Function]}
@@ -1478,6 +1483,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         }
       }
       focusable={true}
+      multiline={false}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -1496,6 +1502,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             "alignItems": "center",
             "borderRadius": 11,
             "borderWidth": 1,
+            "flex": undefined,
             "flexDirection": "row",
             "paddingHorizontal": 22,
           },
@@ -1538,7 +1545,8 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         style={
           [
             {
-              "alignItems": "center",
+              "alignItems": "flex-start",
+              "alignSelf": "flex-start",
               "flex": 1,
               "flexDirection": "row",
             },
@@ -1564,6 +1572,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 "paddingHorizontal": 11,
                 "paddingVertical": 0,
                 "position": "absolute",
+                "top": 0,
               },
               {
                 "transform": [
@@ -1633,6 +1642,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               "value": 0,
             }
           }
+          multiline={false}
           onBlur={[Function]}
           onChangeText={[Function]}
           onFocus={[Function]}
