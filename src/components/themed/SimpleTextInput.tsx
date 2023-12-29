@@ -38,10 +38,15 @@ export interface SimpleTextInputProps {
   onFocus?: () => void
 
   // Other React Native TextInput properties:
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' // Defaults to 'sentences'
+  autoCorrect?: boolean // Defaults to 'true'
+  blurOnSubmit?: boolean // Defaults to 'true'
+  inputAccessoryViewID?: string
   keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad' // Defaults to 'default'
   maxLength?: number
   onSubmitEditing?: () => void
   returnKeyType?: SimpleTextInputReturnKeyType // Defaults to 'done'
+  secureTextEntry?: boolean // Defaults to 'false'
   testID?: string
 
   // Unless 'autoFocus' is passed explicitly in the props, Search Bars 'autoFocus' and 'regular' text inputs don't.
@@ -85,10 +90,15 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
     onSubmitEditing,
 
     // TextInput:
+    autoCapitalize,
+    autoCorrect,
     autoFocus = false,
     blurOnClear = false,
+    blurOnSubmit,
     disabled = false,
+    inputAccessoryViewID,
     maxLength,
+    secureTextEntry,
     testID
   } = props
   const theme = useTheme()
@@ -191,6 +201,12 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
           onFocus={handleFocus}
           onSubmitEditing={handleSubmitEditing}
           maxLength={maxLength}
+          // Other Props:
+          autoCapitalize={autoCapitalize}
+          autoCorrect={autoCorrect}
+          blurOnSubmit={blurOnSubmit}
+          inputAccessoryViewID={inputAccessoryViewID}
+          secureTextEntry={secureTextEntry}
         />
 
         <TouchableOpacity accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
