@@ -2,6 +2,7 @@ import { div, log10 } from 'biggystring'
 import { EdgeDenomination } from 'edge-core-js'
 
 import { formatNumber } from '../locales/intl'
+import { lstrings } from '../locales/strings'
 import {
   DECIMAL_PRECISION,
   decimalOrZero,
@@ -13,12 +14,13 @@ import {
 } from './utils'
 
 interface GetCryptoTextParams {
-  currencyCode?: string
   displayDenomination: EdgeDenomination
   exchangeDenomination: EdgeDenomination
+  nativeAmount: string
+  currencyCode?: string
   exchangeRate?: string
   fiatDenomination?: EdgeDenomination
-  nativeAmount: string
+  hideBalance?: boolean
 }
 
 /**
@@ -29,17 +31,22 @@ interface GetCryptoTextParams {
  * 3. Localization: commas, decimals, spaces
  */
 export const getCryptoText = ({
+  currencyCode,
   displayDenomination,
   exchangeDenomination,
-  fiatDenomination,
   exchangeRate,
-  nativeAmount,
-  currencyCode
+  fiatDenomination,
+  hideBalance,
+  nativeAmount
 }: GetCryptoTextParams) => {
+  // Early exits if no balance hidden or zero
   const { multiplier: displayMultiplier, symbol } = displayDenomination
-  const { multiplier: exchangeMultiplier } = exchangeDenomination
+  const finalSymbol = symbol ? symbol + ' ' : ''
+  const finalCurrencyCode = currencyCode ? ' ' + currencyCode : ''
+  if (hideBalance) return `${finalSymbol}${lstrings.redacted_placeholder}${finalCurrencyCode}`
+  if (zeroString(nativeAmount)) return `${symbol ? symbol + ' ' : ''}0${finalCurrencyCode}`
 
-  if (zeroString(nativeAmount)) return `${symbol ? symbol + ' ' : ''}0${currencyCode ? ' ' + currencyCode : ''}`
+  const { multiplier: exchangeMultiplier } = exchangeDenomination
 
   let maxConversionDecimals = DEFAULT_TRUNCATE_PRECISION
   if (exchangeRate != null && fiatDenomination != null && parseFloat(exchangeRate) > 0) {
