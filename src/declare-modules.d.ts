@@ -33,3 +33,4 @@ declare module 'csv-stringify/lib/browser/sync' {
 declare module 'edge-currency-monero/lib/react-native-io'
 declare module 'react-native-smart-splash-screen'
 declare module 'rn-id-blurview'
+declare module 'text-shadow-component'
