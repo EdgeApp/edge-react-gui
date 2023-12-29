@@ -24,6 +24,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { convertNativeToExchange } from '../../util/utils'
 import { getMemoTitle } from '../../util/validateMemos'
 import { ButtonsContainer } from '../buttons/ButtonsContainer'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { AccelerateTxModal } from '../modals/AccelerateTxModal'
@@ -257,79 +258,91 @@ const TransactionDetailsComponent = (props: Props) => {
 
   return (
     <NotificationSceneWrapper navigation={navigation} hasTabs scroll padding={theme.rem(0.5)}>
-      <CardUi4>
-        <RowUi4
-          rightButtonType="editable"
-          icon={
-            thumbnailPath ? (
-              <FastImage style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
-            ) : (
-              <IonIcon style={styles.tileAvatarIcon} name="person" size={theme.rem(2)} />
-            )
-          }
-          title={personHeader}
-          onPress={openPersonInput}
-        >
-          <EdgeText>{personName}</EdgeText>
-        </RowUi4>
-      </CardUi4>
+      <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
+        <CardUi4>
+          <RowUi4
+            rightButtonType="editable"
+            icon={
+              thumbnailPath ? (
+                <FastImage style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
+              ) : (
+                <IonIcon style={styles.tileAvatarIcon} name="person" size={theme.rem(2)} />
+              )
+            }
+            title={personHeader}
+            onPress={openPersonInput}
+          >
+            <EdgeText>{personName}</EdgeText>
+          </RowUi4>
+        </CardUi4>
+      </EdgeAnim>
 
-      <CardUi4 sections>
-        <TxCryptoAmountRow transaction={transaction} wallet={wallet} />
-        <RowUi4 rightButtonType="editable" title={sprintf(lstrings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={handleEdit}>
-          <View style={styles.tileRow}>
-            <EdgeText>{fiatSymbol + ' '}</EdgeText>
-            <EdgeText>{originalFiatText}</EdgeText>
-          </View>
-        </RowUi4>
-        <RowUi4 rightButtonType="none" title={lstrings.transaction_details_amount_current_price}>
-          <View style={styles.tileRow}>
-            <EdgeText>{fiatSymbol + ' '}</EdgeText>
-            <EdgeText style={styles.tileTextPrice}>{currentFiatText}</EdgeText>
-            {originalFiatText === currentFiatText ? null : (
-              <EdgeText style={percentChange >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>{` (${percentText})`}</EdgeText>
-            )}
-          </View>
-        </RowUi4>
-        <RowUi4 rightButtonType="copy" title={lstrings.transaction_details_tx_id_modal_title} body={txid} />
-        {acceleratedTx == null ? null : (
-          <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={openAccelerateModel} />
-        )}
-      </CardUi4>
+      <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
+        <CardUi4 sections>
+          <TxCryptoAmountRow transaction={transaction} wallet={wallet} />
+          <RowUi4 rightButtonType="editable" title={sprintf(lstrings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={handleEdit}>
+            <View style={styles.tileRow}>
+              <EdgeText>{fiatSymbol + ' '}</EdgeText>
+              <EdgeText>{originalFiatText}</EdgeText>
+            </View>
+          </RowUi4>
+          <RowUi4 rightButtonType="none" title={lstrings.transaction_details_amount_current_price}>
+            <View style={styles.tileRow}>
+              <EdgeText>{fiatSymbol + ' '}</EdgeText>
+              <EdgeText style={styles.tileTextPrice}>{currentFiatText}</EdgeText>
+              {originalFiatText === currentFiatText ? null : (
+                <EdgeText style={percentChange >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>{` (${percentText})`}</EdgeText>
+              )}
+            </View>
+          </RowUi4>
+          <RowUi4 rightButtonType="copy" title={lstrings.transaction_details_tx_id_modal_title} body={txid} />
+          {acceleratedTx == null ? null : (
+            <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={openAccelerateModel} />
+          )}
+        </CardUi4>
+      </EdgeAnim>
 
-      <CardUi4 sections>
-        <RowUi4 rightButtonType="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput}>
-          <EdgeText style={styles.tileCategory}>{categoriesText}</EdgeText>
-        </RowUi4>
-        <RowUi4
-          rightButtonType="editable"
-          title={lstrings.transaction_details_notes_title}
-          body={notes == null || notes.trim() === '' ? lstrings.transaction_details_empty_note_placeholder : notes}
-          onPress={openNotesInput}
-        />
-        {transaction.memos?.map((memo, i) =>
-          memo.hidden === true ? null : <RowUi4 body={memo.value} key={`memo${i}`} title={getMemoTitle(memo.memoName)} rightButtonType="copy" />
-        )}
-      </CardUi4>
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
+        <CardUi4 sections>
+          <RowUi4 rightButtonType="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput}>
+            <EdgeText style={styles.tileCategory}>{categoriesText}</EdgeText>
+          </RowUi4>
+          <RowUi4
+            rightButtonType="editable"
+            title={lstrings.transaction_details_notes_title}
+            body={notes == null || notes.trim() === '' ? lstrings.transaction_details_empty_note_placeholder : notes}
+            onPress={openNotesInput}
+          />
+          {transaction.memos?.map((memo, i) =>
+            memo.hidden === true ? null : <RowUi4 body={memo.value} key={`memo${i}`} title={getMemoTitle(memo.memoName)} rightButtonType="copy" />
+          )}
+        </CardUi4>
+      </EdgeAnim>
 
       {transaction.spendTargets == null ? null : (
-        <CardUi4>
-          <RowUi4 rightButtonType="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />
-        </CardUi4>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 60 }}>
+          <CardUi4>
+            <RowUi4 rightButtonType="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />
+          </CardUi4>
+        </EdgeAnim>
       )}
 
-      {transaction.swapData == null ? null : <SwapDetailsCard swapData={transaction.swapData} transaction={transaction} wallet={wallet} />}
-
-      <AdvancedDetailsCard transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />
-
-      <ButtonsContainer
-        layout="column"
-        primary={{
-          onPress: navigation.pop,
-          label: lstrings.string_done_cap
-        }}
-        scrollMargin
-      />
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+        {transaction.swapData == null ? null : <SwapDetailsCard swapData={transaction.swapData} transaction={transaction} wallet={wallet} />}
+      </EdgeAnim>
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 100 }}>
+        <AdvancedDetailsCard transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />
+      </EdgeAnim>
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
+        <ButtonsContainer
+          layout="column"
+          primary={{
+            onPress: navigation.pop,
+            label: lstrings.string_done_cap
+          }}
+          scrollMargin
+        />
+      </EdgeAnim>
     </NotificationSceneWrapper>
   )
 }

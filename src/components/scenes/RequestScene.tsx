@@ -24,6 +24,7 @@ import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHel
 import { triggerHaptic } from '../../util/haptic'
 import { convertNativeToDenomination, truncateDecimals, zeroString } from '../../util/utils'
 import { Card } from '../cards/Card'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -315,11 +316,11 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     ) : (
       <SceneWrapper background="theme" hasTabs={false}>
         <View style={styles.container}>
-          <View style={styles.requestContainer}>
+          <EdgeAnim style={styles.requestContainer} enter={{ type: 'fadeInUp', distance: 75 }}>
             <EdgeText style={styles.title}>{lstrings.fragment_request_subtitle}</EdgeText>
             <EdgeText style={styles.exchangeRate}>{denomString}</EdgeText>
-          </View>
-          <View style={styles.balanceContainer}>
+          </EdgeAnim>
+          <EdgeAnim style={styles.balanceContainer} enter={{ type: 'fadeInUp', distance: 50 }}>
             <TouchableOpacity onPress={this.toggleBalanceVisibility} style={styles.balanceAmountContainer}>
               {this.props.showBalance ? <EdgeText>{displayBalanceString}</EdgeText> : <EdgeText>{lstrings.string_show_balance}</EdgeText>}
             </TouchableOpacity>
@@ -331,23 +332,25 @@ export class RequestSceneComponent extends React.Component<Props, State> {
                 wallet={wallet}
               />
             </EdgeText>
-          </View>
+          </EdgeAnim>
           {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}
 
-          <Card>
-            <ExchangedFlipInput2
-              forceField="crypto"
-              headerCallback={this.handleOpenWalletListModal}
-              headerText={flipInputHeaderText}
-              inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : undefined}
-              keyboardVisible={false}
-              onAmountChanged={this.onExchangeAmountChanged}
-              ref={this.flipInputRef}
-              returnKeyType={this.state.isFioMode ? 'next' : 'done'}
-              tokenId={primaryCurrencyInfo.tokenId}
-              walletId={wallet.id}
-            />
-          </Card>
+          <EdgeAnim enter={{ type: 'fadeInUp', distance: 25 }}>
+            <Card>
+              <ExchangedFlipInput2
+                forceField="crypto"
+                headerCallback={this.handleOpenWalletListModal}
+                headerText={flipInputHeaderText}
+                inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : undefined}
+                keyboardVisible={false}
+                onAmountChanged={this.onExchangeAmountChanged}
+                ref={this.flipInputRef}
+                returnKeyType={this.state.isFioMode ? 'next' : 'done'}
+                tokenId={primaryCurrencyInfo.tokenId}
+                walletId={wallet.id}
+              />
+            </Card>
+          </EdgeAnim>
 
           <Carousel
             items={this.state.addresses}
@@ -363,16 +366,21 @@ export class RequestSceneComponent extends React.Component<Props, State> {
               />
             )}
           />
-          <TouchableOpacity accessible={false} disabled={addressExplorerDisabled} onPress={this.handleAddressBlockExplorer}>
-            <View style={styles.rightChevronContainer}>
-              <EdgeText>{selectedAddress?.label ?? lstrings.request_qr_your_wallet_address}</EdgeText>
-              {addressExplorerDisabled ? null : <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />}
-            </View>
-            <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
-          </TouchableOpacity>
+
+          <EdgeAnim enter={{ type: 'fadeInDown', distance: 50 }}>
+            <TouchableOpacity accessible={false} disabled={addressExplorerDisabled} onPress={this.handleAddressBlockExplorer}>
+              <View style={styles.rightChevronContainer}>
+                <EdgeText>{selectedAddress?.label ?? lstrings.request_qr_your_wallet_address}</EdgeText>
+                {addressExplorerDisabled ? null : <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />}
+              </View>
+              <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
+            </TouchableOpacity>
+          </EdgeAnim>
         </View>
 
-        <ShareButtons openShareModal={this.openShareModal} copyToClipboard={this.copyToClipboard} openFioAddressModal={this.openFioAddressModal} />
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 75 }}>
+          <ShareButtons openShareModal={this.openShareModal} copyToClipboard={this.copyToClipboard} openFioAddressModal={this.openFioAddressModal} />
+        </EdgeAnim>
       </SceneWrapper>
     )
   }

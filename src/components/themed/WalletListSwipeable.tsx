@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
 import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from './WalletList'
@@ -75,6 +76,7 @@ function WalletListSwipeableComponent(props: Props) {
 
   // Renders a single row:
   const renderRow = useHandler((item: FlatListItem<any>) => {
+    const { index } = item
     if (item.item.key.includes('create-')) {
       const createItem: WalletCreateItem = item.item
       const { currencyCode, displayName, pluginId, walletType, createWalletIds } = createItem
@@ -95,10 +97,18 @@ function WalletListSwipeableComponent(props: Props) {
     const { token, tokenId, wallet, walletId } = item.item
 
     if (wallet != null) {
-      return <WalletListSwipeableCurrencyRow navigation={navigation} token={token} tokenId={tokenId} wallet={wallet} />
+      return (
+        <EdgeAnim enter={{ type: 'fadeInRight', distance: 20 * (index + 1) }}>
+          <WalletListSwipeableCurrencyRow navigation={navigation} token={token} tokenId={tokenId} wallet={wallet} />
+        </EdgeAnim>
+      )
     }
     if (walletId != null) {
-      return <WalletListSwipeableLoadingRow navigation={navigation} walletId={walletId} />
+      return (
+        <EdgeAnim enter={{ type: 'fadeInRight', distance: 20 * (index + 1) }}>
+          <WalletListSwipeableLoadingRow navigation={navigation} walletId={walletId} />
+        </EdgeAnim>
+      )
     }
     return null
   })

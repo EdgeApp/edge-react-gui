@@ -11,6 +11,7 @@ import { config } from '../../../theme/appConfig'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getUi4ImageUri } from '../../../util/CdnUris'
+import { EdgeAnim } from '../../common/EdgeAnim'
 import { NotificationSceneWrapper } from '../../common/SceneWrapper'
 import { PasswordReminderModal } from '../../modals/PasswordReminderModal'
 import { Airship } from '../../services/AirshipInstance'
@@ -75,8 +76,10 @@ export const HomeSceneUi4 = (props: Props) => {
       <View style={styles.tempMargin}>
         <SectionView extendRight>
           <>
-            <BalanceCardUi4 onViewAssetsPress={handleViewAssetsPress} navigation={navigation} />
-            <View style={[styles.homeRowContainer, { height: cardSize }]}>
+            <EdgeAnim enter={{ type: 'fadeInUp', distance: 120 }}>
+              <BalanceCardUi4 onViewAssetsPress={handleViewAssetsPress} navigation={navigation} />
+            </EdgeAnim>
+            <EdgeAnim style={[styles.homeRowContainer, { height: cardSize }]} enter={{ type: 'fadeInUp', distance: 60 }}>
               <HomeCardUi4
                 title={lstrings.buy_crypto}
                 footer={lstrings.buy_crypto_footer}
@@ -99,8 +102,8 @@ export const HomeSceneUi4 = (props: Props) => {
                 }
                 onPress={handleSellPress}
               />
-            </View>
-            <View style={[styles.homeRowContainer, { height: cardSize }]}>
+            </EdgeAnim>
+            <EdgeAnim style={[styles.homeRowContainer, { height: cardSize }]} enter={{ type: 'fadeInUp', distance: 20 }}>
               <HomeCardUi4
                 title={lstrings.fio_web3}
                 footer={lstrings.fio_web3_footer}
@@ -123,7 +126,7 @@ export const HomeSceneUi4 = (props: Props) => {
                 }
                 onPress={handleSwapPress}
               />
-            </View>
+            </EdgeAnim>
           </>
           <>
             <SectionHeaderUi4 leftTitle={lstrings.title_markets} rightNode={lstrings.see_all} onRightPress={() => navigation.navigate('marketsTab', {})} />

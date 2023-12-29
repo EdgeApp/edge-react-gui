@@ -31,12 +31,15 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { ImageProp } from '../../types/Theme'
 import { parseMarkedText } from '../../util/parseMarkedText'
 import { logEvent } from '../../util/tracking'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwipeOffsetDetector } from '../interactions/SwipeOffsetDetector'
 import { Space } from '../layout/Space'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
+
+const ANIM_DURATION = 1000
 
 interface Props extends EdgeSceneProps<'gettingStarted'> {}
 
@@ -177,12 +180,22 @@ export const GettingStartedScene = (props: Props) => {
         <Container>
           <HeroContainer>
             <WelcomeHero swipeOffset={swipeOffset}>
-              <Image source={edgeLogoIcon} />
-              <WelcomeHeroTitle numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.5}>
-                {parseMarkedText(lstrings.getting_started_welcome_title)}
-              </WelcomeHeroTitle>
-              <WelcomeHeroMessage>{lstrings.getting_started_welcome_message}</WelcomeHeroMessage>
-              <WelcomeHeroPrompt>{lstrings.getting_started_welcome_prompt}</WelcomeHeroPrompt>
+              <EdgeAnim enter={{ type: 'fadeInUp', duration: ANIM_DURATION, distance: 80 }}>
+                <Image source={edgeLogoIcon} />
+              </EdgeAnim>
+
+              <EdgeAnim enter={{ type: 'fadeInUp', duration: ANIM_DURATION, distance: 60 }}>
+                <WelcomeHeroTitle numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.5}>
+                  {parseMarkedText(lstrings.getting_started_welcome_title)}
+                </WelcomeHeroTitle>
+              </EdgeAnim>
+              <EdgeAnim enter={{ type: 'fadeInUp', duration: ANIM_DURATION, distance: 40 }}>
+                <WelcomeHeroMessage>{lstrings.getting_started_welcome_message}</WelcomeHeroMessage>
+              </EdgeAnim>
+
+              <EdgeAnim enter={{ type: 'fadeInUp', duration: ANIM_DURATION, distance: 20 }}>
+                <WelcomeHeroPrompt>{lstrings.getting_started_welcome_prompt}</WelcomeHeroPrompt>
+              </EdgeAnim>
             </WelcomeHero>
             {sections.map((section, index) => {
               return (
@@ -194,13 +207,15 @@ export const GettingStartedScene = (props: Props) => {
               )
             })}
           </HeroContainer>
-          <Pagination>
-            {Array.from({ length: paginationCount + (isFinalSwipeEnabled ? 0 : 1) }).map((_, index) => (
-              <Pressable key={index} onPress={() => handlePressIndicator(index)}>
-                <PageIndicator swipeOffset={swipeOffset} itemIndex={index} />
-              </Pressable>
-            ))}
-          </Pagination>
+          <EdgeAnim enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance: 20 }}>
+            <Pagination>
+              {Array.from({ length: paginationCount + (isFinalSwipeEnabled ? 0 : 1) }).map((_, index) => (
+                <Pressable key={index} onPress={() => handlePressIndicator(index)}>
+                  <PageIndicator swipeOffset={swipeOffset} itemIndex={index} />
+                </Pressable>
+              ))}
+            </Pagination>
+          </EdgeAnim>
           <SectionCoverAnimated swipeOffset={swipeOffset}>
             <Sections swipeOffset={swipeOffset}>
               {sections.map((section, index) => {
@@ -216,8 +231,12 @@ export const GettingStartedScene = (props: Props) => {
               })}
             </Sections>
             <Space horizontal={2}>
-              <MainButton onPress={handlePressSignUp} label={lstrings.account_get_started} />
-              <MainButton type="escape" onPress={handlePressSignIn} label={lstrings.getting_started_button_sign_in} />
+              <EdgeAnim enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance: 40 }}>
+                <MainButton onPress={handlePressSignUp} label={lstrings.account_get_started} />
+              </EdgeAnim>
+              <EdgeAnim enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance: 60 }}>
+                <MainButton type="escape" onPress={handlePressSignIn} label={lstrings.getting_started_button_sign_in} />
+              </EdgeAnim>
             </Space>
           </SectionCoverAnimated>
         </Container>
