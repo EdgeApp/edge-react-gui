@@ -10,9 +10,10 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { Space } from '../layout/Space'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 
 interface Props extends EdgeSceneProps<'createWalletAccountSetup'> {}
 
@@ -76,19 +77,20 @@ export function CreateWalletAccountSetupScene(props: Props): JSX.Element {
       Switch to MessageText if we ever define that: */}
       <ModalMessage>{sprintf(lstrings.create_wallet_account_review_instructions, currencyCode)}</ModalMessage>
       <ModalMessage>{lstrings.create_wallet_account_requirements_eos}</ModalMessage>
-      <OutlinedTextInput
-        autoCorrect={false}
-        autoCapitalize="none"
-        autoFocus
-        error={errorMessage}
-        label={lstrings.create_wallet_account_handle}
-        marginRem={[1, 1, 2]}
-        maxLength={12}
-        returnKeyType="next"
-        value={text}
-        onChangeText={handleChangeText}
-        onSubmitEditing={handleSubmit}
-      />
+      <Space around={1} bottom={2}>
+        <FilledTextInput
+          autoCorrect={false}
+          autoCapitalize="none"
+          autoFocus
+          error={errorMessage}
+          placeholder={lstrings.create_wallet_account_handle}
+          maxLength={12}
+          returnKeyType="next"
+          value={text}
+          onChangeText={handleChangeText}
+          onSubmitEditing={handleSubmit}
+        />
+      </Space>
       <MainButton
         alignSelf="center"
         disabled={spinning || text.length !== 12}
