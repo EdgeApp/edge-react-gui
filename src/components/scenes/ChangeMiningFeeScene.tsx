@@ -186,4 +186,4 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-export const ChangeMiningFeeScene2 = withTheme(ChangeMiningFeeComponent)
+export const ChangeMiningFeeScene = withTheme(ChangeMiningFeeComponent)
