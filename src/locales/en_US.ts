@@ -1460,9 +1460,14 @@ const strings = {
   // #region Home
 
   buy_crypto: 'Buy Crypto',
+  buy_crypto_footer: 'Bank or cash to crypto',
   see_all: 'See All',
   sell_crypto: 'Sell Crypto',
+  sell_crypto_footer: 'Crypto to bank or cash',
   swap_crypto: 'Swap Crypto',
+  swap_crypto_footer: 'Crypto to another crypto',
+  fio_web3: 'Web3 Handle',
+  fio_web3_footer: 'Manage your handles and domains',
   title_home: 'Home',
   title_learn: 'Learn',
   view_assets: 'View Assets',

@@ -74,5 +74,5 @@ export const getThemedIconUri = (theme: Theme, path: string) => {
 }
 
 export const getUi4ImageUri = (theme: Theme, path: string) => {
-  return `${EDGE_CONTENT_SERVER_URI}/UI4/${path}.png`
+  return `${EDGE_CONTENT_SERVER_URI}/UI4/${path}.png?`
 }

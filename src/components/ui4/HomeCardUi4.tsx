@@ -33,13 +33,12 @@ export const HomeCardUi4 = (props: Props) => {
 
   return (
     <CardUi4 gradientBackground={gradientBackground} nodeBackground={nodeBackground} onPress={handlePress}>
-      <View style={styles.titleContainer}>
-        <EdgeText style={textShadow}>{title}</EdgeText>
-
-        <IonIcon size={theme.rem(1.25)} style={[styles.chevronIcon, textShadow]} color={theme.iconTappable} name="chevron-forward-outline" />
-      </View>
-      <View style={styles.footerContainer}>
-        <EdgeText style={[styles.footerText, textShadow]} numberOfLines={2}>
+      <View style={styles.verticalSplitContainer}>
+        <View style={styles.titleContainer}>
+          <EdgeText style={textShadow}>{title}</EdgeText>
+          <IonIcon size={theme.rem(1.25)} style={[styles.chevronIcon, textShadow]} color={theme.iconTappable} name="chevron-forward-outline" />
+        </View>
+        <EdgeText style={[styles.footerText, textShadow]} numberOfLines={3} disableFontScaling>
           {footer}
         </EdgeText>
       </View>
@@ -51,16 +50,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
   titleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'stretch',
-    margin: theme.rem(0.25),
-    marginBottom: theme.rem(4)
-  },
-  footerContainer: {
-    margin: theme.rem(0.25)
+    alignItems: 'stretch'
   },
   footerText: {
-    fontSize: theme.rem(0.75),
-    color: theme.secondaryTextUi4
+    fontSize: theme.rem(0.75)
+  },
+  verticalSplitContainer: {
+    flex: 1, // Make sure the card fills the space
+    justifyContent: 'space-between', // Aligns title to the top, footer to the bottom
+    margin: theme.rem(0.5)
   },
 
   // Adjust for bounding box

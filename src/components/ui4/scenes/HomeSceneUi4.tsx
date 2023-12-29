@@ -34,6 +34,10 @@ export const HomeSceneUi4 = (props: Props) => {
   const styles = getStyles(theme)
 
   const { width: screenWidth } = useSafeAreaFrame()
+
+  // Evenly distribute the home cards into 4 quadrants:
+  const cardSize = screenWidth / 2 - theme.rem(TEMP_PADDING_REM)
+
   const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
 
   const handleBuyPress = useHandler(() => {
@@ -72,13 +76,13 @@ export const HomeSceneUi4 = (props: Props) => {
         <SectionView extendRight>
           <>
             <BalanceCardUi4 onViewAssetsPress={handleViewAssetsPress} navigation={navigation} />
-            <View style={styles.homeRowContainer}>
+            <View style={[styles.homeRowContainer, { height: cardSize }]}>
               <HomeCardUi4
                 title={lstrings.buy_crypto}
-                footer="lorem ipsum dolor sit amet"
+                footer={lstrings.buy_crypto_footer}
                 gradientBackground={theme.buyCardGradientUi4}
                 nodeBackground={
-                  <View style={styles.backgroundContainer}>
+                  <View style={styles.backroundImageContainer}>
                     <FastImage source={{ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto') }} style={styles.backgroundImage} resizeMode="stretch" />
                   </View>
                 }
@@ -86,19 +90,23 @@ export const HomeSceneUi4 = (props: Props) => {
               />
               <HomeCardUi4
                 title={lstrings.sell_crypto}
-                footer="lorem ipsum dolor sit amet"
+                footer={lstrings.sell_crypto_footer}
                 gradientBackground={theme.sellCardGradientUi4}
-                nodeBackground={<>{/* TODO */}</>}
+                nodeBackground={
+                  <View style={styles.backroundImageContainer}>
+                    <FastImage source={{ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-sell-crypto') }} style={styles.backgroundImage} resizeMode="stretch" />
+                  </View>
+                }
                 onPress={handleSellPress}
               />
             </View>
-            <View style={styles.homeRowContainer}>
+            <View style={[styles.homeRowContainer, { height: cardSize }]}>
               <HomeCardUi4
-                title={lstrings.title_fio_names}
-                footer="lorem ipsum dolor sit amet"
+                title={lstrings.fio_web3}
+                footer={lstrings.fio_web3_footer}
                 gradientBackground={theme.fioCardGradientUi4}
                 nodeBackground={
-                  <View style={styles.backgroundContainer}>
+                  <View style={styles.backroundImageContainer}>
                     <FastImage source={{ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-fio') }} style={styles.backgroundImage} resizeMode="stretch" />
                   </View>
                 }
@@ -106,9 +114,13 @@ export const HomeSceneUi4 = (props: Props) => {
               />
               <HomeCardUi4
                 title={lstrings.swap_crypto}
-                footer="lorem ipsum dolor sit amet"
+                footer={lstrings.swap_crypto_footer}
                 gradientBackground={theme.swapCardGradientUi4}
-                nodeBackground={<>{/* TODO */}</>}
+                nodeBackground={
+                  <View style={styles.backroundImageContainer}>
+                    <FastImage source={{ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-trade') }} style={styles.backgroundImage} resizeMode="stretch" />
+                  </View>
+                }
                 onPress={handleSwapPress}
               />
             </View>
@@ -138,18 +150,19 @@ export const HomeSceneUi4 = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  backgroundContainer: {
+  backroundImageContainer: {
     alignItems: 'flex-start',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    opacity: 0.6
   },
   backgroundImage: {
     aspectRatio: 1,
-    height: '100%'
+    width: '100%'
   },
   homeRowContainer: {
     flexDirection: 'row',
-    flexGrow: 1,
-    justifyContent: 'space-between',
+    // flexGrow: 1,
+    justifyContent: 'space-evenly',
     alignContent: 'center',
     alignItems: 'stretch'
   },
