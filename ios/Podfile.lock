@@ -206,6 +206,8 @@ PODS:
   - hermes-engine (0.71.11):
     - hermes-engine/Pre-built (= 0.71.11)
   - hermes-engine/Pre-built (0.71.11)
+  - ImageColors (2.3.0):
+    - ExpoModulesCore
   - libevent (2.1.12)
   - libwebp (1.2.1):
     - libwebp/demux (= 1.2.1)
@@ -911,6 +913,7 @@ DEPENDENCIES:
   - FlipperKit/SKIOSNetworkPlugin (= 0.125.0)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
+  - ImageColors (from `../node_modules/react-native-image-colors/ios`)
   - libevent (~> 2.1.12)
   - OpenSSL-Universal (= 1.1.1100)
   - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera`)
@@ -1094,6 +1097,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
+  ImageColors:
+    :path: "../node_modules/react-native-image-colors/ios"
   Permission-Camera:
     :path: "../node_modules/react-native-permissions/ios/Camera"
   Permission-Contacts:
@@ -1298,6 +1303,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   gRPC-Swift: 74adcaaa62ac5e0a018938840328cb1fdfb09e7b
   hermes-engine: 34c863b446d0135b85a6536fa5fd89f48196f848
+  ImageColors: bce1dff849de75dc22a226cab709aabb072d5e4a
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
