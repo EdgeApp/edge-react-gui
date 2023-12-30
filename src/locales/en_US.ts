@@ -1468,6 +1468,8 @@ const strings = {
 
   // #endregion Home
 
+  redacted_placeholder: '●●●●',
+
   // Currency Labels
   currency_label_AFN: 'Afghani',
   currency_label_ALL: 'Lek',

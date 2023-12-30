@@ -52,12 +52,12 @@ const CurrencyRowComponent = (props: Props) => {
   }
 
   // Balance stuff:
-  const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
+  const hideBalance = useSelector(state => !state.ui.settings.isAccountBalanceVisible)
   const balance = useWalletBalance(wallet, tokenId)
   const icon = <CryptoIcon sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
   const tickerText = showRate && wallet != null ? <TickerText wallet={wallet} tokenId={tokenId} /> : null
-  const cryptoText = showBalance ? <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol /> : null
-  const fiatText = showBalance ? <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} /> : null
+  const cryptoText = <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol hideBalance={hideBalance} />
+  const fiatText = <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} hideBalance={hideBalance} />
 
   let displayCurrencyCode = currencyCode
   if (showTokenNames && tokenFromId != null) {

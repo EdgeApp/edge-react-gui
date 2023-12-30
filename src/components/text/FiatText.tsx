@@ -13,6 +13,7 @@ interface Props {
   maxPrecision?: number
   minPrecision?: number
   subCentTruncation?: boolean
+  hideBalance?: boolean
 
   // Amount to show:
   nativeCryptoAmount: string
@@ -33,6 +34,7 @@ export const FiatText = ({
   minPrecision,
   nativeCryptoAmount,
   subCentTruncation = false,
+  hideBalance = false,
   tokenId,
   wallet
 }: Props) => {
@@ -52,7 +54,8 @@ export const FiatText = ({
     maxPrecision,
     minPrecision,
     nativeCryptoAmount,
-    subCentTruncation
+    subCentTruncation,
+    hideBalance
   })
   return <>{text}</>
 }

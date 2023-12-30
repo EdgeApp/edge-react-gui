@@ -40,7 +40,7 @@ export const BalanceCardUi4 = (props: Props) => {
 
   const fiatSymbol = defaultIsoFiat ? getSymbolFromCurrency(defaultIsoFiat) : ''
   const fiatCurrencyCode = defaultIsoFiat.replace('iso:', '')
-  const formattedFiat = isBalanceVisible ? formatNumber(fiatAmount, { toFixed: 2 }) : '****'
+  const formattedFiat = isBalanceVisible ? formatNumber(fiatAmount, { toFixed: 2 }) : lstrings.redacted_placeholder
 
   const textShadow = Platform.OS === 'ios' ? theme.shadowTextIosUi4 : theme.shadowTextAndroidUi4
 

@@ -53,15 +53,15 @@ const CurrencyViewUi4Component = (props: Props) => {
   }
 
   // Balance stuff:
-  const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
+  const hideBalance = useSelector(state => !state.ui.settings.isAccountBalanceVisible)
   const balance = useWalletBalance(wallet, tokenId)
   const { denominations } = token != null ? token : currencyInfo
   const [denomination] = denominations
 
   const icon = <CryptoIconUi4 sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
   const tickerText = wallet != null ? <AssetChangeTextUi4 wallet={wallet} tokenId={tokenId} style={styles.primaryText} /> : null
-  const cryptoText = showBalance ? <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol /> : null
-  const fiatBalanceText = showBalance ? <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} /> : null
+  const cryptoText = <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol hideBalance={hideBalance} />
+  const fiatBalanceText = <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} hideBalance={hideBalance} />
   const fiatRateText = <FiatText nativeCryptoAmount={denomination.multiplier} tokenId={tokenId} wallet={wallet} />
 
   let displayCurrencyCode = currencyCode

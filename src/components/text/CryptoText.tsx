@@ -9,6 +9,7 @@ interface Props {
   tokenId?: string
   wallet: EdgeCurrencyWallet
   withSymbol?: boolean
+  hideBalance?: boolean
 }
 
 /**
@@ -19,8 +20,9 @@ interface Props {
  * 2. Display Denomination
  * 3. Localization: commas, decimals, spaces
  **/
-export const CryptoText = React.memo(({ wallet, tokenId, nativeAmount, withSymbol }: Props) => {
-  const cryptoText = useCryptoText({ wallet, tokenId, nativeAmount, withSymbol })
+export const CryptoText = React.memo((props: Props) => {
+  const { wallet, tokenId, nativeAmount, withSymbol, hideBalance = false } = props
+  const cryptoText = useCryptoText({ wallet, tokenId, nativeAmount, withSymbol, hideBalance })
 
   return <EdgeText>{cryptoText}</EdgeText>
 })
