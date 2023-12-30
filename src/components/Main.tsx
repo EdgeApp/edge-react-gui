@@ -808,7 +808,7 @@ const EdgeWalletsTabScreen = () => {
           headerTitle: () => <TransactionDetailsTitle />
         }}
       />
-      <Stack.Screen name="walletList" component={WalletListScene} />
+      <Stack.Screen name="walletList" component={WalletListScene} options={firstSceneScreenOptions} />
       <Stack.Screen name="transactionList" component={TransactionList} />
     </Stack.Navigator>
   )
