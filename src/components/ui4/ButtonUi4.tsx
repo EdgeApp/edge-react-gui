@@ -1,10 +1,12 @@
 import * as React from 'react'
-import { ActivityIndicator, Platform, Text, TouchableOpacity, ViewStyle } from 'react-native'
+import { ActivityIndicator, Platform, TouchableOpacity, ViewStyle } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
+import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
 
 export type ButtonTypeUi4 = 'primary' | 'secondary' | 'tertiary'
 
@@ -34,13 +36,19 @@ interface Props {
 
   // Which visual style to use. Defaults to primary (solid):
   type?: ButtonTypeUi4
+
+  /** @deprecated - Shouldn't use this post-UI4 transition */
+  marginRem?: number[] | number
+
+  /** @deprecated - Shouldn't use this post-UI4 transition */
+  paddingRem?: number[] | number
 }
 
 /**
  * A stand-alone button to perform the primary action in a modal or scene.
  */
 export function ButtonUi4(props: Props) {
-  const { layout = 'solo', alignSelf = 'auto', children, disabled = false, label, onPress, type = 'primary', spinner = false } = props
+  const { layout = 'solo', alignSelf = 'auto', children, disabled = false, label, onPress, type = 'primary', spinner = false, marginRem, paddingRem } = props
 
   // `onPress` promise logic:
   const [pending, handlePress] = usePendingPress(onPress)
@@ -67,10 +75,11 @@ export function ButtonUi4(props: Props) {
 
   const dynamicGradientStyles = {
     alignSelf,
-    opacity: disabled ? 0.3 : pending ? 0.7 : 1
+    opacity: disabled ? 0.3 : pending ? 0.7 : 1,
+    ...(marginRem == null ? {} : sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))),
+    ...(paddingRem == null ? {} : sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem)))
   }
 
-  const androidAdjust = Platform.OS === 'android' ? styles.androidAdjust : null
   const textShadow = Platform.OS === 'ios' ? theme.shadowTextIosUi4 : theme.shadowTextAndroidUi4
 
   // Show a spinner if waiting on the onPress promise OR if the spinner prop is
@@ -79,9 +88,9 @@ export function ButtonUi4(props: Props) {
 
   const maybeText =
     label == null ? null : (
-      <Text adjustsFontSizeToFit minimumFontScale={0.75} numberOfLines={1} style={[textStyle, textShadow]}>
+      <EdgeText numberOfLines={1} disableFontScaling style={[textStyle, textShadow]}>
         {label}
-      </Text>
+      </EdgeText>
     )
 
   const containerStyle: ViewStyle[] = [styles.containerCommon]
@@ -93,7 +102,7 @@ export function ButtonUi4(props: Props) {
 
   return (
     <TouchableOpacity disabled={disabled || pending} style={finalContainerCommon} onPress={handlePress}>
-      <LinearGradient {...gradientProps} style={[styles.gradientLayoutCommon, dynamicGradientStyles, androidAdjust, ...finalContainerCommon]}>
+      <LinearGradient {...gradientProps} style={[styles.gradientLayoutCommon, dynamicGradientStyles, ...finalContainerCommon]}>
         {hideContent ? null : children}
         {hideContent ? null : maybeText}
         {!hideContent ? null : <ActivityIndicator color={spinnerColor} style={styles.spinnerCommon} />}
@@ -106,19 +115,16 @@ const getStyles = cacheStyles((theme: Theme) => {
   const commonTextViewStyle: ViewStyle = {
     marginHorizontal: theme.rem(0),
     paddingVertical: theme.rem(0.5),
-    paddingHorizontal: theme.rem(0.5)
+    paddingHorizontal: theme.rem(1.5)
   }
 
   return {
-    androidAdjust: {
-      paddingBottom: 3
-    },
     containerColumn: {
-      marginVertical: theme.rem(0.25),
-      flex: 1
+      alignSelf: 'center',
+      marginVertical: theme.rem(0.25)
     },
     containerSolo: {
-      paddingHorizontal: theme.rem(1)
+      alignSelf: 'center'
     },
     containerRow: {
       flex: 1

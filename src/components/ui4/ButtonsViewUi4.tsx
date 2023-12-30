@@ -91,9 +91,10 @@ const StyledButtonContainer = styled(View)<{ absolute: boolean; layout: 'row' | 
   const soloStyle: ViewStyle =
     layout === 'solo'
       ? {
-          flex: 1,
           justifyContent: 'center',
-          marginHorizontal: theme.rem(0.5)
+          marginHorizontal: theme.rem(0.5),
+          alignItems: 'center',
+          flex: 1
         }
       : {}
 
@@ -112,6 +113,7 @@ const StyledButtonContainer = styled(View)<{ absolute: boolean; layout: 'row' | 
       ? {
           flexDirection: 'column',
           justifyContent: 'space-between',
+          alignItems: 'center',
           marginBottom: theme.rem(3) // Extra padding to allow scrolling the buttons further from the hard-to-tap bottom edge
         }
       : {}
