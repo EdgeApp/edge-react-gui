@@ -49,7 +49,7 @@ export const HomeSceneUi4 = (props: Props) => {
     navigation.navigate('exchangeTab', {})
   })
   const handleViewAssetsPress = useHandler(() => {
-    navigation.navigate('walletsTab', {})
+    navigation.navigate('walletsTab', { screen: 'walletList' })
   })
 
   // TODO: Reimplement after info server is published
