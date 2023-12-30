@@ -1,11 +1,6 @@
 import * as React from 'react'
-import { ActivityIndicator, Text, TouchableOpacity, ViewStyle } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
-import { cacheStyles } from 'react-native-patina'
 
-import { usePendingPress } from '../../hooks/usePendingPress'
-import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
-import { Theme, useTheme } from '../services/ThemeContext'
+import { ButtonUi4 } from '../ui4/ButtonUi4'
 
 export type MainButtonType = 'primary' | 'secondary' | 'escape'
 
@@ -46,136 +41,20 @@ interface Props {
  * A stand-alone button to perform the primary action in a modal or scene.
  */
 export function MainButton(props: Props) {
-  const { alignSelf = 'auto', children, disabled = false, label, marginRem, onPress, type = 'primary', paddingRem, spinner = false } = props
-
-  // `onPress` promise logic:
-  const [pending, handlePress] = usePendingPress(onPress)
-
-  // Styles:
-  const theme = useTheme()
-  const styles = getStyles(theme)
-
-  let touchableStyle, textStyle, spinnerColor, colors, start, end, buttonShadow
-  if (type === 'primary') {
-    touchableStyle = styles.primaryButton
-    textStyle = styles.primaryText
-    spinnerColor = theme.primaryButtonText
-    colors = theme.primaryButton
-    start = theme.primaryButtonColorStart
-    end = theme.primaryButtonColorEnd
-    buttonShadow = styles.primaryButtonShadow
-  } else if (type === 'secondary') {
-    touchableStyle = styles.secondaryButton
-    textStyle = styles.secondaryText
-    spinnerColor = theme.secondaryButtonText
-    colors = theme.secondaryButton
-    start = theme.secondaryButtonColorStart
-    end = theme.secondaryButtonColorEnd
-    buttonShadow = styles.secondaryButtonShadow
-  } else {
-    touchableStyle = styles.escapeButton
-    textStyle = styles.escapeText
-    spinnerColor = theme.escapeButtonText
-    colors = theme.escapeButton
-    start = theme.escapeButtonColorStart
-    end = theme.escapeButtonColorEnd
-    buttonShadow = styles.escapeButtonShadow
-  }
-  const dynamicStyles = {
-    alignSelf,
-    opacity: disabled ? 0.3 : pending ? 0.7 : 1,
-    ...sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem)),
-    ...sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
-  }
+  const { alignSelf = 'auto', children, disabled = false, label, marginRem = [0, 1, 0, 1], onPress, type = 'primary', paddingRem, spinner = false } = props
 
   return (
-    <TouchableOpacity disabled={disabled || pending} style={buttonShadow} onPress={handlePress}>
-      <LinearGradient colors={colors} start={start} end={end} style={[touchableStyle, dynamicStyles, styles.linearGradient]}>
-        {pending ? null : children}
-        {pending || label == null ? null : (
-          <Text adjustsFontSizeToFit minimumFontScale={0.75} numberOfLines={1} style={textStyle}>
-            {label}
-          </Text>
-        )}
-        {!pending && !spinner ? null : <ActivityIndicator color={spinnerColor} style={styles.spinner} />}
-      </LinearGradient>
-    </TouchableOpacity>
+    <ButtonUi4
+      alignSelf={alignSelf}
+      disabled={disabled}
+      label={label}
+      marginRem={marginRem}
+      onPress={onPress}
+      paddingRem={paddingRem}
+      spinner={spinner}
+      type={type === 'escape' ? 'tertiary' : type}
+    >
+      {children}
+    </ButtonUi4>
   )
 }
-
-const getStyles = cacheStyles((theme: Theme) => {
-  const commonButton: ViewStyle = {
-    alignItems: 'center',
-    borderRadius: theme.rem(theme.buttonBorderRadiusRem),
-    flexDirection: 'row',
-    justifyContent: 'center',
-    minHeight: theme.rem(3),
-    minWidth: theme.rem(9)
-  }
-  const commonText: ViewStyle = {
-    marginHorizontal: theme.rem(0),
-    paddingTop: theme.rem(0.5),
-    paddingBottom: theme.rem(0.5),
-    paddingLeft: theme.rem(0.75),
-    paddingRight: theme.rem(0.75)
-  }
-
-  return {
-    linearGradient: {
-      // flex: 1,
-      paddingLeft: 0,
-      paddingRight: 0,
-      borderRadius: theme.rem(theme.buttonBorderRadiusRem)
-    },
-
-    primaryButton: {
-      ...commonButton,
-      borderColor: theme.primaryButtonOutline,
-      borderWidth: theme.primaryButtonOutlineWidth
-    },
-
-    primaryButtonShadow: { ...theme.primaryButtonShadow },
-
-    primaryText: {
-      ...commonText,
-      ...theme.primaryButtonTextShadow,
-      fontFamily: theme.primaryButtonFont,
-      fontSize: theme.rem(theme.primaryButtonFontSizeRem),
-      color: theme.primaryButtonText
-    },
-
-    secondaryButton: {
-      ...commonButton,
-      borderColor: theme.secondaryButtonOutline,
-      borderWidth: theme.secondaryButtonOutlineWidth
-    },
-    secondaryButtonShadow: { ...theme.secondaryButtonShadow },
-
-    secondaryText: {
-      ...commonText,
-      fontFamily: theme.secondaryButtonFont,
-      fontSize: theme.rem(theme.secondaryButtonFontSizeRem),
-      color: theme.secondaryButtonText
-    },
-
-    escapeButton: {
-      ...commonButton,
-      borderColor: theme.escapeButtonOutline,
-      borderWidth: theme.escapeButtonOutlineWidth
-    },
-    escapeButtonShadow: { ...theme.escapeButtonShadow },
-
-    escapeText: {
-      ...commonText,
-      fontFamily: theme.escapeButtonFont,
-      fontSize: theme.rem(theme.escapeButtonFontSizeRem),
-      color: theme.escapeButtonText
-    },
-
-    // Common styles:
-    spinner: {
-      height: theme.rem(2),
-      marginHorizontal: theme.rem(0.5)
-    }
-  }
-})
