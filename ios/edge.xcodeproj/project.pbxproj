@@ -38,10 +38,12 @@
 		3D5BD9CD2A4D27C400590088 /* SourceSansPro-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D5BD9B62A4D277B00590088 /* SourceSansPro-Black.ttf */; };
 		3D5BD9CE2A4D27C400590088 /* SourceSansPro-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D5BD9B02A4D277B00590088 /* SourceSansPro-Bold.ttf */; };
 		3D5BD9CF2A4D27F300590088 /* custom.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D5BD9AD2A4D277B00590088 /* custom.ttf */; };
+		812B284944A10A722B22763D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08ADAD14914ABC9FD7D54456 /* ExpoModulesProvider.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		08ADAD14914ABC9FD7D54456 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-edge/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Edge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Edge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = edge/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = edge/AppDelegate.mm; sourceTree = "<group>"; };
@@ -150,6 +152,14 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		61D03668B43B6EE95C40034D /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				DBEBA59143036B1EE984A6FC /* edge */,
+			);
+			name = ExpoModulesProviders;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -169,6 +179,7 @@
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				3D5BD98C2A4D249A00590088 /* Resources */,
+				61D03668B43B6EE95C40034D /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -191,6 +202,14 @@
 				5B7EB9410499542E8C5724F5 /* Pods-edge-edgeTests.debug.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		DBEBA59143036B1EE984A6FC /* edge */ = {
+			isa = PBXGroup;
+			children = (
+				08ADAD14914ABC9FD7D54456 /* ExpoModulesProvider.swift */,
+			);
+			name = edge;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -403,6 +422,7 @@
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				3D5BD9882A4CEFC700590088 /* Base58.swift in Sources */,
 				3D5BD9862A4CEFB900590088 /* EdgeCore.swift in Sources */,
+				812B284944A10A722B22763D /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -431,6 +451,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
 				PRODUCT_NAME = Edge;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -465,6 +486,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
 				PRODUCT_NAME = Edge;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -526,7 +548,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -591,7 +613,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
