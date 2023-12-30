@@ -77,6 +77,10 @@ const palette = {
   lightGreen: '#75C649',
   lightRed: '#E84D65',
 
+  learnLeft: 'rgba(0, 43, 51, .44)',
+  learnMiddle: 'rgba(0, 81, 92, .44)',
+  learnRight: 'rgba(0, 245, 155, .44)',
+
   // Button
   graySecondary: 'hsla(0, 0%, 100%, 0.20)',
 
@@ -522,6 +526,11 @@ export const edgeDark: Theme = {
     colors: [palette.errorOuter, palette.errorInner, palette.errorInner, palette.errorOuter],
     end: { x: 0.9, y: 0 },
     start: { x: 0, y: 0.9 }
+  },
+  cardGradientLearnUi4: {
+    colors: [palette.learnRight, palette.learnMiddle, palette.learnLeft],
+    end: { x: 1, y: 0 },
+    start: { x: 0, y: 1 }
   },
   cardOverlayDisabledUi4: palette.blackOp65,
   cardRadiusRemUi4: 1,

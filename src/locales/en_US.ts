@@ -1465,6 +1465,9 @@ const strings = {
   title_home: 'Home',
   title_learn: 'Learn',
   view_assets: 'View Assets',
+  title_support: 'Need Support?',
+  body_support: 'Contact our team of experts to troubleshoot your crypto needs',
+  button_support: 'Contact Support',
 
   // #endregion Home
 

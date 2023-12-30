@@ -62,7 +62,7 @@ export function PromoCardUi4Component(props: Props) {
         <EdgeText numberOfLines={3}>{message}</EdgeText>
         {ctaLabel == null ? null : (
           <View style={styles.cornerButtonContainer}>
-            <ButtonUi4 type="secondary" label={ctaLabel} onPress={handlePress} />
+            <ButtonUi4 layout="row" type="secondary" label={ctaLabel} onPress={handlePress} />
           </View>
         )}
       </View>

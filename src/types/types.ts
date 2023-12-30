@@ -287,6 +287,7 @@ export interface AppConfig {
   referralServers?: string[]
   supportsEdgeLogin: boolean
   supportEmail: string
+  supportContactSite: string
   supportSite: string
   termsOfServiceSite: string
   website: string
