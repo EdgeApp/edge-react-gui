@@ -141,32 +141,45 @@ exports[`BalanceCard should render with loading props 1`] = `
         
       </Text>
     </View>
-    <Text
-      adjustsFontSizeToFit={true}
-      minimumFontScale={0.65}
-      numberOfLines={1}
+    <View
       style={
-        [
-          {
-            "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
-            "includeFontPadding": false,
-          },
-          {
-            "textShadowColor": "#00000098",
-            "textShadowOffset": {
-              "height": 0,
-              "width": 0,
-            },
-            "textShadowRadius": 3,
-          },
-          null,
-        ]
+        {
+          "height": 56,
+        }
       }
     >
-      Exchange Rates Loading...
-    </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "height": 56,
+              },
+              {
+                "textShadowColor": "#00000098",
+                "textShadowOffset": {
+                  "height": 0,
+                  "width": 0,
+                },
+                "textShadowRadius": 3,
+              },
+            ],
+            null,
+          ]
+        }
+      >
+        Exchange Rates Loading...
+      </Text>
+    </View>
   </View>
   <View
     style={

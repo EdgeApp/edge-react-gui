@@ -71,11 +71,15 @@ export const BalanceCardUi4 = (props: Props) => {
           />
         </View>
         {!exchangeRatesReady ? (
-          <EdgeText style={textShadow}>{lstrings.exchange_rates_loading}</EdgeText>
+          <View style={styles.balanceTextContainer}>
+            <EdgeText style={[styles.balanceTextContainer, textShadow]}>{lstrings.exchange_rates_loading}</EdgeText>
+          </View>
         ) : (
-          <EdgeText style={[styles.balanceText, textShadow]}>
-            {fiatSymbol.length !== 1 ? `${formattedFiat} ${fiatCurrencyCode}` : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`}
-          </EdgeText>
+          <View style={styles.balanceTextContainer}>
+            <EdgeText style={[styles.balanceTextContainer, styles.balanceText, textShadow]}>
+              {fiatSymbol.length !== 1 ? `${formattedFiat} ${fiatCurrencyCode}` : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`}
+            </EdgeText>
+          </View>
         )}
       </TouchableOpacity>
       {onViewAssetsPress == null ? null : (
@@ -134,7 +138,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1.75),
     fontFamily: theme.fontFaceMedium
   },
-
+  balanceTextContainer: {
+    height: theme.rem(2.5)
+  },
   balanceBoxContainer: {
     height: theme.rem(3.25),
     marginTop: theme.rem(0.5)
