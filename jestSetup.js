@@ -13,6 +13,10 @@ jest.mock('disklet', () => {
   }
 })
 
+jest.mock('react-native-image-colors', () => ({
+  getColors: jest.fn().mockResolvedValue('')
+}))
+
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext)
 
 jest.mock('react-native-webview', () => ({

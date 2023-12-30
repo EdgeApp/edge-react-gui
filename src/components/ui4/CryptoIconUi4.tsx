@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Platform, StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { getColors } from 'react-native-image-colors'
 
 import compromisedIcon from '../../assets/images/compromisedIcon.png'
 import { useWatch } from '../../hooks/useWatch'
@@ -23,10 +24,13 @@ interface Props {
   // Styling props
   marginRem?: number | number[]
   sizeRem?: number
+
+  // Callbacks
+  onIconColor?: (color: string) => void
 }
 
 const CryptoIconComponent = (props: Props) => {
-  const { hideSecondary = false, marginRem, mono = false, sizeRem = 2, tokenId, walletId } = props
+  const { hideSecondary = false, marginRem, mono = false, sizeRem = 2, tokenId, walletId, onIconColor } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -45,16 +49,22 @@ const CryptoIconComponent = (props: Props) => {
   const { pluginId = wallet?.currencyInfo.pluginId } = props
 
   // Primary Currency icon
-  const primaryCurrencyIcon = React.useMemo(() => {
+  const primaryCurrencyIconUrl = React.useMemo(() => {
     if (pluginId == null) return null
 
     // Get Currency Icon URI
     const icon = getCurrencyIconUris(pluginId, tokenId)
-    const source = { uri: mono ? icon.symbolImageDarkMono : icon.symbolImage }
+    return mono ? icon.symbolImageDarkMono : icon.symbolImage
+  }, [pluginId, tokenId, mono])
+
+  const primaryCurrencyIcon = React.useMemo(() => {
+    if (primaryCurrencyIconUrl == null) return null
+
+    const source = { uri: primaryCurrencyIconUrl }
 
     // Return Currency logo from the edge server
     return <FastImage style={StyleSheet.absoluteFill} source={source} />
-  }, [pluginId, tokenId, mono])
+  }, [primaryCurrencyIconUrl])
 
   // Secondary (parent) currency icon (if it's a token)
   const secondaryCurrencyIcon = React.useMemo(() => {
@@ -114,6 +124,30 @@ const CryptoIconComponent = (props: Props) => {
           borderRadius: androidShadowSize / 2
         }
   }, [size, theme])
+
+  //
+  // Effects
+  //
+
+  React.useEffect(() => {
+    if (primaryCurrencyIconUrl == null || onIconColor == null) return
+
+    getColors(primaryCurrencyIconUrl, {
+      cache: true,
+      key: primaryCurrencyIconUrl
+    })
+      .then(colors => {
+        if (colors.platform === 'ios') {
+          onIconColor(colors.primary)
+        }
+        if (colors.platform === 'android') {
+          onIconColor(colors.dominant)
+        }
+      })
+      .catch(err => {
+        console.warn(err)
+      })
+  }, [onIconColor, primaryCurrencyIconUrl])
 
   return (
     <View style={spacingStyle}>
