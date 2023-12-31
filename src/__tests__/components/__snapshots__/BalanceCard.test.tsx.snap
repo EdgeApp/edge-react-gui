@@ -144,7 +144,9 @@ exports[`BalanceCard should render with loading props 1`] = `
     <View
       style={
         {
-          "height": 56,
+          "height": 51,
+          "marginBottom": 11,
+          "marginTop": 6,
         }
       }
     >
@@ -162,7 +164,9 @@ exports[`BalanceCard should render with loading props 1`] = `
             },
             [
               {
-                "height": 56,
+                "height": 51,
+                "marginBottom": 11,
+                "marginTop": 6,
               },
               {
                 "textShadowColor": "#00000098",
