@@ -1,5 +1,5 @@
 import { abs } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeMetadata, EdgeMetadataChange, EdgeSaveTxMetadataOptions, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeMetadata, EdgeMetadataChange, EdgeSaveTxMetadataOptions, EdgeTransaction, EdgeTxSwap } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -20,6 +20,7 @@ import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { matchJson } from '../../util/matchJson'
 import { convertNativeToExchange } from '../../util/utils'
 import { getMemoTitle } from '../../util/validateMemos'
@@ -60,6 +61,8 @@ const TransactionDetailsComponent = (props: Props) => {
   const styles = getStyles(theme)
   // Choose a default category based on metadata or the txAction
   const { direction, mergedData, savedData } = getTxActionDisplayInfo(transaction, account, wallet)
+
+  const swapData = convertActionToSwapData(account, transaction) ?? transaction.swapData
 
   const thumbnailPath = useContactThumbnail(mergedData.name)
 
@@ -362,7 +365,7 @@ const TransactionDetailsComponent = (props: Props) => {
       )}
 
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
-        {transaction.swapData == null ? null : <SwapDetailsCard swapData={transaction.swapData} transaction={transaction} wallet={wallet} />}
+        {swapData == null ? null : <SwapDetailsCard swapData={swapData} transaction={transaction} wallet={wallet} />}
       </EdgeAnim>
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 100 }}>
         <AdvancedDetailsCard transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />
@@ -422,3 +425,33 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const TransactionDetailsScene = withWallet(TransactionDetailsComponent)
+
+const convertActionToSwapData = (account: EdgeAccount, transaction: EdgeTransaction): EdgeTxSwap | undefined => {
+  const action = transaction.savedAction ?? transaction.chainAction
+  const assetAction = transaction.assetAction ?? transaction.chainAssetAction
+
+  if (action == null || assetAction == null) {
+    return
+  }
+
+  if (action.actionType !== 'swap') {
+    return
+  }
+
+  const { swapInfo, orderId, orderUri, isEstimate, toAsset, payoutAddress, payoutWalletId, refundAddress } = action
+
+  const payoutCurrencyCode = getCurrencyCodeWithAccount(account, toAsset.pluginId, toAsset.tokenId)
+
+  const out: EdgeTxSwap = {
+    orderId,
+    orderUri,
+    isEstimate: isEstimate ?? true,
+    plugin: swapInfo,
+    payoutAddress: payoutAddress,
+    payoutCurrencyCode,
+    payoutNativeAmount: action.toAsset.nativeAmount ?? '0',
+    payoutWalletId: payoutWalletId,
+    refundAddress: refundAddress
+  }
+  return out
+}
