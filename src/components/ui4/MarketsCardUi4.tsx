@@ -10,6 +10,8 @@ import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { asCoinranking, CoinRankingData } from '../../types/coinrankTypes'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { EdgeAsset } from '../../types/types'
+import { getCurrencyIconUris } from '../../util/CdnUris'
 import { debugLog, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
 import { makePeriodicTask } from '../../util/PeriodicTask'
@@ -21,6 +23,24 @@ import { RowUi4 } from './RowUi4'
 
 const LISTINGS_REFRESH_INTERVAL = 30000
 
+const COINGECKO_TO_EDGE_ASSET: Record<string, EdgeAsset> = {
+  bitcoin: { pluginId: 'bitcoin', tokenId: null },
+  ethereum: { pluginId: 'ethereum', tokenId: null },
+  tether: { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' },
+  binancecoin: { pluginId: 'binance', tokenId: null },
+  solana: { pluginId: 'solana', tokenId: null },
+  ripple: { pluginId: 'ripple', tokenId: null },
+  'usd-coin': { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' },
+  'avalanche-2': { pluginId: 'avalanche', tokenId: null },
+  dogecoin: { pluginId: 'dogecoin', tokenId: null },
+  polkadot: { pluginId: 'polkadot', tokenId: null },
+  tron: { pluginId: 'tron', tokenId: null },
+  'matic-network': { pluginId: 'polygon', tokenId: null },
+  chainlink: { pluginId: 'ethereum', tokenId: '514910771af9ca656af840dff83e8264ecf986ca' },
+  'wrapped-bitcoin': { pluginId: 'ethereum', tokenId: '2260fac5e5542a773aa44fbcfedf7c193bc2c599' },
+  'shiba-inu': { pluginId: 'ethereum', tokenId: '95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce' },
+  uniswap: { pluginId: 'ethereum', tokenId: '1f9840a85d5af5bf1d1762f925bdaddc4201f984' }
+}
 interface Props {
   navigation: NavigationBase
   numRows: number
@@ -41,7 +61,7 @@ export const MarketsCardUi4 = (props: Props) => {
   const [coinRankingDatas, setCoinRankingDatas] = React.useState<CoinRankingData[]>([])
 
   const renderCoinRow = (coinRow: CoinRankingData, index: number) => {
-    const { currencyCode, price, percentChange, imageUrl } = coinRow
+    const { assetId, currencyCode, price, percentChange, imageUrl } = coinRow
     const key = `${index}-${currencyCode}`
 
     // Price & percent change string
@@ -53,10 +73,20 @@ export const MarketsCardUi4 = (props: Props) => {
 
     const priceString = `${fiatSymbol}${formatFiatString({ fiatAmount: price.toString() })} `
 
+    // See if we have an Edge custom icons from a small list of top assets
+    let edgeIconUri
+    const edgeAsset = COINGECKO_TO_EDGE_ASSET[assetId]
+    if (edgeAsset != null) {
+      const icon = getCurrencyIconUris(edgeAsset.pluginId, edgeAsset.tokenId)
+      edgeIconUri = icon.symbolImage
+    }
+
+    const iconUrl = edgeIconUri ?? imageUrl
+
     return (
       <RowUi4
         key={key}
-        icon={imageUrl == null ? null : <FastImage style={styles.icon} source={{ uri: imageUrl }} />}
+        icon={iconUrl == null ? null : <FastImage style={styles.icon} source={{ uri: iconUrl }} />}
         onPress={() => navigation.navigate('coinRankingDetails', { coinRankingData: coinRow })}
         rightButtonType="none"
       >
