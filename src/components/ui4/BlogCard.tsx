@@ -50,7 +50,7 @@ export const BlogCard = (props: Props) => {
         <EdgeText style={[textShadow, styles.titleText]} numberOfLines={1}>
           {title}
         </EdgeText>
-        <EdgeText style={[styles.bodyText, textShadow]} numberOfLines={2}>
+        <EdgeText style={[styles.bodyText, textShadow]} numberOfLines={2} disableFontScaling>
           {body}
         </EdgeText>
       </View>
