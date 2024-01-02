@@ -2,6 +2,7 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import * as React from 'react'
 import { useMemo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
+import { AirshipBridge } from 'react-native-airship'
 import LinearGradient from 'react-native-linear-gradient'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -12,6 +13,9 @@ import { useHandler } from '../../hooks/useHandler'
 import { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
+import { useSelector } from '../../types/reactRedux'
+import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupForTransferModal'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
@@ -55,6 +59,8 @@ export const MenuTabs = (props: BottomTabBarProps) => {
 
   const activeTabRoute = state.routes[activeTabFullIndex]
   const activeTabIndex = routes.findIndex(route => route.name === activeTabRoute.name)
+  const activeUsername = useSelector(state => state.core.account.username)
+  const isLightAccount = activeUsername == null
 
   const handleOnPress = useHandler((route: string) => {
     const currentName = routes[activeTabIndex].name
@@ -64,9 +70,35 @@ export const MenuTabs = (props: BottomTabBarProps) => {
       case 'walletsTab':
         return navigation.navigate('walletsTab', currentName === 'walletsTab' ? { screen: 'walletList' } : {})
       case 'buyTab':
-        return navigation.navigate('buyTab', currentName === 'buyTab' ? { screen: 'pluginListBuy' } : {})
+        if (isLightAccount) {
+          Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
+            return <BackupForTransferModal bridge={bridge} />
+          })
+            .then((userSel?: BackupForTransferModalResult) => {
+              if (userSel === 'upgrade') {
+                navigation.navigate('upgradeUsername', {})
+              }
+            })
+            .catch(error => showError(error))
+        } else {
+          return navigation.navigate('buyTab', currentName === 'buyTab' ? { screen: 'pluginListBuy' } : {})
+        }
+        break
       case 'sellTab':
-        return navigation.navigate('sellTab', currentName === 'sellTab' ? { screen: 'pluginListSell' } : {})
+        if (isLightAccount) {
+          Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
+            return <BackupForTransferModal bridge={bridge} />
+          })
+            .then((userSel?: BackupForTransferModalResult) => {
+              if (userSel === 'upgrade') {
+                navigation.navigate('upgradeUsername', {})
+              }
+            })
+            .catch(error => showError(error))
+        } else {
+          return navigation.navigate('sellTab', currentName === 'sellTab' ? { screen: 'pluginListSell' } : {})
+        }
+        break
       case 'exchangeTab':
         return navigation.navigate('exchangeTab', currentName === 'exchangeTab' ? { screen: 'exchange' } : {})
       case 'extraTab':
