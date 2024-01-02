@@ -137,13 +137,11 @@ const MigrateWalletCompletionComponent = (props: Props) => {
         // Send tokens
         let feeTotal = '0'
         const hasError = false
-        const pendingTxs: EdgeTransaction[] = []
         const successfullyTransferredTokenIds: string[] = []
         for (const item of tokenItems) {
           let tokenSpendInfo: EdgeSpendInfo = {
             currencyCode: item.currencyCode,
             spendTargets: [{ publicAddress: newPublicAddress }],
-            pendingTxs,
             networkFeeOption: 'standard'
           }
           try {
@@ -153,7 +151,6 @@ const MigrateWalletCompletionComponent = (props: Props) => {
             successfullyTransferredTokenIds.push(item.tokenId)
             const txFee = tx.parentNetworkFee ?? tx.networkFee
             feeTotal = add(feeTotal, txFee)
-            pendingTxs.push(tx)
 
             handleItemStatus(item, 'complete')
           } catch (e: any) {
@@ -174,7 +171,6 @@ const MigrateWalletCompletionComponent = (props: Props) => {
               name: newWalletName,
               notes: sprintf(lstrings.migrate_wallet_tx_notes, newWalletName)
             },
-            pendingTxs,
             networkFeeOption: 'standard'
           }
           try {
