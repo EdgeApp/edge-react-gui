@@ -112,14 +112,16 @@ function TransactionListComponent(props: Props) {
     return out
   }, [atEnd, isTransactionListUnsupported, spamThreshold, transactions])
 
+  // TODO: Comment out sticky header indices until we figure out how to
+  // give the headers a background only when they're sticking.
   // Figure out where the section headers are located:
-  const stickyHeaderIndices = React.useMemo<number[]>(() => {
-    const out: number[] = []
-    for (let i = 0; i < listItems.length; ++i) {
-      if (typeof listItems[i] === 'string') out.push(i)
-    }
-    return out
-  }, [listItems])
+  // const stickyHeaderIndices = React.useMemo<number[]>(() => {
+  //   const out: number[] = []
+  //   for (let i = 0; i < listItems.length; ++i) {
+  //     if (typeof listItems[i] === 'string') out.push(i)
+  //   }
+  //   return out
+  // }, [listItems])
 
   // ---------------------------------------------------------------------------
   // Side-Effects
@@ -257,7 +259,9 @@ function TransactionListComponent(props: Props) {
               onEndReachedThreshold={0.5}
               refreshControl={refreshControl}
               renderItem={renderItem}
-              stickyHeaderIndices={stickyHeaderIndices}
+              // TODO: Comment out sticky header indices until we figure out how to
+              // give the headers a background only when they're sticking.
+              // stickyHeaderIndices={stickyHeaderIndices}
               onEndReached={handleScrollEnd}
             />
           )}
