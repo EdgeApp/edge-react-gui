@@ -12,6 +12,8 @@ import { EdgeSceneProps, NavigationProp } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SearchIconAnimated } from '../icons/ThemedIcons'
+import { Space } from '../layout/Space'
 import { ListModal } from '../modals/ListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -19,8 +21,8 @@ import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoR
 import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
+import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../themed/WalletList'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 
@@ -252,19 +254,19 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       {gap => (
         <View style={[styles.content, { marginBottom: -gap.bottom }]}>
           <SceneHeader title={lstrings.title_create_wallet_select_crypto} withTopMargin />
-          <OutlinedTextInput
-            autoCorrect={false}
-            autoCapitalize="words"
-            onChangeText={setSearchTerm}
-            value={searchTerm}
-            label={lstrings.wallet_list_wallet_search}
-            marginRem={[0.5, 1]}
-            searchIcon
-            clearIcon
-            blurOnClear={false}
-            onClear={() => setSearchTerm('')}
-            onSubmitEditing={handleSubmitEditing}
-          />
+          <Space vertical={0.5} horizontal={1}>
+            <SimpleTextInput
+              autoCorrect={false}
+              autoCapitalize="words"
+              onChangeText={setSearchTerm}
+              value={searchTerm}
+              placeholder={lstrings.wallet_list_wallet_search}
+              iconComponent={SearchIconAnimated}
+              blurOnClear={false}
+              onClear={() => setSearchTerm('')}
+              onSubmitEditing={handleSubmitEditing}
+            />
+          </Space>
           <FlashList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ paddingBottom: gap.bottom + theme.rem(4.25) }}

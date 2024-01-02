@@ -15,11 +15,13 @@ import { FlatListItem, GuiFiatType } from '../../types/types'
 import { scale } from '../../util/scaling'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SearchIconAnimated } from '../icons/ThemedIcons'
+import { Space } from '../layout/Space'
 import { showError } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
+import { SimpleTextInput } from '../themed/SimpleTextInput'
 
 interface OwnProps extends EdgeSceneProps<'defaultFiatSetting'> {}
 
@@ -85,16 +87,17 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
             <SceneHeader title={lstrings.title_create_wallet_select_fiat} underline withTopMargin>
-              <OutlinedTextInput
-                autoCorrect={false}
-                autoCapitalize="words"
-                onChangeText={this.handleSearchTermChange}
-                value={this.state.searchTerm}
-                label={lstrings.fragment_wallets_addwallet_fiat_hint}
-                returnKeyType="search"
-                marginRem={[1, 0.5, 0]}
-                searchIcon
-              />
+              <Space top={1} horizontal={0.5}>
+                <SimpleTextInput
+                  autoCorrect={false}
+                  autoCapitalize="words"
+                  onChangeText={this.handleSearchTermChange}
+                  value={this.state.searchTerm}
+                  placeholder={lstrings.fragment_wallets_addwallet_fiat_hint}
+                  returnKeyType="search"
+                  iconComponent={SearchIconAnimated}
+                />
+              </Space>
             </SceneHeader>
             <FlashList
               automaticallyAdjustContentInsets={false}

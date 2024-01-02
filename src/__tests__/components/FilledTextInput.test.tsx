@@ -2,35 +2,35 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
-import { OutlinedTextInput } from '../../components/themed/OutlinedTextInput'
+import { SearchIconAnimated } from '../../components/icons/ThemedIcons'
+import { FilledTextInput } from '../../components/themed/FilledTextInput'
 
-describe('OutlinedTextInput', () => {
+describe('FilledTextInput', () => {
   it('should render with some props', () => {
     const renderer = createRenderer()
 
     const actual = renderer.render(
-      <OutlinedTextInput
+      <FilledTextInput
         value="string"
         error="string"
-        label="string"
-        clearIcon // Defaults to 'true'
-        marginRem={0.5} // Defaults to 0.5
-        multiline // Defaults to 'false'
-        searchIcon // Defaults to 'false'
+        placeholder="string"
+        clearIcon
+        multiline
+        iconComponent={SearchIconAnimated}
         onBlur={() => undefined}
         onChangeText={() => undefined}
         onClear={() => undefined}
         onFocus={() => undefined}
         // Other React Native TextInput properties:
-        autoCapitalize="none" // Defaults to 'sentences'
-        autoCorrect // Defaults to 'true'
-        blurOnSubmit // Defaults to 'true'
+        autoCapitalize="none"
+        autoCorrect
+        blurOnSubmit
         inputAccessoryViewID="string"
-        keyboardType="default" // Defaults to 'default'
+        keyboardType="default"
         maxLength={11}
         onSubmitEditing={() => undefined}
-        returnKeyType="done" // Defaults to 'done'
-        secureTextEntry={false} // Defaults to 'false'
+        returnKeyType="done"
+        secureTextEntry={false}
         testID="string"
         autoFocus
         blurOnClear

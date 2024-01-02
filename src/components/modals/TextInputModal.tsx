@@ -3,11 +3,12 @@ import { Platform, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
+import { Space } from '../layout/Space'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props {
@@ -95,24 +96,25 @@ export function TextInputModal(props: Props) {
       {title != null ? <ModalTitle>{title}</ModalTitle> : null}
       {typeof message === 'string' ? <ModalMessage>{message}</ModalMessage> : <>{message}</>}
       {warningMessage != null ? <Alert type="warning" title={lstrings.string_warning} marginRem={0.5} message={warningMessage} numberOfLines={0} /> : null}
-      <OutlinedTextInput
-        // Text input props:
-        autoCapitalize={autoCapitalize}
-        autoFocus={autoFocus}
-        autoCorrect={autoCorrect}
-        keyboardType={keyboardType}
-        label={inputLabel}
-        returnKeyType={returnKeyType}
-        secureTextEntry={secureTextEntry}
-        multiline={multiline}
-        // Our props:
-        error={errorMessage}
-        marginRem={[1, 0.5, 1.5, 0.5]}
-        onChangeText={handleChangeText}
-        onSubmitEditing={handleSubmit}
-        value={text}
-        maxLength={maxLength}
-      />
+      <Space top={1} horizontal={0.5} bottom={1.5} expand>
+        <FilledTextInput
+          // Text input props:
+          autoCapitalize={autoCapitalize}
+          autoFocus={autoFocus}
+          autoCorrect={autoCorrect}
+          keyboardType={keyboardType}
+          placeholder={inputLabel}
+          returnKeyType={returnKeyType}
+          secureTextEntry={secureTextEntry}
+          multiline={multiline}
+          // Our props:
+          error={errorMessage}
+          onChangeText={handleChangeText}
+          onSubmitEditing={handleSubmit}
+          value={text}
+          maxLength={maxLength}
+        />
+      </Space>
       {
         // Hack around the android:windowSoftInputMode="adjustPan" glitch:
         Platform.OS === 'android' ? <View style={{ flex: 2 }} /> : null

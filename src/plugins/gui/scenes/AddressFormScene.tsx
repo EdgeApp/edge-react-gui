@@ -8,8 +8,8 @@ import Animated, { Easing, interpolateColor, useAnimatedStyle, useDerivedValue, 
 import { NotificationSceneWrapper } from '../../../components/common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
+import { FilledTextInputRef } from '../../../components/themed/FilledTextInput'
 import { MainButton } from '../../../components/themed/MainButton'
-import { OutlinedTextInputRef } from '../../../components/themed/OutlinedTextInput'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
@@ -75,7 +75,7 @@ export const AddressFormScene = React.memo((props: Props) => {
   const [isAnimateHintsNumChange, setIsAnimateHintsNumChange] = React.useState(false)
   const [hintHeight, setHintHeight] = React.useState<number>(0)
 
-  const rAddressInput = React.createRef<OutlinedTextInputRef>()
+  const rAddressInput = React.createRef<FilledTextInputRef>()
 
   const mounted = React.useRef<boolean>(true)
 

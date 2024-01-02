@@ -19,8 +19,8 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { showError, showToast } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
+import { FilledTextInput } from '../../themed/FilledTextInput'
 import { MainButton } from '../../themed/MainButton'
-import { OutlinedTextInput } from '../../themed/OutlinedTextInput'
 
 export interface FioCreateHandleParams {
   freeRegApiToken: string
@@ -182,7 +182,7 @@ export const FioCreateHandleScene = (props: Props) => {
         <FastImage source={{ uri: getFioCustomizeHandleImage(theme) }} style={styles.icon} />
         <EdgeText style={styles.title}>{lstrings.personalize_wallet_title}</EdgeText>
         <View style={styles.inputContainer}>
-          <OutlinedTextInput
+          <FilledTextInput
             ref={inputRef}
             suffix={domainStr}
             value={domainStr === '' ? '' : fioHandle}

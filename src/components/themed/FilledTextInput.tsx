@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { useMemo, useState } from 'react'
-import { TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import { useMemo } from 'react'
+import { ActivityIndicator, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, {
   interpolate,
   interpolateColor,
@@ -15,9 +15,10 @@ import Animated, {
 
 import { useHandler } from '../../hooks/useHandler'
 import { styled, styledWithRef } from '../hoc/styled'
-import { AnimatedIconComponent, CloseIconAnimated } from '../icons/ThemedIcons'
+import { AnimatedIconComponent, CloseIconAnimated, EyeIconAnimated, EyeOffIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
+import { NumericInput } from './NumericInput'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
@@ -26,13 +27,21 @@ export type FilledTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | '
 export interface FilledTextInputProps {
   // Contents:
   value: string
+  error?: string
+  valid?: string
   placeholder?: string
-
-  validate?: (value: string) => boolean
+  numeric?: boolean
+  minDecimals?: number
+  maxDecimals?: number
 
   // Appearance:
+  clearIcon?: boolean
   iconComponent?: AnimatedIconComponent | null
+  multiline?: boolean // Defaults to 'false'
   scale?: SharedValue<number>
+  showSpinner?: boolean
+  prefix?: string // Text input is left-left justified with a persistent prefix
+  suffix?: string // Text input is right-right justified with a persistent suffix
 
   // Callbacks:
   onBlur?: () => void
@@ -41,10 +50,15 @@ export interface FilledTextInputProps {
   onFocus?: () => void
 
   // Other React Native TextInput properties:
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' // Defaults to 'sentences'
+  autoCorrect?: boolean // Defaults to 'true'
+  blurOnSubmit?: boolean // Defaults to 'true'
+  inputAccessoryViewID?: string
   keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad' // Defaults to 'default'
   maxLength?: number
   onSubmitEditing?: () => void
   returnKeyType?: FilledTextInputReturnKeyType // Defaults to 'done'
+  secureTextEntry?: boolean // Defaults to 'false'
   testID?: string
 
   // Unless 'autoFocus' is passed explicitly in the props, Search Bars 'autoFocus' and 'regular' text inputs don't.
@@ -73,12 +87,22 @@ export interface FilledTextInputRef {
 export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextInputProps>((props: FilledTextInputProps, ref) => {
   const {
     // Contents:
+    error,
     placeholder,
+    valid,
     value,
+    numeric,
+    minDecimals,
+    maxDecimals,
 
     // Appearance:
+    clearIcon = true,
     iconComponent,
+    multiline = false,
     scale: scaleProp,
+    showSpinner = false,
+    prefix,
+    suffix,
 
     // Callbacks:
     onBlur,
@@ -88,10 +112,15 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     onSubmitEditing,
 
     // TextInput:
+    autoCapitalize,
+    autoCorrect,
     autoFocus = false,
     blurOnClear = false,
+    blurOnSubmit,
     disabled = false,
+    inputAccessoryViewID,
     maxLength,
+    secureTextEntry,
     testID
   } = props
   const theme = useTheme()
@@ -101,7 +130,9 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   const hasIcon = LeftIcon != null
   const hasValue = value !== ''
 
-  const [errorMessage, setErrorMessage] = useState<string>()
+  // Show/Hide password input:
+  const [hidePassword, setHidePassword] = React.useState(secureTextEntry ?? false)
+  const handleHidePassword = () => setHidePassword(!hidePassword)
 
   // Imperative methods:
   const inputRef = useAnimatedRef<TextInput>()
@@ -145,16 +176,6 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     if (onBlur != null) onBlur()
   })
   const handleChangeText = useHandler((value: string) => {
-    setErrorMessage(undefined)
-    if (props.validate != null) {
-      try {
-        if (!props.validate(value)) {
-          return
-        }
-      } catch (error) {
-        setErrorMessage(String(error))
-      }
-    }
     if (props.onChangeText != null) props.onChangeText(value)
   })
   const handleClearPress = useHandler(() => {
@@ -176,28 +197,32 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   const interpolateIconColor = useAnimatedColorInterpolateFn(theme.textInputIconColor, theme.textInputIconColorFocused, theme.textInputIconColorDisabled)
   const iconColor = useDerivedValue(() => interpolateIconColor(focusAnimation, disableAnimation))
 
-  const placeholderShift = useDerivedValue(() => (hasValue ? 1 : focusAnimation.value), [hasValue])
+  const focusValue = useDerivedValue(() => (hasValue ? 1 : focusAnimation.value), [hasValue])
 
   // Character Limit:
   const charactersLeft = maxLength === undefined ? '' : `${maxLength - value.length}`
 
+  const InputComponent = numeric ? StyledNumericInput : StyledAnimatedTextInput
+
   return (
     <>
       <TouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
-        <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale}>
+        <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} multiline={multiline} scale={scale}>
           <SideContainer scale={leftIconSize}>{LeftIcon == null ? null : <LeftIcon color={iconColor} size={leftIconSize} />}</SideContainer>
 
-          <InnerContainer>
+          <InnerContainer focusValue={focusValue} hasPlaceholder={placeholder != null}>
             {placeholder == null ? null : (
-              <Placeholder shift={placeholderShift}>
-                <PlaceholderText disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale} shift={placeholderShift}>
+              <Placeholder shift={focusValue}>
+                <PlaceholderText disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale} shift={focusValue}>
                   {placeholder}
                 </PlaceholderText>
               </Placeholder>
             )}
 
-            <InputField
+            {prefix == null ? null : <PrefixAnimatedText visibility={focusValue}>{prefix}</PrefixAnimatedText>}
+            <InputComponent
               accessible
+              animated
               ref={inputRef}
               keyboardType={props.keyboardType}
               returnKeyType={props.returnKeyType}
@@ -205,6 +230,9 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               autoFocus={autoFocus}
               disableAnimation={disableAnimation}
               focusAnimation={focusAnimation}
+              minDecimals={minDecimals}
+              maxDecimals={maxDecimals}
+              multiline={multiline}
               selectionColor={theme.textInputTextColor}
               testID={`${testID}.textInput`}
               textAlignVertical="top"
@@ -216,18 +244,37 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               onFocus={handleFocus}
               onSubmitEditing={handleSubmitEditing}
               maxLength={maxLength}
+              // Other Props:
+              autoCapitalize={autoCapitalize}
+              autoCorrect={autoCorrect}
+              blurOnSubmit={blurOnSubmit}
+              inputAccessoryViewID={inputAccessoryViewID}
+              secureTextEntry={hidePassword}
             />
+            {suffix == null ? null : <SuffixText>{suffix}</SuffixText>}
           </InnerContainer>
 
-          <TouchableOpacity accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
-            <SideContainer scale={rightIconSize}>
-              <CloseIconAnimated color={iconColor} size={rightIconSize} />
-            </SideContainer>
-          </TouchableOpacity>
+          {showSpinner ? <ActivityIndicator /> : null}
+          {secureTextEntry ? (
+            <TouchableWithoutFeedback testID={`${testID}.eyeIcon`} onPress={handleHidePassword}>
+              <IconContainer>
+                {hidePassword ? <EyeOffIconAnimated accessible color={iconColor} /> : <EyeIconAnimated accessible color={iconColor} />}
+              </IconContainer>
+            </TouchableWithoutFeedback>
+          ) : null}
+
+          {clearIcon ? (
+            <TouchableOpacity accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
+              <SideContainer scale={rightIconSize}>
+                <CloseIconAnimated color={iconColor} size={rightIconSize} />
+              </SideContainer>
+            </TouchableOpacity>
+          ) : null}
         </Container>
       </TouchableWithoutFeedback>
       <MessagesContainer>
-        <Message danger>{errorMessage}</Message>
+        {valid ? <Message>{valid}</Message> : null}
+        {error ? <Message danger>{error}</Message> : null}
         <Message>{charactersLeft}</Message>
       </MessagesContainer>
     </>
@@ -237,8 +284,9 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
 const Container = styled(Animated.View)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
+  multiline: boolean
   scale: SharedValue<number>
-}>(theme => ({ disableAnimation, focusAnimation, scale }) => {
+}>(theme => ({ disableAnimation, focusAnimation, multiline, scale }) => {
   const rem = theme.rem(1)
   const interpolateInputBackgroundColor = useAnimatedColorInterpolateFn(
     theme.textInputBackgroundColor,
@@ -253,7 +301,8 @@ const Container = styled(Animated.View)<{
 
   return [
     {
-      alignItems: 'center',
+      flex: multiline ? 1 : undefined,
+      alignItems: multiline ? 'stretch' : 'center',
       borderWidth: theme.textInputBorderWidth,
       borderRadius: theme.rem(0.5),
       flexDirection: 'row',
@@ -269,6 +318,10 @@ const Container = styled(Animated.View)<{
   ]
 })
 
+const IconContainer = styled(View)(theme => ({
+  paddingHorizontal: theme.rem(0.25)
+}))
+
 const SideContainer = styled(Animated.View)<{ scale: SharedValue<number> }>(theme => ({ scale }) => {
   return [
     {
@@ -282,8 +335,52 @@ const SideContainer = styled(Animated.View)<{ scale: SharedValue<number> }>(them
   ]
 })
 
-const InnerContainer = styled(Animated.View)(() => ({
-  flex: 1
+const InnerContainer = styled(Animated.View)<{
+  focusValue: SharedValue<number>
+  hasPlaceholder: boolean
+}>(theme => ({ hasPlaceholder, focusValue }) => {
+  const rem = theme.rem(1)
+  return [
+    {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      alignSelf: 'flex-start'
+    },
+    useAnimatedStyle(() => {
+      const shiftValue = interpolate(focusValue.value, [0, 1], [0, rem * 0.4])
+      return {
+        marginTop: hasPlaceholder ? shiftValue : undefined,
+        marginBottom: hasPlaceholder ? -shiftValue : undefined
+      }
+    })
+  ]
+})
+
+const PrefixAnimatedText = styled(Animated.Text)<{ visibility: SharedValue<number> }>(theme => ({ visibility }) => {
+  const rem = theme.rem(1)
+  const isAndroid = Platform.OS === 'android'
+  return [
+    {
+      color: theme.secondaryText,
+      fontFamily: theme.fontFaceDefault,
+      includeFontPadding: false
+    },
+    useAnimatedStyle(() => {
+      return {
+        opacity: visibility.value,
+        top: isAndroid ? -1 : 0,
+        transform: [{ translateY: (1 - visibility.value) * rem }, { scale: visibility.value }]
+      }
+    })
+  ]
+})
+
+const SuffixText = styled(EdgeText)(theme => ({
+  color: theme.secondaryText,
+  fontFamily: theme.fontFaceDefault,
+  includeFontPadding: false,
+  marginRight: theme.rem(1)
 }))
 
 const Placeholder = styled(Animated.View)<{ shift: SharedValue<number> }>(theme => ({ shift }) => {
@@ -291,6 +388,7 @@ const Placeholder = styled(Animated.View)<{ shift: SharedValue<number> }>(theme 
   return [
     {
       position: 'absolute',
+      top: 0,
       alignItems: 'center',
       justifyContent: 'center',
       paddingHorizontal: theme.rem(0.5),
@@ -298,7 +396,7 @@ const Placeholder = styled(Animated.View)<{ shift: SharedValue<number> }>(theme 
       margin: 0
     },
     useAnimatedStyle(() => ({
-      transform: [{ translateY: interpolate(shift.value, [0, 1], [0, -0.7 * rem]) }]
+      transform: [{ translateY: interpolate(shift.value, [0, 1], [0, -1.2 * rem]) }]
     }))
   ]
 })
@@ -332,7 +430,7 @@ const PlaceholderText = styled(Animated.Text)<{
   ]
 })
 
-const InputField = styledWithRef(AnimatedTextInput)<{
+const StyledAnimatedTextInput = styledWithRef(AnimatedTextInput)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
   scale: SharedValue<number>
@@ -342,8 +440,31 @@ const InputField = styledWithRef(AnimatedTextInput)<{
 
   return [
     {
-      position: 'relative',
-      top: theme.rem(0.4),
+      color: theme.textInputBackgroundColor,
+      flexGrow: 1,
+      flexShrink: 1,
+      fontFamily: theme.fontFaceDefault,
+      paddingHorizontal: theme.rem(0.5),
+      paddingVertical: 0,
+      margin: 0
+    },
+    useAnimatedStyle(() => ({
+      color: interpolateTextColor(focusAnimation, disableAnimation),
+      fontSize: scale.value * rem
+    }))
+  ]
+})
+
+const StyledNumericInput = styledWithRef(NumericInput)<{
+  disableAnimation: SharedValue<number>
+  focusAnimation: SharedValue<number>
+  scale: SharedValue<number>
+}>(theme => ({ disableAnimation, focusAnimation, scale }) => {
+  const rem = theme.rem(1)
+  const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused, theme.textInputTextColorDisabled)
+
+  return [
+    {
       color: theme.textInputBackgroundColor,
       flexGrow: 1,
       flexShrink: 1,

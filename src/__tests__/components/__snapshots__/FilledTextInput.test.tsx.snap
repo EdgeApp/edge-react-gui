@@ -1,0 +1,170 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FilledTextInput should render with some props 1`] = `
+<React.Fragment>
+  <TouchableWithoutFeedback
+    accessible={false}
+    onPress={[Function]}
+    testID="string"
+  >
+    <StyledComponent(View)
+      disableAnimation={
+        {
+          "value": 0,
+        }
+      }
+      focusAnimation={
+        {
+          "value": 0,
+        }
+      }
+      multiline={true}
+      scale={
+        {
+          "value": 1,
+        }
+      }
+    >
+      <StyledComponent(View)
+        scale={
+          {
+            "value": 0,
+          }
+        }
+      >
+        <Unknown
+          color={
+            {
+              "value": undefined,
+            }
+          }
+          size={
+            {
+              "value": 0,
+            }
+          }
+        />
+      </StyledComponent(View)>
+      <StyledComponent(View)
+        focusValue={
+          {
+            "value": 1,
+          }
+        }
+        hasPlaceholder={true}
+      >
+        <StyledComponent(View)
+          shift={
+            {
+              "value": 1,
+            }
+          }
+        >
+          <StyledComponent(Text)
+            disableAnimation={
+              {
+                "value": 0,
+              }
+            }
+            focusAnimation={
+              {
+                "value": 0,
+              }
+            }
+            scale={
+              {
+                "value": 1,
+              }
+            }
+            shift={
+              {
+                "value": 1,
+              }
+            }
+          >
+            string
+          </StyledComponent(Text)>
+        </StyledComponent(View)>
+        <StyledComponentWithRef(TextInput)
+          accessibilityState={
+            {
+              "disabled": false,
+            }
+          }
+          accessible={true}
+          animated={true}
+          autoCapitalize="none"
+          autoCorrect={true}
+          autoFocus={true}
+          blurOnSubmit={true}
+          disableAnimation={
+            {
+              "value": 0,
+            }
+          }
+          focusAnimation={
+            {
+              "value": 0,
+            }
+          }
+          inputAccessoryViewID="string"
+          keyboardType="default"
+          maxLength={11}
+          multiline={true}
+          onBlur={[Function]}
+          onChangeText={[Function]}
+          onFocus={[Function]}
+          onSubmitEditing={[Function]}
+          returnKeyType="done"
+          scale={
+            {
+              "value": 1,
+            }
+          }
+          secureTextEntry={false}
+          selectionColor="#FFFFFF"
+          testID="string.textInput"
+          textAlignVertical="top"
+          value="string"
+        />
+      </StyledComponent(View)>
+      <TouchableOpacity
+        accessible={true}
+        onPress={[Function]}
+        testID="string.clearIcon"
+      >
+        <StyledComponent(View)
+          scale={
+            {
+              "value": 22,
+            }
+          }
+        >
+          <Unknown
+            color={
+              {
+                "value": undefined,
+              }
+            }
+            size={
+              {
+                "value": 22,
+              }
+            }
+          />
+        </StyledComponent(View)>
+      </TouchableOpacity>
+    </StyledComponent(View)>
+  </TouchableWithoutFeedback>
+  <StyledComponent(View)>
+    <StyledComponent(WithTheme(EdgeTextComponent))
+      danger={true}
+    >
+      string
+    </StyledComponent(WithTheme(EdgeTextComponent))>
+    <StyledComponent(WithTheme(EdgeTextComponent))>
+      5
+    </StyledComponent(WithTheme(EdgeTextComponent))>
+  </StyledComponent(View)>
+</React.Fragment>
+`;

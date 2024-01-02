@@ -14,8 +14,8 @@ import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { EdgeText } from '../themed/EdgeText'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 
 interface Props extends EdgeSceneProps<'spendingLimits'> {}
 
@@ -65,7 +65,7 @@ export const SpendingLimitsScene = (props: Props) => {
   return (
     <SceneWrapper hasHeader>
       <KeyboardAwareScrollView contentContainerStyle={styles.scene}>
-        <OutlinedTextInput secureTextEntry autoFocus label={lstrings.enter_your_password} value={password} onChangeText={setPassword} />
+        <FilledTextInput secureTextEntry autoFocus placeholder={lstrings.enter_your_password} value={password} onChangeText={setPassword} />
 
         <View style={styles.switchRow}>
           <View style={styles.textBlock}>
@@ -75,11 +75,11 @@ export const SpendingLimitsScene = (props: Props) => {
           <SettingsSwitchRow value={transactionIsEnabled} onPress={handleTransactionIsEnabledChanged} />
         </View>
 
-        <OutlinedTextInput
+        <FilledTextInput
           disabled={!transactionIsEnabled}
           value={transactionAmount}
           onChangeText={setTransactionAmount}
-          label={lstrings.spending_limits_tx_title}
+          placeholder={lstrings.spending_limits_tx_title}
           autoCorrect={false}
           autoFocus={false}
           keyboardType="numeric"

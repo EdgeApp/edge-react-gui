@@ -17,12 +17,14 @@ import { BooleanMap, EdgeAsset } from '../../types/types'
 import { getCurrencyCode, getTokenId, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { CustomAsset } from '../data/row/CustomAssetRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
+import { SearchIconAnimated } from '../icons/ThemedIcons'
+import { Space } from '../layout/Space'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { ModalFooterFade, ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
+import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 import { WalletList } from '../themed/WalletList'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
@@ -220,17 +222,18 @@ export function WalletListModal(props: Props) {
       {bankSection}
       {customAssetSection}
       {showBankOptions || showCustomAssets ? <EdgeText>{lstrings.your_wallets}</EdgeText> : null}
-      <OutlinedTextInput
-        returnKeyType="search"
-        label={lstrings.search_wallets}
-        onChangeText={setSearchText}
-        onFocus={handleSearchFocus}
-        onBlur={handleSearchUnfocus}
-        onClear={handleSearchClear}
-        value={searchText}
-        marginRem={[0.5, 0, 1.25, 0]}
-        searchIcon
-      />
+      <Space top={0.5} bottom={1.25}>
+        <SimpleTextInput
+          returnKeyType="search"
+          placeholder={lstrings.search_wallets}
+          onChangeText={setSearchText}
+          onFocus={handleSearchFocus}
+          onBlur={handleSearchUnfocus}
+          onClear={handleSearchClear}
+          value={searchText}
+          iconComponent={SearchIconAnimated}
+        />
+      </Space>
       <View style={styles.walletsMargin}>
         <WalletList
           allowedAssets={allowedAssets}

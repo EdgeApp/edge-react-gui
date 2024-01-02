@@ -1,7 +1,6 @@
 import { gte } from 'biggystring'
 import { Platform } from 'react-native'
 
-import { OutlinedTextInputProps } from '../components/themed/OutlinedTextInput'
 import { lstrings } from '../locales/strings'
 import { WalletConnectChainId } from '../types/types'
 
@@ -120,7 +119,7 @@ export interface ImportKeyOption {
     knowledgeBaseUri?: string
   }
   required: boolean
-  inputType: OutlinedTextInputProps['keyboardType']
+  inputType: 'default' | 'number-pad'
   inputValidation: (input: string) => boolean
 }
 

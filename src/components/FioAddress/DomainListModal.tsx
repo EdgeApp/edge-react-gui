@@ -9,11 +9,13 @@ import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { FioDomain, FlatListItem } from '../../types/types'
+import { SearchIconAnimated } from '../icons/ThemedIcons'
+import { Space } from '../layout/Space'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { ClickableText } from '../themed/ClickableText'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalFooter, ModalFooterFade, ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
+import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface Item {
@@ -158,17 +160,18 @@ class DomainListModalComponent extends React.Component<Props, State> {
           {lstrings.fio_address_choose_domain_label}
         </ModalTitle>
         <View style={{ marginHorizontal: theme.rem(0.75) }}>
-          <OutlinedTextInput
-            autoCorrect={false}
-            returnKeyType="search"
-            autoCapitalize="none"
-            label={lstrings.fio_domain_label}
-            onChangeText={this.onSearchFilterChange}
-            onSubmitEditing={this.selectCustom}
-            value={input}
-            marginRem={[0, 1]}
-            searchIcon
-          />
+          <Space horizontal={1}>
+            <SimpleTextInput
+              autoCorrect={false}
+              returnKeyType="search"
+              autoCapitalize="none"
+              placeholder={lstrings.fio_domain_label}
+              onChangeText={this.onSearchFilterChange}
+              onSubmitEditing={this.selectCustom}
+              value={input}
+              iconComponent={SearchIconAnimated}
+            />
+          </Space>
         </View>
         <FlashList
           data={items}

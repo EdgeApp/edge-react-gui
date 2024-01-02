@@ -4,9 +4,10 @@ import { Keyboard, ViewStyle, ViewToken } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { useFilter } from '../../hooks/useFilter'
+import { Space } from '../layout/Space'
 import { useTheme } from '../services/ThemeContext'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
 
 interface Props<T> {
@@ -16,7 +17,7 @@ interface Props<T> {
   message?: string
   textInput?: boolean // Defaults to 'true'
   initialValue?: string // Defaults to ''
-  // OutlinedTextInput properties:
+  // FilledTextInput properties:
   searchIcon?: boolean // Defaults to 'true'
   label?: string // Defaults to ''
   autoCorrect?: boolean // Defaults to 'false'
@@ -53,6 +54,7 @@ export function ListModal<T>({
   closeArrow = true,
   onSubmitEditing,
   onViewableItemsChanged,
+  label: placeholder,
   ...textProps
 }: Props<T>) {
   const theme = useTheme()
@@ -76,21 +78,23 @@ export function ListModal<T>({
       {title == null ? null : <ModalTitle>{title}</ModalTitle>}
       {message == null ? null : <ModalMessage>{message}</ModalMessage>}
       {textInput == null ? null : (
-        <OutlinedTextInput
-          // Our props:
-          searchIcon
-          blurOnClear
-          autoCorrect={false}
-          autoCapitalize="words"
-          returnKeyType="done"
-          marginRem={[1, 0.5]}
-          testID={title}
-          onChangeText={handleChangeText}
-          onSubmitEditing={handleSubmitEditing}
-          value={text}
-          // Outlined Text input props:
-          {...textProps}
-        />
+        <Space vertical={1} horizontal={0.5}>
+          <FilledTextInput
+            // Our props:
+            searchIcon
+            blurOnClear
+            autoCorrect={false}
+            autoCapitalize="words"
+            returnKeyType="done"
+            testID={title}
+            onChangeText={handleChangeText}
+            onSubmitEditing={handleSubmitEditing}
+            value={text}
+            placeholder={placeholder}
+            // Outlined Text input props:
+            {...textProps}
+          />
+        </Space>
       )}
       <FlashList
         contentContainerStyle={scrollPadding}
