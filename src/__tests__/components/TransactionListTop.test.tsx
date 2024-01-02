@@ -72,6 +72,7 @@ describe('TransactionListTop', () => {
           wallet={fakeWallet}
           onSearchingChange={() => undefined}
           onSearchTextChange={() => undefined}
+          isLightAccount={false}
         />
       </FakeProviders>
     )
@@ -92,6 +93,7 @@ describe('TransactionListTop', () => {
           wallet={fakeWallet}
           onSearchingChange={() => undefined}
           onSearchTextChange={() => undefined}
+          isLightAccount={false}
         />
       </FakeProviders>
     )

@@ -11,12 +11,13 @@ import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
-import { useDispatch } from '../../types/reactRedux'
-import { Airship } from '../services/AirshipInstance'
+import { useDispatch, useSelector } from '../../types/reactRedux'
+import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ThemedModal } from '../themed/ThemedModal'
+import { BackupForTransferModal, BackupForTransferModalResult } from './BackupForTransferModal'
 import { WalletListModal, WalletListResult } from './WalletListModal'
 
 interface Props {
@@ -41,12 +42,35 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
   const style = styles(theme)
   const dispatch = useDispatch()
 
+  const activeUsername = useSelector(state => state.core.account.username)
+  const isLightAccount = activeUsername == null
+
+  const showBackupModal = useHandler(() => {
+    Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
+      return <BackupForTransferModal bridge={bridge} />
+    })
+      .then((userSel?: BackupForTransferModalResult) => {
+        if (userSel === 'upgrade') {
+          navigation.navigate('upgradeUsername', {})
+        }
+      })
+      .catch(error => showError(error))
+  })
+
   const handleSell = useHandler(() => {
-    navigation.navigate('sellTab', { screen: 'pluginListSell' })
+    if (isLightAccount) {
+      showBackupModal()
+    } else {
+      navigation.navigate('sellTab', { screen: 'pluginListSell' })
+    }
     Airship.clear()
   })
   const handleBuy = useHandler(() => {
-    navigation.navigate('buyTab', { screen: 'pluginListBuy' })
+    if (isLightAccount) {
+      showBackupModal()
+    } else {
+      navigation.navigate('buyTab', { screen: 'pluginListBuy' })
+    }
     Airship.clear()
   })
   const handleSend = useHandler(async () => {
@@ -62,14 +86,18 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
 
   const handleReceive = useHandler(async () => {
     Airship.clear()
-    const result = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={lstrings.select_receive_asset} navigation={navigation} showCreateWallet />
-    ))
+    if (isLightAccount) {
+      showBackupModal()
+    } else {
+      const result = await Airship.show<WalletListResult>(bridge => (
+        <WalletListModal bridge={bridge} headerTitle={lstrings.select_receive_asset} navigation={navigation} showCreateWallet />
+      ))
 
-    if (result?.type === 'wallet') {
-      const { walletId, tokenId } = result
-      await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
-      navigation.navigate('request', {})
+      if (result?.type === 'wallet') {
+        const { walletId, tokenId } = result
+        await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
+        navigation.navigate('request', {})
+      }
     }
   })
 

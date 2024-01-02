@@ -1433,6 +1433,8 @@ const strings = {
   backup_title: 'Back Up Your Account',
   backup_warning_message: 'Without a backup, you risk losing your funds!',
   tap_to_learn_more: 'Tap to learn more.',
+  backup_for_transfer_message:
+    'To buy, sell, and receive funds, please back up your account. Edge encrypted backups use a familiar username and password method that will safeguard your assets and help prevent loss of funds.\n\nNever share your username and password, and store your credentials securely!',
 
   // #endregion Light Account
 
