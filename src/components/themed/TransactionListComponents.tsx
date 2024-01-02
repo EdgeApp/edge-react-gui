@@ -57,7 +57,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(10)
   },
   headerContainer: {
-    backgroundColor: theme.listSectionHeaderBackgroundGradientColors[0],
     paddingLeft: theme.rem(1),
     paddingVertical: theme.rem(0.5)
   },
