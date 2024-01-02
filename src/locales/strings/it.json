@@ -1250,6 +1250,7 @@
   "backup_title": "Effettua il backup del tuo account",
   "backup_warning_message": "Senza un backup, rischi di perdere i tuoi fondi!",
   "tap_to_learn_more": "Tocca per saperne di più.",
+  "backup_for_transfer_message": "To buy, sell, and receive funds, please back up your account. Edge encrypted backups use a familiar username and password method that will safeguard your assets and help prevent loss of funds.\n\nNever share your username and password, and store your credentials securely!",
   "notif_tokens_detected_title": "Token rilevati",
   "notif_tokens_detected_on_wallet_name_1s": "Nuovi token sono stati rilevati e abilitati su %1$s. Clicca per visualizzare.",
   "notif_tokens_detected_on_address_1s": "Nuovi token sono stati rilevati e abilitati su un indirizzo %1$s. Clicca per visualizzare.",
