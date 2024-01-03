@@ -120,6 +120,7 @@ export const testDark: Theme = {
   iconLoadingOverlay: palette.whiteOp75,
   transactionListIconBackground: palette.darkBlue,
   buySellCustomPluginModalIcon: palette.darkBlue,
+  loadingIcon: palette.glowPurple,
 
   // Background
   backgroundGradientColors: [palette.deepPurple, palette.darkPurple2],

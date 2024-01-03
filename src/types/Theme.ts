@@ -94,6 +94,7 @@ export interface Theme {
   iconLoadingOverlay: string
   transactionListIconBackground: string
   buySellCustomPluginModalIcon: string
+  loadingIcon: string
 
   // Background
   backgroundGradientColors: string[]

@@ -85,6 +85,7 @@ export const testLight: Theme = {
   iconLoadingOverlay: palette.whiteOp75,
   transactionListIconBackground: palette.white,
   buySellCustomPluginModalIcon: palette.white,
+  loadingIcon: palette.edgeBlue,
 
   // Background
   backgroundGradientColors: [palette.lightestGray, palette.lightestGray],

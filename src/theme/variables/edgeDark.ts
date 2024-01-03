@@ -117,6 +117,7 @@ export const edgeDark: Theme = {
   iconLoadingOverlay: palette.whiteOp75,
   transactionListIconBackground: palette.darkAqua,
   buySellCustomPluginModalIcon: palette.navyAqua,
+  loadingIcon: palette.edgeMint,
 
   // Background
   // backgroundGradientColors: [palette.navyAqua, palette.navyAquaDarker], // For vertical gradient
