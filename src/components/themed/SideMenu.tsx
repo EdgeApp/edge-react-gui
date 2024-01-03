@@ -32,7 +32,7 @@ import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
-import { LoadingScene } from '../scenes/LoadingScene'
+import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { TitleText } from '../text/TitleText'
@@ -496,5 +496,5 @@ export function SideMenu(props: DrawerContentComponentProps) {
     if (!loggedIn) navigation.navigate('login')
   }, [loggedIn, navigation])
 
-  return loggedIn ? <SideMenuComponent {...props} /> : <LoadingScene />
+  return !loggedIn ? <SideMenuComponent {...props} /> : <LoadingSplashScreen />
 }
