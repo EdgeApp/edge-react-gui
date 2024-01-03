@@ -227,6 +227,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         collapsable={false}
         focusable={true}
         onClick={[Function]}
+        onLayout={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
         onResponderRelease={[Function]}
@@ -279,15 +280,10 @@ exports[`BalanceCard should render with loading props 1`] = `
                 "alignSelf": "stretch",
                 "borderRadius": 45,
               },
-              [
-                {
-                  "alignSelf": "stretch",
-                  "borderRadius": 45,
-                },
-                {
-                  "flex": 1,
-                },
-              ],
+              {
+                "flex": 1,
+              },
+              null,
             ]
           }
         >
@@ -351,6 +347,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         collapsable={false}
         focusable={true}
         onClick={[Function]}
+        onLayout={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
         onResponderRelease={[Function]}
@@ -403,15 +400,10 @@ exports[`BalanceCard should render with loading props 1`] = `
                 "alignSelf": "stretch",
                 "borderRadius": 45,
               },
-              [
-                {
-                  "alignSelf": "stretch",
-                  "borderRadius": 45,
-                },
-                {
-                  "flex": 1,
-                },
-              ],
+              {
+                "flex": 1,
+              },
+              null,
             ]
           }
         >

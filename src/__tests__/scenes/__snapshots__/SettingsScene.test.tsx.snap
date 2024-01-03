@@ -2613,6 +2613,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             collapsable={false}
             focusable={true}
             onClick={[Function]}
+            onLayout={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
             onResponderRelease={[Function]}
@@ -2668,15 +2669,10 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                     "alignSelf": "stretch",
                     "borderRadius": 45,
                   },
-                  [
-                    {
-                      "alignSelf": "stretch",
-                      "borderRadius": 45,
-                    },
-                    {
-                      "alignSelf": "center",
-                    },
-                  ],
+                  {
+                    "alignSelf": "center",
+                  },
+                  null,
                 ]
               }
             >
@@ -2740,6 +2736,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             collapsable={false}
             focusable={true}
             onClick={[Function]}
+            onLayout={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
             onResponderRelease={[Function]}
@@ -2795,15 +2792,10 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                     "alignSelf": "stretch",
                     "borderRadius": 45,
                   },
-                  [
-                    {
-                      "alignSelf": "stretch",
-                      "borderRadius": 45,
-                    },
-                    {
-                      "alignSelf": "center",
-                    },
-                  ],
+                  {
+                    "alignSelf": "center",
+                  },
+                  null,
                 ]
               }
             >
@@ -5465,6 +5457,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             collapsable={false}
             focusable={true}
             onClick={[Function]}
+            onLayout={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
             onResponderRelease={[Function]}
@@ -5520,15 +5513,10 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                     "alignSelf": "stretch",
                     "borderRadius": 45,
                   },
-                  [
-                    {
-                      "alignSelf": "stretch",
-                      "borderRadius": 45,
-                    },
-                    {
-                      "alignSelf": "center",
-                    },
-                  ],
+                  {
+                    "alignSelf": "center",
+                  },
+                  null,
                 ]
               }
             >
@@ -5592,6 +5580,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             collapsable={false}
             focusable={true}
             onClick={[Function]}
+            onLayout={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
             onResponderRelease={[Function]}
@@ -5647,15 +5636,10 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                     "alignSelf": "stretch",
                     "borderRadius": 45,
                   },
-                  [
-                    {
-                      "alignSelf": "stretch",
-                      "borderRadius": 45,
-                    },
-                    {
-                      "alignSelf": "center",
-                    },
-                  ],
+                  {
+                    "alignSelf": "center",
+                  },
+                  null,
                 ]
               }
             >

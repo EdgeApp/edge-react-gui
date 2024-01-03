@@ -513,6 +513,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       collapsable={false}
       focusable={true}
       onClick={[Function]}
+      onLayout={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
       onResponderRelease={[Function]}
@@ -568,15 +569,10 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               "alignSelf": "stretch",
               "borderRadius": 45,
             },
-            [
-              {
-                "alignSelf": "stretch",
-                "borderRadius": 45,
-              },
-              {
-                "alignSelf": "center",
-              },
-            ],
+            {
+              "alignSelf": "center",
+            },
+            null,
           ]
         }
       >
