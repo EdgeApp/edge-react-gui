@@ -33,12 +33,16 @@ interface Props {
     | 'row' // Buttons are stacked side by side horizontally, taking up 50% of the available space each.
     | 'column' // Buttons stacked on top of each other vertically, taking up as much space as the widest button.
     | 'solo' // A single centered button whose size is determined by label length (default for single-button props)
+
+  // Extra bottom margins for scenes to allow scrolling up further into an
+  // easier tap area of the screen
+  sceneMargin?: boolean
 }
 
 /**
  * A consistently styled view for displaying button layouts.
  */
-export const ButtonsViewUi4 = React.memo(({ absolute = false, fade, primary, secondary, secondary2, tertiary, layout = 'column' }: Props) => {
+export const ButtonsViewUi4 = React.memo(({ absolute = false, fade, primary, secondary, secondary2, tertiary, layout = 'column', sceneMargin }: Props) => {
   const [fadeVisibleHack, setFadeVisibleHack] = React.useState(false)
 
   const numButtons = [primary, secondary, secondary2, tertiary].filter(key => key != null).length
@@ -61,7 +65,7 @@ export const ButtonsViewUi4 = React.memo(({ absolute = false, fade, primary, sec
 
   return (
     <Animated.View style={fadeStyle}>
-      <StyledButtonContainer absolute={absolute} layout={layout}>
+      <StyledButtonContainer absolute={absolute} layout={layout} sceneMargin={sceneMargin}>
         {renderButton('primary', primary)}
         {renderButton('secondary', secondary2)}
         {renderButton('secondary', secondary)}
@@ -71,8 +75,8 @@ export const ButtonsViewUi4 = React.memo(({ absolute = false, fade, primary, sec
   )
 })
 
-const StyledButtonContainer = styled(View)<{ absolute: boolean; layout: 'row' | 'column' | 'solo' }>(theme => props => {
-  const { absolute, layout } = props
+const StyledButtonContainer = styled(View)<{ absolute: boolean; layout: 'row' | 'column' | 'solo'; sceneMargin?: boolean }>(theme => props => {
+  const { absolute, layout, sceneMargin } = props
 
   const marginSize = theme.rem(0.5)
 
@@ -119,11 +123,19 @@ const StyledButtonContainer = styled(View)<{ absolute: boolean; layout: 'row' | 
         }
       : {}
 
+  const sceneMarginStyle: ViewStyle = sceneMargin
+    ? {
+        marginBottom: theme.rem(3),
+        marginTop: theme.rem(1)
+      }
+    : {}
+
   return {
     ...baseStyle,
     ...absoluteStyle,
     ...soloStyle,
     ...rowStyle,
-    ...columnStyle
+    ...columnStyle,
+    ...sceneMarginStyle
   }
 })
