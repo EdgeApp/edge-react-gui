@@ -31,7 +31,7 @@ interface Props {
   // number of ButtonInfos given
   layout?:
     | 'row' // Buttons are stacked side by side horizontally, taking up 50% of the available space each.
-    | 'column' // Buttons stacked on top of each other vertically, taking up 100% of the available space each. TODO: Consider doing something fancier like measuring the longest label width instead of always 100% each (default for mutli-button props)
+    | 'column' // Buttons stacked on top of each other vertically, taking up as much space as the widest button.
     | 'solo' // A single centered button whose size is determined by label length (default for single-button props)
 }
 
@@ -49,6 +49,7 @@ export const ButtonsViewUi4 = React.memo(({ absolute = false, fade, primary, sec
   const renderButton = (type: ButtonTypeUi4, buttonProps?: ButtonInfo) => {
     if (buttonProps == null) return null
     const { label, onPress, disabled } = buttonProps
+
     return <ButtonUi4 layout={layout} label={label} onPress={onPress} type={type} disabled={disabled} />
   }
 
@@ -111,10 +112,10 @@ const StyledButtonContainer = styled(View)<{ absolute: boolean; layout: 'row' | 
   const columnStyle: ViewStyle =
     layout === 'column'
       ? {
+          alignSelf: 'center', // Shrink view around buttons
+          alignItems: 'stretch', // Stretch our children out
           flexDirection: 'column',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: theme.rem(3) // Extra padding to allow scrolling the buttons further from the hard-to-tap bottom edge
+          justifyContent: 'space-between'
         }
       : {}
 
