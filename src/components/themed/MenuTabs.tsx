@@ -7,11 +7,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
+import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { Fontello } from '../../assets/vector/index'
 import { useHandler } from '../../hooks/useHandler'
 import { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
+import { useSelector } from '../../types/reactRedux'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
@@ -55,6 +57,8 @@ export const MenuTabs = (props: BottomTabBarProps) => {
 
   const activeTabRoute = state.routes[activeTabFullIndex]
   const activeTabIndex = routes.findIndex(route => route.name === activeTabRoute.name)
+  const activeUsername = useSelector(state => state.core.account.username)
+  const isLightAccount = activeUsername == null
 
   const handleOnPress = useHandler((route: string) => {
     const currentName = routes[activeTabIndex].name
@@ -64,9 +68,19 @@ export const MenuTabs = (props: BottomTabBarProps) => {
       case 'walletsTab':
         return navigation.navigate('walletsTab', currentName === 'walletsTab' ? { screen: 'walletList' } : {})
       case 'buyTab':
-        return navigation.navigate('buyTab', currentName === 'buyTab' ? { screen: 'pluginListBuy' } : {})
+        if (isLightAccount) {
+          showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+        } else {
+          return navigation.navigate('buyTab', currentName === 'buyTab' ? { screen: 'pluginListBuy' } : {})
+        }
+        break
       case 'sellTab':
-        return navigation.navigate('sellTab', currentName === 'sellTab' ? { screen: 'pluginListSell' } : {})
+        if (isLightAccount) {
+          showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+        } else {
+          return navigation.navigate('sellTab', currentName === 'sellTab' ? { screen: 'pluginListSell' } : {})
+        }
+        break
       case 'exchangeTab':
         return navigation.navigate('exchangeTab', currentName === 'exchangeTab' ? { screen: 'exchange' } : {})
       case 'extraTab':

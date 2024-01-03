@@ -3,10 +3,10 @@ import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
+import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useMount } from '../../hooks/useMount'
@@ -16,7 +16,6 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { EdgeAsset, WcConnectionInfo } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupForTransferModal'
 import { ScanModal } from '../modals/ScanModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -71,15 +70,7 @@ export const WcConnectionsScene = (props: Props) => {
 
   const handleNewConnectionPress = async () => {
     if (isLightAccount) {
-      Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
-        return <BackupForTransferModal bridge={bridge} />
-      })
-        .then((userSel?: BackupForTransferModalResult) => {
-          if (userSel === 'upgrade') {
-            navigation.navigate('upgradeUsername', {})
-          }
-        })
-        .catch(error => showError(error))
+      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
     } else {
       const result = await Airship.show<string | undefined>(bridge => (
         <ScanModal
