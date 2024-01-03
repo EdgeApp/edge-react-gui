@@ -15,7 +15,6 @@ import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { WalletListFooter } from '../themed/WalletListFooter'
 import { WalletListHeader } from '../themed/WalletListHeader'
 import { WalletListSortable } from '../themed/WalletListSortable'
 import { WalletListSwipeable } from '../themed/WalletListSwipeable'
@@ -69,10 +68,6 @@ export function WalletListScene(props: Props) {
 
   // rendering -------------------------------------------------------------
 
-  const footer = React.useMemo(() => {
-    return <WalletListFooter navigation={navigation} />
-  }, [navigation])
-
   const header = React.useMemo(() => {
     return (
       <WalletListHeader
@@ -107,7 +102,7 @@ export function WalletListScene(props: Props) {
               <WalletListSwipeable
                 key="fullList"
                 header={header}
-                footer={searching ? undefined : footer}
+                footer={undefined}
                 navigation={navigation}
                 overscroll={notificationHeight}
                 searching={searching}

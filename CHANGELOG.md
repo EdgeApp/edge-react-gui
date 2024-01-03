@@ -12,6 +12,7 @@
 - fixed: Remove `minWidth` style from stake option card
 - fixed: Send scene no-longer accesses clipboard immediately
 - fixed: Don't pass pendingTxs with spendInfo in migrate flow
+- removed: Deposit/Send footer buttons in Wallet/Asset List Scene
 
 ## 3.23.0
 
