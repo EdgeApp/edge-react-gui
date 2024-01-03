@@ -6,12 +6,12 @@ import { AirshipBridge } from 'react-native-airship'
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { showError, showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 interface OwnProps {
   bridge: AirshipBridge<void>
@@ -102,7 +102,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
           // Hack around the Android keyboard glitch:
           Platform.OS === 'android' ? <View style={{ flex: 1 }} /> : null
         }
-        <ButtonsContainer
+        <ButtonsViewUi4
           primary={{ label: lstrings.password_reminder_check_password, onPress: this.handleSubmit, disabled: password.length === 0 }}
           secondary={{ label: lstrings.password_reminder_forgot_password, onPress: this.handleRequestChangePassword, disabled: checkingPassword }}
           layout="column"

@@ -24,7 +24,6 @@ import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { matchJson } from '../../util/matchJson'
 import { convertNativeToExchange } from '../../util/utils'
 import { getMemoTitle } from '../../util/validateMemos'
-import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -36,6 +35,7 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { AdvancedDetailsCard } from '../ui4/AdvancedDetailsCard'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { CardUi4 } from '../ui4/CardUi4'
 import { RowUi4 } from '../ui4/RowUi4'
 import { SwapDetailsCard } from '../ui4/SwapDetailsCard'
@@ -371,13 +371,13 @@ const TransactionDetailsComponent = (props: Props) => {
         <AdvancedDetailsCard transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />
       </EdgeAnim>
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
-        <ButtonsContainer
+        <ButtonsViewUi4
           layout="column"
           primary={{
             onPress: navigation.pop,
             label: lstrings.string_done_cap
           }}
-          scrollMargin
+          sceneMargin
         />
       </EdgeAnim>
     </SceneWrapper>
