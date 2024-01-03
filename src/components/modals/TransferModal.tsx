@@ -7,17 +7,17 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
+import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ThemedModal } from '../themed/ThemedModal'
-import { BackupForTransferModal, BackupForTransferModalResult } from './BackupForTransferModal'
 import { WalletListModal, WalletListResult } from './WalletListModal'
 
 interface Props {
@@ -45,21 +45,9 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
   const activeUsername = useSelector(state => state.core.account.username)
   const isLightAccount = activeUsername == null
 
-  const showBackupModal = useHandler(() => {
-    Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
-      return <BackupForTransferModal bridge={bridge} />
-    })
-      .then((userSel?: BackupForTransferModalResult) => {
-        if (userSel === 'upgrade') {
-          navigation.navigate('upgradeUsername', {})
-        }
-      })
-      .catch(error => showError(error))
-  })
-
   const handleSell = useHandler(() => {
     if (isLightAccount) {
-      showBackupModal()
+      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
     } else {
       navigation.navigate('sellTab', { screen: 'pluginListSell' })
     }
@@ -67,7 +55,7 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
   })
   const handleBuy = useHandler(() => {
     if (isLightAccount) {
-      showBackupModal()
+      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
     } else {
       navigation.navigate('buyTab', { screen: 'pluginListBuy' })
     }
@@ -87,7 +75,7 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
   const handleReceive = useHandler(async () => {
     Airship.clear()
     if (isLightAccount) {
-      showBackupModal()
+      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
     } else {
       const result = await Airship.show<WalletListResult>(bridge => (
         <WalletListModal bridge={bridge} headerTitle={lstrings.select_receive_asset} navigation={navigation} showCreateWallet />

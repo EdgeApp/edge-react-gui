@@ -2,20 +2,18 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import * as React from 'react'
 import { useMemo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
 import LinearGradient from 'react-native-linear-gradient'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
+import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { Fontello } from '../../assets/vector/index'
 import { useHandler } from '../../hooks/useHandler'
 import { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
-import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupForTransferModal'
-import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
@@ -71,30 +69,14 @@ export const MenuTabs = (props: BottomTabBarProps) => {
         return navigation.navigate('walletsTab', currentName === 'walletsTab' ? { screen: 'walletList' } : {})
       case 'buyTab':
         if (isLightAccount) {
-          Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
-            return <BackupForTransferModal bridge={bridge} />
-          })
-            .then((userSel?: BackupForTransferModalResult) => {
-              if (userSel === 'upgrade') {
-                navigation.navigate('upgradeUsername', {})
-              }
-            })
-            .catch(error => showError(error))
+          showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
         } else {
           return navigation.navigate('buyTab', currentName === 'buyTab' ? { screen: 'pluginListBuy' } : {})
         }
         break
       case 'sellTab':
         if (isLightAccount) {
-          Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
-            return <BackupForTransferModal bridge={bridge} />
-          })
-            .then((userSel?: BackupForTransferModalResult) => {
-              if (userSel === 'upgrade') {
-                navigation.navigate('upgradeUsername', {})
-              }
-            })
-            .catch(error => showError(error))
+          showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
         } else {
           return navigation.navigate('sellTab', currentName === 'sellTab' ? { screen: 'pluginListSell' } : {})
         }
