@@ -151,9 +151,10 @@ export const edgeDark: Theme = {
 
   // Section Lists
   // listSectionHeaderBackgroundGradientColors: [palette.navyAquaMiddle], // For vertical gradient
-  listSectionHeaderBackgroundGradientColors: [palette.darkestNavy, palette.darkAqua],
-  listSectionHeaderBackgroundGradientStart: { x: 0, y: 0 },
-  listSectionHeaderBackgroundGradientEnd: { x: 1, y: 0 },
+  listSectionHeaderBackgroundGradientColors: [`#000000aa`, `#00000000`],
+  // Commenting out will remove background gradient:
+  // listSectionHeaderBackgroundGradientStart: { x: 0, y: 0 },
+  // listSectionHeaderBackgroundGradientEnd: { x: 1, y: 0 },
 
   // WalletList
   walletListBackground: palette.navyAqua,
