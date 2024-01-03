@@ -31,7 +31,7 @@ interface Props {
   // number of ButtonInfos given
   layout?:
     | 'row' // Buttons are stacked side by side horizontally, taking up 50% of the available space each.
-    | 'column' // Buttons stacked on top of each other vertically, taking up 100% of the available space each. TODO: Consider doing something fancier like measuring the longest label width instead of always 100% each (default for mutli-button props)
+    | 'column' // Buttons stacked on top of each other vertically, taking up as much space as the widest button.
     | 'solo' // A single centered button whose size is determined by label length (default for single-button props)
 }
 
@@ -40,6 +40,14 @@ interface Props {
  */
 export const ButtonsViewUi4 = React.memo(({ absolute = false, fade, primary, secondary, secondary2, tertiary, layout = 'column' }: Props) => {
   const [fadeVisibleHack, setFadeVisibleHack] = React.useState(false)
+  const [maxButtonWidth, setMaxButtonWidth] = React.useState<number>()
+
+  // Find which button has the largest width to match their width in column layout
+  const handleMeasureWidth = (width: number): void => {
+    if (maxButtonWidth == null || width > maxButtonWidth) {
+      setMaxButtonWidth(width)
+    }
+  }
 
   const numButtons = [primary, secondary, secondary2, tertiary].filter(key => key != null).length
   if (numButtons === 1) layout = 'solo'
@@ -49,7 +57,19 @@ export const ButtonsViewUi4 = React.memo(({ absolute = false, fade, primary, sec
   const renderButton = (type: ButtonTypeUi4, buttonProps?: ButtonInfo) => {
     if (buttonProps == null) return null
     const { label, onPress, disabled } = buttonProps
-    return <ButtonUi4 layout={layout} label={label} onPress={onPress} type={type} disabled={disabled} />
+
+    const isColumn = layout === 'column'
+    return (
+      <ButtonUi4
+        layout={layout}
+        label={label}
+        onPress={onPress}
+        type={type}
+        disabled={disabled}
+        onMeasureWidth={isColumn ? handleMeasureWidth : undefined}
+        width={isColumn ? maxButtonWidth : undefined}
+      />
+    )
   }
 
   // HACK: Workaround for useFadeAnimation not working if visible=true is set

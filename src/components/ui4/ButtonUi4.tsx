@@ -3,6 +3,7 @@ import { ActivityIndicator, Platform, TouchableOpacity, ViewStyle } from 'react-
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
+import { useHandler } from '../../hooks/useHandler'
 import { usePendingPress } from '../../hooks/usePendingPress'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
@@ -12,11 +13,6 @@ export type ButtonTypeUi4 = 'primary' | 'secondary' | 'tertiary'
 
 interface Props {
   children?: React.ReactNode
-
-  // Called when the user presses the button.
-  // If the callback returns a promise, the button will disable itself
-  // and show a spinner until the promise resolves.
-  onPress?: () => void | Promise<void>
 
   // Whether to center the button or stretch to fill the screen.
   // Defaults to 'auto', letting the parent component be in charge:
@@ -42,15 +38,37 @@ interface Props {
 
   /** @deprecated - Shouldn't use this post-UI4 transition */
   paddingRem?: number[] | number
+
+  width?: number // Used to align the width of multiple buttons in column layout
+
+  // Called when the user presses the button.
+  // If the callback returns a promise, the button will disable itself
+  // and show a spinner until the promise resolves.
+  onPress?: () => void | Promise<void>
+
+  onMeasureWidth?: (width: number) => void
 }
 
 /**
  * A stand-alone button to perform the primary action in a modal or scene.
  */
 export function ButtonUi4(props: Props) {
-  const { layout = 'solo', alignSelf = 'auto', children, disabled = false, label, onPress, type = 'primary', spinner = false, marginRem, paddingRem } = props
+  const {
+    layout = 'solo',
+    alignSelf = 'auto',
+    children,
+    disabled = false,
+    label,
+    onPress,
+    onMeasureWidth,
+    type = 'primary',
+    spinner = false,
+    marginRem,
+    paddingRem,
+    width
+  } = props
 
-  // `onPress` promise logic:
+  const [isWidthMeasured, setIsWidthMeasured] = React.useState(false)
   const [pending, handlePress] = usePendingPress(onPress)
 
   // Styles:
@@ -93,16 +111,27 @@ export function ButtonUi4(props: Props) {
       </EdgeText>
     )
 
-  const containerStyle: ViewStyle[] = [styles.containerCommon]
-  if (layout === 'column') containerStyle.push(styles.containerColumn)
-  if (layout === 'row') containerStyle.push(styles.containerRow)
-  if (layout === 'solo') containerStyle.push(styles.containerSolo)
+  const finalContainerCommon: ViewStyle[] = [styles.containerCommon]
+  if (layout === 'column') finalContainerCommon.push(styles.containerColumn)
+  if (layout === 'row') finalContainerCommon.push(styles.containerRow)
+  if (layout === 'solo') finalContainerCommon.push(styles.containerSolo)
 
-  const finalContainerCommon = [styles.containerCommon, containerStyle]
+  const dynamicWidthProp = isWidthMeasured && width != null ? { width } : null
+  const finalGradientLayoutCommon = [styles.gradientLayoutCommon, dynamicGradientStyles, ...finalContainerCommon, dynamicWidthProp]
+
+  // Measure the natural width of the button and store it in the ref
+  const handleOnLayout = useHandler((event: any) => {
+    // Only measure if width is not already set
+    if (onMeasureWidth != null && !isWidthMeasured && event.nativeEvent != null) {
+      const measuredWidth = event.nativeEvent.layout.width
+      onMeasureWidth(measuredWidth)
+      setIsWidthMeasured(true)
+    }
+  })
 
   return (
-    <TouchableOpacity disabled={disabled || pending} style={finalContainerCommon} onPress={handlePress}>
-      <LinearGradient {...gradientProps} style={[styles.gradientLayoutCommon, dynamicGradientStyles, ...finalContainerCommon]}>
+    <TouchableOpacity disabled={disabled || pending} style={finalContainerCommon} onPress={handlePress} onLayout={handleOnLayout}>
+      <LinearGradient {...gradientProps} style={finalGradientLayoutCommon}>
         {hideContent ? null : children}
         {hideContent ? null : maybeText}
         {!hideContent ? null : <ActivityIndicator color={spinnerColor} style={styles.spinnerCommon} />}
