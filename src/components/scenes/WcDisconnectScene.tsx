@@ -13,7 +13,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
-import { Tile } from '../tiles/Tile'
+import { RowUi4 } from '../ui4/RowUi4'
 
 interface Props extends EdgeSceneProps<'wcDisconnect'> {}
 
@@ -52,8 +52,8 @@ export const WcDisconnectScene = (props: Props) => {
           </View>
         </Card>
       </View>
-      <Tile type="static" title={lstrings.string_expiration} body={wcConnectionInfo.expiration} contentPadding={false} />
-      <Tile type="static" title={lstrings.wc_details_connected_wallet} body={wcConnectionInfo.walletName} contentPadding={false} />
+      <RowUi4 title={lstrings.string_expiration} body={wcConnectionInfo.expiration} />
+      <RowUi4 title={lstrings.wc_details_connected_wallet} body={wcConnectionInfo.walletName} />
       <MainButton label={lstrings.wc_details_disconnect_button} type="secondary" marginRem={[3.5, 0.5]} onPress={handleDisconnect} alignSelf="center" />
     </SceneWrapper>
   )

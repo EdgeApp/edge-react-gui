@@ -25,7 +25,7 @@ import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { Tile } from './Tile'
+import { RowUi4 } from '../ui4/RowUi4'
 
 export interface ChangeAddressResult {
   fioAddress?: string
@@ -258,11 +258,11 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   // Rendering
   // ---------------------------------------------------------------------------
 
-  const tileType = loading ? 'loading' : !!recipientAddress && !lockInputs ? 'delete' : 'static'
+  const tileType = !!recipientAddress && !lockInputs ? 'delete' : 'none'
 
   return (
     <View>
-      <Tile type={tileType} title={title} onPress={handleTilePress}>
+      <RowUi4 rightButtonType={tileType} loading={loading} title={title} onPress={handleTilePress}>
         {!recipientAddress && (
           <View style={styles.buttonsContainer}>
             <TouchableOpacity style={styles.buttonContainer} onPress={handleChangeAddress}>
@@ -293,7 +293,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
             </EdgeText>
           </>
         )}
-      </Tile>
+      </RowUi4>
     </View>
   )
 })

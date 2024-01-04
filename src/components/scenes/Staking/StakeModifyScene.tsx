@@ -32,11 +32,13 @@ import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 import { EditableAmountTile } from '../../tiles/EditableAmountTile'
 import { ErrorTile } from '../../tiles/ErrorTile'
 import { IconTile } from '../../tiles/IconTile'
-import { Tile } from '../../tiles/Tile'
+import { RowUi4 } from '../../ui4/RowUi4'
 
 interface Props extends EdgeSceneProps<'stakeModify'> {
   wallet: EdgeCurrencyWallet
 }
+
+// TODO: Check contentPadding
 
 const StakeModifySceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
@@ -381,9 +383,9 @@ const StakeModifySceneComponent = (props: Props) => {
       message = sprintf(lstrings.stake_break_even_days_s, days)
     }
     return (
-      <Tile type="questionable" title={lstrings.stake_break_even_time} contentPadding={false} onPress={handlePressBreakEvenDays}>
+      <RowUi4 rightButtonType="questionable" title={lstrings.stake_break_even_time} onPress={handlePressBreakEvenDays}>
         <EdgeText>{message}</EdgeText>
-      </Tile>
+      </RowUi4>
     )
   }
 

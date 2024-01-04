@@ -2,7 +2,8 @@ import * as React from 'react'
 import { Image, View } from 'react-native'
 
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { Tile } from './Tile'
+import { RowUi4 } from '../ui4/RowUi4'
+// TODO: Remove
 
 interface Props {
   children: React.ReactNode
@@ -18,12 +19,12 @@ export const IconTile = (props: Props) => {
   const icon = iconOverride === undefined ? <Image style={styles.icon} source={{ uri: iconUri }} /> : iconOverride
 
   return (
-    <Tile type="static" title={title} contentPadding={false}>
+    <RowUi4 title={title}>
       <View style={styles.tileContainer}>
         {icon}
         {children}
       </View>
-    </Tile>
+    </RowUi4>
   )
 }
 

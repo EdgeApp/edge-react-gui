@@ -56,8 +56,10 @@ import { AddressTile2, ChangeAddressResult } from '../tiles/AddressTile2'
 import { CountdownTile } from '../tiles/CountdownTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
-import { Tile } from '../tiles/Tile'
 import { AlertCardUi4 } from '../ui4/AlertCardUi4'
+import { RowUi4 } from '../ui4/RowUi4'
+
+// TODO: Check contentPadding
 
 interface Props extends EdgeSceneProps<'send2'> {}
 
@@ -401,8 +403,8 @@ const SendComponent = (props: Props) => {
     const name = coreWallet == null ? '' : getWalletName(coreWallet)
 
     return (
-      <Tile
-        type={lockTilesMap.wallet ? 'static' : 'editable'}
+      <RowUi4
+        rightButtonType={lockTilesMap.wallet ? 'none' : 'editable'}
         title={lstrings.send_scene_send_from_wallet}
         onPress={lockTilesMap.wallet ? undefined : handleWalletPress}
         body={`${name} (${currencyCode})`}
@@ -425,7 +427,7 @@ const SendComponent = (props: Props) => {
     const lastTargetHasAddress = spendInfo.spendTargets[numTargets - 1].publicAddress != null
     const lastTargetHasAmount = spendInfo.spendTargets[numTargets - 1].nativeAmount != null
     if (lastTargetHasAddress && lastTargetHasAmount && ALLOW_MULTIPLE_TARGETS) {
-      return <Tile type="touchable" title={lstrings.send_add_destination_address} onPress={handleAddAddress} maximumHeight="small" contentPadding />
+      return <RowUi4 rightButtonType="touchable" title={lstrings.send_add_destination_address} onPress={handleAddAddress} maximumHeight="small" />
     } else {
       return null
     }
@@ -439,13 +441,7 @@ const SendComponent = (props: Props) => {
     if (expireDate == null) return null
 
     return (
-      <CountdownTile
-        title={lstrings.send_address_expire_title}
-        isoExpireDate={expireDate.toISOString()}
-        onDone={handleTimeoutDone}
-        maximumHeight="small"
-        contentPadding
-      />
+      <CountdownTile title={lstrings.send_address_expire_title} isoExpireDate={expireDate.toISOString()} onDone={handleTimeoutDone} maximumHeight="small" />
     )
   }
 
@@ -475,7 +471,7 @@ const SendComponent = (props: Props) => {
       const feeSyntaxStyle = transactionFee.fiatStyle
 
       return (
-        <Tile type={noChangeMiningFee || lockTilesMap.fee ? 'static' : 'touchable'} title={`${lstrings.string_fee}:`} onPress={handleFeesChange}>
+        <RowUi4 rightButtonType={noChangeMiningFee || lockTilesMap.fee ? 'none' : 'touchable'} title={`${lstrings.string_fee}:`} onPress={handleFeesChange}>
           {processingAmountChanged ? (
             <View style={styles.calcFeeView}>
               <EdgeText
@@ -499,7 +495,7 @@ const SendComponent = (props: Props) => {
               {feeSyntax}
             </EdgeText>
           )}
-        </Tile>
+        </RowUi4>
       )
     }
 
@@ -510,9 +506,9 @@ const SendComponent = (props: Props) => {
     const notes = edgeTransaction?.metadata?.notes
     if (notes != null) {
       return (
-        <Tile type="static" title={lstrings.send_scene_metadata_name_title}>
+        <RowUi4 title={lstrings.send_scene_metadata_name_title}>
           <EdgeText>{notes}</EdgeText>
-        </Tile>
+        </RowUi4>
       )
     }
   }
@@ -600,9 +596,9 @@ const SendComponent = (props: Props) => {
       }
 
       return (
-        <Tile type="touchable" title={memoTitle} onPress={handleUniqueIdentifier}>
+        <RowUi4 rightButtonType="touchable" title={memoTitle} onPress={handleUniqueIdentifier}>
           <EdgeText>{uniqueIdentifier ?? addButtonText}</EdgeText>
-        </Tile>
+        </RowUi4>
       )
     }
 
@@ -622,7 +618,7 @@ const SendComponent = (props: Props) => {
 
   const renderInfoTiles = () => {
     if (!infoTiles || !infoTiles.length) return null
-    return infoTiles.map(({ label, value }) => <Tile key={label} type="static" title={label} body={value} />)
+    return infoTiles.map(({ label, value }) => <RowUi4 key={label} title={label} body={value} />)
   }
 
   const renderAuthentication = () => {
@@ -631,7 +627,7 @@ const SendComponent = (props: Props) => {
 
     const pinLength = pinValue?.length ?? 0
     return (
-      <Tile type="touchable" title={lstrings.four_digit_pin} onPress={handleFocusPin}>
+      <RowUi4 rightButtonType="touchable" title={lstrings.four_digit_pin} onPress={handleFocusPin}>
         <View style={styles.pinContainer}>
           <PinDots pinLength={pinLength} maxLength={PIN_MAX_LENGTH} />
         </View>
@@ -647,7 +643,7 @@ const SendComponent = (props: Props) => {
           value={pinValue}
           secureTextEntry
         />
-      </Tile>
+      </RowUi4>
     )
   }
 

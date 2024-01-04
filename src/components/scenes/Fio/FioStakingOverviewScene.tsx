@@ -23,7 +23,7 @@ import { ClickableText } from '../../themed/ClickableText'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { Tile } from '../../tiles/Tile'
+import { RowUi4 } from '../../ui4/RowUi4'
 
 interface OwnProps extends EdgeSceneProps<'fioStakingOverview'> {}
 
@@ -97,9 +97,9 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
     locks.map(item => {
       const amount = `${item.amount} ${currencyCode}`
       return (
-        <Tile key={item.id} type="static" title={item.title}>
+        <RowUi4 key={item.id} title={item.title}>
           <EdgeText>{amount}</EdgeText>
-        </Tile>
+        </RowUi4>
       )
     })
 
@@ -113,12 +113,12 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
       </SceneHeader>
       <ScrollView style={styles.scrollContainer}>
         <EdgeText style={styles.explainerText}>{lstrings.staking_overview_explainer}</EdgeText>
-        <Tile type="static" title="Currently Staked">
+        <RowUi4 title="Currently Staked">
           <EdgeText>
             {staked}
             <EdgeText style={styles.fiatAmount}>{fiatStaked}</EdgeText>
           </EdgeText>
-        </Tile>
+        </RowUi4>
         {renderItems()}
       </ScrollView>
       <View style={styles.buttonContainer}>

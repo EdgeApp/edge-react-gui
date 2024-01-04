@@ -16,7 +16,7 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeC
 import { ClickableText } from '../../themed/ClickableText'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
-import { Tile } from '../../tiles/Tile'
+import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
 interface State {
@@ -160,8 +160,8 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
 
     return (
       <SceneWrapper background="theme">
-        <Tile type="static" title={lstrings.fio_domain_label} body={`${FIO_ADDRESS_DELIMITER} ${fioDomainName}`} />
-        <Tile type="static" title={lstrings.fio_address_details_screen_expires} body={formatDate(new Date(expiration))} />
+        <RowUi4 title={lstrings.fio_domain_label} body={`${FIO_ADDRESS_DELIMITER} ${fioDomainName}`} />
+        <RowUi4 title={lstrings.fio_address_details_screen_expires} body={formatDate(new Date(expiration))} />
         {showVisibility && (
           <FioActionSubmit
             title={isPublic ? lstrings.title_fio_make_private_domain : lstrings.title_fio_make_public_domain}
