@@ -111,7 +111,7 @@ describe('TransactionDetailsScene', () => {
               isSend: true,
               memos: [],
               metadata: {
-                amountFiat: -6392.93,
+                exchangeAmount: { 'iso:USD': -6392.93 },
                 name: 'timmy'
               },
               nativeAmount: '-12300000',

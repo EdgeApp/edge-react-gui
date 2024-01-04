@@ -50,8 +50,9 @@ export function TransactionListRow(props: Props) {
 
   const { navigation, currencyCode, wallet, tokenId, transaction } = props
   const { canReplaceByFee = false } = wallet.currencyInfo
-  const { metadata, action } = transaction
-  const { name, amountFiat: defaultAmountFiat = 0 } = metadata ?? {}
+  const { metadata = {}, action } = transaction
+  const { category, name } = metadata
+  const defaultAmountFiat = metadata.exchangeAmount?.[wallet.fiatCurrencyCode] ?? 0
 
   const isSentTransaction = transaction.nativeAmount.startsWith('-') || (eq(transaction.nativeAmount, '0') && transaction.isSend)
 
@@ -64,11 +65,7 @@ export function TransactionListRow(props: Props) {
   const fiatDenomination = getDenomFromIsoCode(nonIsoFiatCurrencyCode)
   const denominationSymbol = displayDenomination.symbol
 
-  const currencyName =
-    currencyCode === currencyInfo.currencyCode
-      ? currencyInfo.displayName
-      : currencyInfo.metaTokens.find(metaToken => metaToken.currencyCode === currencyCode)?.currencyName
-  const selectedCurrencyName = currencyName || currencyCode
+  const { displayName = currencyCode } = tokenId == null ? currencyInfo : wallet.currencyConfig.allTokens[tokenId]
 
   // Required Confirmations
   const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
@@ -104,9 +101,9 @@ export function TransactionListRow(props: Props) {
   const transactionTitle =
     action != null
       ? TX_ACTION_LABEL_MAP[action.type]
-      : transaction.metadata && transaction.metadata.name
-      ? transaction.metadata.name
-      : sprintf(isSentTransaction ? lstrings.transaction_sent_1s : lstrings.transaction_received_1s, selectedCurrencyName)
+      : name != null && name !== ''
+      ? name
+      : sprintf(isSentTransaction ? lstrings.transaction_sent_1s : lstrings.transaction_received_1s, displayName)
 
   // Icon & Thumbnail
   const thumbnailPath = useContactThumbnail(name)
@@ -155,7 +152,6 @@ export function TransactionListRow(props: Props) {
   // Transaction Category
   const defaultCategory = !isSentTransaction ? 'income' : 'expense'
   let categoryText: string | undefined
-  const category = transaction.metadata?.category
   if (category != null && category !== '') {
     categoryText = formatCategory(splitCategory(category, defaultCategory))
   }

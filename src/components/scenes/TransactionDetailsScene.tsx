@@ -118,7 +118,8 @@ const TransactionDetailsComponent = (props: Props) => {
   const historicFiat = historicRate * Number(absExchangeAmount)
 
   // Figure out which amount to show:
-  const originalFiat = metadata.amountFiat == null || metadata.amountFiat === 0 ? historicFiat : Math.abs(metadata.amountFiat)
+  const metadataFiat = metadata.exchangeAmount?.[wallet.fiatCurrencyCode]
+  const originalFiat = metadataFiat == null || metadataFiat === 0 ? historicFiat : Math.abs(metadataFiat)
 
   // Percent difference:
   const percentChange = originalFiat === 0 ? 0 : (currentFiat - originalFiat) / originalFiat
@@ -146,7 +147,7 @@ const TransactionDetailsComponent = (props: Props) => {
 
         // Check for NaN, Infinity, and 0:
         if (amountFiat === 0 || JSON.stringify(amountFiat) === 'null') return
-        await onSaveTxDetails({ amountFiat })
+        await onSaveTxDetails({ exchangeAmount: { [wallet.fiatCurrencyCode]: amountFiat } })
       })
       .catch(showError)
   })
@@ -226,18 +227,19 @@ const TransactionDetailsComponent = (props: Props) => {
   }
 
   const onSaveTxDetails = (newDetails: Partial<EdgeMetadata>) => {
-    const { name, notes, bizId, category, amountFiat } = { ...localMetadata, ...newDetails }
-    transaction.metadata = {
-      name,
-      category,
-      notes,
-      amountFiat,
-      bizId
+    const mergedMetadata = {
+      ...localMetadata,
+      ...newDetails,
+      exchangeAmount: {
+        ...localMetadata.exchangeAmount,
+        ...newDetails.exchangeAmount
+      }
     }
+    transaction.metadata = mergedMetadata
 
     wallet.saveTxMetadata(transaction.txid, transaction.currencyCode, transaction.metadata).catch(error => showError(error))
 
-    setLocalMetadata({ ...localMetadata, ...newDetails })
+    setLocalMetadata(mergedMetadata)
   }
 
   const personLabel = direction === 'receive' ? lstrings.transaction_details_sender : lstrings.transaction_details_recipient

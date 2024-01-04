@@ -18,8 +18,8 @@ const edgeTxs: EdgeTransaction[] = [
     metadata: {
       name: 'Crazy Person',
       category: 'Income:Mo Money',
-      notes: 'Hell yeah! Thanks for the fish <<&&>>',
-      amountFiat: 12000.45
+      exchangeAmount: { 'iso:USD': 12000.45 },
+      notes: 'Hell yeah! Thanks for the fish <<&&>>'
     },
     nativeAmount: '123000000',
     networkFee: '1000',
@@ -40,8 +40,8 @@ const edgeTxs: EdgeTransaction[] = [
     metadata: {
       name: 'Crazy Person 2',
       category: 'Expense:Less Money',
-      notes: 'Hell yeah! Here\'s a fish"',
-      amountFiat: 36001.45
+      exchangeAmount: { 'iso:USD': 36001.45 },
+      notes: 'Hell yeah! Here\'s a fish"'
     },
     nativeAmount: '-321000000',
     networkFee: '2000',
@@ -61,8 +61,8 @@ const edgeTxs: EdgeTransaction[] = [
     metadata: {
       name: 'Transfer',
       category: 'Transfer:Edge',
-      notes: '',
-      amountFiat: 36001.45
+      exchangeAmount: { 'iso:USD': 36001.45 },
+      notes: ''
     },
     nativeAmount: '-321000000',
     networkFee: '2000',
@@ -82,8 +82,8 @@ const edgeTxs: EdgeTransaction[] = [
     metadata: {
       name: 'Transfer but actually income',
       category: 'Transfer:Edge',
-      notes: '',
-      amountFiat: 36001.45
+      exchangeAmount: { 'iso:USD': 36001.45 },
+      notes: ''
     },
     nativeAmount: '321000000',
     networkFee: '2000',
@@ -104,8 +104,8 @@ const edgeTxs: EdgeTransaction[] = [
     metadata: {
       name: 'Transfer but no fee',
       category: 'Transfer:Edge',
-      notes: '',
-      amountFiat: 36001.45
+      exchangeAmount: { 'iso:USD': 36001.45 },
+      notes: ''
     },
     nativeAmount: '-321000000',
     networkFee: '0',
@@ -125,8 +125,8 @@ const edgeTxs: EdgeTransaction[] = [
     metadata: {
       name: 'Transfer but no fiat amount',
       category: 'Transfer:Edge',
-      notes: '',
-      amountFiat: 0
+      exchangeAmount: { 'iso:USD': 0 },
+      notes: ''
     },
     nativeAmount: '-321000000',
     networkFee: '2000',
