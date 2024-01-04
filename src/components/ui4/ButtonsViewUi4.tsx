@@ -4,7 +4,10 @@ import Animated from 'react-native-reanimated'
 
 import { useFadeAnimation } from '../../hooks/animations/useFadeAnimation'
 import { styled } from '../hoc/styled'
+import { Space } from '../layout/Space'
 import { ButtonTypeUi4, ButtonUi4 } from './ButtonUi4'
+
+const INTER_BUTTON_SPACING_REM = 1
 
 export interface ButtonInfo {
   label: string
@@ -61,6 +64,8 @@ export const ButtonsViewUi4 = React.memo((props: Props) => {
 
   const fadeStyle = useFadeAnimation(fadeVisibleHack, { noFadeIn: fade == null })
 
+  const spacing = <Space around={INTER_BUTTON_SPACING_REM / 2} />
+
   const renderButton = (type: ButtonTypeUi4, buttonProps?: ButtonInfo) => {
     if (buttonProps == null) return null
     const { label, onPress, disabled } = buttonProps
@@ -89,8 +94,11 @@ export const ButtonsViewUi4 = React.memo((props: Props) => {
     <Animated.View style={fadeStyle}>
       <StyledButtonContainer absolute={absolute} layout={layout} scrollMargin={scrollMargin}>
         {renderButton('primary', primary)}
+        {primary != null && secondary != null ? spacing : null}
         {renderButton('secondary', secondary2)}
+        {secondary != null && secondary2 != null ? spacing : null}
         {renderButton('secondary', secondary)}
+        {tertiary != null ? spacing : null}
         {renderButton('tertiary', tertiary)}
       </StyledButtonContainer>
     </Animated.View>
@@ -130,8 +138,7 @@ const StyledButtonContainer = styled(View)<{ absolute: boolean; layout: 'row' | 
       ? {
           flex: 1,
           flexDirection: 'row-reverse',
-          justifyContent: 'center',
-          marginHorizontal: 0
+          justifyContent: 'center'
         }
       : {}
 
