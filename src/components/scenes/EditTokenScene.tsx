@@ -11,7 +11,6 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
-import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -20,6 +19,7 @@ import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 interface Props extends EdgeSceneProps<'editToken'> {
   wallet: EdgeCurrencyWallet
@@ -178,10 +178,11 @@ function EditTokenSceneComponent(props: Props) {
           value={decimalPlaces}
           onChangeText={setDecimalPlaces}
         />
-        <ButtonsContainer
+        <ButtonsViewUi4
           primary={{ label: lstrings.string_save, onPress: handleSave }}
           secondary={tokenId == null ? undefined : { label: lstrings.edittoken_delete_token, onPress: handleDelete }}
           layout="column"
+          scrollMargin
         />
       </ScrollView>
     </SceneWrapper>

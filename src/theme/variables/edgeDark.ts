@@ -90,6 +90,9 @@ const palette = {
   errorOuter: '#94472e',
   errorInner: '#962c32',
 
+  darkestGreen: '#20312f',
+  darkGreen: '#00604d',
+
   orangeOp50: 'rgba(192, 93, 12, 0.5)',
   lightBlueOp50: 'rgba(10, 129, 153, 0.5)',
   purpleOp50: 'rgba(65, 35, 184, 0.5)',
@@ -447,10 +450,10 @@ export const edgeDark: Theme = {
   buttonPrimaryUi4: {
     textStyle: {
       fontFamily: palette.QuicksandMedium,
-      color: palette.black
+      color: palette.white
     },
     gradientProps: {
-      colors: [palette.darkMint, palette.edgeMint],
+      colors: [palette.darkestGreen, palette.darkGreen],
       end: { x: 1, y: 0 },
       start: { x: 0, y: 0 }
     },
@@ -462,8 +465,8 @@ export const edgeDark: Theme = {
       elevation: 2
     },
     containerStyle: {
-      borderColor: palette.edgeMint,
-      borderWidth: 1
+      borderColor: palette.darkestGreen,
+      borderWidth: 0
     },
     spinnerColor: palette.white
   },
