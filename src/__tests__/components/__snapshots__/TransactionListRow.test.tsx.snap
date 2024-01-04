@@ -83,8 +83,16 @@ exports[`TransactionListRow should render with loading props 1`] = `
             {
               "alignItems": "center",
               "borderRadius": 28,
+              "elevation": 0,
               "height": 45,
               "justifyContent": "center",
+              "shadowColor": "#000000",
+              "shadowOffset": {
+                "height": 3,
+                "width": -3,
+              },
+              "shadowOpacity": 0.6,
+              "shadowRadius": 4,
               "width": 45,
             },
             {
