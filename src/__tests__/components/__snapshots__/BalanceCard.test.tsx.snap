@@ -201,7 +201,6 @@ exports[`BalanceCard should render with loading props 1`] = `
           "flexDirection": "row-reverse",
           "justifyContent": "center",
           "margin": 11,
-          "marginHorizontal": 0,
         }
       }
     >
@@ -324,6 +323,23 @@ exports[`BalanceCard should render with loading props 1`] = `
           </Text>
         </BVLinearGradient>
       </View>
+      <View
+        style={
+          [
+            {
+              "alignItems": undefined,
+              "flex": undefined,
+              "flexDirection": "column",
+              "justifyContent": undefined,
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
+            },
+            undefined,
+          ]
+        }
+      />
       <View
         accessibilityState={
           {
