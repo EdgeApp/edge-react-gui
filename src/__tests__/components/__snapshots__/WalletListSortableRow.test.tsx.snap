@@ -218,7 +218,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
                 "includeFontPadding": false,
               },
               {
-                "color": "#A4C7DF",
+                "color": "#3dd9f4",
                 "flex": 1,
                 "fontSize": 17,
               },
@@ -241,7 +241,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
                 "includeFontPadding": false,
               },
               {
-                "color": "#A4C7DF",
+                "color": "#3dd9f4",
                 "fontSize": 17,
                 "textAlign": "right",
               },

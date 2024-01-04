@@ -175,7 +175,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -308,7 +308,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingBottom": 6,
                         "paddingRight": 22,
@@ -437,7 +437,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -562,7 +562,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -975,7 +975,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -1108,7 +1108,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingBottom": 6,
                         "paddingRight": 22,
@@ -1237,7 +1237,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -1362,7 +1362,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -1498,7 +1498,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -1603,7 +1603,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -1985,7 +1985,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -2117,7 +2117,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -2250,7 +2250,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingBottom": 6,
                         "paddingRight": 22,
@@ -2379,7 +2379,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -2504,7 +2504,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -2917,7 +2917,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -3049,7 +3049,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -3181,7 +3181,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -3306,7 +3306,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -3719,7 +3719,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -3851,7 +3851,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -3984,7 +3984,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingBottom": 6,
                         "paddingRight": 22,
@@ -4086,7 +4086,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -4499,7 +4499,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -4631,7 +4631,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -4736,7 +4736,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -5149,7 +5149,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -5281,7 +5281,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -5387,7 +5387,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingBottom": 6,
                         "paddingRight": 22,
@@ -5516,7 +5516,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -5641,7 +5641,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -6054,7 +6054,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -6159,7 +6159,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -6292,7 +6292,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingBottom": 6,
                         "paddingRight": 22,
@@ -6394,7 +6394,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -6519,7 +6519,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -6932,7 +6932,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -7037,7 +7037,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -7143,7 +7143,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingBottom": 6,
                         "paddingRight": 22,
@@ -7245,7 +7245,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -7370,7 +7370,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -7783,7 +7783,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingBottom": 6,
                       "paddingRight": 22,
@@ -7889,7 +7889,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingBottom": 6,
                         "paddingRight": 22,
@@ -8173,7 +8173,7 @@ exports[`SendScene2 Render SendScene 1`] = `
           style={
             [
               {
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "flex": 1,
               },
               {
@@ -8195,7 +8195,7 @@ exports[`SendScene2 Render SendScene 1`] = `
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",

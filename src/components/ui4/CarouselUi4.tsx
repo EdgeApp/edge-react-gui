@@ -69,6 +69,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(DOT_SIZE_REM),
     height: theme.rem(DOT_SIZE_REM),
     borderRadius: theme.rem(DOT_SIZE_REM) / 2,
-    backgroundColor: theme.iconTappableAltUi4
+    backgroundColor: theme.primaryText
   }
 }))

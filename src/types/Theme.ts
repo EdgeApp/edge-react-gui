@@ -247,8 +247,8 @@ export interface Theme {
   // cardShadow: string,
   cardBorder: number
   cardBorderColor: string
-  cardBorderRadius: number // TODO: use this
-  // TODO: cardTextShadow: TextShadowParams
+  cardBorderRadius: number
+  cardTextShadow: TextShadowParams // For added contrast against complex card backgrounds
 
   tabBarBackground: string[]
   tabBarBackgroundStart: GradientCoords
@@ -429,7 +429,7 @@ export interface Theme {
   // UI 4.0:
 
   // Shadows
-  // iconShadow: ThemeShadowParams
+  iconShadow: ThemeShadowParams
 
   // Basic Card Styles
   cardBaseColorUi4: string
@@ -437,23 +437,12 @@ export interface Theme {
   cardGradientErrorUi4: ThemeGradientParams
   cardGradientLearnUi4: ThemeGradientParams
   cardOverlayDisabledUi4: string
-  cardRadiusRemUi4: number // TODO: merge with old keys
 
   // Special Home Scene Tiled Cards
   buyCardGradientUi4: ThemeGradientParams
   sellCardGradientUi4: ThemeGradientParams
   fioCardGradientUi4: ThemeGradientParams
   swapCardGradientUi4: ThemeGradientParams
-
-  // TODO: merge below with old keys:
-  iconTappableAltUi4: string
-
-  negativeTextMutedUi4: string
-  secondaryTextUi4: string
-
-  shadowColorUi4: string
-  shadowTextIosUi4: TextShadowParams
-  shadowTextAndroidUi4: TextShadowParams
 
   txDirBgReceiveUi4: string
   txDirBgSendUi4: string

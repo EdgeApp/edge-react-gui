@@ -158,7 +158,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   negativeText: {
-    color: theme.negativeTextMutedUi4
+    color: theme.negativeText
   },
   positiveText: {
     color: theme.positiveText

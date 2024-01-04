@@ -26,7 +26,7 @@ exports[`LineTextDivider should render with loading props 1`] = `
     style={
       [
         {
-          "color": "#A4C7DF",
+          "color": "#3dd9f4",
           "fontFamily": "Quicksand-Medium",
           "fontSize": 22,
           "paddingHorizontal": 17,

@@ -80,11 +80,17 @@ const palette = {
   // Button
   graySecondary: 'hsla(0, 0%, 100%, 0.20)',
 
+  // Shadows
+  shadow: 'rgba(0, 0, 0, 0.514)',
+
   // Gradients
   warningOuter: '#772a0f',
   warningInner: '#835d22',
   errorOuter: '#94472e',
   errorInner: '#962c32',
+
+  darkestGreen: '#20312f',
+  darkGreen: '#00604d',
 
   orangeOp24: '#fc9e733d',
   lightBlueOp24: '#4ea5bc3d',
@@ -158,7 +164,7 @@ export const edgeLight: Theme = {
   primaryText: palette.black,
   secondaryText: palette.gray,
   warningText: palette.accentOrange,
-  positiveText: palette.accentGreen,
+  positiveText: palette.gray,
   negativeText: palette.accentRed,
   dangerText: palette.accentRed,
   textLink: palette.edgeBlue,
@@ -257,7 +263,15 @@ export const edgeLight: Theme = {
   // cardShadow: palette.blackOp25,
   cardBorder: 1,
   cardBorderColor: palette.whiteOp10,
-  cardBorderRadius: 4,
+  cardBorderRadius: 16,
+  cardTextShadow: {
+    textShadowColor: palette.shadow,
+    textShadowOffset: {
+      width: 0,
+      height: 0
+    },
+    textShadowRadius: 3
+  },
 
   tabBarBackground: [palette.white, palette.white],
   tabBarBackgroundStart: { x: 0, y: 0 },
@@ -445,73 +459,16 @@ export const edgeLight: Theme = {
   guiPluginLogoMoonpay: guiPluginLogoMoonpay,
 
   // UI 4.0:
-  buttonBorderRadiusRemUi4: 2,
-  buttonFontSizeRemUi4: 1,
-
-  buttonPrimaryUi4: {
-    textStyle: {
-      fontFamily: palette.QuicksandMedium,
-      color: palette.black
+  // Shadows
+  iconShadow: {
+    shadowColor: palette.black,
+    shadowOffset: {
+      width: -3,
+      height: 3
     },
-    gradientProps: {
-      colors: [palette.edgeMint, palette.edgeMint],
-      end: { x: 1, y: 0 },
-      start: { x: 0, y: 0 }
-    },
-    shadowParams: {
-      shadowColor: palette.white,
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.25,
-      shadowRadius: 8,
-      elevation: 2
-    },
-    containerStyle: {
-      borderColor: palette.edgeMint,
-      borderWidth: 1
-    },
-    spinnerColor: palette.white
-  },
-
-  buttonSecondaryUi4: {
-    textStyle: {
-      fontFamily: palette.QuicksandMedium,
-      color: palette.white
-    },
-    gradientProps: {
-      colors: [palette.graySecondary, palette.graySecondary],
-      end: { x: 1, y: 0 },
-      start: { x: 0, y: 0 }
-    },
-    shadowParams: themeNoShadow,
-    containerStyle: {
-      borderColor: palette.edgeMint,
-      borderWidth: 1
-    },
-    spinnerColor: palette.white
-  },
-
-  buttonTertiaryUi4: {
-    textStyle: {
-      fontFamily: palette.QuicksandMedium,
-      color: palette.black
-    },
-    gradientProps: {
-      colors: [palette.edgeMint, palette.edgeMint],
-      end: { x: 1, y: 0 },
-      start: { x: 0, y: 0 }
-    },
-    shadowParams: {
-      shadowColor: palette.white,
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.25,
-      shadowRadius: 8,
-      elevation: 2
-    },
-    containerStyle: {
-      borderColor: palette.edgeMint,
-      borderWidth: 1
-    },
-    spinnerColor: palette.white
+    shadowOpacity: 0.6,
+    shadowRadius: 4,
+    elevation: 0
   },
 
   // Basic Card Styles
@@ -532,7 +489,6 @@ export const edgeLight: Theme = {
     start: { x: 0, y: 1 }
   },
   cardOverlayDisabledUi4: palette.blackOp65,
-  cardRadiusRemUi4: 1,
 
   // Special Home Scene Tiled Cards
   buyCardGradientUi4: {
@@ -555,14 +511,6 @@ export const edgeLight: Theme = {
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
-
-  iconTappableAltUi4: palette.black,
-
-  negativeTextMutedUi4: palette.gray,
-
-  shadowColorUi4: palette.gray,
-
-  touchHighlightUi4: palette.lightGrayOp75,
 
   txDirBgReceiveUi4: palette.greenOp60,
   txDirBgSendUi4: palette.redOp60,

@@ -82,7 +82,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
           numberOfLines={3}
           style={
             {
-              "color": "#A4C7DF",
+              "color": "#3dd9f4",
               "fontSize": 22,
               "textAlign": "left",
             }
@@ -105,7 +105,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
           numberOfLines={5}
           style={
             {
-              "color": "#A4C7DF",
+              "color": "#3dd9f4",
               "fontSize": 22,
               "textAlign": "left",
             }

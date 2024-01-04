@@ -126,7 +126,9 @@ const StyledButtonContainer = styled(View)<{ absolute: boolean; layout: 'row' | 
           alignSelf: 'center', // Shrink view around buttons
           alignItems: 'stretch', // Stretch our children out
           flexDirection: 'column',
-          justifyContent: 'space-between'
+          // justifyContent: 'space-between',
+          borderColor: '#ffffff30',
+          borderWidth: 0.5
         }
       : {}
 

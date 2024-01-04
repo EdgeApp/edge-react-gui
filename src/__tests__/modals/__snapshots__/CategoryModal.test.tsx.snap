@@ -701,7 +701,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             },
             [
               {
-                "color": "#A4C7DF",
+                "color": "#3dd9f4",
                 "fontSize": 18,
               },
             ],
@@ -1784,7 +1784,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             },
             [
               {
-                "color": "#A4C7DF",
+                "color": "#3dd9f4",
                 "fontSize": 18,
               },
             ],
