@@ -414,6 +414,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 {
                   "backgroundColor": "#000000",
                   "borderRadius": 17,
+                  "elevation": 0,
                   "height": 34,
                   "shadowColor": "#000000",
                   "shadowOffset": {
@@ -849,7 +850,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           [
             {
               "borderColor": "rgba(255, 255, 255, .1)",
-              "borderRadius": 4,
+              "borderRadius": 16,
               "borderWidth": 1,
             },
             null,
@@ -1458,6 +1459,7 @@ exports[`TransactionListTop should render 1`] = `
                 {
                   "backgroundColor": "#000000",
                   "borderRadius": 17,
+                  "elevation": 0,
                   "height": 34,
                   "shadowColor": "#000000",
                   "shadowOffset": {

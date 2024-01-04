@@ -104,7 +104,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
             {
               "alignSelf": "stretch",
               "borderColor": "#F1AA19",
-              "borderRadius": 4,
+              "borderRadius": 16,
               "borderWidth": 1,
               "margin": 22,
             },

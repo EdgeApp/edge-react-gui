@@ -145,7 +145,7 @@ exports[`BuyCrypto should render with some props 1`] = `
             "includeFontPadding": false,
           },
           {
-            "color": "#A4C7DF",
+            "color": "#3dd9f4",
             "textAlign": "center",
           },
           null,

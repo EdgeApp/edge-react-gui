@@ -1,5 +1,6 @@
 import { Dimensions, Platform } from 'react-native'
 
+import edgeMark from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
 import fioAddressLogo from '../../assets/images/list_fioAddress.png'
@@ -61,7 +62,40 @@ const palette = {
   QuicksandRegular: 'Quicksand-Regular',
   QuicksandMedium: 'Quicksand-Medium',
   QuicksandSemiBold: 'Quicksand-SemiBold',
-  QuicksandBold: 'Quicksand-Bold'
+  QuicksandBold: 'Quicksand-Bold',
+
+  // UI4 palette
+  skyBlue: '#3dd9f4',
+  blackOp65: 'rgba(0, 0, 0, .65)',
+  redOp60: 'rgba(232, 84, 102, .6)',
+  grayOp70: 'rgba(135, 147, 158, .7)',
+  greenOp60: 'rgba(119, 197, 19, .6)',
+  lightGreen: '#75C649',
+  lightRed: '#E84D65',
+
+  learnLeft: 'rgba(0, 43, 51, .44)',
+  learnMiddle: 'rgba(0, 81, 92, .44)',
+  learnRight: 'rgba(0, 245, 155, .44)',
+
+  // Button
+  graySecondary: 'hsla(0, 0%, 100%, 0.20)',
+
+  // Shadows
+  shadow: 'rgba(0, 0, 0, 0.514)',
+
+  // Gradients
+  warningOuter: '#772a0f',
+  warningInner: '#835d22',
+  errorOuter: '#94472e',
+  errorInner: '#962c32',
+
+  darkestGreen: '#20312f',
+  darkGreen: '#00604d',
+
+  orangeOp24: '#fc9e733d',
+  lightBlueOp24: '#4ea5bc3d',
+  purpleOp24: '#4123b73d',
+  pinkOp24: '#db37a03d'
 }
 
 const deviceWidth = Dimensions.get('window').width
@@ -71,7 +105,7 @@ export const testLight: Theme = {
     return Math.round(scale(16) * size)
   },
   isDark: false,
-  preferPrimaryButton: true,
+  preferPrimaryButton: false,
 
   // Common border
   defaultBorderColor: palette.white,
@@ -90,9 +124,9 @@ export const testLight: Theme = {
   backgroundGradientColors: [palette.lightestGray, palette.lightestGray],
   backgroundGradientStart: { x: 0, y: 0 },
   backgroundGradientEnd: { x: 0, y: 1 },
-  backgroundImageServerUrls: [],
+  backgroundImageServerUrls: ['https://content.edge.app'],
   backgroundImage: undefined,
-  backgroundLoadingOverlay: 'rgba(123,123,123,.2)',
+  backgroundLoadingOverlay: `rgba(123,123,123,.2)`,
 
   // Camera Overlay
   cameraOverlayColor: palette.gray,
@@ -106,12 +140,12 @@ export const testLight: Theme = {
   modalCloseIcon: palette.edgeMint,
   modalBorderColor: palette.transparent,
   modalBorderWidth: 0,
-  modalBorderRadiusRem: 2,
+  modalBorderRadiusRem: 1,
 
   sideMenuColor: palette.lightestGray,
   sideMenuBorderColor: palette.transparent,
   sideMenuBorderWidth: 0,
-  sideMenuFont: palette.QuicksandBold,
+  sideMenuFont: palette.QuicksandMedium,
 
   // Tile
   // listHeaderBackground: palette.white,
@@ -129,7 +163,7 @@ export const testLight: Theme = {
   primaryText: palette.black,
   secondaryText: palette.gray,
   warningText: palette.accentOrange,
-  positiveText: palette.accentGreen,
+  positiveText: palette.gray,
   negativeText: palette.accentRed,
   dangerText: palette.accentRed,
   textLink: palette.edgeBlue,
@@ -137,12 +171,12 @@ export const testLight: Theme = {
   // listHeaderText: palette.black,
 
   // Header
-  headerIcon: fioAddressLogo,
+  headerIcon: edgeMark,
 
   // Buttons
   // Should add palette when pressed
   buttonBorderRadiusRem: 0.25,
-  addButtonFont: palette.QuicksandBold,
+  addButtonFont: palette.QuicksandMedium,
 
   keypadButtonOutline: palette.edgeBlue,
   keypadButtonOutlineWidth: 1,
@@ -224,12 +258,20 @@ export const testLight: Theme = {
   // cardShadow: palette.blackOp25,
   cardBorder: 1,
   cardBorderColor: palette.whiteOp10,
-  cardBorderRadius: 4,
+  cardBorderRadius: 16,
+  cardTextShadow: {
+    textShadowColor: palette.shadow,
+    textShadowOffset: {
+      width: 0,
+      height: 0
+    },
+    textShadowRadius: 3
+  },
 
-  tabBarBackground: [palette.white, palette.edgeMint],
+  tabBarBackground: [palette.white, palette.white],
   tabBarBackgroundStart: { x: 0, y: 0 },
   tabBarBackgroundEnd: { x: 1, y: 1 },
-  tabBarTopOutlineColors: [palette.white, palette.edgeMint],
+  tabBarTopOutlineColors: [palette.white, palette.white],
   tabBarIcon: palette.gray,
   tabBarIconHighlighted: palette.edgeBlue,
 
@@ -327,6 +369,10 @@ export const testLight: Theme = {
   underlayColor: palette.white,
   underlayOpacity: 0.95,
 
+  // TouchableHighlights overlay
+  overlayDisabledColor: palette.blackOp50,
+  overlayDisabledTextColor: palette.white,
+
   // Tutorials
   tutorialModalUnderlay: palette.transparent,
 
@@ -351,8 +397,10 @@ export const testLight: Theme = {
   outlineTextInputTextColor: palette.black,
   outlineTextInputBorderWidth: 1,
   outlineTextInputBorderColor: palette.gray,
+  outlineTextInputBorderColorDisabled: palette.gray,
   outlineTextInputBorderColorFocused: palette.edgeBlue,
   outlineTextInputLabelColor: palette.gray,
+  outlineTextInputLabelColorDisabled: palette.gray,
   outlineTextInputLabelColorFocused: palette.edgeBlue,
 
   // Simple Text Input
@@ -399,9 +447,70 @@ export const testLight: Theme = {
   paymentTypeLogoUpi,
   paymentTypeVisa,
 
-  fioAddressLogo: fioAddressLogo,
   primaryLogo: edgeLogo,
+  fioAddressLogo: fioAddressLogo,
   walletListSlideTutorialImage: walletListSlidingTutorial,
 
-  guiPluginLogoMoonpay: guiPluginLogoMoonpay
+  guiPluginLogoMoonpay: guiPluginLogoMoonpay,
+
+  // UI 4.0:
+  // Shadows
+  iconShadow: {
+    shadowColor: palette.black,
+    shadowOffset: {
+      width: -3,
+      height: 3
+    },
+    shadowOpacity: 0.6,
+    shadowRadius: 4,
+    elevation: 0
+  },
+
+  // Basic Card Styles
+  cardBaseColorUi4: palette.whiteOp10,
+  cardGradientWarningUi4: {
+    colors: [palette.warningOuter, palette.warningInner, palette.warningInner, palette.warningOuter],
+    end: { x: 0.9, y: 0 },
+    start: { x: 0, y: 0.9 }
+  },
+  cardGradientErrorUi4: {
+    colors: [palette.errorOuter, palette.errorInner, palette.errorInner, palette.errorOuter],
+    end: { x: 0.9, y: 0 },
+    start: { x: 0, y: 0.9 }
+  },
+  cardGradientLearnUi4: {
+    colors: [palette.learnRight, palette.learnMiddle, palette.learnLeft],
+    end: { x: 1, y: 0 },
+    start: { x: 0, y: 1 }
+  },
+  cardOverlayDisabledUi4: palette.blackOp65,
+
+  // Special Home Scene Tiled Cards
+  buyCardGradientUi4: {
+    colors: [palette.orangeOp24, palette.transparent],
+    end: { x: 0, y: 1 },
+    start: { x: 1, y: 0 }
+  },
+  sellCardGradientUi4: {
+    colors: [palette.lightBlueOp24, palette.transparent],
+    end: { x: 0, y: 1 },
+    start: { x: 1, y: 0 }
+  },
+  fioCardGradientUi4: {
+    colors: [palette.purpleOp24, palette.transparent],
+    end: { x: 0, y: 1 },
+    start: { x: 1, y: 0 }
+  },
+  swapCardGradientUi4: {
+    colors: [palette.pinkOp24, palette.transparent],
+    end: { x: 0, y: 1 },
+    start: { x: 1, y: 0 }
+  },
+
+  txDirBgReceiveUi4: palette.greenOp60,
+  txDirBgSendUi4: palette.redOp60,
+  txDirBgSwapUi4: palette.grayOp70,
+  txDirFgReceiveUi4: palette.lightGreen,
+  txDirFgSendUi4: palette.lightRed,
+  txDirFgSwapUi4: palette.lightGray
 }

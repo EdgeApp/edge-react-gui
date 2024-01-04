@@ -5,7 +5,7 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
   style={
     [
       {
-        "borderRadius": 22,
+        "borderRadius": 16,
         "flex": 1,
       },
       {
@@ -27,7 +27,7 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
     style={
       {
         "backgroundColor": "rgba(255, 255, 255, .1)",
-        "borderRadius": 22,
+        "borderRadius": 16,
         "bottom": 0,
         "left": 0,
         "overflow": "hidden",
@@ -89,7 +89,7 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
                 "includeFontPadding": false,
               },
               {
-                "color": "#A4C7DF",
+                "color": "#3dd9f4",
                 "fontSize": 17,
                 "paddingRight": 22,
               },

@@ -167,10 +167,10 @@ export const testDark: Theme = {
 
   // Text
   primaryText: palette.white,
-  secondaryText: palette.blueGray,
+  secondaryText: palette.skyBlue,
   warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
-  negativeText: palette.accentRed,
+  negativeText: palette.gray,
   dangerText: palette.accentRed,
   textLink: palette.edgeMint,
   deactivatedText: palette.gray,
@@ -266,7 +266,15 @@ export const testDark: Theme = {
   // cardShadow: palette.blackOp25,
   cardBorder: 1,
   cardBorderColor: palette.whiteOp10,
-  cardBorderRadius: 4,
+  cardBorderRadius: 16,
+  cardTextShadow: {
+    textShadowColor: palette.shadow,
+    textShadowOffset: {
+      width: 0,
+      height: 0
+    },
+    textShadowRadius: 3
+  },
 
   tabBarBackground: [palette.navyAqua, palette.navyAqua],
   tabBarBackgroundStart: { x: 0, y: 0 },
@@ -454,6 +462,17 @@ export const testDark: Theme = {
   guiPluginLogoMoonpay: guiPluginLogoMoonpay,
 
   // UI 4.0:
+  // Shadows
+  iconShadow: {
+    shadowColor: palette.black,
+    shadowOffset: {
+      width: -3,
+      height: 3
+    },
+    shadowOpacity: 0.6,
+    shadowRadius: 4,
+    elevation: 0
+  },
 
   // Basic Card Styles
   cardBaseColorUi4: palette.whiteOp10,
@@ -473,7 +492,6 @@ export const testDark: Theme = {
     start: { x: 0, y: 1 }
   },
   cardOverlayDisabledUi4: palette.blackOp65,
-  cardRadiusRemUi4: 1,
 
   // Special Home Scene Tiled Cards
   buyCardGradientUi4: {
@@ -495,29 +513,6 @@ export const testDark: Theme = {
     colors: [palette.pinkOp50, palette.transparent],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
-  },
-
-  iconTappableAltUi4: palette.white,
-
-  negativeTextMutedUi4: palette.gray,
-  secondaryTextUi4: palette.skyBlue,
-
-  shadowColorUi4: palette.black,
-  shadowTextIosUi4: {
-    textShadowColor: '#00000098',
-    textShadowOffset: {
-      width: 0,
-      height: 0
-    },
-    textShadowRadius: 3
-  },
-  shadowTextAndroidUi4: {
-    textShadowColor: '#00000098',
-    textShadowOffset: {
-      width: 0,
-      height: 0
-    },
-    textShadowRadius: 10
   },
 
   txDirBgReceiveUi4: palette.greenOp60,

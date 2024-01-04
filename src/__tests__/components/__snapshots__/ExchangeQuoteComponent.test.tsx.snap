@@ -13,7 +13,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
       [
         {
           "borderColor": "rgba(255, 255, 255, .1)",
-          "borderRadius": 4,
+          "borderRadius": 16,
           "borderWidth": 1,
         },
         null,
@@ -233,7 +233,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
                 "includeFontPadding": false,
               },
               {
-                "color": "#A4C7DF",
+                "color": "#3dd9f4",
                 "fontSize": 17,
               },
               null,
@@ -311,7 +311,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
                   "includeFontPadding": false,
                 },
                 {
-                  "color": "#A4C7DF",
+                  "color": "#3dd9f4",
                   "fontSize": 17,
                 },
                 null,

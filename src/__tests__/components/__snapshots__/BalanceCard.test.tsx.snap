@@ -5,7 +5,7 @@ exports[`BalanceCard should render with loading props 1`] = `
   style={
     [
       {
-        "borderRadius": 22,
+        "borderRadius": 16,
         "flex": 1,
       },
       {
@@ -27,7 +27,7 @@ exports[`BalanceCard should render with loading props 1`] = `
     style={
       {
         "backgroundColor": "rgba(255, 255, 255, .1)",
-        "borderRadius": 22,
+        "borderRadius": 16,
         "bottom": 0,
         "left": 0,
         "overflow": "hidden",
@@ -93,7 +93,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               "includeFontPadding": false,
             },
             {
-              "textShadowColor": "#00000098",
+              "textShadowColor": "rgba(0, 0, 0, 0.514)",
               "textShadowOffset": {
                 "height": 0,
                 "width": 0,
@@ -121,7 +121,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                 "marginRight": 0,
               },
               {
-                "textShadowColor": "#00000098",
+                "textShadowColor": "rgba(0, 0, 0, 0.514)",
                 "textShadowOffset": {
                   "height": 0,
                   "width": 0,
@@ -169,7 +169,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                 "marginTop": 6,
               },
               {
-                "textShadowColor": "#00000098",
+                "textShadowColor": "rgba(0, 0, 0, 0.514)",
                 "textShadowOffset": {
                   "height": 0,
                   "width": 0,

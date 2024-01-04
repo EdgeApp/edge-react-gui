@@ -57,7 +57,7 @@ exports[`TransactionDetailsScene should render 1`] = `
           style={
             [
               {
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "flex": 1,
               },
               {
@@ -79,7 +79,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",
@@ -169,7 +169,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingRight": 22,
                     },
@@ -283,7 +283,7 @@ exports[`TransactionDetailsScene should render 1`] = `
           style={
             [
               {
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "flex": 1,
               },
               {
@@ -305,7 +305,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",
@@ -367,7 +367,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -455,7 +455,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -640,7 +640,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -777,7 +777,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -823,7 +823,7 @@ exports[`TransactionDetailsScene should render 1`] = `
           style={
             [
               {
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "flex": 1,
               },
               {
@@ -845,7 +845,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",
@@ -907,7 +907,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -1067,7 +1067,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -1190,7 +1190,7 @@ exports[`TransactionDetailsScene should render 1`] = `
           style={
             [
               {
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "flex": 1,
               },
               {
@@ -1212,7 +1212,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",
@@ -1274,7 +1274,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -1362,7 +1362,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -1772,7 +1772,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           style={
             [
               {
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "flex": 1,
               },
               {
@@ -1794,7 +1794,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",
@@ -1884,7 +1884,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingRight": 22,
                     },
@@ -1998,7 +1998,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           style={
             [
               {
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "flex": 1,
               },
               {
@@ -2020,7 +2020,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",
@@ -2082,7 +2082,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -2170,7 +2170,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -2355,7 +2355,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -2427,7 +2427,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#E85466",
+                          "color": "#87939E",
                           "fontSize": 22,
                         },
                         null,
@@ -2492,7 +2492,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -2538,7 +2538,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           style={
             [
               {
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "flex": 1,
               },
               {
@@ -2560,7 +2560,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",
@@ -2622,7 +2622,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -2782,7 +2782,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -2905,7 +2905,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           style={
             [
               {
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "flex": 1,
               },
               {
@@ -2927,7 +2927,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",
@@ -2989,7 +2989,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -3077,7 +3077,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },

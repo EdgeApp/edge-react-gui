@@ -306,7 +306,7 @@ exports[`HelpModal should render with loading props 1`] = `
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#A4C7DF",
+                          "color": "#3dd9f4",
                           "fontSize": 17,
                           "marginTop": 6,
                         },
@@ -490,7 +490,7 @@ exports[`HelpModal should render with loading props 1`] = `
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#A4C7DF",
+                          "color": "#3dd9f4",
                           "fontSize": 17,
                           "marginTop": 6,
                         },
@@ -674,7 +674,7 @@ exports[`HelpModal should render with loading props 1`] = `
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#A4C7DF",
+                          "color": "#3dd9f4",
                           "fontSize": 17,
                           "marginTop": 6,
                         },
@@ -858,7 +858,7 @@ exports[`HelpModal should render with loading props 1`] = `
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#A4C7DF",
+                          "color": "#3dd9f4",
                           "fontSize": 17,
                           "marginTop": 6,
                         },
@@ -1039,7 +1039,7 @@ exports[`HelpModal should render with loading props 1`] = `
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#A4C7DF",
+                          "color": "#3dd9f4",
                           "fontSize": 17,
                           "marginTop": 6,
                         },
@@ -1099,7 +1099,7 @@ exports[`HelpModal should render with loading props 1`] = `
                     "includeFontPadding": false,
                   },
                   {
-                    "color": "#A4C7DF",
+                    "color": "#3dd9f4",
                     "fontSize": 17,
                   },
                   null,
@@ -1121,7 +1121,7 @@ exports[`HelpModal should render with loading props 1`] = `
                     "includeFontPadding": false,
                   },
                   {
-                    "color": "#A4C7DF",
+                    "color": "#3dd9f4",
                     "fontSize": 17,
                   },
                   null,
