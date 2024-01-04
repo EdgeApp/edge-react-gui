@@ -13,7 +13,7 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { Tile } from '../../tiles/Tile'
+import { RowUi4 } from '../../ui4/RowUi4'
 
 interface OwnProps extends EdgeSceneProps<'fioSentRequestDetails'> {}
 
@@ -43,7 +43,7 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
     const { amount } = content
     const tokenCode = content.token_code.toUpperCase()
     const text = `${amount} ${tokenCode} (${fiatSymbol} ${this.fiatAmount(tokenCode, amount)})`
-    return <Tile type="static" title={lstrings.fio_request_amount} body={text} />
+    return <RowUi4 title={lstrings.fio_request_amount} body={text} />
   }
 
   statusField = (status: FioRequestStatus) => {
@@ -54,11 +54,7 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
     } else if (status === 'rejected') {
       statusLabel = <EdgeText style={[styles.status, styles.statusRejected]}>{lstrings.fio_reject_status}</EdgeText>
     }
-    return (
-      <Tile type="static" title={lstrings.string_status}>
-        {statusLabel}
-      </Tile>
-    )
+    return <RowUi4 title={lstrings.string_status}>{statusLabel}</RowUi4>
   }
 
   render() {
@@ -71,11 +67,11 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
         <SceneHeader title={lstrings.title_fio_sent_request_details} underline />
         <View style={styles.headerSpace} />
         {this.amountField()}
-        <Tile type="static" title={lstrings.fio_request_sent_details_from} body={selectedFioSentRequest.payee_fio_address} />
-        <Tile type="static" title={lstrings.fio_request_sent_details_to} body={selectedFioSentRequest.payer_fio_address} />
+        <RowUi4 title={lstrings.fio_request_sent_details_from} body={selectedFioSentRequest.payee_fio_address} />
+        <RowUi4 title={lstrings.fio_request_sent_details_to} body={selectedFioSentRequest.payer_fio_address} />
         {this.statusField(selectedFioSentRequest.status)}
-        <Tile type="static" title={lstrings.fio_date_label} body={formatDate(new Date(selectedFioSentRequest.time_stamp), SHORT_DATE_FMT)} />
-        <Tile type="static" title={lstrings.memo_memo_title} body={selectedFioSentRequest.content.memo} />
+        <RowUi4 title={lstrings.fio_date_label} body={formatDate(new Date(selectedFioSentRequest.time_stamp), SHORT_DATE_FMT)} />
+        <RowUi4 title={lstrings.memo_memo_title} body={selectedFioSentRequest.content.memo} />
       </SceneWrapper>
     )
   }

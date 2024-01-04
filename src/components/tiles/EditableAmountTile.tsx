@@ -9,7 +9,7 @@ import { getWalletFiat } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, zeroString } from '../../util/utils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { Tile } from './Tile'
+import { RowUi4 } from '../ui4/RowUi4'
 
 interface Props {
   title: string
@@ -50,15 +50,17 @@ export const EditableAmountTile = (props: Props) => {
   }
 
   if (compressed) {
-    return <Tile type={lockInputs ? 'static' : 'delete'} title={title} body={`Amount: ${cryptoAmountSyntax} (${fiatAmountSyntax})`} onPress={onPress} />
+    return (
+      <RowUi4 rightButtonType={lockInputs ? 'none' : 'delete'} title={title} body={`Amount: ${cryptoAmountSyntax} (${fiatAmountSyntax})`} onPress={onPress} />
+    )
   } else {
     return (
-      <Tile type={lockInputs ? 'static' : 'editable'} title={title} onPress={lockInputs ? undefined : onPress}>
+      <RowUi4 rightButtonType={lockInputs ? 'none' : 'editable'} title={title} onPress={lockInputs ? undefined : onPress}>
         <EdgeText style={[styles.amountText, cryptoAmountStyle]} minimumFontScale={0.3}>
           {cryptoAmountSyntax}
         </EdgeText>
         {fiatAmountSyntax == null ? null : <EdgeText>{fiatAmountSyntax}</EdgeText>}
-      </Tile>
+      </RowUi4>
     )
   }
 }

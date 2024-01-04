@@ -14,7 +14,7 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { Slider } from '../themed/Slider'
 import { ThemedModal } from '../themed/ThemedModal'
-import { Tile } from '../tiles/Tile'
+import { RowUi4 } from '../ui4/RowUi4'
 
 interface OwnProps {
   acceleratedTx: EdgeTransaction
@@ -115,8 +115,8 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
         <ModalTitle>{lstrings.transaction_details_accelerate_transaction_header}</ModalTitle>
         <ModalMessage>{lstrings.transaction_details_accelerate_transaction_instructional}</ModalMessage>
         <View style={styles.container}>
-          <Tile type="static" title={lstrings.transaction_details_accelerate_transaction_old_fee_title} body={oldFee} />
-          {newFee == null ? null : <Tile type="static" title={lstrings.transaction_details_accelerate_transaction_new_fee_title} body={newFee} />}
+          <RowUi4 title={lstrings.transaction_details_accelerate_transaction_old_fee_title} body={oldFee} />
+          {newFee == null ? null : <RowUi4 title={lstrings.transaction_details_accelerate_transaction_new_fee_title} body={newFee} />}
         </View>
         {isLowerAmount ? (
           <WarningCard

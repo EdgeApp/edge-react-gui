@@ -1,11 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FioAddressSettingsComponent should render with loading props 1`] = `
-<SceneWrapper>
-  <WithTheme(TileComponent)
+<SceneWrapper
+  background="theme"
+>
+  <RowUi4
     body="MyFioAddress"
     title="FIO Crypto Handle"
-    type="static"
   />
   <React.Fragment>
     <MainButton

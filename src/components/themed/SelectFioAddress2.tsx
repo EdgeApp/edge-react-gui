@@ -15,7 +15,7 @@ import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { Tile } from '../tiles/Tile'
+import { RowUi4 } from '../ui4/RowUi4'
 
 interface OwnProps {
   navigation: NavigationBase
@@ -209,8 +209,9 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
     const { loading } = this.state
 
     return (
-      <Tile
-        type={loading && !selected ? 'loading' : fioRequest ? 'static' : 'touchable'}
+      <RowUi4
+        rightButtonType={fioRequest ? 'none' : 'touchable'}
+        loading={loading && !selected}
         title={lstrings.select_fio_address_address_from}
         body={selected}
         onPress={fioRequest ? undefined : this.selectAddress}
@@ -228,15 +229,15 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
 
     if (memoError) {
       return (
-        <Tile type="touchable" title={lstrings.select_fio_address_address_memo_error} onPress={this.openMessageInput}>
+        <RowUi4 rightButtonType="touchable" title={lstrings.select_fio_address_address_memo_error} onPress={this.openMessageInput}>
           <EdgeText style={{ color: theme.dangerText }}>{memoError}</EdgeText>
-        </Tile>
+        </RowUi4>
       )
     }
 
     return (
-      <Tile
-        type="touchable"
+      <RowUi4
+        rightButtonType="touchable"
         title={lstrings.select_fio_address_address_memo}
         body={memo || lstrings.fio_sender_memo_placeholder}
         onPress={this.openMessageInput}

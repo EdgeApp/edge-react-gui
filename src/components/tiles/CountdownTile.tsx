@@ -1,10 +1,9 @@
 import * as React from 'react'
 
 import { useState } from '../../types/reactHooks'
-import { Tile } from './Tile'
+import { RowUi4 } from '../ui4/RowUi4'
 
 interface Props {
-  contentPadding?: boolean
   maximumHeight?: 'small' | 'medium' | 'large'
   onDone: () => void
   isoExpireDate: string
@@ -12,7 +11,7 @@ interface Props {
 }
 
 export const CountdownTile = (props: Props) => {
-  const { contentPadding, isoExpireDate, maximumHeight, onDone, title } = props
+  const { isoExpireDate, maximumHeight, onDone, title } = props
 
   const timeoutHandler = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const [tick, setTick] = useState<number>(0)
@@ -39,5 +38,5 @@ export const CountdownTile = (props: Props) => {
   let time = date.toISOString().slice(11, 19)
   if (time.startsWith('00:')) time = time.slice(3)
 
-  return <Tile type="static" title={title} body={time} maximumHeight={maximumHeight} contentPadding={contentPadding} />
+  return <RowUi4 title={title} body={time} maximumHeight={maximumHeight} />
 }
