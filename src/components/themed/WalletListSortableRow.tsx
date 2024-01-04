@@ -11,9 +11,10 @@ import { calculateFiatBalance } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, decimalOrZero, truncateDecimals } from '../../util/utils'
-import { CryptoIcon } from '../icons/CryptoIcon'
+
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface Props {
   wallet?: EdgeCurrencyWallet
@@ -66,7 +67,7 @@ function WalletListSortableRowComponent(props: Props) {
           <Ionicon name="ios-menu" size={theme.rem(1.25)} color={theme.icon} />
         </View>
         <View style={styles.iconContainer}>
-          <CryptoIcon pluginId={wallet.currencyInfo.pluginId} walletId={wallet.id} />
+          <CryptoIconUi4 pluginId={wallet.currencyInfo.pluginId} walletId={wallet.id} />
         </View>
         <View style={styles.detailsContainer}>
           <View style={styles.detailsRow}>

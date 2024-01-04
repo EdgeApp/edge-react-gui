@@ -66,7 +66,26 @@ exports[`CreateWalletAccountSelect renders 1`] = `
               "width": 90,
             }
           }
-        />
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "#000000",
+                "borderRadius": 45,
+                "elevation": 0,
+                "height": 90,
+                "shadowColor": "#000000",
+                "shadowOffset": {
+                  "height": 3,
+                  "width": -3,
+                },
+                "shadowOpacity": 0.6,
+                "shadowRadius": 4,
+                "width": 90,
+              }
+            }
+          />
+        </View>
       </View>
       <Text
         style={

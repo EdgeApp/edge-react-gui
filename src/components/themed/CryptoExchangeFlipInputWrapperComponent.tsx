@@ -9,12 +9,13 @@ import { GuiCurrencyInfo } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { convertNativeToDenomination } from '../../util/utils'
 import { Card } from '../cards/Card'
-import { CryptoIcon } from '../icons/CryptoIcon'
+
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts } from './ExchangedFlipInput2'
 import { MainButton } from './MainButton'
 import { SelectableRow } from './SelectableRow'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface OwnProps {
   walletId: string
@@ -54,7 +55,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
     const styles = getStyles(this.props.theme)
     return (
       <View style={styles.iconContainer}>
-        <CryptoIcon sizeRem={1.75} walletId={this.props.walletId} tokenId={this.props.tokenId} />
+        <CryptoIconUi4 sizeRem={1.75} walletId={this.props.walletId} tokenId={this.props.tokenId} />
       </View>
     )
   }
@@ -114,7 +115,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
           <View style={styles.containerSelectedWalletNotFocus}>
             <SelectableRow
               arrowTappable
-              icon={<CryptoIcon sizeRem={1.75} walletId={this.props.walletId} tokenId={this.props.tokenId} />}
+              icon={<CryptoIconUi4 sizeRem={1.75} walletId={this.props.walletId} tokenId={this.props.tokenId} />}
               title={
                 <EdgeText style={styles.iconText} numberOfLines={1}>
                   {guiWalletName + ': ' + displayDenomination}

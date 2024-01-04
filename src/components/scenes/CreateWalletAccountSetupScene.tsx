@@ -2,7 +2,6 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { useMount } from '../../hooks/useMount'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
@@ -14,6 +13,7 @@ import { Space } from '../layout/Space'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage } from '../themed/ModalParts'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface Props extends EdgeSceneProps<'createWalletAccountSetup'> {}
 
@@ -70,7 +70,7 @@ export function CreateWalletAccountSetupScene(props: Props): JSX.Element {
   return (
     <SceneWrapper scroll>
       <View style={{ alignSelf: 'center' }}>
-        <CryptoIcon marginRem={1} pluginId={pluginId} sizeRem={4} tokenId={tokenId} />
+        <CryptoIconUi4 marginRem={1} pluginId={pluginId} sizeRem={4} tokenId={tokenId} />
       </View>
       {/* This is an abuse of ModalMessage,
       but EdgeText breaks this text by setting numberOfLines.

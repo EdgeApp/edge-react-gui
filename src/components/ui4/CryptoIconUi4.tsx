@@ -30,7 +30,7 @@ interface Props {
   onIconColor?: (color: string) => void
 }
 
-const CryptoIconComponent = (props: Props) => {
+export const CryptoIconUi4 = (props: Props) => {
   const { hideSecondary = false, marginRem, mono = false, sizeRem = 2, tokenId, walletId, onIconColor } = props
 
   const theme = useTheme()
@@ -155,5 +155,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: '50%'
   }
 }))
-
-export const CryptoIconUi4 = React.memo(CryptoIconComponent)
