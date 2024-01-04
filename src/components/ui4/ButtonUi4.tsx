@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ActivityIndicator, Platform, TouchableOpacity, ViewStyle } from 'react-native'
+import { ActivityIndicator, TouchableOpacity, ViewStyle } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
@@ -57,30 +57,42 @@ export function ButtonUi4(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  let spinnerColor, textStyle, gradientProps
-  if (type === 'primary') {
-    textStyle = styles.primaryText
-    spinnerColor = theme.buttonPrimaryUi4.spinnerColor
-    gradientProps = theme.buttonPrimaryUi4.gradientProps
-  } else if (type === 'secondary') {
-    textStyle = styles.secondaryText
-    spinnerColor = theme.buttonSecondaryUi4.spinnerColor
-    gradientProps = theme.buttonSecondaryUi4.gradientProps
-  } else {
-    // (type === 'tertiary')
-    textStyle = styles.tertiaryText
-    spinnerColor = theme.buttonTertiaryUi4.spinnerColor
-    gradientProps = theme.buttonTertiaryUi4.gradientProps
+  const buttonProps = {
+    primary: {
+      textStyle: styles.primaryText,
+      spinnerColor: theme.primaryButtonText,
+      gradientProps: {
+        colors: theme.primaryButton,
+        end: theme.primaryButtonColorEnd,
+        start: theme.primaryButtonColorStart
+      }
+    },
+    secondary: {
+      textStyle: styles.secondaryText,
+      spinnerColor: theme.secondaryButtonText,
+      gradientProps: {
+        colors: theme.secondaryButton,
+        end: theme.secondaryButtonColorEnd,
+        start: theme.secondaryButtonColorStart
+      }
+    },
+    tertiary: {
+      textStyle: styles.tertiaryText,
+      spinnerColor: theme.escapeButtonText,
+      gradientProps: {
+        colors: theme.escapeButton,
+        end: theme.escapeButtonColorEnd,
+        start: theme.escapeButtonColorStart
+      }
+    }
   }
+
+  const { spinnerColor, textStyle, gradientProps } = buttonProps[type]
 
   const dynamicGradientStyles = {
     alignSelf,
-    opacity: disabled ? 0.3 : pending ? 0.7 : 1,
-    ...(marginRem == null ? {} : sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))),
-    ...(paddingRem == null ? {} : sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem)))
+    opacity: disabled ? 0.3 : pending ? 0.7 : 1
   }
-
-  const textShadow = Platform.OS === 'ios' ? theme.shadowTextIosUi4 : theme.shadowTextAndroidUi4
 
   // Show a spinner if waiting on the onPress promise OR if the spinner prop is
   // manually enabled.
@@ -88,12 +100,16 @@ export function ButtonUi4(props: Props) {
 
   const maybeText =
     label == null ? null : (
-      <EdgeText numberOfLines={1} disableFontScaling style={[textStyle, textShadow]}>
+      <EdgeText numberOfLines={1} disableFontScaling style={textStyle}>
         {label}
       </EdgeText>
     )
 
-  const containerStyle: ViewStyle[] = [styles.containerCommon]
+  const containerStyle: ViewStyle[] = [
+    styles.containerCommon,
+    marginRem == null ? {} : sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem)),
+    paddingRem == null ? {} : sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
+  ]
   if (layout === 'column') containerStyle.push(styles.containerColumn)
   if (layout === 'row') containerStyle.push(styles.containerRow)
   if (layout === 'solo') containerStyle.push(styles.containerSolo)
@@ -112,16 +128,29 @@ export function ButtonUi4(props: Props) {
 }
 
 const getStyles = cacheStyles((theme: Theme) => {
-  const commonTextViewStyle: ViewStyle = {
-    marginHorizontal: theme.rem(0),
-    paddingVertical: theme.rem(0.5),
-    paddingHorizontal: theme.rem(1.5)
-  }
-
   return {
+    // Common styles:
+    spinnerCommon: {
+      height: theme.rem(2),
+      marginLeft: theme.rem(0.5)
+    },
+    containerCommon: {
+      borderRadius: theme.rem(theme.buttonBorderRadiusRem),
+      alignSelf: 'stretch',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    gradientLayoutCommon: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      height: theme.rem(3),
+      paddingHorizontal: theme.rem(2)
+    },
+
+    // Other styles:
     containerColumn: {
-      alignSelf: 'center',
-      marginVertical: theme.rem(0.25)
+      alignSelf: 'stretch'
     },
     containerSolo: {
       alignSelf: 'center'
@@ -130,54 +159,19 @@ const getStyles = cacheStyles((theme: Theme) => {
       flex: 1
     },
     primaryText: {
-      ...commonTextViewStyle,
-      ...theme.buttonPrimaryUi4.textStyle,
-      fontSize: theme.rem(theme.buttonFontSizeRemUi4)
-    },
-    primaryShadow: {
-      ...theme.buttonPrimaryUi4.shadowParams
-    },
-    primaryContainer: {
-      ...theme.buttonPrimaryUi4.containerStyle
+      fontFamily: theme.primaryButtonFont,
+      fontSize: theme.rem(theme.primaryButtonFontSizeRem),
+      color: theme.primaryButtonText
     },
     secondaryText: {
-      ...commonTextViewStyle,
-      ...theme.buttonSecondaryUi4.textStyle,
-      fontSize: theme.rem(theme.buttonFontSizeRemUi4)
-    },
-    secondaryShadow: {
-      ...theme.buttonSecondaryUi4.shadowParams
-    },
-    secondaryContainer: {
-      ...theme.buttonSecondaryUi4.containerStyle
+      fontFamily: theme.secondaryButtonFont,
+      fontSize: theme.rem(theme.secondaryButtonFontSizeRem),
+      color: theme.secondaryButtonText
     },
     tertiaryText: {
-      ...commonTextViewStyle,
-      ...theme.buttonTertiaryUi4.textStyle,
-      fontSize: theme.rem(theme.buttonFontSizeRemUi4)
-    },
-    tertiaryShadow: {
-      ...theme.buttonTertiaryUi4.shadowParams
-    },
-    tertiaryContainer: {
-      ...theme.buttonTertiaryUi4.containerStyle
-    },
-
-    // Common styles:
-    spinnerCommon: {
-      height: theme.rem(2),
-      marginHorizontal: theme.rem(0.5)
-    },
-    containerCommon: {
-      borderRadius: theme.rem(theme.buttonBorderRadiusRemUi4),
-      alignSelf: 'stretch'
-    },
-    gradientLayoutCommon: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      height: theme.rem(2.5),
-      marginHorizontal: theme.rem(0.5)
+      fontFamily: theme.escapeButtonFont,
+      fontSize: theme.rem(theme.escapeButtonFontSizeRem),
+      color: theme.escapeButtonText
     }
   }
 })

@@ -16,9 +16,11 @@ interface ThemeShadowParams {
   }
   shadowOpacity: number
   shadowRadius: number
+  /** @deprecated Android-specific prop no longer needed. */
   elevation: number
 }
 
+/** @depreated Use textShadow props from text-shadow-component */
 interface TextShadowParams {
   textShadowColor: string
   textShadowOffset: {
@@ -26,20 +28,6 @@ interface TextShadowParams {
     height: number
   }
   textShadowRadius: number
-}
-
-interface ButtomParamsUi4 {
-  textStyle: {
-    fontFamily: string
-    color: string
-  }
-  gradientProps: ThemeGradientParams
-  shadowParams: ThemeShadowParams // TODO: Address android/ios inconsistencies with lib
-  containerStyle: {
-    borderColor: string
-    borderWidth: number
-  }
-  spinnerColor: string
 }
 
 const asGradientCoords = asObject({
@@ -259,7 +247,8 @@ export interface Theme {
   // cardShadow: string,
   cardBorder: number
   cardBorderColor: string
-  cardBorderRadius: number
+  cardBorderRadius: number // TODO: use this
+  // TODO: cardTextShadow: TextShadowParams
 
   tabBarBackground: string[]
   tabBarBackgroundStart: GradientCoords
@@ -438,12 +427,9 @@ export interface Theme {
   guiPluginLogoMoonpay: ImageProp
 
   // UI 4.0:
-  buttonBorderRadiusRemUi4: number
-  buttonFontSizeRemUi4: number
 
-  buttonPrimaryUi4: ButtomParamsUi4
-  buttonSecondaryUi4: ButtomParamsUi4
-  buttonTertiaryUi4: ButtomParamsUi4
+  // Shadows
+  // iconShadow: ThemeShadowParams
 
   // Basic Card Styles
   cardBaseColorUi4: string
@@ -451,7 +437,7 @@ export interface Theme {
   cardGradientErrorUi4: ThemeGradientParams
   cardGradientLearnUi4: ThemeGradientParams
   cardOverlayDisabledUi4: string
-  cardRadiusRemUi4: number
+  cardRadiusRemUi4: number // TODO: merge with old keys
 
   // Special Home Scene Tiled Cards
   buyCardGradientUi4: ThemeGradientParams
@@ -459,6 +445,7 @@ export interface Theme {
   fioCardGradientUi4: ThemeGradientParams
   swapCardGradientUi4: ThemeGradientParams
 
+  // TODO: merge below with old keys:
   iconTappableAltUi4: string
 
   negativeTextMutedUi4: string
@@ -467,8 +454,6 @@ export interface Theme {
   shadowColorUi4: string
   shadowTextIosUi4: TextShadowParams
   shadowTextAndroidUi4: TextShadowParams
-
-  touchHighlightUi4: string
 
   txDirBgReceiveUi4: string
   txDirBgSendUi4: string

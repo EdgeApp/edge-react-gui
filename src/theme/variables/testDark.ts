@@ -1,7 +1,8 @@
 import { Dimensions, Platform } from 'react-native'
 
-import backgroundImage from '../../assets/images/backgrounds/login_bg.jpg'
 import fioAddressLogo from '../../assets/images/details_fioAddress.png'
+import edgeMark from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
+import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
 import paymentTypeLogoAuspost from '../../assets/images/paymentTypes/paymentTypeLogoAuspost.png'
@@ -27,21 +28,17 @@ import { textNoShadow, Theme, themeNoShadow } from '../../types/Theme'
 import { scale } from '../../util/scaling'
 
 const palette = {
-  white: '#FDF2D5',
+  white: '#FFFFFF',
   black: '#000000',
-  deepPurple: '#1A043D',
-  darkPurple1: '#2C0F60',
-  darkPurple2: '#280363',
-  darkPurple3: '#210449',
-  plainPurple: '#532499',
-  glowPurple: '#FA00FF',
-  lightPurple: '#FAaaFF',
-  royalBlue: '#003B65',
-  darkBlue: '#0C446A',
-  edgeNavy: '#0D2145',
-  edgeBlue: '#0E4B75',
+  blackTransparent: '#00000000',
+  darkestNavy: '#06090c',
+
   darkMint: '#089e73',
-  edgeMint: '#66EDA8',
+  edgeMint: '#00f1a2',
+  darkAqua: '#1b2f3b',
+  navyAqua: '#121d25',
+  navyAquaMiddle: '#11191f', // For vertical gradient
+  navyAquaDarker: '#0E141A', // For vertical gradient
   blueGray: '#A4C7DF',
   gray: '#87939E',
   lightGray: '#D9E3ED',
@@ -50,14 +47,13 @@ const palette = {
   accentRed: '#E85466',
   accentBlue: '#0073D9',
   accentOrange: '#F1AA19',
-  darkBlueNavyGradient1: '#0C446A',
-  darkBlueNavyGradient2: '#0D2145',
+  darkBlueLightened: '#2B333A',
 
   blackOp25: 'rgba(0, 0, 0, .25)',
   blackOp50: 'rgba(0, 0, 0, .5)',
 
-  whiteOp10: 'rgba(255, 255, 255, .1)',
   whiteOp05: 'rgba(255, 255, 255, .05)',
+  whiteOp10: 'rgba(255, 255, 255, .1)',
   whiteOp75: 'rgba(255, 255, 255, .75)',
 
   grayOp80: 'rgba(135, 147, 158, .8)',
@@ -86,8 +82,13 @@ const palette = {
   learnMiddle: 'rgba(0, 81, 92, .44)',
   learnRight: 'rgba(0, 245, 155, .44)',
 
+  // Button
   graySecondary: 'hsla(0, 0%, 100%, 0.20)',
 
+  // Shadows
+  shadow: 'rgba(0, 0, 0, 0.514)',
+
+  // Gradients
   warningOuter: '#772a0f',
   warningInner: '#835d22',
   errorOuter: '#94472e',
@@ -116,21 +117,22 @@ export const testDark: Theme = {
 
   // Icons
   icon: palette.white,
-  iconTappable: palette.glowPurple,
+  iconTappable: palette.edgeMint,
   iconDeactivated: palette.whiteOp75,
   dangerIcon: palette.accentRed,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
-  transactionListIconBackground: palette.darkBlue,
-  buySellCustomPluginModalIcon: palette.darkBlue,
-  loadingIcon: palette.glowPurple,
+  transactionListIconBackground: palette.darkAqua,
+  buySellCustomPluginModalIcon: palette.navyAqua,
+  loadingIcon: palette.edgeMint,
 
   // Background
-  backgroundGradientColors: [palette.deepPurple, palette.darkPurple2],
+  // backgroundGradientColors: [palette.navyAqua, palette.navyAquaDarker], // For vertical gradient
+  backgroundGradientColors: [palette.darkestNavy, palette.darkAqua],
   backgroundGradientStart: { x: 0, y: 0 },
-  backgroundGradientEnd: { x: 0, y: 1 },
-  backgroundImageServerUrls: ['https://content-test.edge.app'],
-  backgroundImage,
+  backgroundGradientEnd: { x: 1, y: 0 },
+  backgroundImageServerUrls: ['https://content.edge.app'],
+  backgroundImage: undefined,
   backgroundLoadingOverlay: 'rgba(123,123,123,.2)',
 
   // Camera Overlay
@@ -139,16 +141,16 @@ export const testDark: Theme = {
   cameraOverlayOpEnd: 0.3,
 
   // Modal
-  modal: palette.edgeNavy,
+  modal: palette.navyAqua,
   modalCloseIcon: palette.edgeMint,
-  modalBorderColor: palette.glowPurple,
-  modalBorderWidth: 4,
-  modalBorderRadiusRem: 2,
+  modalBorderColor: palette.transparent,
+  modalBorderWidth: 0,
+  modalBorderRadiusRem: 1,
 
-  sideMenuColor: palette.edgeNavy,
-  sideMenuBorderColor: palette.glowPurple,
-  sideMenuBorderWidth: 4,
-  sideMenuFont: palette.QuicksandBold,
+  sideMenuColor: palette.navyAqua,
+  sideMenuBorderColor: palette.navyAqua,
+  sideMenuBorderWidth: 0,
+  sideMenuFont: palette.QuicksandMedium,
 
   // Tile
   // listHeaderBackground: palette.edgeNavy,
@@ -156,14 +158,18 @@ export const testDark: Theme = {
   tileBackgroundMuted: palette.transparent,
 
   // Section Lists
-  listSectionHeaderBackgroundGradientColors: [palette.transparent],
+  // listSectionHeaderBackgroundGradientColors: [palette.navyAquaMiddle], // For vertical gradient
+  listSectionHeaderBackgroundGradientColors: [`#000000aa`, `#00000000`],
+  // Commenting out will remove background gradient:
+  // listSectionHeaderBackgroundGradientStart: { x: 0, y: 0 },
+  // listSectionHeaderBackgroundGradientEnd: { x: 1, y: 0 },
 
   // WalletList
-  walletListBackground: palette.edgeBlue,
-  walletListMutedBackground: palette.mutedBlue,
+  walletListBackground: palette.navyAqua,
+  walletListMutedBackground: palette.navyAqua,
 
   // Text
-  primaryText: palette.lightPurple,
+  primaryText: palette.white,
   secondaryText: palette.blueGray,
   warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
@@ -175,70 +181,64 @@ export const testDark: Theme = {
   // listHeaderText: palette.white,
 
   // Header
-  headerIcon: fioAddressLogo,
-  headerBackground: [palette.edgeNavy, palette.edgeNavy],
+  headerIcon: edgeMark,
+  headerBackground: [palette.black, palette.blackTransparent],
   headerBackgroundStart: { x: 0, y: 0 },
-  headerBackgroundEnd: { x: 1, y: 1 },
-  headerOutlineColors: [palette.edgeNavy, palette.edgeMint],
+  headerBackgroundEnd: { x: 0, y: 0.5 },
+  headerOutlineColors: [palette.transparent, palette.transparent],
 
   // Buttons
   // Should add palette when pressed
-  buttonBorderRadiusRem: 0.5,
-  addButtonFont: palette.QuicksandBold,
+  buttonBorderRadiusRem: 1.5,
+  addButtonFont: palette.QuicksandMedium,
 
-  keypadButtonOutline: palette.glowPurple,
-  keypadButtonOutlineWidth: 1.5,
-  keypadButton: [palette.plainPurple, palette.darkPurple1],
+  keypadButtonOutline: palette.transparent,
+  keypadButtonOutlineWidth: 1,
+  keypadButton: [palette.transparent, palette.transparent],
   keypadButtonColorStart: { x: 0, y: 0 },
   keypadButtonColorEnd: { x: 1, y: 1 },
-  keypadButtonText: palette.lightPurple,
-  keypadButtonTextShadow: {
-    textShadowColor: palette.edgeMint,
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 8
-  },
-  keypadButtonShadow: {
-    shadowColor: palette.edgeMint,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.7,
-    shadowRadius: 8,
-    elevation: 3
-  },
-  keypadButtonBorderRadiusRem: 0.5,
-  keypadButtonFontSizeRem: 2,
+  keypadButtonText: palette.edgeMint,
+  keypadButtonTextShadow: textNoShadow,
+  keypadButtonShadow: themeNoShadow,
+  keypadButtonBorderRadiusRem: 0.25,
+  keypadButtonFontSizeRem: 1.5,
   keypadButtonFont: palette.QuicksandMedium,
 
-  primaryButtonOutline: palette.glowPurple,
-  primaryButtonOutlineWidth: 2,
-  primaryButton: [palette.plainPurple, palette.darkPurple1],
-  primaryButtonColorStart: { x: 0.5, y: 0 },
-  primaryButtonColorEnd: { x: 0.5, y: 1 },
-  primaryButtonText: palette.lightPurple,
-  primaryButtonTextShadow: {
-    textShadowColor: palette.edgeMint,
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 8
-  },
+  primaryButtonOutline: palette.transparent,
+  primaryButtonOutlineWidth: 0,
+  primaryButton: [palette.darkestGreen, palette.darkGreen],
+  primaryButtonColorStart: { x: 0, y: 0 },
+  primaryButtonColorEnd: { x: 1, y: 0 },
+  primaryButtonText: palette.white,
+  primaryButtonTextShadow: textNoShadow,
   primaryButtonShadow: {
-    shadowColor: palette.edgeMint,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.7,
-    shadowRadius: 8,
-    elevation: 3
+    shadowColor: palette.black,
+    shadowOffset: { width: -1.5, height: 1.5 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    /** @deprecated */
+    elevation: 0
   },
-  primaryButtonFontSizeRem: 1.25,
-  primaryButtonFont: palette.QuicksandBold,
+  primaryButtonFontSizeRem: 1,
+  primaryButtonFont: palette.QuicksandMedium,
 
-  secondaryButtonOutline: palette.glowPurple,
-  secondaryButtonOutlineWidth: 2,
-  secondaryButton: [palette.transparent, palette.transparent],
-  secondaryButtonColorStart: { x: 0.5, y: 0 },
-  secondaryButtonColorEnd: { x: 0.5, y: 1 },
-  secondaryButtonText: palette.glowPurple,
+  secondaryButtonOutline: palette.graySecondary,
+  secondaryButtonOutlineWidth: 0,
+  secondaryButton: [palette.graySecondary, palette.graySecondary],
+  secondaryButtonColorStart: { x: 0, y: 0 },
+  secondaryButtonColorEnd: { x: 1, y: 1 },
+  secondaryButtonText: palette.white,
   secondaryButtonTextShadow: textNoShadow,
-  secondaryButtonShadow: themeNoShadow,
+  secondaryButtonShadow: {
+    shadowColor: palette.black,
+    shadowOffset: { width: -1.5, height: 1.5 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    /** @deprecated */
+    elevation: 0
+  },
   secondaryButtonFontSizeRem: 1,
-  secondaryButtonFont: palette.QuicksandLight,
+  secondaryButtonFont: palette.QuicksandRegular,
 
   escapeButtonOutline: palette.transparent,
   escapeButtonOutlineWidth: 0,
@@ -251,14 +251,14 @@ export const testDark: Theme = {
   escapeButtonFontSizeRem: 1,
   escapeButtonFont: palette.QuicksandRegular,
 
-  pinUsernameButtonOutline: palette.white,
-  pinUsernameButtonOutlineWidth: 0.5,
-  pinUsernameButton: [palette.edgeMint, palette.transparent],
+  pinUsernameButtonOutline: palette.transparent,
+  pinUsernameButtonOutlineWidth: 0,
+  pinUsernameButton: [palette.transparent, palette.transparent],
   pinUsernameButtonColorStart: { x: 0, y: 0 },
   pinUsernameButtonColorEnd: { x: 1, y: 1 },
-  pinUsernameButtonText: palette.accentRed,
-  pinUsernameButtonTextShadow: { textShadowColor: palette.edgeMint, textShadowOffset: { width: 0, height: 0 }, textShadowRadius: 8 },
-  pinUsernameButtonShadow: { shadowColor: palette.edgeMint, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.7, shadowRadius: 8, elevation: 3 },
+  pinUsernameButtonText: palette.white,
+  pinUsernameButtonTextShadow: textNoShadow,
+  pinUsernameButtonShadow: themeNoShadow,
   pinUsernameButtonBorderRadiusRem: 1,
   pinUsernameButtonFontSizeRem: 1.5,
   pinUsernameButtonFont: palette.QuicksandRegular,
@@ -275,10 +275,10 @@ export const testDark: Theme = {
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 4,
 
-  tabBarBackground: [palette.edgeNavy, palette.edgeMint],
-  tabBarBackgroundStart: { x: 0, y: 0 },
-  tabBarBackgroundEnd: { x: 1, y: 1 },
-  tabBarTopOutlineColors: [palette.edgeNavy, palette.edgeMint],
+  tabBarBackground: [`${palette.black}00`, palette.black],
+  tabBarBackgroundStart: { x: 0, y: 0.5 },
+  tabBarBackgroundEnd: { x: 0, y: 1 },
+  tabBarTopOutlineColors: [`${palette.white}22`, `${palette.white}22`],
   tabBarIcon: palette.white,
   tabBarIconHighlighted: palette.edgeMint,
 
@@ -302,9 +302,9 @@ export const testDark: Theme = {
   // warningBubble: palette.accentOrange,
 
   // Confirmation slider
-  confirmationSlider: palette.whiteOp05,
+  confirmationSlider: palette.darkBlueLightened,
   confirmationSliderText: palette.white,
-  confirmationSliderArrow: palette.edgeBlue,
+  confirmationSliderArrow: palette.darkAqua,
   confirmationSliderThumb: palette.edgeMint,
   confirmationSliderTextDeactivated: palette.gray,
   confirmationThumbDeactivated: palette.gray,
@@ -322,8 +322,8 @@ export const testDark: Theme = {
   thickLineWidth: 3,
 
   // DividerLine component
-  dividerLineHeight: 2,
-  dividerLineColors: [palette.edgeMint, palette.edgeNavy],
+  dividerLineHeight: 1,
+  dividerLineColors: [palette.whiteOp10, palette.whiteOp10],
 
   // Notifications
   // notificationBackground: palette.lightGrayOp75,
@@ -343,7 +343,7 @@ export const testDark: Theme = {
   // Settings Row
   settingsRowBackground: palette.transparent,
   settingsRowPressed: palette.transparent,
-  settingsRowHeaderBackground: [palette.edgeNavy, palette.edgeMint],
+  settingsRowHeaderBackground: [palette.navyAqua, palette.navyAqua],
   settingsRowHeaderBackgroundStart: { x: 0, y: 0 },
   settingsRowHeaderBackgroundEnd: { x: 1, y: 1 },
   settingsRowHeaderFont: palette.QuicksandMedium,
@@ -354,7 +354,7 @@ export const testDark: Theme = {
   dateModalTextLight: palette.accentBlue,
   dateModalTextDark: palette.white,
   dateModalBackgroundLight: palette.white,
-  dateModalBackgroundDark: palette.edgeBlue,
+  dateModalBackgroundDark: palette.darkAqua,
 
   // Wallet Icon Progress
   walletProgressIconFill: palette.edgeMint,
@@ -400,29 +400,29 @@ export const testDark: Theme = {
   inputAccessoryText: palette.accentBlue,
 
   // Outline Text Input
-  outlineTextInputColor: palette.darkPurple3,
-  outlineTextInputTextColor: palette.lightPurple,
+  outlineTextInputColor: palette.transparent,
+  outlineTextInputTextColor: palette.white,
   outlineTextInputBorderWidth: 1,
-  outlineTextInputBorderColor: palette.darkPurple1,
+  outlineTextInputBorderColor: palette.blueGray,
   outlineTextInputBorderColorDisabled: palette.gray,
-  outlineTextInputBorderColorFocused: palette.glowPurple,
-  outlineTextInputLabelColor: palette.white,
+  outlineTextInputBorderColorFocused: palette.edgeMint,
+  outlineTextInputLabelColor: palette.blueGray,
   outlineTextInputLabelColorDisabled: palette.gray,
-  outlineTextInputLabelColorFocused: palette.black,
+  outlineTextInputLabelColorFocused: palette.edgeMint,
 
   // Simple Text Input
-  textInputTextColor: palette.gray,
-  textInputTextColorDisabled: palette.white,
+  textInputTextColor: palette.white,
+  textInputTextColorDisabled: palette.gray,
   textInputTextColorFocused: palette.white,
-  textInputBackgroundColor: palette.edgeNavy,
-  textInputBackgroundColorDisabled: palette.edgeNavy,
-  textInputBackgroundColorFocused: palette.edgeNavy,
-  textInputBorderColor: palette.mutedBlue,
+  textInputBackgroundColor: palette.darkAqua,
+  textInputBackgroundColorDisabled: palette.darkAqua,
+  textInputBackgroundColorFocused: palette.darkAqua,
+  textInputBorderColor: `${palette.edgeMint}00`,
   textInputBorderColorDisabled: palette.gray,
   textInputBorderColorFocused: palette.edgeMint,
-  textInputBorderWidth: 1,
   textInputBorderRadius: 100,
-  textInputIconColor: palette.mutedBlue,
+  textInputBorderWidth: 1,
+  textInputIconColor: palette.gray,
   textInputIconColorDisabled: palette.gray,
   textInputIconColorFocused: palette.edgeMint,
   textInputPlaceholderColor: palette.gray,
@@ -454,87 +454,13 @@ export const testDark: Theme = {
   paymentTypeLogoUpi,
   paymentTypeVisa,
 
+  primaryLogo: edgeLogo,
   fioAddressLogo: fioAddressLogo,
-  primaryLogo: paymentTypeLogoPayid,
   walletListSlideTutorialImage: walletListSlidingTutorial,
 
   guiPluginLogoMoonpay: guiPluginLogoMoonpay,
 
   // UI 4.0:
-  buttonBorderRadiusRemUi4: 2,
-  buttonFontSizeRemUi4: 1,
-
-  buttonPrimaryUi4: {
-    textStyle: {
-      fontFamily: palette.QuicksandMedium,
-      color: palette.white
-    },
-    gradientProps: {
-      colors: [palette.darkestGreen, palette.darkGreen],
-      end: { x: 1, y: 0 },
-      start: { x: 0, y: 0 }
-    },
-    shadowParams: {
-      shadowColor: palette.white,
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.25,
-      shadowRadius: 8,
-      elevation: 2
-    },
-    containerStyle: {
-      borderColor: palette.darkestGreen,
-      borderWidth: 0
-    },
-    spinnerColor: palette.white
-  },
-
-  buttonSecondaryUi4: {
-    textStyle: {
-      fontFamily: palette.QuicksandMedium,
-      color: palette.white
-    },
-    gradientProps: {
-      colors: [palette.graySecondary, palette.graySecondary],
-      end: { x: 1, y: 0 },
-      start: { x: 0, y: 0 }
-    },
-    shadowParams: {
-      shadowColor: palette.black,
-      shadowOffset: { width: -1.5, height: 1.5 },
-      shadowOpacity: 0.5,
-      shadowRadius: 2,
-      elevation: 2
-    },
-    containerStyle: {
-      borderColor: palette.edgeMint,
-      borderWidth: 1
-    },
-    spinnerColor: palette.white
-  },
-
-  buttonTertiaryUi4: {
-    textStyle: {
-      fontFamily: palette.QuicksandMedium,
-      color: palette.black
-    },
-    gradientProps: {
-      colors: [palette.darkMint, palette.edgeMint],
-      end: { x: 1, y: 0 },
-      start: { x: 0, y: 0 }
-    },
-    shadowParams: {
-      shadowColor: palette.white,
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.25,
-      shadowRadius: 8,
-      elevation: 2
-    },
-    containerStyle: {
-      borderColor: palette.edgeMint,
-      borderWidth: 1
-    },
-    spinnerColor: palette.white
-  },
 
   // Basic Card Styles
   cardBaseColorUi4: palette.whiteOp10,
@@ -600,8 +526,6 @@ export const testDark: Theme = {
     },
     textShadowRadius: 10
   },
-
-  touchHighlightUi4: palette.lightGrayOp75,
 
   txDirBgReceiveUi4: palette.greenOp60,
   txDirBgSendUi4: palette.redOp60,

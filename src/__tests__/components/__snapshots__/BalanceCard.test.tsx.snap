@@ -235,9 +235,11 @@ exports[`BalanceCard should render with loading props 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           {
+            "alignItems": "center",
             "alignSelf": "stretch",
-            "borderRadius": 45,
+            "borderRadius": 34,
             "flex": 1,
+            "justifyContent": "center",
             "opacity": 1,
           }
         }
@@ -252,7 +254,7 @@ exports[`BalanceCard should render with loading props 1`] = `
           endPoint={
             {
               "x": 1,
-              "y": 0,
+              "y": 1,
             }
           }
           locations={null}
@@ -267,23 +269,29 @@ exports[`BalanceCard should render with loading props 1`] = `
               {
                 "alignItems": "center",
                 "flexDirection": "row",
-                "height": 56,
+                "height": 67,
                 "justifyContent": "center",
-                "marginHorizontal": 11,
+                "paddingHorizontal": 45,
               },
               {
                 "alignSelf": "auto",
                 "opacity": 1,
               },
               {
+                "alignItems": "center",
                 "alignSelf": "stretch",
-                "borderRadius": 45,
+                "borderRadius": 34,
+                "justifyContent": "center",
               },
               [
                 {
+                  "alignItems": "center",
                   "alignSelf": "stretch",
-                  "borderRadius": 45,
+                  "borderRadius": 34,
+                  "justifyContent": "center",
                 },
+                {},
+                {},
                 {
                   "flex": 1,
                 },
@@ -303,24 +311,11 @@ exports[`BalanceCard should render with loading props 1`] = `
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
-                [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Medium",
-                    "fontSize": 22,
-                    "marginHorizontal": 0,
-                    "paddingHorizontal": 34,
-                    "paddingVertical": 11,
-                  },
-                  {
-                    "textShadowColor": "#00000098",
-                    "textShadowOffset": {
-                      "height": 0,
-                      "width": 0,
-                    },
-                    "textShadowRadius": 3,
-                  },
-                ],
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
                 null,
               ]
             }
@@ -359,9 +354,11 @@ exports[`BalanceCard should render with loading props 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           {
+            "alignItems": "center",
             "alignSelf": "stretch",
-            "borderRadius": 45,
+            "borderRadius": 34,
             "flex": 1,
+            "justifyContent": "center",
             "opacity": 1,
           }
         }
@@ -376,7 +373,7 @@ exports[`BalanceCard should render with loading props 1`] = `
           endPoint={
             {
               "x": 1,
-              "y": 0,
+              "y": 1,
             }
           }
           locations={null}
@@ -391,23 +388,29 @@ exports[`BalanceCard should render with loading props 1`] = `
               {
                 "alignItems": "center",
                 "flexDirection": "row",
-                "height": 56,
+                "height": 67,
                 "justifyContent": "center",
-                "marginHorizontal": 11,
+                "paddingHorizontal": 45,
               },
               {
                 "alignSelf": "auto",
                 "opacity": 1,
               },
               {
+                "alignItems": "center",
                 "alignSelf": "stretch",
-                "borderRadius": 45,
+                "borderRadius": 34,
+                "justifyContent": "center",
               },
               [
                 {
+                  "alignItems": "center",
                   "alignSelf": "stretch",
-                  "borderRadius": 45,
+                  "borderRadius": 34,
+                  "justifyContent": "center",
                 },
+                {},
+                {},
                 {
                   "flex": 1,
                 },
@@ -427,24 +430,11 @@ exports[`BalanceCard should render with loading props 1`] = `
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
-                [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Medium",
-                    "fontSize": 22,
-                    "marginHorizontal": 0,
-                    "paddingHorizontal": 34,
-                    "paddingVertical": 11,
-                  },
-                  {
-                    "textShadowColor": "#00000098",
-                    "textShadowOffset": {
-                      "height": 0,
-                      "width": 0,
-                    },
-                    "textShadowRadius": 3,
-                  },
-                ],
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
                 null,
               ]
             }
