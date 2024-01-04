@@ -2,6 +2,7 @@ import { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { ShadowedView } from 'react-native-fast-shadow'
 import { getColors } from 'react-native-image-colors'
 
 import compromisedIcon from '../../assets/images/compromisedIcon.png'
@@ -97,16 +98,13 @@ const CryptoIconComponent = (props: Props) => {
     [marginRem, size, theme]
   )
 
-  const shadowStyle = React.useMemo(
-    () => ({
-      height: size,
-      width: size,
-      borderRadius: size / 2,
-      backgroundColor: theme.iconShadow.shadowColor,
-      ...theme.iconShadow
-    }),
-    [size, theme]
-  )
+  const shadowStyle = {
+    height: size,
+    width: size,
+    borderRadius: size / 2,
+    backgroundColor: theme.iconShadow.shadowColor,
+    ...theme.iconShadow
+  }
 
   //
   // Effects
@@ -142,9 +140,10 @@ const CryptoIconComponent = (props: Props) => {
           wallet={wallet}
         />
       )}
-      <View style={shadowStyle} />
-      {primaryCurrencyIcon}
-      {hideSecondary ? null : secondaryCurrencyIcon}
+      <ShadowedView style={shadowStyle}>
+        {primaryCurrencyIcon}
+        {hideSecondary ? null : secondaryCurrencyIcon}
+      </ShadowedView>
     </View>
   )
 }
