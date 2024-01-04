@@ -14,7 +14,13 @@ exports[`Request should render with loaded props 1`] = `
       }
     }
   >
-    <View
+    <EdgeAnim
+      enter={
+        {
+          "distance": 75,
+          "type": "fadeInUp",
+        }
+      }
       style={
         {
           "flexDirection": "row",
@@ -43,8 +49,14 @@ exports[`Request should render with loaded props 1`] = `
       >
         1 undefined
       </WithTheme(EdgeTextComponent)>
-    </View>
-    <View
+    </EdgeAnim>
+    <EdgeAnim
+      enter={
+        {
+          "distance": 50,
+          "type": "fadeInUp",
+        }
+      }
       style={
         {
           "flexDirection": "row",
@@ -92,62 +104,89 @@ exports[`Request should render with loaded props 1`] = `
           }
         />
       </WithTheme(EdgeTextComponent)>
-    </View>
-    <WithTheme(CardComponent)>
-      <Memo
-        forceField="crypto"
-        headerCallback={[Function]}
-        headerText="Receive to My Bitcoin"
-        keyboardVisible={false}
-        onAmountChanged={[Function]}
-        returnKeyType="done"
-      />
-    </WithTheme(CardComponent)>
+    </EdgeAnim>
+    <EdgeAnim
+      enter={
+        {
+          "distance": 25,
+          "type": "fadeInUp",
+        }
+      }
+    >
+      <WithTheme(CardComponent)>
+        <Memo
+          forceField="crypto"
+          headerCallback={[Function]}
+          headerText="Receive to My Bitcoin"
+          keyboardVisible={false}
+          onAmountChanged={[Function]}
+          returnKeyType="done"
+        />
+      </WithTheme(CardComponent)>
+    </EdgeAnim>
     <Carousel
       items={[]}
       keyExtractor={[Function]}
       onChangeItem={[Function]}
       renderItem={[Function]}
     />
-    <TouchableOpacity
-      accessible={false}
-      disabled={false}
-      onPress={[Function]}
+    <EdgeAnim
+      enter={
+        {
+          "distance": 50,
+          "type": "fadeInDown",
+        }
+      }
     >
-      <View
-        style={
-          {
-            "alignItems": "center",
-            "flexDirection": "row",
-          }
-        }
+      <TouchableOpacity
+        accessible={false}
+        disabled={false}
+        onPress={[Function]}
       >
-        <WithTheme(EdgeTextComponent)>
-          Your Wallet Address
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+            }
+          }
+        >
+          <WithTheme(EdgeTextComponent)>
+            Your Wallet Address
+          </WithTheme(EdgeTextComponent)>
+          <Icon
+            allowFontScaling={false}
+            color="#00f1a2"
+            name="chevron-forward"
+            size={34}
+          />
+        </View>
+        <WithTheme(EdgeTextComponent)
+          style={
+            {
+              "fontSize": 17,
+            }
+          }
+        >
+          Loading…
         </WithTheme(EdgeTextComponent)>
-        <Icon
-          allowFontScaling={false}
-          color="#00f1a2"
-          name="chevron-forward"
-          size={34}
-        />
-      </View>
-      <WithTheme(EdgeTextComponent)
-        style={
-          {
-            "fontSize": 17,
-          }
-        }
-      >
-        Loading…
-      </WithTheme(EdgeTextComponent)>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </EdgeAnim>
   </View>
-  <ShareButtons
-    copyToClipboard={[Function]}
-    openFioAddressModal={[Function]}
-    openShareModal={[Function]}
-  />
+  <EdgeAnim
+    enter={
+      {
+        "distance": 75,
+        "type": "fadeInDown",
+      }
+    }
+  >
+    <ShareButtons
+      copyToClipboard={[Function]}
+      openFioAddressModal={[Function]}
+      openShareModal={[Function]}
+    />
+  </EdgeAnim>
 </SceneWrapper>
 `;
 

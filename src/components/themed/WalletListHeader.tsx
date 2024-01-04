@@ -6,6 +6,7 @@ import { Fontello } from '../../assets/vector/index'
 import { lstrings } from '../../locales/strings'
 import { NavigationBase } from '../../types/routerTypes'
 import { PromoCard } from '../cards/PromoCard'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -82,10 +83,22 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
             </TouchableOpacity>
           )}
         </View>
-        {searching ? null : <BalanceCardUi4 navigation={navigation} />}
-        {sorting || searching ? null : <SectionHeaderUi4 leftTitle={lstrings.title_wallets} rightNode={addSortButtons} />}
+        {searching ? null : (
+          <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
+            <BalanceCardUi4 navigation={navigation} />
+          </EdgeAnim>
+        )}
+        {sorting || searching ? null : (
+          <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
+            <SectionHeaderUi4 leftTitle={lstrings.title_wallets} rightNode={addSortButtons} />
+          </EdgeAnim>
+        )}
 
-        {searching ? null : <PromoCard navigation={navigation} />}
+        {searching ? null : (
+          <EdgeAnim enter={{ type: 'fadeInUp', distance: 20 }} exit={{ type: 'fadeOutUp' }}>
+            <PromoCard navigation={navigation} />
+          </EdgeAnim>
+        )}
       </>
     )
   }

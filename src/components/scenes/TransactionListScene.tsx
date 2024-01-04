@@ -21,6 +21,7 @@ import { FlatListItem } from '../../types/types'
 import { fetchInfo } from '../../util/network'
 import { calculateSpamThreshold, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { AssetStatusCard } from '../cards/AssetStatusCard'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { useTheme } from '../services/ThemeContext'
@@ -216,14 +217,22 @@ function TransactionListComponent(props: Props) {
     }
   }, [isTransactionListUnsupported, navigation, searching, tokenId, wallet])
 
-  const renderItem = useHandler(({ item }: FlatListItem<ListItem>) => {
+  const renderItem = useHandler(({ index, item }: FlatListItem<ListItem>) => {
     if (item == null) {
       return <EmptyLoader />
     }
     if (typeof item === 'string') {
-      return <SectionHeader title={item} />
+      return (
+        <EdgeAnim enter={{ type: 'fadeInLeft', distance: 30 * (index + 1) }}>
+          <SectionHeader title={item} />
+        </EdgeAnim>
+      )
     }
-    return <TransactionListRow currencyCode={currencyCode} navigation={navigation} transaction={item} wallet={wallet} />
+    return (
+      <EdgeAnim enter={{ type: 'fadeInRight', distance: 30 * (index + 1) }}>
+        <TransactionListRow currencyCode={currencyCode} navigation={navigation} transaction={item} wallet={wallet} />
+      </EdgeAnim>
+    )
   })
 
   const getItemType = useHandler((item: ListItem) => {

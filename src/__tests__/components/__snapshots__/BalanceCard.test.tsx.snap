@@ -77,29 +77,48 @@ exports[`BalanceCard should render with loading props 1`] = `
         {
           "alignItems": "center",
           "flexDirection": "row",
-          "justifyContent": "space-between",
         }
       }
     >
-      <View
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
         style={
-          {
-            "alignItems": "center",
-            "flexDirection": "row",
-          }
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "textShadowColor": "#00000098",
+              "textShadowOffset": {
+                "height": 0,
+                "width": 0,
+              },
+              "textShadowRadius": 3,
+            },
+            null,
+          ]
         }
       >
-        <Text
-          adjustsFontSizeToFit={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
-          style={
+        Total Balance
+      </Text>
+      <Text
+        allowFontScaling={false}
+        style={
+          [
+            {
+              "color": "#00f1a2",
+              "fontSize": 22,
+            },
             [
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
+                "alignSelf": "center",
+                "marginLeft": 6,
+                "marginRight": 0,
               },
               {
                 "textShadowColor": "#00000098",
@@ -109,74 +128,62 @@ exports[`BalanceCard should render with loading props 1`] = `
                 },
                 "textShadowRadius": 3,
               },
-              null,
-            ]
-          }
-        >
-          Total Balance
-        </Text>
-        <Text
-          allowFontScaling={false}
-          style={
-            [
-              {
-                "color": "#00f1a2",
-                "fontSize": 22,
-              },
-              [
-                {
-                  "alignSelf": "center",
-                  "marginLeft": 6,
-                  "marginRight": 0,
-                },
-                {
-                  "textShadowColor": "#00000098",
-                  "textShadowOffset": {
-                    "height": 0,
-                    "width": 0,
-                  },
-                  "textShadowRadius": 3,
-                },
-              ],
-              {
-                "fontFamily": "Ionicons",
-                "fontStyle": "normal",
-                "fontWeight": "normal",
-              },
-              {},
-            ]
-          }
-        >
-          
-        </Text>
-      </View>
-    </View>
-    <Text
-      adjustsFontSizeToFit={true}
-      minimumFontScale={0.65}
-      numberOfLines={1}
-      style={
-        [
-          {
-            "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
-            "includeFontPadding": false,
-          },
-          {
-            "textShadowColor": "#00000098",
-            "textShadowOffset": {
-              "height": 0,
-              "width": 0,
+            ],
+            {
+              "fontFamily": "Ionicons",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
             },
-            "textShadowRadius": 3,
-          },
-          null,
-        ]
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "height": 51,
+          "marginBottom": 11,
+          "marginTop": 6,
+        }
       }
     >
-      Exchange Rates Loading...
-    </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "height": 51,
+                "marginBottom": 11,
+                "marginTop": 6,
+              },
+              {
+                "textShadowColor": "#00000098",
+                "textShadowOffset": {
+                  "height": 0,
+                  "width": 0,
+                },
+                "textShadowRadius": 3,
+              },
+            ],
+            null,
+          ]
+        }
+      >
+        Exchange Rates Loading...
+      </Text>
+    </View>
   </View>
   <View
     style={

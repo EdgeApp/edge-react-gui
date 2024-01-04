@@ -10,6 +10,7 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { getTotalFiatAmountFromExchangeRates } from '../../util/utils'
+import { AnimatedNumber } from '../common/AnimatedNumber'
 import { TransferModal } from '../modals/TransferModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -17,6 +18,9 @@ import { EdgeText } from '../themed/EdgeText'
 import { ButtonsViewUi4 } from './ButtonsViewUi4'
 import { CardUi4 } from './CardUi4'
 
+// Numbers larger than this are likely to overflow the display width so don't
+// use regular Text components which can auto shrink
+const MAX_ANIMATED_AMOUNT = 10000000
 interface Props {
   navigation: NavigationBase
   onViewAssetsPress?: () => void
@@ -58,26 +62,33 @@ export const BalanceCardUi4 = (props: Props) => {
     Airship.show(bridge => <TransferModal depositOrSend="deposit" bridge={bridge} account={account} navigation={navigation} />).catch(() => {})
   })
 
+  const balanceString = fiatSymbol.length !== 1 ? `${formattedFiat} ${fiatCurrencyCode}` : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`
+  const animateNumber = fiatAmount < MAX_ANIMATED_AMOUNT
+
   return (
     <CardUi4>
       <TouchableOpacity style={styles.balanceContainer} onPress={handleToggleAccountBalanceVisibility}>
         <View style={styles.titleContainer}>
-          <View style={styles.titleSubContainer}>
-            <EdgeText style={textShadow}>{lstrings.fragment_wallets_balance_text}</EdgeText>
-            <IonIcon
-              name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'}
-              style={[styles.eyeIcon, textShadow]}
-              color={theme.iconTappable}
-              size={theme.rem(1)}
-            />
-          </View>
+          <EdgeText style={textShadow}>{lstrings.fragment_wallets_balance_text}</EdgeText>
+          <IonIcon
+            name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'}
+            style={[styles.eyeIcon, textShadow]}
+            color={theme.iconTappable}
+            size={theme.rem(1)}
+          />
         </View>
         {!exchangeRatesReady ? (
-          <EdgeText style={textShadow}>{lstrings.exchange_rates_loading}</EdgeText>
+          <View style={styles.balanceTextContainer}>
+            <EdgeText style={[styles.balanceTextContainer, textShadow]}>{lstrings.exchange_rates_loading}</EdgeText>
+          </View>
+        ) : animateNumber ? (
+          <View style={styles.balanceTextContainer}>
+            <AnimatedNumber numberString={balanceString} style={styles.balanceTextContainer} textStyle={{ ...styles.balanceText, ...textShadow }} />
+          </View>
         ) : (
-          <EdgeText style={[styles.balanceText, textShadow]}>
-            {fiatSymbol.length !== 1 ? `${formattedFiat} ${fiatCurrencyCode}` : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`}
-          </EdgeText>
+          <View style={styles.balanceTextContainer}>
+            <EdgeText style={[styles.balanceTextContainer, styles.balanceText, textShadow]}>{balanceString}</EdgeText>
+          </View>
         )}
       </TouchableOpacity>
       {onViewAssetsPress == null ? null : (
@@ -107,11 +118,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   titleContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  titleSubContainer: {
-    flexDirection: 'row',
     alignItems: 'center'
   },
 
@@ -134,14 +140,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginLeft: theme.rem(0.25),
     marginRight: theme.rem(0)
   },
-
   balanceText: {
-    marginTop: theme.rem(0.5),
-    marginBottom: theme.rem(0.5),
     fontSize: theme.rem(1.75),
-    fontFamily: theme.fontFaceMedium
+    fontFamily: theme.fontFaceMedium,
+    color: theme.primaryText,
+    includeFontPadding: false
   },
-
+  balanceTextContainer: {
+    marginTop: theme.rem(0.25),
+    marginBottom: theme.rem(0.5),
+    height: theme.rem(2.25)
+  },
   balanceBoxContainer: {
     height: theme.rem(3.25),
     marginTop: theme.rem(0.5)

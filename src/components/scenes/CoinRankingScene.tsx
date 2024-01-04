@@ -13,6 +13,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { NotificationSceneWrapper } from '../common/SceneWrapper'
 import { CoinRankRow } from '../data/row/CoinRankRow'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
@@ -69,7 +70,7 @@ const CoinRankingComponent = (props: Props) => {
 
   const { coinRankingDatas } = coinRanking
 
-  const renderItem = useHandler((itemObj: FlatListItem<number>) => {
+  const renderItem = (itemObj: FlatListItem<number>) => {
     const { index, item } = itemObj
     const currencyCode = coinRankingDatas[index]?.currencyCode ?? 'NO_CURRENCY_CODE'
     const rank = coinRankingDatas[index]?.rank ?? 'NO_RANK'
@@ -77,16 +78,18 @@ const CoinRankingComponent = (props: Props) => {
     debugLog(LOG_COINRANK, `renderItem ${key.toString()}`)
 
     return (
-      <CoinRankRow
-        navigation={navigation}
-        index={item}
-        key={key}
-        coinRanking={coinRanking}
-        percentChangeTimeFrame={percentChangeTimeFrame}
-        assetSubText={assetSubText}
-      />
+      <EdgeAnim enter={{ type: 'fadeInRight', distance: 20 * (index + 1) }}>
+        <CoinRankRow
+          navigation={navigation}
+          index={item}
+          key={key}
+          coinRanking={coinRanking}
+          percentChangeTimeFrame={percentChangeTimeFrame}
+          assetSubText={assetSubText}
+        />
+      </EdgeAnim>
     )
-  })
+  }
 
   const handleEndReached = useHandler(() => {
     debugLog(LOG_COINRANK, `handleEndReached. setRequestDataSize ${requestDataSize + QUERY_PAGE_SIZE}`)
