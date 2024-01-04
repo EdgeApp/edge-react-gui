@@ -156,11 +156,11 @@ const edgeTxs: EdgeTransaction[] = [
 ]
 
 test('export CSV matches reference data', function () {
-  const out = exportTransactionsToCSVInner([...edgeTxs], 'BTC', 'USD', '100')
+  const out = exportTransactionsToCSVInner([...edgeTxs], 'BTC', 'iso:USD', '100')
   expect(out).toEqual(csvResult)
 })
 
 test('export QBO matches reference data', function () {
-  const out = exportTransactionsToQBOInner([...edgeTxs], 'BTC', 'USD', '100', 1524578071304)
+  const out = exportTransactionsToQBOInner([...edgeTxs], 'BTC', 'iso:USD', '100', 1524578071304)
   expect(out).toEqual(qboResult)
 })
