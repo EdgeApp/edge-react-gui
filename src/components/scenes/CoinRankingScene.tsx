@@ -70,7 +70,7 @@ const CoinRankingComponent = (props: Props) => {
 
   const { coinRankingDatas } = coinRanking
 
-  const renderItem = useHandler((itemObj: FlatListItem<number>) => {
+  const renderItem = (itemObj: FlatListItem<number>) => {
     const { index, item } = itemObj
     const currencyCode = coinRankingDatas[index]?.currencyCode ?? 'NO_CURRENCY_CODE'
     const rank = coinRankingDatas[index]?.rank ?? 'NO_RANK'
@@ -89,7 +89,7 @@ const CoinRankingComponent = (props: Props) => {
         />
       </EdgeAnim>
     )
-  })
+  }
 
   const handleEndReached = useHandler(() => {
     debugLog(LOG_COINRANK, `handleEndReached. setRequestDataSize ${requestDataSize + QUERY_PAGE_SIZE}`)
