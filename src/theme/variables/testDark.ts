@@ -93,10 +93,10 @@ const palette = {
   errorOuter: '#94472e',
   errorInner: '#962c32',
 
-  orangeOp24: '#fc9e733d',
-  lightBlueOp24: '#4ea5bc3d',
-  purpleOp24: '#4123b73d',
-  pinkOp24: '#db37a03d'
+  orangeOp50: 'rgba(192, 93, 12, 0.5)',
+  lightBlueOp50: 'rgba(10, 129, 153, 0.5)',
+  purpleOp50: 'rgba(65, 35, 184, 0.5)',
+  pinkOp50: 'rgba(219, 57, 159, 0.5)'
 }
 
 const deviceWidth = Dimensions.get('window').width
@@ -550,22 +550,22 @@ export const testDark: Theme = {
 
   // Special Home Scene Tiled Cards
   buyCardGradientUi4: {
-    colors: [palette.orangeOp24, palette.transparent],
+    colors: [palette.orangeOp50, palette.transparent],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
   sellCardGradientUi4: {
-    colors: [palette.lightBlueOp24, palette.transparent],
+    colors: [palette.lightBlueOp50, palette.transparent],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
   fioCardGradientUi4: {
-    colors: [palette.purpleOp24, palette.transparent],
+    colors: [palette.purpleOp50, palette.transparent],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
   swapCardGradientUi4: {
-    colors: [palette.pinkOp24, palette.transparent],
+    colors: [palette.pinkOp50, palette.transparent],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
