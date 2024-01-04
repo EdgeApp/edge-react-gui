@@ -243,13 +243,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   content: {
     flex: 1
   },
-  cryptoTypeLogo: {
-    width: theme.rem(2),
-    height: theme.rem(2),
-    borderRadius: theme.rem(1),
-    marginLeft: theme.rem(0.25),
-    backgroundColor: theme.backgroundGradientColors[1]
-  },
   instructionalText: {
     color: theme.primaryText,
     fontSize: theme.rem(0.75),

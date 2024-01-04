@@ -26,6 +26,7 @@ import { withServices } from '../hoc/withServices'
 import { showHelpModal } from '../modals/HelpModal'
 import { UpdateModal } from '../modals/UpdateModal'
 import { Airship, showError } from '../services/AirshipInstance'
+import { DotsBackground } from '../ui4/DotsBackground'
 import { LoadingScene } from './LoadingScene'
 
 // Sneak the BlurView over to the login UI:
@@ -183,6 +184,7 @@ export function LoginSceneComponent(props: Props) {
     <LoadingScene />
   ) : (
     <View style={styles.container} testID="edge: login-scene">
+      <DotsBackground />
       <LoginScreen
         key={String(counter)}
         accountOptions={accountOptions}

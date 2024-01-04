@@ -3,16 +3,15 @@ import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { useMemo } from 'react'
 import { Animated, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { maybeComponent } from '../hoc/maybeComponent'
-import { styled } from '../hoc/styled'
 import { NotificationView } from '../notification/NotificationView'
 import { useTheme } from '../services/ThemeContext'
 import { MAX_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
+import { DotsBackground } from '../ui4/DotsBackground'
 import { KeyboardTracker } from './KeyboardTracker'
 
 export interface InsetStyles {
@@ -36,8 +35,8 @@ interface SceneWrapperProps {
   // to changes to the info.
   children: React.ReactNode | ((info: SceneWrapperInfo) => React.ReactNode)
 
-  // Settings for when using ScrollView
-  keyboardShouldPersistTaps?: 'always' | 'never' | 'handled'
+  // Adjusts the blurred dots background:
+  accentColor?: string
 
   // True if this scene should shrink to avoid the keyboard:
   avoidKeyboard?: boolean
@@ -50,6 +49,9 @@ interface SceneWrapperProps {
 
   // True if this scene has a bottom tab bar:
   hasTabs?: boolean
+
+  // Settings for when using ScrollView
+  keyboardShouldPersistTaps?: 'always' | 'never' | 'handled'
 
   // Padding to add inside the scene border:
   padding?: number
@@ -73,6 +75,7 @@ interface SceneWrapperProps {
  */
 export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const {
+    accentColor,
     avoidKeyboard = false,
     children,
     hasHeader = true,
@@ -141,7 +144,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
 
     return (
       <MaybeAnimatedView when={hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles, { maxHeight: keyboardAnimation, padding }]}>
-        <StyledLinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart} />
+        <DotsBackground accentColor={accentColor} />
         <MaybeScrollView
           when={scroll && !hasKeyboardAnimation}
           style={[layoutStyles, { padding }]}
@@ -184,14 +187,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start'
   }
-})
-
-const StyledLinearGradient = styled(LinearGradient)({
-  position: 'absolute',
-  left: 0,
-  right: 0,
-  bottom: 0,
-  top: 0
 })
 
 const MaybeAnimatedView = maybeComponent(Animated.View)

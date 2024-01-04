@@ -182,7 +182,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           numberOfLines={1}
           style={
             {
-              "color": "#06090c",
+              "color": "#1a1a1a",
               "fontFamily": "Quicksand-Bold",
               "fontSize": 14,
               "marginHorizontal": 7,
@@ -1451,7 +1451,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           numberOfLines={1}
           style={
             {
-              "color": "#06090c",
+              "color": "#1a1a1a",
               "fontFamily": "Quicksand-Bold",
               "fontSize": 14,
               "marginHorizontal": 7,

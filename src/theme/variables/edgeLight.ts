@@ -77,6 +77,10 @@ const palette = {
   learnMiddle: 'rgba(0, 81, 92, .44)',
   learnRight: 'rgba(0, 245, 155, .44)',
 
+  // Background
+  backgroundGreen: '#15cb7f',
+  backgroundPurple: '#7f15cb',
+
   // Button
   graySecondary: 'hsla(0, 0%, 100%, 0.20)',
 
@@ -122,9 +126,15 @@ export const edgeLight: Theme = {
   loadingIcon: palette.edgeBlue,
 
   // Background
-  backgroundGradientColors: [palette.lightestGray, palette.lightestGray],
-  backgroundGradientStart: { x: 0, y: 0 },
-  backgroundGradientEnd: { x: 0, y: 1 },
+  background: {
+    blurRadius: scale(80),
+    color: palette.lightestGray,
+    dotOpacity: 0.3,
+    dots: [
+      { color: palette.backgroundGreen, cx: '75%', cy: '25%', r: scale(175) },
+      { color: palette.backgroundPurple, cx: '25%', cy: '75%', r: scale(150), accent: 'keep' }
+    ]
+  },
 
   // Camera Overlay
   cameraOverlayColor: palette.gray,

@@ -239,7 +239,7 @@ export const Main = () => {
       ...DefaultTheme,
       colors: {
         ...DefaultTheme.colors,
-        background: theme.backgroundGradientColors[0]
+        background: theme.background.color
       }
     }
   }, [theme])

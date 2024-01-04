@@ -239,8 +239,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(2),
     height: theme.rem(2),
     borderRadius: theme.rem(1),
-    marginLeft: theme.rem(0.25),
-    backgroundColor: theme.backgroundGradientColors[1]
+    marginLeft: theme.rem(0.25)
   },
   instructionalText: {
     fontSize: theme.rem(0.75),

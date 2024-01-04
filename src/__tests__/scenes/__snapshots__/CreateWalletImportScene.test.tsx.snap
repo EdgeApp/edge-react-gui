@@ -2,36 +2,198 @@
 
 exports[`CreateWalletImportScene should render with loading props 1`] = `
 [
-  <BVLinearGradient
-    colors={
+  <View
+    onLayout={[Function]}
+    style={
       [
-        4278585612,
-        4279971643,
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "backgroundColor": "#1a1a1a",
+        },
       ]
     }
-    endPoint={
-      {
-        "x": 1,
-        "y": 0,
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight="0"
+      bbWidth="0"
+      focusable={false}
+      height={0}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      style={
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        }
       }
-    }
-    locations={null}
-    startPoint={
-      {
-        "x": 0,
-        "y": 0,
-      }
-    }
-    style={
-      {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
-      }
-    }
-  />,
+      vbHeight={0}
+      vbWidth={0}
+      width={0}
+    >
+      <RNSVGGroup
+        fill={
+          {
+            "payload": 4278190080,
+            "type": 0,
+          }
+        }
+      >
+        <RNSVGDefs>
+          <RNSVGRadialGradient
+            cx="50%"
+            cy="50%"
+            fx="50%"
+            fy="50%"
+            gradient={
+              [
+                0,
+                -1,
+                0.125,
+                -167772161,
+                0.25,
+                -637534209,
+                0.75,
+                654311423,
+                0.875,
+                184549375,
+                1,
+                16777215,
+              ]
+            }
+            gradientTransform={null}
+            gradientUnits={0}
+            name="grad0"
+            rx="50%"
+            ry="50%"
+          />
+          <RNSVGRadialGradient
+            cx="50%"
+            cy="50%"
+            fx="50%"
+            fy="50%"
+            gradient={
+              [
+                0,
+                -216279,
+                0.0588,
+                -216279,
+                0.1765,
+                -167988439,
+                0.29410000000000003,
+                -637750487,
+                0.7646999999999999,
+                654095145,
+                0.8824,
+                184333097,
+                1,
+                16560937,
+              ]
+            }
+            gradientTransform={null}
+            gradientUnits={0}
+            name="grad1"
+            rx="50%"
+            ry="50%"
+          />
+          <RNSVGRadialGradient
+            cx="50%"
+            cy="50%"
+            fx="50%"
+            fy="50%"
+            gradient={
+              [
+                0,
+                -16719740,
+                0.4667,
+                -16719740,
+                0.5333,
+                -184491900,
+                0.6,
+                -654253948,
+                0.8667,
+                637591684,
+                0.9333,
+                167829636,
+                1,
+                57476,
+              ]
+            }
+            gradientTransform={null}
+            gradientUnits={0}
+            name="grad2"
+            rx="50%"
+            ry="50%"
+          />
+        </RNSVGDefs>
+        <RNSVGGroup
+          fill={
+            {
+              "payload": 4278190080,
+              "type": 0,
+            }
+          }
+          opacity={0.25}
+        >
+          <RNSVGCircle
+            cx="10%"
+            cy="10%"
+            fill={
+              {
+                "brushRef": "grad0",
+                "type": 1,
+              }
+            }
+            propList={
+              [
+                "fill",
+              ]
+            }
+            r="224.73239436619718"
+          />
+          <RNSVGCircle
+            cx="95%"
+            cy="30%"
+            fill={
+              {
+                "brushRef": "grad1",
+                "type": 1,
+              }
+            }
+            propList={
+              [
+                "fill",
+              ]
+            }
+            r="238.7781690140845"
+          />
+          <RNSVGCircle
+            cx="-15%"
+            cy="100%"
+            fill={
+              {
+                "brushRef": "grad2",
+                "type": 1,
+              }
+            }
+            propList={
+              [
+                "fill",
+              ]
+            }
+            r="421.37323943661977"
+          />
+        </RNSVGGroup>
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>,
   <View
     style={
       [

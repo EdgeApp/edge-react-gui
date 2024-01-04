@@ -57,7 +57,8 @@ function TransactionListComponent(props: Props) {
   const [searchText, setSearchText] = React.useState('')
   const [assetStatuses, setAssetStatuses] = React.useState<AssetStatus[]>([])
   const [iconColor, setIconColor] = React.useState<string>()
-  const backgroundGradientColor = iconColor == null ? '#00000000' : `${iconColor}44`
+  const transparentBackground = `${theme.background.color}00`
+  const backgroundGradientColor = iconColor == null ? transparentBackground : `${iconColor}44`
 
   // Selectors:
   const exchangeDenom = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
@@ -248,10 +249,15 @@ function TransactionListComponent(props: Props) {
   })
 
   return (
-    <SceneWrapper hasNotifications hasTabs>
+    <SceneWrapper accentColor={iconColor} hasNotifications hasTabs>
       {({ insetStyles }) => (
         <>
-          <LinearGradient colors={[backgroundGradientColor, '#00000000']} start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }} style={StyleSheet.absoluteFill} />
+          <LinearGradient
+            colors={[backgroundGradientColor, transparentBackground]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            style={StyleSheet.absoluteFill}
+          />
           {SHOW_FLIP_INPUT_TESTER ? (
             <ExchangedFlipInputTester />
           ) : (
