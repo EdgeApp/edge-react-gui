@@ -74,10 +74,10 @@ exports[`FioDomainRegister should render with loading props 1`] = `
     <View
       onLayout={[Function]}
     >
-      <WithTheme(TileComponent)
+      <RowUi4
         onPress={[Function]}
+        rightButtonType="editable"
         title="Choose a FIO Domain"
-        type="editable"
       >
         <View
           style={
@@ -106,7 +106,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
             
           </WithTheme(EdgeTextComponent)>
         </View>
-      </WithTheme(TileComponent)>
+      </RowUi4>
     </View>
     <WithTheme(FormErrorComponent)
       isVisible={false}

@@ -9,7 +9,9 @@ import { useSelector } from '../../types/reactRedux'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
-import { Tile, TileType } from './Tile'
+import { RowActionIcon, RowUi4 } from '../ui4/RowUi4'
+
+// TODO: Check contentPadding
 
 interface Props {
   denomination: EdgeDenomination
@@ -18,12 +20,12 @@ interface Props {
   title: string
   walletId: string
   tokenId: EdgeTokenId
-  type?: TileType
+  type?: RowActionIcon
   onPress?: () => Promise<void> | void
 }
 
 export const CryptoFiatAmountTile = (props: Props) => {
-  const { denomination, maxCryptoChars, nativeCryptoAmount, title, walletId, tokenId, type = 'static', onPress } = props
+  const { denomination, maxCryptoChars, nativeCryptoAmount, title, walletId, tokenId, type = 'none', onPress } = props
   const wallet = useSelector(state => state.core.account.currencyWallets[walletId])
 
   const { name: cryptoName, multiplier: cryptoDenomMult } = denomination
@@ -41,11 +43,11 @@ export const CryptoFiatAmountTile = (props: Props) => {
   const absCryptoAmount = abs(nativeCryptoAmount)
 
   return (
-    <Tile type={type} title={title} contentPadding={false} onPress={onPress}>
+    <RowUi4 rightButtonType={type} title={title} onPress={onPress}>
       <EdgeText>
         {cryptoAmountText}
         (<FiatText wallet={wallet} tokenId={tokenId} nativeCryptoAmount={absCryptoAmount} />)
       </EdgeText>
-    </Tile>
+    </RowUi4>
   )
 }

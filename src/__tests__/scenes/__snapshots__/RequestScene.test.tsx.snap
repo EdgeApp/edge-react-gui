@@ -114,7 +114,7 @@ exports[`Request should render with loaded props 1`] = `
         }
       }
     >
-      <WithTheme(CardComponent)>
+      <CardUi4>
         <Memo
           forceField="crypto"
           headerCallback={[Function]}
@@ -124,7 +124,7 @@ exports[`Request should render with loaded props 1`] = `
           returnKeyType="done"
           tokenId={null}
         />
-      </WithTheme(CardComponent)>
+      </CardUi4>
     </EdgeAnim>
     <Carousel
       items={[]}

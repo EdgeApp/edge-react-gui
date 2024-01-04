@@ -23,7 +23,6 @@ import { getTokenIdForced, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpe
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { convertNativeToDenomination, truncateDecimals, zeroString } from '../../util/utils'
-import { Card } from '../cards/Card'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { AddressModal } from '../modals/AddressModal'
@@ -41,6 +40,7 @@ import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef }
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ShareButtons } from '../themed/ShareButtons'
+import { CardUi4 } from '../ui4/CardUi4'
 
 interface OwnProps extends EdgeSceneProps<'request'> {}
 
@@ -332,7 +332,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
           {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}
 
           <EdgeAnim enter={{ type: 'fadeInUp', distance: 25 }}>
-            <Card>
+            <CardUi4>
               <ExchangedFlipInput2
                 forceField="crypto"
                 headerCallback={this.handleOpenWalletListModal}
@@ -345,7 +345,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
                 tokenId={primaryCurrencyInfo.tokenId}
                 walletId={wallet.id}
               />
-            </Card>
+            </CardUi4>
           </EdgeAnim>
 
           <Carousel

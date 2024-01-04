@@ -19,7 +19,6 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { truncateString } from '../../util/utils'
-import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { FlashNotification } from '../navigation/FlashNotification'
@@ -29,6 +28,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
+import { CardUi4 } from '../ui4/CardUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface Props extends EdgeSceneProps<'wcConnect'> {}
@@ -128,9 +128,9 @@ export const WcConnectScene = (props: Props) => {
 
         <EdgeText style={styles.bodyTitle}>{bodyTitleText}</EdgeText>
         <EdgeText style={styles.body}>{lstrings.wc_confirm_body}</EdgeText>
-        <Card paddingRem={0} marginRem={[2.5, 0.5, 2]}>
+        <CardUi4 paddingRem={0} marginRem={[2.5, 0.5, 2]}>
           {renderWalletSelect()}
-        </Card>
+        </CardUi4>
         {subTitleText !== '' && (
           <MainButton label={lstrings.wc_confirm_connect_button} type="secondary" marginRem={[3.5, 0.5]} onPress={handleConnect} alignSelf="center" />
         )}

@@ -30,7 +30,7 @@ import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { ErrorTile } from '../../tiles/ErrorTile'
 import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
-import { Tile } from '../../tiles/Tile'
+import { RowUi4 } from '../../ui4/RowUi4'
 import { FormScene } from '../FormScene'
 
 const FEE_VOLATILITY_MULTIPLIER: { [network: string]: string } = {
@@ -227,26 +227,26 @@ export const LoanCreateConfirmationScene = (props: Props) => {
       sliderDisabled={actionProgram == null || isFeesExceedCollateral}
       onSliderComplete={handleSliderComplete}
     >
-      <Tile type="static" title={lstrings.loan_amount_borrow}>
+      <RowUi4 title={lstrings.loan_amount_borrow}>
         <EdgeText>
           <FiatText appendFiatCurrencyCode autoPrecision hideFiatSymbol nativeCryptoAmount={nativeDestAmount} tokenId={destTokenId} wallet={destWallet} />
         </EdgeText>
-      </Tile>
-      <Tile type="static" title={lstrings.loan_collateral_amount}>
+      </RowUi4>
+      <RowUi4 title={lstrings.loan_collateral_amount}>
         <CryptoFiatAmountRow nativeAmount={nativeSrcAmount} tokenId={srcTokenId} wallet={srcWallet} marginRem={[0.25, 0, 0, 0]} />
-      </Tile>
+      </RowUi4>
 
-      <Tile type="static" title={lstrings.loan_collateral_source}>
+      <RowUi4 title={lstrings.loan_collateral_source}>
         <CurrencyRow tokenId={srcTokenId} wallet={srcWallet} marginRem={0} />
-      </Tile>
+      </RowUi4>
 
-      <Tile type="static" title={lstrings.loan_debt_destination}>
+      <RowUi4 title={lstrings.loan_debt_destination}>
         {paymentMethod != null ? (
           <PaymentMethodRow paymentMethod={paymentMethod} pluginId="wyre" marginRem={0} />
         ) : (
           <CurrencyRow tokenId={destTokenId} wallet={destWallet} marginRem={0} />
         )}
-      </Tile>
+      </RowUi4>
       {actionProgramError != null ? <ErrorTile message={actionProgramError.message} /> : null}
       <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeAmount} />
       {isFeesExceedCollateral ? <ErrorTile message={lstrings.loan_amount_fees_exceeds_collateral} /> : null}

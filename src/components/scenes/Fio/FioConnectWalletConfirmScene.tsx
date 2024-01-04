@@ -14,7 +14,7 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeC
 import { EdgeText } from '../../themed/EdgeText'
 import { Slider } from '../../themed/Slider'
 import { Radio } from '../../themed/ThemedButtons'
-import { Tile } from '../../tiles/Tile'
+import { RowUi4 } from '../../ui4/RowUi4'
 
 interface State {
   acknowledge: boolean
@@ -187,18 +187,10 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
     return (
       <SceneWrapper background="theme">
         <ScrollView>
-          <Tile type="static" title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
-          {walletsToConnect.length ? (
-            <Tile type="static" title={lstrings.title_fio_connect_to_wallet}>
-              {walletsToConnect.map(this.renderWalletLine)}
-            </Tile>
-          ) : null}
+          <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
+          {walletsToConnect.length ? <RowUi4 title={lstrings.title_fio_connect_to_wallet}>{walletsToConnect.map(this.renderWalletLine)}</RowUi4> : null}
 
-          {walletsToDisconnect.length ? (
-            <Tile type="static" title={lstrings.title_fio_disconnect_wallets}>
-              {walletsToDisconnect.map(this.renderWalletLine)}
-            </Tile>
-          ) : null}
+          {walletsToDisconnect.length ? <RowUi4 title={lstrings.title_fio_disconnect_wallets}>{walletsToDisconnect.map(this.renderWalletLine)}</RowUi4> : null}
 
           <Radio value={acknowledge} onPress={this.check} marginRem={[2, 2, 0]}>
             <EdgeText style={styles.checkTitle} numberOfLines={4}>
