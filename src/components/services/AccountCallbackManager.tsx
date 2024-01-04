@@ -13,8 +13,11 @@ import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { stakeMetadataCache } from '../../plugins/stake-plugins/metadataCache'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { makePeriodicTask } from '../../util/PeriodicTask'
 import { datelog, snooze } from '../../util/utils'
 import { Airship } from './AirshipInstance'
+
+const REFRESH_RATES_MS = 30000
 
 interface Props {
   account: EdgeAccount
@@ -66,14 +69,7 @@ export function AccountCallbackManager(props: Props) {
         if (hasAlerts) {
           navigation.navigate('securityAlerts', {})
         }
-      }),
-
-      account.rateCache.on('update', () =>
-        setDirty(dirty => ({
-          ...dirty,
-          rates: true
-        }))
-      )
+      })
     ]
 
     return () => cleanups.forEach(cleanup => cleanup())
@@ -179,6 +175,17 @@ export function AccountCallbackManager(props: Props) {
     [dirty.rates],
     'AccountCallbackManager:rates'
   )
+
+  React.useEffect(() => {
+    const task = makePeriodicTask(() => {
+      setDirty(dirty => ({
+        ...dirty,
+        rates: true
+      }))
+    }, REFRESH_RATES_MS)
+    task.start()
+    return () => task.stop()
+  }, [])
 
   return null
 }
