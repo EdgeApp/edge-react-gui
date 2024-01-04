@@ -10,7 +10,6 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -20,6 +19,7 @@ import { ModalMessage } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
 import { WalletCreateItem } from '../themed/WalletList'
 import { Tile } from '../tiles/Tile'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 export interface CreateWalletImportOptionsParams {
   createWalletList: WalletCreateItem[]
@@ -145,7 +145,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
     return (
       <View style={styles.optionContainer}>
         <View style={styles.optionHeader}>
-          <CryptoIcon sizeRem={1.25} pluginId={pluginId} tokenId={null} />
+          <CryptoIconUi4 sizeRem={1.25} pluginId={pluginId} tokenId={null} />
           <EdgeText style={styles.pluginIdText}>{currencyConfig[pluginId].currencyInfo.displayName}</EdgeText>
         </View>
         {arr.map(opt => {

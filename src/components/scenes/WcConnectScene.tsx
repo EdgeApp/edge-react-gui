@@ -21,7 +21,6 @@ import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { truncateString } from '../../util/utils'
 import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { FlashNotification } from '../navigation/FlashNotification'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -30,6 +29,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface Props extends EdgeSceneProps<'wcConnect'> {}
 
@@ -108,7 +108,7 @@ export const WcConnectScene = (props: Props) => {
     } else {
       const walletNameStr = truncateString(walletName || '', MAX_ADDRESS_CHARACTERS)
       const walletImage = (
-        <CryptoIcon pluginId={wallet.currencyInfo.pluginId} tokenId={getTokenIdForced(account, wallet.currencyInfo.pluginId, selectedWallet.currencyCode)} />
+        <CryptoIconUi4 pluginId={wallet.currencyInfo.pluginId} tokenId={getTokenIdForced(account, wallet.currencyInfo.pluginId, selectedWallet.currencyCode)} />
       )
       const walletAddressStr = truncateString(walletAddress, MAX_ADDRESS_CHARACTERS, true)
       return <SelectableRow arrowTappable icon={walletImage} subTitle={walletAddressStr} title={walletNameStr} onPress={handleWalletListModal} />

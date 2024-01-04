@@ -30,7 +30,6 @@ import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
 import { TappableCard } from '../../cards/TappableCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withLoanAccount } from '../../hoc/withLoanAccount'
-import { CryptoIcon } from '../../icons/CryptoIcon'
 import { FiatIcon } from '../../icons/FiatIcon'
 import { Space } from '../../layout/Space'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
@@ -39,6 +38,7 @@ import { SectionHeading } from '../../text/SectionHeading'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
+import { CryptoIconUi4 } from '../../ui4/CryptoIconUi4'
 
 interface Props extends EdgeSceneProps<'loanDetails'> {
   loanAccount: LoanAccount
@@ -242,7 +242,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
               <Card key={debt.tokenId} marginRem={[0, 0, 1]}>
                 <Space sideways>
                   <Space right={1}>
-                    <CryptoIcon hideSecondary pluginId={pluginId} tokenId={debt.tokenId} />
+                    <CryptoIconUi4 hideSecondary pluginId={pluginId} tokenId={debt.tokenId} />
                   </Space>
                   <Space>
                     <EdgeText style={styles.breakdownText}>

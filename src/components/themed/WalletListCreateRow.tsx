@@ -15,9 +15,9 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { ThunkAction } from '../../types/reduxTypes'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { logEvent, TrackingEventName } from '../../util/tracking'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { ListModal } from '../modals/ListModal'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 import { WalletListCurrencyRow } from './WalletListCurrencyRow'
 
@@ -116,7 +116,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
 
   return (
     <TouchableOpacity style={styles.row} onPress={handlePress}>
-      <CryptoIcon marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
+      <CryptoIconUi4 marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
       <View style={styles.nameColumn}>
         <EdgeText style={styles.currencyText}>{`${currencyCode}${networkName}`}</EdgeText>
         <EdgeText style={styles.nameText}>{currencyName}</EdgeText>

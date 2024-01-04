@@ -2,7 +2,6 @@ import * as React from 'react'
 import { ScrollView } from 'react-native'
 
 import { NotificationSettings, updateNotificationSettings } from '../../actions/NotificationActions'
-import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -12,6 +11,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface Props extends EdgeSceneProps<'notificationSettings'> {}
 
@@ -73,7 +73,7 @@ export const NotificationScene = (props: Props) => {
 
           return (
             <SettingsTappableRow disabled={settings.ignorePriceChanges} key={pluginId} label={currencyInfo.displayName} onPress={handlePress}>
-              <CryptoIcon pluginId={pluginId} tokenId={null} />
+              <CryptoIconUi4 pluginId={pluginId} tokenId={null} />
             </SettingsTappableRow>
           )
         })}

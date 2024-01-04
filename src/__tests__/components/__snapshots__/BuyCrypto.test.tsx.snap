@@ -74,7 +74,26 @@ exports[`BuyCrypto should render with some props 1`] = `
               "width": 51,
             }
           }
-        />
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "#000000",
+                "borderRadius": 25.5,
+                "elevation": 0,
+                "height": 51,
+                "shadowColor": "#000000",
+                "shadowOffset": {
+                  "height": 3,
+                  "width": -3,
+                },
+                "shadowOpacity": 0.6,
+                "shadowRadius": 4,
+                "width": 51,
+              }
+            }
+          />
+        </View>
         <Text
           adjustsFontSizeToFit={true}
           minimumFontScale={0.65}

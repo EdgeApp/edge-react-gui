@@ -15,11 +15,11 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { getCurrencyCode, getCurrencyInfos, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { ModalScrollArea, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface Option {
   value: WalletListMenuKey
@@ -213,7 +213,7 @@ export function WalletListMenuModal(props: Props) {
         <View>
           <ModalTitle>{getWalletName(wallet)}</ModalTitle>
           <View style={styles.row}>
-            <CryptoIcon marginRem={[0, 0, 0, 0.5]} sizeRem={1} tokenId={tokenId} walletId={walletId} />
+            <CryptoIconUi4 marginRem={[0, 0, 0, 0.5]} sizeRem={1} tokenId={tokenId} walletId={walletId} />
             <ModalTitle>{getCurrencyCode(wallet, tokenId)}</ModalTitle>
           </View>
         </View>

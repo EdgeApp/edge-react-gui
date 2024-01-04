@@ -5,8 +5,8 @@ import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstan
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface Props extends EdgeSceneProps<'assetSettings'> {}
 
@@ -28,7 +28,7 @@ export function AssetSettingsScene(props: Props) {
 
           return (
             <SettingsTappableRow key={pluginId} label={displayName} onPress={onPress}>
-              <CryptoIcon marginRem={[0.5, 0, 0.5, 0.5]} pluginId={pluginId} tokenId={null} sizeRem={1.25} />
+              <CryptoIconUi4 marginRem={[0.5, 0, 0.5, 0.5]} pluginId={pluginId} tokenId={null} sizeRem={1.25} />
             </SettingsTappableRow>
           )
         })}

@@ -5,9 +5,9 @@ import { TouchableOpacity, View } from 'react-native'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { useSelector } from '../../types/reactRedux'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -49,7 +49,7 @@ export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
 
   return (
     <TouchableOpacity style={styles.container} disabled={onPress == null} onPress={handlePress}>
-      <CryptoIcon marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
+      <CryptoIconUi4 marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
       <View style={styles.detailsContainer}>
         <EdgeText style={styles.detailsCurrency}>{`${tokenOrCurrencyInfo == null ? '' : tokenOrCurrencyInfo.currencyCode}${networkName}`}</EdgeText>
         <EdgeText style={styles.detailsName}>{walletName}</EdgeText>

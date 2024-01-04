@@ -3,7 +3,6 @@ import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, Switch, View } from 'react-native'
 
-import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { showError } from '../../components/services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../components/services/ThemeContext'
 import { EdgeText } from '../../components/themed/EdgeText'
@@ -14,6 +13,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { FioConnectionWalletItem } from '../../types/types'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { convertFIOToEdgeCodes, makeConnectWallets } from '../../util/FioAddressUtils'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface LocalState {
   connectWalletsMap: { [walletId: string]: FioConnectionWalletItem }
@@ -165,7 +165,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
         <View style={[styles.wallet, disabled ? styles.walletDisabled : null]}>
           <View style={styles.rowContainerTop}>
             <View style={styles.containerLeft}>
-              {wallet != null ? <CryptoIcon pluginId={pluginId} tokenId={tokenId} /> : <EdgeText>{noWalletSymbol}</EdgeText>}
+              {wallet != null ? <CryptoIconUi4 pluginId={pluginId} tokenId={tokenId} /> : <EdgeText>{noWalletSymbol}</EdgeText>}
             </View>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsCol}>
