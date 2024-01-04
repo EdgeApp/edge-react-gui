@@ -5,10 +5,10 @@ import { ActivityIndicator, View } from 'react-native'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { lstrings } from '../../locales/strings'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 export interface ExchangeQuoteProcessingParams {
   fetchSwapQuotesPromise: Promise<EdgeSwapQuote[]>
@@ -65,7 +65,7 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
         <ActivityIndicator style={styles.spinner} color={theme.iconTappable} />
       </View>
       {!isLongWait ? null : (
-        <ButtonsContainer
+        <ButtonsViewUi4
           absolute
           fade
           primary={{
@@ -76,6 +76,7 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
             }
           }}
           layout="column"
+          scrollMargin
         />
       )}
     </SceneWrapper>

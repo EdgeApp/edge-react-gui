@@ -16,9 +16,11 @@ interface ThemeShadowParams {
   }
   shadowOpacity: number
   shadowRadius: number
+  /** @deprecated Android-specific prop no longer needed. */
   elevation: number
 }
 
+/** @depreated Use textShadow props from text-shadow-component */
 interface TextShadowParams {
   textShadowColor: string
   textShadowOffset: {
@@ -26,20 +28,6 @@ interface TextShadowParams {
     height: number
   }
   textShadowRadius: number
-}
-
-interface ButtomParamsUi4 {
-  textStyle: {
-    fontFamily: string
-    color: string
-  }
-  gradientProps: ThemeGradientParams
-  shadowParams: ThemeShadowParams // TODO: Address android/ios inconsistencies with lib
-  containerStyle: {
-    borderColor: string
-    borderWidth: number
-  }
-  spinnerColor: string
 }
 
 const asGradientCoords = asObject({
@@ -255,6 +243,7 @@ export interface Theme {
   cardBorder: number
   cardBorderColor: string
   cardBorderRadius: number
+  cardTextShadow: TextShadowParams // For added contrast against complex card backgrounds
 
   tabBarBackground: string[]
   tabBarBackgroundStart: GradientCoords
@@ -433,12 +422,9 @@ export interface Theme {
   guiPluginLogoMoonpay: ImageProp
 
   // UI 4.0:
-  buttonBorderRadiusRemUi4: number
-  buttonFontSizeRemUi4: number
 
-  buttonPrimaryUi4: ButtomParamsUi4
-  buttonSecondaryUi4: ButtomParamsUi4
-  buttonTertiaryUi4: ButtomParamsUi4
+  // Shadows
+  iconShadow: ThemeShadowParams
 
   // Basic Card Styles
   cardBaseColorUi4: string
@@ -446,24 +432,12 @@ export interface Theme {
   cardGradientErrorUi4: ThemeGradientParams
   cardGradientLearnUi4: ThemeGradientParams
   cardOverlayDisabledUi4: string
-  cardRadiusRemUi4: number
 
   // Special Home Scene Tiled Cards
   buyCardGradientUi4: ThemeGradientParams
   sellCardGradientUi4: ThemeGradientParams
   fioCardGradientUi4: ThemeGradientParams
   swapCardGradientUi4: ThemeGradientParams
-
-  iconTappableAltUi4: string
-
-  negativeTextMutedUi4: string
-  secondaryTextUi4: string
-
-  shadowColorUi4: string
-  shadowTextIosUi4: TextShadowParams
-  shadowTextAndroidUi4: TextShadowParams
-
-  touchHighlightUi4: string
 
   txDirBgReceiveUi4: string
   txDirBgSendUi4: string

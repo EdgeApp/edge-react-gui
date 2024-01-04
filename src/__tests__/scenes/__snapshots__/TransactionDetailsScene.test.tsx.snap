@@ -57,7 +57,7 @@ exports[`TransactionDetailsScene should render 1`] = `
           style={
             [
               {
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "flex": 1,
               },
               {
@@ -79,7 +79,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",
@@ -169,7 +169,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingRight": 22,
                     },
@@ -283,7 +283,7 @@ exports[`TransactionDetailsScene should render 1`] = `
           style={
             [
               {
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "flex": 1,
               },
               {
@@ -305,7 +305,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",
@@ -367,7 +367,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -455,7 +455,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -640,7 +640,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -777,7 +777,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -823,7 +823,7 @@ exports[`TransactionDetailsScene should render 1`] = `
           style={
             [
               {
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "flex": 1,
               },
               {
@@ -845,7 +845,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",
@@ -907,7 +907,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -1067,7 +1067,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -1190,7 +1190,7 @@ exports[`TransactionDetailsScene should render 1`] = `
           style={
             [
               {
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "flex": 1,
               },
               {
@@ -1212,7 +1212,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",
@@ -1274,7 +1274,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -1362,7 +1362,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -1413,17 +1413,17 @@ exports[`TransactionDetailsScene should render 1`] = `
         >
           <View
             absolute={false}
-            layout="column"
+            layout="solo"
+            scrollMargin={true}
             style={
               {
-                "bottom": undefined,
-                "flexDirection": "column",
-                "justifyContent": "space-evenly",
-                "left": undefined,
+                "alignItems": "center",
+                "flex": 1,
+                "justifyContent": "center",
                 "margin": 11,
+                "marginBottom": 67,
                 "marginHorizontal": 11,
-                "position": undefined,
-                "right": undefined,
+                "marginTop": 22,
               }
             }
           >
@@ -1449,6 +1449,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               collapsable={false}
               focusable={true}
               onClick={[Function]}
+              onLayout={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
               onResponderRelease={[Function]}
@@ -1457,23 +1458,19 @@ exports[`TransactionDetailsScene should render 1`] = `
               onStartShouldSetResponder={[Function]}
               style={
                 {
-                  "elevation": 2,
+                  "alignItems": "center",
+                  "alignSelf": "center",
+                  "borderRadius": 34,
+                  "justifyContent": "center",
                   "opacity": 1,
-                  "shadowColor": "#FFFFFF",
-                  "shadowOffset": {
-                    "height": 0,
-                    "width": 0,
-                  },
-                  "shadowOpacity": 0.25,
-                  "shadowRadius": 8,
                 }
               }
             >
               <BVLinearGradient
                 colors={
                   [
-                    4278754931,
-                    4278251938,
+                    4280299823,
+                    4278214733,
                   ]
                 }
                 endPoint={
@@ -1493,55 +1490,49 @@ exports[`TransactionDetailsScene should render 1`] = `
                   [
                     {
                       "alignItems": "center",
-                      "borderColor": "rgba(255, 255, 255, 0)",
-                      "borderRadius": 6,
-                      "borderWidth": 0,
                       "flexDirection": "row",
+                      "height": 67,
                       "justifyContent": "center",
-                      "minHeight": 67,
-                      "minWidth": 202,
+                      "paddingHorizontal": 45,
                     },
                     {
                       "alignSelf": "auto",
-                      "marginBottom": 112,
-                      "marginLeft": 0,
-                      "marginRight": 0,
-                      "marginTop": 11,
                       "opacity": 1,
-                      "paddingBottom": 0,
-                      "paddingLeft": 0,
-                      "paddingRight": 0,
-                      "paddingTop": 0,
                     },
                     {
-                      "borderRadius": 6,
-                      "paddingLeft": 0,
-                      "paddingRight": 0,
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "borderRadius": 34,
+                      "justifyContent": "center",
                     },
+                    {},
+                    {},
+                    {
+                      "alignSelf": "center",
+                    },
+                    null,
                   ]
                 }
               >
                 <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.75}
+                  adjustsFontSizeToFit={false}
+                  minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
-                    {
-                      "color": "#1b2f3b",
-                      "fontFamily": "Quicksand-Medium",
-                      "fontSize": 22,
-                      "marginHorizontal": 0,
-                      "paddingBottom": 11,
-                      "paddingLeft": 17,
-                      "paddingRight": 17,
-                      "paddingTop": 11,
-                      "textShadowColor": "#000000",
-                      "textShadowOffset": {
-                        "height": 0,
-                        "width": 0,
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
                       },
-                      "textShadowRadius": 0,
-                    }
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Medium",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ]
                   }
                 >
                   Done
@@ -1781,7 +1772,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           style={
             [
               {
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "flex": 1,
               },
               {
@@ -1803,7 +1794,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",
@@ -1893,7 +1884,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "paddingRight": 22,
                     },
@@ -2007,7 +1998,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           style={
             [
               {
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "flex": 1,
               },
               {
@@ -2029,7 +2020,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",
@@ -2091,7 +2082,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -2179,7 +2170,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -2364,7 +2355,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -2436,7 +2427,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#E85466",
+                          "color": "#87939E",
                           "fontSize": 22,
                         },
                         null,
@@ -2501,7 +2492,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -2547,7 +2538,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           style={
             [
               {
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "flex": 1,
               },
               {
@@ -2569,7 +2560,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",
@@ -2631,7 +2622,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -2791,7 +2782,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -2914,7 +2905,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           style={
             [
               {
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "flex": 1,
               },
               {
@@ -2936,7 +2927,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",
@@ -2998,7 +2989,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -3086,7 +3077,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -3137,17 +3128,17 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         >
           <View
             absolute={false}
-            layout="column"
+            layout="solo"
+            scrollMargin={true}
             style={
               {
-                "bottom": undefined,
-                "flexDirection": "column",
-                "justifyContent": "space-evenly",
-                "left": undefined,
+                "alignItems": "center",
+                "flex": 1,
+                "justifyContent": "center",
                 "margin": 11,
+                "marginBottom": 67,
                 "marginHorizontal": 11,
-                "position": undefined,
-                "right": undefined,
+                "marginTop": 22,
               }
             }
           >
@@ -3173,6 +3164,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               collapsable={false}
               focusable={true}
               onClick={[Function]}
+              onLayout={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
               onResponderRelease={[Function]}
@@ -3181,23 +3173,19 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               onStartShouldSetResponder={[Function]}
               style={
                 {
-                  "elevation": 2,
+                  "alignItems": "center",
+                  "alignSelf": "center",
+                  "borderRadius": 34,
+                  "justifyContent": "center",
                   "opacity": 1,
-                  "shadowColor": "#FFFFFF",
-                  "shadowOffset": {
-                    "height": 0,
-                    "width": 0,
-                  },
-                  "shadowOpacity": 0.25,
-                  "shadowRadius": 8,
                 }
               }
             >
               <BVLinearGradient
                 colors={
                   [
-                    4278754931,
-                    4278251938,
+                    4280299823,
+                    4278214733,
                   ]
                 }
                 endPoint={
@@ -3217,55 +3205,49 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   [
                     {
                       "alignItems": "center",
-                      "borderColor": "rgba(255, 255, 255, 0)",
-                      "borderRadius": 6,
-                      "borderWidth": 0,
                       "flexDirection": "row",
+                      "height": 67,
                       "justifyContent": "center",
-                      "minHeight": 67,
-                      "minWidth": 202,
+                      "paddingHorizontal": 45,
                     },
                     {
                       "alignSelf": "auto",
-                      "marginBottom": 112,
-                      "marginLeft": 0,
-                      "marginRight": 0,
-                      "marginTop": 11,
                       "opacity": 1,
-                      "paddingBottom": 0,
-                      "paddingLeft": 0,
-                      "paddingRight": 0,
-                      "paddingTop": 0,
                     },
                     {
-                      "borderRadius": 6,
-                      "paddingLeft": 0,
-                      "paddingRight": 0,
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "borderRadius": 34,
+                      "justifyContent": "center",
                     },
+                    {},
+                    {},
+                    {
+                      "alignSelf": "center",
+                    },
+                    null,
                   ]
                 }
               >
                 <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.75}
+                  adjustsFontSizeToFit={false}
+                  minimumFontScale={0.65}
                   numberOfLines={1}
                   style={
-                    {
-                      "color": "#1b2f3b",
-                      "fontFamily": "Quicksand-Medium",
-                      "fontSize": 22,
-                      "marginHorizontal": 0,
-                      "paddingBottom": 11,
-                      "paddingLeft": 17,
-                      "paddingRight": 17,
-                      "paddingTop": 11,
-                      "textShadowColor": "#000000",
-                      "textShadowOffset": {
-                        "height": 0,
-                        "width": 0,
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
                       },
-                      "textShadowRadius": 0,
-                    }
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Medium",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ]
                   }
                 >
                   Done

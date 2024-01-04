@@ -3,6 +3,7 @@ import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { ShadowedView } from 'react-native-fast-shadow'
 import Share from 'react-native-share'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -120,16 +121,16 @@ export function TransactionListRow(props: Props) {
     isSwapIcon ? styles.arrowIconContainerSwap : isSentTransaction ? styles.arrowIconContainerSend : styles.arrowIconContainerReceive
   ]
   const arrowIcon = (
-    <View style={arrowContainerStyle}>
+    <ShadowedView style={arrowContainerStyle}>
       <Ionicons name={arrowIconName} size={arrowIconSize} color={arrowIconColor} style={styles.icon} />
-    </View>
+    </ShadowedView>
   )
 
   const icon = thumbnailPath ? (
-    <View style={styles.contactContainer}>
+    <ShadowedView style={styles.contactContainer}>
       <FastImage style={styles.contactImage} source={{ uri: thumbnailPath }} />
       {arrowIcon}
-    </View>
+    </ShadowedView>
   ) : (
     arrowIcon
   )
@@ -219,7 +220,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     width: theme.rem(2),
     height: theme.rem(2),
-    borderRadius: theme.rem(1.25)
+    borderRadius: theme.rem(1.25),
+    ...theme.iconShadow
   },
   contactImage: {
     position: 'absolute',
@@ -242,7 +244,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     width: theme.rem(2),
     height: theme.rem(2),
-    borderRadius: theme.rem(1.25)
+    borderRadius: theme.rem(1.25),
+    ...theme.iconShadow
   },
   // Pad the containers to account for vector icons having an off-center origin
   arrowIconContainerSend: {

@@ -55,7 +55,7 @@ exports[`PromoCard should render 1`] = `
         [
           {
             "borderColor": "rgba(255, 255, 255, .1)",
-            "borderRadius": 4,
+            "borderRadius": 16,
             "borderWidth": 1,
           },
           null,

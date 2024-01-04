@@ -265,7 +265,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "marginTop": 6,
                     },
@@ -616,6 +616,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
         collapsable={false}
         focusable={true}
         onClick={[Function]}
+        onLayout={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
         onResponderRelease={[Function]}
@@ -624,23 +625,23 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
         onStartShouldSetResponder={[Function]}
         style={
           {
-            "elevation": 0,
+            "alignItems": "center",
+            "alignSelf": "center",
+            "borderRadius": 34,
+            "justifyContent": "center",
+            "marginBottom": 0,
+            "marginLeft": 11,
+            "marginRight": 11,
+            "marginTop": 11,
             "opacity": 1,
-            "shadowColor": "#000000",
-            "shadowOffset": {
-              "height": 0,
-              "width": 0,
-            },
-            "shadowOpacity": 0,
-            "shadowRadius": 0,
           }
         }
       >
         <BVLinearGradient
           colors={
             [
-              16777215,
-              16777215,
+              872415231,
+              872415231,
             ]
           }
           endPoint={
@@ -660,49 +661,54 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             [
               {
                 "alignItems": "center",
-                "borderColor": "#00f1a2",
-                "borderRadius": 6,
-                "borderWidth": 1.5,
                 "flexDirection": "row",
+                "height": 67,
                 "justifyContent": "center",
-                "minHeight": 67,
-                "minWidth": 202,
+                "paddingHorizontal": 45,
               },
               {
                 "alignSelf": "center",
+                "opacity": 1,
+              },
+              {
+                "alignItems": "center",
+                "alignSelf": "stretch",
+                "borderRadius": 34,
+                "justifyContent": "center",
+              },
+              {
                 "marginBottom": 0,
                 "marginLeft": 11,
                 "marginRight": 11,
                 "marginTop": 11,
-                "opacity": 1,
-                "paddingBottom": 0,
-                "paddingLeft": 0,
-                "paddingRight": 0,
-                "paddingTop": 0,
               },
+              {},
               {
-                "borderRadius": 6,
-                "paddingLeft": 0,
-                "paddingRight": 0,
+                "alignSelf": "center",
               },
+              null,
             ]
           }
         >
           <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.75}
+            adjustsFontSizeToFit={false}
+            minimumFontScale={0.65}
             numberOfLines={1}
             style={
-              {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "marginHorizontal": 0,
-                "paddingBottom": 11,
-                "paddingLeft": 17,
-                "paddingRight": 17,
-                "paddingTop": 11,
-              }
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                null,
+              ]
             }
           >
             Create Wallets
@@ -731,6 +737,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
         collapsable={false}
         focusable={true}
         onClick={[Function]}
+        onLayout={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
         onResponderRelease={[Function]}
@@ -739,15 +746,15 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
         onStartShouldSetResponder={[Function]}
         style={
           {
-            "elevation": 0,
+            "alignItems": "center",
+            "alignSelf": "center",
+            "borderRadius": 34,
+            "justifyContent": "center",
+            "marginBottom": 22,
+            "marginLeft": 11,
+            "marginRight": 11,
+            "marginTop": 11,
             "opacity": 1,
-            "shadowColor": "#000000",
-            "shadowOffset": {
-              "height": 0,
-              "width": 0,
-            },
-            "shadowOpacity": 0,
-            "shadowRadius": 0,
           }
         }
       >
@@ -775,49 +782,54 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             [
               {
                 "alignItems": "center",
-                "borderColor": "rgba(255, 255, 255, 0)",
-                "borderRadius": 6,
-                "borderWidth": 0,
                 "flexDirection": "row",
+                "height": 67,
                 "justifyContent": "center",
-                "minHeight": 67,
-                "minWidth": 202,
+                "paddingHorizontal": 45,
               },
               {
                 "alignSelf": "center",
+                "opacity": 1,
+              },
+              {
+                "alignItems": "center",
+                "alignSelf": "stretch",
+                "borderRadius": 34,
+                "justifyContent": "center",
+              },
+              {
                 "marginBottom": 22,
                 "marginLeft": 11,
                 "marginRight": 11,
                 "marginTop": 11,
-                "opacity": 1,
-                "paddingBottom": 0,
-                "paddingLeft": 0,
-                "paddingRight": 0,
-                "paddingTop": 0,
               },
+              {},
               {
-                "borderRadius": 6,
-                "paddingLeft": 0,
-                "paddingRight": 0,
+                "alignSelf": "center",
               },
+              null,
             ]
           }
         >
           <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.75}
+            adjustsFontSizeToFit={false}
+            minimumFontScale={0.65}
             numberOfLines={1}
             style={
-              {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "marginHorizontal": 0,
-                "paddingBottom": 11,
-                "paddingLeft": 17,
-                "paddingRight": 17,
-                "paddingTop": 11,
-              }
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#00f1a2",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                null,
+              ]
             }
           >
             Import Wallets

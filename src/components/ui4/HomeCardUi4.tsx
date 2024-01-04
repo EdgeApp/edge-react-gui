@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { Platform, View } from 'react-native'
+import { View } from 'react-native'
 import { LinearGradientProps } from 'react-native-linear-gradient'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useHandler } from '../../hooks/useHandler'
+import { styles } from '../modals/TransferModal'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { CardUi4 } from './CardUi4'
@@ -25,8 +26,6 @@ export const HomeCardUi4 = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const textShadow = Platform.OS === 'ios' ? theme.shadowTextIosUi4 : theme.shadowTextAndroidUi4
-
   const handlePress = useHandler(() => {
     onPress()
   })
@@ -35,10 +34,10 @@ export const HomeCardUi4 = (props: Props) => {
     <CardUi4 gradientBackground={gradientBackground} nodeBackground={nodeBackground} onPress={handlePress}>
       <View style={styles.verticalSplitContainer}>
         <View style={styles.titleContainer}>
-          <EdgeText style={textShadow}>{title}</EdgeText>
-          <IonIcon size={theme.rem(1.25)} style={[styles.chevronIcon, textShadow]} color={theme.iconTappable} name="chevron-forward-outline" />
+          <EdgeText style={theme.cardTextShadow}>{title}</EdgeText>
+          <IonIcon size={theme.rem(1.25)} style={[styles.chevronIcon, theme.cardTextShadow]} color={theme.iconTappable} name="chevron-forward-outline" />
         </View>
-        <EdgeText style={[styles.footerText, textShadow]} numberOfLines={3} disableFontScaling>
+        <EdgeText style={[styles.footerText, theme.cardTextShadow]} numberOfLines={3} disableFontScaling>
           {footer}
         </EdgeText>
       </View>

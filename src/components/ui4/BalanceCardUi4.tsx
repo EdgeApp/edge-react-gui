@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Platform, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
@@ -46,8 +46,6 @@ export const BalanceCardUi4 = (props: Props) => {
   const fiatCurrencyCode = defaultIsoFiat.replace('iso:', '')
   const formattedFiat = isBalanceVisible ? formatNumber(fiatAmount, { toFixed: 2 }) : lstrings.redacted_placeholder
 
-  const textShadow = Platform.OS === 'ios' ? theme.shadowTextIosUi4 : theme.shadowTextAndroidUi4
-
   const exchangeRatesReady = exchangeRates != null && Object.keys(exchangeRates).length > 0
 
   const handleToggleAccountBalanceVisibility = useHandler(() => {
@@ -69,31 +67,31 @@ export const BalanceCardUi4 = (props: Props) => {
     <CardUi4>
       <TouchableOpacity style={styles.balanceContainer} onPress={handleToggleAccountBalanceVisibility}>
         <View style={styles.titleContainer}>
-          <EdgeText style={textShadow}>{lstrings.fragment_wallets_balance_text}</EdgeText>
+          <EdgeText style={theme.cardTextShadow}>{lstrings.fragment_wallets_balance_text}</EdgeText>
           <IonIcon
             name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'}
-            style={[styles.eyeIcon, textShadow]}
+            style={[styles.eyeIcon, theme.cardTextShadow]}
             color={theme.iconTappable}
             size={theme.rem(1)}
           />
         </View>
         {!exchangeRatesReady ? (
           <View style={styles.balanceTextContainer}>
-            <EdgeText style={[styles.balanceTextContainer, textShadow]}>{lstrings.exchange_rates_loading}</EdgeText>
+            <EdgeText style={[styles.balanceTextContainer, theme.cardTextShadow]}>{lstrings.exchange_rates_loading}</EdgeText>
           </View>
         ) : animateNumber ? (
           <View style={styles.balanceTextContainer}>
-            <AnimatedNumber numberString={balanceString} style={styles.balanceTextContainer} textStyle={{ ...styles.balanceText, ...textShadow }} />
+            <AnimatedNumber numberString={balanceString} style={styles.balanceTextContainer} textStyle={{ ...styles.balanceText, ...theme.cardTextShadow }} />
           </View>
         ) : (
           <View style={styles.balanceTextContainer}>
-            <EdgeText style={[styles.balanceTextContainer, styles.balanceText, textShadow]}>{balanceString}</EdgeText>
+            <EdgeText style={[styles.balanceTextContainer, styles.balanceText, theme.cardTextShadow]}>{balanceString}</EdgeText>
           </View>
         )}
       </TouchableOpacity>
       {onViewAssetsPress == null ? null : (
         <TouchableOpacity style={styles.rightButtonContainer} onPress={onViewAssetsPress}>
-          <EdgeText style={[styles.tappableText, textShadow]}>{lstrings.view_assets}</EdgeText>
+          <EdgeText style={[styles.tappableText, theme.cardTextShadow]}>{lstrings.view_assets}</EdgeText>
         </TouchableOpacity>
       )}
 

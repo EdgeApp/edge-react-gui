@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { Platform, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { ShadowedView } from 'react-native-fast-shadow'
 import { getColors } from 'react-native-image-colors'
 
 import compromisedIcon from '../../assets/images/compromisedIcon.png'
@@ -29,7 +30,7 @@ interface Props {
   onIconColor?: (color: string) => void
 }
 
-const CryptoIconComponent = (props: Props) => {
+export const CryptoIconUi4 = (props: Props) => {
   const { hideSecondary = false, marginRem, mono = false, sizeRem = 2, tokenId, walletId, onIconColor } = props
 
   const theme = useTheme()
@@ -95,35 +96,13 @@ const CryptoIconComponent = (props: Props) => {
     [marginRem, size, theme]
   )
 
-  // Apply platform-specific shadow stylings. Android has limited shadow props,
-  // so we are fudging the values to keep them looking consistent.
-  // TODO: Use Skia instead
-  const shadowStyle = React.useMemo(() => {
-    const androidShadowSize = size * 1.15
-
-    return Platform.OS === 'ios'
-      ? {
-          height: size,
-          width: size,
-          borderRadius: size / 2,
-          backgroundColor: theme.shadowColorUi4,
-          shadowColor: theme.shadowColorUi4,
-          shadowOffset: {
-            width: -3,
-            height: 3
-          },
-          shadowOpacity: 0.6,
-          shadowRadius: 4
-        }
-      : {
-          elevation: 3,
-          left: -10,
-          top: -2,
-          height: androidShadowSize,
-          width: androidShadowSize,
-          borderRadius: androidShadowSize / 2
-        }
-  }, [size, theme])
+  const shadowStyle = {
+    height: size,
+    width: size,
+    borderRadius: size / 2,
+    backgroundColor: theme.iconShadow.shadowColor,
+    ...theme.iconShadow
+  }
 
   //
   // Effects
@@ -159,9 +138,10 @@ const CryptoIconComponent = (props: Props) => {
           wallet={wallet}
         />
       )}
-      <View style={shadowStyle} />
-      {primaryCurrencyIcon}
-      {hideSecondary ? null : secondaryCurrencyIcon}
+      <ShadowedView style={shadowStyle}>
+        {primaryCurrencyIcon}
+        {hideSecondary ? null : secondaryCurrencyIcon}
+      </ShadowedView>
     </View>
   )
 }
@@ -175,5 +155,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: '50%'
   }
 }))
-
-export const CryptoIconUi4 = React.memo(CryptoIconComponent)

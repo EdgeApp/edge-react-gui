@@ -414,6 +414,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 {
                   "backgroundColor": "#000000",
                   "borderRadius": 17,
+                  "elevation": 0,
                   "height": 34,
                   "shadowColor": "#000000",
                   "shadowOffset": {
@@ -425,40 +426,41 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                   "width": 34,
                 }
               }
-            />
-            <View
-              style={
-                [
-                  {
-                    "overflow": "hidden",
-                  },
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  },
-                ]
-              }
             >
-              <FastImageView
-                resizeMode="cover"
-                source={
-                  {
-                    "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                  }
-                }
+              <View
                 style={
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
+                  [
+                    {
+                      "overflow": "hidden",
+                    },
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    },
+                  ]
                 }
-              />
+              >
+                <FastImageView
+                  resizeMode="cover"
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                    }
+                  }
+                  style={
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    }
+                  }
+                />
+              </View>
             </View>
           </View>
           <Text
@@ -849,7 +851,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           [
             {
               "borderColor": "rgba(255, 255, 255, .1)",
-              "borderRadius": 4,
+              "borderRadius": 16,
               "borderWidth": 1,
             },
             null,
@@ -1458,6 +1460,7 @@ exports[`TransactionListTop should render 1`] = `
                 {
                   "backgroundColor": "#000000",
                   "borderRadius": 17,
+                  "elevation": 0,
                   "height": 34,
                   "shadowColor": "#000000",
                   "shadowOffset": {
@@ -1469,40 +1472,41 @@ exports[`TransactionListTop should render 1`] = `
                   "width": 34,
                 }
               }
-            />
-            <View
-              style={
-                [
-                  {
-                    "overflow": "hidden",
-                  },
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  },
-                ]
-              }
             >
-              <FastImageView
-                resizeMode="cover"
-                source={
-                  {
-                    "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                  }
-                }
+              <View
                 style={
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
+                  [
+                    {
+                      "overflow": "hidden",
+                    },
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    },
+                  ]
                 }
-              />
+              >
+                <FastImageView
+                  resizeMode="cover"
+                  source={
+                    {
+                      "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                    }
+                  }
+                  style={
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    }
+                  }
+                />
+              </View>
             </View>
           </View>
           <Text

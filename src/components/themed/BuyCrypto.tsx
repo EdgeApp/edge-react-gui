@@ -9,10 +9,11 @@ import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { NavigationBase } from '../../types/routerTypes'
-import { CryptoIcon } from '../icons/CryptoIcon'
+
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { ButtonBox } from './ThemedButtons'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 const allowedPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId => !!SPECIAL_CURRENCY_INFO[pluginId].displayBuyCrypto)
 
@@ -43,7 +44,7 @@ export const BuyCrypto = (props: Props) => {
         <ButtonBox onPress={handlePress} paddingRem={1}>
           <View style={styles.container}>
             <View style={styles.buyCrypto}>
-              <CryptoIcon walletId={wallet.id} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
+              <CryptoIconUi4 walletId={wallet.id} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
 
               <EdgeText style={styles.buyCryptoText}>{sprintf(lstrings.transaction_list_buy_crypto_message, displayName)}</EdgeText>
             </View>

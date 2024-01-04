@@ -84,11 +84,17 @@ const palette = {
   // Button
   graySecondary: 'hsla(0, 0%, 100%, 0.20)',
 
+  // Shadows
+  shadow: 'rgba(0, 0, 0, 0.514)',
+
   // Gradients
   warningOuter: '#772a0f',
   warningInner: '#835d22',
   errorOuter: '#94472e',
   errorInner: '#962c32',
+
+  darkestGreen: '#20312f',
+  darkGreen: '#00604d',
 
   orangeOp50: 'rgba(192, 93, 12, 0.5)',
   lightBlueOp50: 'rgba(10, 129, 153, 0.5)',
@@ -162,10 +168,10 @@ export const edgeDark: Theme = {
 
   // Text
   primaryText: palette.white,
-  secondaryText: palette.blueGray,
+  secondaryText: palette.skyBlue,
   warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
-  negativeText: palette.accentRed,
+  negativeText: palette.gray,
   dangerText: palette.accentRed,
   textLink: palette.edgeMint,
   deactivatedText: palette.gray,
@@ -177,7 +183,7 @@ export const edgeDark: Theme = {
 
   // Buttons
   // Should add palette when pressed
-  buttonBorderRadiusRem: 0.25,
+  buttonBorderRadiusRem: 1.5,
   addButtonFont: palette.QuicksandMedium,
 
   keypadButtonOutline: palette.transparent,
@@ -194,29 +200,37 @@ export const edgeDark: Theme = {
 
   primaryButtonOutline: palette.transparent,
   primaryButtonOutlineWidth: 0,
-  primaryButton: [palette.darkMint, palette.edgeMint],
+  primaryButton: [palette.darkestGreen, palette.darkGreen],
   primaryButtonColorStart: { x: 0, y: 0 },
   primaryButtonColorEnd: { x: 1, y: 0 },
-  primaryButtonText: palette.darkAqua,
+  primaryButtonText: palette.white,
   primaryButtonTextShadow: textNoShadow,
   primaryButtonShadow: {
-    shadowColor: palette.white,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 2
+    shadowColor: palette.black,
+    shadowOffset: { width: -1.5, height: 1.5 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    /** @deprecated */
+    elevation: 0
   },
   primaryButtonFontSizeRem: 1,
   primaryButtonFont: palette.QuicksandMedium,
 
-  secondaryButtonOutline: palette.edgeMint,
-  secondaryButtonOutlineWidth: 1.5,
-  secondaryButton: [palette.transparent, palette.transparent],
+  secondaryButtonOutline: palette.graySecondary,
+  secondaryButtonOutlineWidth: 0,
+  secondaryButton: [palette.graySecondary, palette.graySecondary],
   secondaryButtonColorStart: { x: 0, y: 0 },
   secondaryButtonColorEnd: { x: 1, y: 1 },
-  secondaryButtonText: palette.edgeMint,
+  secondaryButtonText: palette.white,
   secondaryButtonTextShadow: textNoShadow,
-  secondaryButtonShadow: themeNoShadow,
+  secondaryButtonShadow: {
+    shadowColor: palette.black,
+    shadowOffset: { width: -1.5, height: 1.5 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    /** @deprecated */
+    elevation: 0
+  },
   secondaryButtonFontSizeRem: 1,
   secondaryButtonFont: palette.QuicksandRegular,
 
@@ -253,7 +267,15 @@ export const edgeDark: Theme = {
   // cardShadow: palette.blackOp25,
   cardBorder: 1,
   cardBorderColor: palette.whiteOp10,
-  cardBorderRadius: 4,
+  cardBorderRadius: 16,
+  cardTextShadow: {
+    textShadowColor: palette.shadow,
+    textShadowOffset: {
+      width: 0,
+      height: 0
+    },
+    textShadowRadius: 3
+  },
 
   tabBarBackground: [palette.navyAqua, palette.navyAqua],
   tabBarBackgroundStart: { x: 0, y: 0 },
@@ -441,79 +463,16 @@ export const edgeDark: Theme = {
   guiPluginLogoMoonpay: guiPluginLogoMoonpay,
 
   // UI 4.0:
-  buttonBorderRadiusRemUi4: 2,
-  buttonFontSizeRemUi4: 1,
-
-  buttonPrimaryUi4: {
-    textStyle: {
-      fontFamily: palette.QuicksandMedium,
-      color: palette.black
+  // Shadows
+  iconShadow: {
+    shadowColor: palette.black,
+    shadowOffset: {
+      width: -3,
+      height: 3
     },
-    gradientProps: {
-      colors: [palette.darkMint, palette.edgeMint],
-      end: { x: 1, y: 0 },
-      start: { x: 0, y: 0 }
-    },
-    shadowParams: {
-      shadowColor: palette.white,
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.25,
-      shadowRadius: 8,
-      elevation: 2
-    },
-    containerStyle: {
-      borderColor: palette.edgeMint,
-      borderWidth: 1
-    },
-    spinnerColor: palette.white
-  },
-
-  buttonSecondaryUi4: {
-    textStyle: {
-      fontFamily: palette.QuicksandMedium,
-      color: palette.white
-    },
-    gradientProps: {
-      colors: [palette.graySecondary, palette.graySecondary],
-      end: { x: 1, y: 0 },
-      start: { x: 0, y: 0 }
-    },
-    shadowParams: {
-      shadowColor: palette.black,
-      shadowOffset: { width: -1.5, height: 1.5 },
-      shadowOpacity: 0.5,
-      shadowRadius: 2,
-      elevation: 2
-    },
-    containerStyle: {
-      borderColor: palette.edgeMint,
-      borderWidth: 1
-    },
-    spinnerColor: palette.white
-  },
-
-  buttonTertiaryUi4: {
-    textStyle: {
-      fontFamily: palette.QuicksandMedium,
-      color: palette.black
-    },
-    gradientProps: {
-      colors: [palette.darkMint, palette.edgeMint],
-      end: { x: 1, y: 0 },
-      start: { x: 0, y: 0 }
-    },
-    shadowParams: {
-      shadowColor: palette.white,
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.25,
-      shadowRadius: 8,
-      elevation: 2
-    },
-    containerStyle: {
-      borderColor: palette.edgeMint,
-      borderWidth: 1
-    },
-    spinnerColor: palette.white
+    shadowOpacity: 0.6,
+    shadowRadius: 4,
+    elevation: 0
   },
 
   // Basic Card Styles
@@ -534,7 +493,6 @@ export const edgeDark: Theme = {
     start: { x: 0, y: 1 }
   },
   cardOverlayDisabledUi4: palette.blackOp65,
-  cardRadiusRemUi4: 1,
 
   // Special Home Scene Tiled Cards
   buyCardGradientUi4: {
@@ -557,31 +515,6 @@ export const edgeDark: Theme = {
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
-
-  iconTappableAltUi4: palette.white,
-
-  negativeTextMutedUi4: palette.gray,
-  secondaryTextUi4: palette.skyBlue,
-
-  shadowColorUi4: palette.black,
-  shadowTextIosUi4: {
-    textShadowColor: '#00000098',
-    textShadowOffset: {
-      width: 0,
-      height: 0
-    },
-    textShadowRadius: 3
-  },
-  shadowTextAndroidUi4: {
-    textShadowColor: '#00000098',
-    textShadowOffset: {
-      width: 0,
-      height: 0
-    },
-    textShadowRadius: 10
-  },
-
-  touchHighlightUi4: palette.lightGrayOp75,
 
   txDirBgReceiveUi4: palette.greenOp60,
   txDirBgSendUi4: palette.redOp60,

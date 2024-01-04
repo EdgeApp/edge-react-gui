@@ -66,7 +66,26 @@ exports[`CreateWalletAccountSelect renders 1`] = `
               "width": 90,
             }
           }
-        />
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "#000000",
+                "borderRadius": 45,
+                "elevation": 0,
+                "height": 90,
+                "shadowColor": "#000000",
+                "shadowOffset": {
+                  "height": 3,
+                  "width": -3,
+                },
+                "shadowOpacity": 0.6,
+                "shadowRadius": 4,
+                "width": 90,
+              }
+            }
+          />
+        </View>
       </View>
       <Text
         style={
@@ -455,7 +474,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 },
                 [
                   {
-                    "color": "#A4C7DF",
+                    "color": "#3dd9f4",
                     "fontSize": 18,
                   },
                 ],
@@ -489,6 +508,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         collapsable={false}
         focusable={true}
         onClick={[Function]}
+        onLayout={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
         onResponderRelease={[Function]}
@@ -497,23 +517,23 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           {
-            "elevation": 2,
+            "alignItems": "center",
+            "alignSelf": "center",
+            "borderRadius": 34,
+            "justifyContent": "center",
+            "marginBottom": 11,
+            "marginLeft": 11,
+            "marginRight": 11,
+            "marginTop": 11,
             "opacity": 1,
-            "shadowColor": "#FFFFFF",
-            "shadowOffset": {
-              "height": 0,
-              "width": 0,
-            },
-            "shadowOpacity": 0.25,
-            "shadowRadius": 8,
           }
         }
       >
         <BVLinearGradient
           colors={
             [
-              4278754931,
-              4278251938,
+              4280299823,
+              4278214733,
             ]
           }
           endPoint={
@@ -533,55 +553,54 @@ exports[`CreateWalletAccountSelect renders 1`] = `
             [
               {
                 "alignItems": "center",
-                "borderColor": "rgba(255, 255, 255, 0)",
-                "borderRadius": 6,
-                "borderWidth": 0,
                 "flexDirection": "row",
+                "height": 67,
                 "justifyContent": "center",
-                "minHeight": 67,
-                "minWidth": 202,
+                "paddingHorizontal": 45,
               },
               {
                 "alignSelf": "center",
+                "opacity": 0.3,
+              },
+              {
+                "alignItems": "center",
+                "alignSelf": "stretch",
+                "borderRadius": 34,
+                "justifyContent": "center",
+              },
+              {
                 "marginBottom": 11,
                 "marginLeft": 11,
                 "marginRight": 11,
                 "marginTop": 11,
-                "opacity": 0.3,
-                "paddingBottom": 0,
-                "paddingLeft": 0,
-                "paddingRight": 0,
-                "paddingTop": 0,
               },
+              {},
               {
-                "borderRadius": 6,
-                "paddingLeft": 0,
-                "paddingRight": 0,
+                "alignSelf": "center",
               },
+              null,
             ]
           }
         >
           <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.75}
+            adjustsFontSizeToFit={false}
+            minimumFontScale={0.65}
             numberOfLines={1}
             style={
-              {
-                "color": "#1b2f3b",
-                "fontFamily": "Quicksand-Medium",
-                "fontSize": 22,
-                "marginHorizontal": 0,
-                "paddingBottom": 11,
-                "paddingLeft": 17,
-                "paddingRight": 17,
-                "paddingTop": 11,
-                "textShadowColor": "#000000",
-                "textShadowOffset": {
-                  "height": 0,
-                  "width": 0,
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
                 },
-                "textShadowRadius": 0,
-              }
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 22,
+                },
+                null,
+              ]
             }
           >
             Next

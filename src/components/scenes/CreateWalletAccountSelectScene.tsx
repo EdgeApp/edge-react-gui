@@ -4,7 +4,6 @@ import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
 import { createAccountTransaction, fetchAccountActivationInfo, fetchWalletAccountActivationPaymentInfo } from '../../actions/CreateWalletActions'
-import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -15,13 +14,14 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
-import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { IconDataRow } from '../data/row/IconDataRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 export interface AccountPaymentParams {
   requestedAccountName: string
@@ -114,7 +114,7 @@ export const CreateWalletAccountSelectScene = (props: Props) => {
   return (
     <SceneWrapper>
       <View style={styles.titleIconArea}>
-        <CryptoIcon sizeRem={4} pluginId={existingCoreWallet.currencyInfo.pluginId} tokenId={tokenId} />
+        <CryptoIconUi4 sizeRem={4} pluginId={existingCoreWallet.currencyInfo.pluginId} tokenId={tokenId} />
       </View>
       <View style={styles.createWalletPromptArea}>
         <EdgeText numberOfLines={10}>{isRenderSelect ? instructionSyntax : confirmMessageSyntax}</EdgeText>
@@ -132,7 +132,7 @@ export const CreateWalletAccountSelectScene = (props: Props) => {
           </Card>
         ) : (
           <IconDataRow
-            icon={<CryptoIcon pluginId={paymentWallet.currencyInfo.pluginId} sizeRem={2} />}
+            icon={<CryptoIconUi4 pluginId={paymentWallet.currencyInfo.pluginId} sizeRem={2} />}
             leftText={getWalletName(paymentWallet)}
             leftSubtext={`${lstrings.send_confirmation_balance}: ${paymentWallet.balances[paymentCurrencyCode]} ${paymentCurrencyCode}`}
             rightText={`${paymentDenominationSymbol} ${amount} ${paymentCurrencyCode}`}
@@ -142,7 +142,7 @@ export const CreateWalletAccountSelectScene = (props: Props) => {
       </View>
       <View style={styles.buttonArea}>
         {isRenderSelect ? (
-          <ButtonsContainer
+          <ButtonsViewUi4
             primary={{ disabled: !activationCost || activationCost === '', onPress: handleSelect, label: lstrings.create_wallet_account_select_wallet }}
             layout="column"
           />
@@ -151,10 +151,11 @@ export const CreateWalletAccountSelectScene = (props: Props) => {
             <EdgeText style={styles.accountReviewConfirmText} numberOfLines={2}>
               {lstrings.create_wallet_account_confirm}
             </EdgeText>
-            <ButtonsContainer
+            <ButtonsViewUi4
               primary={{ disabled: isCreatingWallet, onPress: handleSubmit, label: lstrings.legacy_address_modal_continue }}
               secondary={{ disabled: isCreatingWallet, onPress: handleCancel, label: lstrings.string_cancel_cap }}
               layout="column"
+              scrollMargin
             />
           </>
         )}

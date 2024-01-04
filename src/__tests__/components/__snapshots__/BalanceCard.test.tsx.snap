@@ -5,7 +5,7 @@ exports[`BalanceCard should render with loading props 1`] = `
   style={
     [
       {
-        "borderRadius": 22,
+        "borderRadius": 16,
         "flex": 1,
       },
       {
@@ -27,7 +27,7 @@ exports[`BalanceCard should render with loading props 1`] = `
     style={
       {
         "backgroundColor": "rgba(255, 255, 255, .1)",
-        "borderRadius": 22,
+        "borderRadius": 16,
         "bottom": 0,
         "left": 0,
         "overflow": "hidden",
@@ -93,7 +93,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               "includeFontPadding": false,
             },
             {
-              "textShadowColor": "#00000098",
+              "textShadowColor": "rgba(0, 0, 0, 0.514)",
               "textShadowOffset": {
                 "height": 0,
                 "width": 0,
@@ -121,7 +121,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                 "marginRight": 0,
               },
               {
-                "textShadowColor": "#00000098",
+                "textShadowColor": "rgba(0, 0, 0, 0.514)",
                 "textShadowOffset": {
                   "height": 0,
                   "width": 0,
@@ -169,7 +169,7 @@ exports[`BalanceCard should render with loading props 1`] = `
                 "marginTop": 6,
               },
               {
-                "textShadowColor": "#00000098",
+                "textShadowColor": "rgba(0, 0, 0, 0.514)",
                 "textShadowOffset": {
                   "height": 0,
                   "width": 0,
@@ -201,7 +201,6 @@ exports[`BalanceCard should render with loading props 1`] = `
           "flexDirection": "row-reverse",
           "justifyContent": "center",
           "margin": 11,
-          "marginHorizontal": 0,
         }
       }
     >
@@ -227,6 +226,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         collapsable={false}
         focusable={true}
         onClick={[Function]}
+        onLayout={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
         onResponderRelease={[Function]}
@@ -235,9 +235,11 @@ exports[`BalanceCard should render with loading props 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           {
+            "alignItems": "center",
             "alignSelf": "stretch",
-            "borderRadius": 45,
+            "borderRadius": 34,
             "flex": 1,
+            "justifyContent": "center",
             "opacity": 1,
           }
         }
@@ -252,7 +254,7 @@ exports[`BalanceCard should render with loading props 1`] = `
           endPoint={
             {
               "x": 1,
-              "y": 0,
+              "y": 1,
             }
           }
           locations={null}
@@ -267,53 +269,47 @@ exports[`BalanceCard should render with loading props 1`] = `
               {
                 "alignItems": "center",
                 "flexDirection": "row",
-                "height": 56,
+                "height": 67,
                 "justifyContent": "center",
-                "marginHorizontal": 11,
+                "paddingHorizontal": 45,
               },
               {
                 "alignSelf": "auto",
                 "opacity": 1,
               },
-              null,
               {
+                "alignItems": "center",
                 "alignSelf": "stretch",
-                "borderRadius": 45,
+                "borderRadius": 34,
+                "justifyContent": "center",
               },
-              [
-                {
-                  "alignSelf": "stretch",
-                  "borderRadius": 45,
-                },
-                {
-                  "flex": 1,
-                },
-              ],
+              {},
+              {},
+              {
+                "flex": 1,
+              },
+              null,
             ]
           }
         >
           <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.75}
+            adjustsFontSizeToFit={false}
+            minimumFontScale={0.65}
             numberOfLines={1}
             style={
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
-                  "marginHorizontal": 0,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 11,
+                  "includeFontPadding": false,
                 },
                 {
-                  "textShadowColor": "#00000098",
-                  "textShadowOffset": {
-                    "height": 0,
-                    "width": 0,
-                  },
-                  "textShadowRadius": 3,
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
                 },
+                null,
               ]
             }
           >
@@ -321,6 +317,23 @@ exports[`BalanceCard should render with loading props 1`] = `
           </Text>
         </BVLinearGradient>
       </View>
+      <View
+        style={
+          [
+            {
+              "alignItems": undefined,
+              "flex": undefined,
+              "flexDirection": "column",
+              "justifyContent": undefined,
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
+            },
+            undefined,
+          ]
+        }
+      />
       <View
         accessibilityState={
           {
@@ -343,6 +356,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         collapsable={false}
         focusable={true}
         onClick={[Function]}
+        onLayout={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
         onResponderRelease={[Function]}
@@ -351,9 +365,11 @@ exports[`BalanceCard should render with loading props 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           {
+            "alignItems": "center",
             "alignSelf": "stretch",
-            "borderRadius": 45,
+            "borderRadius": 34,
             "flex": 1,
+            "justifyContent": "center",
             "opacity": 1,
           }
         }
@@ -368,7 +384,7 @@ exports[`BalanceCard should render with loading props 1`] = `
           endPoint={
             {
               "x": 1,
-              "y": 0,
+              "y": 1,
             }
           }
           locations={null}
@@ -383,53 +399,47 @@ exports[`BalanceCard should render with loading props 1`] = `
               {
                 "alignItems": "center",
                 "flexDirection": "row",
-                "height": 56,
+                "height": 67,
                 "justifyContent": "center",
-                "marginHorizontal": 11,
+                "paddingHorizontal": 45,
               },
               {
                 "alignSelf": "auto",
                 "opacity": 1,
               },
-              null,
               {
+                "alignItems": "center",
                 "alignSelf": "stretch",
-                "borderRadius": 45,
+                "borderRadius": 34,
+                "justifyContent": "center",
               },
-              [
-                {
-                  "alignSelf": "stretch",
-                  "borderRadius": 45,
-                },
-                {
-                  "flex": 1,
-                },
-              ],
+              {},
+              {},
+              {
+                "flex": 1,
+              },
+              null,
             ]
           }
         >
           <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.75}
+            adjustsFontSizeToFit={false}
+            minimumFontScale={0.65}
             numberOfLines={1}
             style={
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
-                  "marginHorizontal": 0,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 11,
+                  "includeFontPadding": false,
                 },
                 {
-                  "textShadowColor": "#00000098",
-                  "textShadowOffset": {
-                    "height": 0,
-                    "width": 0,
-                  },
-                  "textShadowRadius": 3,
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
                 },
+                null,
               ]
             }
           >
