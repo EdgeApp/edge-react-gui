@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 
 import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants'
@@ -118,7 +118,7 @@ export const getTokenId = (account: EdgeAccount, pluginId: string, currencyCode:
 /**
  * Get the currencyCode associated with a tokenId
  */
-export const getCurrencyCode = (wallet: EdgeCurrencyWallet, tokenId?: string): string => {
+export const getCurrencyCode = (wallet: EdgeCurrencyWallet, tokenId?: EdgeTokenId): string => {
   const { currencyCode } = tokenId != null ? wallet.currencyConfig.allTokens[tokenId] : wallet.currencyInfo
   return currencyCode
 }

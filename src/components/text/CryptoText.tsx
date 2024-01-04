@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 import { useCryptoText } from '../../hooks/useCryptoText'
@@ -6,7 +6,7 @@ import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
   nativeAmount: string
-  tokenId?: string
+  tokenId?: EdgeTokenId
   wallet: EdgeCurrencyWallet
   withSymbol?: boolean
   hideBalance?: boolean

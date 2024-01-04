@@ -257,7 +257,7 @@ class FakeCurrencyEngine {
 
   // Spending:
   async makeSpend(spendInfo: EdgeSpendInfo): Promise<EdgeTransaction> {
-    const { currencyCode = this.currencyInfo.currencyCode, spendTargets } = spendInfo
+    const { currencyCode = this.currencyInfo.currencyCode, spendTargets, tokenId = null } = spendInfo
     const tokenSpend = currencyCode !== this.currencyInfo.currencyCode
 
     // Check the spend targets:
@@ -287,6 +287,7 @@ class FakeCurrencyEngine {
       ourReceiveAddresses: [],
       parentNetworkFee: tokenSpend ? this.defaultSettings.parentNetworkFee : undefined,
       signedTx: '',
+      tokenId,
       txid: 'spend',
       walletId: 'someid'
     }

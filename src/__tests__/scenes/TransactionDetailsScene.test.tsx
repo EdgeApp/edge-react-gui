@@ -85,6 +85,7 @@ describe('TransactionDetailsScene', () => {
               otherParams: {},
               ourReceiveAddresses: ['this is an address'],
               signedTx: 'this is a signed tx',
+              tokenId: null,
               txid: 'this is the txid',
               walletId: fakeCoreWallet.id
             },
@@ -118,6 +119,7 @@ describe('TransactionDetailsScene', () => {
               otherParams: {},
               ourReceiveAddresses: ['this is an address'],
               signedTx: 'this is a signed tx',
+              tokenId: null,
               txid: 'this is the txid',
               walletId: fakeCoreWallet.id
             },

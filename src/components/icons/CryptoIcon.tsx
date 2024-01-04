@@ -1,3 +1,4 @@
+import { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -13,7 +14,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 interface Props {
   // Main props - If non is specified, would just render an empty view
   pluginId?: string // Needed when walletId is not supplied and we still want to get an icon
-  tokenId?: string // Needed when it's a token (not the plugin's native currency)
+  tokenId?: EdgeTokenId // Needed when it's a token (not the plugin's native currency)
   walletId?: string // To allow showing the progress ratio sync circle
 
   // Image props
@@ -49,7 +50,7 @@ const CryptoIconComponent = (props: Props) => {
     if (pluginId == null) return null
 
     // Get Currency Icon URI
-    const icon = getCurrencyIconUris(pluginId, tokenId)
+    const icon = getCurrencyIconUris(pluginId, tokenId ?? undefined)
     const source = { uri: mono ? icon.symbolImageDarkMono : icon.symbolImage }
 
     // Return Currency logo from the edge server

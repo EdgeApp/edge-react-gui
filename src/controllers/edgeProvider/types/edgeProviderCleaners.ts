@@ -46,11 +46,11 @@ const asEdgeMemo = asObject<EdgeMemo>({
 
 const asEdgeTransaction = asObject<EdgeTransaction>({
   walletId: asString,
-
   currencyCode: asString,
-  nativeAmount: asString,
+  tokenId: asOptional(asString, null),
 
-  // Fees:
+  // Amounts:
+  nativeAmount: asString,
   networkFee: asString,
   parentNetworkFee: asOptional(asString),
 

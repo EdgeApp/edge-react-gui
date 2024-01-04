@@ -21,6 +21,7 @@ describe('AdvancedDetailsCard', () => {
             otherParams: {},
             ourReceiveAddresses: ['123123123'],
             signedTx: '',
+            tokenId: null,
             txid: '',
             walletId: ''
           }}

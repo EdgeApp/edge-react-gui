@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Text } from 'react-native'
 
@@ -19,7 +19,7 @@ interface Props {
   nativeAmount?: string
   showRate?: boolean
   token?: EdgeToken
-  tokenId?: string
+  tokenId?: EdgeTokenId
   wallet: EdgeCurrencyWallet
 }
 

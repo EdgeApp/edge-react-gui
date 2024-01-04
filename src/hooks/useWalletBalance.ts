@@ -1,10 +1,10 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 /**
  * Subscribes to a specific balance within a wallet.
  */
-export function useWalletBalance(wallet: EdgeCurrencyWallet, tokenId?: string): string {
+export function useWalletBalance(wallet: EdgeCurrencyWallet, tokenId?: EdgeTokenId): string {
   // The core still reports balances by currency code:
   const token = tokenId == null ? null : wallet.currencyConfig.allTokens[tokenId]
   const { currencyCode } = token == null ? wallet.currencyInfo : token

@@ -26,6 +26,7 @@ const edgeTxs: EdgeTransaction[] = [
     ourReceiveAddresses: ['receiveaddress1', 'receiveaddress2'],
     parentNetworkFee: '10002',
     signedTx: '298t983y4t983y4t93y4g98oeshfgi4t89w394t',
+    tokenId: null,
     txid: 'txid1',
     walletId: ''
   },
@@ -47,6 +48,7 @@ const edgeTxs: EdgeTransaction[] = [
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     parentNetworkFee: '20001',
     signedTx: 'fiuwh34f98h3tiuheirgserg',
+    tokenId: null,
     txid: 'txid2',
     walletId: ''
   },
@@ -67,6 +69,7 @@ const edgeTxs: EdgeTransaction[] = [
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     isSend: false,
     signedTx: 'fiuwh34f98h3tiuheirgserg',
+    tokenId: null,
     txid: 'txid3',
     walletId: ''
   },
@@ -87,6 +90,7 @@ const edgeTxs: EdgeTransaction[] = [
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     isSend: true,
     signedTx: 'fiuwh34f98h3tiuheirgserg',
+    tokenId: null,
     txid: 'txid4',
     walletId: ''
   },
@@ -108,6 +112,7 @@ const edgeTxs: EdgeTransaction[] = [
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     parentNetworkFee: '20001',
     signedTx: 'fiuwh34f98h3tiuheirgserg',
+    tokenId: 'usdc_contract_address',
     txid: 'txid4',
     walletId: ''
   },
@@ -128,6 +133,7 @@ const edgeTxs: EdgeTransaction[] = [
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     isSend: true,
     signedTx: 'fiuwh34f98h3tiuheirgserg',
+    tokenId: null,
     txid: 'txid5',
     walletId: ''
   },
@@ -143,6 +149,7 @@ const edgeTxs: EdgeTransaction[] = [
     networkFee: '2000',
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     signedTx: 'fiuwh34f98h3tiuheirgserg',
+    tokenId: null,
     txid: 'txid6',
     walletId: ''
   }

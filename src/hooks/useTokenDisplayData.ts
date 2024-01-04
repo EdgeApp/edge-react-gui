@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
 import { useSelector } from '../types/reactRedux'
 import { fixFiatCurrencyCode, getDenomFromIsoCode, zeroString } from '../util/utils'
@@ -12,7 +12,7 @@ import { useWatch } from './useWatch'
  * 3. Localization: commas, decimals, spaces
  * */
 
-export const useTokenDisplayData = (props: { tokenId?: string; wallet: EdgeCurrencyWallet }) => {
+export const useTokenDisplayData = (props: { tokenId?: EdgeTokenId; wallet: EdgeCurrencyWallet }) => {
   const { tokenId, wallet } = props
   const { currencyConfig, currencyInfo } = wallet
   const { allTokens } = currencyConfig
