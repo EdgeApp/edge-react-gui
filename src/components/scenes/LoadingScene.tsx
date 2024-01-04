@@ -1,14 +1,20 @@
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
 
-import { THEME } from '../../theme/variables/airbitz'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { useTheme } from '../services/ThemeContext'
 
+/**
+ * This is a scene component, so therefore it must be used in react-navigation
+ * component hierarchy. Use LoadingSplashScreen for rendering a loading state
+ * above outside of the navigation/provider component tree.
+ */
 export const LoadingScene = () => {
+  const theme = useTheme()
   return (
     <SceneWrapper background="theme" hasHeader={false} hasTabs={false}>
       <View style={styles.container}>
-        <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} size="large" />
+        <ActivityIndicator color={theme.loadingIcon} size="large" />
       </View>
     </SceneWrapper>
   )

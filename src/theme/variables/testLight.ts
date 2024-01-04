@@ -85,6 +85,7 @@ export const testLight: Theme = {
   iconLoadingOverlay: palette.whiteOp75,
   transactionListIconBackground: palette.white,
   buySellCustomPluginModalIcon: palette.white,
+  loadingIcon: palette.edgeBlue,
 
   // Background
   backgroundGradientColors: [palette.lightestGray, palette.lightestGray],
@@ -138,6 +139,10 @@ export const testLight: Theme = {
 
   // Header
   headerIcon: fioAddressLogo,
+  headerBackground: [palette.white, palette.edgeMint],
+  headerBackgroundStart: { x: 0, y: 0 },
+  headerBackgroundEnd: { x: 1, y: 1 },
+  headerOutlineColors: [palette.white, palette.edgeMint],
 
   // Buttons
   // Should add palette when pressed

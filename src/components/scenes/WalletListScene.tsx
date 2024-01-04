@@ -9,7 +9,7 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { CrossFade } from '../common/CrossFade'
-import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -85,8 +85,8 @@ export function WalletListScene(props: Props) {
   const handlePressDone = useHandler(() => setSorting(false))
 
   return (
-    <NotificationSceneWrapper navigation={navigation} hasTabs padding={theme.rem(0.5)}>
-      {(gap, notificationHeight) => (
+    <SceneWrapper hasTabs background="theme" hasHeader hasNotifications padding={theme.rem(0.5)}>
+      {({ insetStyles }) => (
         <>
           <WiredProgressBar />
           {sorting && (
@@ -104,7 +104,7 @@ export function WalletListScene(props: Props) {
                 header={header}
                 footer={undefined}
                 navigation={navigation}
-                overscroll={notificationHeight}
+                insetStyles={insetStyles}
                 searching={searching}
                 searchText={searchText}
                 onRefresh={handleRefresh}
@@ -115,7 +115,7 @@ export function WalletListScene(props: Props) {
           </View>
         </>
       )}
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 }
 

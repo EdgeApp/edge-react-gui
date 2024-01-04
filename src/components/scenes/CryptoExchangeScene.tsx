@@ -1,7 +1,7 @@
 import { div, gt, gte } from 'biggystring'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Keyboard } from 'react-native'
+import { Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
@@ -17,7 +17,7 @@ import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, zeroString } from '../../util/utils'
-import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { InsetStyles, SceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
@@ -58,7 +58,7 @@ interface StateProps {
   insufficient: boolean
   genericError: string | null
 
-  overscroll: number
+  insetStyles: InsetStyles
 }
 interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => Promise<void>
@@ -290,7 +290,8 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { fromWalletName, toWalletName, theme, overscroll } = this.props
+    const { fromWalletName, toWalletName, theme, insetStyles } = this.props
+
     const styles = getStyles(theme)
 
     const isFromFocused = this.state.whichWalletFocus === 'from'
@@ -299,12 +300,12 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     const toHeaderText = sprintf(lstrings.exchange_to_wallet, toWalletName)
 
     return (
-      <>
+      <View style={[styles.sceneContainer, { paddingTop: insetStyles.paddingTop }]}>
         <SceneHeader title={lstrings.title_exchange} underline />
         <KeyboardAwareScrollView
           style={styles.mainScrollView}
           keyboardShouldPersistTaps="always"
-          contentContainerStyle={[{ paddingBottom: overscroll }, styles.scrollViewContentContainer]}
+          contentContainerStyle={[{ paddingBottom: insetStyles.paddingBottom }, styles.scrollViewContentContainer]}
         >
           <LineTextDivider title={lstrings.fragment_send_from_label} lowerCased />
           <CryptoExchangeFlipInputWrapper
@@ -337,18 +338,20 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
           {this.renderAlert()}
           {this.renderButton()}
         </KeyboardAwareScrollView>
-      </>
+      </View>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  sceneContainer: {
+    flex: 1
+  },
   mainScrollView: {
     flex: 1
   },
   scrollViewContentContainer: {
-    alignItems: 'center',
-    paddingTop: theme.rem(0.5)
+    alignItems: 'center'
   }
 }))
 
@@ -424,8 +427,8 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   })
 
   return (
-    <NotificationSceneWrapper navigation={navigation} hasTabs>
-      {(gap, notificationHeight) => (
+    <SceneWrapper hasTabs hasNotifications>
+      {({ insetStyles }) => (
         <CryptoExchangeComponent
           route={route}
           onSelectWallet={handleSelectWallet}
@@ -437,9 +440,9 @@ export const CryptoExchangeScene = (props: OwnProps) => {
           exchangeInfo={exchangeInfo}
           insufficient={insufficient}
           genericError={genericError}
-          overscroll={notificationHeight}
+          insetStyles={insetStyles}
         />
       )}
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 }

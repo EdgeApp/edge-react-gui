@@ -3,7 +3,7 @@ import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 
 import { Fontello } from '../../../assets/vector/index'
-import { NotificationSceneWrapper } from '../../../components/common/SceneWrapper'
+import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { MainButton } from '../../../components/themed/MainButton'
@@ -22,7 +22,7 @@ interface Props extends EdgeSceneProps<'guiPluginInfoDisplay'> {}
 export const InfoDisplayScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { route, navigation } = props
+  const { route } = props
   // TODO: headerIconUri
   const { headerTitle, transferInfo, promptMessage, onDone } = route.params
 
@@ -122,14 +122,14 @@ export const InfoDisplayScene = React.memo((props: Props) => {
     ))
 
   return (
-    <NotificationSceneWrapper navigation={navigation} scroll background="theme">
+    <SceneWrapper scroll background="theme" hasNotifications>
       <SceneHeader title={headerTitle} underline withTopMargin />
       <View style={styles.promptContainer}>
         <EdgeText numberOfLines={12}>{promptMessage}</EdgeText>
       </View>
       {renderGroups()}
       <MainButton label={lstrings.string_done_cap} marginRem={[2, 1, 1.5, 1]} type="secondary" onPress={handleDone} />
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 })
 

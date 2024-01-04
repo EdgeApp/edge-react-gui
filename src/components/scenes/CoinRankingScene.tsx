@@ -14,7 +14,7 @@ import { FlatListItem } from '../../types/types'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
 import { EdgeAnim } from '../common/EdgeAnim'
-import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { CoinRankRow } from '../data/row/CoinRankRow'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { showError } from '../services/AirshipInstance'
@@ -202,10 +202,10 @@ const CoinRankingComponent = (props: Props) => {
   const assetSubTextString = assetSubTextStrings[assetSubText]
 
   return (
-    <NotificationSceneWrapper navigation={navigation} background="theme" hasTabs>
-      {(gap, notificationHeight) => (
+    <SceneWrapper background="theme" hasTabs hasNotifications>
+      {({ insetStyles }) => (
         <>
-          <View style={styles.searchContainer}>
+          <View style={[styles.searchContainer, { paddingTop: insetStyles.paddingTop }]}>
             <View style={styles.searchTextInputContainer}>
               <SimpleTextInput
                 returnKeyType="search"
@@ -247,11 +247,11 @@ const CoinRankingComponent = (props: Props) => {
             renderItem={renderItem}
             onEndReachedThreshold={1}
             onEndReached={handleEndReached}
-            contentContainerStyle={{ paddingBottom: notificationHeight }}
+            contentContainerStyle={{ paddingBottom: insetStyles.paddingBottom }}
           />
         </>
       )}
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 }
 

@@ -29,10 +29,9 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
-import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
-import { LoadingScene } from '../scenes/LoadingScene'
+import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { TitleText } from '../text/TitleText'
@@ -283,7 +282,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
   const xButtonBottomColor = theme.modal
 
   return (
-    <SceneWrapper hasHeader={false} hasTabs background="none">
+    <View style={{ flex: 1, paddingTop: insets.top }}>
       {/* ==== Top Panel Start ==== */}
       <View style={styles.topPanel}>
         <Image style={styles.logoImage} source={theme.primaryLogo} resizeMode="contain" />
@@ -361,7 +360,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
         {/* === Translucent X Close Button End === */}
       </View>
       {/* ==== Bottom Panel End ==== */}
-    </SceneWrapper>
+    </View>
   )
 }
 
@@ -412,7 +411,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     bottom: 0,
     height: theme.rem(3),
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderBottomLeftRadius: theme.rem(1)
   },
   bottomPanel: {
     flex: 1,
@@ -496,5 +496,5 @@ export function SideMenu(props: DrawerContentComponentProps) {
     if (!loggedIn) navigation.navigate('login')
   }, [loggedIn, navigation])
 
-  return loggedIn ? <SideMenuComponent {...props} /> : <LoadingScene />
+  return !loggedIn ? <SideMenuComponent {...props} /> : <LoadingSplashScreen />
 }

@@ -7,6 +7,7 @@
 - changed: Light account re-enabled at 50% distribution
 - changed: Block Buy/Sell/Receive for Light Accounts
 - changed: Free FIO handle modal visual design
+- changed: Scene layout to support transparent and blurred header and tab-bar
 - fixed: USP vs legacy landing experiment distribution
 - fixed: Paybis sell from Tron USDT
 - fixed: Remove `minWidth` style from stake option card

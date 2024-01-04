@@ -2,7 +2,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-import { NotificationSceneWrapper } from '../../../components/common/SceneWrapper'
+import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { MainButton } from '../../../components/themed/MainButton'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
@@ -22,7 +22,7 @@ export const SepaFormScene = React.memo((props: Props) => {
   const styles = getStyles(theme)
 
   // TODO: headerIconUri
-  const { navigation, route } = props
+  const { route } = props
   const { headerTitle, onSubmit } = route.params
   const disklet = useSelector(state => state.core.disklet)
 
@@ -58,8 +58,8 @@ export const SepaFormScene = React.memo((props: Props) => {
   }, [])
 
   return (
-    <NotificationSceneWrapper navigation={navigation} background="theme">
-      {(gap, notificationHeight) => (
+    <SceneWrapper background="theme" hasNotifications>
+      {({ insetStyles }) => (
         <>
           <SceneHeader title={headerTitle} underline withTopMargin />
           <View style={styles.container}>
@@ -68,7 +68,7 @@ export const SepaFormScene = React.memo((props: Props) => {
               extraScrollHeight={theme.rem(2.75)}
               enableAutomaticScroll
               enableOnAndroid
-              contentContainerStyle={{ paddingBottom: notificationHeight }}
+              contentContainerStyle={insetStyles}
             >
               <GuiFormField fieldType="name" value={name} label={lstrings.form_field_title_account_owner} onChangeText={handleNameInput} autofocus />
               <GuiFormField fieldType="iban" value={iban} label={lstrings.form_field_title_iban} onChangeText={handleIbanInput} />
@@ -84,7 +84,7 @@ export const SepaFormScene = React.memo((props: Props) => {
           </View>
         </>
       )}
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 })
 

@@ -12,7 +12,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { formatLargeNumberString as formatLargeNumber } from '../../util/utils'
 import { SwipeChart } from '../charts/SwipeChart'
 import { EdgeAnim } from '../common/EdgeAnim'
-import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -75,7 +75,7 @@ const COLUMN_RIGHT_DATA_KEYS: Array<keyof CoinRankingData> = [
 const CoinRankingDetailsSceneComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { navigation, route } = props
+  const { route } = props
   const { coinRankingData } = route.params
   const { currencyCode, currencyName } = coinRankingData
   const currencyCodeUppercase = currencyCode.toUpperCase()
@@ -165,7 +165,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   }
 
   return (
-    <NotificationSceneWrapper navigation={navigation} background="theme" scroll>
+    <SceneWrapper background="theme" hasTabs hasNotifications scroll>
       <View style={styles.container}>
         <EdgeAnim style={styles.titleContainer} enter={{ type: 'fadeInLeft' }}>
           <FastImage style={styles.icon} source={imageUrlObject} />
@@ -177,7 +177,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
           <View style={styles.column}>{renderRows(coinRankingData, COLUMN_RIGHT_DATA_KEYS)}</View>
         </View>
       </View>
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 }
 

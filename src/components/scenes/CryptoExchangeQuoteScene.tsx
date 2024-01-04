@@ -13,7 +13,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { logEvent } from '../../util/tracking'
 import { PoweredByCard } from '../cards/PoweredByCard'
-import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { SwapProviderRow } from '../data/row/SwapProviderRow'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal'
@@ -183,11 +183,11 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
     ))
   }
   return (
-    <NotificationSceneWrapper hasTabs navigation={navigation} background="theme">
-      {(gap, notificationHeight) => (
+    <SceneWrapper hasTabs hasNotifications background="theme">
+      {({ insetStyles }) => (
         <>
           <SceneHeader title={lstrings.title_exchange} underline withTopMargin />
-          <ScrollView contentContainerStyle={[{ paddingBottom: notificationHeight }, styles.container]}>
+          <ScrollView contentContainerStyle={[insetStyles, styles.container]}>
             <LineTextDivider title={lstrings.fragment_send_from_label} lowerCased />
             {showFeeWarning ? <AlertCardUi4 marginRem={[0, 1, 1.5, 1]} title={lstrings.transaction_details_fee_warning} type="warning" /> : null}
             <ExchangeQuote quote={selectedQuote} fromTo="from" showFeeWarning={showFeeWarning} />
@@ -220,7 +220,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
           </ScrollView>
         </>
       )}
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 }
 

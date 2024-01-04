@@ -31,7 +31,7 @@ import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { fetchInfo } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { base58ToUuid } from '../../util/utils'
-import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { InsetStyles, SceneWrapper } from '../common/SceneWrapper'
 import { CountryListModal } from '../modals/CountryListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -84,7 +84,7 @@ interface StateProps {
   developerModeOn: boolean
   deviceId: string
   disablePlugins: NestedDisableMap
-  contentContainerStyle: { paddingBottom?: number }
+  insetStyles: InsetStyles
 }
 
 interface DispatchProps {
@@ -354,7 +354,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { accountPlugins, accountReferral, countryCode, developerModeOn, disablePlugins, theme, contentContainerStyle } = this.props
+    const { accountPlugins, accountReferral, countryCode, developerModeOn, disablePlugins, theme, insetStyles } = this.props
     const direction = this.getSceneDirection()
     const { buy = [], sell = [] } = this.state.buySellPlugins
     const styles = getStyles(theme)
@@ -377,7 +377,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     return (
-      <>
+      <View style={[styles.sceneContainer, { paddingTop: insetStyles.paddingTop }]}>
         <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline />
         <TouchableOpacity style={styles.selectedCountryRow} onPress={this._handleCountryPress}>
           {countryData && (
@@ -400,15 +400,18 @@ class GuiPluginList extends React.PureComponent<Props, State> {
             data={plugins}
             renderItem={this.renderPlugin}
             keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
-            contentContainerStyle={contentContainerStyle}
+            contentContainerStyle={{ paddingBottom: insetStyles.paddingBottom }}
           />
         )}
-      </>
+      </View>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  sceneContainer: {
+    flex: 1
+  },
   selectedCountryRow: {
     marginTop: theme.rem(1.5),
     marginBottom: theme.rem(1.5),
@@ -501,8 +504,8 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   }
 
   return (
-    <NotificationSceneWrapper navigation={navigation} background="theme" hasTabs>
-      {(gap, notificationHeight) => (
+    <SceneWrapper background="theme" hasTabs hasNotifications>
+      {({ insetStyles }) => (
         <GuiPluginList
           navigation={navigation}
           route={route}
@@ -516,9 +519,9 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
           disablePlugins={disablePlugins}
           updateCountryCode={updateCountryCode}
           theme={theme}
-          contentContainerStyle={{ paddingBottom: notificationHeight }}
+          insetStyles={insetStyles}
         />
       )}
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 })

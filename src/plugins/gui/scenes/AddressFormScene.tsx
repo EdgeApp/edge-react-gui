@@ -5,7 +5,7 @@ import { Platform, ScrollView, TouchableOpacity, View, ViewStyle } from 'react-n
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Animated, { Easing, interpolateColor, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated'
 
-import { NotificationSceneWrapper } from '../../../components/common/SceneWrapper'
+import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { FilledTextInputRef } from '../../../components/themed/FilledTextInput'
@@ -55,7 +55,7 @@ const asKmootValidProperties = asObject({
 export const AddressFormScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { navigation, route } = props
+  const { route } = props
   const { countryCode, headerTitle, /* headerIconUri, */ onSubmit } = route.params
   const disklet = useSelector(state => state.core.disklet)
   const dropdownBorderColor = React.useMemo(() => [theme.iconDeactivated, theme.iconTappable], [theme])
@@ -250,8 +250,8 @@ export const AddressFormScene = React.memo((props: Props) => {
       key !== 'address2' && formData[key].trim() === ''
   )
   return (
-    <NotificationSceneWrapper navigation={navigation} background="theme">
-      {(gap, notificationHeight) => (
+    <SceneWrapper background="theme" hasNotifications>
+      {({ insetStyles }) => (
         <>
           <SceneHeader title={headerTitle} underline withTopMargin />
           <View style={styles.container}>
@@ -260,7 +260,7 @@ export const AddressFormScene = React.memo((props: Props) => {
               extraScrollHeight={theme.rem(2.75)}
               enableAutomaticScroll
               enableOnAndroid
-              contentContainerStyle={{ paddingBottom: notificationHeight }}
+              contentContainerStyle={insetStyles}
             >
               <GuiFormField
                 fieldType="address"
@@ -328,7 +328,7 @@ export const AddressFormScene = React.memo((props: Props) => {
           </View>
         </>
       )}
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 })
 

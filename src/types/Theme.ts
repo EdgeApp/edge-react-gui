@@ -94,6 +94,7 @@ export interface Theme {
   iconLoadingOverlay: string
   transactionListIconBackground: string
   buySellCustomPluginModalIcon: string
+  loadingIcon: string
 
   // Background
   backgroundGradientColors: string[]
@@ -169,6 +170,10 @@ export interface Theme {
 
   // Header
   headerIcon: ImageProp
+  headerBackground: string[]
+  headerBackgroundStart: GradientCoords
+  headerBackgroundEnd: GradientCoords
+  headerOutlineColors: string[]
 
   // Buttons
   buttonBorderRadiusRem: number

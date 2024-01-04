@@ -1,40 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CreateWalletAccountSelect renders 1`] = `
-<BVLinearGradient
-  colors={
-    [
-      4278585612,
-      4279971643,
-    ]
-  }
-  endPoint={
-    {
-      "x": 1,
-      "y": 0,
+[
+  <BVLinearGradient
+    colors={
+      [
+        4278585612,
+        4279971643,
+      ]
     }
-  }
-  locations={null}
-  startPoint={
-    {
-      "x": 0,
-      "y": 0,
-    }
-  }
-  style={
-    {
-      "bottom": 0,
-      "left": 0,
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
-    }
-  }
->
-  <RCTScrollView
-    contentContainerStyle={
+    endPoint={
       {
-        "padding": 0,
+        "x": 1,
+        "y": 0,
+      }
+    }
+    locations={null}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
       }
     }
     style={
@@ -43,8 +28,29 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         "left": 0,
         "position": "absolute",
         "right": 0,
-        "top": 64,
+        "top": 0,
       }
+    }
+  />,
+  <RCTScrollView
+    contentContainerStyle={
+      {
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "paddingRight": 0,
+        "paddingTop": 64,
+      }
+    }
+    style={
+      [
+        {
+          "height": 1334,
+          "width": 750,
+        },
+        {
+          "padding": 0,
+        },
+      ]
     }
   >
     <View>
@@ -589,6 +595,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         </BVLinearGradient>
       </View>
     </View>
-  </RCTScrollView>
-</BVLinearGradient>
+  </RCTScrollView>,
+]
 `;

@@ -3,6 +3,7 @@ import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
 import { CreateWalletImportScene } from '../../components/scenes/CreateWalletImportScene'
+import { defaultAccount } from '../../reducers/CoreReducer'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
@@ -18,6 +19,7 @@ describe('CreateWalletImportScene', () => {
   const mockState: FakeState = {
     core: {
       account: {
+        ...defaultAccount,
         currencyConfig: {
           bitcoin: {
             importKey: () => {}

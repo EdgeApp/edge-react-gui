@@ -1,19 +1,29 @@
 import { getDefaultHeaderHeight } from '@react-navigation/elements'
+import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
-import { Animated, ScrollView, StyleSheet, View } from 'react-native'
+import { useMemo } from 'react'
+import { Animated, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { THEME } from '../../theme/variables/airbitz'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { maybeComponent } from '../hoc/maybeComponent'
+import { styled } from '../hoc/styled'
 import { NotificationView } from '../notification/NotificationView'
 import { useTheme } from '../services/ThemeContext'
+import { MAX_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
 import { KeyboardTracker } from './KeyboardTracker'
+
+export interface InsetStyles {
+  paddingTop: number
+  paddingRight: number
+  paddingBottom: number
+  paddingLeft: number
+}
 
 type BackgroundOptions =
   | 'theme' // Whatever the current theme specifies (default)
-  | 'legacy' // Seprate dark header and white content areas
   | 'none' // Do not render any background elements
 
 interface SceneWrapperProps {
@@ -21,7 +31,7 @@ interface SceneWrapperProps {
   // or a function that accepts the current gap and returns an element.
   // The function will be called on each render, allowing the scene to react
   // to changes in the gap.
-  children: React.ReactNode | ((gap: EdgeInsets, notificationHeight: number) => React.ReactNode)
+  children: React.ReactNode | ((info: { safeAreaInsets: EdgeInsets; insets: EdgeInsets; insetStyles: InsetStyles }) => React.ReactNode)
 
   // Settings for when using ScrollView
   keyboardShouldPersistTaps?: 'always' | 'never' | 'handled'
@@ -32,11 +42,11 @@ interface SceneWrapperProps {
   // Background options:
   background?: BackgroundOptions
 
-  // Extra header area to insert above the body background:
-  bodySplit?: number
-
   // True if this scene has a header (with back button & such):
   hasHeader?: boolean
+
+  // This enables notifications in the scene
+  hasNotifications?: boolean
 
   // True if this scene has a bottom tab bar:
   hasTabs?: boolean
@@ -48,191 +58,141 @@ interface SceneWrapperProps {
   scroll?: boolean
 }
 
-interface NotificationSceneWrapperProps extends SceneWrapperProps {
-  navigation: NavigationBase
-}
-
-/**
- * A SceneWrapper with a possible notification view at the bottom.
- */
-export const NotificationSceneWrapper = (props: NotificationSceneWrapperProps): JSX.Element => {
-  const {
-    avoidKeyboard = false,
-    background = 'theme',
-    bodySplit = 0,
-    children,
-    hasHeader = true,
-    hasTabs = false,
-    keyboardShouldPersistTaps,
-    navigation,
-    padding = 0,
-    scroll = false
-  } = props
-
-  const activeUsername = useSelector(state => state.core.account.username)
-  const isLightAccount = activeUsername == null
-
-  const theme = useTheme()
-  const notificationHeight = isLightAccount ? theme.rem(4) : 0
-
-  // Subscribe to the window size:
-  const frame = useSafeAreaFrame()
-  const insets = useSafeAreaInsets()
-
-  const renderScene = (gap: EdgeInsets, keyboardAnimation: Animated.Value | null, keyboardHeight: number): JSX.Element => {
-    // Render the scene container:
-    // If function children, the caller handles the insets and overscroll
-    const isFuncChildren = typeof children === 'function'
-
-    const finalChildren = isFuncChildren ? children({ ...gap, bottom: keyboardHeight }, notificationHeight) : children
-    const scene =
-      keyboardAnimation != null ? (
-        <Animated.View style={[styles.scene, { ...gap, maxHeight: keyboardAnimation, padding }]}>{finalChildren}</Animated.View>
-      ) : scroll ? (
-        <ScrollView
-          style={{ position: 'absolute', padding, ...gap }}
-          keyboardShouldPersistTaps={keyboardShouldPersistTaps}
-          contentContainerStyle={{ paddingBottom: notificationHeight }}
-        >
-          {finalChildren}
-        </ScrollView>
-      ) : (
-        <View style={[styles.scene, { ...gap, padding, paddingBottom: isFuncChildren ? undefined : notificationHeight }]}>{finalChildren}</View>
-      )
-
-    // Render the notifications:
-    const notifications = <NotificationView navigation={navigation} />
-
-    // Render the background, if any:
-    if (background === 'none')
-      return (
-        <>
-          {scene}
-          {notifications}
-        </>
-      )
-    return (
-      <LinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart} style={styles.gradient}>
-        {background !== 'legacy' ? null : <View style={[styles.legacyBackground, { top: gap.top + bodySplit }]} />}
-        {scene}
-        {notifications}
-      </LinearGradient>
-    )
-  }
-
-  const gap: EdgeInsets = {
-    ...insets,
-    bottom: hasTabs ? 0 : insets.bottom,
-    top: insets.top + (hasHeader ? getDefaultHeaderHeight(frame, false, 0) : 0)
-  }
-  const downValue = frame.height - gap.top
-  const upValue = (keyboardHeight: number) => downValue - keyboardHeight
-
-  return avoidKeyboard ? (
-    <KeyboardTracker downValue={downValue} upValue={upValue}>
-      {(keyboardAnimation, keyboardLayout) => renderScene(gap, keyboardAnimation, downValue - keyboardLayout)}
-    </KeyboardTracker>
-  ) : (
-    renderScene(gap, null, 0)
-  )
-}
-
 /**
  * Wraps a normal stacked scene, creating a perfectly-sized box
  * that avoids the header, tab bar, and notifications (if any).
- *
  * Also draws a common gradient background under the scene.
  *
- * TODO: Eventually deprecate this as scenes integrate the
- * NotificationSceneWrapper instead
+ * If the children are normal React elements, then the wrapper will apply
+ * padding needed to avoid the safe area inset and header/tab-bar/etc.
+ *
+ * If the child is a function component, though, the scene rendering SceneWrapper
+ * is responsible for applying its own padding. The scene can leverage the
+ * provided `info` parameter passed to the children function-prop for this
+ * purpose.
  */
 export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const {
     avoidKeyboard = false,
     background = 'theme',
-    bodySplit = 0,
     children,
     hasHeader = true,
+    hasNotifications = false,
     hasTabs = false,
     keyboardShouldPersistTaps,
     padding = 0,
     scroll = false
   } = props
+
+  const accountId = useSelector(state => state.core.account.id)
+  const activeUsername = useSelector(state => state.core.account.username)
+  const isLightAccount = accountId != null && activeUsername == null
+
+  const navigation = useNavigation<NavigationBase>()
   const theme = useTheme()
+  const windowDimensions = useWindowDimensions()
+  const layoutStyles = useMemo(
+    () => ({
+      height: windowDimensions.height,
+      width: windowDimensions.width
+    }),
+    [windowDimensions.height, windowDimensions.width]
+  )
 
   // Subscribe to the window size:
   const frame = useSafeAreaFrame()
-  const insets = useSafeAreaInsets()
+  const safeAreaInsets = useSafeAreaInsets()
 
-  const renderScene = (gap: EdgeInsets, keyboardAnimation: Animated.Value | null, keyboardHeight: number): JSX.Element => {
-    // Render the scene container:
-    const finalChildren = typeof children === 'function' ? children({ ...gap, bottom: keyboardHeight }, 0) : children
-    const scene =
-      keyboardAnimation != null ? (
-        <Animated.View style={[styles.scene, { ...gap, maxHeight: keyboardAnimation, padding }]}>{finalChildren}</Animated.View>
-      ) : scroll ? (
-        <ScrollView style={{ position: 'absolute', ...gap }} keyboardShouldPersistTaps={keyboardShouldPersistTaps} contentContainerStyle={{ padding }}>
-          {finalChildren}
-        </ScrollView>
-      ) : (
-        <View style={[styles.scene, { ...gap, padding }]}>{finalChildren}</View>
-      )
+  const notificationHeight = theme.rem(4)
+  const headerBarHeight = getDefaultHeaderHeight(frame, false, 0)
 
-    // Render the background, if any:
-    if (background === 'none') return scene
+  const renderScene = (safeAreaInsets: EdgeInsets, keyboardAnimation: Animated.Value | undefined, trackerValue: number): JSX.Element => {
+    // If function children, the caller handles the insets and overscroll
+    const hasKeyboardAnimation = keyboardAnimation != null
+    const isFuncChildren = typeof children === 'function'
+
+    // These are the safeAreaInsets including the app's header and tab-bar
+    // heights.
+    const insets: EdgeInsets = {
+      top: safeAreaInsets.top + (hasHeader ? headerBarHeight : 0),
+      right: safeAreaInsets.right,
+      bottom: (isLightAccount ? notificationHeight : 0) + (hasTabs ? MAX_TAB_BAR_HEIGHT : safeAreaInsets.bottom),
+      left: safeAreaInsets.left
+    }
+
+    // This is a convenient styles object which may be applied as
+    // contentContainerStyles for child scroll components. It will also be
+    // used for the ScrollView component internal to the SceneWrapper.
+    const insetStyles: InsetStyles = {
+      paddingTop: insets.top,
+      paddingRight: insets.right,
+      paddingBottom: insets.bottom,
+      paddingLeft: insets.left
+    }
+
+    const maybeInsetStyles = isFuncChildren ? {} : insetStyles
+
     return (
-      <LinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart} style={styles.gradient}>
-        {background !== 'legacy' ? null : <View style={[styles.legacyBackground, { top: gap.top + bodySplit }]} />}
-        {scene}
-      </LinearGradient>
+      <MaybeAnimatedView when={hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles, { maxHeight: keyboardAnimation, padding }]}>
+        <MaybeLinearGradient
+          when={background === 'theme'}
+          colors={theme.backgroundGradientColors}
+          end={theme.backgroundGradientEnd}
+          start={theme.backgroundGradientStart}
+        />
+        <MaybeScrollView
+          when={scroll && !hasKeyboardAnimation}
+          style={[layoutStyles, { padding }]}
+          keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+          contentContainerStyle={insetStyles}
+        >
+          <MaybeView when={!scroll && !hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles]}>
+            {isFuncChildren ? children({ safeAreaInsets, insets, insetStyles: insetStyles }) : children}
+            {hasNotifications ? <NotificationView navigation={navigation} /> : null}
+          </MaybeView>
+        </MaybeScrollView>
+      </MaybeAnimatedView>
     )
   }
 
-  const gap: EdgeInsets = {
-    ...insets,
-    bottom: hasTabs ? 0 : insets.bottom,
-    top: insets.top + (hasHeader ? getDefaultHeaderHeight(frame, false, 0) : 0)
-  }
-  const downValue = frame.height - gap.top
+  // These represent the distance from the top of the screen to the top of
+  // the keyboard depending if the keyboard is down or up.
+  const downValue = frame.height
   const upValue = (keyboardHeight: number) => downValue - keyboardHeight
 
   return avoidKeyboard ? (
     <KeyboardTracker downValue={downValue} upValue={upValue}>
-      {(keyboardAnimation, keyboardLayout) => renderScene(gap, keyboardAnimation, downValue - keyboardLayout)}
+      {(keyboardAnimation, trackerValue) =>
+        renderScene(
+          safeAreaInsets,
+          keyboardAnimation /* Animation between downValue and upValue */,
+          trackerValue /* downValue or upValue depending on if the keyboard state */
+        )
+      }
     </KeyboardTracker>
   ) : (
-    renderScene(gap, null, 0)
+    renderScene(safeAreaInsets, undefined, 0)
   )
 }
 
 const styles = StyleSheet.create({
-  legacyBackground: {
-    // Layout:
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-
-    // Visuals:
-    backgroundColor: THEME.COLORS.GRAY_4
-  },
-
-  gradient: {
-    // Layout:
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    top: 0
-  },
-
-  scene: {
-    // Layout:
-    position: 'absolute',
-
+  sceneContainer: {
     // Children:
     alignItems: 'stretch',
     flexDirection: 'column',
     justifyContent: 'flex-start'
   }
 })
+
+const StyledLinearGradient = styled(LinearGradient)({
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  bottom: 0,
+  top: 0
+})
+
+const MaybeAnimatedView = maybeComponent(Animated.View)
+const MaybeLinearGradient = maybeComponent(StyledLinearGradient)
+const MaybeScrollView = maybeComponent(ScrollView)
+const MaybeView = maybeComponent(View)

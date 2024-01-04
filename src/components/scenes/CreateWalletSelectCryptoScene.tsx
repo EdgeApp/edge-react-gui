@@ -251,8 +251,8 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
   return (
     <SceneWrapper background="theme">
-      {gap => (
-        <View style={[styles.content, { marginBottom: -gap.bottom }]}>
+      {({ safeAreaInsets }) => (
+        <View style={[styles.content, { marginBottom: -safeAreaInsets.bottom }]}>
           <SceneHeader title={lstrings.title_create_wallet_select_crypto} withTopMargin />
           <Space vertical={0.5} horizontal={1}>
             <SimpleTextInput
@@ -269,7 +269,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
           </Space>
           <FlashList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ paddingBottom: gap.bottom + theme.rem(4.25) }}
+            contentContainerStyle={{ paddingBottom: safeAreaInsets.bottom + theme.rem(4.25) }}
             data={filteredCreateWalletList}
             estimatedItemSize={theme.rem(4.25)}
             extraData={selectedItems}

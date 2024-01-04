@@ -113,6 +113,7 @@ export const edgeLight: Theme = {
   iconLoadingOverlay: palette.whiteOp75,
   transactionListIconBackground: palette.white,
   buySellCustomPluginModalIcon: palette.white,
+  loadingIcon: palette.edgeBlue,
 
   // Background
   backgroundGradientColors: [palette.lightestGray, palette.lightestGray],
@@ -166,6 +167,10 @@ export const edgeLight: Theme = {
 
   // Header
   headerIcon: edgeMark,
+  headerBackground: [palette.white, palette.white],
+  headerBackgroundStart: { x: 0, y: 0 },
+  headerBackgroundEnd: { x: 1, y: 1 },
+  headerOutlineColors: [palette.white, palette.white],
 
   // Buttons
   // Should add palette when pressed

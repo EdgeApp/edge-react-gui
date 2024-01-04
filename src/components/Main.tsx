@@ -35,11 +35,13 @@ import { BackButton } from './navigation/BackButton'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle'
 import { EdgeLogoHeader } from './navigation/EdgeLogoHeader'
 import { PluginBackButton } from './navigation/GuiPluginBackButton'
+import { HeaderBackground } from './navigation/HeaderBackground'
 import { HeaderTextButton } from './navigation/HeaderTextButton'
 import { HeaderTitle } from './navigation/HeaderTitle'
 import { ParamHeaderTitle } from './navigation/ParamHeaderTitle'
 import { SideMenuButton } from './navigation/SideMenuButton'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle'
+import { LoadingSplashScreen } from './progress-indicators/LoadingSplashScreen'
 import { AssetSettingsScene as AssetSettingsSceneComponent } from './scenes/AssetSettingsScene'
 import { ChangeMiningFeeScene as ChangeMiningFeeSceneComponent } from './scenes/ChangeMiningFeeScene'
 import { ChangePasswordScene as ChangePasswordSceneComponent } from './scenes/ChangePasswordScene'
@@ -83,7 +85,6 @@ import { FioStakingOverviewScene as FioStakingOverviewSceneComponent } from './s
 import { GettingStartedScene } from './scenes/GettingStartedScene'
 import { GuiPluginListScene as GuiPluginListSceneComponent } from './scenes/GuiPluginListScene'
 import { GuiPluginViewScene as GuiPluginViewSceneComponent } from './scenes/GuiPluginViewScene'
-import { LoadingScene } from './scenes/LoadingScene'
 import { LoanCloseScene as LoanCloseSceneComponent } from './scenes/Loans/LoanCloseScene'
 import { LoanCreateConfirmationScene as LoanCreateConfirmationSceneComponent } from './scenes/Loans/LoanCreateConfirmationScene'
 import { LoanCreateScene as LoanCreateSceneComponent } from './scenes/Loans/LoanCreateScene'
@@ -220,6 +221,7 @@ const defaultScreenOptions: StackNavigationOptions = {
   headerShown: true,
   headerMode,
   headerTitleAlign: 'center',
+  headerBackground: HeaderBackground,
   headerTransparent: true
 }
 const firstSceneScreenOptions: StackNavigationOptions = {
@@ -262,7 +264,7 @@ export const Main = () => {
   }, [])
 
   return legacyLanding == null ? (
-    <LoadingScene />
+    <LoadingSplashScreen />
   ) : (
     <NavigationContainer theme={reactNavigationTheme}>
       <Stack.Navigator

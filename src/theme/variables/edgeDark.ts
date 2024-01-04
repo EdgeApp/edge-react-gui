@@ -30,6 +30,7 @@ import { scale } from '../../util/scaling'
 const palette = {
   white: '#FFFFFF',
   black: '#000000',
+  blackTransparent: '#00000000',
   darkestNavy: '#06090c',
 
   darkMint: '#089e73',
@@ -117,6 +118,7 @@ export const edgeDark: Theme = {
   iconLoadingOverlay: palette.whiteOp75,
   transactionListIconBackground: palette.darkAqua,
   buySellCustomPluginModalIcon: palette.navyAqua,
+  loadingIcon: palette.edgeMint,
 
   // Background
   // backgroundGradientColors: [palette.navyAqua, palette.navyAquaDarker], // For vertical gradient
@@ -174,6 +176,10 @@ export const edgeDark: Theme = {
 
   // Header
   headerIcon: edgeMark,
+  headerBackground: [palette.black, palette.blackTransparent],
+  headerBackgroundStart: { x: 0, y: 0 },
+  headerBackgroundEnd: { x: 0, y: 0.5 },
+  headerOutlineColors: [palette.transparent, palette.transparent],
 
   // Buttons
   // Should add palette when pressed
@@ -255,10 +261,10 @@ export const edgeDark: Theme = {
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 4,
 
-  tabBarBackground: [palette.navyAqua, palette.navyAqua],
-  tabBarBackgroundStart: { x: 0, y: 0 },
-  tabBarBackgroundEnd: { x: 1, y: 1 },
-  tabBarTopOutlineColors: [palette.navyAqua, palette.navyAqua],
+  tabBarBackground: [`${palette.black}00`, palette.black],
+  tabBarBackgroundStart: { x: 0, y: 0.5 },
+  tabBarBackgroundEnd: { x: 0, y: 1 },
+  tabBarTopOutlineColors: [`${palette.white}22`, `${palette.white}22`],
   tabBarIcon: palette.white,
   tabBarIconHighlighted: palette.edgeMint,
 
