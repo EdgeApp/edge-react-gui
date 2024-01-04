@@ -1458,8 +1458,10 @@ exports[`TransactionDetailsScene should render 1`] = `
               onStartShouldSetResponder={[Function]}
               style={
                 {
+                  "alignItems": "center",
                   "alignSelf": "center",
-                  "borderRadius": 45,
+                  "borderRadius": 34,
+                  "justifyContent": "center",
                   "opacity": 1,
                 }
               }
@@ -1489,18 +1491,22 @@ exports[`TransactionDetailsScene should render 1`] = `
                     {
                       "alignItems": "center",
                       "flexDirection": "row",
-                      "height": 56,
+                      "height": 67,
                       "justifyContent": "center",
-                      "marginHorizontal": 11,
+                      "paddingHorizontal": 45,
                     },
                     {
                       "alignSelf": "auto",
                       "opacity": 1,
                     },
                     {
+                      "alignItems": "center",
                       "alignSelf": "stretch",
-                      "borderRadius": 45,
+                      "borderRadius": 34,
+                      "justifyContent": "center",
                     },
+                    {},
+                    {},
                     {
                       "alignSelf": "center",
                     },
@@ -1520,24 +1526,11 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Medium",
-                          "fontSize": 22,
-                          "marginHorizontal": 0,
-                          "paddingHorizontal": 34,
-                          "paddingVertical": 11,
-                        },
-                        {
-                          "textShadowColor": "#00000098",
-                          "textShadowOffset": {
-                            "height": 0,
-                            "width": 0,
-                          },
-                          "textShadowRadius": 3,
-                        },
-                      ],
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Medium",
+                        "fontSize": 22,
+                      },
                       null,
                     ]
                   }
@@ -3180,8 +3173,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               onStartShouldSetResponder={[Function]}
               style={
                 {
+                  "alignItems": "center",
                   "alignSelf": "center",
-                  "borderRadius": 45,
+                  "borderRadius": 34,
+                  "justifyContent": "center",
                   "opacity": 1,
                 }
               }
@@ -3211,18 +3206,22 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     {
                       "alignItems": "center",
                       "flexDirection": "row",
-                      "height": 56,
+                      "height": 67,
                       "justifyContent": "center",
-                      "marginHorizontal": 11,
+                      "paddingHorizontal": 45,
                     },
                     {
                       "alignSelf": "auto",
                       "opacity": 1,
                     },
                     {
+                      "alignItems": "center",
                       "alignSelf": "stretch",
-                      "borderRadius": 45,
+                      "borderRadius": 34,
+                      "justifyContent": "center",
                     },
+                    {},
+                    {},
                     {
                       "alignSelf": "center",
                     },
@@ -3242,24 +3241,11 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Medium",
-                          "fontSize": 22,
-                          "marginHorizontal": 0,
-                          "paddingHorizontal": 34,
-                          "paddingVertical": 11,
-                        },
-                        {
-                          "textShadowColor": "#00000098",
-                          "textShadowOffset": {
-                            "height": 0,
-                            "width": 0,
-                          },
-                          "textShadowRadius": 3,
-                        },
-                      ],
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Medium",
+                        "fontSize": 22,
+                      },
                       null,
                     ]
                   }
