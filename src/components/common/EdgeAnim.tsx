@@ -17,7 +17,7 @@ import Animated, {
   LinearTransition
 } from 'react-native-reanimated'
 
-export const DEFAULT_ANIMATION_DURATION_MS = 500
+export const DEFAULT_ANIMATION_DURATION_MS = 300
 export const LAYOUT_ANIMATION = LinearTransition.duration(DEFAULT_ANIMATION_DURATION_MS)
 
 type AnimBuilder = typeof ComplexAnimationBuilder
