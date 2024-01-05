@@ -13,6 +13,7 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
+import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
 interface OwnProps extends EdgeSceneProps<'fioSentRequestDetails'> {}
@@ -63,15 +64,17 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper>
+      <SceneWrapper scroll padding={theme.rem(0.5)}>
         <SceneHeader title={lstrings.title_fio_sent_request_details} underline />
         <View style={styles.headerSpace} />
-        {this.amountField()}
-        <RowUi4 title={lstrings.fio_request_sent_details_from} body={selectedFioSentRequest.payee_fio_address} />
-        <RowUi4 title={lstrings.fio_request_sent_details_to} body={selectedFioSentRequest.payer_fio_address} />
-        {this.statusField(selectedFioSentRequest.status)}
-        <RowUi4 title={lstrings.fio_date_label} body={formatDate(new Date(selectedFioSentRequest.time_stamp), SHORT_DATE_FMT)} />
-        <RowUi4 title={lstrings.memo_memo_title} body={selectedFioSentRequest.content.memo} />
+        <CardUi4 sections>
+          {this.amountField()}
+          <RowUi4 title={lstrings.fio_request_sent_details_from} body={selectedFioSentRequest.payee_fio_address} />
+          <RowUi4 title={lstrings.fio_request_sent_details_to} body={selectedFioSentRequest.payer_fio_address} />
+          {this.statusField(selectedFioSentRequest.status)}
+          <RowUi4 title={lstrings.fio_date_label} body={formatDate(new Date(selectedFioSentRequest.time_stamp), SHORT_DATE_FMT)} />
+          <RowUi4 title={lstrings.memo_memo_title} body={selectedFioSentRequest.content.memo} />
+        </CardUi4>
       </SceneWrapper>
     )
   }

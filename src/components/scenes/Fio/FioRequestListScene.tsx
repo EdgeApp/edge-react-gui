@@ -572,7 +572,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'stretch'
+    alignItems: 'stretch',
+    marginHorizontal: theme.rem(0.5)
   },
   container: {
     alignItems: 'stretch',

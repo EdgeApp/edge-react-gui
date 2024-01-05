@@ -17,7 +17,7 @@ import { convertEdgeToFIOCodes, convertFIOToEdgeCodes } from '../../util/FioAddr
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { ClickableRow } from './ClickableRow'
+import { CardUi4 } from '../ui4/CardUi4'
 import { EdgeText } from './EdgeText'
 import { SwipableRowRef, SwipeableRow } from './SwipeableRow'
 
@@ -115,9 +115,7 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
         rightThreshold={theme.rem(7.5)}
         onRightSwipe={this.onSwipe}
       >
-        <ClickableRow paddingRem={[0, 1]} onPress={this.onPress}>
-          <FontAwesome name={isSent ? 'paper-plane' : 'history'} style={styles.icon} />
-
+        <CardUi4 onPress={this.onPress} icon={<FontAwesome name={isSent ? 'paper-plane' : 'history'} style={styles.icon} />}>
           <View style={styles.requestRight}>
             <View style={styles.requestDetailsRow}>
               <EdgeText style={styles.name}>{isSent ? fioRequest.payer_fio_address : fioRequest.payee_fio_address}</EdgeText>
@@ -131,7 +129,7 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
             </View>
             <View style={styles.requestDetailsRow}>{isSent ? this.showStatus(fioRequest.status) : this.requestedField()}</View>
           </View>
-        </ClickableRow>
+        </CardUi4>
       </SwipeableRow>
     )
   }
@@ -139,9 +137,9 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   icon: {
-    marginRight: theme.rem(1),
+    margin: theme.rem(0.25),
     color: theme.primaryText,
-    fontSize: theme.rem(1)
+    fontSize: theme.rem(1.5)
   },
   name: {
     flex: 1,
@@ -149,7 +147,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.primaryText
   },
   requestRight: {
-    flex: 1
+    flex: 1,
+    margin: theme.rem(0.25)
   },
   requestTime: {
     color: theme.secondaryText

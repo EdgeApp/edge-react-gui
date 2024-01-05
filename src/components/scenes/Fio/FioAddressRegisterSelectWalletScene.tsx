@@ -1,7 +1,7 @@
 import { mul, toFixed } from 'biggystring'
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Alert, Image, View } from 'react-native'
+import { Alert, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
@@ -20,7 +20,8 @@ import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
-import { MainButton } from '../../themed/MainButton'
+import { ButtonUi4 } from '../../ui4/ButtonUi4'
+import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
@@ -200,7 +201,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
   }
 
   renderSelectWallet = () => {
-    const { account, theme, route } = this.props
+    const { account, route } = this.props
     const { selectedDomain, fioAddress } = route.params
     const { activationCost, paymentWallet, loading } = this.state
 
@@ -210,15 +211,14 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
 
     return (
       <>
-        <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddress} />
-        {!selectedDomain.walletId && (
-          <RowUi4 rightButtonType="touchable" title={lstrings.create_wallet_account_select_wallet} body={walletName} onPress={this.onWalletPress} />
-        )}
-        <RowUi4 title={lstrings.create_wallet_account_amount_due} body={costStr} />
-        {!loading && ((paymentWallet && paymentWallet.id) || selectedDomain.walletId !== '') && (
-          <MainButton disabled={nextDisabled} onPress={this.onNextPress} label={lstrings.string_next_capitalized} marginRem={1} type="secondary" />
-        )}
-        {loading && <ActivityIndicator color={theme.iconTappable} />}
+        <CardUi4 sections marginRem={[0.5, 0.5, 2, 0.5]}>
+          <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddress} />
+          {!selectedDomain.walletId && (
+            <RowUi4 rightButtonType="touchable" title={lstrings.create_wallet_account_select_wallet} body={walletName} onPress={this.onWalletPress} />
+          )}
+          <RowUi4 title={lstrings.create_wallet_account_amount_due} body={costStr} loading={loading} />
+        </CardUi4>
+        <ButtonUi4 disabled={nextDisabled} onPress={this.onNextPress} label={lstrings.string_next_capitalized} type="primary" />
       </>
     )
   }
@@ -229,13 +229,11 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     const styles = getStyles(theme)
     const detailsText = sprintf(lstrings.fio_address_payment_required_text, config.appName)
     return (
-      <SceneWrapper scroll>
-        <View style={styles.header}>
-          <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
-          <EdgeText style={styles.instructionalText} numberOfLines={10}>
-            {detailsText}
-          </EdgeText>
-        </View>
+      <SceneWrapper scroll padding={theme.rem(0.5)}>
+        <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
+        <EdgeText style={styles.instructionalText} numberOfLines={10}>
+          {detailsText}
+        </EdgeText>
         {this.renderSelectWallet()}
         {errorMessage && (
           <EdgeText style={styles.errorMessage} numberOfLines={3}>
@@ -249,11 +247,9 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  header: {
-    paddingHorizontal: theme.rem(1.25)
-  },
   instructionalText: {
     paddingVertical: theme.rem(1.5),
+    paddingHorizontal: theme.rem(0.5),
     fontSize: theme.rem(1),
     textAlign: 'center',
     color: theme.secondaryText

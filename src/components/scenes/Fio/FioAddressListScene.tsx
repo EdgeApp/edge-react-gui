@@ -117,7 +117,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
     return (
       <>
         <SceneWrapper>
-          <ScrollView style={styles.row}>
+          <ScrollView style={styles.section}>
             <SceneHeader title={lstrings.title_fio_address} underline />
             <View style={styles.list}>
               {!fioAddresses.length && <EdgeText style={styles.noNames}>{noFioAddressesText}</EdgeText>}
@@ -182,8 +182,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(2.5),
     alignSelf: 'center'
   },
-  row: {
-    flex: 1
+  section: {
+    flex: 1,
+    marginHorizontal: theme.rem(0.5)
   },
   noNames: {
     color: theme.deactivatedText,
@@ -197,12 +198,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'center'
   },
   iconImg: {
-    height: theme.rem(2.25),
-    marginRight: theme.rem(1.5)
+    height: theme.rem(2.25)
   },
   iconIon: {
-    width: theme.rem(1.5),
-    marginRight: theme.rem(1),
     textAlign: 'center'
   },
   actionButton: {
