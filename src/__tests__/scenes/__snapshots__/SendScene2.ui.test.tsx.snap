@@ -97,8 +97,8 @@ exports[`SendScene2 1 spendTarget 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -245,8 +245,8 @@ exports[`SendScene2 1 spendTarget 1`] = `
               [
                 {
                   "alignItems": "center",
+                  "alignSelf": "stretch",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flex": 1,
                   "flexDirection": "row",
                 },
                 {
@@ -389,8 +389,8 @@ exports[`SendScene2 1 spendTarget 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -556,8 +556,8 @@ exports[`SendScene2 1 spendTarget 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -955,8 +955,8 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -1103,8 +1103,8 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               [
                 {
                   "alignItems": "center",
+                  "alignSelf": "stretch",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flex": 1,
                   "flexDirection": "row",
                 },
                 {
@@ -1247,8 +1247,8 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -1414,8 +1414,8 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -1561,8 +1561,8 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -1635,8 +1635,8 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -1961,8 +1961,8 @@ exports[`SendScene2 2 spendTargets 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -2108,8 +2108,8 @@ exports[`SendScene2 2 spendTargets 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -2256,8 +2256,8 @@ exports[`SendScene2 2 spendTargets 1`] = `
               [
                 {
                   "alignItems": "center",
+                  "alignSelf": "stretch",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flex": 1,
                   "flexDirection": "row",
                 },
                 {
@@ -2400,8 +2400,8 @@ exports[`SendScene2 2 spendTargets 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -2567,8 +2567,8 @@ exports[`SendScene2 2 spendTargets 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -2966,8 +2966,8 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -3113,8 +3113,8 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -3260,8 +3260,8 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -3427,8 +3427,8 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -3826,8 +3826,8 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -3973,8 +3973,8 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -4121,8 +4121,8 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
               [
                 {
                   "alignItems": "center",
+                  "alignSelf": "stretch",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flex": 1,
                   "flexDirection": "row",
                 },
                 {
@@ -4265,8 +4265,8 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -4664,8 +4664,8 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -4811,8 +4811,8 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -4958,8 +4958,8 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -5357,8 +5357,8 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -5504,8 +5504,8 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -5678,8 +5678,8 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             style={
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
                 "marginBottom": 11,
                 "marginLeft": 11,
@@ -5747,8 +5747,8 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -5914,8 +5914,8 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -6313,8 +6313,8 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -6486,8 +6486,8 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           style={
             {
               "alignItems": "center",
+              "alignSelf": "stretch",
               "backgroundColor": "rgba(255, 255, 255, 0)",
-              "flex": 1,
               "flexDirection": "row",
               "marginBottom": 11,
               "marginLeft": 11,
@@ -6559,8 +6559,8 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
               [
                 {
                   "alignItems": "center",
+                  "alignSelf": "stretch",
                   "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flex": 1,
                   "flexDirection": "row",
                 },
                 {
@@ -6703,8 +6703,8 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -6797,8 +6797,8 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -7196,8 +7196,8 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -7369,8 +7369,8 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
           style={
             {
               "alignItems": "center",
+              "alignSelf": "stretch",
               "backgroundColor": "rgba(255, 255, 255, 0)",
-              "flex": 1,
               "flexDirection": "row",
               "marginBottom": 11,
               "marginLeft": 11,
@@ -7468,8 +7468,8 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             style={
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
                 "marginBottom": 11,
                 "marginLeft": 11,
@@ -7537,8 +7537,8 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -7631,8 +7631,8 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -8030,8 +8030,8 @@ exports[`SendScene2 Render SendScene 1`] = `
             [
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
               },
               {
@@ -8204,8 +8204,8 @@ exports[`SendScene2 Render SendScene 1`] = `
             style={
               {
                 "alignItems": "center",
+                "alignSelf": "stretch",
                 "backgroundColor": "rgba(255, 255, 255, 0)",
-                "flex": 1,
                 "flexDirection": "row",
                 "marginBottom": 11,
                 "marginLeft": 11,
@@ -8508,8 +8508,8 @@ exports[`SendScene2 Render SendScene 1`] = `
           style={
             [
               {
+                "alignSelf": "stretch",
                 "borderRadius": 16,
-                "flex": 1,
               },
               {
                 "marginBottom": 34,
@@ -8523,6 +8523,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                 "paddingRight": 11,
                 "paddingTop": 11,
               },
+              undefined,
             ]
           }
         >
