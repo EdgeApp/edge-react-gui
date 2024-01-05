@@ -61,14 +61,11 @@ export function MiniButton(props: Props) {
 // Use the secondary button styles, but scale them:
 const miniScale = 5 / 8
 
-// @ts-expect-error
 const getStyles = cacheStyles((theme: Theme) => ({
   button: {
     alignItems: 'center',
-    backgroundColor: theme.secondaryButton,
-    borderColor: theme.secondaryButtonOutline,
-    borderRadius: theme.rem(0.25 * miniScale),
-    borderWidth: theme.rem(0.1 * miniScale),
+    backgroundColor: theme.secondaryButton[0],
+    borderRadius: theme.rem(2 * miniScale),
     flexDirection: 'row',
     justifyContent: 'center',
     minHeight: theme.rem(3 * miniScale),
