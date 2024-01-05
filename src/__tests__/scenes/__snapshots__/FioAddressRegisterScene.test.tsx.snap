@@ -3,6 +3,7 @@
 exports[`FioAddressRegister should render with loading props 1`] = `
 <SceneWrapper
   background="theme"
+  padding={11}
 >
   <Memo(SceneHeaderComponent)
     style={
@@ -50,7 +51,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
           [
             {
               "paddingBottom": 22,
-              "paddingHorizontal": 22,
+              "paddingHorizontal": 11,
             },
             {
               "paddingTop": 34,
@@ -74,7 +75,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         style={
           {
             "paddingBottom": 22,
-            "paddingHorizontal": 22,
+            "paddingHorizontal": 11,
           }
         }
       >
@@ -97,7 +98,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         style={
           {
             "paddingBottom": 22,
-            "paddingHorizontal": 22,
+            "paddingHorizontal": 11,
           }
         }
       >
@@ -117,34 +118,54 @@ exports[`FioAddressRegister should render with loading props 1`] = `
       <View
         onLayout={[Function]}
       >
-        <RowUi4
-          onPress={[Function]}
-          rightButtonType="editable"
-          title="Choose a FIO Crypto Handle"
+        <CardUi4
+          sections={true}
         >
-          <View
-            style={
-              {
-                "flexDirection": "row",
-              }
-            }
+          <RowUi4
+            onPress={[Function]}
+            rightButtonType="editable"
+            title="Choose a FIO Crypto Handle"
           >
-            <WithTheme(EdgeTextComponent)
+            <View
               style={
                 {
-                  "color": "#87939E",
+                  "flexDirection": "row",
                 }
               }
             >
-              Your Crypto Handle name here
-            </WithTheme(EdgeTextComponent)>
-          </View>
-        </RowUi4>
-        <RowUi4
-          body="Loading…"
+              <WithTheme(EdgeTextComponent)
+                style={
+                  {
+                    "color": "#87939E",
+                  }
+                }
+              >
+                Your Crypto Handle name here
+              </WithTheme(EdgeTextComponent)>
+            </View>
+          </RowUi4>
+          <RowUi4
+            body="Loading…"
+            onPress={[Function]}
+            rightButtonType="touchable"
+            title="Choose FIO Domain for Your Crypto Handle"
+          />
+        </CardUi4>
+      </View>
+      <View
+        style={
+          {
+            "marginTop": 34,
+          }
+        }
+      >
+        <ButtonUi4
+          disabled={true}
+          label="Next"
+          layout="row"
           onPress={[Function]}
-          rightButtonType="touchable"
-          title="Choose FIO Domain for Your Crypto Handle"
+          spinner={false}
+          type="primary"
         />
       </View>
       <WithTheme(FormErrorComponent)
