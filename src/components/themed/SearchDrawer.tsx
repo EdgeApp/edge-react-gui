@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { useDerivedValue } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
-import { lstrings } from '../../locales/strings'
 import { useDrawerOpenRatio } from '../../state/SceneDrawerState'
 import { SceneWrapperInfo } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
@@ -10,7 +9,9 @@ import { Space } from '../layout/Space'
 import { SceneDrawerWrapper } from './SceneDrawerWrapper'
 import { SimpleTextInput, SimpleTextInputRef } from './SimpleTextInput'
 
-interface WalletListSearchProps {
+interface SearchDrawerProps {
+  placeholder: string
+
   isSearching: boolean
   searchText: string
   sceneWrapperInfo: SceneWrapperInfo
@@ -20,8 +21,8 @@ interface WalletListSearchProps {
   onStartSearching: () => void
 }
 
-export const WalletListSearch = (props: WalletListSearchProps) => {
-  const { isSearching, searchText, sceneWrapperInfo, onChangeText, onDoneSearching, onStartSearching } = props
+export const SearchDrawer = (props: SearchDrawerProps) => {
+  const { placeholder, isSearching, searchText, sceneWrapperInfo, onChangeText, onDoneSearching, onStartSearching } = props
 
   const textInputRef = React.useRef<SimpleTextInputRef>(null)
 
@@ -64,7 +65,7 @@ export const WalletListSearch = (props: WalletListSearchProps) => {
       <Space expand horizontal={1} vertical={0.5}>
         <SimpleTextInput
           returnKeyType="search"
-          placeholder={lstrings.wallet_list_wallet_search}
+          placeholder={placeholder}
           onChangeText={handleSearchChangeText}
           value={searchText}
           onBlur={handleSearchBlur}
