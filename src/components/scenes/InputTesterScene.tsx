@@ -12,6 +12,7 @@ import { FlipInputModal2, FlipInputModalResult } from '../modals/FlipInputModal2
 import { Airship } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { CardUi4 } from '../ui4/CardUi4'
@@ -24,6 +25,7 @@ export function InputTesterScene() {
   // const walletIds = Object.keys(account.currencyWallets)
   const [value0, setValue0] = useState<string>('')
   const [value1, setValue1] = useState<string>('')
+  const [filledTextInputValue, setFilledTextInputValue] = useState<string>('')
   const walletId = selectedWallet?.wallet.id ?? ''
   const tokenId = selectedWallet?.tokenId ?? null
   const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
@@ -75,6 +77,9 @@ export function InputTesterScene() {
   return (
     <SceneWrapper scroll hasTabs hasHeader={false}>
       <View style={styles.headerContainer}>
+        <Space vertical={1}>
+          <FilledTextInput value={filledTextInputValue} onChangeText={setFilledTextInputValue} autoFocus={false} placeholder="Test FilledTextInput" />
+        </Space>
         <CardUi4>
           <ExchangedFlipInput2
             ref={exchangedFlipInputRef}
