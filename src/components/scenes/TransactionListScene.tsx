@@ -33,9 +33,6 @@ import { SearchDrawer } from '../themed/SearchDrawer'
 import { EmptyLoader, SectionHeader, SectionHeaderCentered } from '../themed/TransactionListComponents'
 import { TransactionListRow } from '../themed/TransactionListRow'
 import { TransactionListTop } from '../themed/TransactionListTop'
-import { InputTesterScene } from './InputTesterScene'
-
-const SHOW_INPUT_TESTER = false
 
 const AnimatedFlashList = Animated.createAnimatedComponent<FlashListProps<ListItem>>(FlashList)
 
@@ -272,10 +269,6 @@ function TransactionListComponent(props: Props) {
     },
     [handleChangeText, handleDoneSearching, handleStartSearching, isSearching, searchText]
   )
-
-  if (SHOW_INPUT_TESTER) {
-    return <InputTesterScene />
-  }
 
   return (
     <SceneWrapper accentColor={iconColor} avoidKeyboard hasTabs hasHeader hasNotifications renderDrawer={renderDrawer}>

@@ -73,7 +73,7 @@ export function InputTesterScene() {
   const returnKeyType: ReturnKeyType = 'done'
 
   return (
-    <SceneWrapper scroll hasTabs>
+    <SceneWrapper scroll hasTabs hasHeader={false}>
       <View style={styles.headerContainer}>
         <CardUi4>
           <ExchangedFlipInput2
