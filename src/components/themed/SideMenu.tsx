@@ -496,5 +496,5 @@ export function SideMenu(props: DrawerContentComponentProps) {
     if (!loggedIn) navigation.navigate('login')
   }, [loggedIn, navigation])
 
-  return !loggedIn ? <SideMenuComponent {...props} /> : <LoadingSplashScreen />
+  return loggedIn ? <SideMenuComponent {...props} /> : <LoadingSplashScreen />
 }
