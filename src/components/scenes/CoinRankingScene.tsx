@@ -1,27 +1,30 @@
-import { FlashList } from '@shopify/flash-list'
+import { FlashList, FlashListProps, ListRenderItemInfo } from '@shopify/flash-list'
 import * as React from 'react'
+import { useCallback } from 'react'
 import { TouchableOpacity, View } from 'react-native'
+import Animated from 'react-native-reanimated'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
+import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { asCoinranking, AssetSubText, CoinRanking, PercentChangeTimeFrame } from '../../types/coinrankTypes'
 import { useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { FlatListItem } from '../../types/types'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
 import { EdgeAnim } from '../common/EdgeAnim'
-import { SceneWrapper } from '../common/SceneWrapper'
+import { SceneWrapper, SceneWrapperInfo } from '../common/SceneWrapper'
 import { CoinRankRow } from '../data/row/CoinRankRow'
-import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
-import { SimpleTextInput, SimpleTextInputRef } from '../themed/SimpleTextInput'
+import { SearchDrawer } from '../themed/SearchDrawer'
+
+const AnimatedFlashList = Animated.createAnimatedComponent<FlashListProps<number>>(FlashList)
 
 const coinRanking: CoinRanking = { coinRankingDatas: [] }
 
@@ -56,21 +59,22 @@ const CoinRankingComponent = (props: Props) => {
   const [lastUsedFiat, setLastUsedFiat] = useState<string>(defaultIsoFiat)
 
   const mounted = React.useRef<boolean>(true)
-  const textInput = React.useRef<SimpleTextInputRef>(null)
   const timeoutHandler = React.useRef<Timeout | undefined>()
 
   const [requestDataSize, setRequestDataSize] = useState<number>(QUERY_PAGE_SIZE)
   const [dataSize, setDataSize] = useState<number>(0)
   const [searchText, setSearchText] = useState<string>('')
-  const [searching, setSearching] = useState<boolean>(false)
+  const [isSearching, setIsSearching] = useState<boolean>(false)
   const [percentChangeTimeFrame, setPercentChangeTimeFrame] = useState<PercentChangeTimeFrame>('hours24')
   const [assetSubText, setPriceSubText] = useState<AssetSubText>('marketCap')
+
+  const handleScroll = useSceneScrollHandler()
 
   const extraData = React.useMemo(() => ({ assetSubText, lastUsedFiat, percentChangeTimeFrame }), [assetSubText, lastUsedFiat, percentChangeTimeFrame])
 
   const { coinRankingDatas } = coinRanking
 
-  const renderItem = (itemObj: FlatListItem<number>) => {
+  const renderItem = (itemObj: ListRenderItemInfo<number>) => {
     const { index, item } = itemObj
     const currencyCode = coinRankingDatas[index]?.currencyCode ?? 'NO_CURRENCY_CODE'
     const rank = coinRankingDatas[index]?.rank ?? 'NO_RANK'
@@ -114,21 +118,17 @@ const CoinRankingComponent = (props: Props) => {
     setPriceSubText(newPriceSubText)
   })
 
-  const handleOnChangeText = useHandler((input: string) => {
-    setSearchText(input)
+  const handleStartSearching = useHandler(() => {
+    setIsSearching(true)
   })
-  const handleTextFieldFocus = useHandler(() => {
-    setSearching(true)
-  })
-  const handleSearchDone = useHandler(() => {
+
+  const handleDoneSearching = useHandler(() => {
     setSearchText('')
-    setSearching(false)
-    textInput.current?.blur()
+    setIsSearching(false)
   })
-  const handleSubmit = useHandler(() => {
-    if (searchText === '') {
-      setSearching(false)
-    }
+
+  const handleChangeText = useHandler((value: string) => {
+    setSearchText(value)
   })
 
   React.useEffect(() => {
@@ -205,31 +205,28 @@ const CoinRankingComponent = (props: Props) => {
   const timeFrameString = percentChangeStrings[percentChangeTimeFrame]
   const assetSubTextString = assetSubTextStrings[assetSubText]
 
+  const renderDrawer = useCallback(
+    (info: SceneWrapperInfo) => {
+      return (
+        <SearchDrawer
+          placeholder={lstrings.search_assets}
+          isSearching={isSearching}
+          searchText={searchText}
+          sceneWrapperInfo={info}
+          onStartSearching={handleStartSearching}
+          onDoneSearching={handleDoneSearching}
+          onChangeText={handleChangeText}
+        />
+      )
+    },
+    [handleChangeText, handleDoneSearching, handleStartSearching, isSearching, searchText]
+  )
+
   return (
-    <SceneWrapper hasTabs hasNotifications>
+    <SceneWrapper avoidKeyboard hasNotifications renderDrawer={renderDrawer}>
       {({ insetStyles }) => (
         <>
-          <View style={[styles.searchContainer, { paddingTop: insetStyles.paddingTop }]}>
-            <View style={styles.searchTextInputContainer}>
-              <SimpleTextInput
-                returnKeyType="search"
-                placeholder={lstrings.search_assets}
-                onChangeText={handleOnChangeText}
-                value={searchText ?? ''}
-                onFocus={handleTextFieldFocus}
-                onSubmitEditing={handleSubmit}
-                ref={textInput}
-                iconComponent={SearchIconAnimated}
-              />
-            </View>
-            {searching && (
-              <TouchableOpacity onPress={handleSearchDone} style={styles.searchDoneButton}>
-                <EdgeText style={styles.tappableHeaderText}>{lstrings.string_done_cap}</EdgeText>
-              </TouchableOpacity>
-            )}
-          </View>
-
-          <View style={styles.container}>
+          <View style={[styles.container, { paddingTop: insetStyles.paddingTop }]}>
             <View style={styles.rankView}>
               <EdgeText style={styles.rankText}>{lstrings.coin_rank_rank}</EdgeText>
             </View>
@@ -244,7 +241,7 @@ const CoinRankingComponent = (props: Props) => {
             </View>
           </View>
           <DividerLine marginRem={[0, 0, 0, 1]} />
-          <FlashList
+          <AnimatedFlashList
             estimatedItemSize={theme.rem(3.75)}
             data={listdata}
             extraData={extraData}
@@ -252,6 +249,7 @@ const CoinRankingComponent = (props: Props) => {
             onEndReachedThreshold={1}
             onEndReached={handleEndReached}
             contentContainerStyle={{ paddingBottom: insetStyles.paddingBottom }}
+            onScroll={handleScroll}
           />
         </>
       )}
@@ -275,15 +273,6 @@ const getStyles = cacheStyles((theme: Theme) => {
       alignItems: 'center',
       marginLeft: theme.rem(1),
       paddingRight: theme.rem(1)
-    },
-    searchContainer: {
-      flexDirection: 'row',
-      marginVertical: theme.rem(0.5),
-      marginHorizontal: theme.rem(1)
-    },
-    searchTextInputContainer: {
-      flex: 1,
-      flexDirection: 'column'
     },
     searchDoneButton: {
       justifyContent: 'center',
