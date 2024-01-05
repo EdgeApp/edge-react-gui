@@ -91,7 +91,6 @@ export interface Theme {
 
   backgroundImageServerUrls: string[]
   backgroundImage?: ImageProp
-  backgroundLoadingOverlay: string
 
   // Camera Overlay
   cameraOverlayColor: string

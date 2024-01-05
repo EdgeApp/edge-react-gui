@@ -127,7 +127,6 @@ export const edgeLight: Theme = {
   backgroundGradientEnd: { x: 0, y: 1 },
   backgroundImageServerUrls: ['https://content.edge.app'],
   backgroundImage: undefined,
-  backgroundLoadingOverlay: `rgba(123,123,123,.2)`,
 
   // Camera Overlay
   cameraOverlayColor: palette.gray,

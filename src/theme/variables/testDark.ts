@@ -133,7 +133,6 @@ export const testDark: Theme = {
   backgroundGradientEnd: { x: 1, y: 0 },
   backgroundImageServerUrls: ['https://content.edge.app'],
   backgroundImage: undefined,
-  backgroundLoadingOverlay: 'rgba(123,123,123,.2)',
 
   // Camera Overlay
   cameraOverlayColor: palette.black,
