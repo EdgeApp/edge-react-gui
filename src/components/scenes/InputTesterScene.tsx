@@ -15,7 +15,7 @@ import { MainButton } from '../themed/MainButton'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { CardUi4 } from '../ui4/CardUi4'
 
-export function ExchangedFlipInputTester(props: {}) {
+export function InputTesterScene() {
   const theme = useTheme()
   const styles = getStyles(theme)
   const selectedWallet = useSelectedWallet()

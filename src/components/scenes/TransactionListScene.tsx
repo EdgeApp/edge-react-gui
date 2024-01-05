@@ -33,7 +33,7 @@ import { SearchDrawer } from '../themed/SearchDrawer'
 import { EmptyLoader, SectionHeader, SectionHeaderCentered } from '../themed/TransactionListComponents'
 import { TransactionListRow } from '../themed/TransactionListRow'
 import { TransactionListTop } from '../themed/TransactionListTop'
-import { ExchangedFlipInputTester } from './ExchangedFlipInputTester'
+import { InputTesterScene } from './InputTesterScene'
 
 const SHOW_FLIP_INPUT_TESTER = false
 
@@ -284,7 +284,7 @@ function TransactionListComponent(props: Props) {
             style={StyleSheet.absoluteFill}
           />
           {SHOW_FLIP_INPUT_TESTER ? (
-            <ExchangedFlipInputTester />
+            <InputTesterScene />
           ) : (
             <AnimatedFlashList
               ref={flashList}
