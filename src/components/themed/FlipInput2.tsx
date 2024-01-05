@@ -215,10 +215,11 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
 
 const AnimatedNumericInput = Animated.createAnimatedComponent(NumericInput)
 
-const ContainerView = styled(View)({
+const ContainerView = styled(View)(theme => ({
   flexDirection: 'row',
-  alignItems: 'center'
-})
+  alignItems: 'center',
+  margin: theme.rem(0.5)
+}))
 
 const InnerView = styled(Animated.View)<{
   focusAnimation: SharedValue<number>
