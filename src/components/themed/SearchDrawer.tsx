@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { useDerivedValue } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useDrawerOpenRatio } from '../../state/SceneDrawerState'
@@ -27,8 +26,6 @@ export const SearchDrawer = (props: SearchDrawerProps) => {
   const textInputRef = React.useRef<SimpleTextInputRef>(null)
 
   const { drawerOpenRatio, setKeepOpen } = useDrawerOpenRatio()
-
-  const inputScale = useDerivedValue(() => drawerOpenRatio.value)
 
   const handleSearchChangeText = useHandler((text: string) => {
     onChangeText(text)
@@ -73,7 +70,7 @@ export const SearchDrawer = (props: SearchDrawerProps) => {
           onFocus={handleSearchFocus}
           ref={textInputRef}
           iconComponent={SearchIconAnimated}
-          scale={inputScale}
+          scale={drawerOpenRatio}
         />
       </Space>
     </SceneDrawerWrapper>
