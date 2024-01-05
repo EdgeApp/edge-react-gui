@@ -95,7 +95,7 @@ export const WcConnectionsScene = (props: Props) => {
         <EdgeText style={styles.subTitle}>{lstrings.wc_walletconnect_subtitle}</EdgeText>
         <MainButton
           label={connecting ? undefined : lstrings.wc_walletconnect_new_connection_button}
-          type="secondary"
+          type="primary"
           marginRem={[1, 0.5]}
           onPress={async () => await handleNewConnectionPress()}
           alignSelf="center"
