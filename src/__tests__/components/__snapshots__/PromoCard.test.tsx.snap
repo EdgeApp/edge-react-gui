@@ -47,8 +47,8 @@ exports[`PromoCard should render 1`] = `
     style={
       [
         {
+          "alignSelf": "stretch",
           "borderRadius": 16,
-          "flex": 1,
         },
         {
           "marginBottom": 11,
@@ -62,6 +62,7 @@ exports[`PromoCard should render 1`] = `
           "paddingRight": 11,
           "paddingTop": 11,
         },
+        undefined,
       ]
     }
   >

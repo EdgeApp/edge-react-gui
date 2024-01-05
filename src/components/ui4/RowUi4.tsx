@@ -131,10 +131,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.tileBackground,
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1
+    alignSelf: 'stretch'
   },
   content: {
-    flex: 1
+    flexDirection: 'column'
   },
   iconContainer: {
     marginRight: theme.rem(0.25)
