@@ -89,9 +89,6 @@ export interface Theme {
   backgroundGradientStart: { x: number; y: number }
   backgroundGradientEnd: { x: number; y: number }
 
-  backgroundImageServerUrls: string[]
-  backgroundImage?: ImageProp
-
   // Camera Overlay
   cameraOverlayColor: string
   cameraOverlayOpStart: number

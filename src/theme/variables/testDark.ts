@@ -131,8 +131,6 @@ export const testDark: Theme = {
   backgroundGradientColors: [palette.darkestNavy, palette.darkAqua],
   backgroundGradientStart: { x: 0, y: 0 },
   backgroundGradientEnd: { x: 1, y: 0 },
-  backgroundImageServerUrls: ['https://content.edge.app'],
-  backgroundImage: undefined,
 
   // Camera Overlay
   cameraOverlayColor: palette.black,

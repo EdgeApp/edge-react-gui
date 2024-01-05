@@ -125,8 +125,6 @@ export const testLight: Theme = {
   backgroundGradientColors: [palette.lightestGray, palette.lightestGray],
   backgroundGradientStart: { x: 0, y: 0 },
   backgroundGradientEnd: { x: 0, y: 1 },
-  backgroundImageServerUrls: ['https://content.edge.app'],
-  backgroundImage: undefined,
 
   // Camera Overlay
   cameraOverlayColor: palette.gray,

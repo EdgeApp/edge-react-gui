@@ -14,22 +14,18 @@ import { cacheStyles, Theme, useTheme } from '../../components/services/ThemeCon
 import { ENV } from '../../env'
 import { ExperimentConfig, getExperimentConfig } from '../../experimentConfig'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
-import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { ImageProp } from '../../types/Theme'
 import { GuiTouchIdInfo } from '../../types/types'
 import { logEvent, trackError } from '../../util/tracking'
-import { pickRandom } from '../../util/utils'
 import { withServices } from '../hoc/withServices'
 import { showHelpModal } from '../modals/HelpModal'
 import { UpdateModal } from '../modals/UpdateModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { getBackgroundImage } from './../../util/ThemeCache'
 import { LoadingScene } from './LoadingScene'
 
 // Sneak the BlurView over to the login UI:
@@ -74,11 +70,6 @@ export function LoginSceneComponent(props: Props) {
   // ---------------------------------------------------------------------
   // Effects
   // ---------------------------------------------------------------------
-
-  const [backgroundImage = theme.backgroundImage] = useAsyncValue<ImageProp | undefined>(async () => {
-    const url = pickRandom(theme.backgroundImageServerUrls)
-    return await getBackgroundImage(disklet, url, theme.backgroundImage)
-  }, [disklet, theme])
 
   React.useEffect(() => {
     const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
@@ -198,7 +189,6 @@ export function LoginSceneComponent(props: Props) {
         appConfig={config}
         appId={config.appId}
         appName={config.appNameShort}
-        backgroundImage={backgroundImage}
         context={context}
         fontDescription={fontDescription}
         initialLoginId={nextLoginId ?? undefined}
@@ -231,8 +221,7 @@ const dummyTouchIdInfo: GuiTouchIdInfo = {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
-    paddingTop: StatusBar.currentHeight,
-    backgroundColor: theme.backgroundGradientColors[0]
+    paddingTop: StatusBar.currentHeight
   }
 }))
 
