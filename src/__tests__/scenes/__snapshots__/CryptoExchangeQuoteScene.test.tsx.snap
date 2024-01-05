@@ -43,7 +43,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
         {
           "bottom": 0,
           "left": 0,
-          "padding": 0,
+          "padding": 11,
           "paddingBottom": undefined,
           "right": 0,
           "top": 64,
@@ -153,8 +153,8 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
               "alignItems": "center",
               "flexDirection": "row",
               "justifyContent": "space-between",
-              "marginVertical": 22,
-              "paddingHorizontal": 22,
+              "marginVertical": 11,
+              "paddingHorizontal": 11,
               "width": "100%",
             }
           }
@@ -215,10 +215,10 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                 "borderRadius": 16,
               },
               {
-                "marginBottom": 0,
-                "marginLeft": 22,
-                "marginRight": 22,
-                "marginTop": 0,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
               },
               {
                 "paddingBottom": 11,
@@ -253,10 +253,10 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                   "justifyContent": "center",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -413,7 +413,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                   "flexDirection": "column",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "marginLeft": 22,
+                  "marginLeft": 11,
                   "marginRight": 6,
                 }
               }
@@ -554,7 +554,14 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
               </View>
             </View>
           </View>
-          <View>
+          <View
+            style={
+              {
+                "margin": 11,
+                "marginTop": 0,
+              }
+            }
+          >
             <View
               style={
                 [
@@ -718,8 +725,8 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
               "alignItems": "center",
               "flexDirection": "row",
               "justifyContent": "space-between",
-              "marginVertical": 22,
-              "paddingHorizontal": 22,
+              "marginVertical": 11,
+              "paddingHorizontal": 11,
               "width": "100%",
             }
           }
@@ -780,10 +787,10 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                 "borderRadius": 16,
               },
               {
-                "marginBottom": 0,
-                "marginLeft": 22,
-                "marginRight": 22,
-                "marginTop": 0,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
               },
               {
                 "paddingBottom": 11,
@@ -818,10 +825,10 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                   "justifyContent": "center",
                 },
                 {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                 },
               ]
             }
@@ -978,7 +985,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                   "flexDirection": "column",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "marginLeft": 22,
+                  "marginLeft": 11,
                   "marginRight": 6,
                 }
               }
@@ -1124,8 +1131,9 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
           style={
             {
               "alignItems": "center",
-              "paddingBottom": 22,
-              "paddingTop": 22,
+              "flexDirection": "row",
+              "justifyContent": "center",
+              "marginVertical": 11,
             }
           }
         >
@@ -1147,7 +1155,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                 "text": undefined,
               }
             }
-            accessible={true}
+            accessible={false}
             collapsable={false}
             focusable={true}
             onClick={[Function]}
@@ -1159,83 +1167,104 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
             onStartShouldSetResponder={[Function]}
             style={
               {
+                "alignSelf": "stretch",
+                "borderRadius": 16,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
                 "opacity": 1,
+                "paddingBottom": 22,
+                "paddingLeft": 22,
+                "paddingRight": 22,
+                "paddingTop": 22,
               }
             }
           >
             <View
               style={
-                [
-                  {
-                    "alignSelf": "stretch",
-                    "borderRadius": 16,
-                  },
-                  {
-                    "marginBottom": 11,
-                    "marginLeft": 11,
-                    "marginRight": 11,
-                    "marginTop": 11,
-                  },
-                  {
-                    "paddingBottom": 11,
-                    "paddingLeft": 11,
-                    "paddingRight": 11,
-                    "paddingTop": 11,
-                  },
-                  undefined,
-                ]
+                {
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                }
               }
             >
               <View
                 style={
-                  {
-                    "backgroundColor": "rgba(255, 255, 255, .1)",
-                    "borderRadius": 16,
-                    "bottom": 0,
-                    "left": 0,
-                    "overflow": "hidden",
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
+                  [
+                    {
+                      "overflow": "hidden",
+                    },
+                    {
+                      "aspectRatio": 1,
+                      "height": 45,
+                      "width": 45,
+                    },
+                  ]
                 }
-              />
+              >
+                <FastImageView
+                  resizeMode="contain"
+                  source={
+                    {
+                      "uri": "https://content.edge.app/exchangeIcons/bitcoin/icon.png",
+                    }
+                  }
+                  style={
+                    {
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    }
+                  }
+                />
+              </View>
               <View
                 style={
                   {
-                    "alignItems": "center",
-                    "flexDirection": "row",
+                    "flexDirection": "column",
+                    "paddingHorizontal": 11,
                   }
                 }
               >
                 <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "aspectRatio": 1,
-                        "height": 45,
-                        "width": 45,
-                      },
-                    ]
+                    {
+                      "flexDirection": "row",
+                    }
                   }
                 >
-                  <FastImageView
-                    resizeMode="contain"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/exchangeIcons/bitcoin/icon.png",
-                      }
-                    }
+                  <Text
                     style={
                       {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                      }
+                    }
+                  >
+                    Powered by 
+                  </Text>
+                  <Text
+                    style={
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
                       }
                     }
                   />
@@ -1243,77 +1272,44 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                 <View
                   style={
                     {
-                      "flexDirection": "column",
-                      "paddingHorizontal": 11,
+                      "flexDirection": "row",
                     }
                   }
                 >
-                  <View
+                  <Text
                     style={
                       {
-                        "flexDirection": "row",
+                        "color": "#87939E",
+                        "fontSize": 17,
                       }
                     }
                   >
-                    <Text
-                      style={
-                        {
-                          "color": "#3dd9f4",
-                          "fontSize": 17,
-                        }
-                      }
-                    >
-                      Powered by 
-                    </Text>
-                    <Text
-                      style={
-                        {
-                          "color": "#3dd9f4",
-                          "fontSize": 17,
-                        }
-                      }
-                    />
-                  </View>
-                  <View
-                    style={
-                      {
-                        "flexDirection": "row",
-                      }
-                    }
-                  >
-                    <Text
-                      style={
-                        {
-                          "color": "#87939E",
-                          "fontSize": 17,
-                        }
-                      }
-                    >
-                      Tap to Change Provider
-                    </Text>
-                  </View>
+                    Tap to Change Provider
+                  </Text>
                 </View>
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#00f1a2",
-                        "fontSize": 22,
-                      },
-                      undefined,
-                      {
-                        "fontFamily": "Ionicons",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
-                    ]
-                  }
-                >
-                  
-                </Text>
               </View>
+              <Text
+                allowFontScaling={false}
+                style={
+                  [
+                    {
+                      "color": "#00f1a2",
+                      "fontSize": 22,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
             </View>
           </View>
         </View>
@@ -1349,10 +1345,10 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
             {
               "alignSelf": "stretch",
               "borderRadius": 16,
-              "marginBottom": 22,
-              "marginLeft": 22,
-              "marginRight": 22,
-              "marginTop": 22,
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
               "opacity": 1,
               "paddingBottom": 11,
               "paddingLeft": 11,
@@ -1499,7 +1495,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
             [
               {
                 "marginBottom": 22,
-                "marginTop": 11,
+                "marginTop": 45,
               },
               {
                 "alignItems": "center",

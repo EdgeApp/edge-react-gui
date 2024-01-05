@@ -14,6 +14,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
         },
         {
           "alignItems": "center",
+          "marginHorizontal": 11,
           "paddingTop": 11,
         },
       ]
@@ -58,9 +59,9 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
         label="MAX"
         marginRem={
           [
-            1.2,
+            0.7,
             0,
-            0,
+            1,
           ]
         }
         onPress={[Function]}

@@ -113,7 +113,9 @@ exports[`Request should render with loaded props 1`] = `
         }
       }
     >
-      <CardUi4>
+      <CardUi4
+        marginRem={0}
+      >
         <Memo
           forceField="crypto"
           headerCallback={[Function]}
