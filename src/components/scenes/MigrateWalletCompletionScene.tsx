@@ -239,12 +239,11 @@ const MigrateWalletCompletionComponent = (props: Props) => {
 
   return (
     <SceneWrapper background="theme">
-      {({ safeAreaInsets }) => (
-        <View style={[styles.content, { marginBottom: -safeAreaInsets.bottom }]}>
+      {({ insetStyles }) => (
+        <View style={[styles.content, insetStyles]}>
           <SceneHeader title={lstrings.migrate_wallets_title} withTopMargin />
           <FlashList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ paddingBottom: safeAreaInsets.bottom, paddingTop: theme.rem(0.5) }}
             data={sortedMigrateWalletList}
             estimatedItemSize={theme.rem(4.25)}
             extraData={itemStatus}

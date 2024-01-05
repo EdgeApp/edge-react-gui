@@ -138,12 +138,12 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
 
   return (
     <SceneWrapper background="theme">
-      {({ safeAreaInsets }) => (
-        <View style={[styles.content, { marginBottom: -safeAreaInsets.bottom }]}>
+      {({ insetStyles }) => (
+        <View style={[styles.content, { ...insetStyles, paddingBottom: 0 }]}>
           <SceneHeader title={lstrings.migrate_wallets_select_crypto_title} withTopMargin />
           <FlashList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ paddingBottom: safeAreaInsets.bottom, paddingTop: theme.rem(0.5) }}
+            contentContainerStyle={{ paddingBottom: insetStyles.paddingBottom * 3 }}
             data={migrateWalletList}
             estimatedItemSize={theme.rem(4.25)}
             extraData={selectedItems}
@@ -151,7 +151,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
             keyExtractor={keyExtractor}
             renderItem={renderCreateWalletRow}
           />
-          {renderNextButton}
+          <View style={{ bottom: insetStyles.paddingBottom }}>{renderNextButton}</View>
         </View>
       )}
     </SceneWrapper>
