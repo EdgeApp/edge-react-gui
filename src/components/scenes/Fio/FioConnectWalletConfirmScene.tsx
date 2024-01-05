@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { ScrollView } from 'react-native'
 
 import { lstrings } from '../../../locales/strings'
 import { CcWalletMap } from '../../../reducers/FioReducer'
@@ -185,36 +184,34 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper background="theme">
-        <ScrollView>
-          <Tile type="static" title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
-          {walletsToConnect.length ? (
-            <Tile type="static" title={lstrings.title_fio_connect_to_wallet}>
-              {walletsToConnect.map(this.renderWalletLine)}
-            </Tile>
-          ) : null}
+      <SceneWrapper scroll background="theme">
+        <Tile type="static" title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
+        {walletsToConnect.length ? (
+          <Tile type="static" title={lstrings.title_fio_connect_to_wallet}>
+            {walletsToConnect.map(this.renderWalletLine)}
+          </Tile>
+        ) : null}
 
-          {walletsToDisconnect.length ? (
-            <Tile type="static" title={lstrings.title_fio_disconnect_wallets}>
-              {walletsToDisconnect.map(this.renderWalletLine)}
-            </Tile>
-          ) : null}
+        {walletsToDisconnect.length ? (
+          <Tile type="static" title={lstrings.title_fio_disconnect_wallets}>
+            {walletsToDisconnect.map(this.renderWalletLine)}
+          </Tile>
+        ) : null}
 
-          <Radio value={acknowledge} onPress={this.check} marginRem={[2, 2, 0]}>
-            <EdgeText style={styles.checkTitle} numberOfLines={4}>
-              {lstrings.fio_connect_checkbox_text}
-            </EdgeText>
-          </Radio>
-          {showSlider && (
-            <Slider
-              parentStyle={styles.slider}
-              onSlidingComplete={this.confirm}
-              disabled={!acknowledge || connectWalletsLoading}
-              disabledText={lstrings.send_confirmation_slide_to_confirm}
-              showSpinner={connectWalletsLoading}
-            />
-          )}
-        </ScrollView>
+        <Radio value={acknowledge} onPress={this.check} marginRem={[2, 2, 0]}>
+          <EdgeText style={styles.checkTitle} numberOfLines={4}>
+            {lstrings.fio_connect_checkbox_text}
+          </EdgeText>
+        </Radio>
+        {showSlider && (
+          <Slider
+            parentStyle={styles.slider}
+            onSlidingComplete={this.confirm}
+            disabled={!acknowledge || connectWalletsLoading}
+            disabledText={lstrings.send_confirmation_slide_to_confirm}
+            showSpinner={connectWalletsLoading}
+          />
+        )}
       </SceneWrapper>
     )
   }

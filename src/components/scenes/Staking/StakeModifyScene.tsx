@@ -2,7 +2,6 @@ import { eq, gt, toFixed } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../../locales/strings'
@@ -479,21 +478,14 @@ const StakeModifySceneComponent = (props: Props) => {
 
   return (
     <SceneWrapper scroll background="theme">
-      <ScrollView>
-        <SceneHeader style={styles.sceneHeader} title={title} underline withTopMargin>
-          {icon}
-        </SceneHeader>
-        {renderChangeQuoteAmountTiles(modification)}
-        {renderWarning()}
-        <View style={styles.footer}>
-          <Slider
-            onSlidingComplete={handleSlideComplete}
-            disabled={isSliderDisabled}
-            showSpinner={sliderLocked}
-            disabledText={lstrings.stake_disabled_slider}
-          />
-        </View>
-      </ScrollView>
+      <SceneHeader style={styles.sceneHeader} title={title} underline withTopMargin>
+        {icon}
+      </SceneHeader>
+      {renderChangeQuoteAmountTiles(modification)}
+      {renderWarning()}
+      <View style={styles.footer}>
+        <Slider onSlidingComplete={handleSlideComplete} disabled={isSliderDisabled} showSpinner={sliderLocked} disabledText={lstrings.stake_disabled_slider} />
+      </View>
     </SceneWrapper>
   )
 }

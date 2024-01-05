@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { ScrollView } from 'react-native'
 
 import { NotificationSettings, updateNotificationSettings } from '../../actions/NotificationActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
@@ -43,41 +42,39 @@ export const NotificationScene = (props: Props) => {
   )
 
   return (
-    <SceneWrapper background="theme" hasTabs={false}>
-      <ScrollView>
-        <SettingsSwitchRow
-          key="marketing-notifications"
-          label={lstrings.settings_marketing_notifications_switch}
-          value={!settings.ignoreMarketing}
-          onPress={async () => await handlePressToggleSetting('ignoreMarketing')}
-        />
-        <SettingsSwitchRow
-          key="price-notifications"
-          label={lstrings.settings_price_notifications_switch}
-          value={!settings.ignorePriceChanges}
-          onPress={async () => await handlePressToggleSetting('ignorePriceChanges')}
-        />
-        {pluginIds.map(pluginId => {
-          const { currencyInfo } = currencyConfigs[pluginId]
-          const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
+    <SceneWrapper scroll background="theme" hasTabs={false}>
+      <SettingsSwitchRow
+        key="marketing-notifications"
+        label={lstrings.settings_marketing_notifications_switch}
+        value={!settings.ignoreMarketing}
+        onPress={async () => await handlePressToggleSetting('ignoreMarketing')}
+      />
+      <SettingsSwitchRow
+        key="price-notifications"
+        label={lstrings.settings_price_notifications_switch}
+        value={!settings.ignorePriceChanges}
+        onPress={async () => await handlePressToggleSetting('ignorePriceChanges')}
+      />
+      {pluginIds.map(pluginId => {
+        const { currencyInfo } = currencyConfigs[pluginId]
+        const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
 
-          const handlePress = () => {
-            if (!settings.ignorePriceChanges) {
-              navigation.navigate('currencyNotificationSettings', {
-                currencyInfo
-              })
-            }
+        const handlePress = () => {
+          if (!settings.ignorePriceChanges) {
+            navigation.navigate('currencyNotificationSettings', {
+              currencyInfo
+            })
           }
+        }
 
-          if (keysOnlyMode) return null
+        if (keysOnlyMode) return null
 
-          return (
-            <SettingsTappableRow disabled={settings.ignorePriceChanges} key={pluginId} label={currencyInfo.displayName} onPress={handlePress}>
-              <CryptoIconUi4 pluginId={pluginId} tokenId={null} />
-            </SettingsTappableRow>
-          )
-        })}
-      </ScrollView>
+        return (
+          <SettingsTappableRow disabled={settings.ignorePriceChanges} key={pluginId} label={currencyInfo.displayName} onPress={handlePress}>
+            <CryptoIconUi4 pluginId={pluginId} tokenId={null} />
+          </SettingsTappableRow>
+        )
+      })}
     </SceneWrapper>
   )
 }
