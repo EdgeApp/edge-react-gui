@@ -4,7 +4,6 @@ import { LinearGradientProps } from 'react-native-linear-gradient'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useHandler } from '../../hooks/useHandler'
-import { styles } from '../modals/TransferModal'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { CardUi4 } from './CardUi4'
@@ -31,7 +30,7 @@ export const HomeCardUi4 = (props: Props) => {
   })
 
   return (
-    <CardUi4 gradientBackground={gradientBackground} nodeBackground={nodeBackground} onPress={handlePress}>
+    <CardUi4 gradientBackground={gradientBackground} nodeBackground={nodeBackground} onPress={handlePress} fill>
       <View style={styles.verticalSplitContainer}>
         <View style={styles.titleContainer}>
           <EdgeText style={theme.cardTextShadow}>{title}</EdgeText>
