@@ -116,12 +116,18 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     const hasKeyboardAnimation = keyboardAnimation != null
     const isFuncChildren = typeof children === 'function'
 
+    // Derive the keyboard height by getting the difference between screen height
+    // and trackerValue. This value should be from zero to keyboard height
+    // depending on the open state of the keyboard
+    const keyboardHeight = frame.height - trackerValue
+    const isKeyboardOpen = keyboardHeight !== 0
+
     // These are the safeAreaInsets including the app's header and tab-bar
     // heights.
     const insets: EdgeInsets = {
       top: safeAreaInsets.top + (hasHeader ? headerBarHeight : 0),
       right: safeAreaInsets.right,
-      bottom: (isLightAccount ? notificationHeight : 0) + (hasTabs ? MAX_TAB_BAR_HEIGHT : safeAreaInsets.bottom),
+      bottom: (isLightAccount ? notificationHeight : 0) + (hasTabs ? MAX_TAB_BAR_HEIGHT : isKeyboardOpen ? 0 : safeAreaInsets.bottom),
       left: safeAreaInsets.left
     }
 
