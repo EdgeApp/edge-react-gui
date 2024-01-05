@@ -47,13 +47,12 @@ interface Props extends EdgeSceneProps<'transactionDetails'> {
 export interface TransactionDetailsParams {
   edgeTransaction: EdgeTransaction
   walletId: string
-  tokenId?: string
 }
 
 const TransactionDetailsComponent = (props: Props) => {
   const { navigation, route, wallet } = props
-  const { edgeTransaction: transaction, tokenId, walletId } = route.params
-  const { metadata = {}, action, nativeAmount, date, currencyCode, txid } = transaction
+  const { edgeTransaction: transaction, walletId } = route.params
+  const { currencyCode, metadata = {}, chainAssetAction, nativeAmount, date, tokenId, txid } = transaction
   const { currencyInfo } = wallet
 
   const theme = useTheme()
@@ -75,7 +74,7 @@ const TransactionDetailsComponent = (props: Props) => {
   const splitCat =
     metadata?.category != null || txActionSplitCat == null
       ? splitCategory(
-          metadata?.category,
+          metadata?.category ?? undefined,
           // Pick the right default:
           direction === 'receive' ? 'income' : 'expense'
         )
@@ -93,7 +92,7 @@ const TransactionDetailsComponent = (props: Props) => {
   })
   const [acceleratedTx, setAcceleratedTx] = React.useState<null | EdgeTransaction>(null)
 
-  const { name = '' } = localMetadata
+  const name = localMetadata.name ?? ''
 
   // #region Crypto Fiat Rows
 
@@ -237,13 +236,19 @@ const TransactionDetailsComponent = (props: Props) => {
     }
     transaction.metadata = mergedMetadata
 
-    wallet.saveTxMetadata(transaction.txid, transaction.currencyCode, transaction.metadata).catch(error => showError(error))
+    wallet
+      .saveTxMetadata({
+        txid: transaction.txid,
+        tokenId: transaction.tokenId,
+        metadata: transaction.metadata
+      })
+      .catch(error => showError(error))
 
     setLocalMetadata(mergedMetadata)
   }
 
   const personLabel = direction === 'receive' ? lstrings.transaction_details_sender : lstrings.transaction_details_recipient
-  const personName = action != null ? TX_ACTION_LABEL_MAP[action.type] : name !== '' ? name : personLabel
+  const personName = chainAssetAction != null ? TX_ACTION_LABEL_MAP[chainAssetAction.assetActionType] : name !== '' ? name : personLabel
   const personHeader = sprintf(lstrings.transaction_details_person_name, personLabel)
 
   // spendTargets recipient addresses format

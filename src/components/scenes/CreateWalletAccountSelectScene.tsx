@@ -12,7 +12,7 @@ import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getTokenIdForced, getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
 import { ButtonsContainer } from '../buttons/ButtonsContainer'
@@ -62,13 +62,14 @@ export const CreateWalletAccountSelectScene = (props: Props) => {
     `${activationCost} ${selectedWalletType.currencyCode}`
   )
   const confirmMessageSyntax = sprintf(lstrings.create_wallet_account_make_payment_2s, selectedWalletType.currencyCode, existingCoreWallet.name)
-  const tokenId = getTokenId(account, existingCoreWallet.currencyInfo.pluginId, selectedWalletType.currencyCode)
+  const tokenId = getTokenIdForced(account, existingCoreWallet.currencyInfo.pluginId, selectedWalletType.currencyCode)
 
   const [isCreatingWallet, setIsCreatingWallet] = React.useState(true)
   const [walletId, setWalletId] = React.useState('')
 
   const paymentWallet = account.currencyWallets[walletId]
   const isRenderSelect = walletId === '' || walletAccountActivationQuoteError
+  const paymentTokenId = getWalletTokenId(paymentWallet, paymentCurrencyCode)
 
   const handleRenameAndReturnWallet = useHandler(async () => {
     await existingCoreWallet.renameWallet(accountName)
@@ -132,9 +133,9 @@ export const CreateWalletAccountSelectScene = (props: Props) => {
           </Card>
         ) : (
           <IconDataRow
-            icon={<CryptoIcon pluginId={paymentWallet.currencyInfo.pluginId} sizeRem={2} />}
+            icon={<CryptoIcon pluginId={paymentWallet.currencyInfo.pluginId} tokenId={null} sizeRem={2} />}
             leftText={getWalletName(paymentWallet)}
-            leftSubtext={`${lstrings.send_confirmation_balance}: ${paymentWallet.balances[paymentCurrencyCode]} ${paymentCurrencyCode}`}
+            leftSubtext={`${lstrings.send_confirmation_balance}: ${paymentWallet.balanceMap.get(paymentTokenId)} ${paymentCurrencyCode}`}
             rightText={`${paymentDenominationSymbol} ${amount} ${paymentCurrencyCode}`}
             rightSubText={`≈ ${activationCost} ${selectedWalletType.currencyCode}`}
           />

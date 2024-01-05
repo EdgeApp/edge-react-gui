@@ -30,7 +30,7 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { zeroString } from '../../../util/utils'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
@@ -135,10 +135,10 @@ export const LoanManageSceneComponent = (props: Props) => {
 
   // Src/dest Wallet Picker
   const wallets = useWatch(account, 'currencyWallets')
-  const hardDebtTokenId = React.useMemo(() => getTokenId(account, borrowEnginePluginId, 'USDC'), [account, borrowEnginePluginId])
-  const hardCollateralTokenId = React.useMemo(() => getTokenId(account, borrowEnginePluginId, 'WBTC'), [account, borrowEnginePluginId])
+  const hardDebtTokenId = React.useMemo(() => getTokenIdForced(account, borrowEnginePluginId, 'USDC'), [account, borrowEnginePluginId])
+  const hardCollateralTokenId = React.useMemo(() => getTokenIdForced(account, borrowEnginePluginId, 'WBTC'), [account, borrowEnginePluginId])
   const hardAllowedCollateralAssets = [{ pluginId: borrowEnginePluginId, tokenId: hardCollateralTokenId }]
-  if (loanManageType === 'loan-manage-deposit') hardAllowedCollateralAssets.push({ pluginId: 'bitcoin', tokenId: undefined })
+  if (loanManageType === 'loan-manage-deposit') hardAllowedCollateralAssets.push({ pluginId: 'bitcoin', tokenId: null })
   const hardAllowedDebtAssets = [{ pluginId: borrowEnginePluginId, tokenId: hardDebtTokenId }]
 
   // Selected debt/collateral
@@ -261,7 +261,7 @@ export const LoanManageSceneComponent = (props: Props) => {
                 nativeAmount: actionNativeAmount,
                 walletId: borrowEngineWallet.id,
                 tokenId: hardAllowedDebtAssets[0].tokenId,
-                fromTokenId: selectedAsset.customAsset != null ? hardAllowedCollateralAssets[0].tokenId : undefined
+                fromTokenId: selectedAsset.customAsset != null ? hardAllowedCollateralAssets[0].tokenId : null
               }
             ]
           }

@@ -12,7 +12,7 @@ import { getExchangeDenominationFromState } from '../../../selectors/Denominatio
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { FioAddress, FioRequest } from '../../../types/types'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import {
   addToFioAddressCache,
   cancelFioRequest,
@@ -373,7 +373,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     }
 
     const { tokenCode } = convertFIOToEdgeCodes(pluginId, content.chain_code.toUpperCase(), content.token_code.toUpperCase())
-    const tokenId = getTokenId(account, pluginId, tokenCode)
+    const tokenId = getTokenIdForced(account, pluginId, tokenCode)
     const allowedAssets = [{ pluginId, tokenId }]
 
     const result = await Airship.show<WalletListResult>(bridge => (
@@ -398,7 +398,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
 
     const parsedUri = await currencyWallet.parseUri(pendingRequest.content.payee_public_address, currencyCode)
     const { pluginId } = currencyWallet.currencyInfo
-    const tokenId = getTokenId(account, pluginId, currencyCode)
+    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
     const memos: EdgeMemo[] | undefined = parsedUri.uniqueIdentifier != null ? [{ type: 'text', value: parsedUri.uniqueIdentifier }] : undefined
     const sendParams: SendScene2Params = {
@@ -406,6 +406,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       fioPendingRequest: pendingRequest,
       tokenId,
       spendInfo: {
+        tokenId,
         metadata: parsedUri.metadata,
         spendTargets: [
           {

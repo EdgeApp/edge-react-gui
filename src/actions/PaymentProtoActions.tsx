@@ -20,7 +20,7 @@ import {
 } from '../types/PaymentProtoTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { EdgeAsset, StringMap } from '../types/types'
-import { getTokenId } from '../util/CurrencyInfoHelpers'
+import { getTokenId, getTokenIdForced } from '../util/CurrencyInfoHelpers'
 
 export interface LaunchPaymentProtoParams {
   wallet?: EdgeCurrencyWallet
@@ -130,7 +130,7 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
     if (paymentProtoSupportedPluginIds.find(id => id === pluginId) == null) continue
 
     if (chain === currency) {
-      paymentAssets.push({ pluginId })
+      paymentAssets.push({ pluginId, tokenId: null })
       paymentCurrencies.push(chain)
     } else {
       const edgeCurrencyCode = CURRENCY_MAP[currency] ?? currency
@@ -206,9 +206,11 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
   // This is an additional buffer because the protocol doesn't discount segwit
   // transactions and we want to make sure the transaction succeeds.
   const { pluginId } = selectedWallet.currencyInfo
+  const tokenId = getTokenIdForced(account, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode ?? selectedWallet.currencyInfo.currencyCode)
+
   if (typeof requiredFeeRate === 'number' && SPECIAL_CURRENCY_INFO[pluginId].hasSegwit) requiredFeeRate *= 1.8
   const spendInfo: EdgeSpendInfo = {
-    currencyCode: selectedCurrencyCode,
+    tokenId,
     // Reverse the outputs since Anypay puts the merchant amount first. Making it last will have
     // amount shown in a large Amount Tile. Anypay fee will show compressed in a combined
     // address/amount Tile
@@ -231,7 +233,7 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
       scamWarning: hideScamWarning
     },
     spendInfo,
-    tokenId: getTokenId(account, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode ?? selectedWallet.currencyInfo.currencyCode),
+    tokenId,
     lockTilesMap: { amount: true, address: true, fee: requiredFeeRate != null },
     onBack,
     onDone: async (error: Error | null, edgeTransaction?: EdgeTransaction) => {

@@ -2,13 +2,14 @@ import '@walletconnect/react-native-compat'
 
 import { Core } from '@walletconnect/core'
 import Web3Wallet, { Web3WalletTypes } from '@walletconnect/web3wallet'
-import { asNumber, asObject, asOptional, asString, asUnknown } from 'cleaners'
+import { asNumber, asObject, asString, asUnknown } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { getAccounts, getClient, getWalletIdFromSessionNamespace, waitingClients, walletConnectClient } from '../../hooks/useWalletConnect'
+import { asLegacyTokenId } from '../../types/types'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal'
 import { Airship, showError } from '../services/AirshipInstance'
 
@@ -99,7 +100,7 @@ export const WalletConnectService = (props: Props) => {
 }
 
 // Cleaners
-const payloadAmounts = asObject({ nativeAmount: asString, networkFee: asString, tokenId: asOptional(asString) })
+const payloadAmounts = asObject({ nativeAmount: asString, networkFee: asString, tokenId: asLegacyTokenId })
 const asSessionRequest = asObject({
   id: asNumber,
   topic: asString,

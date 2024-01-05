@@ -468,7 +468,7 @@ export const banxaProvider: FiatProviderFactory = {
           expirationDate: new Date(Date.now() + 50000),
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
             const { showUi, coreWallet } = approveParams
-            const receiveAddress = await coreWallet.getReceiveAddress()
+            const receiveAddress = await coreWallet.getReceiveAddress({ tokenId: null })
 
             const bodyParams: any = {
               payment_method_id: paymentObj?.id ?? '',
@@ -550,6 +550,7 @@ export const banxaProvider: FiatProviderFactory = {
                               walletId: coreWallet.id,
                               tokenId,
                               spendInfo: {
+                                tokenId,
                                 spendTargets: [
                                   {
                                     nativeAmount,

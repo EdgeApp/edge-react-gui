@@ -40,6 +40,7 @@ describe('CreateWalletImportScene', () => {
                 currencyCode: 'BTC',
                 displayName: 'Bitcoin',
                 pluginId: 'bitcoin',
+                tokenId: null,
                 walletType: 'wallet:bitcoin-bip49'
               }
             ],

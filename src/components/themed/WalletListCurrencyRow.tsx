@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
 import { TouchableOpacity } from 'react-native'
@@ -17,12 +17,12 @@ import { EdgeText } from './EdgeText'
 interface Props {
   customAsset?: CustomAsset
   token?: EdgeToken
-  tokenId?: string
+  tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
 
   // Callbacks:
   onLongPress?: () => void
-  onPress?: (walletId: string, currencyCode: string, tokenId?: string, customAsset?: CustomAsset) => void
+  onPress?: (walletId: string, tokenId: EdgeTokenId, customAsset?: CustomAsset) => void
 }
 
 const WalletListCurrencyRowComponent = (props: Props) => {
@@ -41,22 +41,17 @@ const WalletListCurrencyRowComponent = (props: Props) => {
   const pausedWallets = useSelector(state => state.ui.settings.userPausedWalletsSet)
   const isPaused = (pausedWallets != null && pausedWallets.has(wallet.id)) || isKeysOnlyPlugin(wallet.currencyInfo.pluginId)
 
-  // Currency code and wallet name for display:
-  const currencyCode = customAsset?.currencyCode ?? token?.currencyCode ?? wallet.currencyInfo.currencyCode
-
   //
   // State
   //
-
   const [primaryColor, setPrimaryColor] = useState<string>('#00000000')
 
   //
   // Handlers
   //
-
   const handlePress = useHandler(() => {
     triggerHaptic('impactLight')
-    if (onPress != null) onPress(wallet.id, currencyCode, tokenId, customAsset)
+    if (onPress != null) onPress(wallet.id, tokenId, customAsset)
   })
 
   const handleLongPress = useHandler(() => {

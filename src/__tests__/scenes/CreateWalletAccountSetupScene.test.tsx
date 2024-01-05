@@ -16,6 +16,7 @@ describe('CreateWalletAccountSelect', () => {
             selectedWalletType: {
               currencyName: 'bitcoin',
               walletType: 'wallet:bitcoin',
+              pluginId: 'bitcoin',
               currencyCode: 'BTC'
             } as any,
             isReactivation: true,

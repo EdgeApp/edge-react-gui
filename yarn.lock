@@ -8612,10 +8612,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^1.14.0:
-  version "1.14.0"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-1.14.0.tgz#16569cf6a24b50e26e0105eca554bd041ce15a01"
-  integrity sha512-P2yGTyu4eqoFUHFnrmkemxJrFFezql+cL2ZZ01JDyRJFgeAwy9zlEmg1Aj4IgOq8hzoNUFTd68fKTVPZZRDKEA==
+edge-core-js@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.0.0.tgz#264e87b1ae673b10c0529e7fb7b804364d79c765"
+  integrity sha512-lNVIElFgTL0gPAsEN6dS6xicrmFAvRMokkuGa3tnNUrDY4QbfuJotGlIAMdlYE5fLqbP5DzFAsSgU/nybfbtYQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^4.0.0"
@@ -8719,10 +8719,10 @@ edge-currency-plugins@^2.5.1:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-1.3.0.tgz#6fde352b0e837a4c0e762a911812594e11508b3a"
-  integrity sha512-DZbQ0A9vjD7PFaS7d+frStn3V1fKjmfRo/WDM3GksVoB1Lj4ZZArBibN9SPBGDZxTAU8U5axwlMSLEbUMzlSLA==
+edge-exchange-plugins@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.0.0.tgz#e584342e9c9e54a5c3ce90a42e45606a2ac65beb"
+  integrity sha512-tPnevYDh0XsjeduuZ3Drjo9hK3hPxPj+efUG4kQJpLtzLdnChkR2g52OleIzFCxjR5pdAM17R1zqPVSbNYv6jw==
   dependencies:
     biggystring "^4.1.3"
     cleaners "^0.3.13"

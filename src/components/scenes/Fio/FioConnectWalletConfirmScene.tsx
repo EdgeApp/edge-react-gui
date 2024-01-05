@@ -53,7 +53,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
           walletId: wallet.id,
           tokenCode: wallet.currencyCode,
           chainCode: wallet.chainCode,
-          publicAddress: (await wallet.edgeWallet.getReceiveAddress()).publicAddress
+          publicAddress: (await wallet.edgeWallet.getReceiveAddress({ tokenId: null })).publicAddress
         }))
 
         let publicAddresses = await Promise.all(promiseArray)
@@ -70,7 +70,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
           walletId: wallet.id,
           tokenCode: wallet.currencyCode,
           chainCode: wallet.chainCode,
-          publicAddress: (await wallet.edgeWallet.getReceiveAddress()).publicAddress
+          publicAddress: (await wallet.edgeWallet.getReceiveAddress({ tokenId: null })).publicAddress
         }))
 
         publicAddresses = await Promise.all(promiseArray)

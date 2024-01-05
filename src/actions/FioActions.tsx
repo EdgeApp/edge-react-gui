@@ -76,6 +76,7 @@ export function checkFioObtData(wallet: EdgeCurrencyWallet, transactions: EdgeTr
       const obtDataRecords = await getFioObtData(fioWallets)
 
       for (const transaction of transactions) {
+        const { tokenId } = transaction
         const edgeMetadata: EdgeMetadata = transaction.metadata != null ? transaction.metadata : { notes: '' }
         try {
           const { name } = edgeMetadata
@@ -97,7 +98,7 @@ export function checkFioObtData(wallet: EdgeCurrencyWallet, transactions: EdgeTr
         await addToFioAddressCache(state.core.account, [obtForTx.payer_fio_address])
 
         try {
-          await wallet.saveTxMetadata(transaction.txid, transaction.currencyCode, edgeMetadata)
+          await wallet.saveTxMetadata({ txid: transaction.txid, tokenId, metadata: edgeMetadata })
         } catch (err: any) {
           console.warn(err)
         }

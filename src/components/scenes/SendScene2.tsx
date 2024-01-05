@@ -8,6 +8,7 @@ import {
   EdgeMemo,
   EdgeSpendInfo,
   EdgeSpendTarget,
+  EdgeTokenId,
   EdgeTransaction
 } from 'edge-core-js'
 import * as React from 'react'
@@ -63,7 +64,7 @@ interface Props extends EdgeSceneProps<'send2'> {}
 
 export interface SendScene2Params {
   walletId: string
-  tokenId?: string
+  tokenId: EdgeTokenId
   dismissAlert?: boolean
   isoExpireDate?: string
   minNativeAmount?: string
@@ -142,7 +143,7 @@ const SendComponent = (props: Props) => {
   const initExpireDate = isoExpireDate != null ? new Date(isoExpireDate) : undefined
   const [processingAmountChanged, setProcessingAmountChanged] = React.useState<boolean>(false)
   const [walletId, setWalletId] = useState<string>(initWalletId)
-  const [spendInfo, setSpendInfo] = useState<EdgeSpendInfo>(initSpendInfo ?? { spendTargets: [{}] })
+  const [spendInfo, setSpendInfo] = useState<EdgeSpendInfo>(initSpendInfo ?? { tokenId: null, spendTargets: [{}] })
   const [fieldChanged, setFieldChanged] = useState<ExchangeFlipInputFields>('fiat')
   const [feeNativeAmount, setFeeNativeAmount] = useState<string>('')
   const [minNativeAmount, setMinNativeAmount] = useState<string | undefined>(initMinNativeAmount)
@@ -168,7 +169,7 @@ const SendComponent = (props: Props) => {
   const pinSpendingLimitsAmount = useSelector<number>(state => state.ui.settings.spendingLimits.transaction.amount ?? 0)
   const defaultIsoFiat = useSelector<string>(state => state.ui.settings.defaultIsoFiat)
   const currencyWallets = useWatch(account, 'currencyWallets')
-  const [tokenId, setTokenId] = useState<string | undefined>(spendInfo.tokenId ?? tokenIdProp)
+  const [tokenId, setTokenId] = useState<EdgeTokenId>(spendInfo.tokenId ?? tokenIdProp)
   const coreWallet = currencyWallets[walletId]
   const { pluginId, memoOptions = [] } = coreWallet.currencyInfo
   const currencyCode = getCurrencyCode(coreWallet, tokenId)
@@ -178,10 +179,6 @@ const SendComponent = (props: Props) => {
   const parentExchangeDenom = useExchangeDenom(pluginId, currencyWallets[walletId].currencyInfo.currencyCode)
 
   spendInfo.tokenId = tokenId
-
-  // TODO: Fix currency plugins that implement getMaxSpendable to not look at the currencyCode
-  // but the tokenId. Then we can remove the line below
-  spendInfo.currencyCode = currencyCode
 
   if (initialMount.current) {
     if (hiddenFeaturesMap.scamWarning === false) {
@@ -317,6 +314,7 @@ const SendComponent = (props: Props) => {
         ref={flipInputModalRef}
         bridge={bridge}
         startNativeAmount={spendTarget.nativeAmount}
+        feeTokenId={null}
         forceField={fieldChanged}
         onAmountsChanged={handleAmountsChanged(spendTarget)}
         onMaxSet={handleSetMax(index)}
@@ -330,7 +328,7 @@ const SendComponent = (props: Props) => {
         if (error == null) return
         console.log(error)
         const insufficientFunds = asMaybeInsufficientFundsError(error)
-        if (insufficientFunds != null && insufficientFunds.currencyCode != null && spendInfo.currencyCode !== insufficientFunds.currencyCode) {
+        if (insufficientFunds != null && insufficientFunds.tokenId != null && spendInfo.tokenId !== insufficientFunds.tokenId) {
           await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={insufficientFunds} navigation={navigation} wallet={coreWallet} />)
         }
       })
@@ -388,7 +386,7 @@ const SendComponent = (props: Props) => {
         const { pluginId: newPluginId } = currencyWallets[result.walletId].currencyInfo
         if (pluginId !== newPluginId || currencyCode !== result.currencyCode) {
           setTokenId(result.tokenId)
-          setSpendInfo({ spendTargets: [{}] })
+          setSpendInfo({ tokenId: result.tokenId, spendTargets: [{}] })
         }
       })
       .catch(error => {
@@ -883,7 +881,7 @@ const SendComponent = (props: Props) => {
   // Mount/Unmount life-cycle events:
   useMount(() => {
     if (doCheckAndShowGetCryptoModal) {
-      dispatch(checkAndShowGetCryptoModal(navigation, route.params.walletId, route.params.spendInfo?.currencyCode)).catch(err => showError(err))
+      dispatch(checkAndShowGetCryptoModal(navigation, route.params.walletId, route.params.spendInfo?.tokenId)).catch(err => showError(err))
     }
   })
   useUnmount(() => {
@@ -907,7 +905,7 @@ const SendComponent = (props: Props) => {
         spendInfo.spendTargets[0].nativeAmount = maxSpendable
       }
       if (spendInfo.spendTargets[0].nativeAmount == null) {
-        flipInputModalRef.current?.setFees({ feeNativeAmount: '' })
+        flipInputModalRef.current?.setFees({ feeNativeAmount: '', feeTokenId: null })
       }
       if (pinSpendingLimitsEnabled) {
         const rate = exchangeRates[`${currencyCode}_${defaultIsoFiat}`] ?? INFINITY_STRING
@@ -947,7 +945,7 @@ const SendComponent = (props: Props) => {
       setEdgeTransaction(edgeTx)
       const { parentNetworkFee, networkFee } = edgeTx
       const feeNativeAmount = parentNetworkFee ?? networkFee
-      const feeTokenId = parentNetworkFee == null ? tokenId : undefined
+      const feeTokenId = parentNetworkFee == null ? tokenId : null
       setFeeNativeAmount(feeNativeAmount)
       flipInputModalRef.current?.setFees({ feeTokenId, feeNativeAmount })
       flipInputModalRef.current?.setError(null)
@@ -955,8 +953,9 @@ const SendComponent = (props: Props) => {
     } catch (e: any) {
       const insufficientFunds = asMaybeInsufficientFundsError(e)
       if (insufficientFunds != null) {
-        if (insufficientFunds.currencyCode != null) {
-          e.message = sprintf(lstrings.stake_error_insufficient_s, insufficientFunds.currencyCode)
+        if (insufficientFunds.tokenId != null) {
+          const errorCurrencyCode = getCurrencyCode(coreWallet, insufficientFunds.tokenId)
+          e.message = sprintf(lstrings.stake_error_insufficient_s, errorCurrencyCode)
         } else {
           e.message = lstrings.exchange_insufficient_funds_title
         }
@@ -965,7 +964,7 @@ const SendComponent = (props: Props) => {
       setError(e)
       setEdgeTransaction(null)
       flipInputModalRef.current?.setError(e.message)
-      flipInputModalRef.current?.setFees({ feeNativeAmount: '' })
+      flipInputModalRef.current?.setFees({ feeNativeAmount: '', feeTokenId: null })
     }
     setProcessingAmountChanged(false)
   }, [spendInfo, maxSpendSetter, walletId, pinSpendingLimitsEnabled, pinValue])

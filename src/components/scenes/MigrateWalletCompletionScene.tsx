@@ -125,7 +125,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
         // Change old wallet name
         if (createdNewWallet) await oldWallet.renameWallet(`${oldWalletName}${lstrings.migrate_wallet_old_fragment}`)
 
-        const addressInfo = await newWallet.getReceiveAddress()
+        const addressInfo = await newWallet.getReceiveAddress({ tokenId: null })
         const newPublicAddress = addressInfo.segwitAddress ?? addressInfo.publicAddress
 
         const tokenItems = bundle.filter((pair: any): pair is MigrateWalletTokenItem => pair.tokenId != null)
@@ -140,7 +140,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
         const successfullyTransferredTokenIds: string[] = []
         for (const item of tokenItems) {
           let tokenSpendInfo: EdgeSpendInfo = {
-            currencyCode: item.currencyCode,
+            tokenId: item.tokenId,
             spendTargets: [{ publicAddress: newPublicAddress }],
             networkFeeOption: 'standard'
           }
@@ -164,7 +164,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
         if (!hasError) {
           // Send mainnet
           let spendInfo: EdgeSpendInfo = {
-            currencyCode: oldWallet.currencyInfo.currencyCode,
+            tokenId: null,
             spendTargets: [{ publicAddress: newPublicAddress }],
             metadata: {
               category: 'Transfer',

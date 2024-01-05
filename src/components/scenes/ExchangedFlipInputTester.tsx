@@ -24,7 +24,7 @@ export function ExchangedFlipInputTester(props: {}) {
   const [value0, setValue0] = useState<string>('')
   const [value1, setValue1] = useState<string>('')
   const walletId = selectedWallet?.wallet.id ?? ''
-  const tokenId = selectedWallet?.tokenId
+  const tokenId = selectedWallet?.tokenId ?? null
   const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
 
   const onAmountChanged = (amounts: ExchangedFlipInputAmounts): void => {
@@ -52,13 +52,12 @@ export function ExchangedFlipInputTester(props: {}) {
     if (selectedWallet == null) return
     Airship.show<FlipInputModalResult>(bridge => {
       if (selectedWallet == null) return null
-      return <FlipInputModal2 bridge={bridge} wallet={selectedWallet.wallet} tokenId={tokenId} onAmountsChanged={onAmountsChanged} />
+      return <FlipInputModal2 bridge={bridge} wallet={selectedWallet.wallet} tokenId={tokenId} feeTokenId={null} onAmountsChanged={onAmountsChanged} />
     }).catch(error => console.log(error))
   }
 
   const coreWallet = selectedWallet?.wallet
-  const currencyCode = coreWallet?.currencyInfo.currencyCode ?? ''
-  let balance = coreWallet?.balances[currencyCode] ?? ''
+  let balance = coreWallet?.balanceMap.get(tokenId) ?? ''
   if (eq(balance, '0')) balance = ''
   const headerText = 'Select Wallet'
   const headerCallback = () => console.log('Header pressed')

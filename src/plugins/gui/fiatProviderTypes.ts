@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
 import { FiatPaymentType, FiatPluginRegionCode, FiatPluginUi } from './fiatPluginTypes'
 
@@ -58,7 +58,7 @@ export interface FiatProviderAssetMap {
 export interface FiatProviderGetQuoteParams {
   wallet?: EdgeCurrencyWallet
   pluginId: string
-  tokenId?: string
+  tokenId: EdgeTokenId
   displayCurrencyCode: string
   exchangeAmount: string
   fiatCurrencyCode: string

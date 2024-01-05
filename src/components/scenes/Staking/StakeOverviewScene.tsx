@@ -10,7 +10,7 @@ import { ChangeQuoteRequest, PositionAllocation, StakePlugin, StakePolicy, Stake
 import { getDisplayDenominationFromState } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getAllocationLocktimeMessage, getPolicyIconUris, getPolicyTitleName, getPositionAllocations } from '../../../util/stakeUtils'
 import { StakingReturnsCard } from '../../cards/StakingReturnsCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -121,7 +121,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
     const title = `${sprintf(titleBase, currencyCode)} ${getAllocationLocktimeMessage(item)}`
     const denomination = displayDenomMap[currencyCode]
 
-    const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+    const tokenId = getTokenIdForced(account, wallet.currencyInfo.pluginId, currencyCode)
     return <CryptoFiatAmountTile title={title} nativeCryptoAmount={nativeAmount ?? '0'} tokenId={tokenId} denomination={denomination} walletId={wallet.id} />
   }
 

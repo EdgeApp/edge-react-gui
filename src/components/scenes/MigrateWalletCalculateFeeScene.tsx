@@ -90,7 +90,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
         networkFee: fee,
         ourReceiveAddresses: [],
         signedTx: '',
-        tokenId: tokenId ?? null,
+        tokenId: null,
         txid: '',
         walletId
       }
@@ -153,9 +153,9 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
 
       const assetPromises = bundle.map((asset, i) => {
         return async () => {
-          const publicAddress = SPECIAL_CURRENCY_INFO[pluginId].dummyPublicAddress ?? (await wallet.getReceiveAddress()).publicAddress
+          const publicAddress = SPECIAL_CURRENCY_INFO[pluginId].dummyPublicAddress ?? (await wallet.getReceiveAddress({ tokenId: null })).publicAddress
           const spendInfo: EdgeSpendInfo = {
-            currencyCode: asset.currencyCode,
+            tokenId: asset.tokenId,
             spendTargets: [{ publicAddress }],
             networkFeeOption: 'standard'
           }
@@ -163,7 +163,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
           try {
             const maxAmount = await wallet.getMaxSpendable(spendInfo)
             if (maxAmount === '0') {
-              throw new InsufficientFundsError({ currencyCode: asset.currencyCode })
+              throw new InsufficientFundsError({ tokenId: asset.tokenId })
             }
             const maxSpendInfo = { ...spendInfo, spendTargets: [{ publicAddress, nativeAmount: maxAmount }] }
             const edgeTransaction = await wallet.makeSpend(maxSpendInfo)
@@ -172,8 +172,8 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
             feeTotal = add(feeTotal, txFee)
 
             // While imperfect, sanity check that the total fee spent so far to send tokens + fee to send mainnet currency is under the total mainnet balance
-            if (i === bundle.length - 1 && lt(wallet.balances[wallet.currencyInfo.currencyCode], feeTotal)) {
-              throw new InsufficientFundsError({ currencyCode: asset.currencyCode, networkFee: feeTotal })
+            if (i === bundle.length - 1 && lt(wallet.balanceMap.get(null) ?? '0', feeTotal)) {
+              throw new InsufficientFundsError({ tokenId: null, networkFee: feeTotal })
             }
           } catch (e: any) {
             for (const key of bundlesFeeTotals.keys()) {

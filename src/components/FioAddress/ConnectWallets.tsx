@@ -12,7 +12,7 @@ import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { FioConnectionWalletItem } from '../../types/types'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { convertFIOToEdgeCodes, makeConnectWallets } from '../../util/FioAddressUtils'
 
 interface LocalState {
@@ -159,7 +159,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
       const pluginId = wallet.edgeWallet.currencyInfo.pluginId
       const { tokenCode: currencyCode } = convertFIOToEdgeCodes(pluginId, wallet.chainCode, wallet.currencyCode)
 
-      const tokenId = getTokenId(account, pluginId, currencyCode)
+      const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
       return (
         <View style={[styles.wallet, disabled ? styles.walletDisabled : null]}>

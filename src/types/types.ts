@@ -1,9 +1,24 @@
-import { asBoolean, asMaybe, asNumber, asObject, asString } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeToken } from 'edge-core-js/types'
+import { asBoolean, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString } from 'cleaners'
+import { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeToken, EdgeTokenId } from 'edge-core-js/types'
 
 import { LocaleStringKey } from '../locales/en_US'
 import { RootState } from './reduxTypes'
 import { Theme } from './Theme'
+
+/** @deprecated Only to be used for payloads that still allow undefined for
+ *  tokenId such as notification server
+ */
+export const asLegacyTokenId = asOptional(asString, null)
+
+export const asEdgeTokenId = asEither(asString, asNull)
+export const asEdgeAsset = asObject({
+  pluginId: asString,
+  tokenId: asEdgeTokenId
+})
+export const asEdgeCurrencyCode = asObject({
+  pluginId: asString,
+  currencyCode: asString
+})
 
 export interface BooleanMap {
   [key: string]: boolean
@@ -20,7 +35,7 @@ export interface MapObject<T> {
 
 export interface GuiCurrencyInfo {
   walletId: string
-  tokenId: string | undefined
+  tokenId: EdgeTokenId
   displayCurrencyCode: string
   exchangeCurrencyCode: string
   displayDenomination: EdgeDenomination
@@ -110,7 +125,7 @@ export interface CurrencyConverter {
 
 export const emptyCurrencyInfo: GuiCurrencyInfo = {
   walletId: '',
-  tokenId: undefined,
+  tokenId: null,
   displayCurrencyCode: '',
   exchangeCurrencyCode: '',
   displayDenomination: {
@@ -307,19 +322,19 @@ export interface AppConfig {
  */
 export interface WalletListItem {
   key: string
+  tokenId: EdgeTokenId
+  walletId: string
 
-  // These will be set for token rows:
+  // `token` will be set for token rows:
   token?: EdgeToken
-  tokenId?: string
 
   // The wallet will be present once it loads:
   wallet?: EdgeCurrencyWallet
-  walletId: string
 }
 
 export interface EdgeAsset {
   pluginId: string
-  tokenId?: string
+  tokenId: EdgeTokenId
 }
 
 export interface TempActionDisplayInfo {

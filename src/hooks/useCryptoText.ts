@@ -9,7 +9,7 @@ interface Props {
   nativeAmount: string
   wallet: EdgeCurrencyWallet
   hideBalance?: boolean
-  tokenId?: EdgeTokenId
+  tokenId: EdgeTokenId
   withSymbol?: boolean
 }
 

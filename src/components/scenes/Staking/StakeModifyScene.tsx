@@ -1,5 +1,5 @@
 import { eq, gt, toFixed } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -11,7 +11,7 @@ import { getDisplayDenomination, getExchangeDenominationFromAccount } from '../.
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getTokenIdForced, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getPolicyIconUris, getPositionAllocations } from '../../../util/stakeUtils'
 import { toBigNumberString } from '../../../util/toBigNumberString'
@@ -156,7 +156,8 @@ const StakeModifySceneComponent = (props: Props) => {
         if (allocationToMod == null) throw new Error(`Existing stake not found for ${modCurrencyCode}`)
         setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: allocationToMod.nativeAmount })
       } else if (modification === 'stake' && existingStaked.length === 1) {
-        setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: wallet.balances[modCurrencyCode] })
+        const tokenId = getWalletTokenId(wallet, modCurrencyCode)
+        setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: wallet.balanceMap.get(tokenId) ?? '0' })
       }
     }
   }
@@ -188,7 +189,7 @@ const StakeModifySceneComponent = (props: Props) => {
     }
   }
 
-  const handleShowFlipInputModal = (currencyCode: string, tokenId?: string) => () => {
+  const handleShowFlipInputModal = (currencyCode: string, tokenId: EdgeTokenId) => () => {
     const header = modification === 'stake' ? lstrings.stake_modal_modify_stake_title : lstrings.stake_modal_modify_unstake_title
 
     // TODO: Max button needs to be enabled after max calculation for
@@ -201,6 +202,7 @@ const StakeModifySceneComponent = (props: Props) => {
         bridge={bridge}
         wallet={wallet}
         tokenId={tokenId}
+        feeTokenId={null}
         startNativeAmount={eq(changeQuoteRequest.nativeAmount, '0') ? undefined : changeQuoteRequest.nativeAmount}
         onAmountsChanged={() => {}}
         onMaxSet={handleMaxButtonPress(currencyCode)}
@@ -270,7 +272,7 @@ const StakeModifySceneComponent = (props: Props) => {
 
   const renderEditableQuoteAmountRow = (allocationType: 'stake' | 'unstake' | 'claim', asset: { pluginId: string; currencyCode: string }) => {
     const { pluginId, currencyCode } = asset
-    const tokenId = getTokenId(account, pluginId, currencyCode)
+    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
     const quoteAllocation: QuoteAllocation | undefined =
       changeQuote != null
         ? changeQuote.allocations.find(
@@ -327,7 +329,7 @@ const StakeModifySceneComponent = (props: Props) => {
 
     const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, currencyCode)
     const title = modification === 'stake' ? lstrings.stake_estimated_staking_fee : lstrings.stake_estimated_unstaking_fee
-    const tokenId = getTokenId(account, pluginId, currencyCode)
+    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
     return (
       <CryptoFiatAmountTile
@@ -354,7 +356,7 @@ const StakeModifySceneComponent = (props: Props) => {
     if (quoteAllocation == null) return null
 
     const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, currencyCode)
-    const tokenId = getTokenId(account, pluginId, currencyCode)
+    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
     return (
       <CryptoFiatAmountTile
@@ -420,7 +422,7 @@ const StakeModifySceneComponent = (props: Props) => {
 
     return (
       <View style={styles.amountTilesContainer}>
-        <IconTile title={lstrings.wc_smartcontract_wallet} iconUri={getCurrencyIconUris(wallet.currencyInfo.pluginId).symbolImage}>
+        <IconTile title={lstrings.wc_smartcontract_wallet} iconUri={getCurrencyIconUris(wallet.currencyInfo.pluginId, null).symbolImage}>
           <EdgeText>{getWalletName(wallet)}</EdgeText>
         </IconTile>
         {
@@ -442,6 +444,7 @@ const StakeModifySceneComponent = (props: Props) => {
         {
           // Render network fee tile
           <CryptoFiatAmountTile
+            tokenId={null}
             title={lstrings.wc_smartcontract_network_fee}
             nativeCryptoAmount={networkFeeQuote?.nativeAmount ?? '0'}
             walletId={wallet.id}

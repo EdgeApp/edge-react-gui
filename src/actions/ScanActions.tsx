@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
@@ -14,7 +14,7 @@ import { config } from '../theme/appConfig'
 import { RequestAddressLink } from '../types/DeepLinkTypes'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { getTokenId } from '../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
 import { makeCurrencyCodeTable, upgradeCurrencyCodes } from '../util/tokenIdTools'
@@ -92,18 +92,19 @@ export const doRequestAddress = async (navigation: NavigationBase, account: Edge
   // Show wallet picker(s) for supported assets
   const jsonPayloadMap: { [currencyAndTokenCode: string]: string | null } = {}
   for (const supportedAsset of supportedAssets) {
-    const tokenId = upgradeCurrencyCodes(lookup, [`${supportedAsset.nativeCode}-${supportedAsset.tokenCode}`])
+    const edgeAssets = upgradeCurrencyCodes(lookup, [`${supportedAsset.nativeCode}-${supportedAsset.tokenCode}`])
 
     await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={navigation} headerTitle={lstrings.select_wallet} allowedAssets={tokenId} showCreateWallet />
+      <WalletListModal bridge={bridge} navigation={navigation} headerTitle={lstrings.select_wallet} allowedAssets={edgeAssets} showCreateWallet />
     )).then(async result => {
       if (result?.type === 'wallet') {
         const { walletId, currencyCode } = result
         const { currencyWallets } = account
         const wallet = currencyWallets[walletId]
+        const tokenId = getWalletTokenId(wallet, currencyCode)
 
         // TODO: Extend getReceiveAddress() to generate the full bitcion:XXXX address instead of using raw addresses here
-        const { publicAddress } = await wallet.getReceiveAddress({ currencyCode })
+        const { publicAddress } = await wallet.getReceiveAddress({ tokenId })
         jsonPayloadMap[`${currencyWallets[walletId].currencyInfo.currencyCode}_${currencyCode}`] = publicAddress
       }
     })
@@ -174,8 +175,7 @@ export function handleWalletUris(
   fioAddress?: string
 ): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    const { account } = getState().core
-    const { legacyAddress, metadata, minNativeAmount, nativeAmount, publicAddress, uniqueIdentifier } = parsedUri
+    const { legacyAddress, metadata, minNativeAmount, nativeAmount, publicAddress, uniqueIdentifier, tokenId = null } = parsedUri
     const currencyCode: string = parsedUri.currencyCode ?? wallet.currencyInfo.currencyCode
 
     // Coin operations
@@ -185,9 +185,10 @@ export function handleWalletUris(
 
       if (parsedUri.token) {
         // TOKEN URI
-        const { contractAddress, currencyName, denominations, currencyCode } = parsedUri.token
+        const { contractAddress, currencyName, denominations } = parsedUri.token
         return navigation.push('editToken', {
-          currencyCode: currencyCode.toUpperCase(),
+          currencyCode: parsedUri.token.currencyCode.toUpperCase(),
+          tokenId,
           multiplier: denominations[0]?.multiplier,
           displayName: currencyName,
           networkLocation: { contractAddress },
@@ -201,10 +202,6 @@ export function handleWalletUris(
       }
 
       // PUBLIC ADDRESS URI
-      let tokenId: string | undefined
-      if (currencyCode !== wallet.currencyInfo.currencyCode) {
-        tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
-      }
       const spendInfo: EdgeSpendInfo = {
         metadata,
         spendTargets: [
@@ -222,7 +219,7 @@ export function handleWalletUris(
       // React navigation doesn't like passing non-serializable objects as params. Convert date to string first
       // https://github.com/react-navigation/react-navigation/issues/7925
       const isoExpireDate = parsedUri?.expireDate?.toISOString()
-      navigation.push('send2', { walletId: wallet.id, minNativeAmount, spendInfo, isoExpireDate, hiddenFeaturesMap: { scamWarning: false } })
+      navigation.push('send2', { walletId: wallet.id, minNativeAmount, spendInfo, tokenId, isoExpireDate, hiddenFeaturesMap: { scamWarning: false } })
     } catch (error: any) {
       // INVALID URI
       await Airship.show<'ok' | undefined>(bridge => (
@@ -263,6 +260,7 @@ async function privateKeyModalActivated(wallet: EdgeCurrencyWallet, privateKeys:
 
 async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[]) {
   const unsignedTx = await wallet.sweepPrivateKeys({
+    tokenId: null,
     privateKeys,
     spendTargets: []
   })
@@ -300,15 +298,16 @@ async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[
 
 const shownWalletGetCryptoModals: string[] = []
 
-export function checkAndShowGetCryptoModal(navigation: NavigationBase, selectedWalletId?: string, selectedCurrencyCode?: string): ThunkAction<Promise<void>> {
+export function checkAndShowGetCryptoModal(navigation: NavigationBase, selectedWalletId?: string, tokenId?: EdgeTokenId): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     try {
       const state = getState()
-      const currencyCode = selectedCurrencyCode ?? state.ui.wallets.selectedCurrencyCode
       const { currencyWallets } = state.core.account
       const wallet: EdgeCurrencyWallet = currencyWallets[selectedWalletId ?? state.ui.wallets.selectedWalletId]
+      tokenId = tokenId === undefined ? getWalletTokenId(wallet, state.ui.wallets.selectedCurrencyCode) : tokenId
+      const currencyCode = getCurrencyCode(wallet, tokenId)
       // check if balance is zero
-      const balance = wallet.balances[currencyCode]
+      const balance = wallet.balanceMap.get(tokenId)
       if (!zeroString(balance) || shownWalletGetCryptoModals.includes(wallet.id)) return // if there's a balance then early exit
       shownWalletGetCryptoModals.push(wallet.id) // add to list of wallets with modal shown this session
       let threeButtonModal

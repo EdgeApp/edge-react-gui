@@ -56,9 +56,17 @@ describe('CreateWalletSelectFiatComponent', () => {
                 currencyCode: 'BTC',
                 displayName: 'Bitcoin (no Segwit)',
                 pluginId: 'bitcoin',
+                tokenId: null,
                 walletType: 'wallet:bitcoin-bip44'
               },
-              { key: 'create-wallet:ethereum-ethereum', currencyCode: 'ETH', displayName: 'Ethereum', pluginId: 'ethereum', walletType: 'wallet:ethereum' },
+              {
+                key: 'create-wallet:ethereum-ethereum',
+                currencyCode: 'ETH',
+                displayName: 'Ethereum',
+                pluginId: 'ethereum',
+                tokenId: null,
+                walletType: 'wallet:ethereum'
+              },
               {
                 key: 'create-ethereum-9992ec3cf6a55b00978cddf2b27bc6882d88d1ec',
                 currencyCode: 'POLY',

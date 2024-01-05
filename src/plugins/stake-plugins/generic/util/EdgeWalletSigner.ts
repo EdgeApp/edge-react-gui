@@ -24,7 +24,7 @@ export class EdgeWalletSigner extends ethers.Signer {
   }
 
   async getAddress(): Promise<string> {
-    const { publicAddress } = await this.wallet.getReceiveAddress()
+    const { publicAddress } = await this.wallet.getReceiveAddress({ tokenId: null })
     return publicAddress
   }
 
@@ -77,6 +77,7 @@ export class EdgeWalletSigner extends ethers.Signer {
     const memoHexValue = data == null ? undefined : typeof data === 'string' ? data.replace('0x', '') : base16.stringify(data)
     const memos: EdgeMemo[] = memoHexValue == null ? [] : [{ type: 'hex', value: memoHexValue }]
     const edgeTransaction = await this.wallet.makeSpend({
+      tokenId: null,
       spendTargets,
       memos,
       metadata: await transaction.customData,

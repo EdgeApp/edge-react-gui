@@ -1,7 +1,7 @@
 import { FlashList } from '@shopify/flash-list'
 import { abs, lt } from 'biggystring'
 import { asArray } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { asAssetStatus, AssetStatus } from 'edge-info-server/types'
 import * as React from 'react'
 import { RefreshControl, StyleSheet } from 'react-native'
@@ -36,7 +36,7 @@ const SHOW_FLIP_INPUT_TESTER = false
 
 export interface TransactionListParams {
   walletId: string
-  tokenId: string | undefined
+  tokenId: EdgeTokenId
 }
 
 interface Props extends EdgeSceneProps<'transactionList'> {
@@ -230,7 +230,7 @@ function TransactionListComponent(props: Props) {
     }
     return (
       <EdgeAnim enter={{ type: 'fadeInRight', distance: 30 * (index + 1) }}>
-        <TransactionListRow currencyCode={currencyCode} navigation={navigation} transaction={item} wallet={wallet} />
+        <TransactionListRow navigation={navigation} transaction={item} wallet={wallet} />
       </EdgeAnim>
     )
   })
@@ -284,9 +284,9 @@ function TransactionListComponent(props: Props) {
  * If the token gets deleted, the scene will crash.
  * Fall back to the main currency code if this happens.
  */
-function checkToken(tokenId: string | undefined, allTokens: EdgeTokenMap): string | undefined {
-  if (tokenId == null) return undefined
-  if (allTokens[tokenId] == null) return undefined
+function checkToken(tokenId: EdgeTokenId, allTokens: EdgeTokenMap): EdgeTokenId {
+  if (tokenId == null) return null
+  if (allTokens[tokenId] == null) return null
   return tokenId
 }
 

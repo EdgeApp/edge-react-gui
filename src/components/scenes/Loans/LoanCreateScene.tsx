@@ -1,5 +1,5 @@
 import { div, lt, max, mul } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -26,7 +26,7 @@ import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getTokenId, getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { enableToken } from '../../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../../util/utils'
 import { Card } from '../../cards/Card'
@@ -83,9 +83,12 @@ export const LoanCreateScene = (props: Props) => {
   // user selected src/dest that don't involve the borrowEngineWallet.
   // Currently, the only use case is selecting fiat (bank) as a src/dest.
   const hardCollateralCurrencyCode = 'WBTC'
-  const hardSrcTokenAddr = React.useMemo(() => getTokenId(account, borrowEnginePluginId, hardCollateralCurrencyCode), [account, borrowEnginePluginId])
-  const hardDestTokenAddr = React.useMemo(() => getTokenId(account, borrowEnginePluginId, 'USDC'), [account, borrowEnginePluginId])
-  const hardAllowedSrcAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardSrcTokenAddr }, { pluginId: 'bitcoin' }]
+  const hardSrcTokenAddr = React.useMemo(() => getTokenIdForced(account, borrowEnginePluginId, hardCollateralCurrencyCode), [account, borrowEnginePluginId])
+  const hardDestTokenAddr = React.useMemo(() => getTokenIdForced(account, borrowEnginePluginId, 'USDC'), [account, borrowEnginePluginId])
+  const hardAllowedSrcAsset = [
+    { pluginId: borrowEnginePluginId, tokenId: hardSrcTokenAddr },
+    { pluginId: 'bitcoin', tokenId: null }
+  ]
   const hardAllowedDestAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardDestTokenAddr }]
 
   const ltvRatio = borrowPlugin.borrowInfo.maxLtvRatio.toString()
@@ -112,7 +115,7 @@ export const LoanCreateScene = (props: Props) => {
   // #region Source Wallet Data
 
   const [srcWalletId, setSrcWalletId] = React.useState<string | undefined>(undefined)
-  const [srcTokenId, setSrcTokenId] = React.useState<string | undefined>(undefined)
+  const [srcTokenId, setSrcTokenId] = React.useState<EdgeTokenId>(null)
   const [srcCurrencyCode, setSrcCurrencyCode] = React.useState<string | undefined>(undefined)
 
   const srcWallet = srcWalletId == null ? undefined : wallets[srcWalletId]
@@ -131,7 +134,7 @@ export const LoanCreateScene = (props: Props) => {
   // #region Destination Wallet/Bank Data
 
   const [destWallet, setDestWallet] = React.useState<EdgeCurrencyWallet | undefined>(undefined)
-  const [destTokenId, setDestTokenId] = React.useState<string | undefined>(undefined)
+  const [destTokenId, setDestTokenId] = React.useState<EdgeTokenId>(null)
   const [destBankId, setDestBankId] = React.useState<string | undefined>(undefined)
 
   const [bankAccountsMap, setBankAccountsMap] = React.useState<{ [paymentMethodId: string]: PaymentMethod } | undefined>(undefined)

@@ -1,6 +1,6 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import { lt } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeEncodeUri, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
 import Share, { ShareOptions } from 'react-native-share'
@@ -19,7 +19,7 @@ import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { GuiCurrencyInfo } from '../../types/types'
-import { getTokenId, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
+import { getTokenIdForced, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { convertNativeToDenomination, truncateDecimals, zeroString } from '../../util/utils'
@@ -45,7 +45,6 @@ import { ShareButtons } from '../themed/ShareButtons'
 interface OwnProps extends EdgeSceneProps<'request'> {}
 
 interface StateProps {
-  account: EdgeAccount
   currencyCode?: string
   wallet?: EdgeCurrencyWallet
   exchangeSecondaryToPrimaryRatio?: string
@@ -57,7 +56,7 @@ interface StateProps {
 
 interface DispatchProps {
   refreshAllFioAddresses: () => Promise<void>
-  onSelectWallet: (navigation: NavigationBase, walletId: string, tokenId?: string) => Promise<void>
+  onSelectWallet: (navigation: NavigationBase, walletId: string, tokenId: EdgeTokenId) => Promise<void>
   toggleAccountBalanceVisibility: () => void
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
@@ -128,7 +127,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     if (wallet == null) return
     if (isKeysOnlyPlugin(wallet.currencyInfo.pluginId)) return
 
-    const receiveAddress = await wallet.getReceiveAddress()
+    const receiveAddress = await wallet.getReceiveAddress({ tokenId: null })
     const addresses: AddressInfo[] = []
 
     // Handle segwitAddress
@@ -243,13 +242,10 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   handleOpenWalletListModal = () => {
-    const { account } = this.props
     Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={this.props.navigation} />)
       .then(async result => {
         if (result?.type === 'wallet') {
-          const { walletId, currencyCode } = result
-          const wallet = account.currencyWallets[walletId]
-          const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+          const { walletId, tokenId } = result
           await this.props.onSelectWallet(this.props.navigation, walletId, tokenId)
 
           if (this.flipInputRef.current != null) {
@@ -413,7 +409,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
       if (this.state.minimumPopupModalState[pluginId] === 'NOT_YET_SHOWN') {
         const { minimumPopupModals } = getSpecialCurrencyInfo(pluginId)
         const minBalance = minimumPopupModals != null ? minimumPopupModals.minimumNativeBalance : '0'
-        if (lt(wallet.balances[currencyCode] ?? '0', minBalance)) {
+        if (lt(wallet.balanceMap.get(null) ?? '0', minBalance)) {
           return true
         }
       }
@@ -553,7 +549,6 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
 
     if (currencyCode == null || wallet == null) {
       return {
-        account,
         publicAddress: '',
         fioAddressesExist: false,
         isConnected: state.network.isConnected,
@@ -565,7 +560,7 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     const primaryDisplayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
     const primaryExchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
-    const tokenId = getTokenId(state.core.account, pluginId, currencyCode)
+    const tokenId = getTokenIdForced(state.core.account, pluginId, currencyCode)
 
     const primaryCurrencyInfo: GuiCurrencyInfo = {
       walletId: walletId,
@@ -580,7 +575,6 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     const fioAddressesExist = !!state.ui.fioAddress.fioAddresses.length
 
     return {
-      account,
       currencyCode,
       wallet,
       exchangeSecondaryToPrimaryRatio,
@@ -594,7 +588,7 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     async refreshAllFioAddresses() {
       await dispatch(refreshAllFioAddresses())
     },
-    async onSelectWallet(navigation: NavigationBase, walletId: string, tokenId?: string) {
+    async onSelectWallet(navigation: NavigationBase, walletId: string, tokenId: EdgeTokenId) {
       await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
     },
     toggleAccountBalanceVisibility() {

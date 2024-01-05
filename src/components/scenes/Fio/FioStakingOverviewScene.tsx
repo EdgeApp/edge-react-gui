@@ -15,6 +15,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../../select
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
+import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getFioStakingBalances } from '../../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -50,7 +51,7 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
     navigation,
     theme,
     route: {
-      params: { currencyCode, walletId }
+      params: { tokenId, walletId }
     },
     currencyWallet,
     stakingCryptoAmountFormat,
@@ -63,6 +64,7 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
   const styles = getStyles(theme)
   const [locks, setLocks] = React.useState<Lock[]>([])
   const stakingStatus = useWatch(currencyWallet, 'stakingStatus')
+  const currencyCode = getCurrencyCode(currencyWallet, tokenId)
 
   useAsyncEffect(async () => {
     await refreshAllFioAddresses()
@@ -87,10 +89,10 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
   }, [stakingStatus, currencyDenomination])
 
   const handlePressStake = () => {
-    navigation.navigate('fioStakingChange', { change: 'add', currencyCode, walletId })
+    navigation.navigate('fioStakingChange', { change: 'add', tokenId, walletId })
   }
   const handlePressUnstake = () => {
-    navigation.navigate('fioStakingChange', { change: 'remove', currencyCode, walletId })
+    navigation.navigate('fioStakingChange', { change: 'remove', tokenId, walletId })
   }
 
   const renderItems = () =>
@@ -163,10 +165,11 @@ export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnPro
   (state, ownProps) => {
     const {
       route: {
-        params: { walletId, currencyCode }
+        params: { walletId, tokenId }
       }
     } = ownProps
     const currencyWallet = state.core.account.currencyWallets[walletId]
+    const currencyCode = getCurrencyCode(currencyWallet, tokenId)
 
     const { staked } = getFioStakingBalances(currencyWallet.stakingStatus)
     const stakedNativeAmount = staked

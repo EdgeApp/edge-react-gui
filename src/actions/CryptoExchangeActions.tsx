@@ -24,7 +24,7 @@ import { convertCurrency } from '../selectors/WalletSelectors'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { GuiCurrencyInfo, GuiSwapInfo } from '../types/types'
-import { getTokenId } from '../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getTokenIdForced, getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
 import { bestOfPlugins } from '../util/ReferralHelpers'
@@ -52,12 +52,16 @@ export function getQuoteForTransaction(navigation: NavigationBase, info: SetNati
     const { currencyWallets } = state.core.account
     const fromCoreWallet: EdgeCurrencyWallet = currencyWallets[fromWalletId]
     const toCoreWallet: EdgeCurrencyWallet = currencyWallets[toWalletId]
+
+    const fromTokenId = getWalletTokenId(fromCoreWallet, fromCurrencyCode)
+    const toTokenId = getWalletTokenId(toCoreWallet, toCurrencyCode)
+
     const request: EdgeSwapRequest = {
-      fromCurrencyCode,
+      fromTokenId,
       fromWallet: fromCoreWallet,
       nativeAmount: info.primaryNativeAmount,
       quoteFor: info.whichWallet,
-      toCurrencyCode,
+      toTokenId,
       toWallet: toCoreWallet
     }
 
@@ -78,20 +82,18 @@ export function getQuoteForTransaction(navigation: NavigationBase, info: SetNati
         navigation.navigate('exchangeTab', { screen: 'exchange' })
 
         const insufficientFunds = asMaybeInsufficientFundsError(error)
-        if (
-          insufficientFunds != null &&
-          insufficientFunds.currencyCode != null &&
-          fromCurrencyCode !== insufficientFunds.currencyCode &&
-          fromWalletId != null
-        ) {
-          const { currencyCode } = insufficientFunds
+        if (insufficientFunds != null && fromWalletId != null && fromTokenId !== insufficientFunds.tokenId) {
+          const { tokenId } = insufficientFunds
           const { currencyWallets } = state.core.account
+          const fromWallet = currencyWallets[fromWalletId]
+          const currencyCode = getCurrencyCode(fromWallet, tokenId)
+
           await Airship.show(bridge => (
             <InsufficientFeesModal
               bridge={bridge}
               coreError={insufficientFunds}
               navigation={navigation}
-              wallet={currencyWallets[fromWalletId]}
+              wallet={fromWallet}
               onSwap={() => {
                 dispatch({ type: 'SHIFT_COMPLETE' })
                 dispatch(selectWalletForExchange(fromWalletId, currencyCode, 'to')).catch(err => showError(err))
@@ -163,7 +165,9 @@ export const getSwapInfo = async (state: RootState, quote: EdgeSwapQuote): Promi
   // Currency conversion tools:
   // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
   const { request } = quote
-  const { fromWallet, toWallet, fromCurrencyCode = '', toCurrencyCode = '' } = request
+  const { fromWallet, toWallet, fromTokenId, toTokenId } = request
+  const fromCurrencyCode = getCurrencyCode(fromWallet, fromTokenId)
+  const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
 
   // Format from amount:
   const fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
@@ -300,7 +304,9 @@ export function shiftCryptoCurrency(navigation: NavigationBase, quote: EdgeSwapQ
     const { fromDisplayAmount, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = await getSwapInfo(state, quote)
     const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate, request } = quote
     // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
-    const { toWallet, fromCurrencyCode = '', toCurrencyCode = '' } = request
+    const { fromWallet, toWallet, fromTokenId, toTokenId } = request
+    const fromCurrencyCode = getCurrencyCode(fromWallet, fromTokenId)
+    const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
     try {
       logEvent('Exchange_Shift_Start')
       const { swapInfo } = account.swapConfig[pluginId]
@@ -373,7 +379,7 @@ export function selectWalletForExchange(walletId: string, currencyCode: string, 
     const primaryExchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, cc)
     const primaryInfo: GuiCurrencyInfo = {
       walletId,
-      tokenId: getTokenId(state.core.account, wallet.currencyInfo.pluginId, cc),
+      tokenId: getTokenIdForced(state.core.account, wallet.currencyInfo.pluginId, cc),
       displayCurrencyCode: cc,
       exchangeCurrencyCode: cc,
       displayDenomination: primaryDisplayDenomination,
@@ -419,7 +425,9 @@ async function getBalanceMessage(state: RootState, walletId: string, currencyCod
   const { account } = state.core
   const { currencyWallets } = account
   const wallet = currencyWallets[walletId]
-  const balanceInCrypto = wallet.balances[currencyCode] ?? '0'
+  const tokenId = getWalletTokenId(wallet, currencyCode)
+
+  const balanceInCrypto = wallet.balanceMap.get(tokenId) ?? '0'
   const isoFiatCurrencyCode = wallet.fiatCurrencyCode
   const exchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
   const balanceInCryptoDisplay = convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)

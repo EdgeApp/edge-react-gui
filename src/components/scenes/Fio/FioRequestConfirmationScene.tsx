@@ -11,7 +11,7 @@ import { getExchangeRate, getSelectedCurrencyWallet } from '../../../selectors/W
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../../types/types'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import {
   addToFioAddressCache,
   checkPubAddress,
@@ -115,7 +115,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     const { amounts } = route.params
     const { walletAddresses, fioAddressFrom } = this.state
     const walletAddress = walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)
-    const { publicAddress } = await edgeWallet.getReceiveAddress()
+    const { publicAddress } = await edgeWallet.getReceiveAddress({ tokenId: null })
 
     if (walletAddress && fioPlugin) {
       const { fioWallet } = walletAddress
@@ -355,7 +355,7 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
 
     const primaryCurrencyInfo: GuiCurrencyInfo = {
       walletId: state.ui.wallets.selectedWalletId,
-      tokenId: getTokenId(account, selectedWallet.currencyInfo.pluginId, currencyCode),
+      tokenId: getTokenIdForced(account, selectedWallet.currencyInfo.pluginId, currencyCode),
       displayCurrencyCode: currencyCode,
       displayDenomination: primaryDisplayDenomination,
       exchangeCurrencyCode: primaryExchangeCurrencyCode,

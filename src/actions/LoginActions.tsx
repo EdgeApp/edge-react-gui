@@ -276,7 +276,7 @@ const currencyCodesToEdgeTokenIds = (account: EdgeAccount, currencyCodes: string
 
     // Add the mainnet EdgeAsset if we haven't yet
     if (edgeTokenIds.find(edgeTokenId => edgeTokenId.tokenId == null && edgeTokenId.pluginId === pluginId) == null) {
-      edgeTokenIds.push({ pluginId })
+      edgeTokenIds.push({ pluginId, tokenId: null })
     }
 
     // Add tokens

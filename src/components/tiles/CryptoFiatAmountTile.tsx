@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-raw-text */
 import { abs, div } from 'biggystring'
-import { EdgeDenomination } from 'edge-core-js'
+import { EdgeDenomination, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 import { MAX_CRYPTO_AMOUNT_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
@@ -17,7 +17,7 @@ interface Props {
   nativeCryptoAmount: string
   title: string
   walletId: string
-  tokenId?: string
+  tokenId: EdgeTokenId
   type?: TileType
   onPress?: () => Promise<void> | void
 }

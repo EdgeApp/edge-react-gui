@@ -9,7 +9,7 @@ import { lstrings } from '../../../locales/strings'
 import { StakePlugin, StakePolicy, StakePositionMap } from '../../../plugins/stake-plugins/types'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getPluginFromPolicy, getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
 import { StakingOptionCard } from '../../cards/StakingOptionCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -39,7 +39,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
 
   const account = useSelector(state => state.core.account)
   const pluginId = wallet?.currencyInfo.pluginId
-  const tokenId = pluginId ? getTokenId(account, pluginId, currencyCode) : undefined
+  const tokenId = pluginId ? getTokenIdForced(account, pluginId, currencyCode) : null
 
   //
   // Handlers

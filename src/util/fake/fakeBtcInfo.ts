@@ -39,9 +39,5 @@ export const btcCurrencyInfo: EdgeCurrencyInfo = {
   // Explorers:
   blockExplorer: 'https://blockchair.com/bitcoin/block/%s',
   addressExplorer: 'https://blockchair.com/bitcoin/address/%s',
-  transactionExplorer: 'https://blockchair.com/bitcoin/transaction/%s',
-
-  // Images:
-  symbolImage: ``,
-  symbolImageDarkMono: ``
+  transactionExplorer: 'https://blockchair.com/bitcoin/transaction/%s'
 }

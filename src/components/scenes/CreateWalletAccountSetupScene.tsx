@@ -63,7 +63,7 @@ export function CreateWalletAccountSetupScene(props: Props): JSX.Element {
       .finally(() => setSpinning(false))
   }
 
-  const tokenId = getTokenId(account, pluginId, currencyCode)
+  const tokenId = getTokenId(account, pluginId, currencyCode) ?? null
 
   useMount(() => logEvent('Activate_Wallet_Start'))
 

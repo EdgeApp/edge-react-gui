@@ -6,7 +6,7 @@ import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
   nativeAmount: string
-  tokenId?: EdgeTokenId
+  tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
   withSymbol?: boolean
   hideBalance?: boolean

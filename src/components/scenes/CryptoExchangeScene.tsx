@@ -1,5 +1,5 @@
 import { div, gt, gte } from 'biggystring'
-import { EdgeAccount } from 'edge-core-js'
+import { EdgeAccount, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -14,7 +14,7 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../types/types'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getTokenId, getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, zeroString } from '../../util/utils'
 import { InsetStyles, SceneWrapper } from '../common/SceneWrapper'
@@ -36,8 +36,9 @@ interface StateProps {
   exchangeInfo: ExchangeInfo
 
   // The following props are used to populate the CryptoExchangeFlipInputs
+  fromTokenId: EdgeTokenId
   fromWalletId: string
-  fromWalletBalances: { [code: string]: string }
+  fromWalletBalanceMap: Map<EdgeTokenId, string>
   fromWalletName: string
   fromExchangeAmount: string
   fromWalletPrimaryInfo: GuiCurrencyInfo
@@ -77,8 +78,9 @@ interface State {
 }
 
 const defaultFromWalletInfo = {
+  fromTokenId: null,
   fromCurrencyCode: '',
-  fromWalletBalances: {},
+  fromWalletBalanceMap: new Map<EdgeTokenId, string>(),
   fromWalletName: '',
   fromWalletPrimaryInfo: emptyCurrencyInfo,
   fromExchangeAmount: '',
@@ -192,9 +194,9 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   checkExceedsAmount(): boolean {
-    const { fromCurrencyCode, fromWalletBalances } = this.props
+    const { fromTokenId, fromWalletBalanceMap } = this.props
     const { fromAmountNative, whichWalletFocus } = this.state
-    const fromNativeBalance = fromWalletBalances[fromCurrencyCode] ?? '0'
+    const fromNativeBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
 
     return whichWalletFocus === 'from' && gte(fromNativeBalance, '0') && gt(fromAmountNative, fromNativeBalance)
   }
@@ -240,10 +242,10 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   renderAlert = () => {
-    const { fromWalletBalances, fromCurrencyCode, insufficient, genericError, pluginId } = this.props
+    const { fromWalletBalanceMap, fromTokenId, insufficient, genericError, pluginId } = this.props
 
     const { minimumPopupModals } = getSpecialCurrencyInfo(pluginId)
-    const primaryNativeBalance = fromWalletBalances[fromCurrencyCode] ?? '0'
+    const primaryNativeBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
 
     if (minimumPopupModals != null && primaryNativeBalance < minimumPopupModals.minimumNativeBalance) {
       return <AlertCardUi4 marginRem={[1.5, 1]} title={lstrings.request_minimum_notification_title} body={minimumPopupModals.alertMessage} type="warning" />
@@ -375,22 +377,25 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   }
 
   if (fromWalletId != null && currencyWallets[fromWalletId] != null) {
+    const fromWallet = currencyWallets[fromWalletId]
     const { fromNativeAmount, fromWalletPrimaryInfo } = cryptoExchange
     const {
       exchangeDenomination: { multiplier },
       exchangeCurrencyCode
     } = fromWalletPrimaryInfo
+    const fromTokenId = getWalletTokenId(fromWallet, exchangeCurrencyCode)
 
     const fromWalletName = getWalletName(currencyWallets[fromWalletId])
     const {
       currencyInfo: { pluginId },
-      balances: fromWalletBalances
+      balanceMap: fromWalletBalanceMap
     } = currencyWallets[fromWalletId]
 
     Object.assign(result, {
+      fromTokenId,
       fromWalletId,
       fromWalletName,
-      fromWalletBalances,
+      fromWalletBalanceMap,
       fromCurrencyCode: exchangeCurrencyCode,
       fromWalletPrimaryInfo,
       fromExchangeAmount: div(fromNativeAmount, multiplier, DECIMAL_PRECISION),

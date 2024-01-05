@@ -1,5 +1,5 @@
 import { div, mul } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 import { formatFiatString } from '../../hooks/useFiatText'
@@ -15,7 +15,7 @@ interface Props {
   iconUri: string
   inputModalMessage: string
   title: string
-  tokenId?: string
+  tokenId: EdgeTokenId
   onAmountChanged: (fiatAmount: string, nativeCryptoAmount: string) => void
 }
 

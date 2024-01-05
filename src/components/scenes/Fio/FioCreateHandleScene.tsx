@@ -112,7 +112,7 @@ export const FioCreateHandleScene = (props: Props) => {
         body: JSON.stringify({
           address: fioAccountName,
           referralCode: freeRegRefCode,
-          publicKey: (await wallet.getReceiveAddress()).publicAddress,
+          publicKey: (await wallet.getReceiveAddress({ tokenId: null })).publicAddress,
           redirectUrl: '',
           apiToken: freeRegApiToken
         })

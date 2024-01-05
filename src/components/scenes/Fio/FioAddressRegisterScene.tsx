@@ -92,7 +92,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
   checkFreeAddress = async () => {
     try {
       const { fioPlugin } = this.props
-      const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings.freeAddressRef)
+      const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings?.freeAddressRef)
       if (publicDomains.findIndex((publicDomain: FioPublicDomain) => publicDomain.free) > -1) {
         this.setState({ showFreeAddressLink: true })
       }
@@ -105,7 +105,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
   getPublicDomains = async () => {
     const { fioPlugin } = this.props
     try {
-      const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings.fallbackRef)
+      const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings?.fallbackRef)
       const publicDomainsConverted = publicDomains
         // @ts-expect-error
         .sort(publicDomain => (publicDomain.domain === FIO_DOMAIN_DEFAULT.name ? -1 : 1))
@@ -149,7 +149,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
     if (!fioWallets.length) return
     if (!selectedWallet) return
     const publicKey = selectedWallet.publicWalletInfo.keys.publicKey
-    const url = `${fioPlugin.currencyInfo.defaultSettings.fioAddressRegUrl}${fioPlugin.currencyInfo.defaultSettings.freeAddressRef}?publicKey=${publicKey}`
+    const url = `${fioPlugin.currencyInfo.defaultSettings?.fioAddressRegUrl}${fioPlugin.currencyInfo.defaultSettings?.freeAddressRef}?publicKey=${publicKey}`
     try {
       await openLink(url)
     } catch (e: any) {
@@ -294,7 +294,12 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
   selectFioWallet = async () => {
     await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={[{ pluginId: 'fio' }]} />
+      <WalletListModal
+        bridge={bridge}
+        navigation={this.props.navigation}
+        headerTitle={lstrings.select_wallet}
+        allowedAssets={[{ pluginId: 'fio', tokenId: null }]}
+      />
     )).then(result => {
       if (result?.type === 'wallet') {
         const { walletId } = result

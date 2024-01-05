@@ -207,12 +207,12 @@ const getProposalNamespaceCompatibleEdgeTokenIds = (proposal: Web3WalletTypes.Se
     if (requiredChainIds.has(chainIdString)) {
       hasWalletForRequiredNamespace = true
       if (!edgeTokenIdMap.has(pluginId)) {
-        edgeTokenIdMap.set(pluginId, { pluginId })
+        edgeTokenIdMap.set(pluginId, { pluginId, tokenId: null })
       }
     }
     if (optionalChainIds.has(chainIdString)) {
       if (!edgeTokenIdMap.has(pluginId)) {
-        edgeTokenIdMap.set(pluginId, { pluginId })
+        edgeTokenIdMap.set(pluginId, { pluginId, tokenId: null })
       }
     }
   }

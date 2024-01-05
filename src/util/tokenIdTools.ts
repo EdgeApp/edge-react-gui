@@ -46,7 +46,7 @@ export function makeCurrencyCodeTable(currencyConfigMap: CurrencyConfigMap): (cu
     const currencyConfig = currencyConfigMap[pluginId]
     const { allTokens, currencyInfo } = currencyConfig
 
-    addMatch(currencyInfo.currencyCode, { pluginId })
+    addMatch(currencyInfo.currencyCode, { pluginId, tokenId: null })
 
     for (const tokenId of Object.keys(allTokens)) {
       const token = allTokens[tokenId]

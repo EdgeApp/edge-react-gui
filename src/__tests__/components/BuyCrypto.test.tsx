@@ -27,7 +27,7 @@ describe('BuyCrypto', () => {
 
     const renderer = TestRenderer.create(
       <FakeProviders initialState={mockState}>
-        <BuyCrypto wallet={fakeWallet} tokenId={undefined} navigation={fakeNavigation} />
+        <BuyCrypto wallet={fakeWallet} tokenId={null} navigation={fakeNavigation} />
       </FakeProviders>
     )
 

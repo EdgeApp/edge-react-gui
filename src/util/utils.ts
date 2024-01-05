@@ -28,7 +28,7 @@ import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { RootState } from '../types/reduxTypes'
 import { GuiExchangeRates, GuiFiatType } from '../types/types'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers'
-import { getTokenId } from './CurrencyInfoHelpers'
+import { getCurrencyCode, getTokenId } from './CurrencyInfoHelpers'
 import { base58 } from './encoding'
 
 export const DECIMAL_PRECISION = 18
@@ -277,8 +277,9 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
   for (const walletId of Object.keys(state.core.account.currencyWallets)) {
     const wallet = state.core.account.currencyWallets[walletId]
     log.push(`LogTot: pluginId:${wallet.currencyInfo.pluginId} wallet=${wallet.id.slice(0, 5)} isoFiat=${isoFiatCurrencyCode}`)
-    for (const currencyCode of Object.keys(wallet.balances)) {
-      const nativeBalance = wallet.balances[currencyCode] ?? '0'
+    for (const tokenId of wallet.balanceMap.keys()) {
+      const nativeBalance = wallet.balanceMap.get(tokenId) ?? '0'
+      const currencyCode = getCurrencyCode(wallet, tokenId)
       const rate = exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? '0'
       log.push(`\nLogTot: code=${currencyCode} rate=${rate} nb=${nativeBalance}`)
 

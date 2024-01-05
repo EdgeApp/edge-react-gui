@@ -1,5 +1,5 @@
 import { FlashList, ListRenderItem } from '@shopify/flash-list'
-import { EdgeAccount } from 'edge-core-js'
+import { EdgeAccount, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -14,7 +14,7 @@ import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { BooleanMap, EdgeAsset } from '../../types/types'
-import { getCurrencyCode, getTokenId, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getTokenIdForced, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { CustomAsset } from '../data/row/CustomAssetRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
@@ -34,7 +34,7 @@ export type WalletListResult =
   | {
       type: 'wallet'
       walletId: string
-      tokenId: string | undefined
+      tokenId: EdgeTokenId
       /** @deprecated Use tokenId instead */
       currencyCode: string
     }
@@ -68,7 +68,8 @@ interface Props {
 const keysOnlyModeAssets: EdgeAsset[] = Object.keys(SPECIAL_CURRENCY_INFO)
   .filter(pluginId => isKeysOnlyPlugin(pluginId))
   .map(pluginId => ({
-    pluginId
+    pluginId,
+    tokenId: null
   }))
 
 export function WalletListModal(props: Props) {
@@ -97,6 +98,7 @@ export function WalletListModal(props: Props) {
   const showCustomAssets = customAssets != null && customAssets.length > 0
 
   const account = useSelector(state => state.core.account)
+  const currencyWallets = useSelector(state => state.core.account.currencyWallets)
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -132,13 +134,15 @@ export function WalletListModal(props: Props) {
   const handlePaymentMethodPress = useHandler((fiatAccountId: string) => () => {
     bridge.resolve({ type: 'wyre', fiatAccountId })
   })
-  const handleWalletListPress = useHandler((walletId: string, currencyCode: string, tokenId?: string, customAsset?: CustomAsset) => {
+  const handleWalletListPress = useHandler((walletId: string, tokenId: EdgeTokenId, customAsset?: CustomAsset) => {
     if (walletId === '') {
       handleCancel()
       showError(lstrings.network_alert_title)
     } else if (customAsset != null) {
       bridge.resolve({ type: 'custom', customAsset })
-    } else if (walletId != null && currencyCode != null) {
+    } else {
+      const wallet = currencyWallets[walletId]
+      const currencyCode = getCurrencyCode(wallet, tokenId)
       bridge.resolve({ type: 'wallet', walletId, currencyCode, tokenId })
     }
   })
@@ -324,7 +328,7 @@ export const pickWallet = async ({
   if (assets != null && matchingAssets.length === 1 && Object.keys(walletIdMap).length === 1) {
     // Only one matching wallet and asset. Auto pick the wallet
     const [walletId, currencyCode] = Object.keys(walletIdMap)[0].split(':')
-    const tokenId = getTokenId(account, currencyWallets[walletId].currencyInfo.pluginId, currencyCode)
+    const tokenId = getTokenIdForced(account, currencyWallets[walletId].currencyInfo.pluginId, currencyCode)
     return { type: 'wallet', walletId, currencyCode, tokenId }
   } else {
     const walletListResult = await Airship.show<WalletListResult>(bridge => (

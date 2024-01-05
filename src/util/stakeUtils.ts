@@ -65,7 +65,7 @@ export const getAllocationLocktimeMessage = (allocation: PositionAllocation) => 
  * Returns the icon uris of stake and reward assets.
  */
 export const getPolicyIconUris = (
-  { metaTokens, pluginId }: EdgeCurrencyInfo,
+  { metaTokens = [], pluginId }: EdgeCurrencyInfo,
   stakePolicy: StakePolicy
 ): { stakeAssetUris: string[]; rewardAssetUris: string[] } => {
   const stakeAssetNames = getAssetCurrencyCodes(stakePolicy, 'stakeAssets')
@@ -78,8 +78,8 @@ export const getPolicyIconUris = (
     (rewardAssetName, i) => stakePolicy.rewardAssets[i].cdnName ?? metaTokens.find(metaToken => metaToken.currencyCode === rewardAssetName)?.contractAddress
   )
 
-  const stakeAssetUris = stakeContractAddresses.map(stakeContractAddress => getCurrencyIconUris(pluginId, stakeContractAddress).symbolImage)
-  const rewardAssetUris = rewardContractAddresses.map(rewardContractAddress => getCurrencyIconUris(pluginId, rewardContractAddress).symbolImage)
+  const stakeAssetUris = stakeContractAddresses.map(stakeContractAddress => getCurrencyIconUris(pluginId, stakeContractAddress ?? null).symbolImage)
+  const rewardAssetUris = rewardContractAddresses.map(rewardContractAddress => getCurrencyIconUris(pluginId, rewardContractAddress ?? null).symbolImage)
 
   return { stakeAssetUris, rewardAssetUris }
 }

@@ -119,7 +119,7 @@ export function useWalletConnect(): WalletConnect {
     const chainId = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
     if (chainId == null) return
 
-    const address = await wallet.getReceiveAddress()
+    const address = await wallet.getReceiveAddress({ tokenId: null })
     const supportedNamespaces = getSupportedNamespaces(chainId, address.publicAddress)
 
     // Check that we support all required methods
@@ -238,7 +238,7 @@ export const getAccounts = async (currencyWallets: { [walletId: string]: EdgeCur
     const chainId = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
     if (chainId == null) continue
 
-    const address = await currencyWallets[walletId].getReceiveAddress()
+    const address = await currencyWallets[walletId].getReceiveAddress({ tokenId: null })
     const account = `${chainId.namespace}:${chainId.reference}:${address.publicAddress}`
     map.set(account, walletId)
   }

@@ -14,7 +14,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 interface Props {
   // Main props - If non is specified, would just render an empty view
   pluginId?: string // Needed when walletId is not supplied and we still want to get an icon
-  tokenId?: EdgeTokenId // Needed when it's a token (not the plugin's native currency)
+  tokenId: EdgeTokenId // Needed when it's a token (not the plugin's native currency)
   walletId?: string // To allow showing the progress ratio sync circle
 
   // Image props
@@ -50,7 +50,7 @@ const CryptoIconComponent = (props: Props) => {
     if (pluginId == null) return null
 
     // Get Currency Icon URI
-    const icon = getCurrencyIconUris(pluginId, tokenId ?? undefined)
+    const icon = getCurrencyIconUris(pluginId, tokenId)
     const source = { uri: mono ? icon.symbolImageDarkMono : icon.symbolImage }
 
     // Return Currency logo from the edge server
@@ -69,7 +69,7 @@ const CryptoIconComponent = (props: Props) => {
     }
 
     // Get Parent Icon URI
-    const icon = getCurrencyIconUris(pluginId)
+    const icon = getCurrencyIconUris(pluginId, null)
     const source = { uri: mono ? icon.symbolImageDarkMono : icon.symbolImage }
 
     // Return Parent logo from the edge server

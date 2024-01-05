@@ -1,5 +1,5 @@
 import { add, div, mul } from 'biggystring'
-import { EdgeAccount } from 'edge-core-js'
+import { EdgeAccount, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 import { LoginUpdatePayload, NewPushEvent } from '../../controllers/action-queue/types/pushApiTypes'
@@ -89,7 +89,7 @@ export const LoanManagerService = (props: Props) => {
   // Update Liquidation Threshold Push Event
   //
   const getCurrencyCode = React.useCallback(
-    (borrowEngine: BorrowEngine, tokenId?: string): string => {
+    (borrowEngine: BorrowEngine, tokenId: EdgeTokenId): string => {
       const tokens = allTokens[borrowEngine.currencyWallet.currencyInfo.pluginId]
       const token = tokenId != null ? tokens[tokenId] : undefined
       return token?.currencyCode ?? borrowEngine.currencyWallet.currencyInfo.currencyCode
@@ -186,7 +186,7 @@ export const LoanManagerService = (props: Props) => {
       const onlyUsdBasedDebts = filteredDebts.every(debt => (debt.tokenId != null ? USD_BASED_TOKEN_IDS.includes(debt.tokenId.toLowerCase()) : false))
 
       if (onlyOneCollateral && onlyUsdBasedDebts) {
-        const getExchangeAmount = (tokenId: string | undefined, nativeAmount: string): string => {
+        const getExchangeAmount = (tokenId: EdgeTokenId, nativeAmount: string): string => {
           const tokens = allTokens[borrowEngine.currencyWallet.currencyInfo.pluginId]
           const token = tokenId != null ? tokens[tokenId] : undefined
           const denom = token != null ? token.denominations[0] : borrowEngine.currencyWallet.currencyInfo.denominations[0]

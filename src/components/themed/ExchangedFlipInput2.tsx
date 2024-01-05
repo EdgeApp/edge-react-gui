@@ -1,5 +1,5 @@
 import { div, log10, mul, round } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import React, { useMemo, useState } from 'react'
 import { ActivityIndicator, Platform, ReturnKeyType, TouchableOpacity } from 'react-native'
 
@@ -31,7 +31,7 @@ export interface ExchangedFlipInputAmounts {
 
 export interface Props {
   walletId: string
-  tokenId?: string
+  tokenId: EdgeTokenId
   startNativeAmount?: string
   keyboardVisible?: boolean
   headerText: string

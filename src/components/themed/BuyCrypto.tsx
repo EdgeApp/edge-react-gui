@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -18,7 +18,7 @@ const allowedPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId => !
 
 interface OwnProps {
   wallet: EdgeCurrencyWallet
-  tokenId?: string
+  tokenId: EdgeTokenId
   navigation: NavigationBase
 }
 

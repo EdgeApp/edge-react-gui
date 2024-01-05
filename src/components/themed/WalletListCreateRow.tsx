@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -13,7 +13,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { ThunkAction } from '../../types/reduxTypes'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { logEvent, TrackingEventName } from '../../util/tracking'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { ListModal } from '../modals/ListModal'
@@ -30,7 +30,7 @@ export interface WalletListCreateRowProps {
   pluginId: string
   walletType?: string
 
-  onPress?: (walletId: string, currencyCode: string) => void
+  onPress?: (walletId: string, tokenId: EdgeTokenId) => void
 }
 
 export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) => {
@@ -54,12 +54,12 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const tokenId = getTokenId(account, pluginId, currencyCode)
+  const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
   const networkName = pluginId != null && tokenId != null ? ` (${account.currencyConfig[pluginId].currencyInfo.displayName})` : ''
 
   const handlePress = useHandler(() => {
-    const handleRes = (walletId: string) => (onPress != null ? onPress(walletId, currencyCode) : null)
+    const handleRes = (walletId: string) => (onPress != null ? onPress(walletId, tokenId) : null)
     if (walletType != null) {
       dispatch(createAndSelectWallet({ walletType }))
         .then(handleRes)
@@ -81,6 +81,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
         Airship.show(bridge => {
           const renderRow = (wallet: EdgeCurrencyWallet) => (
             <WalletListCurrencyRow
+              tokenId={null}
               wallet={wallet}
               onPress={walletId => {
                 dispatch(

@@ -1,6 +1,6 @@
 import * as NavigationCore from '@react-navigation/core'
 import { StackActionHelpers } from '@react-navigation/native'
-import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, JsonObject, OtpError } from 'edge-core-js'
+import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTokenId, JsonObject, OtpError } from 'edge-core-js'
 import { InitialRouteName } from 'edge-login-ui-rn'
 
 import { CoinRankingDetailsParams } from '../components/scenes/CoinRankingDetailsScene'
@@ -112,7 +112,7 @@ export interface RouteParamList {
     displayName?: string
     multiplier?: string
     networkLocation?: JsonObject
-    tokenId?: string // Acts like "add token" if this is missing
+    tokenId?: EdgeTokenId // Acts like "add token" if this is missing
     walletId: string
   }
   exchange: {}
@@ -185,11 +185,11 @@ export interface RouteParamList {
   }
   fioStakingChange: {
     change: 'add' | 'remove'
-    currencyCode: string
+    tokenId: EdgeTokenId
     walletId: string
   }
   fioStakingOverview: {
-    currencyCode: string
+    tokenId: EdgeTokenId
     walletId: string
   }
   home: {}
@@ -204,12 +204,12 @@ export interface RouteParamList {
   loanCreateConfirmation: {
     borrowEngine: BorrowEngine
     borrowPlugin: BorrowPlugin
-    destTokenId: string
+    destTokenId: EdgeTokenId
     destWallet: EdgeCurrencyWallet
     nativeDestAmount: string
     nativeSrcAmount: string
     paymentMethod?: PaymentMethod
-    srcTokenId?: string
+    srcTokenId: EdgeTokenId
     srcWallet: EdgeCurrencyWallet
   }
   loanClose: {

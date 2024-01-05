@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Linking, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -17,7 +17,7 @@ const transactionListUnsupportedPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).f
 
 interface OwnProps {
   wallet: EdgeCurrencyWallet
-  tokenId?: string
+  tokenId: EdgeTokenId
 }
 
 type Props = OwnProps
@@ -34,7 +34,7 @@ export const ExplorerCard = (props: Props) => {
   //
 
   const handlePress = useHandler(async () => {
-    const receiveAddress = await wallet.getReceiveAddress()
+    const receiveAddress = await wallet.getReceiveAddress({ tokenId: null })
     const url = sprintf(addressExplorer, receiveAddress.publicAddress)
     await Linking.openURL(url)
   })

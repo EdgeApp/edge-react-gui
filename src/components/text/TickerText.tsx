@@ -13,7 +13,7 @@ import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
   wallet: EdgeCurrencyWallet
-  tokenId?: EdgeTokenId
+  tokenId: EdgeTokenId
 }
 
 const getPercentDeltaString = (currencyCode: string, assetToFiatRate: string, assetToYestFiatRate: string, usdToWalletFiatRate: string, theme: Theme) => {

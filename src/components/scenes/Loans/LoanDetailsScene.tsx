@@ -1,5 +1,5 @@
 import { add, div, gt, max, mul, sub } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -304,7 +304,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const LoanDetailsScene = withLoanAccount(LoanDetailsSceneComponent)
 
-export const useFiatTotal = (wallet: EdgeCurrencyWallet, tokenAmounts: Array<{ tokenId?: string; nativeAmount: string }>): string => {
+export const useFiatTotal = (wallet: EdgeCurrencyWallet, tokenAmounts: Array<{ tokenId: EdgeTokenId; nativeAmount: string }>): string => {
   const exchangeRates = useSelector(state => state.exchangeRates)
 
   return tokenAmounts.reduce((sum, tokenAmount) => {
@@ -320,7 +320,7 @@ export const displayFiatTotal = (wallet: EdgeCurrencyWallet, fiatAmount: string)
   return `${fiatSymbol}${formatFiatString({ autoPrecision: true, fiatAmount })}`
 }
 
-export const calculateFiatAmount = (wallet: EdgeCurrencyWallet, exchangeRates: GuiExchangeRates, tokenId: string | undefined, nativeAmount: string): string => {
+export const calculateFiatAmount = (wallet: EdgeCurrencyWallet, exchangeRates: GuiExchangeRates, tokenId: EdgeTokenId, nativeAmount: string): string => {
   if (tokenId == null) return '0' // TODO: Support wrapped native token
 
   const token = getToken(wallet, tokenId)

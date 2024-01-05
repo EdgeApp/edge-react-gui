@@ -35,7 +35,7 @@ const fakeCurrencyConfig: any = {
 }
 
 const fakeCoreWallet: any = {
-  balances: { BTC: '123123' },
+  balanceMap: new Map([[null, '123123']]),
   blockHeight: 12345,
   currencyConfig: fakeCurrencyConfig,
   currencyInfo,

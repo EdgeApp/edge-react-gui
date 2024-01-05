@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { lstrings } from '../../../locales/strings'
 import { HomeAddress, SepaInfo } from '../../../types/FormTypes'
 import { StringMap } from '../../../types/types'
+import { getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import { FiatPaymentType, FiatPluginUi } from '../fiatPluginTypes'
 import {
   FiatProvider,
@@ -250,7 +251,7 @@ const approveBityQuote = async (
 
   if (orderData.message_to_sign != null) {
     const { body } = orderData.message_to_sign
-    const { publicAddress } = await wallet.getReceiveAddress()
+    const { publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
     const signedMessage = await wallet.signMessage(body, { otherParams: { publicAddress } })
     const signUrl = baseUrl + orderData.message_to_sign.signature_submission_url
     const request = {
@@ -408,7 +409,7 @@ export const bityProvider: FiatProviderFactory = {
             // Bity only checks SEPA info format validity.
             // Home address and KYC is only required for sell.
 
-            const cryptoAddress = (await coreWallet.getReceiveAddress()).publicAddress
+            const cryptoAddress = (await coreWallet.getReceiveAddress({ tokenId: null })).publicAddress
 
             await showUi.sepaForm({
               headerTitle: lstrings.sepa_form_title,
@@ -489,8 +490,10 @@ const completeSellOrder = async (approveQuoteRes: BityApproveQuoteResponse, core
     throw new Error('Bity: Could not find input denomination: ' + inputCurrencyCode)
   }
 
+  const tokenId = getWalletTokenId(coreWallet, inputCurrencyCode)
+
   const spendInfo: EdgeSpendInfo = {
-    currencyCode: inputCurrencyCode,
+    tokenId,
     spendTargets: [
       {
         nativeAmount,
@@ -502,7 +505,7 @@ const completeSellOrder = async (approveQuoteRes: BityApproveQuoteResponse, core
       notes: `${pluginDisplayName} ${lstrings.transaction_details_exchange_order_id}: ${id}`
     }
   }
-  await showUi.send({ walletId: coreWallet.id, spendInfo })
+  await showUi.send({ walletId: coreWallet.id, spendInfo, tokenId })
 }
 
 /**

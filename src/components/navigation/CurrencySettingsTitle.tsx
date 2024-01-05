@@ -15,7 +15,7 @@ export function CurrencySettingsTitle() {
   const styles = getStyles(useTheme())
   return (
     <View style={styles.container}>
-      <CryptoIcon marginRem={iconPadding} pluginId={pluginId} sizeRem={1.25} />
+      <CryptoIcon marginRem={iconPadding} pluginId={pluginId} tokenId={null} sizeRem={1.25} />
       <EdgeText style={styles.text}>{displayName}</EdgeText>
     </View>
   )

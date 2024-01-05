@@ -8,7 +8,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -41,9 +41,8 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
     Object.keys(currencyWallets).forEach(walletId => {
       const wallet = currencyWallets[walletId]
       const {
-        currencyInfo: { currencyCode, pluginId, walletType },
-        currencyConfig: { allTokens },
-        balances,
+        currencyInfo: { pluginId, walletType },
+        balanceMap,
         enabledTokenIds
       } = wallet
 
@@ -52,32 +51,19 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
       if (pluginId === 'ripple') return // ignore currencies with token approval since they can't do bulk approvals
 
       const walletAssetList: MigrateWalletItem[] = []
-      for (const [cc, bal] of Object.entries(balances)) {
-        if (cc === currencyCode) {
-          if (zeroString(bal)) return // ignore wallet
-          walletAssetList.unshift({
-            createWalletIds: [walletId],
-            currencyCode: cc,
-            displayName: getWalletName(wallet),
-            key: walletId,
-            pluginId: pluginId,
-            walletType
-          })
-        } else {
-          if (zeroString(bal)) continue // ignore token
-          const tokenId = Object.keys(allTokens).find(tokenId => cc === allTokens[tokenId].currencyCode)
-
-          if (tokenId == null || !enabledTokenIds.includes(tokenId)) continue // ignore token
-          walletAssetList.push({
-            createWalletIds: [walletId],
-            currencyCode: cc,
-            displayName: getWalletName(wallet),
-            key: `${walletId}:${cc}`,
-            pluginId: pluginId,
-            tokenId,
-            walletType
-          })
-        }
+      for (const [tokenId, bal] of Array.from(balanceMap.entries())) {
+        if (zeroString(bal)) continue // ignore token
+        if (tokenId != null && !enabledTokenIds.includes(tokenId)) continue // ignore token
+        const currencyCode = getCurrencyCode(wallet, tokenId)
+        walletAssetList.push({
+          createWalletIds: [walletId],
+          currencyCode,
+          displayName: getWalletName(wallet),
+          key: `${walletId}:${tokenId ?? 'PARENT_TOKEN'}`,
+          pluginId: pluginId,
+          tokenId,
+          walletType
+        })
       }
       list = [...list, ...walletAssetList]
     })

@@ -88,6 +88,7 @@ describe('SendScene2', () => {
         <SendScene2
           {...fakeSceneProps('send2', {
             walletId: btcWallet.id,
+            tokenId: null,
             doCheckAndShowGetCryptoModal: false
           })}
         />
@@ -107,7 +108,9 @@ describe('SendScene2', () => {
         <SendScene2
           {...fakeSceneProps('send2', {
             walletId: btcWallet.id,
+            tokenId: null,
             spendInfo: {
+              tokenId: null,
               spendTargets: [{ publicAddress: 'some pub address', nativeAmount: '1234' }]
             },
             doCheckAndShowGetCryptoModal: false
@@ -133,7 +136,9 @@ describe('SendScene2', () => {
               { label: 'info tile label 2', value: 'info tile value 2' }
             ],
             walletId: btcWallet.id,
+            tokenId: null,
             spendInfo: {
+              tokenId: null,
               spendTargets: [{ publicAddress: 'some pub address', nativeAmount: '1234' }]
             },
             doCheckAndShowGetCryptoModal: false
@@ -155,7 +160,9 @@ describe('SendScene2', () => {
         <SendScene2
           {...fakeSceneProps('send2', {
             walletId: btcWallet.id,
+            tokenId: null,
             spendInfo: {
+              tokenId: null,
               spendTargets: [
                 { publicAddress: 'some pub address', nativeAmount: '1234' },
                 { publicAddress: 'some pub address 2', nativeAmount: '12345' }
@@ -179,7 +186,9 @@ describe('SendScene2', () => {
     const params: SendScene2Params = {
       hiddenFeaturesMap: { address: true },
       walletId: btcWallet.id,
+      tokenId: null,
       spendInfo: {
+        tokenId: null,
         spendTargets: [
           { publicAddress: 'some pub address', nativeAmount: '1234' },
           { publicAddress: 'some pub address 2', nativeAmount: '12345' }
@@ -222,7 +231,9 @@ describe('SendScene2', () => {
     const params: SendScene2Params = {
       lockTilesMap: { address: true },
       walletId: btcWallet.id,
+      tokenId: null,
       spendInfo: {
+        tokenId: null,
         spendTargets: [
           { publicAddress: 'some pub address', nativeAmount: '1234' },
           { publicAddress: 'some pub address 2', nativeAmount: '12345' }

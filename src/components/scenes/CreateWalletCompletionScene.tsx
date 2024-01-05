@@ -122,7 +122,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
   const renderRow = useHandler(({ item }) => {
     if (item.walletType != null) {
       // Mainnet
-      return <CreateWalletSelectCryptoRow pluginId={item.pluginId} walletName={walletNames[item.key]} rightSide={renderStatus(item)} />
+      return <CreateWalletSelectCryptoRow tokenId={null} pluginId={item.pluginId} walletName={walletNames[item.key]} rightSide={renderStatus(item)} />
     } else if (item.key === tokenKey) {
       // Single token row
       const tokenNameString = newTokenItems.map(item => item.currencyCode).join(', ')

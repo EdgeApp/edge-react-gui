@@ -31,7 +31,7 @@ describe('WalletListRow', () => {
 
     const renderer = TestRenderer.create(
       <FakeProviders initialState={mockState}>
-        <CreateWalletSelectCryptoRow pluginId={pluginId} walletName={walletName} onPress={onPress} rightSide={rightSide} />
+        <CreateWalletSelectCryptoRow pluginId={pluginId} tokenId={null} walletName={walletName} onPress={onPress} rightSide={rightSide} />
       </FakeProviders>
     )
 

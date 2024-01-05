@@ -7,7 +7,7 @@ import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { EdgeAsset } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../util/network'
 import { logEvent } from '../../util/tracking'
 import { fuzzyTimeout } from '../../util/utils'
@@ -125,7 +125,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           for (const currencyCode in currencyCodeMap) {
             if (currencyCodeMap[currencyCode]) {
               try {
-                const currencyTokenId = getTokenId(account, currencyPluginId, currencyCode)
+                const currencyTokenId = getTokenIdForced(account, currencyPluginId, currencyCode)
                 allowedAssets.push({ pluginId: currencyPluginId, tokenId: currencyTokenId })
               } catch (e: any) {
                 // This is ok. We might not support a specific pluginId
