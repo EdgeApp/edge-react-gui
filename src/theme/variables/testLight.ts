@@ -84,10 +84,10 @@ const palette = {
   shadow: 'rgba(0, 0, 0, 0.514)',
 
   // Gradients
-  warningOuter: '#772a0f',
-  warningInner: '#835d22',
-  errorOuter: '#94472e',
-  errorInner: '#962c32',
+  warningOuter: 'rgba(119, 43, 15, 0.44)',
+  warningInner: 'rgba(130, 91, 33, 0.44)',
+  errorOuter: 'rgba(148, 71, 46, 0.44)',
+  errorInner: 'rgba(150, 44, 49, 0.44)',
 
   darkestGreen: '#20312f',
   darkGreen: '#00604d',
