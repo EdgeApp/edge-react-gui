@@ -6,6 +6,7 @@ import { cacheStyles } from 'react-native-patina'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useState } from '../../types/reactHooks'
 import { consify } from '../../util/utils'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { Space } from '../layout/Space'
 import { FlipInputModal2, FlipInputModalResult } from '../modals/FlipInputModal2'
 import { Airship } from '../services/AirshipInstance'
@@ -72,36 +73,38 @@ export function InputTesterScene() {
   const returnKeyType: ReturnKeyType = 'done'
 
   return (
-    <View style={styles.headerContainer}>
-      <CardUi4>
-        <ExchangedFlipInput2
-          ref={exchangedFlipInputRef}
-          walletId={walletId}
-          headerText={headerText}
-          editable={editable}
-          headerCallback={headerCallback}
-          returnKeyType={returnKeyType}
-          forceField={defaultField ? 'crypto' : 'fiat'}
-          keyboardVisible={keyboardVisible}
-          tokenId={tokenId}
-          startNativeAmount={balance}
-          onAmountChanged={onAmountChanged}
-        />
-      </CardUi4>
-      <Space vertical={1}>
-        <SimpleTextInput value={value0} onChangeText={onChangeText0} autoFocus={false} placeholder="Crypto Amount" />
-      </Space>
-      <MainButton label="Set Crypto Amt" onPress={onPress0} />
-      <Space vertical={1}>
-        <SimpleTextInput value={value1} onChangeText={onChangeText1} autoFocus={false} placeholder="Fiat Amount" />
-      </Space>
-      <Space vertical={0.5}>
-        <MainButton label="Set Fiat Amt" onPress={onPress1} />
-      </Space>
-      <Space vertical={0.5}>
-        <MainButton label="Launch FlipInputModal2" onPress={handleFlipInputModal} />
-      </Space>
-    </View>
+    <SceneWrapper scroll hasTabs>
+      <View style={styles.headerContainer}>
+        <CardUi4>
+          <ExchangedFlipInput2
+            ref={exchangedFlipInputRef}
+            walletId={walletId}
+            headerText={headerText}
+            editable={editable}
+            headerCallback={headerCallback}
+            returnKeyType={returnKeyType}
+            forceField={defaultField ? 'crypto' : 'fiat'}
+            keyboardVisible={keyboardVisible}
+            tokenId={tokenId}
+            startNativeAmount={balance}
+            onAmountChanged={onAmountChanged}
+          />
+        </CardUi4>
+        <Space vertical={1}>
+          <SimpleTextInput value={value0} onChangeText={onChangeText0} autoFocus={false} placeholder="Crypto Amount" />
+        </Space>
+        <MainButton label="Set Crypto Amt" onPress={onPress0} />
+        <Space vertical={1}>
+          <SimpleTextInput value={value1} onChangeText={onChangeText1} autoFocus={false} placeholder="Fiat Amount" />
+        </Space>
+        <Space vertical={0.5}>
+          <MainButton label="Set Fiat Amt" onPress={onPress1} />
+        </Space>
+        <Space vertical={0.5}>
+          <MainButton label="Launch FlipInputModal2" onPress={handleFlipInputModal} />
+        </Space>
+      </View>
+    </SceneWrapper>
   )
 }
 
@@ -109,9 +112,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // The sort & add buttons are stacked on top of the header component:
   // Header Stack style
   headerContainer: {
-    margin: theme.rem(2),
-    width: 320,
-    height: 100
+    margin: theme.rem(2)
   },
   headerText: {
     flex: 1

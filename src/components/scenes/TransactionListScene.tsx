@@ -35,7 +35,7 @@ import { TransactionListRow } from '../themed/TransactionListRow'
 import { TransactionListTop } from '../themed/TransactionListTop'
 import { InputTesterScene } from './InputTesterScene'
 
-const SHOW_FLIP_INPUT_TESTER = false
+const SHOW_INPUT_TESTER = false
 
 const AnimatedFlashList = Animated.createAnimatedComponent<FlashListProps<ListItem>>(FlashList)
 
@@ -273,6 +273,10 @@ function TransactionListComponent(props: Props) {
     [handleChangeText, handleDoneSearching, handleStartSearching, isSearching, searchText]
   )
 
+  if (SHOW_INPUT_TESTER) {
+    return <InputTesterScene />
+  }
+
   return (
     <SceneWrapper accentColor={iconColor} avoidKeyboard hasTabs hasHeader hasNotifications renderDrawer={renderDrawer}>
       {({ insetStyles }) => (
@@ -283,29 +287,25 @@ function TransactionListComponent(props: Props) {
             end={{ x: 0, y: 1 }}
             style={StyleSheet.absoluteFill}
           />
-          {SHOW_FLIP_INPUT_TESTER ? (
-            <InputTesterScene />
-          ) : (
-            <AnimatedFlashList
-              ref={flashList}
-              contentContainerStyle={insetStyles}
-              data={listItems}
-              estimatedItemSize={theme.rem(4.25)}
-              getItemType={getItemType}
-              keyboardShouldPersistTaps="handled"
-              keyExtractor={keyExtractor}
-              ListEmptyComponent={emptyComponent}
-              ListHeaderComponent={topArea}
-              onEndReachedThreshold={0.5}
-              refreshControl={refreshControl}
-              renderItem={renderItem}
-              // TODO: Comment out sticky header indices until we figure out how to
-              // give the headers a background only when they're sticking.
-              // stickyHeaderIndices={stickyHeaderIndices}
-              onEndReached={handleScrollEnd}
-              onScroll={handleScroll}
-            />
-          )}
+          <AnimatedFlashList
+            ref={flashList}
+            contentContainerStyle={insetStyles}
+            data={listItems}
+            estimatedItemSize={theme.rem(4.25)}
+            getItemType={getItemType}
+            keyboardShouldPersistTaps="handled"
+            keyExtractor={keyExtractor}
+            ListEmptyComponent={emptyComponent}
+            ListHeaderComponent={topArea}
+            onEndReachedThreshold={0.5}
+            refreshControl={refreshControl}
+            renderItem={renderItem}
+            // TODO: Comment out sticky header indices until we figure out how to
+            // give the headers a background only when they're sticking.
+            // stickyHeaderIndices={stickyHeaderIndices}
+            onEndReached={handleScrollEnd}
+            onScroll={handleScroll}
+          />
         </>
       )}
     </SceneWrapper>
