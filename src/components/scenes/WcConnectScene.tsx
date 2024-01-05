@@ -25,9 +25,9 @@ import { FlashNotification } from '../navigation/FlashNotification'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { CardUi4 } from '../ui4/CardUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
@@ -131,9 +131,7 @@ export const WcConnectScene = (props: Props) => {
         <CardUi4 paddingRem={0} marginRem={[2.5, 0.5, 2]}>
           {renderWalletSelect()}
         </CardUi4>
-        {subTitleText !== '' && (
-          <MainButton label={lstrings.wc_confirm_connect_button} type="secondary" marginRem={[3.5, 0.5]} onPress={handleConnect} alignSelf="center" />
-        )}
+        {subTitleText === '' ? null : <ButtonsViewUi4 scrollMargin primary={{ label: lstrings.wc_confirm_connect_button, onPress: handleConnect }} />}
       </ScrollView>
     </SceneWrapper>
   )
@@ -142,7 +140,8 @@ export const WcConnectScene = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   currencyLogo: {
     height: theme.rem(2),
-    width: theme.rem(2)
+    width: theme.rem(2),
+    marginLeft: theme.rem(0.5)
   },
   container: {
     padding: theme.rem(0.5),
