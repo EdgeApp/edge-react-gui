@@ -31,8 +31,8 @@ exports[`TransactionListRow should render with loading props 1`] = `
   onStartShouldSetResponder={[Function]}
   style={
     {
+      "alignSelf": "stretch",
       "borderRadius": 16,
-      "flex": 1,
       "marginBottom": 11,
       "marginLeft": 11,
       "marginRight": 11,

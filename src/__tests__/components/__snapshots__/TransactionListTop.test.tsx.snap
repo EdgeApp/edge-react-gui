@@ -843,8 +843,8 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
       style={
         [
           {
+            "alignSelf": "stretch",
             "borderRadius": 16,
-            "flex": 1,
           },
           {
             "marginBottom": -11,
@@ -858,6 +858,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             "paddingRight": 0,
             "paddingTop": 0,
           },
+          undefined,
         ]
       }
     >

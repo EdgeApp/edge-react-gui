@@ -211,8 +211,8 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
           style={
             [
               {
+                "alignSelf": "stretch",
                 "borderRadius": 16,
-                "flex": 1,
               },
               {
                 "marginBottom": 0,
@@ -226,6 +226,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                 "paddingRight": 11,
                 "paddingTop": 11,
               },
+              undefined,
             ]
           }
         >
@@ -775,8 +776,8 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
           style={
             [
               {
+                "alignSelf": "stretch",
                 "borderRadius": 16,
-                "flex": 1,
               },
               {
                 "marginBottom": 0,
@@ -790,6 +791,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                 "paddingRight": 11,
                 "paddingTop": 11,
               },
+              undefined,
             ]
           }
         >
@@ -1165,8 +1167,8 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
               style={
                 [
                   {
+                    "alignSelf": "stretch",
                     "borderRadius": 16,
-                    "flex": 1,
                   },
                   {
                     "marginBottom": 11,
@@ -1180,6 +1182,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                     "paddingRight": 11,
                     "paddingTop": 11,
                   },
+                  undefined,
                 ]
               }
             >
@@ -1344,8 +1347,8 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
           onStartShouldSetResponder={[Function]}
           style={
             {
+              "alignSelf": "stretch",
               "borderRadius": 16,
-              "flex": 1,
               "marginBottom": 22,
               "marginLeft": 22,
               "marginRight": 22,
