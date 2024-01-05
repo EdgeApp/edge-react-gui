@@ -246,24 +246,17 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     const primaryNativeBalance = fromWalletBalances[fromCurrencyCode] ?? '0'
 
     if (minimumPopupModals != null && primaryNativeBalance < minimumPopupModals.minimumNativeBalance) {
-      return <AlertCardUi4 marginRem={[1.5, 1]} title={lstrings.request_minimum_notification_title} body={minimumPopupModals.alertMessage} type="warning" />
+      return <AlertCardUi4 title={lstrings.request_minimum_notification_title} body={minimumPopupModals.alertMessage} type="warning" />
     }
 
     if (insufficient || genericError != null) {
       const title = genericError != null ? lstrings.exchange_generic_error_title : insufficient ? lstrings.exchange_insufficient_funds_title : ''
       const message = genericError != null ? genericError : insufficient ? lstrings.exchange_insufficient_funds_message : ''
-      return <AlertCardUi4 marginRem={[1.5, 1]} title={title} body={message} type="error" />
+      return <AlertCardUi4 title={title} body={message} type="error" />
     }
 
     if (this.checkExceedsAmount()) {
-      return (
-        <AlertCardUi4
-          marginRem={[1.5, 1]}
-          title={lstrings.exchange_insufficient_funds_title}
-          body={lstrings.exchange_insufficient_funds_below_balance}
-          type="error"
-        />
-      )
+      return <AlertCardUi4 title={lstrings.exchange_insufficient_funds_title} body={lstrings.exchange_insufficient_funds_below_balance} type="error" />
     }
 
     return null
@@ -319,7 +312,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             focusMe={this.focusFromWallet}
             onNext={this.handleNext}
           >
-            {this.props.hasMaxSpend ? <MiniButton alignSelf="center" label={lstrings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={this.handleMax} /> : null}
+            {this.props.hasMaxSpend ? <MiniButton alignSelf="center" label={lstrings.string_max_cap} marginRem={[0.7, 0, 1]} onPress={this.handleMax} /> : null}
           </CryptoExchangeFlipInputWrapper>
           <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
           <CryptoExchangeFlipInputWrapper
@@ -348,7 +341,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   scrollViewContentContainer: {
     alignItems: 'center',
-    paddingTop: theme.rem(0.5)
+    paddingTop: theme.rem(0.5),
+    marginHorizontal: theme.rem(0.5)
   }
 }))
 

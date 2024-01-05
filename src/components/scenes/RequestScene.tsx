@@ -336,7 +336,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
           {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}
 
           <EdgeAnim enter={{ type: 'fadeInUp', distance: 25 }}>
-            <CardUi4>
+            <CardUi4 marginRem={0}>
               <ExchangedFlipInput2
                 forceField="crypto"
                 headerCallback={this.handleOpenWalletListModal}
