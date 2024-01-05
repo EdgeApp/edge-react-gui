@@ -25,6 +25,8 @@ export interface InsetStyles {
 export interface SceneWrapperInfo {
   insets: EdgeInsets
   insetStyles: InsetStyles
+  hasTabs: boolean
+  isKeyboardOpen: boolean
 }
 
 type BackgroundOptions =
@@ -143,7 +145,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
 
     const maybeInsetStyles = isFuncChildren ? {} : insetStyles
 
-    const info: SceneWrapperInfo = { insets, insetStyles }
+    const info: SceneWrapperInfo = { insets, insetStyles, hasTabs, isKeyboardOpen }
 
     return (
       <MaybeAnimatedView when={hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles, { maxHeight: keyboardAnimation, padding }]}>
