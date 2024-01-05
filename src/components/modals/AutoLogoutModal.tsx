@@ -7,11 +7,11 @@ import Feather from 'react-native-vector-icons/Feather'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { DisplayTime, displayToSeconds, secondsToDisplay } from '../../util/displayTime'
-import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 interface Props {
   bridge: AirshipBridge<number | undefined>
@@ -115,7 +115,7 @@ export const AutoLogoutModal = (props: Props) => {
           </Picker>
         )}
       </View>
-      <ButtonsContainer primary={{ label: lstrings.string_save, onPress: handleDone }} layout="column" />
+      <ButtonsViewUi4 primary={{ label: lstrings.string_save, onPress: handleDone }} layout="column" />
     </ThemedModal>
   )
 }

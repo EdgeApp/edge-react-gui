@@ -633,29 +633,23 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
         onStartShouldSetResponder={[Function]}
         style={
           {
-            "elevation": 0,
+            "alignSelf": "center",
+            "borderRadius": 45,
             "opacity": 1,
-            "shadowColor": "#000000",
-            "shadowOffset": {
-              "height": 0,
-              "width": 0,
-            },
-            "shadowOpacity": 0,
-            "shadowRadius": 0,
           }
         }
       >
         <BVLinearGradient
           colors={
             [
-              16777215,
-              16777215,
+              872415231,
+              872415231,
             ]
           }
           endPoint={
             {
               "x": 1,
-              "y": 1,
+              "y": 0,
             }
           }
           locations={null}
@@ -669,13 +663,10 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             [
               {
                 "alignItems": "center",
-                "borderColor": "#00f1a2",
-                "borderRadius": 6,
-                "borderWidth": 1.5,
                 "flexDirection": "row",
+                "height": 56,
                 "justifyContent": "center",
-                "minHeight": 67,
-                "minWidth": 202,
+                "marginHorizontal": 11,
               },
               {
                 "alignSelf": "center",
@@ -684,34 +675,55 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                 "marginRight": 11,
                 "marginTop": 11,
                 "opacity": 1,
-                "paddingBottom": 0,
-                "paddingLeft": 0,
-                "paddingRight": 0,
-                "paddingTop": 0,
               },
               {
-                "borderRadius": 6,
-                "paddingLeft": 0,
-                "paddingRight": 0,
+                "alignSelf": "stretch",
+                "borderRadius": 45,
               },
+              [
+                {
+                  "alignSelf": "stretch",
+                  "borderRadius": 45,
+                },
+                {
+                  "alignSelf": "center",
+                },
+              ],
             ]
           }
         >
           <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.75}
+            adjustsFontSizeToFit={false}
+            minimumFontScale={0.65}
             numberOfLines={1}
             style={
-              {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "marginHorizontal": 0,
-                "paddingBottom": 11,
-                "paddingLeft": 17,
-                "paddingRight": 17,
-                "paddingTop": 11,
-              }
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Medium",
+                    "fontSize": 22,
+                    "marginHorizontal": 0,
+                    "paddingHorizontal": 34,
+                    "paddingVertical": 11,
+                  },
+                  {
+                    "textShadowColor": "#00000098",
+                    "textShadowOffset": {
+                      "height": 0,
+                      "width": 0,
+                    },
+                    "textShadowRadius": 3,
+                  },
+                ],
+                null,
+              ]
             }
           >
             Create Wallets
@@ -748,29 +760,23 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
         onStartShouldSetResponder={[Function]}
         style={
           {
-            "elevation": 0,
+            "alignSelf": "center",
+            "borderRadius": 45,
             "opacity": 1,
-            "shadowColor": "#000000",
-            "shadowOffset": {
-              "height": 0,
-              "width": 0,
-            },
-            "shadowOpacity": 0,
-            "shadowRadius": 0,
           }
         }
       >
         <BVLinearGradient
           colors={
             [
-              16777215,
-              16777215,
+              4278754931,
+              4278251938,
             ]
           }
           endPoint={
             {
               "x": 1,
-              "y": 1,
+              "y": 0,
             }
           }
           locations={null}
@@ -784,13 +790,10 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             [
               {
                 "alignItems": "center",
-                "borderColor": "rgba(255, 255, 255, 0)",
-                "borderRadius": 6,
-                "borderWidth": 0,
                 "flexDirection": "row",
+                "height": 56,
                 "justifyContent": "center",
-                "minHeight": 67,
-                "minWidth": 202,
+                "marginHorizontal": 11,
               },
               {
                 "alignSelf": "center",
@@ -799,34 +802,55 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                 "marginRight": 11,
                 "marginTop": 11,
                 "opacity": 1,
-                "paddingBottom": 0,
-                "paddingLeft": 0,
-                "paddingRight": 0,
-                "paddingTop": 0,
               },
               {
-                "borderRadius": 6,
-                "paddingLeft": 0,
-                "paddingRight": 0,
+                "alignSelf": "stretch",
+                "borderRadius": 45,
               },
+              [
+                {
+                  "alignSelf": "stretch",
+                  "borderRadius": 45,
+                },
+                {
+                  "alignSelf": "center",
+                },
+              ],
             ]
           }
         >
           <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.75}
+            adjustsFontSizeToFit={false}
+            minimumFontScale={0.65}
             numberOfLines={1}
             style={
-              {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "marginHorizontal": 0,
-                "paddingBottom": 11,
-                "paddingLeft": 17,
-                "paddingRight": 17,
-                "paddingTop": 11,
-              }
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                [
+                  {
+                    "color": "#000000",
+                    "fontFamily": "Quicksand-Medium",
+                    "fontSize": 22,
+                    "marginHorizontal": 0,
+                    "paddingHorizontal": 34,
+                    "paddingVertical": 11,
+                  },
+                  {
+                    "textShadowColor": "#00000098",
+                    "textShadowOffset": {
+                      "height": 0,
+                      "width": 0,
+                    },
+                    "textShadowRadius": 3,
+                  },
+                ],
+                null,
+              ]
             }
           >
             Import Wallets
