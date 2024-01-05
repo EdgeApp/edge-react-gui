@@ -9,6 +9,7 @@ exports[`FioAddressList should render with loading props 1`] = `
       style={
         {
           "flex": 1,
+          "marginHorizontal": 11,
         }
       }
     >
@@ -37,7 +38,6 @@ exports[`FioAddressList should render with loading props 1`] = `
               style={
                 {
                   "height": 51,
-                  "marginRight": 34,
                 }
               }
             />
@@ -70,9 +70,7 @@ exports[`FioAddressList should render with loading props 1`] = `
               size={34}
               style={
                 {
-                  "marginRight": 22,
                   "textAlign": "center",
-                  "width": 34,
                 }
               }
             />
