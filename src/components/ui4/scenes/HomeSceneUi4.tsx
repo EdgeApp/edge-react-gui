@@ -1,3 +1,4 @@
+import { asBlogPosts, BlogPost } from 'edge-info-server/types'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -11,6 +12,7 @@ import { config } from '../../../theme/appConfig'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getUi4ImageUri } from '../../../util/CdnUris'
+import { fetchInfo } from '../../../util/network'
 import { EdgeAnim } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { PasswordReminderModal } from '../../modals/PasswordReminderModal'
@@ -57,8 +59,17 @@ export const HomeSceneUi4 = (props: Props) => {
     navigation.navigate('walletsTab', { screen: 'walletList' })
   })
 
-  // TODO: Reimplement after info server is published
-  const blogData: any[] = []
+  const [blogPosts, setBlogPosts] = React.useState<BlogPost[]>([])
+
+  // Check for AssetStatuses from info server (known sync issues, etc):
+  React.useEffect(() => {
+    fetchInfo(`v1/blogPosts/${config.appId ?? 'edge'}`)
+      .then(async res => {
+        const infoData = await res.json()
+        setBlogPosts(asBlogPosts(infoData))
+      })
+      .catch(e => console.log(String(e)))
+  }, [])
 
   // Show the password reminder on mount if required:
   useAsyncEffect(
@@ -133,12 +144,12 @@ export const HomeSceneUi4 = (props: Props) => {
             <MarketsCardUi4 navigation={navigation} numRows={5} />
           </>
           {/* TODO: Reimplement after info server is published */}
-          {blogData == null || blogData.length === 0 ? null : (
+          {blogPosts == null || blogPosts.length === 0 ? null : (
             <>
               <SectionHeaderUi4 leftTitle={lstrings.title_learn} />
               <View style={styles.carouselContainer}>
                 <CarouselUi4 height={theme.rem(13)} width={screenWidth}>
-                  {blogData.map((blogPost, index) => (
+                  {blogPosts.map((blogPost, index) => (
                     <BlogCard blogPost={blogPost} key={`${JSON.stringify(blogPost.localeTitle)}-${index}`} />
                   ))}
                 </CarouselUi4>

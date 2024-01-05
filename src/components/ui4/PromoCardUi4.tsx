@@ -35,7 +35,12 @@ export function PromoCardUi4Component(props: Props) {
 
   const handlePress = useHandler(() => {
     if (ctaButton == null) return
-    const { url } = ctaButton
+    const { localeUrls } = ctaButton
+    const url = getLocaleOrDefaultString(localeUrls)
+    if (url == null) {
+      showError('No PromoCard URL found')
+      return
+    }
 
     dispatch(linkReferralWithCurrencies(navigation, url)).catch(err => showError(err))
   })

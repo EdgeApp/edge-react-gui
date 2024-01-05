@@ -46,7 +46,10 @@ export const CarouselUi4 = (props: Props) => {
         lockScrollWhileSnapping
       />
       <Pagination
-        dotContainerStyle={{ marginTop: -theme.rem(2) }}
+        containerStyle={{
+          marginTop: -theme.rem(1),
+          marginBottom: -theme.rem(1)
+        }}
         dotsLength={numChildren}
         activeDotIndex={activeIndex}
         tappableDots
