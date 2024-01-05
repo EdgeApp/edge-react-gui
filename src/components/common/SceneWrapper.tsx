@@ -22,16 +22,21 @@ export interface InsetStyles {
   paddingLeft: number
 }
 
+export interface SceneWrapperInfo {
+  insets: EdgeInsets
+  insetStyles: InsetStyles
+}
+
 type BackgroundOptions =
   | 'theme' // Whatever the current theme specifies (default)
   | 'none' // Do not render any background elements
 
 interface SceneWrapperProps {
   // The children can either be normal React elements,
-  // or a function that accepts the current gap and returns an element.
+  // or a function that accepts info about the scene outer state and returns an element.
   // The function will be called on each render, allowing the scene to react
-  // to changes in the gap.
-  children: React.ReactNode | ((info: { safeAreaInsets: EdgeInsets; insets: EdgeInsets; insetStyles: InsetStyles }) => React.ReactNode)
+  // to changes to the info.
+  children: React.ReactNode | ((info: SceneWrapperInfo) => React.ReactNode)
 
   // Settings for when using ScrollView
   keyboardShouldPersistTaps?: 'always' | 'never' | 'handled'
@@ -132,6 +137,8 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
 
     const maybeInsetStyles = isFuncChildren ? {} : insetStyles
 
+    const info: SceneWrapperInfo = { insets, insetStyles }
+
     return (
       <MaybeAnimatedView when={hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles, { maxHeight: keyboardAnimation, padding }]}>
         <MaybeLinearGradient
@@ -147,7 +154,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
           contentContainerStyle={insetStyles}
         >
           <MaybeView when={!scroll && !hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles]}>
-            {isFuncChildren ? children({ safeAreaInsets, insets, insetStyles: insetStyles }) : children}
+            {isFuncChildren ? children(info) : children}
             {hasNotifications ? <NotificationView navigation={navigation} /> : null}
           </MaybeView>
         </MaybeScrollView>
