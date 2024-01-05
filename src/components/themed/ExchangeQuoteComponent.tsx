@@ -87,29 +87,27 @@ export const ExchangeQuote = (props: Props) => {
       const feeTextStyle = showFeeWarning ? styles.bottomWarningText : styles.bottomText
 
       return (
-        <>
-          <View>
-            {renderRow(
-              <EdgeText style={feeTextStyle}>{lstrings.mining_fee}</EdgeText>,
-              <EdgeText style={feeTextStyle}>{`${feeCryptoText} (${feeFiatText} ${fiatCurrencyCode})`}</EdgeText>,
-              {
-                ...sidesToMargin(mapSides(fixSides([0.75, 0, 0], 0), theme.rem))
-              }
-            )}
-            {renderRow(
-              <EdgeText style={styles.bottomText}>{lstrings.string_total_amount}</EdgeText>,
-              <EdgeText style={styles.bottomText}>{totalFiatText}</EdgeText>
-            )}
-          </View>
-        </>
+        <View style={styles.bottomContainer}>
+          {renderRow(
+            <EdgeText style={feeTextStyle}>{lstrings.mining_fee}</EdgeText>,
+            <EdgeText style={feeTextStyle}>{`${feeCryptoText} (${feeFiatText} ${fiatCurrencyCode})`}</EdgeText>,
+            {
+              ...sidesToMargin(mapSides(fixSides([0.75, 0, 0], 0), theme.rem))
+            }
+          )}
+          {renderRow(
+            <EdgeText style={styles.bottomText}>{lstrings.string_total_amount}</EdgeText>,
+            <EdgeText style={styles.bottomText}>{totalFiatText}</EdgeText>
+          )}
+        </View>
       )
     }
     return null
   }
 
   return (
-    <CardUi4 marginRem={[0, 1]}>
-      <CurrencyRow wallet={isFrom ? fromWallet : toWallet} tokenId={isFrom ? fromTokenId : toTokenId} marginRem={0} nativeAmount={nativeAmount} />
+    <CardUi4>
+      <CurrencyRow wallet={isFrom ? fromWallet : toWallet} tokenId={isFrom ? fromTokenId : toTokenId} marginRem={0.5} nativeAmount={nativeAmount} />
       {renderBottom()}
     </CardUi4>
   )
@@ -128,6 +126,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   value: {
     marginLeft: theme.rem(0.25),
     textAlign: 'right'
+  },
+  bottomContainer: {
+    margin: theme.rem(0.5),
+    marginTop: theme.rem(0)
   },
   bottomText: {
     marginTop: theme.rem(0.25),

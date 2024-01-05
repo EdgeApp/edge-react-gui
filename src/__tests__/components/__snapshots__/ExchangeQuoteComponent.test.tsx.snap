@@ -9,10 +9,10 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         "borderRadius": 16,
       },
       {
-        "marginBottom": 0,
-        "marginLeft": 22,
-        "marginRight": 22,
-        "marginTop": 0,
+        "marginBottom": 11,
+        "marginLeft": 11,
+        "marginRight": 11,
+        "marginTop": 11,
       },
       {
         "paddingBottom": 11,
@@ -47,10 +47,10 @@ exports[`ExchangeQuote should render with loading props 1`] = `
           "justifyContent": "center",
         },
         {
-          "marginBottom": 0,
-          "marginLeft": 0,
-          "marginRight": 0,
-          "marginTop": 0,
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
         },
       ]
     }
@@ -207,7 +207,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
           "flexDirection": "column",
           "flexGrow": 1,
           "flexShrink": 1,
-          "marginLeft": 22,
+          "marginLeft": 11,
           "marginRight": 6,
         }
       }
@@ -348,7 +348,14 @@ exports[`ExchangeQuote should render with loading props 1`] = `
       </View>
     </View>
   </View>
-  <View>
+  <View
+    style={
+      {
+        "margin": 11,
+        "marginTop": 0,
+      }
+    }
+  >
     <View
       style={
         [
