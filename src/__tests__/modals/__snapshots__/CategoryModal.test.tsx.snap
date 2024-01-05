@@ -742,25 +742,25 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           data={
             [
               {
-                "display": "Income: Paycheck",
+                "display": "Income:Paycheck",
                 "new": true,
                 "raw": "Income:Paycheck",
                 "selected": true,
               },
               {
-                "display": "Exchange: Paycheck",
+                "display": "Exchange:Paycheck",
                 "new": true,
                 "raw": "Exchange:Paycheck",
                 "selected": false,
               },
               {
-                "display": "Expense: Paycheck",
+                "display": "Expense:Paycheck",
                 "new": true,
                 "raw": "Expense:Paycheck",
                 "selected": false,
               },
               {
-                "display": "Transfer: Paycheck",
+                "display": "Transfer:Paycheck",
                 "new": true,
                 "raw": "Transfer:Paycheck",
                 "selected": false,
@@ -771,25 +771,25 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             DataProvider {
               "_data": [
                 {
-                  "display": "Income: Paycheck",
+                  "display": "Income:Paycheck",
                   "new": true,
                   "raw": "Income:Paycheck",
                   "selected": true,
                 },
                 {
-                  "display": "Exchange: Paycheck",
+                  "display": "Exchange:Paycheck",
                   "new": true,
                   "raw": "Exchange:Paycheck",
                   "selected": false,
                 },
                 {
-                  "display": "Expense: Paycheck",
+                  "display": "Expense:Paycheck",
                   "new": true,
                   "raw": "Expense:Paycheck",
                   "selected": false,
                 },
                 {
-                  "display": "Transfer: Paycheck",
+                  "display": "Transfer:Paycheck",
                   "new": true,
                   "raw": "Transfer:Paycheck",
                   "selected": false,
@@ -847,25 +847,25 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 },
                 "data": [
                   {
-                    "display": "Income: Paycheck",
+                    "display": "Income:Paycheck",
                     "new": true,
                     "raw": "Income:Paycheck",
                     "selected": true,
                   },
                   {
-                    "display": "Exchange: Paycheck",
+                    "display": "Exchange:Paycheck",
                     "new": true,
                     "raw": "Exchange:Paycheck",
                     "selected": false,
                   },
                   {
-                    "display": "Expense: Paycheck",
+                    "display": "Expense:Paycheck",
                     "new": true,
                     "raw": "Expense:Paycheck",
                     "selected": false,
                   },
                   {
-                    "display": "Transfer: Paycheck",
+                    "display": "Transfer:Paycheck",
                     "new": true,
                     "raw": "Transfer:Paycheck",
                     "selected": false,
@@ -1825,25 +1825,25 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           data={
             [
               {
-                "display": "Exchange: Buy Bitcoin",
+                "display": "Exchange:Buy Bitcoin",
                 "new": false,
                 "raw": "Exchange:Buy Bitcoin",
                 "selected": true,
               },
               {
-                "display": "Exchange: Sell Bitcoin",
+                "display": "Exchange:Sell Bitcoin",
                 "new": false,
                 "raw": "Exchange:Sell Bitcoin",
                 "selected": true,
               },
               {
-                "display": "Expense: Air Travel",
+                "display": "Expense:Air Travel",
                 "new": false,
                 "raw": "Expense:Air Travel",
                 "selected": false,
               },
               {
-                "display": "Expense: Alcohol & Bars",
+                "display": "Expense:Alcohol & Bars",
                 "new": false,
                 "raw": "Expense:Alcohol & Bars",
                 "selected": false,
@@ -1854,25 +1854,25 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             DataProvider {
               "_data": [
                 {
-                  "display": "Exchange: Buy Bitcoin",
+                  "display": "Exchange:Buy Bitcoin",
                   "new": false,
                   "raw": "Exchange:Buy Bitcoin",
                   "selected": true,
                 },
                 {
-                  "display": "Exchange: Sell Bitcoin",
+                  "display": "Exchange:Sell Bitcoin",
                   "new": false,
                   "raw": "Exchange:Sell Bitcoin",
                   "selected": true,
                 },
                 {
-                  "display": "Expense: Air Travel",
+                  "display": "Expense:Air Travel",
                   "new": false,
                   "raw": "Expense:Air Travel",
                   "selected": false,
                 },
                 {
-                  "display": "Expense: Alcohol & Bars",
+                  "display": "Expense:Alcohol & Bars",
                   "new": false,
                   "raw": "Expense:Alcohol & Bars",
                   "selected": false,
@@ -1930,25 +1930,25 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 },
                 "data": [
                   {
-                    "display": "Exchange: Buy Bitcoin",
+                    "display": "Exchange:Buy Bitcoin",
                     "new": false,
                     "raw": "Exchange:Buy Bitcoin",
                     "selected": true,
                   },
                   {
-                    "display": "Exchange: Sell Bitcoin",
+                    "display": "Exchange:Sell Bitcoin",
                     "new": false,
                     "raw": "Exchange:Sell Bitcoin",
                     "selected": true,
                   },
                   {
-                    "display": "Expense: Air Travel",
+                    "display": "Expense:Air Travel",
                     "new": false,
                     "raw": "Expense:Air Travel",
                     "selected": false,
                   },
                   {
-                    "display": "Expense: Alcohol & Bars",
+                    "display": "Expense:Alcohol & Bars",
                     "new": false,
                     "raw": "Expense:Alcohol & Bars",
                     "selected": false,

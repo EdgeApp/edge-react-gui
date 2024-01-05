@@ -1,6 +1,6 @@
 import { eq, round } from 'biggystring'
 import { asArray, asDate, asMaybe, asObject, asOptional, asString, asValue } from 'cleaners'
-import { EdgeFetchOptions, EdgeSpendInfo, JsonObject } from 'edge-core-js'
+import { EdgeAssetAction, EdgeFetchOptions, EdgeSpendInfo, EdgeTxActionFiat, JsonObject } from 'edge-core-js'
 import URL from 'url-parse'
 
 import { SendScene2Params } from '../../../components/scenes/SendScene2'
@@ -9,7 +9,7 @@ import { lstrings } from '../../../locales/strings'
 import { EdgeAsset, StringMap } from '../../../types/types'
 import { makeUuid } from '../../../util/utils'
 import { SendErrorNoTransaction } from '../fiatPlugin'
-import { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
+import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
@@ -26,6 +26,8 @@ const providerId = 'paybis'
 const storeId = 'paybis'
 const partnerIcon = 'paybis.png'
 const pluginDisplayName = 'Paybis'
+const providerDisplayName = pluginDisplayName
+const supportEmail = 'support@paybis.com'
 
 type AllowedPaymentTypes = Record<FiatDirection, { [Payment in FiatPaymentType]?: boolean }>
 
@@ -529,9 +531,36 @@ export const paybisProvider: FiatProviderFactory = {
                       console.log(`  tokenId: ${tokenId}`)
                       const nativeAmount = await coreWallet.denominationToNative(amount, displayCurrencyCode)
 
+                      const assetAction: EdgeAssetAction = {
+                        assetActionType: 'sell'
+                      }
+                      const savedAction: EdgeTxActionFiat = {
+                        actionType: 'fiat',
+                        orderId: invoice,
+                        orderUri: `${widgetUrl}?requestId=${requestId}`,
+                        isEstimate: true,
+                        fiatPlugin: {
+                          providerId,
+                          providerDisplayName,
+                          supportEmail
+                        },
+                        payinAddress: depositAddress,
+                        cryptoAsset: {
+                          pluginId: coreWallet.currencyInfo.pluginId,
+                          tokenId,
+                          nativeAmount
+                        },
+                        fiatAsset: {
+                          fiatCurrencyCode,
+                          fiatAmount
+                        }
+                      }
+
                       // Launch the SendScene to make payment
                       const spendInfo: EdgeSpendInfo = {
                         tokenId,
+                        assetAction,
+                        savedAction,
                         spendTargets: [
                           {
                             nativeAmount,
@@ -563,7 +592,7 @@ export const paybisProvider: FiatProviderFactory = {
                           address: true
                         }
                       }
-                      await showUi.send(sendParams)
+                      const tx = await showUi.send(sendParams)
                       await showUi.trackConversion('Sell_Success', {
                         destCurrencyCode: fiatCurrencyCode,
                         destExchangeAmount: fiatAmount,
@@ -573,6 +602,18 @@ export const paybisProvider: FiatProviderFactory = {
                         pluginId: providerId,
                         orderId: invoice
                       })
+
+                      // Save separate metadata/action for token transaction fee
+                      if (tokenId != null) {
+                        const params: SaveTxActionParams = {
+                          walletId: coreWallet.id,
+                          tokenId,
+                          txid: tx.txid,
+                          savedAction,
+                          assetAction: { ...assetAction, assetActionType: 'sell' }
+                        }
+                        await showUi.saveTxAction(params)
+                      }
 
                       // Route back to the original URL to show Paybis confirmation screen
                       await showUi.exitScene()

@@ -81,15 +81,15 @@ exports[`TransactionListRow should render with loading props 1`] = `
         style={
           [
             {
+              "backgroundColor": "rgba(232, 84, 102, .6)",
+              "paddingTop": 1,
+            },
+            {
               "alignItems": "center",
               "borderRadius": 28,
               "height": 45,
               "justifyContent": "center",
               "width": 45,
-            },
-            {
-              "backgroundColor": "rgba(232, 84, 102, .6)",
-              "paddingTop": 1,
             },
           ]
         }

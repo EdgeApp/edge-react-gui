@@ -700,8 +700,8 @@ const strings = {
   transaction_details_unstake: 'Unstake Funds',
   transaction_details_unstake_order: 'Unstake Order',
 
-  transaction_details_swap_to_subcat_1s: 'to %1$s',
-  transaction_details_swap_from_subcat_1s: 'from %1$s',
+  transaction_details_swap_to_subcat_1s: 'To %1$s',
+  transaction_details_swap_from_subcat_1s: 'From %1$s',
   transaction_details_swap_order_notes_2s: '%1$s to %2$s',
   transaction_details_stake_subcat_1s: 'Stake %1$s',
   transaction_details_stake_subcat_2s: 'Stake %1$s and %2$s',
@@ -713,7 +713,9 @@ const strings = {
   transaction_details_unstake_subcat_2s: 'Unstake %1$s and %2$s',
   transaction_details_unstake_order_notes_1s: 'Create Unstake %1$s Order',
   transaction_details_unstake_order_notes_2s: 'Create Unstake %1$s and %2$s Order',
+  transaction_details_token_approval: 'Token Approval',
   transaction_details_token_approval_subcat: 'Token Approval Fee',
+  transaction_details_transfer_funds: 'Transfer Funds',
 
   my_receive_addresses_title: 'My Receive Addresses',
 
@@ -1339,6 +1341,7 @@ const strings = {
   fiat_plugin_select_asset_to_sell: 'Select Asset to Sell',
   fiat_plugin_buy_currencycode: 'Buy %s', // TODO: string key convention
   fiat_plugin_sell_currencycode_s: 'Sell %s',
+  fiat_plugin_sell_network_fee: 'Sell Network Fee',
   fiat_plugin_amount_currencycode: 'Amount %s',
   fiat_plugin_buy_amount_over_limit: 'Max purchase amount is %s',
   fiat_plugin_buy_amount_over_undef_limit: 'Purchase amount is over maximum',

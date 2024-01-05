@@ -25,7 +25,6 @@ import { RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { GuiCurrencyInfo, GuiSwapInfo } from '../types/types'
 import { getCurrencyCode, getTokenIdForced, getWalletTokenId } from '../util/CurrencyInfoHelpers'
-import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
 import { bestOfPlugins } from '../util/ReferralHelpers'
 import { logEvent } from '../util/tracking'
@@ -304,22 +303,11 @@ export function shiftCryptoCurrency(navigation: NavigationBase, quote: EdgeSwapQ
     const { fromDisplayAmount, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = await getSwapInfo(state, quote)
     const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate, request } = quote
     // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
-    const { fromWallet, toWallet, fromTokenId, toTokenId } = request
-    const fromCurrencyCode = getCurrencyCode(fromWallet, fromTokenId)
+    const { toWallet, toTokenId } = request
     const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
     try {
       logEvent('Exchange_Shift_Start')
-      const { swapInfo } = account.swapConfig[pluginId]
-
-      // Build the category string:
-      const isTransfer = pluginId === 'transfer'
-      const toWalletName = getWalletName(toWallet)
-      const name = isTransfer ? toWalletName : swapInfo.displayName
-      const swapType = isTransfer ? 'transfer' : 'exchange'
-      const swapTarget = isTransfer ? toWalletName : toCurrencyCode
-      const category = `${swapType}:${fromCurrencyCode} ${lstrings.word_to_in_convert_from_to_string} ${swapTarget}`
-
-      const result: EdgeSwapResult = await quote.approve({ metadata: { name, category } })
+      const result: EdgeSwapResult = await quote.approve()
 
       logActivity(`Swap Exchange Executed: ${account.username}`)
       logActivity(`

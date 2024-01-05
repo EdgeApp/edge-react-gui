@@ -1,14 +1,13 @@
-import { abs, eq } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
+import { abs } from 'biggystring'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeMetadata, EdgeMetadataChange, EdgeSaveTxMetadataOptions, EdgeTransaction, EdgeTxSwap } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { formatCategory, getTxActionDisplayInfo, joinCategory, splitCategory } from '../../actions/CategoriesActions'
+import { formatCategory, getTxActionDisplayInfo, splitCategory } from '../../actions/CategoriesActions'
 import { playSendSound } from '../../actions/SoundActions'
-import { TX_ACTION_LABEL_MAP } from '../../constants/txActionConstants'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { displayFiatAmount } from '../../hooks/useFiatText'
@@ -21,6 +20,8 @@ import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
+import { matchJson } from '../../util/matchJson'
 import { convertNativeToExchange } from '../../util/utils'
 import { getMemoTitle } from '../../util/validateMemos'
 import { ButtonsContainer } from '../buttons/ButtonsContainer'
@@ -52,47 +53,27 @@ export interface TransactionDetailsParams {
 const TransactionDetailsComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { edgeTransaction: transaction, walletId } = route.params
-  const { currencyCode, metadata = {}, chainAssetAction, nativeAmount, date, tokenId, txid } = transaction
+  const { currencyCode, metadata, nativeAmount, date, txid } = transaction
   const { currencyInfo } = wallet
 
   const theme = useTheme()
+  const account = useSelector(state => state.core.account)
   const styles = getStyles(theme)
-  const thumbnailPath = useContactThumbnail(metadata?.name)
-
-  const isSentTransaction = transaction.nativeAmount.startsWith('-') || (eq(transaction.nativeAmount, '0') && transaction.isSend)
-
   // Choose a default category based on metadata or the txAction
-  const txActionInfo = getTxActionDisplayInfo(transaction, wallet, tokenId)
-  const txActionSplitCat = txActionInfo?.splitCategory
-  const txActionNotes = txActionInfo?.notes
-  const txActionDir = txActionInfo?.direction
+  const { direction, mergedData, savedData } = getTxActionDisplayInfo(transaction, account, wallet)
 
-  // Determine direction from transaction nativeAmount if not specified in
-  // txActionInfo
-  const direction = txActionDir ?? isSentTransaction ? 'send' : 'receive'
+  const swapData = convertActionToSwapData(account, transaction) ?? transaction.swapData
 
-  const splitCat =
-    metadata?.category != null || txActionSplitCat == null
-      ? splitCategory(
-          metadata?.category ?? undefined,
-          // Pick the right default:
-          direction === 'receive' ? 'income' : 'expense'
-        )
-      : txActionSplitCat
-
-  const category = joinCategory(splitCat)
-
-  const notes = metadata?.notes == null ? txActionNotes : metadata.notes
+  const thumbnailPath = useContactThumbnail(mergedData.name)
 
   const [localMetadata, setLocalMetadata] = React.useState<EdgeMetadata>({
+    exchangeAmount: metadata?.exchangeAmount,
     bizId: 0,
-    category,
-    name: metadata?.name ?? '',
-    notes: notes ?? ''
+    category: mergedData?.category,
+    name: mergedData.name ?? '',
+    notes: mergedData.notes ?? ''
   })
   const [acceleratedTx, setAcceleratedTx] = React.useState<null | EdgeTransaction>(null)
-
-  const name = localMetadata.name ?? ''
 
   // #region Crypto Fiat Rows
 
@@ -117,7 +98,7 @@ const TransactionDetailsComponent = (props: Props) => {
   const historicFiat = historicRate * Number(absExchangeAmount)
 
   // Figure out which amount to show:
-  const metadataFiat = metadata.exchangeAmount?.[wallet.fiatCurrencyCode]
+  const metadataFiat = localMetadata.exchangeAmount?.[wallet.fiatCurrencyCode]
   const originalFiat = metadataFiat == null || metadataFiat === 0 ? historicFiat : Math.abs(metadataFiat)
 
   // Percent difference:
@@ -142,10 +123,15 @@ const TransactionDetailsComponent = (props: Props) => {
     ))
       .then(async inputText => {
         if (inputText == null) return
+        if (inputText === '') {
+          // Setting amountFiat to 0 will cause GUI to load dynamic exchange rate
+          inputText = '0'
+        }
         const amountFiat = parseFloat(inputText.replace(',', '.'))
 
         // Check for NaN, Infinity, and 0:
-        if (amountFiat === 0 || JSON.stringify(amountFiat) === 'null') return
+        if (JSON.stringify(amountFiat) === 'null') return
+
         await onSaveTxDetails({ exchangeAmount: { [wallet.fiatCurrencyCode]: amountFiat } })
       })
       .catch(showError)
@@ -167,15 +153,14 @@ const TransactionDetailsComponent = (props: Props) => {
   }, [])
 
   const openPersonInput = async () => {
-    const personLabel = direction === 'receive' ? lstrings.transaction_details_payer : lstrings.transaction_details_payee
     const person = await Airship.show<ContactModalResult | undefined>(bridge => (
-      <ContactListModal bridge={bridge} contactType={personLabel} contactName={name} />
+      <ContactListModal bridge={bridge} contactType={personLabel} contactName={localMetadata.name ?? ''} />
     ))
     if (person != null) onSaveTxDetails({ name: person.contactName })
   }
 
   const openCategoryInput = async () => {
-    const newCategory = await Airship.show<string | undefined>(bridge => <CategoryModal bridge={bridge} initialCategory={category} />)
+    const newCategory = await Airship.show<string | undefined>(bridge => <CategoryModal bridge={bridge} initialCategory={localMetadata.category ?? ''} />)
     if (newCategory == null) return
     onSaveTxDetails({ category: newCategory })
   }
@@ -184,7 +169,7 @@ const TransactionDetailsComponent = (props: Props) => {
     const notes = await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
-        initialValue={notes}
+        initialValue={localMetadata.notes}
         inputLabel={lstrings.transaction_details_notes_title}
         multiline
         submitLabel={lstrings.string_save}
@@ -226,29 +211,75 @@ const TransactionDetailsComponent = (props: Props) => {
   }
 
   const onSaveTxDetails = (newDetails: Partial<EdgeMetadata>) => {
-    const mergedMetadata = {
-      ...localMetadata,
-      ...newDetails,
-      exchangeAmount: {
-        ...localMetadata.exchangeAmount,
-        ...newDetails.exchangeAmount
+    const newValues: EdgeMetadata = { ...localMetadata, ...newDetails, exchangeAmount: { ...localMetadata.exchangeAmount, ...newDetails.exchangeAmount } }
+    const { name, notes, category, exchangeAmount } = newValues
+
+    let newName, newCategory, newNotes, newExchangeAmount
+    let changed = false
+
+    if (name !== localMetadata.name) {
+      changed = true
+      if (name === savedData.name || name === '') {
+        // The updated name matches data from savedAction or chainAction so delete
+        // any user edited metadata so we just fallback. Also applies to category and
+        // notes.
+        newName = null
+        newDetails.name = savedData.name
+      } else {
+        newName = name
       }
     }
-    transaction.metadata = mergedMetadata
 
-    wallet
-      .saveTxMetadata({
-        txid: transaction.txid,
-        tokenId: transaction.tokenId,
-        metadata: transaction.metadata
-      })
-      .catch(error => showError(error))
+    if (category !== localMetadata.category) {
+      changed = true
+      const lowerCat = category?.toLowerCase()
+      if (category === savedData.category || (lowerCat === 'income:' && direction === 'receive') || (lowerCat === 'expense:' && direction === 'send')) {
+        newCategory = null
+        newDetails.category = savedData.category
+      } else {
+        newCategory = category
+      }
+    }
 
-    setLocalMetadata(mergedMetadata)
+    if (notes !== localMetadata.notes) {
+      changed = true
+      if (notes === savedData.notes || notes === '') {
+        newNotes = null
+        newDetails.notes = savedData.notes
+      } else {
+        newNotes = notes
+      }
+    }
+
+    if (!matchJson(exchangeAmount, localMetadata.exchangeAmount)) {
+      changed = true
+      newExchangeAmount = exchangeAmount
+    }
+
+    if (!changed) {
+      console.log('EXIT onSaveTxDetails no change')
+      return
+    }
+    const metadata: EdgeMetadataChange = {
+      name: newName,
+      category: newCategory,
+      notes: newNotes,
+      exchangeAmount: newExchangeAmount
+    }
+
+    const saveTxMetadataParams: EdgeSaveTxMetadataOptions = {
+      txid: transaction.txid,
+      tokenId: transaction.tokenId,
+      metadata: metadata
+    }
+
+    wallet.saveTxMetadata(saveTxMetadataParams).catch(error => showError(error))
+
+    setLocalMetadata(newValues)
   }
 
   const personLabel = direction === 'receive' ? lstrings.transaction_details_sender : lstrings.transaction_details_recipient
-  const personName = chainAssetAction != null ? TX_ACTION_LABEL_MAP[chainAssetAction.assetActionType] : name !== '' ? name : personLabel
+  const personName = localMetadata.name ?? personLabel
   const personHeader = sprintf(lstrings.transaction_details_person_name, personLabel)
 
   // spendTargets recipient addresses format
@@ -261,7 +292,7 @@ const TransactionDetailsComponent = (props: Props) => {
     }
   }
 
-  const categoriesText = formatCategory(splitCategory(category))
+  const categoriesText = formatCategory(splitCategory(localMetadata.category ?? undefined))
 
   return (
     <SceneWrapper hasNotifications hasTabs scroll padding={theme.rem(0.5)}>
@@ -317,7 +348,7 @@ const TransactionDetailsComponent = (props: Props) => {
           <RowUi4
             rightButtonType="editable"
             title={lstrings.transaction_details_notes_title}
-            body={notes == null || notes.trim() === '' ? lstrings.transaction_details_empty_note_placeholder : notes}
+            body={localMetadata.notes == null || localMetadata.notes.trim() === '' ? lstrings.transaction_details_empty_note_placeholder : localMetadata.notes}
             onPress={openNotesInput}
           />
           {transaction.memos?.map((memo, i) =>
@@ -325,7 +356,6 @@ const TransactionDetailsComponent = (props: Props) => {
           )}
         </CardUi4>
       </EdgeAnim>
-
       {transaction.spendTargets == null ? null : (
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 60 }}>
           <CardUi4>
@@ -335,7 +365,7 @@ const TransactionDetailsComponent = (props: Props) => {
       )}
 
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
-        {transaction.swapData == null ? null : <SwapDetailsCard swapData={transaction.swapData} transaction={transaction} wallet={wallet} />}
+        {swapData == null ? null : <SwapDetailsCard swapData={swapData} transaction={transaction} wallet={wallet} />}
       </EdgeAnim>
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 100 }}>
         <AdvancedDetailsCard transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />
@@ -395,3 +425,33 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const TransactionDetailsScene = withWallet(TransactionDetailsComponent)
+
+const convertActionToSwapData = (account: EdgeAccount, transaction: EdgeTransaction): EdgeTxSwap | undefined => {
+  const action = transaction.savedAction ?? transaction.chainAction
+  const assetAction = transaction.assetAction ?? transaction.chainAssetAction
+
+  if (action == null || assetAction == null) {
+    return
+  }
+
+  if (action.actionType !== 'swap') {
+    return
+  }
+
+  const { swapInfo, orderId, orderUri, isEstimate, toAsset, payoutAddress, payoutWalletId, refundAddress } = action
+
+  const payoutCurrencyCode = getCurrencyCodeWithAccount(account, toAsset.pluginId, toAsset.tokenId)
+
+  const out: EdgeTxSwap = {
+    orderId,
+    orderUri,
+    isEstimate: isEstimate ?? true,
+    plugin: swapInfo,
+    payoutAddress: payoutAddress,
+    payoutCurrencyCode,
+    payoutNativeAmount: action.toAsset.nativeAmount ?? '0',
+    payoutWalletId: payoutWalletId,
+    refundAddress: refundAddress
+  }
+  return out
+}
