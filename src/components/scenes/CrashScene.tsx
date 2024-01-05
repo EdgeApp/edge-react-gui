@@ -18,7 +18,7 @@ export function CrashScene(props: Props): React.ReactElement {
   const styles = getStyles(theme)
 
   return (
-    <SceneWrapper background="theme" padding={theme.rem(0.5)} scroll>
+    <SceneWrapper padding={theme.rem(0.5)} scroll>
       <AntDesignIcon name="frowno" style={styles.icon} />
       <Text style={styles.titleText}>{lstrings.error_boundary_title}</Text>
       <Text style={styles.messageText}>{sprintf(lstrings.error_boundary_message_s, config.supportEmail)}</Text>

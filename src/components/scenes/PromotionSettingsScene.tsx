@@ -31,7 +31,7 @@ export class PromotionSettingsComponent extends React.Component<Props> {
     const { accountReferral, deviceReferral, removePromotion } = this.props
 
     return (
-      <SceneWrapper background="theme" hasTabs={false}>
+      <SceneWrapper hasTabs={false}>
         <SettingsHeaderRow label={lstrings.settings_promotion_affiliation_header} />
         <SettingsSubHeader
           label={

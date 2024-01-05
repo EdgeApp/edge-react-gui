@@ -29,10 +29,6 @@ export interface SceneWrapperInfo {
   isKeyboardOpen: boolean
 }
 
-type BackgroundOptions =
-  | 'theme' // Whatever the current theme specifies (default)
-  | 'none' // Do not render any background elements
-
 interface SceneWrapperProps {
   // The children can either be normal React elements,
   // or a function that accepts info about the scene outer state and returns an element.
@@ -45,9 +41,6 @@ interface SceneWrapperProps {
 
   // True if this scene should shrink to avoid the keyboard:
   avoidKeyboard?: boolean
-
-  // Background options:
-  background?: BackgroundOptions
 
   // True if this scene has a header (with back button & such):
   hasHeader?: boolean
@@ -81,7 +74,6 @@ interface SceneWrapperProps {
 export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const {
     avoidKeyboard = false,
-    background = 'theme',
     children,
     hasHeader = true,
     hasNotifications = false,
@@ -149,12 +141,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
 
     return (
       <MaybeAnimatedView when={hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles, { maxHeight: keyboardAnimation, padding }]}>
-        <MaybeLinearGradient
-          when={background === 'theme'}
-          colors={theme.backgroundGradientColors}
-          end={theme.backgroundGradientEnd}
-          start={theme.backgroundGradientStart}
-        />
+        <StyledLinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart} />
         <MaybeScrollView
           when={scroll && !hasKeyboardAnimation}
           style={[layoutStyles, { padding }]}
@@ -208,6 +195,5 @@ const StyledLinearGradient = styled(LinearGradient)({
 })
 
 const MaybeAnimatedView = maybeComponent(Animated.View)
-const MaybeLinearGradient = maybeComponent(StyledLinearGradient)
 const MaybeScrollView = maybeComponent(ScrollView)
 const MaybeView = maybeComponent(View)

@@ -83,7 +83,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     })
 
     return (
-      <SceneWrapper avoidKeyboard background="theme">
+      <SceneWrapper avoidKeyboard>
         {({ insetStyles }) => (
           <View style={[styles.content, { ...insetStyles, paddingBottom: 0 }]}>
             <SceneHeader title={lstrings.title_create_wallet_select_fiat} underline withTopMargin>

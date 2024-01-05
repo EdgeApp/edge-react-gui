@@ -14,7 +14,7 @@ export function AssetSettingsScene(props: Props) {
   const account = useSelector(state => state.core.account)
 
   return (
-    <SceneWrapper scroll background="theme" hasTabs={false}>
+    <SceneWrapper scroll hasTabs={false}>
       {CURRENCY_SETTINGS_KEYS.map(pluginId => {
         if (account.currencyConfig[pluginId] == null) return null
         const { currencyInfo } = account.currencyConfig[pluginId]

@@ -140,7 +140,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper background="theme">
+      <SceneWrapper>
         <SceneHeader title={this.isFioAddress() ? lstrings.title_fio_address_confirmation : lstrings.title_register_fio_domain} underline />
         <View style={styles.scene}>
           <Tile

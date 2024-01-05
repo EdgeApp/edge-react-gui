@@ -147,7 +147,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     const { showTransfer, showAddBundledTxs } = this.state
 
     return (
-      <SceneWrapper background="theme">
+      <SceneWrapper>
         <Tile type="static" title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
         {bundledTxs != null ? <Tile type="static" title={lstrings.fio_address_details_screen_bundled_txs} body={`${bundledTxs}`} /> : null}
         {showAddBundledTxs && (

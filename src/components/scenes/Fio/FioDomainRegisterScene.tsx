@@ -256,7 +256,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     }
 
     return (
-      <SceneWrapper background="theme">
+      <SceneWrapper>
         <SceneHeader style={styles.header} title={lstrings.title_register_fio_domain}>
           <IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />
         </SceneHeader>

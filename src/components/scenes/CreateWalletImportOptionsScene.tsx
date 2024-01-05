@@ -211,7 +211,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
   const keyExtractor = useHandler((item: [string, Set<ImportKeyOption>]) => item[0])
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper>
       <SceneHeader title={lstrings.create_wallet_import_options_title} withTopMargin />
       <View style={styles.content}>
         <FlashList

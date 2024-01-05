@@ -160,7 +160,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
   const keyExtractor = useHandler((item: WalletCreateItem) => item.key)
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper>
       {({ insetStyles }) => (
         <View style={[styles.content, insetStyles]}>
           <SceneHeader title={lstrings.title_create_wallets} withTopMargin />

@@ -504,7 +504,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   }
 
   return (
-    <SceneWrapper background="theme" hasTabs hasNotifications>
+    <SceneWrapper hasTabs hasNotifications>
       {({ insetStyles }) => (
         <GuiPluginList
           navigation={navigation}

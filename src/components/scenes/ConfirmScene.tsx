@@ -51,7 +51,7 @@ const ConfirmComponent = (props: Props) => {
   }, [onBack])
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper>
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         <SceneHeader title={titleText} underline />
         <View style={styles.body}>

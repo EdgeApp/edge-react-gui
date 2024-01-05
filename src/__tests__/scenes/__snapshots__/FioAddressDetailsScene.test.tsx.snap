@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FioAddressDetails should render with loading props 1`] = `
-<SceneWrapper
-  background="theme"
->
+<SceneWrapper>
   <WithTheme(EdgeTextComponent)
     style={
       {

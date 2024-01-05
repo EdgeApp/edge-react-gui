@@ -215,7 +215,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
   const keyExtractor = useHandler((item: MigrateWalletItem) => item.key)
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper>
       <View style={styles.content}>
         <SceneHeader title={lstrings.migrate_wallets_calculate_fee_title} withTopMargin />
         <EdgeText style={styles.instructionalText} numberOfLines={4}>

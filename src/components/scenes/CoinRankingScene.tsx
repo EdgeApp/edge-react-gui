@@ -202,7 +202,7 @@ const CoinRankingComponent = (props: Props) => {
   const assetSubTextString = assetSubTextStrings[assetSubText]
 
   return (
-    <SceneWrapper background="theme" hasTabs hasNotifications>
+    <SceneWrapper hasTabs hasNotifications>
       {({ insetStyles }) => (
         <>
           <View style={[styles.searchContainer, { paddingTop: insetStyles.paddingTop }]}>

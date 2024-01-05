@@ -468,7 +468,7 @@ const StakeModifySceneComponent = (props: Props) => {
 
   if (stakePosition.allocations.length === 0) {
     return (
-      <SceneWrapper background="theme">
+      <SceneWrapper>
         <FillLoader />
       </SceneWrapper>
     )
@@ -477,7 +477,7 @@ const StakeModifySceneComponent = (props: Props) => {
   const isSliderDisabled = sliderLocked || changeQuote == null || !changeQuote.allocations.some(quoteAllocation => gt(quoteAllocation.nativeAmount, '0'))
 
   return (
-    <SceneWrapper scroll background="theme">
+    <SceneWrapper scroll>
       <SceneHeader style={styles.sceneHeader} title={title} underline withTopMargin>
         {icon}
       </SceneHeader>

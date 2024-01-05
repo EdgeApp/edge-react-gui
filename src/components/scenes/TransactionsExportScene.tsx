@@ -133,7 +133,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     const disabledExport = !isExportQbo && !isExportCsv && !isExportBitwave
 
     return (
-      <SceneWrapper scroll background="theme">
+      <SceneWrapper scroll>
         <SettingsRow label={walletName} onPress={() => undefined} />
         <SettingsHeaderRow icon={<EntypoIcon name="calendar" color={theme.icon} size={iconSize} />} label={lstrings.export_transaction_date_range} />
         <SettingsRow label={lstrings.export_transaction_this_month} onPress={this.setThisMonth} />

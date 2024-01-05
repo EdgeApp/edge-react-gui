@@ -204,7 +204,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     }
 
     return (
-      <SceneWrapper scroll background="theme">
+      <SceneWrapper scroll>
         <IonIcon name="ios-at" style={styles.iconIon} color={theme.primaryText} size={theme.rem(4)} />
         <EdgeText style={styles.instructionalText} numberOfLines={7}>
           {detailsText}

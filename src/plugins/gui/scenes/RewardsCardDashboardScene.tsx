@@ -53,7 +53,7 @@ export const RewardsCardDashboardScene = (props: Props) => {
 
   return (
     <>
-      <SceneWrapper keyboardShouldPersistTaps="handled" background="theme" hasHeader scroll hasTabs>
+      <SceneWrapper keyboardShouldPersistTaps="handled" hasHeader scroll hasTabs>
         <SceneHeader
           title={lstrings.rewards_card_dashboard_title}
           tertiary={

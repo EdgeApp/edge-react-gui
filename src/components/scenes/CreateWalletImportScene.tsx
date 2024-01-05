@@ -136,7 +136,7 @@ const CreateWalletImportComponent = (props: Props) => {
   const svgWidth = React.useMemo(() => 83 * theme.rem(0.0625), [theme])
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper>
       <SceneHeader title={lstrings.create_wallet_import_title} withTopMargin />
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}

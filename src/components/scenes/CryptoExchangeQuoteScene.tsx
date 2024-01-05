@@ -183,7 +183,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
     ))
   }
   return (
-    <SceneWrapper hasTabs hasNotifications background="theme">
+    <SceneWrapper hasTabs hasNotifications>
       {({ insetStyles }) => (
         <>
           <SceneHeader title={lstrings.title_exchange} underline withTopMargin />

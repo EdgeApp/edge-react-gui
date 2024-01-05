@@ -337,7 +337,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   }
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper>
       {(() => {
         switch (change) {
           case 'add':

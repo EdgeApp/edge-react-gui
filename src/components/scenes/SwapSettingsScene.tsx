@@ -175,7 +175,7 @@ export class SwapSettings extends React.Component<Props, State> {
 
   render() {
     return (
-      <SceneWrapper background="theme" hasTabs={false}>
+      <SceneWrapper hasTabs={false}>
         <ScrollView contentContainerStyle={{ paddingBottom: this.props.theme.rem(4) }}>
           <SettingsSubHeader label={lstrings.settings_exchange_instruction} />
           <SettingsHeaderRow label={lstrings.swap_preferred_header} />

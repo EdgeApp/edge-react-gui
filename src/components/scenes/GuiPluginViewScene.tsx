@@ -22,7 +22,7 @@ export function GuiPluginViewScene(props: Props): JSX.Element {
   const { deepPath, deepQuery, plugin } = route.params
 
   return (
-    <SceneWrapper background="theme" hasTabs={route.name !== 'pluginView'}>
+    <SceneWrapper hasTabs={route.name !== 'pluginView'}>
       <EdgeProviderComponent plugin={plugin} deepPath={deepPath} deepQuery={deepQuery} navigation={navigation} />
     </SceneWrapper>
   )

@@ -22,7 +22,7 @@ export const FormScene = (props: Props) => {
   const styles = getStyles(theme)
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper>
       <SceneHeader tertiary={headerTertiary} title={headerText} underline withTopMargin />
       <KeyboardAwareScrollView contentContainerStyle={styles.container} extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
         {children}

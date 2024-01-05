@@ -98,7 +98,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
     const otpDescriptionTwo = sprintf(lstrings.otp_description_two, config.appName)
 
     return (
-      <SceneWrapper background="theme" padding={theme.rem(0.5)} scroll>
+      <SceneWrapper padding={theme.rem(0.5)} scroll>
         <AntDesignIcon name="lock" style={styles.icon} />
         <Text style={styles.titleText}>{otpKey != null ? lstrings.title_otp_enabled : lstrings.title_otp_disabled}</Text>
 

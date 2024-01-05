@@ -299,7 +299,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     const fiatName = edgeWallet.fiatCurrencyCode.replace('iso:', '')
 
     return (
-      <SceneWrapper background="theme">
+      <SceneWrapper>
         <Tile type="editable" title={lstrings.fio_confirm_request_from} body={fioAddressFrom} onPress={this.onAddressFromPressed} />
         <Tile
           type="editable"
