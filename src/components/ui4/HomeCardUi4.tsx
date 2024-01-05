@@ -30,7 +30,7 @@ export const HomeCardUi4 = (props: Props) => {
   })
 
   return (
-    <CardUi4 gradientBackground={gradientBackground} nodeBackground={nodeBackground} onPress={handlePress}>
+    <CardUi4 gradientBackground={gradientBackground} nodeBackground={nodeBackground} onPress={handlePress} fill>
       <View style={styles.verticalSplitContainer}>
         <View style={styles.titleContainer}>
           <EdgeText style={theme.cardTextShadow}>{title}</EdgeText>

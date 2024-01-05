@@ -28,6 +28,7 @@ interface Props {
   paddingRem?: number[] | number
 
   // Options:
+  fill?: boolean // Set flex to 1 for tiling
   sections?: boolean // Automatic section dividers, only if chilren are multiple nodes
   onClose?: () => Promise<void> | void // If specified, adds a close button, absolutely positioned in the top right
 
@@ -48,13 +49,14 @@ interface Props {
  * onClose: If specified, adds a close button
  */
 export const CardUi4 = (props: Props) => {
-  const { children, icon, marginRem, paddingRem, overlay, sections, gradientBackground, nodeBackground, onClose, onLongPress, onPress } = props
+  const { children, icon, marginRem, paddingRem, overlay, sections, gradientBackground, nodeBackground, fill = false, onClose, onLongPress, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
-
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0.5), theme.rem))
+  const fillStyle = fill ? styles.fill : undefined
+
   const isPressable = onPress != null || onLongPress != null
 
   const handlePress = useHandler(async () => {
@@ -117,7 +119,7 @@ export const CardUi4 = (props: Props) => {
     ) : (
       <>
         {background}
-        <View style={styles.rowContainer}>
+        <View style={styles.iconRowContainer}>
           {maybeIcon}
           {content}
         </View>
@@ -127,11 +129,11 @@ export const CardUi4 = (props: Props) => {
     )
 
   return isPressable ? (
-    <TouchableOpacity accessible={false} onPress={handlePress} onLongPress={handleLongPress} style={[styles.cardContainer, margin, padding]}>
+    <TouchableOpacity accessible={false} onPress={handlePress} onLongPress={handleLongPress} style={[styles.cardContainer, margin, padding, fillStyle]}>
       {allContent}
     </TouchableOpacity>
   ) : (
-    <View style={[styles.cardContainer, margin, padding]}>{allContent}</View>
+    <View style={[styles.cardContainer, margin, padding, fillStyle]}>{allContent}</View>
   )
 }
 
@@ -144,7 +146,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   cardContainer: {
     borderRadius: theme.cardBorderRadius,
-    flex: 1
+    alignSelf: 'stretch'
   },
   cornerContainer: {
     margin: theme.rem(1),
@@ -161,7 +163,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: 2,
     pointerEvents: 'none'
   },
-  rowContainer: {
+  iconRowContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center'
@@ -171,7 +173,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignContent: 'center'
   },
-  warning: {
-    borderColor: theme.warningIcon
+  fill: {
+    flex: 1
   }
 }))
