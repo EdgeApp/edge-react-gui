@@ -277,44 +277,36 @@ exports[`TransactionDetailsScene should render 1`] = `
           >
             <View
               style={
-                {
-                  "marginRight": 6,
-                }
+                [
+                  {
+                    "overflow": "hidden",
+                  },
+                  {
+                    "borderRadius": 22,
+                    "height": 45,
+                    "marginRight": 11,
+                    "width": 45,
+                  },
+                ]
               }
             >
-              <View
-                style={
-                  [
-                    {
-                      "overflow": "hidden",
-                    },
-                    {
-                      "borderRadius": 22,
-                      "height": 45,
-                      "marginRight": 11,
-                      "width": 45,
-                    },
-                  ]
+              <FastImageView
+                resizeMode="cover"
+                source={
+                  {
+                    "uri": "thumb/nail/path",
+                  }
                 }
-              >
-                <FastImageView
-                  resizeMode="cover"
-                  source={
-                    {
-                      "uri": "thumb/nail/path",
-                    }
+                style={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
                   }
-                  style={
-                    {
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    }
-                  }
-                />
-              </View>
+                }
+              />
             </View>
             <View
               style={
@@ -2010,44 +2002,36 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           >
             <View
               style={
-                {
-                  "marginRight": 6,
-                }
+                [
+                  {
+                    "overflow": "hidden",
+                  },
+                  {
+                    "borderRadius": 22,
+                    "height": 45,
+                    "marginRight": 11,
+                    "width": 45,
+                  },
+                ]
               }
             >
-              <View
-                style={
-                  [
-                    {
-                      "overflow": "hidden",
-                    },
-                    {
-                      "borderRadius": 22,
-                      "height": 45,
-                      "marginRight": 11,
-                      "width": 45,
-                    },
-                  ]
+              <FastImageView
+                resizeMode="cover"
+                source={
+                  {
+                    "uri": "thumb/nail/path",
+                  }
                 }
-              >
-                <FastImageView
-                  resizeMode="cover"
-                  source={
-                    {
-                      "uri": "thumb/nail/path",
-                    }
+                style={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
                   }
-                  style={
-                    {
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    }
-                  }
-                />
-              </View>
+                }
+              />
             </View>
             <View
               style={
