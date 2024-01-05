@@ -7805,10 +7805,10 @@ csv-stringify@^5.6.2:
   resolved "https://registry.yarnpkg.com/csv-stringify/-/csv-stringify-5.6.2.tgz#e653783e2189c4c797fbb12abf7f4943c787caa9"
   integrity sha512-n3rIVbX6ylm1YsX2NEug9IaPV8xRnT+9/NNZbrA/bcHgOSSeqtWla6XnI/xmyu57wIw+ASCAoX1oM6EZtqJV0A==
 
-currency-codes@^1.1.2:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/currency-codes/-/currency-codes-1.5.0.tgz#c98206903d8ec6178c4b57287273eb6d8e7b9624"
-  integrity sha512-S0703ftUp2/NR+BKZ51cfWtuzEIzGlrZm5cphUekJGp6B6x+vSWBS2w9dd1i8jqX8YwEzVrYxKlH0nST5EArnw==
+currency-codes@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/currency-codes/-/currency-codes-1.5.1.tgz#7ed12dc00be91414937c71855ff5ea6059b88d47"
+  integrity sha512-hqy8vtlIYKzO6pe2TE0V4/riZALIc7nhtE9cvxk5FDRCvfGplgzUvpTmZlMsyO+NeK5U41j+sQXJOo8l8v9kdg==
   dependencies:
     first-match "~0.0.1"
     nub "~0.0.0"
@@ -8612,16 +8612,16 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^1.13.1:
-  version "1.13.1"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-1.13.1.tgz#1f8c0604467c8ca3777907619770e41883271682"
-  integrity sha512-TEIg2ijSa0r6I9Qichk+YK2Q5FpS4AlzvJgWKUnAR26Q+TcpVZtOs356lmIbCF+ehJqtsQ+L+adZJs2ExcN4kg==
+edge-core-js@^1.14.0:
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-1.14.0.tgz#16569cf6a24b50e26e0105eca554bd041ce15a01"
+  integrity sha512-P2yGTyu4eqoFUHFnrmkemxJrFFezql+cL2ZZ01JDyRJFgeAwy9zlEmg1Aj4IgOq8hzoNUFTd68fKTVPZZRDKEA==
   dependencies:
     aes-js "^3.1.0"
     base-x "^4.0.0"
     biggystring "^4.0.0"
     cleaners "^0.3.14"
-    currency-codes "^1.1.2"
+    currency-codes "^1.5.1"
     disklet "^0.5.2"
     edge-sync-client "^0.2.8"
     elliptic "^6.4.0"
@@ -8634,7 +8634,7 @@ edge-core-js@^1.13.1:
     rfc4648 "^1.5.3"
     scrypt-js "^2.0.3"
     serverlet "^0.1.2"
-    yaob "^0.3.11"
+    yaob "^0.3.12"
     yavent "^0.1.3"
 
 edge-currency-accountbased@^2.18.8:
@@ -19406,7 +19406,7 @@ yaml@^1.10.0:
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-1.10.2.tgz#2301c5ffbf12b467de8da2333a459e29e7920e4b"
   integrity sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
 
-yaob@^0.3.11, yaob@^0.3.12, yaob@^0.3.6:
+yaob@^0.3.12, yaob@^0.3.6:
   version "0.3.12"
   resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.3.12.tgz#fb37da4749f1202cc96dedeb8763082c914b5e35"
   integrity sha512-HVXUb7s4ZawrEtpAEpuNwsD6oHCqapY9aCnMEeZnk3lIAlTO85Gw7pT2xzmYy3Q4CKPcG9pCW3h2rgf9vBTuqg==

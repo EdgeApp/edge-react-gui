@@ -1,4 +1,4 @@
-"CURRENCY_CODE","DATE","TIME","PAYEE_PAYER_NAME","AMT_ASSET","DENOMINATION","USD","CATEGORY","NOTES","AMT_NETWORK_FEES_ASSET","TXID","OUR_RECEIVE_ADDRESSES","VER","DEVICE_DESCRIPTION"
+"CURRENCY_CODE","DATE","TIME","PAYEE_PAYER_NAME","AMT_ASSET","DENOMINATION","iso:USD","CATEGORY","NOTES","AMT_NETWORK_FEES_ASSET","TXID","OUR_RECEIVE_ADDRESSES","VER","DEVICE_DESCRIPTION"
 "BTC","2018-04-23","09:49","Crazy Person","1230000","","12000.45","Income:Mo Money","Hell yeah! Thanks for the fish <<&&>>","10","txid1","receiveaddress1,receiveaddress2",1,"iphone12"
 "BTC","2018-04-24","13:36","Crazy Person 2","-3210000","","36001.45","Expense:Less Money","Hell yeah! Here's a fish""","20","txid2","receiveaddress3,receiveaddress4",1,"iphone12"
 "BTC","2018-04-25","17:23","Transfer","-3209980","","36001.22569188851","Transfer:Edge","","0","txid3","receiveaddress3,receiveaddress4",1,"iphone12"

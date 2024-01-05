@@ -223,7 +223,7 @@ const activateWalletTokens = async (
       activateWalletId: wallet.id,
       activateTokenIds: tokenIds,
       paymentWalletId,
-      paymentTokenId: tokenId
+      paymentTokenId: tokenId ?? undefined
     })
     const tokensText = tokenIds.map(tokenId => {
       const { currencyCode, displayName } = getToken(wallet, tokenId) ?? {}

@@ -18,14 +18,15 @@ const edgeTxs: EdgeTransaction[] = [
     metadata: {
       name: 'Crazy Person',
       category: 'Income:Mo Money',
-      notes: 'Hell yeah! Thanks for the fish <<&&>>',
-      amountFiat: 12000.45
+      exchangeAmount: { 'iso:USD': 12000.45 },
+      notes: 'Hell yeah! Thanks for the fish <<&&>>'
     },
     nativeAmount: '123000000',
     networkFee: '1000',
     ourReceiveAddresses: ['receiveaddress1', 'receiveaddress2'],
     parentNetworkFee: '10002',
     signedTx: '298t983y4t983y4t93y4g98oeshfgi4t89w394t',
+    tokenId: null,
     txid: 'txid1',
     walletId: ''
   },
@@ -39,14 +40,15 @@ const edgeTxs: EdgeTransaction[] = [
     metadata: {
       name: 'Crazy Person 2',
       category: 'Expense:Less Money',
-      notes: 'Hell yeah! Here\'s a fish"',
-      amountFiat: 36001.45
+      exchangeAmount: { 'iso:USD': 36001.45 },
+      notes: 'Hell yeah! Here\'s a fish"'
     },
     nativeAmount: '-321000000',
     networkFee: '2000',
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     parentNetworkFee: '20001',
     signedTx: 'fiuwh34f98h3tiuheirgserg',
+    tokenId: null,
     txid: 'txid2',
     walletId: ''
   },
@@ -59,14 +61,15 @@ const edgeTxs: EdgeTransaction[] = [
     metadata: {
       name: 'Transfer',
       category: 'Transfer:Edge',
-      notes: '',
-      amountFiat: 36001.45
+      exchangeAmount: { 'iso:USD': 36001.45 },
+      notes: ''
     },
     nativeAmount: '-321000000',
     networkFee: '2000',
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     isSend: false,
     signedTx: 'fiuwh34f98h3tiuheirgserg',
+    tokenId: null,
     txid: 'txid3',
     walletId: ''
   },
@@ -79,14 +82,15 @@ const edgeTxs: EdgeTransaction[] = [
     metadata: {
       name: 'Transfer but actually income',
       category: 'Transfer:Edge',
-      notes: '',
-      amountFiat: 36001.45
+      exchangeAmount: { 'iso:USD': 36001.45 },
+      notes: ''
     },
     nativeAmount: '321000000',
     networkFee: '2000',
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     isSend: true,
     signedTx: 'fiuwh34f98h3tiuheirgserg',
+    tokenId: null,
     txid: 'txid4',
     walletId: ''
   },
@@ -100,14 +104,15 @@ const edgeTxs: EdgeTransaction[] = [
     metadata: {
       name: 'Transfer but no fee',
       category: 'Transfer:Edge',
-      notes: '',
-      amountFiat: 36001.45
+      exchangeAmount: { 'iso:USD': 36001.45 },
+      notes: ''
     },
     nativeAmount: '-321000000',
     networkFee: '0',
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     parentNetworkFee: '20001',
     signedTx: 'fiuwh34f98h3tiuheirgserg',
+    tokenId: 'usdc_contract_address',
     txid: 'txid4',
     walletId: ''
   },
@@ -120,14 +125,15 @@ const edgeTxs: EdgeTransaction[] = [
     metadata: {
       name: 'Transfer but no fiat amount',
       category: 'Transfer:Edge',
-      notes: '',
-      amountFiat: 0
+      exchangeAmount: { 'iso:USD': 0 },
+      notes: ''
     },
     nativeAmount: '-321000000',
     networkFee: '2000',
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     isSend: true,
     signedTx: 'fiuwh34f98h3tiuheirgserg',
+    tokenId: null,
     txid: 'txid5',
     walletId: ''
   },
@@ -143,17 +149,18 @@ const edgeTxs: EdgeTransaction[] = [
     networkFee: '2000',
     ourReceiveAddresses: ['receiveaddress3', 'receiveaddress4'],
     signedTx: 'fiuwh34f98h3tiuheirgserg',
+    tokenId: null,
     txid: 'txid6',
     walletId: ''
   }
 ]
 
 test('export CSV matches reference data', function () {
-  const out = exportTransactionsToCSVInner([...edgeTxs], 'BTC', 'USD', '100')
+  const out = exportTransactionsToCSVInner([...edgeTxs], 'BTC', 'iso:USD', '100')
   expect(out).toEqual(csvResult)
 })
 
 test('export QBO matches reference data', function () {
-  const out = exportTransactionsToQBOInner([...edgeTxs], 'BTC', 'USD', '100', 1524578071304)
+  const out = exportTransactionsToQBOInner([...edgeTxs], 'BTC', 'iso:USD', '100', 1524578071304)
   expect(out).toEqual(qboResult)
 })

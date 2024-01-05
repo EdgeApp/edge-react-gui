@@ -563,6 +563,7 @@ function cleanTx(tx: EdgeTransaction): EdgeTransaction {
     signedTx: '',
     // requestedCustomFee: tx.requestedCustomFee,
     txid: tx.txid,
+    tokenId: tx.tokenId,
     walletId: tx.walletId
   }
   return newTx

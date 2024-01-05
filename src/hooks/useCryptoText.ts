@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
 import { getDisplayDenomination } from '../selectors/DenominationSelectors'
 import { useSelector } from '../types/reactRedux'
@@ -9,7 +9,7 @@ interface Props {
   nativeAmount: string
   wallet: EdgeCurrencyWallet
   hideBalance?: boolean
-  tokenId?: string
+  tokenId?: EdgeTokenId
   withSymbol?: boolean
 }
 
