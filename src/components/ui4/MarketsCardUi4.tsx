@@ -60,7 +60,7 @@ export const MarketsCardUi4 = (props: Props) => {
         onPress={() => navigation.navigate('coinRankingDetails', { coinRankingData: coinRow })}
         rightButtonType="none"
       >
-        <View style={styles.row}>
+        <View style={styles.rowBody}>
           <EdgeText>{currencyCode.toUpperCase() ?? 'N/A'}</EdgeText>
           <View style={styles.rowRight}>
             <EdgeText>{priceString}</EdgeText>
@@ -115,13 +115,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
   icon: {
     width: theme.rem(2),
     height: theme.rem(2),
-    marginRight: theme.rem(0.25)
+    marginRight: theme.rem(0.5)
   },
-  row: {
+  rowBody: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    flex: 1
+    flex: 1,
+    marginHorizontal: theme.rem(0.5)
   },
   rowRight: {
     flexDirection: 'row',
