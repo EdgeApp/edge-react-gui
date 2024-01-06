@@ -82,8 +82,15 @@ export const CardUi4 = (props: Props) => {
     }
   })
 
-  const handleClose = useHandler(() => {
-    triggerHaptic('impactLight')
+  const handleClose = useHandler(async () => {
+    if (onClose != null) {
+      triggerHaptic('impactLight')
+      try {
+        await onClose()
+      } catch (err) {
+        showError(err)
+      }
+    }
   })
 
   const nonNullChildren = React.Children.toArray(children).filter(child => child != null && React.isValidElement(child))
