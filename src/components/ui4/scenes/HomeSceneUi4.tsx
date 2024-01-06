@@ -23,6 +23,7 @@ import { BlogCard } from '../BlogCard'
 import { CarouselUi4 } from '../CarouselUi4'
 import { HomeCardUi4 } from '../HomeCardUi4'
 import { MarketsCardUi4 } from '../MarketsCardUi4'
+import { PromoCardsUi4 } from '../PromoCardsUi4'
 import { SectionHeaderUi4 } from '../SectionHeaderUi4'
 import { SectionView } from '../SectionView'
 import { SupportCardUi4 } from '../SupportCardUi4'
@@ -61,7 +62,7 @@ export const HomeSceneUi4 = (props: Props) => {
 
   const [blogPosts, setBlogPosts] = React.useState<BlogPost[]>([])
 
-  // Check for AssetStatuses from info server (known sync issues, etc):
+  // Check for BlogPosts from info server:
   React.useEffect(() => {
     fetchInfo(`v1/blogPosts/${config.appId ?? 'edge'}`)
       .then(async res => {
@@ -88,10 +89,12 @@ export const HomeSceneUi4 = (props: Props) => {
       <View style={styles.tempMargin}>
         <SectionView extendRight>
           <>
-            <EdgeAnim enter={{ type: 'fadeInUp', distance: 120 }}>
+            <EdgeAnim enter={{ type: 'fadeInUp', distance: 140 }}>
               <BalanceCardUi4 onViewAssetsPress={handleViewAssetsPress} navigation={navigation} />
             </EdgeAnim>
-            <EdgeAnim style={[styles.homeRowContainer, { height: cardSize }]} enter={{ type: 'fadeInUp', distance: 60 }}>
+            {/* Animation inside PromoCardsUi4 component */}
+            <PromoCardsUi4 navigation={navigation} screenWidth={screenWidth} />
+            <EdgeAnim style={[styles.homeRowContainer, { height: cardSize }]} enter={{ type: 'fadeInUp', distance: 80 }}>
               <HomeCardUi4
                 title={lstrings.buy_crypto}
                 footer={lstrings.buy_crypto_footer}
@@ -115,7 +118,7 @@ export const HomeSceneUi4 = (props: Props) => {
                 onPress={handleSellPress}
               />
             </EdgeAnim>
-            <EdgeAnim style={[styles.homeRowContainer, { height: cardSize }]} enter={{ type: 'fadeInUp', distance: 20 }}>
+            <EdgeAnim style={[styles.homeRowContainer, { height: cardSize }]} enter={{ type: 'fadeInUp', distance: 60 }}>
               <HomeCardUi4
                 title={lstrings.fio_web3}
                 footer={lstrings.fio_web3_footer}
@@ -142,17 +145,18 @@ export const HomeSceneUi4 = (props: Props) => {
           </>
           <>
             <SectionHeaderUi4 leftTitle={lstrings.title_markets} rightNode={lstrings.see_all} onRightPress={() => navigation.navigate('coinRanking', {})} />
-            <MarketsCardUi4 navigation={navigation} numRows={5} />
+            <EdgeAnim enter={{ type: 'fadeInUp', distance: 30 }}>
+              <MarketsCardUi4 navigation={navigation} numRows={5} />
+            </EdgeAnim>
           </>
-          {/* TODO: Reimplement after info server is published */}
           {blogPosts == null || blogPosts.length === 0 ? null : (
             <>
               <SectionHeaderUi4 leftTitle={lstrings.title_learn} />
-                <CarouselUi4 height={theme.rem(13)} width={screenWidth}>
-                  {blogPosts.map((blogPost, index) => (
-                    <BlogCard blogPost={blogPost} key={`${JSON.stringify(blogPost.localeTitle)}-${index}`} />
-                  ))}
-                </CarouselUi4>
+              <CarouselUi4 height={theme.rem(13)} width={screenWidth}>
+                {blogPosts.map((blogPost, index) => (
+                  <BlogCard blogPost={blogPost} key={`${JSON.stringify(blogPost.localeTitle)}-${index}`} />
+                ))}
+              </CarouselUi4>
             </>
           )}
           <SupportCardUi4 title={lstrings.title_support} body={lstrings.body_support} buttonText={lstrings.button_support} url={config.supportContactSite} />
