@@ -123,9 +123,9 @@ export function SwapDetailsCard(props: Props) {
     <CardUi4 sections>
       <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_exchange_details} onPress={handleExchangeDetails}>
         <View style={styles.tileColumn}>
-          <EdgeText style={styles.tileTextBottom}>{lstrings.title_exchange + ' ' + sourceAmount + ' ' + symbolString}</EdgeText>
-          <EdgeText style={styles.tileTextBottom}>{lstrings.string_to_capitalize + ' ' + destinationAmount + ' ' + destinationCurrencyCode}</EdgeText>
-          <EdgeText style={styles.tileTextBottom}>{swapData.isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote}</EdgeText>
+          <EdgeText>{lstrings.title_exchange + ' ' + sourceAmount + ' ' + symbolString}</EdgeText>
+          <EdgeText>{lstrings.string_to_capitalize + ' ' + destinationAmount + ' ' + destinationCurrencyCode}</EdgeText>
+          <EdgeText>{swapData.isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote}</EdgeText>
         </View>
       </RowUi4>
       {orderUri == null ? null : (
@@ -142,9 +142,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
   tileColumn: {
     flexDirection: 'column',
     justifyContent: 'center'
-  },
-  tileTextBottom: {
-    color: theme.primaryText,
-    fontSize: theme.rem(1)
   }
 }))
