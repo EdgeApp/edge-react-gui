@@ -1,11 +1,12 @@
 import { asBoolean, asObject, asString } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
+import { getTxActionDisplayInfo } from '../../actions/CategoriesActions'
 import { exportTransactionsToBitwave, exportTransactionsToCSV, exportTransactionsToQBO, updateTxsFiat } from '../../actions/TransactionExportActions'
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
@@ -35,6 +36,7 @@ interface File {
 interface OwnProps extends EdgeSceneProps<'transactionsExport'> {}
 
 interface StateProps {
+  account: EdgeAccount
   multiplier: string
   exchangeMultiplier: string
   parentMultiplier: string
@@ -206,7 +208,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   }
 
   handleSubmit = async (): Promise<void> => {
-    const { exchangeMultiplier, multiplier, parentMultiplier, route } = this.props
+    const { account, exchangeMultiplier, multiplier, parentMultiplier, route } = this.props
     const { sourceWallet, currencyCode } = route.params
     const { isExportBitwave, isExportQbo, isExportCsv, startDate, endDate } = this.state
     const { tokenId } = this.props
@@ -285,10 +287,16 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
       .trim()
       .replace(/[-\s]+/g, '-') // Collapse spaces & dashes
 
-    const txs = await sourceWallet.getTransactions({
+    const rawTxs = await sourceWallet.getTransactions({
       tokenId,
       startDate,
       endDate
+    })
+
+    const txs = rawTxs.map(tx => {
+      const { mergedData } = getTxActionDisplayInfo(tx, account, sourceWallet)
+      const out: EdgeTransaction = { ...tx, metadata: mergedData }
+      return out
     })
 
     const files: File[] = []
@@ -380,6 +388,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
 export const TransactionsExportScene = connect<StateProps, DispatchProps, OwnProps>(
   (state, { route: { params } }) => ({
+    account: state.core.account,
     multiplier: getDisplayDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.currencyCode).multiplier,
     exchangeMultiplier: getExchangeDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.currencyCode).multiplier,
     parentMultiplier: getExchangeDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.sourceWallet.currencyInfo.currencyCode).multiplier,
