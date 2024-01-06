@@ -43,7 +43,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
             "paddingHorizontal": 28,
           },
           {
-            "color": "#A4C7DF",
+            "color": "#3dd9f4",
             "fontSize": 22,
           },
           {
@@ -63,7 +63,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
             "paddingHorizontal": 28,
           },
           {
-            "color": "#A4C7DF",
+            "color": "#3dd9f4",
             "fontSize": 22,
           },
         ]

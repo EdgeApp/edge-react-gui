@@ -51,7 +51,7 @@ exports[`Tile should render with loading props 1`] = `
           ellipsizeMode="tail"
           style={
             {
-              "color": "#A4C7DF",
+              "color": "#3dd9f4",
               "fontSize": 17,
               "paddingBottom": 6,
               "paddingRight": 22,

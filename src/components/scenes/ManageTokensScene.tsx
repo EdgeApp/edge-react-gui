@@ -13,7 +13,6 @@ import { FlatListItem } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { Space } from '../layout/Space'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -24,6 +23,7 @@ import { ManageTokensRow } from '../themed/ManageTokensRow'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Title } from '../themed/Title'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface Props extends EdgeSceneProps<'manageTokens'> {
   wallet: EdgeCurrencyWallet
@@ -123,7 +123,7 @@ function ManageTokensSceneComponent(props: Props) {
   return (
     <SceneWrapper>
       <SceneHeader underline>
-        <Title leftIcon={<CryptoIcon sizeRem={1.5} tokenId={null} walletId={wallet.id} />} text={walletName} />
+        <Title leftIcon={<CryptoIconUi4 sizeRem={1.5} tokenId={null} walletId={wallet.id} />} text={walletName} />
         <EdgeText style={styles.subTitle}>{lstrings.managetokens_top_instructions}</EdgeText>
         <Space top={1}>
           <FilledTextInput

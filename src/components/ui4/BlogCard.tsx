@@ -1,6 +1,6 @@
 import { BlogPost } from 'edge-info-server/types'
 import * as React from 'react'
-import { Platform, View } from 'react-native'
+import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -25,8 +25,6 @@ export const BlogCard = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const textShadow = Platform.OS === 'ios' ? theme.shadowTextIosUi4 : theme.shadowTextAndroidUi4
-
   const title = getLocaleOrDefaultString(localeTitle)
   const body = getLocaleOrDefaultString(localeBody)
   const url = getLocaleOrDefaultString(localeBlogUrl)
@@ -47,10 +45,10 @@ export const BlogCard = (props: Props) => {
     >
       <View style={styles.backgroundSpacing} />
       <View style={styles.textContainer}>
-        <EdgeText style={[textShadow, styles.titleText]} numberOfLines={1}>
+        <EdgeText style={[styles.titleText, theme.cardTextShadow]} numberOfLines={1}>
           {title}
         </EdgeText>
-        <EdgeText style={[styles.bodyText, textShadow]} numberOfLines={2} disableFontScaling>
+        <EdgeText style={[styles.bodyText, theme.cardTextShadow]} numberOfLines={2} disableFontScaling>
           {body}
         </EdgeText>
       </View>

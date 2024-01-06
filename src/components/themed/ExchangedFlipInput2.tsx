@@ -10,8 +10,8 @@ import { useWatch } from '../../hooks/useWatch'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, maxPrimaryCurrencyConversionDecimals, precisionAdjust } from '../../util/utils'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 import { FieldNum, FlipInput2, FlipInputFieldInfos, FlipInputRef } from './FlipInput2'
 import { RightChevronButton } from './ThemedButtons'
@@ -209,7 +209,7 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
   return coreWallet != null ? (
     <>
       <TouchableOpacity accessible={false} onPress={headerCallback} style={styles.headerContainer}>
-        <CryptoIcon marginRem={[0, 1, 0, 0]} pluginId={pluginId} sizeRem={1.5} tokenId={tokenId} />
+        <CryptoIconUi4 marginRem={[0, 1, 0, 0]} pluginId={pluginId} sizeRem={1.5} tokenId={tokenId} />
         {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
       </TouchableOpacity>
 

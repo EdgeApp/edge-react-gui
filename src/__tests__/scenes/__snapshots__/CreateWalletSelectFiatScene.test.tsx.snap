@@ -268,7 +268,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#A4C7DF",
+                      "color": "#3dd9f4",
                       "fontSize": 17,
                       "marginTop": 6,
                     },
@@ -633,8 +633,14 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
         onStartShouldSetResponder={[Function]}
         style={
           {
+            "alignItems": "center",
             "alignSelf": "center",
-            "borderRadius": 45,
+            "borderRadius": 34,
+            "justifyContent": "center",
+            "marginBottom": 0,
+            "marginLeft": 11,
+            "marginRight": 11,
+            "marginTop": 11,
             "opacity": 1,
           }
         }
@@ -649,7 +655,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
           endPoint={
             {
               "x": 1,
-              "y": 0,
+              "y": 1,
             }
           }
           locations={null}
@@ -664,27 +670,34 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
               {
                 "alignItems": "center",
                 "flexDirection": "row",
-                "height": 56,
+                "height": 67,
                 "justifyContent": "center",
-                "marginHorizontal": 11,
+                "paddingHorizontal": 45,
               },
               {
                 "alignSelf": "center",
-                "marginBottom": 0,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
                 "opacity": 1,
               },
               {
+                "alignItems": "center",
                 "alignSelf": "stretch",
-                "borderRadius": 45,
+                "borderRadius": 34,
+                "justifyContent": "center",
               },
               [
                 {
+                  "alignItems": "center",
                   "alignSelf": "stretch",
-                  "borderRadius": 45,
+                  "borderRadius": 34,
+                  "justifyContent": "center",
                 },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                },
+                {},
                 {
                   "alignSelf": "center",
                 },
@@ -704,24 +717,11 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
-                [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Medium",
-                    "fontSize": 22,
-                    "marginHorizontal": 0,
-                    "paddingHorizontal": 34,
-                    "paddingVertical": 11,
-                  },
-                  {
-                    "textShadowColor": "#00000098",
-                    "textShadowOffset": {
-                      "height": 0,
-                      "width": 0,
-                    },
-                    "textShadowRadius": 3,
-                  },
-                ],
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
                 null,
               ]
             }
@@ -760,8 +760,14 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
         onStartShouldSetResponder={[Function]}
         style={
           {
+            "alignItems": "center",
             "alignSelf": "center",
-            "borderRadius": 45,
+            "borderRadius": 34,
+            "justifyContent": "center",
+            "marginBottom": 22,
+            "marginLeft": 11,
+            "marginRight": 11,
+            "marginTop": 11,
             "opacity": 1,
           }
         }
@@ -769,14 +775,14 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
         <BVLinearGradient
           colors={
             [
-              4278754931,
-              4278251938,
+              16777215,
+              16777215,
             ]
           }
           endPoint={
             {
               "x": 1,
-              "y": 0,
+              "y": 1,
             }
           }
           locations={null}
@@ -791,27 +797,34 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
               {
                 "alignItems": "center",
                 "flexDirection": "row",
-                "height": 56,
+                "height": 67,
                 "justifyContent": "center",
-                "marginHorizontal": 11,
+                "paddingHorizontal": 45,
               },
               {
                 "alignSelf": "center",
-                "marginBottom": 22,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
                 "opacity": 1,
               },
               {
+                "alignItems": "center",
                 "alignSelf": "stretch",
-                "borderRadius": 45,
+                "borderRadius": 34,
+                "justifyContent": "center",
               },
               [
                 {
+                  "alignItems": "center",
                   "alignSelf": "stretch",
-                  "borderRadius": 45,
+                  "borderRadius": 34,
+                  "justifyContent": "center",
                 },
+                {
+                  "marginBottom": 22,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                },
+                {},
                 {
                   "alignSelf": "center",
                 },
@@ -831,24 +844,11 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
-                [
-                  {
-                    "color": "#000000",
-                    "fontFamily": "Quicksand-Medium",
-                    "fontSize": 22,
-                    "marginHorizontal": 0,
-                    "paddingHorizontal": 34,
-                    "paddingVertical": 11,
-                  },
-                  {
-                    "textShadowColor": "#00000098",
-                    "textShadowOffset": {
-                      "height": 0,
-                      "width": 0,
-                    },
-                    "textShadowRadius": 3,
-                  },
-                ],
+                {
+                  "color": "#00f1a2",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
                 null,
               ]
             }

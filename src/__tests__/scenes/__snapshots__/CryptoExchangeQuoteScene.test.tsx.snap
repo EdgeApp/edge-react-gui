@@ -182,7 +182,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                 },
                 [
                   {
-                    "color": "#A4C7DF",
+                    "color": "#3dd9f4",
                     "fontFamily": "Quicksand-Medium",
                     "fontSize": 22,
                     "paddingHorizontal": 17,
@@ -219,7 +219,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
               [
                 {
                   "borderColor": "rgba(255, 255, 255, .1)",
-                  "borderRadius": 4,
+                  "borderRadius": 16,
                   "borderWidth": 1,
                 },
                 null,
@@ -349,37 +349,56 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                 </RNSVGSvgView>
                 <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
+                    {
+                      "backgroundColor": "#000000",
+                      "borderRadius": 22.5,
+                      "elevation": 0,
+                      "height": 45,
+                      "shadowColor": "#000000",
+                      "shadowOffset": {
+                        "height": 3,
+                        "width": -3,
                       },
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      },
-                    ]
+                      "shadowOpacity": 0.6,
+                      "shadowRadius": 4,
+                      "width": 45,
+                    }
                   }
                 >
-                  <FastImageView
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                      }
-                    }
+                  <View
                     style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                      [
+                        {
+                          "overflow": "hidden",
+                        },
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        },
+                      ]
                     }
-                  />
+                  >
+                    <FastImageView
+                      resizeMode="cover"
+                      source={
+                        {
+                          "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                        }
+                      }
+                      style={
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
+                      }
+                    />
+                  </View>
                 </View>
               </View>
               <View
@@ -439,7 +458,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                       },
                       null,
@@ -517,7 +536,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#A4C7DF",
+                          "color": "#3dd9f4",
                           "fontSize": 17,
                         },
                         null,
@@ -723,7 +742,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                 },
                 [
                   {
-                    "color": "#A4C7DF",
+                    "color": "#3dd9f4",
                     "fontFamily": "Quicksand-Medium",
                     "fontSize": 22,
                     "paddingHorizontal": 17,
@@ -760,7 +779,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
               [
                 {
                   "borderColor": "rgba(255, 255, 255, .1)",
-                  "borderRadius": 4,
+                  "borderRadius": 16,
                   "borderWidth": 1,
                 },
                 null,
@@ -890,37 +909,56 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                 </RNSVGSvgView>
                 <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
+                    {
+                      "backgroundColor": "#000000",
+                      "borderRadius": 22.5,
+                      "elevation": 0,
+                      "height": 45,
+                      "shadowColor": "#000000",
+                      "shadowOffset": {
+                        "height": 3,
+                        "width": -3,
                       },
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      },
-                    ]
+                      "shadowOpacity": 0.6,
+                      "shadowRadius": 4,
+                      "width": 45,
+                    }
                   }
                 >
-                  <FastImageView
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                      }
-                    }
+                  <View
                     style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                      [
+                        {
+                          "overflow": "hidden",
+                        },
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        },
+                      ]
                     }
-                  />
+                  >
+                    <FastImageView
+                      resizeMode="cover"
+                      source={
+                        {
+                          "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
+                        }
+                      }
+                      style={
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
+                      }
+                    />
+                  </View>
                 </View>
               </View>
               <View
@@ -980,7 +1018,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#A4C7DF",
+                        "color": "#3dd9f4",
                         "fontSize": 17,
                       },
                       null,
@@ -1058,7 +1096,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#A4C7DF",
+                          "color": "#3dd9f4",
                           "fontSize": 17,
                         },
                         null,
@@ -1127,7 +1165,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                   [
                     {
                       "borderColor": "rgba(255, 255, 255, .1)",
-                      "borderRadius": 4,
+                      "borderRadius": 16,
                       "borderWidth": 1,
                     },
                     null,
@@ -1204,7 +1242,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       <Text
                         style={
                           {
-                            "color": "#A4C7DF",
+                            "color": "#3dd9f4",
                             "fontSize": 17,
                           }
                         }
@@ -1214,7 +1252,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       <Text
                         style={
                           {
-                            "color": "#A4C7DF",
+                            "color": "#3dd9f4",
                             "fontSize": 17,
                           }
                         }
@@ -1294,7 +1332,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
           onStartShouldSetResponder={[Function]}
           style={
             {
-              "borderRadius": 22,
+              "borderRadius": 16,
               "flex": 1,
               "marginBottom": 22,
               "marginLeft": 22,
@@ -1312,7 +1350,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
             style={
               {
                 "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 22,
+                "borderRadius": 16,
                 "bottom": 0,
                 "left": 0,
                 "overflow": "hidden",

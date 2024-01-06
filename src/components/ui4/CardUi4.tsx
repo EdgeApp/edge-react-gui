@@ -97,7 +97,7 @@ export const CardUi4 = (props: Props) => {
   const maybeCloseButton =
     onClose == null ? null : (
       <TouchableOpacity style={styles.cornerContainer} onPress={handleClose}>
-        <AntDesignIcon color={theme.iconTappableAltUi4} name="close" size={theme.rem(1.25)} />
+        <AntDesignIcon color={theme.primaryText} name="close" size={theme.rem(1.25)} />
       </TouchableOpacity>
     )
 
@@ -135,12 +135,12 @@ export const CardUi4 = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   backgroundFill: {
     ...StyleSheet.absoluteFillObject,
-    borderRadius: theme.rem(theme.cardRadiusRemUi4),
+    borderRadius: theme.cardBorderRadius,
     backgroundColor: theme.cardBaseColorUi4,
     overflow: 'hidden'
   },
   cardContainer: {
-    borderRadius: theme.rem(theme.cardRadiusRemUi4),
+    borderRadius: theme.cardBorderRadius,
     flex: 1
   },
   cornerContainer: {
@@ -153,7 +153,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
     backgroundColor: theme.cardOverlayDisabledUi4,
-    borderRadius: theme.rem(theme.cardRadiusRemUi4),
+    borderRadius: theme.cardBorderRadius,
     justifyContent: 'center',
     margin: 2,
     pointerEvents: 'none'

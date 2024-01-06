@@ -31,7 +31,7 @@ exports[`TransactionListRow should render with loading props 1`] = `
   onStartShouldSetResponder={[Function]}
   style={
     {
-      "borderRadius": 22,
+      "borderRadius": 16,
       "flex": 1,
       "marginBottom": 11,
       "marginLeft": 11,
@@ -49,7 +49,7 @@ exports[`TransactionListRow should render with loading props 1`] = `
     style={
       {
         "backgroundColor": "rgba(255, 255, 255, .1)",
-        "borderRadius": 22,
+        "borderRadius": 16,
         "bottom": 0,
         "left": 0,
         "overflow": "hidden",
@@ -87,8 +87,16 @@ exports[`TransactionListRow should render with loading props 1`] = `
             {
               "alignItems": "center",
               "borderRadius": 28,
+              "elevation": 0,
               "height": 45,
               "justifyContent": "center",
+              "shadowColor": "#000000",
+              "shadowOffset": {
+                "height": 3,
+                "width": -3,
+              },
+              "shadowOpacity": 0.6,
+              "shadowRadius": 4,
               "width": 45,
             },
           ]
@@ -248,7 +256,7 @@ exports[`TransactionListRow should render with loading props 1`] = `
                 "includeFontPadding": false,
               },
               {
-                "color": "#A4C7DF",
+                "color": "#3dd9f4",
                 "fontSize": 17,
                 "textAlign": "right",
               },

@@ -12,8 +12,8 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, decimalOrZero, truncateDecimals } from '../../util/utils'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -68,7 +68,7 @@ function WalletListSortableRowComponent(props: Props) {
           <Ionicon name="ios-menu" size={theme.rem(1.25)} color={theme.icon} />
         </View>
         <View style={styles.iconContainer}>
-          <CryptoIcon pluginId={wallet.currencyInfo.pluginId} walletId={wallet.id} tokenId={null} />
+          <CryptoIconUi4 pluginId={wallet.currencyInfo.pluginId} walletId={wallet.id} tokenId={null} />
         </View>
         <View style={styles.detailsContainer}>
           <View style={styles.detailsRow}>
