@@ -273,8 +273,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
         </Container>
       </TouchableWithoutFeedback>
       <MessagesContainer>
-        {valid ? <Message>{valid}</Message> : null}
-        {error ? <Message danger>{error}</Message> : null}
+        <Message danger={error != null}>{valid || error || null}</Message>
         <Message>{charactersLeft}</Message>
       </MessagesContainer>
     </>
