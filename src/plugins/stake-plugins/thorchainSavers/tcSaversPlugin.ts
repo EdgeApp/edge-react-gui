@@ -1,10 +1,8 @@
 import { add, div, eq, gt, lt, max, mul, sub, toFixed } from 'biggystring'
 import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString } from 'cleaners'
 import { EdgeAccount, EdgeCurrencyWallet, EdgeMemo, EdgeSpendInfo, EdgeTransaction, InsufficientFundsError } from 'edge-core-js'
-import { sprintf } from 'sprintf-js'
 
 import { asMaybeContractLocation } from '../../../components/scenes/EditTokenScene'
-import { lstrings } from '../../../locales/strings'
 import { StringMap } from '../../../types/types'
 import { getTokenId, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getHistoricalRate } from '../../../util/exchangeRates'
@@ -559,7 +557,18 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     // 2. Only use UTXOs from the primary address (index 0)
     // 3. Force change to go to the primary address
     otherParams: { outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
-    metadata: { name: 'Thorchain Savers', category: `Transfer:Thorchain Savers ${sprintf(lstrings.transaction_details_stake_subcat_1s, currencyCode)}` }
+    assetAction: { assetActionType: 'stake' },
+    savedAction: {
+      actionType: 'stake',
+      pluginId: stakeProviderInfo.pluginId,
+      stakeAssets: [
+        {
+          pluginId,
+          tokenId,
+          nativeAmount
+        }
+      ]
+    }
   }
 
   if (isEvm && !isToken) {
@@ -601,7 +610,18 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
           nativeAmount: nativeAmount
         }
       ],
-      metadata: { name: 'Thorchain Savers', category: `Expense:${lstrings.wc_smartcontract_network_fee}` },
+      assetAction: { assetActionType: 'stakeNetworkFee' },
+      savedAction: {
+        actionType: 'stake',
+        pluginId: stakeProviderInfo.pluginId,
+        stakeAssets: [
+          {
+            pluginId,
+            tokenId,
+            nativeAmount
+          }
+        ]
+      },
       otherParams: { forceChangeAddress }
     }
 
@@ -637,9 +657,16 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
           publicAddress: sourceTokenContractAddress
         }
       ],
-      metadata: {
-        name: 'Thorchain Savers',
-        category: `Expense:${lstrings.transaction_details_token_approval_subcat}`
+      assetAction: { assetActionType: 'tokenApproval' },
+      savedAction: {
+        actionType: 'tokenApproval',
+        tokenApproved: {
+          pluginId,
+          tokenId,
+          nativeAmount
+        },
+        tokenContractAddress: sourceTokenContractAddress ?? '',
+        contractAddress: router ?? ''
       }
     }
     approvalTx = await wallet.makeSpend(spendInfo)
@@ -853,10 +880,17 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
     tokenId,
     spendTargets: [{ publicAddress: poolAddress, nativeAmount: sendNativeAmount }],
     otherParams: { outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
-    metadata: {
-      name: 'Thorchain Savers',
-      category: `Expense:${sprintf(lstrings.transaction_details_unstake_order_subcat)}`,
-      notes: sprintf(lstrings.transaction_details_unstake_order_notes_1s, currencyCode)
+    assetAction: { assetActionType: 'unstakeOrder' },
+    savedAction: {
+      actionType: 'stake',
+      pluginId: stakeProviderInfo.pluginId,
+      stakeAssets: [
+        {
+          pluginId,
+          tokenId,
+          nativeAmount
+        }
+      ]
     },
     memos: [
       {
@@ -904,7 +938,19 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
           type: memoType,
           value: memoValue
         }
-      ]
+      ],
+      assetAction: { assetActionType: 'unstakeNetworkFee' },
+      savedAction: {
+        actionType: 'stake',
+        pluginId: stakeProviderInfo.pluginId,
+        stakeAssets: [
+          {
+            pluginId,
+            tokenId,
+            nativeAmount
+          }
+        ]
+      }
     })
     networkFee = estimateTx.networkFee
 
@@ -947,7 +993,18 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
               nativeAmount: add(networkFee, sendNativeAmount)
             }
           ],
-          metadata: { name: 'Thorchain Savers', category: `Expense:${lstrings.wc_smartcontract_network_fee}` },
+          assetAction: { assetActionType: 'unstakeNetworkFee' },
+          savedAction: {
+            actionType: 'stake',
+            pluginId: stakeProviderInfo.pluginId,
+            stakeAssets: [
+              {
+                pluginId,
+                tokenId,
+                nativeAmount
+              }
+            ]
+          },
           otherParams: { forceChangeAddress }
         })
         const signedTx = await wallet.signTx(tx)

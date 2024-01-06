@@ -322,6 +322,24 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
     switch (actionType) {
       case 'swap': {
         switch (assetActionType) {
+          case 'transfer': {
+            const txSrc = action.payoutWalletId !== wallet.id
+            const toFromStr = txSrc ? lstrings.transaction_details_swap_to_subcat_1s : lstrings.transaction_details_swap_from_subcat_1s
+            const walletName = account.currencyWallets[action.payoutWalletId]?.name ?? currencyName
+            edgeCategory = {
+              category: 'transfer',
+              subcategory: sprintf(toFromStr, walletName)
+            }
+            break
+          }
+          case 'transferNetworkFee':
+          case 'swapNetworkFee': {
+            edgeCategory = {
+              category: 'expense',
+              subcategory: lstrings.wc_smartcontract_network_fee
+            }
+            break
+          }
           case 'swap':
           case 'swapOrderFill': {
             // Determine if the swap destination was to a different asset or if the
@@ -413,6 +431,15 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
             direction = 'send'
             break
           }
+          case 'unstakeNetworkFee':
+          case 'stakeNetworkFee': {
+            edgeCategory = {
+              category: 'expense',
+              subcategory: lstrings.wc_smartcontract_network_fee
+            }
+            break
+          }
+
           default:
             console.error(`Unsupported EdgeTxAction assetAction:assetActionType: '${assetAction}:${assetActionType}'`)
         }
