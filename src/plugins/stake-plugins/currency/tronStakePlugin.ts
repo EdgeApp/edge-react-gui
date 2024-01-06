@@ -179,6 +179,18 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
             otherParams: {
               type: 'addV2',
               params: { nativeAmount, resource }
+            },
+            assetAction: { assetActionType: 'stake' },
+            savedAction: {
+              actionType: 'stake',
+              pluginId: stakeProviderInfo.pluginId,
+              stakeAssets: [
+                {
+                  pluginId,
+                  tokenId: null,
+                  nativeAmount
+                }
+              ]
             }
           }
           edgeTransaction = await wallet.makeSpend(spendInfo)
@@ -191,6 +203,18 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
             otherParams: {
               type: 'removeV2',
               params: { nativeAmount, resource }
+            },
+            assetAction: { assetActionType: 'unstake' },
+            savedAction: {
+              actionType: 'stake',
+              pluginId: stakeProviderInfo.pluginId,
+              stakeAssets: [
+                {
+                  pluginId,
+                  tokenId: null,
+                  nativeAmount
+                }
+              ]
             }
           }
           edgeTransaction = await wallet.makeSpend(spendInfo)
@@ -202,6 +226,18 @@ export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
             spendTargets,
             otherParams: {
               type: 'withdrawExpireUnfreeze'
+            },
+            assetAction: { assetActionType: 'claim' },
+            savedAction: {
+              actionType: 'stake',
+              pluginId: stakeProviderInfo.pluginId,
+              stakeAssets: [
+                {
+                  pluginId,
+                  tokenId: null,
+                  nativeAmount
+                }
+              ]
             }
           }
           edgeTransaction = await wallet.makeSpend(spendInfo)

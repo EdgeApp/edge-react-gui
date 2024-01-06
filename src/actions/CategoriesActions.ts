@@ -410,6 +410,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
             direction = 'send'
             break
           }
+          case 'claim':
           case 'unstake': {
             let subcategory
             if (action.stakeAssets.length === 1) subcategory = sprintf(lstrings.transaction_details_unstake_subcat_1s, ...getCurrencyCodes(action.stakeAssets))
@@ -423,6 +424,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
             direction = 'receive'
             break
           }
+          case 'claimOrder':
           case 'unstakeOrder': {
             if (action.stakeAssets.length === 1) notes = sprintf(lstrings.transaction_details_unstake_order_notes_1s, ...getCurrencyCodes(action.stakeAssets))
             else if (action.stakeAssets.length === 2)
@@ -518,6 +520,7 @@ export const pluginIdIcons: Record<string, string> = {
   swapuz: EDGE_CONTENT_SERVER_URI + '/swapuz.png',
   thorchain: EDGE_CONTENT_SERVER_URI + '/thorchain.png',
   thorchainda: EDGE_CONTENT_SERVER_URI + '/thorchain.png',
+  tronResources: EDGE_CONTENT_SERVER_URI + '/TRON/TRON.png',
   velodrome: EDGE_CONTENT_SERVER_URI + '/velodrome.png',
   xrpdex: EDGE_CONTENT_SERVER_URI + '/xrpdex.png'
 }

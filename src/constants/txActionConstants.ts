@@ -4,6 +4,8 @@ import { lstrings } from '../locales/strings'
 
 export const TX_ACTION_LABEL_MAP: Record<EdgeAssetActionType, string> = {
   buy: lstrings.fiat_plugin_buy_currencycode,
+  claim: lstrings.transaction_details_claim,
+  claimOrder: lstrings.transaction_details_claim_order,
   sell: lstrings.fiat_plugin_sell_currencycode_s,
   sellNetworkFee: lstrings.fiat_plugin_sell_network_fee,
   swap: lstrings.transaction_details_swap,
