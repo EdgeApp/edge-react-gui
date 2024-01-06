@@ -56,7 +56,6 @@ export interface RouteParamList {
   buyTab: {}
   sellTab: {}
   exchangeTab: {}
-  marketsTab: {}
 
   // Gui Plugins
   guiPluginEnterAmount: FiatPluginEnterAmountParams

@@ -359,6 +359,13 @@ const EdgeAppStack = () => {
         }}
       />
       <Stack.Screen
+        name="coinRanking"
+        component={CoinRankingScene}
+        listeners={{
+          focus: () => dispatch(checkEnabledExchanges())
+        }}
+      />
+      <Stack.Screen
         name="coinRankingDetails"
         component={CoinRankingDetailsScene}
         options={{
@@ -652,7 +659,7 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
-      <Stack.Screen name="marketsTab" component={EdgeMarketsTabScreen} />
+
       <Stack.Screen name="migrateWalletCalculateFee" component={MigrateWalletCalculateFeeScene} />
       <Stack.Screen
         name="migrateWalletCompletion"
@@ -898,29 +905,6 @@ const EdgeExchangeTabScreen = () => {
         options={{
           headerLeft: () => null,
           headerRight: () => null
-        }}
-      />
-    </Stack.Navigator>
-  )
-}
-
-const EdgeMarketsTabScreen = () => {
-  const dispatch = useDispatch()
-  return (
-    <Stack.Navigator initialRouteName="coinRanking" screenOptions={defaultScreenOptions}>
-      <Stack.Screen
-        name="coinRanking"
-        component={CoinRankingScene}
-        options={firstSceneScreenOptions}
-        listeners={{
-          focus: () => dispatch(checkEnabledExchanges())
-        }}
-      />
-      <Stack.Screen
-        name="coinRankingDetails"
-        component={CoinRankingDetailsScene}
-        options={{
-          headerTitle: () => <EdgeLogoHeader />
         }}
       />
     </Stack.Navigator>

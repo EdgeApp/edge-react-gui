@@ -140,7 +140,7 @@ export const HomeSceneUi4 = (props: Props) => {
             </EdgeAnim>
           </>
           <>
-            <SectionHeaderUi4 leftTitle={lstrings.title_markets} rightNode={lstrings.see_all} onRightPress={() => navigation.navigate('marketsTab', {})} />
+            <SectionHeaderUi4 leftTitle={lstrings.title_markets} rightNode={lstrings.see_all} onRightPress={() => navigation.navigate('coinRanking', {})} />
             <MarketsCardUi4 navigation={navigation} numRows={5} />
           </>
           {/* TODO: Reimplement after info server is published */}
