@@ -28,7 +28,7 @@ export interface SimpleTextInputProps {
   placeholder?: string
 
   // Appearance:
-  iconComponent?: AnimatedIconComponent
+  iconComponent?: AnimatedIconComponent | null
   scale?: SharedValue<number>
 
   // Callbacks:
