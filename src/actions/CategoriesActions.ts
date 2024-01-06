@@ -3,6 +3,7 @@ import { EdgeAccount, EdgeAssetAmount, EdgeCurrencyWallet, EdgeMetadata, EdgeTra
 import { sprintf } from 'sprintf-js'
 
 import { showError } from '../components/services/AirshipInstance'
+import { EDGE_CONTENT_SERVER_URI } from '../constants/CdnConstants'
 import { TX_ACTION_LABEL_MAP } from '../constants/txActionConstants'
 import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
@@ -268,6 +269,7 @@ export const defaultCategories = [
 
 export interface ActionDisplayInfo {
   direction: 'send' | 'receive'
+  iconPluginId?: string
   userData: EdgeMetadata
   savedData: EdgeMetadata
   mergedData: EdgeMetadata
@@ -290,6 +292,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
   let edgeCategory: EdgeCategory
   let direction: 'send' | 'receive'
   let notes: string | undefined
+  let iconPluginId: string | undefined
 
   // Default text for send or receive
   if (isSentTransaction) {
@@ -321,6 +324,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
 
     switch (actionType) {
       case 'swap': {
+        iconPluginId = action.swapInfo.pluginId
         switch (assetActionType) {
           case 'transfer': {
             const txSrc = action.payoutWalletId !== wallet.id
@@ -378,6 +382,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
         break
       }
       case 'stake': {
+        iconPluginId = action.pluginId
         switch (assetActionType) {
           case 'stake': {
             let subcategory
@@ -446,6 +451,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
         break
       }
       case 'fiat': {
+        iconPluginId = action.fiatPlugin.providerId
         switch (assetActionType) {
           case 'buy': {
             payeeText = sprintf(payeeText, currencyName)
@@ -491,8 +497,27 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
 
   return {
     direction,
+    iconPluginId,
     savedData,
     userData: metadata ?? {},
     mergedData
   }
+}
+
+export const pluginIdIcons: Record<string, string> = {
+  bitrefill: EDGE_CONTENT_SERVER_URI + '/bitrefill.png',
+  bitsofgold: EDGE_CONTENT_SERVER_URI + '/bits-of-gold-logo.png',
+  changenow: EDGE_CONTENT_SERVER_URI + '/changenow.png',
+  changehero: EDGE_CONTENT_SERVER_URI + '/changehero.png',
+  exolix: EDGE_CONTENT_SERVER_URI + '/exolix-logo.png',
+  godex: EDGE_CONTENT_SERVER_URI + '/godex.png',
+  letsexchange: EDGE_CONTENT_SERVER_URI + '/letsexchange-logo.png',
+  lifi: EDGE_CONTENT_SERVER_URI + '/lifi.png',
+  sideshift: EDGE_CONTENT_SERVER_URI + '/sideshift-logo.png',
+  simplex: EDGE_CONTENT_SERVER_URI + '/simplex.png',
+  swapuz: EDGE_CONTENT_SERVER_URI + '/swapuz.png',
+  thorchain: EDGE_CONTENT_SERVER_URI + '/thorchain.png',
+  thorchainda: EDGE_CONTENT_SERVER_URI + '/thorchain.png',
+  velodrome: EDGE_CONTENT_SERVER_URI + '/velodrome.png',
+  xrpdex: EDGE_CONTENT_SERVER_URI + '/xrpdex.png'
 }

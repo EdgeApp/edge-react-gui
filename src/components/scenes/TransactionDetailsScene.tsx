@@ -6,7 +6,7 @@ import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { formatCategory, getTxActionDisplayInfo, splitCategory } from '../../actions/CategoriesActions'
+import { formatCategory, getTxActionDisplayInfo, pluginIdIcons, splitCategory } from '../../actions/CategoriesActions'
 import { playSendSound } from '../../actions/SoundActions'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
@@ -60,11 +60,11 @@ const TransactionDetailsComponent = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const styles = getStyles(theme)
   // Choose a default category based on metadata or the txAction
-  const { direction, mergedData, savedData } = getTxActionDisplayInfo(transaction, account, wallet)
+  const { direction, iconPluginId, mergedData, savedData } = getTxActionDisplayInfo(transaction, account, wallet)
 
   const swapData = convertActionToSwapData(account, transaction) ?? transaction.swapData
 
-  const thumbnailPath = useContactThumbnail(mergedData.name)
+  const thumbnailPath = useContactThumbnail(mergedData.name) ?? pluginIdIcons[iconPluginId ?? '']
 
   const [localMetadata, setLocalMetadata] = React.useState<EdgeMetadata>({
     exchangeAmount: metadata?.exchangeAmount,
