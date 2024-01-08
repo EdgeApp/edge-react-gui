@@ -1298,6 +1298,7 @@ const strings = {
   stake_estimated_return: 'Estimated Return: %s',
   stake_s_staked: '%s Staked',
   stake_s_earned: '%s Earned',
+  stake_s_unstaked: '%s Unstaked',
   stake_lock_message: 'locked until %s',
   stake_select_options: 'Select staking options:',
   stake_stake_more_funds: 'Stake More Funds',

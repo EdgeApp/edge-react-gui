@@ -24,7 +24,8 @@ const getAssetDisplayName = (stakePolicy: StakePolicy, assetType: 'stakeAssets' 
 export const getPositionAllocations = (stakePosition: StakePosition) => {
   return {
     staked: stakePosition.allocations.filter(positionAllocation => positionAllocation.allocationType === 'staked'),
-    earned: stakePosition.allocations.filter(positionAllocation => positionAllocation.allocationType === 'earned')
+    earned: stakePosition.allocations.filter(positionAllocation => positionAllocation.allocationType === 'earned'),
+    unstaked: stakePosition.allocations.filter(positionAllocation => positionAllocation.allocationType === 'unstaked')
   }
 }
 
