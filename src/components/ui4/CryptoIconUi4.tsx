@@ -122,7 +122,7 @@ export const CryptoIconUi4 = (props: Props) => {
           onIconColor(colors.primary)
         }
         if (colors.platform === 'android') {
-          onIconColor(colors.dominant)
+          onIconColor(colors.vibrant)
         }
       })
       .catch(err => {
