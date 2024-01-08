@@ -1,4 +1,5 @@
 import { ChangeQuote, ChangeQuoteRequest, StakePlugin, StakePluginFactory, StakePolicy, StakePolicyFilter, StakePosition, StakePositionRequest } from '../types'
+import { CoreumNativeSkateKitAdapterConfig, makeSkateKitAdapter } from './policyAdapters/CoreumStakeKitAdaptor'
 import { GlifInfinityPoolAdapterConfig, makeGlifInfinityPoolAdapter } from './policyAdapters/GlifInfinityPoolAdapter'
 import { makeTarotPoolAdapter, TarotPoolAdapterConfig } from './policyAdapters/TarotPoolAdaptor'
 import { StakeAdapterConfig, StakePolicyAdapter } from './policyAdapters/types'
@@ -73,12 +74,17 @@ function isPolicyInfoForGlifInfinityPool(policyInfo: StakePolicyConfig<StakeAdap
 function isPolicyInfoForTarotPool(policyInfo: StakePolicyConfig<StakeAdapterConfig>): policyInfo is StakePolicyConfig<TarotPoolAdapterConfig> {
   return policyInfo.adapterConfig.type === 'tarot-velodrome-pool'
 }
+function isPolicyInfoForCoreumStakeKit(policyInfo: StakePolicyConfig<StakeAdapterConfig>): policyInfo is StakePolicyConfig<CoreumNativeSkateKitAdapterConfig> {
+  return policyInfo.adapterConfig.type === 'coreum-native-stake-kit'
+}
 
 const makePolicyAdapter = (policyInfo: StakePolicyConfig<StakeAdapterConfig>): StakePolicyAdapter => {
   if (isPolicyInfoForGlifInfinityPool(policyInfo)) {
     return makeGlifInfinityPoolAdapter(policyInfo)
   } else if (isPolicyInfoForTarotPool(policyInfo)) {
     return makeTarotPoolAdapter(policyInfo)
+  } else if (isPolicyInfoForCoreumStakeKit(policyInfo)) {
+    return makeSkateKitAdapter(policyInfo)
   } else {
     throw new Error('Unknown policyInfo')
   }
