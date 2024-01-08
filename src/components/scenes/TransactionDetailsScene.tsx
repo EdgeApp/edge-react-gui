@@ -327,7 +327,7 @@ const TransactionDetailsComponent = (props: Props) => {
           <RowUi4 rightButtonType="none" title={lstrings.transaction_details_amount_current_price}>
             <View style={styles.tileRow}>
               <EdgeText>{fiatSymbol + ' '}</EdgeText>
-              <EdgeText style={styles.tileTextPrice}>{currentFiatText}</EdgeText>
+              <EdgeText>{currentFiatText}</EdgeText>
               {originalFiatText === currentFiatText ? null : (
                 <EdgeText style={percentChange >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>{` (${percentText})`}</EdgeText>
               )}
@@ -342,9 +342,7 @@ const TransactionDetailsComponent = (props: Props) => {
 
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
         <CardUi4 sections>
-          <RowUi4 rightButtonType="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput}>
-            <EdgeText style={styles.tileCategory}>{categoriesText}</EdgeText>
-          </RowUi4>
+          <RowUi4 rightButtonType="editable" title={lstrings.transaction_details_category_title} onPress={openCategoryInput} body={categoriesText} />
           <RowUi4
             rightButtonType="editable"
             title={lstrings.transaction_details_notes_title}
@@ -399,21 +397,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderRadius: theme.rem(1),
     marginRight: theme.rem(0.5)
   },
-  tileCategory: {
-    marginVertical: theme.rem(0.25),
-    color: theme.primaryText
-  },
-  tileTextPrice: {
-    color: theme.primaryText,
-    fontSize: theme.rem(1)
-  },
   tileTextPriceChangeUp: {
-    color: theme.positiveText,
-    fontSize: theme.rem(1)
+    color: theme.positiveText
   },
   tileTextPriceChangeDown: {
-    color: theme.negativeText,
-    fontSize: theme.rem(1)
+    color: theme.negativeText
   },
   textAdvancedTransaction: {
     color: theme.textLink,
