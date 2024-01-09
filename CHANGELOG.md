@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 3.23.3
+
+- fixed: ETC spend error regression caused by EIP-1559 upgrade in EthereumEngine
+- fixed: Update Glif Pool APY information endpoints to resolve error message
+
 ## 3.23.2
 
 - fixed: Spend regression for non-EIP-1559 transactions
