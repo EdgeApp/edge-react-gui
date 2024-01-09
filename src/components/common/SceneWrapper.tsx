@@ -126,10 +126,11 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
 
     // These are the safeAreaInsets including the app's header and tab-bar
     // heights.
+    const tabPlusBottomInset = hasTabs ? MAX_TAB_BAR_HEIGHT : isKeyboardOpen ? 0 : safeAreaInsets.bottom
     const insets: EdgeInsets = {
       top: safeAreaInsets.top + (hasHeader ? headerBarHeight : 0),
       right: safeAreaInsets.right,
-      bottom: (isLightAccount ? notificationHeight : 0) + (hasTabs ? MAX_TAB_BAR_HEIGHT : isKeyboardOpen ? 0 : safeAreaInsets.bottom),
+      bottom: (isLightAccount ? notificationHeight : 0) + tabPlusBottomInset,
       left: safeAreaInsets.left
     }
 
@@ -163,9 +164,9 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
         >
           <MaybeView when={!scroll && !hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles]}>
             {isFuncChildren ? children(info) : children}
-            {hasNotifications ? <NotificationView navigation={navigation} /> : null}
           </MaybeView>
         </MaybeScrollView>
+        {hasNotifications ? <NotificationView navigation={navigation} bottomInset={tabPlusBottomInset} /> : null}
       </MaybeAnimatedView>
     )
   }

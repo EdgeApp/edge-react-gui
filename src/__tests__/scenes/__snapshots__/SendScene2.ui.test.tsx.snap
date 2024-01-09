@@ -784,19 +784,20 @@ exports[`SendScene2 1 spendTarget 1`] = `
         </View>
       </View>
     </View>
-    <View
-      style={
-        {
-          "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
-          "justifyContent": "flex-end",
-          "marginHorizontal": 11,
-          "position": "absolute",
-        }
-      }
-    />
   </View>,
+  <View
+    bottomInset={0}
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 6,
+        "height": 79,
+        "justifyContent": "flex-end",
+        "marginHorizontal": 11,
+        "position": "absolute",
+      }
+    }
+  />,
 ]
 `;
 
@@ -1794,19 +1795,20 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
         </View>
       </View>
     </View>
-    <View
-      style={
-        {
-          "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
-          "justifyContent": "flex-end",
-          "marginHorizontal": 11,
-          "position": "absolute",
-        }
-      }
-    />
   </View>,
+  <View
+    bottomInset={0}
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 6,
+        "height": 79,
+        "justifyContent": "flex-end",
+        "marginHorizontal": 11,
+        "position": "absolute",
+      }
+    }
+  />,
 ]
 `;
 
@@ -2726,19 +2728,20 @@ exports[`SendScene2 2 spendTargets 1`] = `
         </View>
       </View>
     </View>
-    <View
-      style={
-        {
-          "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
-          "justifyContent": "flex-end",
-          "marginHorizontal": 11,
-          "position": "absolute",
-        }
-      }
-    />
   </View>,
+  <View
+    bottomInset={0}
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 6,
+        "height": 79,
+        "justifyContent": "flex-end",
+        "marginHorizontal": 11,
+        "position": "absolute",
+      }
+    }
+  />,
 ]
 `;
 
@@ -3528,19 +3531,20 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
         </View>
       </View>
     </View>
-    <View
-      style={
-        {
-          "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
-          "justifyContent": "flex-end",
-          "marginHorizontal": 11,
-          "position": "absolute",
-        }
-      }
-    />
   </View>,
+  <View
+    bottomInset={0}
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 6,
+        "height": 79,
+        "justifyContent": "flex-end",
+        "marginHorizontal": 11,
+        "position": "absolute",
+      }
+    }
+  />,
 ]
 `;
 
@@ -4308,19 +4312,20 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
         </View>
       </View>
     </View>
-    <View
-      style={
-        {
-          "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
-          "justifyContent": "flex-end",
-          "marginHorizontal": 11,
-          "position": "absolute",
-        }
-      }
-    />
   </View>,
+  <View
+    bottomInset={0}
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 6,
+        "height": 79,
+        "justifyContent": "flex-end",
+        "marginHorizontal": 11,
+        "position": "absolute",
+      }
+    }
+  />,
 ]
 `;
 
@@ -4958,19 +4963,20 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
         </View>
       </View>
     </View>
-    <View
-      style={
-        {
-          "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
-          "justifyContent": "flex-end",
-          "marginHorizontal": 11,
-          "position": "absolute",
-        }
-      }
-    />
   </View>,
+  <View
+    bottomInset={0}
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 6,
+        "height": 79,
+        "justifyContent": "flex-end",
+        "marginHorizontal": 11,
+        "position": "absolute",
+      }
+    }
+  />,
 ]
 `;
 
@@ -5863,19 +5869,20 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
         </View>
       </View>
     </View>
-    <View
-      style={
-        {
-          "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
-          "justifyContent": "flex-end",
-          "marginHorizontal": 11,
-          "position": "absolute",
-        }
-      }
-    />
   </View>,
+  <View
+    bottomInset={0}
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 6,
+        "height": 79,
+        "justifyContent": "flex-end",
+        "marginHorizontal": 11,
+        "position": "absolute",
+      }
+    }
+  />,
 ]
 `;
 
@@ -6741,19 +6748,20 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
         </View>
       </View>
     </View>
-    <View
-      style={
-        {
-          "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
-          "justifyContent": "flex-end",
-          "marginHorizontal": 11,
-          "position": "absolute",
-        }
-      }
-    />
   </View>,
+  <View
+    bottomInset={0}
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 6,
+        "height": 79,
+        "justifyContent": "flex-end",
+        "marginHorizontal": 11,
+        "position": "absolute",
+      }
+    }
+  />,
 ]
 `;
 
@@ -7592,19 +7600,20 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
         </View>
       </View>
     </View>
-    <View
-      style={
-        {
-          "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
-          "justifyContent": "flex-end",
-          "marginHorizontal": 11,
-          "position": "absolute",
-        }
-      }
-    />
   </View>,
+  <View
+    bottomInset={0}
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 6,
+        "height": 79,
+        "justifyContent": "flex-end",
+        "marginHorizontal": 11,
+        "position": "absolute",
+      }
+    }
+  />,
 ]
 `;
 
@@ -8502,18 +8511,19 @@ exports[`SendScene2 Render SendScene 1`] = `
         }
       }
     />
-    <View
-      style={
-        {
-          "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
-          "justifyContent": "flex-end",
-          "marginHorizontal": 11,
-          "position": "absolute",
-        }
-      }
-    />
   </View>,
+  <View
+    bottomInset={0}
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 6,
+        "height": 79,
+        "justifyContent": "flex-end",
+        "marginHorizontal": 11,
+        "position": "absolute",
+      }
+    }
+  />,
 ]
 `;

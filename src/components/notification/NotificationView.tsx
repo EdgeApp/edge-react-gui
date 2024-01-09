@@ -14,10 +14,11 @@ import { NotificationCard } from './NotificationCard'
 
 interface Props {
   navigation: NavigationBase
+  bottomInset: number // To appear above the tab bar
 }
 
 const NotificationViewComponent = (props: Props) => {
-  const { navigation } = props
+  const { navigation, bottomInset } = props
   const theme = useTheme()
   const dispatch = useDispatch()
 
@@ -78,7 +79,7 @@ const NotificationViewComponent = (props: Props) => {
   }, [detectedTokensRedux, handlePress, theme])
 
   return (
-    <NotificationCardsContainer>
+    <NotificationCardsContainer bottomInset={bottomInset}>
       {isBackupWarningShown ? (
         <NotificationCard type="warning" title={lstrings.backup_title} message={lstrings.backup_warning_message} onPress={handlePress} />
       ) : null}
@@ -87,12 +88,12 @@ const NotificationViewComponent = (props: Props) => {
   )
 }
 
-const NotificationCardsContainer = styled(View)(theme => ({
+const NotificationCardsContainer = styled(View)<{ bottomInset: number }>(theme => props => ({
   alignSelf: 'center',
   height: theme.rem(3.5),
   marginHorizontal: theme.rem(0.5),
   justifyContent: 'flex-end',
-  bottom: theme.rem(0.25),
+  bottom: props.bottomInset + theme.rem(0.25),
   position: 'absolute'
 }))
 

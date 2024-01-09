@@ -1550,20 +1550,21 @@ exports[`TransactionDetailsScene should render 1`] = `
           </View>
         </View>
       </View>
-      <View
-        style={
-          {
-            "alignSelf": "center",
-            "bottom": 6,
-            "height": 79,
-            "justifyContent": "flex-end",
-            "marginHorizontal": 11,
-            "position": "absolute",
-          }
-        }
-      />
     </View>
   </RCTScrollView>,
+  <View
+    bottomInset={92}
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 98,
+        "height": 79,
+        "justifyContent": "flex-end",
+        "marginHorizontal": 11,
+        "position": "absolute",
+      }
+    }
+  />,
 ]
 `;
 
@@ -3117,19 +3118,20 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           </View>
         </View>
       </View>
-      <View
-        style={
-          {
-            "alignSelf": "center",
-            "bottom": 6,
-            "height": 79,
-            "justifyContent": "flex-end",
-            "marginHorizontal": 11,
-            "position": "absolute",
-          }
-        }
-      />
     </View>
   </RCTScrollView>,
+  <View
+    bottomInset={92}
+    style={
+      {
+        "alignSelf": "center",
+        "bottom": 98,
+        "height": 79,
+        "justifyContent": "flex-end",
+        "marginHorizontal": 11,
+        "position": "absolute",
+      }
+    }
+  />,
 ]
 `;
