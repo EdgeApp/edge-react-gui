@@ -68,9 +68,9 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
       const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
         navigation.replace('edgeTabs', {
-          screen: 'walletsTab',
+          screen: 'homeTab',
           params: {
-            screen: 'walletList'
+            screen: 'home'
           }
         })
         const selectedEdgetokenIds = items.map(item => ({ pluginId: item.pluginId, tokenId: item.tokenId }))
