@@ -4,6 +4,7 @@
 
 - added: `minerTip` to `feeRateUsed` processing
 - added: Make the alert drop-down swipeable.
+- added: Multi output payments for UTXO currencies
 - changed: Update various scenes with UI4 components
 - changed: Light account re-enabled at 50% distribution
 - changed: Block Buy/Sell/Receive for Light Accounts

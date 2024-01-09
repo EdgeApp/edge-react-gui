@@ -111,7 +111,7 @@ interface FioSenderInfo {
 // animation is added. Waiting for reanimated v3 which fixes crashes in Layout animations.
 // Note: multiple targets can be added via JSON payment protocol to fix payments to Anypay
 // invoices.
-const ALLOW_MULTIPLE_TARGETS = false
+const ALLOW_MULTIPLE_TARGETS = true
 
 const PIN_MAX_LENGTH = 4
 const INFINITY_STRING = '999999999999999999999999999999999999999'

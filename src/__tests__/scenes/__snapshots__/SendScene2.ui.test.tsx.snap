@@ -805,6 +805,144 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   </View>
                 </View>
               </View>
+              <View
+                style={
+                  [
+                    {
+                      "borderBottomColor": "rgba(255, 255, 255, .1)",
+                      "borderBottomWidth": 1,
+                      "height": 1,
+                    },
+                    {
+                      "margin": 11,
+                    },
+                  ]
+                }
+              />
+              <View
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
+                    },
+                    {
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
+                    },
+                  ]
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "flexDirection": "column",
+                        "flexShrink": 1,
+                      },
+                      {
+                        "marginRight": 34,
+                      },
+                    ]
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={false}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "paddingRight": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Add Destination Address
+                  </Text>
+                </View>
+                <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={false}
+                  collapsable={false}
+                  focusable={true}
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    {
+                      "alignItems": "flex-end",
+                      "height": "100%",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "100%",
+                    }
+                  }
+                >
+                  <Text
+                    allowFontScaling={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {
+                          "fontWeight": "900",
+                        },
+                      ]
+                    }
+                  >
+                    
+                  </Text>
+                </View>
+              </View>
             </View>
           </View>
         </View>
@@ -2014,6 +2152,144 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       
                     </Text>
                   </View>
+                </View>
+              </View>
+              <View
+                style={
+                  [
+                    {
+                      "borderBottomColor": "rgba(255, 255, 255, .1)",
+                      "borderBottomWidth": 1,
+                      "height": 1,
+                    },
+                    {
+                      "margin": 11,
+                    },
+                  ]
+                }
+              />
+              <View
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
+                    },
+                    {
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
+                    },
+                  ]
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "flexDirection": "column",
+                        "flexShrink": 1,
+                      },
+                      {
+                        "marginRight": 34,
+                      },
+                    ]
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={false}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "paddingRight": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Add Destination Address
+                  </Text>
+                </View>
+                <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={false}
+                  collapsable={false}
+                  focusable={true}
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    {
+                      "alignItems": "flex-end",
+                      "height": "100%",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "100%",
+                    }
+                  }
+                >
+                  <Text
+                    allowFontScaling={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {
+                          "fontWeight": "900",
+                        },
+                      ]
+                    }
+                  >
+                    
+                  </Text>
                 </View>
               </View>
             </View>
@@ -3578,6 +3854,144 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       
                     </Text>
                   </View>
+                </View>
+              </View>
+              <View
+                style={
+                  [
+                    {
+                      "borderBottomColor": "rgba(255, 255, 255, .1)",
+                      "borderBottomWidth": 1,
+                      "height": 1,
+                    },
+                    {
+                      "margin": 11,
+                    },
+                  ]
+                }
+              />
+              <View
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "alignSelf": "stretch",
+                      "backgroundColor": "rgba(255, 255, 255, 0)",
+                      "flexDirection": "row",
+                    },
+                    {
+                      "marginBottom": 11,
+                      "marginLeft": 11,
+                      "marginRight": 11,
+                      "marginTop": 11,
+                    },
+                  ]
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "flexDirection": "column",
+                        "flexShrink": 1,
+                      },
+                      {
+                        "marginRight": 34,
+                      },
+                    ]
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={false}
+                    ellipsizeMode="tail"
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                          "paddingRight": 22,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Add Destination Address
+                  </Text>
+                </View>
+                <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={false}
+                  collapsable={false}
+                  focusable={true}
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    {
+                      "alignItems": "flex-end",
+                      "height": "100%",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                      "position": "absolute",
+                      "right": 0,
+                      "width": "100%",
+                    }
+                  }
+                >
+                  <Text
+                    allowFontScaling={false}
+                    style={
+                      [
+                        {
+                          "color": undefined,
+                          "fontSize": 22,
+                        },
+                        {
+                          "color": "#00f1a2",
+                          "marginLeft": 11,
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontFamily": "FontAwesome5Free-Solid",
+                          "fontStyle": "normal",
+                          "fontWeight": "normal",
+                        },
+                        {
+                          "fontWeight": "900",
+                        },
+                      ]
+                    }
+                  >
+                    
+                  </Text>
                 </View>
               </View>
             </View>
