@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## Unreleased
+
+- fixed: ETC spend error regression caused by EIP-1559 upgrade in EthereumEngine
+
 ## 3.23.2
 
 - fixed: Spend regression for non-EIP-1559 transactions
