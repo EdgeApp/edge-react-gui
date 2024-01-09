@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ScrollView, Text } from 'react-native'
+import { Text } from 'react-native'
 
 import { setDenominationKeyRequest } from '../../actions/SettingsActions'
 import { lstrings } from '../../locales/strings'
@@ -52,14 +52,12 @@ export function CurrencySettingsScene(props: Props) {
   }
 
   return (
-    <SceneWrapper background="theme" hasTabs={false}>
-      <ScrollView>
-        {denominations.length > 1 ? renderDenominations() : null}
-        <MaybeBlockbookSetting currencyConfig={currencyConfig} />
-        <MaybeCustomServersSetting currencyConfig={currencyConfig} />
-        <MaybeElectrumSetting currencyConfig={currencyConfig} />
-        <MaybeMoneroUserSettings currencyConfig={currencyConfig} />
-      </ScrollView>
+    <SceneWrapper scroll background="theme" hasTabs={false}>
+      {denominations.length > 1 ? renderDenominations() : null}
+      <MaybeBlockbookSetting currencyConfig={currencyConfig} />
+      <MaybeCustomServersSetting currencyConfig={currencyConfig} />
+      <MaybeElectrumSetting currencyConfig={currencyConfig} />
+      <MaybeMoneroUserSettings currencyConfig={currencyConfig} />
     </SceneWrapper>
   )
 }

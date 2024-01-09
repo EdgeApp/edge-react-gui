@@ -1,7 +1,7 @@
 import { mul, toFixed } from 'biggystring'
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
+import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -204,32 +204,30 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     }
 
     return (
-      <SceneWrapper background="theme">
-        <ScrollView>
-          <IonIcon name="ios-at" style={styles.iconIon} color={theme.primaryText} size={theme.rem(4)} />
-          <EdgeText style={styles.instructionalText} numberOfLines={7}>
-            {detailsText}
+      <SceneWrapper scroll background="theme">
+        <IonIcon name="ios-at" style={styles.iconIon} color={theme.primaryText} size={theme.rem(4)} />
+        <EdgeText style={styles.instructionalText} numberOfLines={7}>
+          {detailsText}
+        </EdgeText>
+        <Tile type="static" title={lstrings.fio_domain_label} body={fioDomain} />
+        <Tile type="static" title={lstrings.create_wallet_account_amount_due} body={loading ? lstrings.loading : `${activationCost} ${FIO_STR}`} />
+        <Tile
+          type="touchable"
+          title={lstrings.create_wallet_account_select_wallet}
+          body={paymentWalletBody}
+          onPress={this.onWalletPress}
+          // @ts-expect-error
+          disabled={!activationCost || activationCost === 0}
+        />
+        {!loading && paymentWallet && paymentWallet.id && (
+          <MainButton label={lstrings.string_next_capitalized} marginRem={1} onPress={this.onNextPress} type="secondary" />
+        )}
+        {errorMessage && (
+          <EdgeText style={styles.errorMessage} numberOfLines={3}>
+            {errorMessage}
           </EdgeText>
-          <Tile type="static" title={lstrings.fio_domain_label} body={fioDomain} />
-          <Tile type="static" title={lstrings.create_wallet_account_amount_due} body={loading ? lstrings.loading : `${activationCost} ${FIO_STR}`} />
-          <Tile
-            type="touchable"
-            title={lstrings.create_wallet_account_select_wallet}
-            body={paymentWalletBody}
-            onPress={this.onWalletPress}
-            // @ts-expect-error
-            disabled={!activationCost || activationCost === 0}
-          />
-          {!loading && paymentWallet && paymentWallet.id && (
-            <MainButton label={lstrings.string_next_capitalized} marginRem={1} onPress={this.onNextPress} type="secondary" />
-          )}
-          {errorMessage && (
-            <EdgeText style={styles.errorMessage} numberOfLines={3}>
-              {errorMessage}
-            </EdgeText>
-          )}
-          <View style={styles.bottomSpace} />
-        </ScrollView>
+        )}
+        <View style={styles.bottomSpace} />
       </SceneWrapper>
     )
   }

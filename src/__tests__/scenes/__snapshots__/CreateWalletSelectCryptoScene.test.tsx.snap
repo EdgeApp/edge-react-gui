@@ -55,7 +55,10 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             "flex": 1,
           },
           {
-            "marginBottom": -0,
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "paddingRight": 0,
+            "paddingTop": 64,
           },
         ]
       }

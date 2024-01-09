@@ -32,257 +32,255 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
       }
     }
   />,
-  <View
+  <RCTScrollView
+    contentContainerStyle={
+      {
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "paddingRight": 0,
+        "paddingTop": 64,
+      }
+    }
     style={
       [
-        {
-          "alignItems": "stretch",
-          "flexDirection": "column",
-          "justifyContent": "flex-start",
-        },
         {
           "height": 1334,
           "width": 750,
         },
         {
-          "paddingBottom": 0,
-          "paddingLeft": 0,
-          "paddingRight": 0,
-          "paddingTop": 64,
+          "padding": 0,
         },
       ]
     }
   >
-    <RCTScrollView>
-      <View>
-        <View
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
+    <View>
+      <View
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
           }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
+        }
+        accessible={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "rgba(255, 255, 255, 0)",
+            "flexDirection": "row",
+            "marginBottom": 1,
+            "minHeight": 67,
+            "padding": 11,
+          }
+        }
+      >
+        <Text
           style={
             {
-              "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0)",
-              "flexDirection": "row",
-              "marginBottom": 1,
-              "minHeight": 67,
-              "padding": 11,
+              "color": "#FFFFFF",
+              "flexGrow": 1,
+              "flexShrink": 1,
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "paddingHorizontal": 11,
+              "textAlign": "left",
             }
           }
         >
-          <Text
+          3% change within 1 hour
+        </Text>
+        <View>
+          <View
+            pending={false}
             style={
-              {
-                "color": "#FFFFFF",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "paddingHorizontal": 11,
-                "textAlign": "left",
-              }
+              [
+                {
+                  "aspectRatio": 1,
+                  "position": "absolute",
+                  "width": "100%",
+                  "zIndex": 1,
+                },
+                {
+                  "opacity": 0,
+                },
+              ]
             }
           >
-            3% change within 1 hour
-          </Text>
-          <View>
-            <View
-              pending={false}
-              style={
-                [
-                  {
-                    "aspectRatio": 1,
-                    "position": "absolute",
-                    "width": "100%",
-                    "zIndex": 1,
-                  },
-                  {
-                    "opacity": 0,
-                  },
-                ]
-              }
-            >
-              <ActivityIndicator
-                color="#00f1a2"
-                style={
-                  {
-                    "height": 34,
-                    "marginHorizontal": 11,
-                  }
-                }
-              />
-            </View>
-            <View
-              pending={false}
+            <ActivityIndicator
+              color="#00f1a2"
               style={
                 {
-                  "opacity": 1,
+                  "height": 34,
+                  "marginHorizontal": 11,
                 }
               }
-            >
-              <View
-                pointerEvents="none"
-                style={
-                  {
-                    "marginHorizontal": 11,
-                    "padding": 0,
-                  }
-                }
-              >
-                <RCTSwitch
-                  accessibilityRole="switch"
-                  onChange={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
-                  onTintColor="#00f1a2"
-                  style={
-                    [
-                      {
-                        "height": 31,
-                        "width": 51,
-                      },
-                      {
-                        "backgroundColor": "#87939E",
-                        "borderRadius": 16,
-                      },
-                    ]
-                  }
-                  tintColor="#87939E"
-                  value={true}
-                />
-              </View>
-            </View>
+            />
           </View>
-        </View>
-        <View
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0)",
-              "flexDirection": "row",
-              "marginBottom": 1,
-              "minHeight": 67,
-              "padding": 11,
-            }
-          }
-        >
-          <Text
+          <View
+            pending={false}
             style={
               {
-                "color": "#FFFFFF",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "paddingHorizontal": 11,
-                "textAlign": "left",
+                "opacity": 1,
               }
             }
           >
-            10% change within 24 hours
-          </Text>
-          <View>
             <View
-              pending={false}
-              style={
-                [
-                  {
-                    "aspectRatio": 1,
-                    "position": "absolute",
-                    "width": "100%",
-                    "zIndex": 1,
-                  },
-                  {
-                    "opacity": 0,
-                  },
-                ]
-              }
-            >
-              <ActivityIndicator
-                color="#00f1a2"
-                style={
-                  {
-                    "height": 34,
-                    "marginHorizontal": 11,
-                  }
-                }
-              />
-            </View>
-            <View
-              pending={false}
+              pointerEvents="none"
               style={
                 {
-                  "opacity": 1,
+                  "marginHorizontal": 11,
+                  "padding": 0,
                 }
               }
             >
-              <View
-                pointerEvents="none"
+              <RCTSwitch
+                accessibilityRole="switch"
+                onChange={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                onTintColor="#00f1a2"
                 style={
-                  {
-                    "marginHorizontal": 11,
-                    "padding": 0,
-                  }
+                  [
+                    {
+                      "height": 31,
+                      "width": 51,
+                    },
+                    {
+                      "backgroundColor": "#87939E",
+                      "borderRadius": 16,
+                    },
+                  ]
                 }
-              >
-                <RCTSwitch
-                  accessibilityRole="switch"
-                  onChange={[Function]}
-                  onResponderTerminationRequest={[Function]}
-                  onStartShouldSetResponder={[Function]}
-                  onTintColor="#00f1a2"
-                  style={
-                    [
-                      {
-                        "height": 31,
-                        "width": 51,
-                      },
-                      {
-                        "backgroundColor": "#87939E",
-                        "borderRadius": 16,
-                      },
-                    ]
-                  }
-                  tintColor="#87939E"
-                  value={true}
-                />
-              </View>
+                tintColor="#87939E"
+                value={true}
+              />
             </View>
           </View>
         </View>
       </View>
-    </RCTScrollView>
-  </View>,
+      <View
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "rgba(255, 255, 255, 0)",
+            "flexDirection": "row",
+            "marginBottom": 1,
+            "minHeight": 67,
+            "padding": 11,
+          }
+        }
+      >
+        <Text
+          style={
+            {
+              "color": "#FFFFFF",
+              "flexGrow": 1,
+              "flexShrink": 1,
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "paddingHorizontal": 11,
+              "textAlign": "left",
+            }
+          }
+        >
+          10% change within 24 hours
+        </Text>
+        <View>
+          <View
+            pending={false}
+            style={
+              [
+                {
+                  "aspectRatio": 1,
+                  "position": "absolute",
+                  "width": "100%",
+                  "zIndex": 1,
+                },
+                {
+                  "opacity": 0,
+                },
+              ]
+            }
+          >
+            <ActivityIndicator
+              color="#00f1a2"
+              style={
+                {
+                  "height": 34,
+                  "marginHorizontal": 11,
+                }
+              }
+            />
+          </View>
+          <View
+            pending={false}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+          >
+            <View
+              pointerEvents="none"
+              style={
+                {
+                  "marginHorizontal": 11,
+                  "padding": 0,
+                }
+              }
+            >
+              <RCTSwitch
+                accessibilityRole="switch"
+                onChange={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                onTintColor="#00f1a2"
+                style={
+                  [
+                    {
+                      "height": 31,
+                      "width": 51,
+                    },
+                    {
+                      "backgroundColor": "#87939E",
+                      "borderRadius": 16,
+                    },
+                  ]
+                }
+                tintColor="#87939E"
+                value={true}
+              />
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </RCTScrollView>,
 ]
 `;

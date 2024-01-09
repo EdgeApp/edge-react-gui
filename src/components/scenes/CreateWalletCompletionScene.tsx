@@ -161,12 +161,12 @@ const CreateWalletCompletionComponent = (props: Props) => {
 
   return (
     <SceneWrapper background="theme">
-      {({ safeAreaInsets }) => (
-        <View style={[styles.content, { marginBottom: -safeAreaInsets.bottom }]}>
+      {({ insetStyles }) => (
+        <View style={[styles.content, insetStyles]}>
           <SceneHeader title={lstrings.title_create_wallets} withTopMargin />
           <FlashList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ paddingTop: theme.rem(0.5), paddingBottom: safeAreaInsets.bottom }}
+            contentContainerStyle={{ paddingTop: theme.rem(0.5) }}
             data={filteredCreateItemsForDisplay}
             estimatedItemSize={theme.rem(4.25)}
             fadingEdgeLength={10}

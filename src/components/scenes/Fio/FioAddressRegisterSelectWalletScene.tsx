@@ -1,7 +1,7 @@
 import { mul, toFixed } from 'biggystring'
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Alert, Image, ScrollView, View } from 'react-native'
+import { ActivityIndicator, Alert, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
@@ -229,22 +229,20 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     const styles = getStyles(theme)
     const detailsText = sprintf(lstrings.fio_address_payment_required_text, config.appName)
     return (
-      <SceneWrapper background="theme">
-        <ScrollView>
-          <View style={styles.header}>
-            <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
-            <EdgeText style={styles.instructionalText} numberOfLines={10}>
-              {detailsText}
-            </EdgeText>
-          </View>
-          {this.renderSelectWallet()}
-          {errorMessage && (
-            <EdgeText style={styles.errorMessage} numberOfLines={3}>
-              {errorMessage}
-            </EdgeText>
-          )}
-          <View style={styles.bottomSpace} />
-        </ScrollView>
+      <SceneWrapper scroll background="theme">
+        <View style={styles.header}>
+          <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
+          <EdgeText style={styles.instructionalText} numberOfLines={10}>
+            {detailsText}
+          </EdgeText>
+        </View>
+        {this.renderSelectWallet()}
+        {errorMessage && (
+          <EdgeText style={styles.errorMessage} numberOfLines={3}>
+            {errorMessage}
+          </EdgeText>
+        )}
+        <View style={styles.bottomSpace} />
       </SceneWrapper>
     )
   }

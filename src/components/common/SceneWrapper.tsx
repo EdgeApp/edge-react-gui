@@ -22,16 +22,23 @@ export interface InsetStyles {
   paddingLeft: number
 }
 
+export interface SceneWrapperInfo {
+  insets: EdgeInsets
+  insetStyles: InsetStyles
+  hasTabs: boolean
+  isKeyboardOpen: boolean
+}
+
 type BackgroundOptions =
   | 'theme' // Whatever the current theme specifies (default)
   | 'none' // Do not render any background elements
 
 interface SceneWrapperProps {
   // The children can either be normal React elements,
-  // or a function that accepts the current gap and returns an element.
+  // or a function that accepts info about the scene outer state and returns an element.
   // The function will be called on each render, allowing the scene to react
-  // to changes in the gap.
-  children: React.ReactNode | ((info: { safeAreaInsets: EdgeInsets; insets: EdgeInsets; insetStyles: InsetStyles }) => React.ReactNode)
+  // to changes to the info.
+  children: React.ReactNode | ((info: SceneWrapperInfo) => React.ReactNode)
 
   // Settings for when using ScrollView
   keyboardShouldPersistTaps?: 'always' | 'never' | 'handled'
@@ -111,12 +118,18 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     const hasKeyboardAnimation = keyboardAnimation != null
     const isFuncChildren = typeof children === 'function'
 
+    // Derive the keyboard height by getting the difference between screen height
+    // and trackerValue. This value should be from zero to keyboard height
+    // depending on the open state of the keyboard
+    const keyboardHeight = frame.height - trackerValue
+    const isKeyboardOpen = keyboardHeight !== 0
+
     // These are the safeAreaInsets including the app's header and tab-bar
     // heights.
     const insets: EdgeInsets = {
       top: safeAreaInsets.top + (hasHeader ? headerBarHeight : 0),
       right: safeAreaInsets.right,
-      bottom: (isLightAccount ? notificationHeight : 0) + (hasTabs ? MAX_TAB_BAR_HEIGHT : safeAreaInsets.bottom),
+      bottom: (isLightAccount ? notificationHeight : 0) + (hasTabs ? MAX_TAB_BAR_HEIGHT : isKeyboardOpen ? 0 : safeAreaInsets.bottom),
       left: safeAreaInsets.left
     }
 
@@ -131,6 +144,8 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     }
 
     const maybeInsetStyles = isFuncChildren ? {} : insetStyles
+
+    const info: SceneWrapperInfo = { insets, insetStyles, hasTabs, isKeyboardOpen }
 
     return (
       <MaybeAnimatedView when={hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles, { maxHeight: keyboardAnimation, padding }]}>
@@ -147,7 +162,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
           contentContainerStyle={insetStyles}
         >
           <MaybeView when={!scroll && !hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles]}>
-            {isFuncChildren ? children({ safeAreaInsets, insets, insetStyles: insetStyles }) : children}
+            {isFuncChildren ? children(info) : children}
             {hasNotifications ? <NotificationView navigation={navigation} /> : null}
           </MaybeView>
         </MaybeScrollView>

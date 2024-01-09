@@ -3,48 +3,47 @@
 exports[`FioConnectWalletConfirm should render with loading props 1`] = `
 <SceneWrapper
   background="theme"
+  scroll={true}
 >
-  <ScrollView>
-    <WithTheme(TileComponent)
-      body="MyFioAddress"
-      title="FIO Crypto Handle"
-      type="static"
-    />
-    <Radio
-      marginRem={
-        [
-          2,
-          2,
-          0,
-        ]
-      }
-      onPress={[Function]}
-      value={false}
-    >
-      <WithTheme(EdgeTextComponent)
-        numberOfLines={4}
-        style={
-          {
-            "color": "#FFFFFF",
-            "fontSize": 17,
-            "marginLeft": 22,
-          }
-        }
-      >
-        I acknowledge that one address from each wallet will become public. These addresses will remain public even after wallets are disconnected.
-      </WithTheme(EdgeTextComponent)>
-    </Radio>
-    <WithTheme(SliderComponent)
-      disabled={true}
-      disabledText="Slide to Confirm"
-      onSlidingComplete={[Function]}
-      parentStyle={
+  <WithTheme(TileComponent)
+    body="MyFioAddress"
+    title="FIO Crypto Handle"
+    type="static"
+  />
+  <Radio
+    marginRem={
+      [
+        2,
+        2,
+        0,
+      ]
+    }
+    onPress={[Function]}
+    value={false}
+  >
+    <WithTheme(EdgeTextComponent)
+      numberOfLines={4}
+      style={
         {
-          "paddingVertical": 45,
+          "color": "#FFFFFF",
+          "fontSize": 17,
+          "marginLeft": 22,
         }
       }
-      showSpinner={false}
-    />
-  </ScrollView>
+    >
+      I acknowledge that one address from each wallet will become public. These addresses will remain public even after wallets are disconnected.
+    </WithTheme(EdgeTextComponent)>
+  </Radio>
+  <WithTheme(SliderComponent)
+    disabled={true}
+    disabledText="Slide to Confirm"
+    onSlidingComplete={[Function]}
+    parentStyle={
+      {
+        "paddingVertical": 45,
+      }
+    }
+    showSpinner={false}
+  />
 </SceneWrapper>
 `;

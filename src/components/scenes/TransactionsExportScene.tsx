@@ -1,7 +1,7 @@
 import { asBoolean, asObject, asString } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { Platform, ScrollView } from 'react-native'
+import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
@@ -133,18 +133,16 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     const disabledExport = !isExportQbo && !isExportCsv && !isExportBitwave
 
     return (
-      <SceneWrapper background="theme">
-        <ScrollView>
-          <SettingsRow label={walletName} onPress={() => undefined} />
-          <SettingsHeaderRow icon={<EntypoIcon name="calendar" color={theme.icon} size={iconSize} />} label={lstrings.export_transaction_date_range} />
-          <SettingsRow label={lstrings.export_transaction_this_month} onPress={this.setThisMonth} />
-          <SettingsRow label={lstrings.export_transaction_last_month} onPress={this.setLastMonth} />
-          <SettingsLabelRow label={lstrings.string_start} right={startDateString} onPress={this.handleStartDate} />
-          <SettingsLabelRow label={lstrings.string_end} right={endDateString} onPress={this.handleEndDate} />
-          <SettingsHeaderRow icon={<EntypoIcon name="export" color={theme.icon} size={iconSize} />} label={lstrings.export_transaction_export_type} />
-          {Platform.OS === 'android' ? this.renderAndroidSwitches() : this.renderIosSwitches()}
-          {disabledExport ? null : <MainButton label={lstrings.string_export} marginRem={1.5} onPress={this.handleSubmit} type="secondary" />}
-        </ScrollView>
+      <SceneWrapper scroll background="theme">
+        <SettingsRow label={walletName} onPress={() => undefined} />
+        <SettingsHeaderRow icon={<EntypoIcon name="calendar" color={theme.icon} size={iconSize} />} label={lstrings.export_transaction_date_range} />
+        <SettingsRow label={lstrings.export_transaction_this_month} onPress={this.setThisMonth} />
+        <SettingsRow label={lstrings.export_transaction_last_month} onPress={this.setLastMonth} />
+        <SettingsLabelRow label={lstrings.string_start} right={startDateString} onPress={this.handleStartDate} />
+        <SettingsLabelRow label={lstrings.string_end} right={endDateString} onPress={this.handleEndDate} />
+        <SettingsHeaderRow icon={<EntypoIcon name="export" color={theme.icon} size={iconSize} />} label={lstrings.export_transaction_export_type} />
+        {Platform.OS === 'android' ? this.renderAndroidSwitches() : this.renderIosSwitches()}
+        {disabledExport ? null : <MainButton label={lstrings.string_export} marginRem={1.5} onPress={this.handleSubmit} type="secondary" />}
       </SceneWrapper>
     )
   }
