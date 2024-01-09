@@ -19,7 +19,7 @@ const filecoinPolicyConfig: Array<StakePolicyConfig<StakeAdapterConfig>> = [
       rpcProviderUrls: [`https://api.node.glif.io/rpc/v0`],
       poolContractAddress: '0x43dAe5624445e7679D16a63211c5ff368681500c', // Pool 0
       simpleRampContractAddress: '0x8147AccE69d711bcED176a0b7a029Ff54800d930',
-      yieldInfoEndpoint: `https://pools-metrics.vercel.app/api/v0/apy`
+      yieldInfoEndpoint: `https://events.glif.link/pool/apy`
     },
     disableMaxStake: true,
     hideClaimAction: true,
