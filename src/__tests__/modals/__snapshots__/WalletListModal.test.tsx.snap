@@ -256,11 +256,6 @@ exports[`WalletListModal should render with loading props 1`] = `
           onFocus={[Function]}
           onSubmitEditing={[Function]}
           placeholder="Search Wallets"
-          placeholderTextColor={
-            {
-              "value": undefined,
-            }
-          }
           returnKeyType="search"
           scale={
             {

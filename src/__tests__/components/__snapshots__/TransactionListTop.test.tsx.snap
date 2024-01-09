@@ -148,11 +148,6 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             onFocus={[Function]}
             onSubmitEditing={[Function]}
             placeholder="Search Transactions"
-            placeholderTextColor={
-              {
-                "value": undefined,
-              }
-            }
             returnKeyType="search"
             scale={
               {
@@ -1194,11 +1189,6 @@ exports[`TransactionListTop should render 1`] = `
             onFocus={[Function]}
             onSubmitEditing={[Function]}
             placeholder="Search Transactions"
-            placeholderTextColor={
-              {
-                "value": undefined,
-              }
-            }
             returnKeyType="search"
             scale={
               {
