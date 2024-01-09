@@ -142,7 +142,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
   }
 
   const handleMarketsPress = () => {
-    navigation.navigate('marketsTab', { screen: 'coinRanking' })
+    navigation.navigate('coinRanking', {})
   }
 
   const handleShareApp = () => {
