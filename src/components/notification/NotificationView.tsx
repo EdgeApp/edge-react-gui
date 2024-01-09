@@ -3,6 +3,8 @@ import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
+import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -25,14 +27,23 @@ const NotificationViewComponent = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const detectedTokensRedux = useSelector(state => state.core.enabledDetectedTokens)
   const wallets = useWatch(account, 'currencyWallets')
+  const fioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
+  const fioWallets = useSelector(state => state.ui.wallets.fioWallets)
 
-  const isBackupWarningShown = account.id != null && account.username == null
+  const isLightAccount = account.id != null && account.username == null
+  const isBackupWarningShown = isLightAccount && fioAddresses.length > 0
 
   const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
 
   const handlePress = useHandler(async () => {
     await showBackupModal({ navigation })
   })
+
+  // Fetch FIO names to check if we need a backup warning for light accounts
+  useAsyncEffect(async () => {
+    if (!isLightAccount || fioWallets.length === 0) return
+    await dispatch(refreshAllFioAddresses())
+  }, [fioWallets])
 
   // Show a tokens detected notification per walletId found in newTokens
   React.useEffect(() => {
@@ -81,7 +92,7 @@ const NotificationViewComponent = (props: Props) => {
   return (
     <NotificationCardsContainer bottomInset={bottomInset}>
       {isBackupWarningShown ? (
-        <NotificationCard type="warning" title={lstrings.backup_title} message={lstrings.backup_warning_message} onPress={handlePress} />
+        <NotificationCard type="warning" title={lstrings.backup_title} message={lstrings.backup_web3_warning_message} onPress={handlePress} />
       ) : null}
       {autoDetectTokenCards.length > 0 ? autoDetectTokenCards : null}
     </NotificationCardsContainer>

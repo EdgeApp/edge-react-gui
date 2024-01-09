@@ -12,6 +12,8 @@
 - changed: Do not write tx.metadata in fiat sell transactions
 - changed: Use new EdgeTransaction.savedAction to show extended transaction info in tx list and tx details
 - changed: Use new EdgeTxAction data for Thorchain and Tron stake plugins
+- changed: Persistent backup notification for light accounts to show only when
+  fio handles were created.
 - fixed: USP vs legacy landing experiment distribution
 - fixed: Paybis sell from Tron USDT
 - fixed: Remove `minWidth` style from stake option card

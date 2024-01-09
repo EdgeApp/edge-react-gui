@@ -67,7 +67,7 @@ export const BackupModal = (props: { bridge: AirshipBridge<BackupModalResult | u
           {lstrings.backup_info_message}
         </EdgeText>
         <EdgeText style={styles.warningText} numberOfLines={2}>
-          {lstrings.backup_warning_message}
+          {lstrings.backup_web3_warning_message}
         </EdgeText>
         <Text style={styles.linkText} onPress={() => openBrowserUri(config.backupAccountSite)}>
           {lstrings.tap_to_learn_more}
