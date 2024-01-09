@@ -16,6 +16,7 @@
 - fixed: Paybis sell from Tron USDT
 - fixed: Remove `minWidth` style from stake option card
 - fixed: Send scene no-longer accesses clipboard immediately
+- fixed: Update Glif Pool APY information endpoints to resolve error message
 - fixed: Don't pass pendingTxs with spendInfo in migrate flow
 - removed: Deposit/Send footer buttons in Wallet/Asset List Scene
 
