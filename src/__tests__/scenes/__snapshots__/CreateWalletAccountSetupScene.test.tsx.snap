@@ -337,6 +337,47 @@ exports[`CreateWalletAccountSelect renders 1`] = `
 
       </Text>
       <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessible={false}
+        disableAnimation={
+          {
+            "value": 0,
+          }
+        }
+        focusAnimation={
+          {
+            "value": 0,
+          }
+        }
+        focusable={true}
+        multiline={false}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        scale={
+          {
+            "value": 1,
+          }
+        }
+        spaceProps={
+          {
+            "around": 1,
+            "bottom": 2,
+            "returnKeyType": "next",
+          }
+        }
         style={
           [
             {
@@ -349,10 +390,188 @@ exports[`CreateWalletAccountSelect renders 1`] = `
               "marginRight": 22,
               "marginTop": 22,
             },
-            undefined,
+            {
+              "alignItems": "center",
+              "borderRadius": 11,
+              "borderWidth": 1,
+              "flex": undefined,
+              "flexDirection": "row",
+              "paddingHorizontal": 22,
+            },
+            {
+              "backgroundColor": undefined,
+              "borderColor": undefined,
+              "marginHorizontal": undefined,
+              "opacity": undefined,
+              "paddingVertical": 17.6,
+            },
           ]
         }
       >
+        <View
+          scale={
+            {
+              "value": 0,
+            }
+          }
+          style={
+            [
+              {
+                "alignItems": "stretch",
+                "aspectRatio": 1,
+              },
+              {
+                "opacity": 0,
+                "width": 0,
+              },
+            ]
+          }
+        />
+        <View
+          focusValue={
+            {
+              "value": 0,
+            }
+          }
+          hasPlaceholder={true}
+          style={
+            [
+              {
+                "alignItems": "flex-start",
+                "alignSelf": "flex-start",
+                "flex": 1,
+                "flexDirection": "row",
+              },
+              {
+                "marginBottom": NaN,
+                "marginTop": undefined,
+              },
+            ]
+          }
+        >
+          <View
+            shift={
+              {
+                "value": 0,
+              }
+            }
+            style={
+              [
+                {
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                  "margin": 0,
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 0,
+                  "position": "absolute",
+                  "top": 0,
+                },
+                {
+                  "transform": [
+                    {
+                      "translateY": undefined,
+                    },
+                  ],
+                },
+              ]
+            }
+          >
+            <Text
+              disableAnimation={
+                {
+                  "value": 0,
+                }
+              }
+              focusAnimation={
+                {
+                  "value": 0,
+                }
+              }
+              scale={
+                {
+                  "value": 1,
+                }
+              }
+              shift={
+                {
+                  "value": 0,
+                }
+              }
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": undefined,
+                    "fontSize": undefined,
+                  },
+                ]
+              }
+            >
+              Account Handle
+            </Text>
+          </View>
+          <TextInput
+            accessibilityState={
+              {
+                "disabled": false,
+              }
+            }
+            accessible={true}
+            animated={true}
+            autoCapitalize="none"
+            autoCorrect={false}
+            autoFocus={true}
+            disableAnimation={
+              {
+                "value": 0,
+              }
+            }
+            focusAnimation={
+              {
+                "value": 0,
+              }
+            }
+            maxLength={12}
+            multiline={false}
+            onBlur={[Function]}
+            onChangeText={[Function]}
+            onFocus={[Function]}
+            onSubmitEditing={[Function]}
+            returnKeyType="next"
+            scale={
+              {
+                "value": 1,
+              }
+            }
+            secureTextEntry={false}
+            selectionColor="#FFFFFF"
+            style={
+              [
+                {
+                  "color": "#1b2f3b",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "margin": 0,
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 0,
+                },
+                {
+                  "color": undefined,
+                  "fontSize": 22,
+                },
+              ]
+            }
+            testID="undefined.textInput"
+            textAlignVertical="top"
+            value=""
+          />
+        </View>
         <View
           accessibilityState={
             {
@@ -363,19 +582,17 @@ exports[`CreateWalletAccountSelect renders 1`] = `
               "selected": undefined,
             }
           }
-          accessible={false}
-          disableAnimation={
+          accessibilityValue={
             {
-              "value": 0,
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
             }
           }
-          focusAnimation={
-            {
-              "value": 0,
-            }
-          }
+          accessible={true}
+          collapsable={false}
           focusable={true}
-          multiline={false}
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
@@ -383,45 +600,12 @@ exports[`CreateWalletAccountSelect renders 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          scale={
-            {
-              "value": 1,
-            }
-          }
-          spaceProps={
-            {
-              "returnKeyType": "next",
-            }
-          }
           style={
-            [
-              {
-                "alignItems": undefined,
-                "flex": undefined,
-                "flexDirection": "column",
-                "justifyContent": undefined,
-                "marginBottom": 0,
-                "marginLeft": 0,
-                "marginRight": 0,
-                "marginTop": 0,
-              },
-              {
-                "alignItems": "center",
-                "borderRadius": 11,
-                "borderWidth": 1,
-                "flex": undefined,
-                "flexDirection": "row",
-                "paddingHorizontal": 22,
-              },
-              {
-                "backgroundColor": undefined,
-                "borderColor": undefined,
-                "marginHorizontal": undefined,
-                "opacity": undefined,
-                "paddingVertical": 17.6,
-              },
-            ]
+            {
+              "opacity": 1,
+            }
           }
+          testID="undefined.clearIcon"
         >
           <View
             scale={
@@ -441,290 +625,90 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 },
               ]
             }
-          />
-          <View
-            focusValue={
-              {
-                "value": 0,
-              }
-            }
-            hasPlaceholder={true}
-            style={
-              [
-                {
-                  "alignItems": "flex-start",
-                  "alignSelf": "flex-start",
-                  "flex": 1,
-                  "flexDirection": "row",
-                },
-                {
-                  "marginBottom": NaN,
-                  "marginTop": undefined,
-                },
-              ]
-            }
           >
-            <View
-              shift={
-                {
-                  "value": 0,
-                }
-              }
+            <Text
+              adjustsFontSizeToFit={true}
+              allowFontScaling={false}
               style={
                 [
-                  {
-                    "alignItems": "center",
-                    "justifyContent": "center",
-                    "margin": 0,
-                    "paddingHorizontal": 11,
-                    "paddingVertical": 0,
-                    "position": "absolute",
-                    "top": 0,
-                  },
-                  {
-                    "transform": [
-                      {
-                        "translateY": undefined,
-                      },
-                    ],
-                  },
-                ]
-              }
-            >
-              <Text
-                disableAnimation={
-                  {
-                    "value": 0,
-                  }
-                }
-                focusAnimation={
-                  {
-                    "value": 0,
-                  }
-                }
-                scale={
-                  {
-                    "value": 1,
-                  }
-                }
-                shift={
-                  {
-                    "value": 0,
-                  }
-                }
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": undefined,
-                      "fontSize": undefined,
-                    },
-                  ]
-                }
-              >
-                Account Handle
-              </Text>
-            </View>
-            <TextInput
-              accessibilityState={
-                {
-                  "disabled": false,
-                }
-              }
-              accessible={true}
-              animated={true}
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoFocus={true}
-              disableAnimation={
-                {
-                  "value": 0,
-                }
-              }
-              focusAnimation={
-                {
-                  "value": 0,
-                }
-              }
-              maxLength={12}
-              multiline={false}
-              onBlur={[Function]}
-              onChangeText={[Function]}
-              onFocus={[Function]}
-              onSubmitEditing={[Function]}
-              returnKeyType="next"
-              scale={
-                {
-                  "value": 1,
-                }
-              }
-              secureTextEntry={false}
-              selectionColor="#FFFFFF"
-              style={
-                [
-                  {
-                    "color": "#1b2f3b",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "margin": 0,
-                    "paddingHorizontal": 11,
-                    "paddingVertical": 0,
-                  },
                   {
                     "color": undefined,
-                    "fontSize": 22,
-                  },
-                ]
-              }
-              testID="undefined.textInput"
-              textAlignVertical="top"
-              value=""
-            />
-          </View>
-          <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": undefined,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={true}
-            collapsable={false}
-            focusable={true}
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
-            style={
-              {
-                "opacity": 1,
-              }
-            }
-            testID="undefined.clearIcon"
-          >
-            <View
-              scale={
-                {
-                  "value": 0,
-                }
-              }
-              style={
-                [
-                  {
-                    "alignItems": "stretch",
-                    "aspectRatio": 1,
+                    "fontSize": 12,
                   },
                   {
-                    "opacity": 0,
-                    "width": 0,
+                    "color": "#FFFFFF",
+                    "fontSize": 0,
                   },
+                  {
+                    "fontFamily": "anticon",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  {},
                 ]
               }
             >
-              <Text
-                adjustsFontSizeToFit={true}
-                allowFontScaling={false}
-                style={
-                  [
-                    {
-                      "color": undefined,
-                      "fontSize": 12,
-                    },
-                    {
-                      "color": "#FFFFFF",
-                      "fontSize": 0,
-                    },
-                    {
-                      "fontFamily": "anticon",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
+              
+            </Text>
           </View>
         </View>
-        <View
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+            "paddingHorizontal": 11,
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          danger={false}
+          minimumFontScale={0.65}
+          numberOfLines={1}
           style={
-            {
-              "flexDirection": "row",
-              "justifyContent": "space-between",
-              "paddingHorizontal": 11,
-            }
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 18,
+                },
+              ],
+              null,
+            ]
+          }
+        />
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 18,
+                },
+              ],
+              null,
+            ]
           }
         >
-          <Text
-            adjustsFontSizeToFit={true}
-            danger={false}
-            minimumFontScale={0.65}
-            numberOfLines={1}
-            style={
-              [
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                [
-                  {
-                    "color": "#3dd9f4",
-                    "fontSize": 18,
-                  },
-                ],
-                null,
-              ]
-            }
-          />
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
-            style={
-              [
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                [
-                  {
-                    "color": "#3dd9f4",
-                    "fontSize": 18,
-                  },
-                ],
-                null,
-              ]
-            }
-          >
-            12
-          </Text>
-        </View>
+          12
+        </Text>
       </View>
       <View
         accessibilityState={

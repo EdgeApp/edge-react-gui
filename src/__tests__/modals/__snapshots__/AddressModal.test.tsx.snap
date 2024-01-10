@@ -35,20 +35,17 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
       }
     }
   >
-    <Memo
+    <ForwardRef
+      autoCapitalize="none"
+      autoCorrect={false}
       horizontal={1}
-    >
-      <ForwardRef
-        autoCapitalize="none"
-        autoCorrect={false}
-        onChangeText={[Function]}
-        onSubmitEditing={[Function]}
-        placeholder="Address"
-        returnKeyType="search"
-        showSpinner={false}
-        value=""
-      />
-    </Memo>
+      onChangeText={[Function]}
+      onSubmitEditing={[Function]}
+      placeholder="Address"
+      returnKeyType="search"
+      showSpinner={false}
+      value=""
+    />
     <View
       style={
         {

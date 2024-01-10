@@ -77,15 +77,14 @@ export function InputTesterScene() {
   return (
     <SceneWrapper scroll hasTabs hasHeader={false}>
       <View style={styles.headerContainer}>
-        <Space vertical={1}>
-          <FilledTextInput
-            value={filledTextInputValue}
-            onChangeText={setFilledTextInputValue}
-            autoFocus={false}
-            placeholder="Test FilledTextInput"
-            maxLength={100}
-          />
-        </Space>
+        <FilledTextInput
+          vertical={1}
+          value={filledTextInputValue}
+          onChangeText={setFilledTextInputValue}
+          autoFocus={false}
+          placeholder="Test FilledTextInput"
+          maxLength={100}
+        />
         <CardUi4>
           <ExchangedFlipInput2
             ref={exchangedFlipInputRef}

@@ -12,7 +12,6 @@ import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { Space } from '../layout/Space'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -151,19 +150,20 @@ const CreateWalletImportComponent = (props: Props) => {
         <EdgeText style={styles.instructionalText} numberOfLines={2}>
           {lstrings.create_wallet_import_all_instructions}
         </EdgeText>
-        <Space top={1} horizontal={0.75} bottom={1.25}>
-          <FilledTextInput
-            value={importText}
-            returnKeyType="next"
-            placeholder={lstrings.create_wallet_import_input_key_or_seed_prompt}
-            autoCapitalize="none"
-            autoCorrect={false}
-            blurOnClear={false}
-            onChangeText={setImportText}
-            onSubmitEditing={handleNext}
-            ref={textInputRef}
-          />
-        </Space>
+        <FilledTextInput
+          top={1}
+          horizontal={0.75}
+          bottom={1.25}
+          value={importText}
+          returnKeyType="next"
+          placeholder={lstrings.create_wallet_import_input_key_or_seed_prompt}
+          autoCapitalize="none"
+          autoCorrect={false}
+          blurOnClear={false}
+          onChangeText={setImportText}
+          onSubmitEditing={handleNext}
+          ref={textInputRef}
+        />
         <MainButton label={lstrings.string_next_capitalized} type="secondary" marginRem={[0.5, 0.5]} onPress={handleNext} alignSelf="center" />
       </KeyboardAwareScrollView>
     </SceneWrapper>

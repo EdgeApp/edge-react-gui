@@ -14,7 +14,6 @@ import { connect } from '../../types/reactRedux'
 import { ResolutionError } from '../../types/ResolutionError'
 import { FioAddress, FlatListItem } from '../../types/types'
 import { checkPubAddress, FioAddresses, getFioAddressCache } from '../../util/FioAddressUtils'
-import { Space } from '../layout/Space'
 import { FormattedText as Text } from '../legacy/FormattedText/FormattedText.ui'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
@@ -310,20 +309,19 @@ export class AddressModalComponent extends React.Component<Props, State> {
           {title || lstrings.address_modal_default_header}
         </ModalTitle>
         <View style={styles.container}>
-          <Space horizontal={1}>
-            <FilledTextInput
-              autoCorrect={false}
-              returnKeyType="search"
-              autoCapitalize="none"
-              placeholder={lstrings.fragment_send_address}
-              onChangeText={this.onChangeTextDelayed}
-              onSubmitEditing={this.handleSubmit}
-              value={uri}
-              error={errorLabel}
-              valid={validLabel}
-              showSpinner={showSpinner}
-            />
-          </Space>
+          <FilledTextInput
+            horizontal={1}
+            autoCorrect={false}
+            returnKeyType="search"
+            autoCapitalize="none"
+            placeholder={lstrings.fragment_send_address}
+            onChangeText={this.onChangeTextDelayed}
+            onSubmitEditing={this.handleSubmit}
+            value={uri}
+            error={errorLabel}
+            valid={validLabel}
+            showSpinner={showSpinner}
+          />
           {!userFioAddressesLoading ? (
             <FlashList
               data={filteredFioAddresses}
