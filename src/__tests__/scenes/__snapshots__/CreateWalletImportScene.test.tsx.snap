@@ -212,6 +212,9 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
           "paddingRight": 0,
           "paddingTop": 64,
         },
+        {
+          "padding": 0,
+        },
       ]
     }
   >

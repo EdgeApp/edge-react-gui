@@ -207,6 +207,9 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           "width": 750,
         },
         {},
+        {
+          "padding": 0,
+        },
       ]
     }
   >
