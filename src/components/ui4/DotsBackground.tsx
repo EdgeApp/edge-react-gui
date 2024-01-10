@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { LayoutChangeEvent, StyleSheet, View } from 'react-native'
+import { LayoutChangeEvent, StyleSheet } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 import { Circle, Defs, G, RadialGradient, Stop, Svg } from 'react-native-svg'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -17,7 +18,7 @@ interface Props {
 export function DotsBackground(props: Props): JSX.Element {
   const { accentColors, overrideDots } = props
   const theme = useTheme()
-  const { blurRadius, color, dotOpacity, dots } = theme.backgroundDots
+  const { blurRadius, dotOpacity, dots } = theme.backgroundDots
 
   const accentDots: ThemeDot[] = []
   for (let i = 0; i < dots.length; i++) {
@@ -97,12 +98,18 @@ export function DotsBackground(props: Props): JSX.Element {
   }
 
   return (
-    <View style={[StyleSheet.absoluteFill, { backgroundColor: color }]} onLayout={handleLayout}>
+    <LinearGradient
+      style={StyleSheet.absoluteFill}
+      colors={theme.backgroundGradientColors}
+      end={theme.backgroundGradientEnd}
+      start={theme.backgroundGradientStart}
+      onLayout={handleLayout}
+    >
       <Svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
         <Defs>{accentDots.map(renderGradient)}</Defs>
         <G opacity={dotOpacity}>{accentDots.map(renderCircle)}</G>
       </Svg>
-    </View>
+    </LinearGradient>
   )
 }
 

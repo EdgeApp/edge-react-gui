@@ -95,7 +95,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     labelSelected: {
       ...labelCommon,
-      color: theme.backgroundDots.color
+      color: theme.secondaryButtonText
     },
     labelDisabled: {
       ...labelCommon,

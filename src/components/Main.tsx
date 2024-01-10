@@ -240,7 +240,7 @@ export const Main = () => {
       ...DefaultTheme,
       colors: {
         ...DefaultTheme.colors,
-        background: theme.backgroundDots.color
+        background: theme.backgroundGradientColors[0]
       }
     }
   }, [theme])

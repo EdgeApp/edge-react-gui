@@ -2,21 +2,35 @@
 
 exports[`SendScene2 1 spendTarget 1`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279900698,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 1,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -193,7 +207,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -1174,21 +1188,35 @@ exports[`SendScene2 1 spendTarget 1`] = `
 
 exports[`SendScene2 1 spendTarget with info tiles 1`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279900698,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 1,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -1365,7 +1393,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -2534,21 +2562,35 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
 
 exports[`SendScene2 2 spendTargets 1`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279900698,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 1,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -2725,7 +2767,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -3865,21 +3907,35 @@ exports[`SendScene2 2 spendTargets 1`] = `
 
 exports[`SendScene2 2 spendTargets hide tiles 1`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279900698,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 1,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -4056,7 +4112,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -5041,21 +5097,35 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
 
 exports[`SendScene2 2 spendTargets hide tiles 2`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279900698,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 1,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -5232,7 +5302,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -6193,21 +6263,35 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
 
 exports[`SendScene2 2 spendTargets hide tiles 3`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279900698,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 1,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -6384,7 +6468,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -7190,21 +7274,35 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
 
 exports[`SendScene2 2 spendTargets lock tiles 1`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279900698,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 1,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -7381,7 +7479,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -8480,21 +8578,35 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
 
 exports[`SendScene2 2 spendTargets lock tiles 2`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279900698,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 1,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -8671,7 +8783,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -9705,21 +9817,35 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
 
 exports[`SendScene2 2 spendTargets lock tiles 3`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279900698,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 1,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -9896,7 +10022,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -10889,21 +11015,35 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
 
 exports[`SendScene2 Render SendScene 1`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279900698,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 1,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -11080,7 +11220,7 @@ exports[`SendScene2 Render SendScene 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [

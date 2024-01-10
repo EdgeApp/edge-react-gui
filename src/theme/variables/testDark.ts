@@ -132,9 +132,11 @@ export const testDark: Theme = {
   loadingIcon: palette.edgeMint,
 
   // Background
+  backgroundGradientColors: [palette.black, palette.black],
+  backgroundGradientStart: { x: 0, y: 0 },
+  backgroundGradientEnd: { x: 1, y: 0 },
   backgroundDots: {
     blurRadius: scale(80),
-    color: palette.backgroundBlack,
     dotOpacity: 0.25,
     dots: [
       {

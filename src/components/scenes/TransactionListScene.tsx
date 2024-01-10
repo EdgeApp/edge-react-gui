@@ -61,7 +61,7 @@ function TransactionListComponent(props: Props) {
   const [searchText, setSearchText] = React.useState('')
   const [assetStatuses, setAssetStatuses] = React.useState<AssetStatus[]>([])
   const [iconColor, setIconColor] = React.useState<string>()
-  const transparentBackground = `${theme.backgroundDots.color}00`
+  const transparentBackground = `${theme.backgroundGradientColors[0]}00`
   const backgroundGradientColor = iconColor == null ? transparentBackground : `${iconColor}44`
 
   // Selectors:

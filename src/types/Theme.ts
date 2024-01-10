@@ -98,9 +98,11 @@ export interface Theme {
   loadingIcon: string
 
   // Background
+  backgroundGradientColors: string[]
+  backgroundGradientStart: { x: number; y: number }
+  backgroundGradientEnd: { x: number; y: number }
   backgroundDots: {
     blurRadius: number
-    color: string
     dotOpacity: number
     dots: ThemeDot[]
     assetOverrideDots: UpdateDots
