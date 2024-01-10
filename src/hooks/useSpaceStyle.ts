@@ -57,7 +57,12 @@ export interface SpaceProps {
   sideways?: boolean
 }
 
-export const useSpaceStyle = (props: SpaceProps): ViewStyle => {
+export type SpaceStyle = Pick<
+  ViewStyle,
+  'marginTop' | 'marginBottom' | 'marginLeft' | 'marginRight' | 'flex' | 'flexDirection' | 'alignItems' | 'justifyContent'
+>
+
+export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
   const theme = useTheme()
   const { around, horizontal, vertical, top, bottom, left, right, expand: fill = false, sideways = false } = props
 
