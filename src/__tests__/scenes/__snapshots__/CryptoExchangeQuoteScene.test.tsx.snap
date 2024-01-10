@@ -1525,10 +1525,10 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
             <BVLinearGradient
               colors={
                 [
-                  4285999631,
-                  4286799138,
-                  4286799138,
-                  4285999631,
+                  1886857999,
+                  1887591201,
+                  1887591201,
+                  1886857999,
                 ]
               }
               endPoint={
