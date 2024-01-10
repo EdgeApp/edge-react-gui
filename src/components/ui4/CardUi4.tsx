@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import LinearGradient, { LinearGradientProps } from 'react-native-linear-gradient'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
@@ -16,7 +17,7 @@ interface Props {
 
   // children & icon share the same 2nd layer:
   children: React.ReactNode | React.ReactNode[]
-  icon?: React.ReactNode
+  icon?: React.ReactNode | string
 
   // Everything else underneath, in order:
   gradientBackground?: LinearGradientProps // 3rd layer
@@ -95,7 +96,10 @@ export const CardUi4 = (props: Props) => {
     </View>
   )
 
-  const maybeIcon = icon == null ? null : <View style={styles.iconContainer}>{icon}</View>
+  const maybeIcon =
+    icon == null ? null : (
+      <View style={styles.iconContainer}>{typeof icon === 'string' ? <FastImage source={{ uri: icon }} style={styles.iconBuiltin} /> : icon}</View>
+    )
 
   const content = sections ? <SectionView>{children}</SectionView> : children
 
@@ -172,6 +176,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: theme.rem(0.25),
     justifyContent: 'center',
     alignContent: 'center'
+  },
+  iconBuiltin: {
+    // When uri strings are given to this component as an icon prop, handle
+    // the icon styling
+    height: theme.rem(1.5),
+    width: theme.rem(1.5),
+    resizeMode: 'contain'
   },
   fill: {
     flex: 1

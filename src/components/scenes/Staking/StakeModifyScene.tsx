@@ -30,7 +30,7 @@ import { Slider } from '../../themed/Slider'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 import { EditableAmountTile } from '../../tiles/EditableAmountTile'
 import { ErrorTile } from '../../tiles/ErrorTile'
-import { IconTile } from '../../tiles/IconTile'
+import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
 interface Props extends EdgeSceneProps<'stakeModify'> {
@@ -423,9 +423,9 @@ const StakeModifySceneComponent = (props: Props) => {
 
     return (
       <View style={styles.amountTilesContainer}>
-        <IconTile title={lstrings.wc_smartcontract_wallet} iconUri={getCurrencyIconUris(wallet.currencyInfo.pluginId, null).symbolImage}>
-          <EdgeText>{getWalletName(wallet)}</EdgeText>
-        </IconTile>
+        <CardUi4 icon={getCurrencyIconUris(wallet.currencyInfo.pluginId, null).symbolImage}>
+          <RowUi4 title={lstrings.wc_smartcontract_wallet} body={getWalletName(wallet)} />
+        </CardUi4>
         {
           // Render stake/unstake amount tiles
           modification === 'stake' || modification === 'unstake'

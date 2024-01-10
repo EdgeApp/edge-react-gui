@@ -19,13 +19,13 @@ import { zeroString } from '../../util/utils'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
-import { EdgeText } from '../themed/EdgeText'
 import { ModalFooter, ModalFooterFade, ModalTitle } from '../themed/ModalParts'
 import { SafeSlider } from '../themed/SafeSlider'
 import { ThemedModal } from '../themed/ThemedModal'
 import { CryptoFiatAmountTile } from '../tiles/CryptoFiatAmountTile'
 import { FiatAmountTile } from '../tiles/FiatAmountTile'
-import { IconTile } from '../tiles/IconTile'
+import { CardUi4 } from '../ui4/CardUi4'
+import { RowUi4 } from '../ui4/RowUi4'
 
 interface Props extends WcSmartContractModalProps {
   bridge: AirshipBridge<void>
@@ -38,7 +38,7 @@ export const WcSmartContractModal = (props: Props) => {
   const styles = getStyles(theme)
   const walletConnect = useWalletConnect()
   const dAppName = dApp.peerMeta.name
-  const icon = dApp.peerMeta.icons[0]
+  const iconUri = dApp.peerMeta.icons[0]
 
   const walletName = getWalletName(wallet)
 
@@ -157,12 +157,12 @@ export const WcSmartContractModal = (props: Props) => {
             tokenId={tokenId}
           />
         )}
-        <IconTile title={lstrings.wc_smartcontract_wallet} iconUri={walletImageUri}>
-          <EdgeText>{walletName}</EdgeText>
-        </IconTile>
-        <IconTile title={lstrings.wc_smartcontract_dapp} iconUri={icon}>
-          <EdgeText>{dAppName}</EdgeText>
-        </IconTile>
+        <CardUi4 icon={walletImageUri}>
+          <RowUi4 title={lstrings.wc_smartcontract_wallet} body={walletName} />
+        </CardUi4>
+        <CardUi4 icon={iconUri}>
+          <RowUi4 title={lstrings.wc_smartcontract_dapp} body={dAppName} />
+        </CardUi4>
         {zeroString(networkFee) ? null : (
           <CryptoFiatAmountTile
             title={lstrings.wc_smartcontract_network_fee}
