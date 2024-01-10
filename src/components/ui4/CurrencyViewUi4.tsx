@@ -133,7 +133,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1
   },
   primaryText: {
-    fontSize: theme.rem(0.75)
+    fontSize: theme.rem(0.75),
+    marginRight: theme.rem(0.25)
   },
   secondaryText: {
     fontSize: theme.rem(0.75),

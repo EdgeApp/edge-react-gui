@@ -19,7 +19,7 @@ interface SplitRow {
 
 /**
  * A view representing rows of data split on the left and right edges of the
- * line. Neither side will exceed 50% of the width of the view.
+ * line
  **/
 export const SplitRowsView = (props: Props) => {
   const { children, marginRem } = props
@@ -45,20 +45,17 @@ export const SplitRowsView = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flexDirection: 'column',
-    justifyContent: 'space-between',
-    flex: 1
+    justifyContent: 'space-between'
   },
   leftColumn: {
     flexDirection: 'column',
-    justifyContent: 'flex-start',
-    flex: 1,
-    maxWidth: '50%'
+    justifyContent: 'flex-start'
   },
   rightColumn: {
     flexDirection: 'column',
     alignItems: 'flex-end',
-    flex: 1,
-    maxWidth: '50%'
+    flexGrow: 1,
+    flexShrink: 1
   },
   row: {
     flexDirection: 'row',
