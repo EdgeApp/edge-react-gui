@@ -907,7 +907,7 @@
   "fio_domain_to_transfer": "Dominio da trasferire",
   "fio_domain_transferred": "Trasferimento riuscito",
   "fio_free_handle_complete": "Hai creato con successo il tuo FIO handle",
-  "fio_free_web3_handle_title_m": "Ottieni il tuo handle *Web3*",
+  "fio_free_web3_handle_title_m": "Claim Your Web3 *Handle*",
   "fio_free_handle_title": "Ottieni un handle FIO",
   "fio_free_web3_handle_message": "Dai al tuo account un handle Web3 universale fornito da FIO per semplificare l'invio e la ricezione delle transazioni.",
   "fio_free_handle_please_wait": "Attendere il completamento della creazione dei portafogli...",
