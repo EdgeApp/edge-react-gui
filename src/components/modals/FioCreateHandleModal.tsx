@@ -5,13 +5,13 @@ import FastImage from 'react-native-fast-image'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { getFioNewHandleImage } from '../../util/CdnUris'
+import { getUi4ImageUri } from '../../util/CdnUris'
 import { parseMarkedText } from '../../util/parseMarkedText'
 import { styled } from '../hoc/styled'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { MainButton } from '../themed/MainButton'
 import { ThemedModal } from '../themed/ThemedModal'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 interface Props {
   bridge: AirshipBridge<boolean>
@@ -40,8 +40,10 @@ export const FioCreateHandleModal = (props: Props) => {
   return (
     <ThemedModal bridge={bridge} closeButton={false} onCancel={handleCancel}>
       <View style={styles.container}>
-        <FastImage source={{ uri: getFioNewHandleImage(theme) }} style={styles.icon} />
-        <GetFioHandleTitle>{parseMarkedText(lstrings.fio_free_web3_handle_title_m)}</GetFioHandleTitle>
+        <FastImage source={{ uri: getUi4ImageUri(theme, 'fio/newHandle') }} style={styles.icon} />
+        <GetFioHandleTitle numberOfLines={1} adjustsFontSizeToFit>
+          {parseMarkedText(lstrings.fio_free_web3_handle_title_m)}
+        </GetFioHandleTitle>
         <EdgeText style={styles.message} numberOfLines={8} disableFontScaling>
           {lstrings.fio_free_web3_handle_message}
         </EdgeText>
@@ -51,8 +53,11 @@ export const FioCreateHandleModal = (props: Props) => {
           {lstrings.fio_free_handle_please_wait}
         </EdgeText>
       ) : null}
-      <MainButton type="primary" label={lstrings.get_started_button} onPress={handleConfirm} marginRem={[1, 1, 0.5, 1]} />
-      <MainButton type="escape" label={lstrings.not_now_button} onPress={handleCancel} marginRem={[0.5, 1, 0.5, 1]} />
+      <ButtonsViewUi4
+        primary={{ label: lstrings.get_started_button, onPress: handleConfirm }}
+        secondary={{ label: lstrings.not_now_button, onPress: handleCancel }}
+        layout="column"
+      />
     </ThemedModal>
   )
 }

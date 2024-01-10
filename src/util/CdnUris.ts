@@ -10,10 +10,6 @@ import { removeHexPrefix } from './utils'
 /**
  * New user FIO handle signup flow
  */
-export const getFioNewHandleImage = (theme: Theme) => {
-  return getThemedIconUri(theme, 'FIO/fioNewHandle')
-}
-
 export const getFioCustomizeHandleImage = (theme: Theme) => {
   return getThemedIconUri(theme, 'FIO/fioCustomizeHandle')
 }
