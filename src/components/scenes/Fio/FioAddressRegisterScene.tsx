@@ -396,7 +396,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper background="theme">
+      <SceneWrapper>
         <SceneHeader style={styles.header} title={lstrings.title_fio_address_confirmation}>
           <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
         </SceneHeader>

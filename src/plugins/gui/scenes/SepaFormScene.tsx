@@ -58,7 +58,7 @@ export const SepaFormScene = React.memo((props: Props) => {
   }, [])
 
   return (
-    <SceneWrapper background="theme" hasNotifications>
+    <SceneWrapper hasNotifications>
       {({ insetStyles }) => (
         <>
           <SceneHeader title={headerTitle} underline withTopMargin />

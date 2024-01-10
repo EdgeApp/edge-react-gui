@@ -129,7 +129,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
 
   const poweredByIconPath = poweredBy != null ? getPartnerIconUri(poweredBy.poweredByIcon) : undefined
   return (
-    <SceneWrapper scroll keyboardShouldPersistTaps="handled" background="theme" hasNotifications>
+    <SceneWrapper scroll keyboardShouldPersistTaps="handled" hasNotifications>
       <SceneHeader style={styles.sceneHeader} title={headerTitle} underline withTopMargin>
         {headerIcon}
       </SceneHeader>

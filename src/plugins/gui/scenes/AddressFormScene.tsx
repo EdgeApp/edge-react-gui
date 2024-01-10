@@ -250,7 +250,7 @@ export const AddressFormScene = React.memo((props: Props) => {
       key !== 'address2' && formData[key].trim() === ''
   )
   return (
-    <SceneWrapper background="theme" hasNotifications>
+    <SceneWrapper hasNotifications>
       {({ insetStyles }) => (
         <>
           <SceneHeader title={headerTitle} underline withTopMargin />

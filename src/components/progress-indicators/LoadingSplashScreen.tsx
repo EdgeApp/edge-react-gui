@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { ActivityIndicator } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import { ActivityIndicator, View } from 'react-native'
 
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
+import { DotsBackground } from '../ui4/DotsBackground'
 
 /**
  * This is not a scene component. It's purpose is to be used outside of the
@@ -14,13 +14,14 @@ import { useTheme } from '../services/ThemeContext'
 export const LoadingSplashScreen = () => {
   const theme = useTheme()
   return (
-    <StyledLinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart}>
+    <ViewContainer>
+      <DotsBackground />
       <ActivityIndicator color={theme.loadingIcon} size="large" />
-    </StyledLinearGradient>
+    </ViewContainer>
   )
 }
 
-const StyledLinearGradient = styled(LinearGradient)({
+const ViewContainer = styled(View)({
   flex: 1,
   alignItems: 'center',
   justifyContent: 'center'

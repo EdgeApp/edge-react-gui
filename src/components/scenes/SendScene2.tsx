@@ -985,7 +985,7 @@ const SendComponent = (props: Props) => {
     disabledText = lstrings.spending_limits_enter_pin
   }
   return (
-    <SceneWrapper background="theme" hasNotifications>
+    <SceneWrapper hasNotifications>
       {({ insetStyles }) => (
         <>
           <StyledKeyboardAwareScrollView

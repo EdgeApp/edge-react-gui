@@ -229,7 +229,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     const styles = getStyles(theme)
     const detailsText = sprintf(lstrings.fio_address_payment_required_text, config.appName)
     return (
-      <SceneWrapper scroll background="theme">
+      <SceneWrapper scroll>
         <View style={styles.header}>
           <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
           <EdgeText style={styles.instructionalText} numberOfLines={10}>

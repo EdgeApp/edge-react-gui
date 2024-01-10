@@ -215,7 +215,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
   const keyExtractor = useHandler((item: MigrateWalletItem) => item.key)
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper>
       <View style={styles.content}>
         <SceneHeader title={lstrings.migrate_wallets_calculate_fee_title} withTopMargin />
         <EdgeText style={styles.instructionalText} numberOfLines={4}>
@@ -242,13 +242,6 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   content: {
     flex: 1
-  },
-  cryptoTypeLogo: {
-    width: theme.rem(2),
-    height: theme.rem(2),
-    borderRadius: theme.rem(1),
-    marginLeft: theme.rem(0.25),
-    backgroundColor: theme.backgroundGradientColors[1]
   },
   instructionalText: {
     color: theme.primaryText,

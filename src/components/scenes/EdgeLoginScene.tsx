@@ -69,7 +69,7 @@ export const EdgeLoginScene = (props: Props) => {
   const logoUri = theme.isDark ? lobby?.loginRequest?.displayImageDarkUrl : lobby?.loginRequest?.displayImageLightUrl
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper>
       <View style={styles.topArea}>
         <CrossFade activeKey={lobby == null ? 'loader' : 'logo'}>
           <View key="loader" style={styles.header}>

@@ -218,7 +218,7 @@ export const LoanCreateConfirmationScene = (props: Props) => {
   if (loanAccountError != null) return <Alert title={lstrings.error_unexpected_title} type="error" message={translateError(loanAccountError)} />
 
   return loanAccount == null ? (
-    <SceneWrapper background="theme">
+    <SceneWrapper>
       <FillLoader />
     </SceneWrapper>
   ) : (

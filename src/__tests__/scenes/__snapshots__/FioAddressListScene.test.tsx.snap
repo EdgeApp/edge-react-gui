@@ -2,9 +2,7 @@
 
 exports[`FioAddressList should render with loading props 1`] = `
 <React.Fragment>
-  <SceneWrapper
-    background="theme"
-  >
+  <SceneWrapper>
     <ScrollView
       style={
         {

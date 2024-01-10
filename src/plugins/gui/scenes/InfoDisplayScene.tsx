@@ -122,7 +122,7 @@ export const InfoDisplayScene = React.memo((props: Props) => {
     ))
 
   return (
-    <SceneWrapper scroll background="theme" hasNotifications>
+    <SceneWrapper scroll hasNotifications>
       <SceneHeader title={headerTitle} underline withTopMargin />
       <View style={styles.promptContainer}>
         <EdgeText numberOfLines={12}>{promptMessage}</EdgeText>

@@ -184,7 +184,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper scroll background="theme">
+      <SceneWrapper scroll>
         <Tile type="static" title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
         {walletsToConnect.length ? (
           <Tile type="static" title={lstrings.title_fio_connect_to_wallet}>

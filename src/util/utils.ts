@@ -519,11 +519,6 @@ export const shuffleArray = <T>(array: T[]): T[] => {
   return array
 }
 
-export const pickRandom = <T>(array?: T[]): T | null => {
-  if (array == null || array.length === 0) return null
-  return array[Math.floor(Math.random() * array.length)]
-}
-
 /**
  * Waits for a collection of promises.
  * Returns all the promises that manage to resolve within the timeout.

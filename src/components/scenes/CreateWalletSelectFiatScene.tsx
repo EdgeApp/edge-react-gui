@@ -208,7 +208,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
   const keyExtractor = useHandler((item: WalletCreateItem) => item.key)
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper>
       <SceneHeader title={lstrings.title_create_wallet} withTopMargin />
       <View style={styles.content}>
         {renderSelectedFiatRow()}
@@ -239,8 +239,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(2),
     height: theme.rem(2),
     borderRadius: theme.rem(1),
-    marginLeft: theme.rem(0.25),
-    backgroundColor: theme.backgroundGradientColors[1]
+    marginLeft: theme.rem(0.25)
   },
   instructionalText: {
     fontSize: theme.rem(0.75),

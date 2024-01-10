@@ -289,7 +289,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     const isLightAccount = username == null
 
     return (
-      <SceneWrapper scroll background="theme" hasTabs={false}>
+      <SceneWrapper scroll hasTabs={false}>
         <SettingsHeaderRow
           icon={<FontAwesomeIcon color={theme.icon} name="user-o" size={iconSize} />}
           label={`${lstrings.settings_account_title_cap}: ${username ?? lstrings.missing_username}`}

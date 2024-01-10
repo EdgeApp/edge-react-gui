@@ -12,17 +12,7 @@ describe('ClickableRow', () => {
     const fakeChild: React.ReactNode = 'String'
 
     const actual = renderer.render(
-      <ClickableRowComponent
-        onPress={() => undefined}
-        onLongPress={() => undefined}
-        highlight
-        gradient
-        autoHeight
-        underline
-        marginRem={11}
-        paddingRem={11}
-        theme={getTheme()}
-      >
+      <ClickableRowComponent onPress={() => undefined} onLongPress={() => undefined} autoHeight underline marginRem={11} paddingRem={11} theme={getTheme()}>
         {fakeChild}
       </ClickableRowComponent>
     )

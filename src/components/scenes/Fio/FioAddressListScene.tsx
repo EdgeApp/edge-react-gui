@@ -116,7 +116,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
     const noFioAddressesText = `${lstrings.no} ${lstrings.title_fio_address}`
     return (
       <>
-        <SceneWrapper background="theme">
+        <SceneWrapper>
           <ScrollView style={styles.row}>
             <SceneHeader title={lstrings.title_fio_address} underline />
             <View style={styles.list}>

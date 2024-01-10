@@ -137,7 +137,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
   const keyExtractor = useHandler((item: MigrateWalletItem) => item.key)
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper>
       {({ insetStyles }) => (
         <View style={[styles.content, { ...insetStyles, paddingBottom: 0 }]}>
           <SceneHeader title={lstrings.migrate_wallets_select_crypto_title} withTopMargin />

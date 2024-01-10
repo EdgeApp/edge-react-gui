@@ -75,7 +75,7 @@ export class CryptoExchangeSuccessComponent extends React.PureComponent<Props, L
     const { showButton } = this.state
     const styles = getStyles(theme)
     return (
-      <SceneWrapper background="theme" hasNotifications>
+      <SceneWrapper hasNotifications>
         <View style={styles.container}>
           <EdgeText style={styles.title}>{lstrings.exchange_congratulations}</EdgeText>
           <EdgeText style={styles.text} numberOfLines={2}>

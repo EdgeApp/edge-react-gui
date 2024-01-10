@@ -265,8 +265,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.secondaryText
   },
   bottomSection: {
-    flex: 1,
-    backgroundColor: theme.backgroundGradientColors[1],
     padding: theme.rem(1)
   },
   btnDisabled: {

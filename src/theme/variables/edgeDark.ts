@@ -82,6 +82,11 @@ const palette = {
   learnMiddle: 'rgba(0, 81, 92, .44)',
   learnRight: 'rgba(0, 245, 155, .44)',
 
+  // Background:
+  backgroundBlack: '#1a1a1a',
+  backgroundGreen: '#00e084',
+  backgroundYellow: '#fcb329',
+
   // Button
   graySecondary: 'hsla(0, 0%, 100%, 0.20)',
 
@@ -127,13 +132,36 @@ export const edgeDark: Theme = {
   loadingIcon: palette.edgeMint,
 
   // Background
-  // backgroundGradientColors: [palette.navyAqua, palette.navyAquaDarker], // For vertical gradient
-  backgroundGradientColors: [palette.darkestNavy, palette.darkAqua],
-  backgroundGradientStart: { x: 0, y: 0 },
-  backgroundGradientEnd: { x: 1, y: 0 },
-  backgroundImageServerUrls: ['https://content.edge.app'],
-  backgroundImage: undefined,
-  backgroundLoadingOverlay: 'rgba(123,123,123,.2)',
+  background: {
+    blurRadius: scale(80),
+    color: palette.backgroundBlack,
+    dotOpacity: 0.25,
+    dots: [
+      {
+        // Top-left:
+        accent: 'keep',
+        color: palette.white,
+        cx: '10%',
+        cy: '10%',
+        r: scale(80)
+      },
+      {
+        // Mid-right:
+        color: palette.backgroundYellow,
+        cx: '95%',
+        cy: '30%',
+        r: scale(90)
+      },
+      {
+        // Bottom-left:
+        accent: 'drop',
+        color: palette.backgroundGreen,
+        cx: '-15%',
+        cy: '100%',
+        r: scale(220)
+      }
+    ]
+  },
 
   // Camera Overlay
   cameraOverlayColor: palette.black,

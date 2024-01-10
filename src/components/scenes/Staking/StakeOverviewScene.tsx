@@ -129,7 +129,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
 
   if (stakeAllocations == null || rewardAllocations == null)
     return (
-      <SceneWrapper background="theme">
+      <SceneWrapper>
         <FillLoader />
       </SceneWrapper>
     )
@@ -137,7 +137,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   const { canStake = false, canClaim = false, canUnstakeAndClaim = false, canUnstake = false } = stakePosition ?? {}
 
   return (
-    <SceneWrapper scroll background="theme">
+    <SceneWrapper scroll>
       <SceneHeader title={title} withTopMargin />
       <View style={styles.card}>
         <StakingReturnsCard

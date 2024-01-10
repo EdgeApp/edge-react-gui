@@ -37,7 +37,7 @@ export class FioAddressRegistered extends React.Component<Props> {
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper background="theme">
+      <SceneWrapper>
         <View style={styles.view}>
           <View style={styles.texts}>
             <View style={styles.image}>
