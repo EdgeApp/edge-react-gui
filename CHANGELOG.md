@@ -18,6 +18,7 @@
 - fixed: Send scene no-longer accesses clipboard immediately
 - fixed: Update Glif Pool APY information endpoints to resolve error message
 - fixed: Don't pass pendingTxs with spendInfo in migrate flow
+- fixed: Fixed title and message handling in AssetStatusCard
 - removed: Deposit/Send footer buttons in Wallet/Asset List Scene
 
 ## 3.23.0
