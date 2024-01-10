@@ -5,12 +5,13 @@ import * as React from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import { sprintf } from 'sprintf-js'
 
 import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useMount } from '../../hooks/useMount'
-import { useWalletConnect } from '../../hooks/useWalletConnect'
+import { useWalletConnect, walletConnectClient } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -106,6 +107,11 @@ export const WcConnectionsScene = (props: Props) => {
           spinner={connecting}
         />
         <EdgeText style={styles.listTitle}>{lstrings.wc_walletconnect_active_connections}</EdgeText>
+        {walletConnectClient.client != null ? null : (
+          <EdgeText style={{ ...styles.listTitle, color: theme.dangerText }}>
+            {sprintf(lstrings.wc_dapp_disconnected, lstrings.wc_walletconnect_title)}
+          </EdgeText>
+        )}
         <View style={styles.list}>
           {connections.map((dAppConnection: WcConnectionInfo, index) => (
             <TouchableOpacity key={index} style={styles.listRow} onPress={() => handleActiveConnectionPress(dAppConnection)}>
