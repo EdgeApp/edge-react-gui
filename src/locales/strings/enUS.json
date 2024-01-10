@@ -551,6 +551,8 @@
   "title_add_token": "Add Token",
   "title_password_recovery": "Password Recovery",
   "title_plugin_buy": "Buy Cryptocurrency",
+  "title_select_region": "Select Region",
+  "title_select_payment_method": "Select Payment Method",
   "title_plugin_sell": "Sell Cryptocurrency",
   "title_otp": "2-Factor Security",
   "title_register_fio_address": "Register FIO Address",
