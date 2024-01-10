@@ -61,40 +61,44 @@ export const WalletConnectService = (props: Props) => {
     }
   }
 
-  useAsyncEffect(async () => {
-    if (walletConnectClient.client == null) {
-      let projectId: string | undefined
-      if (typeof ENV.WALLET_CONNECT_INIT === 'object' && ENV.WALLET_CONNECT_INIT.projectId != null) {
-        projectId = ENV.WALLET_CONNECT_INIT.projectId
+  useAsyncEffect(
+    async () => {
+      if (walletConnectClient.client == null) {
+        let projectId: string | undefined
+        if (typeof ENV.WALLET_CONNECT_INIT === 'object' && ENV.WALLET_CONNECT_INIT.projectId != null) {
+          projectId = ENV.WALLET_CONNECT_INIT.projectId
+        }
+
+        walletConnectClient.client = await Web3Wallet.init({
+          core: new Core({
+            projectId
+          }),
+          metadata: {
+            name: 'Edge Wallet',
+            description: 'Edge Wallet',
+            url: 'https://www.edge.app',
+            icons: ['https://content.edge.app/Edge_logo_Icon.png']
+          }
+        })
       }
 
-      walletConnectClient.client = await Web3Wallet.init({
-        core: new Core({
-          projectId
-        }),
-        metadata: {
-          name: 'Edge Wallet',
-          description: 'Edge Wallet',
-          url: 'https://www.edge.app',
-          icons: ['https://content.edge.app/Edge_logo_Icon.png']
-        }
-      })
-    }
+      const handleSessionRequestSync = (event: Web3WalletTypes.SessionRequest) => {
+        handleSessionRequest(event).catch(err => showError(err))
+      }
 
-    const handleSessionRequestSync = (event: Web3WalletTypes.SessionRequest) => {
-      handleSessionRequest(event).catch(err => showError(err))
-    }
+      if (walletConnectClient.client?.events.listenerCount('session_request') === 0) {
+        walletConnectClient.client.on('session_request', handleSessionRequestSync)
+      }
+      console.log('WalletConnect initialized')
+      waitingClients.forEach(f => f(walletConnectClient.client as Web3Wallet))
 
-    if (walletConnectClient.client?.events.listenerCount('session_request') === 0) {
-      walletConnectClient.client.on('session_request', handleSessionRequestSync)
-    }
-    console.log('WalletConnect initialized')
-    waitingClients.forEach(f => f(walletConnectClient.client as Web3Wallet))
-
-    return () => {
-      walletConnectClient.client?.events.removeListener('session_request', handleSessionRequestSync)
-    }
-  }, [])
+      return () => {
+        walletConnectClient.client?.events.removeListener('session_request', handleSessionRequestSync)
+      }
+    },
+    [],
+    'WalletConnectService'
+  )
 
   return null
 }

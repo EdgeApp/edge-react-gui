@@ -11,21 +11,25 @@ export function useAsyncValue<T>(effect: () => Promise<T>, deps?: unknown[]): [T
   const [error, setError] = React.useState<Error | undefined>(undefined)
 
   let cancel = false
-  useAsyncEffect(async () => {
-    try {
-      const value = await effect()
-      if (cancel) return
-      setValue(value)
-      setError(undefined)
-    } catch (error: any) {
-      if (cancel) return
-      setValue(undefined)
-      setError(error)
-    }
-    return () => {
-      cancel = true
-    }
-  }, deps)
+  useAsyncEffect(
+    async () => {
+      try {
+        const value = await effect()
+        if (cancel) return
+        setValue(value)
+        setError(undefined)
+      } catch (error: any) {
+        if (cancel) return
+        setValue(undefined)
+        setError(error)
+      }
+      return () => {
+        cancel = true
+      }
+    },
+    deps,
+    'useAsyncValue'
+  )
 
   return [value, error]
 }

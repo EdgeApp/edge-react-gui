@@ -83,125 +83,129 @@ const MigrateWalletCompletionComponent = (props: Props) => {
   }
 
   // Create the wallets and enable the tokens
-  useAsyncEffect(async () => {
-    const settings = await readSyncedSettings(account)
-    const securityCheckedWallets = { ...settings.securityCheckedWallets }
+  useAsyncEffect(
+    async () => {
+      const settings = await readSyncedSettings(account)
+      const securityCheckedWallets = { ...settings.securityCheckedWallets }
 
-    const migrationPromises = []
-    for (const bundle of sortedMigrateWalletListBundles) {
-      const mainnetItem = bundle[bundle.length - 1]
-      const { createWalletIds } = mainnetItem
-      const oldWalletId = createWalletIds[0]
+      const migrationPromises = []
+      for (const bundle of sortedMigrateWalletListBundles) {
+        const mainnetItem = bundle[bundle.length - 1]
+        const { createWalletIds } = mainnetItem
+        const oldWalletId = createWalletIds[0]
 
-      if (securityCheckedWallets[oldWalletId] == null) {
-        securityCheckedWallets[oldWalletId] = { checked: false, modalShown: 0 }
-      }
-
-      const oldWallet = currencyWallets[oldWalletId]
-      const {
-        currencyInfo: { walletType },
-        fiatCurrencyCode
-      } = oldWallet
-      const oldWalletName = getWalletName(oldWallet)
-      const newWalletName = `${oldWalletName}${lstrings.migrate_wallet_new_fragment}`
-
-      // Create new wallet
-      const createNewWalletPromise = async () => {
-        const previouslyCreatedWalletInfo = account.allKeys.find(
-          keys => keys.migratedFromWalletId === oldWalletId && !keys.archived && !keys.deleted && !keys.hidden
-        )
-        let newWallet = previouslyCreatedWalletInfo != null ? currencyWallets[previouslyCreatedWalletInfo.id] : undefined
-
-        let createdNewWallet = false
-        if (newWallet == null) {
-          newWallet = await account.createCurrencyWallet(walletType, {
-            name: newWalletName,
-            fiatCurrencyCode,
-            migratedFromWalletId: oldWalletId
-          })
-          createdNewWallet = true
+        if (securityCheckedWallets[oldWalletId] == null) {
+          securityCheckedWallets[oldWalletId] = { checked: false, modalShown: 0 }
         }
 
-        // Change old wallet name
-        if (createdNewWallet) await oldWallet.renameWallet(`${oldWalletName}${lstrings.migrate_wallet_old_fragment}`)
+        const oldWallet = currencyWallets[oldWalletId]
+        const {
+          currencyInfo: { walletType },
+          fiatCurrencyCode
+        } = oldWallet
+        const oldWalletName = getWalletName(oldWallet)
+        const newWalletName = `${oldWalletName}${lstrings.migrate_wallet_new_fragment}`
 
-        const addressInfo = await newWallet.getReceiveAddress({ tokenId: null })
-        const newPublicAddress = addressInfo.segwitAddress ?? addressInfo.publicAddress
+        // Create new wallet
+        const createNewWalletPromise = async () => {
+          const previouslyCreatedWalletInfo = account.allKeys.find(
+            keys => keys.migratedFromWalletId === oldWalletId && !keys.archived && !keys.deleted && !keys.hidden
+          )
+          let newWallet = previouslyCreatedWalletInfo != null ? currencyWallets[previouslyCreatedWalletInfo.id] : undefined
 
-        const tokenItems = bundle.filter((pair: any): pair is MigrateWalletTokenItem => pair.tokenId != null)
-
-        // Enable tokens on new wallet
-        const tokenIdsToEnable = [...new Set([...newWallet.enabledTokenIds, ...tokenItems.map(pair => pair.tokenId)])]
-        await newWallet.changeEnabledTokenIds(tokenIdsToEnable)
-
-        // Send tokens
-        let feeTotal = '0'
-        const hasError = false
-        const successfullyTransferredTokenIds: string[] = []
-        for (const item of tokenItems) {
-          let tokenSpendInfo: EdgeSpendInfo = {
-            tokenId: item.tokenId,
-            spendTargets: [{ publicAddress: newPublicAddress }],
-            networkFeeOption: 'standard'
-          }
-          try {
-            const maxAmount = await oldWallet.getMaxSpendable(tokenSpendInfo)
-            tokenSpendInfo = { ...tokenSpendInfo, spendTargets: [{ ...tokenSpendInfo.spendTargets[0], nativeAmount: maxAmount }] }
-            const tx = await makeSpendSignAndBroadcast(oldWallet, tokenSpendInfo)
-            successfullyTransferredTokenIds.push(item.tokenId)
-            const txFee = tx.parentNetworkFee ?? tx.networkFee
-            feeTotal = add(feeTotal, txFee)
-
-            handleItemStatus(item, 'complete')
-          } catch (e: any) {
-            handleItemStatus(item, 'error')
-          }
-        }
-
-        // Disable empty tokens
-        await oldWallet.changeEnabledTokenIds(tokenIdsToEnable.filter(tokenId => !successfullyTransferredTokenIds.includes(tokenId)))
-
-        if (!hasError) {
-          // Send mainnet
-          let spendInfo: EdgeSpendInfo = {
-            tokenId: null,
-            spendTargets: [{ publicAddress: newPublicAddress }],
-            metadata: {
-              category: 'Transfer',
+          let createdNewWallet = false
+          if (newWallet == null) {
+            newWallet = await account.createCurrencyWallet(walletType, {
               name: newWalletName,
-              notes: sprintf(lstrings.migrate_wallet_tx_notes, newWalletName)
-            },
-            networkFeeOption: 'standard'
+              fiatCurrencyCode,
+              migratedFromWalletId: oldWalletId
+            })
+            createdNewWallet = true
           }
-          try {
-            const maxAmount = await oldWallet.getMaxSpendable(spendInfo)
-            spendInfo = { ...spendInfo, spendTargets: [{ ...spendInfo.spendTargets[0], nativeAmount: maxAmount }] }
-            const amountToSend = sub(maxAmount, feeTotal)
-            spendInfo = { ...spendInfo, spendTargets: [{ ...spendInfo.spendTargets[0], nativeAmount: amountToSend }] }
-            await makeSpendSignAndBroadcast(oldWallet, spendInfo)
-            handleItemStatus(mainnetItem, 'complete')
 
-            const { modalShown } = securityCheckedWallets[oldWalletId]
-            securityCheckedWallets[oldWalletId] = { checked: true, modalShown }
-          } catch (e) {
-            showError(e)
+          // Change old wallet name
+          if (createdNewWallet) await oldWallet.renameWallet(`${oldWalletName}${lstrings.migrate_wallet_old_fragment}`)
+
+          const addressInfo = await newWallet.getReceiveAddress({ tokenId: null })
+          const newPublicAddress = addressInfo.segwitAddress ?? addressInfo.publicAddress
+
+          const tokenItems = bundle.filter((pair: any): pair is MigrateWalletTokenItem => pair.tokenId != null)
+
+          // Enable tokens on new wallet
+          const tokenIdsToEnable = [...new Set([...newWallet.enabledTokenIds, ...tokenItems.map(pair => pair.tokenId)])]
+          await newWallet.changeEnabledTokenIds(tokenIdsToEnable)
+
+          // Send tokens
+          let feeTotal = '0'
+          const hasError = false
+          const successfullyTransferredTokenIds: string[] = []
+          for (const item of tokenItems) {
+            let tokenSpendInfo: EdgeSpendInfo = {
+              tokenId: item.tokenId,
+              spendTargets: [{ publicAddress: newPublicAddress }],
+              networkFeeOption: 'standard'
+            }
+            try {
+              const maxAmount = await oldWallet.getMaxSpendable(tokenSpendInfo)
+              tokenSpendInfo = { ...tokenSpendInfo, spendTargets: [{ ...tokenSpendInfo.spendTargets[0], nativeAmount: maxAmount }] }
+              const tx = await makeSpendSignAndBroadcast(oldWallet, tokenSpendInfo)
+              successfullyTransferredTokenIds.push(item.tokenId)
+              const txFee = tx.parentNetworkFee ?? tx.networkFee
+              feeTotal = add(feeTotal, txFee)
+
+              handleItemStatus(item, 'complete')
+            } catch (e: any) {
+              handleItemStatus(item, 'error')
+            }
+          }
+
+          // Disable empty tokens
+          await oldWallet.changeEnabledTokenIds(tokenIdsToEnable.filter(tokenId => !successfullyTransferredTokenIds.includes(tokenId)))
+
+          if (!hasError) {
+            // Send mainnet
+            let spendInfo: EdgeSpendInfo = {
+              tokenId: null,
+              spendTargets: [{ publicAddress: newPublicAddress }],
+              metadata: {
+                category: 'Transfer',
+                name: newWalletName,
+                notes: sprintf(lstrings.migrate_wallet_tx_notes, newWalletName)
+              },
+              networkFeeOption: 'standard'
+            }
+            try {
+              const maxAmount = await oldWallet.getMaxSpendable(spendInfo)
+              spendInfo = { ...spendInfo, spendTargets: [{ ...spendInfo.spendTargets[0], nativeAmount: maxAmount }] }
+              const amountToSend = sub(maxAmount, feeTotal)
+              spendInfo = { ...spendInfo, spendTargets: [{ ...spendInfo.spendTargets[0], nativeAmount: amountToSend }] }
+              await makeSpendSignAndBroadcast(oldWallet, spendInfo)
+              handleItemStatus(mainnetItem, 'complete')
+
+              const { modalShown } = securityCheckedWallets[oldWalletId]
+              securityCheckedWallets[oldWalletId] = { checked: true, modalShown }
+            } catch (e) {
+              showError(e)
+              handleItemStatus(mainnetItem, 'error')
+            }
+          } else {
             handleItemStatus(mainnetItem, 'error')
           }
-        } else {
-          handleItemStatus(mainnetItem, 'error')
         }
+        migrationPromises.push(createNewWalletPromise)
       }
-      migrationPromises.push(createNewWalletPromise)
-    }
 
-    for (const migration of migrationPromises) {
-      await migration()
-    }
-    await writeSyncedSettings(account, { ...settings, securityCheckedWallets })
+      for (const migration of migrationPromises) {
+        await migration()
+      }
+      await writeSyncedSettings(account, { ...settings, securityCheckedWallets })
 
-    setDone(true)
-    return () => {}
-  }, [])
+      setDone(true)
+      return () => {}
+    },
+    [],
+    'MigrateWalletCompletionComponent'
+  )
 
   const renderStatus = useHandler((item: MigrateWalletItem) => {
     let icon = <ActivityIndicator style={{ paddingRight: theme.rem(0.3125) }} color={theme.iconTappable} />

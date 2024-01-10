@@ -45,15 +45,19 @@ export function DeepLinkingManager(props: Props) {
   }
 
   // Startup tasks:
-  useAsyncEffect(async () => {
-    const listener = Linking.addEventListener('url', async event => await handleUrl(event.url))
+  useAsyncEffect(
+    async () => {
+      const listener = Linking.addEventListener('url', async event => await handleUrl(event.url))
 
-    let url = await Linking.getInitialURL()
-    if (url == null && ENV.YOLO_DEEP_LINK != null) url = ENV.YOLO_DEEP_LINK
-    if (url != null) await handleUrl(url)
+      let url = await Linking.getInitialURL()
+      if (url == null && ENV.YOLO_DEEP_LINK != null) url = ENV.YOLO_DEEP_LINK
+      if (url != null) await handleUrl(url)
 
-    return () => listener.remove()
-  }, [])
+      return () => listener.remove()
+    },
+    [],
+    'DeepLinkingManager:getInitialURL'
+  )
 
   const handlePushMessage = async (message: FirebaseMessagingTypes.RemoteMessage) => {
     try {
@@ -69,31 +73,35 @@ export function DeepLinkingManager(props: Props) {
   }
 
   // Firebase messaging
-  useAsyncEffect(async () => {
-    /**
-     * Fires when the app launches from push notification
-     * */
-    const remoteMessage = await messaging().getInitialNotification()
-    if (remoteMessage != null) {
-      await handlePushMessage(remoteMessage)
-    }
+  useAsyncEffect(
+    async () => {
+      /**
+       * Fires when the app launches from push notification
+       * */
+      const remoteMessage = await messaging().getInitialNotification()
+      if (remoteMessage != null) {
+        await handlePushMessage(remoteMessage)
+      }
 
-    /**
-     * Fires when the app is in background
-     * */
-    messaging().onNotificationOpenedApp(remoteMessage => {
-      handlePushMessage(remoteMessage).catch(err => console.warn(err))
-    })
+      /**
+       * Fires when the app is in background
+       * */
+      messaging().onNotificationOpenedApp(remoteMessage => {
+        handlePushMessage(remoteMessage).catch(err => console.warn(err))
+      })
 
-    /**
-     * Fires when the app is in foreground and receives a notification
-     * */
-    const unsubscribe = messaging().onMessage(remoteMessage => {
-      // do nothing for now except return the unsubscribe function
-    })
+      /**
+       * Fires when the app is in foreground and receives a notification
+       * */
+      const unsubscribe = messaging().onMessage(remoteMessage => {
+        // do nothing for now except return the unsubscribe function
+      })
 
-    return () => unsubscribe()
-  }, [])
+      return () => unsubscribe()
+    },
+    [],
+    'DeepLinkingManager:getInitialNotification'
+  )
 
   return null
 }

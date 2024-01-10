@@ -18,7 +18,7 @@ interface State {
  * Runs an effect when its dependencies change, just like `useEffect`,
  * but awaits the returned promise before starting the next run.
  */
-export function useAsyncEffect(effect: AsyncEffect, deps?: unknown[], tag?: string): void {
+export function useAsyncEffect(effect: AsyncEffect, deps: unknown[] = [], tag: string): void {
   const state = React.useRef<State>({
     closed: false,
     dirty: false,
@@ -41,7 +41,7 @@ export function useAsyncEffect(effect: AsyncEffect, deps?: unknown[], tag?: stri
   if (!matchDeps(deps, state.current.lastDeps)) state.current.dirty = true
   state.current.lastDeps = deps
   state.current.effect = effect
-  wakeup(state.current)
+  wakeup(state.current, tag)
 }
 
 /**
@@ -79,12 +79,12 @@ function wakeup(state: State, tag?: string): void {
       .then(cleanup => {
         state.lastCleanup = cleanup ?? undefined
         state.running = false
-        wakeup(state)
+        wakeup(state, tag)
       })
       .catch(error => {
         showError(error, { tag })
         state.running = false
-        wakeup(state)
+        wakeup(state, tag)
       })
   }
 }

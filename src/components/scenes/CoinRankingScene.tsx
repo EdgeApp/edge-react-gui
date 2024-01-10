@@ -140,43 +140,47 @@ const CoinRankingComponent = (props: Props) => {
     }
   }, [])
 
-  useAsyncEffect(async () => {
-    const queryLoop = async () => {
-      try {
-        let start = 1
-        debugLog(LOG_COINRANK, `queryLoop ${defaultIsoFiat} dataSize=${dataSize} requestDataSize=${requestDataSize}`)
-        while (start < requestDataSize) {
-          const url = `v2/coinrank?fiatCode=${defaultIsoFiat}&start=${start}&length=${QUERY_PAGE_SIZE}`
-          const response = await fetchRates(url)
-          if (!response.ok) {
-            const text = await response.text()
-            console.warn(text)
-            break
+  useAsyncEffect(
+    async () => {
+      const queryLoop = async () => {
+        try {
+          let start = 1
+          debugLog(LOG_COINRANK, `queryLoop ${defaultIsoFiat} dataSize=${dataSize} requestDataSize=${requestDataSize}`)
+          while (start < requestDataSize) {
+            const url = `v2/coinrank?fiatCode=${defaultIsoFiat}&start=${start}&length=${QUERY_PAGE_SIZE}`
+            const response = await fetchRates(url)
+            if (!response.ok) {
+              const text = await response.text()
+              console.warn(text)
+              break
+            }
+            const replyJson = await response.json()
+            const listings = asCoinranking(replyJson)
+            for (let i = 0; i < listings.data.length; i++) {
+              const rankIndex = start - 1 + i
+              const row = listings.data[i]
+              coinRankingDatas[rankIndex] = row
+              debugLog(LOG_COINRANK, `queryLoop: ${rankIndex.toString()} ${row.rank} ${row.currencyCode}`)
+            }
+            start += QUERY_PAGE_SIZE
           }
-          const replyJson = await response.json()
-          const listings = asCoinranking(replyJson)
-          for (let i = 0; i < listings.data.length; i++) {
-            const rankIndex = start - 1 + i
-            const row = listings.data[i]
-            coinRankingDatas[rankIndex] = row
-            debugLog(LOG_COINRANK, `queryLoop: ${rankIndex.toString()} ${row.rank} ${row.currencyCode}`)
+          setDataSize(coinRankingDatas.length)
+          if (lastUsedFiat !== defaultIsoFiat) {
+            setLastUsedFiat(defaultIsoFiat)
           }
-          start += QUERY_PAGE_SIZE
+        } catch (e: any) {
+          console.warn(e.message)
         }
-        setDataSize(coinRankingDatas.length)
-        if (lastUsedFiat !== defaultIsoFiat) {
-          setLastUsedFiat(defaultIsoFiat)
-        }
-      } catch (e: any) {
-        console.warn(e.message)
+        timeoutHandler.current = setTimeout(queryLoop, LISTINGS_REFRESH_INTERVAL)
       }
-      timeoutHandler.current = setTimeout(queryLoop, LISTINGS_REFRESH_INTERVAL)
-    }
-    if (timeoutHandler.current != null) {
-      clearTimeout(timeoutHandler.current)
-    }
-    queryLoop().catch(e => debugLog(LOG_COINRANK, e.message))
-  }, [requestDataSize, defaultIsoFiat])
+      if (timeoutHandler.current != null) {
+        clearTimeout(timeoutHandler.current)
+      }
+      queryLoop().catch(e => debugLog(LOG_COINRANK, e.message))
+    },
+    [requestDataSize, defaultIsoFiat],
+    'CoinRankingComponent'
+  )
 
   const listdata: number[] = React.useMemo(() => {
     debugLog(LOG_COINRANK, `Updating listdata dataSize=${dataSize} searchText=${searchText}`)

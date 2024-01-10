@@ -77,10 +77,14 @@ export function EdgeCoreManager(props: Props) {
   const isAppForeground = useIsAppForeground()
 
   // Keep the core in sync with the application state:
-  useAsyncEffect(async () => {
-    if (context == null) return
-    await context.changePaused(!isAppForeground, { secondsDelay: !isAppForeground ? 20 : 0 })
-  }, [context, isAppForeground])
+  useAsyncEffect(
+    async () => {
+      if (context == null) return
+      await context.changePaused(!isAppForeground, { secondsDelay: !isAppForeground ? 20 : 0 })
+    },
+    [context, isAppForeground],
+    'EdgeCoreManager'
+  )
 
   function hideSplash() {
     if (!splashHidden.current) {

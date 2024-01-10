@@ -47,9 +47,13 @@ export function CategoryModal(props: Props) {
   const categories = useSelector(state => state.ui.subcategories)
 
   // Load the categories from disk:
-  useAsyncEffect(async () => {
-    await dispatch(getSubcategories())
-  }, [dispatch])
+  useAsyncEffect(
+    async () => {
+      await dispatch(getSubcategories())
+    },
+    [dispatch],
+    'categoryModal'
+  )
 
   const sortedCategories = React.useMemo(() => {
     // Transform the raw categories into row objects:

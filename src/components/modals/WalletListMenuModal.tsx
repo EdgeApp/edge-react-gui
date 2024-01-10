@@ -140,72 +140,76 @@ export function WalletListMenuModal(props: Props) {
     dispatch(walletListMenuAction(navigation, walletId, option, tokenId)).catch(error => showError(error))
   })
 
-  useAsyncEffect(async () => {
-    if (wallet == null) {
-      setOptions([
-        { label: lstrings.string_get_raw_keys, value: 'getRawKeys' },
-        { label: lstrings.string_archive_wallet, value: 'rawDelete' }
-      ])
-      return
-    }
-
-    if (tokenId != null) {
-      setOptions([
-        {
-          label: lstrings.string_resync,
-          value: 'resync'
-        },
-        {
-          label: lstrings.fragment_wallets_export_transactions,
-          value: 'exportWalletTransactions'
-        },
-        {
-          label: lstrings.fragment_wallets_delete_token,
-          value: 'delete'
-        }
-      ])
-      return
-    }
-
-    const result: Option[] = []
-
-    const { pluginId } = wallet.currencyInfo
-    if (pausedWallets != null && !isKeysOnlyPlugin(pluginId)) {
-      result.push({
-        label: pausedWallets.has(walletId) ? lstrings.fragment_wallets_unpause_wallet : lstrings.fragment_wallets_pause_wallet,
-        value: 'togglePause'
-      })
-    }
-
-    for (const option of WALLET_LIST_MENU) {
-      const { pluginIds, label, value } = option
-
-      if (Array.isArray(pluginIds) && !pluginIds.includes(pluginId)) continue
-
-      // Special case for `manageTokens`. Only allow pluginsIds that have metatokens
-      if (value === 'manageTokens') {
-        if (Object.keys(account.currencyConfig[pluginId].builtinTokens).length === 0) continue
+  useAsyncEffect(
+    async () => {
+      if (wallet == null) {
+        setOptions([
+          { label: lstrings.string_get_raw_keys, value: 'getRawKeys' },
+          { label: lstrings.string_archive_wallet, value: 'rawDelete' }
+        ])
+        return
       }
 
-      // Special case for light accounts. Don't allow `getSeed` or `getRawKeys`
-      if (account.username == null && (value === 'getSeed' || value === 'getRawKeys')) continue
+      if (tokenId != null) {
+        setOptions([
+          {
+            label: lstrings.string_resync,
+            value: 'resync'
+          },
+          {
+            label: lstrings.fragment_wallets_export_transactions,
+            value: 'exportWalletTransactions'
+          },
+          {
+            label: lstrings.fragment_wallets_delete_token,
+            value: 'delete'
+          }
+        ])
+        return
+      }
 
-      result.push({ label, value })
-    }
+      const result: Option[] = []
 
-    const splittable = await account.listSplittableWalletTypes(wallet.id)
+      const { pluginId } = wallet.currencyInfo
+      if (pausedWallets != null && !isKeysOnlyPlugin(pluginId)) {
+        result.push({
+          label: pausedWallets.has(walletId) ? lstrings.fragment_wallets_unpause_wallet : lstrings.fragment_wallets_pause_wallet,
+          value: 'togglePause'
+        })
+      }
 
-    const currencyInfos = getCurrencyInfos(account)
-    for (const splitWalletType of splittable) {
-      const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
-      if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
-      result.push({ label: sprintf(lstrings.string_split_wallet, info.displayName), value: `split${info.pluginId}` })
-    }
+      for (const option of WALLET_LIST_MENU) {
+        const { pluginIds, label, value } = option
 
-    setOptions(result)
+        if (Array.isArray(pluginIds) && !pluginIds.includes(pluginId)) continue
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+        // Special case for `manageTokens`. Only allow pluginsIds that have metatokens
+        if (value === 'manageTokens') {
+          if (Object.keys(account.currencyConfig[pluginId].builtinTokens).length === 0) continue
+        }
+
+        // Special case for light accounts. Don't allow `getSeed` or `getRawKeys`
+        if (account.username == null && (value === 'getSeed' || value === 'getRawKeys')) continue
+
+        result.push({ label, value })
+      }
+
+      const splittable = await account.listSplittableWalletTypes(wallet.id)
+
+      const currencyInfos = getCurrencyInfos(account)
+      for (const splitWalletType of splittable) {
+        const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
+        if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
+        result.push({ label: sprintf(lstrings.string_split_wallet, info.displayName), value: `split${info.pluginId}` })
+      }
+
+      setOptions(result)
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [],
+    'WalletListMenuModal'
+  )
 
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>

@@ -26,12 +26,16 @@ export function PermissionsSettingModal(props: {
     ? sprintf(lstrings.contacts_permission_modal_enable_settings_mandatory, name, permission)
     : sprintf(lstrings.contacts_permission_modal_enable_settings, name, permission)
 
-  useAsyncEffect(async () => {
-    if (!isAppForeground || !mandatory) return
-    const status = await check(permissionNames[permission])
-    if (!checkIfDenied(status)) bridge.resolve(false)
-    return () => {}
-  }, [permission, isAppForeground])
+  useAsyncEffect(
+    async () => {
+      if (!isAppForeground || !mandatory) return
+      const status = await check(permissionNames[permission])
+      if (!checkIfDenied(status)) bridge.resolve(false)
+      return () => {}
+    },
+    [permission, isAppForeground],
+    'PermissionsSettingModal'
+  )
 
   const handlePress = () => {
     openSettings().catch(showError)

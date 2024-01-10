@@ -173,10 +173,14 @@ export function LoginSceneComponent(props: Props) {
   })
 
   // Wait for the experiment config to initialize before rendering anything
-  useAsyncEffect(async () => {
-    const experimentConfig = await getExperimentConfig()
-    setExperimentConfig(experimentConfig)
-  }, [])
+  useAsyncEffect(
+    async () => {
+      const experimentConfig = await getExperimentConfig()
+      setExperimentConfig(experimentConfig)
+    },
+    [],
+    'LoginSceneComponent'
+  )
 
   const inMaestro = isMaestro()
 

@@ -62,10 +62,14 @@ export const LoanDashboardScene = (props: Props) => {
   const currencyWallets = useWatch(account, 'currencyWallets')
 
   const [isWalletsLoaded, setIsWalletsLoaded] = React.useState(false)
-  useAsyncEffect(async () => {
-    await account.waitForAllWallets()
-    setIsWalletsLoaded(true)
-  }, [account])
+  useAsyncEffect(
+    async () => {
+      await account.waitForAllWallets()
+      setIsWalletsLoaded(true)
+    },
+    [account],
+    'LoanDashboardScene:1'
+  )
 
   const [isNewLoanLoading, setIsNewLoanLoading] = React.useState(false)
 
@@ -76,16 +80,24 @@ export const LoanDashboardScene = (props: Props) => {
   // Effects
   //
 
-  useAsyncEffect(async () => {
-    if (await isShowLoanWelcomeModal(account.disklet)) await Airship.show<'ok' | undefined>(bridge => <LoanWelcomeModal bridge={bridge} />)
-  }, [])
+  useAsyncEffect(
+    async () => {
+      if (await isShowLoanWelcomeModal(account.disklet)) await Airship.show<'ok' | undefined>(bridge => <LoanWelcomeModal bridge={bridge} />)
+    },
+    [],
+    'LoanDashboardScene:2'
+  )
 
-  useAsyncEffect(async () => {
-    // Only resync on scene mount every 5 minutes
-    if (Date.now() - lastResyncTimestamp > 5 * 60 * 1000) {
-      await dispatch(resyncLoanAccounts(account))
-    }
-  }, [account, dispatch, lastResyncTimestamp])
+  useAsyncEffect(
+    async () => {
+      // Only resync on scene mount every 5 minutes
+      if (Date.now() - lastResyncTimestamp > 5 * 60 * 1000) {
+        await dispatch(resyncLoanAccounts(account))
+      }
+    },
+    [account, dispatch, lastResyncTimestamp],
+    'LoanDashboardScene:3'
+  )
 
   //
   // Handlers
