@@ -907,7 +907,7 @@
   "fio_domain_to_transfer": "Dominio a transferir",
   "fio_domain_transferred": "Transferido con éxito",
   "fio_free_handle_complete": "Successfully created your FIO handle",
-  "fio_free_web3_handle_title_m": "Claim Your *Web3* Handle",
+  "fio_free_web3_handle_title_m": "Claim Your Web3 *Handle*",
   "fio_free_handle_title": "Get a FIO Handle",
   "fio_free_web3_handle_message": "Give your account a universal Web3 handle powered by FIO to simplify sending and receiving transactions.",
   "fio_free_handle_please_wait": "Please wait for wallet creation to complete...",
