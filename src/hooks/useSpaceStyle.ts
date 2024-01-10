@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { ViewStyle } from 'react-native'
 
 import { useTheme } from '../components/services/ThemeContext'
@@ -94,16 +95,21 @@ export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
   // Flex:
   const flex = fill ? 1 : undefined
 
-  return {
-    marginTop,
-    marginBottom,
-    marginLeft,
-    marginRight,
-    flex,
-    flexDirection,
-    alignItems,
-    justifyContent
-  }
+  const style: SpaceStyle = useMemo(
+    () => ({
+      marginTop,
+      marginBottom,
+      marginLeft,
+      marginRight,
+      flex,
+      flexDirection,
+      alignItems,
+      justifyContent
+    }),
+    [alignItems, flex, flexDirection, justifyContent, marginBottom, marginLeft, marginRight, marginTop]
+  )
+
+  return style
 }
 
 const numberify = (...things: Array<boolean | number | undefined>): number => {
