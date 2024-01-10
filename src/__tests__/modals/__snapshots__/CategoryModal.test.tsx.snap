@@ -414,8 +414,23 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           "value": 1,
         }
       }
+      spaceProps={
+        {
+          "returnKeyType": "done",
+        }
+      }
       style={
         [
+          {
+            "alignItems": undefined,
+            "flex": undefined,
+            "flexDirection": "column",
+            "justifyContent": undefined,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+          },
           {
             "alignItems": "center",
             "borderRadius": 11,
@@ -1464,8 +1479,23 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           "value": 1,
         }
       }
+      spaceProps={
+        {
+          "returnKeyType": "done",
+        }
+      }
       style={
         [
+          {
+            "alignItems": undefined,
+            "flex": undefined,
+            "flexDirection": "column",
+            "justifyContent": undefined,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+          },
           {
             "alignItems": "center",
             "borderRadius": 11,

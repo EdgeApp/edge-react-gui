@@ -24,6 +24,12 @@ exports[`FilledTextInput should render with some props 1`] = `
           "value": 1,
         }
       }
+      spaceProps={
+        {
+          "keyboardType": "default",
+          "returnKeyType": "done",
+        }
+      }
     >
       <StyledComponent(View)
         scale={
