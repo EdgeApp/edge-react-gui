@@ -456,22 +456,16 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
     notes
   }
 
-  let userData: EdgeMetadata = {}
-  // User added metadata takes priority so override if present
-  if (metadata != null) {
-    userData = metadata
-  }
-
   const mergedData: EdgeMetadata = {
-    name: userData.name ?? savedData.name,
-    category: userData.category ?? savedData.category,
-    notes: userData.notes ?? savedData.notes
+    name: metadata?.name != null && metadata.name.length > 0 ? metadata.name : savedData.name,
+    category: metadata?.category != null && metadata.category.length > 0 ? metadata.category : savedData.category,
+    notes: metadata?.notes != null && metadata.notes.length > 0 ? metadata.notes : savedData.notes
   }
 
   return {
     direction,
     savedData,
-    userData,
+    userData: metadata ?? {},
     mergedData
   }
 }
