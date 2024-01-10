@@ -10,7 +10,6 @@ import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { FioDomain, FlatListItem } from '../../types/types'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
-import { Space } from '../layout/Space'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { ClickableText } from '../themed/ClickableText'
 import { EdgeText } from '../themed/EdgeText'
@@ -159,20 +158,17 @@ class DomainListModalComponent extends React.Component<Props, State> {
         <ModalTitle center paddingRem={[0, 3, 1]}>
           {lstrings.fio_address_choose_domain_label}
         </ModalTitle>
-        <View style={{ marginHorizontal: theme.rem(0.75) }}>
-          <Space horizontal={1}>
-            <SimpleTextInput
-              autoCorrect={false}
-              returnKeyType="search"
-              autoCapitalize="none"
-              placeholder={lstrings.fio_domain_label}
-              onChangeText={this.onSearchFilterChange}
-              onSubmitEditing={this.selectCustom}
-              value={input}
-              iconComponent={SearchIconAnimated}
-            />
-          </Space>
-        </View>
+        <SimpleTextInput
+          horizontal={0.75}
+          autoCorrect={false}
+          returnKeyType="search"
+          autoCapitalize="none"
+          placeholder={lstrings.fio_domain_label}
+          onChangeText={this.onSearchFilterChange}
+          onSubmitEditing={this.selectCustom}
+          value={input}
+          iconComponent={SearchIconAnimated}
+        />
         <FlashList
           data={items}
           estimatedItemSize={theme.rem(3.5)}

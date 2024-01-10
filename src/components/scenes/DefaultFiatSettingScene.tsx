@@ -16,7 +16,6 @@ import { scale } from '../../util/scaling'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
-import { Space } from '../layout/Space'
 import { showError } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -87,17 +86,17 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
         {({ insetStyles }) => (
           <View style={[styles.content, { ...insetStyles, paddingBottom: 0 }]}>
             <SceneHeader title={lstrings.title_create_wallet_select_fiat} underline withTopMargin>
-              <Space top={1} horizontal={0.5}>
-                <SimpleTextInput
-                  autoCorrect={false}
-                  autoCapitalize="words"
-                  onChangeText={this.handleSearchTermChange}
-                  value={this.state.searchTerm}
-                  placeholder={lstrings.fragment_wallets_addwallet_fiat_hint}
-                  returnKeyType="search"
-                  iconComponent={SearchIconAnimated}
-                />
-              </Space>
+              <SimpleTextInput
+                top={1}
+                horizontal={0.5}
+                autoCorrect={false}
+                autoCapitalize="words"
+                onChangeText={this.handleSearchTermChange}
+                value={this.state.searchTerm}
+                placeholder={lstrings.fragment_wallets_addwallet_fiat_hint}
+                returnKeyType="search"
+                iconComponent={SearchIconAnimated}
+              />
             </SceneHeader>
             <FlashList
               automaticallyAdjustContentInsets={false}

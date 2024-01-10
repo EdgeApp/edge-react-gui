@@ -13,7 +13,6 @@ import { EdgeAsset } from '../../types/types'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
-import { Space } from '../layout/Space'
 import { ListModal } from '../modals/ListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -255,19 +254,19 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       {({ insetStyles }) => (
         <View style={[styles.content, { ...insetStyles, paddingBottom: 0 }]}>
           <SceneHeader title={lstrings.title_create_wallet_select_crypto} withTopMargin />
-          <Space vertical={0.5} horizontal={1}>
-            <SimpleTextInput
-              autoCorrect={false}
-              autoCapitalize="words"
-              onChangeText={setSearchTerm}
-              value={searchTerm}
-              placeholder={lstrings.wallet_list_wallet_search}
-              iconComponent={SearchIconAnimated}
-              blurOnClear={false}
-              onClear={() => setSearchTerm('')}
-              onSubmitEditing={handleSubmitEditing}
-            />
-          </Space>
+          <SimpleTextInput
+            vertical={0.5}
+            horizontal={1}
+            autoCorrect={false}
+            autoCapitalize="words"
+            onChangeText={setSearchTerm}
+            value={searchTerm}
+            placeholder={lstrings.wallet_list_wallet_search}
+            iconComponent={SearchIconAnimated}
+            blurOnClear={false}
+            onClear={() => setSearchTerm('')}
+            onSubmitEditing={handleSubmitEditing}
+          />
           <FlashList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ paddingBottom: insetStyles.paddingBottom + theme.rem(4.25) }}

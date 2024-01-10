@@ -101,13 +101,9 @@ export function InputTesterScene() {
             onAmountChanged={onAmountChanged}
           />
         </CardUi4>
-        <Space vertical={1}>
-          <SimpleTextInput value={value0} onChangeText={onChangeText0} autoFocus={false} placeholder="Crypto Amount" />
-        </Space>
+        <SimpleTextInput vertical={1} value={value0} onChangeText={onChangeText0} autoFocus={false} placeholder="Crypto Amount" />
         <MainButton label="Set Crypto Amt" onPress={onPress0} />
-        <Space vertical={1}>
-          <SimpleTextInput value={value1} onChangeText={onChangeText1} autoFocus={false} placeholder="Fiat Amount" />
-        </Space>
+        <SimpleTextInput vertical={1} value={value1} onChangeText={onChangeText1} autoFocus={false} placeholder="Fiat Amount" />
         <Space vertical={0.5}>
           <MainButton label="Set Fiat Amt" onPress={onPress1} />
         </Space>
