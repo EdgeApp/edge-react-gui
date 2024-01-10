@@ -8,7 +8,7 @@ import Share from 'react-native-share'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { formatCategory, getTxActionDisplayInfo, splitCategory } from '../../actions/CategoriesActions'
+import { formatCategory, getTxActionDisplayInfo, pluginIdIcons, splitCategory } from '../../actions/CategoriesActions'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { displayFiatAmount } from '../../hooks/useFiatText'
@@ -77,7 +77,7 @@ export function TransactionListRow(props: Props) {
     maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(log10(displayDenomination.multiplier), precisionAdjustValue)
   }
 
-  const { direction, mergedData } = getTxActionDisplayInfo(transaction, account, wallet)
+  const { direction, iconPluginId, mergedData } = getTxActionDisplayInfo(transaction, account, wallet)
   const { category, name } = mergedData
   const isSentTransaction = direction === 'send'
 
@@ -120,7 +120,7 @@ export function TransactionListRow(props: Props) {
   }
 
   // Icon & Thumbnail
-  const thumbnailPath = useContactThumbnail(name)
+  const thumbnailPath = useContactThumbnail(name) ?? pluginIdIcons[iconPluginId ?? '']
   if (thumbnailPath != null) {
     arrowIconSize = theme.rem(1)
     arrowContainerStyle.push(styles.arrowIconOverlayContainer)

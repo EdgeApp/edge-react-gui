@@ -3,6 +3,7 @@ import { EdgeAccount, EdgeAssetAmount, EdgeCurrencyWallet, EdgeMetadata, EdgeTra
 import { sprintf } from 'sprintf-js'
 
 import { showError } from '../components/services/AirshipInstance'
+import { EDGE_CONTENT_SERVER_URI } from '../constants/CdnConstants'
 import { TX_ACTION_LABEL_MAP } from '../constants/txActionConstants'
 import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
@@ -268,6 +269,7 @@ export const defaultCategories = [
 
 export interface ActionDisplayInfo {
   direction: 'send' | 'receive'
+  iconPluginId?: string
   userData: EdgeMetadata
   savedData: EdgeMetadata
   mergedData: EdgeMetadata
@@ -290,6 +292,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
   let edgeCategory: EdgeCategory
   let direction: 'send' | 'receive'
   let notes: string | undefined
+  let iconPluginId: string | undefined
 
   // Default text for send or receive
   if (isSentTransaction) {
@@ -321,7 +324,26 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
 
     switch (actionType) {
       case 'swap': {
+        iconPluginId = action.swapInfo.pluginId
         switch (assetActionType) {
+          case 'transfer': {
+            const txSrc = action.payoutWalletId !== wallet.id
+            const toFromStr = txSrc ? lstrings.transaction_details_swap_to_subcat_1s : lstrings.transaction_details_swap_from_subcat_1s
+            const walletName = account.currencyWallets[action.payoutWalletId]?.name ?? currencyName
+            edgeCategory = {
+              category: 'transfer',
+              subcategory: sprintf(toFromStr, walletName)
+            }
+            break
+          }
+          case 'transferNetworkFee':
+          case 'swapNetworkFee': {
+            edgeCategory = {
+              category: 'expense',
+              subcategory: lstrings.wc_smartcontract_network_fee
+            }
+            break
+          }
           case 'swap':
           case 'swapOrderFill': {
             // Determine if the swap destination was to a different asset or if the
@@ -360,6 +382,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
         break
       }
       case 'stake': {
+        iconPluginId = action.pluginId
         switch (assetActionType) {
           case 'stake': {
             let subcategory
@@ -387,6 +410,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
             direction = 'send'
             break
           }
+          case 'claim':
           case 'unstake': {
             let subcategory
             if (action.stakeAssets.length === 1) subcategory = sprintf(lstrings.transaction_details_unstake_subcat_1s, ...getCurrencyCodes(action.stakeAssets))
@@ -400,6 +424,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
             direction = 'receive'
             break
           }
+          case 'claimOrder':
           case 'unstakeOrder': {
             if (action.stakeAssets.length === 1) notes = sprintf(lstrings.transaction_details_unstake_order_notes_1s, ...getCurrencyCodes(action.stakeAssets))
             else if (action.stakeAssets.length === 2)
@@ -413,12 +438,22 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
             direction = 'send'
             break
           }
+          case 'unstakeNetworkFee':
+          case 'stakeNetworkFee': {
+            edgeCategory = {
+              category: 'expense',
+              subcategory: lstrings.wc_smartcontract_network_fee
+            }
+            break
+          }
+
           default:
             console.error(`Unsupported EdgeTxAction assetAction:assetActionType: '${assetAction}:${assetActionType}'`)
         }
         break
       }
       case 'fiat': {
+        iconPluginId = action.fiatPlugin.providerId
         switch (assetActionType) {
           case 'buy': {
             payeeText = sprintf(payeeText, currencyName)
@@ -464,8 +499,28 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
 
   return {
     direction,
+    iconPluginId,
     savedData,
     userData: metadata ?? {},
     mergedData
   }
+}
+
+export const pluginIdIcons: Record<string, string> = {
+  bitrefill: EDGE_CONTENT_SERVER_URI + '/bitrefill.png',
+  bitsofgold: EDGE_CONTENT_SERVER_URI + '/bits-of-gold-logo.png',
+  changenow: EDGE_CONTENT_SERVER_URI + '/changenow.png',
+  changehero: EDGE_CONTENT_SERVER_URI + '/changehero.png',
+  exolix: EDGE_CONTENT_SERVER_URI + '/exolix-logo.png',
+  godex: EDGE_CONTENT_SERVER_URI + '/godex.png',
+  letsexchange: EDGE_CONTENT_SERVER_URI + '/letsexchange-logo.png',
+  lifi: EDGE_CONTENT_SERVER_URI + '/lifi.png',
+  sideshift: EDGE_CONTENT_SERVER_URI + '/sideshift-logo.png',
+  simplex: EDGE_CONTENT_SERVER_URI + '/simplex.png',
+  swapuz: EDGE_CONTENT_SERVER_URI + '/swapuz.png',
+  thorchain: EDGE_CONTENT_SERVER_URI + '/thorchain.png',
+  thorchainda: EDGE_CONTENT_SERVER_URI + '/thorchain.png',
+  tronResources: EDGE_CONTENT_SERVER_URI + '/TRON/TRON.png',
+  velodrome: EDGE_CONTENT_SERVER_URI + '/velodrome.png',
+  xrpdex: EDGE_CONTENT_SERVER_URI + '/xrpdex.png'
 }
