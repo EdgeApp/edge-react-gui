@@ -623,7 +623,7 @@
   "transaction_details_exchange_support_request": "Richiesta di assistenza %s",
   "transaction_details_fee_warning": "Commissioni di rete elevate",
   "transaction_details_swap": "Scambia Fondi",
-  "transaction_details_swap_network_fee": "Swap Network Fee",
+  "transaction_details_swap_network_fee": "Commissioni di rete per lo scambio",
   "transaction_details_swap_order_cancel": "Ordine di scambio annullato",
   "transaction_details_swap_order_post": "Ordine di scambio aperto",
   "transaction_details_swap_order_fill": "Ordine di scambio completato",
