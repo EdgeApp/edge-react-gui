@@ -312,6 +312,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 [
                   {
                     "flexDirection": "column",
+                    "flexShrink": 1,
                   },
                   {
                     "marginRight": 34,
@@ -507,6 +508,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -661,6 +663,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -877,6 +880,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -1472,6 +1476,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 [
                   {
                     "flexDirection": "column",
+                    "flexShrink": 1,
                   },
                   {
                     "marginRight": 34,
@@ -1667,6 +1672,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -1821,6 +1827,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -2037,6 +2044,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -2195,9 +2203,10 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
-                      "flex": 1,
+                      "flexGrow": 1,
                     },
                   ]
                 }
@@ -2288,9 +2297,10 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
-                      "flex": 1,
+                      "flexGrow": 1,
                     },
                   ]
                 }
@@ -2818,6 +2828,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 [
                   {
                     "flexDirection": "column",
+                    "flexShrink": 1,
                   },
                   {
                     "marginRight": 34,
@@ -3013,6 +3024,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -3171,6 +3183,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -3325,6 +3338,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -3541,6 +3555,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -4136,6 +4151,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 [
                   {
                     "flexDirection": "column",
+                    "flexShrink": 1,
                   },
                   {
                     "marginRight": 34,
@@ -4331,6 +4347,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -4489,6 +4506,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -4705,6 +4723,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -5300,6 +5319,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 [
                   {
                     "flexDirection": "column",
+                    "flexShrink": 1,
                   },
                   {
                     "marginRight": 34,
@@ -5495,6 +5515,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -5653,6 +5674,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -5845,6 +5867,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -6440,6 +6463,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 [
                   {
                     "flexDirection": "column",
+                    "flexShrink": 1,
                   },
                   {
                     "marginRight": 34,
@@ -6635,6 +6659,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -6831,6 +6856,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -7426,6 +7452,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 [
                   {
                     "flexDirection": "column",
+                    "flexShrink": 1,
                   },
                   {
                     "marginRight": 34,
@@ -7621,6 +7648,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -7803,9 +7831,10 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
-                      "flex": 1,
+                      "flexGrow": 1,
                     },
                   ]
                 }
@@ -7892,6 +7921,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -8108,6 +8138,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -8703,6 +8734,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 [
                   {
                     "flexDirection": "column",
+                    "flexShrink": 1,
                   },
                   {
                     "marginRight": 34,
@@ -8922,9 +8954,10 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
-                      "flex": 1,
+                      "flexGrow": 1,
                     },
                   ]
                 }
@@ -9015,6 +9048,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -9169,9 +9203,10 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
-                      "flex": 1,
+                      "flexGrow": 1,
                     },
                   ]
                 }
@@ -9320,6 +9355,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -9915,6 +9951,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 [
                   {
                     "flexDirection": "column",
+                    "flexShrink": 1,
                   },
                   {
                     "marginRight": 34,
@@ -10134,9 +10171,10 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
-                      "flex": 1,
+                      "flexGrow": 1,
                     },
                   ]
                 }
@@ -10251,9 +10289,10 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
-                      "flex": 1,
+                      "flexGrow": 1,
                     },
                   ]
                 }
@@ -10340,9 +10379,10 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
-                      "flex": 1,
+                      "flexGrow": 1,
                     },
                   ]
                 }
@@ -10491,6 +10531,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
                       "marginRight": 34,
@@ -11086,6 +11127,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                 [
                   {
                     "flexDirection": "column",
+                    "flexShrink": 1,
                   },
                   {
                     "marginRight": 34,
@@ -11305,9 +11347,10 @@ exports[`SendScene2 Render SendScene 1`] = `
                   [
                     {
                       "flexDirection": "column",
+                      "flexShrink": 1,
                     },
                     {
-                      "flex": 1,
+                      "flexGrow": 1,
                     },
                   ]
                 }

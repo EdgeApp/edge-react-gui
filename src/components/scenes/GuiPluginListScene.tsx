@@ -391,9 +391,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
                 />
               )
             }
-          >
-            <EdgeText style={styles.selectedCountryText}>{countryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}</EdgeText>
-          </RowUi4>
+            body={countryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}
+          />
         </CardUi4>
         {plugins.length === 0 ? (
           <View style={styles.emptyPluginContainer}>
@@ -431,10 +430,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderRadius: theme.rem(1),
     margin: theme.rem(0.25),
     marginRight: theme.rem(1)
-  },
-  selectedCountryText: {
-    fontFamily: theme.fontFaceMedium,
-    alignItems: 'center'
   },
   emptyPluginContainer: {
     flex: 1,

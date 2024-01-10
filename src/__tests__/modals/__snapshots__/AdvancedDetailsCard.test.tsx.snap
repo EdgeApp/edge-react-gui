@@ -74,9 +74,10 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
           [
             {
               "flexDirection": "column",
+              "flexShrink": 1,
             },
             {
-              "flex": 1,
+              "flexGrow": 1,
             },
           ]
         }
