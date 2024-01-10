@@ -907,7 +907,7 @@
   "fio_domain_to_transfer": "転送するドメイン",
   "fio_domain_transferred": "転送成功",
   "fio_free_handle_complete": "FIOハンドルを正常に作成しました",
-  "fio_free_web3_handle_title_m": "Claim Your *Web3* Handle",
+  "fio_free_web3_handle_title_m": "Claim Your Web3 *Handle*",
   "fio_free_handle_title": "FIOハンドルを入手しましょう",
   "fio_free_web3_handle_message": "Give your account a universal Web3 handle powered by FIO to simplify sending and receiving transactions.",
   "fio_free_handle_please_wait": "ウォレットの作成が完了するまでお待ちください...",
