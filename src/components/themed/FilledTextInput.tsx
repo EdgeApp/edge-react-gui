@@ -422,7 +422,6 @@ const PlaceholderText = styled(Animated.Text)<{
 
   return [
     {
-      color: theme.primaryText,
       fontFamily: theme.fontFaceDefault,
       fontSize: theme.rem(1),
       includeFontPadding: false

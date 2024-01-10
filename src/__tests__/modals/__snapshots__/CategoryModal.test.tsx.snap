@@ -541,7 +541,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             style={
               [
                 {
-                  "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
@@ -1606,7 +1605,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             style={
               [
                 {
-                  "color": "#FFFFFF",
                   "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
