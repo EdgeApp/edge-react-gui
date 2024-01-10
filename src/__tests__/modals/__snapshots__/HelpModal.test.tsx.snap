@@ -188,135 +188,51 @@ exports[`HelpModal should render with loading props 1`] = `
             onStartShouldSetResponder={[Function]}
             style={
               {
+                "alignSelf": "stretch",
+                "borderRadius": 16,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
                 "opacity": 1,
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
               }
             }
           >
             <View
               style={
-                [
-                  {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "height": 96,
-                    "justifyContent": "center",
-                    "paddingHorizontal": 22,
-                  },
-                  {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
-                  },
-                  {
-                    "paddingBottom": 0,
-                    "paddingLeft": 11,
-                    "paddingRight": 11,
-                    "paddingTop": 0,
-                  },
-                  {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
-                    "borderBottomWidth": 1,
-                  },
-                  null,
-                  {
-                    "borderColor": "white",
-                    "borderWidth": 0,
-                  },
-                ]
+                {
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "width": "100%",
+                }
               }
             >
               <View
                 style={
                   {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "justifyContent": "space-between",
-                    "width": "100%",
+                    "margin": 11,
                   }
                 }
               >
-                <View
-                  style={
-                    {
-                      "margin": 11,
-                    }
-                  }
-                >
-                  <Text
-                    allowFontScaling={false}
-                    style={
-                      [
-                        {
-                          "color": "#00f1a2",
-                          "fontSize": 34,
-                        },
-                        undefined,
-                        {
-                          "fontFamily": "custom",
-                          "fontStyle": "normal",
-                          "fontWeight": "normal",
-                        },
-                        {},
-                      ]
-                    }
-                  >
-                    
-                  </Text>
-                </View>
-                <View
-                  style={
-                    {
-                      "alignItems": "flex-start",
-                      "flex": 1,
-                      "flexDirection": "column",
-                      "margin": 11,
-                    }
-                  }
-                >
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    minimumFontScale={0.65}
-                    numberOfLines={1}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        undefined,
-                        null,
-                      ]
-                    }
-                  >
-                    Knowledge Base
-                  </Text>
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    minimumFontScale={0.65}
-                    numberOfLines={2}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        {
-                          "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "marginTop": 6,
-                        },
-                        null,
-                      ]
-                    }
-                  >
-                    Commonly asked questions and FAQ
-                  </Text>
-                </View>
                 <Text
                   allowFontScaling={false}
                   style={
@@ -325,11 +241,9 @@ exports[`HelpModal should render with loading props 1`] = `
                         "color": "#00f1a2",
                         "fontSize": 34,
                       },
+                      undefined,
                       {
-                        "marginHorizontal": 0,
-                      },
-                      {
-                        "fontFamily": "Ionicons",
+                        "fontFamily": "custom",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
@@ -337,7 +251,60 @@ exports[`HelpModal should render with loading props 1`] = `
                     ]
                   }
                 >
-                  
+                  
+                </Text>
+              </View>
+              <View
+                style={
+                  {
+                    "alignItems": "flex-start",
+                    "flex": 1,
+                    "flexDirection": "column",
+                    "margin": 11,
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      undefined,
+                      null,
+                    ]
+                  }
+                >
+                  Knowledge Base
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={2}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "marginTop": 6,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Commonly asked questions and FAQ
                 </Text>
               </View>
             </View>
@@ -372,135 +339,51 @@ exports[`HelpModal should render with loading props 1`] = `
             onStartShouldSetResponder={[Function]}
             style={
               {
+                "alignSelf": "stretch",
+                "borderRadius": 16,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
                 "opacity": 1,
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
               }
             }
           >
             <View
               style={
-                [
-                  {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "height": 96,
-                    "justifyContent": "center",
-                    "paddingHorizontal": 22,
-                  },
-                  {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
-                  },
-                  {
-                    "paddingBottom": 0,
-                    "paddingLeft": 11,
-                    "paddingRight": 11,
-                    "paddingTop": 0,
-                  },
-                  {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
-                    "borderBottomWidth": 1,
-                  },
-                  null,
-                  {
-                    "borderColor": "white",
-                    "borderWidth": 0,
-                  },
-                ]
+                {
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "width": "100%",
+                }
               }
             >
               <View
                 style={
                   {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "justifyContent": "space-between",
-                    "width": "100%",
+                    "margin": 11,
                   }
                 }
               >
-                <View
-                  style={
-                    {
-                      "margin": 11,
-                    }
-                  }
-                >
-                  <Text
-                    allowFontScaling={false}
-                    style={
-                      [
-                        {
-                          "color": "#00f1a2",
-                          "fontSize": 34,
-                        },
-                        undefined,
-                        {
-                          "fontFamily": "custom",
-                          "fontStyle": "normal",
-                          "fontWeight": "normal",
-                        },
-                        {},
-                      ]
-                    }
-                  >
-                    
-                  </Text>
-                </View>
-                <View
-                  style={
-                    {
-                      "alignItems": "flex-start",
-                      "flex": 1,
-                      "flexDirection": "column",
-                      "margin": 11,
-                    }
-                  }
-                >
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    minimumFontScale={0.65}
-                    numberOfLines={1}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        undefined,
-                        null,
-                      ]
-                    }
-                  >
-                    Submit a Support Ticket
-                  </Text>
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    minimumFontScale={0.65}
-                    numberOfLines={2}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        {
-                          "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "marginTop": 6,
-                        },
-                        null,
-                      ]
-                    }
-                  >
-                    Troubleshooting and technical support
-                  </Text>
-                </View>
                 <Text
                   allowFontScaling={false}
                   style={
@@ -509,11 +392,9 @@ exports[`HelpModal should render with loading props 1`] = `
                         "color": "#00f1a2",
                         "fontSize": 34,
                       },
+                      undefined,
                       {
-                        "marginHorizontal": 0,
-                      },
-                      {
-                        "fontFamily": "Ionicons",
+                        "fontFamily": "custom",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
@@ -521,7 +402,60 @@ exports[`HelpModal should render with loading props 1`] = `
                     ]
                   }
                 >
-                  
+                  
+                </Text>
+              </View>
+              <View
+                style={
+                  {
+                    "alignItems": "flex-start",
+                    "flex": 1,
+                    "flexDirection": "column",
+                    "margin": 11,
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      undefined,
+                      null,
+                    ]
+                  }
+                >
+                  Submit a Support Ticket
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={2}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "marginTop": 6,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Troubleshooting and technical support
                 </Text>
               </View>
             </View>
@@ -556,135 +490,51 @@ exports[`HelpModal should render with loading props 1`] = `
             onStartShouldSetResponder={[Function]}
             style={
               {
+                "alignSelf": "stretch",
+                "borderRadius": 16,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
                 "opacity": 1,
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
               }
             }
           >
             <View
               style={
-                [
-                  {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "height": 96,
-                    "justifyContent": "center",
-                    "paddingHorizontal": 22,
-                  },
-                  {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
-                  },
-                  {
-                    "paddingBottom": 0,
-                    "paddingLeft": 11,
-                    "paddingRight": 11,
-                    "paddingTop": 0,
-                  },
-                  {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
-                    "borderBottomWidth": 1,
-                  },
-                  null,
-                  {
-                    "borderColor": "white",
-                    "borderWidth": 0,
-                  },
-                ]
+                {
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "width": "100%",
+                }
               }
             >
               <View
                 style={
                   {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "justifyContent": "space-between",
-                    "width": "100%",
+                    "margin": 11,
                   }
                 }
               >
-                <View
-                  style={
-                    {
-                      "margin": 11,
-                    }
-                  }
-                >
-                  <Text
-                    allowFontScaling={false}
-                    style={
-                      [
-                        {
-                          "color": "#00f1a2",
-                          "fontSize": 34,
-                        },
-                        undefined,
-                        {
-                          "fontFamily": "custom",
-                          "fontStyle": "normal",
-                          "fontWeight": "normal",
-                        },
-                        {},
-                      ]
-                    }
-                  >
-                    
-                  </Text>
-                </View>
-                <View
-                  style={
-                    {
-                      "alignItems": "flex-start",
-                      "flex": 1,
-                      "flexDirection": "column",
-                      "margin": 11,
-                    }
-                  }
-                >
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    minimumFontScale={0.65}
-                    numberOfLines={1}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        undefined,
-                        null,
-                      ]
-                    }
-                  >
-                    Call for Assistance
-                  </Text>
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    minimumFontScale={0.65}
-                    numberOfLines={2}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        {
-                          "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "marginTop": 6,
-                        },
-                        null,
-                      ]
-                    }
-                  >
-                    Get in touch by phone
-                  </Text>
-                </View>
                 <Text
                   allowFontScaling={false}
                   style={
@@ -693,11 +543,9 @@ exports[`HelpModal should render with loading props 1`] = `
                         "color": "#00f1a2",
                         "fontSize": 34,
                       },
+                      undefined,
                       {
-                        "marginHorizontal": 0,
-                      },
-                      {
-                        "fontFamily": "Ionicons",
+                        "fontFamily": "custom",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
@@ -705,7 +553,60 @@ exports[`HelpModal should render with loading props 1`] = `
                     ]
                   }
                 >
-                  
+                  
+                </Text>
+              </View>
+              <View
+                style={
+                  {
+                    "alignItems": "flex-start",
+                    "flex": 1,
+                    "flexDirection": "column",
+                    "margin": 11,
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      undefined,
+                      null,
+                    ]
+                  }
+                >
+                  Call for Assistance
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={2}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "marginTop": 6,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Get in touch by phone
                 </Text>
               </View>
             </View>
@@ -740,135 +641,51 @@ exports[`HelpModal should render with loading props 1`] = `
             onStartShouldSetResponder={[Function]}
             style={
               {
+                "alignSelf": "stretch",
+                "borderRadius": 16,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
                 "opacity": 1,
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
               }
             }
           >
             <View
               style={
-                [
-                  {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "height": 96,
-                    "justifyContent": "center",
-                    "paddingHorizontal": 22,
-                  },
-                  {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
-                  },
-                  {
-                    "paddingBottom": 0,
-                    "paddingLeft": 11,
-                    "paddingRight": 11,
-                    "paddingTop": 0,
-                  },
-                  {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
-                    "borderBottomWidth": 1,
-                  },
-                  null,
-                  {
-                    "borderColor": "white",
-                    "borderWidth": 0,
-                  },
-                ]
+                {
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "width": "100%",
+                }
               }
             >
               <View
                 style={
                   {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "justifyContent": "space-between",
-                    "width": "100%",
+                    "margin": 11,
                   }
                 }
               >
-                <View
-                  style={
-                    {
-                      "margin": 11,
-                    }
-                  }
-                >
-                  <Text
-                    allowFontScaling={false}
-                    style={
-                      [
-                        {
-                          "color": "#00f1a2",
-                          "fontSize": 34,
-                        },
-                        undefined,
-                        {
-                          "fontFamily": "custom",
-                          "fontStyle": "normal",
-                          "fontWeight": "normal",
-                        },
-                        {},
-                      ]
-                    }
-                  >
-                    
-                  </Text>
-                </View>
-                <View
-                  style={
-                    {
-                      "alignItems": "flex-start",
-                      "flex": 1,
-                      "flexDirection": "column",
-                      "margin": 11,
-                    }
-                  }
-                >
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    minimumFontScale={0.65}
-                    numberOfLines={1}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        undefined,
-                        null,
-                      ]
-                    }
-                  >
-                    Visit the Edge site
-                  </Text>
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    minimumFontScale={0.65}
-                    numberOfLines={2}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        {
-                          "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "marginTop": 6,
-                        },
-                        null,
-                      ]
-                    }
-                  >
-                    More info on Edge
-                  </Text>
-                </View>
                 <Text
                   allowFontScaling={false}
                   style={
@@ -877,11 +694,9 @@ exports[`HelpModal should render with loading props 1`] = `
                         "color": "#00f1a2",
                         "fontSize": 34,
                       },
+                      undefined,
                       {
-                        "marginHorizontal": 0,
-                      },
-                      {
-                        "fontFamily": "Ionicons",
+                        "fontFamily": "custom",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
@@ -889,7 +704,60 @@ exports[`HelpModal should render with loading props 1`] = `
                     ]
                   }
                 >
-                  
+                  
+                </Text>
+              </View>
+              <View
+                style={
+                  {
+                    "alignItems": "flex-start",
+                    "flex": 1,
+                    "flexDirection": "column",
+                    "margin": 11,
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      undefined,
+                      null,
+                    ]
+                  }
+                >
+                  Visit the Edge site
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={2}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "marginTop": 6,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  More info on Edge
                 </Text>
               </View>
             </View>
@@ -924,132 +792,51 @@ exports[`HelpModal should render with loading props 1`] = `
             onStartShouldSetResponder={[Function]}
             style={
               {
+                "alignSelf": "stretch",
+                "borderRadius": 16,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
                 "opacity": 1,
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
               }
             }
           >
             <View
               style={
-                [
-                  {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "height": 96,
-                    "justifyContent": "center",
-                    "paddingHorizontal": 22,
-                  },
-                  {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
-                  },
-                  {
-                    "paddingBottom": 0,
-                    "paddingLeft": 11,
-                    "paddingRight": 11,
-                    "paddingTop": 0,
-                  },
-                  null,
-                  null,
-                  {
-                    "borderColor": "white",
-                    "borderWidth": 0,
-                  },
-                ]
+                {
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "width": "100%",
+                }
               }
             >
               <View
                 style={
                   {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "justifyContent": "space-between",
-                    "width": "100%",
+                    "margin": 11,
                   }
                 }
               >
-                <View
-                  style={
-                    {
-                      "margin": 11,
-                    }
-                  }
-                >
-                  <Text
-                    allowFontScaling={false}
-                    style={
-                      [
-                        {
-                          "color": "#00f1a2",
-                          "fontSize": 34,
-                        },
-                        undefined,
-                        {
-                          "fontFamily": "custom",
-                          "fontStyle": "normal",
-                          "fontWeight": "normal",
-                        },
-                        {},
-                      ]
-                    }
-                  >
-                    
-                  </Text>
-                </View>
-                <View
-                  style={
-                    {
-                      "alignItems": "flex-start",
-                      "flex": 1,
-                      "flexDirection": "column",
-                      "margin": 11,
-                    }
-                  }
-                >
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    minimumFontScale={0.65}
-                    numberOfLines={1}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        undefined,
-                        null,
-                      ]
-                    }
-                  >
-                    Terms of Service
-                  </Text>
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    minimumFontScale={0.65}
-                    numberOfLines={2}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        {
-                          "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "marginTop": 6,
-                        },
-                        null,
-                      ]
-                    }
-                  >
-                    Understand your obligations and risks associated with our platform
-                  </Text>
-                </View>
                 <Text
                   allowFontScaling={false}
                   style={
@@ -1058,11 +845,9 @@ exports[`HelpModal should render with loading props 1`] = `
                         "color": "#00f1a2",
                         "fontSize": 34,
                       },
+                      undefined,
                       {
-                        "marginHorizontal": 0,
-                      },
-                      {
-                        "fontFamily": "Ionicons",
+                        "fontFamily": "custom",
                         "fontStyle": "normal",
                         "fontWeight": "normal",
                       },
@@ -1070,7 +855,60 @@ exports[`HelpModal should render with loading props 1`] = `
                     ]
                   }
                 >
-                  
+                  
+                </Text>
+              </View>
+              <View
+                style={
+                  {
+                    "alignItems": "flex-start",
+                    "flex": 1,
+                    "flexDirection": "column",
+                    "margin": 11,
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      undefined,
+                      null,
+                    ]
+                  }
+                >
+                  Terms of Service
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={2}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "marginTop": 6,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  Understand your obligations and risks associated with our platform
                 </Text>
               </View>
             </View>

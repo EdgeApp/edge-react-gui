@@ -1,14 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SelectableRowComponent should render with loading props 1`] = `
-<WithTheme(ClickableRowComponent)
+exports[`SelectableRow should render with loading props 1`] = `
+<CardUi4
   onPress={[Function]}
-  paddingRem={
-    [
-      0,
-      0.5,
-    ]
-  }
 >
   <View
     style={
@@ -37,21 +31,13 @@ exports[`SelectableRowComponent should render with loading props 1`] = `
         }
       }
     >
-      <WithTheme(EdgeTextComponent)>
+      <WithTheme(EdgeTextComponent)
+        disableFontScaling={true}
+        numberOfLines={1}
+      >
         title
       </WithTheme(EdgeTextComponent)>
     </View>
-    <Icon
-      allowFontScaling={false}
-      color="#FFFFFF"
-      name="chevron-forward-outline"
-      size={34}
-      style={
-        {
-          "marginHorizontal": 0,
-        }
-      }
-    />
   </View>
-</WithTheme(ClickableRowComponent)>
+</CardUi4>
 `;

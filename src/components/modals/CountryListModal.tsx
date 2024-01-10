@@ -32,15 +32,7 @@ export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }:
     const logoName = filename ?? name.toLowerCase().replace(' ', '-')
     const source = { uri: `${FLAG_LOGO_URL}/${logoName}.png` }
 
-    return (
-      <SelectableRow
-        arrowTappable
-        icon={<FastImage source={source} style={styles.image} />}
-        subTitle={alpha}
-        title={name}
-        onPress={() => bridge.resolve(alpha)}
-      />
-    )
+    return <SelectableRow icon={<FastImage source={source} style={styles.image} />} subTitle={alpha} title={name} onPress={() => bridge.resolve(alpha)} />
   }
 
   const rowDataFilter = (searchText: string, country: CountryData) => {

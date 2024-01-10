@@ -2,14 +2,13 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
-import { getTheme } from '../../components/services/ThemeContext'
-import { SelectableRowComponent } from '../../components/themed/SelectableRow'
+import { SelectableRow } from '../../components/themed/SelectableRow'
 
-describe('SelectableRowComponent', () => {
+describe('SelectableRow', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
 
-    const actual = renderer.render(<SelectableRowComponent onPress={() => undefined} title="title" theme={getTheme()} />)
+    const actual = renderer.render(<SelectableRow onPress={() => undefined} title="title" />)
 
     expect(actual).toMatchSnapshot()
   })
