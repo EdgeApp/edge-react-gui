@@ -4,10 +4,9 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
 <SceneWrapper
   scroll={true}
 >
-  <WithTheme(TileComponent)
+  <RowUi4
     body="MyFioAddress"
     title="FIO Crypto Handle"
-    type="static"
   />
   <Radio
     marginRem={

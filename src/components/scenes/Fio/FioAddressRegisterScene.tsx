@@ -22,9 +22,10 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeC
 import { ClickableText } from '../../themed/ClickableText'
 import { EdgeText } from '../../themed/EdgeText'
 import { FormError } from '../../themed/FormError'
-import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { Tile } from '../../tiles/Tile'
+import { ButtonUi4 } from '../../ui4/ButtonUi4'
+import { CardUi4 } from '../../ui4/CardUi4'
+import { RowUi4 } from '../../ui4/RowUi4'
 
 interface State {
   selectedWallet: EdgeCurrencyWallet | null
@@ -325,21 +326,19 @@ export class FioAddressRegister extends React.Component<Props, State> {
     const { isValid, isAvailable, loading, walletLoading } = this.state
     const styles = getStyles(this.props.theme)
 
-    if (isValid && isAvailable && !loading) {
-      return (
-        <View style={styles.buttons}>
-          <MainButton
-            disabled={!isAvailable || walletLoading}
-            label={walletLoading ? '' : lstrings.string_next_capitalized}
-            spinner={walletLoading}
-            onPress={this.handleNextButton}
-            type="secondary"
-          />
-        </View>
-      )
-    }
-
-    return null
+    // TODO: Update ButtonsViewUi4 to handle single button case
+    return (
+      <View style={styles.buttons}>
+        <ButtonUi4
+          layout="row"
+          disabled={!isValid || !isAvailable || loading}
+          label={walletLoading ? '' : lstrings.string_next_capitalized}
+          spinner={walletLoading}
+          onPress={this.handleNextButton}
+          type="primary"
+        />
+      </View>
+    )
   }
 
   renderLoader() {
@@ -357,7 +356,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
     if (fioWallets && fioWallets.length > 1) {
       const title = `${selectedWallet == null ? lstrings.fio_address_register_no_wallet_name : getWalletName(selectedWallet)}`
-      return <Tile type="touchable" title={`${lstrings.title_fio_connect_to_wallet}`} onPress={this.selectFioWallet} body={title} />
+      return <RowUi4 rightButtonType="touchable" title={`${lstrings.title_fio_connect_to_wallet}`} onPress={this.selectFioWallet} body={title} />
     }
   }
 
@@ -396,7 +395,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper>
+      <SceneWrapper padding={theme.rem(0.5)}>
         <SceneHeader style={styles.header} title={lstrings.title_fio_address_confirmation}>
           <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
         </SceneHeader>
@@ -420,23 +419,25 @@ export class FioAddressRegister extends React.Component<Props, State> {
             </View>
 
             <View onLayout={this.fieldViewOnLayout}>
-              <Tile type="editable" title={lstrings.fio_address_choose_label} onPress={this.editAddressPressed}>
-                <View style={styles.addressTileBody}>
-                  {fioAddress ? (
-                    <EdgeText style={styles.fioAddressName}>{fioAddress}</EdgeText>
-                  ) : (
-                    <EdgeText style={styles.muted}>{lstrings.fio_address_register_placeholder}</EdgeText>
-                  )}
-                  {this.renderLoader()}
-                </View>
-              </Tile>
-              <Tile
-                type="touchable"
-                title={lstrings.fio_address_choose_domain_label}
-                onPress={this.selectFioDomain}
-                body={domainsLoading ? lstrings.loading : `${FIO_ADDRESS_DELIMITER}${selectedDomain.name}`}
-              />
-              {this.renderFioWallets()}
+              <CardUi4 sections>
+                <RowUi4 rightButtonType="editable" title={lstrings.fio_address_choose_label} onPress={this.editAddressPressed}>
+                  <View style={styles.addressTileBody}>
+                    {fioAddress ? (
+                      <EdgeText style={styles.fioAddressName}>{fioAddress}</EdgeText>
+                    ) : (
+                      <EdgeText style={styles.muted}>{lstrings.fio_address_register_placeholder}</EdgeText>
+                    )}
+                    {this.renderLoader()}
+                  </View>
+                </RowUi4>
+                <RowUi4
+                  rightButtonType="touchable"
+                  title={lstrings.fio_address_choose_domain_label}
+                  onPress={this.selectFioDomain}
+                  body={domainsLoading ? lstrings.loading : `${FIO_ADDRESS_DELIMITER}${selectedDomain.name}`}
+                />
+                {this.renderFioWallets()}
+              </CardUi4>
             </View>
             {this.renderButton()}
             {this.props.fioWallets.length && showFreeAddressLink ? (
@@ -463,7 +464,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     position: 'relative'
   },
   createWalletPromptArea: {
-    paddingHorizontal: theme.rem(1),
+    paddingHorizontal: theme.rem(0.5),
     paddingBottom: theme.rem(1)
   },
   instructionalText: {
@@ -476,8 +477,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.secondaryText
   },
   buttons: {
-    marginTop: theme.rem(1.5),
-    paddingHorizontal: theme.rem(1)
+    marginTop: theme.rem(1.5)
   },
   error: {
     flex: 1,

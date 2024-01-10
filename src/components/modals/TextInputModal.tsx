@@ -119,10 +119,11 @@ export function TextInputModal(props: Props) {
         // Hack around the android:windowSoftInputMode="adjustPan" glitch:
         Platform.OS === 'android' ? <View style={{ flex: 2 }} /> : null
       }
+      {/* TODO: Style ButtonsViewUi4 for Modals */}
       {spinning ? (
-        <MainButton alignSelf="center" disabled marginRem={0.5} type="secondary" spinner />
+        <MainButton alignSelf="center" disabled marginRem={0.5} type="primary" spinner />
       ) : (
-        <MainButton alignSelf="center" label={submitLabel} marginRem={0.5} onPress={handleSubmit} type="secondary" />
+        <MainButton alignSelf="center" label={submitLabel} marginRem={0.5} onPress={handleSubmit} type="primary" />
       )}
     </ThemedModal>
   )

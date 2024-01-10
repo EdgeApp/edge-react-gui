@@ -4,9 +4,8 @@ import { asObject, asString } from 'cleaners'
 import { Disklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
-import { Image, Platform, TouchableOpacity, View } from 'react-native'
+import { Image, Platform, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { readSyncedSettings, updateOneSetting, writeSyncedSettings } from '../../actions/SettingsActions'
@@ -38,6 +37,9 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
+import { CardUi4 } from '../ui4/CardUi4'
+import { RowUi4 } from '../ui4/RowUi4'
+import { SectionView } from '../ui4/SectionView'
 
 const buyRaw = buyPluginJsonOverrideRaw.length > 0 ? buyPluginJsonOverrideRaw : buyPluginJsonRaw
 const sellRaw = sellPluginJsonOverrideRaw.length > 0 ? sellPluginJsonOverrideRaw : sellPluginJsonRaw
@@ -324,23 +326,22 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const poweredBy = plugin.poweredBy ?? plugin.displayName
 
     return (
-      <View style={styles.pluginRowContainer}>
-        <TouchableOpacity
-          accessible={false}
-          onPress={async () => await this.openPlugin(item).catch(showError)}
-          onLongPress={async () => await this.openPlugin(item, true).catch(showError)}
-        >
-          <View style={styles.pluginRowLogoAndInfo}>
-            <Image
-              style={styles.logo}
-              // @ts-expect-error
-              source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]}
-            />
-            <View style={styles.pluginTextContainer}>
-              <EdgeText style={styles.titleText}>{item.title}</EdgeText>
-              <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>
-            </View>
-          </View>
+      <CardUi4
+        icon={
+          <Image
+            style={styles.logo}
+            // @ts-expect-error
+            source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]}
+          />
+        }
+        onPress={async () => await this.openPlugin(item).catch(showError)}
+        onLongPress={async () => await this.openPlugin(item, true).catch(showError)}
+      >
+        <SectionView dividerMarginRem={[0.2, 0]} marginRem={0.5}>
+          <>
+            <EdgeText style={styles.titleText}>{item.title}</EdgeText>
+            {item.description === '' ? null : <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>}
+          </>
           {poweredBy != null && item.partnerIconPath != null ? (
             <View style={styles.pluginRowPoweredByRow}>
               <EdgeText style={styles.footerText}>{lstrings.plugin_powered_by_space}</EdgeText>
@@ -348,8 +349,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
               <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
             </View>
           ) : null}
-        </TouchableOpacity>
-      </View>
+        </SectionView>
+      </CardUi4>
     )
   }
 
@@ -379,16 +380,21 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     return (
       <View style={[styles.sceneContainer, { paddingTop: insetStyles.paddingTop }]}>
         <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline />
-        <TouchableOpacity style={styles.selectedCountryRow} onPress={this._handleCountryPress}>
-          {countryData && (
-            <FastImage
-              source={{ uri: `${FLAG_LOGO_URL}/${countryData.filename || countryData.name.toLowerCase().replace(' ', '-')}.png` }}
-              style={styles.selectedCountryFlag}
-            />
-          )}
-          <EdgeText style={styles.selectedCountryText}>{countryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}</EdgeText>
-          <AntDesignIcon name="right" size={theme.rem(1)} color={theme.icon} />
-        </TouchableOpacity>
+        <CardUi4>
+          <RowUi4
+            onPress={this._handleCountryPress}
+            icon={
+              countryData == null ? undefined : (
+                <FastImage
+                  source={{ uri: `${FLAG_LOGO_URL}/${countryData.filename || countryData.name.toLowerCase().replace(' ', '-')}.png` }}
+                  style={styles.selectedCountryFlag}
+                />
+              )
+            }
+          >
+            <EdgeText style={styles.selectedCountryText}>{countryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}</EdgeText>
+          </RowUi4>
+        </CardUi4>
         {plugins.length === 0 ? (
           <View style={styles.emptyPluginContainer}>
             <EdgeText style={styles.emptyPluginText} numberOfLines={2}>
@@ -423,11 +429,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(2),
     width: theme.rem(2),
     borderRadius: theme.rem(1),
-    marginRight: theme.rem(1.5)
+    margin: theme.rem(0.25),
+    marginRight: theme.rem(1)
   },
   selectedCountryText: {
-    flex: 1,
-    fontFamily: theme.fontFaceMedium
+    fontFamily: theme.fontFaceMedium,
+    alignItems: 'center'
   },
   emptyPluginContainer: {
     flex: 1,
@@ -438,38 +445,23 @@ const getStyles = cacheStyles((theme: Theme) => ({
   emptyPluginText: {
     textAlign: 'center'
   },
-  pluginRowContainer: {
-    borderTopWidth: theme.thinLineWidth,
-    borderTopColor: theme.lineDivider,
-    marginBottom: theme.rem(1),
-    marginLeft: theme.rem(1.5),
-    paddingTop: theme.rem(1),
-    paddingRight: theme.rem(1.5)
-  },
-  pluginRowLogoAndInfo: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
   pluginRowPoweredByRow: {
-    marginTop: theme.rem(0.5),
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center'
   },
   logo: {
-    marginRight: theme.rem(1.5),
+    margin: theme.rem(0.5),
     width: theme.rem(2),
-    maxHeight: theme.rem(2),
+    height: theme.rem(2),
+    aspectRatio: 1,
     resizeMode: 'contain'
   },
-  pluginTextContainer: {
-    width: '80%'
-  },
   titleText: {
-    marginBottom: theme.rem(0.25),
     fontFamily: theme.fontFaceMedium
   },
   subtitleText: {
+    marginTop: theme.rem(0.25),
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
   },
@@ -504,7 +496,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   }
 
   return (
-    <SceneWrapper hasTabs hasNotifications>
+    <SceneWrapper hasTabs hasNotifications padding={theme.rem(0.5)}>
       {({ insetStyles }) => (
         <GuiPluginList
           navigation={navigation}

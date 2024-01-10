@@ -79,7 +79,7 @@ export const RowUi4 = (props: Props) => {
 
   const content = (
     <>
-      {icon == null ? null : <View style={styles.iconContainer}>{icon}</View>}
+      {icon == null ? null : icon}
       <View style={styles.content}>
         {title == null ? null : (
           <EdgeText disableFontScaling ellipsizeMode="tail" style={error ? styles.textHeaderError : styles.textHeader}>
@@ -131,13 +131,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.tileBackground,
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1
+    alignSelf: 'stretch'
   },
   content: {
-    flex: 1
-  },
-  iconContainer: {
-    marginRight: theme.rem(0.25)
+    flexDirection: 'column'
   },
   tappableIcon: {
     color: theme.iconTappable,

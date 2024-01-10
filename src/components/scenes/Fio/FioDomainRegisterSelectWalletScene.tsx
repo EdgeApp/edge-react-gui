@@ -23,7 +23,7 @@ import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
-import { Tile } from '../../tiles/Tile'
+import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
 interface StateProps {
@@ -209,10 +209,10 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
         <EdgeText style={styles.instructionalText} numberOfLines={7}>
           {detailsText}
         </EdgeText>
-        <Tile type="static" title={lstrings.fio_domain_label} body={fioDomain} />
-        <Tile type="static" title={lstrings.create_wallet_account_amount_due} body={loading ? lstrings.loading : `${activationCost} ${FIO_STR}`} />
-        <Tile
-          type="touchable"
+        <RowUi4 title={lstrings.fio_domain_label} body={fioDomain} />
+        <RowUi4 title={lstrings.create_wallet_account_amount_due} body={loading ? lstrings.loading : `${activationCost} ${FIO_STR}`} />
+        <RowUi4
+          rightButtonType="touchable"
           title={lstrings.create_wallet_account_select_wallet}
           body={paymentWalletBody}
           onPress={this.onWalletPress}

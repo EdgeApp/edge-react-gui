@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { Text, View } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import { View } from 'react-native'
 
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
   icon?: React.ReactNode
@@ -13,33 +13,26 @@ interface Props {
 
 /**
  * A blue header row in a settings scene.
+ * TODO: SettingsScene needs UI4 design.
  */
 export const SettingsHeaderRowComponent = (props: Props) => {
   const { icon, label } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const colors = theme.settingsRowHeaderBackground
-  const start = theme.settingsRowHeaderBackgroundStart
-  const end = theme.settingsRowHeaderBackgroundEnd
 
   return (
-    <LinearGradient colors={colors} start={start} end={end} style={styles.row}>
+    <View style={styles.row}>
       {icon != null ? <View style={styles.padding}>{icon}</View> : undefined}
-      <Text style={styles.text}>{label}</Text>
-    </LinearGradient>
+      <EdgeText style={styles.text}>{label}</EdgeText>
+    </View>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   row: {
-    // Layout:
-    minHeight: theme.rem(2.75),
-    padding: theme.rem(1),
-
-    // Children:
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'flex-start'
+    margin: theme.rem(0.5)
   },
 
   text: {

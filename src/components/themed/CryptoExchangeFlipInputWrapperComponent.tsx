@@ -9,13 +9,13 @@ import { connect } from '../../types/reactRedux'
 import { GuiCurrencyInfo } from '../../types/types'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { convertNativeToDenomination } from '../../util/utils'
-import { Card } from '../cards/Card'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { CardUi4 } from '../ui4/CardUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
+import { RowUi4 } from '../ui4/RowUi4'
 import { EdgeText } from './EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts } from './ExchangedFlipInput2'
 import { MainButton } from './MainButton'
-import { SelectableRow } from './SelectableRow'
 
 interface OwnProps {
   walletId: string
@@ -111,20 +111,11 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
 
     if (!this.props.isFocused) {
       return (
-        <Card marginRem={[0, 1]} paddingRem={0}>
-          <View style={styles.containerSelectedWalletNotFocus}>
-            <SelectableRow
-              arrowTappable
-              icon={<CryptoIconUi4 sizeRem={1.75} walletId={this.props.walletId} tokenId={this.props.tokenId} />}
-              title={
-                <EdgeText style={styles.iconText} numberOfLines={1}>
-                  {guiWalletName + ': ' + displayDenomination}
-                </EdgeText>
-              }
-              onPress={this.focusMe}
-            />
-          </View>
-        </Card>
+        <CardUi4>
+          <RowUi4 icon={<CryptoIconUi4 sizeRem={1.75} walletId={this.props.walletId} tokenId={this.props.tokenId} />} onPress={this.focusMe}>
+            <EdgeText style={styles.text}>{guiWalletName + ': ' + displayDenomination}</EdgeText>
+          </RowUi4>
+        </CardUi4>
       )
     }
 
@@ -132,7 +123,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
       <>
         {this.state?.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage ?? ''}</EdgeText> : null}
         {this.renderBalance()}
-        <Card marginRem={[0, 1]}>
+        <CardUi4>
           <ExchangedFlipInput2
             onNext={onNext}
             onFocus={this.props.onFocus}
@@ -147,7 +138,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
             walletId={this.props.walletId}
           />
           {children}
-        </Card>
+        </CardUi4>
       </>
     )
   }
@@ -167,10 +158,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  containerSelectedWalletNotFocus: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
+  text: {
+    fontFamily: theme.fontFaceMedium,
+    fontSize: theme.rem(1.25),
+    marginLeft: theme.rem(0.5)
   },
   topRow: {
     height: theme.rem(2),
@@ -182,33 +173,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     top: theme.rem(0.125),
     borderRadius: theme.rem(1)
   },
-  currencyIcon: {
-    height: theme.rem(1.5),
-    width: theme.rem(1.5),
-    resizeMode: 'contain'
-  },
-  textIconContainer: {
-    position: 'relative',
-    flexDirection: 'row',
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  iconText: {
-    color: theme.primaryText,
-    fontFamily: theme.fontFaceBold,
-    fontSize: theme.rem(1.25)
-  },
   balanceText: {
     alignSelf: 'flex-start',
     marginLeft: theme.rem(1),
-    marginBottom: theme.rem(0.5),
     color: theme.secondaryText
   },
   errorText: {
     alignSelf: 'flex-start',
-    marginLeft: theme.rem(1),
+    marginLeft: theme.rem(0.5),
     marginBottom: theme.rem(0.75),
     color: theme.dangerText
   }

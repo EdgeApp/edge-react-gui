@@ -189,7 +189,7 @@ export function TransactionListRow(props: Props) {
 
   return (
     <CardUi4 icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
-      <SectionView dividerVerticalRem={[0.2, 0.5]} marginRem={[0.25, 0]}>
+      <SectionView dividerMarginRem={[0.2, 0.5]} marginRem={[0.25, 0]}>
         <>
           <View style={styles.row}>
             <EdgeText style={styles.titleText}>{name}</EdgeText>

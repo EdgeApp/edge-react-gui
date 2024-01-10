@@ -9,7 +9,7 @@ import { zeroString } from '../../util/utils'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { Card } from './Card'
+import { CardUi4 } from '../ui4/CardUi4'
 
 const UnderlinedNumInputCardComponent = (props: {
   currencyCode: string
@@ -44,7 +44,7 @@ const UnderlinedNumInputCardComponent = (props: {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handlePress}>
-        <Card>
+        <CardUi4>
           <View style={styles.cardContainer}>
             <View style={styles.leftContainer}>
               <EdgeText style={styles.textTitle}>{title}</EdgeText>
@@ -69,7 +69,7 @@ const UnderlinedNumInputCardComponent = (props: {
             </View>
             <FastImage style={styles.icon} source={{ uri: iconUri }} />
           </View>
-        </Card>
+        </CardUi4>
       </TouchableOpacity>
     </View>
   )

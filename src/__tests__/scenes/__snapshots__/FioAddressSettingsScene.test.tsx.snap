@@ -2,10 +2,9 @@
 
 exports[`FioAddressSettingsComponent should render with loading props 1`] = `
 <SceneWrapper>
-  <WithTheme(TileComponent)
+  <RowUi4
     body="MyFioAddress"
     title="FIO Crypto Handle"
-    type="static"
   />
   <React.Fragment>
     <MainButton

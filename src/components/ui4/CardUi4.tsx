@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import LinearGradient, { LinearGradientProps } from 'react-native-linear-gradient'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
@@ -16,7 +17,7 @@ interface Props {
 
   // children & icon share the same 2nd layer:
   children: React.ReactNode | React.ReactNode[]
-  icon?: React.ReactNode
+  icon?: React.ReactNode | string
 
   // Everything else underneath, in order:
   gradientBackground?: LinearGradientProps // 3rd layer
@@ -28,6 +29,7 @@ interface Props {
   paddingRem?: number[] | number
 
   // Options:
+  fill?: boolean // Set flex to 1 for tiling
   sections?: boolean // Automatic section dividers, only if chilren are multiple nodes
   onClose?: () => Promise<void> | void // If specified, adds a close button, absolutely positioned in the top right
 
@@ -48,13 +50,14 @@ interface Props {
  * onClose: If specified, adds a close button
  */
 export const CardUi4 = (props: Props) => {
-  const { children, icon, marginRem, paddingRem, overlay, sections, gradientBackground, nodeBackground, onClose, onLongPress, onPress } = props
+  const { children, icon, marginRem, paddingRem, overlay, sections, gradientBackground, nodeBackground, fill = false, onClose, onLongPress, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
-
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0.5), theme.rem))
+  const fillStyle = fill ? styles.fill : undefined
+
   const isPressable = onPress != null || onLongPress != null
 
   const handlePress = useHandler(async () => {
@@ -83,6 +86,9 @@ export const CardUi4 = (props: Props) => {
     triggerHaptic('impactLight')
   })
 
+  const nonNullChildren = React.Children.toArray(children).filter(child => child != null && React.isValidElement(child))
+  if (nonNullChildren.length === 0) return null
+
   const background = (
     <View style={styles.backgroundFill}>
       {nodeBackground}
@@ -90,7 +96,10 @@ export const CardUi4 = (props: Props) => {
     </View>
   )
 
-  const maybeIcon = icon == null ? null : <View style={styles.iconContainer}>{icon}</View>
+  const maybeIcon =
+    icon == null ? null : (
+      <View style={styles.iconContainer}>{typeof icon === 'string' ? <FastImage source={{ uri: icon }} style={styles.iconBuiltin} /> : icon}</View>
+    )
 
   const content = sections ? <SectionView>{children}</SectionView> : children
 
@@ -114,7 +123,7 @@ export const CardUi4 = (props: Props) => {
     ) : (
       <>
         {background}
-        <View style={styles.rowContainer}>
+        <View style={styles.iconRowContainer}>
           {maybeIcon}
           {content}
         </View>
@@ -124,11 +133,11 @@ export const CardUi4 = (props: Props) => {
     )
 
   return isPressable ? (
-    <TouchableOpacity accessible={false} onPress={handlePress} onLongPress={handleLongPress} style={[styles.cardContainer, margin, padding]}>
+    <TouchableOpacity accessible={false} onPress={handlePress} onLongPress={handleLongPress} style={[styles.cardContainer, margin, padding, fillStyle]}>
       {allContent}
     </TouchableOpacity>
   ) : (
-    <View style={[styles.cardContainer, margin, padding]}>{allContent}</View>
+    <View style={[styles.cardContainer, margin, padding, fillStyle]}>{allContent}</View>
   )
 }
 
@@ -141,7 +150,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   cardContainer: {
     borderRadius: theme.cardBorderRadius,
-    flex: 1
+    alignSelf: 'stretch'
   },
   cornerContainer: {
     margin: theme.rem(1),
@@ -158,7 +167,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: 2,
     pointerEvents: 'none'
   },
-  rowContainer: {
+  iconRowContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center'
@@ -168,7 +177,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignContent: 'center'
   },
-  warning: {
-    borderColor: theme.warningIcon
+  iconBuiltin: {
+    // When uri strings are given to this component as an icon prop, handle
+    // the icon styling
+    height: theme.rem(1.5),
+    width: theme.rem(1.5),
+    resizeMode: 'contain'
+  },
+  fill: {
+    flex: 1
   }
 }))

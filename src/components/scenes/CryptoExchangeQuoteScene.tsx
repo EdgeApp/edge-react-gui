@@ -183,31 +183,22 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
     ))
   }
   return (
-    <SceneWrapper hasTabs hasNotifications>
+    <SceneWrapper hasTabs hasNotifications padding={theme.rem(0.5)}>
       {({ insetStyles }) => (
         <>
           <SceneHeader title={lstrings.title_exchange} underline withTopMargin />
           <ScrollView contentContainerStyle={[insetStyles, styles.container]}>
             <LineTextDivider title={lstrings.fragment_send_from_label} lowerCased />
-            {showFeeWarning ? <AlertCardUi4 marginRem={[0, 1, 1.5, 1]} title={lstrings.transaction_details_fee_warning} type="warning" /> : null}
+            {showFeeWarning ? <AlertCardUi4 title={lstrings.transaction_details_fee_warning} type="warning" /> : null}
             <ExchangeQuote quote={selectedQuote} fromTo="from" showFeeWarning={showFeeWarning} />
             <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
             <ExchangeQuote quote={selectedQuote} fromTo="to" />
             <PoweredByCard iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)} poweredByText={exchangeName} onPress={handlePoweredByTap} />
             {selectedQuote.isEstimate ? (
-              <AlertCardUi4
-                // TODO: Rework margins/padding on non-UI4 components on this scene so this margin isn't needed.
-                marginRem={1}
-                title={lstrings.estimated_quote}
-                body={lstrings.estimated_exchange_message}
-                type="warning"
-                onPress={handleForEstimateExplanation}
-              />
+              <AlertCardUi4 title={lstrings.estimated_quote} body={lstrings.estimated_exchange_message} type="warning" onPress={handleForEstimateExplanation} />
             ) : null}
             {selectedQuote.canBePartial ? (
               <AlertCardUi4
-                // TODO: Rework margins/padding on non-UI4 components on this scene so this margin isn't needed.
-                marginRem={1}
                 title={lstrings.can_be_partial_quote_title}
                 body={lstrings.can_be_partial_quote_message}
                 type="warning"
@@ -229,7 +220,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingTop: theme.rem(0.5)
   },
   slider: {
-    marginTop: theme.rem(0.5),
+    marginTop: theme.rem(2),
     marginBottom: theme.rem(1)
   }
 }))

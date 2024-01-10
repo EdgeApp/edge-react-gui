@@ -6,7 +6,6 @@ import { cacheStyles } from 'react-native-patina'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useState } from '../../types/reactHooks'
 import { consify } from '../../util/utils'
-import { Card } from '../cards/Card'
 import { Space } from '../layout/Space'
 import { FlipInputModal2, FlipInputModalResult } from '../modals/FlipInputModal2'
 import { Airship } from '../services/AirshipInstance'
@@ -14,6 +13,7 @@ import { Theme, useTheme } from '../services/ThemeContext'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
 import { MainButton } from '../themed/MainButton'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
+import { CardUi4 } from '../ui4/CardUi4'
 
 export function ExchangedFlipInputTester(props: {}) {
   const theme = useTheme()
@@ -73,7 +73,7 @@ export function ExchangedFlipInputTester(props: {}) {
 
   return (
     <View style={styles.headerContainer}>
-      <Card>
+      <CardUi4>
         <ExchangedFlipInput2
           ref={exchangedFlipInputRef}
           walletId={walletId}
@@ -87,7 +87,7 @@ export function ExchangedFlipInputTester(props: {}) {
           startNativeAmount={balance}
           onAmountChanged={onAmountChanged}
         />
-      </Card>
+      </CardUi4>
       <Space vertical={1}>
         <SimpleTextInput value={value0} onChangeText={onChangeText0} autoFocus={false} placeholder="Crypto Amount" />
       </Space>

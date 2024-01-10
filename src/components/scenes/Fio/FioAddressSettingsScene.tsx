@@ -13,7 +13,7 @@ import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
-import { Tile } from '../../tiles/Tile'
+import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
 interface LocalState {
@@ -148,8 +148,8 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
 
     return (
       <SceneWrapper>
-        <Tile type="static" title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
-        {bundledTxs != null ? <Tile type="static" title={lstrings.fio_address_details_screen_bundled_txs} body={`${bundledTxs}`} /> : null}
+        <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
+        {bundledTxs != null ? <RowUi4 title={lstrings.fio_address_details_screen_bundled_txs} body={`${bundledTxs}`} /> : null}
         {showAddBundledTxs && (
           <FioActionSubmit
             onSubmit={this.onAddBundledTxsSubmit}

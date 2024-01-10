@@ -7,7 +7,7 @@ import { lstrings } from '../../locales/strings'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ButtonBox } from '../themed/ThemedButtons'
-import { Card } from './Card'
+import { CardUi4 } from '../ui4/CardUi4'
 
 interface Props {
   message: string
@@ -25,7 +25,7 @@ export function IconMessageCard(props: Props) {
 
   return (
     <ButtonBox marginRem={0.5} onPress={onPress}>
-      <Card>
+      <CardUi4>
         <View style={styles.cardContainer}>
           {typeof iconOrUri === 'string' ? <FastImage resizeMode="contain" source={{ uri: iconOrUri }} style={styles.icon} /> : iconOrUri}
           <View style={styles.textContainer}>
@@ -51,7 +51,7 @@ export function IconMessageCard(props: Props) {
             </TouchableOpacity>
           )}
         </View>
-      </Card>
+      </CardUi4>
     </ButtonBox>
   )
 }

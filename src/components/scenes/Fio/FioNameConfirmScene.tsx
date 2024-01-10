@@ -13,7 +13,7 @@ import { ButtonsModal } from '../../modals/ButtonsModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { Tile } from '../../tiles/Tile'
+import { RowUi4 } from '../../ui4/RowUi4'
 
 interface StateProps {
   fioPlugin?: EdgeCurrencyConfig
@@ -143,8 +143,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
       <SceneWrapper>
         <SceneHeader title={this.isFioAddress() ? lstrings.title_fio_address_confirmation : lstrings.title_register_fio_domain} underline />
         <View style={styles.scene}>
-          <Tile
-            type="static"
+          <RowUi4
             title={this.isFioAddress() ? lstrings.fio_address_confirm_screen_label : lstrings.fio_domain_label}
             body={this.isFioAddress() ? fioName : `${FIO_ADDRESS_DELIMITER}${fioName}`}
           />

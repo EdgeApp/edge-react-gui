@@ -27,11 +27,11 @@ export const LineTextDividerComponent = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     width: '100%',
-    paddingHorizontal: theme.rem(1),
+    paddingHorizontal: theme.rem(0.5),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: theme.rem(1)
+    marginVertical: theme.rem(0.5)
   },
   line: {
     flex: 1,
