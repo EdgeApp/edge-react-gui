@@ -209,6 +209,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
     </RNSVGSvgView>
   </BVLinearGradient>,
   <RCTScrollView
+    collapsable={false}
     contentContainerStyle={
       {
         "paddingBottom": 0,
@@ -217,16 +218,14 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
         "paddingTop": 64,
       }
     }
+    onScroll={[Function]}
+    scrollEventThrottle={0.0001}
     style={
-      [
-        {
-          "height": 1334,
-          "width": 750,
-        },
-        {
-          "padding": 0,
-        },
-      ]
+      {
+        "height": 1334,
+        "padding": 0,
+        "width": 750,
+      }
     }
   >
     <View>

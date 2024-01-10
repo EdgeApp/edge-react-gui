@@ -2,10 +2,12 @@ import { getDefaultHeaderHeight } from '@react-navigation/elements'
 import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { useMemo } from 'react'
-import { Animated, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native'
+import { Animated, StyleSheet, useWindowDimensions, View } from 'react-native'
+import Reanimated from 'react-native-reanimated'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useSceneDrawerState } from '../../state/SceneDrawerState'
+import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { OverrideDots } from '../../types/Theme'
@@ -129,6 +131,9 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const notificationHeight = theme.rem(4)
   const headerBarHeight = getDefaultHeaderHeight(frame, false, 0)
 
+  // If the scene has scroll, this will be required for tabs and/or header animation
+  const handleScroll = useSceneScrollHandler()
+
   const renderScene = (safeAreaInsets: EdgeInsets, keyboardAnimation: Animated.Value | undefined, trackerValue: number): JSX.Element => {
     // If function children, the caller handles the insets and overscroll
     const hasKeyboardAnimation = keyboardAnimation != null
@@ -172,18 +177,19 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
           backgroundGradientStart={backgroundGradientStart}
           backgroundGradientEnd={backgroundGradientEnd}
         />
-        <MaybeScrollView
+        <MaybeAnimatedScrollView
           when={scroll && !hasKeyboardAnimation}
           style={[layoutStyles, { padding }]}
           keyboardShouldPersistTaps={keyboardShouldPersistTaps}
           contentContainerStyle={insetStyles}
+          onScroll={hasTabs || hasHeader ? handleScroll : () => {}}
         >
           <MaybeView when={!scroll && !hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles, { padding }]}>
             {isFuncChildren ? children(info) : children}
             {hasNotifications ? <NotificationView navigation={navigation} /> : null}
             {renderDrawer == null ? null : <SceneDrawer info={info}>{renderDrawer}</SceneDrawer>}
           </MaybeView>
-        </MaybeScrollView>
+        </MaybeAnimatedScrollView>
       </MaybeAnimatedView>
     )
   }
@@ -218,5 +224,5 @@ const styles = StyleSheet.create({
 })
 
 const MaybeAnimatedView = maybeComponent(Animated.View)
-const MaybeScrollView = maybeComponent(ScrollView)
+const MaybeAnimatedScrollView = maybeComponent(Reanimated.ScrollView)
 const MaybeView = maybeComponent(View)

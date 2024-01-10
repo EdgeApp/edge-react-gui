@@ -164,6 +164,7 @@ exports[`TransactionDetailsScene should render 1`] = `
     </RNSVGSvgView>
   </BVLinearGradient>,
   <RCTScrollView
+    collapsable={false}
     contentContainerStyle={
       {
         "paddingBottom": 92,
@@ -172,16 +173,14 @@ exports[`TransactionDetailsScene should render 1`] = `
         "paddingTop": 64,
       }
     }
+    onScroll={[Function]}
+    scrollEventThrottle={0.0001}
     style={
-      [
-        {
-          "height": 1334,
-          "width": 750,
-        },
-        {
-          "padding": 11,
-        },
-      ]
+      {
+        "height": 1334,
+        "padding": 11,
+        "width": 750,
+      }
     }
   >
     <View>
@@ -1882,6 +1881,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
     </RNSVGSvgView>
   </BVLinearGradient>,
   <RCTScrollView
+    collapsable={false}
     contentContainerStyle={
       {
         "paddingBottom": 92,
@@ -1890,16 +1890,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         "paddingTop": 64,
       }
     }
+    onScroll={[Function]}
+    scrollEventThrottle={0.0001}
     style={
-      [
-        {
-          "height": 1334,
-          "width": 750,
-        },
-        {
-          "padding": 11,
-        },
-      ]
+      {
+        "height": 1334,
+        "padding": 11,
+        "width": 750,
+      }
     }
   >
     <View>
