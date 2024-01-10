@@ -65,7 +65,7 @@ export type SpaceStyle = Pick<
 
 export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
   const theme = useTheme()
-  const { around, horizontal, vertical, top, bottom, left, right, expand: fill = false, sideways = false } = props
+  const { around, horizontal, vertical, top, bottom, left, right, expand = false, sideways = false } = props
 
   const topFill = boolify(top, vertical, around)
   const bottomFill = boolify(bottom, vertical, around)
@@ -90,10 +90,10 @@ export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
   const horizontalAlignment = leftFill && rightFill ? 'center' : rightFill ? 'flex-start' : leftFill ? 'flex-end' : undefined
   const verticalAlignment = topFill && bottomFill ? 'center' : bottomFill ? 'flex-start' : topFill ? 'flex-end' : undefined
   const alignItems = sideways ? verticalAlignment : horizontalAlignment
-  const justifyContent = sideways ? horizontalAlignment ?? (fill ? 'space-between' : undefined) : verticalAlignment
+  const justifyContent = sideways ? horizontalAlignment ?? (expand ? 'space-between' : undefined) : verticalAlignment
 
   // Flex:
-  const flex = fill ? 1 : undefined
+  const flex = expand ? 1 : undefined
 
   const style: SpaceStyle = useMemo(
     () => ({
