@@ -54,6 +54,7 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
       exchangeRates.push({ currency_pair: `iso:USD_${walletIsoFiat}` })
     }
     for (const tokenId of wallet.enabledTokenIds) {
+      if (wallet.currencyConfig.allTokens[tokenId] == null) continue
       const { currencyCode: tokenCode } = wallet.currencyConfig.allTokens[tokenId]
       if (tokenCode !== currencyCode) {
         exchangeRates.push({ currency_pair: `${tokenCode}_${walletIsoFiat}` })
