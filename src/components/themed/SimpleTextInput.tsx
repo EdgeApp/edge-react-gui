@@ -14,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
+import { SpaceProps, useSpaceStyle } from '../../hooks/useSpaceStyle'
 import { styled, styledWithRef } from '../hoc/styled'
 import { AnimatedIconComponent, CloseIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
@@ -22,7 +23,7 @@ const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
 export type SimpleTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'done'
 
-export interface SimpleTextInputProps {
+export interface SimpleTextInputProps extends SpaceProps {
   // Contents:
   value: string
   placeholder?: string
@@ -99,7 +100,8 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
     inputAccessoryViewID,
     maxLength,
     secureTextEntry,
-    testID
+    testID,
+    ...spaceProps
   } = props
   const theme = useTheme()
   const themeRem = theme.rem(1)
@@ -176,7 +178,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
 
   return (
     <TouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
-      <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale}>
+      <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale} spaceProps={spaceProps}>
         <SideContainer size={leftIconSize}>{Icon == null ? null : <Icon color={iconColor} size={leftIconSize} />}</SideContainer>
 
         <InputField
@@ -223,7 +225,8 @@ const Container = styled(Animated.View)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
   scale: SharedValue<number>
-}>(theme => ({ disableAnimation, focusAnimation, scale }) => {
+  spaceProps: SpaceProps
+}>(theme => ({ disableAnimation, focusAnimation, scale, spaceProps }) => {
   const rem = theme.rem(1)
   const interpolateInputBackgroundColor = useAnimatedColorInterpolateFn(
     theme.textInputBackgroundColor,
@@ -235,8 +238,10 @@ const Container = styled(Animated.View)<{
     theme.textInputBorderColorFocused,
     theme.textInputBorderColorDisabled
   )
+  const spaceStyle = useSpaceStyle(spaceProps)
 
   return [
+    spaceStyle,
     {
       alignItems: 'center',
       borderWidth: theme.textInputBorderWidth,

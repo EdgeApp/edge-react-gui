@@ -170,8 +170,23 @@ exports[`WalletListModal should render with loading props 1`] = `
             "value": 1,
           }
         }
+        spaceProps={
+          {
+            "returnKeyType": "search",
+          }
+        }
         style={
           [
+            {
+              "alignItems": undefined,
+              "flex": undefined,
+              "flexDirection": "column",
+              "justifyContent": undefined,
+              "marginBottom": 0,
+              "marginLeft": 0,
+              "marginRight": 0,
+              "marginTop": 0,
+            },
             {
               "alignItems": "center",
               "borderRadius": 2247,
