@@ -389,63 +389,106 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             
           </Text>
         </View>
-        <TextInput
-          accessibilityState={
-            {
-              "disabled": false,
-            }
-          }
-          accessible={true}
-          autoCapitalize="words"
-          autoCorrect={false}
-          autoFocus={false}
-          disableAnimation={
-            {
-              "value": 0,
-            }
-          }
-          focusAnimation={
-            {
-              "value": 0,
-            }
-          }
-          onBlur={[Function]}
-          onChangeText={[Function]}
-          onFocus={[Function]}
-          onSubmitEditing={[Function]}
-          placeholder="Search Wallets"
-          placeholderTextColor={
-            {
-              "value": undefined,
-            }
-          }
-          scale={
-            {
-              "value": 1,
-            }
-          }
-          selectionColor="#FFFFFF"
+        <View
           style={
-            [
-              {
-                "color": "#1b2f3b",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
-                "margin": 0,
-                "paddingHorizontal": 11,
-                "paddingVertical": 0,
-              },
-              {
-                "color": undefined,
-                "fontSize": 22,
-              },
-            ]
+            {
+              "flex": 1,
+            }
           }
-          testID="undefined.textInput"
-          textAlignVertical="top"
-          value=""
-        />
+        >
+          <Text
+            disableAnimation={
+              {
+                "value": 0,
+              }
+            }
+            focusAnimation={
+              {
+                "value": 0,
+              }
+            }
+            scale={
+              {
+                "value": 1,
+              }
+            }
+            style={
+              [
+                {
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                  "margin": 0,
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 0,
+                  "position": "absolute",
+                  "top": 0,
+                },
+                {
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": undefined,
+                  "fontSize": 22,
+                },
+              ]
+            }
+          >
+            Search Wallets
+          </Text>
+          <TextInput
+            accessibilityState={
+              {
+                "disabled": false,
+              }
+            }
+            accessible={true}
+            autoCapitalize="words"
+            autoCorrect={false}
+            autoFocus={false}
+            disableAnimation={
+              {
+                "value": 0,
+              }
+            }
+            focusAnimation={
+              {
+                "value": 0,
+              }
+            }
+            onBlur={[Function]}
+            onChangeText={[Function]}
+            onFocus={[Function]}
+            onSubmitEditing={[Function]}
+            scale={
+              {
+                "value": 1,
+              }
+            }
+            selectionColor="#FFFFFF"
+            style={
+              [
+                {
+                  "color": "#1b2f3b",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "margin": 0,
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 0,
+                },
+                {
+                  "color": undefined,
+                  "fontSize": 22,
+                },
+              ]
+            }
+            testID="undefined.textInput"
+            textAlignVertical="top"
+            value=""
+          />
+        </View>
         <View
           accessibilityState={
             {

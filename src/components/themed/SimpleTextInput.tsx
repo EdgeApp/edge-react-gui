@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useMemo } from 'react'
-import { TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import { TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, {
   interpolate,
   interpolateColor,
@@ -169,47 +169,45 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   const interpolateIconColor = useAnimatedColorInterpolateFn(theme.textInputIconColor, theme.textInputIconColorFocused, theme.textInputIconColorDisabled)
   const iconColor = useDerivedValue(() => interpolateIconColor(focusAnimation, disableAnimation))
 
-  const interpolatePlaceholderTextColor = useAnimatedColorInterpolateFn(
-    theme.textInputPlaceholderColor,
-    theme.textInputPlaceholderColorFocused,
-    theme.textInputPlaceholderColorDisabled
-  )
-  const placeholderTextColor = useDerivedValue(() => interpolatePlaceholderTextColor(focusAnimation, disableAnimation))
-
   return (
     <TouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
       <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale} spaceProps={spaceProps}>
         <SideContainer size={leftIconSize}>{Icon == null ? null : <Icon color={iconColor} size={leftIconSize} />}</SideContainer>
 
-        <InputField
-          accessible
-          ref={inputRef}
-          keyboardType={props.keyboardType}
-          returnKeyType={props.returnKeyType}
-          accessibilityState={{ disabled }}
-          autoFocus={autoFocus}
-          disableAnimation={disableAnimation}
-          focusAnimation={focusAnimation}
-          placeholder={placeholder}
-          placeholderTextColor={placeholderTextColor}
-          selectionColor={theme.textInputTextColor}
-          testID={`${testID}.textInput`}
-          textAlignVertical="top"
-          scale={scale}
-          value={value}
-          // Callbacks:
-          onBlur={handleBlur}
-          onChangeText={onChangeText}
-          onFocus={handleFocus}
-          onSubmitEditing={handleSubmitEditing}
-          maxLength={maxLength}
-          // Other Props:
-          autoCapitalize={autoCapitalize}
-          autoCorrect={autoCorrect}
-          blurOnSubmit={blurOnSubmit}
-          inputAccessoryViewID={inputAccessoryViewID}
-          secureTextEntry={secureTextEntry}
-        />
+        <InnerContainer>
+          {placeholder == null ? null : (
+            <PlaceholderText disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale}>
+              {placeholder}
+            </PlaceholderText>
+          )}
+          <InputField
+            accessible
+            ref={inputRef}
+            keyboardType={props.keyboardType}
+            returnKeyType={props.returnKeyType}
+            accessibilityState={{ disabled }}
+            autoFocus={autoFocus}
+            disableAnimation={disableAnimation}
+            focusAnimation={focusAnimation}
+            selectionColor={theme.textInputTextColor}
+            testID={`${testID}.textInput`}
+            textAlignVertical="top"
+            scale={scale}
+            value={value}
+            // Callbacks:
+            onBlur={handleBlur}
+            onChangeText={onChangeText}
+            onFocus={handleFocus}
+            onSubmitEditing={handleSubmitEditing}
+            maxLength={maxLength}
+            // Other Props:
+            autoCapitalize={autoCapitalize}
+            autoCorrect={autoCorrect}
+            blurOnSubmit={blurOnSubmit}
+            inputAccessoryViewID={inputAccessoryViewID}
+            secureTextEntry={secureTextEntry}
+          />
+        </InnerContainer>
 
         <TouchableOpacity accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
           <SideContainer size={rightIconSize}>
@@ -269,6 +267,46 @@ const SideContainer = styled(Animated.View)<{ size: SharedValue<number> }>(theme
       width: size.value,
       opacity: size.value
     }))
+  ]
+})
+
+const InnerContainer = styled(View)({
+  flex: 1
+})
+
+const PlaceholderText = styled(Animated.Text)<{
+  disableAnimation: SharedValue<number>
+  focusAnimation: SharedValue<number>
+  scale: SharedValue<number>
+}>(theme => ({ disableAnimation, focusAnimation, scale }) => {
+  const rem = theme.rem(1)
+  const interpolatePlaceholderTextColor = useAnimatedColorInterpolateFn(
+    theme.textInputPlaceholderColor,
+    theme.textInputPlaceholderColorFocused,
+    theme.textInputPlaceholderColorDisabled
+  )
+
+  return [
+    {
+      position: 'absolute',
+      top: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: theme.rem(0.5),
+      paddingVertical: 0,
+      margin: 0
+    },
+    {
+      fontFamily: theme.fontFaceDefault,
+      fontSize: theme.rem(1),
+      includeFontPadding: false
+    },
+    useAnimatedStyle(() => {
+      return {
+        color: interpolatePlaceholderTextColor(focusAnimation, disableAnimation),
+        fontSize: scale.value * rem
+      }
+    })
   ]
 })
 
