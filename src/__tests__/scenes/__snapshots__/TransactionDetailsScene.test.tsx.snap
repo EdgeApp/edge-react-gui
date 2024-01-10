@@ -310,9 +310,14 @@ exports[`TransactionDetailsScene should render 1`] = `
             </View>
             <View
               style={
-                {
-                  "flexDirection": "column",
-                }
+                [
+                  {
+                    "flexDirection": "column",
+                  },
+                  {
+                    "marginRight": 34,
+                  },
+                ]
               }
             >
               <Text
@@ -359,14 +364,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                 timmy
               </Text>
             </View>
-            <View
-              style={
-                {
-                  "height": "100%",
-                  "width": 34,
-                }
-              }
-            />
             <View
               accessibilityState={
                 {
@@ -509,9 +506,14 @@ exports[`TransactionDetailsScene should render 1`] = `
             >
               <View
                 style={
-                  {
-                    "flexDirection": "column",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                    },
+                    {
+                      "flex": 1,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -597,9 +599,14 @@ exports[`TransactionDetailsScene should render 1`] = `
             >
               <View
                 style={
-                  {
-                    "flexDirection": "column",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                    },
+                    {
+                      "marginRight": 34,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -674,14 +681,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                   </Text>
                 </View>
               </View>
-              <View
-                style={
-                  {
-                    "height": "100%",
-                    "width": 34,
-                  }
-                }
-              />
               <View
                 accessibilityState={
                   {
@@ -782,9 +781,14 @@ exports[`TransactionDetailsScene should render 1`] = `
             >
               <View
                 style={
-                  {
-                    "flexDirection": "column",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                    },
+                    {
+                      "flex": 1,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -915,9 +919,14 @@ exports[`TransactionDetailsScene should render 1`] = `
             >
               <View
                 style={
-                  {
-                    "flexDirection": "column",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                    },
+                    {
+                      "marginRight": 34,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -1046,9 +1055,14 @@ exports[`TransactionDetailsScene should render 1`] = `
             >
               <View
                 style={
-                  {
-                    "flexDirection": "column",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                    },
+                    {
+                      "marginRight": 34,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -1099,14 +1113,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                   Income
                 </Text>
               </View>
-              <View
-                style={
-                  {
-                    "height": "100%",
-                    "width": 34,
-                  }
-                }
-              />
               <View
                 accessibilityState={
                   {
@@ -1207,9 +1213,14 @@ exports[`TransactionDetailsScene should render 1`] = `
             >
               <View
                 style={
-                  {
-                    "flexDirection": "column",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                    },
+                    {
+                      "marginRight": 34,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -1260,14 +1271,6 @@ exports[`TransactionDetailsScene should render 1`] = `
                   Tap to Add Note (Optional)
                 </Text>
               </View>
-              <View
-                style={
-                  {
-                    "height": "100%",
-                    "width": 34,
-                  }
-                }
-              />
               <View
                 accessibilityState={
                   {
@@ -1415,9 +1418,14 @@ exports[`TransactionDetailsScene should render 1`] = `
             >
               <View
                 style={
-                  {
-                    "flexDirection": "column",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                    },
+                    {
+                      "flex": 1,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -1503,9 +1511,14 @@ exports[`TransactionDetailsScene should render 1`] = `
             >
               <View
                 style={
-                  {
-                    "flexDirection": "column",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                    },
+                    {
+                      "marginRight": 34,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -2035,9 +2048,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             </View>
             <View
               style={
-                {
-                  "flexDirection": "column",
-                }
+                [
+                  {
+                    "flexDirection": "column",
+                  },
+                  {
+                    "marginRight": 34,
+                  },
+                ]
               }
             >
               <Text
@@ -2084,14 +2102,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 timmy
               </Text>
             </View>
-            <View
-              style={
-                {
-                  "height": "100%",
-                  "width": 34,
-                }
-              }
-            />
             <View
               accessibilityState={
                 {
@@ -2234,9 +2244,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             >
               <View
                 style={
-                  {
-                    "flexDirection": "column",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                    },
+                    {
+                      "flex": 1,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -2322,9 +2337,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             >
               <View
                 style={
-                  {
-                    "flexDirection": "column",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                    },
+                    {
+                      "marginRight": 34,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -2399,14 +2419,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   </Text>
                 </View>
               </View>
-              <View
-                style={
-                  {
-                    "height": "100%",
-                    "width": 34,
-                  }
-                }
-              />
               <View
                 accessibilityState={
                   {
@@ -2507,9 +2519,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             >
               <View
                 style={
-                  {
-                    "flexDirection": "column",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                    },
+                    {
+                      "flex": 1,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -2640,9 +2657,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             >
               <View
                 style={
-                  {
-                    "flexDirection": "column",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                    },
+                    {
+                      "marginRight": 34,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -2771,9 +2793,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             >
               <View
                 style={
-                  {
-                    "flexDirection": "column",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                    },
+                    {
+                      "marginRight": 34,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -2824,14 +2851,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   Expense
                 </Text>
               </View>
-              <View
-                style={
-                  {
-                    "height": "100%",
-                    "width": 34,
-                  }
-                }
-              />
               <View
                 accessibilityState={
                   {
@@ -2932,9 +2951,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             >
               <View
                 style={
-                  {
-                    "flexDirection": "column",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                    },
+                    {
+                      "marginRight": 34,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -2985,14 +3009,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   Tap to Add Note (Optional)
                 </Text>
               </View>
-              <View
-                style={
-                  {
-                    "height": "100%",
-                    "width": 34,
-                  }
-                }
-              />
               <View
                 accessibilityState={
                   {
@@ -3140,9 +3156,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             >
               <View
                 style={
-                  {
-                    "flexDirection": "column",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                    },
+                    {
+                      "flex": 1,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -3228,9 +3249,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             >
               <View
                 style={
-                  {
-                    "flexDirection": "column",
-                  }
+                  [
+                    {
+                      "flexDirection": "column",
+                    },
+                    {
+                      "marginRight": 34,
+                    },
+                  ]
                 }
               >
                 <Text
