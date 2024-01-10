@@ -13,7 +13,7 @@ interface Props {
 export function DotsBackground(props: Props): JSX.Element {
   const { accentColor } = props
   const theme = useTheme()
-  const { blurRadius, color, dotOpacity, dots } = theme.background
+  const { blurRadius, color, dotOpacity, dots } = theme.backgroundDots
 
   const accentDots: ThemeDot[] = []
   for (const dot of dots) {

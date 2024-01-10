@@ -126,7 +126,7 @@ export const testLight: Theme = {
   loadingIcon: palette.edgeBlue,
 
   // Background
-  background: {
+  backgroundDots: {
     blurRadius: scale(80),
     color: palette.lightestGray,
     dotOpacity: 0.3,

@@ -96,7 +96,7 @@ export interface Theme {
   loadingIcon: string
 
   // Background
-  background: {
+  backgroundDots: {
     blurRadius: number
     color: string // Never include an alpha here
     dotOpacity: number
