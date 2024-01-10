@@ -9,6 +9,7 @@ import { useSelector } from '../../types/reactRedux'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
+import { CardUi4 } from '../ui4/CardUi4'
 import { RowActionIcon, RowUi4 } from '../ui4/RowUi4'
 
 // TODO: Check contentPadding
@@ -43,11 +44,13 @@ export const CryptoFiatAmountTile = (props: Props) => {
   const absCryptoAmount = abs(nativeCryptoAmount)
 
   return (
-    <RowUi4 rightButtonType={type} title={title} onPress={onPress}>
-      <EdgeText>
-        {cryptoAmountText}
-        (<FiatText wallet={wallet} tokenId={tokenId} nativeCryptoAmount={absCryptoAmount} />)
-      </EdgeText>
-    </RowUi4>
+    <CardUi4>
+      <RowUi4 rightButtonType={type} title={title} onPress={onPress}>
+        <EdgeText>
+          {cryptoAmountText}
+          (<FiatText wallet={wallet} tokenId={tokenId} nativeCryptoAmount={absCryptoAmount} />)
+        </EdgeText>
+      </RowUi4>
+    </CardUi4>
   )
 }
