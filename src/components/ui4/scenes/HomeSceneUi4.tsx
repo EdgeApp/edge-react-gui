@@ -148,13 +148,11 @@ export const HomeSceneUi4 = (props: Props) => {
           {blogPosts == null || blogPosts.length === 0 ? null : (
             <>
               <SectionHeaderUi4 leftTitle={lstrings.title_learn} />
-              <View style={styles.carouselContainer}>
                 <CarouselUi4 height={theme.rem(13)} width={screenWidth}>
                   {blogPosts.map((blogPost, index) => (
                     <BlogCard blogPost={blogPost} key={`${JSON.stringify(blogPost.localeTitle)}-${index}`} />
                   ))}
                 </CarouselUi4>
-              </View>
             </>
           )}
           <SupportCardUi4 title={lstrings.title_support} body={lstrings.body_support} buttonText={lstrings.button_support} url={config.supportContactSite} />
@@ -180,9 +178,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'space-evenly',
     alignContent: 'center',
     alignItems: 'stretch'
-  },
-  carouselContainer: {
-    left: theme.rem(-TEMP_PADDING_REM) // Need to fudge this to cancel out the scene's padding
   },
 
   // We plan to remove dividers that extend all the way to the right in the
