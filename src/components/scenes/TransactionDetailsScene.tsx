@@ -13,6 +13,7 @@ import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useHistoricalRate } from '../../hooks/useHistoricalRate'
+import { useIconColor } from '../../hooks/useIconColor'
 import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
@@ -22,7 +23,7 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { matchJson } from '../../util/matchJson'
-import { convertNativeToExchange } from '../../util/utils'
+import { convertNativeToExchange, darkenHexColor } from '../../util/utils'
 import { getMemoTitle } from '../../util/validateMemos'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -37,6 +38,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { AdvancedDetailsCard } from '../ui4/AdvancedDetailsCard'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { CardUi4 } from '../ui4/CardUi4'
+import { AccentColors } from '../ui4/DotsBackground'
 import { RowUi4 } from '../ui4/RowUi4'
 import { SwapDetailsCard } from '../ui4/SwapDetailsCard'
 import { TxCryptoAmountRow } from '../ui4/TxCryptoAmountRow'
@@ -53,12 +55,14 @@ export interface TransactionDetailsParams {
 const TransactionDetailsComponent = (props: Props) => {
   const { navigation, route, wallet } = props
   const { edgeTransaction: transaction, walletId } = route.params
-  const { currencyCode, metadata, nativeAmount, date, txid } = transaction
+  const { currencyCode, metadata, nativeAmount, date, txid, tokenId } = transaction
   const { currencyInfo } = wallet
 
   const theme = useTheme()
   const account = useSelector(state => state.core.account)
   const styles = getStyles(theme)
+  const iconColor = useIconColor({ pluginId: currencyInfo.pluginId, tokenId })
+
   // Choose a default category based on metadata or the txAction
   const { direction, iconPluginId, mergedData, savedData } = getTxActionDisplayInfo(transaction, account, wallet)
 
@@ -294,8 +298,29 @@ const TransactionDetailsComponent = (props: Props) => {
 
   const categoriesText = formatCategory(splitCategory(localMetadata.category ?? undefined))
 
+  const accentColors: AccentColors = {
+    // Transparent fallback for while iconColor is loading
+    iconAccentColor: iconColor ?? '#00000000'
+  }
+
+  const backgroundColors = [...theme.assetBackgroundGradientColors]
+  if (iconColor != null) {
+    const scaledColor = darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+    backgroundColors[0] = scaledColor
+  }
+
   return (
-    <SceneWrapper hasNotifications hasTabs scroll padding={theme.rem(0.5)}>
+    <SceneWrapper
+      accentColors={accentColors}
+      hasNotifications
+      hasTabs
+      scroll
+      padding={theme.rem(0.5)}
+      backgroundGradientColors={backgroundColors}
+      backgroundGradientEnd={theme.assetBackgroundGradientEnd}
+      backgroundGradientStart={theme.assetBackgroundGradientStart}
+      overrideDots={theme.backgroundDots.assetOverrideDots}
+    >
       <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
         <CardUi4>
           <RowUi4
