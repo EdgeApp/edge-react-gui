@@ -33,18 +33,20 @@ export type SceneScrollHandler = (event: NativeSyntheticEvent<NativeScrollEvent>
 
 export const useSceneScrollHandler = (): SceneScrollHandler => {
   const sceneScrollContext = useSceneScrollContext()
+  const dragStartX = useSharedValue(0)
   const dragStartY = useSharedValue(0)
 
   const handler = useAnimatedScrollHandler({
     onScroll: (nativeEvent: NativeScrollEvent) => {
       'worklet'
       sceneScrollContext.scrollX.value = nativeEvent.contentOffset.y
-      sceneScrollContext.scrollXDelta.value = nativeEvent.contentOffset.y - dragStartY.value
+      sceneScrollContext.scrollXDelta.value = nativeEvent.contentOffset.x - dragStartX.value
       sceneScrollContext.scrollY.value = nativeEvent.contentOffset.y
       sceneScrollContext.scrollYDelta.value = nativeEvent.contentOffset.y - dragStartY.value
     },
     onBeginDrag: (nativeEvent: NativeScrollEvent) => {
       'worklet'
+      dragStartX.value = nativeEvent.contentOffset.x
       dragStartY.value = nativeEvent.contentOffset.y
 
       sceneScrollContext.scrollBeginEvent.value = nativeEvent
