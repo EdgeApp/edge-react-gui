@@ -196,9 +196,13 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
     })
   }
 
-  useAsyncEffect(async () => {
-    await dispatch(refreshAllFioAddresses())
-  }, [])
+  useAsyncEffect(
+    async () => {
+      await dispatch(refreshAllFioAddresses())
+    },
+    [],
+    'FioStakingChangeScene'
+  )
 
   React.useEffect(() => {
     if (currencyPlugin != null && currencyPlugin.otherMethods != null && currencyPlugin.otherMethods.getStakeEstReturn != null) {

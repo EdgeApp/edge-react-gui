@@ -237,12 +237,16 @@ export const AddressFormScene = React.memo((props: Props) => {
   }, [searchResults])
 
   // Initialize scene with any saved form data from disklet
-  useAsyncEffect(async () => {
-    const diskletFormData = await getDiskletFormData(disklet, ADDRESS_FORM_DISKLET_NAME, asHomeAddress)
-    if (diskletFormData != null && diskletFormData.country === countryCode) {
-      setFormData(diskletFormData)
-    }
-  }, [])
+  useAsyncEffect(
+    async () => {
+      const diskletFormData = await getDiskletFormData(disklet, ADDRESS_FORM_DISKLET_NAME, asHomeAddress)
+      if (diskletFormData != null && diskletFormData.country === countryCode) {
+        setFormData(diskletFormData)
+      }
+    },
+    [],
+    'AddressFormScene'
+  )
 
   const disableNextButton = (Object.keys(formData) as Array<keyof HomeAddress>).some(
     key =>

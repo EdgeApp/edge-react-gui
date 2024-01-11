@@ -144,25 +144,29 @@ export const FioCreateHandleScene = (props: Props) => {
   })
 
   // Create the new FIO wallet, default the handle to a cleaned version of the username
-  useAsyncEffect(async () => {
-    const domains = await fioPlugin.otherMethods.getDomains(freeRegRefCode)
-    if (domains.length === 1) {
-      if (!mounted.current) return
-      try {
-        setDomainStr(`${FIO_ADDRESS_DELIMITER}${asFreeFioDomain(domains[0]).domain}`)
-      } catch (e) {
-        setErrorText(lstrings.fio_register_handle_error)
-        return
+  useAsyncEffect(
+    async () => {
+      const domains = await fioPlugin.otherMethods.getDomains(freeRegRefCode)
+      if (domains.length === 1) {
+        if (!mounted.current) return
+        try {
+          setDomainStr(`${FIO_ADDRESS_DELIMITER}${asFreeFioDomain(domains[0]).domain}`)
+        } catch (e) {
+          setErrorText(lstrings.fio_register_handle_error)
+          return
+        }
       }
-    }
-    handleChangeFioHandle(account.username ?? '')
+      handleChangeFioHandle(account.username ?? '')
 
-    const wallet = await dispatch(createFioWallet())
+      const wallet = await dispatch(createFioWallet())
 
-    if (!mounted.current) return
-    setWallet(wallet)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+      if (!mounted.current) return
+      setWallet(wallet)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [],
+    'FioCreateHandleScene'
+  )
 
   React.useEffect(() => {
     // Clear error, if there was one

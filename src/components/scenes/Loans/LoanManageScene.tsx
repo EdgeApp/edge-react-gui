@@ -203,87 +203,95 @@ export const LoanManageSceneComponent = (props: Props) => {
   // -----------------------------------------------------------------------------
 
   // TODO: Full max button implementation and behavior
-  useAsyncEffect(async () => {
-    const currentLoanAssetNativeAmount =
-      manageActionData.actionSide === 'collaterals'
-        ? collaterals.find(collateral => collateral.tokenId === selectedAsset.tokenId)?.nativeAmount ?? '0'
-        : debts.find(debt => debt.tokenId === selectedAsset.tokenId)?.nativeAmount ?? '0'
+  useAsyncEffect(
+    async () => {
+      const currentLoanAssetNativeAmount =
+        manageActionData.actionSide === 'collaterals'
+          ? collaterals.find(collateral => collateral.tokenId === selectedAsset.tokenId)?.nativeAmount ?? '0'
+          : debts.find(debt => debt.tokenId === selectedAsset.tokenId)?.nativeAmount ?? '0'
 
-    setPendingDebtOrCollateral({
-      nativeAmount: max(add(currentLoanAssetNativeAmount, mul(actionAmountSign, actionNativeAmount)), '0'),
-      tokenId: selectedAsset.tokenId,
-      apr: 0
-    })
+      setPendingDebtOrCollateral({
+        nativeAmount: max(add(currentLoanAssetNativeAmount, mul(actionAmountSign, actionNativeAmount)), '0'),
+        tokenId: selectedAsset.tokenId,
+        apr: 0
+      })
 
-    return () => {}
-  }, [actionNativeAmount, selectedAsset.tokenId])
+      return () => {}
+    },
+    [actionNativeAmount, selectedAsset.tokenId],
+    'LoanManageSceneComponent:1'
+  )
 
   // Build Action Program
-  useAsyncEffect(async () => {
-    if (zeroString(actionNativeAmount) || isLtvExceeded) {
-      setActionProgram(undefined)
-    } else {
-      let actionOp: ActionOp
-      switch (loanManageType) {
-        case 'loan-manage-deposit':
-          actionOp = await makeAaveDepositAction({
-            borrowPluginId,
-            depositTokenId: hardAllowedCollateralAssets[0].tokenId,
-            nativeAmount: actionNativeAmount,
-            borrowEngineWallet: borrowEngineWallet,
-            srcTokenId: selectedAsset.tokenId,
-            srcWallet: selectedAsset.wallet ?? borrowEngineWallet
-          })
-          break
-        case 'loan-manage-borrow':
-          {
-            const destination: LoanAsset = {
-              wallet: borrowEngineWallet,
-              tokenId: selectedAsset.tokenId,
-              nativeAmount: actionNativeAmount,
-              ...(selectedAsset.paymentMethod != null ? { paymentMethodId: selectedAsset.paymentMethod.id } : {}),
-              ...(selectedAsset.tokenId != null ? { tokenId: selectedAsset.tokenId } : {})
-            }
-            actionOp = await makeAaveBorrowAction({
-              borrowEngineWallet,
+  useAsyncEffect(
+    async () => {
+      if (zeroString(actionNativeAmount) || isLtvExceeded) {
+        setActionProgram(undefined)
+      } else {
+        let actionOp: ActionOp
+        switch (loanManageType) {
+          case 'loan-manage-deposit':
+            actionOp = await makeAaveDepositAction({
               borrowPluginId,
-              destination
+              depositTokenId: hardAllowedCollateralAssets[0].tokenId,
+              nativeAmount: actionNativeAmount,
+              borrowEngineWallet: borrowEngineWallet,
+              srcTokenId: selectedAsset.tokenId,
+              srcWallet: selectedAsset.wallet ?? borrowEngineWallet
             })
-          }
-          break
-        case 'loan-manage-repay':
-          actionOp = {
-            type: 'seq',
-            actions: [
-              {
-                type: 'loan-repay',
-                borrowPluginId,
+            break
+          case 'loan-manage-borrow':
+            {
+              const destination: LoanAsset = {
+                wallet: borrowEngineWallet,
+                tokenId: selectedAsset.tokenId,
                 nativeAmount: actionNativeAmount,
-                walletId: borrowEngineWallet.id,
-                tokenId: hardAllowedDebtAssets[0].tokenId,
-                fromTokenId: selectedAsset.customAsset != null ? hardAllowedCollateralAssets[0].tokenId : null
+                ...(selectedAsset.paymentMethod != null ? { paymentMethodId: selectedAsset.paymentMethod.id } : {}),
+                ...(selectedAsset.tokenId != null ? { tokenId: selectedAsset.tokenId } : {})
               }
-            ]
-          }
-          break
-        case 'loan-manage-withdraw':
-          actionOp = {
-            type: 'seq',
-            actions: [
-              {
-                type: 'loan-withdraw',
+              actionOp = await makeAaveBorrowAction({
+                borrowEngineWallet,
                 borrowPluginId,
-                nativeAmount: actionNativeAmount,
-                walletId: borrowEngineWallet.id,
-                tokenId: selectedAsset.tokenId
-              }
-            ]
-          }
-          break
+                destination
+              })
+            }
+            break
+          case 'loan-manage-repay':
+            actionOp = {
+              type: 'seq',
+              actions: [
+                {
+                  type: 'loan-repay',
+                  borrowPluginId,
+                  nativeAmount: actionNativeAmount,
+                  walletId: borrowEngineWallet.id,
+                  tokenId: hardAllowedDebtAssets[0].tokenId,
+                  fromTokenId: selectedAsset.customAsset != null ? hardAllowedCollateralAssets[0].tokenId : null
+                }
+              ]
+            }
+            break
+          case 'loan-manage-withdraw':
+            actionOp = {
+              type: 'seq',
+              actions: [
+                {
+                  type: 'loan-withdraw',
+                  borrowPluginId,
+                  nativeAmount: actionNativeAmount,
+                  walletId: borrowEngineWallet.id,
+                  tokenId: selectedAsset.tokenId
+                }
+              ]
+            }
+            break
+        }
+        setActionProgram(await makeActionProgram(actionOp))
       }
-      setActionProgram(await makeActionProgram(actionOp))
-    }
-  }, [actionNativeAmount, loanManageType, borrowEngineWallet, borrowPluginId, isLtvExceeded, selectedAsset])
+    },
+    [actionNativeAmount, loanManageType, borrowEngineWallet, borrowPluginId, isLtvExceeded, selectedAsset],
+    'LoanManageSceneComponent:2'
+  )
 
   // Get Network Fees
   const [networkFeeMap = {}] = useAsyncValue(async () => {
@@ -296,13 +304,17 @@ export const LoanManageSceneComponent = (props: Props) => {
   }, [account, actionProgram, clientId])
 
   // APR
-  useAsyncEffect(async () => {
-    if (isShowAprChange) {
-      const apr = await borrowEngine.getAprQuote(selectedAsset.tokenId)
-      setNewApr(apr)
-    }
-    return () => {}
-  }, [borrowEngine, selectedAsset.tokenId, isShowAprChange])
+  useAsyncEffect(
+    async () => {
+      if (isShowAprChange) {
+        const apr = await borrowEngine.getAprQuote(selectedAsset.tokenId)
+        setNewApr(apr)
+      }
+      return () => {}
+    },
+    [borrowEngine, selectedAsset.tokenId, isShowAprChange],
+    'LoanManageSceneComponent:3'
+  )
 
   // #endregion Hooks
 

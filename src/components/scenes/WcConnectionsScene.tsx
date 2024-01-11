@@ -46,11 +46,15 @@ export const WcConnectionsScene = (props: Props) => {
     if (uri != null) onScanSuccess(uri).catch(err => showError(err))
   })
 
-  useAsyncEffect(async () => {
-    const connections = await walletConnect.getActiveSessions()
-    setConnections(connections)
-    // We want to trigger another lookup whenever the props change ie. navigating from the connect or disconnect scenes
-  }, [walletConnect, props])
+  useAsyncEffect(
+    async () => {
+      const connections = await walletConnect.getActiveSessions()
+      setConnections(connections)
+      // We want to trigger another lookup whenever the props change ie. navigating from the connect or disconnect scenes
+    },
+    [walletConnect, props],
+    'WcConnectionsScene'
+  )
 
   const onScanSuccess = async (qrResult: string) => {
     setConnecting(true)

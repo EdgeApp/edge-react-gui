@@ -79,7 +79,8 @@ export const HomeSceneUi4 = (props: Props) => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
+    'HomeSceneUi4'
   )
 
   return (

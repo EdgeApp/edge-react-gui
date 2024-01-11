@@ -48,14 +48,18 @@ export const SepaFormScene = React.memo((props: Props) => {
   })
 
   // Initialize scene with any saved forms from disklet
-  useAsyncEffect(async () => {
-    const diskletFormData: SepaInfo | undefined = await getDiskletFormData<SepaInfo>(disklet, SEPA_FORM_DISKLET_NAME, asSepaInfo)
-    if (diskletFormData != null) {
-      setName(diskletFormData.name)
-      setIban(diskletFormData.iban)
-      setSwift(diskletFormData.swift)
-    }
-  }, [])
+  useAsyncEffect(
+    async () => {
+      const diskletFormData: SepaInfo | undefined = await getDiskletFormData<SepaInfo>(disklet, SEPA_FORM_DISKLET_NAME, asSepaInfo)
+      if (diskletFormData != null) {
+        setName(diskletFormData.name)
+        setIban(diskletFormData.iban)
+        setSwift(diskletFormData.swift)
+      }
+    },
+    [],
+    'SepaFormScene'
+  )
 
   return (
     <SceneWrapper hasNotifications>

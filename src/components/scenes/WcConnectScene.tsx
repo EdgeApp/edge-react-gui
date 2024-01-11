@@ -61,10 +61,14 @@ export const WcConnectScene = (props: Props) => {
     return { subTitleText, bodyTitleText, dAppImage }
   }, [proposal])
 
-  useAsyncEffect(async () => {
-    const r = await wallet.getReceiveAddress({ tokenId: null })
-    setWalletAddress(r.publicAddress)
-  }, [wallet])
+  useAsyncEffect(
+    async () => {
+      const r = await wallet.getReceiveAddress({ tokenId: null })
+      setWalletAddress(r.publicAddress)
+    },
+    [wallet],
+    'WcConnectScene'
+  )
 
   const dispatch = useDispatch()
 

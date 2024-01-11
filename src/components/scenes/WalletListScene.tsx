@@ -63,7 +63,8 @@ export function WalletListScene(props: Props) {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
+    'WalletListScene'
   )
 
   // rendering -------------------------------------------------------------

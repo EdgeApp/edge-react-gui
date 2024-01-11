@@ -35,18 +35,22 @@ export const EdgeLoginScene = (props: Props) => {
       ? sprintf(lstrings.edge_description_warning, lobby?.loginRequest?.displayName)
       : sprintf(lstrings.access_wallet_description, config.appName)
 
-  useAsyncEffect(async () => {
-    try {
-      setLobby(await account.fetchLobby(lobbyId))
-    } catch (error: any) {
-      if (error.message.includes('Account does not')) {
-        await showOkModal(lstrings.edge_login_failed, lstrings.edge_login_fail_stale_qr)
-      } else {
-        showError(error)
+  useAsyncEffect(
+    async () => {
+      try {
+        setLobby(await account.fetchLobby(lobbyId))
+      } catch (error: any) {
+        if (error.message.includes('Account does not')) {
+          await showOkModal(lstrings.edge_login_failed, lstrings.edge_login_fail_stale_qr)
+        } else {
+          showError(error)
+        }
+        navigation.pop()
       }
-      navigation.pop()
-    }
-  }, [lobbyId])
+    },
+    [lobbyId],
+    'EdgeLoginScene'
+  )
 
   const handleAccept = useHandler(async () => {
     if (lobby?.loginRequest == null) return

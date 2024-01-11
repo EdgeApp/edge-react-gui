@@ -57,10 +57,14 @@ export const LoanCreateScene = (props: Props) => {
   const { currencyWallet: borrowEngineWallet } = borrowEngine
 
   // Force enable tokens required for loan
-  useAsyncEffect(async () => {
-    await enableToken('WBTC', borrowEngineWallet)
-    await enableToken('USDC', borrowEngineWallet)
-  }, [])
+  useAsyncEffect(
+    async () => {
+      await enableToken('WBTC', borrowEngineWallet)
+      await enableToken('USDC', borrowEngineWallet)
+    },
+    [],
+    'LoanCreateScene:1'
+  )
 
   // #endregion Initialization
 
@@ -139,10 +143,14 @@ export const LoanCreateScene = (props: Props) => {
 
   const [bankAccountsMap, setBankAccountsMap] = React.useState<{ [paymentMethodId: string]: PaymentMethod } | undefined>(undefined)
 
-  useAsyncEffect(async () => {
-    // TODO: Re-enable when new fiat ramp partner is avialable:
-    setBankAccountsMap(undefined)
-  }, [account])
+  useAsyncEffect(
+    async () => {
+      // TODO: Re-enable when new fiat ramp partner is avialable:
+      setBankAccountsMap(undefined)
+    },
+    [account],
+    'LoanCreateScene:2'
+  )
   const paymentMethod = destBankId == null || bankAccountsMap == null || Object.keys(bankAccountsMap).length === 0 ? undefined : bankAccountsMap[destBankId]
 
   // #endregion Destination Wallet/Bank Data
@@ -158,15 +166,19 @@ export const LoanCreateScene = (props: Props) => {
   const [isLoading, setIsLoading] = React.useState(false)
   const debts = useWatch(borrowEngine, 'debts')
   const [apr, setApr] = React.useState(0)
-  useAsyncEffect(async () => {
-    if (destTokenId != null) {
-      const destDebt = debts.find(debt => debt.tokenId === destTokenId)
-      if (destDebt != null) {
-        const apr = await borrowEngine.getAprQuote(destTokenId)
-        setApr(apr)
+  useAsyncEffect(
+    async () => {
+      if (destTokenId != null) {
+        const destDebt = debts.find(debt => debt.tokenId === destTokenId)
+        if (destDebt != null) {
+          const apr = await borrowEngine.getAprQuote(destTokenId)
+          setApr(apr)
+        }
       }
-    }
-  }, [debts, destTokenId])
+    },
+    [debts, destTokenId],
+    'LoanCreateScene:3'
+  )
   // #endregion APR
 
   // #region Required Collateral, LTV

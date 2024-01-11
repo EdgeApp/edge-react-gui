@@ -42,18 +42,22 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
     }
   }, [])
 
-  useAsyncEffect(async () => {
-    try {
-      const quotes = await fetchSwapQuotesPromise
-      if (mounted.current) onDone(quotes)
-    } catch (e: any) {
-      await onError(e)
-    }
+  useAsyncEffect(
+    async () => {
+      try {
+        const quotes = await fetchSwapQuotesPromise
+        if (mounted.current) onDone(quotes)
+      } catch (e: any) {
+        await onError(e)
+      }
 
-    return () => {
-      mounted.current = false
-    }
-  }, [onDone, onError])
+      return () => {
+        mounted.current = false
+      }
+    },
+    [onDone, onError],
+    'CryptoExchangeQuoteProcessingScene'
+  )
 
   return (
     <SceneWrapper hasTabs={false}>

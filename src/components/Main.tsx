@@ -256,10 +256,14 @@ export const Main = () => {
   })
 
   // Wait for the experiment config to initialize before rendering anything
-  useAsyncEffect(async () => {
-    if (isMaestro()) return
-    setLegacyLanding((await getExperimentConfigValue('legacyLanding')) === 'legacyLanding')
-  }, [])
+  useAsyncEffect(
+    async () => {
+      if (isMaestro()) return
+      setLegacyLanding((await getExperimentConfigValue('legacyLanding')) === 'legacyLanding')
+    },
+    [],
+    'setLegacyLanding'
+  )
 
   return legacyLanding == null ? (
     <LoadingSplashScreen />

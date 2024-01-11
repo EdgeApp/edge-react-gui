@@ -67,18 +67,22 @@ export function EdgeProviderComponent(props: Props): JSX.Element {
   }, [accountPlugins, accountReferral, pluginId])
 
   // Make sure we have the permissions the plugin requires:
-  useAsyncEffect(async () => {
-    for (const permission of permissions) {
-      const deniedPermission = await requestPermissionOnSettings(disklet, permission, displayName, mandatoryPermissions)
-      if (deniedPermission) {
-        navigation.goBack()
-        return
+  useAsyncEffect(
+    async () => {
+      for (const permission of permissions) {
+        const deniedPermission = await requestPermissionOnSettings(disklet, permission, displayName, mandatoryPermissions)
+        if (deniedPermission) {
+          navigation.goBack()
+          return
+        }
       }
-    }
 
-    // Now show the promo message, if we have one:
-    if (promoMessage != null) showToast(promoMessage)
-  }, [displayName, mandatoryPermissions, navigation, permissions, promoMessage, disklet])
+      // Now show the promo message, if we have one:
+      if (promoMessage != null) showToast(promoMessage)
+    },
+    [displayName, mandatoryPermissions, navigation, permissions, promoMessage, disklet],
+    'EdgeProviderComponent'
+  )
 
   // Sign up for back-button events:
   const webView = React.useRef<WebView>(null)

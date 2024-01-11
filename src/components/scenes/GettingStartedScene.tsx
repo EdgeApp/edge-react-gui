@@ -152,10 +152,14 @@ export const GettingStartedScene = (props: Props) => {
   )
 
   // Initialize variant config values
-  useAsyncEffect(async () => {
-    setIsFinalSwipeEnabled((await getExperimentConfigValue('swipeLastUsp')) === 'true')
-    setCreateAccountType(await getExperimentConfigValue('createAccountType'))
-  }, [])
+  useAsyncEffect(
+    async () => {
+      setIsFinalSwipeEnabled((await getExperimentConfigValue('swipeLastUsp')) === 'true')
+      setCreateAccountType(await getExperimentConfigValue('createAccountType'))
+    },
+    [],
+    'GettingStartedScene'
+  )
 
   // Redirect to login screen if device has memory of accounts
   // HACK: It's unknown how the localUsers dependency makes the routing work

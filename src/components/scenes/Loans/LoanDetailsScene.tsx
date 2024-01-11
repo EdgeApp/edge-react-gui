@@ -77,17 +77,21 @@ export const LoanDetailsSceneComponent = (props: Props) => {
   const [runningProgramMessage, setRunningProgramMessage] = React.useState<string | undefined>(undefined)
   const isActionProgramRunning = runningProgramMessage != null
 
-  useAsyncEffect(async () => {
-    if (runningActionQueueItem != null) {
-      const displayInfo: ActionDisplayInfo = await getActionProgramDisplayInfo(account, runningActionQueueItem.program, runningActionQueueItem.state)
-      const activeStep = displayInfo.steps.find(step => step.status === 'active')
-      setRunningProgramMessage(activeStep != null ? activeStep.title : undefined)
-    } else {
-      setRunningProgramMessage(undefined)
-    }
+  useAsyncEffect(
+    async () => {
+      if (runningActionQueueItem != null) {
+        const displayInfo: ActionDisplayInfo = await getActionProgramDisplayInfo(account, runningActionQueueItem.program, runningActionQueueItem.state)
+        const activeStep = displayInfo.steps.find(step => step.status === 'active')
+        setRunningProgramMessage(activeStep != null ? activeStep.title : undefined)
+      } else {
+        setRunningProgramMessage(undefined)
+      }
 
-    return () => {}
-  }, [account, runningActionQueueItem])
+      return () => {}
+    },
+    [account, runningActionQueueItem],
+    'LoanDetailsSceneComponent'
+  )
 
   const summaryDetails = [
     { label: lstrings.loan_collateral_value, value: displayFiatTotal(wallet, collateralTotal) },

@@ -66,9 +66,13 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
   const stakingStatus = useWatch(currencyWallet, 'stakingStatus')
   const currencyCode = getCurrencyCode(currencyWallet, tokenId)
 
-  useAsyncEffect(async () => {
-    await refreshAllFioAddresses()
-  }, [refreshAllFioAddresses])
+  useAsyncEffect(
+    async () => {
+      await refreshAllFioAddresses()
+    },
+    [refreshAllFioAddresses],
+    'FioStakingOverviewSceneComponent'
+  )
 
   React.useEffect(() => {
     setLocks(

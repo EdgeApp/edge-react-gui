@@ -895,85 +895,89 @@ const SendComponent = (props: Props) => {
   })
 
   // Calculate the transaction
-  useAsyncEffect(async () => {
-    try {
-      setProcessingAmountChanged(true)
-      if (spendInfo.spendTargets[0].publicAddress == null) {
-        setEdgeTransaction(null)
-        setSpendingLimitExceeded(false)
-        setMaxSpendSetter(-1)
-        setProcessingAmountChanged(false)
-        return
-      }
-      if (maxSpendSetter === 0) {
-        spendInfo.spendTargets[0].nativeAmount = '0' // Some currencies error without a nativeAmount
-        const maxSpendable = await coreWallet.getMaxSpendable(spendInfo)
-        spendInfo.spendTargets[0].nativeAmount = maxSpendable
-      }
-      if (spendInfo.spendTargets[0].nativeAmount == null) {
-        flipInputModalRef.current?.setFees({ feeNativeAmount: '', feeTokenId: null })
-      }
-      if (pinSpendingLimitsEnabled) {
-        const rate = exchangeRates[`${currencyCode}_${defaultIsoFiat}`] ?? INFINITY_STRING
-        const totalNativeAmount = spendInfo.spendTargets.reduce((prev, target) => add(target.nativeAmount ?? '0', prev), '0')
-        const totalExchangeAmount = div(totalNativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION)
-        const fiatAmount = mul(totalExchangeAmount, rate)
-        const exceeded = gte(fiatAmount, pinSpendingLimitsAmount.toFixed(DECIMAL_PRECISION))
-        setSpendingLimitExceeded(exceeded)
-      }
+  useAsyncEffect(
+    async () => {
+      try {
+        setProcessingAmountChanged(true)
+        if (spendInfo.spendTargets[0].publicAddress == null) {
+          setEdgeTransaction(null)
+          setSpendingLimitExceeded(false)
+          setMaxSpendSetter(-1)
+          setProcessingAmountChanged(false)
+          return
+        }
+        if (maxSpendSetter === 0) {
+          spendInfo.spendTargets[0].nativeAmount = '0' // Some currencies error without a nativeAmount
+          const maxSpendable = await coreWallet.getMaxSpendable(spendInfo)
+          spendInfo.spendTargets[0].nativeAmount = maxSpendable
+        }
+        if (spendInfo.spendTargets[0].nativeAmount == null) {
+          flipInputModalRef.current?.setFees({ feeNativeAmount: '', feeTokenId: null })
+        }
+        if (pinSpendingLimitsEnabled) {
+          const rate = exchangeRates[`${currencyCode}_${defaultIsoFiat}`] ?? INFINITY_STRING
+          const totalNativeAmount = spendInfo.spendTargets.reduce((prev, target) => add(target.nativeAmount ?? '0', prev), '0')
+          const totalExchangeAmount = div(totalNativeAmount, cryptoExchangeDenomination.multiplier, DECIMAL_PRECISION)
+          const fiatAmount = mul(totalExchangeAmount, rate)
+          const exceeded = gte(fiatAmount, pinSpendingLimitsAmount.toFixed(DECIMAL_PRECISION))
+          setSpendingLimitExceeded(exceeded)
+        }
 
-      if (minNativeAmount != null) {
-        for (const target of spendInfo.spendTargets) {
-          if (target.nativeAmount == null) continue
-          if (lt(target.nativeAmount, minNativeAmount)) {
-            const minDisplayAmount = div(minNativeAmount, cryptoDisplayDenomination.multiplier, DECIMAL_PRECISION)
-            const { name } = cryptoDisplayDenomination
+        if (minNativeAmount != null) {
+          for (const target of spendInfo.spendTargets) {
+            if (target.nativeAmount == null) continue
+            if (lt(target.nativeAmount, minNativeAmount)) {
+              const minDisplayAmount = div(minNativeAmount, cryptoDisplayDenomination.multiplier, DECIMAL_PRECISION)
+              const { name } = cryptoDisplayDenomination
 
-            setError(new Error(sprintf(lstrings.error_spend_amount_less_then_min_s, `${minDisplayAmount} ${name}`)))
-            setEdgeTransaction(null)
-            setFeeNativeAmount('')
-            setProcessingAmountChanged(false)
-            return
+              setError(new Error(sprintf(lstrings.error_spend_amount_less_then_min_s, `${minDisplayAmount} ${name}`)))
+              setEdgeTransaction(null)
+              setFeeNativeAmount('')
+              setProcessingAmountChanged(false)
+              return
+            }
           }
         }
-      }
 
-      makeSpendCounter.current++
-      const localMakeSpendCounter = makeSpendCounter.current
-      const edgeTx = await coreWallet.makeSpend(spendInfo)
-      if (localMakeSpendCounter < makeSpendCounter.current) {
-        // This makeSpend result is out of date. Throw it away since a newer one is in flight.
-        // This is not REALLY needed since useAsyncEffect seems to serialize calls into the effect
-        // function, but if this code ever gets refactored to not use useAsyncEffect, this
-        // check MUST remain
-        return
-      }
-      setEdgeTransaction(edgeTx)
-      const { parentNetworkFee, networkFee } = edgeTx
-      const feeNativeAmount = parentNetworkFee ?? networkFee
-      const feeTokenId = parentNetworkFee == null ? tokenId : null
-      setFeeNativeAmount(feeNativeAmount)
-      flipInputModalRef.current?.setFees({ feeTokenId, feeNativeAmount })
-      flipInputModalRef.current?.setError(null)
-      setError(undefined)
-    } catch (e: any) {
-      const insufficientFunds = asMaybeInsufficientFundsError(e)
-      if (insufficientFunds != null) {
-        if (insufficientFunds.tokenId != null) {
-          const errorCurrencyCode = getCurrencyCode(coreWallet, insufficientFunds.tokenId)
-          e.message = sprintf(lstrings.stake_error_insufficient_s, errorCurrencyCode)
-        } else {
-          e.message = lstrings.exchange_insufficient_funds_title
+        makeSpendCounter.current++
+        const localMakeSpendCounter = makeSpendCounter.current
+        const edgeTx = await coreWallet.makeSpend(spendInfo)
+        if (localMakeSpendCounter < makeSpendCounter.current) {
+          // This makeSpend result is out of date. Throw it away since a newer one is in flight.
+          // This is not REALLY needed since useAsyncEffect seems to serialize calls into the effect
+          // function, but if this code ever gets refactored to not use useAsyncEffect, this
+          // check MUST remain
+          return
         }
-      }
+        setEdgeTransaction(edgeTx)
+        const { parentNetworkFee, networkFee } = edgeTx
+        const feeNativeAmount = parentNetworkFee ?? networkFee
+        const feeTokenId = parentNetworkFee == null ? tokenId : null
+        setFeeNativeAmount(feeNativeAmount)
+        flipInputModalRef.current?.setFees({ feeTokenId, feeNativeAmount })
+        flipInputModalRef.current?.setError(null)
+        setError(undefined)
+      } catch (e: any) {
+        const insufficientFunds = asMaybeInsufficientFundsError(e)
+        if (insufficientFunds != null) {
+          if (insufficientFunds.tokenId != null) {
+            const errorCurrencyCode = getCurrencyCode(coreWallet, insufficientFunds.tokenId)
+            e.message = sprintf(lstrings.stake_error_insufficient_s, errorCurrencyCode)
+          } else {
+            e.message = lstrings.exchange_insufficient_funds_title
+          }
+        }
 
-      setError(e)
-      setEdgeTransaction(null)
-      flipInputModalRef.current?.setError(e.message)
-      flipInputModalRef.current?.setFees({ feeNativeAmount: '', feeTokenId: null })
-    }
-    setProcessingAmountChanged(false)
-  }, [spendInfo, maxSpendSetter, walletId, pinSpendingLimitsEnabled, pinValue])
+        setError(e)
+        setEdgeTransaction(null)
+        flipInputModalRef.current?.setError(e.message)
+        flipInputModalRef.current?.setFees({ feeNativeAmount: '', feeTokenId: null })
+      }
+      setProcessingAmountChanged(false)
+    },
+    [spendInfo, maxSpendSetter, walletId, pinSpendingLimitsEnabled, pinValue],
+    'SendComponent'
+  )
 
   const showSlider = spendInfo.spendTargets[0].publicAddress != null
   let disableSlider = false

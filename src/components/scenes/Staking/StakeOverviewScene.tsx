@@ -69,23 +69,27 @@ const StakeOverviewSceneComponent = (props: Props) => {
     return () => clearInterval(interval)
   }, [])
 
-  useAsyncEffect(async () => {
-    let sp: StakePosition
-    try {
-      if (stakePosition == null) {
-        sp = await stakePlugin.fetchStakePosition({ stakePolicyId, wallet, account })
-        setStakePosition(sp)
-      } else {
-        const guiAllocations = getPositionAllocations(stakePosition)
-        setStakeAllocations(guiAllocations.staked)
-        setRewardAllocations(guiAllocations.earned)
-        setStakePosition(stakePosition)
+  useAsyncEffect(
+    async () => {
+      let sp: StakePosition
+      try {
+        if (stakePosition == null) {
+          sp = await stakePlugin.fetchStakePosition({ stakePolicyId, wallet, account })
+          setStakePosition(sp)
+        } else {
+          const guiAllocations = getPositionAllocations(stakePosition)
+          setStakeAllocations(guiAllocations.staked)
+          setRewardAllocations(guiAllocations.earned)
+          setStakePosition(stakePosition)
+        }
+      } catch (err) {
+        showError(err)
+        console.error(err)
       }
-    } catch (err) {
-      showError(err)
-      console.error(err)
-    }
-  }, [account, stakePlugin, stakePolicyId, stakePosition, updateCounter, wallet])
+    },
+    [account, stakePlugin, stakePolicyId, stakePosition, updateCounter, wallet],
+    'StakeOverviewSceneComponent'
+  )
 
   // Handlers
   const handleModifyPress = (modification: ChangeQuoteRequest['action'] | 'unstakeAndClaim') => () => {

@@ -85,31 +85,35 @@ const CreateWalletCompletionComponent = (props: Props) => {
   const flatListRef = React.useRef<FlashList<WalletCreateItem>>(null)
 
   // Create the wallets and enable the tokens
-  useAsyncEffect(async () => {
-    const promises: Array<(() => Promise<EdgeCurrencyWallet>) | (() => Promise<void>)> = [...walletPromises]
-    if (tokenKey != null) promises.push(tokenPromise)
+  useAsyncEffect(
+    async () => {
+      const promises: Array<(() => Promise<EdgeCurrencyWallet>) | (() => Promise<void>)> = [...walletPromises]
+      if (tokenKey != null) promises.push(tokenPromise)
 
-    for (const [i, promise] of promises.entries()) {
-      try {
-        const wallet = await promise()
-        // We created a wallet so let's Update relevant pending tokens with the new walletId
-        if (wallet != null) {
-          newTokenItems
-            .filter(item => item.pluginId === wallet.currencyInfo.pluginId && item.createWalletIds[0] === PLACEHOLDER_WALLET_ID)
-            .forEach(item => (item.createWalletIds = [wallet.id]))
+      for (const [i, promise] of promises.entries()) {
+        try {
+          const wallet = await promise()
+          // We created a wallet so let's Update relevant pending tokens with the new walletId
+          if (wallet != null) {
+            newTokenItems
+              .filter(item => item.pluginId === wallet.currencyInfo.pluginId && item.createWalletIds[0] === PLACEHOLDER_WALLET_ID)
+              .forEach(item => (item.createWalletIds = [wallet.id]))
+          }
+          setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'complete' }))
+        } catch (e) {
+          showError(e)
+          setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'error' }))
         }
-        setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'complete' }))
-      } catch (e) {
-        showError(e)
-        setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'error' }))
+
+        flatListRef.current?.scrollToIndex({ animated: true, index: i, viewPosition: 0.5 })
       }
+      setDone(true)
 
-      flatListRef.current?.scrollToIndex({ animated: true, index: i, viewPosition: 0.5 })
-    }
-    setDone(true)
-
-    return () => {}
-  }, [])
+      return () => {}
+    },
+    [],
+    'CreateWalletCompletionComponent'
+  )
 
   const renderStatus = useHandler((item: WalletCreateItem) => {
     let icon = <ActivityIndicator style={{ paddingRight: theme.rem(0.3125) }} color={theme.iconTappable} />
