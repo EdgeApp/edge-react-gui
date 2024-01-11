@@ -92,6 +92,7 @@ export interface GuiFiatType {
   value: string
 }
 
+// @deprecated use ListRenderItemInfo from FlashList or FlatList components
 export interface FlatListItem<T> {
   index: number
   item: T

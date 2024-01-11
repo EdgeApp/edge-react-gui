@@ -59,7 +59,7 @@ interface SceneWrapperProps {
   padding?: number
 
   // Render function to render component for the tab drawer
-  renderDrawer?: () => React.ReactNode
+  renderDrawer?: (info: SceneWrapperInfo) => React.ReactNode
 
   // True to make the scene scrolling (if avoidKeyboard is false):
   scroll?: boolean
@@ -162,7 +162,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
           <MaybeView when={!scroll && !hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles]}>
             {isFuncChildren ? children(info) : children}
             {hasNotifications ? <NotificationView navigation={navigation} /> : null}
-            <SceneDrawer isKeyboardOpen={isKeyboardOpen}>{renderDrawer == null ? null : renderDrawer()}</SceneDrawer>
+            {renderDrawer == null ? null : <SceneDrawer info={info}>{renderDrawer}</SceneDrawer>}
           </MaybeView>
         </MaybeScrollView>
       </MaybeAnimatedView>

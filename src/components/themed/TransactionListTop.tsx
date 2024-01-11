@@ -27,7 +27,6 @@ import { triggerHaptic } from '../../util/haptic'
 import { getFioStakingBalances, getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
 import { convertNativeToDenomination, datelog } from '../../util/utils'
 import { VisaCardCard } from '../cards/VisaCardCard'
-import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupForTransferModal'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
@@ -36,7 +35,6 @@ import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeConte
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 import { SceneHeader } from './SceneHeader'
-import { SimpleTextInput, SimpleTextInputRef } from './SimpleTextInput'
 
 interface OwnProps {
   navigation: NavigationProp<'transactionList'>
@@ -81,8 +79,6 @@ interface State {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 export class TransactionListTopComponent extends React.PureComponent<Props, State> {
-  textInput = React.createRef<SimpleTextInputRef>()
-
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -95,10 +91,6 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (!prevProps.searching && this.props.searching && this.textInput.current) {
-      this.textInput.current.focus()
-    }
-
     // Update staking policies if the wallet changes
     if (prevProps.wallet !== this.props.wallet) {
       this.updatePluginsAndPolicies().catch(err => showError(err))
@@ -339,14 +331,6 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     navigation.push('send2', { walletId: wallet.id, tokenId, hiddenFeaturesMap: { scamWarning: false } })
   }
 
-  handleSearchDone = () => {
-    triggerHaptic('impactLight')
-    this.props.onSearchingChange(false)
-    if (this.textInput.current) {
-      this.textInput.current.clear()
-    }
-  }
-
   handleStakePress = () => {
     triggerHaptic('impactLight')
     const { currencyCode, wallet, navigation, tokenId } = this.props
@@ -381,15 +365,6 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     }
   }
 
-  clearText = () => {
-    triggerHaptic('impactLight')
-    this.setState({ input: '' })
-    this.props.onSearchTextChange('')
-    if (this.textInput.current) {
-      this.textInput.current.blur()
-    }
-  }
-
   render() {
     const { wallet, isEmpty, searching, theme, tokenId } = this.props
     const { stakePolicies } = this.state
@@ -401,28 +376,6 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     return (
       <>
         <View style={styles.container}>
-          {!searching && isEmpty ? null : (
-            <View style={styles.searchContainer}>
-              <View style={{ flex: 1, flexDirection: 'column' }}>
-                <SimpleTextInput
-                  returnKeyType="search"
-                  placeholder={lstrings.transaction_list_search}
-                  onChangeText={this.handleOnChangeText}
-                  value={this.state.input}
-                  onFocus={this.handleTextFieldFocus}
-                  onBlur={this.handleTextFieldBlur}
-                  ref={this.textInput}
-                  iconComponent={SearchIconAnimated}
-                />
-              </View>
-              {!searching ? null : (
-                <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
-                  <EdgeText style={{ color: theme.textLink }}>{lstrings.string_done_cap}</EdgeText>
-                </TouchableOpacity>
-              )}
-            </View>
-          )}
-
           {searching ? null : (
             <>
               {this.renderBalanceBox()}
@@ -536,15 +489,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // Transactions Divider
   transactionsDividerText: {
     fontFamily: theme.fontFaceMedium
-  },
-
-  searchContainer: {
-    flexDirection: 'row',
-    marginTop: theme.rem(0.5)
-  },
-  searchDoneButton: {
-    justifyContent: 'center',
-    paddingLeft: theme.rem(0.75)
   },
 
   // Staking Box
