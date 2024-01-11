@@ -143,6 +143,7 @@ const SendComponent = (props: Props) => {
     doCheckAndShowGetCryptoModal = true
   } = route.params
 
+  const openCameraRef = React.useRef<boolean>(openCamera)
   const initExpireDate = isoExpireDate != null ? new Date(isoExpireDate) : undefined
   const [processingAmountChanged, setProcessingAmountChanged] = React.useState<boolean>(false)
   const [walletId, setWalletId] = useState<string>(initWalletId)
@@ -262,6 +263,9 @@ const SendComponent = (props: Props) => {
       const { publicAddress = '', otherParams = {} } = spendTarget
       const { fioAddress } = otherParams
       const title = lstrings.send_scene_send_to_address + (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
+      const doOpenCamera = openCameraRef.current
+      if (openCameraRef.current) openCameraRef.current = false
+
       return (
         <AddressTile2
           title={title}
@@ -271,7 +275,7 @@ const SendComponent = (props: Props) => {
           onChangeAddress={handleChangeAddress(spendTarget)}
           resetSendTransaction={handleResetSendTransaction(spendTarget)}
           lockInputs={lockTilesMap.address}
-          isCameraOpen={openCamera}
+          isCameraOpen={doOpenCamera}
           fioToAddress={fioAddress}
           navigation={navigation}
         />
