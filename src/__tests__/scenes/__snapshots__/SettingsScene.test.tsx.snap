@@ -3412,32 +3412,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           </View>
         </View>
       </View>
-      <View
-        drawerOpenRatio={
-          {
-            "value": 1,
-          }
-        }
-        isKeyboardOpen={true}
-        onLayout={[Function]}
-        style={
-          [
-            {
-              "alignItems": "stretch",
-              "bottom": 0,
-              "flexDirection": "column",
-              "justifyContent": "flex-start",
-              "left": 0,
-              "overflow": "hidden",
-              "position": "absolute",
-              "right": 0,
-            },
-            {
-              "bottom": 0,
-            },
-          ]
-        }
-      />
     </View>
   </RCTScrollView>,
 ]
@@ -6855,32 +6829,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           </View>
         </View>
       </View>
-      <View
-        drawerOpenRatio={
-          {
-            "value": 1,
-          }
-        }
-        isKeyboardOpen={true}
-        onLayout={[Function]}
-        style={
-          [
-            {
-              "alignItems": "stretch",
-              "bottom": 0,
-              "flexDirection": "column",
-              "justifyContent": "flex-start",
-              "left": 0,
-              "overflow": "hidden",
-              "position": "absolute",
-              "right": 0,
-            },
-            {
-              "bottom": 0,
-            },
-          ]
-        }
-      />
     </View>
   </RCTScrollView>,
 ]

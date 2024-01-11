@@ -9,7 +9,7 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { CrossFade } from '../common/CrossFade'
-import { SceneWrapper } from '../common/SceneWrapper'
+import { SceneWrapper, SceneWrapperInfo } from '../common/SceneWrapper'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -88,17 +88,21 @@ export function WalletListScene(props: Props) {
 
   const handlePressDone = useHandler(() => setSorting(false))
 
-  const renderDrawer = () => {
-    return (
-      <WalletListSearch
-        isSearching={isSearching}
-        searchText={searchText}
-        onStartSearching={handleStartSearching}
-        onDoneSearching={handleDoneSearching}
-        onChangeText={handleChangeText}
-      />
-    )
-  }
+  const renderDrawer = React.useCallback(
+    (info: SceneWrapperInfo) => {
+      return (
+        <WalletListSearch
+          isSearching={isSearching}
+          searchText={searchText}
+          sceneWrapperInfo={info}
+          onStartSearching={handleStartSearching}
+          onDoneSearching={handleDoneSearching}
+          onChangeText={handleChangeText}
+        />
+      )
+    },
+    [handleChangeText, handleDoneSearching, handleStartSearching, isSearching, searchText]
+  )
 
   return (
     <SceneWrapper avoidKeyboard hasTabs hasHeader hasNotifications padding={theme.rem(0.5)} renderDrawer={renderDrawer}>

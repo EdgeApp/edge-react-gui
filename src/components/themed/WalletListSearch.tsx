@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import { LayoutChangeEvent, StyleSheet } from 'react-native'
-import Animated, { SharedValue, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
-import { BlurView } from 'rn-id-blurview'
+import React, { useEffect } from 'react'
+import { useDerivedValue } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDrawerOpenRatio } from '../../state/SceneDrawerState'
-import { styled } from '../hoc/styled'
+import { SceneWrapperInfo } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { Space } from '../layout/Space'
-import { useTheme } from '../services/ThemeContext'
+import { SceneDrawerWrapper } from './SceneDrawerWrapper'
 import { SimpleTextInput, SimpleTextInputRef } from './SimpleTextInput'
 
 interface WalletListSearchProps {
   isSearching: boolean
   searchText: string
+  sceneWrapperInfo: SceneWrapperInfo
 
   onChangeText: (value: string) => void
   onDoneSearching: () => void
@@ -22,20 +21,13 @@ interface WalletListSearchProps {
 }
 
 export const WalletListSearch = (props: WalletListSearchProps) => {
-  const { isSearching, searchText, onChangeText, onDoneSearching, onStartSearching } = props
-  const theme = useTheme()
+  const { isSearching, searchText, sceneWrapperInfo, onChangeText, onDoneSearching, onStartSearching } = props
 
   const textInputRef = React.useRef<SimpleTextInputRef>(null)
 
   const { drawerOpenRatio, setKeepOpen } = useDrawerOpenRatio()
-  const [containerHeight, setContainerHeight] = useState<number | undefined>(undefined)
 
   const inputScale = useDerivedValue(() => drawerOpenRatio.value)
-
-  const handleLayout = useHandler((event: LayoutChangeEvent) => {
-    if (containerHeight != null) return
-    setContainerHeight(event.nativeEvent.layout.height)
-  })
 
   const handleSearchChangeText = useHandler((text: string) => {
     onChangeText(text)
@@ -68,39 +60,21 @@ export const WalletListSearch = (props: WalletListSearchProps) => {
   }, [isSearching, setKeepOpen])
 
   return (
-    <>
-      <BlurView blurType={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} overlayColor="#00000000" />
-      <ContainerAnimatedView containerHeight={containerHeight} drawerOpenRatio={drawerOpenRatio} onLayout={handleLayout}>
-        <Space expand horizontal={1} vertical={0.5}>
-          <SimpleTextInput
-            returnKeyType="search"
-            placeholder={lstrings.wallet_list_wallet_search}
-            onChangeText={handleSearchChangeText}
-            value={searchText}
-            onBlur={handleSearchBlur}
-            onClear={handleSearchClear}
-            onFocus={handleSearchFocus}
-            ref={textInputRef}
-            iconComponent={SearchIconAnimated}
-            scale={inputScale}
-          />
-        </Space>
-      </ContainerAnimatedView>
-    </>
+    <SceneDrawerWrapper info={sceneWrapperInfo}>
+      <Space expand horizontal={1} vertical={0.5}>
+        <SimpleTextInput
+          returnKeyType="search"
+          placeholder={lstrings.wallet_list_wallet_search}
+          onChangeText={handleSearchChangeText}
+          value={searchText}
+          onBlur={handleSearchBlur}
+          onClear={handleSearchClear}
+          onFocus={handleSearchFocus}
+          ref={textInputRef}
+          iconComponent={SearchIconAnimated}
+          scale={inputScale}
+        />
+      </Space>
+    </SceneDrawerWrapper>
   )
 }
-
-const ContainerAnimatedView = styled(Animated.View)<{
-  containerHeight?: number
-  drawerOpenRatio: SharedValue<number>
-}>(() => ({ containerHeight, drawerOpenRatio }) => [
-  {
-    overflow: 'hidden'
-  },
-  useAnimatedStyle(() => {
-    if (containerHeight == null) return {}
-    return {
-      height: containerHeight * drawerOpenRatio.value
-    }
-  })
-])
