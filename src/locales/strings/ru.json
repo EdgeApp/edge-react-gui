@@ -551,6 +551,8 @@
   "title_add_token": "Добавить токен",
   "title_password_recovery": "Восстановление пароля",
   "title_plugin_buy": "Покупка криптовалюты",
+  "title_select_region": "Select Region",
+  "title_select_payment_method": "Select Payment Method",
   "title_plugin_sell": "Продать криптовалюту",
   "title_otp": "2-факторная безопасность",
   "title_register_fio_address": "Регистрация адреса FIO",
