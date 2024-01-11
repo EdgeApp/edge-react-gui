@@ -222,6 +222,16 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
     }),
     metadata
   }
+
+  // RBF transactions aren't supported so it needs to be disabled
+  if (selectedWallet.currencyInfo.canReplaceByFee) {
+    Object.assign(spendInfo, {
+      otherParams: {
+        enableRbf: false
+      }
+    })
+  }
+
   if (requiredFeeRate != null) {
     spendInfo.networkFeeOption = 'custom'
     spendInfo.customNetworkFee = { satPerByte: Math.ceil(requiredFeeRate) }

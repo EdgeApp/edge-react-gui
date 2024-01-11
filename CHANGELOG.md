@@ -16,6 +16,7 @@
 - changed: Use new EdgeTxAction data for Thorchain and Tron stake plugins
 - changed: Make useAsyncEffect tags required
 - changed: Rettry failed WalletConnect initializations
+- changed: Disable RBF for payment protocol transactions
 - fixed: USP vs legacy landing experiment distribution
 - fixed: Paybis sell from Tron USDT
 - fixed: Remove `minWidth` style from stake option card
