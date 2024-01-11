@@ -36,32 +36,35 @@ export const useSceneScrollHandler = (): SceneScrollHandler => {
   const dragStartX = useSharedValue(0)
   const dragStartY = useSharedValue(0)
 
-  const handler = useAnimatedScrollHandler({
-    onScroll: (nativeEvent: NativeScrollEvent) => {
-      'worklet'
-      sceneScrollContext.scrollX.value = nativeEvent.contentOffset.y
-      sceneScrollContext.scrollXDelta.value = nativeEvent.contentOffset.x - dragStartX.value
-      sceneScrollContext.scrollY.value = nativeEvent.contentOffset.y
-      sceneScrollContext.scrollYDelta.value = nativeEvent.contentOffset.y - dragStartY.value
-    },
-    onBeginDrag: (nativeEvent: NativeScrollEvent) => {
-      'worklet'
-      dragStartX.value = nativeEvent.contentOffset.x
-      dragStartY.value = nativeEvent.contentOffset.y
+  const handler = useAnimatedScrollHandler(
+    {
+      onScroll: (nativeEvent: NativeScrollEvent) => {
+        'worklet'
+        sceneScrollContext.scrollX.value = nativeEvent.contentOffset.y
+        sceneScrollContext.scrollXDelta.value = nativeEvent.contentOffset.x - dragStartX.value
+        sceneScrollContext.scrollY.value = nativeEvent.contentOffset.y
+        sceneScrollContext.scrollYDelta.value = nativeEvent.contentOffset.y - dragStartY.value
+      },
+      onBeginDrag: (nativeEvent: NativeScrollEvent) => {
+        'worklet'
+        dragStartX.value = nativeEvent.contentOffset.x
+        dragStartY.value = nativeEvent.contentOffset.y
 
-      sceneScrollContext.scrollBeginEvent.value = nativeEvent
+        sceneScrollContext.scrollBeginEvent.value = nativeEvent
+      },
+      onEndDrag: nativeEvent => {
+        'worklet'
+        sceneScrollContext.scrollEndEvent.value = nativeEvent
+      },
+      onMomentumBegin: nativeEvent => {
+        sceneScrollContext.scrollMomentumBeginEvent.value = nativeEvent
+      },
+      onMomentumEnd: nativeEvent => {
+        sceneScrollContext.scrollMomentumEndEvent.value = nativeEvent
+      }
     },
-    onEndDrag: nativeEvent => {
-      'worklet'
-      sceneScrollContext.scrollEndEvent.value = nativeEvent
-    },
-    onMomentumBegin: nativeEvent => {
-      sceneScrollContext.scrollMomentumBeginEvent.value = nativeEvent
-    },
-    onMomentumEnd: nativeEvent => {
-      sceneScrollContext.scrollMomentumEndEvent.value = nativeEvent
-    }
-  })
+    []
+  )
 
   return handler
 }
