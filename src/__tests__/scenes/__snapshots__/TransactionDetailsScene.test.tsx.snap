@@ -1672,13 +1672,15 @@ exports[`TransactionDetailsScene should render 1`] = `
                     {
                       "alignItems": "center",
                       "flexDirection": "row",
-                      "height": 67,
                       "justifyContent": "center",
-                      "paddingHorizontal": 45,
                     },
                     {
                       "alignSelf": "auto",
                       "opacity": 1,
+                    },
+                    {
+                      "height": 67,
+                      "paddingHorizontal": 45,
                     },
                     {
                       "alignItems": "center",
@@ -1693,12 +1695,12 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "borderRadius": 34,
                         "justifyContent": "center",
                       },
-                      {},
-                      {},
                       {
                         "alignSelf": "center",
                       },
                     ],
+                    undefined,
+                    undefined,
                   ]
                 }
               >
@@ -3419,13 +3421,15 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     {
                       "alignItems": "center",
                       "flexDirection": "row",
-                      "height": 67,
                       "justifyContent": "center",
-                      "paddingHorizontal": 45,
                     },
                     {
                       "alignSelf": "auto",
                       "opacity": 1,
+                    },
+                    {
+                      "height": 67,
+                      "paddingHorizontal": 45,
                     },
                     {
                       "alignItems": "center",
@@ -3440,12 +3444,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "borderRadius": 34,
                         "justifyContent": "center",
                       },
-                      {},
-                      {},
                       {
                         "alignSelf": "center",
                       },
                     ],
+                    undefined,
+                    undefined,
                   ]
                 }
               >
