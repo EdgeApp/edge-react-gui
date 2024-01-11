@@ -28,8 +28,9 @@ export const PromoCardsUi4 = (props: Props) => {
   // Check for PromoCard2 from info server:
   React.useEffect(() => {
     const osType = Platform.OS.toLowerCase()
-    const osVersion = DeviceInfo.getSystemVersion()
+    const osVersionRaw = DeviceInfo.getSystemVersion()
     const version = getVersion()
+    const osVersion = Array.from({ length: 3 }, (_, i) => osVersionRaw.split('.')[i] || '0').join('.')
 
     fetchInfo(`v1/inforollup/${config.appId ?? 'edge'}?os=${osType}&osVersion=${osVersion}&appVersion=${version}`)
       .then(async res => {
