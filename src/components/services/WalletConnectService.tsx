@@ -10,8 +10,11 @@ import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { getAccounts, getClient, getWalletIdFromSessionNamespace, waitingClients, walletConnectClient } from '../../hooks/useWalletConnect'
 import { asLegacyTokenId } from '../../types/types'
+import { snooze } from '../../util/utils'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal'
 import { Airship, showError } from '../services/AirshipInstance'
+
+const TWO_SECONDS = 2000
 
 interface Props {
   account: EdgeAccount
@@ -69,19 +72,28 @@ export const WalletConnectService = (props: Props) => {
           projectId = ENV.WALLET_CONNECT_INIT.projectId
         }
 
-        walletConnectClient.client = await Web3Wallet.init({
-          core: new Core({
-            projectId
-          }),
-          metadata: {
-            name: 'Edge Wallet',
-            description: 'Edge Wallet',
-            url: 'https://www.edge.app',
-            icons: ['https://content.edge.app/Edge_logo_Icon.png']
+        // If init fails, retry every 2 seconds
+        let retrySeconds = 0
+        while (walletConnectClient.client == null) {
+          try {
+            await snooze(retrySeconds)
+            walletConnectClient.client = await Web3Wallet.init({
+              core: new Core({
+                projectId
+              }),
+              metadata: {
+                name: 'Edge Wallet',
+                description: 'Edge Wallet',
+                url: 'https://www.edge.app',
+                icons: ['https://content.edge.app/Edge_logo_Icon.png']
+              }
+            })
+          } catch (e) {
+            console.error('WalletConnectService init error', e)
+            if (retrySeconds < TWO_SECONDS) retrySeconds = TWO_SECONDS
           }
-        })
+        }
       }
-
       const handleSessionRequestSync = (event: Web3WalletTypes.SessionRequest) => {
         handleSessionRequest(event).catch(err => showError(err))
       }
