@@ -44,6 +44,11 @@ interface SceneWrapperProps {
   // True if this scene should shrink to avoid the keyboard:
   avoidKeyboard?: boolean
 
+  // Optional backgroundGradient overrides
+  backgroundGradientColors?: string[]
+  backgroundGradientStart?: { x: number; y: number }
+  backgroundGradientEnd?: { x: number; y: number }
+
   // True if this scene has a header (with back button & such):
   hasHeader?: boolean
 
@@ -87,6 +92,9 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     overrideDots,
     accentColors,
     avoidKeyboard = false,
+    backgroundGradientColors,
+    backgroundGradientStart,
+    backgroundGradientEnd,
     children,
     renderDrawer,
     hasHeader = true,
@@ -157,7 +165,13 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
 
     return (
       <MaybeAnimatedView when={hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles, { maxHeight: keyboardAnimation, padding }]}>
-        <DotsBackground overrideDots={overrideDots} accentColors={accentColors} />
+        <DotsBackground
+          accentColors={accentColors}
+          overrideDots={overrideDots}
+          backgroundGradientColors={backgroundGradientColors}
+          backgroundGradientStart={backgroundGradientStart}
+          backgroundGradientEnd={backgroundGradientEnd}
+        />
         <MaybeScrollView
           when={scroll && !hasKeyboardAnimation}
           style={[layoutStyles, { padding }]}

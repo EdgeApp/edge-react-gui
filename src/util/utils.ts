@@ -595,3 +595,40 @@ export const base58ToUuid = (base58String: string): string => {
   const uuid = v4({ random: bytes })
   return uuid
 }
+
+/**
+ * Darken a color by a scale factor.
+ * @param hexColor of format '#1f1f1f1f'
+ * @param scaleFactor 0-1 with 0 being black, 1 is unchanged
+ * @returns darkened hex color string
+ */
+export const darkenHexColor = (hexColor: string, scaleFactor: number): string => {
+  if (scaleFactor < 0 || scaleFactor > 1) throw new Error('scaleFactor must be between 0-1')
+  hexColor = hexColor.replace('#', '')
+
+  // Check for short and long hexadecimal color codes
+  if (hexColor.length === 3) {
+    // Expand short color code (e.g., #abc to #aabbcc)
+    hexColor = hexColor
+      .split('')
+      .map(char => char + char)
+      .join('')
+  } else if (hexColor.length !== 6) {
+    throw new Error('Invalid hexadecimal color code')
+  }
+
+  // Parse the hexadecimal values
+  const r = parseInt(hexColor.slice(0, 2), 16)
+  const g = parseInt(hexColor.slice(2, 4), 16)
+  const b = parseInt(hexColor.slice(4, 6), 16)
+
+  // Multiply each color component by the scale factor
+  const scaledR = Math.round(r * scaleFactor)
+  const scaledG = Math.round(g * scaleFactor)
+  const scaledB = Math.round(b * scaleFactor)
+
+  // Convert the scaled values back to hexadecimal
+  const scaledHexColor = `#${scaledR.toString(16).padStart(2, '0')}${scaledG.toString(16).padStart(2, '0')}${scaledB.toString(16).padStart(2, '0')}`
+
+  return scaledHexColor
+}

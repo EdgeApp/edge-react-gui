@@ -163,6 +163,10 @@ export const edgeDark: Theme = {
     ],
     assetOverrideDots: [undefined, { accentColor: 'iconAccentColor' }, null]
   },
+  assetBackgroundGradientColors: [palette.darkAqua, palette.backgroundBlack],
+  assetBackgroundGradientStart: { x: 0, y: 0 },
+  assetBackgroundGradientEnd: { x: 0, y: 1 },
+  assetBackgroundColorScale: 0.1,
 
   // Camera Overlay
   cameraOverlayColor: palette.black,

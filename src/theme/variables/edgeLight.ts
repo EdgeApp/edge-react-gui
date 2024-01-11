@@ -138,6 +138,10 @@ export const edgeLight: Theme = {
     ],
     assetOverrideDots: [undefined, { accentColor: 'iconAccentColor' }, null]
   },
+  assetBackgroundGradientColors: [palette.lightestGray, palette.lightestGray],
+  assetBackgroundGradientStart: { x: 0, y: 0 },
+  assetBackgroundGradientEnd: { x: 0, y: 1 },
+  assetBackgroundColorScale: 0.3,
 
   // Camera Overlay
   cameraOverlayColor: palette.gray,

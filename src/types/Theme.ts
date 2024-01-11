@@ -107,6 +107,10 @@ export interface Theme {
     dots: ThemeDot[]
     assetOverrideDots: UpdateDots
   }
+  assetBackgroundGradientColors: string[]
+  assetBackgroundGradientStart: { x: number; y: number }
+  assetBackgroundGradientEnd: { x: number; y: number }
+  assetBackgroundColorScale: number
 
   // Camera Overlay
   cameraOverlayColor: string

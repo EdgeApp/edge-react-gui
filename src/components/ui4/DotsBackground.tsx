@@ -11,12 +11,16 @@ export interface AccentColors {
   iconAccentColor?: string
 }
 interface Props {
+  // Optional backgroundGradient overrides
+  backgroundGradientColors?: string[]
+  backgroundGradientStart?: { x: number; y: number }
+  backgroundGradientEnd?: { x: number; y: number }
   overrideDots?: UpdateDots
   accentColors?: AccentColors
 }
 
 export function DotsBackground(props: Props): JSX.Element {
-  const { accentColors, overrideDots } = props
+  const { accentColors, backgroundGradientColors, backgroundGradientStart, backgroundGradientEnd, overrideDots } = props
   const theme = useTheme()
   const { blurRadius, dotOpacity, dots } = theme.backgroundDots
 
@@ -100,9 +104,9 @@ export function DotsBackground(props: Props): JSX.Element {
   return (
     <LinearGradient
       style={StyleSheet.absoluteFill}
-      colors={theme.backgroundGradientColors}
-      end={theme.backgroundGradientEnd}
-      start={theme.backgroundGradientStart}
+      colors={backgroundGradientColors ?? theme.backgroundGradientColors}
+      end={backgroundGradientEnd ?? theme.backgroundGradientEnd}
+      start={backgroundGradientStart ?? theme.backgroundGradientStart}
       onLayout={handleLayout}
     >
       <Svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
