@@ -551,6 +551,8 @@
   "title_add_token": "トークンを追加",
   "title_password_recovery": "パスワード復元",
   "title_plugin_buy": "暗号資産を買う",
+  "title_select_region": "Select Region",
+  "title_select_payment_method": "Select Payment Method",
   "title_plugin_sell": "暗号資産を売却",
   "title_otp": "二段階認証",
   "title_register_fio_address": "FIOアドレスを登録",
