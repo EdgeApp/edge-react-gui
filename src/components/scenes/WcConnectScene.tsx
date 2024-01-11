@@ -28,7 +28,6 @@ import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
-import { CardUi4 } from '../ui4/CardUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface Props extends EdgeSceneProps<'wcConnect'> {}
@@ -104,14 +103,14 @@ export const WcConnectScene = (props: Props) => {
 
   const renderWalletSelect = () => {
     if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
-      return <SelectableRow arrowTappable title={lstrings.wc_confirm_select_wallet} onPress={handleWalletListModal} />
+      return <SelectableRow title={lstrings.wc_confirm_select_wallet} onPress={handleWalletListModal} />
     } else {
       const walletNameStr = truncateString(walletName || '', MAX_ADDRESS_CHARACTERS)
       const walletImage = (
         <CryptoIconUi4 pluginId={wallet.currencyInfo.pluginId} tokenId={getTokenIdForced(account, wallet.currencyInfo.pluginId, selectedWallet.currencyCode)} />
       )
       const walletAddressStr = truncateString(walletAddress, MAX_ADDRESS_CHARACTERS, true)
-      return <SelectableRow arrowTappable icon={walletImage} subTitle={walletAddressStr} title={walletNameStr} onPress={handleWalletListModal} />
+      return <SelectableRow icon={walletImage} subTitle={walletAddressStr} title={walletNameStr} onPress={handleWalletListModal} />
     }
   }
 
@@ -128,9 +127,7 @@ export const WcConnectScene = (props: Props) => {
 
         <EdgeText style={styles.bodyTitle}>{bodyTitleText}</EdgeText>
         <EdgeText style={styles.body}>{lstrings.wc_confirm_body}</EdgeText>
-        <CardUi4 paddingRem={0} marginRem={[2.5, 0.5, 2]}>
-          {renderWalletSelect()}
-        </CardUi4>
+        {renderWalletSelect()}
         {subTitleText === '' ? null : <ButtonsViewUi4 sceneMargin primary={{ label: lstrings.wc_confirm_connect_button, onPress: handleConnect }} />}
       </ScrollView>
     </SceneWrapper>
@@ -166,7 +163,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   body: {
     color: theme.secondaryText,
-    marginLeft: theme.rem(0.5)
+    marginLeft: theme.rem(0.5),
+    marginBottom: theme.rem(1)
   },
   icon: {
     alignSelf: 'center',

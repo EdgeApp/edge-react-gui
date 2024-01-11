@@ -80,7 +80,7 @@ export const RowUi4 = (props: Props) => {
   const content = (
     <>
       {icon == null ? null : icon}
-      <View style={styles.content}>
+      <View style={[styles.content, rightButtonVisible ? styles.tappableIconMargin : styles.fullWidth]}>
         {title == null ? null : (
           <EdgeText disableFontScaling ellipsizeMode="tail" style={error ? styles.textHeaderError : styles.textHeader}>
             {title}
@@ -99,16 +99,13 @@ export const RowUi4 = (props: Props) => {
       {
         // If right action icon button is visible, only the icon dims on row tap
         isTappable && rightButtonVisible ? (
-          <>
-            <View style={styles.tappableIconMargin} />
-            <TouchableOpacity style={styles.tappableIconContainer} accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={loading}>
-              {rightButtonType === 'touchable' ? <FontAwesome5 name="chevron-right" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
-              {rightButtonType === 'editable' ? <FontAwesomeIcon name="edit" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
-              {rightButtonType === 'copy' ? <FontAwesomeIcon name="copy" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
-              {rightButtonType === 'delete' ? <FontAwesomeIcon name="times" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
-              {rightButtonType === 'questionable' ? <SimpleLineIcons name="question" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
-            </TouchableOpacity>
-          </>
+          <TouchableOpacity style={styles.tappableIconContainer} accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={loading}>
+            {rightButtonType === 'touchable' ? <FontAwesome5 name="chevron-right" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
+            {rightButtonType === 'editable' ? <FontAwesomeIcon name="edit" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
+            {rightButtonType === 'copy' ? <FontAwesomeIcon name="copy" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
+            {rightButtonType === 'delete' ? <FontAwesomeIcon name="times" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
+            {rightButtonType === 'questionable' ? <SimpleLineIcons name="question" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
+          </TouchableOpacity>
         ) : null
       }
     </>
@@ -134,7 +131,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignSelf: 'stretch'
   },
   content: {
-    flexDirection: 'column'
+    flexDirection: 'column',
+    flexShrink: 1
+  },
+  fullWidth: {
+    flexGrow: 1
   },
   tappableIcon: {
     color: theme.iconTappable,
@@ -142,7 +143,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'center'
   },
   tappableIconContainer: {
-    // Positioned absolutely with constant width to increase tappable area
+    // Positioned absolutely with full width to increase tappable area
     // overlapping the content, improving ease of tappability.
     position: 'absolute',
     right: 0,
@@ -155,11 +156,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     // Extra invisible space to align the content when the right tappable icon
     // is visible, since the right tappable icon + TouchableOpaicty is
     // positioned absolutely.
-    // Using this instead of negative margins on tappableIconContainer to make
-    // it more clear what the spacing is without taking into account the
-    // children styling of tappableIconContainer.
-    width: theme.rem(1.5),
-    height: '100%'
+    marginRight: theme.rem(1.5)
   },
   textHeader: {
     color: theme.secondaryText,

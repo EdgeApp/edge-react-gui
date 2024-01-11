@@ -39,6 +39,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { CardUi4 } from '../ui4/CardUi4'
 import { RowUi4 } from '../ui4/RowUi4'
+import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
 import { SectionView } from '../ui4/SectionView'
 
 const buyRaw = buyPluginJsonOverrideRaw.length > 0 ? buyPluginJsonOverrideRaw : buyPluginJsonRaw
@@ -380,9 +381,12 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     return (
       <View style={[styles.sceneContainer, { paddingTop: insetStyles.paddingTop }]}>
         <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline />
+
+        <SectionHeaderUi4 leftTitle={lstrings.title_select_region} />
         <CardUi4>
           <RowUi4
             onPress={this._handleCountryPress}
+            rightButtonType="none"
             icon={
               countryData == null ? undefined : (
                 <FastImage
@@ -391,10 +395,10 @@ class GuiPluginList extends React.PureComponent<Props, State> {
                 />
               )
             }
-          >
-            <EdgeText style={styles.selectedCountryText}>{countryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}</EdgeText>
-          </RowUi4>
+            body={countryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}
+          />
         </CardUi4>
+        <SectionHeaderUi4 leftTitle={lstrings.title_select_payment_method} />
         {plugins.length === 0 ? (
           <View style={styles.emptyPluginContainer}>
             <EdgeText style={styles.emptyPluginText} numberOfLines={2}>
@@ -432,10 +436,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: theme.rem(0.25),
     marginRight: theme.rem(1)
   },
-  selectedCountryText: {
-    fontFamily: theme.fontFaceMedium,
-    alignItems: 'center'
-  },
   emptyPluginContainer: {
     flex: 1,
     padding: theme.rem(2),
@@ -447,7 +447,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   pluginRowPoweredByRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     alignItems: 'center'
   },
   logo: {

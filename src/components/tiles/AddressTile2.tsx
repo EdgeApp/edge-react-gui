@@ -261,57 +261,60 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   const tileType = !!recipientAddress && !lockInputs ? 'delete' : 'none'
 
   return (
-    <View>
-      <RowUi4 rightButtonType={tileType} loading={loading} title={title} onPress={handleTilePress}>
-        {!recipientAddress && (
-          <View style={styles.buttonsContainer}>
-            <TouchableOpacity style={styles.buttonContainer} onPress={handleChangeAddress}>
-              <FontAwesome name="edit" size={theme.rem(2)} color={theme.iconTappable} />
-              <EdgeText style={styles.buttonText}>{lstrings.enter_as_in_enter_address_with_keyboard}</EdgeText>
+    <RowUi4 rightButtonType={tileType} loading={loading} title={title} onPress={handleTilePress}>
+      {!recipientAddress && (
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity style={styles.buttonContainer} onPress={handleChangeAddress}>
+            <FontAwesome name="edit" size={theme.rem(2)} color={theme.iconTappable} />
+            <EdgeText style={styles.buttonText}>{lstrings.enter_as_in_enter_address_with_keyboard}</EdgeText>
+          </TouchableOpacity>
+          {canSelfTransfer ? (
+            <TouchableOpacity style={styles.buttonContainer} onPress={handleSelfTransfer}>
+              <AntDesign name="wallet" size={theme.rem(2)} color={theme.iconTappable} />
+              <EdgeText style={styles.buttonText}>{lstrings.fragment_send_myself}</EdgeText>
             </TouchableOpacity>
-            {canSelfTransfer ? (
-              <TouchableOpacity style={styles.buttonContainer} onPress={handleSelfTransfer}>
-                <AntDesign name="wallet" size={theme.rem(2)} color={theme.iconTappable} />
-                <EdgeText style={styles.buttonText}>{lstrings.fragment_send_myself}</EdgeText>
-              </TouchableOpacity>
-            ) : null}
-            <TouchableOpacity style={styles.buttonContainer} onPress={handleScan}>
-              <FontAwesome5 name="expand" size={theme.rem(2)} color={theme.iconTappable} />
-              <EdgeText style={styles.buttonText}>{lstrings.scan_as_in_scan_barcode}</EdgeText>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonContainer} onPress={handlePasteFromClipboard}>
-              <FontAwesome5 name="clipboard" size={theme.rem(2)} color={theme.iconTappable} />
-              <EdgeText style={styles.buttonText}>{lstrings.string_paste}</EdgeText>
-            </TouchableOpacity>
-          </View>
-        )}
-        {recipientAddress == null || recipientAddress === '' ? null : (
-          <>
-            {fioToAddress == null ? null : <EdgeText>{fioToAddress + '\n'}</EdgeText>}
-            <EdgeText numberOfLines={3} disableFontScaling>
-              {recipientAddress}
-            </EdgeText>
-          </>
-        )}
-      </RowUi4>
-    </View>
+          ) : null}
+          <TouchableOpacity style={styles.buttonContainer} onPress={handleScan}>
+            <FontAwesome5 name="expand" size={theme.rem(2)} color={theme.iconTappable} />
+            <EdgeText style={styles.buttonText}>{lstrings.scan_as_in_scan_barcode}</EdgeText>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonContainer} onPress={handlePasteFromClipboard}>
+            <FontAwesome5 name="clipboard" size={theme.rem(2)} color={theme.iconTappable} />
+            <EdgeText style={styles.buttonText}>{lstrings.string_paste}</EdgeText>
+          </TouchableOpacity>
+        </View>
+      )}
+      {recipientAddress == null || recipientAddress === '' ? null : (
+        <>
+          {fioToAddress == null ? null : <EdgeText>{fioToAddress + '\n'}</EdgeText>}
+          <EdgeText numberOfLines={3} disableFontScaling>
+            {recipientAddress}
+          </EdgeText>
+        </>
+      )}
+    </RowUi4>
   )
 })
 
 const getStyles = cacheStyles((theme: Theme) => ({
   buttonsContainer: {
-    paddingTop: theme.rem(1),
+    paddingTop: theme.rem(0.75),
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: 'space-between',
+    alignItems: 'flex-start', // Align items to the top
+    alignSelf: 'stretch'
   },
   buttonContainer: {
-    flex: 1,
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    height: theme.rem(3), // Unify height of all buttons regardless of icon dimensions
+    flex: 1
   },
   buttonText: {
+    alignSelf: 'center',
     fontSize: theme.rem(0.75),
+    marginTop: theme.rem(0.25),
     color: theme.textLink
   }
 }))

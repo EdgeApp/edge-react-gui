@@ -71,9 +71,15 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
     >
       <View
         style={
-          {
-            "flexDirection": "column",
-          }
+          [
+            {
+              "flexDirection": "column",
+              "flexShrink": 1,
+            },
+            {
+              "flexGrow": 1,
+            },
+          ]
         }
       >
         <Text

@@ -1,9 +1,8 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { ClickableRow } from './ClickableRow'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { CardUi4 } from '../ui4/CardUi4'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -12,35 +11,39 @@ interface Props {
 
   subTitle?: string
   icon?: React.ReactNode
-  autoHeight?: boolean
-  arrowTappable?: boolean
-  underline?: boolean
 
+  /** @deprecated Only to be used during the UI4 transition */
   marginRem?: number[] | number
 }
 
-export class SelectableRowComponent extends React.PureComponent<Props & ThemeProps> {
-  render() {
-    const { icon, title, subTitle, arrowTappable, underline, autoHeight, marginRem, onPress, theme } = this.props
-    const styles = getStyles(theme)
+/**
+ * Modified from UI3.
+ * Similar to a CardUi4/RowUi4 combination, but emphasizes the first row instead
+ * of the second row with primary colors.
+ */
+export const SelectableRow = (props: Props) => {
+  const { icon, title, subTitle, marginRem, onPress } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
-    return (
-      <ClickableRow autoHeight={autoHeight} marginRem={marginRem} paddingRem={[0, 0.5]} underline={underline} onPress={onPress}>
-        <View style={styles.rowContainer}>
-          <View style={styles.iconContainer}>{icon}</View>
-          <View style={styles.textContainer}>
-            <EdgeText>{title}</EdgeText>
-            {subTitle ? (
-              <EdgeText style={styles.subTitle} numberOfLines={2}>
-                {subTitle}
-              </EdgeText>
-            ) : null}
-          </View>
-          <IonIcon size={theme.rem(1.5)} color={arrowTappable ? theme.iconTappable : theme.icon} name="chevron-forward-outline" style={styles.chevron} />
+  return (
+    <CardUi4 onPress={onPress} marginRem={marginRem}>
+      <View style={styles.rowContainer}>
+        {/* HACK: Keeping the iconContainer instead of CardUi4's built-in icon prop because the prop's behavior is inconsistent in legacy use cases */}
+        <View style={styles.iconContainer}>{icon}</View>
+        <View style={styles.textContainer}>
+          <EdgeText numberOfLines={1} disableFontScaling>
+            {title}
+          </EdgeText>
+          {subTitle ? (
+            <EdgeText style={styles.subTitle} numberOfLines={2}>
+              {subTitle}
+            </EdgeText>
+          ) : null}
         </View>
-      </ClickableRow>
-    )
-  }
+      </View>
+    </CardUi4>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -63,10 +66,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.secondaryText,
     fontSize: theme.rem(0.75),
     marginTop: theme.rem(0.25)
-  },
-  chevron: {
-    marginHorizontal: theme.rem(0)
   }
 }))
-
-export const SelectableRow = withTheme(SelectableRowComponent)

@@ -70,42 +70,33 @@ export const HelpModal = (props: Props) => {
       </View>
 
       <SelectableRow
-        arrowTappable
         icon={<Fontello name="help_idea" color={theme.iconTappable} size={theme.rem(1.5)} />}
         subTitle={lstrings.help_knowledge_base_text}
         title={lstrings.help_knowledge_base}
-        underline
         onPress={() => handleSitePress(lstrings.help_knowledge_base, config.knowledgeBase)}
       />
 
       <SelectableRow
-        arrowTappable
         icon={<Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />}
         subTitle={lstrings.help_support_text}
         title={lstrings.help_support}
-        underline
         onPress={() => handleSitePress(lstrings.help_support, config.supportSite)}
       />
 
       <SelectableRow
-        arrowTappable
         icon={<Fontello name="help_call" color={theme.iconTappable} size={theme.rem(1.5)} />}
         subTitle={lstrings.help_call_text}
         title={lstrings.help_call}
-        underline
         onPress={async () => await Linking.openURL(`tel:${config.phoneNumber}`)}
       />
 
       <SelectableRow
-        arrowTappable
         icon={<Fontello name="globe" color={theme.iconTappable} size={theme.rem(1.5)} />}
         subTitle={helpSiteMoreInfoText}
         title={sprintf(lstrings.help_visit_site, config.appName)}
-        underline
         onPress={() => handleSitePress(helpSiteMoreInfoText, config.website)}
       />
       <SelectableRow
-        arrowTappable
         icon={<Fontello name="doc-text" color={theme.iconTappable} size={theme.rem(1.5)} />}
         subTitle={lstrings.help_terms_of_service_text}
         title={lstrings.title_terms_of_service}
