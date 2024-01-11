@@ -10,6 +10,7 @@ import thunk from 'redux-thunk'
 import { loadDeviceReferral } from '../../actions/DeviceReferralActions'
 import { ENV } from '../../env'
 import { rootReducer } from '../../reducers/RootReducer'
+import { renderStateProviders } from '../../state/renderStateProviders'
 import { Dispatch, RootState, Store } from '../../types/reduxTypes'
 import { loginStatusChecker } from '../../util/middleware/loginStatusChecker'
 import { perfLogger } from '../../util/middleware/perfLogger'
@@ -66,11 +67,13 @@ export function Providers(props: Props) {
         // @ts-expect-error
         themeOverride={theme}
       >
-        <MenuProvider>
-          <Airship>
-            <Main />
-          </Airship>
-        </MenuProvider>
+        {renderStateProviders(
+          <MenuProvider>
+            <Airship>
+              <Main />
+            </Airship>
+          </MenuProvider>
+        )}
       </LoginUiProvider>
     </Provider>
   )

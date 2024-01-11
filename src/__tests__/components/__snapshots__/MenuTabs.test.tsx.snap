@@ -2,7 +2,6 @@
 
 exports[`MenuTabs should render with loading props 1`] = `
 <BVLinearGradient
-  bottom={0}
   colors={
     [
       0,
