@@ -680,62 +680,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
     <View
       style={
         {
-          "flexDirection": "row",
-          "justifyContent": "space-between",
-          "marginBottom": 22,
-          "paddingHorizontal": 11,
-        }
-      }
-    >
-      <Text
-        adjustsFontSizeToFit={true}
-        danger={false}
-        minimumFontScale={0.65}
-        numberOfLines={1}
-        style={
-          [
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "includeFontPadding": false,
-            },
-            [
-              {
-                "color": "#3dd9f4",
-                "fontSize": 18,
-              },
-            ],
-            null,
-          ]
-        }
-      />
-      <Text
-        adjustsFontSizeToFit={true}
-        minimumFontScale={0.65}
-        numberOfLines={1}
-        style={
-          [
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "includeFontPadding": false,
-            },
-            [
-              {
-                "color": "#3dd9f4",
-                "fontSize": 18,
-              },
-            ],
-            null,
-          ]
-        }
-      />
-    </View>
-    <View
-      style={
-        {
           "flex": 1,
         }
       }
@@ -1782,62 +1726,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           </Text>
         </View>
       </View>
-    </View>
-    <View
-      style={
-        {
-          "flexDirection": "row",
-          "justifyContent": "space-between",
-          "marginBottom": 22,
-          "paddingHorizontal": 11,
-        }
-      }
-    >
-      <Text
-        adjustsFontSizeToFit={true}
-        danger={false}
-        minimumFontScale={0.65}
-        numberOfLines={1}
-        style={
-          [
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "includeFontPadding": false,
-            },
-            [
-              {
-                "color": "#3dd9f4",
-                "fontSize": 18,
-              },
-            ],
-            null,
-          ]
-        }
-      />
-      <Text
-        adjustsFontSizeToFit={true}
-        minimumFontScale={0.65}
-        numberOfLines={1}
-        style={
-          [
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "includeFontPadding": false,
-            },
-            [
-              {
-                "color": "#3dd9f4",
-                "fontSize": 18,
-              },
-            ],
-            null,
-          ]
-        }
-      />
     </View>
     <View
       style={

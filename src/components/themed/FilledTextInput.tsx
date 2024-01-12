@@ -272,10 +272,12 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
           ) : null}
         </Container>
       </TouchableWithoutFeedback>
-      <MessagesContainer>
-        <Message danger={error != null}>{valid || error || null}</Message>
-        <Message>{charactersLeft}</Message>
-      </MessagesContainer>
+      {valid != null || error != null || charactersLeft !== '' ? (
+        <MessagesContainer>
+          <Message danger={error != null}>{valid ?? error ?? null}</Message>
+          <Message>{charactersLeft}</Message>
+        </MessagesContainer>
+      ) : null}
     </>
   )
 })
@@ -482,8 +484,7 @@ const StyledNumericInput = styledWithRef(NumericInput)<{
 const MessagesContainer = styled(Animated.View)(theme => ({
   flexDirection: 'row',
   justifyContent: 'space-between',
-  paddingHorizontal: theme.rem(0.5),
-  marginBottom: theme.rem(1)
+  paddingHorizontal: theme.rem(0.5)
 }))
 
 const Message = styled(EdgeText)<{ danger?: boolean }>(theme => props => [

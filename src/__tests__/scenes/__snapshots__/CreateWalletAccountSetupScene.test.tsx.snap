@@ -658,7 +658,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
             {
               "flexDirection": "row",
               "justifyContent": "space-between",
-              "marginBottom": 22,
               "paddingHorizontal": 11,
             }
           }
