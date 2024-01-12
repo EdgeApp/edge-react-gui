@@ -160,7 +160,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   text: {
     fontFamily: theme.fontFaceMedium,
-    fontSize: theme.rem(1.25),
+    fontSize: theme.rem(1),
     marginLeft: theme.rem(0.5)
   },
   topRow: {
