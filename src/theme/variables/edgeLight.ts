@@ -519,6 +519,8 @@ export const edgeLight: Theme = {
     start: { x: 1, y: 0 }
   },
 
+  modalBackgroundUi4: '#ffffff80',
+
   txDirBgReceiveUi4: palette.greenOp60,
   txDirBgSendUi4: palette.redOp60,
   txDirBgSwapUi4: palette.grayOp70,

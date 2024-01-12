@@ -18,8 +18,8 @@ import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { ModalScrollArea, ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Option {
   value: WalletListMenuKey
@@ -212,7 +212,7 @@ export function WalletListMenuModal(props: Props) {
   )
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel}>
+    <ModalUi4 bridge={bridge} onCancel={handleCancel}>
       {wallet != null && (
         <View>
           <ModalTitle>{getWalletName(wallet)}</ModalTitle>
@@ -238,7 +238,7 @@ export function WalletListMenuModal(props: Props) {
           ))}
         </ModalScrollArea>
       </View>
-    </ThemedModal>
+    </ModalUi4>
   )
 }
 

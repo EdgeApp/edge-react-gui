@@ -22,8 +22,8 @@ import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
 import { MiniButton } from '../themed/MiniButton'
-import { ThemedModal } from '../themed/ThemedModal'
 import { CardUi4 } from '../ui4/CardUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 export interface FlipInputModalResult {
   nativeAmount: string
@@ -219,7 +219,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
   }))
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCloseModal}>
+    <ModalUi4 bridge={bridge} onCancel={handleCloseModal}>
       {/* Extra view needed here to fullscreen the modal on small devices */}
       <View style={styles.hackContainer}>
         <View style={styles.flipInput}>{renderFlipInput()}</View>
@@ -232,7 +232,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
           </View>
         </TouchableWithoutFeedback>
       </View>
-    </ThemedModal>
+    </ModalUi4>
   )
 })
 

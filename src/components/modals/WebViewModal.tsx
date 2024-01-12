@@ -4,7 +4,7 @@ import { WebView } from 'react-native-webview'
 
 import { Airship } from '../services/AirshipInstance'
 import { ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 export async function showWebViewModal(title: string, uri: string): Promise<void> {
   await Airship.show(bridge => <WebViewModal bridge={bridge} title={title} uri={uri} />)
@@ -25,11 +25,11 @@ export const WebViewModal = (props: Props) => {
   }
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]}>
+    <ModalUi4 bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]}>
       <ModalTitle center paddingRem={[0, 1, 1]}>
         {title}
       </ModalTitle>
       <WebView ref={webviewRef} allowsInlineMediaPlayback source={{ uri }} />
-    </ThemedModal>
+    </ModalUi4>
   )
 }

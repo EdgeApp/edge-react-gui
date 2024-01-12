@@ -10,7 +10,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
   bridge: AirshipBridge<boolean>
@@ -48,7 +48,7 @@ export function ConfirmContinueModal(props: Props) {
   }
 
   return (
-    <ThemedModal bridge={bridge} closeButton={isSkippable} warning={warning} onCancel={handleClose}>
+    <ModalUi4 bridge={bridge} warning={warning} onCancel={isSkippable ? handleClose : undefined}>
       {title != null && (
         <View style={styles.headerContainer}>
           <Ionicons name="warning" size={theme.rem(1.75)} color={theme.warningIcon} />
@@ -71,7 +71,7 @@ export function ConfirmContinueModal(props: Props) {
           <MainButton alignSelf="center" label={lstrings.confirm_finish} marginRem={0.5} type="secondary" onPress={handleAgreed} />
         </Fade>
       </ScrollView>
-    </ThemedModal>
+    </ModalUi4>
   )
 }
 

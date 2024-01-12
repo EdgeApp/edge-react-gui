@@ -17,7 +17,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 const buildNumber = getBuildNumber()
 const versionNumber = getVersion()
@@ -61,7 +61,7 @@ export const HelpModal = (props: Props) => {
   const helpSiteMoreInfoText = sprintf(lstrings.help_site_more_info_text, config.appName)
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]} scroll>
+    <ModalUi4 bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]} scroll>
       <View style={styles.titleContainer}>
         <Image source={theme.primaryLogo} style={styles.logo} resizeMode="contain" />
         <ModalTitle center paddingRem={[0, 1]}>
@@ -106,7 +106,7 @@ export const HelpModal = (props: Props) => {
         <EdgeText style={styles.version}>{versionText}</EdgeText>
         <EdgeText style={styles.version}>{buildText}</EdgeText>
       </View>
-    </ThemedModal>
+    </ModalUi4>
   )
 }
 

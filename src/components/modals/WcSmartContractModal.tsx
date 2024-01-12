@@ -19,12 +19,12 @@ import { zeroString } from '../../util/utils'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
-import { ModalFooter, ModalFooterFade, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { SafeSlider } from '../themed/SafeSlider'
-import { ThemedModal } from '../themed/ThemedModal'
 import { CryptoFiatAmountTile } from '../tiles/CryptoFiatAmountTile'
 import { FiatAmountTile } from '../tiles/FiatAmountTile'
 import { CardUi4 } from '../ui4/CardUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
 import { RowUi4 } from '../ui4/RowUi4'
 
 interface Props extends WcSmartContractModalProps {
@@ -141,7 +141,7 @@ export const WcSmartContractModal = (props: Props) => {
   )
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]}>
+    <ModalUi4 bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]}>
       <View style={styles.title}>
         <Image style={styles.logo} source={WalletConnectLogo} />
         <ModalTitle>{lstrings.wc_smartcontract_title}</ModalTitle>
@@ -177,8 +177,8 @@ export const WcSmartContractModal = (props: Props) => {
         )}
         {slider}
       </ScrollView>
-      <ModalFooterFade />
-    </ThemedModal>
+      {/* <ModalFooterFade /> */}
+    </ModalUi4>
   )
 }
 

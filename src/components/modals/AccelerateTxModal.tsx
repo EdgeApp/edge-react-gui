@@ -13,7 +13,7 @@ import { WarningCard } from '../cards/WarningCard'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { Slider } from '../themed/Slider'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalUi4 } from '../ui4/ModalUi4'
 import { RowUi4 } from '../ui4/RowUi4'
 
 interface OwnProps {
@@ -111,7 +111,7 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
     const isSending = status === 'sending'
 
     return (
-      <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
+      <ModalUi4 bridge={bridge} onCancel={this.handleCancel}>
         <ModalTitle>{lstrings.transaction_details_accelerate_transaction_header}</ModalTitle>
         <ModalMessage>{lstrings.transaction_details_accelerate_transaction_instructional}</ModalMessage>
         <View style={styles.container}>
@@ -140,7 +140,7 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
             disabledText={lstrings.transaction_details_accelerate_transaction_slider_disabled}
           />
         </View>
-      </ThemedModal>
+      </ModalUi4>
     )
   }
 }

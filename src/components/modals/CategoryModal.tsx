@@ -1,7 +1,7 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { TouchableHighlight, View } from 'react-native'
+import { ListRenderItem, TouchableHighlight, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
+import { FlatList } from 'react-native-gesture-handler'
 
 import { Category, displayCategories, formatCategory, getSubcategories, joinCategory, setNewSubcategory, splitCategory } from '../../actions/CategoriesActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -14,8 +14,8 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
-import { ModalFooter, ModalFooterFade, ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalFooter, ModalTitle } from '../themed/ModalParts'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
   bridge: AirshipBridge<string | undefined>
@@ -133,7 +133,7 @@ export function CategoryModal(props: Props) {
   ))
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel}>
+    <ModalUi4 bridge={bridge} onCancel={handleCancel}>
       <ModalTitle center>{lstrings.category_modal_title}</ModalTitle>
       <View style={styles.inputCategoryRow}>
         {categoryOrder.map(item => (
@@ -150,17 +150,17 @@ export function CategoryModal(props: Props) {
         value={subcategory}
       />
       <View style={styles.categoryListContainer}>
-        <FlashList
+        <FlatList
           contentContainerStyle={styles.scrollPadding}
           data={sortedCategories}
-          estimatedItemSize={theme.rem(3)}
+          // estimatedItemSize={theme.rem(3)}
           keyboardShouldPersistTaps="handled"
           keyExtractor={keyExtractor}
           renderItem={renderRow}
         />
-        <ModalFooterFade />
+        {/* <ModalFooterFade /> */}
       </View>
-    </ThemedModal>
+    </ModalUi4>
   )
 }
 

@@ -454,6 +454,8 @@ export interface Theme {
   fioCardGradientUi4: ThemeGradientParams
   swapCardGradientUi4: ThemeGradientParams
 
+  modalBackgroundUi4: string
+
   txDirBgReceiveUi4: string
   txDirBgSendUi4: string
   txDirBgSwapUi4: string

@@ -8,7 +8,7 @@ import { Alert } from '../themed/Alert'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
   // Resolves to the entered string, or void if cancelled.
@@ -91,7 +91,7 @@ export function TextInputModal(props: Props) {
   }
 
   return (
-    <ThemedModal warning={warning} bridge={bridge} onCancel={() => bridge.resolve(undefined)}>
+    <ModalUi4 warning={warning} bridge={bridge} onCancel={() => bridge.resolve(undefined)}>
       {title != null ? <ModalTitle>{title}</ModalTitle> : null}
       {typeof message === 'string' ? <ModalMessage>{message}</ModalMessage> : <>{message}</>}
       {warningMessage != null ? <Alert type="warning" title={lstrings.string_warning} marginRem={0.5} message={warningMessage} numberOfLines={0} /> : null}
@@ -126,6 +126,6 @@ export function TextInputModal(props: Props) {
       ) : (
         <MainButton alignSelf="center" label={submitLabel} marginRem={0.5} onPress={handleSubmit} type="primary" />
       )}
-    </ThemedModal>
+    </ModalUi4>
   )
 }

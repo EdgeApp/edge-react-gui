@@ -1069,6 +1069,11 @@ exports[`SendScene2 1 spendTarget 1`] = `
             }
           />
           <View
+            collapsable={false}
+            handlerTag={1}
+            handlerType="PanGestureHandler"
+            onGestureHandlerEvent={[Function]}
+            onGestureHandlerStateChange={[Function]}
             style={
               [
                 {
@@ -2424,6 +2429,11 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             }
           />
           <View
+            collapsable={false}
+            handlerTag={2}
+            handlerType="PanGestureHandler"
+            onGestureHandlerEvent={[Function]}
+            onGestureHandlerStateChange={[Function]}
             style={
               [
                 {
@@ -3750,6 +3760,11 @@ exports[`SendScene2 2 spendTargets 1`] = `
             }
           />
           <View
+            collapsable={false}
+            handlerTag={3}
+            handlerType="PanGestureHandler"
+            onGestureHandlerEvent={[Function]}
+            onGestureHandlerStateChange={[Function]}
             style={
               [
                 {
@@ -4921,6 +4936,11 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             }
           />
           <View
+            collapsable={false}
+            handlerTag={4}
+            handlerType="PanGestureHandler"
+            onGestureHandlerEvent={[Function]}
+            onGestureHandlerStateChange={[Function]}
             style={
               [
                 {
@@ -6068,6 +6088,11 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             }
           />
           <View
+            collapsable={false}
+            handlerTag={5}
+            handlerType="PanGestureHandler"
+            onGestureHandlerEvent={[Function]}
+            onGestureHandlerStateChange={[Function]}
             style={
               [
                 {
@@ -7060,6 +7085,11 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             }
           />
           <View
+            collapsable={false}
+            handlerTag={6}
+            handlerType="PanGestureHandler"
+            onGestureHandlerEvent={[Function]}
+            onGestureHandlerStateChange={[Function]}
             style={
               [
                 {
@@ -8345,6 +8375,11 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             }
           />
           <View
+            collapsable={false}
+            handlerTag={7}
+            handlerType="PanGestureHandler"
+            onGestureHandlerEvent={[Function]}
+            onGestureHandlerStateChange={[Function]}
             style={
               [
                 {
@@ -9565,6 +9600,11 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             }
           />
           <View
+            collapsable={false}
+            handlerTag={8}
+            handlerType="PanGestureHandler"
+            onGestureHandlerEvent={[Function]}
+            onGestureHandlerStateChange={[Function]}
             style={
               [
                 {
@@ -10744,6 +10784,11 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             }
           />
           <View
+            collapsable={false}
+            handlerTag={9}
+            handlerType="PanGestureHandler"
+            onGestureHandlerEvent={[Function]}
+            onGestureHandlerStateChange={[Function]}
             style={
               [
                 {

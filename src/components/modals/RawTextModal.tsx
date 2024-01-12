@@ -7,7 +7,7 @@ import { lstrings } from '../../locales/strings'
 import { showToast } from '../services/AirshipInstance'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
   bridge: AirshipBridge<void>
@@ -27,7 +27,7 @@ export function RawTextModal(props: Props) {
   }
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel}>
+    <ModalUi4 bridge={bridge} onCancel={handleCancel}>
       {title != null ? <ModalTitle>{title}</ModalTitle> : null}
       <ScrollView>
         <ModalMessage>{body}</ModalMessage>
@@ -35,6 +35,6 @@ export function RawTextModal(props: Props) {
       {disableCopy ? null : (
         <MainButton alignSelf="center" label={lstrings.fragment_request_copy_title} marginRem={0.5} onPress={handleCopy} type="secondary" />
       )}
-    </ThemedModal>
+    </ModalUi4>
   )
 }

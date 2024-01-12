@@ -20,7 +20,7 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface OwnProps {
   bridge: AirshipBridge<string | undefined>
@@ -304,7 +304,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <ThemedModal bridge={this.props.bridge} onCancel={this.handleClose} paddingRem={1}>
+      <ModalUi4 bridge={this.props.bridge} onCancel={this.handleClose} paddingRem={1}>
         <ModalTitle center paddingRem={[0, 2, 1]}>
           {title || lstrings.address_modal_default_header}
         </ModalTitle>
@@ -338,7 +338,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
           {/* TODO: Style ButtonsViewUi4 for Modals */}
           <MainButton label={lstrings.submit} type="primary" onPress={this.handleSubmit} />
         </View>
-      </ThemedModal>
+      </ModalUi4>
     )
   }
 }
