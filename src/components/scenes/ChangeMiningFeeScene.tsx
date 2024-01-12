@@ -9,7 +9,6 @@ import { lstrings } from '../../locales/strings'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { FeeOption } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { Space } from '../layout/Space'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { SettingsRadioRow } from '../settings/SettingsRadioRow'
 import { Alert } from '../themed/Alert'
@@ -128,9 +127,10 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
     if (networkFeeOption !== 'custom') return null
 
     return (
-      <Space around={1}>
+      <>
         {customFormat.map(key => (
           <FilledTextInput
+            around={1}
             key={key}
             autoFocus={false}
             autoCorrect={false}
@@ -145,7 +145,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
             keyboardType="numeric"
           />
         ))}
-      </Space>
+      </>
     )
   }
 

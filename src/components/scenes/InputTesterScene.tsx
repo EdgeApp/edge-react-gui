@@ -6,16 +6,18 @@ import { cacheStyles } from 'react-native-patina'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useState } from '../../types/reactHooks'
 import { consify } from '../../util/utils'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { Space } from '../layout/Space'
 import { FlipInputModal2, FlipInputModalResult } from '../modals/FlipInputModal2'
 import { Airship } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { CardUi4 } from '../ui4/CardUi4'
 
-export function ExchangedFlipInputTester(props: {}) {
+export function InputTesterScene() {
   const theme = useTheme()
   const styles = getStyles(theme)
   const selectedWallet = useSelectedWallet()
@@ -23,6 +25,7 @@ export function ExchangedFlipInputTester(props: {}) {
   // const walletIds = Object.keys(account.currencyWallets)
   const [value0, setValue0] = useState<string>('')
   const [value1, setValue1] = useState<string>('')
+  const [filledTextInputValue, setFilledTextInputValue] = useState<string>('')
   const walletId = selectedWallet?.wallet.id ?? ''
   const tokenId = selectedWallet?.tokenId ?? null
   const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
@@ -72,36 +75,42 @@ export function ExchangedFlipInputTester(props: {}) {
   const returnKeyType: ReturnKeyType = 'done'
 
   return (
-    <View style={styles.headerContainer}>
-      <CardUi4>
-        <ExchangedFlipInput2
-          ref={exchangedFlipInputRef}
-          walletId={walletId}
-          headerText={headerText}
-          editable={editable}
-          headerCallback={headerCallback}
-          returnKeyType={returnKeyType}
-          forceField={defaultField ? 'crypto' : 'fiat'}
-          keyboardVisible={keyboardVisible}
-          tokenId={tokenId}
-          startNativeAmount={balance}
-          onAmountChanged={onAmountChanged}
+    <SceneWrapper scroll hasTabs hasHeader={false}>
+      <View style={styles.headerContainer}>
+        <FilledTextInput
+          vertical={1}
+          value={filledTextInputValue}
+          onChangeText={setFilledTextInputValue}
+          autoFocus={false}
+          placeholder="Test FilledTextInput"
+          maxLength={100}
         />
-      </CardUi4>
-      <Space vertical={1}>
-        <SimpleTextInput value={value0} onChangeText={onChangeText0} autoFocus={false} placeholder="Crypto Amount" />
-      </Space>
-      <MainButton label="Set Crypto Amt" onPress={onPress0} />
-      <Space vertical={1}>
-        <SimpleTextInput value={value1} onChangeText={onChangeText1} autoFocus={false} placeholder="Fiat Amount" />
-      </Space>
-      <Space vertical={0.5}>
-        <MainButton label="Set Fiat Amt" onPress={onPress1} />
-      </Space>
-      <Space vertical={0.5}>
-        <MainButton label="Launch FlipInputModal2" onPress={handleFlipInputModal} />
-      </Space>
-    </View>
+        <CardUi4>
+          <ExchangedFlipInput2
+            ref={exchangedFlipInputRef}
+            walletId={walletId}
+            headerText={headerText}
+            editable={editable}
+            headerCallback={headerCallback}
+            returnKeyType={returnKeyType}
+            forceField={defaultField ? 'crypto' : 'fiat'}
+            keyboardVisible={keyboardVisible}
+            tokenId={tokenId}
+            startNativeAmount={balance}
+            onAmountChanged={onAmountChanged}
+          />
+        </CardUi4>
+        <SimpleTextInput vertical={1} value={value0} onChangeText={onChangeText0} autoFocus={false} placeholder="Crypto Amount" />
+        <MainButton label="Set Crypto Amt" onPress={onPress0} />
+        <SimpleTextInput vertical={1} value={value1} onChangeText={onChangeText1} autoFocus={false} placeholder="Fiat Amount" />
+        <Space vertical={0.5}>
+          <MainButton label="Set Fiat Amt" onPress={onPress1} />
+        </Space>
+        <Space vertical={0.5}>
+          <MainButton label="Launch FlipInputModal2" onPress={handleFlipInputModal} />
+        </Space>
+      </View>
+    </SceneWrapper>
   )
 }
 
@@ -109,9 +118,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // The sort & add buttons are stacked on top of the header component:
   // Header Stack style
   headerContainer: {
-    margin: theme.rem(2),
-    width: 320,
-    height: 100
+    margin: theme.rem(2)
   },
   headerText: {
     flex: 1

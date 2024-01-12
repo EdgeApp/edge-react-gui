@@ -56,6 +56,8 @@ export interface RouteParamList {
   buyTab: {}
   sellTab: {}
   exchangeTab: {}
+  extraTab: undefined
+  devTab: undefined
 
   // Gui Plugins
   guiPluginEnterAmount: FiatPluginEnterAmountParams
@@ -119,7 +121,6 @@ export interface RouteParamList {
   exchangeQuoteProcessing: ExchangeQuoteProcessingParams
   exchangeSettings: {}
   exchangeSuccess: {}
-  extraTab: undefined
   fioCreateHandle: FioCreateHandleParams
   fioAddressDetails: {
     fioAddressName: string

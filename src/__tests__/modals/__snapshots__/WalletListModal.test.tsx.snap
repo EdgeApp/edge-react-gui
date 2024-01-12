@@ -120,6 +120,46 @@ exports[`WalletListModal should render with loading props 1`] = `
       </Text>
     </View>
     <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessible={false}
+      disableAnimation={
+        {
+          "value": 0,
+        }
+      }
+      focusAnimation={
+        {
+          "value": 0,
+        }
+      }
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      scale={
+        {
+          "value": 1,
+        }
+      }
+      spaceProps={
+        {
+          "bottom": 1.25,
+          "returnKeyType": "search",
+          "top": 0.5,
+        }
+      }
       style={
         [
           {
@@ -132,107 +172,115 @@ exports[`WalletListModal should render with loading props 1`] = `
             "marginRight": 0,
             "marginTop": 11,
           },
-          undefined,
+          {
+            "alignItems": "center",
+            "borderRadius": 2247,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "paddingHorizontal": 22,
+          },
+          {
+            "backgroundColor": undefined,
+            "borderColor": undefined,
+            "marginHorizontal": undefined,
+            "opacity": undefined,
+            "paddingVertical": 17.6,
+          },
         ]
       }
     >
       <View
-        accessibilityState={
+        size={
           {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessible={false}
-        disableAnimation={
-          {
-            "value": 0,
-          }
-        }
-        focusAnimation={
-          {
-            "value": 0,
-          }
-        }
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        scale={
-          {
-            "value": 1,
+            "value": undefined,
           }
         }
         style={
           [
             {
-              "alignItems": "center",
-              "borderRadius": 2247,
-              "borderWidth": 1,
-              "flexDirection": "row",
-              "paddingHorizontal": 22,
+              "alignItems": "stretch",
+              "aspectRatio": 1,
             },
             {
-              "backgroundColor": undefined,
-              "borderColor": undefined,
-              "marginHorizontal": undefined,
               "opacity": undefined,
-              "paddingVertical": 17.6,
+              "width": undefined,
             },
           ]
         }
       >
-        <View
-          size={
+        <Text
+          adjustsFontSizeToFit={true}
+          allowFontScaling={false}
+          style={
+            [
+              {
+                "color": undefined,
+                "fontSize": 12,
+              },
+              {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              },
+              {
+                "fontFamily": "anticon",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              {},
+            ]
+          }
+        >
+          
+        </Text>
+      </View>
+      <View
+        style={
+          {
+            "flex": 1,
+          }
+        }
+      >
+        <Text
+          disableAnimation={
             {
-              "value": undefined,
+              "value": 0,
+            }
+          }
+          focusAnimation={
+            {
+              "value": 0,
+            }
+          }
+          scale={
+            {
+              "value": 1,
             }
           }
           style={
             [
               {
-                "alignItems": "stretch",
-                "aspectRatio": 1,
+                "alignItems": "center",
+                "justifyContent": "center",
+                "margin": 0,
+                "paddingHorizontal": 11,
+                "paddingVertical": 0,
+                "position": "absolute",
+                "top": 0,
               },
               {
-                "opacity": undefined,
-                "width": undefined,
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "color": undefined,
+                "fontSize": 22,
               },
             ]
           }
         >
-          <Text
-            adjustsFontSizeToFit={true}
-            allowFontScaling={false}
-            style={
-              [
-                {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                },
-                {
-                  "fontFamily": "anticon",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                {},
-              ]
-            }
-          >
-            
-          </Text>
-        </View>
+          Search Wallets
+        </Text>
         <TextInput
           accessibilityState={
             {
@@ -255,12 +303,6 @@ exports[`WalletListModal should render with loading props 1`] = `
           onChangeText={[Function]}
           onFocus={[Function]}
           onSubmitEditing={[Function]}
-          placeholder="Search Wallets"
-          placeholderTextColor={
-            {
-              "value": undefined,
-            }
-          }
           returnKeyType="search"
           scale={
             {
@@ -289,85 +331,85 @@ exports[`WalletListModal should render with loading props 1`] = `
           textAlignVertical="top"
           value=""
         />
+      </View>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "opacity": 1,
+          }
+        }
+        testID="undefined.clearIcon"
+      >
         <View
-          accessibilityState={
+          size={
             {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": undefined,
+              "value": 0,
             }
           }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
           style={
-            {
-              "opacity": 1,
-            }
-          }
-          testID="undefined.clearIcon"
-        >
-          <View
-            size={
+            [
               {
-                "value": 0,
-              }
-            }
+                "alignItems": "stretch",
+                "aspectRatio": 1,
+              },
+              {
+                "opacity": 0,
+                "width": 0,
+              },
+            ]
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
             style={
               [
                 {
-                  "alignItems": "stretch",
-                  "aspectRatio": 1,
+                  "color": undefined,
+                  "fontSize": 12,
                 },
                 {
-                  "opacity": 0,
-                  "width": 0,
+                  "color": "#FFFFFF",
+                  "fontSize": 0,
                 },
+                {
+                  "fontFamily": "anticon",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                {},
               ]
             }
           >
-            <Text
-              adjustsFontSizeToFit={true}
-              allowFontScaling={false}
-              style={
-                [
-                  {
-                    "color": undefined,
-                    "fontSize": 12,
-                  },
-                  {
-                    "color": "#FFFFFF",
-                    "fontSize": 0,
-                  },
-                  {
-                    "fontFamily": "anticon",
-                    "fontStyle": "normal",
-                    "fontWeight": "normal",
-                  },
-                  {},
-                ]
-              }
-            >
-              
-            </Text>
-          </View>
+            
+          </Text>
         </View>
       </View>
     </View>

@@ -207,6 +207,9 @@ exports[`SendScene2 1 spendTarget 1`] = `
           "width": 750,
         },
         {},
+        {
+          "padding": 11,
+        },
       ]
     }
   >
@@ -1371,6 +1374,9 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
           "width": 750,
         },
         {},
+        {
+          "padding": 11,
+        },
       ]
     }
   >
@@ -2723,6 +2729,9 @@ exports[`SendScene2 2 spendTargets 1`] = `
           "width": 750,
         },
         {},
+        {
+          "padding": 11,
+        },
       ]
     }
   >
@@ -4046,6 +4055,9 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
           "width": 750,
         },
         {},
+        {
+          "padding": 11,
+        },
       ]
     }
   >
@@ -5214,6 +5226,9 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
           "width": 750,
         },
         {},
+        {
+          "padding": 11,
+        },
       ]
     }
   >
@@ -6358,6 +6373,9 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
           "width": 750,
         },
         {},
+        {
+          "padding": 11,
+        },
       ]
     }
   >
@@ -7347,6 +7365,9 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
           "width": 750,
         },
         {},
+        {
+          "padding": 11,
+        },
       ]
     }
   >
@@ -8629,6 +8650,9 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           "width": 750,
         },
         {},
+        {
+          "padding": 11,
+        },
       ]
     }
   >
@@ -9846,6 +9870,9 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
           "width": 750,
         },
         {},
+        {
+          "padding": 11,
+        },
       ]
     }
   >
@@ -11022,6 +11049,9 @@ exports[`SendScene2 Render SendScene 1`] = `
           "width": 750,
         },
         {},
+        {
+          "padding": 11,
+        },
       ]
     }
   >

@@ -3,7 +3,6 @@ import { Platform, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
-import { Space } from '../layout/Space'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
 import { FilledTextInput } from '../themed/FilledTextInput'
@@ -96,25 +95,27 @@ export function TextInputModal(props: Props) {
       {title != null ? <ModalTitle>{title}</ModalTitle> : null}
       {typeof message === 'string' ? <ModalMessage>{message}</ModalMessage> : <>{message}</>}
       {warningMessage != null ? <Alert type="warning" title={lstrings.string_warning} marginRem={0.5} message={warningMessage} numberOfLines={0} /> : null}
-      <Space top={1} horizontal={0.5} bottom={1.5} expand>
-        <FilledTextInput
-          // Text input props:
-          autoCapitalize={autoCapitalize}
-          autoFocus={autoFocus}
-          autoCorrect={autoCorrect}
-          keyboardType={keyboardType}
-          placeholder={inputLabel}
-          returnKeyType={returnKeyType}
-          secureTextEntry={secureTextEntry}
-          multiline={multiline}
-          // Our props:
-          error={errorMessage}
-          onChangeText={handleChangeText}
-          onSubmitEditing={handleSubmit}
-          value={text}
-          maxLength={maxLength}
-        />
-      </Space>
+      <FilledTextInput
+        top={1}
+        horizontal={0.5}
+        bottom={1.5}
+        expand
+        // Text input props:
+        autoCapitalize={autoCapitalize}
+        autoFocus={autoFocus}
+        autoCorrect={autoCorrect}
+        keyboardType={keyboardType}
+        placeholder={inputLabel}
+        returnKeyType={returnKeyType}
+        secureTextEntry={secureTextEntry}
+        multiline={multiline}
+        // Our props:
+        error={errorMessage}
+        onChangeText={handleChangeText}
+        onSubmitEditing={handleSubmit}
+        value={text}
+        maxLength={maxLength}
+      />
       {
         // Hack around the android:windowSoftInputMode="adjustPan" glitch:
         Platform.OS === 'android' ? <View style={{ flex: 2 }} /> : null

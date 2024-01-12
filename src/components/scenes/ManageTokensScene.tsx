@@ -14,7 +14,6 @@ import { normalizeForSearch } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
-import { Space } from '../layout/Space'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
@@ -125,15 +124,14 @@ function ManageTokensSceneComponent(props: Props) {
       <SceneHeader underline>
         <Title leftIcon={<CryptoIconUi4 sizeRem={1.5} tokenId={null} walletId={wallet.id} />} text={walletName} />
         <EdgeText style={styles.subTitle}>{lstrings.managetokens_top_instructions}</EdgeText>
-        <Space top={1}>
-          <FilledTextInput
-            placeholder={lstrings.search_tokens}
-            returnKeyType="search"
-            iconComponent={SearchIconAnimated}
-            value={searchValue}
-            onChangeText={setSearchValue}
-          />
-        </Space>
+        <FilledTextInput
+          top={1}
+          placeholder={lstrings.search_tokens}
+          returnKeyType="search"
+          iconComponent={SearchIconAnimated}
+          value={searchValue}
+          onChangeText={setSearchValue}
+        />
       </SceneHeader>
       <FlashList estimatedItemSize={theme.rem(4.25)} data={filteredTokenIds} extraData={extraData} keyExtractor={keyExtractor} renderItem={renderRow} />
       {!isCustomTokensSupported ? null : (

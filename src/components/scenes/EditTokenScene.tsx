@@ -148,6 +148,7 @@ function EditTokenSceneComponent(props: Props) {
       <SceneHeader title={tokenId == null ? lstrings.title_add_token : lstrings.title_edit_token} underline />
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
         <FilledTextInput
+          around={0.5}
           autoCapitalize="characters"
           autoCorrect={false}
           autoFocus={false}
@@ -156,6 +157,7 @@ function EditTokenSceneComponent(props: Props) {
           onChangeText={setCurrencyCode}
         />
         <FilledTextInput
+          around={0.5}
           autoCapitalize="words"
           autoCorrect={false}
           autoFocus={false}
@@ -164,6 +166,7 @@ function EditTokenSceneComponent(props: Props) {
           onChangeText={setDisplayName}
         />
         <FilledTextInput
+          around={0.5}
           autoCorrect={false}
           autoFocus={false}
           placeholder={lstrings.addtoken_contract_address_input_text}
@@ -171,6 +174,7 @@ function EditTokenSceneComponent(props: Props) {
           onChangeText={setContractAddress}
         />
         <FilledTextInput
+          around={0.5}
           autoCorrect={false}
           autoFocus={false}
           keyboardType="numeric"

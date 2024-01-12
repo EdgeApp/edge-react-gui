@@ -12,6 +12,7 @@ import { BlurView } from 'rn-id-blurview'
 
 import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { Fontello } from '../../assets/vector/index'
+import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
@@ -33,7 +34,8 @@ const title: { readonly [key: string]: string } = {
   buyTab: lstrings.title_buy,
   sellTab: lstrings.title_sell,
   exchangeTab: lstrings.title_exchange,
-  extraTab: lstrings[extraTabString]
+  extraTab: lstrings[extraTabString],
+  devTab: lstrings.title_dev_tab
 }
 
 export const MenuTabs = (props: BottomTabBarProps) => {
@@ -47,6 +49,9 @@ export const MenuTabs = (props: BottomTabBarProps) => {
     () =>
       state.routes.filter(route => {
         if (config.extraTab == null && route.name === 'extraTab') {
+          return false
+        }
+        if (ENV.DEV_TAB == null && route.name === 'devTab') {
           return false
         }
         if (config.disableSwaps === true && route.name === 'exchangeTab') {
@@ -127,7 +132,8 @@ const Tab = ({
     buyTab: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
     sellTab: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
     exchangeTab: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />,
-    extraTab: <VectorIcon font="Feather" name="map-pin" size={theme.rem(1.25)} color={color} />
+    extraTab: <VectorIcon font="Feather" name="map-pin" size={theme.rem(1.25)} color={color} />,
+    devTab: <SimpleLineIcons name="wrench" size={theme.rem(1.25)} color={color} />
   }
 
   const handleOnPress = useHandler(() => {
@@ -156,6 +162,8 @@ const Tab = ({
         return navigation.navigate('exchangeTab', currentName === 'exchangeTab' ? { screen: 'exchange' } : {})
       case 'extraTab':
         return navigation.navigate('extraTab')
+      case 'devTab':
+        return navigation.navigate('devTab')
     }
   })
 

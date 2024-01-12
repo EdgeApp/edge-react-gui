@@ -18,7 +18,6 @@ import { getCurrencyCode, getTokenIdForced, isKeysOnlyPlugin } from '../../util/
 import { CustomAsset } from '../data/row/CustomAssetRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
-import { Space } from '../layout/Space'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -226,18 +225,18 @@ export function WalletListModal(props: Props) {
       {bankSection}
       {customAssetSection}
       {showBankOptions || showCustomAssets ? <EdgeText>{lstrings.your_wallets}</EdgeText> : null}
-      <Space top={0.5} bottom={1.25}>
-        <SimpleTextInput
-          returnKeyType="search"
-          placeholder={lstrings.search_wallets}
-          onChangeText={setSearchText}
-          onFocus={handleSearchFocus}
-          onBlur={handleSearchUnfocus}
-          onClear={handleSearchClear}
-          value={searchText}
-          iconComponent={SearchIconAnimated}
-        />
-      </Space>
+      <SimpleTextInput
+        top={0.5}
+        bottom={1.25}
+        returnKeyType="search"
+        placeholder={lstrings.search_wallets}
+        onChangeText={setSearchText}
+        onFocus={handleSearchFocus}
+        onBlur={handleSearchUnfocus}
+        onClear={handleSearchClear}
+        value={searchText}
+        iconComponent={SearchIconAnimated}
+      />
       <View style={styles.walletsMargin}>
         <WalletList
           allowedAssets={allowedAssets}

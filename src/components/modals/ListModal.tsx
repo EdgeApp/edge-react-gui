@@ -4,7 +4,6 @@ import { Keyboard, ViewStyle, ViewToken } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { useFilter } from '../../hooks/useFilter'
-import { Space } from '../layout/Space'
 import { useTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
@@ -78,23 +77,23 @@ export function ListModal<T>({
       {title == null ? null : <ModalTitle>{title}</ModalTitle>}
       {message == null ? null : <ModalMessage>{message}</ModalMessage>}
       {textInput == null ? null : (
-        <Space vertical={1} horizontal={0.5}>
-          <FilledTextInput
-            // Our props:
-            searchIcon
-            blurOnClear
-            autoCorrect={false}
-            autoCapitalize="words"
-            returnKeyType="done"
-            testID={title}
-            onChangeText={handleChangeText}
-            onSubmitEditing={handleSubmitEditing}
-            value={text}
-            placeholder={placeholder}
-            // Outlined Text input props:
-            {...textProps}
-          />
-        </Space>
+        <FilledTextInput
+          vertical={1}
+          horizontal={0.5}
+          // Our props:
+          searchIcon
+          blurOnClear
+          autoCorrect={false}
+          autoCapitalize="words"
+          returnKeyType="done"
+          testID={title}
+          onChangeText={handleChangeText}
+          onSubmitEditing={handleSubmitEditing}
+          value={text}
+          placeholder={placeholder}
+          // Outlined Text input props:
+          {...textProps}
+        />
       )}
       <FlashList
         contentContainerStyle={scrollPadding}

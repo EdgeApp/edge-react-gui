@@ -14,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
+import { SpaceProps, useSpaceStyle } from '../../hooks/useSpaceStyle'
 import { styled, styledWithRef } from '../hoc/styled'
 import { AnimatedIconComponent, CloseIconAnimated, EyeIconAnimated, EyeOffIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
@@ -24,7 +25,7 @@ const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
 export type FilledTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'done'
 
-export interface FilledTextInputProps {
+export interface FilledTextInputProps extends SpaceProps {
   // Contents:
   value: string
   error?: string
@@ -121,7 +122,8 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     inputAccessoryViewID,
     maxLength,
     secureTextEntry,
-    testID
+    testID,
+    ...spaceProps
   } = props
   const theme = useTheme()
   const themeRem = theme.rem(1)
@@ -207,7 +209,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   return (
     <>
       <TouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
-        <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} multiline={multiline} scale={scale}>
+        <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} multiline={multiline} scale={scale} spaceProps={spaceProps}>
           <SideContainer scale={leftIconSize}>{LeftIcon == null ? null : <LeftIcon color={iconColor} size={leftIconSize} />}</SideContainer>
 
           <InnerContainer focusValue={focusValue} hasPlaceholder={placeholder != null}>
@@ -272,11 +274,12 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
           ) : null}
         </Container>
       </TouchableWithoutFeedback>
-      <MessagesContainer>
-        {valid ? <Message>{valid}</Message> : null}
-        {error ? <Message danger>{error}</Message> : null}
-        <Message>{charactersLeft}</Message>
-      </MessagesContainer>
+      {valid != null || error != null || charactersLeft !== '' ? (
+        <MessagesContainer>
+          <Message danger={error != null}>{valid ?? error ?? null}</Message>
+          <Message>{charactersLeft}</Message>
+        </MessagesContainer>
+      ) : null}
     </>
   )
 })
@@ -286,7 +289,8 @@ const Container = styled(Animated.View)<{
   focusAnimation: SharedValue<number>
   multiline: boolean
   scale: SharedValue<number>
-}>(theme => ({ disableAnimation, focusAnimation, multiline, scale }) => {
+  spaceProps: SpaceProps
+}>(theme => ({ disableAnimation, focusAnimation, multiline, scale, spaceProps }) => {
   const rem = theme.rem(1)
   const interpolateInputBackgroundColor = useAnimatedColorInterpolateFn(
     theme.textInputBackgroundColor,
@@ -298,8 +302,10 @@ const Container = styled(Animated.View)<{
     theme.textInputBorderColorFocused,
     theme.textInputBorderColorDisabled
   )
+  const spaceStyle = useSpaceStyle(spaceProps)
 
   return [
+    spaceStyle,
     {
       flex: multiline ? 1 : undefined,
       alignItems: multiline ? 'stretch' : 'center',
@@ -416,7 +422,6 @@ const PlaceholderText = styled(Animated.Text)<{
 
   return [
     {
-      color: theme.primaryText,
       fontFamily: theme.fontFaceDefault,
       fontSize: theme.rem(1),
       includeFontPadding: false
@@ -483,8 +488,7 @@ const StyledNumericInput = styledWithRef(NumericInput)<{
 const MessagesContainer = styled(Animated.View)(theme => ({
   flexDirection: 'row',
   justifyContent: 'space-between',
-  paddingHorizontal: theme.rem(0.5),
-  marginBottom: theme.rem(1)
+  paddingHorizontal: theme.rem(0.5)
 }))
 
 const Message = styled(EdgeText)<{ danger?: boolean }>(theme => props => [

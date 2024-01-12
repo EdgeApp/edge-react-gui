@@ -159,7 +159,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
           keyboardShouldPersistTaps={keyboardShouldPersistTaps}
           contentContainerStyle={insetStyles}
         >
-          <MaybeView when={!scroll && !hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles]}>
+          <MaybeView when={!scroll && !hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles, { padding }]}>
             {isFuncChildren ? children(info) : children}
             {hasNotifications ? <NotificationView navigation={navigation} /> : null}
             {renderDrawer == null ? null : <SceneDrawer info={info}>{renderDrawer}</SceneDrawer>}
