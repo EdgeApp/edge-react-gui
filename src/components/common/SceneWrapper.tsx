@@ -132,7 +132,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const headerBarHeight = getDefaultHeaderHeight(frame, false, 0)
 
   // If the scene has scroll, this will be required for tabs and/or header animation
-  const handleScroll = useSceneScrollHandler()
+  const handleScroll = useSceneScrollHandler(scroll && (hasTabs || hasHeader))
 
   const renderScene = (safeAreaInsets: EdgeInsets, keyboardAnimation: Animated.Value | undefined, trackerValue: number): JSX.Element => {
     // If function children, the caller handles the insets and overscroll
