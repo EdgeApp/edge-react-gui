@@ -447,13 +447,15 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
               {
                 "alignItems": "center",
                 "flexDirection": "row",
-                "height": 67,
                 "justifyContent": "center",
-                "paddingHorizontal": 45,
               },
               {
                 "alignSelf": "auto",
                 "opacity": 1,
+              },
+              {
+                "height": 67,
+                "paddingHorizontal": 45,
               },
               {
                 "alignItems": "center",
@@ -469,16 +471,16 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
                   "justifyContent": "center",
                 },
                 {
-                  "marginBottom": 22,
-                  "marginLeft": 22,
-                  "marginRight": 22,
-                  "marginTop": 22,
-                },
-                {},
-                {
                   "alignSelf": "center",
                 },
               ],
+              {
+                "marginBottom": 22,
+                "marginLeft": 22,
+                "marginRight": 22,
+                "marginTop": 22,
+              },
+              undefined,
             ]
           }
         >
@@ -575,13 +577,15 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
             {
               "alignItems": "center",
               "flexDirection": "row",
-              "height": 67,
               "justifyContent": "center",
-              "paddingHorizontal": 45,
             },
             {
               "alignSelf": "auto",
               "opacity": 1,
+            },
+            {
+              "height": 67,
+              "paddingHorizontal": 45,
             },
             {
               "alignItems": "center",
@@ -597,16 +601,16 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
                 "justifyContent": "center",
               },
               {
-                "marginBottom": 22,
-                "marginLeft": 22,
-                "marginRight": 22,
-                "marginTop": 0,
-              },
-              {},
-              {
                 "alignSelf": "center",
               },
             ],
+            {
+              "marginBottom": 22,
+              "marginLeft": 22,
+              "marginRight": 22,
+              "marginTop": 0,
+            },
+            undefined,
           ]
         }
       >

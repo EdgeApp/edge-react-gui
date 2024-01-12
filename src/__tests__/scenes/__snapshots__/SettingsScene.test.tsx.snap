@@ -3220,13 +3220,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   {
                     "alignItems": "center",
                     "flexDirection": "row",
-                    "height": 67,
                     "justifyContent": "center",
-                    "paddingHorizontal": 45,
                   },
                   {
                     "alignSelf": "auto",
                     "opacity": 1,
+                  },
+                  {
+                    "height": 67,
+                    "paddingHorizontal": 45,
                   },
                   {
                     "alignItems": "center",
@@ -3241,12 +3243,12 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                       "borderRadius": 34,
                       "justifyContent": "center",
                     },
-                    {},
-                    {},
                     {
                       "alignSelf": "stretch",
                     },
                   ],
+                  undefined,
+                  undefined,
                 ]
               }
             >
@@ -3355,13 +3357,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   {
                     "alignItems": "center",
                     "flexDirection": "row",
-                    "height": 67,
                     "justifyContent": "center",
-                    "paddingHorizontal": 45,
                   },
                   {
                     "alignSelf": "auto",
                     "opacity": 1,
+                  },
+                  {
+                    "height": 67,
+                    "paddingHorizontal": 45,
                   },
                   {
                     "alignItems": "center",
@@ -3376,12 +3380,12 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                       "borderRadius": 34,
                       "justifyContent": "center",
                     },
-                    {},
-                    {},
                     {
                       "alignSelf": "stretch",
                     },
                   ],
+                  undefined,
+                  undefined,
                 ]
               }
             >
@@ -6637,13 +6641,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   {
                     "alignItems": "center",
                     "flexDirection": "row",
-                    "height": 67,
                     "justifyContent": "center",
-                    "paddingHorizontal": 45,
                   },
                   {
                     "alignSelf": "auto",
                     "opacity": 1,
+                  },
+                  {
+                    "height": 67,
+                    "paddingHorizontal": 45,
                   },
                   {
                     "alignItems": "center",
@@ -6658,12 +6664,12 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                       "borderRadius": 34,
                       "justifyContent": "center",
                     },
-                    {},
-                    {},
                     {
                       "alignSelf": "stretch",
                     },
                   ],
+                  undefined,
+                  undefined,
                 ]
               }
             >
@@ -6772,13 +6778,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   {
                     "alignItems": "center",
                     "flexDirection": "row",
-                    "height": 67,
                     "justifyContent": "center",
-                    "paddingHorizontal": 45,
                   },
                   {
                     "alignSelf": "auto",
                     "opacity": 1,
+                  },
+                  {
+                    "height": 67,
+                    "paddingHorizontal": 45,
                   },
                   {
                     "alignItems": "center",
@@ -6793,12 +6801,12 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                       "borderRadius": 34,
                       "justifyContent": "center",
                     },
-                    {},
-                    {},
                     {
                       "alignSelf": "stretch",
                     },
                   ],
+                  undefined,
+                  undefined,
                 ]
               }
             >

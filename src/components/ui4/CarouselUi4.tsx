@@ -30,7 +30,7 @@ export const CarouselUi4 = (props: Props) => {
   if (children == null || numChildren === 0) return null
 
   return (
-    <>
+    <View style={styles.carouselContainer}>
       <Carousel
         data={nonNullChildren}
         renderItem={renderItem}
@@ -57,7 +57,7 @@ export const CarouselUi4 = (props: Props) => {
         inactiveDotOpacity={0.4}
         inactiveDotScale={0.7}
       />
-    </>
+    </View>
   )
 }
 
@@ -70,5 +70,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(DOT_SIZE_REM),
     borderRadius: theme.rem(DOT_SIZE_REM) / 2,
     backgroundColor: theme.primaryText
+  },
+  carouselContainer: {
+    left: theme.rem(-0.5) // Need to fudge this to cancel out the scene's padding
   }
 }))

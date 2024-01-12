@@ -723,13 +723,15 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             {
               "alignItems": "center",
               "flexDirection": "row",
-              "height": 67,
               "justifyContent": "center",
-              "paddingHorizontal": 45,
             },
             {
               "alignSelf": "center",
               "opacity": 1,
+            },
+            {
+              "height": 67,
+              "paddingHorizontal": 45,
             },
             {
               "alignItems": "center",
@@ -745,16 +747,16 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
                 "justifyContent": "center",
               },
               {
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-              },
-              {},
-              {
                 "alignSelf": "center",
               },
             ],
+            {
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
+            },
+            undefined,
           ]
         }
       >

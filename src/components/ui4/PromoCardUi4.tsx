@@ -2,6 +2,7 @@ import { PromoCard2 } from 'edge-info-server/types'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import LinearGradient from 'react-native-linear-gradient'
 
 import { linkReferralWithCurrencies } from '../../actions/WalletListActions'
 import { useHandler } from '../../hooks/useHandler'
@@ -17,9 +18,10 @@ import { CardUi4 } from './CardUi4'
 interface Props {
   navigation: NavigationBase
   promoInfo: PromoCard2
+  // onClose: () => void // TODO: Implement
 }
 
-export function PromoCardUi4Component(props: Props) {
+export function PromoCardUi4(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
@@ -45,14 +47,15 @@ export function PromoCardUi4Component(props: Props) {
     dispatch(linkReferralWithCurrencies(navigation, url)).catch(err => showError(err))
   })
 
-  const handleClose = useHandler(() => {})
+  const handleClose = useHandler(() => {
+    // TODO: Implement
+  })
 
   return (
     <CardUi4
       onClose={handleClose}
-      gradientBackground={{ colors: backgroundGradientColors, start: backgroundGradientStart, end: backgroundGradientEnd }}
       nodeBackground={
-        <View style={styles.backgroundContainer}>
+        <LinearGradient colors={backgroundGradientColors} start={backgroundGradientStart} end={backgroundGradientEnd} style={styles.backgroundContainer}>
           <FastImage
             source={{
               uri: imageUri
@@ -60,14 +63,16 @@ export function PromoCardUi4Component(props: Props) {
             style={styles.backgroundImage}
             resizeMode="stretch"
           />
-        </View>
+        </LinearGradient>
       }
     >
       <View style={styles.contentContainer}>
-        <EdgeText numberOfLines={3}>{message}</EdgeText>
+        <EdgeText numberOfLines={4} disableFontScaling style={styles.text}>
+          {message}
+        </EdgeText>
         {ctaLabel == null ? null : (
           <View style={styles.cornerButtonContainer}>
-            <ButtonUi4 layout="row" type="secondary" label={ctaLabel} onPress={handlePress} />
+            <ButtonUi4 layout="solo" type="secondary" label={ctaLabel} mini onPress={handlePress} />
           </View>
         )}
       </View>
@@ -79,17 +84,20 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'flex-end',
     justifyContent: 'flex-end'
   },
+  text: {
+    fontSize: theme.rem(0.75)
+  },
   backgroundImage: {
     aspectRatio: 1,
     height: '100%'
   },
   contentContainer: {
     justifyContent: 'space-between',
-    width: '75%', // Leave space for right-justified background image
-    margin: theme.rem(0.5)
+    width: '70%', // Leave space for right-justified background image
+    margin: theme.rem(0.5),
+    height: theme.rem(7)
   },
   cornerButtonContainer: {
-    marginTop: theme.rem(1),
-    alignItems: 'flex-start'
+    alignSelf: 'flex-start'
   }
 }))

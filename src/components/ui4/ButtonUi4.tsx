@@ -37,6 +37,9 @@ interface Props {
   // Which visual style to use. Defaults to primary (solid):
   type?: ButtonTypeUi4
 
+  // Still uses 'type', but makes it shorter (2 rem vs 3 rem)
+  mini?: boolean
+
   /** @deprecated - Shouldn't use this post-UI4 transition */
   marginRem?: number[] | number
 
@@ -45,10 +48,24 @@ interface Props {
 }
 
 /**
- * A stand-alone button to perform the primary action in a modal or scene.
+ * A stylized button with 0 outside margins by default.
+ * - Typically to be used as a child of ButtonsViewUi4.
+ * - NOT meant to be used on its own outside of ButtonsViewUi4 unless layout='solo'
  */
 export function ButtonUi4(props: Props) {
-  const { layout = 'solo', alignSelf = 'auto', children, disabled = false, label, onPress, type = 'primary', spinner = false, marginRem, paddingRem } = props
+  const {
+    layout = 'solo',
+    alignSelf = 'auto',
+    children,
+    disabled = false,
+    label,
+    onPress,
+    type = 'primary',
+    spinner = false,
+    mini = false,
+    marginRem,
+    paddingRem
+  } = props
 
   // `onPress` promise logic:
   const [pending, handlePress] = usePendingPress(onPress)
@@ -105,20 +122,21 @@ export function ButtonUi4(props: Props) {
       </EdgeText>
     )
 
-  const containerStyle: ViewStyle[] = [
-    styles.containerCommon,
-    marginRem == null ? {} : sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem)),
-    paddingRem == null ? {} : sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
-  ]
+  const containerStyle: ViewStyle[] = [styles.containerCommon]
   if (layout === 'column') containerStyle.push(styles.containerColumn)
   if (layout === 'row') containerStyle.push(styles.containerRow)
   if (layout === 'solo') containerStyle.push(styles.containerSolo)
 
-  const finalContainerCommon = [styles.containerCommon, containerStyle]
+  const customMargin = marginRem == null ? undefined : sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
+  const customPadding = paddingRem == null ? undefined : sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
+  const finalContainerCommon = [styles.containerCommon, containerStyle, customMargin, customPadding]
 
   return (
     <TouchableOpacity disabled={disabled || pending} style={finalContainerCommon} onPress={handlePress}>
-      <LinearGradient {...gradientProps} style={[styles.gradientLayoutCommon, dynamicGradientStyles, ...finalContainerCommon]}>
+      <LinearGradient
+        {...gradientProps}
+        style={[styles.contentCommon, dynamicGradientStyles, mini ? styles.contentSizeMini : styles.contentSizeDefault, ...finalContainerCommon]}
+      >
         {hideContent ? null : children}
         {hideContent ? null : maybeText}
         {!hideContent ? null : <ActivityIndicator color={spinnerColor} style={styles.spinnerCommon} />}
@@ -140,15 +158,21 @@ const getStyles = cacheStyles((theme: Theme) => {
       alignItems: 'center',
       justifyContent: 'center'
     },
-    gradientLayoutCommon: {
+    contentCommon: {
       alignItems: 'center',
       flexDirection: 'row',
-      justifyContent: 'center',
-      height: theme.rem(3),
-      paddingHorizontal: theme.rem(2)
+      justifyContent: 'center'
     },
 
     // Other styles:
+    contentSizeDefault: {
+      paddingHorizontal: theme.rem(2),
+      height: theme.rem(3)
+    },
+    contentSizeMini: {
+      paddingHorizontal: theme.rem(1.5),
+      height: theme.rem(2)
+    },
     containerColumn: {
       alignSelf: 'stretch'
     },

@@ -215,7 +215,7 @@ export interface ValidateFuncs {
   getVersion: () => string
 }
 
-const getCountryCodeByIp = async (): Promise<string> => {
+export const getCountryCodeByIp = async (): Promise<string> => {
   const apiKey = ENV.IP_API_KEY ?? ''
   let out = '--'
   try {
