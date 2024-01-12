@@ -1370,6 +1370,7 @@ const strings = {
   fiat_plugin_sell_cancelled: 'Sell order cancelled',
   fiat_plugin_sell_failed_try_again: 'Sell order failed. Please try again.',
   fiat_plugin_sell_failed_to_send_try_again: 'Failed to send funds for sell transaction. Please try again.',
+  fiat_plugin_cannot_continue_camera_permission: 'Cannot continue. Camera permission needed for ID verifications',
 
   // Wallet List Modal
   select_recv_wallet: 'Select Receiving Wallet',

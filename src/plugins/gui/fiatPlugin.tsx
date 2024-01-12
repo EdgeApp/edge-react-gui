@@ -1,4 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard'
+import { Disklet } from 'disklet'
 import { EdgeAccount, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
@@ -14,6 +15,7 @@ import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { Airship, showError, showToast, showToastSpinner } from '../../components/services/AirshipInstance'
+import { requestPermissionOnSettings } from '../../components/services/PermissionsManager'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AccountReferral } from '../../types/ReferralTypes'
@@ -24,6 +26,7 @@ import {
   FiatPaymentType,
   FiatPluginAddressFormParams,
   FiatPluginListModalParams,
+  FiatPluginPermissions,
   FiatPluginRegionCode,
   FiatPluginSepaFormParams,
   FiatPluginSepaTransferParams,
@@ -40,6 +43,7 @@ export const SendErrorBackPressed = 'SendErrorBackPressed'
 export const executePlugin = async (params: {
   account: EdgeAccount
   accountReferral: AccountReferral
+  disklet: Disklet
   deviceId: string
   direction: 'buy' | 'sell'
   disablePlugins?: NestedDisableMap
@@ -56,6 +60,7 @@ export const executePlugin = async (params: {
     accountReferral,
     deviceId,
     direction,
+    disklet,
     guiPlugin,
     longPress = false,
     navigation,
@@ -123,6 +128,15 @@ export const executePlugin = async (params: {
           }
         })
       })
+    },
+    requestPermission: async (permissions: FiatPluginPermissions, displayName: string, mandatory: boolean = true) => {
+      for (const permission of permissions) {
+        const deniedPermission = await requestPermissionOnSettings(disklet, permission, displayName, mandatory)
+        if (deniedPermission) {
+          return false
+        }
+      }
+      return true
     },
     async rewardsCardDashboard(params) {
       maybeNavigateToCorrectTabScene()

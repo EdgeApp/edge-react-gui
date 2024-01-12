@@ -468,6 +468,10 @@ export const banxaProvider: FiatProviderFactory = {
           expirationDate: new Date(Date.now() + 50000),
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
             const { showUi, coreWallet } = approveParams
+            const success = await showUi.requestPermission(['camera'], pluginDisplayName, true)
+            if (!success) {
+              await showUi.showError(new Error(lstrings.fiat_plugin_cannot_continue_camera_permission))
+            }
             const receiveAddress = await coreWallet.getReceiveAddress({ tokenId: null })
 
             const bodyParams: any = {

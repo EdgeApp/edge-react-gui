@@ -6,6 +6,7 @@ import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
 import { ButtonInfo, ButtonModalProps } from '../../components/modals/ButtonsModal'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
+import { Permission } from '../../reducers/PermissionsReducer'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList } from '../../types/routerTypes'
@@ -116,6 +117,9 @@ export interface SaveTxActionParams {
   savedAction: EdgeTxAction
   assetAction: EdgeAssetAction
 }
+
+export type FiatPluginPermissions = Permission[]
+
 export interface FiatPluginUi {
   addressWarnings: (parsedUri: any, currencyCode: string) => Promise<boolean>
   buttonModal: <Buttons extends { [key: string]: ButtonInfo }>(params: Omit<ButtonModalProps<Buttons>, 'bridge'>) => Promise<keyof Buttons | undefined>
@@ -127,6 +131,7 @@ export interface FiatPluginUi {
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
   enterAmount: (params: AppParamList['guiPluginEnterAmount']) => void
   addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress>
+  requestPermission: (permissions: FiatPluginPermissions, displayName: string, mandatory: boolean) => Promise<boolean>
   rewardsCardDashboard: (params: RewardsCardDashboardParams) => Promise<void>
   rewardsCardWelcome: (params: RewardsCardWelcomeParams) => Promise<void>
   saveTxAction: (params: SaveTxActionParams) => Promise<void>
