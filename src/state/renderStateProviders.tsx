@@ -1,8 +1,8 @@
 import * as React from 'react'
 
-import { SceneDrawerProvider } from './SceneFooterState'
+import { SceneFooterProvider } from './SceneFooterState'
 import { SceneScrollProvider } from './SceneScrollState'
 
-const stateProviders = [SceneScrollProvider, SceneDrawerProvider]
+const stateProviders = [SceneScrollProvider, SceneFooterProvider]
 
 export const renderStateProviders = (children: React.ReactNode) => stateProviders.reduce((element, Provider) => <Provider>{element}</Provider>, children)

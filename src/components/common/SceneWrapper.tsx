@@ -6,7 +6,7 @@ import { Animated, StyleSheet, useWindowDimensions, View } from 'react-native'
 import Reanimated from 'react-native-reanimated'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { useSceneDrawerState } from '../../state/SceneFooterState'
+import { useSceneFooterState } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
@@ -15,7 +15,7 @@ import { maybeComponent } from '../hoc/maybeComponent'
 import { NotificationView } from '../notification/NotificationView'
 import { useTheme } from '../services/ThemeContext'
 import { MAX_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
-import { SceneDrawer } from '../themed/SceneFooter'
+import { SceneFooter } from '../themed/SceneFooter'
 import { AccentColors, DotsBackground } from '../ui4/DotsBackground'
 import { KeyboardTracker } from './KeyboardTracker'
 
@@ -69,8 +69,8 @@ interface SceneWrapperProps {
   // Padding to add inside the scene border:
   padding?: number
 
-  // Render function to render component for the tab drawer
-  renderDrawer?: (info: SceneWrapperInfo) => React.ReactNode
+  // Render function to render components floating at the bottom of the scene
+  renderFooter?: (info: SceneWrapperInfo) => React.ReactNode
 
   // True to make the scene scrolling (if avoidKeyboard is false):
   scroll?: boolean
@@ -98,7 +98,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     backgroundGradientStart,
     backgroundGradientEnd,
     children,
-    renderDrawer,
+    renderFooter,
     hasHeader = true,
     hasNotifications = false,
     hasTabs = false,
@@ -111,7 +111,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const activeUsername = useSelector(state => state.core.account.username)
   const isLightAccount = accountId != null && activeUsername == null
 
-  const { tabDrawerHeight = 0 } = useSceneDrawerState()
+  const { footerHeight = 0 } = useSceneFooterState()
 
   const navigation = useNavigation<NavigationBase>()
   const theme = useTheme()
@@ -160,7 +160,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     const insetStyles: InsetStyles = {
       paddingTop: insets.top,
       paddingRight: insets.right,
-      paddingBottom: insets.bottom + tabDrawerHeight,
+      paddingBottom: insets.bottom + footerHeight,
       paddingLeft: insets.left
     }
 
@@ -187,7 +187,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
           <MaybeView when={!scroll && !hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles, { padding }]}>
             {isFuncChildren ? children(info) : children}
             {hasNotifications ? <NotificationView navigation={navigation} /> : null}
-            {renderDrawer == null ? null : <SceneDrawer info={info}>{renderDrawer}</SceneDrawer>}
+            {renderFooter == null ? null : <SceneFooter info={info}>{renderFooter}</SceneFooter>}
           </MaybeView>
         </MaybeAnimatedScrollView>
       </MaybeAnimatedView>

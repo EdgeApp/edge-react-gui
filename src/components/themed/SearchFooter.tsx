@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
-import { useDrawerOpenRatio } from '../../state/SceneFooterState'
+import { useFooterOpenRatio } from '../../state/SceneFooterState'
 import { SceneWrapperInfo } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { Space } from '../layout/Space'
-import { SceneDrawerWrapper } from './SceneFooterWrapper'
+import { SceneFooterWrapper } from './SceneFooterWrapper'
 import { SimpleTextInput, SimpleTextInputRef } from './SimpleTextInput'
 
-interface SearchDrawerProps {
+interface SearchFooterProps {
   placeholder: string
 
   isSearching: boolean
@@ -20,12 +20,12 @@ interface SearchDrawerProps {
   onStartSearching: () => void
 }
 
-export const SearchDrawer = (props: SearchDrawerProps) => {
+export const SearchFooter = (props: SearchFooterProps) => {
   const { placeholder, isSearching, searchText, sceneWrapperInfo, onChangeText, onDoneSearching, onStartSearching } = props
 
   const textInputRef = React.useRef<SimpleTextInputRef>(null)
 
-  const { drawerOpenRatio, setKeepOpen } = useDrawerOpenRatio()
+  const { footerOpenRatio, setKeepOpen } = useFooterOpenRatio()
 
   const handleSearchChangeText = useHandler((text: string) => {
     onChangeText(text)
@@ -58,7 +58,7 @@ export const SearchDrawer = (props: SearchDrawerProps) => {
   }, [isSearching, setKeepOpen])
 
   return (
-    <SceneDrawerWrapper info={sceneWrapperInfo}>
+    <SceneFooterWrapper info={sceneWrapperInfo}>
       <Space expand horizontal={1} vertical={0.5}>
         <SimpleTextInput
           returnKeyType="search"
@@ -70,9 +70,9 @@ export const SearchDrawer = (props: SearchDrawerProps) => {
           onFocus={handleSearchFocus}
           ref={textInputRef}
           iconComponent={SearchIconAnimated}
-          scale={drawerOpenRatio}
+          scale={footerOpenRatio}
         />
       </Space>
-    </SceneDrawerWrapper>
+    </SceneFooterWrapper>
   )
 }

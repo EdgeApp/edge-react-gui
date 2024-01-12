@@ -29,7 +29,7 @@ import { withWallet } from '../hoc/withWallet'
 import { useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
 import { ExplorerCard } from '../themed/ExplorerCard'
-import { SearchDrawer } from '../themed/SearchFooter'
+import { SearchFooter } from '../themed/SearchFooter'
 import { EmptyLoader, SectionHeader, SectionHeaderCentered } from '../themed/TransactionListComponents'
 import { TransactionListRow } from '../themed/TransactionListRow'
 import { TransactionListTop } from '../themed/TransactionListTop'
@@ -253,10 +253,10 @@ function TransactionListComponent(props: Props) {
     return item.txid
   })
 
-  const renderDrawer = React.useCallback(
+  const renderFooter = React.useCallback(
     (info: SceneWrapperInfo) => {
       return (
-        <SearchDrawer
+        <SearchFooter
           placeholder={lstrings.transaction_list_search}
           isSearching={isSearching}
           searchText={searchText}
@@ -289,7 +289,7 @@ function TransactionListComponent(props: Props) {
       hasTabs
       hasHeader
       hasNotifications
-      renderDrawer={renderDrawer}
+      renderFooter={renderFooter}
       backgroundGradientColors={backgroundColors}
       backgroundGradientEnd={theme.assetBackgroundGradientEnd}
       backgroundGradientStart={theme.assetBackgroundGradientStart}

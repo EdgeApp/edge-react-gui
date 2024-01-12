@@ -16,7 +16,7 @@ import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
-import { useDrawerOpenRatio } from '../../state/SceneFooterState'
+import { useFooterOpenRatio } from '../../state/SceneFooterState'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { styled } from '../hoc/styled'
@@ -65,7 +65,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const activeTabRoute = state.routes[activeTabFullIndex]
   const activeTabIndex = routes.findIndex(route => route.name === activeTabRoute.name)
 
-  const { drawerOpenRatio, resetDrawerRatio } = useDrawerOpenRatio()
+  const { footerOpenRatio, resetFooterRatio } = useFooterOpenRatio()
 
   return (
     <Container>
@@ -79,8 +79,8 @@ export const MenuTabs = (props: BottomTabBarProps) => {
               key={route.name}
               route={route}
               isActive={activeTabIndex === index}
-              drawerOpenRatio={drawerOpenRatio}
-              resetDrawerRatio={resetDrawerRatio}
+              footerOpenRatio={footerOpenRatio}
+              resetFooterRatio={resetFooterRatio}
             />
           ))}
         </Tabs>
@@ -107,16 +107,16 @@ const Tabs = styled(View)({
 const Tab = ({
   route,
   isActive,
-  drawerOpenRatio,
-  resetDrawerRatio,
+  footerOpenRatio,
+  resetFooterRatio,
   currentName,
   navigation
 }: {
   isActive: boolean
   currentName: string
   route: BottomTabBarProps['state']['routes'][number]
-  drawerOpenRatio: SharedValue<number>
-  resetDrawerRatio: () => void
+  footerOpenRatio: SharedValue<number>
+  resetFooterRatio: () => void
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>
 }) => {
   const theme = useTheme()
@@ -137,7 +137,7 @@ const Tab = ({
   }
 
   const handleOnPress = useHandler(() => {
-    resetDrawerRatio()
+    resetFooterRatio()
 
     switch (route.name) {
       case 'homeTab':
@@ -170,7 +170,7 @@ const Tab = ({
   return (
     <TabContainer accessible={false} insetBottom={insets.bottom} key={route.key} onPress={handleOnPress}>
       {icon[route.name]}
-      <Label accessible numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.65} isActive={isActive} openRatio={drawerOpenRatio}>
+      <Label accessible numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.65} isActive={isActive} openRatio={footerOpenRatio}>
         {title[route.name]}
       </Label>
     </TabContainer>

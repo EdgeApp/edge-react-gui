@@ -15,7 +15,7 @@ import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { SearchDrawer } from '../themed/SearchFooter'
+import { SearchFooter } from '../themed/SearchFooter'
 import { WalletListHeader } from '../themed/WalletListHeader'
 import { WalletListSortable } from '../themed/WalletListSortable'
 import { WalletListSwipeable } from '../themed/WalletListSwipeable'
@@ -88,10 +88,10 @@ export function WalletListScene(props: Props) {
 
   const handlePressDone = useHandler(() => setSorting(false))
 
-  const renderDrawer = React.useCallback(
+  const renderFooter = React.useCallback(
     (info: SceneWrapperInfo) => {
       return (
-        <SearchDrawer
+        <SearchFooter
           placeholder={lstrings.wallet_list_wallet_search}
           isSearching={isSearching}
           searchText={searchText}
@@ -106,7 +106,7 @@ export function WalletListScene(props: Props) {
   )
 
   return (
-    <SceneWrapper avoidKeyboard hasTabs hasHeader hasNotifications padding={theme.rem(0.5)} renderDrawer={renderDrawer}>
+    <SceneWrapper avoidKeyboard hasTabs hasHeader hasNotifications padding={theme.rem(0.5)} renderFooter={renderFooter}>
       {({ insetStyles }) => (
         <>
           <WiredProgressBar />

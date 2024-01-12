@@ -22,7 +22,7 @@ import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
-import { SearchDrawer } from '../themed/SearchFooter'
+import { SearchFooter } from '../themed/SearchFooter'
 
 const AnimatedFlashList = Animated.createAnimatedComponent<FlashListProps<number>>(FlashList)
 
@@ -206,10 +206,10 @@ const CoinRankingComponent = (props: Props) => {
   const timeFrameString = percentChangeStrings[percentChangeTimeFrame]
   const assetSubTextString = assetSubTextStrings[assetSubText]
 
-  const renderDrawer = useCallback(
+  const renderFooter = useCallback(
     (info: SceneWrapperInfo) => {
       return (
-        <SearchDrawer
+        <SearchFooter
           placeholder={lstrings.search_assets}
           isSearching={isSearching}
           searchText={searchText}
@@ -224,7 +224,7 @@ const CoinRankingComponent = (props: Props) => {
   )
 
   return (
-    <SceneWrapper avoidKeyboard hasNotifications renderDrawer={renderDrawer}>
+    <SceneWrapper avoidKeyboard hasNotifications renderFooter={renderFooter}>
       {({ insetStyles }) => (
         <>
           <View style={[styles.container, { paddingTop: insetStyles.paddingTop }]}>

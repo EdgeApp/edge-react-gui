@@ -4,12 +4,12 @@ import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated
 import { BlurView } from 'rn-id-blurview'
 
 import { useHandler } from '../../hooks/useHandler'
-import { useDrawerOpenRatio } from '../../state/SceneFooterState'
+import { useFooterOpenRatio } from '../../state/SceneFooterState'
 import { SceneWrapperInfo } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
 
-export interface SceneDrawerProps {
+export interface SceneFooterProps {
   children: React.ReactNode
   info: SceneWrapperInfo
 
@@ -17,13 +17,13 @@ export interface SceneDrawerProps {
   noBackgroundBlur?: boolean
 }
 
-export const SceneDrawerWrapper = (props: SceneDrawerProps) => {
+export const SceneFooterWrapper = (props: SceneFooterProps) => {
   const { noBackgroundBlur = false, children, info } = props
   const theme = useTheme()
-  const { drawerOpenRatio } = useDrawerOpenRatio()
+  const { footerOpenRatio } = useFooterOpenRatio()
 
   const [containerHeight, setContainerHeight] = useState<number | undefined>(undefined)
-  const handleDrawerInnerLayout = useHandler((event: LayoutChangeEvent) => {
+  const handleFooterInnerLayout = useHandler((event: LayoutChangeEvent) => {
     if (containerHeight != null) return
     setContainerHeight(event.nativeEvent.layout.height)
   })
@@ -31,11 +31,11 @@ export const SceneDrawerWrapper = (props: SceneDrawerProps) => {
   return (
     <ContainerAnimatedView
       containerHeight={containerHeight}
-      drawerOpenRatio={drawerOpenRatio}
+      footerOpenRatio={footerOpenRatio}
       hasTabs={info.hasTabs}
       insetBottom={info.insets.bottom}
       isKeyboardOpen={info.isKeyboardOpen}
-      onLayout={handleDrawerInnerLayout}
+      onLayout={handleFooterInnerLayout}
     >
       {noBackgroundBlur ? null : <BlurView blurType={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} overlayColor="#00000000" />}
       {children}
@@ -45,11 +45,11 @@ export const SceneDrawerWrapper = (props: SceneDrawerProps) => {
 
 const ContainerAnimatedView = styled(Animated.View)<{
   containerHeight?: number
-  drawerOpenRatio: SharedValue<number>
+  footerOpenRatio: SharedValue<number>
   hasTabs: boolean
   insetBottom: number
   isKeyboardOpen: boolean
-}>(() => ({ containerHeight, drawerOpenRatio, hasTabs, insetBottom, isKeyboardOpen }) => {
+}>(() => ({ containerHeight, footerOpenRatio, hasTabs, insetBottom, isKeyboardOpen }) => {
   return [
     {
       flex: 1,
@@ -58,7 +58,7 @@ const ContainerAnimatedView = styled(Animated.View)<{
     useAnimatedStyle(() => {
       if (containerHeight == null) return {}
       return {
-        height: containerHeight * drawerOpenRatio.value + (hasTabs ? 0 : insetBottom)
+        height: containerHeight * footerOpenRatio.value + (hasTabs ? 0 : insetBottom)
       }
     })
   ]

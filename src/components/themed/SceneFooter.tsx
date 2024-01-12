@@ -1,34 +1,34 @@
 import React from 'react'
 import Animated, { interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 
-import { useDrawerOpenRatio, useLayoutHeightInTabBar } from '../../state/SceneFooterState'
+import { useFooterOpenRatio, useLayoutHeightInFooter } from '../../state/SceneFooterState'
 import { SceneWrapperInfo } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { MAX_TAB_BAR_HEIGHT, MIN_TAB_BAR_HEIGHT } from './MenuTabs'
 
-export interface SceneDrawerProps {
-  // Render function to render component for the tab drawer
+export interface SceneFooterProps {
+  // Render function to render component for the tab footer
   children: (info: SceneWrapperInfo) => React.ReactNode
   info: SceneWrapperInfo
 }
 
-export const SceneDrawer = (props: SceneDrawerProps) => {
+export const SceneFooter = (props: SceneFooterProps) => {
   const { children, info } = props
-  const { drawerOpenRatio } = useDrawerOpenRatio()
-  const handleDrawerLayout = useLayoutHeightInTabBar()
+  const { footerOpenRatio } = useFooterOpenRatio()
+  const handleFooterLayout = useLayoutHeightInFooter()
 
   return (
-    <Drawer drawerOpenRatio={drawerOpenRatio} hasTabs={info.hasTabs} isKeyboardOpen={info.isKeyboardOpen} onLayout={handleDrawerLayout}>
+    <Footer footerOpenRatio={footerOpenRatio} hasTabs={info.hasTabs} isKeyboardOpen={info.isKeyboardOpen} onLayout={handleFooterLayout}>
       {children(info)}
-    </Drawer>
+    </Footer>
   )
 }
 
-const Drawer = styled(Animated.View)<{
-  drawerOpenRatio: SharedValue<number>
+const Footer = styled(Animated.View)<{
+  footerOpenRatio: SharedValue<number>
   hasTabs: boolean
   isKeyboardOpen: boolean
-}>(() => ({ drawerOpenRatio, hasTabs, isKeyboardOpen }) => {
+}>(() => ({ footerOpenRatio, hasTabs, isKeyboardOpen }) => {
   return [
     {
       position: 'absolute',
@@ -42,7 +42,7 @@ const Drawer = styled(Animated.View)<{
     },
     useAnimatedStyle(() => {
       return {
-        bottom: isKeyboardOpen ? 0 : !hasTabs ? 0 : interpolate(drawerOpenRatio.value, [0, 1], [MIN_TAB_BAR_HEIGHT, MAX_TAB_BAR_HEIGHT])
+        bottom: isKeyboardOpen ? 0 : !hasTabs ? 0 : interpolate(footerOpenRatio.value, [0, 1], [MIN_TAB_BAR_HEIGHT, MAX_TAB_BAR_HEIGHT])
       }
     })
   ]
