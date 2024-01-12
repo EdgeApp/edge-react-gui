@@ -28,7 +28,7 @@ import { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
 import { ModalMessage, ModalTitle } from '../../themed/ModalParts'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
-import { ThemedModal } from '../../themed/ThemedModal'
+import { ModalUi4 } from '../../ui4/ModalUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
 interface Props extends EdgeSceneProps<'fioStakingChange'> {
@@ -185,13 +185,13 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   const handleUnlockDate = async () => {
     await Airship.show(bridge => {
       return (
-        <ThemedModal bridge={bridge} onCancel={bridge.resolve} paddingRem={1}>
+        <ModalUi4 bridge={bridge} onCancel={bridge.resolve} paddingRem={1}>
           <ModalTitle icon={<MaterialCommunityIcons name="chart-line" size={theme.rem(2)} color={theme.iconTappable} />}>
             {lstrings.staking_change_unlock_explainer_title}
           </ModalTitle>
           <ModalMessage>{lstrings.staking_change_unlock_explainer1}</ModalMessage>
           <ModalMessage>{lstrings.staking_change_unlock_explainer2}</ModalMessage>
-        </ThemedModal>
+        </ModalUi4>
       )
     })
   }

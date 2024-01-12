@@ -10,8 +10,8 @@ import { DisplayTime, displayToSeconds, secondsToDisplay } from '../../util/disp
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
   bridge: AirshipBridge<number | undefined>
@@ -76,7 +76,7 @@ export const AutoLogoutModal = (props: Props) => {
   }, [])
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel}>
+    <ModalUi4 bridge={bridge} onCancel={handleCancel}>
       <ModalTitle>{lstrings.dialog_title}</ModalTitle>
       <View style={styles.pickerContainer}>
         {isAndroid ? (
@@ -116,7 +116,7 @@ export const AutoLogoutModal = (props: Props) => {
         )}
       </View>
       <ButtonsViewUi4 primary={{ label: lstrings.string_save, onPress: handleDone }} layout="column" />
-    </ThemedModal>
+    </ModalUi4>
   )
 }
 

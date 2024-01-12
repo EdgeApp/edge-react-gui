@@ -25,9 +25,9 @@ import { LineTextDivider } from '../themed/LineTextDivider'
 import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Slider } from '../themed/Slider'
-import { ThemedModal } from '../themed/ThemedModal'
 import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
 import { AlertCardUi4 } from '../ui4/AlertCardUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 export interface CryptoExchangeQuoteParams {
   selectedQuote: EdgeSwapQuote
@@ -140,7 +140,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
 
   const handlePoweredByTap = useHandler(async () => {
     await Airship.show(bridge => (
-      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve()}>
+      <ModalUi4 bridge={bridge} onCancel={() => bridge.resolve()}>
         <ModalTitle>{lstrings.quote_swap_provider}</ModalTitle>
         <SectionList
           style={styles.container}
@@ -152,7 +152,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
           renderSectionHeader={renderSectionHeader}
           sections={sectionList}
         />
-      </ThemedModal>
+      </ModalUi4>
     ))
   })
 

@@ -1,13 +1,13 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { Keyboard, ViewStyle, ViewToken } from 'react-native'
+import { Keyboard, ListRenderItem, ViewStyle, ViewToken } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
+import { FlatList } from 'react-native-gesture-handler'
 
 import { useFilter } from '../../hooks/useFilter'
 import { useTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props<T> {
   bridge: AirshipBridge<any>
@@ -36,8 +36,6 @@ interface Props<T> {
   rowComponent?: (props: T) => React.ReactElement
   rowDataFilter?: (filterText: string, data: T, index: number) => boolean
   onViewableItemsChanged?: (info: { viewableItems: ViewToken[]; changed: ViewToken[] }) => void
-  // Footer Props
-  closeArrow?: boolean // Defaults to 'true'
 }
 
 export function ListModal<T>({
@@ -50,7 +48,6 @@ export function ListModal<T>({
   fullScreen = true,
   rowComponent,
   rowDataFilter,
-  closeArrow = true,
   onSubmitEditing,
   onViewableItemsChanged,
   label: placeholder,
@@ -73,7 +70,7 @@ export function ListModal<T>({
   }, [theme])
 
   return (
-    <ThemedModal bridge={bridge} closeButton={closeArrow} onCancel={handleCancel}>
+    <ModalUi4 bridge={bridge} onCancel={handleCancel}>
       {title == null ? null : <ModalTitle>{title}</ModalTitle>}
       {message == null ? null : <ModalMessage>{message}</ModalMessage>}
       {textInput == null ? null : (
@@ -95,16 +92,16 @@ export function ListModal<T>({
           {...textProps}
         />
       )}
-      <FlashList
+      <FlatList
         contentContainerStyle={scrollPadding}
         data={filteredRows}
-        estimatedItemSize={theme.rem(5)}
+        // estimatedItemSize={theme.rem(5)}
         keyboardShouldPersistTaps="handled"
         keyExtractor={(_, i) => `${i}`}
         renderItem={renderItem}
         onScroll={() => Keyboard.dismiss()}
         onViewableItemsChanged={onViewableItemsChanged}
       />
-    </ThemedModal>
+    </ModalUi4>
   )
 }

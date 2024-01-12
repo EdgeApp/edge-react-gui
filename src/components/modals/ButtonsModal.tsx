@@ -2,11 +2,12 @@ import * as React from 'react'
 import { View, ViewStyle } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
+import { useHandler } from '../../hooks/useHandler'
 import { showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 export interface ButtonInfo {
   label: string
@@ -26,12 +27,15 @@ export interface ButtonModalProps<Buttons> {
   message?: string
   children?: React.ReactNode
   buttons: Buttons
-  closeArrow?: boolean
   disableCancel?: boolean
   fullScreen?: boolean
 
   // Adds a border:
   warning?: boolean
+
+  /** @deprecated. Does nothing. */
+  // eslint-disable-next-line react/no-unused-prop-types
+  closeArrow?: boolean
 }
 
 /**
@@ -46,10 +50,10 @@ export interface ButtonModalProps<Buttons> {
  * or other interactive elements.
  */
 export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(props: ButtonModalProps<Buttons>) {
-  const { bridge, title, message, children, buttons, closeArrow = false, disableCancel = false, fullScreen = false, warning } = props
+  const { bridge, title, message, children, buttons, disableCancel = false, fullScreen = false, warning } = props
   const theme = useTheme()
 
-  const handleCancel = disableCancel ? () => {} : () => bridge.resolve(undefined)
+  const handleCancel = useHandler(() => bridge.resolve(undefined))
 
   const containerStyle: ViewStyle = {
     flex: fullScreen ? 1 : 0
@@ -62,7 +66,7 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
   }
 
   return (
-    <ThemedModal closeButton={closeArrow} warning={warning} bridge={bridge} paddingRem={1} onCancel={handleCancel}>
+    <ModalUi4 warning={warning} bridge={bridge} paddingRem={1} onCancel={disableCancel ? undefined : handleCancel}>
       <View style={containerStyle}>
         <View style={textStyle}>
           {title != null ? <ModalTitle>{title}</ModalTitle> : null}
@@ -96,6 +100,6 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
           return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} />
         })}
       </View>
-    </ThemedModal>
+    </ModalUi4>
   )
 }

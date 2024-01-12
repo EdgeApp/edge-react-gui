@@ -11,7 +11,7 @@ import { showToast } from '../services/AirshipInstance'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalUi4 } from '../ui4/ModalUi4'
 interface Props {
   bridge: AirshipBridge<void>
   logs: MultiLogOutput
@@ -71,7 +71,7 @@ export const LogsModal = (props: Props) => {
   }
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel} scroll>
+    <ModalUi4 bridge={bridge} onCancel={handleCancel} scroll>
       <ModalTitle>{lstrings.settings_button_export_logs}</ModalTitle>
       {!isDangerous ? null : <WarningCard key="warning" title={lstrings.string_warning} footer={lstrings.settings_modal_send_unsafe} marginRem={0.5} />}
       {isDangerous ? null : <ModalMessage>{lstrings.settings_modal_export_logs_message}</ModalMessage>}
@@ -89,6 +89,6 @@ export const LogsModal = (props: Props) => {
         <MainButton label={lstrings.settings_button_send_logs} marginRem={0.5} type="primary" onPress={handleSend} disabled={isDangerous} />
       )}
       <MainButton label={lstrings.settings_button_export_logs} marginRem={0.5} type="secondary" onPress={handleShare} />
-    </ThemedModal>
+    </ModalUi4>
   )
 }

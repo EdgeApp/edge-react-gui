@@ -17,7 +17,7 @@ import { Airship } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalUi4 } from '../ui4/ModalUi4'
 import { WalletListModal, WalletListResult } from './WalletListModal'
 
 interface Props {
@@ -152,24 +152,13 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
 
   const options = depositOrSend === 'deposit' ? depositOptions : sendOptions
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel}>
+    <ModalUi4 bridge={bridge} onCancel={handleCancel}>
       <ModalTitle>{depositOrSend === 'deposit' ? lstrings.loan_fragment_deposit : lstrings.fragment_send_subtitle}</ModalTitle>
       {options.map((option, index) => {
         const { title, icon, onPress } = option
-        return (
-          <SelectableRow
-            key={title}
-            title={title}
-            onPress={onPress}
-            icon={<View style={style.iconContainer}>{icon}</View>}
-            // HACK: ThemedModal has 1 rem padding all around, making it
-            // impossible to use components expecting split 0.5rem
-            // margin/padding.
-            marginRem={[0.5, -0.5]}
-          />
-        )
+        return <SelectableRow marginRem={0.5} key={title} title={title} onPress={onPress} icon={<View style={style.iconContainer}>{icon}</View>} />
       })}
-    </ThemedModal>
+    </ModalUi4>
   )
 }
 

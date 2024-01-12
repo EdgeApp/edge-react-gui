@@ -10,8 +10,8 @@ import { parseMarkedText } from '../../util/parseMarkedText'
 import { styled } from '../hoc/styled'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ThemedModal } from '../themed/ThemedModal'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
   bridge: AirshipBridge<boolean>
@@ -38,7 +38,7 @@ export const FioCreateHandleModal = (props: Props) => {
   })
 
   return (
-    <ThemedModal bridge={bridge} closeButton={false} onCancel={handleCancel}>
+    <ModalUi4 bridge={bridge} onCancel={handleCancel}>
       <View style={styles.container}>
         <FastImage source={{ uri: getUi4ImageUri(theme, 'fio/newHandle') }} style={styles.icon} />
         <GetFioHandleTitle numberOfLines={1} adjustsFontSizeToFit>
@@ -58,7 +58,7 @@ export const FioCreateHandleModal = (props: Props) => {
         secondary={{ label: lstrings.not_now_button, onPress: handleCancel }}
         layout="column"
       />
-    </ThemedModal>
+    </ModalUi4>
   )
 }
 

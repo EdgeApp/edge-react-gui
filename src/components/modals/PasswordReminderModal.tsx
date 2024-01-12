@@ -10,8 +10,8 @@ import { showError, showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface OwnProps {
   bridge: AirshipBridge<void>
@@ -79,7 +79,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
     const { errorMessage, password, checkingPassword } = this.state
 
     return (
-      <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
+      <ModalUi4 bridge={bridge} onCancel={this.handleCancel}>
         <ModalTitle>{lstrings.password_reminder_remember_your_password}</ModalTitle>
         <ScrollView style={{ maxHeight: theme.rem(9) }}>
           <ModalMessage>{lstrings.password_reminder_you_will_need_your_password}</ModalMessage>
@@ -107,7 +107,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
           secondary={{ label: lstrings.password_reminder_forgot_password, onPress: this.handleRequestChangePassword, disabled: checkingPassword }}
           layout="column"
         />
-      </ThemedModal>
+      </ModalUi4>
     )
   }
 }

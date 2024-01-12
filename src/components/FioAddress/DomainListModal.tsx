@@ -1,7 +1,7 @@
-import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
+import { FlatList } from 'react-native-gesture-handler'
 
 import { Fontello } from '../../assets/vector'
 import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../constants/WalletAndCurrencyConstants'
@@ -13,9 +13,9 @@ import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { ClickableText } from '../themed/ClickableText'
 import { EdgeText } from '../themed/EdgeText'
-import { ModalFooter, ModalFooterFade, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Item {
   label: string
@@ -154,7 +154,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(undefined)} paddingRem={[1, 0]}>
+      <ModalUi4 bridge={bridge} onCancel={() => bridge.resolve(undefined)} paddingRem={[1, 0]}>
         <ModalTitle center paddingRem={[0, 3, 1]}>
           {lstrings.fio_address_choose_domain_label}
         </ModalTitle>
@@ -169,16 +169,16 @@ class DomainListModalComponent extends React.Component<Props, State> {
           value={input}
           iconComponent={SearchIconAnimated}
         />
-        <FlashList
+        <FlatList
           data={items}
-          estimatedItemSize={theme.rem(3.5)}
+          // estimatedItemSize={theme.rem(3.5)}
           keyboardShouldPersistTaps="handled"
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
           contentContainerStyle={styles.scrollPadding}
         />
-        <ModalFooterFade />
-      </ThemedModal>
+        {/* <ModalFooterFade /> */}
+      </ModalUi4>
     )
   }
 }
