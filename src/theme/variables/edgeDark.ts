@@ -550,6 +550,8 @@ export const edgeDark: Theme = {
     start: { x: 1, y: 0 }
   },
 
+  modalBackgroundUi4: 'rgba(255, 255, 255, 0.376)',
+
   txDirBgReceiveUi4: palette.greenOp60,
   txDirBgSendUi4: palette.redOp60,
   txDirBgSwapUi4: palette.grayOp70,
