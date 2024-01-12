@@ -138,30 +138,27 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
 
     const isEnterTextMode = amountFocused || !zeroAmount
     const currencyName = fieldInfos[fieldNum].currencyName
-    const inputRef = inputRefs[fieldNum]
 
     return (
-      <AmountFieldContainerTouchable key="bottom" accessible={false} onPress={() => inputRef.current?.focus()}>
-        <BottomContainerView>
-          <AmountAnimatedNumericInput
-            value={primaryAmount}
-            focusAnimation={focusAnimation}
-            maxDecimals={fieldInfos[fieldNum].maxEntryDecimals}
-            onChangeText={onNumericInputChange}
-            autoCorrect={false}
-            editable={editable}
-            returnKeyType={returnKeyType}
-            autoFocus={primaryField === fieldNum && keyboardVisible}
-            ref={inputRefs[fieldNum]}
-            onSubmitEditing={onNext}
-            inputAccessoryViewID={inputAccessoryViewID}
-            onFocus={handleBottomFocus}
-            onBlur={handleBottomBlur}
-          />
-          {!isEnterTextMode ? <PlaceholderAnimatedText>{lstrings.string_tap_to_edit}</PlaceholderAnimatedText> : null}
-          {isEnterTextMode ? <CurrencySymbolAnimatedText focusAnimation={focusAnimation}>{' ' + currencyName}</CurrencySymbolAnimatedText> : null}
-        </BottomContainerView>
-      </AmountFieldContainerTouchable>
+      <BottomContainerView key="bottom">
+        <AmountAnimatedNumericInput
+          value={primaryAmount}
+          focusAnimation={focusAnimation}
+          maxDecimals={fieldInfos[fieldNum].maxEntryDecimals}
+          onChangeText={onNumericInputChange}
+          autoCorrect={false}
+          editable={editable}
+          returnKeyType={returnKeyType}
+          autoFocus={primaryField === fieldNum && keyboardVisible}
+          ref={inputRefs[fieldNum]}
+          onSubmitEditing={onNext}
+          inputAccessoryViewID={inputAccessoryViewID}
+          onFocus={handleBottomFocus}
+          onBlur={handleBottomBlur}
+        />
+        {!isEnterTextMode ? <PlaceholderAnimatedText>{lstrings.string_tap_to_edit}</PlaceholderAnimatedText> : null}
+        {isEnterTextMode ? <CurrencySymbolAnimatedText focusAnimation={focusAnimation}>{' ' + currencyName}</CurrencySymbolAnimatedText> : null}
+      </BottomContainerView>
     )
   }
 
@@ -191,16 +188,19 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
   return (
     <>
       <ContainerView>
-        <InnerView focusAnimation={focusAnimation}>
-          <FrontAnimatedView animatedValue={animatedValue} pointerEvents={flipField(primaryField) ? 'auto' : 'none'}>
-            {renderTopRow(1)}
-            {renderBottomRow(0)}
-          </FrontAnimatedView>
-          <BackAnimatedView animatedValue={animatedValue} pointerEvents={primaryField ? 'auto' : 'none'}>
-            {renderTopRow(0)}
-            {renderBottomRow(1)}
-          </BackAnimatedView>
-        </InnerView>
+        <AmountFieldContainerTouchable accessible={false} onPress={() => inputRefs[primaryField].current?.focus()}>
+          <InnerView focusAnimation={focusAnimation}>
+            <FrontAnimatedView animatedValue={animatedValue} pointerEvents={flipField(primaryField) ? 'auto' : 'none'}>
+              {renderTopRow(1)}
+              {renderBottomRow(0)}
+            </FrontAnimatedView>
+            <BackAnimatedView animatedValue={animatedValue} pointerEvents={primaryField ? 'auto' : 'none'}>
+              {renderTopRow(0)}
+              {renderBottomRow(1)}
+            </BackAnimatedView>
+          </InnerView>
+        </AmountFieldContainerTouchable>
+
         <ButtonBox onPress={onToggleFlipInput} paddingRem={[0.5, 0, 0.5, 0.5]}>
           <FlipIcon color={theme.iconTappable} size={theme.rem(1.5)} />
         </ButtonBox>
@@ -273,6 +273,7 @@ const BackAnimatedView = styled(Animated.View)<{ animatedValue: SharedValue<numb
 
 const TopAmountText = styled(Text)(theme => () => [
   {
+    alignSelf: 'flex-start',
     color: theme.textInputPlaceholderColor,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.8),
@@ -307,7 +308,6 @@ const AmountAnimatedNumericInput = styledWithRef(AnimatedNumericInput)<{ focusAn
 )
 
 const PlaceholderAnimatedText = styled(Animated.Text)(theme => ({
-  // opacity: 0,
   position: 'absolute',
   left: 0,
   top: 0,
