@@ -1205,6 +1205,7 @@
   "fiat_plugin_sell_cancelled": "Sell order cancelled",
   "fiat_plugin_sell_failed_try_again": "Sell order failed. Please try again.",
   "fiat_plugin_sell_failed_to_send_try_again": "Failed to send funds for sell transaction. Please try again.",
+  "fiat_plugin_cannot_continue_camera_permission": "Cannot continue. Camera permission needed for ID verifications",
   "select_recv_wallet": "Selecione a carteira para receber",
   "select_src_wallet": "Selecione Fonte da Carteira",
   "deposit_to_bank": "Depositar no banco",
