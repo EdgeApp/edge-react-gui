@@ -121,8 +121,6 @@ export const edgeLight: Theme = {
   dangerIcon: palette.accentRed,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
-  transactionListIconBackground: palette.white,
-  buySellCustomPluginModalIcon: palette.white,
   loadingIcon: palette.edgeBlue,
 
   // Background

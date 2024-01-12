@@ -93,8 +93,6 @@ export interface Theme {
   warningIcon: string
   dangerIcon: string
   iconLoadingOverlay: string
-  transactionListIconBackground: string
-  buySellCustomPluginModalIcon: string
   loadingIcon: string
 
   // Background
@@ -124,7 +122,6 @@ export interface Theme {
   modalBorderWidth: number
   modalBorderRadiusRem: number
 
-  sideMenuColor: string
   sideMenuBorderColor: string
   sideMenuBorderWidth: number
   sideMenuFont: string
@@ -148,16 +145,9 @@ export interface Theme {
   // - otpSettingsKey
   // - tileComponent
 
-  // WalletList
-  walletListBackground: string
-  walletListMutedBackground: string
-
   // Settings Row
   settingsRowBackground: string
   settingsRowPressed: string
-  settingsRowHeaderBackground: string[]
-  settingsRowHeaderBackgroundStart: GradientCoords
-  settingsRowHeaderBackgroundEnd: GradientCoords
 
   settingsRowHeaderFont: string
   settingsRowHeaderFontSizeRem: number
@@ -349,7 +339,6 @@ export interface Theme {
   // pressedOpacity: number,
   searchListRefreshControlIndicator: string
   clipboardPopupText: string
-  flipInputBorder: string
 
   // Fonts
   fontFaceDefault: string
@@ -383,17 +372,6 @@ export interface Theme {
   // Input Accessory
   inputAccessoryBackground: string
   inputAccessoryText: string
-
-  // Outline Text Input
-  outlineTextInputColor: string
-  outlineTextInputTextColor: string
-  outlineTextInputBorderWidth: number
-  outlineTextInputBorderColor: string
-  outlineTextInputBorderColorDisabled: string
-  outlineTextInputBorderColorFocused: string
-  outlineTextInputLabelColor: string
-  outlineTextInputLabelColorDisabled: string
-  outlineTextInputLabelColorFocused: string
 
   // Text Input
   textInputTextColor: string

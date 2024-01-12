@@ -121,8 +121,6 @@ export const testLight: Theme = {
   dangerIcon: palette.accentRed,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
-  transactionListIconBackground: palette.white,
-  buySellCustomPluginModalIcon: palette.white,
   loadingIcon: palette.edgeBlue,
 
   // Background
@@ -355,9 +353,6 @@ export const testLight: Theme = {
   // Settings Row
   settingsRowBackground: palette.white,
   settingsRowPressed: palette.transparent,
-  settingsRowHeaderBackground: [palette.lightGray, palette.lightGray],
-  settingsRowHeaderBackgroundStart: { x: 0, y: 0 },
-  settingsRowHeaderBackgroundEnd: { x: 1, y: 1 },
   settingsRowHeaderFont: palette.QuicksandMedium,
   settingsRowHeaderFontSizeRem: 1,
   settingsRowSubHeader: palette.transparent,
@@ -410,17 +405,6 @@ export const testLight: Theme = {
   // Input Accessory
   inputAccessoryBackground: palette.white,
   inputAccessoryText: palette.accentBlue,
-
-  // Outline Text Input
-  outlineTextInputColor: palette.transparent,
-  outlineTextInputTextColor: palette.black,
-  outlineTextInputBorderWidth: 1,
-  outlineTextInputBorderColor: palette.gray,
-  outlineTextInputBorderColorDisabled: palette.gray,
-  outlineTextInputBorderColorFocused: palette.edgeBlue,
-  outlineTextInputLabelColor: palette.gray,
-  outlineTextInputLabelColorDisabled: palette.gray,
-  outlineTextInputLabelColorFocused: palette.edgeBlue,
 
   // Simple Text Input
   textInputTextColor: palette.gray,

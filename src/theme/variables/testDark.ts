@@ -127,8 +127,6 @@ export const testDark: Theme = {
   dangerIcon: palette.accentRed,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
-  transactionListIconBackground: palette.darkAqua,
-  buySellCustomPluginModalIcon: palette.navyAqua,
   loadingIcon: palette.edgeMint,
 
   // Background
@@ -180,7 +178,6 @@ export const testDark: Theme = {
   modalBorderWidth: 0,
   modalBorderRadiusRem: 1,
 
-  sideMenuColor: palette.navyAqua,
   sideMenuBorderColor: palette.navyAqua,
   sideMenuBorderWidth: 0,
   sideMenuFont: palette.QuicksandMedium,
@@ -196,10 +193,6 @@ export const testDark: Theme = {
   // Commenting out will remove background gradient:
   // listSectionHeaderBackgroundGradientStart: { x: 0, y: 0 },
   // listSectionHeaderBackgroundGradientEnd: { x: 1, y: 0 },
-
-  // WalletList
-  walletListBackground: palette.navyAqua,
-  walletListMutedBackground: palette.navyAqua,
 
   // Text
   primaryText: palette.white,
@@ -384,9 +377,6 @@ export const testDark: Theme = {
   // Settings Row
   settingsRowBackground: palette.transparent,
   settingsRowPressed: palette.transparent,
-  settingsRowHeaderBackground: [palette.navyAqua, palette.navyAqua],
-  settingsRowHeaderBackgroundStart: { x: 0, y: 0 },
-  settingsRowHeaderBackgroundEnd: { x: 1, y: 1 },
   settingsRowHeaderFont: palette.QuicksandMedium,
   settingsRowHeaderFontSizeRem: 1,
   settingsRowSubHeader: palette.transparent,
@@ -405,7 +395,6 @@ export const testDark: Theme = {
   // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
   searchListRefreshControlIndicator: palette.transparent,
   clipboardPopupText: palette.black,
-  flipInputBorder: palette.blueGray,
 
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,
@@ -439,17 +428,6 @@ export const testDark: Theme = {
   // Input Accessory
   inputAccessoryBackground: palette.white,
   inputAccessoryText: palette.accentBlue,
-
-  // Outline Text Input
-  outlineTextInputColor: palette.transparent,
-  outlineTextInputTextColor: palette.white,
-  outlineTextInputBorderWidth: 1,
-  outlineTextInputBorderColor: palette.blueGray,
-  outlineTextInputBorderColorDisabled: palette.gray,
-  outlineTextInputBorderColorFocused: palette.edgeMint,
-  outlineTextInputLabelColor: palette.blueGray,
-  outlineTextInputLabelColorDisabled: palette.gray,
-  outlineTextInputLabelColorFocused: palette.edgeMint,
 
   // Simple Text Input
   textInputTextColor: palette.white,
