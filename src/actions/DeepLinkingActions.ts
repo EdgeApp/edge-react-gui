@@ -61,7 +61,7 @@ export function retryPendingDeepLink(navigation: NavigationBase): ThunkAction<vo
  * Launches a link if it app is able to do so.
  */
 export async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootState, link: DeepLink): Promise<boolean> {
-  const { account } = state.core
+  const { account, disklet } = state.core
   const { accountReferral } = state.account
   const { activeWalletIds, currencyWallets } = account
   const deviceId = base58ToUuid(state.core.context.clientId)
@@ -123,6 +123,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
         accountReferral,
         deviceId,
         disablePlugins: disableProviders,
+        disklet,
         guiPlugin: plugin,
         direction,
         regionCode: { countryCode: state.ui.settings.countryCode },

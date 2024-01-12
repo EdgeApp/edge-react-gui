@@ -7,7 +7,7 @@ import { base58ToUuid } from '../util/utils'
 export function executePluginAction(navigation: NavigationBase, pluginId: string, direction: 'buy' | 'sell'): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
-    const { account, context } = state.core
+    const { account, context, disklet } = state.core
     const { accountReferral } = state.account
     const deviceId = base58ToUuid(context.clientId)
 
@@ -16,6 +16,7 @@ export function executePluginAction(navigation: NavigationBase, pluginId: string
       accountReferral,
       deviceId,
       direction: 'sell',
+      disklet,
       guiPlugin: guiPlugins[pluginId],
       navigation,
       regionCode: { countryCode: 'US' }
