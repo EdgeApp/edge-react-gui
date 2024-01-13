@@ -148,14 +148,11 @@ export const testLight: Theme = {
 
   // Modal
   modal: palette.lightestGray,
-  // @ts-expect-error
-  modalBlurType: 'dark',
   modalCloseIcon: palette.edgeMint,
   modalBorderColor: palette.transparent,
   modalBorderWidth: 0,
   modalBorderRadiusRem: 1,
 
-  sideMenuColor: palette.lightestGray,
   sideMenuBorderColor: palette.transparent,
   sideMenuBorderWidth: 0,
   sideMenuFont: palette.QuicksandMedium,
@@ -168,10 +165,6 @@ export const testLight: Theme = {
   // Section Lists
   listSectionHeaderBackgroundGradientColors: [palette.transparent],
 
-  // WalletList
-  walletListBackground: palette.edgeBlue,
-  walletListMutedBackground: palette.mutedBlue,
-
   // Text
   primaryText: palette.black,
   secondaryText: palette.gray,
@@ -181,6 +174,7 @@ export const testLight: Theme = {
   dangerText: palette.accentRed,
   textLink: palette.edgeBlue,
   deactivatedText: palette.gray,
+  emphasizedText: palette.edgeMint,
   // listHeaderText: palette.black,
 
   // Header
@@ -371,7 +365,6 @@ export const testLight: Theme = {
   // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
   searchListRefreshControlIndicator: palette.transparent,
   clipboardPopupText: palette.black,
-  flipInputBorder: palette.edgeBlue,
 
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,
