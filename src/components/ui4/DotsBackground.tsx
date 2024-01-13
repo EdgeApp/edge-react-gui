@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { Circle, Defs, G, RadialGradient, Stop, Svg } from 'react-native-svg'
 
 import { useHandler } from '../../hooks/useHandler'
-import { ThemeDot, UpdateDots } from '../../types/Theme'
+import { OverrideDots, ThemeDot } from '../../types/Theme'
 import { useTheme } from '../services/ThemeContext'
 
 export interface AccentColors {
@@ -15,7 +15,7 @@ interface Props {
   backgroundGradientColors?: string[]
   backgroundGradientStart?: { x: number; y: number }
   backgroundGradientEnd?: { x: number; y: number }
-  overrideDots?: UpdateDots
+  overrideDots?: OverrideDots
   accentColors?: AccentColors
 }
 

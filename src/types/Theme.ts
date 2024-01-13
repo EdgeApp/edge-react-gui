@@ -13,7 +13,7 @@ export interface ThemeDot {
 }
 
 // Updates to dots. undefined keeps the dots, null deletes them
-export type UpdateDots = Array<Partial<ThemeDot> | undefined | null>
+export type OverrideDots = Array<Partial<ThemeDot> | undefined | null>
 
 interface ThemeGradientParams {
   colors: string[]
@@ -105,7 +105,7 @@ export interface Theme {
     blurRadius: number
     dotOpacity: number
     dots: ThemeDot[]
-    assetOverrideDots: UpdateDots
+    assetOverrideDots: OverrideDots
   }
   assetBackgroundGradientColors: string[]
   assetBackgroundGradientStart: { x: number; y: number }

@@ -8,7 +8,7 @@ import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-sa
 import { useSceneDrawerState } from '../../state/SceneDrawerState'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { UpdateDots } from '../../types/Theme'
+import { OverrideDots } from '../../types/Theme'
 import { maybeComponent } from '../hoc/maybeComponent'
 import { NotificationView } from '../notification/NotificationView'
 import { useTheme } from '../services/ThemeContext'
@@ -62,7 +62,7 @@ interface SceneWrapperProps {
   keyboardShouldPersistTaps?: 'always' | 'never' | 'handled'
 
   // Override existing background dots parameters
-  overrideDots?: UpdateDots
+  overrideDots?: OverrideDots
 
   // Padding to add inside the scene border:
   padding?: number
