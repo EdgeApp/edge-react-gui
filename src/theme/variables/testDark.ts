@@ -309,7 +309,8 @@ export const testDark: Theme = {
     textShadowRadius: 3
   },
 
-  tabBarBackground: [`${palette.black}00`, palette.black],
+  tabBarBackground: [palette.black, palette.black],
+  tabBarBackgroundIos: [palette.blackOp25, palette.blackOp50],
   tabBarBackgroundStart: { x: 0, y: 0.5 },
   tabBarBackgroundEnd: { x: 0, y: 1 },
   tabBarTopOutlineColors: [`${palette.white}22`, `${palette.white}22`],

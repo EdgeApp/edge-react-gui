@@ -269,6 +269,7 @@ export const edgeLight: Theme = {
   },
 
   tabBarBackground: [palette.white, palette.white],
+  tabBarBackgroundIos: [palette.white, palette.white],
   tabBarBackgroundStart: { x: 0, y: 0 },
   tabBarBackgroundEnd: { x: 1, y: 1 },
   tabBarTopOutlineColors: [palette.white, palette.white],

@@ -1,26 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`MenuTabs should render with loading props 1`] = `
-<BVLinearGradient
-  colors={
-    [
-      0,
-      4278190080,
-    ]
-  }
-  endPoint={
-    {
-      "x": 0,
-      "y": 1,
-    }
-  }
-  locations={null}
-  startPoint={
-    {
-      "x": 0,
-      "y": 0.5,
-    }
-  }
+<View
   style={
     {
       "bottom": 0,
@@ -35,7 +16,7 @@ exports[`MenuTabs should render with loading props 1`] = `
   <BlurView
     blurAmount={10}
     blurType="dark"
-    overlayColor="#00000000"
+    overlayColor="rgba(0, 0, 0, 0)"
     style={
       {
         "bottom": 0,
@@ -49,8 +30,8 @@ exports[`MenuTabs should render with loading props 1`] = `
   <BVLinearGradient
     colors={
       [
-        0,
-        4278190080,
+        436207616,
+        3003121664,
       ]
     }
     endPoint={
@@ -77,5 +58,5 @@ exports[`MenuTabs should render with loading props 1`] = `
       }
     />
   </BVLinearGradient>
-</BVLinearGradient>
+</View>
 `;

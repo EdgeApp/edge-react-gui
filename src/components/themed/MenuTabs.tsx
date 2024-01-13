@@ -2,7 +2,7 @@ import { BottomTabBarProps, BottomTabNavigationEventMap } from '@react-navigatio
 import { NavigationHelpers, ParamListBase } from '@react-navigation/native'
 import * as React from 'react'
 import { useMemo } from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -42,7 +42,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const { navigation, state } = props
   const theme = useTheme()
   const activeTabFullIndex = state.index
-  const colors = theme.tabBarBackground
+  const colors = Platform.OS === 'ios' ? theme.tabBarBackgroundIos : theme.tabBarBackground
   const start = theme.tabBarBackgroundStart
   const end = theme.tabBarBackgroundEnd
   const routes = useMemo(
@@ -68,8 +68,8 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const { drawerOpenRatio, resetDrawerRatio } = useDrawerOpenRatio()
 
   return (
-    <ContainerLinearGradient colors={colors} start={start} end={end}>
-      <BlurView blurType={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} overlayColor="#00000000" />
+    <Container>
+      <BlurView blurType={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} overlayColor="rgba(0, 0, 0, 0)" />
       <LinearGradient colors={colors} start={start} end={end}>
         <Tabs>
           {routes.map((route, index: number) => (
@@ -85,11 +85,11 @@ export const MenuTabs = (props: BottomTabBarProps) => {
           ))}
         </Tabs>
       </LinearGradient>
-    </ContainerLinearGradient>
+    </Container>
   )
 }
 
-const ContainerLinearGradient = styled(LinearGradient)({
+const Container = styled(View)({
   position: 'absolute',
   left: 0,
   right: 0,

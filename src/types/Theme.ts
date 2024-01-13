@@ -263,6 +263,9 @@ export interface Theme {
   cardTextShadow: TextShadowParams // For added contrast against complex card backgrounds
 
   tabBarBackground: string[]
+  // IOS has a forced darkening and lightening of blurviews so we need
+  // a different color to compensate
+  tabBarBackgroundIos: string[]
   tabBarBackgroundStart: GradientCoords
   tabBarBackgroundEnd: GradientCoords
   tabBarTopOutlineColors: string[]

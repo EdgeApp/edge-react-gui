@@ -44,7 +44,8 @@ const palette = {
   accentOrange: '#F1AA19',
   darkBlueLightened: '#2B333A',
 
-  blackOp25: 'rgba(0, 0, 0, .25)',
+  blackOp10: 'rgba(0, 0, 0, .1)',
+  blackOp35: 'rgba(0, 0, 0, .25)',
   blackOp50: 'rgba(0, 0, 0, .5)',
   blackOp70: 'rgba(0, 0, 0, .7)',
 
@@ -306,7 +307,8 @@ export const edgeDark: Theme = {
     textShadowRadius: 3
   },
 
-  tabBarBackground: [`${palette.black}00`, palette.black],
+  tabBarBackground: [palette.blackOp35, palette.blackOp70],
+  tabBarBackgroundIos: [palette.blackOp10, palette.blackOp70],
   tabBarBackgroundStart: { x: 0, y: 0.5 },
   tabBarBackgroundEnd: { x: 0, y: 1 },
   tabBarTopOutlineColors: [`${palette.white}22`, `${palette.white}22`],
