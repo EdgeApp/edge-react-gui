@@ -1,17 +1,19 @@
 import { asNumber, asObject } from 'cleaners'
 
+import { AccentColors } from '../components/ui4/DotsBackground'
+
 export type ImageProp = { uri: string } | number
 
 export interface ThemeDot {
-  // The accent color will override the dot color when it is present.
-  // To change this behavior, use 'keep' to preserve the dot color or
-  // 'drop' to remove the dot completely:
-  accent?: 'keep' | 'drop'
+  accentColor?: keyof AccentColors
   color: string
   cx: number | string
   cy: number | string
   r: number
 }
+
+// Updates to dots. undefined keeps the dots, null deletes them
+export type UpdateDots = Array<Partial<ThemeDot> | undefined | null>
 
 interface ThemeGradientParams {
   colors: string[]
@@ -98,9 +100,10 @@ export interface Theme {
   // Background
   backgroundDots: {
     blurRadius: number
-    color: string // Never include an alpha here
+    color: string
     dotOpacity: number
     dots: ThemeDot[]
+    assetOverrideDots: UpdateDots
   }
 
   // Camera Overlay

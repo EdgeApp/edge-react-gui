@@ -33,6 +33,7 @@ import { SearchDrawer } from '../themed/SearchDrawer'
 import { EmptyLoader, SectionHeader, SectionHeaderCentered } from '../themed/TransactionListComponents'
 import { TransactionListRow } from '../themed/TransactionListRow'
 import { TransactionListTop } from '../themed/TransactionListTop'
+import { AccentColors } from '../ui4/DotsBackground'
 
 const AnimatedFlashList = Animated.createAnimatedComponent<FlashListProps<ListItem>>(FlashList)
 
@@ -270,8 +271,21 @@ function TransactionListComponent(props: Props) {
     [handleChangeText, handleDoneSearching, handleStartSearching, isSearching, searchText]
   )
 
+  const accentColors: AccentColors = {
+    // Transparent fallback for while iconColor is loading
+    iconAccentColor: iconColor ?? '#00000000'
+  }
+
   return (
-    <SceneWrapper accentColor={iconColor} avoidKeyboard hasTabs hasHeader hasNotifications renderDrawer={renderDrawer}>
+    <SceneWrapper
+      accentColors={accentColors}
+      overrideDots={theme.backgroundDots.assetOverrideDots}
+      avoidKeyboard
+      hasTabs
+      hasHeader
+      hasNotifications
+      renderDrawer={renderDrawer}
+    >
       {({ insetStyles }) => (
         <>
           <LinearGradient

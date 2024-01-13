@@ -3,24 +3,51 @@ import { LayoutChangeEvent, StyleSheet, View } from 'react-native'
 import { Circle, Defs, G, RadialGradient, Stop, Svg } from 'react-native-svg'
 
 import { useHandler } from '../../hooks/useHandler'
-import { ThemeDot } from '../../types/Theme'
+import { ThemeDot, UpdateDots } from '../../types/Theme'
 import { useTheme } from '../services/ThemeContext'
 
+export interface AccentColors {
+  iconAccentColor?: string
+}
 interface Props {
-  accentColor?: string
+  overrideDots?: UpdateDots
+  accentColors?: AccentColors
 }
 
 export function DotsBackground(props: Props): JSX.Element {
-  const { accentColor } = props
+  const { accentColors, overrideDots } = props
   const theme = useTheme()
   const { blurRadius, color, dotOpacity, dots } = theme.backgroundDots
 
   const accentDots: ThemeDot[] = []
-  for (const dot of dots) {
-    if (accentColor == null || dot.accent === 'keep') {
+  for (let i = 0; i < dots.length; i++) {
+    const dot = dots[i]
+    const overrideDot = overrideDots != null ? overrideDots[i] : undefined
+    if (overrideDot === null) {
+      // Delete the dot
+      continue
+    }
+    if (overrideDot == null && dot == null) continue
+    if (overrideDot === undefined) {
       accentDots.push(dot)
-    } else if (dot.accent == null) {
-      accentDots.push({ ...dot, color: accentColor })
+    } else {
+      if (dot != null) {
+        const mergedDot: ThemeDot = {
+          color: overrideDot.color ?? dot.color,
+          accentColor: overrideDot.accentColor ?? dot.accentColor,
+          r: overrideDot.r ?? dot.r,
+          cx: overrideDot.cx ?? dot.cx,
+          cy: overrideDot.cy ?? dot.cy
+        }
+        if (mergedDot.accentColor != null) {
+          const ac = (accentColors ?? {})[mergedDot.accentColor]
+          if (ac == null) {
+            throw new Error('Missing accentColors')
+          }
+          mergedDot.color = ac
+        }
+        accentDots.push(mergedDot)
+      }
     }
   }
 

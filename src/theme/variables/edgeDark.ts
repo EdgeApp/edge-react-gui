@@ -139,7 +139,6 @@ export const edgeDark: Theme = {
     dots: [
       {
         // Top-left:
-        accent: 'keep',
         color: palette.white,
         cx: '10%',
         cy: '10%',
@@ -154,13 +153,13 @@ export const edgeDark: Theme = {
       },
       {
         // Bottom-left:
-        accent: 'drop',
         color: palette.backgroundGreen,
         cx: '-15%',
         cy: '100%',
         r: scale(220)
       }
-    ]
+    ],
+    assetOverrideDots: [undefined, { accentColor: 'iconAccentColor' }, null]
   },
 
   // Camera Overlay

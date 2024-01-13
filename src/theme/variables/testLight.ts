@@ -133,7 +133,8 @@ export const testLight: Theme = {
     dots: [
       { color: palette.backgroundGreen, cx: '75%', cy: '25%', r: scale(175) },
       { color: palette.backgroundPurple, cx: '25%', cy: '75%', r: scale(150) }
-    ]
+    ],
+    assetOverrideDots: [undefined, { accentColor: 'iconAccentColor' }, null]
   },
 
   // Camera Overlay
