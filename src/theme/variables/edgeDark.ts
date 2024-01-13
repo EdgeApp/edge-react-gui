@@ -188,11 +188,10 @@ export const edgeDark: Theme = {
   tileBackgroundMuted: palette.transparent,
 
   // Section Lists
-  // listSectionHeaderBackgroundGradientColors: [palette.navyAquaMiddle], // For vertical gradient
   listSectionHeaderBackgroundGradientColors: [`#000000aa`, `#00000000`],
   // Commenting out will remove background gradient:
-  // listSectionHeaderBackgroundGradientStart: { x: 0, y: 0 },
-  // listSectionHeaderBackgroundGradientEnd: { x: 1, y: 0 },
+  listSectionHeaderBackgroundGradientStart: null,
+  listSectionHeaderBackgroundGradientEnd: null,
 
   // Text
   primaryText: palette.white,

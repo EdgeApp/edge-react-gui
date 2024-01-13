@@ -164,6 +164,8 @@ export const edgeLight: Theme = {
 
   // Section Lists
   listSectionHeaderBackgroundGradientColors: [palette.transparent],
+  listSectionHeaderBackgroundGradientStart: { x: 0, y: 0 },
+  listSectionHeaderBackgroundGradientEnd: { x: 1, y: 0 },
 
   // Text
   primaryText: palette.black,

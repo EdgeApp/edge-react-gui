@@ -133,8 +133,8 @@ export interface Theme {
 
   // Section Lists
   listSectionHeaderBackgroundGradientColors: string[]
-  listSectionHeaderBackgroundGradientStart?: { x: number; y: number }
-  listSectionHeaderBackgroundGradientEnd?: { x: number; y: number }
+  listSectionHeaderBackgroundGradientStart: { x: number; y: number } | null
+  listSectionHeaderBackgroundGradientEnd: { x: number; y: number } | null
 
   // NOTE: List of components/screens that uses the tileBackground
   // - promoCard
