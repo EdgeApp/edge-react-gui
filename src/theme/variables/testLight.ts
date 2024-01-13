@@ -177,7 +177,6 @@ export const testLight: Theme = {
   textLink: palette.edgeBlue,
   deactivatedText: palette.gray,
   emphasizedText: palette.edgeMint,
-  // listHeaderText: palette.black,
 
   // Header
   headerIcon: edgeMark,
@@ -253,22 +252,7 @@ export const testLight: Theme = {
   dropdownError: palette.accentRed,
   dropdownText: palette.white,
 
-  // tertiaryButtonOutline: palette.edgeBlue,
-  // tertiaryButton: palette.transparent,
-  // tertiaryButtonText: palette.edgeBlue,
-
-  // glassButton: palette.blackOp10,
-  // glassButtonDark: palette.blackOp50,
-  // glassButtonDarkIcon: palette.white,
-  // glassButtonIcon: palette.edgeBlue,
-
-  // dangerButtonOutline: palette.transparent,
-  // dangerButton: palette.accentRed,
-  // dangerButtonText: palette.white,
-
   // Card
-  // cardBackground: palette.white,
-  // cardShadow: palette.blackOp25,
   cardBorder: 1,
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 16,
@@ -295,17 +279,8 @@ export const testLight: Theme = {
   shimmerBackgroundColor: palette.whiteOp05,
   shimmerBackgroundHighlight: palette.whiteOp10,
 
-  // pinOutline: palette.edgeBlue,
-  // pinFilled: palette.edgeBlue,
-
-  // radioButtonOutline: palette.edgeNavy,
-  // radioButtonFilled: palette.edgeBlue,
-
   toggleButton: palette.accentGreen,
   toggleButtonOff: palette.gray,
-  // toggleButtonThumb: palette.white,
-
-  // warningBubble: palette.accentOrange,
 
   // Confirmation slider
   confirmationSlider: palette.blackOp10,
@@ -320,9 +295,6 @@ export const testLight: Theme = {
   // Lines
   lineDivider: palette.edgeBlue,
   titleLineDivider: palette.edgeBlue,
-  // textInputLine: palette.gray,
-  // orLine: palette.gray,
-  // tileDivider: palette.gray,
   thinLineWidth: 1,
   mediumLineWidth: 2,
   thickLineWidth: 3,
@@ -330,21 +302,6 @@ export const testLight: Theme = {
   // DividerLine component
   dividerLineHeight: 1,
   dividerLineColors: [palette.edgeBlue, palette.edgeBlue],
-
-  // Notifications
-  // notificationBackground: palette.grayOp80,
-  // messageBanner: palette.grayOp80,
-  // bubble: palette.whiteOp10,
-
-  // Alert Modal
-  // securityAlertModalHeaderIcon: palette.accentOrange,
-  // securityAlertModalRowBorder: palette.lightGray,
-  // securityAlertModalWarningIcon: palette.accentOrange,
-  // securityAlertModalDangerIcon: palette.accentRed,
-  // securityAlertModalBackground: palette.white,
-  // securityAlertModalText: palette.black,
-  // securityAlertModalLine: palette.lightGray,
-  // securityAlertModalHeaderIconShadow: palette.accentOrangeOp30,
 
   // Settings Row
   settingsRowBackground: palette.white,
@@ -364,7 +321,6 @@ export const testLight: Theme = {
   walletProgressIconDone: palette.white,
 
   // Misc
-  // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
   searchListRefreshControlIndicator: palette.transparent,
   clipboardPopupText: palette.black,
 
