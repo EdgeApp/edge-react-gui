@@ -2,21 +2,35 @@
 
 exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279900698,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 1,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -193,7 +207,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [

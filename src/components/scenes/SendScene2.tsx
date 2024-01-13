@@ -24,6 +24,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useExchangeDenom } from '../../hooks/useExchangeDenom'
 import { useHandler } from '../../hooks/useHandler'
+import { useIconColor } from '../../hooks/useIconColor'
 import { useMount } from '../../hooks/useMount'
 import { useUnmount } from '../../hooks/useUnmount'
 import { useWatch } from '../../hooks/useWatch'
@@ -37,7 +38,7 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { addToFioAddressCache, checkRecordSendFee, FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM, FIO_NO_BUNDLED_ERR_CODE, recordSend } from '../../util/FioAddressUtils'
 import { logActivity } from '../../util/logger'
-import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, zeroString } from '../../util/utils'
+import { convertTransactionFeeToDisplayFee, darkenHexColor, DECIMAL_PRECISION, zeroString } from '../../util/utils'
 import { getMemoError, getMemoLabel, getMemoTitle } from '../../util/validateMemos'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
@@ -59,6 +60,7 @@ import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
 import { AlertCardUi4 } from '../ui4/AlertCardUi4'
 import { CardUi4 } from '../ui4/CardUi4'
+import { AccentColors } from '../ui4/DotsBackground'
 import { RowUi4 } from '../ui4/RowUi4'
 
 // TODO: Check contentPadding
@@ -181,6 +183,7 @@ const SendComponent = (props: Props) => {
   const cryptoExchangeDenomination = useExchangeDenom(pluginId, currencyCode)
   const parentDisplayDenom = useDisplayDenom(pluginId, currencyWallets[walletId].currencyInfo.currencyCode)
   const parentExchangeDenom = useExchangeDenom(pluginId, currencyWallets[walletId].currencyInfo.currencyCode)
+  const iconColor = useIconColor({ pluginId, tokenId })
 
   spendInfo.tokenId = tokenId
 
@@ -994,8 +997,28 @@ const SendComponent = (props: Props) => {
     disableSlider = true
     disabledText = lstrings.spending_limits_enter_pin
   }
+
+  const accentColors: AccentColors = {
+    // Transparent fallback for while iconColor is loading
+    iconAccentColor: iconColor ?? '#00000000'
+  }
+
+  const backgroundColors = [...theme.assetBackgroundGradientColors]
+  if (iconColor != null) {
+    const scaledColor = darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+    backgroundColors[0] = scaledColor
+  }
+
   return (
-    <SceneWrapper hasNotifications padding={theme.rem(0.5)}>
+    <SceneWrapper
+      hasNotifications
+      accentColors={accentColors}
+      padding={theme.rem(0.5)}
+      backgroundGradientColors={backgroundColors}
+      backgroundGradientEnd={theme.assetBackgroundGradientEnd}
+      backgroundGradientStart={theme.assetBackgroundGradientStart}
+      overrideDots={theme.backgroundDots.assetOverrideDots}
+    >
       {({ insetStyles }) => (
         <>
           <StyledKeyboardAwareScrollView

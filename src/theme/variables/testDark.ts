@@ -132,14 +132,15 @@ export const testDark: Theme = {
   loadingIcon: palette.edgeMint,
 
   // Background
-  background: {
+  backgroundGradientColors: [palette.black, palette.black],
+  backgroundGradientStart: { x: 0, y: 0 },
+  backgroundGradientEnd: { x: 1, y: 0 },
+  backgroundDots: {
     blurRadius: scale(80),
-    color: palette.backgroundBlack,
     dotOpacity: 0.25,
     dots: [
       {
         // Top-left:
-        accent: 'keep',
         color: palette.white,
         cx: '10%',
         cy: '10%',
@@ -154,14 +155,18 @@ export const testDark: Theme = {
       },
       {
         // Bottom-left:
-        accent: 'drop',
         color: palette.backgroundGreen,
         cx: '-15%',
         cy: '100%',
         r: scale(220)
       }
-    ]
+    ],
+    assetOverrideDots: [undefined, { accentColor: 'iconAccentColor' }, null]
   },
+  assetBackgroundGradientColors: [palette.darkAqua, palette.black],
+  assetBackgroundGradientStart: { x: 0, y: 0 },
+  assetBackgroundGradientEnd: { x: 0, y: 1 },
+  assetBackgroundColorScale: 0.3,
 
   // Camera Overlay
   cameraOverlayColor: palette.black,

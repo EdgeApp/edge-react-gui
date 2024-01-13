@@ -2,7 +2,39 @@
 
 exports[`Request should render with loaded props 1`] = `
 <SceneWrapper
+  accentColors={
+    {
+      "iconAccentColor": "#00000000",
+    }
+  }
+  backgroundGradientColors={
+    [
+      "#1b2f3b",
+      "#1a1a1a",
+    ]
+  }
+  backgroundGradientEnd={
+    {
+      "x": 0,
+      "y": 1,
+    }
+  }
+  backgroundGradientStart={
+    {
+      "x": 0,
+      "y": 0,
+    }
+  }
   hasTabs={false}
+  overrideDots={
+    [
+      undefined,
+      {
+        "accentColor": "iconAccentColor",
+      },
+      null,
+    ]
+  }
 >
   <View
     style={

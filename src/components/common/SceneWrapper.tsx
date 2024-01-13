@@ -8,12 +8,13 @@ import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-sa
 import { useSceneDrawerState } from '../../state/SceneDrawerState'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { OverrideDots } from '../../types/Theme'
 import { maybeComponent } from '../hoc/maybeComponent'
 import { NotificationView } from '../notification/NotificationView'
 import { useTheme } from '../services/ThemeContext'
 import { MAX_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
 import { SceneDrawer } from '../themed/SceneDrawer'
-import { DotsBackground } from '../ui4/DotsBackground'
+import { AccentColors, DotsBackground } from '../ui4/DotsBackground'
 import { KeyboardTracker } from './KeyboardTracker'
 
 export interface InsetStyles {
@@ -37,11 +38,16 @@ interface SceneWrapperProps {
   // to changes to the info.
   children: React.ReactNode | ((info: SceneWrapperInfo) => React.ReactNode)
 
-  // Adjusts the blurred dots background:
-  accentColor?: string
+  // Object specifying accent colors to use for DotsBackground
+  accentColors?: AccentColors
 
   // True if this scene should shrink to avoid the keyboard:
   avoidKeyboard?: boolean
+
+  // Optional backgroundGradient overrides
+  backgroundGradientColors?: string[]
+  backgroundGradientStart?: { x: number; y: number }
+  backgroundGradientEnd?: { x: number; y: number }
 
   // True if this scene has a header (with back button & such):
   hasHeader?: boolean
@@ -54,6 +60,9 @@ interface SceneWrapperProps {
 
   // Settings for when using ScrollView
   keyboardShouldPersistTaps?: 'always' | 'never' | 'handled'
+
+  // Override existing background dots parameters
+  overrideDots?: OverrideDots
 
   // Padding to add inside the scene border:
   padding?: number
@@ -80,8 +89,12 @@ interface SceneWrapperProps {
  */
 export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const {
-    accentColor,
+    overrideDots,
+    accentColors,
     avoidKeyboard = false,
+    backgroundGradientColors,
+    backgroundGradientStart,
+    backgroundGradientEnd,
     children,
     renderDrawer,
     hasHeader = true,
@@ -152,7 +165,13 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
 
     return (
       <MaybeAnimatedView when={hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles, { maxHeight: keyboardAnimation, padding }]}>
-        <DotsBackground accentColor={accentColor} />
+        <DotsBackground
+          accentColors={accentColors}
+          overrideDots={overrideDots}
+          backgroundGradientColors={backgroundGradientColors}
+          backgroundGradientStart={backgroundGradientStart}
+          backgroundGradientEnd={backgroundGradientEnd}
+        />
         <MaybeScrollView
           when={scroll && !hasKeyboardAnimation}
           style={[layoutStyles, { padding }]}

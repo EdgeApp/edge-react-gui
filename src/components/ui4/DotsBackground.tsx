@@ -1,26 +1,58 @@
 import * as React from 'react'
-import { LayoutChangeEvent, StyleSheet, View } from 'react-native'
+import { LayoutChangeEvent, StyleSheet } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 import { Circle, Defs, G, RadialGradient, Stop, Svg } from 'react-native-svg'
 
 import { useHandler } from '../../hooks/useHandler'
-import { ThemeDot } from '../../types/Theme'
+import { OverrideDots, ThemeDot } from '../../types/Theme'
 import { useTheme } from '../services/ThemeContext'
 
+export interface AccentColors {
+  iconAccentColor?: string
+}
 interface Props {
-  accentColor?: string
+  // Optional backgroundGradient overrides
+  backgroundGradientColors?: string[]
+  backgroundGradientStart?: { x: number; y: number }
+  backgroundGradientEnd?: { x: number; y: number }
+  overrideDots?: OverrideDots
+  accentColors?: AccentColors
 }
 
 export function DotsBackground(props: Props): JSX.Element {
-  const { accentColor } = props
+  const { accentColors, backgroundGradientColors, backgroundGradientStart, backgroundGradientEnd, overrideDots } = props
   const theme = useTheme()
-  const { blurRadius, color, dotOpacity, dots } = theme.background
+  const { blurRadius, dotOpacity, dots } = theme.backgroundDots
 
   const accentDots: ThemeDot[] = []
-  for (const dot of dots) {
-    if (accentColor == null || dot.accent === 'keep') {
+  for (let i = 0; i < dots.length; i++) {
+    const dot = dots[i]
+    const overrideDot = overrideDots != null ? overrideDots[i] : undefined
+    if (overrideDot === null) {
+      // Delete the dot
+      continue
+    }
+    if (overrideDot == null && dot == null) continue
+    if (overrideDot === undefined) {
       accentDots.push(dot)
-    } else if (dot.accent == null) {
-      accentDots.push({ ...dot, color: accentColor })
+    } else {
+      if (dot != null) {
+        const mergedDot: ThemeDot = {
+          color: overrideDot.color ?? dot.color,
+          accentColor: overrideDot.accentColor ?? dot.accentColor,
+          r: overrideDot.r ?? dot.r,
+          cx: overrideDot.cx ?? dot.cx,
+          cy: overrideDot.cy ?? dot.cy
+        }
+        if (mergedDot.accentColor != null) {
+          const ac = (accentColors ?? {})[mergedDot.accentColor]
+          if (ac == null) {
+            throw new Error('Missing accentColors')
+          }
+          mergedDot.color = ac
+        }
+        accentDots.push(mergedDot)
+      }
     }
   }
 
@@ -70,12 +102,18 @@ export function DotsBackground(props: Props): JSX.Element {
   }
 
   return (
-    <View style={[StyleSheet.absoluteFill, { backgroundColor: color }]} onLayout={handleLayout}>
+    <LinearGradient
+      style={StyleSheet.absoluteFill}
+      colors={backgroundGradientColors ?? theme.backgroundGradientColors}
+      end={backgroundGradientEnd ?? theme.backgroundGradientEnd}
+      start={backgroundGradientStart ?? theme.backgroundGradientStart}
+      onLayout={handleLayout}
+    >
       <Svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
         <Defs>{accentDots.map(renderGradient)}</Defs>
         <G opacity={dotOpacity}>{accentDots.map(renderCircle)}</G>
       </Svg>
-    </View>
+    </LinearGradient>
   )
 }
 

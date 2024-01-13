@@ -126,15 +126,22 @@ export const edgeLight: Theme = {
   loadingIcon: palette.edgeBlue,
 
   // Background
-  background: {
+  backgroundGradientColors: [palette.lightestGray, palette.lightestGray],
+  backgroundGradientStart: { x: 0, y: 0 },
+  backgroundGradientEnd: { x: 1, y: 0 },
+  backgroundDots: {
     blurRadius: scale(80),
-    color: palette.lightestGray,
     dotOpacity: 0.3,
     dots: [
       { color: palette.backgroundGreen, cx: '75%', cy: '25%', r: scale(175) },
-      { color: palette.backgroundPurple, cx: '25%', cy: '75%', r: scale(150), accent: 'keep' }
-    ]
+      { color: palette.backgroundPurple, cx: '25%', cy: '75%', r: scale(150) }
+    ],
+    assetOverrideDots: [undefined, { accentColor: 'iconAccentColor' }, null]
   },
+  assetBackgroundGradientColors: [palette.lightestGray, palette.lightestGray],
+  assetBackgroundGradientStart: { x: 0, y: 0 },
+  assetBackgroundGradientEnd: { x: 0, y: 1 },
+  assetBackgroundColorScale: 0.3,
 
   // Camera Overlay
   cameraOverlayColor: palette.gray,

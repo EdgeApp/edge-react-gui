@@ -2,21 +2,35 @@
 
 exports[`SendScene2 1 spendTarget 1`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279971643,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 0,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -82,53 +96,24 @@ exports[`SendScene2 1 spendTarget 1`] = `
             gradient={
               [
                 0,
-                -216279,
+                -16777216,
                 0.0588,
-                -216279,
+                -16777216,
                 0.1765,
-                -167988439,
+                -184549376,
                 0.29410000000000003,
-                -637750487,
+                -654311424,
                 0.7646999999999999,
-                654095145,
+                637534208,
                 0.8824,
-                184333097,
+                167772160,
                 1,
-                16560937,
+                0,
               ]
             }
             gradientTransform={null}
             gradientUnits={0}
             name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16719740,
-                0.4667,
-                -16719740,
-                0.5333,
-                -184491900,
-                0.6,
-                -654253948,
-                0.8667,
-                637591684,
-                0.9333,
-                167829636,
-                1,
-                57476,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad2"
             rx="50%"
             ry="50%"
           />
@@ -174,26 +159,10 @@ exports[`SendScene2 1 spendTarget 1`] = `
             }
             r="238.7781690140845"
           />
-          <RNSVGCircle
-            cx="-15%"
-            cy="100%"
-            fill={
-              {
-                "brushRef": "grad2",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r="421.37323943661977"
-          />
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -1174,21 +1143,35 @@ exports[`SendScene2 1 spendTarget 1`] = `
 
 exports[`SendScene2 1 spendTarget with info tiles 1`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279971643,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 0,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -1254,53 +1237,24 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             gradient={
               [
                 0,
-                -216279,
+                -16777216,
                 0.0588,
-                -216279,
+                -16777216,
                 0.1765,
-                -167988439,
+                -184549376,
                 0.29410000000000003,
-                -637750487,
+                -654311424,
                 0.7646999999999999,
-                654095145,
+                637534208,
                 0.8824,
-                184333097,
+                167772160,
                 1,
-                16560937,
+                0,
               ]
             }
             gradientTransform={null}
             gradientUnits={0}
             name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16719740,
-                0.4667,
-                -16719740,
-                0.5333,
-                -184491900,
-                0.6,
-                -654253948,
-                0.8667,
-                637591684,
-                0.9333,
-                167829636,
-                1,
-                57476,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad2"
             rx="50%"
             ry="50%"
           />
@@ -1346,26 +1300,10 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             }
             r="238.7781690140845"
           />
-          <RNSVGCircle
-            cx="-15%"
-            cy="100%"
-            fill={
-              {
-                "brushRef": "grad2",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r="421.37323943661977"
-          />
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -2534,21 +2472,35 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
 
 exports[`SendScene2 2 spendTargets 1`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279971643,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 0,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -2614,53 +2566,24 @@ exports[`SendScene2 2 spendTargets 1`] = `
             gradient={
               [
                 0,
-                -216279,
+                -16777216,
                 0.0588,
-                -216279,
+                -16777216,
                 0.1765,
-                -167988439,
+                -184549376,
                 0.29410000000000003,
-                -637750487,
+                -654311424,
                 0.7646999999999999,
-                654095145,
+                637534208,
                 0.8824,
-                184333097,
+                167772160,
                 1,
-                16560937,
+                0,
               ]
             }
             gradientTransform={null}
             gradientUnits={0}
             name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16719740,
-                0.4667,
-                -16719740,
-                0.5333,
-                -184491900,
-                0.6,
-                -654253948,
-                0.8667,
-                637591684,
-                0.9333,
-                167829636,
-                1,
-                57476,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad2"
             rx="50%"
             ry="50%"
           />
@@ -2706,26 +2629,10 @@ exports[`SendScene2 2 spendTargets 1`] = `
             }
             r="238.7781690140845"
           />
-          <RNSVGCircle
-            cx="-15%"
-            cy="100%"
-            fill={
-              {
-                "brushRef": "grad2",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r="421.37323943661977"
-          />
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -3865,21 +3772,35 @@ exports[`SendScene2 2 spendTargets 1`] = `
 
 exports[`SendScene2 2 spendTargets hide tiles 1`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279971643,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 0,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -3945,53 +3866,24 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             gradient={
               [
                 0,
-                -216279,
+                -16777216,
                 0.0588,
-                -216279,
+                -16777216,
                 0.1765,
-                -167988439,
+                -184549376,
                 0.29410000000000003,
-                -637750487,
+                -654311424,
                 0.7646999999999999,
-                654095145,
+                637534208,
                 0.8824,
-                184333097,
+                167772160,
                 1,
-                16560937,
+                0,
               ]
             }
             gradientTransform={null}
             gradientUnits={0}
             name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16719740,
-                0.4667,
-                -16719740,
-                0.5333,
-                -184491900,
-                0.6,
-                -654253948,
-                0.8667,
-                637591684,
-                0.9333,
-                167829636,
-                1,
-                57476,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad2"
             rx="50%"
             ry="50%"
           />
@@ -4037,26 +3929,10 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             }
             r="238.7781690140845"
           />
-          <RNSVGCircle
-            cx="-15%"
-            cy="100%"
-            fill={
-              {
-                "brushRef": "grad2",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r="421.37323943661977"
-          />
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -5041,21 +4917,35 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
 
 exports[`SendScene2 2 spendTargets hide tiles 2`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279971643,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 0,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -5121,53 +5011,24 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             gradient={
               [
                 0,
-                -216279,
+                -16777216,
                 0.0588,
-                -216279,
+                -16777216,
                 0.1765,
-                -167988439,
+                -184549376,
                 0.29410000000000003,
-                -637750487,
+                -654311424,
                 0.7646999999999999,
-                654095145,
+                637534208,
                 0.8824,
-                184333097,
+                167772160,
                 1,
-                16560937,
+                0,
               ]
             }
             gradientTransform={null}
             gradientUnits={0}
             name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16719740,
-                0.4667,
-                -16719740,
-                0.5333,
-                -184491900,
-                0.6,
-                -654253948,
-                0.8667,
-                637591684,
-                0.9333,
-                167829636,
-                1,
-                57476,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad2"
             rx="50%"
             ry="50%"
           />
@@ -5213,26 +5074,10 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             }
             r="238.7781690140845"
           />
-          <RNSVGCircle
-            cx="-15%"
-            cy="100%"
-            fill={
-              {
-                "brushRef": "grad2",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r="421.37323943661977"
-          />
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -6193,21 +6038,35 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
 
 exports[`SendScene2 2 spendTargets hide tiles 3`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279971643,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 0,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -6273,53 +6132,24 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             gradient={
               [
                 0,
-                -216279,
+                -16777216,
                 0.0588,
-                -216279,
+                -16777216,
                 0.1765,
-                -167988439,
+                -184549376,
                 0.29410000000000003,
-                -637750487,
+                -654311424,
                 0.7646999999999999,
-                654095145,
+                637534208,
                 0.8824,
-                184333097,
+                167772160,
                 1,
-                16560937,
+                0,
               ]
             }
             gradientTransform={null}
             gradientUnits={0}
             name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16719740,
-                0.4667,
-                -16719740,
-                0.5333,
-                -184491900,
-                0.6,
-                -654253948,
-                0.8667,
-                637591684,
-                0.9333,
-                167829636,
-                1,
-                57476,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad2"
             rx="50%"
             ry="50%"
           />
@@ -6365,26 +6195,10 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             }
             r="238.7781690140845"
           />
-          <RNSVGCircle
-            cx="-15%"
-            cy="100%"
-            fill={
-              {
-                "brushRef": "grad2",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r="421.37323943661977"
-          />
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -7190,21 +7004,35 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
 
 exports[`SendScene2 2 spendTargets lock tiles 1`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279971643,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 0,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -7270,53 +7098,24 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             gradient={
               [
                 0,
-                -216279,
+                -16777216,
                 0.0588,
-                -216279,
+                -16777216,
                 0.1765,
-                -167988439,
+                -184549376,
                 0.29410000000000003,
-                -637750487,
+                -654311424,
                 0.7646999999999999,
-                654095145,
+                637534208,
                 0.8824,
-                184333097,
+                167772160,
                 1,
-                16560937,
+                0,
               ]
             }
             gradientTransform={null}
             gradientUnits={0}
             name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16719740,
-                0.4667,
-                -16719740,
-                0.5333,
-                -184491900,
-                0.6,
-                -654253948,
-                0.8667,
-                637591684,
-                0.9333,
-                167829636,
-                1,
-                57476,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad2"
             rx="50%"
             ry="50%"
           />
@@ -7362,26 +7161,10 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             }
             r="238.7781690140845"
           />
-          <RNSVGCircle
-            cx="-15%"
-            cy="100%"
-            fill={
-              {
-                "brushRef": "grad2",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r="421.37323943661977"
-          />
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -8480,21 +8263,35 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
 
 exports[`SendScene2 2 spendTargets lock tiles 2`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279971643,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 0,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -8560,53 +8357,24 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             gradient={
               [
                 0,
-                -216279,
+                -16777216,
                 0.0588,
-                -216279,
+                -16777216,
                 0.1765,
-                -167988439,
+                -184549376,
                 0.29410000000000003,
-                -637750487,
+                -654311424,
                 0.7646999999999999,
-                654095145,
+                637534208,
                 0.8824,
-                184333097,
+                167772160,
                 1,
-                16560937,
+                0,
               ]
             }
             gradientTransform={null}
             gradientUnits={0}
             name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16719740,
-                0.4667,
-                -16719740,
-                0.5333,
-                -184491900,
-                0.6,
-                -654253948,
-                0.8667,
-                637591684,
-                0.9333,
-                167829636,
-                1,
-                57476,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad2"
             rx="50%"
             ry="50%"
           />
@@ -8652,26 +8420,10 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             }
             r="238.7781690140845"
           />
-          <RNSVGCircle
-            cx="-15%"
-            cy="100%"
-            fill={
-              {
-                "brushRef": "grad2",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r="421.37323943661977"
-          />
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -9705,21 +9457,35 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
 
 exports[`SendScene2 2 spendTargets lock tiles 3`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279971643,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 0,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -9785,53 +9551,24 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             gradient={
               [
                 0,
-                -216279,
+                -16777216,
                 0.0588,
-                -216279,
+                -16777216,
                 0.1765,
-                -167988439,
+                -184549376,
                 0.29410000000000003,
-                -637750487,
+                -654311424,
                 0.7646999999999999,
-                654095145,
+                637534208,
                 0.8824,
-                184333097,
+                167772160,
                 1,
-                16560937,
+                0,
               ]
             }
             gradientTransform={null}
             gradientUnits={0}
             name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16719740,
-                0.4667,
-                -16719740,
-                0.5333,
-                -184491900,
-                0.6,
-                -654253948,
-                0.8667,
-                637591684,
-                0.9333,
-                167829636,
-                1,
-                57476,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad2"
             rx="50%"
             ry="50%"
           />
@@ -9877,26 +9614,10 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             }
             r="238.7781690140845"
           />
-          <RNSVGCircle
-            cx="-15%"
-            cy="100%"
-            fill={
-              {
-                "brushRef": "grad2",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r="421.37323943661977"
-          />
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [
@@ -10889,21 +10610,35 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
 
 exports[`SendScene2 Render SendScene 1`] = `
 [
-  <View
-    onLayout={[Function]}
-    style={
+  <BVLinearGradient
+    colors={
       [
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "backgroundColor": "#1a1a1a",
-        },
+        4279971643,
+        4279900698,
       ]
+    }
+    endPoint={
+      {
+        "x": 0,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
     <RNSVGSvgView
@@ -10969,53 +10704,24 @@ exports[`SendScene2 Render SendScene 1`] = `
             gradient={
               [
                 0,
-                -216279,
+                -16777216,
                 0.0588,
-                -216279,
+                -16777216,
                 0.1765,
-                -167988439,
+                -184549376,
                 0.29410000000000003,
-                -637750487,
+                -654311424,
                 0.7646999999999999,
-                654095145,
+                637534208,
                 0.8824,
-                184333097,
+                167772160,
                 1,
-                16560937,
+                0,
               ]
             }
             gradientTransform={null}
             gradientUnits={0}
             name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16719740,
-                0.4667,
-                -16719740,
-                0.5333,
-                -184491900,
-                0.6,
-                -654253948,
-                0.8667,
-                637591684,
-                0.9333,
-                167829636,
-                1,
-                57476,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad2"
             rx="50%"
             ry="50%"
           />
@@ -11061,26 +10767,10 @@ exports[`SendScene2 Render SendScene 1`] = `
             }
             r="238.7781690140845"
           />
-          <RNSVGCircle
-            cx="-15%"
-            cy="100%"
-            fill={
-              {
-                "brushRef": "grad2",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r="421.37323943661977"
-          />
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </View>,
+  </BVLinearGradient>,
   <View
     style={
       [

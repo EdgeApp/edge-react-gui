@@ -12,17 +12,18 @@ import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActio
 import { selectWalletToken } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { useIconColor } from '../../hooks/useIconColor'
 import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
-import { connect } from '../../types/reactRedux'
+import { connect, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { GuiCurrencyInfo } from '../../types/types'
-import { getTokenIdForced, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
+import { getTokenId, getTokenIdForced, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
-import { convertNativeToDenomination, truncateDecimals, zeroString } from '../../util/utils'
+import { convertNativeToDenomination, darkenHexColor, truncateDecimals, zeroString } from '../../util/utils'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { AddressModal } from '../modals/AddressModal'
@@ -41,6 +42,7 @@ import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ShareButtons } from '../themed/ShareButtons'
 import { CardUi4 } from '../ui4/CardUi4'
+import { AccentColors } from '../ui4/DotsBackground'
 
 interface OwnProps extends EdgeSceneProps<'request'> {}
 
@@ -64,6 +66,10 @@ interface CurrencyMinimumPopupState {
   [pluginId: string]: ModalState
 }
 
+interface HookProps {
+  iconColor?: string
+}
+
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
 interface State {
@@ -82,7 +88,7 @@ interface AddressInfo {
 
 const inputAccessoryViewID: string = 'cancelHeaderId'
 
-export class RequestSceneComponent extends React.Component<Props, State> {
+export class RequestSceneComponent extends React.Component<Props & HookProps, State> {
   flipInputRef: React.RefObject<ExchangedFlipInputRef>
   unsubscribeAddressChanged: (() => void) | undefined
 
@@ -286,7 +292,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { currencyCode, exchangeSecondaryToPrimaryRatio, wallet, primaryCurrencyInfo, theme } = this.props
+    const { currencyCode, exchangeSecondaryToPrimaryRatio, iconColor, wallet, primaryCurrencyInfo, theme } = this.props
     const styles = getStyles(theme)
 
     if (currencyCode == null || primaryCurrencyInfo == null || exchangeSecondaryToPrimaryRatio == null || wallet == null) {
@@ -307,10 +313,28 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     // Selected denomination
     const denomString = `1 ${primaryCurrencyInfo.displayDenomination.name}`
 
+    const accentColors: AccentColors = {
+      // Transparent fallback for while iconColor is loading
+      iconAccentColor: iconColor ?? '#00000000'
+    }
+
+    const backgroundColors = [...theme.assetBackgroundGradientColors]
+    if (iconColor != null) {
+      const scaledColor = darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+      backgroundColors[0] = scaledColor
+    }
+
     return keysOnlyMode ? (
       this.renderKeysOnlyMode()
     ) : (
-      <SceneWrapper hasTabs={false}>
+      <SceneWrapper
+        accentColors={accentColors}
+        hasTabs={false}
+        backgroundGradientColors={backgroundColors}
+        backgroundGradientEnd={theme.assetBackgroundGradientEnd}
+        backgroundGradientStart={theme.assetBackgroundGradientStart}
+        overrideDots={theme.backgroundDots.assetOverrideDots}
+      >
         <View style={styles.container}>
           <EdgeAnim style={styles.requestContainer} enter={{ type: 'fadeInUp', distance: 75 }}>
             <EdgeText style={styles.title}>{lstrings.fragment_request_subtitle}</EdgeText>
@@ -539,7 +563,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
+const RequestSceneConnected = connect<StateProps, DispatchProps, OwnProps & HookProps>(
   state => {
     const { account } = state.core
     const { currencyWallets } = account
@@ -596,3 +620,16 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     }
   })
 )(withTheme(RequestSceneComponent))
+
+export const RequestScene = (props: OwnProps) => {
+  const account = useSelector(state => state.core.account)
+  const currencyCode = useSelector(state => state.ui.wallets.selectedCurrencyCode)
+  const walletId = useSelector(state => state.ui.wallets.selectedWalletId)
+  const wallet = account.currencyWallets[walletId] ?? {}
+
+  const { pluginId = '' } = wallet.currencyInfo ?? {}
+  const tokenId = getTokenId(account, pluginId, currencyCode)
+
+  const iconColor = useIconColor({ pluginId, tokenId: tokenId !== undefined ? tokenId : '' })
+  return <RequestSceneConnected {...props} iconColor={iconColor} />
+}

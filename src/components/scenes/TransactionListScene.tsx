@@ -4,9 +4,8 @@ import { asArray } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { asAssetStatus, AssetStatus } from 'edge-info-server/types'
 import * as React from 'react'
-import { RefreshControl, StyleSheet } from 'react-native'
+import { RefreshControl } from 'react-native'
 import { getVersion } from 'react-native-device-info'
-import { LinearGradient } from 'react-native-linear-gradient'
 import Animated from 'react-native-reanimated'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
@@ -21,7 +20,7 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { fetchInfo } from '../../util/network'
-import { calculateSpamThreshold, unixToLocaleDateTime, zeroString } from '../../util/utils'
+import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { AssetStatusCard } from '../cards/AssetStatusCard'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper, SceneWrapperInfo } from '../common/SceneWrapper'
@@ -33,6 +32,7 @@ import { SearchDrawer } from '../themed/SearchDrawer'
 import { EmptyLoader, SectionHeader, SectionHeaderCentered } from '../themed/TransactionListComponents'
 import { TransactionListRow } from '../themed/TransactionListRow'
 import { TransactionListTop } from '../themed/TransactionListTop'
+import { AccentColors } from '../ui4/DotsBackground'
 
 const AnimatedFlashList = Animated.createAnimatedComponent<FlashListProps<ListItem>>(FlashList)
 
@@ -60,8 +60,6 @@ function TransactionListComponent(props: Props) {
   const [searchText, setSearchText] = React.useState('')
   const [assetStatuses, setAssetStatuses] = React.useState<AssetStatus[]>([])
   const [iconColor, setIconColor] = React.useState<string>()
-  const transparentBackground = `${theme.background.color}00`
-  const backgroundGradientColor = iconColor == null ? transparentBackground : `${iconColor}44`
 
   // Selectors:
   const exchangeDenom = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
@@ -270,16 +268,32 @@ function TransactionListComponent(props: Props) {
     [handleChangeText, handleDoneSearching, handleStartSearching, isSearching, searchText]
   )
 
+  const accentColors: AccentColors = {
+    // Transparent fallback for while iconColor is loading
+    iconAccentColor: iconColor ?? '#00000000'
+  }
+
+  const backgroundColors = [...theme.assetBackgroundGradientColors]
+  if (iconColor != null) {
+    const scaledColor = darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+    backgroundColors[0] = scaledColor
+  }
+
   return (
-    <SceneWrapper accentColor={iconColor} avoidKeyboard hasTabs hasHeader hasNotifications renderDrawer={renderDrawer}>
+    <SceneWrapper
+      accentColors={accentColors}
+      overrideDots={theme.backgroundDots.assetOverrideDots}
+      avoidKeyboard
+      hasTabs
+      hasHeader
+      hasNotifications
+      renderDrawer={renderDrawer}
+      backgroundGradientColors={backgroundColors}
+      backgroundGradientEnd={theme.assetBackgroundGradientEnd}
+      backgroundGradientStart={theme.assetBackgroundGradientStart}
+    >
       {({ insetStyles }) => (
         <>
-          <LinearGradient
-            colors={[backgroundGradientColor, transparentBackground]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 0, y: 1 }}
-            style={StyleSheet.absoluteFill}
-          />
           <AnimatedFlashList
             ref={flashList}
             contentContainerStyle={insetStyles}
