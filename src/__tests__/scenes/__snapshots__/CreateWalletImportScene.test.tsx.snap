@@ -154,7 +154,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               "type": 0,
             }
           }
-          opacity={0.25}
+          opacity={0.1}
         >
           <RNSVGCircle
             cx="10%"
@@ -539,7 +539,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
           style={
             [
               {
-                "color": "#1b2f3b",
+                "color": "hsla(0, 0%, 100%, 0.20)",
                 "flexGrow": 1,
                 "flexShrink": 1,
                 "fontFamily": "Quicksand-Regular",

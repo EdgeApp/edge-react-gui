@@ -152,6 +152,9 @@ export const edgeLight: Theme = {
   modalBorderColor: palette.transparent,
   modalBorderWidth: 0,
   modalBorderRadiusRem: 1,
+  modalAndroidBlurColor: palette.whiteOp75,
+  modalBackgroundUi4: palette.blackOp25,
+  modalSceneOverlayColor: palette.black,
 
   sideMenuBorderColor: palette.transparent,
   sideMenuBorderWidth: 0,
@@ -284,6 +287,7 @@ export const edgeLight: Theme = {
 
   // Confirmation slider
   confirmationSlider: palette.blackOp10,
+  confirmationSliderCompleted: palette.darkGreen,
   confirmationSliderText: palette.edgeBlue,
   confirmationSliderArrow: palette.white,
   confirmationSliderThumb: palette.edgeBlue,
@@ -364,7 +368,7 @@ export const edgeLight: Theme = {
   textInputBackgroundColor: palette.edgeNavy,
   textInputBackgroundColorDisabled: palette.edgeNavy,
   textInputBackgroundColorFocused: palette.edgeNavy,
-  textInputBorderColor: palette.mutedBlue,
+  textInputBorderColor: palette.transparent,
   textInputBorderColorDisabled: palette.gray,
   textInputBorderColorFocused: palette.edgeMint,
   textInputBorderRadius: 100,
@@ -460,8 +464,6 @@ export const edgeLight: Theme = {
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
-
-  modalBackgroundUi4: '#ffffff80',
 
   txDirBgReceiveUi4: palette.greenOp60,
   txDirBgSendUi4: palette.redOp60,

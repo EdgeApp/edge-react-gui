@@ -122,7 +122,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   slider: {
     borderRadius: theme.confirmationSliderThumbWidth / 2,
-    backgroundColor: theme.confirmationSlider,
+    backgroundColor: theme.confirmationSliderCompleted,
     justifyContent: 'center',
     height: theme.confirmationSliderThumbWidth,
     width: theme.confirmationSliderWidth

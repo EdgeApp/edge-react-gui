@@ -9,7 +9,7 @@ exports[`Request should render with loaded props 1`] = `
   }
   backgroundGradientColors={
     [
-      "#1b2f3b",
+      "#1a1a1a",
       "#1a1a1a",
     ]
   }

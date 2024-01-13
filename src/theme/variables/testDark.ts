@@ -177,6 +177,9 @@ export const testDark: Theme = {
   modalBorderColor: palette.transparent,
   modalBorderWidth: 0,
   modalBorderRadiusRem: 1,
+  modalAndroidBlurColor: palette.blackOp25,
+  modalBackgroundUi4: palette.whiteOp10,
+  modalSceneOverlayColor: palette.black,
 
   sideMenuBorderColor: palette.navyAqua,
   sideMenuBorderWidth: 0,
@@ -325,6 +328,7 @@ export const testDark: Theme = {
 
   // Confirmation slider
   confirmationSlider: palette.darkBlueLightened,
+  confirmationSliderCompleted: palette.darkGreen,
   confirmationSliderText: palette.white,
   confirmationSliderArrow: palette.darkAqua,
   confirmationSliderThumb: palette.edgeMint,
@@ -501,8 +505,6 @@ export const testDark: Theme = {
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
-
-  modalBackgroundUi4: '#00000080',
 
   txDirBgReceiveUi4: palette.greenOp60,
   txDirBgSendUi4: palette.redOp60,

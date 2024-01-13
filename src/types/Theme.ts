@@ -121,6 +121,9 @@ export interface Theme {
   modalBorderColor: string
   modalBorderWidth: number
   modalBorderRadiusRem: number
+  modalBackgroundUi4: string
+  modalAndroidBlurColor: string
+  modalSceneOverlayColor: string
 
   sideMenuBorderColor: string
   sideMenuBorderWidth: number
@@ -286,8 +289,12 @@ export interface Theme {
 
   // warningBubble: string,
 
-  // Confirmation slider
+  // Confirmation slider background left of thumb
   confirmationSlider: string
+
+  // Section of slider to right of thumb
+  confirmationSliderCompleted: string
+
   confirmationSliderText: string
   confirmationSliderArrow: string
   confirmationSliderThumb: string
@@ -440,8 +447,6 @@ export interface Theme {
   sellCardGradientUi4: ThemeGradientParams
   fioCardGradientUi4: ThemeGradientParams
   swapCardGradientUi4: ThemeGradientParams
-
-  modalBackgroundUi4: string
 
   txDirBgReceiveUi4: string
   txDirBgSendUi4: string

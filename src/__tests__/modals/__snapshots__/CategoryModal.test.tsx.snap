@@ -24,6 +24,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
     style={
       [
         {
+          "backgroundColor": "#000000",
           "bottom": 0,
           "left": 0,
           "position": "absolute",
@@ -42,7 +43,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
       [
         {
           "alignSelf": "flex-end",
-          "backgroundColor": "rgba(255, 255, 255, 0.376)",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
           "borderTopLeftRadius": 22,
           "borderTopRightRadius": 22,
           "flexShrink": 1,
@@ -79,7 +80,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
       <BlurView
         blurAmount={10}
         blurType="dark"
-        overlayColor="#00000000"
+        overlayColor="rgba(0, 0, 0, .7)"
         style={
           {
             "bottom": 0,
@@ -105,7 +106,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
       <View
         style={
           {
-            "backgroundColor": "#87939E",
+            "backgroundColor": "#888888",
             "borderRadius": 3,
             "height": 6,
             "marginTop": 11,
@@ -629,7 +630,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             style={
               [
                 {
-                  "color": "#1b2f3b",
+                  "color": "hsla(0, 0%, 100%, 0.20)",
                   "flexGrow": 1,
                   "flexShrink": 1,
                   "fontFamily": "Quicksand-Regular",
@@ -1410,7 +1411,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         style={
           [
             {
-              "color": "#87939E",
+              "color": "#888888",
               "fontSize": 22,
             },
             undefined,
@@ -1454,6 +1455,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
     style={
       [
         {
+          "backgroundColor": "#000000",
           "bottom": 0,
           "left": 0,
           "position": "absolute",
@@ -1472,7 +1474,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
       [
         {
           "alignSelf": "flex-end",
-          "backgroundColor": "rgba(255, 255, 255, 0.376)",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
           "borderTopLeftRadius": 22,
           "borderTopRightRadius": 22,
           "flexShrink": 1,
@@ -1509,7 +1511,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
       <BlurView
         blurAmount={10}
         blurType="dark"
-        overlayColor="#00000000"
+        overlayColor="rgba(0, 0, 0, .7)"
         style={
           {
             "bottom": 0,
@@ -1535,7 +1537,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
       <View
         style={
           {
-            "backgroundColor": "#87939E",
+            "backgroundColor": "#888888",
             "borderRadius": 3,
             "height": 6,
             "marginTop": 11,
@@ -2059,7 +2061,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             style={
               [
                 {
-                  "color": "#1b2f3b",
+                  "color": "hsla(0, 0%, 100%, 0.20)",
                   "flexGrow": 1,
                   "flexShrink": 1,
                   "fontFamily": "Quicksand-Regular",
@@ -2724,7 +2726,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         style={
           [
             {
-              "color": "#87939E",
+              "color": "#888888",
               "fontSize": 22,
             },
             undefined,

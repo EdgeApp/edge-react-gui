@@ -97,7 +97,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
           <WithTheme(EdgeTextComponent)
             style={
               {
-                "color": "#87939E",
+                "color": "#888888",
               }
             }
           >

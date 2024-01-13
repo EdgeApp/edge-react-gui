@@ -154,7 +154,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
               "type": 0,
             }
           }
-          opacity={0.25}
+          opacity={0.1}
         >
           <RNSVGCircle
             cx="10%"

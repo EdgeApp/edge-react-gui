@@ -154,7 +154,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               "type": 0,
             }
           }
-          opacity={0.25}
+          opacity={0.1}
         >
           <RNSVGCircle
             cx="10%"
@@ -330,12 +330,12 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
                       "width": 51,
                     },
                     {
-                      "backgroundColor": "#87939E",
+                      "backgroundColor": "#888888",
                       "borderRadius": 16,
                     },
                   ]
                 }
-                tintColor="#87939E"
+                tintColor="#888888"
                 value={true}
               />
             </View>
@@ -443,12 +443,12 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
                       "width": 51,
                     },
                     {
-                      "backgroundColor": "#87939E",
+                      "backgroundColor": "#888888",
                       "borderRadius": 16,
                     },
                   ]
                 }
-                tintColor="#87939E"
+                tintColor="#888888"
                 value={true}
               />
             </View>
