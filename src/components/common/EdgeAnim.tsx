@@ -19,6 +19,7 @@ import Animated, {
 
 export const DEFAULT_ANIMATION_DURATION_MS = 300
 export const LAYOUT_ANIMATION = LinearTransition.duration(DEFAULT_ANIMATION_DURATION_MS)
+export const MAX_LIST_ITEMS_ANIM = 10
 
 type AnimBuilder = typeof ComplexAnimationBuilder
 type AnimTypeFadeIns = 'fadeIn' | 'fadeInDown' | 'fadeInUp' | 'fadeInLeft' | 'fadeInRight'
@@ -33,6 +34,12 @@ interface Anim {
 }
 
 interface Props extends AnimateProps<ViewProps> {
+  /**
+   * disable animation
+   * anim => disable animation but still render a container view
+   * view => render the children with no container view
+   * */
+  disableType?: 'anim' | 'view'
   enter?: Anim
   exit?: Anim
 
@@ -80,13 +87,17 @@ const getAnimBuilder = (anim?: Anim) => {
   return builder
 }
 
-export const EdgeAnim = ({ children, enter, exit, ios = false, visible = true, ...rest }: Props) => {
+export const EdgeAnim = ({ children, disableType, enter, exit, ios = false, visible = true, ...rest }: Props): JSX.Element | null => {
   if (!visible) return null
   const entering = getAnimBuilder(enter)
   const exiting = getAnimBuilder(exit)
 
-  if (ios && Platform.OS !== 'ios') {
-    return <Animated.View>{children}</Animated.View>
+  if (disableType === 'anim' || (ios && Platform.OS !== 'ios')) {
+    return <Animated.View {...rest}>{children}</Animated.View>
+  }
+
+  if (disableType === 'view') {
+    return <>{children}</>
   }
 
   return (

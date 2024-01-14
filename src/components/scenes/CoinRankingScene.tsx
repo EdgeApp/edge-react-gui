@@ -15,7 +15,7 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
-import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { SceneWrapper, SceneWrapperInfo } from '../common/SceneWrapper'
 import { CoinRankRow } from '../data/row/CoinRankRow'
 import { showError } from '../services/AirshipInstance'
@@ -81,8 +81,9 @@ const CoinRankingComponent = (props: Props) => {
     const key = `${index}-${item}-${rank}-${currencyCode}-${lastUsedFiat}`
     debugLog(LOG_COINRANK, `renderItem ${key.toString()}`)
 
+    const disableType = index >= MAX_LIST_ITEMS_ANIM ? 'view' : undefined
     return (
-      <EdgeAnim enter={{ type: 'fadeInRight', distance: 20 * (index + 1) }}>
+      <EdgeAnim disableType={disableType} enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}>
         <CoinRankRow
           navigation={navigation}
           index={item}
