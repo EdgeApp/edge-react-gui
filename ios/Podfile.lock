@@ -1,7 +1,7 @@
 PODS:
   - _NIODataStructures (2.40.0)
   - boost (1.76.0)
-  - BugsnagReactNative (7.20.2):
+  - BugsnagReactNative (7.22.3):
     - React-Core
   - BVLinearGradient (2.8.3):
     - React-Core
@@ -1253,7 +1253,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   _NIODataStructures: 3d45d8e70a1d17a15b1dc59d102c63dbc0525ffd
   boost: 7dcd2de282d72e344012f7d6564d024930a6a440
-  BugsnagReactNative: bf6f4ebababa8536726b3014c7d3e4af8c53d488
+  BugsnagReactNative: d9fa0824cea1beb5ab1f12828d79a2bd1b383e60
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   CGRPCZlib: 298dd3237ba4bd7b3eed109e7080ff3324b7d9c9
   CNIOAtomics: 8edf08644e5e6fa0f021c239be9e8beb1cd9ef18
