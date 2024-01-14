@@ -423,6 +423,22 @@ function buildCommonPost(buildObj: BuildObj) {
       `-F dsym=@${buildObj.tmpDir}/${escapePath(buildObj.productName)} ` +
       `-F projectRoot=${buildObj.guiPlatformDir}`
     call(curl)
+
+    curl = `curl --http1.1 https://upload.bugsnag.com/react-native-source-map \
+   -F apiKey=${buildObj.bugsnagApiKey} \
+   -F appVersion=${buildObj.version} \
+   -F platform=${buildObj.platformType} \
+   -F sourceMap=@${buildObj.bundleMapFile} \
+   -F bundle=@${buildObj.bundlePath} \
+   -F projectRoot=${buildObj.guiPlatformDir} \
+   `
+    if (buildObj.platformType === 'ios') {
+      curl += `-F appBundleVersion=${buildObj.buildNum} `
+    } else if (buildObj.platformType === 'android') {
+      curl += `-F appVersionCode=${buildObj.buildNum} `
+    }
+
+    call(curl)
   }
 
   if (buildObj.appCenterApiToken && buildObj.appCenterAppName && buildObj.appCenterGroupName && !simBuild) {
