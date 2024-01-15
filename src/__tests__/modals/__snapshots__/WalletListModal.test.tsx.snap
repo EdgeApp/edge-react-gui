@@ -53,7 +53,7 @@ exports[`WalletListModal should render with loading props 1`] = `
     style={
       {
         "alignSelf": "flex-end",
-        "backgroundColor": "#121d25",
+        "backgroundColor": "#1a1a1a",
         "borderColor": "rgba(255, 255, 255, 0)",
         "borderTopLeftRadius": 22,
         "borderTopRightRadius": 22,
@@ -313,7 +313,7 @@ exports[`WalletListModal should render with loading props 1`] = `
           style={
             [
               {
-                "color": "#1b2f3b",
+                "color": "hsla(0, 0%, 100%, 0.20)",
                 "flexGrow": 1,
                 "flexShrink": 1,
                 "fontFamily": "Quicksand-Regular",
@@ -640,10 +640,10 @@ exports[`WalletListModal should render with loading props 1`] = `
         <BVLinearGradient
           colors={
             [
-              1187109,
-              856825125,
-              3205635365,
-              4279377189,
+              1710618,
+              857348634,
+              3206158874,
+              4279900698,
             ]
           }
           endPoint={

@@ -5,7 +5,7 @@ exports[`TransactionDetailsScene should render 1`] = `
   <BVLinearGradient
     colors={
       [
-        4279971643,
+        4279900698,
         4279900698,
       ]
     }
@@ -125,7 +125,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               "type": 0,
             }
           }
-          opacity={0.25}
+          opacity={0.1}
         >
           <RNSVGCircle
             cx="10%"
@@ -1722,7 +1722,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
   <BVLinearGradient
     colors={
       [
-        4279971643,
+        4279900698,
         4279900698,
       ]
     }
@@ -1842,7 +1842,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               "type": 0,
             }
           }
-          opacity={0.25}
+          opacity={0.1}
         >
           <RNSVGCircle
             cx="10%"
@@ -2563,7 +2563,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#87939E",
+                          "color": "#888888",
                         },
                         null,
                       ]

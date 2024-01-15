@@ -24,6 +24,7 @@ exports[`HelpModal should render with loading props 1`] = `
     style={
       [
         {
+          "backgroundColor": "#000000",
           "bottom": 0,
           "left": 0,
           "position": "absolute",
@@ -42,7 +43,7 @@ exports[`HelpModal should render with loading props 1`] = `
       [
         {
           "alignSelf": "flex-end",
-          "backgroundColor": "rgba(255, 255, 255, 0.376)",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
           "borderTopLeftRadius": 22,
           "borderTopRightRadius": 22,
           "flexShrink": 1,
@@ -79,7 +80,7 @@ exports[`HelpModal should render with loading props 1`] = `
       <BlurView
         blurAmount={10}
         blurType="dark"
-        overlayColor="#00000000"
+        overlayColor="rgba(0, 0, 0, .7)"
         style={
           {
             "bottom": 0,
@@ -105,7 +106,7 @@ exports[`HelpModal should render with loading props 1`] = `
       <View
         style={
           {
-            "backgroundColor": "#87939E",
+            "backgroundColor": "#888888",
             "borderRadius": 3,
             "height": 6,
             "marginTop": 11,
@@ -1053,7 +1054,7 @@ exports[`HelpModal should render with loading props 1`] = `
         style={
           [
             {
-              "color": "#87939E",
+              "color": "#888888",
               "fontSize": 22,
             },
             undefined,

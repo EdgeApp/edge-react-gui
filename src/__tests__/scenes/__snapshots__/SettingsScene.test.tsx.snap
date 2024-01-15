@@ -154,7 +154,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               "type": 0,
             }
           }
-          opacity={0.25}
+          opacity={0.1}
         >
           <RNSVGCircle
             cx="10%"
@@ -511,7 +511,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               <Text
                 style={
                   {
-                    "color": "#87939E",
+                    "color": "#888888",
                     "flexGrow": 1,
                     "flexShrink": 1,
                     "fontFamily": "Quicksand-Regular",
@@ -633,7 +633,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               <Text
                 style={
                   {
-                    "color": "#87939E",
+                    "color": "#888888",
                     "flexGrow": 1,
                     "flexShrink": 1,
                     "fontFamily": "Quicksand-Regular",
@@ -755,7 +755,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               <Text
                 style={
                   {
-                    "color": "#87939E",
+                    "color": "#888888",
                     "flexGrow": 1,
                     "flexShrink": 1,
                     "fontFamily": "Quicksand-Regular",
@@ -877,7 +877,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               <Text
                 style={
                   {
-                    "color": "#87939E",
+                    "color": "#888888",
                     "flexGrow": 1,
                     "flexShrink": 1,
                     "fontFamily": "Quicksand-Regular",
@@ -999,7 +999,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               <Text
                 style={
                   {
-                    "color": "#87939E",
+                    "color": "#888888",
                     "flexGrow": 1,
                     "flexShrink": 1,
                     "fontFamily": "Quicksand-Regular",
@@ -1768,12 +1768,12 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                             "width": 51,
                           },
                           {
-                            "backgroundColor": "#87939E",
+                            "backgroundColor": "#888888",
                             "borderRadius": 16,
                           },
                         ]
                       }
-                      tintColor="#87939E"
+                      tintColor="#888888"
                       value={true}
                     />
                   </View>
@@ -1895,12 +1895,12 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                             "width": 51,
                           },
                           {
-                            "backgroundColor": "#87939E",
+                            "backgroundColor": "#888888",
                             "borderRadius": 16,
                           },
                         ]
                       }
-                      tintColor="#87939E"
+                      tintColor="#888888"
                       value={true}
                     />
                   </View>
@@ -2022,12 +2022,12 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                             "width": 51,
                           },
                           {
-                            "backgroundColor": "#87939E",
+                            "backgroundColor": "#888888",
                             "borderRadius": 16,
                           },
                         ]
                       }
-                      tintColor="#87939E"
+                      tintColor="#888888"
                       value={true}
                     />
                   </View>
@@ -2515,12 +2515,12 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                             "width": 51,
                           },
                           {
-                            "backgroundColor": "#87939E",
+                            "backgroundColor": "#888888",
                             "borderRadius": 16,
                           },
                         ]
                       }
-                      tintColor="#87939E"
+                      tintColor="#888888"
                       value={true}
                     />
                   </View>
@@ -2642,12 +2642,12 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                             "width": 51,
                           },
                           {
-                            "backgroundColor": "#87939E",
+                            "backgroundColor": "#888888",
                             "borderRadius": 16,
                           },
                         ]
                       }
-                      tintColor="#87939E"
+                      tintColor="#888888"
                       value={true}
                     />
                   </View>
@@ -3135,12 +3135,12 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                             "width": 51,
                           },
                           {
-                            "backgroundColor": "#87939E",
+                            "backgroundColor": "#888888",
                             "borderRadius": 16,
                           },
                         ]
                       }
-                      tintColor="#87939E"
+                      tintColor="#888888"
                       value={true}
                     />
                   </View>
@@ -3588,7 +3588,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               "type": 0,
             }
           }
-          opacity={0.25}
+          opacity={0.1}
         >
           <RNSVGCircle
             cx="10%"
@@ -5202,12 +5202,12 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                             "width": 51,
                           },
                           {
-                            "backgroundColor": "#87939E",
+                            "backgroundColor": "#888888",
                             "borderRadius": 16,
                           },
                         ]
                       }
-                      tintColor="#87939E"
+                      tintColor="#888888"
                       value={true}
                     />
                   </View>
@@ -5329,12 +5329,12 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                             "width": 51,
                           },
                           {
-                            "backgroundColor": "#87939E",
+                            "backgroundColor": "#888888",
                             "borderRadius": 16,
                           },
                         ]
                       }
-                      tintColor="#87939E"
+                      tintColor="#888888"
                       value={true}
                     />
                   </View>
@@ -5456,12 +5456,12 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                             "width": 51,
                           },
                           {
-                            "backgroundColor": "#87939E",
+                            "backgroundColor": "#888888",
                             "borderRadius": 16,
                           },
                         ]
                       }
-                      tintColor="#87939E"
+                      tintColor="#888888"
                       value={true}
                     />
                   </View>
@@ -5949,12 +5949,12 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                             "width": 51,
                           },
                           {
-                            "backgroundColor": "#87939E",
+                            "backgroundColor": "#888888",
                             "borderRadius": 16,
                           },
                         ]
                       }
-                      tintColor="#87939E"
+                      tintColor="#888888"
                       value={true}
                     />
                   </View>
@@ -6076,12 +6076,12 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                             "width": 51,
                           },
                           {
-                            "backgroundColor": "#87939E",
+                            "backgroundColor": "#888888",
                             "borderRadius": 16,
                           },
                         ]
                       }
-                      tintColor="#87939E"
+                      tintColor="#888888"
                       value={true}
                     />
                   </View>
@@ -6569,12 +6569,12 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                             "width": 51,
                           },
                           {
-                            "backgroundColor": "#87939E",
+                            "backgroundColor": "#888888",
                             "borderRadius": 16,
                           },
                         ]
                       }
-                      tintColor="#87939E"
+                      tintColor="#888888"
                       value={true}
                     />
                   </View>

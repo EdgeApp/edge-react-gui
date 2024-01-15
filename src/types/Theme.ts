@@ -93,8 +93,6 @@ export interface Theme {
   warningIcon: string
   dangerIcon: string
   iconLoadingOverlay: string
-  transactionListIconBackground: string
-  buySellCustomPluginModalIcon: string
   loadingIcon: string
 
   // Background
@@ -123,8 +121,10 @@ export interface Theme {
   modalBorderColor: string
   modalBorderWidth: number
   modalBorderRadiusRem: number
+  modalBackgroundUi4: string
+  modalAndroidBlurColor: string
+  modalSceneOverlayColor: string
 
-  sideMenuColor: string
   sideMenuBorderColor: string
   sideMenuBorderWidth: number
   sideMenuFont: string
@@ -136,8 +136,8 @@ export interface Theme {
 
   // Section Lists
   listSectionHeaderBackgroundGradientColors: string[]
-  listSectionHeaderBackgroundGradientStart?: { x: number; y: number }
-  listSectionHeaderBackgroundGradientEnd?: { x: number; y: number }
+  listSectionHeaderBackgroundGradientStart: { x: number; y: number } | null
+  listSectionHeaderBackgroundGradientEnd: { x: number; y: number } | null
 
   // NOTE: List of components/screens that uses the tileBackground
   // - promoCard
@@ -148,16 +148,9 @@ export interface Theme {
   // - otpSettingsKey
   // - tileComponent
 
-  // WalletList
-  walletListBackground: string
-  walletListMutedBackground: string
-
   // Settings Row
   settingsRowBackground: string
   settingsRowPressed: string
-  settingsRowHeaderBackground: string[]
-  settingsRowHeaderBackgroundStart: GradientCoords
-  settingsRowHeaderBackgroundEnd: GradientCoords
 
   settingsRowHeaderFont: string
   settingsRowHeaderFontSizeRem: number
@@ -270,6 +263,9 @@ export interface Theme {
   cardTextShadow: TextShadowParams // For added contrast against complex card backgrounds
 
   tabBarBackground: string[]
+  // IOS has a forced darkening and lightening of blurviews so we need
+  // a different color to compensate
+  tabBarBackgroundIos: string[]
   tabBarBackgroundStart: GradientCoords
   tabBarBackgroundEnd: GradientCoords
   tabBarTopOutlineColors: string[]
@@ -296,8 +292,12 @@ export interface Theme {
 
   // warningBubble: string,
 
-  // Confirmation slider
+  // Confirmation slider background left of thumb
   confirmationSlider: string
+
+  // Section of slider to right of thumb
+  confirmationSliderCompleted: string
+
   confirmationSliderText: string
   confirmationSliderArrow: string
   confirmationSliderThumb: string
@@ -349,7 +349,6 @@ export interface Theme {
   // pressedOpacity: number,
   searchListRefreshControlIndicator: string
   clipboardPopupText: string
-  flipInputBorder: string
 
   // Fonts
   fontFaceDefault: string
@@ -383,17 +382,6 @@ export interface Theme {
   // Input Accessory
   inputAccessoryBackground: string
   inputAccessoryText: string
-
-  // Outline Text Input
-  outlineTextInputColor: string
-  outlineTextInputTextColor: string
-  outlineTextInputBorderWidth: number
-  outlineTextInputBorderColor: string
-  outlineTextInputBorderColorDisabled: string
-  outlineTextInputBorderColorFocused: string
-  outlineTextInputLabelColor: string
-  outlineTextInputLabelColorDisabled: string
-  outlineTextInputLabelColorFocused: string
 
   // Text Input
   textInputTextColor: string
@@ -462,8 +450,6 @@ export interface Theme {
   sellCardGradientUi4: ThemeGradientParams
   fioCardGradientUi4: ThemeGradientParams
   swapCardGradientUi4: ThemeGradientParams
-
-  modalBackgroundUi4: string
 
   txDirBgReceiveUi4: string
   txDirBgSendUi4: string

@@ -121,8 +121,6 @@ export const testLight: Theme = {
   dangerIcon: palette.accentRed,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
-  transactionListIconBackground: palette.white,
-  buySellCustomPluginModalIcon: palette.white,
   loadingIcon: palette.edgeBlue,
 
   // Background
@@ -150,14 +148,14 @@ export const testLight: Theme = {
 
   // Modal
   modal: palette.lightestGray,
-  // @ts-expect-error
-  modalBlurType: 'dark',
   modalCloseIcon: palette.edgeMint,
   modalBorderColor: palette.transparent,
   modalBorderWidth: 0,
   modalBorderRadiusRem: 1,
+  modalAndroidBlurColor: palette.whiteOp75,
+  modalBackgroundUi4: palette.blackOp25,
+  modalSceneOverlayColor: palette.black,
 
-  sideMenuColor: palette.lightestGray,
   sideMenuBorderColor: palette.transparent,
   sideMenuBorderWidth: 0,
   sideMenuFont: palette.QuicksandMedium,
@@ -169,10 +167,8 @@ export const testLight: Theme = {
 
   // Section Lists
   listSectionHeaderBackgroundGradientColors: [palette.transparent],
-
-  // WalletList
-  walletListBackground: palette.edgeBlue,
-  walletListMutedBackground: palette.mutedBlue,
+  listSectionHeaderBackgroundGradientStart: { x: 0, y: 0 },
+  listSectionHeaderBackgroundGradientEnd: { x: 1, y: 0 },
 
   // Text
   primaryText: palette.black,
@@ -183,7 +179,7 @@ export const testLight: Theme = {
   dangerText: palette.accentRed,
   textLink: palette.edgeBlue,
   deactivatedText: palette.gray,
-  // listHeaderText: palette.black,
+  emphasizedText: palette.edgeMint,
 
   // Header
   headerIcon: edgeMark,
@@ -259,22 +255,7 @@ export const testLight: Theme = {
   dropdownError: palette.accentRed,
   dropdownText: palette.white,
 
-  // tertiaryButtonOutline: palette.edgeBlue,
-  // tertiaryButton: palette.transparent,
-  // tertiaryButtonText: palette.edgeBlue,
-
-  // glassButton: palette.blackOp10,
-  // glassButtonDark: palette.blackOp50,
-  // glassButtonDarkIcon: palette.white,
-  // glassButtonIcon: palette.edgeBlue,
-
-  // dangerButtonOutline: palette.transparent,
-  // dangerButton: palette.accentRed,
-  // dangerButtonText: palette.white,
-
   // Card
-  // cardBackground: palette.white,
-  // cardShadow: palette.blackOp25,
   cardBorder: 1,
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 16,
@@ -288,6 +269,7 @@ export const testLight: Theme = {
   },
 
   tabBarBackground: [palette.white, palette.white],
+  tabBarBackgroundIos: [palette.white, palette.white],
   tabBarBackgroundStart: { x: 0, y: 0 },
   tabBarBackgroundEnd: { x: 1, y: 1 },
   tabBarTopOutlineColors: [palette.white, palette.white],
@@ -301,20 +283,12 @@ export const testLight: Theme = {
   shimmerBackgroundColor: palette.whiteOp05,
   shimmerBackgroundHighlight: palette.whiteOp10,
 
-  // pinOutline: palette.edgeBlue,
-  // pinFilled: palette.edgeBlue,
-
-  // radioButtonOutline: palette.edgeNavy,
-  // radioButtonFilled: palette.edgeBlue,
-
   toggleButton: palette.accentGreen,
   toggleButtonOff: palette.gray,
-  // toggleButtonThumb: palette.white,
-
-  // warningBubble: palette.accentOrange,
 
   // Confirmation slider
   confirmationSlider: palette.blackOp10,
+  confirmationSliderCompleted: palette.darkGreen,
   confirmationSliderText: palette.edgeBlue,
   confirmationSliderArrow: palette.white,
   confirmationSliderThumb: palette.edgeBlue,
@@ -326,9 +300,6 @@ export const testLight: Theme = {
   // Lines
   lineDivider: palette.edgeBlue,
   titleLineDivider: palette.edgeBlue,
-  // textInputLine: palette.gray,
-  // orLine: palette.gray,
-  // tileDivider: palette.gray,
   thinLineWidth: 1,
   mediumLineWidth: 2,
   thickLineWidth: 3,
@@ -337,27 +308,9 @@ export const testLight: Theme = {
   dividerLineHeight: 1,
   dividerLineColors: [palette.edgeBlue, palette.edgeBlue],
 
-  // Notifications
-  // notificationBackground: palette.grayOp80,
-  // messageBanner: palette.grayOp80,
-  // bubble: palette.whiteOp10,
-
-  // Alert Modal
-  // securityAlertModalHeaderIcon: palette.accentOrange,
-  // securityAlertModalRowBorder: palette.lightGray,
-  // securityAlertModalWarningIcon: palette.accentOrange,
-  // securityAlertModalDangerIcon: palette.accentRed,
-  // securityAlertModalBackground: palette.white,
-  // securityAlertModalText: palette.black,
-  // securityAlertModalLine: palette.lightGray,
-  // securityAlertModalHeaderIconShadow: palette.accentOrangeOp30,
-
   // Settings Row
   settingsRowBackground: palette.white,
   settingsRowPressed: palette.transparent,
-  settingsRowHeaderBackground: [palette.lightGray, palette.lightGray],
-  settingsRowHeaderBackgroundStart: { x: 0, y: 0 },
-  settingsRowHeaderBackgroundEnd: { x: 1, y: 1 },
   settingsRowHeaderFont: palette.QuicksandMedium,
   settingsRowHeaderFontSizeRem: 1,
   settingsRowSubHeader: palette.transparent,
@@ -373,10 +326,8 @@ export const testLight: Theme = {
   walletProgressIconDone: palette.white,
 
   // Misc
-  // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
   searchListRefreshControlIndicator: palette.transparent,
   clipboardPopupText: palette.black,
-  flipInputBorder: palette.edgeBlue,
 
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,
@@ -410,17 +361,6 @@ export const testLight: Theme = {
   // Input Accessory
   inputAccessoryBackground: palette.white,
   inputAccessoryText: palette.accentBlue,
-
-  // Outline Text Input
-  outlineTextInputColor: palette.transparent,
-  outlineTextInputTextColor: palette.black,
-  outlineTextInputBorderWidth: 1,
-  outlineTextInputBorderColor: palette.gray,
-  outlineTextInputBorderColorDisabled: palette.gray,
-  outlineTextInputBorderColorFocused: palette.edgeBlue,
-  outlineTextInputLabelColor: palette.gray,
-  outlineTextInputLabelColorDisabled: palette.gray,
-  outlineTextInputLabelColorFocused: palette.edgeBlue,
 
   // Simple Text Input
   textInputTextColor: palette.gray,
@@ -525,8 +465,6 @@ export const testLight: Theme = {
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
-
-  modalBackgroundUi4: '#ffffff80',
 
   txDirBgReceiveUi4: palette.greenOp60,
   txDirBgSendUi4: palette.redOp60,

@@ -127,8 +127,6 @@ export const testDark: Theme = {
   dangerIcon: palette.accentRed,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
-  transactionListIconBackground: palette.darkAqua,
-  buySellCustomPluginModalIcon: palette.navyAqua,
   loadingIcon: palette.edgeMint,
 
   // Background
@@ -179,8 +177,10 @@ export const testDark: Theme = {
   modalBorderColor: palette.transparent,
   modalBorderWidth: 0,
   modalBorderRadiusRem: 1,
+  modalAndroidBlurColor: palette.blackOp25,
+  modalBackgroundUi4: palette.whiteOp10,
+  modalSceneOverlayColor: palette.black,
 
-  sideMenuColor: palette.navyAqua,
   sideMenuBorderColor: palette.navyAqua,
   sideMenuBorderWidth: 0,
   sideMenuFont: palette.QuicksandMedium,
@@ -194,12 +194,8 @@ export const testDark: Theme = {
   // listSectionHeaderBackgroundGradientColors: [palette.navyAquaMiddle], // For vertical gradient
   listSectionHeaderBackgroundGradientColors: [`#000000aa`, `#00000000`],
   // Commenting out will remove background gradient:
-  // listSectionHeaderBackgroundGradientStart: { x: 0, y: 0 },
-  // listSectionHeaderBackgroundGradientEnd: { x: 1, y: 0 },
-
-  // WalletList
-  walletListBackground: palette.navyAqua,
-  walletListMutedBackground: palette.navyAqua,
+  listSectionHeaderBackgroundGradientStart: { x: 0, y: 0 },
+  listSectionHeaderBackgroundGradientEnd: { x: 1, y: 0 },
 
   // Text
   primaryText: palette.white,
@@ -211,7 +207,6 @@ export const testDark: Theme = {
   textLink: palette.edgeMint,
   deactivatedText: palette.gray,
   emphasizedText: palette.edgeMint,
-  // listHeaderText: palette.white,
 
   // Header
   headerIcon: edgeMark,
@@ -302,8 +297,6 @@ export const testDark: Theme = {
   dropdownText: palette.white,
 
   // Card
-  // cardBackground: palette.edgeBlue,
-  // cardShadow: palette.blackOp25,
   cardBorder: 1,
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 16,
@@ -316,7 +309,8 @@ export const testDark: Theme = {
     textShadowRadius: 3
   },
 
-  tabBarBackground: [`${palette.black}00`, palette.black],
+  tabBarBackground: [palette.black, palette.black],
+  tabBarBackgroundIos: [palette.blackOp25, palette.blackOp50],
   tabBarBackgroundStart: { x: 0, y: 0.5 },
   tabBarBackgroundEnd: { x: 0, y: 1 },
   tabBarTopOutlineColors: [`${palette.white}22`, `${palette.white}22`],
@@ -330,20 +324,12 @@ export const testDark: Theme = {
   shimmerBackgroundColor: palette.whiteOp05,
   shimmerBackgroundHighlight: palette.whiteOp10,
 
-  // pinOutline: palette.white,
-  // pinFilled: palette.white,
-
-  // radioButtonOutline: palette.lightGray,
-  // radioButtonFilled: palette.edgeMint,
-
   toggleButton: palette.edgeMint,
   toggleButtonOff: palette.gray,
-  // toggleButtonThumb: palette.white,
-
-  // warningBubble: palette.accentOrange,
 
   // Confirmation slider
   confirmationSlider: palette.darkBlueLightened,
+  confirmationSliderCompleted: palette.darkGreen,
   confirmationSliderText: palette.white,
   confirmationSliderArrow: palette.darkAqua,
   confirmationSliderThumb: palette.edgeMint,
@@ -355,9 +341,6 @@ export const testDark: Theme = {
   // Lines
   lineDivider: palette.whiteOp10,
   titleLineDivider: palette.blueGray,
-  // textInputLine: palette.blueGray,
-  // orLine: palette.blueGray,
-  // tileDivider: palette.blueGray,
   thinLineWidth: 1,
   mediumLineWidth: 2,
   thickLineWidth: 3,
@@ -366,27 +349,9 @@ export const testDark: Theme = {
   dividerLineHeight: 1,
   dividerLineColors: [palette.whiteOp10, palette.whiteOp10],
 
-  // Notifications
-  // notificationBackground: palette.lightGrayOp75,
-  // messageBanner: palette.grayOp80,
-  // bubble: palette.whiteOp10,
-
-  // Alert Modal
-  // securityAlertModalHeaderIcon: palette.accentOrange,
-  // securityAlertModalRowBorder: palette.lightGray,
-  // securityAlertModalWarningIcon: palette.accentOrange,
-  // securityAlertModalDangerIcon: palette.accentRed,
-  // securityAlertModalBackground: palette.white,
-  // securityAlertModalText: palette.black,
-  // securityAlertModalLine: palette.lightGray,
-  // securityAlertModalHeaderIconShadow: palette.accentOrangeOp30,
-
   // Settings Row
   settingsRowBackground: palette.transparent,
   settingsRowPressed: palette.transparent,
-  settingsRowHeaderBackground: [palette.navyAqua, palette.navyAqua],
-  settingsRowHeaderBackgroundStart: { x: 0, y: 0 },
-  settingsRowHeaderBackgroundEnd: { x: 1, y: 1 },
   settingsRowHeaderFont: palette.QuicksandMedium,
   settingsRowHeaderFontSizeRem: 1,
   settingsRowSubHeader: palette.transparent,
@@ -402,10 +367,8 @@ export const testDark: Theme = {
   walletProgressIconDone: palette.white,
 
   // Misc
-  // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
   searchListRefreshControlIndicator: palette.transparent,
   clipboardPopupText: palette.black,
-  flipInputBorder: palette.blueGray,
 
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,
@@ -439,17 +402,6 @@ export const testDark: Theme = {
   // Input Accessory
   inputAccessoryBackground: palette.white,
   inputAccessoryText: palette.accentBlue,
-
-  // Outline Text Input
-  outlineTextInputColor: palette.transparent,
-  outlineTextInputTextColor: palette.white,
-  outlineTextInputBorderWidth: 1,
-  outlineTextInputBorderColor: palette.blueGray,
-  outlineTextInputBorderColorDisabled: palette.gray,
-  outlineTextInputBorderColorFocused: palette.edgeMint,
-  outlineTextInputLabelColor: palette.blueGray,
-  outlineTextInputLabelColorDisabled: palette.gray,
-  outlineTextInputLabelColorFocused: palette.edgeMint,
 
   // Simple Text Input
   textInputTextColor: palette.white,
@@ -554,8 +506,6 @@ export const testDark: Theme = {
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
-
-  modalBackgroundUi4: '#00000080',
 
   txDirBgReceiveUi4: palette.greenOp60,
   txDirBgSendUi4: palette.redOp60,

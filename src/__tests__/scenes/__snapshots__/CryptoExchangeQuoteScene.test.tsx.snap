@@ -154,7 +154,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
               "type": 0,
             }
           }
-          opacity={0.25}
+          opacity={0.1}
         >
           <RNSVGCircle
             cx="10%"
@@ -341,7 +341,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
           <View
             style={
               {
-                "borderBottomColor": "#A4C7DF",
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
                 "borderBottomWidth": 1,
                 "flex": 1,
               }
@@ -379,7 +379,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
           <View
             style={
               {
-                "borderBottomColor": "#A4C7DF",
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
                 "borderBottomWidth": 1,
                 "flex": 1,
               }
@@ -913,7 +913,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
           <View
             style={
               {
-                "borderBottomColor": "#A4C7DF",
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
                 "borderBottomWidth": 1,
                 "flex": 1,
               }
@@ -951,7 +951,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
           <View
             style={
               {
-                "borderBottomColor": "#A4C7DF",
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
                 "borderBottomWidth": 1,
                 "flex": 1,
               }
@@ -1458,7 +1458,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                   <Text
                     style={
                       {
-                        "color": "#87939E",
+                        "color": "#888888",
                         "fontSize": 17,
                       }
                     }
@@ -1686,7 +1686,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
             style={
               [
                 {
-                  "backgroundColor": "#2B333A",
+                  "backgroundColor": "#00604d",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -1703,7 +1703,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
               style={
                 [
                   {
-                    "backgroundColor": "#2B333A",
+                    "backgroundColor": "#333333",
                     "borderRadius": 27.5,
                     "bottom": 0,
                     "left": 0,
@@ -1754,7 +1754,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       "fontSize": 34,
                     },
                     {
-                      "color": "#1b2f3b",
+                      "color": "#1a1a1a",
                       "fontSize": 51,
                     },
                     {

@@ -35,25 +35,24 @@ const palette = {
 
   darkMint: '#089e73',
   edgeMint: '#00f1a2',
-  darkAqua: '#1b2f3b',
-  navyAqua: '#121d25',
-  navyAquaMiddle: '#11191f', // For vertical gradient
-  navyAquaDarker: '#0E141A', // For vertical gradient
-  blueGray: '#A4C7DF',
-  gray: '#87939E',
+  gray: '#888888',
+  darkGrey: '#333333',
   lightGray: '#D9E3ED',
-  mutedBlue: '#2F5E89',
   accentGreen: '#77C513',
   accentRed: '#E85466',
   accentBlue: '#0073D9',
   accentOrange: '#F1AA19',
   darkBlueLightened: '#2B333A',
 
-  blackOp25: 'rgba(0, 0, 0, .25)',
+  blackOp10: 'rgba(0, 0, 0, .1)',
+  blackOp35: 'rgba(0, 0, 0, .25)',
   blackOp50: 'rgba(0, 0, 0, .5)',
+  blackOp70: 'rgba(0, 0, 0, .7)',
 
   whiteOp05: 'rgba(255, 255, 255, .05)',
   whiteOp10: 'rgba(255, 255, 255, .1)',
+  whiteOp37: 'rgba(255, 255, 255, .37)',
+  whiteOp50: 'rgba(255, 255, 255, .5)',
   whiteOp75: 'rgba(255, 255, 255, .75)',
 
   grayOp80: 'rgba(135, 147, 158, .8)',
@@ -127,8 +126,6 @@ export const edgeDark: Theme = {
   dangerIcon: palette.accentRed,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
-  transactionListIconBackground: palette.darkAqua,
-  buySellCustomPluginModalIcon: palette.navyAqua,
   loadingIcon: palette.edgeMint,
 
   // Background
@@ -137,7 +134,7 @@ export const edgeDark: Theme = {
   backgroundGradientEnd: { x: 1, y: 1 },
   backgroundDots: {
     blurRadius: scale(80),
-    dotOpacity: 0.25,
+    dotOpacity: 0.1,
     dots: [
       {
         // Top-left:
@@ -163,7 +160,7 @@ export const edgeDark: Theme = {
     ],
     assetOverrideDots: [undefined, { accentColor: 'iconAccentColor' }, null]
   },
-  assetBackgroundGradientColors: [palette.darkAqua, palette.backgroundBlack],
+  assetBackgroundGradientColors: [palette.backgroundBlack, palette.backgroundBlack],
   assetBackgroundGradientStart: { x: 0, y: 0 },
   assetBackgroundGradientEnd: { x: 0, y: 1 },
   assetBackgroundColorScale: 0.1,
@@ -174,14 +171,16 @@ export const edgeDark: Theme = {
   cameraOverlayOpEnd: 0.3,
 
   // Modal
-  modal: palette.navyAqua,
+  modal: palette.backgroundBlack,
   modalCloseIcon: palette.edgeMint,
   modalBorderColor: palette.transparent,
   modalBorderWidth: 0,
   modalBorderRadiusRem: 1,
+  modalAndroidBlurColor: palette.blackOp70,
+  modalBackgroundUi4: palette.whiteOp37,
+  modalSceneOverlayColor: palette.black,
 
-  sideMenuColor: palette.navyAqua,
-  sideMenuBorderColor: palette.navyAqua,
+  sideMenuBorderColor: palette.backgroundBlack,
   sideMenuBorderWidth: 0,
   sideMenuFont: palette.QuicksandMedium,
 
@@ -191,15 +190,10 @@ export const edgeDark: Theme = {
   tileBackgroundMuted: palette.transparent,
 
   // Section Lists
-  // listSectionHeaderBackgroundGradientColors: [palette.navyAquaMiddle], // For vertical gradient
   listSectionHeaderBackgroundGradientColors: [`#000000aa`, `#00000000`],
   // Commenting out will remove background gradient:
-  // listSectionHeaderBackgroundGradientStart: { x: 0, y: 0 },
-  // listSectionHeaderBackgroundGradientEnd: { x: 1, y: 0 },
-
-  // WalletList
-  walletListBackground: palette.navyAqua,
-  walletListMutedBackground: palette.navyAqua,
+  listSectionHeaderBackgroundGradientStart: null,
+  listSectionHeaderBackgroundGradientEnd: null,
 
   // Text
   primaryText: palette.white,
@@ -211,7 +205,6 @@ export const edgeDark: Theme = {
   textLink: palette.edgeMint,
   deactivatedText: palette.gray,
   emphasizedText: palette.edgeMint,
-  // listHeaderText: palette.white,
 
   // Header
   headerIcon: edgeMark,
@@ -302,8 +295,6 @@ export const edgeDark: Theme = {
   dropdownText: palette.white,
 
   // Card
-  // cardBackground: palette.edgeBlue,
-  // cardShadow: palette.blackOp25,
   cardBorder: 1,
   cardBorderColor: palette.whiteOp10,
   cardBorderRadius: 16,
@@ -316,7 +307,8 @@ export const edgeDark: Theme = {
     textShadowRadius: 3
   },
 
-  tabBarBackground: [`${palette.black}00`, palette.black],
+  tabBarBackground: [palette.blackOp35, palette.blackOp70],
+  tabBarBackgroundIos: [palette.blackOp10, palette.blackOp70],
   tabBarBackgroundStart: { x: 0, y: 0.5 },
   tabBarBackgroundEnd: { x: 0, y: 1 },
   tabBarTopOutlineColors: [`${palette.white}22`, `${palette.white}22`],
@@ -330,22 +322,14 @@ export const edgeDark: Theme = {
   shimmerBackgroundColor: palette.whiteOp05,
   shimmerBackgroundHighlight: palette.whiteOp10,
 
-  // pinOutline: palette.white,
-  // pinFilled: palette.white,
-
-  // radioButtonOutline: palette.lightGray,
-  // radioButtonFilled: palette.edgeMint,
-
   toggleButton: palette.edgeMint,
   toggleButtonOff: palette.gray,
-  // toggleButtonThumb: palette.white,
-
-  // warningBubble: palette.accentOrange,
 
   // Confirmation slider
-  confirmationSlider: palette.darkBlueLightened,
+  confirmationSlider: palette.darkGrey,
+  confirmationSliderCompleted: palette.darkGreen,
   confirmationSliderText: palette.white,
-  confirmationSliderArrow: palette.darkAqua,
+  confirmationSliderArrow: palette.backgroundBlack,
   confirmationSliderThumb: palette.edgeMint,
   confirmationSliderTextDeactivated: palette.gray,
   confirmationThumbDeactivated: palette.gray,
@@ -354,10 +338,7 @@ export const edgeDark: Theme = {
 
   // Lines
   lineDivider: palette.whiteOp10,
-  titleLineDivider: palette.blueGray,
-  // textInputLine: palette.blueGray,
-  // orLine: palette.blueGray,
-  // tileDivider: palette.blueGray,
+  titleLineDivider: palette.whiteOp10,
   thinLineWidth: 1,
   mediumLineWidth: 2,
   thickLineWidth: 3,
@@ -366,27 +347,9 @@ export const edgeDark: Theme = {
   dividerLineHeight: 1,
   dividerLineColors: [palette.whiteOp10, palette.whiteOp10],
 
-  // Notifications
-  // notificationBackground: palette.lightGrayOp75,
-  // messageBanner: palette.grayOp80,
-  // bubble: palette.whiteOp10,
-
-  // Alert Modal
-  // securityAlertModalHeaderIcon: palette.accentOrange,
-  // securityAlertModalRowBorder: palette.lightGray,
-  // securityAlertModalWarningIcon: palette.accentOrange,
-  // securityAlertModalDangerIcon: palette.accentRed,
-  // securityAlertModalBackground: palette.white,
-  // securityAlertModalText: palette.black,
-  // securityAlertModalLine: palette.lightGray,
-  // securityAlertModalHeaderIconShadow: palette.accentOrangeOp30,
-
   // Settings Row
   settingsRowBackground: palette.transparent,
   settingsRowPressed: palette.transparent,
-  settingsRowHeaderBackground: [palette.navyAqua, palette.navyAqua],
-  settingsRowHeaderBackgroundStart: { x: 0, y: 0 },
-  settingsRowHeaderBackgroundEnd: { x: 1, y: 1 },
   settingsRowHeaderFont: palette.QuicksandMedium,
   settingsRowHeaderFontSizeRem: 1,
   settingsRowSubHeader: palette.transparent,
@@ -395,17 +358,15 @@ export const edgeDark: Theme = {
   dateModalTextLight: palette.accentBlue,
   dateModalTextDark: palette.white,
   dateModalBackgroundLight: palette.white,
-  dateModalBackgroundDark: palette.darkAqua,
+  dateModalBackgroundDark: palette.backgroundBlack,
 
   // Wallet Icon Progress
   walletProgressIconFill: palette.edgeMint,
   walletProgressIconDone: palette.white,
 
   // Misc
-  // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
   searchListRefreshControlIndicator: palette.transparent,
   clipboardPopupText: palette.black,
-  flipInputBorder: palette.blueGray,
 
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,
@@ -440,34 +401,23 @@ export const edgeDark: Theme = {
   inputAccessoryBackground: palette.white,
   inputAccessoryText: palette.accentBlue,
 
-  // Outline Text Input
-  outlineTextInputColor: palette.transparent,
-  outlineTextInputTextColor: palette.white,
-  outlineTextInputBorderWidth: 1,
-  outlineTextInputBorderColor: palette.blueGray,
-  outlineTextInputBorderColorDisabled: palette.gray,
-  outlineTextInputBorderColorFocused: palette.edgeMint,
-  outlineTextInputLabelColor: palette.blueGray,
-  outlineTextInputLabelColorDisabled: palette.gray,
-  outlineTextInputLabelColorFocused: palette.edgeMint,
-
   // Simple Text Input
   textInputTextColor: palette.white,
   textInputTextColorDisabled: palette.gray,
   textInputTextColorFocused: palette.white,
-  textInputBackgroundColor: palette.darkAqua,
-  textInputBackgroundColorDisabled: palette.darkAqua,
-  textInputBackgroundColorFocused: palette.darkAqua,
+  textInputBackgroundColor: palette.graySecondary,
+  textInputBackgroundColorDisabled: palette.graySecondary,
+  textInputBackgroundColorFocused: palette.graySecondary,
   textInputBorderColor: `${palette.edgeMint}00`,
   textInputBorderColorDisabled: palette.gray,
   textInputBorderColorFocused: palette.edgeMint,
   textInputBorderRadius: 100,
   textInputBorderWidth: 1,
-  textInputIconColor: palette.gray,
-  textInputIconColorDisabled: palette.gray,
+  textInputIconColor: palette.whiteOp50,
+  textInputIconColorDisabled: palette.whiteOp50,
   textInputIconColorFocused: palette.edgeMint,
-  textInputPlaceholderColor: palette.gray,
-  textInputPlaceholderColorDisabled: palette.gray,
+  textInputPlaceholderColor: palette.whiteOp50,
+  textInputPlaceholderColorDisabled: palette.whiteOp50,
   textInputPlaceholderColorFocused: palette.edgeMint,
 
   // Animation
@@ -554,8 +504,6 @@ export const edgeDark: Theme = {
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
-
-  modalBackgroundUi4: 'rgba(255, 255, 255, 0.376)',
 
   txDirBgReceiveUi4: palette.greenOp60,
   txDirBgSendUi4: palette.redOp60,

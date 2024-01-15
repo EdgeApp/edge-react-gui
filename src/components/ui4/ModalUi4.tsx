@@ -12,6 +12,7 @@ import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { maybeComponent } from '../hoc/maybeComponent'
 import { Theme, useTheme } from '../services/ThemeContext'
 
+const BACKGROUND_ALPHA = 0.7
 export interface ModalPropsUi4<T = unknown> {
   bridge: AirshipBridge<T>
   children?: React.ReactNode
@@ -67,7 +68,7 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
 
   React.useEffect(() => {
     // Animate in:
-    opacity.value = withTiming(1, { duration })
+    opacity.value = withTiming(BACKGROUND_ALPHA, { duration })
     offset.value = withTiming(0, { duration })
 
     // Animate out:
@@ -124,7 +125,7 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
         <Animated.View style={[styles.body, bodyStyle, bodyLayout]}>
           {/* Need another Biew here because BlurView doesn't accept rounded corners in its styling */}
           <View style={styles.blurContainer}>
-            <BlurView blurType={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} overlayColor="#00000000" />
+            <BlurView blurType={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} overlayColor={theme.modalAndroidBlurColor} />
           </View>
 
           <View style={styles.dragBarContainer}>
@@ -155,7 +156,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     left: 0,
     position: 'absolute',
     right: 0,
-    top: 0
+    top: 0,
+    backgroundColor: theme.modalSceneOverlayColor
   },
   body: {
     alignSelf: 'flex-end',
