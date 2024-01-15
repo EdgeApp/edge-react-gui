@@ -6,16 +6,16 @@ import { Animated, StyleSheet, View } from 'react-native'
 import Reanimated from 'react-native-reanimated'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { useSceneFooterState } from '../../state/SceneFooterState'
+import { useSceneFooterRenderState, useSceneFooterState } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { OverrideDots } from '../../types/Theme'
 import { maybeComponent } from '../hoc/maybeComponent'
+import { styled } from '../hoc/styled'
 import { NotificationView } from '../notification/NotificationView'
 import { useTheme } from '../services/ThemeContext'
 import { MAX_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
-import { SceneFooter } from '../themed/SceneFooter'
 import { AccentColors, DotsBackground } from '../ui4/DotsBackground'
 import { KeyboardTracker } from './KeyboardTracker'
 
@@ -83,9 +83,6 @@ interface SceneWrapperProps {
   // Padding to add inside the scene border:
   padding?: number
 
-  // Render function to render components floating at the bottom of the scene
-  renderFooter?: (info: SceneWrapperInfo) => React.ReactNode
-
   // True to make the scene scrolling (if avoidKeyboard is false):
   scroll?: boolean
 }
@@ -111,7 +108,6 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     backgroundGradientStart,
     backgroundGradientEnd,
     children,
-    renderFooter,
     hasHeader = true,
     hasNotifications = false,
     hasTabs = false,
@@ -147,6 +143,8 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
 
   // If the scene has scroll, this will be required for tabs and/or header animation
   const handleScroll = useSceneScrollHandler(scroll && (hasTabs || hasHeader))
+
+  const { renderFooter } = useSceneFooterRenderState()
 
   const renderScene = (safeAreaInsets: EdgeInsets, keyboardAnimation: Animated.Value | undefined, trackerValue: number): JSX.Element => {
     // If function children, the caller handles the insets and overscroll
@@ -216,14 +214,10 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
           </MaybeView>
         </MaybeAnimatedScrollView>
         {renderFooter != null || hasNotifications ? (
-          <SceneFooter info={info}>
-            {info => (
-              <>
-                {hasNotifications ? <NotificationView navigation={navigation} /> : null}
-                {renderFooter != null ? renderFooter(info) : null}
-              </>
-            )}
-          </SceneFooter>
+          <>
+            {hasNotifications ? <NotificationView navigation={navigation} /> : null}
+            {renderFooter != null && !hasTabs ? <SceneFooter>{renderFooter(info)}</SceneFooter> : null}
+          </>
         ) : null}
       </MaybeAnimatedView>
     )
@@ -261,3 +255,10 @@ const styles = StyleSheet.create({
 const MaybeAnimatedView = maybeComponent(Animated.View)
 const MaybeAnimatedScrollView = maybeComponent(Reanimated.ScrollView)
 const MaybeView = maybeComponent(View)
+
+const SceneFooter = styled(View)({
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0
+})

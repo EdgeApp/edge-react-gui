@@ -4,38 +4,41 @@ import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useHandler } from '../../hooks/useHandler'
-import { useFooterOpenRatio } from '../../state/SceneFooterState'
+import { useFooterOpenRatio, useLayoutHeightInFooter } from '../../state/SceneFooterState'
 import { SceneWrapperInfo } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { BlurBackground } from '../ui4/BlurBackground'
 
 export interface SceneFooterProps {
   children: React.ReactNode
-  info: SceneWrapperInfo
+  sceneWrapperInfo?: SceneWrapperInfo
 
   // Flags:
   noBackgroundBlur?: boolean
 }
 
 export const SceneFooterWrapper = (props: SceneFooterProps) => {
-  const { noBackgroundBlur = false, children, info } = props
+  const { children, noBackgroundBlur = false, sceneWrapperInfo } = props
+  const { hasTabs = true, isKeyboardOpen = false } = sceneWrapperInfo ?? {}
   const { footerOpenRatio } = useFooterOpenRatio()
+
+  const handleFooterLayout = useLayoutHeightInFooter()
+  const safeAreaInsets = useSafeAreaInsets()
 
   const [containerHeight, setContainerHeight] = useState<number | undefined>(undefined)
   const handleFooterInnerLayout = useHandler((event: LayoutChangeEvent) => {
     if (containerHeight != null) return
     setContainerHeight(event.nativeEvent.layout.height)
+    handleFooterLayout(event)
   })
-
-  const safeAreaInsets = useSafeAreaInsets()
 
   return (
     <ContainerAnimatedView
       containerHeight={containerHeight}
       footerOpenRatio={footerOpenRatio}
-      hasTabs={info.hasTabs}
+      hasTabs={hasTabs}
+      isKeyboardOpen={isKeyboardOpen}
       insetBottom={safeAreaInsets.bottom}
-      isKeyboardOpen={info.isKeyboardOpen}
       onLayout={handleFooterInnerLayout}
     >
       {noBackgroundBlur ? null : <BlurBackground />}
@@ -48,19 +51,18 @@ const ContainerAnimatedView = styled(Animated.View)<{
   containerHeight?: number
   footerOpenRatio: SharedValue<number>
   hasTabs: boolean
-  insetBottom: number
   isKeyboardOpen: boolean
-}>(() => ({ containerHeight, footerOpenRatio, hasTabs, insetBottom, isKeyboardOpen }) => {
+  insetBottom: number
+}>(() => ({ containerHeight, footerOpenRatio, hasTabs, isKeyboardOpen, insetBottom }) => {
   return [
     {
-      flex: 1,
       overflow: 'hidden'
     },
     useAnimatedStyle(() => {
       if (containerHeight == null) return {}
-      const maybeInsetHeight = !hasTabs && !isKeyboardOpen ? insetBottom : 0
+      const maybeInsetBottom = !hasTabs && !isKeyboardOpen ? insetBottom : 0
       return {
-        height: containerHeight * footerOpenRatio.value + maybeInsetHeight
+        height: containerHeight * footerOpenRatio.value + maybeInsetBottom
       }
     })
   ]

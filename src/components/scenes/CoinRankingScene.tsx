@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { useCallback } from 'react'
 import { ListRenderItemInfo, TouchableOpacity, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 
@@ -7,6 +6,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
+import { useSceneFooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { asCoinranking, AssetSubText, CoinRanking, PercentChangeTimeFrame } from '../../types/coinrankTypes'
 import { useState } from '../../types/reactHooks'
@@ -15,7 +15,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
 import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
-import { SceneWrapper, SceneWrapperInfo } from '../common/SceneWrapper'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { CoinRankRow } from '../data/row/CoinRankRow'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -203,14 +203,14 @@ const CoinRankingComponent = (props: Props) => {
   const timeFrameString = percentChangeStrings[percentChangeTimeFrame]
   const assetSubTextString = assetSubTextStrings[assetSubText]
 
-  const renderFooter = useCallback(
-    (info: SceneWrapperInfo) => {
+  useSceneFooterRender(
+    sceneWrapperInfo => {
       return (
         <SearchFooter
           placeholder={lstrings.search_assets}
           isSearching={isSearching}
           searchText={searchText}
-          sceneWrapperInfo={info}
+          sceneWrapperInfo={sceneWrapperInfo}
           onStartSearching={handleStartSearching}
           onDoneSearching={handleDoneSearching}
           onChangeText={handleChangeText}
@@ -221,7 +221,7 @@ const CoinRankingComponent = (props: Props) => {
   )
 
   return (
-    <SceneWrapper avoidKeyboard hasNotifications renderFooter={renderFooter}>
+    <SceneWrapper avoidKeyboard hasNotifications>
       {({ insetStyle, undoInsetStyle }) => (
         <>
           <View style={styles.headerContainer}>

@@ -6,10 +6,11 @@ import { updateWalletsSort } from '../../actions/WalletListActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { useSceneFooterRender } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { CrossFade } from '../common/CrossFade'
-import { SceneWrapper, SceneWrapperInfo } from '../common/SceneWrapper'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -89,10 +90,10 @@ export function WalletListScene(props: Props) {
 
   const handlePressDone = useHandler(() => setSorting(false))
 
-  const renderFooter = React.useCallback(
-    (info: SceneWrapperInfo) => {
+  useSceneFooterRender(
+    sceneWrapperInfo => {
       return sorting ? (
-        <SceneFooterWrapper info={info}>
+        <SceneFooterWrapper sceneWrapperInfo={sceneWrapperInfo}>
           <View style={styles.sortFooterContainer}>
             <MainButton key="doneButton" type="escape" label={lstrings.string_done_cap} onPress={handlePressDone} />
           </View>
@@ -102,7 +103,8 @@ export function WalletListScene(props: Props) {
           placeholder={lstrings.wallet_list_wallet_search}
           isSearching={isSearching}
           searchText={searchText}
-          sceneWrapperInfo={info}
+          noBackground
+          sceneWrapperInfo={sceneWrapperInfo}
           onStartSearching={handleStartSearching}
           onDoneSearching={handleDoneSearching}
           onChangeText={handleChangeText}
@@ -113,7 +115,7 @@ export function WalletListScene(props: Props) {
   )
 
   return (
-    <SceneWrapper avoidKeyboard hasTabs hasNotifications padding={theme.rem(0.5)} renderFooter={renderFooter}>
+    <SceneWrapper avoidKeyboard hasTabs hasNotifications padding={theme.rem(0.5)}>
       {({ insetStyle, undoInsetStyle }) => (
         <>
           <WiredProgressBar />

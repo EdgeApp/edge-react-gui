@@ -1416,5 +1416,15 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
       </View>
     </View>
   </View>,
+  <View
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+      }
+    }
+  />,
 ]
 `;

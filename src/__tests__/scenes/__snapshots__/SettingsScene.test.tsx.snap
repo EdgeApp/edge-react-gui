@@ -3436,6 +3436,16 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
       </View>
     </View>
   </RCTScrollView>,
+  <View
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+      }
+    }
+  />,
 ]
 `;
 
@@ -6875,5 +6885,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
       </View>
     </View>
   </RCTScrollView>,
+  <View
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+      }
+    }
+  />,
 ]
 `;

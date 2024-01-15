@@ -15,7 +15,7 @@ import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
-import { useFooterOpenRatio } from '../../state/SceneFooterState'
+import { useFooterOpenRatio, useSceneFooterRenderState } from '../../state/SceneFooterState'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { styled } from '../hoc/styled'
@@ -63,11 +63,13 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const activeTabIndex = routes.findIndex(route => route.name === activeTabRoute.name)
 
   const { footerOpenRatio, resetFooterRatio } = useFooterOpenRatio()
+  const { renderFooter } = useSceneFooterRenderState()
 
   return (
     <Container>
       <BlurBackground />
       <LinearGradient colors={theme.tabBarBackground} start={theme.tabBarBackgroundStart} end={theme.tabBarBackgroundEnd}>
+        {renderFooter()}
         <Tabs>
           {routes.map((route, index: number) => (
             <Tab

@@ -35,7 +35,12 @@
     "@typescript-eslint/restrict-template-expressions": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
 
-    "react-hooks/exhaustive-deps": "error",
+    "react-hooks/exhaustive-deps": [
+      "error",
+      {
+        "additionalHooks": "^useSceneFooterRender$"
+      }
+    ],
     "react/jsx-handler-names": "off",
     "react-native/no-inline-styles": "off",
     "react-native/no-raw-text": [
