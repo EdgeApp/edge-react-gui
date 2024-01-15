@@ -15172,10 +15172,10 @@ react-native-permissions@^3.8.3:
     picocolors "^1.0.0"
     pkg-dir "^5.0.0"
 
-react-native-piratechain@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.4.2.tgz#992002dbf252af0a104612c9f236472c3901cf0f"
-  integrity sha512-BdQ0GsqV/v/qnM06V3JTo++R0jh7ep5b7DMCkdd5Y6J8nBm/n+0xftUB9rqgm+ED1lS0zJ8udtr4U8b4e5bfXw==
+react-native-piratechain@^0.4.3:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.4.3.tgz#11e745bab390f4ccb85951c8e4957c3f372f1991"
+  integrity sha512-2ENCcmop+LCg9tzg+PE14i6W8NpbgnI2A60hyVdyMtu0aVcii7/F6ZHGYZxOTJi+N+s7LZgIxYYQu8w83mtH6g==
   dependencies:
     rfc4648 "^1.3.0"
 
@@ -15281,10 +15281,10 @@ react-native-webview@^13.2.2:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
 
-react-native-zcash@^0.6.5:
-  version "0.6.5"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.6.5.tgz#f22aa103ecb36bff24b7862c527addfd67095fea"
-  integrity sha512-S6WMR2yoYLGkvvqjMEOyyNduYEN4ZlawRH6tf4Bj9s7fQ9yWHQTgBX4BTFi7SKNQIh4QXBjxGdvAoSA8Su6mUQ==
+react-native-zcash@^0.6.6:
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.6.6.tgz#956c4669b34e08501d4e24c6b37983e76505bf65"
+  integrity sha512-aY3R3WkJ6ONevMuUhc+BREWgEiH8Yc+yjw1jD6e1QIEICyobsXTln7Fw9xy7Za6EY7XaJ0ZFiLKrLAPttcchEw==
   dependencies:
     biggystring "^4.1.3"
     rfc4648 "^1.3.0"
