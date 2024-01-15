@@ -47,6 +47,7 @@ exports[`HelpModal should render with loading props 1`] = `
           "borderTopLeftRadius": 22,
           "borderTopRightRadius": 22,
           "flexShrink": 1,
+          "overflow": "hidden",
           "width": 674,
         },
         {
@@ -57,42 +58,31 @@ exports[`HelpModal should render with loading props 1`] = `
           ],
         },
         {
-          "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
           "marginBottom": -86,
           "paddingBottom": 86,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 0,
         },
       ]
     }
   >
-    <View
+    <BlurView
+      blurAmount={10}
+      blurType="dark"
+      overlayColor="rgba(0, 0, 0, 0)"
       style={
         {
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
-          "height": "100%",
-          "overflow": "hidden",
+          "backgroundColor": undefined,
+          "bottom": 0,
+          "left": 0,
           "position": "absolute",
-          "width": "100%",
+          "right": 0,
+          "top": 0,
         }
       }
-    >
-      <BlurView
-        blurAmount={10}
-        blurType="dark"
-        overlayColor="rgba(0, 0, 0, 0)"
-        style={
-          {
-            "backgroundColor": undefined,
-            "bottom": 0,
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-          }
-        }
-      />
-    </View>
+    />
     <View
       style={
         {
@@ -116,6 +106,82 @@ exports[`HelpModal should render with loading props 1`] = `
         }
       />
     </View>
+    <View
+      style={
+        [
+          {
+            "alignItems": "flex-start",
+            "flexDirection": "row",
+            "marginTop": 28,
+          },
+          {
+            "marginBottom": 22,
+          },
+        ]
+      }
+    >
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "flex-end",
+            "alignSelf": "flex-start",
+            "flexGrow": 1,
+            "justifyContent": "flex-start",
+            "marginRight": 11,
+            "opacity": 1,
+            "paddingTop": 3,
+          }
+        }
+      >
+        <Text
+          allowFontScaling={false}
+          style={
+            [
+              {
+                "color": "#888888",
+                "fontSize": 28,
+              },
+              undefined,
+              {
+                "fontFamily": "anticon",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              {},
+            ]
+          }
+        >
+          
+        </Text>
+      </View>
+    </View>
     <RCTScrollView
       collapsable={false}
       handlerTag={2}
@@ -124,10 +190,8 @@ exports[`HelpModal should render with loading props 1`] = `
       onGestureHandlerStateChange={[Function]}
       style={
         {
-          "marginBottom": 22,
-          "marginLeft": 0,
-          "marginRight": 0,
-          "marginTop": 22,
+          "flexGrow": 0,
+          "flexShrink": 1,
         }
       }
       waitFor={
@@ -1009,68 +1073,6 @@ exports[`HelpModal should render with loading props 1`] = `
         </View>
       </View>
     </RCTScrollView>
-    <View
-      accessibilityState={
-        {
-          "busy": undefined,
-          "checked": undefined,
-          "disabled": undefined,
-          "expanded": undefined,
-          "selected": undefined,
-        }
-      }
-      accessibilityValue={
-        {
-          "max": undefined,
-          "min": undefined,
-          "now": undefined,
-          "text": undefined,
-        }
-      }
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      style={
-        {
-          "alignItems": "center",
-          "height": 45,
-          "justifyContent": "center",
-          "opacity": 1,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-          "width": 45,
-        }
-      }
-    >
-      <Text
-        allowFontScaling={false}
-        style={
-          [
-            {
-              "color": "#888888",
-              "fontSize": 22,
-            },
-            undefined,
-            {
-              "fontFamily": "anticon",
-              "fontStyle": "normal",
-              "fontWeight": "normal",
-            },
-            {},
-          ]
-        }
-      >
-        
-      </Text>
-    </View>
   </View>,
 ]
 `;
