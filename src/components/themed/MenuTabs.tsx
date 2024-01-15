@@ -51,7 +51,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
         if (config.extraTab == null && route.name === 'extraTab') {
           return false
         }
-        if (ENV.DEV_TAB == null && route.name === 'devTab') {
+        if (!ENV.DEV_TAB && route.name === 'devTab') {
           return false
         }
         if (config.disableSwaps === true && route.name === 'exchangeTab') {
