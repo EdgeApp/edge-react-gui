@@ -3,6 +3,23 @@ import './node_modules/react-native-gesture-handler/jestSetup.js'
 import { jest } from '@jest/globals'
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock'
 
+jest.mock('@bugsnag/react-native', () => {
+  return {
+    isStarted: () => false,
+    leaveBreadcrumb: () => {},
+    notify: () => {},
+    start: () => false,
+    getPlugin: () => {
+      return {
+        createErrorBoundary:
+          () =>
+          ({ children }) =>
+            children
+      }
+    }
+  }
+})
+
 jest.mock('disklet', () => {
   const originalModule = jest.requireActual('disklet')
 
