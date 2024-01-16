@@ -136,14 +136,13 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
 
   const renderScene = (safeAreaInsets: EdgeInsets, keyboardAnimation: Animated.Value | undefined, trackerValue: number): JSX.Element => {
     // If function children, the caller handles the insets and overscroll
-    const hasKeyboardAnimation = keyboardAnimation != null
     const isFuncChildren = typeof children === 'function'
 
     // Derive the keyboard height by getting the difference between screen height
     // and trackerValue. This value should be from zero to keyboard height
     // depending on the open state of the keyboard
     const keyboardHeight = frame.height - trackerValue
-    const isKeyboardOpen = keyboardHeight !== 0
+    const isKeyboardOpen = avoidKeyboard && keyboardHeight !== 0
 
     // Calculate app insets considering the app's header, tab-bar,
     // notification area, etc:
@@ -174,7 +173,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     const info: SceneWrapperInfo = { insets, insetStyle, hasTabs, isKeyboardOpen }
 
     return (
-      <MaybeAnimatedView when={hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyle, maybeInsetStyle, { maxHeight: keyboardAnimation, padding }]}>
+      <MaybeAnimatedView when={avoidKeyboard} style={[styles.sceneContainer, layoutStyle, maybeInsetStyle, { maxHeight: keyboardAnimation, padding }]}>
         <DotsBackground
           accentColors={accentColors}
           overrideDots={overrideDots}
@@ -183,13 +182,13 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
           backgroundGradientEnd={backgroundGradientEnd}
         />
         <MaybeAnimatedScrollView
-          when={scroll && !hasKeyboardAnimation}
+          when={scroll && !avoidKeyboard}
           style={[layoutStyle, { padding }]}
           keyboardShouldPersistTaps={keyboardShouldPersistTaps}
           contentContainerStyle={insetStyle}
           onScroll={hasTabs || hasHeader ? handleScroll : () => {}}
         >
-          <MaybeView when={!scroll && !hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyle, maybeInsetStyle, { padding }]}>
+          <MaybeView when={!scroll && !avoidKeyboard} style={[styles.sceneContainer, layoutStyle, maybeInsetStyle, { padding }]}>
             {isFuncChildren ? children(info) : children}
             {hasNotifications ? <NotificationView navigation={navigation} /> : null}
             {renderFooter == null ? null : <SceneFooter info={info}>{renderFooter}</SceneFooter>}
