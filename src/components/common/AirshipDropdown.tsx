@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Dimensions } from 'react-native'
+import { Dimensions, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { Gesture, GestureDetector, TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
@@ -117,7 +117,12 @@ export function AirshipDropdown(props: Props): JSX.Element {
   return (
     <GestureDetector gesture={gesture}>
       <TouchableWithoutFeedback onPress={onPress ?? handleClose}>
-        <Animated.View style={[styles.body, bodyStyle]}>{children}</Animated.View>
+        <Animated.View style={[styles.body, bodyStyle]}>
+          {children}
+          <View style={styles.dragBarContainer}>
+            <View style={styles.dragBar} />
+          </View>
+        </Animated.View>
       </TouchableWithoutFeedback>
     </GestureDetector>
   )
@@ -129,6 +134,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     body: {
       // Layout:
       flexShrink: 1,
+      paddingBottom: theme.rem(0.5),
       paddingTop: safeAreaGap,
       marginTop: -safeAreaGap,
       width: theme.rem(32),
@@ -147,6 +153,20 @@ const getStyles = cacheStyles((theme: Theme) => {
       alignItems: 'stretch',
       flexDirection: 'column',
       justifyContent: 'flex-start'
+    },
+    dragBarContainer: {
+      alignItems: 'center',
+      left: 0,
+      position: 'absolute',
+      right: 0,
+      bottom: theme.rem(0.25)
+    },
+    dragBar: {
+      backgroundColor: theme.modalDragbarColor,
+      borderRadius: theme.rem(0.125),
+      height: theme.rem(0.25),
+      marginTop: theme.rem(0.5),
+      width: theme.rem(3)
     }
   }
 })

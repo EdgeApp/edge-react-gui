@@ -180,6 +180,7 @@ export const testDark: Theme = {
   modalAndroidBlurColor: palette.blackOp25,
   modalBackgroundUi4: palette.whiteOp10,
   modalSceneOverlayColor: palette.black,
+  modalDragbarColor: palette.gray,
 
   sideMenuBorderColor: palette.navyAqua,
   sideMenuBorderWidth: 0,
