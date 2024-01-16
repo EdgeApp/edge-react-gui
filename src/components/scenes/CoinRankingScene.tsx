@@ -22,7 +22,7 @@ import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
-import { SearchDrawer } from '../themed/SearchDrawer'
+import { SearchDrawer } from '../themed/SearchFooter'
 
 const AnimatedFlashList = Animated.createAnimatedComponent<FlashListProps<number>>(FlashList)
 

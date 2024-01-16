@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
-import { useDrawerOpenRatio } from '../../state/SceneDrawerState'
+import { useDrawerOpenRatio } from '../../state/SceneFooterState'
 import { SceneWrapperInfo } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { Space } from '../layout/Space'
-import { SceneDrawerWrapper } from './SceneDrawerWrapper'
+import { SceneDrawerWrapper } from './SceneFooterWrapper'
 import { SimpleTextInput, SimpleTextInputRef } from './SimpleTextInput'
 
 interface SearchDrawerProps {

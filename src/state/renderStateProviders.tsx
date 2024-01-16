@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { SceneDrawerProvider } from './SceneDrawerState'
+import { SceneDrawerProvider } from './SceneFooterState'
 import { SceneScrollProvider } from './SceneScrollState'
 
 const stateProviders = [SceneScrollProvider, SceneDrawerProvider]

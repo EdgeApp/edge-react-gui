@@ -1,7 +1,7 @@
 import React from 'react'
 import Animated, { interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 
-import { useDrawerOpenRatio, useLayoutHeightInTabBar } from '../../state/SceneDrawerState'
+import { useDrawerOpenRatio, useLayoutHeightInTabBar } from '../../state/SceneFooterState'
 import { SceneWrapperInfo } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { MAX_TAB_BAR_HEIGHT, MIN_TAB_BAR_HEIGHT } from './MenuTabs'

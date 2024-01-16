@@ -4,7 +4,7 @@ import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated
 import { BlurView } from 'rn-id-blurview'
 
 import { useHandler } from '../../hooks/useHandler'
-import { useDrawerOpenRatio } from '../../state/SceneDrawerState'
+import { useDrawerOpenRatio } from '../../state/SceneFooterState'
 import { SceneWrapperInfo } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
