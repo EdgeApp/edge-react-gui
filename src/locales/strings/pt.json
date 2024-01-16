@@ -1156,6 +1156,7 @@
   "stake_change_unstake_success": "Fundos unstaked com sucesso",
   "stake_change_claim_success": "Transações de reivindicação enviadas com sucesso",
   "stake_disabled_slider": "Insira o Valor",
+  "stake_warning_multiple_transactions": "Staking requires multiple transactions to confirm and may take 20 seconds or more to complete",
   "stake_warning_stake": "Colocar fundos em staking bloqueará você de reivindicar recompensas por 16 horas e de retirar os seus fundos em staking por 36 horas.\n\nCada interação (stake, unstake, reivindicar recompensas) irá reiniciar ambos os cronômetros.",
   "stake_warning_claim": "Reivindicar recompensas bloqueará você de retirar os seus fundos em staking por 36 horas.\n\nPara reivindicar recompensas E retirar quaisquer fundos em staking, escolha a opção 'Reivindicar Recompensas e Retirar'.",
   "stake_warning_unstake": "Retirar parcialmente fundos do staking impedirá que você remova mais fundos por 36 horas.",
