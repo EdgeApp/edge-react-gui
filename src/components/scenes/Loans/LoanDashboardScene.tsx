@@ -193,7 +193,7 @@ export const LoanDashboardScene = (props: Props) => {
 
   if (!isWalletsLoaded) {
     return (
-      <SceneWrapper hasTabs={false}>
+      <SceneWrapper>
         <SceneHeader title={lstrings.loan_dashboard_title} underline />
         <FillLoader />
       </SceneWrapper>
@@ -201,7 +201,7 @@ export const LoanDashboardScene = (props: Props) => {
   }
 
   return (
-    <SceneWrapper hasTabs={false}>
+    <SceneWrapper>
       <SceneHeader
         tertiary={
           <TouchableOpacity onPress={handleInfoIconPress}>

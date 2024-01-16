@@ -52,7 +52,7 @@ export function CurrencySettingsScene(props: Props) {
   }
 
   return (
-    <SceneWrapper scroll hasTabs={false}>
+    <SceneWrapper scroll>
       {denominations.length > 1 ? renderDenominations() : null}
       <MaybeBlockbookSetting currencyConfig={currencyConfig} />
       <MaybeCustomServersSetting currencyConfig={currencyConfig} />

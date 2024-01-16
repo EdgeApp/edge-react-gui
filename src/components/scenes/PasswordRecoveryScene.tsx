@@ -22,7 +22,7 @@ class ChangeRecoveryComponent extends React.Component<Props> {
     const handleComplete = () => navigation.goBack()
 
     return (
-      <SceneWrapper hasTabs={false}>
+      <SceneWrapper>
         <PasswordRecoveryScreen
           branding={{ appName: config.appName }}
           account={account}

@@ -119,7 +119,7 @@ export const WcConnectScene = (props: Props) => {
   }
 
   return (
-    <SceneWrapper hasTabs={false}>
+    <SceneWrapper>
       <SceneHeader title={lstrings.wc_confirm_title} underline />
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.listRow}>

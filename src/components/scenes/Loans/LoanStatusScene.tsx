@@ -93,7 +93,7 @@ export const LoanStatusSceneComponent = (props: Props) => {
   const isProgramDone = steps.length > 0 && steps[steps.length - 1].status === 'done'
 
   return (
-    <SceneWrapper hasHeader hasTabs={false}>
+    <SceneWrapper hasHeader>
       <SceneHeader
         tertiary={
           <TouchableOpacity onPress={handleInfoIconPress}>

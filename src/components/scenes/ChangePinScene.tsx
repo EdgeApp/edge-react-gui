@@ -24,7 +24,7 @@ export class ChangePinComponent extends React.Component<Props> {
       navigation.goBack()
     }
     return (
-      <SceneWrapper hasTabs={false}>
+      <SceneWrapper>
         <ChangePinScreen account={account} context={context} onComplete={handleComplete} onLogEvent={logEvent} />
       </SceneWrapper>
     )
