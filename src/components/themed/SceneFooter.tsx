@@ -1,5 +1,6 @@
 import React from 'react'
 import Animated, { interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useFooterOpenRatio, useLayoutHeightInFooter } from '../../state/SceneFooterState'
 import { SceneWrapperInfo } from '../common/SceneWrapper'
@@ -17,8 +18,16 @@ export const SceneFooter = (props: SceneFooterProps) => {
   const { footerOpenRatio } = useFooterOpenRatio()
   const handleFooterLayout = useLayoutHeightInFooter()
 
+  const safeAreaInsets = useSafeAreaInsets()
+
   return (
-    <Footer footerOpenRatio={footerOpenRatio} hasTabs={info.hasTabs} isKeyboardOpen={info.isKeyboardOpen} onLayout={handleFooterLayout}>
+    <Footer
+      footerOpenRatio={footerOpenRatio}
+      hasTabs={info.hasTabs}
+      insetBottom={safeAreaInsets.bottom}
+      isKeyboardOpen={info.isKeyboardOpen}
+      onLayout={handleFooterLayout}
+    >
       {children(info)}
     </Footer>
   )
@@ -27,8 +36,9 @@ export const SceneFooter = (props: SceneFooterProps) => {
 const Footer = styled(Animated.View)<{
   footerOpenRatio: SharedValue<number>
   hasTabs: boolean
+  insetBottom: number
   isKeyboardOpen: boolean
-}>(() => ({ footerOpenRatio, hasTabs, isKeyboardOpen }) => {
+}>(() => ({ footerOpenRatio, hasTabs, insetBottom, isKeyboardOpen }) => {
   return [
     {
       position: 'absolute',
@@ -42,7 +52,7 @@ const Footer = styled(Animated.View)<{
     },
     useAnimatedStyle(() => {
       return {
-        bottom: isKeyboardOpen ? 0 : !hasTabs ? 0 : interpolate(footerOpenRatio.value, [0, 1], [MIN_TAB_BAR_HEIGHT, MAX_TAB_BAR_HEIGHT])
+        bottom: isKeyboardOpen ? 0 : !hasTabs ? 0 : interpolate(footerOpenRatio.value, [0, 1], [MIN_TAB_BAR_HEIGHT, MAX_TAB_BAR_HEIGHT]) + insetBottom
       }
     })
   ]

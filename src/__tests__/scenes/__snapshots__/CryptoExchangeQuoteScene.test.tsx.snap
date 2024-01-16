@@ -221,7 +221,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
           "width": 750,
         },
         {
-          "paddingBottom": 92,
+          "paddingBottom": 57,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 64,
@@ -319,7 +319,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       contentContainerStyle={
         [
           {
-            "paddingBottom": 92,
+            "paddingBottom": 57,
             "paddingLeft": 0,
             "paddingRight": 0,
             "paddingTop": 0,
@@ -332,7 +332,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       style={
         {
           "flex": 1,
-          "marginBottom": -92,
+          "marginBottom": -57,
           "marginLeft": -0,
           "marginRight": -0,
           "marginTop": 0,

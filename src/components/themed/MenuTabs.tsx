@@ -25,8 +25,8 @@ import { VectorIcon } from './VectorIcon'
 
 const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_map'
 
-export const MAX_TAB_BAR_HEIGHT = 92
-export const MIN_TAB_BAR_HEIGHT = 74
+export const MAX_TAB_BAR_HEIGHT = 57
+export const MIN_TAB_BAR_HEIGHT = 40
 
 const title: { readonly [key: string]: string } = {
   homeTab: lstrings.title_home,
@@ -180,7 +180,7 @@ const Tab = ({
 const TabContainer = styled(TouchableOpacity)<{ insetBottom: number }>(theme => ({ insetBottom }) => ({
   flex: 1,
   paddingTop: theme.rem(0.75),
-  paddingBottom: Math.max(theme.rem(0.75), insetBottom),
+  paddingBottom: insetBottom,
   justifyContent: 'center',
   alignItems: 'center'
 }))
