@@ -145,12 +145,17 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     const keyboardHeight = frame.height - trackerValue
     const isKeyboardOpen = keyboardHeight !== 0
 
-    // These are the safeAreaInsets including the app's header and tab-bar
-    // heights.
+    // Calculate app insets considering the app's header, tab-bar,
+    // notification area, etc:
+    const maybeHeaderHeight = hasHeader ? headerBarHeight : 0
+    const maybeNotificationHeight = isLightAccount ? notificationHeight : 0
+    const maybeTabBarHeight = hasTabs ? MAX_TAB_BAR_HEIGHT : 0
+    const maybeInsetBottom = !hasTabs && !isKeyboardOpen ? safeAreaInsets.bottom : 0
+    const maybeFooterHeight = !hasTabs && !isKeyboardOpen ? footerHeight : 0
     const insets: EdgeInsets = {
-      top: safeAreaInsets.top + (hasHeader ? headerBarHeight : 0),
+      top: safeAreaInsets.top + maybeHeaderHeight,
       right: safeAreaInsets.right,
-      bottom: (isLightAccount ? notificationHeight : 0) + (hasTabs ? MAX_TAB_BAR_HEIGHT : isKeyboardOpen ? 0 : safeAreaInsets.bottom + footerHeight),
+      bottom: maybeInsetBottom + maybeNotificationHeight + maybeTabBarHeight + maybeFooterHeight,
       left: safeAreaInsets.left
     }
 
