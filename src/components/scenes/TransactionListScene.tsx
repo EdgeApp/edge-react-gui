@@ -287,7 +287,6 @@ function TransactionListComponent(props: Props) {
       overrideDots={theme.backgroundDots.assetOverrideDots}
       avoidKeyboard
       hasTabs
-      hasHeader
       hasNotifications
       renderFooter={renderFooter}
       backgroundGradientColors={backgroundColors}
