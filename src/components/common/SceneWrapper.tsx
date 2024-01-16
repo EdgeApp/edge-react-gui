@@ -150,7 +150,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     const insets: EdgeInsets = {
       top: safeAreaInsets.top + (hasHeader ? headerBarHeight : 0),
       right: safeAreaInsets.right,
-      bottom: (isLightAccount ? notificationHeight : 0) + (hasTabs ? MAX_TAB_BAR_HEIGHT : isKeyboardOpen ? 0 : safeAreaInsets.bottom),
+      bottom: (isLightAccount ? notificationHeight : 0) + (hasTabs ? MAX_TAB_BAR_HEIGHT : isKeyboardOpen ? 0 : safeAreaInsets.bottom + footerHeight),
       left: safeAreaInsets.left
     }
 
@@ -160,7 +160,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     const insetStyles: InsetStyles = {
       paddingTop: insets.top,
       paddingRight: insets.right,
-      paddingBottom: insets.bottom + footerHeight,
+      paddingBottom: insets.bottom,
       paddingLeft: insets.left
     }
 

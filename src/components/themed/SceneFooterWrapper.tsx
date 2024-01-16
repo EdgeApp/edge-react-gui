@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { LayoutChangeEvent, StyleSheet } from 'react-native'
 import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BlurView } from 'rn-id-blurview'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -28,12 +29,14 @@ export const SceneFooterWrapper = (props: SceneFooterProps) => {
     setContainerHeight(event.nativeEvent.layout.height)
   })
 
+  const safeAreaInsets = useSafeAreaInsets()
+
   return (
     <ContainerAnimatedView
       containerHeight={containerHeight}
       footerOpenRatio={footerOpenRatio}
       hasTabs={info.hasTabs}
-      insetBottom={info.insets.bottom}
+      insetBottom={safeAreaInsets.bottom}
       isKeyboardOpen={info.isKeyboardOpen}
       onLayout={handleFooterInnerLayout}
     >
@@ -57,8 +60,9 @@ const ContainerAnimatedView = styled(Animated.View)<{
     },
     useAnimatedStyle(() => {
       if (containerHeight == null) return {}
+      const maybeInsetHeight = !hasTabs && !isKeyboardOpen ? insetBottom : 0
       return {
-        height: containerHeight * footerOpenRatio.value + (hasTabs ? 0 : insetBottom)
+        height: containerHeight * footerOpenRatio.value + maybeInsetHeight
       }
     })
   ]
