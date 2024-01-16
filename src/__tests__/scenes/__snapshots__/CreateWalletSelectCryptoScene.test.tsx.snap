@@ -421,6 +421,11 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "value": 0,
               }
             }
+            hasValueAnimation={
+              {
+                "value": 0,
+              }
+            }
             scale={
               {
                 "value": 1,
@@ -445,6 +450,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 {
                   "color": undefined,
                   "fontSize": 22,
+                  "opacity": undefined,
                 },
               ]
             }

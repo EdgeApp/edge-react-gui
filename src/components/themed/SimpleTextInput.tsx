@@ -166,6 +166,11 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
 
   const scale = useDerivedValue(() => scaleProp?.value ?? 1)
 
+  const hasValueAnimation = useDerivedValue(
+    () => (hasValue ? withTiming(1, { duration: baseDuration }) : withTiming(0, { duration: baseDuration })),
+    [hasValue]
+  )
+
   const interpolateIconColor = useAnimatedColorInterpolateFn(theme.textInputIconColor, theme.textInputIconColorFocused, theme.textInputIconColorDisabled)
   const iconColor = useDerivedValue(() => interpolateIconColor(focusAnimation, disableAnimation))
 
@@ -176,7 +181,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
 
         <InnerContainer>
           {placeholder == null ? null : (
-            <PlaceholderText disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale}>
+            <PlaceholderText disableAnimation={disableAnimation} focusAnimation={focusAnimation} hasValueAnimation={hasValueAnimation} scale={scale}>
               {placeholder}
             </PlaceholderText>
           )}
@@ -277,8 +282,9 @@ const InnerContainer = styled(View)({
 const PlaceholderText = styled(Animated.Text)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
+  hasValueAnimation: SharedValue<number>
   scale: SharedValue<number>
-}>(theme => ({ disableAnimation, focusAnimation, scale }) => {
+}>(theme => ({ disableAnimation, focusAnimation, hasValueAnimation, scale }) => {
   const rem = theme.rem(1)
   const interpolatePlaceholderTextColor = useAnimatedColorInterpolateFn(
     theme.textInputPlaceholderColor,
@@ -303,6 +309,7 @@ const PlaceholderText = styled(Animated.Text)<{
     },
     useAnimatedStyle(() => {
       return {
+        opacity: interpolate(hasValueAnimation.value, [0, 1], [1, 0]),
         color: interpolatePlaceholderTextColor(focusAnimation, disableAnimation),
         fontSize: scale.value * rem
       }
