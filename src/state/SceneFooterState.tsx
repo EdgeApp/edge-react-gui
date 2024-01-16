@@ -29,7 +29,8 @@ export const [SceneFooterProvider, useSceneFooterState] = createStateProvider(()
 })
 
 export const useFooterOpenRatio = () => {
-  const { scrollBeginEvent, scrollEndEvent, scrollMomentumBeginEvent, scrollMomentumEndEvent, scrollY } = useSceneScrollContext()
+  const { scrollState } = useSceneScrollContext()
+  const { scrollBeginEvent, scrollEndEvent, scrollMomentumBeginEvent, scrollMomentumEndEvent, scrollY } = scrollState
 
   const scrollYStart = useSharedValue<number | undefined>(undefined)
   const snapTo = useSharedValue<number | undefined>(undefined)

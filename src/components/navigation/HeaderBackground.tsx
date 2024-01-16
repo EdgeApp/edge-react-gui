@@ -13,10 +13,10 @@ import { BlurBackground } from '../ui4/BlurBackground'
 export const HeaderBackground = (props: any) => {
   const theme = useTheme()
 
-  const { scrollY } = useSceneScrollContext()
+  const { scrollState } = useSceneScrollContext()
 
   return (
-    <HeaderBackgroundContainerView scrollY={scrollY}>
+    <HeaderBackgroundContainerView scrollY={scrollState.scrollY}>
       <BlurBackground />
       <HeaderLinearGradient colors={theme.headerBackground} start={theme.headerBackgroundStart} end={theme.headerBackgroundEnd} />
       <DividerLine colors={theme.headerOutlineColors} />
