@@ -15,7 +15,7 @@ describe('CryptoExchangeComponent', () => {
 
     const actual = renderer.render(
       <CryptoExchangeComponent
-        insetStyles={{ paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0 }}
+        insetStyle={{ paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0 }}
         {...fakeSceneProps('exchange', {})}
         account={fakeAccount}
         exchangeInfo={initialState}

@@ -225,9 +225,9 @@ const CoinRankingComponent = (props: Props) => {
 
   return (
     <SceneWrapper avoidKeyboard hasNotifications renderFooter={renderFooter}>
-      {({ insetStyles }) => (
+      {({ insetStyle }) => (
         <>
-          <View style={[styles.container, { paddingTop: insetStyles.paddingTop }]}>
+          <View style={[styles.container, { paddingTop: insetStyle.paddingTop }]}>
             <View style={styles.rankView}>
               <EdgeText style={styles.rankText}>{lstrings.coin_rank_rank}</EdgeText>
             </View>
@@ -249,7 +249,7 @@ const CoinRankingComponent = (props: Props) => {
             renderItem={renderItem}
             onEndReachedThreshold={1}
             onEndReached={handleEndReached}
-            contentContainerStyle={{ paddingBottom: insetStyles.paddingBottom }}
+            contentContainerStyle={{ paddingBottom: insetStyle.paddingBottom }}
             onScroll={handleScroll}
           />
         </>

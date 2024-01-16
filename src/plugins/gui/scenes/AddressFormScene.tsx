@@ -255,7 +255,7 @@ export const AddressFormScene = React.memo((props: Props) => {
   )
   return (
     <SceneWrapper hasNotifications>
-      {({ insetStyles }) => (
+      {({ insetStyle }) => (
         <>
           <SceneHeader title={headerTitle} underline withTopMargin />
           <View style={styles.container}>
@@ -264,7 +264,7 @@ export const AddressFormScene = React.memo((props: Props) => {
               extraScrollHeight={theme.rem(2.75)}
               enableAutomaticScroll
               enableOnAndroid
-              contentContainerStyle={insetStyles}
+              contentContainerStyle={insetStyle}
             >
               <GuiFormField
                 fieldType="address"

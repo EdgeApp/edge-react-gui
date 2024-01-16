@@ -83,8 +83,8 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
 
     return (
       <SceneWrapper avoidKeyboard>
-        {({ insetStyles }) => (
-          <View style={[styles.content, { ...insetStyles, paddingBottom: 0 }]}>
+        {({ insetStyle }) => (
+          <View style={[styles.content, { ...insetStyle, paddingBottom: 0 }]}>
             <SceneHeader title={lstrings.title_create_wallet_select_fiat} underline withTopMargin>
               <SimpleTextInput
                 top={1}
@@ -100,7 +100,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
             </SceneHeader>
             <FlashList
               automaticallyAdjustContentInsets={false}
-              contentContainerStyle={{ paddingBottom: insetStyles.paddingBottom }}
+              contentContainerStyle={{ paddingBottom: insetStyle.paddingBottom }}
               data={filteredArray}
               estimatedItemSize={theme.rem(1.75)}
               keyboardShouldPersistTaps="handled"

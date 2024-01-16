@@ -19,7 +19,7 @@ import { SceneFooter } from '../themed/SceneFooter'
 import { AccentColors, DotsBackground } from '../ui4/DotsBackground'
 import { KeyboardTracker } from './KeyboardTracker'
 
-export interface InsetStyles {
+export interface InsetStyle {
   paddingTop: number
   paddingRight: number
   paddingBottom: number
@@ -28,7 +28,7 @@ export interface InsetStyles {
 
 export interface SceneWrapperInfo {
   insets: EdgeInsets
-  insetStyles: InsetStyles
+  insetStyle: InsetStyle
   hasTabs: boolean
   isKeyboardOpen: boolean
 }
@@ -116,7 +116,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const navigation = useNavigation<NavigationBase>()
   const theme = useTheme()
   const windowDimensions = useWindowDimensions()
-  const layoutStyles = useMemo(
+  const layoutStyle = useMemo(
     () => ({
       height: windowDimensions.height,
       width: windowDimensions.width
@@ -162,19 +162,19 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     // This is a convenient styles object which may be applied as
     // contentContainerStyles for child scroll components. It will also be
     // used for the ScrollView component internal to the SceneWrapper.
-    const insetStyles: InsetStyles = {
+    const insetStyle = {
       paddingTop: insets.top,
       paddingRight: insets.right,
       paddingBottom: insets.bottom,
       paddingLeft: insets.left
     }
 
-    const maybeInsetStyles = isFuncChildren ? {} : insetStyles
+    const maybeInsetStyle = isFuncChildren ? {} : insetStyle
 
-    const info: SceneWrapperInfo = { insets, insetStyles, hasTabs, isKeyboardOpen }
+    const info: SceneWrapperInfo = { insets, insetStyle, hasTabs, isKeyboardOpen }
 
     return (
-      <MaybeAnimatedView when={hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles, { maxHeight: keyboardAnimation, padding }]}>
+      <MaybeAnimatedView when={hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyle, maybeInsetStyle, { maxHeight: keyboardAnimation, padding }]}>
         <DotsBackground
           accentColors={accentColors}
           overrideDots={overrideDots}
@@ -184,12 +184,12 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
         />
         <MaybeAnimatedScrollView
           when={scroll && !hasKeyboardAnimation}
-          style={[layoutStyles, { padding }]}
+          style={[layoutStyle, { padding }]}
           keyboardShouldPersistTaps={keyboardShouldPersistTaps}
-          contentContainerStyle={insetStyles}
+          contentContainerStyle={insetStyle}
           onScroll={hasTabs || hasHeader ? handleScroll : () => {}}
         >
-          <MaybeView when={!scroll && !hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles, { padding }]}>
+          <MaybeView when={!scroll && !hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyle, maybeInsetStyle, { padding }]}>
             {isFuncChildren ? children(info) : children}
             {hasNotifications ? <NotificationView navigation={navigation} /> : null}
             {renderFooter == null ? null : <SceneFooter info={info}>{renderFooter}</SceneFooter>}

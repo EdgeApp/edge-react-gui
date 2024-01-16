@@ -294,11 +294,11 @@ function TransactionListComponent(props: Props) {
       backgroundGradientEnd={theme.assetBackgroundGradientEnd}
       backgroundGradientStart={theme.assetBackgroundGradientStart}
     >
-      {({ insetStyles }) => (
+      {({ insetStyle }) => (
         <>
           <AnimatedFlashList
             ref={flashList}
-            contentContainerStyle={insetStyles}
+            contentContainerStyle={insetStyle}
             data={listItems}
             estimatedItemSize={theme.rem(4.25)}
             getItemType={getItemType}

@@ -107,7 +107,7 @@ export function WalletListScene(props: Props) {
 
   return (
     <SceneWrapper avoidKeyboard hasTabs hasHeader hasNotifications padding={theme.rem(0.5)} renderFooter={renderFooter}>
-      {({ insetStyles }) => (
+      {({ insetStyle }) => (
         <>
           <WiredProgressBar />
           {sorting && (
@@ -125,7 +125,7 @@ export function WalletListScene(props: Props) {
                 header={header}
                 footer={undefined}
                 navigation={navigation}
-                insetStyles={insetStyles}
+                insetStyle={insetStyle}
                 searching={isSearching}
                 searchText={searchText}
                 onRefresh={handleRefresh}
