@@ -5,6 +5,7 @@ import FastImage from 'react-native-fast-image'
 import { isMaestro } from 'react-native-is-maestro'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
+import { showBackupForTransferModal } from '../../../actions/BackupModalActions'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
@@ -43,9 +44,15 @@ export const HomeSceneUi4 = (props: Props) => {
   const cardSize = screenWidth / 2 - theme.rem(TEMP_PADDING_REM)
 
   const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
+  const account = useSelector(state => state.core.account)
+  const isLightAccount = account.username == null
 
   const handleBuyPress = useHandler(() => {
-    navigation.navigate('buyTab', {})
+    if (isLightAccount) {
+      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+    } else {
+      navigation.navigate('buyTab', {})
+    }
   })
   const handleSellPress = useHandler(() => {
     navigation.navigate('sellTab', {})
