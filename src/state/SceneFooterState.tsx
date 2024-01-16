@@ -1,3 +1,4 @@
+import { useIsFocused } from '@react-navigation/native'
 import { useEffect, useMemo } from 'react'
 import { LayoutChangeEvent, Platform } from 'react-native'
 import { runOnJS, useAnimatedReaction, useSharedValue, withTiming } from 'react-native-reanimated'
@@ -156,6 +157,9 @@ export const useLayoutHeightInFooter = (): ((event: LayoutChangeEvent) => void) 
 
   const [layoutHeight, setLayoutHeight] = useState<number | undefined>(undefined)
 
+  const isFocused = useIsFocused()
+  const maybeLayoutHeight = isFocused ? layoutHeight ?? 0 : 0
+
   // One-time layout measurement handler:
   const handleLayout = useHandler((event: LayoutChangeEvent) => {
     if (layoutHeight == null) {
@@ -166,12 +170,11 @@ export const useLayoutHeightInFooter = (): ((event: LayoutChangeEvent) => void) 
 
   // Add/subtract container height to the tab-bar height when mounted/unmounted
   useEffect(() => {
-    if (layoutHeight == null) return
-    setFooterHeight((prev = 0) => prev + layoutHeight)
+    setFooterHeight((footerHeight = 0) => footerHeight + maybeLayoutHeight)
     return () => {
-      setFooterHeight((prev = 0) => prev - layoutHeight)
+      setFooterHeight((footerHeight = 0) => footerHeight - maybeLayoutHeight)
     }
-  }, [layoutHeight, setFooterHeight])
+  }, [maybeLayoutHeight, setFooterHeight])
 
   return handleLayout
 }
