@@ -2,7 +2,7 @@ import { getDefaultHeaderHeight } from '@react-navigation/elements'
 import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { useMemo } from 'react'
-import { Animated, StyleSheet, useWindowDimensions, View } from 'react-native'
+import { Animated, StyleSheet, View } from 'react-native'
 import Reanimated from 'react-native-reanimated'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -128,18 +128,19 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
 
   const navigation = useNavigation<NavigationBase>()
   const theme = useTheme()
-  const windowDimensions = useWindowDimensions()
-  const layoutStyle = useMemo(
-    () => ({
-      height: windowDimensions.height,
-      width: windowDimensions.width
-    }),
-    [windowDimensions.height, windowDimensions.width]
-  )
 
   // Subscribe to the window size:
   const frame = useSafeAreaFrame()
   const safeAreaInsets = useSafeAreaInsets()
+
+  // Get the screen width/height measurements for the scene
+  const layoutStyle = useMemo(
+    () => ({
+      height: frame.height,
+      width: frame.width
+    }),
+    [frame.height, frame.width]
+  )
 
   const notificationHeight = theme.rem(4)
   const headerBarHeight = getDefaultHeaderHeight(frame, false, 0)
