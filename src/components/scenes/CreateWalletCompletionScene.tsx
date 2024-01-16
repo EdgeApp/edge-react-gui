@@ -149,28 +149,30 @@ const CreateWalletCompletionComponent = (props: Props) => {
 
   const renderNextButton = React.useMemo(() => {
     return (
-      <MainButton
-        spinner={!done}
-        disabled={!done}
-        label={!done ? undefined : lstrings.string_done_cap}
-        type="secondary"
-        marginRem={[1]}
-        onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
-        alignSelf="center"
-      />
+      <View style={styles.bottomButton}>
+        <MainButton
+          spinner={!done}
+          disabled={!done}
+          label={!done ? undefined : lstrings.string_done_cap}
+          type="secondary"
+          marginRem={[0, 0, 0.5]}
+          onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
+          alignSelf="center"
+        />
+      </View>
     )
-  }, [done, navigation])
+  }, [done, navigation, styles.bottomButton])
 
   const keyExtractor = useHandler((item: WalletCreateItem) => item.key)
 
   return (
     <SceneWrapper>
-      {({ insetStyle }) => (
-        <View style={[styles.content, insetStyle]}>
+      {({ insetStyle, undoInsetStyle }) => (
+        <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <SceneHeader title={lstrings.title_create_wallets} withTopMargin />
           <FlashList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ paddingTop: theme.rem(0.5) }}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
             data={filteredCreateItemsForDisplay}
             estimatedItemSize={theme.rem(4.25)}
             fadingEdgeLength={10}
@@ -188,8 +190,10 @@ const CreateWalletCompletionComponent = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  content: {
-    flex: 1
+  bottomButton: {
+    alignSelf: 'center',
+    bottom: theme.rem(1),
+    position: 'absolute'
   }
 }))
 

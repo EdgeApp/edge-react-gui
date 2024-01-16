@@ -26,9 +26,23 @@ export interface InsetStyle {
   paddingLeft: number
 }
 
+export interface UndoInsetStyle {
+  flex: 1
+  marginTop: number
+  marginRight: number
+  marginBottom: number
+  marginLeft: number
+}
+
 export interface SceneWrapperInfo {
+  // Contains the top, left, right, and bottom app insets (includes header, tab-bar, footer, etc)
   insets: EdgeInsets
+  // Convenient padding styles for the insets to be used by scenes (e.g. contentContainerStyles)
   insetStyle: InsetStyle
+  // Convenient style with negative margins for each value in the insets.
+  // This can be useful to apply to containing views in a scene to expand the scene's
+  // edges to the device's edges.
+  undoInsetStyle: UndoInsetStyle
   hasTabs: boolean
   isKeyboardOpen: boolean
 }
@@ -77,17 +91,16 @@ interface SceneWrapperProps {
 }
 
 /**
- * Wraps a normal stacked scene, creating a perfectly-sized box
- * that avoids the header, tab bar, and notifications (if any).
- * Also draws a common gradient background under the scene.
+ * Wraps a scene, creating a perfectly-sized box that avoids app-wide UI
+ * elements such as the header, tab bar, notifications (if any), footer, and
+ * even keyboard. Also draws a common background component under the scene
+ * (defined by the theme). The wrapper will apply padding needed to avoid
+ * the safe area inset and header/tab-bar/etc. This is known as the `insets`.
  *
- * If the children are normal React elements, then the wrapper will apply
- * padding needed to avoid the safe area inset and header/tab-bar/etc.
- *
- * If the child is a function component, though, the scene rendering SceneWrapper
- * is responsible for applying its own padding. The scene can leverage the
- * provided `info` parameter passed to the children function-prop for this
- * purpose.
+ * If the component is passed a function as a children, it will pass the `inset`
+ * as part of an `info` parameter to the function. In addition, the scene wrapper
+ * padding will be passed as `insetStyle` and `undoInsetStyle` will include
+ * negative margin style rules to be used to offset these insets.
  */
 export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const {
@@ -150,11 +163,10 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     const maybeNotificationHeight = isLightAccount ? notificationHeight : 0
     const maybeTabBarHeight = hasTabs ? MAX_TAB_BAR_HEIGHT : 0
     const maybeInsetBottom = !hasTabs && !isKeyboardOpen ? safeAreaInsets.bottom : 0
-    const maybeFooterHeight = !hasTabs && !isKeyboardOpen ? footerHeight : 0
     const insets: EdgeInsets = {
       top: safeAreaInsets.top + maybeHeaderHeight,
       right: safeAreaInsets.right,
-      bottom: maybeInsetBottom + maybeNotificationHeight + maybeTabBarHeight + maybeFooterHeight,
+      bottom: maybeInsetBottom + maybeNotificationHeight + maybeTabBarHeight + footerHeight,
       left: safeAreaInsets.left
     }
 
@@ -168,12 +180,20 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
       paddingLeft: insets.left
     }
 
-    const maybeInsetStyle = isFuncChildren ? {} : insetStyle
+    // This is a convenient styles object which may be applied to scene container
+    // components to offset the inset styles applied to the SceneWrapper.
+    const undoInsetStyle: UndoInsetStyle = {
+      flex: 1,
+      marginTop: -insets.top,
+      marginRight: -insets.right,
+      marginBottom: -insets.bottom,
+      marginLeft: -insets.left
+    }
 
-    const info: SceneWrapperInfo = { insets, insetStyle, hasTabs, isKeyboardOpen }
+    const info: SceneWrapperInfo = { insets, insetStyle, undoInsetStyle, hasTabs, isKeyboardOpen }
 
     return (
-      <MaybeAnimatedView when={avoidKeyboard} style={[styles.sceneContainer, layoutStyle, maybeInsetStyle, { maxHeight: keyboardAnimation, padding }]}>
+      <MaybeAnimatedView when={avoidKeyboard} style={[styles.sceneContainer, layoutStyle, insetStyle, { maxHeight: keyboardAnimation, padding }]}>
         <DotsBackground
           accentColors={accentColors}
           overrideDots={overrideDots}
@@ -188,7 +208,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
           contentContainerStyle={insetStyle}
           onScroll={hasTabs || hasHeader ? handleScroll : () => {}}
         >
-          <MaybeView when={!scroll && !avoidKeyboard} style={[styles.sceneContainer, layoutStyle, maybeInsetStyle, { padding }]}>
+          <MaybeView when={!scroll && !avoidKeyboard} style={[styles.sceneContainer, layoutStyle, insetStyle, { padding }]}>
             {isFuncChildren ? children(info) : children}
             {hasNotifications ? <NotificationView navigation={navigation} /> : null}
             {renderFooter == null ? null : <SceneFooter info={info}>{renderFooter}</SceneFooter>}

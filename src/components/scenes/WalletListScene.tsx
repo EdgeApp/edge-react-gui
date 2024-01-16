@@ -107,7 +107,7 @@ export function WalletListScene(props: Props) {
 
   return (
     <SceneWrapper avoidKeyboard hasTabs hasHeader hasNotifications padding={theme.rem(0.5)} renderFooter={renderFooter}>
-      {({ insetStyle }) => (
+      {({ insetStyle, undoInsetStyle }) => (
         <>
           <WiredProgressBar />
           {sorting && (
@@ -118,7 +118,7 @@ export function WalletListScene(props: Props) {
               </TouchableOpacity>
             </View>
           )}
-          <View style={styles.listStack}>
+          <View style={[styles.listStack, undoInsetStyle]}>
             <CrossFade activeKey={sorting ? 'sortList' : 'fullList'}>
               <WalletListSwipeable
                 key="fullList"

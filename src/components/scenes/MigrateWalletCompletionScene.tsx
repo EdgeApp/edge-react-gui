@@ -227,28 +227,31 @@ const MigrateWalletCompletionComponent = (props: Props) => {
 
   const renderNextButton = React.useMemo(() => {
     return (
-      <MainButton
-        spinner={!done}
-        disabled={!done}
-        label={!done ? undefined : lstrings.string_done_cap}
-        type="secondary"
-        marginRem={[1]}
-        onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
-        alignSelf="center"
-      />
+      <View style={styles.bottomButton}>
+        <MainButton
+          spinner={!done}
+          disabled={!done}
+          label={!done ? undefined : lstrings.string_done_cap}
+          type="secondary"
+          marginRem={[0, 0, 0.5]}
+          onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
+          alignSelf="center"
+        />
+      </View>
     )
-  }, [done, navigation])
+  }, [done, navigation, styles.bottomButton])
 
   const keyExtractor = useHandler((item: MigrateWalletItem) => item.key)
 
   return (
     <SceneWrapper>
-      {({ insetStyle }) => (
-        <View style={[styles.content, insetStyle]}>
+      {({ insetStyle, undoInsetStyle }) => (
+        <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <SceneHeader title={lstrings.migrate_wallets_title} withTopMargin />
           <FlashList
             automaticallyAdjustContentInsets={false}
             data={sortedMigrateWalletList}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
             estimatedItemSize={theme.rem(4.25)}
             extraData={itemStatus}
             fadingEdgeLength={10}
@@ -265,8 +268,10 @@ const MigrateWalletCompletionComponent = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  content: {
-    flex: 1
+  bottomButton: {
+    alignSelf: 'center',
+    bottom: theme.rem(1),
+    position: 'absolute'
   }
 }))
 

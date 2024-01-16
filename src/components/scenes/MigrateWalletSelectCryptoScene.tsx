@@ -126,24 +126,24 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
   const renderNextButton = React.useMemo(
     () => (
       <Fade noFadeIn={numSelected > 0} visible={numSelected > 0} duration={300}>
-        <View style={{ position: 'absolute', bottom: '1%', alignSelf: 'center' }}>
-          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0.5, -0.5]} onPress={handleNext} alignSelf="center" />
+        <View style={styles.bottomButton}>
+          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, -0.5, 0.5]} onPress={handleNext} alignSelf="center" />
         </View>
       </Fade>
     ),
-    [handleNext, numSelected]
+    [handleNext, numSelected, styles.bottomButton]
   )
 
   const keyExtractor = useHandler((item: MigrateWalletItem) => item.key)
 
   return (
     <SceneWrapper>
-      {({ insetStyle }) => (
-        <View style={[styles.content, { ...insetStyle, paddingBottom: 0 }]}>
+      {({ insetStyle, undoInsetStyle }) => (
+        <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <SceneHeader title={lstrings.migrate_wallets_select_crypto_title} withTopMargin />
           <FlashList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ paddingBottom: insetStyle.paddingBottom * 3 }}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
             data={migrateWalletList}
             estimatedItemSize={theme.rem(4.25)}
             extraData={selectedItems}
@@ -151,7 +151,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
             keyExtractor={keyExtractor}
             renderItem={renderCreateWalletRow}
           />
-          <View style={{ bottom: insetStyle.paddingBottom }}>{renderNextButton}</View>
+          {renderNextButton}
         </View>
       )}
     </SceneWrapper>
@@ -159,8 +159,10 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  content: {
-    flex: 1
+  bottomButton: {
+    alignSelf: 'center',
+    bottom: theme.rem(1),
+    position: 'absolute'
   }
 }))
 

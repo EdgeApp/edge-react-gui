@@ -380,7 +380,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     return (
-      <View style={[styles.sceneContainer, { paddingTop: insetStyle.paddingTop }]}>
+      <View style={styles.sceneContainer}>
         <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline />
 
         <SectionHeaderUi4 leftTitle={lstrings.title_select_region} />
@@ -411,7 +411,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
             data={plugins}
             renderItem={this.renderPlugin}
             keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
-            contentContainerStyle={{ paddingBottom: insetStyle.paddingBottom }}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
           />
         )}
       </View>
@@ -498,22 +498,24 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
 
   return (
     <SceneWrapper hasTabs hasNotifications padding={theme.rem(0.5)}>
-      {({ insetStyle }) => (
-        <GuiPluginList
-          navigation={navigation}
-          route={route}
-          deviceId={deviceId}
-          account={account}
-          accountPlugins={accountPlugins}
-          accountReferral={accountReferral}
-          coreDisklet={coreDisklet}
-          countryCode={countryCode}
-          developerModeOn={developerModeOn}
-          disablePlugins={disablePlugins}
-          updateCountryCode={updateCountryCode}
-          theme={theme}
-          insetStyle={insetStyle}
-        />
+      {({ insetStyle, undoInsetStyle }) => (
+        <View style={{ ...undoInsetStyle, marginTop: 0 }}>
+          <GuiPluginList
+            navigation={navigation}
+            route={route}
+            deviceId={deviceId}
+            account={account}
+            accountPlugins={accountPlugins}
+            accountReferral={accountReferral}
+            coreDisklet={coreDisklet}
+            countryCode={countryCode}
+            developerModeOn={developerModeOn}
+            disablePlugins={disablePlugins}
+            updateCountryCode={updateCountryCode}
+            theme={theme}
+            insetStyle={insetStyle}
+          />
+        </View>
       )}
     </SceneWrapper>
   )

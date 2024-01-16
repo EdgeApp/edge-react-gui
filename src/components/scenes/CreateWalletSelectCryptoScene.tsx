@@ -242,7 +242,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     () => (
       <Fade noFadeIn={defaultSelection.length > 0} visible={numSelected > 0} duration={300}>
         <View style={styles.bottomButton}>
-          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, -0.5]} onPress={handleNextPress} alignSelf="center" />
+          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, -0.5, 0.5]} onPress={handleNextPress} alignSelf="center" />
         </View>
       </Fade>
     ),
@@ -251,8 +251,8 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
   return (
     <SceneWrapper>
-      {({ insetStyle }) => (
-        <View style={[styles.content, { ...insetStyle, paddingBottom: 0 }]}>
+      {({ insetStyle, undoInsetStyle }) => (
+        <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <SceneHeader title={lstrings.title_create_wallet_select_crypto} withTopMargin />
           <SimpleTextInput
             vertical={0.5}
@@ -269,7 +269,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
           />
           <FlashList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ paddingBottom: insetStyle.paddingBottom + theme.rem(4.25) }}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
             data={filteredCreateWalletList}
             estimatedItemSize={theme.rem(4.25)}
             extraData={selectedItems}
@@ -290,9 +290,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignSelf: 'center',
     bottom: theme.rem(1),
     position: 'absolute'
-  },
-  content: {
-    flex: 1
   }
 }))
 

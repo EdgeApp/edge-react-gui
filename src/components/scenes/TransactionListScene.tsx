@@ -4,7 +4,7 @@ import { asArray } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { asAssetStatus, AssetStatus } from 'edge-info-server/types'
 import * as React from 'react'
-import { RefreshControl } from 'react-native'
+import { RefreshControl, View } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 import Animated from 'react-native-reanimated'
 
@@ -294,8 +294,8 @@ function TransactionListComponent(props: Props) {
       backgroundGradientEnd={theme.assetBackgroundGradientEnd}
       backgroundGradientStart={theme.assetBackgroundGradientStart}
     >
-      {({ insetStyle }) => (
-        <>
+      {({ insetStyle, undoInsetStyle }) => (
+        <View style={undoInsetStyle}>
           <AnimatedFlashList
             ref={flashList}
             contentContainerStyle={insetStyle}
@@ -315,7 +315,7 @@ function TransactionListComponent(props: Props) {
             onEndReached={handleScrollEnd}
             onScroll={handleScroll}
           />
-        </>
+        </View>
       )}
     </SceneWrapper>
   )

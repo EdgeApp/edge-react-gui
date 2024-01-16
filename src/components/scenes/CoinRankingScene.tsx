@@ -225,9 +225,9 @@ const CoinRankingComponent = (props: Props) => {
 
   return (
     <SceneWrapper avoidKeyboard hasNotifications renderFooter={renderFooter}>
-      {({ insetStyle }) => (
+      {({ insetStyle, undoInsetStyle }) => (
         <>
-          <View style={[styles.container, { paddingTop: insetStyle.paddingTop }]}>
+          <View style={styles.headerContainer}>
             <View style={styles.rankView}>
               <EdgeText style={styles.rankText}>{lstrings.coin_rank_rank}</EdgeText>
             </View>
@@ -242,16 +242,18 @@ const CoinRankingComponent = (props: Props) => {
             </View>
           </View>
           <DividerLine marginRem={[0, 0, 0, 1]} />
-          <AnimatedFlashList
-            estimatedItemSize={theme.rem(3.75)}
-            data={listdata}
-            extraData={extraData}
-            renderItem={renderItem}
-            onEndReachedThreshold={1}
-            onEndReached={handleEndReached}
-            contentContainerStyle={{ paddingBottom: insetStyle.paddingBottom }}
-            onScroll={handleScroll}
-          />
+          <View style={{ ...undoInsetStyle, marginTop: 0 }}>
+            <AnimatedFlashList
+              estimatedItemSize={theme.rem(3.75)}
+              data={listdata}
+              extraData={extraData}
+              renderItem={renderItem}
+              onEndReachedThreshold={1}
+              onEndReached={handleEndReached}
+              contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
+              onScroll={handleScroll}
+            />
+          </View>
         </>
       )}
     </SceneWrapper>
@@ -269,7 +271,7 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 
   return {
-    container: {
+    headerContainer: {
       flexDirection: 'row',
       alignItems: 'center',
       marginLeft: theme.rem(1),

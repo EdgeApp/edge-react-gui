@@ -427,20 +427,22 @@ export const CryptoExchangeScene = (props: OwnProps) => {
 
   return (
     <SceneWrapper hasTabs hasNotifications>
-      {({ insetStyle }) => (
-        <CryptoExchangeComponent
-          route={route}
-          onSelectWallet={handleSelectWallet}
-          getQuoteForTransaction={handleGetQuoteForTransaction}
-          theme={theme}
-          navigation={navigation}
-          account={account}
-          {...result}
-          exchangeInfo={exchangeInfo}
-          insufficient={insufficient}
-          genericError={genericError}
-          insetStyle={insetStyle}
-        />
+      {({ insetStyle, undoInsetStyle }) => (
+        <View style={{ ...undoInsetStyle, marginTop: 0 }}>
+          <CryptoExchangeComponent
+            route={route}
+            onSelectWallet={handleSelectWallet}
+            getQuoteForTransaction={handleGetQuoteForTransaction}
+            theme={theme}
+            navigation={navigation}
+            account={account}
+            {...result}
+            exchangeInfo={exchangeInfo}
+            insufficient={insufficient}
+            genericError={genericError}
+            insetStyle={{ ...insetStyle, paddingTop: 0 }}
+          />
+        </View>
       )}
     </SceneWrapper>
   )

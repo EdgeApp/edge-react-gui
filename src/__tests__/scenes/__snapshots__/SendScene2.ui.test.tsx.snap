@@ -175,7 +175,12 @@ exports[`SendScene2 1 spendTarget 1`] = `
           "height": 1334,
           "width": 750,
         },
-        {},
+        {
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 64,
+        },
         {
           "padding": 11,
         },
@@ -187,7 +192,9 @@ exports[`SendScene2 1 spendTarget 1`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
-          "paddingTop": 64,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 0,
         }
       }
       contentInset={
@@ -1316,7 +1323,12 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
           "height": 1334,
           "width": 750,
         },
-        {},
+        {
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 64,
+        },
         {
           "padding": 11,
         },
@@ -1328,7 +1340,9 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
-          "paddingTop": 64,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 0,
         }
       }
       contentInset={
@@ -2645,7 +2659,12 @@ exports[`SendScene2 2 spendTargets 1`] = `
           "height": 1334,
           "width": 750,
         },
-        {},
+        {
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 64,
+        },
         {
           "padding": 11,
         },
@@ -2657,7 +2676,9 @@ exports[`SendScene2 2 spendTargets 1`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
-          "paddingTop": 64,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 0,
         }
       }
       contentInset={
@@ -3945,7 +3966,12 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
           "height": 1334,
           "width": 750,
         },
-        {},
+        {
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 64,
+        },
         {
           "padding": 11,
         },
@@ -3957,7 +3983,9 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
-          "paddingTop": 64,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 0,
         }
       }
       contentInset={
@@ -5090,7 +5118,12 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
           "height": 1334,
           "width": 750,
         },
-        {},
+        {
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 64,
+        },
         {
           "padding": 11,
         },
@@ -5102,7 +5135,9 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
-          "paddingTop": 64,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 0,
         }
       }
       contentInset={
@@ -6211,7 +6246,12 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
           "height": 1334,
           "width": 750,
         },
-        {},
+        {
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 64,
+        },
         {
           "padding": 11,
         },
@@ -6223,7 +6263,9 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
-          "paddingTop": 64,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 0,
         }
       }
       contentInset={
@@ -7177,7 +7219,12 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
           "height": 1334,
           "width": 750,
         },
-        {},
+        {
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 64,
+        },
         {
           "padding": 11,
         },
@@ -7189,7 +7236,9 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
-          "paddingTop": 64,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 0,
         }
       }
       contentInset={
@@ -8436,7 +8485,12 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           "height": 1334,
           "width": 750,
         },
-        {},
+        {
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 64,
+        },
         {
           "padding": 11,
         },
@@ -8448,7 +8502,9 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
-          "paddingTop": 64,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 0,
         }
       }
       contentInset={
@@ -9630,7 +9686,12 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
           "height": 1334,
           "width": 750,
         },
-        {},
+        {
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 64,
+        },
         {
           "padding": 11,
         },
@@ -9642,7 +9703,9 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
-          "paddingTop": 64,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 0,
         }
       }
       contentInset={
@@ -10783,7 +10846,12 @@ exports[`SendScene2 Render SendScene 1`] = `
           "height": 1334,
           "width": 750,
         },
-        {},
+        {
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 64,
+        },
         {
           "padding": 11,
         },
@@ -10795,7 +10863,9 @@ exports[`SendScene2 Render SendScene 1`] = `
       contentContainerStyle={
         {
           "paddingBottom": 22,
-          "paddingTop": 64,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 0,
         }
       }
       contentInset={

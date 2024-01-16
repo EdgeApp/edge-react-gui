@@ -1023,7 +1023,7 @@ const SendComponent = (props: Props) => {
         <>
           <StyledKeyboardAwareScrollView
             notificationHeight={insetStyle.paddingBottom}
-            contentContainerStyle={{ paddingTop: insetStyle.paddingTop, paddingBottom: theme.rem(1) + insetStyle.paddingBottom }}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: theme.rem(1) + insetStyle.paddingBottom }}
             extraScrollHeight={theme.rem(2.75)}
             enableOnAndroid
           >

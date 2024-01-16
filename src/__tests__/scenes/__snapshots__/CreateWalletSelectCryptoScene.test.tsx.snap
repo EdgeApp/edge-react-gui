@@ -220,7 +220,12 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           "height": 1334,
           "width": 750,
         },
-        {},
+        {
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 64,
+        },
         {
           "padding": 0,
         },
@@ -229,17 +234,13 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
   >
     <View
       style={
-        [
-          {
-            "flex": 1,
-          },
-          {
-            "paddingBottom": 0,
-            "paddingLeft": 0,
-            "paddingRight": 0,
-            "paddingTop": 64,
-          },
-        ]
+        {
+          "flex": 1,
+          "marginBottom": -0,
+          "marginLeft": -0,
+          "marginRight": -0,
+          "marginTop": 0,
+        }
       }
     >
       <View
@@ -763,7 +764,10 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               "props": {
                 "automaticallyAdjustContentInsets": false,
                 "contentContainerStyle": {
-                  "paddingBottom": 96,
+                  "paddingBottom": 79,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
                 },
                 "data": [
                   {
@@ -971,7 +975,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "alignSelf": "center",
                 "borderRadius": 34,
                 "justifyContent": "center",
-                "marginBottom": 0,
+                "marginBottom": 11,
                 "marginLeft": -11,
                 "marginRight": -11,
                 "marginTop": 0,
@@ -1032,7 +1036,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     },
                   ],
                   {
-                    "marginBottom": 0,
+                    "marginBottom": 11,
                     "marginLeft": -11,
                     "marginRight": -11,
                     "marginTop": 0,
