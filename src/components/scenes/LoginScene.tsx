@@ -73,8 +73,9 @@ export function LoginSceneComponent(props: Props) {
   // ---------------------------------------------------------------------
 
   React.useEffect(() => {
+    if (!firstRun) return
     const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
-    if (YOLO_USERNAME != null && (Boolean(YOLO_PASSWORD) || Boolean(YOLO_PIN)) && firstRun) {
+    if (YOLO_USERNAME != null && (Boolean(YOLO_PASSWORD) || Boolean(YOLO_PIN))) {
       firstRun = false
       if (YOLO_PIN != null) {
         context
@@ -92,8 +93,17 @@ export function LoginSceneComponent(props: Props) {
           })
           .catch(showError)
       }
+    } else if (YOLO_USERNAME == null && account.username == null && context.localUsers[0]?.loginId != null && typeof YOLO_PIN === 'string') {
+      // Allow YOLO_PIN with light accounts
+      firstRun = false
+      context
+        .loginWithPIN(context.localUsers[0].loginId, YOLO_PIN, { useLoginId: true })
+        .then(async account => {
+          await dispatch(initializeAccount(navigation, account, dummyTouchIdInfo))
+        })
+        .catch(showError)
     }
-  }, [context, dispatch, navigation])
+  }, [account, context, dispatch, navigation])
 
   React.useEffect(() => {
     if (pendingDeepLink != null && pendingDeepLink.type === 'passwordRecovery') {
