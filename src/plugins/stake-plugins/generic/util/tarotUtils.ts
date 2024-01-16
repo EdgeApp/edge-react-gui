@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber, BigNumberish, ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 import {
@@ -259,6 +259,40 @@ export const tarotUtils = (config: TarotPoolAdapterConfig, provider: ethers.prov
         bAmountBMin: bAmountB / Math.sqrt(SLIPPAGE_FACTOR)
       }
     },
+    async getNewLeverage(changes: typeof this.NO_CHANGES): Promise<number> {
+      const { valueCollateral, valueA, valueB } = await this.getValues(changes)
+      const valueDebt = valueA + valueB
+      if (valueDebt === 0) return 1
+      const equity = valueCollateral - valueDebt
+      if (equity <= 0) return Infinity
+      return valueDebt / equity + 1
+    },
+    async getLeverage(): Promise<number> {
+      return await this.getNewLeverage(this.NO_CHANGES)
+    },
+
+    async getValues(changes: typeof this.NO_CHANGES): Promise<{ valueCollateral: number; valueA: number; valueB: number }> {
+      const [priceA, priceB] = await this.getPriceDenomLP()
+      return await this.getValuesFromPrice(changes, priceA, priceB)
+    },
+
+    async getPriceDenomLP(): Promise<[number, number]> {
+      const [reserve0, reserve1] = await poolContract.getReserves()
+      const collateralTotalSupply = await collateralContract.totalSupply()
+      let price0 = collateralTotalSupply.mul(TEN_18).div(reserve0.mul(2))
+      let price1 = collateralTotalSupply.mul(TEN_18).div(reserve1.mul(2))
+
+      const vaultTokenExchangeRate = await poolContract.exchangeRate() // 1353799604344460049
+
+      if (config.isTarotVault) {
+        price0 = price0.mul(vaultTokenExchangeRate).div(TEN_18)
+        price1 = price1.mul(vaultTokenExchangeRate).div(TEN_18)
+      }
+      return [
+        this.parse18(price0.mul(BigNumber.from(10).pow(config.token0.decimals)).div(TEN_18)),
+        this.parse18(price1.mul(BigNumber.from(10).pow(config.token1.decimals)).div(TEN_18))
+      ]
+    },
 
     formatToDecimals(n: number, decimals = 2): string {
       if (n === Infinity) return 'Infinity'
@@ -268,6 +302,13 @@ export const tarotUtils = (config: TarotPoolAdapterConfig, provider: ethers.prov
       const n = parseFloat(d.toString())
       const s = this.formatToDecimals(Math.max(n, 0), decimals)
       return parseUnits(s, decimals)
+    },
+    parse18(amount: BigNumberish): number {
+      amount = BigNumber.from(amount)
+      if (amount.eq(0)) {
+        return 0
+      }
+      return parseFloat(formatUnits(amount, 18))
     }
   }
 }

@@ -47,6 +47,7 @@ export interface TarotPoolAdapterConfig {
   velodromeFactoryContractAddress: string
   isStable: boolean
   isTarotVault: boolean
+  leverage: number
 }
 
 const SLIPPAGE = 0.02 // 2%
@@ -64,10 +65,6 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
   )
     throw new Error(`Stake and claim of different assets is not supported for TarotPoolAdapter`)
 
-  // Metadata constants:
-  const metadataName = 'Tarot LP Token Leveraged Pool'
-  const metadataPoolAssetName = `${policyConfig.stakeAssets[0].currencyCode}/${policyConfig.stakeAssets[1].currencyCode}`
-
   const { adapterConfig, stakePolicyId } = policyConfig
   const {
     rpcProviderUrls,
@@ -81,8 +78,18 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
     tarotRouterContractAddress,
     velodromeRouterContractAddress,
     velodromeFactoryContractAddress,
-    isStable
+    isStable,
+    leverage
   } = adapterConfig
+
+  if (leverage <= 1) {
+    throw new Error(`leverage must be greater than 1`)
+  }
+
+  // Metadata constants:
+  const metadataName = `Tarot LP Token ${leverage}X Leveraged Pool`
+  const metadataPoolAssetName = `${policyConfig.stakeAssets[0].currencyCode}/${policyConfig.stakeAssets[1].currencyCode}`
+
   const provider = new ethers.providers.FallbackProvider(rpcProviderUrls.map(url => new ethers.providers.JsonRpcProvider(url)))
 
   // L1 fee utils ported from edge-currency-accountbased:
@@ -395,10 +402,10 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
         }
         return await tarotRouterContract.populateTransaction.leverage(
           poolContractAddress,
-          token0Amount,
-          token1Amount,
-          amountToken0Min,
-          amountToken1Min,
+          token0Amount.mul(leverage - 1),
+          token1Amount.mul(leverage - 1),
+          amountToken0Min.mul(leverage - 1),
+          amountToken1Min.mul(leverage - 1),
           walletAddress,
           deadline,
           '0x',
@@ -486,13 +493,13 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
           allocationType: 'unstake',
           pluginId: policyConfig.stakeAssets[0].pluginId,
           currencyCode: policyConfig.stakeAssets[0].currencyCode,
-          nativeAmount: bAmountAMin.toString()
+          nativeAmount: bAmountAMin.div(leverage - 1).toString()
         },
         {
           allocationType: 'unstake',
           pluginId: policyConfig.stakeAssets[1].pluginId,
           currencyCode: policyConfig.stakeAssets[1].currencyCode,
-          nativeAmount: bAmountBMin.toString()
+          nativeAmount: bAmountBMin.div(leverage - 1).toString()
         }
       ]
 
@@ -522,14 +529,24 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
         }
       }
 
-      const allocations: PositionAllocation[] = []
-      const token0AccruedBalance = await tarot.getAccruedBalance(token0BorrowableContract, walletAddress)
-      const token0NativeAmount = token0AccruedBalance.toString()
-      allocations.push(getPositionAllocation(token0Asset, token0NativeAmount))
+      const leverageFloat = await tarot.getLeverage()
+      const leverageInt = Math.round(leverageFloat)
 
-      const token1AccruedBalance = await tarot.getAccruedBalance(token1BorrowableContract, walletAddress)
-      const token1NativeAmount = token1AccruedBalance.toString()
-      allocations.push(getPositionAllocation(token1Asset, token1NativeAmount))
+      const allocations: PositionAllocation[] = []
+      let token0NativeAmount = '0'
+      let token1NativeAmount = '0'
+      if (leverageInt === leverage) {
+        const token0AccruedBalance = await tarot.getAccruedBalance(token0BorrowableContract, walletAddress)
+        token0NativeAmount = token0AccruedBalance.div(leverage - 1).toString()
+        allocations.push(getPositionAllocation(token0Asset, token0NativeAmount))
+
+        const token1AccruedBalance = await tarot.getAccruedBalance(token1BorrowableContract, walletAddress)
+        token1NativeAmount = token1AccruedBalance.div(leverage - 1).toString()
+        allocations.push(getPositionAllocation(token1Asset, token1NativeAmount))
+      } else {
+        allocations.push(getPositionAllocation(token0Asset, '0'))
+        allocations.push(getPositionAllocation(token1Asset, '0'))
+      }
 
       //
       // Actions available for the user:

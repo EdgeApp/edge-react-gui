@@ -13,7 +13,8 @@ const commonAdaptorConfig = {
   type: 'tarot-velodrome-pool' as const,
   rpcProviderUrls: [`https://rpc.ankr.com/optimism`],
   velodromeRouterContractAddress: '0xa062aE8A9c5e11aaA026fc2670B0D65cCc8B2858',
-  tarotRouterContractAddress: '0x9761d46Ef36E07131E8c56af06e35CaC23b9A91E'
+  tarotRouterContractAddress: '0x9761d46Ef36E07131E8c56af06e35CaC23b9A91E',
+  leverage: 5
 }
 
 const adaptors: TarotPoolAdapterConfig[] = [
@@ -151,8 +152,8 @@ const adaptors: TarotPoolAdapterConfig[] = [
 
 const makePolicyConfig = (adapterConfig: TarotPoolAdapterConfig) => {
   return {
-    stakePolicyId: `optimism_tarot_${adapterConfig.token0.tokenId}_${adapterConfig.token1.tokenId}`,
-    stakeProviderInfo,
+    stakePolicyId: `optimism_tarot_${adapterConfig.token0.tokenId}_${adapterConfig.token1.tokenId}_${adapterConfig.leverage}x`,
+    stakeProviderInfo: { ...stakeProviderInfo, displayName: `Tarot Finance ${adapterConfig.leverage}x Leverage` },
     parentPluginId: 'optimism',
     parentCurrencyCode: 'ETH',
     stakeWarning: lstrings.stake_warning_multiple_transactions,
