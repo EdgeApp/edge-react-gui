@@ -2,13 +2,12 @@ import { BottomTabBarProps, BottomTabNavigationEventMap } from '@react-navigatio
 import { NavigationHelpers, ParamListBase } from '@react-navigation/native'
 import * as React from 'react'
 import { useMemo } from 'react'
-import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Platform, TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
-import { BlurView } from 'rn-id-blurview'
 
 import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { Fontello } from '../../assets/vector/index'
@@ -21,6 +20,7 @@ import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
+import { BlurBackground } from '../ui4/BlurBackground'
 import { VectorIcon } from './VectorIcon'
 
 const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_map'
@@ -69,7 +69,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
 
   return (
     <Container>
-      <BlurView blurType={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} overlayColor="rgba(0, 0, 0, 0)" />
+      <BlurBackground />
       <LinearGradient colors={colors} start={start} end={end}>
         <Tabs>
           {routes.map((route, index: number) => (

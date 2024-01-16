@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
-import { LayoutChangeEvent, StyleSheet } from 'react-native'
+import { LayoutChangeEvent } from 'react-native'
 import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { BlurView } from 'rn-id-blurview'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useFooterOpenRatio } from '../../state/SceneFooterState'
 import { SceneWrapperInfo } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
-import { useTheme } from '../services/ThemeContext'
+import { BlurBackground } from '../ui4/BlurBackground'
 
 export interface SceneFooterProps {
   children: React.ReactNode
@@ -20,7 +19,6 @@ export interface SceneFooterProps {
 
 export const SceneFooterWrapper = (props: SceneFooterProps) => {
   const { noBackgroundBlur = false, children, info } = props
-  const theme = useTheme()
   const { footerOpenRatio } = useFooterOpenRatio()
 
   const [containerHeight, setContainerHeight] = useState<number | undefined>(undefined)
@@ -40,7 +38,7 @@ export const SceneFooterWrapper = (props: SceneFooterProps) => {
       isKeyboardOpen={info.isKeyboardOpen}
       onLayout={handleFooterInnerLayout}
     >
-      {noBackgroundBlur ? null : <BlurView blurType={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} overlayColor="#00000000" />}
+      {noBackgroundBlur ? null : <BlurBackground />}
       {children}
     </ContainerAnimatedView>
   )
