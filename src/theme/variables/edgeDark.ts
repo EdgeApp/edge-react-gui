@@ -418,7 +418,7 @@ export const edgeDark: Theme = {
   textInputIconColorFocused: palette.edgeMint,
   textInputPlaceholderColor: palette.whiteOp50,
   textInputPlaceholderColorDisabled: palette.whiteOp50,
-  textInputPlaceholderColorFocused: palette.edgeMint,
+  textInputPlaceholderColorFocused: palette.whiteOp50,
 
   // Animation
   fadeDisable: palette.gray,
