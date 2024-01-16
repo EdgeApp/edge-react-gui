@@ -490,7 +490,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             style={
               [
                 {
-                  "color": "hsla(0, 0%, 100%, 0.20)",
                   "flexGrow": 1,
                   "flexShrink": 1,
                   "fontFamily": "Quicksand-Regular",

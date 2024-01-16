@@ -327,7 +327,6 @@ const InputField = styledWithRef(AnimatedTextInput)<{
 
   return [
     {
-      color: theme.textInputBackgroundColor,
       flexGrow: 1,
       flexShrink: 1,
       fontFamily: theme.fontFaceDefault,
