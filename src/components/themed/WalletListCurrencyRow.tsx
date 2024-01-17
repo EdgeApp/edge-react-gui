@@ -1,9 +1,9 @@
 import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
+import { useIconColor } from '../../hooks/useIconColor'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
@@ -40,11 +40,13 @@ const WalletListCurrencyRowComponent = (props: Props) => {
   const styles = getStyles(theme)
   const pausedWallets = useSelector(state => state.ui.settings.userPausedWalletsSet)
   const isPaused = (pausedWallets != null && pausedWallets.has(wallet.id)) || isKeysOnlyPlugin(wallet.currencyInfo.pluginId)
+  const { pluginId } = wallet.currencyInfo
 
   //
   // State
   //
-  const [primaryColor, setPrimaryColor] = useState<string>('#00000000')
+  const iconColor = useIconColor({ pluginId, tokenId })
+  const primaryColor = iconColor != null ? `${iconColor}88` : 'rgba(0, 0, 0, 0)'
 
   //
   // Handlers
@@ -59,10 +61,6 @@ const WalletListCurrencyRowComponent = (props: Props) => {
     if (onLongPress != null) onLongPress()
   })
 
-  const handleIconColor = useHandler((color: string) => {
-    setPrimaryColor(`${color}88`)
-  })
-
   return customAsset != null ? (
     // TODO: Update to UI4
     <TouchableOpacity accessible={false} style={styles.row} onLongPress={handleLongPress} onPress={handlePress}>
@@ -75,7 +73,7 @@ const WalletListCurrencyRowComponent = (props: Props) => {
       onPress={handlePress}
       gradientBackground={{ colors: [primaryColor, '#00000000'], start: { x: 0, y: 0 }, end: { x: 1, y: 0 } }}
     >
-      <CurrencyViewUi4 token={token} tokenId={tokenId} wallet={wallet} onIconColor={handleIconColor} />
+      <CurrencyViewUi4 token={token} tokenId={tokenId} wallet={wallet} />
     </CardUi4>
   )
 }

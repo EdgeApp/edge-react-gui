@@ -3,7 +3,6 @@ import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { ShadowedView } from 'react-native-fast-shadow'
-import { getColors } from 'react-native-image-colors'
 
 import compromisedIcon from '../../assets/images/compromisedIcon.png'
 import { useWatch } from '../../hooks/useWatch'
@@ -26,13 +25,10 @@ interface Props {
   // Styling props
   marginRem?: number | number[]
   sizeRem?: number
-
-  // Callbacks
-  onIconColor?: (color: string) => void
 }
 
 export const CryptoIconUi4 = (props: Props) => {
-  const { hideSecondary = false, marginRem, mono = false, sizeRem = 2, tokenId, walletId, onIconColor } = props
+  const { hideSecondary = false, marginRem, mono = false, sizeRem = 2, tokenId, walletId } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -105,30 +101,6 @@ export const CryptoIconUi4 = (props: Props) => {
     backgroundColor: theme.iconShadow.shadowColor,
     ...theme.iconShadow
   }
-
-  //
-  // Effects
-  //
-
-  React.useEffect(() => {
-    if (primaryCurrencyIconUrl == null || onIconColor == null) return
-
-    getColors(primaryCurrencyIconUrl, {
-      cache: true,
-      key: primaryCurrencyIconUrl
-    })
-      .then(colors => {
-        if (colors.platform === 'ios') {
-          onIconColor(colors.primary)
-        }
-        if (colors.platform === 'android') {
-          onIconColor(colors.vibrant)
-        }
-      })
-      .catch(err => {
-        console.warn(err)
-      })
-  }, [onIconColor, primaryCurrencyIconUrl])
 
   return (
     <View style={spacingStyle}>

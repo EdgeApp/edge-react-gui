@@ -47,7 +47,6 @@ interface OwnProps {
   // Scene state:
   isEmpty: boolean
   searching: boolean
-  onIconColor?: (color: string) => void
   onSearchingChange: (isSearching: boolean) => void
   onSearchTextChange: (searchString: string) => void
 }
@@ -201,7 +200,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       <>
         <View style={styles.balanceBoxWalletNameCurrencyContainer}>
           <TouchableOpacity accessible={false} style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
-            <CryptoIconUi4 sizeRem={1.5} tokenId={tokenId} walletId={wallet.id} onIconColor={this.props.onIconColor} />
+            <CryptoIconUi4 sizeRem={1.5} tokenId={tokenId} walletId={wallet.id} />
             <EdgeText accessible style={styles.balanceBoxWalletName}>
               {walletName}
             </EdgeText>

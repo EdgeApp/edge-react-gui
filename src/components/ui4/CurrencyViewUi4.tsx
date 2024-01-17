@@ -20,16 +20,13 @@ interface Props {
   token?: EdgeToken
   tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
-
-  // Callbacks
-  onIconColor?: (color: string) => void
 }
 
 /**
  * A view representing the data from a wallet, used for rows, cards, etc.
  */
 const CurrencyViewUi4Component = (props: Props) => {
-  const { nativeAmount, token, tokenId, wallet, onIconColor } = props
+  const { nativeAmount, token, tokenId, wallet } = props
   const { currencyConfig, currencyInfo } = wallet
   const { pluginId } = currencyInfo
   const { showTokenNames = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
@@ -61,7 +58,7 @@ const CurrencyViewUi4Component = (props: Props) => {
   const { denominations } = token != null ? token : currencyInfo
   const [denomination] = denominations
 
-  const icon = <CryptoIconUi4 sizeRem={2} tokenId={tokenId} walletId={wallet.id} onIconColor={onIconColor} />
+  const icon = <CryptoIconUi4 sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
   const tickerText = wallet != null ? <AssetChangeTextUi4 wallet={wallet} tokenId={tokenId} style={styles.primaryText} /> : null
   const cryptoText = <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol hideBalance={hideBalance} />
   const fiatBalanceText = <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} hideBalance={hideBalance} />
