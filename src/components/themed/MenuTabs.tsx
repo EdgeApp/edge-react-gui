@@ -152,12 +152,7 @@ const Tab = ({
         }
         break
       case 'sellTab':
-        if (isLightAccount) {
-          showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
-        } else {
-          return navigation.navigate('sellTab', currentName === 'sellTab' ? { screen: 'pluginListSell' } : {})
-        }
-        break
+        return navigation.navigate('sellTab', currentName === 'sellTab' ? { screen: 'pluginListSell' } : {})
       case 'exchangeTab':
         return navigation.navigate('exchangeTab', currentName === 'exchangeTab' ? { screen: 'exchange' } : {})
       case 'extraTab':
