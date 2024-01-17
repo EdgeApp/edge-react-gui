@@ -2,7 +2,7 @@ import { div, log10, toFixed } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { memo, useState } from 'react'
-import { Dimensions, Platform, TouchableWithoutFeedback, View } from 'react-native'
+import { TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
@@ -190,7 +190,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
 
   const renderFlipInput = () => {
     return (
-      <CardUi4>
+      <CardUi4 marginRem={[0, 0.5, 0.5]}>
         <ExchangedFlipInput2
           ref={exchangedFlipInputRef}
           walletId={wallet.id}
@@ -220,33 +220,26 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
 
   return (
     <ModalUi4 bridge={bridge} onCancel={handleCloseModal}>
-      {/* Extra view needed here to fullscreen the modal on small devices */}
-      <View style={styles.hackContainer}>
-        <View style={styles.flipInput}>{renderFlipInput()}</View>
-        <TouchableWithoutFeedback onPress={handleFeesChange} style={styles.content}>
-          <View>
-            {renderFees()}
-            {renderExchangeRates()}
-            {renderBalance()}
-            {renderErrorMessage()}
-          </View>
-        </TouchableWithoutFeedback>
-      </View>
+      <View style={styles.flipInput}>{renderFlipInput()}</View>
+      <TouchableWithoutFeedback onPress={handleFeesChange}>
+        <View style={styles.fees}>
+          {renderFees()}
+          {renderExchangeRates()}
+          {renderBalance()}
+          {renderErrorMessage()}
+        </View>
+      </TouchableWithoutFeedback>
     </ModalUi4>
   )
 })
 
-const deviceHeight = Dimensions.get('window').height
-
 const getStyles = cacheStyles((theme: Theme) => ({
-  hackContainer: {
-    flex: deviceHeight <= 580 || Platform.OS === 'android' ? 1 : 0
-  },
   flipInput: {
     justifyContent: 'flex-start'
   },
-  content: {
-    justifyContent: 'flex-end'
+  fees: {
+    justifyContent: 'flex-end',
+    margin: theme.rem(0.5)
   },
   headerContainer: {
     flexDirection: 'row',
