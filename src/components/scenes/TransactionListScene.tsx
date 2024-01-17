@@ -22,7 +22,7 @@ import { FlatListItem } from '../../types/types'
 import { fetchInfo } from '../../util/network'
 import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { AssetStatusCard } from '../cards/AssetStatusCard'
-import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { SceneWrapper, SceneWrapperInfo } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { useTheme } from '../services/ThemeContext'
@@ -225,15 +225,17 @@ function TransactionListComponent(props: Props) {
     if (item == null) {
       return <EmptyLoader />
     }
+
+    const disableType = index >= MAX_LIST_ITEMS_ANIM ? 'view' : undefined
     if (typeof item === 'string') {
       return (
-        <EdgeAnim enter={{ type: 'fadeInLeft', distance: 30 * (index + 1) }}>
+        <EdgeAnim disableType={disableType} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
           <SectionHeader title={item} />
         </EdgeAnim>
       )
     }
     return (
-      <EdgeAnim enter={{ type: 'fadeInRight', distance: 30 * (index + 1) }}>
+      <EdgeAnim disableType={disableType} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
         <TransactionListRow navigation={navigation} transaction={item} wallet={wallet} />
       </EdgeAnim>
     )

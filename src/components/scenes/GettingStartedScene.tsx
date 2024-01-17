@@ -211,7 +211,7 @@ export const GettingStartedScene = (props: Props) => {
               )
             })}
           </HeroContainer>
-          <EdgeAnim enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance: 20 }}>
+          <EdgeAnim ios enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance: 20 }}>
             <Pagination>
               {Array.from({ length: paginationCount + (isFinalSwipeEnabled ? 0 : 1) }).map((_, index) => (
                 <Pressable key={index} onPress={() => handlePressIndicator(index)}>
@@ -235,10 +235,10 @@ export const GettingStartedScene = (props: Props) => {
               })}
             </Sections>
             <Space horizontal={2}>
-              <EdgeAnim enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance: 40 }}>
+              <EdgeAnim ios enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance: 40 }}>
                 <MainButton onPress={handlePressSignUp} label={lstrings.account_get_started} />
               </EdgeAnim>
-              <EdgeAnim enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance: 60 }}>
+              <EdgeAnim ios enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance: 60 }}>
                 <MainButton type="escape" onPress={handlePressSignIn} label={lstrings.getting_started_button_sign_in} />
               </EdgeAnim>
             </Space>
