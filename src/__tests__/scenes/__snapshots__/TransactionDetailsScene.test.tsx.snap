@@ -1705,20 +1705,47 @@ exports[`TransactionDetailsScene should render 1`] = `
           </View>
         </View>
       </View>
-      <View
-        style={
-          {
-            "alignSelf": "center",
-            "bottom": 6,
-            "height": 79,
-            "justifyContent": "flex-end",
-            "marginHorizontal": 11,
-            "position": "absolute",
-          }
-        }
-      />
     </View>
   </RCTScrollView>,
+  <View
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={true}
+    insetBottom={0}
+    isKeyboardOpen={false}
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "alignItems": "stretch",
+          "bottom": 0,
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "left": 0,
+          "overflow": "hidden",
+          "position": "absolute",
+          "right": 0,
+        },
+        {
+          "bottom": NaN,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "marginHorizontal": 11,
+          "marginVertical": 11,
+        }
+      }
+    />
+  </View>,
 ]
 `;
 
@@ -3427,19 +3454,46 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           </View>
         </View>
       </View>
-      <View
-        style={
-          {
-            "alignSelf": "center",
-            "bottom": 6,
-            "height": 79,
-            "justifyContent": "flex-end",
-            "marginHorizontal": 11,
-            "position": "absolute",
-          }
-        }
-      />
     </View>
   </RCTScrollView>,
+  <View
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={true}
+    insetBottom={0}
+    isKeyboardOpen={false}
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "alignItems": "stretch",
+          "bottom": 0,
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "left": 0,
+          "overflow": "hidden",
+          "position": "absolute",
+          "right": 0,
+        },
+        {
+          "bottom": NaN,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "marginHorizontal": 11,
+          "marginVertical": 11,
+        }
+      }
+    />
+  </View>,
 ]
 `;

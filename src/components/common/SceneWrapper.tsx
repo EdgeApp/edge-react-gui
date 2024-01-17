@@ -213,10 +213,18 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
         >
           <MaybeView when={!scroll && !avoidKeyboard} style={[styles.sceneContainer, layoutStyle, insetStyle, { padding }]}>
             {isFuncChildren ? children(info) : children}
-            {hasNotifications ? <NotificationView navigation={navigation} /> : null}
-            {renderFooter == null ? null : <SceneFooter info={info}>{renderFooter}</SceneFooter>}
           </MaybeView>
         </MaybeAnimatedScrollView>
+        {renderFooter != null || hasNotifications ? (
+          <SceneFooter info={info}>
+            {info => (
+              <>
+                {hasNotifications ? <NotificationView navigation={navigation} /> : null}
+                {renderFooter != null ? renderFooter(info) : null}
+              </>
+            )}
+          </SceneFooter>
+        ) : null}
       </MaybeAnimatedView>
     )
   }

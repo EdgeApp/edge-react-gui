@@ -1132,15 +1132,42 @@ exports[`SendScene2 1 spendTarget 1`] = `
         </View>
       </View>
     </View>
+  </View>,
+  <View
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    isKeyboardOpen={false}
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "alignItems": "stretch",
+          "bottom": 0,
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "left": 0,
+          "overflow": "hidden",
+          "position": "absolute",
+          "right": 0,
+        },
+        {
+          "bottom": 0,
+        },
+      ]
+    }
+  >
     <View
       style={
         {
           "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
           "justifyContent": "flex-end",
           "marginHorizontal": 11,
-          "position": "absolute",
+          "marginVertical": 11,
         }
       }
     />
@@ -2468,15 +2495,42 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
         </View>
       </View>
     </View>
+  </View>,
+  <View
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    isKeyboardOpen={false}
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "alignItems": "stretch",
+          "bottom": 0,
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "left": 0,
+          "overflow": "hidden",
+          "position": "absolute",
+          "right": 0,
+        },
+        {
+          "bottom": 0,
+        },
+      ]
+    }
+  >
     <View
       style={
         {
           "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
           "justifyContent": "flex-end",
           "marginHorizontal": 11,
-          "position": "absolute",
+          "marginVertical": 11,
         }
       }
     />
@@ -3775,15 +3829,42 @@ exports[`SendScene2 2 spendTargets 1`] = `
         </View>
       </View>
     </View>
+  </View>,
+  <View
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    isKeyboardOpen={false}
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "alignItems": "stretch",
+          "bottom": 0,
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "left": 0,
+          "overflow": "hidden",
+          "position": "absolute",
+          "right": 0,
+        },
+        {
+          "bottom": 0,
+        },
+      ]
+    }
+  >
     <View
       style={
         {
           "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
           "justifyContent": "flex-end",
           "marginHorizontal": 11,
-          "position": "absolute",
+          "marginVertical": 11,
         }
       }
     />
@@ -4927,15 +5008,42 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
         </View>
       </View>
     </View>
+  </View>,
+  <View
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    isKeyboardOpen={false}
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "alignItems": "stretch",
+          "bottom": 0,
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "left": 0,
+          "overflow": "hidden",
+          "position": "absolute",
+          "right": 0,
+        },
+        {
+          "bottom": 0,
+        },
+      ]
+    }
+  >
     <View
       style={
         {
           "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
           "justifyContent": "flex-end",
           "marginHorizontal": 11,
-          "position": "absolute",
+          "marginVertical": 11,
         }
       }
     />
@@ -6055,15 +6163,42 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
         </View>
       </View>
     </View>
+  </View>,
+  <View
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    isKeyboardOpen={false}
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "alignItems": "stretch",
+          "bottom": 0,
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "left": 0,
+          "overflow": "hidden",
+          "position": "absolute",
+          "right": 0,
+        },
+        {
+          "bottom": 0,
+        },
+      ]
+    }
+  >
     <View
       style={
         {
           "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
           "justifyContent": "flex-end",
           "marginHorizontal": 11,
-          "position": "absolute",
+          "marginVertical": 11,
         }
       }
     />
@@ -7028,15 +7163,42 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
         </View>
       </View>
     </View>
+  </View>,
+  <View
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    isKeyboardOpen={false}
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "alignItems": "stretch",
+          "bottom": 0,
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "left": 0,
+          "overflow": "hidden",
+          "position": "absolute",
+          "right": 0,
+        },
+        {
+          "bottom": 0,
+        },
+      ]
+    }
+  >
     <View
       style={
         {
           "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
           "justifyContent": "flex-end",
           "marginHorizontal": 11,
-          "position": "absolute",
+          "marginVertical": 11,
         }
       }
     />
@@ -8294,15 +8456,42 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
         </View>
       </View>
     </View>
+  </View>,
+  <View
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    isKeyboardOpen={false}
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "alignItems": "stretch",
+          "bottom": 0,
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "left": 0,
+          "overflow": "hidden",
+          "position": "absolute",
+          "right": 0,
+        },
+        {
+          "bottom": 0,
+        },
+      ]
+    }
+  >
     <View
       style={
         {
           "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
           "justifyContent": "flex-end",
           "marginHorizontal": 11,
-          "position": "absolute",
+          "marginVertical": 11,
         }
       }
     />
@@ -9495,15 +9684,42 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
         </View>
       </View>
     </View>
+  </View>,
+  <View
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    isKeyboardOpen={false}
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "alignItems": "stretch",
+          "bottom": 0,
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "left": 0,
+          "overflow": "hidden",
+          "position": "absolute",
+          "right": 0,
+        },
+        {
+          "bottom": 0,
+        },
+      ]
+    }
+  >
     <View
       style={
         {
           "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
           "justifyContent": "flex-end",
           "marginHorizontal": 11,
-          "position": "absolute",
+          "marginVertical": 11,
         }
       }
     />
@@ -10655,15 +10871,42 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
         </View>
       </View>
     </View>
+  </View>,
+  <View
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    isKeyboardOpen={false}
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "alignItems": "stretch",
+          "bottom": 0,
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "left": 0,
+          "overflow": "hidden",
+          "position": "absolute",
+          "right": 0,
+        },
+        {
+          "bottom": 0,
+        },
+      ]
+    }
+  >
     <View
       style={
         {
           "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
           "justifyContent": "flex-end",
           "marginHorizontal": 11,
-          "position": "absolute",
+          "marginVertical": 11,
         }
       }
     />
@@ -11820,15 +12063,42 @@ exports[`SendScene2 Render SendScene 1`] = `
         }
       }
     />
+  </View>,
+  <View
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    isKeyboardOpen={false}
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "alignItems": "stretch",
+          "bottom": 0,
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+          "left": 0,
+          "overflow": "hidden",
+          "position": "absolute",
+          "right": 0,
+        },
+        {
+          "bottom": 0,
+        },
+      ]
+    }
+  >
     <View
       style={
         {
           "alignSelf": "center",
-          "bottom": 6,
-          "height": 79,
           "justifyContent": "flex-end",
           "marginHorizontal": 11,
-          "position": "absolute",
+          "marginVertical": 11,
         }
       }
     />
