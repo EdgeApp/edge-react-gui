@@ -17,7 +17,7 @@ import { getCurrencyCode, getCurrencyInfos, isKeysOnlyPlugin } from '../../util/
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { ModalScrollArea, ModalTitle } from '../themed/ModalParts'
+import { ModalTitle } from '../themed/ModalParts'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
@@ -217,7 +217,7 @@ export function WalletListMenuModal(props: Props) {
       title={
         wallet == null ? null : (
           <View>
-            <ModalTitle>{getWalletName(wallet)}</ModalTitle>
+            <ModalTitle paddingRem={[0, 0, 0.5]}>{getWalletName(wallet)}</ModalTitle>
             <View style={styles.row}>
               <CryptoIconUi4 marginRem={[0, 0, 0, 0.5]} sizeRem={1} tokenId={tokenId} walletId={walletId} />
               <ModalTitle>{getCurrencyCode(wallet, tokenId)}</ModalTitle>
@@ -226,22 +226,19 @@ export function WalletListMenuModal(props: Props) {
         )
       }
       onCancel={handleCancel}
+      scroll
     >
-      <View style={styles.scrollViewContainer}>
-        <ModalScrollArea>
-          {options.map((option: Option) => (
-            <TouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
-              <AntDesignIcon
-                // @ts-expect-error
-                name={icons[option.value] ?? 'arrowsalt'} // for split keys like splitBCH, splitETH, etc.
-                size={theme.rem(1)}
-                style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
-              />
-              <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </ModalScrollArea>
-      </View>
+      {options.map((option: Option) => (
+        <TouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
+          <AntDesignIcon
+            // @ts-expect-error
+            name={icons[option.value] ?? 'arrowsalt'} // for split keys like splitBCH, splitETH, etc.
+            size={theme.rem(1)}
+            style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
+          />
+          <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
+        </TouchableOpacity>
+      ))}
     </ModalUi4>
   )
 }
@@ -267,12 +264,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     right: 0,
     bottom: theme.rem(4),
     height: theme.rem(3)
-  },
-  scrollViewContainer: {
-    flexShrink: 1
-  },
-  scrollViewPadding: {
-    paddingBottom: theme.rem(3)
   },
   warningColor: {
     color: theme.warningText
