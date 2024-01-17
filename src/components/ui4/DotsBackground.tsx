@@ -84,7 +84,7 @@ export function DotsBackground(props: Props): JSX.Element {
       <Stop key={`stop${key}`} offset={percent((offset + totalR - 2) / totalR)} stopColor={circle.color} stopOpacity={opacity * dimming * dimming} />
     ))
     if (innerR > 0) {
-      stops.unshift(<Stop offset="0%" stopColor={circle.color} stopOpacity="1" />)
+      stops.unshift(<Stop key="center" offset="0%" stopColor={circle.color} stopOpacity="1" />)
     }
 
     return (

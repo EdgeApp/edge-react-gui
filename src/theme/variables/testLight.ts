@@ -155,6 +155,7 @@ export const testLight: Theme = {
   modalAndroidBlurColor: palette.whiteOp75,
   modalBackgroundUi4: palette.blackOp25,
   modalSceneOverlayColor: palette.black,
+  modalDragbarColor: palette.gray,
 
   sideMenuBorderColor: palette.transparent,
   sideMenuBorderWidth: 0,

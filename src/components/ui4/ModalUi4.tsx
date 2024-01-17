@@ -184,8 +184,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     top: 0
   },
   dragBar: {
-    // TODO: Replace this color we have a proper design:
-    backgroundColor: theme.deactivatedText,
+    backgroundColor: theme.modalDragbarColor,
     borderRadius: theme.rem(0.125),
     height: theme.rem(0.25),
     marginTop: theme.rem(0.5),

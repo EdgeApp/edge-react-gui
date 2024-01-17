@@ -179,6 +179,7 @@ export const edgeDark: Theme = {
   modalAndroidBlurColor: palette.blackOp70,
   modalBackgroundUi4: palette.whiteOp37,
   modalSceneOverlayColor: palette.black,
+  modalDragbarColor: palette.gray,
 
   sideMenuBorderColor: palette.backgroundBlack,
   sideMenuBorderWidth: 0,
