@@ -35,13 +35,27 @@ interface Props {
 
   // Which visual style to use. Defaults to primary (solid):
   type?: MainButtonType
+
+  // From ButtonUi4
+  layout?: 'row' | 'column' | 'solo'
 }
 
 /**
  * A stand-alone button to perform the primary action in a modal or scene.
  */
 export function MainButton(props: Props) {
-  const { alignSelf = 'auto', children, disabled = false, label, marginRem = [0, 1, 0, 1], onPress, type = 'primary', paddingRem, spinner = false } = props
+  const {
+    alignSelf = 'auto',
+    children,
+    disabled = false,
+    label,
+    marginRem = [0, 1, 0, 1],
+    onPress,
+    type = 'primary',
+    paddingRem,
+    layout,
+    spinner = false
+  } = props
 
   return (
     <ButtonUi4
@@ -53,6 +67,7 @@ export function MainButton(props: Props) {
       paddingRem={paddingRem}
       spinner={spinner}
       type={type === 'escape' ? 'tertiary' : type}
+      layout={layout}
     >
       {children}
     </ButtonUi4>
