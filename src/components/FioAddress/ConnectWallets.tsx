@@ -3,6 +3,7 @@ import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, Switch, View } from 'react-native'
 
+import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { showError } from '../../components/services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../components/services/ThemeContext'
 import { EdgeText } from '../../components/themed/EdgeText'
@@ -32,6 +33,7 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
+  const isLightAccount = account.username == null
   const edgeWallets = useWatch(account, 'currencyWallets')
   const ccWalletMap = useSelector(state => state.ui.fio.connectedWalletsByFioAddress[fioAddressName] ?? {})
   const walletItems = React.useMemo(() => makeConnectWallets(edgeWallets, ccWalletMap), [edgeWallets, ccWalletMap])
@@ -53,6 +55,10 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
   }, [prevItemsConnected, walletItems])
 
   const handleContinuePress = useHandler(() => {
+    if (isLightAccount) {
+      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+      return
+    }
     const walletsToDisconnect: FioConnectionWalletItem[] = []
     for (const walletKey of Object.keys(disconnectWalletsMap)) {
       if (
