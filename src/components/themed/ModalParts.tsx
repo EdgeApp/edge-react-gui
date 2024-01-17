@@ -7,8 +7,6 @@ import { lstrings } from '../../locales/strings'
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { GradientFadeOut } from '../modals/GradientFadeout'
 import { Theme, useTheme } from '../services/ThemeContext'
-// TODO:
-// KeyboardAwareScrollView (login) instead of ScrollView (here)
 
 interface ModalTitleProps {
   children: React.ReactNode
@@ -107,7 +105,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   titleContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    margin: theme.rem(0.5)
+    marginHorizontal: theme.rem(0.5)
   },
   titleIconContainer: {
     marginRight: theme.rem(0.5)
@@ -115,8 +113,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   titleText: {
     color: theme.primaryText,
     fontFamily: theme.fontFaceMedium,
-    fontSize: theme.rem(1.2),
-    marginVertical: theme.rem(0.5)
+    fontSize: theme.rem(1.2)
   },
   titleCenter: {
     textAlign: 'center'
