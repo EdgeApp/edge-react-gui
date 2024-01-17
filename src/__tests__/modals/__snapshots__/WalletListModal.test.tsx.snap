@@ -209,25 +209,14 @@ exports[`WalletListModal should render with loading props 1`] = `
         }
       >
         <Text
-          adjustsFontSizeToFit={true}
-          allowFontScaling={false}
           style={
-            [
-              {
-                "color": undefined,
-                "fontSize": 12,
-              },
-              {
-                "color": "#FFFFFF",
-                "fontSize": 22,
-              },
-              {
-                "fontFamily": "anticon",
-                "fontStyle": "normal",
-                "fontWeight": "normal",
-              },
-              {},
-            ]
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "anticon",
+              "fontSize": 22,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            }
           }
         >
           
@@ -392,25 +381,14 @@ exports[`WalletListModal should render with loading props 1`] = `
           }
         >
           <Text
-            adjustsFontSizeToFit={true}
-            allowFontScaling={false}
             style={
-              [
-                {
-                  "color": undefined,
-                  "fontSize": 12,
-                },
-                {
-                  "color": "#FFFFFF",
-                  "fontSize": 0,
-                },
-                {
-                  "fontFamily": "anticon",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                {},
-              ]
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "anticon",
+                "fontSize": 0,
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              }
             }
           >
             

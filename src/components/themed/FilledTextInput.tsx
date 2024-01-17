@@ -16,7 +16,7 @@ import Animated, {
 import { useHandler } from '../../hooks/useHandler'
 import { SpaceProps, useSpaceStyle } from '../../hooks/useSpaceStyle'
 import { styled, styledWithRef } from '../hoc/styled'
-import { AnimatedIconComponent, CloseIconAnimated, EyeIconAnimated, EyeOffIconAnimated } from '../icons/ThemedIcons'
+import { AnimatedIconComponent, CloseIconAnimated, EyeIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 import { NumericInput } from './NumericInput'
@@ -260,7 +260,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
           {secureTextEntry ? (
             <TouchableWithoutFeedback testID={`${testID}.eyeIcon`} onPress={handleHidePassword}>
               <IconContainer>
-                {hidePassword ? <EyeOffIconAnimated accessible color={iconColor} /> : <EyeIconAnimated accessible color={iconColor} />}
+                <EyeIconAnimated accessible color={iconColor} off={!hidePassword} />
               </IconContainer>
             </TouchableWithoutFeedback>
           ) : null}
