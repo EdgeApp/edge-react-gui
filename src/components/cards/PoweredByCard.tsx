@@ -21,7 +21,7 @@ export const PoweredByCard = (props: Props) => {
 
   return (
     <View style={styles.cardContainer}>
-      <CardUi4 paddingRem={1} onPress={onPress}>
+      <CardUi4 paddingRem={0.5} onPress={onPress}>
         <View style={styles.poweredByContainer}>
           <FastImage style={styles.poweredByIcon} source={iconSrc} resizeMode="contain" />
           <View style={styles.poweredByContainerColumn}>
@@ -44,8 +44,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   cardContainer: {
     alignItems: 'center',
     flexDirection: 'row', // Make the card shrink
-    justifyContent: 'center',
-    marginVertical: theme.rem(0.5)
+    justifyContent: 'center'
   },
   poweredByContainerRow: {
     flexDirection: 'row'
