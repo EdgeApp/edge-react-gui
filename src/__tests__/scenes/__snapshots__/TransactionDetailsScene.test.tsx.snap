@@ -175,6 +175,11 @@ exports[`TransactionDetailsScene should render 1`] = `
     }
     onScroll={[Function]}
     scrollEventThrottle={0.0001}
+    scrollIndicatorInsets={
+      {
+        "right": 1,
+      }
+    }
     style={
       {
         "height": 1334,
@@ -1892,6 +1897,11 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
     }
     onScroll={[Function]}
     scrollEventThrottle={0.0001}
+    scrollIndicatorInsets={
+      {
+        "right": 1,
+      }
+    }
     style={
       {
         "height": 1334,

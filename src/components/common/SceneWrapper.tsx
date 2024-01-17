@@ -208,6 +208,8 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
           keyboardShouldPersistTaps={keyboardShouldPersistTaps}
           contentContainerStyle={insetStyle}
           onScroll={hasTabs || hasHeader ? handleScroll : () => {}}
+          // Fixes middle-floating scrollbar issue
+          scrollIndicatorInsets={{ right: 1 }}
         >
           <MaybeView when={!scroll && !avoidKeyboard} style={[styles.sceneContainer, layoutStyle, insetStyle, { padding }]}>
             {isFuncChildren ? children(info) : children}
