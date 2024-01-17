@@ -1,8 +1,7 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { useIconColor } from '../../../hooks/useIconColor'
@@ -105,7 +104,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
       </SceneHeader>
       <View style={styles.optionsContainer}>
         <EdgeText>{lstrings.stake_select_options}</EdgeText>
-        <FlashList data={stakePolicies} renderItem={renderOptions} keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId} />
+        <FlatList data={stakePolicies} renderItem={renderOptions} keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId} />
       </View>
     </SceneWrapper>
   )

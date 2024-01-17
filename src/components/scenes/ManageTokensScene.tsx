@@ -1,7 +1,7 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 
 import { PREFERRED_TOKENS, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -133,7 +133,7 @@ function ManageTokensSceneComponent(props: Props) {
           onChangeText={setSearchValue}
         />
       </SceneHeader>
-      <FlashList estimatedItemSize={theme.rem(4.25)} data={filteredTokenIds} extraData={extraData} keyExtractor={keyExtractor} renderItem={renderRow} />
+      <FlatList data={filteredTokenIds} extraData={extraData} keyExtractor={keyExtractor} renderItem={renderRow} />
       {!isCustomTokensSupported ? null : (
         <>
           <DividerLine marginRem={[0, 1]} />

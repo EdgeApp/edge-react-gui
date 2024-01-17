@@ -1,10 +1,9 @@
-import { FlashList, FlashListProps } from '@shopify/flash-list'
 import { abs, lt } from 'biggystring'
 import { asArray } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { asAssetStatus, AssetStatus } from 'edge-info-server/types'
 import * as React from 'react'
-import { RefreshControl, View } from 'react-native'
+import { ListRenderItemInfo, RefreshControl, View } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 import Animated from 'react-native-reanimated'
 
@@ -19,7 +18,6 @@ import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { FlatListItem } from '../../types/types'
 import { fetchInfo } from '../../util/network'
 import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { AssetStatusCard } from '../cards/AssetStatusCard'
@@ -34,8 +32,6 @@ import { EmptyLoader, SectionHeader, SectionHeaderCentered } from '../themed/Tra
 import { TransactionListRow } from '../themed/TransactionListRow'
 import { TransactionListTop } from '../themed/TransactionListTop'
 import { AccentColors } from '../ui4/DotsBackground'
-
-const AnimatedFlashList = Animated.createAnimatedComponent<FlashListProps<ListItem>>(FlashList)
 
 export interface TransactionListParams {
   walletId: string
@@ -56,7 +52,7 @@ function TransactionListComponent(props: Props) {
   const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
 
   // State:
-  const flashList = React.useRef<FlashList<ListItem>>(null)
+  const flashListRef = React.useRef<Animated.FlatList<ListItem> | null>(null)
   const [isSearching, setIsSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
   const [assetStatuses, setAssetStatuses] = React.useState<AssetStatus[]>([])
@@ -221,7 +217,7 @@ function TransactionListComponent(props: Props) {
     }
   }, [isTransactionListUnsupported, navigation, isSearching, tokenId, wallet])
 
-  const renderItem = useHandler(({ index, item }: FlatListItem<ListItem>) => {
+  const renderItem = useHandler(({ index, item }: ListRenderItemInfo<ListItem>) => {
     if (item == null) {
       return <EmptyLoader />
     }
@@ -239,12 +235,6 @@ function TransactionListComponent(props: Props) {
         <TransactionListRow navigation={navigation} transaction={item} wallet={wallet} />
       </EdgeAnim>
     )
-  })
-
-  const getItemType = useHandler((item: ListItem) => {
-    if (item == null) return 'spinner'
-    if (typeof item === 'string') return 'header'
-    return 'tx'
   })
 
   const keyExtractor = useHandler((item: ListItem) => {
@@ -295,12 +285,11 @@ function TransactionListComponent(props: Props) {
     >
       {({ insetStyle, undoInsetStyle }) => (
         <View style={undoInsetStyle}>
-          <AnimatedFlashList
-            ref={flashList}
+          <Animated.FlatList
+            // @ts-expect-error
+            ref={flashListRef}
             contentContainerStyle={insetStyle}
             data={listItems}
-            estimatedItemSize={theme.rem(4.25)}
-            getItemType={getItemType}
             keyboardShouldPersistTaps="handled"
             keyExtractor={keyExtractor}
             ListEmptyComponent={emptyComponent}

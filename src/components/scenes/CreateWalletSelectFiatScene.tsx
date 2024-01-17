@@ -1,7 +1,7 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { View } from 'react-native'
+import { ListRenderItemInfo, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { FlatList } from 'react-native-gesture-handler'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -173,7 +173,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     if (fiat != null) setFiat(fiat)
   })
 
-  const renderCurrencyRow: ListRenderItem<WalletCreateItem> = useHandler(data => {
+  const renderCurrencyRow = useHandler((data: ListRenderItemInfo<WalletCreateItem>) => {
     const { key, pluginId, tokenId, walletType, createWalletIds } = data.item
 
     if (walletType != null) {
@@ -215,10 +215,9 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
         <EdgeText style={styles.instructionalText} numberOfLines={1}>
           {lstrings.fragment_create_wallet_instructions}
         </EdgeText>
-        <FlashList
+        <FlatList
           automaticallyAdjustContentInsets={false}
           data={createWalletList}
-          estimatedItemSize={theme.rem(4.25)}
           extraData={walletNames}
           keyExtractor={keyExtractor}
           renderItem={renderCurrencyRow}

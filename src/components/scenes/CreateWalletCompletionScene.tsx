@@ -1,7 +1,7 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -82,7 +82,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
     }, {})
   )
 
-  const flatListRef = React.useRef<FlashList<WalletCreateItem>>(null)
+  const flatListRef = React.useRef<FlatList<WalletCreateItem>>(null)
 
   // Create the wallets and enable the tokens
   useAsyncEffect(
@@ -170,11 +170,10 @@ const CreateWalletCompletionComponent = (props: Props) => {
       {({ insetStyle, undoInsetStyle }) => (
         <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <SceneHeader title={lstrings.title_create_wallets} withTopMargin />
-          <FlashList
+          <FlatList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
             data={filteredCreateItemsForDisplay}
-            estimatedItemSize={theme.rem(4.25)}
             fadingEdgeLength={10}
             keyExtractor={keyExtractor}
             extraData={itemStatus}

@@ -1,7 +1,6 @@
-import { FlashList, FlashListProps, ListRenderItemInfo } from '@shopify/flash-list'
 import * as React from 'react'
 import { useCallback } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { ListRenderItemInfo, TouchableOpacity, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -23,8 +22,6 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
 import { SearchFooter } from '../themed/SearchFooter'
-
-const AnimatedFlashList = Animated.createAnimatedComponent<FlashListProps<number>>(FlashList)
 
 const coinRanking: CoinRanking = { coinRankingDatas: [] }
 
@@ -243,8 +240,7 @@ const CoinRankingComponent = (props: Props) => {
           </View>
           <DividerLine marginRem={[0, 0, 0, 1]} />
           <View style={{ ...undoInsetStyle, marginTop: 0 }}>
-            <AnimatedFlashList
-              estimatedItemSize={theme.rem(3.75)}
+            <Animated.FlatList
               data={listdata}
               extraData={extraData}
               renderItem={renderItem}

@@ -1,11 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { FlashList, ListRenderItemInfo } from '@shopify/flash-list'
 import { asObject, asString } from 'cleaners'
 import { Disklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
-import { Image, Platform, View } from 'react-native'
+import { Image, ListRenderItemInfo, Platform, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { FlatList } from 'react-native-gesture-handler'
 
 import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { readSyncedSettings, updateOneSetting, writeSyncedSettings } from '../../actions/SettingsActions'
@@ -407,7 +407,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
             </EdgeText>
           </View>
         ) : (
-          <FlashList
+          <FlatList
             data={plugins}
             renderItem={this.renderPlugin}
             keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}

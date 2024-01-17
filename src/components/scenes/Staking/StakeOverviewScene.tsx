@@ -1,7 +1,7 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
@@ -161,7 +161,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
           </View>
         </>
       ) : null}
-      <FlashList
+      <FlatList
         data={[...stakeAllocations, ...rewardAllocations]}
         renderItem={renderCFAT}
         keyExtractor={(allocation: PositionAllocation) =>

@@ -1,8 +1,8 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import { add, sub } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, ListRenderItemInfo, View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -74,7 +74,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
     }, {})
   })
 
-  const flatListRef = React.useRef<FlashList<MigrateWalletItem>>(null)
+  const flatListRef = React.useRef<FlatList<MigrateWalletItem>>(null)
 
   const handleItemStatus = (item: MigrateWalletItem, status: 'complete' | 'error') => {
     setItemStatus(currentState => ({ ...currentState, [item.key]: status }))
@@ -215,7 +215,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
     return icon
   })
 
-  const renderRow: ListRenderItem<MigrateWalletItem> = useHandler(data => {
+  const renderRow = useHandler((data: ListRenderItemInfo<MigrateWalletItem>) => {
     const { item } = data
     const { createWalletIds } = item
 
@@ -248,11 +248,10 @@ const MigrateWalletCompletionComponent = (props: Props) => {
       {({ insetStyle, undoInsetStyle }) => (
         <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <SceneHeader title={lstrings.migrate_wallets_title} withTopMargin />
-          <FlashList
+          <FlatList
             automaticallyAdjustContentInsets={false}
             data={sortedMigrateWalletList}
             contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
-            estimatedItemSize={theme.rem(4.25)}
             extraData={itemStatus}
             fadingEdgeLength={10}
             keyExtractor={keyExtractor}

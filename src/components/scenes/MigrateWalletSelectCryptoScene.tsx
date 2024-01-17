@@ -1,6 +1,6 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { Switch, View } from 'react-native'
+import { ListRenderItemInfo, Switch, View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -97,7 +97,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
     navigation.push('migrateWalletCalculateFee', { migrateWalletList: filteredMigrateWalletList })
   })
 
-  const renderCreateWalletRow: ListRenderItem<MigrateWalletItem> = useHandler(item => {
+  const renderCreateWalletRow = useHandler((item: ListRenderItemInfo<MigrateWalletItem>) => {
     const { key, displayName, pluginId, tokenId } = item.item
 
     const toggle = (
@@ -141,11 +141,10 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
       {({ insetStyle, undoInsetStyle }) => (
         <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <SceneHeader title={lstrings.migrate_wallets_select_crypto_title} withTopMargin />
-          <FlashList
+          <FlatList
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
             data={migrateWalletList}
-            estimatedItemSize={theme.rem(4.25)}
             extraData={selectedItems}
             keyboardShouldPersistTaps="handled"
             keyExtractor={keyExtractor}

@@ -1,8 +1,8 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import { add, lt } from 'biggystring'
 import { EdgeDenomination, EdgeSpendInfo, EdgeTransaction, InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, ListRenderItemInfo, View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -47,7 +47,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
   const [feeState, setFeeState] = React.useState<Map<string, AssetRowState | undefined>>(new Map())
   const [sliderDisabled, setSliderDisabled] = React.useState(true)
 
-  const renderCurrencyRow: ListRenderItem<MigrateWalletItem> = useHandler(data => {
+  const renderCurrencyRow = useHandler((data: ListRenderItemInfo<MigrateWalletItem>) => {
     const { key, pluginId, tokenId, walletType, createWalletIds } = data.item
     if (walletType == null) return null
 
@@ -225,10 +225,9 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
         <EdgeText style={styles.instructionalText} numberOfLines={4}>
           {lstrings.migrate_wallet_instructions_fragment}
         </EdgeText>
-        <FlashList
+        <FlatList
           automaticallyAdjustContentInsets={false}
           data={migrateWalletList}
-          estimatedItemSize={theme.rem(4.25)}
           extraData={feeState}
           keyExtractor={keyExtractor}
           renderItem={renderCurrencyRow}

@@ -29,6 +29,11 @@ describe('CreateWalletSelectFiatComponent', () => {
               '9992ec3cf6a55b00978cddf2b27bc6882d88d1ec': {
                 currencyCode: 'POLY'
               }
+            },
+            allTokens: {
+              '9992ec3cf6a55b00978cddf2b27bc6882d88d1ec': {
+                currencyCode: 'POLY'
+              }
             }
           }
         },
