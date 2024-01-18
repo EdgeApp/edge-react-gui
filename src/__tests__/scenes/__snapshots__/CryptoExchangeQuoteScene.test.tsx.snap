@@ -1699,7 +1699,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
             style={
               [
                 {
-                  "backgroundColor": "#00604d",
+                  "backgroundColor": "#333333",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -1716,7 +1716,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
               style={
                 [
                   {
-                    "backgroundColor": "#333333",
+                    "backgroundColor": "#00604d",
                     "borderRadius": 27.5,
                     "bottom": 0,
                     "left": 0,
@@ -1725,7 +1725,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                     "top": 0,
                   },
                   {
-                    "width": 295,
+                    "width": 55,
                   },
                 ]
               }
@@ -1751,7 +1751,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                   {
                     "transform": [
                       {
-                        "translateX": 240,
+                        "translateX": 0,
                       },
                     ],
                   },
@@ -1779,7 +1779,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
             <Text

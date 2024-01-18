@@ -1011,7 +1011,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
           style={
             [
               {
-                "backgroundColor": "#00604d",
+                "backgroundColor": "#333333",
                 "borderRadius": 27.5,
                 "height": 55,
                 "justifyContent": "center",
@@ -1030,7 +1030,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
             style={
               [
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#00604d",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -1039,7 +1039,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   "top": 0,
                 },
                 {
-                  "width": 295,
+                  "width": 55,
                 },
               ]
             }
@@ -1067,7 +1067,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 {
                   "transform": [
                     {
-                      "translateX": 240,
+                      "translateX": 0,
                     },
                   ],
                 },
@@ -1095,7 +1095,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
@@ -2374,7 +2374,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
           style={
             [
               {
-                "backgroundColor": "#00604d",
+                "backgroundColor": "#333333",
                 "borderRadius": 27.5,
                 "height": 55,
                 "justifyContent": "center",
@@ -2393,7 +2393,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             style={
               [
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#00604d",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -2402,7 +2402,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   "top": 0,
                 },
                 {
-                  "width": 295,
+                  "width": 55,
                 },
               ]
             }
@@ -2430,7 +2430,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 {
                   "transform": [
                     {
-                      "translateX": 240,
+                      "translateX": 0,
                     },
                   ],
                 },
@@ -2458,7 +2458,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
@@ -3708,7 +3708,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
           style={
             [
               {
-                "backgroundColor": "#00604d",
+                "backgroundColor": "#333333",
                 "borderRadius": 27.5,
                 "height": 55,
                 "justifyContent": "center",
@@ -3727,7 +3727,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
             style={
               [
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#00604d",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -3736,7 +3736,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   "top": 0,
                 },
                 {
-                  "width": 295,
+                  "width": 55,
                 },
               ]
             }
@@ -3764,7 +3764,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 {
                   "transform": [
                     {
-                      "translateX": 240,
+                      "translateX": 0,
                     },
                   ],
                 },
@@ -3792,7 +3792,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
@@ -4887,7 +4887,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
           style={
             [
               {
-                "backgroundColor": "#00604d",
+                "backgroundColor": "#333333",
                 "borderRadius": 27.5,
                 "height": 55,
                 "justifyContent": "center",
@@ -4906,7 +4906,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             style={
               [
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#00604d",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -4915,7 +4915,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   "top": 0,
                 },
                 {
-                  "width": 295,
+                  "width": 55,
                 },
               ]
             }
@@ -4943,7 +4943,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 {
                   "transform": [
                     {
-                      "translateX": 240,
+                      "translateX": 0,
                     },
                   ],
                 },
@@ -4971,7 +4971,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
@@ -6042,7 +6042,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
           style={
             [
               {
-                "backgroundColor": "#00604d",
+                "backgroundColor": "#333333",
                 "borderRadius": 27.5,
                 "height": 55,
                 "justifyContent": "center",
@@ -6061,7 +6061,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             style={
               [
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#00604d",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -6070,7 +6070,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   "top": 0,
                 },
                 {
-                  "width": 295,
+                  "width": 55,
                 },
               ]
             }
@@ -6098,7 +6098,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 {
                   "transform": [
                     {
-                      "translateX": 240,
+                      "translateX": 0,
                     },
                   ],
                 },
@@ -6126,7 +6126,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
@@ -7042,7 +7042,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
           style={
             [
               {
-                "backgroundColor": "#00604d",
+                "backgroundColor": "#333333",
                 "borderRadius": 27.5,
                 "height": 55,
                 "justifyContent": "center",
@@ -7061,7 +7061,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             style={
               [
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#00604d",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -7070,7 +7070,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   "top": 0,
                 },
                 {
-                  "width": 295,
+                  "width": 55,
                 },
               ]
             }
@@ -7098,7 +7098,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 {
                   "transform": [
                     {
-                      "translateX": 240,
+                      "translateX": 0,
                     },
                   ],
                 },
@@ -7126,7 +7126,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
@@ -8335,7 +8335,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
           style={
             [
               {
-                "backgroundColor": "#00604d",
+                "backgroundColor": "#333333",
                 "borderRadius": 27.5,
                 "height": 55,
                 "justifyContent": "center",
@@ -8354,7 +8354,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             style={
               [
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#00604d",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -8363,7 +8363,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   "top": 0,
                 },
                 {
-                  "width": 295,
+                  "width": 55,
                 },
               ]
             }
@@ -8391,7 +8391,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 {
                   "transform": [
                     {
-                      "translateX": 240,
+                      "translateX": 0,
                     },
                   ],
                 },
@@ -8419,7 +8419,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
@@ -9563,7 +9563,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           style={
             [
               {
-                "backgroundColor": "#00604d",
+                "backgroundColor": "#333333",
                 "borderRadius": 27.5,
                 "height": 55,
                 "justifyContent": "center",
@@ -9582,7 +9582,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             style={
               [
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#00604d",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -9591,7 +9591,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   "top": 0,
                 },
                 {
-                  "width": 295,
+                  "width": 55,
                 },
               ]
             }
@@ -9619,7 +9619,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 {
                   "transform": [
                     {
-                      "translateX": 240,
+                      "translateX": 0,
                     },
                   ],
                 },
@@ -9647,7 +9647,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
@@ -10750,7 +10750,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
           style={
             [
               {
-                "backgroundColor": "#00604d",
+                "backgroundColor": "#333333",
                 "borderRadius": 27.5,
                 "height": 55,
                 "justifyContent": "center",
@@ -10769,7 +10769,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             style={
               [
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#00604d",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -10778,7 +10778,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   "top": 0,
                 },
                 {
-                  "width": 295,
+                  "width": 55,
                 },
               ]
             }
@@ -10806,7 +10806,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 {
                   "transform": [
                     {
-                      "translateX": 240,
+                      "translateX": 0,
                     },
                   ],
                 },
@@ -10834,7 +10834,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text

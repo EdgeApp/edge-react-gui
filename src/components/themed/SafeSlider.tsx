@@ -37,11 +37,11 @@ export const SafeSlider = (props: Props) => {
   const sliderDisabled = disabled || completed
   const sliderText = !sliderDisabled ? lstrings.send_confirmation_slide_to_confirm : disabledText || lstrings.select_exchange_amount_short
 
-  const translateX = useSharedValue(upperBound)
+  const translateX = useSharedValue(0)
   const isSliding = useSharedValue(false)
 
   const resetSlider = useHandler(() => {
-    translateX.value = withTiming(upperBound, {
+    translateX.value = withTiming(0, {
       duration: 500,
       easing: Easing.inOut(Easing.exp)
     })
@@ -67,10 +67,10 @@ export const SafeSlider = (props: Props) => {
       if (!sliderDisabled) {
         isSliding.value = false
 
-        if (translateX.value < completePoint) {
+        if (translateX.value > upperBound - completePoint) {
           runOnJS(complete)()
         } else {
-          translateX.value = withTiming(upperBound, {
+          translateX.value = withTiming(0, {
             duration: 500,
             easing: Easing.inOut(Easing.exp)
           })
@@ -96,7 +96,7 @@ export const SafeSlider = (props: Props) => {
 
         <PanGestureHandler onGestureEvent={onGestureEvent}>
           <Animated.View style={[styles.thumb, sliderDisabled ? styles.disabledThumb : null, scrollTranslationStyle]}>
-            <Entypo style={styles.thumbIcon} name="chevron-left" size={theme.rem(1.5)} />
+            <Entypo style={styles.thumbIcon} name="chevron-right" size={theme.rem(1.5)} />
           </Animated.View>
         </PanGestureHandler>
         {completed ? (
@@ -122,7 +122,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   slider: {
     borderRadius: theme.confirmationSliderThumbWidth / 2,
-    backgroundColor: theme.confirmationSliderCompleted,
+    backgroundColor: theme.confirmationSlider,
     justifyContent: 'center',
     height: theme.confirmationSliderThumbWidth,
     width: theme.confirmationSliderWidth
@@ -148,7 +148,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   progress: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: theme.confirmationSlider,
+    backgroundColor: theme.confirmationSliderCompleted,
     borderRadius: theme.confirmationSliderThumbWidth / 2
   },
   textOverlay: {
