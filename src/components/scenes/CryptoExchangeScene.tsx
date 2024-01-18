@@ -426,7 +426,7 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   })
 
   return (
-    <SceneWrapper hasTabs hasNotifications>
+    <SceneWrapper hasTabs hasHeader hasNotifications>
       {({ insetStyles }) => (
         <CryptoExchangeComponent
           route={route}

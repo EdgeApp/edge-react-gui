@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { View } from 'react-native'
 import { LinearGradientProps } from 'react-native-linear-gradient'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useHandler } from '../../hooks/useHandler'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -32,10 +31,7 @@ export const HomeCardUi4 = (props: Props) => {
   return (
     <CardUi4 gradientBackground={gradientBackground} nodeBackground={nodeBackground} onPress={handlePress} fill>
       <View style={styles.verticalSplitContainer}>
-        <View style={styles.titleContainer}>
-          <EdgeText style={theme.cardTextShadow}>{title}</EdgeText>
-          <IonIcon size={theme.rem(1.25)} style={[styles.chevronIcon, theme.cardTextShadow]} color={theme.iconTappable} name="chevron-forward-outline" />
-        </View>
+        <EdgeText style={theme.cardTextShadow}>{title}</EdgeText>
         <EdgeText style={[styles.footerText, theme.cardTextShadow]} numberOfLines={3} disableFontScaling>
           {footer}
         </EdgeText>
@@ -45,11 +41,6 @@ export const HomeCardUi4 = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  titleContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'stretch'
-  },
   footerText: {
     fontSize: theme.rem(0.75)
   },
@@ -57,11 +48,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1, // Make sure the card fills the space
     justifyContent: 'space-between', // Aligns title to the top, footer to the bottom
     margin: theme.rem(0.5)
-  },
-
-  // Adjust for bounding box
-  chevronIcon: {
-    alignSelf: 'center',
-    marginRight: -6
   }
 }))

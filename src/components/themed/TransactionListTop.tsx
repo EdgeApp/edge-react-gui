@@ -3,12 +3,10 @@ import { EdgeAccount, EdgeBalanceMap, EdgeCurrencyWallet, EdgeDenomination, Edge
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
-import { Fontello } from '../../assets/vector'
 import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
@@ -32,6 +30,7 @@ import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
+import { CardUi4 } from '../ui4/CardUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 import { SceneHeader } from './SceneHeader'
@@ -199,7 +198,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const fiatBalanceFormat = formatNumber(fiatBalance && gt(fiatBalance, '0.000001') ? fiatBalance : 0, { toFixed: 2 })
 
     return (
-      <View style={styles.balanceBoxContainer}>
+      <>
         <View style={styles.balanceBoxWalletNameCurrencyContainer}>
           <TouchableOpacity accessible={false} style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
             <CryptoIconUi4 sizeRem={1.5} tokenId={tokenId} walletId={wallet.id} onIconColor={this.props.onIconColor} />
@@ -207,9 +206,6 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               {walletName}
             </EdgeText>
             <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
-          </TouchableOpacity>
-          <TouchableOpacity testID="gearIcon" onPress={this.handleMenu} style={styles.settingsIcon}>
-            <Fontello accessibilityHint={lstrings.wallet_settings_label} color={theme.iconTappable} name="control-panel-settings" size={theme.rem(1.5)} />
           </TouchableOpacity>
         </View>
         <TouchableOpacity accessible={false} onPress={this.props.toggleBalanceVisibility}>
@@ -228,7 +224,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             </EdgeText>
           )}
         </TouchableOpacity>
-      </View>
+      </>
     )
   }
 
@@ -375,40 +371,35 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     return (
       <>
-        <View style={styles.container}>
-          {searching ? null : (
-            <>
-              {this.renderBalanceBox()}
-              {isStakingAvailable && this.renderStakedBalance()}
-              <View style={styles.buttonsContainer}>
-                <TouchableOpacity accessible={false} onPress={this.handleRequest} style={styles.buttons}>
-                  <AntDesignIcon name="arrowdown" size={theme.rem(1)} color={theme.iconTappable} />
-                  <EdgeText accessible style={styles.buttonsText}>
-                    {lstrings.fragment_request_subtitle}
-                  </EdgeText>
-                </TouchableOpacity>
-                <TouchableOpacity accessible={false} onPress={this.handleSend} style={styles.buttons}>
-                  <AntDesignIcon name="arrowup" size={theme.rem(1)} color={theme.iconTappable} />
-                  <EdgeText accessible style={styles.buttonsText}>
-                    {lstrings.fragment_send_subtitle}
-                  </EdgeText>
-                </TouchableOpacity>
-                {!isStakePoliciesLoaded ? (
-                  <ActivityIndicator color={theme.textLink} style={styles.stakingButton} />
-                ) : (
-                  isStakingAvailable && (
-                    <TouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
-                      <AntDesignIcon name="barschart" size={theme.rem(1)} color={theme.iconTappable} />
-                      <EdgeText style={styles.buttonsText}>{lstrings.stake_earn_button_label}</EdgeText>
-                      {bestApy != null ? <EdgeText style={styles.apyText}>{bestApy}</EdgeText> : null}
-                    </TouchableOpacity>
-                  )
-                )}
-              </View>
-            </>
-          )}
-          {isEmpty || searching ? null : <VisaCardCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} />}
-        </View>
+        {searching ? null : (
+          <CardUi4 paddingRem={1} marginRem={[0.5, 0.5, 1]}>
+            {this.renderBalanceBox()}
+            {isStakingAvailable && this.renderStakedBalance()}
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity accessible={false} onPress={this.handleRequest} style={styles.buttons}>
+                <EdgeText accessible style={styles.buttonsText}>
+                  {lstrings.fragment_request_subtitle}
+                </EdgeText>
+              </TouchableOpacity>
+              <TouchableOpacity accessible={false} onPress={this.handleSend} style={styles.buttons}>
+                <EdgeText accessible style={styles.buttonsText}>
+                  {lstrings.fragment_send_subtitle}
+                </EdgeText>
+              </TouchableOpacity>
+              {!isStakePoliciesLoaded ? (
+                <ActivityIndicator color={theme.textLink} style={styles.stakingButton} />
+              ) : (
+                isStakingAvailable && (
+                  <TouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
+                    <EdgeText style={styles.buttonsText}>{lstrings.stake_earn_button_label}</EdgeText>
+                    {bestApy != null ? <EdgeText style={styles.apyText}>{bestApy}</EdgeText> : null}
+                  </TouchableOpacity>
+                )
+              )}
+            </View>
+          </CardUi4>
+        )}
+        {isEmpty || searching ? null : <VisaCardCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} />}
         {isEmpty || searching ? null : (
           <SceneHeader underline>
             <EdgeText style={styles.transactionsDividerText}>{lstrings.fragment_transaction_list_transaction}</EdgeText>
@@ -420,20 +411,14 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    flex: 1,
-    paddingHorizontal: theme.rem(1),
-    paddingBottom: theme.rem(1),
-    marginBottom: theme.rem(0.5)
-  },
-
   // Balance Box
   balanceBoxContainer: {
     marginTop: theme.rem(1.5)
   },
   balanceBoxWalletNameCurrencyContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginBottom: theme.rem(0.5)
   },
   balanceBoxWalletNameContainer: {
     flexShrink: 1,
@@ -458,25 +443,26 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(2)
   },
   settingsIcon: {
-    alignSelf: 'center'
+    alignSelf: 'flex-end'
   },
   // Send/Receive Buttons
   buttonsContainer: {
+    flex: 1,
     marginTop: theme.rem(1),
-    flexDirection: 'row'
+    marginHorizontal: -theme.rem(1),
+    flexDirection: 'row',
+    justifyContent: 'space-evenly'
   },
   buttons: {
     flexShrink: 1,
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingRight: theme.rem(1.5)
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   buttonsText: {
     fontSize: theme.rem(1),
     color: theme.textLink,
-    fontFamily: theme.fontFaceMedium,
-    marginLeft: theme.rem(0.25)
+    fontFamily: theme.fontFaceMedium
   },
   apyText: {
     fontSize: theme.rem(0.75),
