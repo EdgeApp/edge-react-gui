@@ -72,7 +72,7 @@ export function ListModal<T>({
   return (
     <ModalUi4 title={title} bridge={bridge} onCancel={handleCancel}>
       {message == null ? null : <ModalMessage>{message}</ModalMessage>}
-      {textInput == null ? null : (
+      {textInput == null || !textInput ? null : (
         <FilledTextInput
           vertical={1}
           horizontal={0.5}

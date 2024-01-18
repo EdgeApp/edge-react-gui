@@ -75,6 +75,7 @@ export const FiatListModal = (props: Props) => {
 
   return (
     <ListModal
+      textInput={false}
       bridge={bridge}
       title={lstrings.title_create_wallet_select_fiat}
       label={lstrings.fragment_wallets_addwallet_fiat_hint}
