@@ -185,10 +185,16 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   const handleUnlockDate = async () => {
     await Airship.show(bridge => {
       return (
-        <ModalUi4 bridge={bridge} onCancel={bridge.resolve} paddingRem={1}>
-          <ModalTitle icon={<MaterialCommunityIcons name="chart-line" size={theme.rem(2)} color={theme.iconTappable} />}>
-            {lstrings.staking_change_unlock_explainer_title}
-          </ModalTitle>
+        <ModalUi4
+          bridge={bridge}
+          onCancel={bridge.resolve}
+          title={
+            <ModalTitle icon={<MaterialCommunityIcons name="chart-line" size={theme.rem(2)} color={theme.iconTappable} />}>
+              {lstrings.staking_change_unlock_explainer_title}
+            </ModalTitle>
+          }
+          paddingRem={1}
+        >
           <ModalMessage>{lstrings.staking_change_unlock_explainer1}</ModalMessage>
           <ModalMessage>{lstrings.staking_change_unlock_explainer2}</ModalMessage>
         </ModalUi4>

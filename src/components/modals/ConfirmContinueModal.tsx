@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ScrollView, TouchableWithoutFeedback, View } from 'react-native'
+import { TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -48,39 +48,37 @@ export function ConfirmContinueModal(props: Props) {
   }
 
   return (
-    <ModalUi4 bridge={bridge} warning={warning} onCancel={isSkippable ? handleClose : undefined}>
-      {title != null && (
-        <View style={styles.headerContainer}>
-          <Ionicons name="warning" size={theme.rem(1.75)} color={theme.warningIcon} />
-          <ModalTitle>{title}</ModalTitle>
-        </View>
-      )}
-      <ScrollView>
-        {children}
-        {body != null ? <ModalMessage>{body}</ModalMessage> : null}
-        <ModalMessage>{lstrings.confirm_continue_modal_body}</ModalMessage>
-        <TouchableWithoutFeedback onPress={handleTogggle}>
-          <View style={styles.checkBoxContainer}>
-            <EdgeText style={styles.checkboxText}>{lstrings.confirm_continue_modal_button_text}</EdgeText>
-            <View style={[styles.checkCircleContainer, isAgreed ? styles.checkCircleContainerAgreed : undefined]}>
-              {isAgreed && <Feather name="check" color={theme.iconTappable} size={theme.rem(0.75)} accessibilityHint={lstrings.check_icon_hint} />}
-            </View>
+    <ModalUi4
+      bridge={bridge}
+      warning={warning}
+      title={
+        // TODO: warning icon should be part of ModalUi4
+        title == null ? null : (
+          <ModalTitle icon={warning == null ? null : <Ionicons name="warning" size={theme.rem(1.75)} color={theme.warningIcon} />}>{title}</ModalTitle>
+        )
+      }
+      scroll
+      onCancel={isSkippable ? handleClose : undefined}
+    >
+      {children}
+      {body != null ? <ModalMessage>{body}</ModalMessage> : null}
+      <ModalMessage>{lstrings.confirm_continue_modal_body}</ModalMessage>
+      <TouchableWithoutFeedback onPress={handleTogggle}>
+        <View style={styles.checkBoxContainer}>
+          <EdgeText style={styles.checkboxText}>{lstrings.confirm_continue_modal_button_text}</EdgeText>
+          <View style={[styles.checkCircleContainer, isAgreed ? styles.checkCircleContainerAgreed : undefined]}>
+            {isAgreed && <Feather name="check" color={theme.iconTappable} size={theme.rem(0.75)} accessibilityHint={lstrings.check_icon_hint} />}
           </View>
-        </TouchableWithoutFeedback>
-        <Fade visible={isAgreed}>
-          <MainButton alignSelf="center" label={lstrings.confirm_finish} marginRem={0.5} type="secondary" onPress={handleAgreed} />
-        </Fade>
-      </ScrollView>
+        </View>
+      </TouchableWithoutFeedback>
+      <Fade visible={isAgreed}>
+        <MainButton alignSelf="center" label={lstrings.confirm_finish} marginRem={0.5} type="primary" onPress={handleAgreed} />
+      </Fade>
     </ModalUi4>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: theme.rem(0.5)
-  },
   checkBoxContainer: {
     flexDirection: 'row',
     alignItems: 'center',

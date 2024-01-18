@@ -9,7 +9,6 @@ import { lstrings } from '../../locales/strings'
 import { DisplayTime, displayToSeconds, secondsToDisplay } from '../../util/displayTime'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ModalTitle } from '../themed/ModalParts'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
@@ -76,8 +75,7 @@ export const AutoLogoutModal = (props: Props) => {
   }, [])
 
   return (
-    <ModalUi4 bridge={bridge} onCancel={handleCancel}>
-      <ModalTitle>{lstrings.dialog_title}</ModalTitle>
+    <ModalUi4 bridge={bridge} onCancel={handleCancel} title={lstrings.dialog_title}>
       <View style={styles.pickerContainer}>
         {isAndroid ? (
           <View style={styles.androidPickerContainer}>

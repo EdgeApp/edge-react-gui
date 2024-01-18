@@ -560,12 +560,14 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
           "alignItems": "center",
           "alignSelf": "center",
           "borderRadius": 34,
+          "height": undefined,
           "justifyContent": "center",
           "marginBottom": 22,
           "marginLeft": 22,
           "marginRight": 22,
           "marginTop": 0,
           "opacity": 1,
+          "padding": 0,
         }
       }
     >
@@ -619,6 +621,11 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
               },
               {
                 "alignSelf": "center",
+              },
+              {
+                "alignSelf": "center",
+                "height": undefined,
+                "padding": 0,
               },
             ],
             {

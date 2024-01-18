@@ -19,7 +19,6 @@ import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
-import { ModalTitle } from '../themed/ModalParts'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface OwnProps {
@@ -304,10 +303,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <ModalUi4 bridge={this.props.bridge} onCancel={this.handleClose} paddingRem={1}>
-        <ModalTitle center paddingRem={[0, 2, 1]}>
-          {title || lstrings.address_modal_default_header}
-        </ModalTitle>
+      <ModalUi4 bridge={this.props.bridge} onCancel={this.handleClose} paddingRem={1} title={title ?? lstrings.address_modal_default_header}>
         <View style={styles.container}>
           <FilledTextInput
             horizontal={1}

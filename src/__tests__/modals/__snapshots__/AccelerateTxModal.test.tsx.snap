@@ -12,10 +12,8 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
     }
   }
   onCancel={[Function]}
+  title="Accelerate Transaction"
 >
-  <ModalTitle>
-    Accelerate Transaction
-  </ModalTitle>
   <ModalMessage>
     This will resend your transaction with its fee doubled to help prioritize it for network confirmation. Please review new fee amount before confirming.
   </ModalMessage>

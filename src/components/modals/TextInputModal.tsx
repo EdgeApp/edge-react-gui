@@ -7,7 +7,7 @@ import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage } from '../themed/ModalParts'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
@@ -91,8 +91,7 @@ export function TextInputModal(props: Props) {
   }
 
   return (
-    <ModalUi4 warning={warning} bridge={bridge} onCancel={() => bridge.resolve(undefined)}>
-      {title != null ? <ModalTitle>{title}</ModalTitle> : null}
+    <ModalUi4 warning={warning} bridge={bridge} title={title} onCancel={() => bridge.resolve(undefined)}>
       {typeof message === 'string' ? <ModalMessage>{message}</ModalMessage> : <>{message}</>}
       {warningMessage != null ? <Alert type="warning" title={lstrings.string_warning} marginRem={0.5} message={warningMessage} numberOfLines={0} /> : null}
       <FilledTextInput

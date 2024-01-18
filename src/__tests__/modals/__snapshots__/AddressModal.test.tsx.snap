@@ -13,19 +13,8 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
   }
   onCancel={[Function]}
   paddingRem={1}
+  title="string"
 >
-  <ModalTitle
-    center={true}
-    paddingRem={
-      [
-        0,
-        2,
-        1,
-      ]
-    }
-  >
-    string
-  </ModalTitle>
   <View
     style={
       {

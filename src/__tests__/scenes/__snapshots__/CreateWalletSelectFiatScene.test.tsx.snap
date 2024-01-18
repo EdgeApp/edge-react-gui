@@ -1311,12 +1311,14 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             "alignItems": "center",
             "alignSelf": "center",
             "borderRadius": 34,
+            "height": undefined,
             "justifyContent": "center",
             "marginBottom": 22,
             "marginLeft": 11,
             "marginRight": 11,
             "marginTop": 11,
             "opacity": 1,
+            "padding": 0,
           }
         }
       >
@@ -1370,6 +1372,11 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
                 },
                 {
                   "alignSelf": "center",
+                },
+                {
+                  "alignSelf": "center",
+                  "height": undefined,
+                  "padding": 0,
                 },
               ],
               {

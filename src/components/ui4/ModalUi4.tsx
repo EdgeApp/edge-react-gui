@@ -7,14 +7,19 @@ import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
-import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
-import { maybeComponent } from '../hoc/maybeComponent'
+import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
 import { BlurBackground } from './BlurBackground'
 
 const BACKGROUND_ALPHA = 0.7
 export interface ModalPropsUi4<T = unknown> {
   bridge: AirshipBridge<T>
+
+  // If a non-string title is provided, it's up to the caller to ensure no close
+  // button overlap.
+  title?: React.ReactNode
+
   children?: React.ReactNode
 
   // Internal padding to place inside the component.
@@ -39,13 +44,11 @@ const duration = 300
  * and dims the rest of the app.
  */
 export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
-  const { bridge, children, paddingRem, scroll = false, warning = false, onCancel } = props
+  const { bridge, title, children, paddingRem, scroll = false, warning = false, onCancel } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  // Use margin instead of padding to give children the ability to bypass the
-  // default "padding," if necessary
-  const childrenMargin = sidesToMargin(mapSides(fixSides(paddingRem, 0.5), theme.rem))
+  const customPadding = sidesToPadding(mapSides(fixSides(paddingRem, 0.5), theme.rem))
   const closeThreshold = theme.rem(6)
   const dragSlop = theme.rem(1)
 
@@ -105,15 +108,24 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
     opacity: opacity.value
   }))
 
-  const bodyStyle = useAnimatedStyle(() => ({
+  const modalStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: Math.max(-dragSlop, offset.value) }]
   }))
 
-  const bodyLayout = {
+  const bottomGap = safeAreaGap + dragSlop
+  const isHeaderless = title == null && onCancel == null
+  const isCustomTitle = title != null && typeof title !== 'string'
+
+  const modalLayout = {
     borderColor: warning ? theme.warningText : theme.modalBorderColor,
     borderWidth: warning ? 4 : theme.modalBorderWidth,
-    marginBottom: -safeAreaGap - dragSlop,
-    paddingBottom: safeAreaGap + dragSlop
+    marginBottom: -bottomGap,
+    paddingTop: isHeaderless ? customPadding.paddingTop : 0, // If there's a header; either close button or a title, the custom paddingTop will be added to the bottom of the title container.
+    paddingBottom: bottomGap + (scroll ? 0 : customPadding.paddingBottom), // Ignore custom padding on bottom for scrollable content so we don't have a cutoff gap when scrolling content
+
+    // No matter if we are scrollling or not, horizontal paddings are fixed
+    paddingLeft: customPadding.paddingLeft,
+    paddingRight: customPadding.paddingRight
   }
 
   return (
@@ -122,28 +134,31 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
         <Animated.View style={[styles.underlay, underlayStyle]} />
       </TouchableWithoutFeedback>
       <GestureDetector gesture={gesture}>
-        <Animated.View style={[styles.body, bodyStyle, bodyLayout]}>
-          {/* Need another Biew here because BlurView doesn't accept rounded corners in its styling */}
-          <View style={styles.blurContainer}>
-            <BlurBackground />
-          </View>
+        <Animated.View style={[styles.modal, modalStyle, modalLayout]}>
+          <BlurBackground />
 
           <View style={styles.dragBarContainer}>
             <View style={styles.dragBar} />
           </View>
-          {scroll ? (
-            <MaybeScrollView when={scroll} style={childrenMargin}>
-              {children}
-            </MaybeScrollView>
-          ) : (
-            <View style={childrenMargin}>{children}</View>
+
+          {isHeaderless ? null : (
+            <View style={[styles.titleContainer, { marginBottom: customPadding.paddingTop }]}>
+              {typeof title === 'string' ? (
+                <EdgeText style={styles.titleText} numberOfLines={2}>
+                  {title}
+                </EdgeText>
+              ) : (
+                title ?? undefined
+              )}
+              {onCancel == null ? null : (
+                <TouchableOpacity style={isCustomTitle ? styles.closeIconContainerAbsolute : styles.closeIconContainer} onPress={onCancel}>
+                  <AntDesignIcon name="close" color={theme.deactivatedText} size={theme.rem(1.25)} />
+                </TouchableOpacity>
+              )}
+            </View>
           )}
 
-          {onCancel == null ? null : (
-            <TouchableOpacity style={styles.closeIcon} onPress={onCancel}>
-              <AntDesignIcon name="close" color={theme.deactivatedText} size={theme.rem(1)} />
-            </TouchableOpacity>
-          )}
+          {scroll ? <ScrollView style={styles.scroll}>{children}</ScrollView> : children}
         </Animated.View>
       </GestureDetector>
     </>
@@ -159,27 +174,24 @@ const getStyles = cacheStyles((theme: Theme) => ({
     top: 0,
     backgroundColor: theme.modalSceneOverlayColor
   },
-  body: {
+  modal: {
     alignSelf: 'flex-end',
     backgroundColor: theme.modalBackgroundUi4,
     borderTopLeftRadius: theme.rem(1),
     borderTopRightRadius: theme.rem(1),
     flexShrink: 1,
+    overflow: 'hidden',
     width: theme.rem(30) // This works as a maxWidth because flexShrink is set
   },
-
-  blurContainer: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    borderTopLeftRadius: theme.rem(1),
-    borderTopRightRadius: theme.rem(1),
-    overflow: 'hidden'
+  scroll: {
+    // Only take up as much space as needed to display the contents
+    flexGrow: 0,
+    flexShrink: 1
   },
   dragBarContainer: {
     alignItems: 'center',
-    left: 0,
     position: 'absolute',
+    left: 0,
     right: 0,
     top: 0
   },
@@ -190,15 +202,30 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(0.5),
     width: theme.rem(3)
   },
-  closeIcon: {
-    alignItems: 'center',
-    height: theme.rem(2),
-    justifyContent: 'center',
+  closeIconContainer: {
+    // Used when this component is managing the title
+    flexGrow: 1, // Push the title to the left
+    alignSelf: 'flex-start',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-start',
+    paddingTop: theme.rem(0.15), // Bake in margins to align with 1 line of text, no matter the number of lines
+    marginRight: theme.rem(0.5)
+  },
+  closeIconContainerAbsolute: {
+    // Used when the caller passes a special title that may span the entire
+    // width. It's up to the caller to ensure there's no overlap with the close button.
     position: 'absolute',
-    right: 0,
-    top: 0,
-    width: theme.rem(2)
+    top: theme.rem(0.15), // Bake in margins to align with 1 line of text, which is often supplied in custom headers.
+    right: theme.rem(0.5)
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginTop: theme.rem(1.25) // Ensure the top drag bar is not overlapped
+  },
+  titleText: {
+    fontFamily: theme.fontFaceMedium,
+    fontSize: theme.rem(1.2),
+    marginHorizontal: theme.rem(0.5)
   }
 }))
-
-const MaybeScrollView = maybeComponent(ScrollView)

@@ -47,6 +47,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           "borderTopLeftRadius": 22,
           "borderTopRightRadius": 22,
           "flexShrink": 1,
+          "overflow": "hidden",
           "width": 674,
         },
         {
@@ -60,39 +61,29 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
           "marginBottom": -86,
-          "paddingBottom": 86,
+          "paddingBottom": 97,
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "paddingTop": 0,
         },
       ]
     }
   >
-    <View
+    <BlurView
+      blurAmount={10}
+      blurType="dark"
+      overlayColor="rgba(0, 0, 0, 0)"
       style={
         {
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
-          "height": "100%",
-          "overflow": "hidden",
+          "backgroundColor": undefined,
+          "bottom": 0,
+          "left": 0,
           "position": "absolute",
-          "width": "100%",
+          "right": 0,
+          "top": 0,
         }
       }
-    >
-      <BlurView
-        blurAmount={10}
-        blurType="dark"
-        overlayColor="rgba(0, 0, 0, 0)"
-        style={
-          {
-            "backgroundColor": undefined,
-            "bottom": 0,
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-          }
-        }
-      />
-    </View>
+    />
     <View
       style={
         {
@@ -118,307 +109,41 @@ exports[`CategoryModal should render with a subcategory 1`] = `
     </View>
     <View
       style={
-        {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
-        }
+        [
+          {
+            "alignItems": "flex-start",
+            "flexDirection": "row",
+            "marginTop": 28,
+          },
+          {
+            "marginBottom": 11,
+          },
+        ]
       }
     >
-      <View
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={2}
         style={
-          {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "margin": 11,
-          }
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "fontFamily": "Quicksand-Medium",
+              "fontSize": 27,
+              "marginHorizontal": 11,
+            },
+            null,
+          ]
         }
       >
-        <Text
-          style={
-            [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Medium",
-                "fontSize": 27,
-                "marginVertical": 11,
-              },
-              {
-                "textAlign": "center",
-              },
-              {
-                "paddingBottom": 0,
-                "paddingLeft": 0,
-                "paddingRight": 0,
-                "paddingTop": 0,
-              },
-            ]
-          }
-        >
-          Choose a Category
-        </Text>
-      </View>
-      <View
-        style={
-          {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "justifyContent": "space-between",
-            "marginBottom": 22,
-            "marginHorizontal": 22,
-          }
-        }
-      >
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "hsla(0, 0%, 100%, 0.20)",
-              "borderColor": "hsla(0, 0%, 100%, 0.20)",
-              "borderRadius": 4,
-              "borderWidth": 1,
-              "flexDirection": "row",
-              "justifyContent": "center",
-              "marginBottom": 0,
-              "marginLeft": 0,
-              "marginRight": 0,
-              "marginTop": 0,
-              "opacity": 1,
-              "padding": 7,
-            }
-          }
-        >
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.25}
-            numberOfLines={1}
-            style={
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Bold",
-                "fontSize": 14,
-                "marginHorizontal": 7,
-              }
-            }
-          >
-            Income
-          </Text>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0)",
-              "borderColor": "rgba(255, 255, 255, 0)",
-              "borderRadius": 4,
-              "borderWidth": 1,
-              "flexDirection": "row",
-              "justifyContent": "center",
-              "marginBottom": 0,
-              "marginLeft": 0,
-              "marginRight": 0,
-              "marginTop": 0,
-              "opacity": 1,
-              "padding": 7,
-            }
-          }
-        >
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.25}
-            numberOfLines={1}
-            style={
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Bold",
-                "fontSize": 14,
-                "marginHorizontal": 7,
-              }
-            }
-          >
-            Expense
-          </Text>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0)",
-              "borderColor": "rgba(255, 255, 255, 0)",
-              "borderRadius": 4,
-              "borderWidth": 1,
-              "flexDirection": "row",
-              "justifyContent": "center",
-              "marginBottom": 0,
-              "marginLeft": 0,
-              "marginRight": 0,
-              "marginTop": 0,
-              "opacity": 1,
-              "padding": 7,
-            }
-          }
-        >
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.25}
-            numberOfLines={1}
-            style={
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Bold",
-                "fontSize": 14,
-                "marginHorizontal": 7,
-              }
-            }
-          >
-            Transfer
-          </Text>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0)",
-              "borderColor": "rgba(255, 255, 255, 0)",
-              "borderRadius": 4,
-              "borderWidth": 1,
-              "flexDirection": "row",
-              "justifyContent": "center",
-              "marginBottom": 0,
-              "marginLeft": 0,
-              "marginRight": 0,
-              "marginTop": 0,
-              "opacity": 1,
-              "padding": 7,
-            }
-          }
-        >
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.25}
-            numberOfLines={1}
-            style={
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Bold",
-                "fontSize": 14,
-                "marginHorizontal": 7,
-              }
-            }
-          >
-            Exchange
-          </Text>
-        </View>
-      </View>
+        Choose a Category
+      </Text>
       <View
         accessibilityState={
           {
@@ -429,19 +154,17 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             "selected": undefined,
           }
         }
-        accessible={false}
-        disableAnimation={
+        accessibilityValue={
           {
-            "value": 0,
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
           }
         }
-        focusAnimation={
-          {
-            "value": 0,
-          }
-        }
+        accessible={true}
+        collapsable={false}
         focusable={true}
-        multiline={false}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -449,910 +172,298 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         onResponderTerminate={[Function]}
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
-        scale={
-          {
-            "value": 1,
-          }
-        }
-        spaceProps={
-          {
-            "returnKeyType": "done",
-          }
-        }
         style={
-          [
-            {
-              "alignItems": undefined,
-              "flex": undefined,
-              "flexDirection": "column",
-              "justifyContent": undefined,
-              "marginBottom": 0,
-              "marginLeft": 0,
-              "marginRight": 0,
-              "marginTop": 0,
-            },
-            {
-              "alignItems": "center",
-              "borderRadius": 11,
-              "borderWidth": 1,
-              "flex": undefined,
-              "flexDirection": "row",
-              "paddingHorizontal": 22,
-            },
-            {
-              "backgroundColor": undefined,
-              "borderColor": undefined,
-              "marginHorizontal": undefined,
-              "opacity": undefined,
-              "paddingVertical": 17.6,
-            },
-          ]
+          {
+            "alignItems": "flex-end",
+            "alignSelf": "flex-start",
+            "flexGrow": 1,
+            "justifyContent": "flex-start",
+            "marginRight": 11,
+            "opacity": 1,
+            "paddingTop": 3,
+          }
         }
       >
-        <View
-          scale={
-            {
-              "value": 0,
-            }
-          }
+        <Text
+          allowFontScaling={false}
           style={
             [
               {
-                "alignItems": "stretch",
-                "aspectRatio": 1,
+                "color": "#888888",
+                "fontSize": 28,
               },
+              undefined,
               {
-                "opacity": 0,
-                "width": 0,
+                "fontFamily": "anticon",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
               },
-            ]
-          }
-        />
-        <View
-          focusValue={
-            {
-              "value": 1,
-            }
-          }
-          hasPlaceholder={true}
-          style={
-            [
-              {
-                "alignItems": "flex-start",
-                "alignSelf": "flex-start",
-                "flex": 1,
-                "flexDirection": "row",
-              },
-              {
-                "marginBottom": NaN,
-                "marginTop": undefined,
-              },
+              {},
             ]
           }
         >
-          <View
-            shift={
-              {
-                "value": 1,
-              }
-            }
-            style={
-              [
-                {
-                  "alignItems": "center",
-                  "justifyContent": "center",
-                  "margin": 0,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 0,
-                  "position": "absolute",
-                  "top": 0,
-                },
-                {
-                  "transform": [
-                    {
-                      "translateY": undefined,
-                    },
-                  ],
-                },
-              ]
-            }
-          >
-            <Text
-              disableAnimation={
-                {
-                  "value": 0,
-                }
-              }
-              focusAnimation={
-                {
-                  "value": 0,
-                }
-              }
-              scale={
-                {
-                  "value": 1,
-                }
-              }
-              shift={
-                {
-                  "value": 1,
-                }
-              }
-              style={
-                [
-                  {
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
-                  {
-                    "color": undefined,
-                    "fontSize": undefined,
-                  },
-                ]
-              }
-            >
-              Sub-category
-            </Text>
-          </View>
-          <TextInput
-            accessibilityState={
-              {
-                "disabled": false,
-              }
-            }
-            accessible={true}
-            animated={true}
-            autoCapitalize="words"
-            autoFocus={true}
-            disableAnimation={
-              {
-                "value": 0,
-              }
-            }
-            focusAnimation={
-              {
-                "value": 0,
-              }
-            }
-            multiline={false}
-            onBlur={[Function]}
-            onChangeText={[Function]}
-            onFocus={[Function]}
-            onSubmitEditing={[Function]}
-            returnKeyType="done"
-            scale={
-              {
-                "value": 1,
-              }
-            }
-            secureTextEntry={false}
-            selectionColor="#FFFFFF"
-            style={
-              [
-                {
-                  "color": "hsla(0, 0%, 100%, 0.20)",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "margin": 0,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 0,
-                },
-                {
-                  "color": undefined,
-                  "fontSize": 22,
-                },
-              ]
-            }
-            testID="undefined.textInput"
-            textAlignVertical="top"
-            value="Paycheck"
-          />
-        </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": undefined,
-            }
+          
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "marginBottom": 22,
+          "marginHorizontal": 22,
+        }
+      }
+    >
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
           }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
           }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "hsla(0, 0%, 100%, 0.20)",
+            "borderColor": "hsla(0, 0%, 100%, 0.20)",
+            "borderRadius": 4,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "opacity": 1,
+            "padding": 7,
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.25}
+          numberOfLines={1}
           style={
             {
-              "opacity": 1,
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Bold",
+              "fontSize": 14,
+              "marginHorizontal": 7,
             }
           }
-          testID="undefined.clearIcon"
         >
-          <View
-            scale={
-              {
-                "value": 22,
-              }
-            }
-            style={
-              [
-                {
-                  "alignItems": "stretch",
-                  "aspectRatio": 1,
-                },
-                {
-                  "opacity": 22,
-                  "width": 22,
-                },
-              ]
-            }
-          >
-            <Text
-              style={
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "anticon",
-                  "fontSize": 22,
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                }
-              }
-            >
-              
-            </Text>
-          </View>
-        </View>
+          Income
+        </Text>
       </View>
       <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         style={
           {
-            "flex": 1,
+            "alignItems": "center",
+            "backgroundColor": "rgba(255, 255, 255, 0)",
+            "borderColor": "rgba(255, 255, 255, 0)",
+            "borderRadius": 4,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "opacity": 1,
+            "padding": 7,
           }
         }
       >
-        <RCTScrollView
-          collapsable={false}
-          contentContainerStyle={
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.25}
+          numberOfLines={1}
+          style={
             {
-              "paddingBottom": 67,
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Bold",
+              "fontSize": 14,
+              "marginHorizontal": 7,
             }
           }
-          data={
-            [
-              {
-                "display": "Income:Paycheck",
-                "new": true,
-                "raw": "Income:Paycheck",
-                "selected": true,
-              },
-              {
-                "display": "Exchange:Paycheck",
-                "new": true,
-                "raw": "Exchange:Paycheck",
-                "selected": false,
-              },
-              {
-                "display": "Expense:Paycheck",
-                "new": true,
-                "raw": "Expense:Paycheck",
-                "selected": false,
-              },
-              {
-                "display": "Transfer:Paycheck",
-                "new": true,
-                "raw": "Transfer:Paycheck",
-                "selected": false,
-              },
-            ]
+        >
+          Expense
+        </Text>
+      </View>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
           }
-          getItem={[Function]}
-          getItemCount={[Function]}
-          handlerTag={4}
-          handlerType="NativeViewGestureHandler"
-          keyExtractor={[Function]}
-          keyboardShouldPersistTaps="handled"
-          onContentSizeChange={[Function]}
-          onGestureHandlerEvent={[Function]}
-          onGestureHandlerStateChange={[Function]}
-          onLayout={[Function]}
-          onMomentumScrollBegin={[Function]}
-          onMomentumScrollEnd={[Function]}
-          onScroll={[Function]}
-          onScrollBeginDrag={[Function]}
-          onScrollEndDrag={[Function]}
-          removeClippedSubviews={false}
-          renderItem={[Function]}
-          renderScrollComponent={[Function]}
-          scrollEventThrottle={50}
-          stickyHeaderIndices={[]}
-          viewabilityConfigCallbackPairs={[]}
-          waitFor={
-            [
-              {
-                "current": null,
-              },
-              {
-                "current": null,
-              },
-            ]
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "rgba(255, 255, 255, 0)",
+            "borderColor": "rgba(255, 255, 255, 0)",
+            "borderRadius": 4,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "opacity": 1,
+            "padding": 7,
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.25}
+          numberOfLines={1}
+          style={
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Bold",
+              "fontSize": 14,
+              "marginHorizontal": 7,
+            }
           }
         >
-          <View>
-            <View
-              onFocusCapture={[Function]}
-              onLayout={[Function]}
-              style={null}
-            >
-              <View
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={true}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "height": 70,
-                    "paddingLeft": 13,
-                  }
-                }
-              >
-                <View
-                  style={
-                    {
-                      "flex": 1,
-                      "flexDirection": "row",
-                      "justifyContent": "space-between",
-                      "paddingRight": 28.091549295774648,
-                    }
-                  }
-                >
-                  <View
-                    style={
-                      {
-                        "flex": 1,
-                        "justifyContent": "center",
-                        "marginRight": 7.022887323943662,
-                      }
-                    }
-                  >
-                    <Text
-                      adjustsFontSizeToFit={true}
-                      minimumFontScale={0.65}
-                      numberOfLines={1}
-                      style={
-                        [
-                          {
-                            "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
-                            "includeFontPadding": false,
-                          },
-                          {
-                            "fontSize": 21,
-                          },
-                          null,
-                        ]
-                      }
-                    >
-                      Income:Paycheck
-                    </Text>
-                  </View>
-                  <View
-                    style={
-                      {
-                        "justifyContent": "center",
-                      }
-                    }
-                  >
-                    <Text
-                      adjustsFontSizeToFit={true}
-                      minimumFontScale={0.65}
-                      numberOfLines={1}
-                      style={
-                        [
-                          {
-                            "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
-                            "includeFontPadding": false,
-                          },
-                          {
-                            "fontSize": 21,
-                          },
-                          null,
-                        ]
-                      }
-                    >
-                      +
-                    </Text>
-                  </View>
-                </View>
-                <BVLinearGradient
-                  colors={
-                    [
-                      452984831,
-                      452984831,
-                    ]
-                  }
-                  endPoint={
-                    {
-                      "x": 1,
-                      "y": 0.5,
-                    }
-                  }
-                  locations={null}
-                  startPoint={
-                    {
-                      "x": 0,
-                      "y": 0.5,
-                    }
-                  }
-                  style={
-                    [
-                      {
-                        "alignSelf": "stretch",
-                        "height": 1,
-                      },
-                      {
-                        "marginBottom": 0,
-                        "marginLeft": 0,
-                        "marginRight": -22,
-                        "marginTop": 0,
-                      },
-                    ]
-                  }
-                />
-              </View>
-            </View>
-            <View
-              onFocusCapture={[Function]}
-              onLayout={[Function]}
-              style={null}
-            >
-              <View
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={true}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "height": 70,
-                    "paddingLeft": 13,
-                  }
-                }
-              >
-                <View
-                  style={
-                    {
-                      "flex": 1,
-                      "flexDirection": "row",
-                      "justifyContent": "space-between",
-                      "paddingRight": 28.091549295774648,
-                    }
-                  }
-                >
-                  <View
-                    style={
-                      {
-                        "flex": 1,
-                        "justifyContent": "center",
-                        "marginRight": 7.022887323943662,
-                      }
-                    }
-                  >
-                    <Text
-                      adjustsFontSizeToFit={true}
-                      minimumFontScale={0.65}
-                      numberOfLines={1}
-                      style={
-                        [
-                          {
-                            "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
-                            "includeFontPadding": false,
-                          },
-                          {
-                            "fontSize": 21,
-                          },
-                          null,
-                        ]
-                      }
-                    >
-                      Exchange:Paycheck
-                    </Text>
-                  </View>
-                  <View
-                    style={
-                      {
-                        "justifyContent": "center",
-                      }
-                    }
-                  >
-                    <Text
-                      adjustsFontSizeToFit={true}
-                      minimumFontScale={0.65}
-                      numberOfLines={1}
-                      style={
-                        [
-                          {
-                            "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
-                            "includeFontPadding": false,
-                          },
-                          {
-                            "fontSize": 21,
-                          },
-                          null,
-                        ]
-                      }
-                    >
-                      +
-                    </Text>
-                  </View>
-                </View>
-                <BVLinearGradient
-                  colors={
-                    [
-                      452984831,
-                      452984831,
-                    ]
-                  }
-                  endPoint={
-                    {
-                      "x": 1,
-                      "y": 0.5,
-                    }
-                  }
-                  locations={null}
-                  startPoint={
-                    {
-                      "x": 0,
-                      "y": 0.5,
-                    }
-                  }
-                  style={
-                    [
-                      {
-                        "alignSelf": "stretch",
-                        "height": 1,
-                      },
-                      {
-                        "marginBottom": 0,
-                        "marginLeft": 0,
-                        "marginRight": -22,
-                        "marginTop": 0,
-                      },
-                    ]
-                  }
-                />
-              </View>
-            </View>
-            <View
-              onFocusCapture={[Function]}
-              onLayout={[Function]}
-              style={null}
-            >
-              <View
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={true}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "height": 70,
-                    "paddingLeft": 13,
-                  }
-                }
-              >
-                <View
-                  style={
-                    {
-                      "flex": 1,
-                      "flexDirection": "row",
-                      "justifyContent": "space-between",
-                      "paddingRight": 28.091549295774648,
-                    }
-                  }
-                >
-                  <View
-                    style={
-                      {
-                        "flex": 1,
-                        "justifyContent": "center",
-                        "marginRight": 7.022887323943662,
-                      }
-                    }
-                  >
-                    <Text
-                      adjustsFontSizeToFit={true}
-                      minimumFontScale={0.65}
-                      numberOfLines={1}
-                      style={
-                        [
-                          {
-                            "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
-                            "includeFontPadding": false,
-                          },
-                          {
-                            "fontSize": 21,
-                          },
-                          null,
-                        ]
-                      }
-                    >
-                      Expense:Paycheck
-                    </Text>
-                  </View>
-                  <View
-                    style={
-                      {
-                        "justifyContent": "center",
-                      }
-                    }
-                  >
-                    <Text
-                      adjustsFontSizeToFit={true}
-                      minimumFontScale={0.65}
-                      numberOfLines={1}
-                      style={
-                        [
-                          {
-                            "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
-                            "includeFontPadding": false,
-                          },
-                          {
-                            "fontSize": 21,
-                          },
-                          null,
-                        ]
-                      }
-                    >
-                      +
-                    </Text>
-                  </View>
-                </View>
-                <BVLinearGradient
-                  colors={
-                    [
-                      452984831,
-                      452984831,
-                    ]
-                  }
-                  endPoint={
-                    {
-                      "x": 1,
-                      "y": 0.5,
-                    }
-                  }
-                  locations={null}
-                  startPoint={
-                    {
-                      "x": 0,
-                      "y": 0.5,
-                    }
-                  }
-                  style={
-                    [
-                      {
-                        "alignSelf": "stretch",
-                        "height": 1,
-                      },
-                      {
-                        "marginBottom": 0,
-                        "marginLeft": 0,
-                        "marginRight": -22,
-                        "marginTop": 0,
-                      },
-                    ]
-                  }
-                />
-              </View>
-            </View>
-            <View
-              onFocusCapture={[Function]}
-              onLayout={[Function]}
-              style={null}
-            >
-              <View
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={true}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "height": 70,
-                    "paddingLeft": 13,
-                  }
-                }
-              >
-                <View
-                  style={
-                    {
-                      "flex": 1,
-                      "flexDirection": "row",
-                      "justifyContent": "space-between",
-                      "paddingRight": 28.091549295774648,
-                    }
-                  }
-                >
-                  <View
-                    style={
-                      {
-                        "flex": 1,
-                        "justifyContent": "center",
-                        "marginRight": 7.022887323943662,
-                      }
-                    }
-                  >
-                    <Text
-                      adjustsFontSizeToFit={true}
-                      minimumFontScale={0.65}
-                      numberOfLines={1}
-                      style={
-                        [
-                          {
-                            "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
-                            "includeFontPadding": false,
-                          },
-                          {
-                            "fontSize": 21,
-                          },
-                          null,
-                        ]
-                      }
-                    >
-                      Transfer:Paycheck
-                    </Text>
-                  </View>
-                  <View
-                    style={
-                      {
-                        "justifyContent": "center",
-                      }
-                    }
-                  >
-                    <Text
-                      adjustsFontSizeToFit={true}
-                      minimumFontScale={0.65}
-                      numberOfLines={1}
-                      style={
-                        [
-                          {
-                            "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
-                            "includeFontPadding": false,
-                          },
-                          {
-                            "fontSize": 21,
-                          },
-                          null,
-                        ]
-                      }
-                    >
-                      +
-                    </Text>
-                  </View>
-                </View>
-                <BVLinearGradient
-                  colors={
-                    [
-                      452984831,
-                      452984831,
-                    ]
-                  }
-                  endPoint={
-                    {
-                      "x": 1,
-                      "y": 0.5,
-                    }
-                  }
-                  locations={null}
-                  startPoint={
-                    {
-                      "x": 0,
-                      "y": 0.5,
-                    }
-                  }
-                  style={
-                    [
-                      {
-                        "alignSelf": "stretch",
-                        "height": 1,
-                      },
-                      {
-                        "marginBottom": 0,
-                        "marginLeft": 0,
-                        "marginRight": -22,
-                        "marginTop": 0,
-                      },
-                    ]
-                  }
-                />
-              </View>
-            </View>
-          </View>
-        </RCTScrollView>
+          Transfer
+        </Text>
+      </View>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "rgba(255, 255, 255, 0)",
+            "borderColor": "rgba(255, 255, 255, 0)",
+            "borderRadius": 4,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "opacity": 1,
+            "padding": 7,
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.25}
+          numberOfLines={1}
+          style={
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Bold",
+              "fontSize": 14,
+              "marginHorizontal": 7,
+            }
+          }
+        >
+          Exchange
+        </Text>
       </View>
     </View>
     <View
@@ -1365,17 +476,19 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           "selected": undefined,
         }
       }
-      accessibilityValue={
+      accessible={false}
+      disableAnimation={
         {
-          "max": undefined,
-          "min": undefined,
-          "now": undefined,
-          "text": undefined,
+          "value": 0,
         }
       }
-      accessible={true}
-      collapsable={false}
+      focusAnimation={
+        {
+          "value": 0,
+        }
+      }
       focusable={true}
+      multiline={false}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -1383,39 +496,910 @@ exports[`CategoryModal should render with a subcategory 1`] = `
       onResponderTerminate={[Function]}
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
-      style={
+      scale={
         {
-          "alignItems": "center",
-          "height": 45,
-          "justifyContent": "center",
-          "opacity": 1,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-          "width": 45,
+          "value": 1,
         }
       }
+      spaceProps={
+        {
+          "returnKeyType": "done",
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": undefined,
+            "flex": undefined,
+            "flexDirection": "column",
+            "justifyContent": undefined,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+          },
+          {
+            "alignItems": "center",
+            "borderRadius": 11,
+            "borderWidth": 1,
+            "flex": undefined,
+            "flexDirection": "row",
+            "paddingHorizontal": 22,
+          },
+          {
+            "backgroundColor": undefined,
+            "borderColor": undefined,
+            "marginHorizontal": undefined,
+            "opacity": undefined,
+            "paddingVertical": 17.6,
+          },
+        ]
+      }
     >
-      <Text
-        allowFontScaling={false}
+      <View
+        scale={
+          {
+            "value": 0,
+          }
+        }
         style={
           [
             {
-              "color": "#888888",
-              "fontSize": 22,
+              "alignItems": "stretch",
+              "aspectRatio": 1,
             },
-            undefined,
             {
-              "fontFamily": "anticon",
-              "fontStyle": "normal",
-              "fontWeight": "normal",
+              "opacity": 0,
+              "width": 0,
             },
-            {},
+          ]
+        }
+      />
+      <View
+        focusValue={
+          {
+            "value": 1,
+          }
+        }
+        hasPlaceholder={true}
+        style={
+          [
+            {
+              "alignItems": "flex-start",
+              "alignSelf": "flex-start",
+              "flex": 1,
+              "flexDirection": "row",
+            },
+            {
+              "marginBottom": NaN,
+              "marginTop": undefined,
+            },
           ]
         }
       >
-        
-      </Text>
+        <View
+          shift={
+            {
+              "value": 1,
+            }
+          }
+          style={
+            [
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+                "margin": 0,
+                "paddingHorizontal": 11,
+                "paddingVertical": 0,
+                "position": "absolute",
+                "top": 0,
+              },
+              {
+                "transform": [
+                  {
+                    "translateY": undefined,
+                  },
+                ],
+              },
+            ]
+          }
+        >
+          <Text
+            disableAnimation={
+              {
+                "value": 0,
+              }
+            }
+            focusAnimation={
+              {
+                "value": 0,
+              }
+            }
+            scale={
+              {
+                "value": 1,
+              }
+            }
+            shift={
+              {
+                "value": 1,
+              }
+            }
+            style={
+              [
+                {
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": undefined,
+                  "fontSize": undefined,
+                },
+              ]
+            }
+          >
+            Sub-category
+          </Text>
+        </View>
+        <TextInput
+          accessibilityState={
+            {
+              "disabled": false,
+            }
+          }
+          accessible={true}
+          animated={true}
+          autoCapitalize="words"
+          autoFocus={true}
+          disableAnimation={
+            {
+              "value": 0,
+            }
+          }
+          focusAnimation={
+            {
+              "value": 0,
+            }
+          }
+          multiline={false}
+          onBlur={[Function]}
+          onChangeText={[Function]}
+          onFocus={[Function]}
+          onSubmitEditing={[Function]}
+          returnKeyType="done"
+          scale={
+            {
+              "value": 1,
+            }
+          }
+          secureTextEntry={false}
+          selectionColor="#FFFFFF"
+          style={
+            [
+              {
+                "color": "hsla(0, 0%, 100%, 0.20)",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "margin": 0,
+                "paddingHorizontal": 11,
+                "paddingVertical": 0,
+              },
+              {
+                "color": undefined,
+                "fontSize": 22,
+              },
+            ]
+          }
+          testID="undefined.textInput"
+          textAlignVertical="top"
+          value="Paycheck"
+        />
+      </View>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "opacity": 1,
+          }
+        }
+        testID="undefined.clearIcon"
+      >
+        <View
+          scale={
+            {
+              "value": 22,
+            }
+          }
+          style={
+            [
+              {
+                "alignItems": "stretch",
+                "aspectRatio": 1,
+              },
+              {
+                "opacity": 22,
+                "width": 22,
+              },
+            ]
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "anticon",
+                "fontSize": 22,
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              }
+            }
+          >
+            
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RCTScrollView
+        collapsable={false}
+        contentContainerStyle={
+          {
+            "paddingBottom": 67,
+          }
+        }
+        data={
+          [
+            {
+              "display": "Income:Paycheck",
+              "new": true,
+              "raw": "Income:Paycheck",
+              "selected": true,
+            },
+            {
+              "display": "Exchange:Paycheck",
+              "new": true,
+              "raw": "Exchange:Paycheck",
+              "selected": false,
+            },
+            {
+              "display": "Expense:Paycheck",
+              "new": true,
+              "raw": "Expense:Paycheck",
+              "selected": false,
+            },
+            {
+              "display": "Transfer:Paycheck",
+              "new": true,
+              "raw": "Transfer:Paycheck",
+              "selected": false,
+            },
+          ]
+        }
+        getItem={[Function]}
+        getItemCount={[Function]}
+        handlerTag={4}
+        handlerType="NativeViewGestureHandler"
+        keyExtractor={[Function]}
+        keyboardShouldPersistTaps="handled"
+        onContentSizeChange={[Function]}
+        onGestureHandlerEvent={[Function]}
+        onGestureHandlerStateChange={[Function]}
+        onLayout={[Function]}
+        onMomentumScrollBegin={[Function]}
+        onMomentumScrollEnd={[Function]}
+        onScroll={[Function]}
+        onScrollBeginDrag={[Function]}
+        onScrollEndDrag={[Function]}
+        removeClippedSubviews={false}
+        renderItem={[Function]}
+        renderScrollComponent={[Function]}
+        scrollEventThrottle={50}
+        stickyHeaderIndices={[]}
+        viewabilityConfigCallbackPairs={[]}
+        waitFor={
+          [
+            {
+              "current": null,
+            },
+            {
+              "current": null,
+            },
+          ]
+        }
+      >
+        <View>
+          <View
+            onFocusCapture={[Function]}
+            onLayout={[Function]}
+            style={null}
+          >
+            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "flex": 1,
+                  "height": 70,
+                  "paddingLeft": 13,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "paddingRight": 28.091549295774648,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "flex": 1,
+                      "justifyContent": "center",
+                      "marginRight": 7.022887323943662,
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 21,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Income:Paycheck
+                  </Text>
+                </View>
+                <View
+                  style={
+                    {
+                      "justifyContent": "center",
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 21,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    +
+                  </Text>
+                </View>
+              </View>
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
+                style={
+                  [
+                    {
+                      "alignSelf": "stretch",
+                      "height": 1,
+                    },
+                    {
+                      "marginBottom": 0,
+                      "marginLeft": 0,
+                      "marginRight": -22,
+                      "marginTop": 0,
+                    },
+                  ]
+                }
+              />
+            </View>
+          </View>
+          <View
+            onFocusCapture={[Function]}
+            onLayout={[Function]}
+            style={null}
+          >
+            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "flex": 1,
+                  "height": 70,
+                  "paddingLeft": 13,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "paddingRight": 28.091549295774648,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "flex": 1,
+                      "justifyContent": "center",
+                      "marginRight": 7.022887323943662,
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 21,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Exchange:Paycheck
+                  </Text>
+                </View>
+                <View
+                  style={
+                    {
+                      "justifyContent": "center",
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 21,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    +
+                  </Text>
+                </View>
+              </View>
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
+                style={
+                  [
+                    {
+                      "alignSelf": "stretch",
+                      "height": 1,
+                    },
+                    {
+                      "marginBottom": 0,
+                      "marginLeft": 0,
+                      "marginRight": -22,
+                      "marginTop": 0,
+                    },
+                  ]
+                }
+              />
+            </View>
+          </View>
+          <View
+            onFocusCapture={[Function]}
+            onLayout={[Function]}
+            style={null}
+          >
+            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "flex": 1,
+                  "height": 70,
+                  "paddingLeft": 13,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "paddingRight": 28.091549295774648,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "flex": 1,
+                      "justifyContent": "center",
+                      "marginRight": 7.022887323943662,
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 21,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Expense:Paycheck
+                  </Text>
+                </View>
+                <View
+                  style={
+                    {
+                      "justifyContent": "center",
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 21,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    +
+                  </Text>
+                </View>
+              </View>
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
+                style={
+                  [
+                    {
+                      "alignSelf": "stretch",
+                      "height": 1,
+                    },
+                    {
+                      "marginBottom": 0,
+                      "marginLeft": 0,
+                      "marginRight": -22,
+                      "marginTop": 0,
+                    },
+                  ]
+                }
+              />
+            </View>
+          </View>
+          <View
+            onFocusCapture={[Function]}
+            onLayout={[Function]}
+            style={null}
+          >
+            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "flex": 1,
+                  "height": 70,
+                  "paddingLeft": 13,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "paddingRight": 28.091549295774648,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "flex": 1,
+                      "justifyContent": "center",
+                      "marginRight": 7.022887323943662,
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 21,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Transfer:Paycheck
+                  </Text>
+                </View>
+                <View
+                  style={
+                    {
+                      "justifyContent": "center",
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 21,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    +
+                  </Text>
+                </View>
+              </View>
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
+                style={
+                  [
+                    {
+                      "alignSelf": "stretch",
+                      "height": 1,
+                    },
+                    {
+                      "marginBottom": 0,
+                      "marginLeft": 0,
+                      "marginRight": -22,
+                      "marginTop": 0,
+                    },
+                  ]
+                }
+              />
+            </View>
+          </View>
+        </View>
+      </RCTScrollView>
     </View>
   </View>,
 ]
@@ -1468,6 +1452,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           "borderTopLeftRadius": 22,
           "borderTopRightRadius": 22,
           "flexShrink": 1,
+          "overflow": "hidden",
           "width": 674,
         },
         {
@@ -1481,39 +1466,29 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
           "marginBottom": -86,
-          "paddingBottom": 86,
+          "paddingBottom": 97,
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "paddingTop": 0,
         },
       ]
     }
   >
-    <View
+    <BlurView
+      blurAmount={10}
+      blurType="dark"
+      overlayColor="rgba(0, 0, 0, 0)"
       style={
         {
-          "borderTopLeftRadius": 22,
-          "borderTopRightRadius": 22,
-          "height": "100%",
-          "overflow": "hidden",
+          "backgroundColor": undefined,
+          "bottom": 0,
+          "left": 0,
           "position": "absolute",
-          "width": "100%",
+          "right": 0,
+          "top": 0,
         }
       }
-    >
-      <BlurView
-        blurAmount={10}
-        blurType="dark"
-        overlayColor="rgba(0, 0, 0, 0)"
-        style={
-          {
-            "backgroundColor": undefined,
-            "bottom": 0,
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-          }
-        }
-      />
-    </View>
+    />
     <View
       style={
         {
@@ -1539,306 +1514,593 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
     </View>
     <View
       style={
-        {
-          "marginBottom": 11,
-          "marginLeft": 11,
-          "marginRight": 11,
-          "marginTop": 11,
-        }
+        [
+          {
+            "alignItems": "flex-start",
+            "flexDirection": "row",
+            "marginTop": 28,
+          },
+          {
+            "marginBottom": 11,
+          },
+        ]
       }
     >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={2}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "fontFamily": "Quicksand-Medium",
+              "fontSize": 27,
+              "marginHorizontal": 11,
+            },
+            null,
+          ]
+        }
+      >
+        Choose a Category
+      </Text>
       <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         style={
           {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "margin": 11,
+            "alignItems": "flex-end",
+            "alignSelf": "flex-start",
+            "flexGrow": 1,
+            "justifyContent": "flex-start",
+            "marginRight": 11,
+            "opacity": 1,
+            "paddingTop": 3,
           }
         }
       >
         <Text
+          allowFontScaling={false}
           style={
             [
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Medium",
-                "fontSize": 27,
-                "marginVertical": 11,
+                "color": "#888888",
+                "fontSize": 28,
+              },
+              undefined,
+              {
+                "fontFamily": "anticon",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              {},
+            ]
+          }
+        >
+          
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "marginBottom": 22,
+          "marginHorizontal": 22,
+        }
+      }
+    >
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "rgba(255, 255, 255, 0)",
+            "borderColor": "rgba(255, 255, 255, 0)",
+            "borderRadius": 4,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "opacity": 1,
+            "padding": 7,
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.25}
+          numberOfLines={1}
+          style={
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Bold",
+              "fontSize": 14,
+              "marginHorizontal": 7,
+            }
+          }
+        >
+          Income
+        </Text>
+      </View>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "rgba(255, 255, 255, 0)",
+            "borderColor": "rgba(255, 255, 255, 0)",
+            "borderRadius": 4,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "opacity": 1,
+            "padding": 7,
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.25}
+          numberOfLines={1}
+          style={
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Bold",
+              "fontSize": 14,
+              "marginHorizontal": 7,
+            }
+          }
+        >
+          Expense
+        </Text>
+      </View>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "rgba(255, 255, 255, 0)",
+            "borderColor": "rgba(255, 255, 255, 0)",
+            "borderRadius": 4,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "opacity": 1,
+            "padding": 7,
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.25}
+          numberOfLines={1}
+          style={
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Bold",
+              "fontSize": 14,
+              "marginHorizontal": 7,
+            }
+          }
+        >
+          Transfer
+        </Text>
+      </View>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "hsla(0, 0%, 100%, 0.20)",
+            "borderColor": "hsla(0, 0%, 100%, 0.20)",
+            "borderRadius": 4,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+            "opacity": 1,
+            "padding": 7,
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.25}
+          numberOfLines={1}
+          style={
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Bold",
+              "fontSize": 14,
+              "marginHorizontal": 7,
+            }
+          }
+        >
+          Exchange
+        </Text>
+      </View>
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessible={false}
+      disableAnimation={
+        {
+          "value": 0,
+        }
+      }
+      focusAnimation={
+        {
+          "value": 0,
+        }
+      }
+      focusable={true}
+      multiline={false}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      scale={
+        {
+          "value": 1,
+        }
+      }
+      spaceProps={
+        {
+          "returnKeyType": "done",
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": undefined,
+            "flex": undefined,
+            "flexDirection": "column",
+            "justifyContent": undefined,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+          },
+          {
+            "alignItems": "center",
+            "borderRadius": 11,
+            "borderWidth": 1,
+            "flex": undefined,
+            "flexDirection": "row",
+            "paddingHorizontal": 22,
+          },
+          {
+            "backgroundColor": undefined,
+            "borderColor": undefined,
+            "marginHorizontal": undefined,
+            "opacity": undefined,
+            "paddingVertical": 17.6,
+          },
+        ]
+      }
+    >
+      <View
+        scale={
+          {
+            "value": 0,
+          }
+        }
+        style={
+          [
+            {
+              "alignItems": "stretch",
+              "aspectRatio": 1,
+            },
+            {
+              "opacity": 0,
+              "width": 0,
+            },
+          ]
+        }
+      />
+      <View
+        focusValue={
+          {
+            "value": 0,
+          }
+        }
+        hasPlaceholder={true}
+        style={
+          [
+            {
+              "alignItems": "flex-start",
+              "alignSelf": "flex-start",
+              "flex": 1,
+              "flexDirection": "row",
+            },
+            {
+              "marginBottom": NaN,
+              "marginTop": undefined,
+            },
+          ]
+        }
+      >
+        <View
+          shift={
+            {
+              "value": 0,
+            }
+          }
+          style={
+            [
+              {
+                "alignItems": "center",
+                "justifyContent": "center",
+                "margin": 0,
+                "paddingHorizontal": 11,
+                "paddingVertical": 0,
+                "position": "absolute",
+                "top": 0,
               },
               {
-                "textAlign": "center",
-              },
-              {
-                "paddingBottom": 0,
-                "paddingLeft": 0,
-                "paddingRight": 0,
-                "paddingTop": 0,
+                "transform": [
+                  {
+                    "translateY": undefined,
+                  },
+                ],
               },
             ]
           }
         >
-          Choose a Category
-        </Text>
-      </View>
-      <View
-        style={
-          {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "justifyContent": "space-between",
-            "marginBottom": 22,
-            "marginHorizontal": 22,
-          }
-        }
-      >
-        <View
+          <Text
+            disableAnimation={
+              {
+                "value": 0,
+              }
+            }
+            focusAnimation={
+              {
+                "value": 0,
+              }
+            }
+            scale={
+              {
+                "value": 1,
+              }
+            }
+            shift={
+              {
+                "value": 0,
+              }
+            }
+            style={
+              [
+                {
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": undefined,
+                  "fontSize": undefined,
+                },
+              ]
+            }
+          >
+            Sub-category
+          </Text>
+        </View>
+        <TextInput
           accessibilityState={
             {
-              "busy": undefined,
-              "checked": undefined,
               "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
             }
           }
           accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
+          animated={true}
+          autoCapitalize="words"
+          autoFocus={true}
+          disableAnimation={
+            {
+              "value": 0,
+            }
+          }
+          focusAnimation={
+            {
+              "value": 0,
+            }
+          }
+          multiline={false}
+          onBlur={[Function]}
+          onChangeText={[Function]}
+          onFocus={[Function]}
+          onSubmitEditing={[Function]}
+          returnKeyType="done"
+          scale={
+            {
+              "value": 1,
+            }
+          }
+          secureTextEntry={false}
+          selectionColor="#FFFFFF"
           style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0)",
-              "borderColor": "rgba(255, 255, 255, 0)",
-              "borderRadius": 4,
-              "borderWidth": 1,
-              "flexDirection": "row",
-              "justifyContent": "center",
-              "marginBottom": 0,
-              "marginLeft": 0,
-              "marginRight": 0,
-              "marginTop": 0,
-              "opacity": 1,
-              "padding": 7,
-            }
-          }
-        >
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.25}
-            numberOfLines={1}
-            style={
+            [
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Bold",
-                "fontSize": 14,
-                "marginHorizontal": 7,
-              }
-            }
-          >
-            Income
-          </Text>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0)",
-              "borderColor": "rgba(255, 255, 255, 0)",
-              "borderRadius": 4,
-              "borderWidth": 1,
-              "flexDirection": "row",
-              "justifyContent": "center",
-              "marginBottom": 0,
-              "marginLeft": 0,
-              "marginRight": 0,
-              "marginTop": 0,
-              "opacity": 1,
-              "padding": 7,
-            }
-          }
-        >
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.25}
-            numberOfLines={1}
-            style={
+                "color": "hsla(0, 0%, 100%, 0.20)",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Regular",
+                "margin": 0,
+                "paddingHorizontal": 11,
+                "paddingVertical": 0,
+              },
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Bold",
-                "fontSize": 14,
-                "marginHorizontal": 7,
-              }
-            }
-          >
-            Expense
-          </Text>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
+                "color": undefined,
+                "fontSize": 22,
+              },
+            ]
           }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0)",
-              "borderColor": "rgba(255, 255, 255, 0)",
-              "borderRadius": 4,
-              "borderWidth": 1,
-              "flexDirection": "row",
-              "justifyContent": "center",
-              "marginBottom": 0,
-              "marginLeft": 0,
-              "marginRight": 0,
-              "marginTop": 0,
-              "opacity": 1,
-              "padding": 7,
-            }
-          }
-        >
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.25}
-            numberOfLines={1}
-            style={
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Bold",
-                "fontSize": 14,
-                "marginHorizontal": 7,
-              }
-            }
-          >
-            Transfer
-          </Text>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "hsla(0, 0%, 100%, 0.20)",
-              "borderColor": "hsla(0, 0%, 100%, 0.20)",
-              "borderRadius": 4,
-              "borderWidth": 1,
-              "flexDirection": "row",
-              "justifyContent": "center",
-              "marginBottom": 0,
-              "marginLeft": 0,
-              "marginRight": 0,
-              "marginTop": 0,
-              "opacity": 1,
-              "padding": 7,
-            }
-          }
-        >
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.25}
-            numberOfLines={1}
-            style={
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Bold",
-                "fontSize": 14,
-                "marginHorizontal": 7,
-              }
-            }
-          >
-            Exchange
-          </Text>
-        </View>
+          testID="undefined.textInput"
+          textAlignVertical="top"
+          value=""
+        />
       </View>
       <View
         accessibilityState={
@@ -1850,19 +2112,17 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             "selected": undefined,
           }
         }
-        accessible={false}
-        disableAnimation={
+        accessibilityValue={
           {
-            "value": 0,
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
           }
         }
-        focusAnimation={
-          {
-            "value": 0,
-          }
-        }
+        accessible={true}
+        collapsable={false}
         focusable={true}
-        multiline={false}
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -1870,45 +2130,12 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         onResponderTerminate={[Function]}
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
-        scale={
-          {
-            "value": 1,
-          }
-        }
-        spaceProps={
-          {
-            "returnKeyType": "done",
-          }
-        }
         style={
-          [
-            {
-              "alignItems": undefined,
-              "flex": undefined,
-              "flexDirection": "column",
-              "justifyContent": undefined,
-              "marginBottom": 0,
-              "marginLeft": 0,
-              "marginRight": 0,
-              "marginTop": 0,
-            },
-            {
-              "alignItems": "center",
-              "borderRadius": 11,
-              "borderWidth": 1,
-              "flex": undefined,
-              "flexDirection": "row",
-              "paddingHorizontal": 22,
-            },
-            {
-              "backgroundColor": undefined,
-              "borderColor": undefined,
-              "marginHorizontal": undefined,
-              "opacity": undefined,
-              "paddingVertical": 17.6,
-            },
-          ]
+          {
+            "opacity": 1,
+          }
         }
+        testID="undefined.clearIcon"
       >
         <View
           scale={
@@ -1928,799 +2155,540 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               },
             ]
           }
-        />
-        <View
-          focusValue={
-            {
-              "value": 0,
-            }
-          }
-          hasPlaceholder={true}
-          style={
-            [
-              {
-                "alignItems": "flex-start",
-                "alignSelf": "flex-start",
-                "flex": 1,
-                "flexDirection": "row",
-              },
-              {
-                "marginBottom": NaN,
-                "marginTop": undefined,
-              },
-            ]
-          }
         >
-          <View
-            shift={
-              {
-                "value": 0,
-              }
-            }
+          <Text
             style={
-              [
-                {
-                  "alignItems": "center",
-                  "justifyContent": "center",
-                  "margin": 0,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 0,
-                  "position": "absolute",
-                  "top": 0,
-                },
-                {
-                  "transform": [
-                    {
-                      "translateY": undefined,
-                    },
-                  ],
-                },
-              ]
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "anticon",
+                "fontSize": 0,
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              }
             }
           >
-            <Text
-              disableAnimation={
-                {
-                  "value": 0,
-                }
-              }
-              focusAnimation={
-                {
-                  "value": 0,
-                }
-              }
-              scale={
-                {
-                  "value": 1,
-                }
-              }
-              shift={
-                {
-                  "value": 0,
-                }
-              }
-              style={
-                [
-                  {
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
-                  {
-                    "color": undefined,
-                    "fontSize": undefined,
-                  },
-                ]
-              }
-            >
-              Sub-category
-            </Text>
-          </View>
-          <TextInput
-            accessibilityState={
-              {
-                "disabled": false,
-              }
-            }
-            accessible={true}
-            animated={true}
-            autoCapitalize="words"
-            autoFocus={true}
-            disableAnimation={
-              {
-                "value": 0,
-              }
-            }
-            focusAnimation={
-              {
-                "value": 0,
-              }
-            }
-            multiline={false}
-            onBlur={[Function]}
-            onChangeText={[Function]}
-            onFocus={[Function]}
-            onSubmitEditing={[Function]}
-            returnKeyType="done"
-            scale={
-              {
-                "value": 1,
-              }
-            }
-            secureTextEntry={false}
-            selectionColor="#FFFFFF"
-            style={
-              [
-                {
-                  "color": "hsla(0, 0%, 100%, 0.20)",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
-                  "margin": 0,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 0,
-                },
-                {
-                  "color": undefined,
-                  "fontSize": 22,
-                },
-              ]
-            }
-            testID="undefined.textInput"
-            textAlignVertical="top"
-            value=""
-          />
+            
+          </Text>
         </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "opacity": 1,
-            }
-          }
-          testID="undefined.clearIcon"
-        >
-          <View
-            scale={
-              {
-                "value": 0,
-              }
-            }
-            style={
-              [
-                {
-                  "alignItems": "stretch",
-                  "aspectRatio": 1,
-                },
-                {
-                  "opacity": 0,
-                  "width": 0,
-                },
-              ]
-            }
-          >
-            <Text
-              style={
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "anticon",
-                  "fontSize": 0,
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                }
-              }
-            >
-              
-            </Text>
-          </View>
-        </View>
-      </View>
-      <View
-        style={
-          {
-            "flex": 1,
-          }
-        }
-      >
-        <RCTScrollView
-          collapsable={false}
-          contentContainerStyle={
-            {
-              "paddingBottom": 67,
-            }
-          }
-          data={
-            [
-              {
-                "display": "Exchange:Buy Bitcoin",
-                "new": false,
-                "raw": "Exchange:Buy Bitcoin",
-                "selected": true,
-              },
-              {
-                "display": "Exchange:Sell Bitcoin",
-                "new": false,
-                "raw": "Exchange:Sell Bitcoin",
-                "selected": true,
-              },
-              {
-                "display": "Expense:Air Travel",
-                "new": false,
-                "raw": "Expense:Air Travel",
-                "selected": false,
-              },
-              {
-                "display": "Expense:Alcohol & Bars",
-                "new": false,
-                "raw": "Expense:Alcohol & Bars",
-                "selected": false,
-              },
-            ]
-          }
-          getItem={[Function]}
-          getItemCount={[Function]}
-          handlerTag={2}
-          handlerType="NativeViewGestureHandler"
-          keyExtractor={[Function]}
-          keyboardShouldPersistTaps="handled"
-          onContentSizeChange={[Function]}
-          onGestureHandlerEvent={[Function]}
-          onGestureHandlerStateChange={[Function]}
-          onLayout={[Function]}
-          onMomentumScrollBegin={[Function]}
-          onMomentumScrollEnd={[Function]}
-          onScroll={[Function]}
-          onScrollBeginDrag={[Function]}
-          onScrollEndDrag={[Function]}
-          removeClippedSubviews={false}
-          renderItem={[Function]}
-          renderScrollComponent={[Function]}
-          scrollEventThrottle={50}
-          stickyHeaderIndices={[]}
-          viewabilityConfigCallbackPairs={[]}
-          waitFor={
-            [
-              {
-                "current": null,
-              },
-              {
-                "current": null,
-              },
-            ]
-          }
-        >
-          <View>
-            <View
-              onFocusCapture={[Function]}
-              onLayout={[Function]}
-              style={null}
-            >
-              <View
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={true}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "height": 70,
-                    "paddingLeft": 13,
-                  }
-                }
-              >
-                <View
-                  style={
-                    {
-                      "flex": 1,
-                      "flexDirection": "row",
-                      "justifyContent": "space-between",
-                      "paddingRight": 28.091549295774648,
-                    }
-                  }
-                >
-                  <View
-                    style={
-                      {
-                        "flex": 1,
-                        "justifyContent": "center",
-                        "marginRight": 7.022887323943662,
-                      }
-                    }
-                  >
-                    <Text
-                      adjustsFontSizeToFit={true}
-                      minimumFontScale={0.65}
-                      numberOfLines={1}
-                      style={
-                        [
-                          {
-                            "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
-                            "includeFontPadding": false,
-                          },
-                          {
-                            "fontSize": 21,
-                          },
-                          null,
-                        ]
-                      }
-                    >
-                      Exchange:Buy Bitcoin
-                    </Text>
-                  </View>
-                </View>
-                <BVLinearGradient
-                  colors={
-                    [
-                      452984831,
-                      452984831,
-                    ]
-                  }
-                  endPoint={
-                    {
-                      "x": 1,
-                      "y": 0.5,
-                    }
-                  }
-                  locations={null}
-                  startPoint={
-                    {
-                      "x": 0,
-                      "y": 0.5,
-                    }
-                  }
-                  style={
-                    [
-                      {
-                        "alignSelf": "stretch",
-                        "height": 1,
-                      },
-                      {
-                        "marginBottom": 0,
-                        "marginLeft": 0,
-                        "marginRight": -22,
-                        "marginTop": 0,
-                      },
-                    ]
-                  }
-                />
-              </View>
-            </View>
-            <View
-              onFocusCapture={[Function]}
-              onLayout={[Function]}
-              style={null}
-            >
-              <View
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={true}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "height": 70,
-                    "paddingLeft": 13,
-                  }
-                }
-              >
-                <View
-                  style={
-                    {
-                      "flex": 1,
-                      "flexDirection": "row",
-                      "justifyContent": "space-between",
-                      "paddingRight": 28.091549295774648,
-                    }
-                  }
-                >
-                  <View
-                    style={
-                      {
-                        "flex": 1,
-                        "justifyContent": "center",
-                        "marginRight": 7.022887323943662,
-                      }
-                    }
-                  >
-                    <Text
-                      adjustsFontSizeToFit={true}
-                      minimumFontScale={0.65}
-                      numberOfLines={1}
-                      style={
-                        [
-                          {
-                            "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
-                            "includeFontPadding": false,
-                          },
-                          {
-                            "fontSize": 21,
-                          },
-                          null,
-                        ]
-                      }
-                    >
-                      Exchange:Sell Bitcoin
-                    </Text>
-                  </View>
-                </View>
-                <BVLinearGradient
-                  colors={
-                    [
-                      452984831,
-                      452984831,
-                    ]
-                  }
-                  endPoint={
-                    {
-                      "x": 1,
-                      "y": 0.5,
-                    }
-                  }
-                  locations={null}
-                  startPoint={
-                    {
-                      "x": 0,
-                      "y": 0.5,
-                    }
-                  }
-                  style={
-                    [
-                      {
-                        "alignSelf": "stretch",
-                        "height": 1,
-                      },
-                      {
-                        "marginBottom": 0,
-                        "marginLeft": 0,
-                        "marginRight": -22,
-                        "marginTop": 0,
-                      },
-                    ]
-                  }
-                />
-              </View>
-            </View>
-            <View
-              onFocusCapture={[Function]}
-              onLayout={[Function]}
-              style={null}
-            >
-              <View
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={true}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "height": 70,
-                    "paddingLeft": 13,
-                  }
-                }
-              >
-                <View
-                  style={
-                    {
-                      "flex": 1,
-                      "flexDirection": "row",
-                      "justifyContent": "space-between",
-                      "paddingRight": 28.091549295774648,
-                    }
-                  }
-                >
-                  <View
-                    style={
-                      {
-                        "flex": 1,
-                        "justifyContent": "center",
-                        "marginRight": 7.022887323943662,
-                      }
-                    }
-                  >
-                    <Text
-                      adjustsFontSizeToFit={true}
-                      minimumFontScale={0.65}
-                      numberOfLines={1}
-                      style={
-                        [
-                          {
-                            "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
-                            "includeFontPadding": false,
-                          },
-                          {
-                            "fontSize": 21,
-                          },
-                          null,
-                        ]
-                      }
-                    >
-                      Expense:Air Travel
-                    </Text>
-                  </View>
-                </View>
-                <BVLinearGradient
-                  colors={
-                    [
-                      452984831,
-                      452984831,
-                    ]
-                  }
-                  endPoint={
-                    {
-                      "x": 1,
-                      "y": 0.5,
-                    }
-                  }
-                  locations={null}
-                  startPoint={
-                    {
-                      "x": 0,
-                      "y": 0.5,
-                    }
-                  }
-                  style={
-                    [
-                      {
-                        "alignSelf": "stretch",
-                        "height": 1,
-                      },
-                      {
-                        "marginBottom": 0,
-                        "marginLeft": 0,
-                        "marginRight": -22,
-                        "marginTop": 0,
-                      },
-                    ]
-                  }
-                />
-              </View>
-            </View>
-            <View
-              onFocusCapture={[Function]}
-              onLayout={[Function]}
-              style={null}
-            >
-              <View
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={true}
-                focusable={true}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "height": 70,
-                    "paddingLeft": 13,
-                  }
-                }
-              >
-                <View
-                  style={
-                    {
-                      "flex": 1,
-                      "flexDirection": "row",
-                      "justifyContent": "space-between",
-                      "paddingRight": 28.091549295774648,
-                    }
-                  }
-                >
-                  <View
-                    style={
-                      {
-                        "flex": 1,
-                        "justifyContent": "center",
-                        "marginRight": 7.022887323943662,
-                      }
-                    }
-                  >
-                    <Text
-                      adjustsFontSizeToFit={true}
-                      minimumFontScale={0.65}
-                      numberOfLines={1}
-                      style={
-                        [
-                          {
-                            "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
-                            "fontSize": 22,
-                            "includeFontPadding": false,
-                          },
-                          {
-                            "fontSize": 21,
-                          },
-                          null,
-                        ]
-                      }
-                    >
-                      Expense:Alcohol & Bars
-                    </Text>
-                  </View>
-                </View>
-                <BVLinearGradient
-                  colors={
-                    [
-                      452984831,
-                      452984831,
-                    ]
-                  }
-                  endPoint={
-                    {
-                      "x": 1,
-                      "y": 0.5,
-                    }
-                  }
-                  locations={null}
-                  startPoint={
-                    {
-                      "x": 0,
-                      "y": 0.5,
-                    }
-                  }
-                  style={
-                    [
-                      {
-                        "alignSelf": "stretch",
-                        "height": 1,
-                      },
-                      {
-                        "marginBottom": 0,
-                        "marginLeft": 0,
-                        "marginRight": -22,
-                        "marginTop": 0,
-                      },
-                    ]
-                  }
-                />
-              </View>
-            </View>
-          </View>
-        </RCTScrollView>
       </View>
     </View>
     <View
-      accessibilityState={
-        {
-          "busy": undefined,
-          "checked": undefined,
-          "disabled": undefined,
-          "expanded": undefined,
-          "selected": undefined,
-        }
-      }
-      accessibilityValue={
-        {
-          "max": undefined,
-          "min": undefined,
-          "now": undefined,
-          "text": undefined,
-        }
-      }
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
       style={
         {
-          "alignItems": "center",
-          "height": 45,
-          "justifyContent": "center",
-          "opacity": 1,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-          "width": 45,
+          "flex": 1,
         }
       }
     >
-      <Text
-        allowFontScaling={false}
-        style={
+      <RCTScrollView
+        collapsable={false}
+        contentContainerStyle={
+          {
+            "paddingBottom": 67,
+          }
+        }
+        data={
           [
             {
-              "color": "#888888",
-              "fontSize": 22,
+              "display": "Exchange:Buy Bitcoin",
+              "new": false,
+              "raw": "Exchange:Buy Bitcoin",
+              "selected": true,
             },
-            undefined,
             {
-              "fontFamily": "anticon",
-              "fontStyle": "normal",
-              "fontWeight": "normal",
+              "display": "Exchange:Sell Bitcoin",
+              "new": false,
+              "raw": "Exchange:Sell Bitcoin",
+              "selected": true,
             },
-            {},
+            {
+              "display": "Expense:Air Travel",
+              "new": false,
+              "raw": "Expense:Air Travel",
+              "selected": false,
+            },
+            {
+              "display": "Expense:Alcohol & Bars",
+              "new": false,
+              "raw": "Expense:Alcohol & Bars",
+              "selected": false,
+            },
+          ]
+        }
+        getItem={[Function]}
+        getItemCount={[Function]}
+        handlerTag={2}
+        handlerType="NativeViewGestureHandler"
+        keyExtractor={[Function]}
+        keyboardShouldPersistTaps="handled"
+        onContentSizeChange={[Function]}
+        onGestureHandlerEvent={[Function]}
+        onGestureHandlerStateChange={[Function]}
+        onLayout={[Function]}
+        onMomentumScrollBegin={[Function]}
+        onMomentumScrollEnd={[Function]}
+        onScroll={[Function]}
+        onScrollBeginDrag={[Function]}
+        onScrollEndDrag={[Function]}
+        removeClippedSubviews={false}
+        renderItem={[Function]}
+        renderScrollComponent={[Function]}
+        scrollEventThrottle={50}
+        stickyHeaderIndices={[]}
+        viewabilityConfigCallbackPairs={[]}
+        waitFor={
+          [
+            {
+              "current": null,
+            },
+            {
+              "current": null,
+            },
           ]
         }
       >
-        
-      </Text>
+        <View>
+          <View
+            onFocusCapture={[Function]}
+            onLayout={[Function]}
+            style={null}
+          >
+            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "flex": 1,
+                  "height": 70,
+                  "paddingLeft": 13,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "paddingRight": 28.091549295774648,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "flex": 1,
+                      "justifyContent": "center",
+                      "marginRight": 7.022887323943662,
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 21,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Exchange:Buy Bitcoin
+                  </Text>
+                </View>
+              </View>
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
+                style={
+                  [
+                    {
+                      "alignSelf": "stretch",
+                      "height": 1,
+                    },
+                    {
+                      "marginBottom": 0,
+                      "marginLeft": 0,
+                      "marginRight": -22,
+                      "marginTop": 0,
+                    },
+                  ]
+                }
+              />
+            </View>
+          </View>
+          <View
+            onFocusCapture={[Function]}
+            onLayout={[Function]}
+            style={null}
+          >
+            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "flex": 1,
+                  "height": 70,
+                  "paddingLeft": 13,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "paddingRight": 28.091549295774648,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "flex": 1,
+                      "justifyContent": "center",
+                      "marginRight": 7.022887323943662,
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 21,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Exchange:Sell Bitcoin
+                  </Text>
+                </View>
+              </View>
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
+                style={
+                  [
+                    {
+                      "alignSelf": "stretch",
+                      "height": 1,
+                    },
+                    {
+                      "marginBottom": 0,
+                      "marginLeft": 0,
+                      "marginRight": -22,
+                      "marginTop": 0,
+                    },
+                  ]
+                }
+              />
+            </View>
+          </View>
+          <View
+            onFocusCapture={[Function]}
+            onLayout={[Function]}
+            style={null}
+          >
+            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "flex": 1,
+                  "height": 70,
+                  "paddingLeft": 13,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "paddingRight": 28.091549295774648,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "flex": 1,
+                      "justifyContent": "center",
+                      "marginRight": 7.022887323943662,
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 21,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Expense:Air Travel
+                  </Text>
+                </View>
+              </View>
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
+                style={
+                  [
+                    {
+                      "alignSelf": "stretch",
+                      "height": 1,
+                    },
+                    {
+                      "marginBottom": 0,
+                      "marginLeft": 0,
+                      "marginRight": -22,
+                      "marginTop": 0,
+                    },
+                  ]
+                }
+              />
+            </View>
+          </View>
+          <View
+            onFocusCapture={[Function]}
+            onLayout={[Function]}
+            style={null}
+          >
+            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "flex": 1,
+                  "height": 70,
+                  "paddingLeft": 13,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "flex": 1,
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "paddingRight": 28.091549295774648,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "flex": 1,
+                      "justifyContent": "center",
+                      "marginRight": 7.022887323943662,
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 21,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Expense:Alcohol & Bars
+                  </Text>
+                </View>
+              </View>
+              <BVLinearGradient
+                colors={
+                  [
+                    452984831,
+                    452984831,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 0.5,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.5,
+                  }
+                }
+                style={
+                  [
+                    {
+                      "alignSelf": "stretch",
+                      "height": 1,
+                    },
+                    {
+                      "marginBottom": 0,
+                      "marginLeft": 0,
+                      "marginRight": -22,
+                      "marginTop": 0,
+                    },
+                  ]
+                }
+              />
+            </View>
+          </View>
+        </View>
+      </RCTScrollView>
     </View>
   </View>,
 ]

@@ -141,11 +141,17 @@ export const WcSmartContractModal = (props: Props) => {
   )
 
   return (
-    <ModalUi4 bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]}>
-      <View style={styles.title}>
-        <Image style={styles.logo} source={WalletConnectLogo} />
-        <ModalTitle>{lstrings.wc_smartcontract_title}</ModalTitle>
-      </View>
+    <ModalUi4
+      bridge={bridge}
+      onCancel={handleClose}
+      title={
+        <View style={styles.title}>
+          <Image style={styles.logo} source={WalletConnectLogo} />
+          <ModalTitle>{lstrings.wc_smartcontract_title}</ModalTitle>
+        </View>
+      }
+      paddingRem={[1, 0]}
+    >
       <ScrollView contentContainerStyle={styles.scrollPadding}>
         {renderWarning()}
         {zeroString(nativeAmount) ? null : (

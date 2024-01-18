@@ -6,7 +6,7 @@ import { AirshipBridge } from 'react-native-airship'
 import { lstrings } from '../../locales/strings'
 import { showToast } from '../services/AirshipInstance'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage } from '../themed/ModalParts'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
@@ -27,8 +27,7 @@ export function RawTextModal(props: Props) {
   }
 
   return (
-    <ModalUi4 bridge={bridge} onCancel={handleCancel}>
-      {title != null ? <ModalTitle>{title}</ModalTitle> : null}
+    <ModalUi4 bridge={bridge} title={title} onCancel={handleCancel}>
       <ScrollView>
         <ModalMessage>{body}</ModalMessage>
       </ScrollView>
