@@ -763,11 +763,11 @@ const strings = {
     'You have scanned a legacy format address that may not be for the intended currency as it is indistinguishable from other currency addresses.\n\nSending to this address MAY result in a LOSS of funds!\n\nDo you want to continue?',
   legacy_address_modal_continue: 'Continue',
 
-  password_reminder_remember_your_password: 'Remember your password?',
+  password_reminder_remember_your_password: 'Remember Your Password?',
   password_reminder_you_will_need_your_password: 'You will need your password if your device gets lost or stolen, or if you uninstall the app.',
   password_reminder_enter_password_below: 'Enter it below to make sure:',
   password_reminder_check_password: 'Check Password',
-  password_reminder_forgot_password: 'I forgot, change password',
+  password_reminder_forgot_password: 'I Forgot. Change Password',
   password_reminder_great_job: 'Great job remembering your password.',
   password_reminder_invalid: 'Invalid Password',
 
