@@ -177,7 +177,6 @@ export const testDark: Theme = {
   modalBorderColor: palette.transparent,
   modalBorderWidth: 0,
   modalBorderRadiusRem: 1,
-  modalAndroidBlurColor: palette.blackOp25,
   modalBackgroundUi4: palette.whiteOp10,
   modalSceneOverlayColor: palette.black,
   modalDragbarColor: palette.gray,

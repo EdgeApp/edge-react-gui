@@ -80,7 +80,7 @@ exports[`HelpModal should render with loading props 1`] = `
       <BlurView
         blurAmount={10}
         blurType="dark"
-        overlayColor="rgba(0, 0, 0, .7)"
+        overlayColor="rgba(0, 0, 0, 0)"
         style={
           {
             "backgroundColor": undefined,

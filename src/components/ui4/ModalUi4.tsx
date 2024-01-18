@@ -125,7 +125,7 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
         <Animated.View style={[styles.body, bodyStyle, bodyLayout]}>
           {/* Need another Biew here because BlurView doesn't accept rounded corners in its styling */}
           <View style={styles.blurContainer}>
-            <BlurBackground overlayColor={theme.modalAndroidBlurColor} />
+            <BlurBackground />
           </View>
 
           <View style={styles.dragBarContainer}>
