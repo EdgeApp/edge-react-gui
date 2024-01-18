@@ -5,7 +5,7 @@ import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
-  children: React.ReactNode | React.ReactNode[]
+  children: React.ReactNode
 
   // For scene-level usage where we want the line to extend all the way to the
   // right
@@ -40,33 +40,17 @@ export const SectionView = (props: Props): JSX.Element | null => {
       ? styles.dividerMarginScene
       : styles.dividerMarginCard
 
-  const nonNullChildren = React.Children.map(children, child => {
-    if (child != null) {
-      return child
-    }
+  // Add a line divider after each child:
+  const dividedChildren: React.ReactNode[] = []
+  React.Children.forEach(children, (child, i): void => {
+    if (child == null || child === false) return
+    dividedChildren.push(child)
+    dividedChildren.push(<View key={`line${i}`} style={[styles.divider, dividerMargin]} />)
   })
-  const numChildren = React.Children.count(nonNullChildren)
 
-  if (children == null || numChildren === 0) return null
-
-  // Add a line divider between each child if there's more than one:
-  return (
-    <View style={[styles.container, margin]}>
-      {numChildren === 1
-        ? nonNullChildren
-        : React.Children.map(nonNullChildren, (child, index) => {
-            if (index < numChildren - 1) {
-              return (
-                <>
-                  {child}
-                  <View style={[styles.divider, dividerMargin]} />
-                </>
-              )
-            }
-            return child
-          })}
-    </View>
-  )
+  // Render the children, skipping the last line divider:
+  if (dividedChildren.length === 0) return null
+  return <View style={[styles.container, margin]}>{dividedChildren.slice(0, -1)}</View>
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
