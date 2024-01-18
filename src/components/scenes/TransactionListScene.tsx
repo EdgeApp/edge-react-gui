@@ -10,6 +10,7 @@ import Animated from 'react-native-reanimated'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
+import { useIconColor } from '../../hooks/useIconColor'
 import { useTransactionList } from '../../hooks/useTransactionList'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -59,7 +60,7 @@ function TransactionListComponent(props: Props) {
   const [isSearching, setIsSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
   const [assetStatuses, setAssetStatuses] = React.useState<AssetStatus[]>([])
-  const [iconColor, setIconColor] = React.useState<string>()
+  const iconColor = useIconColor({ pluginId, tokenId })
 
   // Selectors:
   const exchangeDenom = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
@@ -198,7 +199,6 @@ function TransactionListComponent(props: Props) {
           tokenId={tokenId}
           wallet={wallet}
           isLightAccount={isLightAccount}
-          onIconColor={setIconColor}
           onSearchingChange={setIsSearching}
           onSearchTextChange={setSearchText}
         />
