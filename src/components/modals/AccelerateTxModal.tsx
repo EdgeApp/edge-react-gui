@@ -11,7 +11,7 @@ import { GuiExchangeRates } from '../../types/types'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
 import { WarningCard } from '../cards/WarningCard'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage } from '../themed/ModalParts'
 import { Slider } from '../themed/Slider'
 import { ModalUi4 } from '../ui4/ModalUi4'
 import { RowUi4 } from '../ui4/RowUi4'
@@ -111,8 +111,7 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
     const isSending = status === 'sending'
 
     return (
-      <ModalUi4 bridge={bridge} onCancel={this.handleCancel}>
-        <ModalTitle>{lstrings.transaction_details_accelerate_transaction_header}</ModalTitle>
+      <ModalUi4 bridge={bridge} onCancel={this.handleCancel} title={lstrings.transaction_details_accelerate_transaction_header}>
         <ModalMessage>{lstrings.transaction_details_accelerate_transaction_instructional}</ModalMessage>
         <View style={styles.container}>
           <RowUi4 title={lstrings.transaction_details_accelerate_transaction_old_fee_title} body={oldFee} />

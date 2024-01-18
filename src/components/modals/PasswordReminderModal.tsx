@@ -9,7 +9,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { showError, showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
-import { ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage } from '../themed/ModalParts'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
@@ -79,8 +79,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
     const { errorMessage, password, checkingPassword } = this.state
 
     return (
-      <ModalUi4 bridge={bridge} onCancel={this.handleCancel}>
-        <ModalTitle>{lstrings.password_reminder_remember_your_password}</ModalTitle>
+      <ModalUi4 bridge={bridge} title={lstrings.password_reminder_remember_your_password} onCancel={this.handleCancel}>
         <ScrollView style={{ maxHeight: theme.rem(9) }}>
           <ModalMessage>{lstrings.password_reminder_you_will_need_your_password}</ModalMessage>
           <ModalMessage>{lstrings.password_reminder_enter_password_below}</ModalMessage>

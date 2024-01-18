@@ -58,6 +58,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           ],
         },
         {
+          "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
           "marginBottom": -86,
           "paddingBottom": 97,
@@ -120,6 +121,29 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         ]
       }
     >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={2}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "fontFamily": "Quicksand-Medium",
+              "fontSize": 27,
+              "marginHorizontal": 11,
+            },
+            null,
+          ]
+        }
+      >
+        Choose a Category
+      </Text>
       <View
         accessibilityState={
           {
@@ -181,39 +205,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           
         </Text>
       </View>
-    </View>
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "margin": 11,
-        }
-      }
-    >
-      <Text
-        style={
-          [
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Medium",
-              "fontSize": 27,
-              "marginVertical": 11,
-            },
-            {
-              "textAlign": "center",
-            },
-            {
-              "paddingBottom": 0,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 0,
-            },
-          ]
-        }
-      >
-        Choose a Category
-      </Text>
     </View>
     <View
       style={
@@ -1472,6 +1463,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           ],
         },
         {
+          "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
           "marginBottom": -86,
           "paddingBottom": 97,
@@ -1534,6 +1526,29 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         ]
       }
     >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={2}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "fontFamily": "Quicksand-Medium",
+              "fontSize": 27,
+              "marginHorizontal": 11,
+            },
+            null,
+          ]
+        }
+      >
+        Choose a Category
+      </Text>
       <View
         accessibilityState={
           {
@@ -1595,39 +1610,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           
         </Text>
       </View>
-    </View>
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "margin": 11,
-        }
-      }
-    >
-      <Text
-        style={
-          [
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Medium",
-              "fontSize": 27,
-              "marginVertical": 11,
-            },
-            {
-              "textAlign": "center",
-            },
-            {
-              "paddingBottom": 0,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 0,
-            },
-          ]
-        }
-      >
-        Choose a Category
-      </Text>
     </View>
     <View
       style={

@@ -6,7 +6,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage } from '../themed/ModalParts'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 export interface ButtonInfo {
@@ -78,10 +78,9 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
   }
 
   return (
-    <ModalUi4 warning={warning} bridge={bridge} paddingRem={1} onCancel={disableCancel ? undefined : handleCancel}>
+    <ModalUi4 warning={warning} bridge={bridge} paddingRem={1} title={title} onCancel={disableCancel ? undefined : handleCancel}>
       <View style={containerStyle}>
         <View style={textStyle}>
-          {title != null ? <ModalTitle>{title}</ModalTitle> : null}
           {message != null ? <ModalMessage>{message}</ModalMessage> : null}
           {children}
         </View>

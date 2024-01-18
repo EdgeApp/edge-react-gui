@@ -212,17 +212,21 @@ export function WalletListMenuModal(props: Props) {
   )
 
   return (
-    <ModalUi4 bridge={bridge} onCancel={handleCancel}>
-      {wallet != null && (
-        <View>
-          <ModalTitle>{getWalletName(wallet)}</ModalTitle>
-          <View style={styles.row}>
-            <CryptoIconUi4 marginRem={[0, 0, 0, 0.5]} sizeRem={1} tokenId={tokenId} walletId={walletId} />
-            <ModalTitle>{getCurrencyCode(wallet, tokenId)}</ModalTitle>
+    <ModalUi4
+      bridge={bridge}
+      title={
+        wallet == null ? null : (
+          <View>
+            <ModalTitle>{getWalletName(wallet)}</ModalTitle>
+            <View style={styles.row}>
+              <CryptoIconUi4 marginRem={[0, 0, 0, 0.5]} sizeRem={1} tokenId={tokenId} walletId={walletId} />
+              <ModalTitle>{getCurrencyCode(wallet, tokenId)}</ModalTitle>
+            </View>
           </View>
-        </View>
-      )}
-
+        )
+      }
+      onCancel={handleCancel}
+    >
       <View style={styles.scrollViewContainer}>
         <ModalScrollArea>
           {options.map((option: Option) => (

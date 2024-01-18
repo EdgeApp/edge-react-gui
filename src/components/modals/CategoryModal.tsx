@@ -14,7 +14,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
-import { ModalFooter, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter } from '../themed/ModalParts'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
@@ -133,8 +133,7 @@ export function CategoryModal(props: Props) {
   ))
 
   return (
-    <ModalUi4 bridge={bridge} onCancel={handleCancel}>
-      <ModalTitle center>{lstrings.category_modal_title}</ModalTitle>
+    <ModalUi4 bridge={bridge} onCancel={handleCancel} title={lstrings.category_modal_title}>
       <View style={styles.inputCategoryRow}>
         {categoryOrder.map(item => (
           <MinimalButton key={item} highlighted={category === item} label={displayCategories[item]} onPress={() => setCategory(item)} />

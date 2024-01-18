@@ -15,7 +15,6 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Airship } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
-import { ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ModalUi4 } from '../ui4/ModalUi4'
 import { WalletListModal, WalletListResult } from './WalletListModal'
@@ -152,8 +151,7 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
 
   const options = depositOrSend === 'deposit' ? depositOptions : sendOptions
   return (
-    <ModalUi4 bridge={bridge} onCancel={handleCancel}>
-      <ModalTitle>{depositOrSend === 'deposit' ? lstrings.loan_fragment_deposit : lstrings.fragment_send_subtitle}</ModalTitle>
+    <ModalUi4 bridge={bridge} title={depositOrSend === 'deposit' ? lstrings.loan_fragment_deposit : lstrings.fragment_send_subtitle} onCancel={handleCancel}>
       {options.map((option, index) => {
         const { title, icon, onPress } = option
         return <SelectableRow marginRem={0.5} key={title} title={title} onPress={onPress} icon={<View style={style.iconContainer}>{icon}</View>} />

@@ -12,7 +12,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { roundedFee } from '../../util/utils'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage } from '../themed/ModalParts'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
@@ -54,8 +54,7 @@ export function InsufficientFeesModal(props: Props) {
   })
 
   return (
-    <ModalUi4 bridge={bridge} paddingRem={1} onCancel={handleCancel}>
-      <ModalTitle>{lstrings.buy_crypto_modal_title}</ModalTitle>
+    <ModalUi4 bridge={bridge} paddingRem={1} title={lstrings.buy_crypto_modal_title} onCancel={handleCancel}>
       <ModalMessage>{sprintf(lstrings.buy_parent_crypto_modal_message_2s, amountString, name)}</ModalMessage>
       <MainButton label={sprintf(lstrings.buy_crypto_modal_buy_action, currencyCode)} type="primary" marginRem={0.5} onPress={handleBuy} />
       <MainButton label={lstrings.buy_crypto_modal_exchange} type="primary" marginRem={0.5} onPress={handleSwap} />

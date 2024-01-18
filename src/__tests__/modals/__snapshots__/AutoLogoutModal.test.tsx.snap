@@ -12,10 +12,8 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
     }
   }
   onCancel={[Function]}
+  title="Set Auto Logoff time"
 >
-  <ModalTitle>
-    Set Auto Logoff time
-  </ModalTitle>
   <View
     style={
       {

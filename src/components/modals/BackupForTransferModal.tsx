@@ -2,7 +2,7 @@ import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
-import { ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage } from '../themed/ModalParts'
 import { ButtonsModal } from './ButtonsModal'
 
 export type BackupForTransferModalResult = 'upgrade'
@@ -20,9 +20,9 @@ export function BackupForTransferModal(props: Props) {
       buttons={{
         upgrade: { label: lstrings.backup_account }
       }}
+      title={lstrings.backup_title}
       closeArrow
     >
-      <ModalTitle>{lstrings.backup_title}</ModalTitle>
       <ModalMessage paddingRem={[0, 0, 1.5, 0]}>{lstrings.backup_for_transfer_message}</ModalMessage>
     </ButtonsModal>
   )

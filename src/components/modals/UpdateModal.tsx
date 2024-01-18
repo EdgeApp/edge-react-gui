@@ -31,11 +31,16 @@ export function UpdateModal(props: Props) {
   const message = sprintf(lstrings.update_fresh_new_version, config.appName)
 
   return (
-    <ModalUi4 bridge={bridge} onCancel={handleClose}>
-      <View style={styles.titleContainer}>
-        <Image style={styles.titleImage} resizeMode="contain" source={theme.primaryLogo} />
-        <ModalTitle>{lstrings.update_header}</ModalTitle>
-      </View>
+    <ModalUi4
+      bridge={bridge}
+      title={
+        <View style={styles.titleContainer}>
+          <Image style={styles.titleImage} resizeMode="contain" source={theme.primaryLogo} />
+          <ModalTitle>{lstrings.update_header}</ModalTitle>
+        </View>
+      }
+      onCancel={handleClose}
+    >
       <ModalMessage>{message}</ModalMessage>
       <MainButton label={lstrings.update_now} marginRem={0.5} type="primary" onPress={handleUpdate} />
       <MainButton label={lstrings.update_later} marginRem={0.5} type="secondary" onPress={onSkip} />

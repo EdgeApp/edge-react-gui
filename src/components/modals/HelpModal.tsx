@@ -61,14 +61,18 @@ export const HelpModal = (props: Props) => {
   const helpSiteMoreInfoText = sprintf(lstrings.help_site_more_info_text, config.appName)
 
   return (
-    <ModalUi4 bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]} scroll>
-      <View style={styles.titleContainer}>
-        <Image source={theme.primaryLogo} style={styles.logo} resizeMode="contain" />
-        <ModalTitle center paddingRem={[0, 1]}>
-          {helpModalTitle}
-        </ModalTitle>
-      </View>
-
+    <ModalUi4
+      bridge={bridge}
+      title={
+        <View style={styles.titleContainer}>
+          <Image source={theme.primaryLogo} style={styles.logo} resizeMode="contain" />
+          <ModalTitle center>{helpModalTitle}</ModalTitle>
+        </View>
+      }
+      onCancel={handleClose}
+      paddingRem={[1, 0]}
+      scroll
+    >
       <SelectableRow
         icon={<Fontello name="help_idea" color={theme.iconTappable} size={theme.rem(1.5)} />}
         subTitle={lstrings.help_knowledge_base_text}
@@ -114,7 +118,7 @@ const deviceHeight = Dimensions.get('window').height
 
 const getStyles = cacheStyles((theme: Theme) => ({
   titleContainer: {
-    marginTop: theme.rem(0.5),
+    marginTop: theme.rem(1),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'

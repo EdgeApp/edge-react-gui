@@ -121,6 +121,62 @@ exports[`HelpModal should render with loading props 1`] = `
       }
     >
       <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+            "justifyContent": "center",
+            "marginTop": 22,
+          }
+        }
+      >
+        <Image
+          resizeMode="contain"
+          source={
+            {
+              "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_L.png",
+            }
+          }
+          style={
+            {
+              "height": 51,
+            }
+          }
+        />
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "marginHorizontal": 11,
+            }
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 27,
+                },
+                {
+                  "textAlign": "center",
+                },
+                {
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
+                },
+              ]
+            }
+          >
+            Thanks for using Edge!
+          </Text>
+        </View>
+      </View>
+      <View
         accessibilityState={
           {
             "busy": undefined,
@@ -150,13 +206,10 @@ exports[`HelpModal should render with loading props 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           {
-            "alignItems": "flex-end",
-            "alignSelf": "flex-start",
-            "flexGrow": 1,
-            "justifyContent": "flex-start",
-            "marginRight": 11,
             "opacity": 1,
-            "paddingTop": 3,
+            "position": "absolute",
+            "right": 11,
+            "top": 3,
           }
         }
       >
@@ -203,63 +256,6 @@ exports[`HelpModal should render with loading props 1`] = `
       }
     >
       <View>
-        <View
-          style={
-            {
-              "alignItems": "center",
-              "flexDirection": "column",
-              "justifyContent": "center",
-              "marginTop": 11,
-            }
-          }
-        >
-          <Image
-            resizeMode="contain"
-            source={
-              {
-                "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_L.png",
-              }
-            }
-            style={
-              {
-                "height": 51,
-              }
-            }
-          />
-          <View
-            style={
-              {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "margin": 11,
-              }
-            }
-          >
-            <Text
-              style={
-                [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Medium",
-                    "fontSize": 27,
-                    "marginVertical": 11,
-                  },
-                  {
-                    "textAlign": "center",
-                  },
-                  {
-                    "paddingBottom": 0,
-                    "paddingLeft": 22,
-                    "paddingRight": 22,
-                    "paddingTop": 0,
-                  },
-                ]
-              }
-            >
-              Thanks for using Edge!
-            </Text>
-          </View>
-        </View>
         <View
           accessibilityState={
             {
