@@ -43,6 +43,7 @@ export interface FilledTextInputProps extends SpaceProps {
   showSpinner?: boolean
   prefix?: string // Text input is left-left justified with a persistent prefix
   suffix?: string // Text input is right-right justified with a persistent suffix
+  textsizeRem?: number
 
   // Callbacks:
   onBlur?: () => void
@@ -123,6 +124,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     maxLength,
     secureTextEntry,
     testID,
+    textsizeRem,
     ...spaceProps
   } = props
   const theme = useTheme()
@@ -217,7 +219,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
           <InnerContainer focusValue={focusValue} hasPlaceholder={placeholder != null}>
             {placeholder == null ? null : (
               <Placeholder shift={focusValue}>
-                <PlaceholderText disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale} shift={focusValue}>
+                <PlaceholderText disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale} shift={focusValue} textsizeRem={textsizeRem}>
                   {placeholder}
                 </PlaceholderText>
               </Placeholder>
@@ -240,6 +242,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               selectionColor={theme.textInputTextColor}
               testID={`${testID}.textInput`}
               textAlignVertical="top"
+              textsizeRem={textsizeRem}
               scale={scale}
               value={value}
               // Callbacks:
@@ -428,8 +431,10 @@ const PlaceholderText = styled(Animated.Text)<{
   focusAnimation: SharedValue<number>
   scale: SharedValue<number>
   shift: SharedValue<number>
-}>(theme => ({ disableAnimation, focusAnimation, scale, shift }) => {
-  const fontSizeBase = theme.rem(scale.value)
+  textsizeRem?: number
+}>(theme => ({ disableAnimation, focusAnimation, scale, shift, textsizeRem }) => {
+  const fontSizeBase = theme.rem(textsizeRem ?? scale.value)
+  const fontSizeScaled = theme.rem(scale.value) * 0.75
   const interpolatePlaceholderTextColor = useAnimatedColorInterpolateFn(
     theme.textInputPlaceholderColor,
     theme.textInputPlaceholderColorFocused,
@@ -445,7 +450,7 @@ const PlaceholderText = styled(Animated.Text)<{
     useAnimatedStyle(() => {
       return {
         color: interpolatePlaceholderTextColor(focusAnimation, disableAnimation),
-        fontSize: interpolate(shift.value, [0, 1], [fontSizeBase, 0.75 * fontSizeBase])
+        fontSize: interpolate(shift.value, [0, 1], [fontSizeBase, fontSizeScaled])
       }
     })
   ]
@@ -455,8 +460,9 @@ const StyledAnimatedTextInput = styledWithRef(AnimatedTextInput)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
   scale: SharedValue<number>
-}>(theme => ({ disableAnimation, focusAnimation, scale }) => {
-  const rem = theme.rem(1)
+  textsizeRem?: number
+}>(theme => ({ disableAnimation, focusAnimation, scale, textsizeRem }) => {
+  const rem = theme.rem(textsizeRem ?? 1)
   const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused, theme.textInputTextColorDisabled)
   // Need 2 pixels of shift given a 16 point rem settings
   // This is due to Android rendering a text input vertically lower
@@ -485,8 +491,9 @@ const StyledNumericInput = styledWithRef(NumericInput)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
   scale: SharedValue<number>
-}>(theme => ({ disableAnimation, focusAnimation, scale }) => {
-  const rem = theme.rem(1)
+  textsizeRem?: number
+}>(theme => ({ disableAnimation, focusAnimation, textsizeRem, scale }) => {
+  const rem = theme.rem(textsizeRem ?? 1)
   const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused, theme.textInputTextColorDisabled)
   // Need 2 pixels of shift given a 16 point rem settings
   // This is due to Android rendering a text input vertically lower

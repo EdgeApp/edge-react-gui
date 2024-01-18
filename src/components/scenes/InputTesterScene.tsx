@@ -37,6 +37,8 @@ export function InputTesterScene(props: Props) {
   const [filledTextInputValue3, setFilledTextInputValue3] = useState<string>('')
   const [filledTextInputValue4, setFilledTextInputValue4] = useState<string>('')
   const [filledTextInputValue5, setFilledTextInputValue5] = useState<string>('')
+  const [filledTextInputValue6, setFilledTextInputValue6] = useState<string>('')
+  const [filledTextInputValue7, setFilledTextInputValue7] = useState<string>('')
   const walletId = selectedWallet?.wallet.id ?? ''
   const tokenId = selectedWallet?.tokenId ?? null
   const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
@@ -89,6 +91,26 @@ export function InputTesterScene(props: Props) {
     <SceneWrapper scroll hasTabs hasHeader={false}>
       <SectionView marginRem={1}>
         <FilledTextInput
+          vertical={1}
+          value={filledTextInputValue6}
+          onChangeText={setFilledTextInputValue6}
+          autoFocus={false}
+          placeholder="Test big text"
+          textsizeRem={1.5}
+          maxLength={100}
+        />
+        <FilledTextInput
+          numeric
+          vertical={1}
+          value={filledTextInputValue7}
+          onChangeText={setFilledTextInputValue7}
+          autoFocus={false}
+          placeholder="Test big number"
+          textsizeRem={1.5}
+          maxLength={100}
+        />
+        <FilledTextInput
+          vertical={1}
           value={filledTextInputValue}
           onChangeText={setFilledTextInputValue}
           autoFocus={false}

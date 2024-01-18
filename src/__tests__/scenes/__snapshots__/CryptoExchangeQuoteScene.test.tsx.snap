@@ -1326,7 +1326,6 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
               "alignItems": "center",
               "flexDirection": "row",
               "justifyContent": "center",
-              "marginVertical": 11,
             }
           }
         >
@@ -1367,10 +1366,10 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                 "marginRight": 11,
                 "marginTop": 11,
                 "opacity": 1,
-                "paddingBottom": 22,
-                "paddingLeft": 22,
-                "paddingRight": 22,
-                "paddingTop": 22,
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
               }
             }
           >
