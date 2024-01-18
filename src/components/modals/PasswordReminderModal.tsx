@@ -1,6 +1,5 @@
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Platform, ScrollView, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
@@ -75,16 +74,17 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
   handleChangeText = (password: string) => this.setState({ password })
 
   render() {
-    const { bridge, theme } = this.props
+    const { bridge } = this.props
     const { errorMessage, password, checkingPassword } = this.state
 
     return (
       <ModalUi4 bridge={bridge} title={lstrings.password_reminder_remember_your_password} onCancel={this.handleCancel}>
-        <ScrollView style={{ maxHeight: theme.rem(9) }}>
-          <ModalMessage>{lstrings.password_reminder_you_will_need_your_password}</ModalMessage>
-          <ModalMessage>{lstrings.password_reminder_enter_password_below}</ModalMessage>
-        </ScrollView>
+        <ModalMessage>{lstrings.password_reminder_you_will_need_your_password}</ModalMessage>
+        <ModalMessage>{lstrings.password_reminder_enter_password_below}</ModalMessage>
         <FilledTextInput
+          top={0.5}
+          bottom={2}
+          horizontal={0.5}
           autoFocus={false}
           error={errorMessage}
           placeholder={lstrings.password}
@@ -93,14 +93,6 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
           secureTextEntry
           value={password}
         />
-        {/* HACK: Extra padding to accommodate potential error message
-            TODO: Roll this into the built-in OutlinedTextInput margins and
-            update all callers */}
-        <View style={{ margin: theme.rem(0.5) }} />
-        {
-          // Hack around the Android keyboard glitch:
-          Platform.OS === 'android' ? <View style={{ flex: 1 }} /> : null
-        }
         <ButtonsViewUi4
           primary={{ label: lstrings.password_reminder_check_password, onPress: this.handleSubmit, disabled: password.length === 0 }}
           secondary={{ label: lstrings.password_reminder_forgot_password, onPress: this.handleRequestChangePassword, disabled: checkingPassword }}
