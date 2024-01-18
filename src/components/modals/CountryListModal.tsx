@@ -70,7 +70,6 @@ export const CountryListModal = ({ countryCode: rawCountryCode, bridge }: Props)
       title={lstrings.buy_sell_crypto_select_country_button}
       label={lstrings.search_region}
       autoFocus
-      blurOnClear={false}
       rowsData={countryCodes}
       onSubmitEditing={handleSubmitEditing}
       rowComponent={rowComponent}

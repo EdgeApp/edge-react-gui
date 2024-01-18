@@ -29,7 +29,6 @@ interface Props<T> {
   onSubmitEditing?: (text: string) => void
   secureTextEntry?: boolean // Defaults to 'false'
   autoFocus?: boolean // Defaults to 'false'
-  blurOnClear?: boolean // Defaults to 'true'
   // List Props
   rowsData?: T[] // Defaults to []
   fullScreen?: boolean
@@ -72,13 +71,13 @@ export function ListModal<T>({
   return (
     <ModalUi4 title={title} bridge={bridge} onCancel={handleCancel}>
       {message == null ? null : <ModalMessage>{message}</ModalMessage>}
-      {textInput == null || !textInput ? null : (
+      {!textInput ? null : (
         <FilledTextInput
           vertical={1}
           horizontal={0.5}
           // Our props:
           searchIcon
-          blurOnClear
+          blurOnClear={false}
           autoCorrect={false}
           autoCapitalize="words"
           returnKeyType="done"
