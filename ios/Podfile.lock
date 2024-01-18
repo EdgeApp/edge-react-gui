@@ -18,7 +18,7 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (2.0.1):
+  - edge-core-js (2.1.0):
     - React-Core
   - edge-currency-accountbased (3.0.1):
     - React-Core
@@ -1266,7 +1266,7 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  edge-core-js: 1c873ea7016c3b0a4c1b2dcb6b3f80c385191ef9
+  edge-core-js: 437d3b94b66107b3d3444655ba7e4746b893d6da
   edge-currency-accountbased: 074e8a04e97f1e9d5b5da5e7ec17f0adb7222c81
   edge-exchange-plugins: a7340c395f9b99f762858ff568e7889269f5b8da
   edge-login-ui-rn: 2da2db24a1cc2723a1a5c847100318b2774ab1dd

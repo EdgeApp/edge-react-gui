@@ -150,10 +150,12 @@ async function fetchSwapQuotes(state: RootState, request: EdgeSwapRequest): Prom
 
   // Get the quote:
   const quotes: EdgeSwapQuote[] = await account.fetchSwapQuotes(request, {
+    disabled: { ...activePlugins.disabled, ...disablePlugins },
+    noResponseMs: 60 * 1000,
     preferPluginId,
     preferType: preferredSwapPluginType,
-    disabled: { ...activePlugins.disabled, ...disablePlugins },
-    promoCodes: activePlugins.promoCodes
+    promoCodes: activePlugins.promoCodes,
+    slowResponseMs: 10 * 1000
   })
 
   return quotes
