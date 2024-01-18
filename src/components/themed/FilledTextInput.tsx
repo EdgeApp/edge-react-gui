@@ -114,7 +114,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     onSubmitEditing,
 
     // TextInput:
-    autoCapitalize,
+    autoCapitalize = props.secureTextEntry === true ? 'none' : undefined,
     autoCorrect,
     autoFocus = false,
     blurOnClear = false,
