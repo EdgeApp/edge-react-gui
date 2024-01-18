@@ -58,6 +58,7 @@ exports[`HelpModal should render with loading props 1`] = `
           ],
         },
         {
+          "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
           "marginBottom": -86,
           "paddingBottom": 86,
@@ -125,8 +126,8 @@ exports[`HelpModal should render with loading props 1`] = `
           {
             "alignItems": "center",
             "flexDirection": "column",
+            "flexGrow": 1,
             "justifyContent": "center",
-            "marginTop": 22,
           }
         }
       >

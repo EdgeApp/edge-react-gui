@@ -118,7 +118,7 @@ const deviceHeight = Dimensions.get('window').height
 
 const getStyles = cacheStyles((theme: Theme) => ({
   titleContainer: {
-    marginTop: theme.rem(1),
+    flexGrow: 1,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'
