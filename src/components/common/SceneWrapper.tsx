@@ -2,11 +2,11 @@ import { getDefaultHeaderHeight } from '@react-navigation/elements'
 import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { useMemo } from 'react'
-import { Animated, StyleSheet, useWindowDimensions, View } from 'react-native'
+import { Animated, StyleSheet, View } from 'react-native'
 import Reanimated from 'react-native-reanimated'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { useSceneDrawerState } from '../../state/SceneDrawerState'
+import { useSceneFooterState } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
@@ -15,20 +15,34 @@ import { maybeComponent } from '../hoc/maybeComponent'
 import { NotificationView } from '../notification/NotificationView'
 import { useTheme } from '../services/ThemeContext'
 import { MAX_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
-import { SceneDrawer } from '../themed/SceneDrawer'
+import { SceneFooter } from '../themed/SceneFooter'
 import { AccentColors, DotsBackground } from '../ui4/DotsBackground'
 import { KeyboardTracker } from './KeyboardTracker'
 
-export interface InsetStyles {
+export interface InsetStyle {
   paddingTop: number
   paddingRight: number
   paddingBottom: number
   paddingLeft: number
 }
 
+export interface UndoInsetStyle {
+  flex: 1
+  marginTop: number
+  marginRight: number
+  marginBottom: number
+  marginLeft: number
+}
+
 export interface SceneWrapperInfo {
+  // Contains the top, left, right, and bottom app insets (includes header, tab-bar, footer, etc)
   insets: EdgeInsets
-  insetStyles: InsetStyles
+  // Convenient padding styles for the insets to be used by scenes (e.g. contentContainerStyles)
+  insetStyle: InsetStyle
+  // Convenient style with negative margins for each value in the insets.
+  // This can be useful to apply to containing views in a scene to expand the scene's
+  // edges to the device's edges.
+  undoInsetStyle: UndoInsetStyle
   hasTabs: boolean
   isKeyboardOpen: boolean
 }
@@ -69,25 +83,24 @@ interface SceneWrapperProps {
   // Padding to add inside the scene border:
   padding?: number
 
-  // Render function to render component for the tab drawer
-  renderDrawer?: (info: SceneWrapperInfo) => React.ReactNode
+  // Render function to render components floating at the bottom of the scene
+  renderFooter?: (info: SceneWrapperInfo) => React.ReactNode
 
   // True to make the scene scrolling (if avoidKeyboard is false):
   scroll?: boolean
 }
 
 /**
- * Wraps a normal stacked scene, creating a perfectly-sized box
- * that avoids the header, tab bar, and notifications (if any).
- * Also draws a common gradient background under the scene.
+ * Wraps a scene, creating a perfectly-sized box that avoids app-wide UI
+ * elements such as the header, tab bar, notifications (if any), footer, and
+ * even keyboard. Also draws a common background component under the scene
+ * (defined by the theme). The wrapper will apply padding needed to avoid
+ * the safe area inset and header/tab-bar/etc. This is known as the `insets`.
  *
- * If the children are normal React elements, then the wrapper will apply
- * padding needed to avoid the safe area inset and header/tab-bar/etc.
- *
- * If the child is a function component, though, the scene rendering SceneWrapper
- * is responsible for applying its own padding. The scene can leverage the
- * provided `info` parameter passed to the children function-prop for this
- * purpose.
+ * If the component is passed a function as a children, it will pass the `inset`
+ * as part of an `info` parameter to the function. In addition, the scene wrapper
+ * padding will be passed as `insetStyle` and `undoInsetStyle` will include
+ * negative margin style rules to be used to offset these insets.
  */
 export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const {
@@ -98,7 +111,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     backgroundGradientStart,
     backgroundGradientEnd,
     children,
-    renderDrawer,
+    renderFooter,
     hasHeader = true,
     hasNotifications = false,
     hasTabs = false,
@@ -111,22 +124,23 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const activeUsername = useSelector(state => state.core.account.username)
   const isLightAccount = accountId != null && activeUsername == null
 
-  const { tabDrawerHeight = 0 } = useSceneDrawerState()
+  const { footerHeight = 0 } = useSceneFooterState()
 
   const navigation = useNavigation<NavigationBase>()
   const theme = useTheme()
-  const windowDimensions = useWindowDimensions()
-  const layoutStyles = useMemo(
-    () => ({
-      height: windowDimensions.height,
-      width: windowDimensions.width
-    }),
-    [windowDimensions.height, windowDimensions.width]
-  )
 
   // Subscribe to the window size:
   const frame = useSafeAreaFrame()
   const safeAreaInsets = useSafeAreaInsets()
+
+  // Get the screen width/height measurements for the scene
+  const layoutStyle = useMemo(
+    () => ({
+      height: frame.height,
+      width: frame.width
+    }),
+    [frame.height, frame.width]
+  )
 
   const notificationHeight = theme.rem(4)
   const headerBarHeight = getDefaultHeaderHeight(frame, false, 0)
@@ -136,40 +150,51 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
 
   const renderScene = (safeAreaInsets: EdgeInsets, keyboardAnimation: Animated.Value | undefined, trackerValue: number): JSX.Element => {
     // If function children, the caller handles the insets and overscroll
-    const hasKeyboardAnimation = keyboardAnimation != null
     const isFuncChildren = typeof children === 'function'
 
     // Derive the keyboard height by getting the difference between screen height
     // and trackerValue. This value should be from zero to keyboard height
     // depending on the open state of the keyboard
     const keyboardHeight = frame.height - trackerValue
-    const isKeyboardOpen = keyboardHeight !== 0
+    const isKeyboardOpen = avoidKeyboard && keyboardHeight !== 0
 
-    // These are the safeAreaInsets including the app's header and tab-bar
-    // heights.
+    // Calculate app insets considering the app's header, tab-bar,
+    // notification area, etc:
+    const maybeHeaderHeight = hasHeader ? headerBarHeight : 0
+    const maybeNotificationHeight = isLightAccount ? notificationHeight : 0
+    const maybeTabBarHeight = hasTabs ? MAX_TAB_BAR_HEIGHT : 0
+    const maybeInsetBottom = !hasTabs && !isKeyboardOpen ? safeAreaInsets.bottom : 0
     const insets: EdgeInsets = {
-      top: safeAreaInsets.top + (hasHeader ? headerBarHeight : 0),
+      top: safeAreaInsets.top + maybeHeaderHeight,
       right: safeAreaInsets.right,
-      bottom: (isLightAccount ? notificationHeight : 0) + (hasTabs ? MAX_TAB_BAR_HEIGHT : isKeyboardOpen ? 0 : safeAreaInsets.bottom),
+      bottom: maybeInsetBottom + maybeNotificationHeight + maybeTabBarHeight + footerHeight,
       left: safeAreaInsets.left
     }
 
     // This is a convenient styles object which may be applied as
     // contentContainerStyles for child scroll components. It will also be
     // used for the ScrollView component internal to the SceneWrapper.
-    const insetStyles: InsetStyles = {
+    const insetStyle = {
       paddingTop: insets.top,
       paddingRight: insets.right,
-      paddingBottom: insets.bottom + tabDrawerHeight,
+      paddingBottom: insets.bottom,
       paddingLeft: insets.left
     }
 
-    const maybeInsetStyles = isFuncChildren ? {} : insetStyles
+    // This is a convenient styles object which may be applied to scene container
+    // components to offset the inset styles applied to the SceneWrapper.
+    const undoInsetStyle: UndoInsetStyle = {
+      flex: 1,
+      marginTop: -insets.top,
+      marginRight: -insets.right,
+      marginBottom: -insets.bottom,
+      marginLeft: -insets.left
+    }
 
-    const info: SceneWrapperInfo = { insets, insetStyles, hasTabs, isKeyboardOpen }
+    const info: SceneWrapperInfo = { insets, insetStyle, undoInsetStyle, hasTabs, isKeyboardOpen }
 
     return (
-      <MaybeAnimatedView when={hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles, { maxHeight: keyboardAnimation, padding }]}>
+      <MaybeAnimatedView when={avoidKeyboard} style={[styles.sceneContainer, layoutStyle, insetStyle, { maxHeight: keyboardAnimation, padding }]}>
         <DotsBackground
           accentColors={accentColors}
           overrideDots={overrideDots}
@@ -178,18 +203,28 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
           backgroundGradientEnd={backgroundGradientEnd}
         />
         <MaybeAnimatedScrollView
-          when={scroll && !hasKeyboardAnimation}
-          style={[layoutStyles, { padding }]}
+          when={scroll && !avoidKeyboard}
+          style={[layoutStyle, { padding }]}
           keyboardShouldPersistTaps={keyboardShouldPersistTaps}
-          contentContainerStyle={insetStyles}
+          contentContainerStyle={insetStyle}
           onScroll={hasTabs || hasHeader ? handleScroll : () => {}}
+          // Fixes middle-floating scrollbar issue
+          scrollIndicatorInsets={{ right: 1 }}
         >
-          <MaybeView when={!scroll && !hasKeyboardAnimation} style={[styles.sceneContainer, layoutStyles, maybeInsetStyles, { padding }]}>
+          <MaybeView when={!scroll && !avoidKeyboard} style={[styles.sceneContainer, layoutStyle, insetStyle, { padding }]}>
             {isFuncChildren ? children(info) : children}
-            {hasNotifications ? <NotificationView navigation={navigation} /> : null}
-            {renderDrawer == null ? null : <SceneDrawer info={info}>{renderDrawer}</SceneDrawer>}
           </MaybeView>
         </MaybeAnimatedScrollView>
+        {renderFooter != null || hasNotifications ? (
+          <SceneFooter info={info}>
+            {info => (
+              <>
+                {hasNotifications ? <NotificationView navigation={navigation} /> : null}
+                {renderFooter != null ? renderFooter(info) : null}
+              </>
+            )}
+          </SceneFooter>
+        ) : null}
       </MaybeAnimatedView>
     )
   }

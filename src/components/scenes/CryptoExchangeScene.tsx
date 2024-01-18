@@ -17,7 +17,7 @@ import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../types/types'
 import { getTokenId, getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, zeroString } from '../../util/utils'
-import { InsetStyles, SceneWrapper } from '../common/SceneWrapper'
+import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
@@ -59,7 +59,7 @@ interface StateProps {
   insufficient: boolean
   genericError: string | null
 
-  insetStyles: InsetStyles
+  insetStyle: InsetStyle
 }
 interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => Promise<void>
@@ -285,7 +285,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { fromWalletName, toWalletName, theme, insetStyles } = this.props
+    const { fromWalletName, toWalletName, theme, insetStyle } = this.props
 
     const styles = getStyles(theme)
 
@@ -295,12 +295,12 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     const toHeaderText = sprintf(lstrings.exchange_to_wallet, toWalletName)
 
     return (
-      <View style={[styles.sceneContainer, { paddingTop: insetStyles.paddingTop }]}>
+      <View style={[styles.sceneContainer, { paddingTop: insetStyle.paddingTop }]}>
         <SceneHeader title={lstrings.title_exchange} underline />
         <KeyboardAwareScrollView
           style={styles.mainScrollView}
           keyboardShouldPersistTaps="always"
-          contentContainerStyle={[{ paddingBottom: insetStyles.paddingBottom }, styles.scrollViewContentContainer]}
+          contentContainerStyle={[{ paddingBottom: insetStyle.paddingBottom }, styles.scrollViewContentContainer]}
         >
           <LineTextDivider title={lstrings.fragment_send_from_label} lowerCased />
           <CryptoExchangeFlipInputWrapper
@@ -426,21 +426,23 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   })
 
   return (
-    <SceneWrapper hasTabs hasHeader hasNotifications>
-      {({ insetStyles }) => (
-        <CryptoExchangeComponent
-          route={route}
-          onSelectWallet={handleSelectWallet}
-          getQuoteForTransaction={handleGetQuoteForTransaction}
-          theme={theme}
-          navigation={navigation}
-          account={account}
-          {...result}
-          exchangeInfo={exchangeInfo}
-          insufficient={insufficient}
-          genericError={genericError}
-          insetStyles={insetStyles}
-        />
+    <SceneWrapper hasTabs hasNotifications>
+      {({ insetStyle, undoInsetStyle }) => (
+        <View style={{ ...undoInsetStyle, marginTop: 0 }}>
+          <CryptoExchangeComponent
+            route={route}
+            onSelectWallet={handleSelectWallet}
+            getQuoteForTransaction={handleGetQuoteForTransaction}
+            theme={theme}
+            navigation={navigation}
+            account={account}
+            {...result}
+            exchangeInfo={exchangeInfo}
+            insufficient={insufficient}
+            genericError={genericError}
+            insetStyle={{ ...insetStyle, paddingTop: 0 }}
+          />
+        </View>
       )}
     </SceneWrapper>
   )

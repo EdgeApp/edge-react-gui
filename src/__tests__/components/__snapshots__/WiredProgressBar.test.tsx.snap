@@ -5,6 +5,7 @@ exports[`ProgressBar should render with loading props 1`] = `
   style={
     {
       "flexDirection": "row",
+      "zIndex": 100,
     }
   }
 >
@@ -13,11 +14,11 @@ exports[`ProgressBar should render with loading props 1`] = `
       [
         {
           "backgroundColor": "#00f1a2",
-          "bottom": 0,
+          "height": 3,
           "left": 0,
           "position": "absolute",
-          "top": -3,
-          "zIndex": 100,
+          "right": 0,
+          "top": 0,
         },
         {
           "width": "19.9%",

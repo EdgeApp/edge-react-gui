@@ -2,13 +2,12 @@ import { BottomTabBarProps, BottomTabNavigationEventMap } from '@react-navigatio
 import { NavigationHelpers, ParamListBase } from '@react-navigation/native'
 import * as React from 'react'
 import { useMemo } from 'react'
-import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Platform, TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
-import { BlurView } from 'rn-id-blurview'
 
 import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { Fontello } from '../../assets/vector/index'
@@ -16,17 +15,18 @@ import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
-import { useDrawerOpenRatio } from '../../state/SceneDrawerState'
+import { useFooterOpenRatio } from '../../state/SceneFooterState'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
+import { BlurBackground } from '../ui4/BlurBackground'
 import { VectorIcon } from './VectorIcon'
 
 const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_map'
 
-export const MAX_TAB_BAR_HEIGHT = 92
-export const MIN_TAB_BAR_HEIGHT = 74
+export const MAX_TAB_BAR_HEIGHT = 57
+export const MIN_TAB_BAR_HEIGHT = 40
 
 const title: { readonly [key: string]: string } = {
   homeTab: lstrings.title_home,
@@ -65,11 +65,11 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const activeTabRoute = state.routes[activeTabFullIndex]
   const activeTabIndex = routes.findIndex(route => route.name === activeTabRoute.name)
 
-  const { drawerOpenRatio, resetDrawerRatio } = useDrawerOpenRatio()
+  const { footerOpenRatio, resetFooterRatio } = useFooterOpenRatio()
 
   return (
     <Container>
-      <BlurView blurType={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} overlayColor="rgba(0, 0, 0, 0)" />
+      <BlurBackground />
       <LinearGradient colors={colors} start={start} end={end}>
         <Tabs>
           {routes.map((route, index: number) => (
@@ -79,8 +79,8 @@ export const MenuTabs = (props: BottomTabBarProps) => {
               key={route.name}
               route={route}
               isActive={activeTabIndex === index}
-              drawerOpenRatio={drawerOpenRatio}
-              resetDrawerRatio={resetDrawerRatio}
+              footerOpenRatio={footerOpenRatio}
+              resetFooterRatio={resetFooterRatio}
             />
           ))}
         </Tabs>
@@ -107,16 +107,16 @@ const Tabs = styled(View)({
 const Tab = ({
   route,
   isActive,
-  drawerOpenRatio,
-  resetDrawerRatio,
+  footerOpenRatio,
+  resetFooterRatio,
   currentName,
   navigation
 }: {
   isActive: boolean
   currentName: string
   route: BottomTabBarProps['state']['routes'][number]
-  drawerOpenRatio: SharedValue<number>
-  resetDrawerRatio: () => void
+  footerOpenRatio: SharedValue<number>
+  resetFooterRatio: () => void
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>
 }) => {
   const theme = useTheme()
@@ -137,7 +137,7 @@ const Tab = ({
   }
 
   const handleOnPress = useHandler(() => {
-    resetDrawerRatio()
+    resetFooterRatio()
 
     switch (route.name) {
       case 'homeTab':
@@ -170,7 +170,7 @@ const Tab = ({
   return (
     <TabContainer accessible={false} insetBottom={insets.bottom} key={route.key} onPress={handleOnPress}>
       {icon[route.name]}
-      <Label accessible numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.65} isActive={isActive} openRatio={drawerOpenRatio}>
+      <Label accessible numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.65} isActive={isActive} openRatio={footerOpenRatio}>
         {title[route.name]}
       </Label>
     </TabContainer>
@@ -180,7 +180,7 @@ const Tab = ({
 const TabContainer = styled(TouchableOpacity)<{ insetBottom: number }>(theme => ({ insetBottom }) => ({
   flex: 1,
   paddingTop: theme.rem(0.75),
-  paddingBottom: Math.max(theme.rem(0.75), insetBottom),
+  paddingBottom: insetBottom,
   justifyContent: 'center',
   alignItems: 'center'
 }))

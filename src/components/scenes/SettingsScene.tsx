@@ -290,7 +290,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     const isLightAccount = username == null
 
     return (
-      <SceneWrapper scroll hasTabs={false}>
+      <SceneWrapper scroll>
         <SectionView extendRight marginRem={0.5}>
           <>
             <SettingsHeaderRow

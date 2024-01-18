@@ -1,16 +1,16 @@
 import * as React from 'react'
-import { BackHandler, Dimensions, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { BackHandler, Dimensions, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { Gesture, GestureDetector, ScrollView } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import { BlurView } from 'rn-id-blurview'
 
 import { useHandler } from '../../hooks/useHandler'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { maybeComponent } from '../hoc/maybeComponent'
 import { Theme, useTheme } from '../services/ThemeContext'
+import { BlurBackground } from './BlurBackground'
 
 const BACKGROUND_ALPHA = 0.7
 export interface ModalPropsUi4<T = unknown> {
@@ -125,7 +125,7 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
         <Animated.View style={[styles.body, bodyStyle, bodyLayout]}>
           {/* Need another Biew here because BlurView doesn't accept rounded corners in its styling */}
           <View style={styles.blurContainer}>
-            <BlurView blurType={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} overlayColor={theme.modalAndroidBlurColor} />
+            <BlurBackground />
           </View>
 
           <View style={styles.dragBarContainer}>

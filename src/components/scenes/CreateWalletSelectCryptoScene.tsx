@@ -1,6 +1,6 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { Keyboard, Switch, View } from 'react-native'
+import { Keyboard, ListRenderItemInfo, Switch, View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { enableTokensAcrossWallets, MainWalletCreateItem, PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
@@ -206,7 +206,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     Keyboard.dismiss()
   })
 
-  const renderCreateWalletRow: ListRenderItem<WalletCreateItem> = useHandler(item => {
+  const renderCreateWalletRow = useHandler((item: ListRenderItemInfo<WalletCreateItem>) => {
     const { key, displayName, pluginId, tokenId } = item.item
 
     const accessibilityHint = sprintf(lstrings.create_wallet_hint, displayName)
@@ -242,7 +242,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     () => (
       <Fade noFadeIn={defaultSelection.length > 0} visible={numSelected > 0} duration={300}>
         <View style={styles.bottomButton}>
-          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, -0.5]} onPress={handleNextPress} alignSelf="center" />
+          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, -0.5, 0.5]} onPress={handleNextPress} alignSelf="center" />
         </View>
       </Fade>
     ),
@@ -251,8 +251,8 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
   return (
     <SceneWrapper>
-      {({ insetStyles }) => (
-        <View style={[styles.content, { ...insetStyles, paddingBottom: 0 }]}>
+      {({ insetStyle, undoInsetStyle }) => (
+        <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <SceneHeader title={lstrings.title_create_wallet_select_crypto} withTopMargin />
           <SimpleTextInput
             vertical={0.5}
@@ -267,11 +267,10 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             onClear={() => setSearchTerm('')}
             onSubmitEditing={handleSubmitEditing}
           />
-          <FlashList
+          <FlatList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ paddingBottom: insetStyles.paddingBottom + theme.rem(4.25) }}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
             data={filteredCreateWalletList}
-            estimatedItemSize={theme.rem(4.25)}
             extraData={selectedItems}
             keyboardDismissMode="on-drag"
             keyboardShouldPersistTaps="handled"
@@ -290,9 +289,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignSelf: 'center',
     bottom: theme.rem(1),
     position: 'absolute'
-  },
-  content: {
-    flex: 1
   }
 }))
 

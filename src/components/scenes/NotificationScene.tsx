@@ -42,7 +42,7 @@ export const NotificationScene = (props: Props) => {
   )
 
   return (
-    <SceneWrapper scroll hasTabs={false}>
+    <SceneWrapper scroll>
       <SettingsSwitchRow
         key="marketing-notifications"
         label={lstrings.settings_marketing_notifications_switch}

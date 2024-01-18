@@ -1,19 +1,27 @@
 import { EdgeWalletStates } from 'edge-core-js'
 import * as React from 'react'
 import DraggableFlatList, { DragEndParams, RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist'
+import Animated from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
+import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
+import { InsetStyle } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { WalletListSortableRow } from './WalletListSortableRow'
 
-interface Props {}
+const AnimatedDraggableFlatList = Animated.createAnimatedComponent(DraggableFlatList)
+
+interface Props {
+  insetStyle?: InsetStyle
+}
 
 /**
  * A wallet list that can be dragged to sort the items inside.
  */
 export function WalletListSortable(props: Props) {
+  const { insetStyle } = props
   // Subscribe to account state:
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
@@ -27,6 +35,7 @@ export function WalletListSortable(props: Props) {
       <WalletListSortableRow wallet={currencyWallets[params.item]} onDrag={params.drag} />
     </ScaleDecorator>
   ))
+  const handleScroll = useSceneScrollHandler()
 
   React.useEffect(() => () => {
     const keyStates: EdgeWalletStates = {}
@@ -37,5 +46,17 @@ export function WalletListSortable(props: Props) {
     account.changeWalletStates(keyStates).catch(showError)
   })
 
-  return <DraggableFlatList data={walletOrder} keyExtractor={keyExtractor} renderItem={renderItem} onDragEnd={handleDragEnd} />
+  return (
+    <AnimatedDraggableFlatList
+      data={walletOrder}
+      // @ts-expect-error
+      keyExtractor={keyExtractor}
+      // @ts-expect-error
+      renderItem={renderItem}
+      // @ts-expect-error
+      onDragEnd={handleDragEnd}
+      onScroll={handleScroll}
+      contentContainerStyle={insetStyle}
+    />
+  )
 }

@@ -220,6 +220,11 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
     }
     onScroll={[Function]}
     scrollEventThrottle={0.0001}
+    scrollIndicatorInsets={
+      {
+        "right": 1,
+      }
+    }
     style={
       {
         "height": 1334,

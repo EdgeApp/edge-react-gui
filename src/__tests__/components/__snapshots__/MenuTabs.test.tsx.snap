@@ -19,6 +19,7 @@ exports[`MenuTabs should render with loading props 1`] = `
     overlayColor="rgba(0, 0, 0, 0)"
     style={
       {
+        "backgroundColor": undefined,
         "bottom": 0,
         "left": 0,
         "position": "absolute",

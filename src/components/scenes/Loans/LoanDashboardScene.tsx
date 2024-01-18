@@ -1,7 +1,7 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { ListRenderItemInfo, TouchableOpacity, View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -19,7 +19,6 @@ import { borrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { Theme } from '../../../types/Theme'
-import { FlatListItem } from '../../../types/types'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getCurrencyInfos } from '../../../util/CurrencyInfoHelpers'
 import { LoanSummaryCard } from '../../cards/LoanSummaryCard'
@@ -159,7 +158,7 @@ export const LoanDashboardScene = (props: Props) => {
   // Render
   //
 
-  const renderLoanCard = useHandler((item: FlatListItem<LoanAccount>) => {
+  const renderLoanCard = useHandler((item: ListRenderItemInfo<LoanAccount>) => {
     const loanAccount: LoanAccount = item.item
     const iconUri = getBorrowPluginIconUri(loanAccount.borrowPlugin.borrowInfo)
 
@@ -193,7 +192,7 @@ export const LoanDashboardScene = (props: Props) => {
 
   if (!isWalletsLoaded) {
     return (
-      <SceneWrapper hasTabs={false}>
+      <SceneWrapper>
         <SceneHeader title={lstrings.loan_dashboard_title} underline />
         <FillLoader />
       </SceneWrapper>
@@ -201,7 +200,7 @@ export const LoanDashboardScene = (props: Props) => {
   }
 
   return (
-    <SceneWrapper hasTabs={false}>
+    <SceneWrapper>
       <SceneHeader
         tertiary={
           <TouchableOpacity onPress={handleInfoIconPress}>
@@ -234,7 +233,7 @@ export const LoanDashboardScene = (props: Props) => {
         </>
       ) : (
         <View style={styles.listMargin}>
-          <FlashList
+          <FlatList
             data={Object.values(loanAccountsMap)}
             keyboardShouldPersistTaps="handled"
             keyExtractor={(loanAccount: LoanAccount) => loanAccount.id}

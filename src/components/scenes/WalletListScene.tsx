@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 import { isMaestro } from 'react-native-is-maestro'
 
 import { updateWalletsSort } from '../../actions/WalletListActions'
@@ -14,8 +14,9 @@ import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
-import { SearchDrawer } from '../themed/SearchDrawer'
+import { MainButton } from '../themed/MainButton'
+import { SceneFooterWrapper } from '../themed/SceneFooterWrapper'
+import { SearchFooter } from '../themed/SearchFooter'
 import { WalletListHeader } from '../themed/WalletListHeader'
 import { WalletListSortable } from '../themed/WalletListSortable'
 import { WalletListSwipeable } from '../themed/WalletListSwipeable'
@@ -88,10 +89,16 @@ export function WalletListScene(props: Props) {
 
   const handlePressDone = useHandler(() => setSorting(false))
 
-  const renderDrawer = React.useCallback(
+  const renderFooter = React.useCallback(
     (info: SceneWrapperInfo) => {
-      return (
-        <SearchDrawer
+      return sorting ? (
+        <SceneFooterWrapper info={info}>
+          <View style={styles.sortFooterContainer}>
+            <MainButton key="doneButton" type="escape" label={lstrings.string_done_cap} onPress={handlePressDone} />
+          </View>
+        </SceneFooterWrapper>
+      ) : (
+        <SearchFooter
           placeholder={lstrings.wallet_list_wallet_search}
           isSearching={isSearching}
           searchText={searchText}
@@ -102,36 +109,28 @@ export function WalletListScene(props: Props) {
         />
       )
     },
-    [handleChangeText, handleDoneSearching, handleStartSearching, isSearching, searchText]
+    [handleChangeText, handleDoneSearching, handlePressDone, handleStartSearching, isSearching, searchText, sorting, styles.sortFooterContainer]
   )
 
   return (
-    <SceneWrapper avoidKeyboard hasTabs hasHeader hasNotifications padding={theme.rem(0.5)} renderDrawer={renderDrawer}>
-      {({ insetStyles }) => (
+    <SceneWrapper avoidKeyboard hasTabs hasNotifications padding={theme.rem(0.5)} renderFooter={renderFooter}>
+      {({ insetStyle, undoInsetStyle }) => (
         <>
           <WiredProgressBar />
-          {sorting && (
-            <View style={styles.headerContainer}>
-              <EdgeText style={styles.headerText}>{lstrings.title_wallets}</EdgeText>
-              <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={handlePressDone}>
-                <EdgeText style={styles.doneButton}>{lstrings.string_done_cap}</EdgeText>
-              </TouchableOpacity>
-            </View>
-          )}
-          <View style={styles.listStack}>
+          <View style={[styles.listStack, undoInsetStyle]}>
             <CrossFade activeKey={sorting ? 'sortList' : 'fullList'}>
               <WalletListSwipeable
                 key="fullList"
                 header={header}
                 footer={undefined}
                 navigation={navigation}
-                insetStyles={insetStyles}
+                insetStyle={insetStyle}
                 searching={isSearching}
                 searchText={searchText}
                 onRefresh={handleRefresh}
                 onReset={handleReset}
               />
-              <WalletListSortable key="sortList" />
+              <WalletListSortable insetStyle={insetStyle} key="sortList" />
             </CrossFade>
           </View>
         </>
@@ -141,22 +140,9 @@ export function WalletListScene(props: Props) {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  // The sort & add buttons are stacked on top of the header component:
-  // Header Stack style
-  headerContainer: {
-    flexDirection: 'row',
-    marginHorizontal: theme.rem(1)
-  },
-  headerText: {
-    flex: 1
-  },
-  headerButtonsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  doneButton: {
-    color: theme.textLink
+  sortFooterContainer: {
+    flexDirection: 'column',
+    alignItems: 'center'
   },
   // The two lists are stacked vertically on top of each other:
   listStack: {

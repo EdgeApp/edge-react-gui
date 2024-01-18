@@ -1,7 +1,6 @@
-import { FlashList, FlashListProps, ListRenderItemInfo } from '@shopify/flash-list'
 import * as React from 'react'
 import { useCallback } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { ListRenderItemInfo, TouchableOpacity, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -22,9 +21,7 @@ import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
-import { SearchDrawer } from '../themed/SearchDrawer'
-
-const AnimatedFlashList = Animated.createAnimatedComponent<FlashListProps<number>>(FlashList)
+import { SearchFooter } from '../themed/SearchFooter'
 
 const coinRanking: CoinRanking = { coinRankingDatas: [] }
 
@@ -206,10 +203,10 @@ const CoinRankingComponent = (props: Props) => {
   const timeFrameString = percentChangeStrings[percentChangeTimeFrame]
   const assetSubTextString = assetSubTextStrings[assetSubText]
 
-  const renderDrawer = useCallback(
+  const renderFooter = useCallback(
     (info: SceneWrapperInfo) => {
       return (
-        <SearchDrawer
+        <SearchFooter
           placeholder={lstrings.search_assets}
           isSearching={isSearching}
           searchText={searchText}
@@ -224,10 +221,10 @@ const CoinRankingComponent = (props: Props) => {
   )
 
   return (
-    <SceneWrapper avoidKeyboard hasNotifications renderDrawer={renderDrawer}>
-      {({ insetStyles }) => (
+    <SceneWrapper avoidKeyboard hasNotifications renderFooter={renderFooter}>
+      {({ insetStyle, undoInsetStyle }) => (
         <>
-          <View style={[styles.container, { paddingTop: insetStyles.paddingTop }]}>
+          <View style={styles.headerContainer}>
             <View style={styles.rankView}>
               <EdgeText style={styles.rankText}>{lstrings.coin_rank_rank}</EdgeText>
             </View>
@@ -242,16 +239,17 @@ const CoinRankingComponent = (props: Props) => {
             </View>
           </View>
           <DividerLine marginRem={[0, 0, 0, 1]} />
-          <AnimatedFlashList
-            estimatedItemSize={theme.rem(3.75)}
-            data={listdata}
-            extraData={extraData}
-            renderItem={renderItem}
-            onEndReachedThreshold={1}
-            onEndReached={handleEndReached}
-            contentContainerStyle={{ paddingBottom: insetStyles.paddingBottom }}
-            onScroll={handleScroll}
-          />
+          <View style={{ ...undoInsetStyle, marginTop: 0 }}>
+            <Animated.FlatList
+              data={listdata}
+              extraData={extraData}
+              renderItem={renderItem}
+              onEndReachedThreshold={1}
+              onEndReached={handleEndReached}
+              contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
+              onScroll={handleScroll}
+            />
+          </View>
         </>
       )}
     </SceneWrapper>
@@ -269,7 +267,7 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 
   return {
-    container: {
+    headerContainer: {
       flexDirection: 'row',
       alignItems: 'center',
       marginLeft: theme.rem(1),

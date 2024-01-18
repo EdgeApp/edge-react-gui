@@ -25,7 +25,6 @@ exports[`Request should render with loaded props 1`] = `
       "y": 0,
     }
   }
-  hasTabs={false}
   overrideDots={
     [
       undefined,

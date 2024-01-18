@@ -122,7 +122,6 @@ export interface Theme {
   modalBorderWidth: number
   modalBorderRadiusRem: number
   modalBackgroundUi4: string
-  modalAndroidBlurColor: string
   modalSceneOverlayColor: string
   modalDragbarColor: string
 

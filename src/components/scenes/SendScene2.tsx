@@ -1019,11 +1019,11 @@ const SendComponent = (props: Props) => {
       backgroundGradientStart={theme.assetBackgroundGradientStart}
       overrideDots={theme.backgroundDots.assetOverrideDots}
     >
-      {({ insetStyles }) => (
+      {({ insetStyle }) => (
         <>
           <StyledKeyboardAwareScrollView
-            notificationHeight={insetStyles.paddingBottom}
-            contentContainerStyle={{ paddingTop: insetStyles.paddingTop, paddingBottom: theme.rem(1) + insetStyles.paddingBottom }}
+            notificationHeight={insetStyle.paddingBottom}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: theme.rem(1) + insetStyle.paddingBottom }}
             extraScrollHeight={theme.rem(2.75)}
             enableOnAndroid
           >
@@ -1044,7 +1044,7 @@ const SendComponent = (props: Props) => {
             </CardUi4>
             {renderScamWarning()}
           </StyledKeyboardAwareScrollView>
-          <StyledSliderView notificationHeight={insetStyles.paddingBottom}>
+          <StyledSliderView notificationHeight={insetStyle.paddingBottom}>
             {showSlider && <SafeSlider disabledText={disabledText} onSlidingComplete={handleSliderComplete} disabled={disableSlider} />}
           </StyledSliderView>
         </>

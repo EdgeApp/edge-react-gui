@@ -152,7 +152,6 @@ export const edgeLight: Theme = {
   modalBorderColor: palette.transparent,
   modalBorderWidth: 0,
   modalBorderRadiusRem: 1,
-  modalAndroidBlurColor: palette.whiteOp75,
   modalBackgroundUi4: palette.blackOp25,
   modalSceneOverlayColor: palette.black,
   modalDragbarColor: palette.gray,

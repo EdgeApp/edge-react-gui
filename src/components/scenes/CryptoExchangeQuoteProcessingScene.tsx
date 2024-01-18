@@ -60,7 +60,7 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
   )
 
   return (
-    <SceneWrapper hasTabs={false}>
+    <SceneWrapper>
       <View style={styles.container}>
         <EdgeText style={styles.title}>{lstrings.hang_tight}</EdgeText>
         <EdgeText style={styles.findingText} numberOfLines={3}>

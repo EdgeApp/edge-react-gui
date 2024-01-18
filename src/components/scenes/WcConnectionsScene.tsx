@@ -94,7 +94,7 @@ export const WcConnectionsScene = (props: Props) => {
   }
 
   return (
-    <SceneWrapper hasTabs={false}>
+    <SceneWrapper>
       <SceneHeader underline title={lstrings.wc_walletconnect_title} />
       <ScrollView contentContainerStyle={styles.container}>
         <EdgeText style={styles.subTitle}>{lstrings.wc_walletconnect_subtitle}</EdgeText>

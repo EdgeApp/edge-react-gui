@@ -268,7 +268,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
   renderKeysOnlyMode = () => {
     const styles = getStyles(this.props.theme)
     return (
-      <SceneWrapper hasTabs={false}>
+      <SceneWrapper>
         <SceneHeader title={sprintf(lstrings.request_deprecated_header, this.props.wallet?.currencyInfo.displayName)} underline withTopMargin />
         <Text style={styles.keysOnlyModeText}>{sprintf(lstrings.request_deprecated_currency_code, this.props.primaryCurrencyInfo?.displayCurrencyCode)}</Text>
         <MainButton onPress={this.handleKeysOnlyModePress} label={lstrings.help_support} marginRem={2} type="secondary">
@@ -329,7 +329,6 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
     ) : (
       <SceneWrapper
         accentColors={accentColors}
-        hasTabs={false}
         backgroundGradientColors={backgroundColors}
         backgroundGradientEnd={theme.assetBackgroundGradientEnd}
         backgroundGradientStart={theme.assetBackgroundGradientStart}

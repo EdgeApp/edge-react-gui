@@ -1,6 +1,6 @@
-import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
 import { Linking, TouchableOpacity, View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { ImportKeyOption, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
@@ -214,10 +214,9 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
     <SceneWrapper>
       <SceneHeader title={lstrings.create_wallet_import_options_title} withTopMargin />
       <View style={styles.content}>
-        <FlashList
+        <FlatList
           automaticallyAdjustContentInsets={false}
           data={[...importOpts.entries()]}
-          estimatedItemSize={(importOpts.size * theme.rem(1.375) + values.size * theme.rem(4.25)) / (importOpts.size + values.size)}
           extraData={values}
           keyboardShouldPersistTaps="handled"
           keyExtractor={keyExtractor}

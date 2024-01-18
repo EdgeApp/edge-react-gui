@@ -220,6 +220,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
     }
     onScroll={[Function]}
     scrollEventThrottle={0.0001}
+    scrollIndicatorInsets={
+      {
+        "right": 1,
+      }
+    }
     style={
       {
         "height": 1334,
@@ -3654,6 +3659,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
     }
     onScroll={[Function]}
     scrollEventThrottle={0.0001}
+    scrollIndicatorInsets={
+      {
+        "right": 1,
+      }
+    }
     style={
       {
         "height": 1334,

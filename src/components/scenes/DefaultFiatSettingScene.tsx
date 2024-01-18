@@ -1,7 +1,7 @@
-import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
 import { Alert, Keyboard, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { FlatList } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
 
 import { setDefaultFiatRequest } from '../../actions/SettingsActions'
@@ -12,7 +12,6 @@ import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { Theme } from '../../types/Theme'
 import { FlatListItem, GuiFiatType } from '../../types/types'
-import { scale } from '../../util/scaling'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
@@ -75,16 +74,14 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { theme } = this.props
-    const styles = getStyles(this.props.theme)
     const filteredArray = this.props.supportedFiats.filter(entry => {
       return entry.label.toLowerCase().includes(this.state.searchTerm.toLowerCase())
     })
 
     return (
       <SceneWrapper avoidKeyboard>
-        {({ insetStyles }) => (
-          <View style={[styles.content, { ...insetStyles, paddingBottom: 0 }]}>
+        {({ insetStyle, undoInsetStyle }) => (
+          <View style={{ ...undoInsetStyle, marginTop: 0 }}>
             <SceneHeader title={lstrings.title_create_wallet_select_fiat} underline withTopMargin>
               <SimpleTextInput
                 top={1}
@@ -98,11 +95,10 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
                 iconComponent={SearchIconAnimated}
               />
             </SceneHeader>
-            <FlashList
+            <FlatList
               automaticallyAdjustContentInsets={false}
-              contentContainerStyle={{ paddingBottom: insetStyles.paddingBottom }}
+              contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
               data={filteredArray}
-              estimatedItemSize={theme.rem(1.75)}
               keyboardShouldPersistTaps="handled"
               keyExtractor={this.keyExtractor}
               renderItem={this.renderFiatTypeResult}
@@ -137,10 +133,6 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  content: {
-    flex: 1,
-    paddingTop: scale(5)
-  },
   cryptoTypeLogo: {
     width: theme.rem(2),
     height: theme.rem(2),

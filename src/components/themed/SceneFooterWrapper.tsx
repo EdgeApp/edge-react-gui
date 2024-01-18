@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
-import { LayoutChangeEvent, StyleSheet } from 'react-native'
+import { LayoutChangeEvent } from 'react-native'
 import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
-import { BlurView } from 'rn-id-blurview'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useHandler } from '../../hooks/useHandler'
-import { useDrawerOpenRatio } from '../../state/SceneDrawerState'
+import { useFooterOpenRatio } from '../../state/SceneFooterState'
 import { SceneWrapperInfo } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
-import { useTheme } from '../services/ThemeContext'
+import { BlurBackground } from '../ui4/BlurBackground'
 
-export interface SceneDrawerProps {
+export interface SceneFooterProps {
   children: React.ReactNode
   info: SceneWrapperInfo
 
@@ -17,27 +17,28 @@ export interface SceneDrawerProps {
   noBackgroundBlur?: boolean
 }
 
-export const SceneDrawerWrapper = (props: SceneDrawerProps) => {
+export const SceneFooterWrapper = (props: SceneFooterProps) => {
   const { noBackgroundBlur = false, children, info } = props
-  const theme = useTheme()
-  const { drawerOpenRatio } = useDrawerOpenRatio()
+  const { footerOpenRatio } = useFooterOpenRatio()
 
   const [containerHeight, setContainerHeight] = useState<number | undefined>(undefined)
-  const handleDrawerInnerLayout = useHandler((event: LayoutChangeEvent) => {
+  const handleFooterInnerLayout = useHandler((event: LayoutChangeEvent) => {
     if (containerHeight != null) return
     setContainerHeight(event.nativeEvent.layout.height)
   })
 
+  const safeAreaInsets = useSafeAreaInsets()
+
   return (
     <ContainerAnimatedView
       containerHeight={containerHeight}
-      drawerOpenRatio={drawerOpenRatio}
+      footerOpenRatio={footerOpenRatio}
       hasTabs={info.hasTabs}
-      insetBottom={info.insets.bottom}
+      insetBottom={safeAreaInsets.bottom}
       isKeyboardOpen={info.isKeyboardOpen}
-      onLayout={handleDrawerInnerLayout}
+      onLayout={handleFooterInnerLayout}
     >
-      {noBackgroundBlur ? null : <BlurView blurType={theme.isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} overlayColor="#00000000" />}
+      {noBackgroundBlur ? null : <BlurBackground />}
       {children}
     </ContainerAnimatedView>
   )
@@ -45,11 +46,11 @@ export const SceneDrawerWrapper = (props: SceneDrawerProps) => {
 
 const ContainerAnimatedView = styled(Animated.View)<{
   containerHeight?: number
-  drawerOpenRatio: SharedValue<number>
+  footerOpenRatio: SharedValue<number>
   hasTabs: boolean
   insetBottom: number
   isKeyboardOpen: boolean
-}>(() => ({ containerHeight, drawerOpenRatio, hasTabs, insetBottom, isKeyboardOpen }) => {
+}>(() => ({ containerHeight, footerOpenRatio, hasTabs, insetBottom, isKeyboardOpen }) => {
   return [
     {
       flex: 1,
@@ -57,8 +58,9 @@ const ContainerAnimatedView = styled(Animated.View)<{
     },
     useAnimatedStyle(() => {
       if (containerHeight == null) return {}
+      const maybeInsetHeight = !hasTabs && !isKeyboardOpen ? insetBottom : 0
       return {
-        height: containerHeight * drawerOpenRatio.value + (hasTabs ? 0 : insetBottom)
+        height: containerHeight * footerOpenRatio.value + maybeInsetHeight
       }
     })
   ]

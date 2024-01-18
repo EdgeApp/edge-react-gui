@@ -1,7 +1,7 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -82,7 +82,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
     }, {})
   )
 
-  const flatListRef = React.useRef<FlashList<WalletCreateItem>>(null)
+  const flatListRef = React.useRef<FlatList<WalletCreateItem>>(null)
 
   // Create the wallets and enable the tokens
   useAsyncEffect(
@@ -149,30 +149,31 @@ const CreateWalletCompletionComponent = (props: Props) => {
 
   const renderNextButton = React.useMemo(() => {
     return (
-      <MainButton
-        spinner={!done}
-        disabled={!done}
-        label={!done ? undefined : lstrings.string_done_cap}
-        type="secondary"
-        marginRem={[1]}
-        onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
-        alignSelf="center"
-      />
+      <View style={styles.bottomButton}>
+        <MainButton
+          spinner={!done}
+          disabled={!done}
+          label={!done ? undefined : lstrings.string_done_cap}
+          type="secondary"
+          marginRem={[0, 0, 0.5]}
+          onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
+          alignSelf="center"
+        />
+      </View>
     )
-  }, [done, navigation])
+  }, [done, navigation, styles.bottomButton])
 
   const keyExtractor = useHandler((item: WalletCreateItem) => item.key)
 
   return (
     <SceneWrapper>
-      {({ insetStyles }) => (
-        <View style={[styles.content, insetStyles]}>
+      {({ insetStyle, undoInsetStyle }) => (
+        <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <SceneHeader title={lstrings.title_create_wallets} withTopMargin />
-          <FlashList
+          <FlatList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ paddingTop: theme.rem(0.5) }}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
             data={filteredCreateItemsForDisplay}
-            estimatedItemSize={theme.rem(4.25)}
             fadingEdgeLength={10}
             keyExtractor={keyExtractor}
             extraData={itemStatus}
@@ -188,8 +189,10 @@ const CreateWalletCompletionComponent = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  content: {
-    flex: 1
+  bottomButton: {
+    alignSelf: 'center',
+    bottom: theme.rem(1),
+    position: 'absolute'
   }
 }))
 

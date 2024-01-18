@@ -63,7 +63,7 @@ export const SepaFormScene = React.memo((props: Props) => {
 
   return (
     <SceneWrapper hasNotifications>
-      {({ insetStyles }) => (
+      {({ insetStyle }) => (
         <>
           <SceneHeader title={headerTitle} underline withTopMargin />
           <View style={styles.container}>
@@ -72,7 +72,7 @@ export const SepaFormScene = React.memo((props: Props) => {
               extraScrollHeight={theme.rem(2.75)}
               enableAutomaticScroll
               enableOnAndroid
-              contentContainerStyle={insetStyles}
+              contentContainerStyle={insetStyle}
             >
               <GuiFormField fieldType="name" value={name} label={lstrings.form_field_title_account_owner} onChangeText={handleNameInput} autofocus />
               <GuiFormField fieldType="iban" value={iban} label={lstrings.form_field_title_iban} onChangeText={handleIbanInput} />

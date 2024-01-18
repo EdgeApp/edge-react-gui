@@ -37,7 +37,7 @@ export const CurrencyNotificationScene = (props: Props) => {
   const handleDailyPress = useHandler(updateSettings('daily'))
 
   return (
-    <SceneWrapper scroll hasTabs={false}>
+    <SceneWrapper scroll>
       <SettingsSwitchRow
         key="hourly"
         label={sprintf(lstrings.settings_currency_notifications_percent_change_hour, 3)}
