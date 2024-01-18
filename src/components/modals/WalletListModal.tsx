@@ -22,11 +22,11 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { ModalFooterFade, ModalTitle } from '../themed/ModalParts'
+import { ModalTitle } from '../themed/ModalParts'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
-import { ThemedModal } from '../themed/ThemedModal'
 import { WalletList } from '../themed/WalletList'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
+import { ModalUi4 } from '../ui4/ModalUi4'
 import { ButtonsModal } from './ButtonsModal'
 
 export type WalletListResult =
@@ -220,59 +220,60 @@ export function WalletListModal(props: Props) {
   // #endregion Renderers
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel}>
-      <ModalTitle center>{headerTitle}</ModalTitle>
+    <ModalUi4
+      bridge={bridge}
+      scroll
+      title={
+        <View style={styles.header}>
+          <ModalTitle>{headerTitle}</ModalTitle>
+          <SimpleTextInput
+            around={0.5}
+            returnKeyType="search"
+            placeholder={lstrings.search_wallets}
+            onChangeText={setSearchText}
+            onFocus={handleSearchFocus}
+            onBlur={handleSearchUnfocus}
+            onClear={handleSearchClear}
+            value={searchText}
+            iconComponent={SearchIconAnimated}
+          />
+        </View>
+      }
+      onCancel={handleCancel}
+    >
       {bankSection}
       {customAssetSection}
       {showBankOptions || showCustomAssets ? <EdgeText>{lstrings.your_wallets}</EdgeText> : null}
-      <SimpleTextInput
-        top={0.5}
-        bottom={1.25}
-        returnKeyType="search"
-        placeholder={lstrings.search_wallets}
-        onChangeText={setSearchText}
-        onFocus={handleSearchFocus}
-        onBlur={handleSearchUnfocus}
-        onClear={handleSearchClear}
-        value={searchText}
-        iconComponent={SearchIconAnimated}
+      <WalletList
+        allowedAssets={allowedAssets}
+        allowedWalletIds={allowedWalletIds}
+        excludeAssets={walletListExcludeAssets}
+        excludeWalletIds={excludeWalletIds}
+        filterActivation={filterActivation}
+        searching={searching}
+        searchText={searchText}
+        showCreateWallet={showCreateWallet}
+        createWalletId={createWalletId}
+        onPress={handleWalletListPress}
+        navigation={navigation}
       />
-      <View style={styles.walletsMargin}>
-        <WalletList
-          allowedAssets={allowedAssets}
-          allowedWalletIds={allowedWalletIds}
-          excludeAssets={walletListExcludeAssets}
-          excludeWalletIds={excludeWalletIds}
-          filterActivation={filterActivation}
-          searching={searching}
-          searchText={searchText}
-          showCreateWallet={showCreateWallet}
-          createWalletId={createWalletId}
-          onPress={handleWalletListPress}
-          navigation={navigation}
-        />
-        <ModalFooterFade />
-      </View>
-    </ThemedModal>
+    </ModalUi4>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  header: {
+    flexGrow: 1
+  },
   bankMargin: {
     flex: 1,
     marginBottom: theme.rem(1),
-    marginHorizontal: theme.rem(-1),
     marginTop: theme.rem(-1)
   },
   customAssetMargin: {
     flex: 1,
     marginBottom: theme.rem(1),
-    marginHorizontal: theme.rem(-1),
     marginTop: theme.rem(-0.5)
-  },
-  walletsMargin: {
-    flex: 1,
-    marginHorizontal: theme.rem(-1)
   }
 }))
 
