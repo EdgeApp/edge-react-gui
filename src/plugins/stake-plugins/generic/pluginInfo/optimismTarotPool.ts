@@ -11,7 +11,7 @@ const stakeProviderInfo: StakeProviderInfo = {
 
 const commonAdaptorConfig = {
   type: 'tarot-velodrome-pool' as const,
-  rpcProviderUrls: [`https://rpc.ankr.com/optimism`],
+  rpcProviderUrls: ['https://mainnet.optimism.io'],
   velodromeRouterContractAddress: '0xa062aE8A9c5e11aaA026fc2670B0D65cCc8B2858',
   tarotRouterContractAddress: '0x9761d46Ef36E07131E8c56af06e35CaC23b9A91E',
   leverage: 5
