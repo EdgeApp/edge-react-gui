@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useMemo } from 'react'
-import { ActivityIndicator, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Platform, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, {
   interpolate,
   interpolateColor,
@@ -18,10 +18,10 @@ import { SpaceProps, useSpaceStyle } from '../../hooks/useSpaceStyle'
 import { styled, styledWithRef } from '../hoc/styled'
 import { AnimatedIconComponent, CloseIconAnimated, EyeIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
-import { EdgeText } from './EdgeText'
 import { NumericInput } from './NumericInput'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
+const isAndroid = Platform.OS === 'android'
 
 export type FilledTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'done'
 
@@ -132,6 +132,8 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   const hasIcon = LeftIcon != null
   const hasValue = value !== ''
 
+  const spaceStyle = useSpaceStyle(spaceProps)
+
   // Show/Hide password input:
   const [hidePassword, setHidePassword] = React.useState(secureTextEntry ?? false)
   const handleHidePassword = () => setHidePassword(!hidePassword)
@@ -207,9 +209,9 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   const InputComponent = numeric ? StyledNumericInput : StyledAnimatedTextInput
 
   return (
-    <>
+    <View style={spaceStyle}>
       <TouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
-        <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} multiline={multiline} scale={scale} spaceProps={spaceProps}>
+        <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} multiline={multiline} scale={scale}>
           <SideContainer scale={leftIconSize}>{LeftIcon == null ? null : <LeftIcon color={iconColor} size={leftIconSize} />}</SideContainer>
 
           <InnerContainer focusValue={focusValue} hasPlaceholder={placeholder != null}>
@@ -280,7 +282,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
           <Message>{charactersLeft}</Message>
         </MessagesContainer>
       ) : null}
-    </>
+    </View>
   )
 })
 
@@ -289,8 +291,7 @@ const Container = styled(Animated.View)<{
   focusAnimation: SharedValue<number>
   multiline: boolean
   scale: SharedValue<number>
-  spaceProps: SpaceProps
-}>(theme => ({ disableAnimation, focusAnimation, multiline, scale, spaceProps }) => {
+}>(theme => ({ disableAnimation, focusAnimation, multiline, scale }) => {
   const rem = theme.rem(1)
   const interpolateInputBackgroundColor = useAnimatedColorInterpolateFn(
     theme.textInputBackgroundColor,
@@ -302,24 +303,22 @@ const Container = styled(Animated.View)<{
     theme.textInputBorderColorFocused,
     theme.textInputBorderColorDisabled
   )
-  const spaceStyle = useSpaceStyle(spaceProps)
 
   return [
-    spaceStyle,
     {
       flex: multiline ? 1 : undefined,
       alignItems: multiline ? 'stretch' : 'center',
       borderWidth: theme.textInputBorderWidth,
       borderRadius: theme.rem(0.5),
       flexDirection: 'row',
-      paddingHorizontal: theme.rem(1)
+      paddingHorizontal: theme.rem(0.4)
     },
     useAnimatedStyle(() => ({
       backgroundColor: interpolateInputBackgroundColor(focusAnimation, disableAnimation),
       borderColor: interpolateOutlineColor(focusAnimation, disableAnimation),
       opacity: interpolate(scale.value, [1, 0.5], [1, 0]),
       marginHorizontal: interpolate(scale.value, [1, 0], [0, 2 * rem]),
-      paddingVertical: scale.value * 0.8 * rem
+      paddingVertical: scale.value * 0.75 * rem
     }))
   ]
 })
@@ -346,15 +345,20 @@ const InnerContainer = styled(Animated.View)<{
   hasPlaceholder: boolean
 }>(theme => ({ hasPlaceholder, focusValue }) => {
   const rem = theme.rem(1)
+
+  // Need 2 pixels of shift given a 16 point rem settings
+  const androidHShift = isAndroid ? rem / 8 : 0
+
   return [
     {
+      left: androidHShift,
       flex: 1,
       flexDirection: 'row',
       alignItems: 'flex-start',
       alignSelf: 'flex-start'
     },
     useAnimatedStyle(() => {
-      const shiftValue = interpolate(focusValue.value, [0, 1], [0, rem * 0.4])
+      const shiftValue = interpolate(focusValue.value, [0, 1], [0, rem * 0.5])
       return {
         marginTop: hasPlaceholder ? shiftValue : undefined,
         marginBottom: hasPlaceholder ? -shiftValue : undefined
@@ -365,44 +369,56 @@ const InnerContainer = styled(Animated.View)<{
 
 const PrefixAnimatedText = styled(Animated.Text)<{ visibility: SharedValue<number> }>(theme => ({ visibility }) => {
   const rem = theme.rem(1)
-  const isAndroid = Platform.OS === 'android'
+
   return [
     {
       color: theme.secondaryText,
       fontFamily: theme.fontFaceDefault,
+      fontSize: theme.rem(1),
       includeFontPadding: false
     },
     useAnimatedStyle(() => {
       return {
         opacity: visibility.value,
-        top: isAndroid ? -1 : 0,
         transform: [{ translateY: (1 - visibility.value) * rem }, { scale: visibility.value }]
       }
     })
   ]
 })
 
-const SuffixText = styled(EdgeText)(theme => ({
-  color: theme.secondaryText,
-  fontFamily: theme.fontFaceDefault,
-  includeFontPadding: false,
-  marginRight: theme.rem(1)
-}))
+const SuffixText = styled(Text)(theme => {
+  return {
+    color: theme.secondaryText,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    includeFontPadding: false,
+    marginRight: theme.rem(0.5)
+  }
+})
 
 const Placeholder = styled(Animated.View)<{ shift: SharedValue<number> }>(theme => ({ shift }) => {
   const rem = theme.rem(1)
+  const androidVShift = isAndroid ? rem / 16 : 0
   return [
     {
       position: 'absolute',
-      top: 0,
+      top: androidVShift,
+      left: rem * 0.4,
       alignItems: 'center',
       justifyContent: 'center',
-      paddingHorizontal: theme.rem(0.5),
+      paddingHorizontal: theme.rem(0),
       paddingVertical: 0,
       margin: 0
     },
     useAnimatedStyle(() => ({
-      transform: [{ translateY: interpolate(shift.value, [0, 1], [0, -1.2 * rem]) }]
+      transform: [
+        {
+          translateY: interpolate(shift.value, [0, 1], [0, -1 * rem])
+        },
+        {
+          translateX: interpolate(shift.value, [0, 1], [0, -0.4 * rem])
+        }
+      ]
     }))
   ]
 })
@@ -429,7 +445,7 @@ const PlaceholderText = styled(Animated.Text)<{
     useAnimatedStyle(() => {
       return {
         color: interpolatePlaceholderTextColor(focusAnimation, disableAnimation),
-        fontSize: interpolate(shift.value, [0, 1], [fontSizeBase, 0.8 * fontSizeBase])
+        fontSize: interpolate(shift.value, [0, 1], [fontSizeBase, 0.75 * fontSizeBase])
       }
     })
   ]
@@ -442,6 +458,10 @@ const StyledAnimatedTextInput = styledWithRef(AnimatedTextInput)<{
 }>(theme => ({ disableAnimation, focusAnimation, scale }) => {
   const rem = theme.rem(1)
   const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused, theme.textInputTextColorDisabled)
+  // Need 2 pixels of shift given a 16 point rem settings
+  // This is due to Android rendering a text input vertically lower
+  // than a Text field by ~2 pixels
+  const androidVShift = isAndroid ? rem / 8 : 0
 
   return [
     {
@@ -449,8 +469,9 @@ const StyledAnimatedTextInput = styledWithRef(AnimatedTextInput)<{
       flexGrow: 1,
       flexShrink: 1,
       fontFamily: theme.fontFaceDefault,
-      paddingHorizontal: theme.rem(0.5),
+      paddingHorizontal: 0,
       paddingVertical: 0,
+      transform: [{ translateY: -androidVShift }],
       margin: 0
     },
     useAnimatedStyle(() => ({
@@ -467,6 +488,10 @@ const StyledNumericInput = styledWithRef(NumericInput)<{
 }>(theme => ({ disableAnimation, focusAnimation, scale }) => {
   const rem = theme.rem(1)
   const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused, theme.textInputTextColorDisabled)
+  // Need 2 pixels of shift given a 16 point rem settings
+  // This is due to Android rendering a text input vertically lower
+  // than a Text field by ~2 pixels
+  const androidVShift = isAndroid ? rem / 8 : 0
 
   return [
     {
@@ -474,8 +499,9 @@ const StyledNumericInput = styledWithRef(NumericInput)<{
       flexGrow: 1,
       flexShrink: 1,
       fontFamily: theme.fontFaceDefault,
-      paddingHorizontal: theme.rem(0.5),
+      paddingHorizontal: 0,
       paddingVertical: 0,
+      transform: [{ translateY: -androidVShift }],
       margin: 0
     },
     useAnimatedStyle(() => ({
@@ -491,10 +517,12 @@ const MessagesContainer = styled(Animated.View)(theme => ({
   paddingHorizontal: theme.rem(0.5)
 }))
 
-const Message = styled(EdgeText)<{ danger?: boolean }>(theme => props => [
+const Message = styled(Text)<{ danger?: boolean }>(theme => props => [
   {
     color: props.danger === true ? theme.dangerText : theme.secondaryText,
-    fontSize: theme.rem(0.8)
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(0.75),
+    includeFontPadding: false
   }
 ])
 

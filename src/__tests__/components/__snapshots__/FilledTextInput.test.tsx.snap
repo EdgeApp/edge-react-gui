@@ -1,7 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FilledTextInput should render with some props 1`] = `
-<React.Fragment>
+<View
+  style={
+    {
+      "alignItems": undefined,
+      "flex": undefined,
+      "flexDirection": "column",
+      "justifyContent": undefined,
+      "marginBottom": 0,
+      "marginLeft": 0,
+      "marginRight": 0,
+      "marginTop": 0,
+    }
+  }
+>
   <TouchableWithoutFeedback
     accessible={false}
     onPress={[Function]}
@@ -22,12 +35,6 @@ exports[`FilledTextInput should render with some props 1`] = `
       scale={
         {
           "value": 1,
-        }
-      }
-      spaceProps={
-        {
-          "keyboardType": "default",
-          "returnKeyType": "done",
         }
       }
     >
@@ -163,14 +170,14 @@ exports[`FilledTextInput should render with some props 1`] = `
     </StyledComponent(View)>
   </TouchableWithoutFeedback>
   <StyledComponent(View)>
-    <StyledComponent(WithTheme(EdgeTextComponent))
+    <StyledComponent(Text)
       danger={true}
     >
       string
-    </StyledComponent(WithTheme(EdgeTextComponent))>
-    <StyledComponent(WithTheme(EdgeTextComponent))>
+    </StyledComponent(Text)>
+    <StyledComponent(Text)>
       5
-    </StyledComponent(WithTheme(EdgeTextComponent))>
+    </StyledComponent(Text)>
   </StyledComponent(View)>
-</React.Fragment>
+</View>
 `;

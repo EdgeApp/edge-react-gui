@@ -33,6 +33,10 @@ export function InputTesterScene(props: Props) {
   const [value0, setValue0] = useState<string>('')
   const [value1, setValue1] = useState<string>('')
   const [filledTextInputValue, setFilledTextInputValue] = useState<string>('')
+  const [filledTextInputValue2, setFilledTextInputValue2] = useState<string>('')
+  const [filledTextInputValue3, setFilledTextInputValue3] = useState<string>('')
+  const [filledTextInputValue4, setFilledTextInputValue4] = useState<string>('')
+  const [filledTextInputValue5, setFilledTextInputValue5] = useState<string>('')
   const walletId = selectedWallet?.wallet.id ?? ''
   const tokenId = selectedWallet?.tokenId ?? null
   const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
@@ -85,14 +89,52 @@ export function InputTesterScene(props: Props) {
     <SceneWrapper scroll hasTabs hasHeader={false}>
       <SectionView marginRem={1}>
         <FilledTextInput
-          vertical={1}
           value={filledTextInputValue}
           onChangeText={setFilledTextInputValue}
           autoFocus={false}
           placeholder="Test FilledTextInput"
           maxLength={100}
         />
-
+        <FilledTextInput
+          vertical={1}
+          prefix="PRE"
+          value={filledTextInputValue2}
+          onChangeText={setFilledTextInputValue2}
+          autoFocus={false}
+          placeholder="Test FilledTextInput"
+          maxLength={100}
+        />
+        <FilledTextInput
+          numeric
+          vertical={1}
+          value={filledTextInputValue3}
+          onChangeText={setFilledTextInputValue3}
+          autoFocus={false}
+          placeholder="Test FilledTextInput num"
+        />
+        <FilledTextInput
+          numeric
+          vertical={1}
+          prefix="$"
+          suffix="BTC"
+          value={filledTextInputValue4}
+          onChangeText={setFilledTextInputValue4}
+          autoFocus={false}
+          placeholder="Test FilledTextInput num"
+          error="Error"
+          maxLength={100}
+        />
+        <FilledTextInput
+          vertical={1}
+          prefix="USD"
+          suffix="BTC"
+          value={filledTextInputValue5}
+          onChangeText={setFilledTextInputValue5}
+          autoFocus={false}
+          placeholder="Test FilledTextInput"
+          error="Error"
+          maxLength={100}
+        />
         <CardUi4>
           <ExchangedFlipInput2
             ref={exchangedFlipInputRef}
