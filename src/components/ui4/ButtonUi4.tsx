@@ -127,6 +127,8 @@ export function ButtonUi4(props: Props) {
   if (layout === 'row') containerStyle.push(styles.containerRow)
   if (layout === 'solo') containerStyle.push(styles.containerSolo)
 
+  if (type === 'tertiary') containerStyle.push(styles.containerTertiary)
+
   const customMargin = marginRem == null ? undefined : sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
   const customPadding = paddingRem == null ? undefined : sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
   const finalContainerCommon = [styles.containerCommon, containerStyle, customMargin, customPadding]
@@ -181,6 +183,13 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     containerRow: {
       flex: 1
+    },
+    containerTertiary: {
+      // Reduce the bounds of a tertiary button so it doesn't appear to be too
+      // far from other buttons
+      alignSelf: 'center',
+      padding: 0,
+      height: undefined
     },
     primaryText: {
       fontFamily: theme.primaryButtonFont,
