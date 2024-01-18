@@ -222,7 +222,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                 "borderColor": undefined,
                 "marginHorizontal": undefined,
                 "opacity": undefined,
-                "paddingVertical": 17.6,
+                "paddingVertical": 16.5,
               },
             ]
           }
