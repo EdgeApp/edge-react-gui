@@ -2,7 +2,7 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import { ethers } from 'ethers'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -19,6 +19,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { getTokenId, getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { AddressModal } from '../modals/AddressModal'
 import { ScanModal } from '../modals/ScanModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
@@ -263,7 +264,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   return (
     <RowUi4 rightButtonType={tileType} loading={loading} title={title} onPress={handleTilePress}>
       {!recipientAddress && (
-        <View style={styles.buttonsContainer}>
+        <EdgeAnim style={styles.buttonsContainer} enter={{ type: 'stretchInY' }} exit={{ type: 'stretchOutY' }}>
           <TouchableOpacity style={styles.buttonContainer} onPress={handleChangeAddress}>
             <FontAwesome name="edit" size={theme.rem(2)} color={theme.iconTappable} />
             <EdgeText style={styles.buttonText}>{lstrings.enter_as_in_enter_address_with_keyboard}</EdgeText>
@@ -282,15 +283,15 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
             <FontAwesome5 name="clipboard" size={theme.rem(2)} color={theme.iconTappable} />
             <EdgeText style={styles.buttonText}>{lstrings.string_paste}</EdgeText>
           </TouchableOpacity>
-        </View>
+        </EdgeAnim>
       )}
       {recipientAddress == null || recipientAddress === '' ? null : (
-        <>
+        <EdgeAnim enter={{ type: 'stretchInY' }} exit={{ type: 'stretchOutY' }}>
           {fioToAddress == null ? null : <EdgeText>{fioToAddress + '\n'}</EdgeText>}
           <EdgeText numberOfLines={3} disableFontScaling>
             {recipientAddress}
           </EdgeText>
-        </>
+        </EdgeAnim>
       )}
     </RowUi4>
   )

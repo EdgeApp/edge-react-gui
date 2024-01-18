@@ -14,7 +14,9 @@ import Animated, {
   FadeOutLeft,
   FadeOutRight,
   FadeOutUp,
-  LinearTransition
+  LinearTransition,
+  StretchInY,
+  StretchOutY
 } from 'react-native-reanimated'
 
 export const DEFAULT_ANIMATION_DURATION_MS = 300
@@ -24,7 +26,9 @@ export const MAX_LIST_ITEMS_ANIM = 10
 type AnimBuilder = typeof ComplexAnimationBuilder
 type AnimTypeFadeIns = 'fadeIn' | 'fadeInDown' | 'fadeInUp' | 'fadeInLeft' | 'fadeInRight'
 type AnimTypeFadeOuts = 'fadeOut' | 'fadeOutDown' | 'fadeOutUp' | 'fadeOutLeft' | 'fadeOutRight'
-type AnimType = AnimTypeFadeIns | AnimTypeFadeOuts
+type AnimTypeStretchIns = 'stretchInY'
+type AnimTypeStretchOuts = 'stretchOutY'
+type AnimType = AnimTypeFadeIns | AnimTypeFadeOuts | AnimTypeStretchIns | AnimTypeStretchOuts
 
 interface Anim {
   type: AnimType
@@ -58,7 +62,9 @@ const builderMap: Record<AnimType, AnimBuilder> = {
   fadeOutDown: FadeOutDown,
   fadeOutUp: FadeOutUp,
   fadeOutLeft: FadeOutLeft,
-  fadeOutRight: FadeOutRight
+  fadeOutRight: FadeOutRight,
+  stretchInY: StretchInY,
+  stretchOutY: StretchOutY
 }
 
 const getAnimBuilder = (anim?: Anim) => {

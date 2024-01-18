@@ -40,6 +40,7 @@ import { addToFioAddressCache, checkRecordSendFee, FIO_FEE_EXCEEDS_SUPPLIED_MAXI
 import { logActivity } from '../../util/logger'
 import { convertTransactionFeeToDisplayFee, darkenHexColor, DECIMAL_PRECISION, zeroString } from '../../util/utils'
 import { getMemoError, getMemoLabel, getMemoTitle } from '../../util/validateMemos'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -110,7 +111,7 @@ interface FioSenderInfo {
 // animation is added. Waiting for reanimated v3 which fixes crashes in Layout animations.
 // Note: multiple targets can be added via JSON payment protocol to fix payments to Anypay
 // invoices.
-const ALLOW_MULTIPLE_TARGETS = false
+const ALLOW_MULTIPLE_TARGETS = true
 
 const PIN_MAX_LENGTH = 4
 const INFINITY_STRING = '999999999999999999999999999999999999999'
@@ -1027,25 +1028,35 @@ const SendComponent = (props: Props) => {
             extraScrollHeight={theme.rem(2.75)}
             enableOnAndroid
           >
-            <CardUi4>{renderSelectedWallet()}</CardUi4>
-            <CardUi4 sections>
-              {renderAddressAmountPairs()}
-              {renderAddAddress()}
-              {renderTimeout()}
-              {renderError()}
-            </CardUi4>
-            <CardUi4 sections>
-              {renderFees()}
-              {renderMetadataNotes()}
-              {renderSelectFioAddress()}
-              {renderUniqueIdentifier()}
-              {renderInfoTiles()}
-              {renderAuthentication()}
-            </CardUi4>
-            {renderScamWarning()}
+            <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
+              <CardUi4>{renderSelectedWallet()}</CardUi4>
+            </EdgeAnim>
+            <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
+              <CardUi4 sections>
+                {renderAddressAmountPairs()}
+                {renderAddAddress()}
+                {renderTimeout()}
+                {renderError()}
+              </CardUi4>
+            </EdgeAnim>
+            <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
+              <CardUi4 sections>
+                {renderFees()}
+                {renderMetadataNotes()}
+                {renderSelectFioAddress()}
+                {renderUniqueIdentifier()}
+                {renderInfoTiles()}
+                {renderAuthentication()}
+              </CardUi4>
+            </EdgeAnim>
+            <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>{renderScamWarning()}</EdgeAnim>
           </StyledKeyboardAwareScrollView>
           <StyledSliderView notificationHeight={insetStyle.paddingBottom}>
-            {showSlider && <SafeSlider disabledText={disabledText} onSlidingComplete={handleSliderComplete} disabled={disableSlider} />}
+            {showSlider && (
+              <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
+                <SafeSlider disabledText={disabledText} onSlidingComplete={handleSliderComplete} disabled={disableSlider} />
+              </EdgeAnim>
+            )}
           </StyledSliderView>
         </>
       )}

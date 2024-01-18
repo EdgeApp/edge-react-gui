@@ -7,6 +7,7 @@ import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelector
 import { GuiExchangeRates } from '../../types/types'
 import { getWalletFiat } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, zeroString } from '../../util/utils'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { RowUi4 } from '../ui4/RowUi4'
@@ -49,18 +50,24 @@ export const EditableAmountTile = (props: Props) => {
     cryptoAmountSyntax = `0 ${displayDenomination.name}`
   }
 
+  const key = `${cryptoAmountSyntax}-${title}`
+
   if (compressed) {
     return (
-      <RowUi4 rightButtonType={lockInputs ? 'none' : 'delete'} title={title} body={`Amount: ${cryptoAmountSyntax} (${fiatAmountSyntax})`} onPress={onPress} />
+      <EdgeAnim key={key} enter={{ type: 'stretchInY' }} exit={{ type: 'stretchOutY' }}>
+        <RowUi4 rightButtonType={lockInputs ? 'none' : 'delete'} title={title} body={`Amount: ${cryptoAmountSyntax} (${fiatAmountSyntax})`} onPress={onPress} />
+      </EdgeAnim>
     )
   } else {
     return (
-      <RowUi4 rightButtonType={lockInputs ? 'none' : 'editable'} title={title} onPress={lockInputs ? undefined : onPress}>
-        <EdgeText style={[styles.amountText, cryptoAmountStyle]} minimumFontScale={0.3}>
-          {cryptoAmountSyntax}
-        </EdgeText>
-        {fiatAmountSyntax == null ? null : <EdgeText>{fiatAmountSyntax}</EdgeText>}
-      </RowUi4>
+      <EdgeAnim key={key} enter={{ type: 'stretchInY' }} exit={{ type: 'stretchOutY' }}>
+        <RowUi4 rightButtonType={lockInputs ? 'none' : 'editable'} title={title} onPress={lockInputs ? undefined : onPress}>
+          <EdgeText style={[styles.amountText, cryptoAmountStyle]} minimumFontScale={0.3}>
+            {cryptoAmountSyntax}
+          </EdgeText>
+          {fiatAmountSyntax == null ? null : <EdgeText>{fiatAmountSyntax}</EdgeText>}
+        </RowUi4>
+      </EdgeAnim>
     )
   }
 }
