@@ -91,7 +91,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
     onSubmitEditing,
 
     // TextInput:
-    autoCapitalize,
+    autoCapitalize = props.secureTextEntry === true ? 'none' : undefined,
     autoCorrect,
     autoFocus = false,
     blurOnClear = false,
