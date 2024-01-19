@@ -5,9 +5,13 @@ import Evilicons from 'react-native-vector-icons/EvilIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants'
+import { useIconColor } from '../../hooks/useIconColor'
 import { lstrings } from '../../locales/strings'
+import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { FeeOption } from '../../types/types'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { darkenHexColor } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { SettingsRadioRow } from '../settings/SettingsRadioRow'
@@ -15,8 +19,13 @@ import { Alert } from '../themed/Alert'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
+import { AccentColors } from '../ui4/DotsBackground'
 
 interface OwnProps extends EdgeSceneProps<'changeMiningFee2'> {}
+
+interface HookProps {
+  iconColor?: string
+}
 
 type Props = OwnProps & ThemeProps
 
@@ -40,7 +49,7 @@ const feeOptions = {
   }
 }
 
-export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> {
+export class ChangeMiningFeeComponent extends React.PureComponent<Props & HookProps, State> {
   constructor(props: Props) {
     super(props)
     const { networkFeeOption = 'standard', customNetworkFee = {} } = this.props.route.params.spendInfo
@@ -75,14 +84,32 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
   }
 
   render() {
-    const { theme } = this.props
+    const { iconColor, theme } = this.props
     const styles = getStyles(theme)
 
     const customFormat = this.getCustomFormat()
     const { networkFeeOption } = this.state
 
+    const accentColors: AccentColors = {
+      // Transparent fallback for while iconColor is loading
+      iconAccentColor: iconColor ?? '#00000000'
+    }
+
+    const backgroundColors = [...theme.assetBackgroundGradientColors]
+    if (iconColor != null) {
+      const scaledColor = darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+      backgroundColors[0] = scaledColor
+    }
+
     return (
-      <SceneWrapper avoidKeyboard>
+      <SceneWrapper
+        accentColors={accentColors}
+        avoidKeyboard
+        backgroundGradientColors={backgroundColors}
+        backgroundGradientEnd={theme.assetBackgroundGradientEnd}
+        backgroundGradientStart={theme.assetBackgroundGradientStart}
+        overrideDots={theme.backgroundDots.assetOverrideDots}
+      >
         <SceneHeader title={lstrings.title_change_mining_fee} underline withTopMargin />
         <ScrollView contentContainerStyle={styles.container}>
           {Object.keys(feeOptions).map(feeSetting => {
@@ -186,4 +213,16 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-export const ChangeMiningFeeScene = withTheme(ChangeMiningFeeComponent)
+const ChangeMiningFeeSceneThemed = withTheme(ChangeMiningFeeComponent)
+
+export const ChangeMiningFeeScene = (props: OwnProps) => {
+  const account = useSelector(state => state.core.account)
+  const currencyCode = useSelector(state => state.ui.wallets.selectedCurrencyCode)
+  const walletId = useSelector(state => state.ui.wallets.selectedWalletId)
+  const wallet = account.currencyWallets[walletId] ?? {}
+  const { pluginId = '' } = wallet.currencyInfo ?? {}
+  const tokenId = getTokenId(account, pluginId, currencyCode)
+
+  const iconColor = useIconColor({ pluginId, tokenId: tokenId !== undefined ? tokenId : '' })
+  return <ChangeMiningFeeSceneThemed {...props} iconColor={iconColor} />
+}
