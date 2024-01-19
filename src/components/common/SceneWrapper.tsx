@@ -146,7 +146,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
 
   const { renderFooter } = useSceneFooterRenderState()
 
-  const renderScene = (safeAreaInsets: EdgeInsets, keyboardAnimation: Animated.Value | undefined, trackerValue: number): JSX.Element => {
+  const renderScene = (keyboardAnimation: Animated.Value | undefined, trackerValue: number): JSX.Element => {
     // If function children, the caller handles the insets and overscroll
     const isFuncChildren = typeof children === 'function'
 
@@ -172,7 +172,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     // This is a convenient styles object which may be applied as
     // contentContainerStyles for child scroll components. It will also be
     // used for the ScrollView component internal to the SceneWrapper.
-    const insetStyle = {
+    const insetStyle: InsetStyle = {
       paddingTop: insets.top,
       paddingRight: insets.right,
       paddingBottom: insets.bottom,
@@ -231,15 +231,11 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   return avoidKeyboard ? (
     <KeyboardTracker downValue={downValue} upValue={upValue}>
       {(keyboardAnimation, trackerValue) =>
-        renderScene(
-          safeAreaInsets,
-          keyboardAnimation /* Animation between downValue and upValue */,
-          trackerValue /* downValue or upValue depending on if the keyboard state */
-        )
+        renderScene(keyboardAnimation /* Animation between downValue and upValue */, trackerValue /* downValue or upValue depending on if the keyboard state */)
       }
     </KeyboardTracker>
   ) : (
-    renderScene(safeAreaInsets, undefined, 0)
+    renderScene(undefined, 0)
   )
 }
 
