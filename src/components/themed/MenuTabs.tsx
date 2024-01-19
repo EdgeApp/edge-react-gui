@@ -2,7 +2,7 @@ import { BottomTabBarProps, BottomTabNavigationEventMap } from '@react-navigatio
 import { NavigationHelpers, ParamListBase } from '@react-navigation/native'
 import * as React from 'react'
 import { useMemo } from 'react'
-import { Platform, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -42,9 +42,6 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const { navigation, state } = props
   const theme = useTheme()
   const activeTabFullIndex = state.index
-  const colors = Platform.OS === 'ios' ? theme.tabBarBackgroundIos : theme.tabBarBackground
-  const start = theme.tabBarBackgroundStart
-  const end = theme.tabBarBackgroundEnd
   const routes = useMemo(
     () =>
       state.routes.filter(route => {
@@ -70,7 +67,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   return (
     <Container>
       <BlurBackground />
-      <LinearGradient colors={colors} start={start} end={end}>
+      <LinearGradient colors={theme.tabBarBackground} start={theme.tabBarBackgroundStart} end={theme.tabBarBackgroundEnd}>
         <Tabs>
           {routes.map((route, index: number) => (
             <Tab
