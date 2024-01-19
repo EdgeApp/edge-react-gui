@@ -150,7 +150,6 @@ export const WcSmartContractModal = (props: Props) => {
           <ModalTitle>{lstrings.wc_smartcontract_title}</ModalTitle>
         </View>
       }
-      paddingRem={[1, 0]}
     >
       <ScrollView contentContainerStyle={styles.scrollPadding}>
         {renderWarning()}
@@ -192,7 +191,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   title: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: theme.rem(1)
+    paddingHorizontal: theme.rem(1),
+    paddingTop: theme.rem(1)
   },
   logo: {
     height: theme.rem(2),

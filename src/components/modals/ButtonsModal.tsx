@@ -78,7 +78,7 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
   }
 
   return (
-    <ModalUi4 warning={warning} bridge={bridge} paddingRem={1} title={title} onCancel={disableCancel ? undefined : handleCancel}>
+    <ModalUi4 warning={warning} bridge={bridge} title={title} onCancel={disableCancel ? undefined : handleCancel}>
       <View style={containerStyle}>
         <View style={textStyle}>
           {message != null ? <ModalMessage>{message}</ModalMessage> : null}

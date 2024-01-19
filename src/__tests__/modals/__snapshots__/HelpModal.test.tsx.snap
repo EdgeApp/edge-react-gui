@@ -62,8 +62,8 @@ exports[`HelpModal should render with loading props 1`] = `
           "borderWidth": 0,
           "marginBottom": -86,
           "paddingBottom": 86,
-          "paddingLeft": 0,
-          "paddingRight": 0,
+          "paddingLeft": 11,
+          "paddingRight": 11,
           "paddingTop": 0,
         },
       ]
@@ -116,7 +116,7 @@ exports[`HelpModal should render with loading props 1`] = `
             "marginTop": 28,
           },
           {
-            "marginBottom": 22,
+            "marginBottom": 11,
           },
         ]
       }
@@ -128,6 +128,7 @@ exports[`HelpModal should render with loading props 1`] = `
             "flexDirection": "column",
             "flexGrow": 1,
             "justifyContent": "center",
+            "marginTop": 6,
           }
         }
       >
@@ -154,22 +155,35 @@ exports[`HelpModal should render with loading props 1`] = `
           }
         >
           <Text
+            adjustsFontSizeToFit={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
             style={
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 27,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
                 },
-                {
-                  "textAlign": "center",
-                },
-                {
-                  "paddingBottom": 0,
-                  "paddingLeft": 0,
-                  "paddingRight": 0,
-                  "paddingTop": 0,
-                },
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Medium",
+                    "fontSize": 27,
+                  },
+                  {
+                    "flexGrow": 1,
+                    "textAlign": "center",
+                  },
+                  {
+                    "marginBottom": 0,
+                    "marginLeft": 0,
+                    "marginRight": 0,
+                    "marginTop": 0,
+                  },
+                ],
+                null,
               ]
             }
           >
@@ -209,7 +223,7 @@ exports[`HelpModal should render with loading props 1`] = `
           {
             "opacity": 1,
             "position": "absolute",
-            "right": 11,
+            "right": 6,
             "top": 3,
           }
         }

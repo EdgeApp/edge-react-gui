@@ -70,7 +70,6 @@ export const HelpModal = (props: Props) => {
         </View>
       }
       onCancel={handleClose}
-      paddingRem={[1, 0]}
       scroll
     >
       <SelectableRow
@@ -121,7 +120,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexGrow: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop: theme.rem(0.25)
   },
   logo: {
     height: theme.rem(2.25)

@@ -138,20 +138,32 @@ exports[`WalletListModal should render with loading props 1`] = `
           }
         >
           <Text
+            adjustsFontSizeToFit={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
             style={
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 27,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
                 },
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Medium",
+                    "fontSize": 27,
+                  },
+                  null,
+                  {
+                    "marginBottom": 0,
+                    "marginLeft": 0,
+                    "marginRight": 0,
+                    "marginTop": 0,
+                  },
+                ],
                 null,
-                {
-                  "paddingBottom": 0,
-                  "paddingLeft": 0,
-                  "paddingRight": 0,
-                  "paddingTop": 0,
-                },
               ]
             }
           >
@@ -467,7 +479,7 @@ exports[`WalletListModal should render with loading props 1`] = `
           {
             "opacity": 1,
             "position": "absolute",
-            "right": 11,
+            "right": 6,
             "top": 3,
           }
         }

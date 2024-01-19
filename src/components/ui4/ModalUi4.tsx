@@ -7,12 +7,12 @@ import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
-import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { BlurBackground } from './BlurBackground'
 
 const BACKGROUND_ALPHA = 0.7
+
 export interface ModalPropsUi4<T = unknown> {
   bridge: AirshipBridge<T>
 
@@ -21,9 +21,6 @@ export interface ModalPropsUi4<T = unknown> {
   title?: React.ReactNode
 
   children?: React.ReactNode
-
-  // Internal padding to place inside the component.
-  paddingRem?: number[] | number
 
   // Include a scroll area:
   scroll?: boolean
@@ -44,11 +41,11 @@ const duration = 300
  * and dims the rest of the app.
  */
 export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
-  const { bridge, title, children, paddingRem, scroll = false, warning = false, onCancel } = props
+  const { bridge, title, children, scroll = false, warning = false, onCancel } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const customPadding = sidesToPadding(mapSides(fixSides(paddingRem, 0.5), theme.rem))
+  const halfRem = theme.rem(0.5)
   const closeThreshold = theme.rem(6)
   const dragSlop = theme.rem(1)
 
@@ -120,12 +117,8 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
     borderColor: warning ? theme.warningText : theme.modalBorderColor,
     borderWidth: warning ? 4 : theme.modalBorderWidth,
     marginBottom: -bottomGap,
-    paddingTop: isHeaderless ? customPadding.paddingTop : 0, // If there's a header; either close button or a title, the custom paddingTop will be added to the bottom of the title container.
-    paddingBottom: bottomGap + (scroll ? 0 : customPadding.paddingBottom), // Ignore custom padding on bottom for scrollable content so we don't have a cutoff gap when scrolling content
-
-    // No matter if we are scrollling or not, horizontal paddings are fixed
-    paddingLeft: customPadding.paddingLeft,
-    paddingRight: customPadding.paddingRight
+    paddingTop: isHeaderless ? halfRem : 0, // If there's a header; either close button or a title, the custom paddingTop will be added to the bottom of the title container.
+    paddingBottom: bottomGap + (scroll ? 0 : halfRem) // Ignore padding on bottom for scrollable content so we don't have a cutoff gap when scrolling content
   }
 
   return (
@@ -142,7 +135,7 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
           </View>
 
           {isHeaderless ? null : (
-            <View style={[styles.titleContainer, { marginBottom: customPadding.paddingTop }]}>
+            <View style={styles.titleContainer}>
               {typeof title === 'string' ? (
                 <EdgeText style={styles.titleText} numberOfLines={2}>
                   {title}
@@ -181,7 +174,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderTopRightRadius: theme.rem(1),
     flexShrink: 1,
     overflow: 'hidden',
-    width: theme.rem(30) // This works as a maxWidth because flexShrink is set
+    width: theme.rem(30), // This works as a maxWidth because flexShrink is set
+    paddingLeft: theme.rem(0.5),
+    paddingRight: theme.rem(0.5)
   },
   scroll: {
     // Only take up as much space as needed to display the contents
@@ -209,23 +204,25 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'flex-end',
     justifyContent: 'flex-start',
     paddingTop: theme.rem(0.15), // Bake in margins to align with 1 line of text, no matter the number of lines
-    marginRight: theme.rem(0.5)
+    marginRight: theme.rem(0.25) // Less margins because the icon itself comes with whitespace
   },
   closeIconContainerAbsolute: {
     // Used when the caller passes a special title that may span the entire
     // width. It's up to the caller to ensure there's no overlap with the close button.
     position: 'absolute',
     top: theme.rem(0.15), // Bake in margins to align with 1 line of text, which is often supplied in custom headers.
-    right: theme.rem(0.5)
+    right: theme.rem(0.25)
   },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginTop: theme.rem(1.25) // Ensure the top drag bar is not overlapped
+    marginTop: theme.rem(1.25), // Ensure the top drag bar is not overlapped
+    marginBottom: theme.rem(0.5)
   },
   titleText: {
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1.2),
-    marginHorizontal: theme.rem(0.5)
+    marginHorizontal: theme.rem(0.5),
+    flexShrink: 1
   }
 }))

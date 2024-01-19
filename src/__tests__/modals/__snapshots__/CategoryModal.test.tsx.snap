@@ -134,6 +134,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               "includeFontPadding": false,
             },
             {
+              "flexShrink": 1,
               "fontFamily": "Quicksand-Medium",
               "fontSize": 27,
               "marginHorizontal": 11,
@@ -178,7 +179,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             "alignSelf": "flex-start",
             "flexGrow": 1,
             "justifyContent": "flex-start",
-            "marginRight": 11,
+            "marginRight": 6,
             "opacity": 1,
             "paddingTop": 3,
           }
@@ -1549,6 +1550,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               "includeFontPadding": false,
             },
             {
+              "flexShrink": 1,
               "fontFamily": "Quicksand-Medium",
               "fontSize": 27,
               "marginHorizontal": 11,
@@ -1593,7 +1595,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             "alignSelf": "flex-start",
             "flexGrow": 1,
             "justifyContent": "flex-start",
-            "marginRight": 11,
+            "marginRight": 6,
             "opacity": 1,
             "paddingTop": 3,
           }
