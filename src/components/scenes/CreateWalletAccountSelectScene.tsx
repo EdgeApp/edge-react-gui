@@ -69,7 +69,7 @@ export const CreateWalletAccountSelectScene = (props: Props) => {
 
   const paymentWallet = account.currencyWallets[walletId]
   const isRenderSelect = walletId === '' || walletAccountActivationQuoteError
-  const paymentTokenId = getWalletTokenId(paymentWallet, paymentCurrencyCode)
+  const paymentTokenId = paymentCurrencyCode === '' ? null : getWalletTokenId(paymentWallet, paymentCurrencyCode)
 
   const handleRenameAndReturnWallet = useHandler(async () => {
     await existingCoreWallet.renameWallet(accountName)

@@ -7,6 +7,7 @@ import { Image, ListRenderItemInfo, Platform, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { FlatList } from 'react-native-gesture-handler'
 
+import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { readSyncedSettings, updateOneSetting, writeSyncedSettings } from '../../actions/SettingsActions'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
@@ -234,6 +235,12 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const { accountReferral, coreDisklet, countryCode, deviceId, disablePlugins, navigation, account } = this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
+
+    // Don't allow light accounts to enter plugins
+    if (account.username == null) {
+      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+      return
+    }
 
     // Grab a custom URI if necessary:
     let { deepPath = undefined } = listRow

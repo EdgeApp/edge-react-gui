@@ -22,9 +22,11 @@ interface CountryListViewToken extends ViewToken {
   item: CountryData
 }
 
-export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }: Props) => {
+export const CountryListModal = ({ countryCode: rawCountryCode, bridge }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  const countryCode = rawCountryCode === '' ? getCountry() ?? 'US' : rawCountryCode
 
   const [visibleRows, setVisibleRows] = React.useState<CountryListViewToken[]>([])
 

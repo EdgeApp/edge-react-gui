@@ -763,11 +763,11 @@ const strings = {
     'You have scanned a legacy format address that may not be for the intended currency as it is indistinguishable from other currency addresses.\n\nSending to this address MAY result in a LOSS of funds!\n\nDo you want to continue?',
   legacy_address_modal_continue: 'Continue',
 
-  password_reminder_remember_your_password: 'Remember your password?',
+  password_reminder_remember_your_password: 'Remember Your Password?',
   password_reminder_you_will_need_your_password: 'You will need your password if your device gets lost or stolen, or if you uninstall the app.',
   password_reminder_enter_password_below: 'Enter it below to make sure:',
   password_reminder_check_password: 'Check Password',
-  password_reminder_forgot_password: 'I forgot, change password',
+  password_reminder_forgot_password: 'I Forgot. Change Password',
   password_reminder_great_job: 'Great job remembering your password.',
   password_reminder_invalid: 'Invalid Password',
 
@@ -1445,7 +1445,7 @@ const strings = {
   backup_info_message: 'Create a username and password to securely encrypt and back up your account',
   backup_dismiss_button: 'Continue Without a Backup',
   backup_title: 'Back Up Your Account',
-  backup_warning_message: 'Without a backup, you risk losing your funds!',
+  backup_warning_message: 'Without a backup, you risk losing your web3 handle!',
   tap_to_learn_more: 'Tap to learn more.',
   backup_for_transfer_message:
     'To buy, sell, and receive funds, please back up your account. Edge encrypted backups use a familiar username and password method that will safeguard your assets and help prevent loss of funds.\n\nNever share your username and password, and store your credentials securely!',
