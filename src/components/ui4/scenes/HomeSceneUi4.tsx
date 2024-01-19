@@ -105,7 +105,7 @@ export const HomeSceneUi4 = (props: Props) => {
               <HomeCardUi4
                 title={lstrings.buy_crypto}
                 footer={lstrings.buy_crypto_footer}
-                gradientBackground={theme.buyCardGradientUi4}
+                gradientBackground={theme.buyCardGradient}
                 nodeBackground={
                   <View style={styles.backroundImageContainer}>
                     <FastImage source={{ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto') }} style={styles.backgroundImage} resizeMode="stretch" />
@@ -116,7 +116,7 @@ export const HomeSceneUi4 = (props: Props) => {
               <HomeCardUi4
                 title={lstrings.sell_crypto}
                 footer={lstrings.sell_crypto_footer}
-                gradientBackground={theme.sellCardGradientUi4}
+                gradientBackground={theme.sellCardGradient}
                 nodeBackground={
                   <View style={styles.backroundImageContainer}>
                     <FastImage source={{ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-sell-crypto') }} style={styles.backgroundImage} resizeMode="stretch" />
@@ -129,7 +129,7 @@ export const HomeSceneUi4 = (props: Props) => {
               <HomeCardUi4
                 title={lstrings.fio_web3}
                 footer={lstrings.fio_web3_footer}
-                gradientBackground={theme.fioCardGradientUi4}
+                gradientBackground={theme.fioCardGradient}
                 nodeBackground={
                   <View style={styles.backroundImageContainer}>
                     <FastImage source={{ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-fio') }} style={styles.backgroundImage} resizeMode="stretch" />
@@ -140,7 +140,7 @@ export const HomeSceneUi4 = (props: Props) => {
               <HomeCardUi4
                 title={lstrings.swap_crypto}
                 footer={lstrings.swap_crypto_footer}
-                gradientBackground={theme.swapCardGradientUi4}
+                gradientBackground={theme.swapCardGradient}
                 nodeBackground={
                   <View style={styles.backroundImageContainer}>
                     <FastImage source={{ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-trade') }} style={styles.backgroundImage} resizeMode="stretch" />

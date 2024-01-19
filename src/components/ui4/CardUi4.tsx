@@ -152,7 +152,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   backgroundFill: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: theme.cardBorderRadius,
-    backgroundColor: theme.cardBaseColorUi4,
+    backgroundColor: theme.cardBaseColor,
     overflow: 'hidden'
   },
   cardContainer: {
@@ -168,7 +168,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   overlayContainer: {
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
-    backgroundColor: theme.cardOverlayDisabledUi4,
+    backgroundColor: theme.cardOverlayDisabled,
     borderRadius: theme.cardBorderRadius,
     justifyContent: 'center',
     margin: 2,
