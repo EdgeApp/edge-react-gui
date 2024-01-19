@@ -32,9 +32,7 @@ export const SelectableRow = (props: Props) => {
         {/* HACK: Keeping the iconContainer instead of CardUi4's built-in icon prop because the prop's behavior is inconsistent in legacy use cases */}
         <View style={styles.iconContainer}>{icon}</View>
         <View style={styles.textContainer}>
-          <EdgeText numberOfLines={1} disableFontScaling>
-            {title}
-          </EdgeText>
+          <EdgeText numberOfLines={1}>{title}</EdgeText>
           {subTitle ? (
             <EdgeText style={styles.subTitle} numberOfLines={2}>
               {subTitle}

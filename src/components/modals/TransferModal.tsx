@@ -160,7 +160,7 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
   )
 }
 
-export const styles = cacheStyles((theme: Theme) => ({
+const styles = cacheStyles((theme: Theme) => ({
   iconContainer: {
     flexDirection: 'row',
     paddingVertical: theme.rem(0.5),

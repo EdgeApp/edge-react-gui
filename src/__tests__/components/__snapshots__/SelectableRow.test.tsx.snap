@@ -32,7 +32,6 @@ exports[`SelectableRow should render with loading props 1`] = `
       }
     >
       <WithTheme(EdgeTextComponent)
-        disableFontScaling={true}
         numberOfLines={1}
       >
         title

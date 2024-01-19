@@ -48,6 +48,8 @@ exports[`WalletListModal should render with loading props 1`] = `
           "borderTopRightRadius": 22,
           "flexShrink": 1,
           "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
           "width": 674,
         },
         {
@@ -62,8 +64,6 @@ exports[`WalletListModal should render with loading props 1`] = `
           "borderWidth": 0,
           "marginBottom": -86,
           "paddingBottom": 86,
-          "paddingLeft": 11,
-          "paddingRight": 11,
           "paddingTop": 0,
         },
       ]
@@ -98,10 +98,10 @@ exports[`WalletListModal should render with loading props 1`] = `
       <View
         style={
           {
-            "backgroundColor": "#888888",
+            "backgroundColor": "hsla(0, 0%, 53%, 0.3)",
             "borderRadius": 3,
             "height": 6,
-            "marginTop": 11,
+            "marginTop": 6,
             "width": 67,
           }
         }
@@ -109,16 +109,12 @@ exports[`WalletListModal should render with loading props 1`] = `
     </View>
     <View
       style={
-        [
-          {
-            "alignItems": "flex-start",
-            "flexDirection": "row",
-            "marginTop": 28,
-          },
-          {
-            "marginBottom": 11,
-          },
-        ]
+        {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+          "marginBottom": 11,
+          "marginTop": 28,
+        }
       }
     >
       <View
@@ -138,31 +134,20 @@ exports[`WalletListModal should render with loading props 1`] = `
           }
         >
           <Text
-            adjustsFontSizeToFit={false}
-            minimumFontScale={0.65}
-            numberOfLines={0}
             style={
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 27,
                 },
-                [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Medium",
-                    "fontSize": 27,
-                  },
-                  null,
-                  {
-                    "marginBottom": 0,
-                    "marginLeft": 0,
-                    "marginRight": 0,
-                    "marginTop": 0,
-                  },
-                ],
+                null,
+                {
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
+                },
                 null,
               ]
             }
