@@ -50,8 +50,7 @@ export const useFooterOpenRatio = () => {
     snapTo.value = Math.round(footerOpenRatio.value)
   }
   function delayedSnap() {
-    'worklet'
-    runOnJS(setTimeout)(snap, 300)
+    setTimeout(snap, 300)
   }
 
   // Scroll event subscriptions:
@@ -63,7 +62,7 @@ export const useFooterOpenRatio = () => {
   useSharedEvent(scrollEndEvent, () => {
     'worklet'
     if (Platform.OS === 'android') {
-      delayedSnap()
+      runOnJS(delayedSnap)()
       return
     }
     if (scrollYStart.value != null) {
