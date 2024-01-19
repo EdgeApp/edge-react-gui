@@ -103,11 +103,11 @@ export function TransactionListRow(props: Props) {
   // Assign defaults if transaction is just basic send/recv
   if (isSentTransaction) {
     arrowIconName = 'arrow-up'
-    arrowIconColor = theme.txDirFgSendUi4
+    arrowIconColor = theme.txDirFgSend
     arrowContainerStyle = [styles.arrowIconContainerSend]
   } else {
     arrowIconName = 'arrow-down'
-    arrowIconColor = theme.txDirFgReceiveUi4
+    arrowIconColor = theme.txDirFgReceive
     arrowContainerStyle = [styles.arrowIconContainerReceive]
   }
 
@@ -115,7 +115,7 @@ export function TransactionListRow(props: Props) {
 
   if (edgeCategory.category === 'exchange') {
     arrowIconName = 'swap-horizontal'
-    arrowIconColor = theme.txDirFgSwapUi4
+    arrowIconColor = theme.txDirFgSwap
     arrowContainerStyle = [styles.arrowIconContainerSwap]
   }
 
@@ -257,14 +257,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // Pad the containers to account for vector icons having an off-center origin
   arrowIconContainerSend: {
     paddingTop: 1,
-    backgroundColor: theme.txDirBgSendUi4
+    backgroundColor: theme.txDirBgSend
   },
   arrowIconContainerSwap: {
-    backgroundColor: theme.txDirBgSwapUi4
+    backgroundColor: theme.txDirBgSwap
   },
   arrowIconContainerReceive: {
     paddingBottom: 2,
-    backgroundColor: theme.txDirBgReceiveUi4
+    backgroundColor: theme.txDirBgReceive
   },
   row: {
     flexDirection: 'row',

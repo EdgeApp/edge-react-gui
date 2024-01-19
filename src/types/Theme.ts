@@ -121,7 +121,7 @@ export interface Theme {
   modalBorderColor: string
   modalBorderWidth: number
   modalBorderRadiusRem: number
-  modalBackgroundUi4: string
+  modalBackground: string
   modalSceneOverlayColor: string
   modalDragbarColor: string
 
@@ -436,22 +436,22 @@ export interface Theme {
   iconShadow: ThemeShadowParams
 
   // Basic Card Styles
-  cardBaseColorUi4: string
-  cardGradientWarningUi4: ThemeGradientParams
-  cardGradientErrorUi4: ThemeGradientParams
-  cardGradientLearnUi4: ThemeGradientParams
-  cardOverlayDisabledUi4: string
+  cardBaseColor: string
+  cardGradientWarning: ThemeGradientParams
+  cardGradientError: ThemeGradientParams
+  cardGradientLearn: ThemeGradientParams
+  cardOverlayDisabled: string
 
   // Special Home Scene Tiled Cards
-  buyCardGradientUi4: ThemeGradientParams
-  sellCardGradientUi4: ThemeGradientParams
-  fioCardGradientUi4: ThemeGradientParams
-  swapCardGradientUi4: ThemeGradientParams
+  buyCardGradient: ThemeGradientParams
+  sellCardGradient: ThemeGradientParams
+  fioCardGradient: ThemeGradientParams
+  swapCardGradient: ThemeGradientParams
 
-  txDirBgReceiveUi4: string
-  txDirBgSendUi4: string
-  txDirBgSwapUi4: string
-  txDirFgReceiveUi4: string
-  txDirFgSendUi4: string
-  txDirFgSwapUi4: string
+  txDirBgReceive: string
+  txDirBgSend: string
+  txDirBgSwap: string
+  txDirFgReceive: string
+  txDirFgSend: string
+  txDirFgSwap: string
 }

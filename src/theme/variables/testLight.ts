@@ -152,7 +152,7 @@ export const testLight: Theme = {
   modalBorderColor: palette.transparent,
   modalBorderWidth: 0,
   modalBorderRadiusRem: 1,
-  modalBackgroundUi4: palette.blackOp25,
+  modalBackground: palette.blackOp25,
   modalSceneOverlayColor: palette.black,
   modalDragbarColor: palette.gray,
 
@@ -425,50 +425,50 @@ export const testLight: Theme = {
   },
 
   // Basic Card Styles
-  cardBaseColorUi4: palette.whiteOp10,
-  cardGradientWarningUi4: {
+  cardBaseColor: palette.whiteOp10,
+  cardGradientWarning: {
     colors: [palette.warningOuter, palette.warningInner, palette.warningInner, palette.warningOuter],
     end: { x: 0.9, y: 0 },
     start: { x: 0, y: 0.9 }
   },
-  cardGradientErrorUi4: {
+  cardGradientError: {
     colors: [palette.errorOuter, palette.errorInner, palette.errorInner, palette.errorOuter],
     end: { x: 0.9, y: 0 },
     start: { x: 0, y: 0.9 }
   },
-  cardGradientLearnUi4: {
+  cardGradientLearn: {
     colors: [palette.learnRight, palette.learnMiddle, palette.learnLeft],
     end: { x: 1, y: 0 },
     start: { x: 0, y: 1 }
   },
-  cardOverlayDisabledUi4: palette.blackOp65,
+  cardOverlayDisabled: palette.blackOp65,
 
   // Special Home Scene Tiled Cards
-  buyCardGradientUi4: {
+  buyCardGradient: {
     colors: [palette.orangeOp24, palette.transparent],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
-  sellCardGradientUi4: {
+  sellCardGradient: {
     colors: [palette.lightBlueOp24, palette.transparent],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
-  fioCardGradientUi4: {
+  fioCardGradient: {
     colors: [palette.purpleOp24, palette.transparent],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
-  swapCardGradientUi4: {
+  swapCardGradient: {
     colors: [palette.pinkOp24, palette.transparent],
     end: { x: 0, y: 1 },
     start: { x: 1, y: 0 }
   },
 
-  txDirBgReceiveUi4: palette.greenOp60,
-  txDirBgSendUi4: palette.redOp60,
-  txDirBgSwapUi4: palette.grayOp70,
-  txDirFgReceiveUi4: palette.lightGreen,
-  txDirFgSendUi4: palette.lightRed,
-  txDirFgSwapUi4: palette.lightGray
+  txDirBgReceive: palette.greenOp60,
+  txDirBgSend: palette.redOp60,
+  txDirBgSwap: palette.grayOp70,
+  txDirFgReceive: palette.lightGreen,
+  txDirFgSend: palette.lightRed,
+  txDirFgSwap: palette.lightGray
 }

@@ -169,7 +169,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   modal: {
     alignSelf: 'flex-end',
-    backgroundColor: theme.modalBackgroundUi4,
+    backgroundColor: theme.modalBackground,
     borderTopLeftRadius: theme.rem(1),
     borderTopRightRadius: theme.rem(1),
     flexShrink: 1,
