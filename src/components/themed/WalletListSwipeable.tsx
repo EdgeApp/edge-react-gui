@@ -119,15 +119,12 @@ function WalletListSwipeableComponent(props: Props) {
     return null
   })
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const flatListContentOffset = React.useMemo(() => ({ x: 0, y: searching ? 0 : theme.rem(4.5) }), [searching])
   const data = React.useMemo(() => [...searchedWalletList, ...createWalletList], [searchedWalletList, createWalletList])
 
   const handleScroll = useSceneScrollHandler()
 
   return (
     <AnimatedFlatList
-      contentOffset={flatListContentOffset}
       contentContainerStyle={insetStyle}
       data={data}
       keyboardShouldPersistTaps="handled"
