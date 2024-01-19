@@ -45,7 +45,7 @@ export const useContactThumbnail = (name?: string): string | undefined => {
     for (const contact of contacts) {
       const { givenName, familyName } = contact
       const contactName = normalizeForSearch(`${givenName}${familyName ?? ''}`)
-      if (contact.thumbnailPath != null && contactName === searchName) {
+      if (contactName === searchName && contact.thumbnailPath != null && contact.thumbnailPath !== '') {
         return contact.thumbnailPath
       }
     }

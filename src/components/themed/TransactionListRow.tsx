@@ -135,14 +135,15 @@ export function TransactionListRow(props: Props) {
     </ShadowedView>
   )
 
-  const icon = thumbnailPath ? (
-    <ShadowedView style={styles.contactContainer}>
-      <FastImage style={styles.contactImage} source={{ uri: thumbnailPath }} />
-      {arrowIcon}
-    </ShadowedView>
-  ) : (
-    arrowIcon
-  )
+  const icon =
+    thumbnailPath != null ? (
+      <ShadowedView style={styles.contactContainer}>
+        <FastImage style={styles.contactImage} source={{ uri: thumbnailPath }} />
+        {arrowIcon}
+      </ShadowedView>
+    ) : (
+      arrowIcon
+    )
 
   // Pending Text and Style
   const currentConfirmations = transaction.confirmations
