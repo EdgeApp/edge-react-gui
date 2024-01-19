@@ -48,6 +48,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           "borderTopRightRadius": 22,
           "flexShrink": 1,
           "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
           "width": 674,
         },
         {
@@ -62,8 +64,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           "borderWidth": 0,
           "marginBottom": -86,
           "paddingBottom": 97,
-          "paddingLeft": 11,
-          "paddingRight": 11,
           "paddingTop": 0,
         },
       ]
@@ -98,10 +98,10 @@ exports[`CategoryModal should render with a subcategory 1`] = `
       <View
         style={
           {
-            "backgroundColor": "#888888",
+            "backgroundColor": "hsla(0, 0%, 53%, 0.3)",
             "borderRadius": 3,
             "height": 6,
-            "marginTop": 11,
+            "marginTop": 6,
             "width": 67,
           }
         }
@@ -109,16 +109,12 @@ exports[`CategoryModal should render with a subcategory 1`] = `
     </View>
     <View
       style={
-        [
-          {
-            "alignItems": "flex-start",
-            "flexDirection": "row",
-            "marginTop": 28,
-          },
-          {
-            "marginBottom": 11,
-          },
-        ]
+        {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+          "marginBottom": 11,
+          "marginTop": 28,
+        }
       }
     >
       <Text
@@ -134,6 +130,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               "includeFontPadding": false,
             },
             {
+              "flexShrink": 1,
               "fontFamily": "Quicksand-Medium",
               "fontSize": 27,
               "marginHorizontal": 11,
@@ -178,7 +175,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             "alignSelf": "flex-start",
             "flexGrow": 1,
             "justifyContent": "flex-start",
-            "marginRight": 11,
+            "marginRight": 6,
             "opacity": 1,
             "paddingTop": 3,
           }
@@ -212,8 +209,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           "alignItems": "center",
           "flexDirection": "row",
           "justifyContent": "space-between",
-          "marginBottom": 22,
-          "marginHorizontal": 22,
+          "margin": 11,
         }
       }
     >
@@ -473,10 +469,10 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           "flex": undefined,
           "flexDirection": "column",
           "justifyContent": undefined,
-          "marginBottom": 0,
-          "marginLeft": 0,
-          "marginRight": 0,
-          "marginTop": 0,
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
         }
       }
     >
@@ -1463,6 +1459,8 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           "borderTopRightRadius": 22,
           "flexShrink": 1,
           "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
           "width": 674,
         },
         {
@@ -1477,8 +1475,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           "borderWidth": 0,
           "marginBottom": -86,
           "paddingBottom": 97,
-          "paddingLeft": 11,
-          "paddingRight": 11,
           "paddingTop": 0,
         },
       ]
@@ -1513,10 +1509,10 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
       <View
         style={
           {
-            "backgroundColor": "#888888",
+            "backgroundColor": "hsla(0, 0%, 53%, 0.3)",
             "borderRadius": 3,
             "height": 6,
-            "marginTop": 11,
+            "marginTop": 6,
             "width": 67,
           }
         }
@@ -1524,16 +1520,12 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
     </View>
     <View
       style={
-        [
-          {
-            "alignItems": "flex-start",
-            "flexDirection": "row",
-            "marginTop": 28,
-          },
-          {
-            "marginBottom": 11,
-          },
-        ]
+        {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+          "marginBottom": 11,
+          "marginTop": 28,
+        }
       }
     >
       <Text
@@ -1549,6 +1541,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               "includeFontPadding": false,
             },
             {
+              "flexShrink": 1,
               "fontFamily": "Quicksand-Medium",
               "fontSize": 27,
               "marginHorizontal": 11,
@@ -1593,7 +1586,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             "alignSelf": "flex-start",
             "flexGrow": 1,
             "justifyContent": "flex-start",
-            "marginRight": 11,
+            "marginRight": 6,
             "opacity": 1,
             "paddingTop": 3,
           }
@@ -1627,8 +1620,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           "alignItems": "center",
           "flexDirection": "row",
           "justifyContent": "space-between",
-          "marginBottom": 22,
-          "marginHorizontal": 22,
+          "margin": 11,
         }
       }
     >
@@ -1888,10 +1880,10 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           "flex": undefined,
           "flexDirection": "column",
           "justifyContent": undefined,
-          "marginBottom": 0,
-          "marginLeft": 0,
-          "marginRight": 0,
-          "marginTop": 0,
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
         }
       }
     >

@@ -193,7 +193,6 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
               {lstrings.staking_change_unlock_explainer_title}
             </ModalTitle>
           }
-          paddingRem={1}
         >
           <ModalMessage>{lstrings.staking_change_unlock_explainer1}</ModalMessage>
           <ModalMessage>{lstrings.staking_change_unlock_explainer2}</ModalMessage>

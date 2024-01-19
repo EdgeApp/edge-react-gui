@@ -49,6 +49,8 @@ const palette = {
   blackOp50: 'rgba(0, 0, 0, .5)',
   blackOp70: 'rgba(0, 0, 0, .7)',
 
+  darkGreyOp30: 'hsla(0, 0%, 53%, 0.3)',
+
   whiteOp05: 'rgba(255, 255, 255, .05)',
   whiteOp10: 'rgba(255, 255, 255, .1)',
   whiteOp37: 'rgba(255, 255, 255, .37)',
@@ -178,7 +180,7 @@ export const edgeDark: Theme = {
   modalBorderRadiusRem: 1,
   modalBackgroundUi4: palette.whiteOp37,
   modalSceneOverlayColor: palette.black,
-  modalDragbarColor: palette.gray,
+  modalDragbarColor: palette.darkGreyOp30,
 
   sideMenuBorderColor: palette.backgroundBlack,
   sideMenuBorderWidth: 0,

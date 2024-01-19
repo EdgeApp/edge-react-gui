@@ -12,47 +12,41 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
     }
   }
   onCancel={[Function]}
-  paddingRem={1}
   title="string"
 >
+  <ForwardRef
+    around={0.5}
+    autoCapitalize="none"
+    autoCorrect={false}
+    bottom={1}
+    onChangeText={[Function]}
+    onSubmitEditing={[Function]}
+    placeholder="Address"
+    returnKeyType="search"
+    showSpinner={false}
+    value=""
+  />
   <View
     style={
       {
+        "alignItems": "center",
         "flex": 1,
-        "flexDirection": "column",
-        "width": "100%",
+        "justifyContent": "center",
       }
     }
   >
-    <ForwardRef
-      autoCapitalize="none"
-      autoCorrect={false}
-      horizontal={1}
-      onChangeText={[Function]}
-      onSubmitEditing={[Function]}
-      placeholder="Address"
-      returnKeyType="search"
-      showSpinner={false}
-      value=""
-    />
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flex": 1,
-          "justifyContent": "center",
-        }
-      }
-    >
-      <ActivityIndicator
-        color="#00f1a2"
-      />
-    </View>
-    <MainButton
-      label="Submit"
-      onPress={[Function]}
-      type="primary"
+    <ActivityIndicator
+      color="#00f1a2"
     />
   </View>
+  <Memo
+    primary={
+      {
+        "label": "Next",
+        "onPress": [Function],
+      }
+    }
+    sceneMargin={true}
+  />
 </ModalUi4>
 `;

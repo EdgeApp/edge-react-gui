@@ -159,7 +159,6 @@ const CreateWalletImportComponent = (props: Props) => {
           placeholder={lstrings.create_wallet_import_input_key_or_seed_prompt}
           autoCapitalize="none"
           autoCorrect={false}
-          blurOnClear={false}
           onChangeText={setImportText}
           onSubmitEditing={handleNext}
           ref={textInputRef}

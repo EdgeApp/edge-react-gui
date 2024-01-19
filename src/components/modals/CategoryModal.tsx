@@ -140,6 +140,7 @@ export function CategoryModal(props: Props) {
         ))}
       </View>
       <FilledTextInput
+        around={0.5}
         autoFocus
         returnKeyType="done"
         autoCapitalize="words"
@@ -171,8 +172,7 @@ const getStyle = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginHorizontal: theme.rem(1),
-    marginBottom: theme.rem(1)
+    margin: theme.rem(0.5)
   },
   categoryListContainer: {
     flex: 1

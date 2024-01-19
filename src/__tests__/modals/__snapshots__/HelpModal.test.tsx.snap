@@ -48,6 +48,8 @@ exports[`HelpModal should render with loading props 1`] = `
           "borderTopRightRadius": 22,
           "flexShrink": 1,
           "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
           "width": 674,
         },
         {
@@ -62,8 +64,6 @@ exports[`HelpModal should render with loading props 1`] = `
           "borderWidth": 0,
           "marginBottom": -86,
           "paddingBottom": 86,
-          "paddingLeft": 0,
-          "paddingRight": 0,
           "paddingTop": 0,
         },
       ]
@@ -98,10 +98,10 @@ exports[`HelpModal should render with loading props 1`] = `
       <View
         style={
           {
-            "backgroundColor": "#888888",
+            "backgroundColor": "hsla(0, 0%, 53%, 0.3)",
             "borderRadius": 3,
             "height": 6,
-            "marginTop": 11,
+            "marginTop": 6,
             "width": 67,
           }
         }
@@ -109,16 +109,12 @@ exports[`HelpModal should render with loading props 1`] = `
     </View>
     <View
       style={
-        [
-          {
-            "alignItems": "flex-start",
-            "flexDirection": "row",
-            "marginTop": 28,
-          },
-          {
-            "marginBottom": 22,
-          },
-        ]
+        {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+          "marginBottom": 11,
+          "marginTop": 28,
+        }
       }
     >
       <View
@@ -128,6 +124,7 @@ exports[`HelpModal should render with loading props 1`] = `
             "flexDirection": "column",
             "flexGrow": 1,
             "justifyContent": "center",
+            "marginTop": 6,
           }
         }
       >
@@ -162,6 +159,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   "fontSize": 27,
                 },
                 {
+                  "flexGrow": 1,
                   "textAlign": "center",
                 },
                 {
@@ -170,6 +168,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   "paddingRight": 0,
                   "paddingTop": 0,
                 },
+                null,
               ]
             }
           >
@@ -209,7 +208,7 @@ exports[`HelpModal should render with loading props 1`] = `
           {
             "opacity": 1,
             "position": "absolute",
-            "right": 11,
+            "right": 6,
             "top": 3,
           }
         }
@@ -364,7 +363,7 @@ exports[`HelpModal should render with loading props 1`] = `
               }
             >
               <Text
-                adjustsFontSizeToFit={false}
+                adjustsFontSizeToFit={true}
                 minimumFontScale={0.65}
                 numberOfLines={1}
                 style={
@@ -515,7 +514,7 @@ exports[`HelpModal should render with loading props 1`] = `
               }
             >
               <Text
-                adjustsFontSizeToFit={false}
+                adjustsFontSizeToFit={true}
                 minimumFontScale={0.65}
                 numberOfLines={1}
                 style={
@@ -666,7 +665,7 @@ exports[`HelpModal should render with loading props 1`] = `
               }
             >
               <Text
-                adjustsFontSizeToFit={false}
+                adjustsFontSizeToFit={true}
                 minimumFontScale={0.65}
                 numberOfLines={1}
                 style={
@@ -817,7 +816,7 @@ exports[`HelpModal should render with loading props 1`] = `
               }
             >
               <Text
-                adjustsFontSizeToFit={false}
+                adjustsFontSizeToFit={true}
                 minimumFontScale={0.65}
                 numberOfLines={1}
                 style={
@@ -968,7 +967,7 @@ exports[`HelpModal should render with loading props 1`] = `
               }
             >
               <Text
-                adjustsFontSizeToFit={false}
+                adjustsFontSizeToFit={true}
                 minimumFontScale={0.65}
                 numberOfLines={1}
                 style={

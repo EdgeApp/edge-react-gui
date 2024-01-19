@@ -154,9 +154,9 @@ class DomainListModalComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <ModalUi4 bridge={bridge} onCancel={() => bridge.resolve(undefined)} paddingRem={[1, 0]} title={lstrings.fio_address_choose_domain_label}>
+      <ModalUi4 bridge={bridge} onCancel={() => bridge.resolve(undefined)} title={lstrings.fio_address_choose_domain_label}>
         <SimpleTextInput
-          horizontal={0.75}
+          around={0.5}
           autoCorrect={false}
           returnKeyType="search"
           autoCapitalize="none"
@@ -174,7 +174,6 @@ class DomainListModalComponent extends React.Component<Props, State> {
           renderItem={this.renderItem}
           contentContainerStyle={styles.scrollPadding}
         />
-        {/* <ModalFooterFade /> */}
       </ModalUi4>
     )
   }

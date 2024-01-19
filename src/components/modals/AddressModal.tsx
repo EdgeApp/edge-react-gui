@@ -18,7 +18,7 @@ import { FormattedText as Text } from '../legacy/FormattedText/FormattedText.ui'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
-import { MainButton } from '../themed/MainButton'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface OwnProps {
@@ -303,52 +303,45 @@ export class AddressModalComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <ModalUi4 bridge={this.props.bridge} onCancel={this.handleClose} paddingRem={1} title={title ?? lstrings.address_modal_default_header}>
-        <View style={styles.container}>
-          <FilledTextInput
-            horizontal={1}
-            autoCorrect={false}
-            returnKeyType="search"
-            autoCapitalize="none"
-            placeholder={lstrings.fragment_send_address}
-            onChangeText={this.onChangeTextDelayed}
-            onSubmitEditing={this.handleSubmit}
-            value={uri}
-            error={errorLabel}
-            valid={validLabel}
-            showSpinner={showSpinner}
+      <ModalUi4 bridge={this.props.bridge} onCancel={this.handleClose} title={title ?? lstrings.address_modal_default_header}>
+        <FilledTextInput
+          around={0.5}
+          bottom={1}
+          autoCorrect={false}
+          returnKeyType="search"
+          autoCapitalize="none"
+          placeholder={lstrings.fragment_send_address}
+          onChangeText={this.onChangeTextDelayed}
+          onSubmitEditing={this.handleSubmit}
+          value={uri}
+          error={errorLabel}
+          valid={validLabel}
+          showSpinner={showSpinner}
+        />
+        {!userFioAddressesLoading ? (
+          <FlashList
+            data={filteredFioAddresses}
+            estimatedItemSize={theme.rem(4.25)}
+            keyboardShouldPersistTaps="handled"
+            keyExtractor={this.keyExtractor}
+            renderItem={this.renderFioAddressRow}
           />
-          {!userFioAddressesLoading ? (
-            <FlashList
-              data={filteredFioAddresses}
-              estimatedItemSize={theme.rem(4.25)}
-              keyboardShouldPersistTaps="handled"
-              keyExtractor={this.keyExtractor}
-              renderItem={this.renderFioAddressRow}
-            />
-          ) : (
-            <View style={styles.loaderContainer}>
-              <ActivityIndicator color={this.props.theme.iconTappable} />
-            </View>
-          )}
-          {/* TODO: Style ButtonsViewUi4 for Modals */}
-          <MainButton label={lstrings.submit} type="primary" onPress={this.handleSubmit} />
-        </View>
+        ) : (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator color={this.props.theme.iconTappable} />
+          </View>
+        )}
+        <ButtonsViewUi4 sceneMargin primary={{ label: lstrings.string_next_capitalized, onPress: this.handleSubmit }} />
       </ModalUi4>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    flex: 1,
-    width: '100%',
-    flexDirection: 'column'
-  },
   rowContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: theme.rem(0.5)
+    margin: theme.rem(0.5)
   },
   fioAddressAvatarContainer: {
     width: theme.rem(1.25),
