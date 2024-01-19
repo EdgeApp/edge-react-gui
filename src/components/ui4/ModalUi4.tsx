@@ -194,7 +194,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.modalDragbarColor,
     borderRadius: theme.rem(0.125),
     height: theme.rem(0.25),
-    marginTop: theme.rem(0.5),
+    marginTop: theme.rem(0.25),
     width: theme.rem(3)
   },
   closeIconContainer: {
