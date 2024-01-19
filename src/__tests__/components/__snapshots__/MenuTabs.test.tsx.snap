@@ -2,6 +2,8 @@
 
 exports[`MenuTabs should render with loading props 1`] = `
 <View
+  collapsable={false}
+  keyboardAnimation={0}
   style={
     {
       "bottom": 0,
