@@ -519,14 +519,14 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               "borderWidth": 1,
               "flex": undefined,
               "flexDirection": "row",
-              "paddingHorizontal": 9,
+              "paddingHorizontal": 17,
             },
             {
               "backgroundColor": undefined,
               "borderColor": undefined,
               "marginHorizontal": undefined,
               "opacity": undefined,
-              "paddingVertical": 16.5,
+              "paddingVertical": 22,
             },
           ]
         }
@@ -1930,14 +1930,14 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               "borderWidth": 1,
               "flex": undefined,
               "flexDirection": "row",
-              "paddingHorizontal": 9,
+              "paddingHorizontal": 17,
             },
             {
               "backgroundColor": undefined,
               "borderColor": undefined,
               "marginHorizontal": undefined,
               "opacity": undefined,
-              "paddingVertical": 16.5,
+              "paddingVertical": 22,
             },
           ]
         }

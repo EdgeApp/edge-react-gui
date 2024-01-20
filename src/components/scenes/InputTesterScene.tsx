@@ -8,6 +8,7 @@ import { useState } from '../../types/reactHooks'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { consify } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { CountryListModal } from '../modals/CountryListModal'
@@ -91,6 +92,7 @@ export function InputTesterScene(props: Props) {
     <SceneWrapper scroll hasTabs hasHeader={false}>
       <SectionView marginRem={1}>
         <FilledTextInput
+          iconComponent={SearchIconAnimated}
           vertical={1}
           value={filledTextInputValue6}
           onChangeText={setFilledTextInputValue6}
