@@ -314,14 +314,14 @@ const Container = styled(Animated.View)<{
       borderWidth: theme.textInputBorderWidth,
       borderRadius: theme.rem(0.5),
       flexDirection: 'row',
-      paddingHorizontal: theme.rem(0.4)
+      paddingHorizontal: theme.rem(0.75)
     },
     useAnimatedStyle(() => ({
       backgroundColor: interpolateInputBackgroundColor(focusAnimation, disableAnimation),
       borderColor: interpolateOutlineColor(focusAnimation, disableAnimation),
       opacity: interpolate(scale.value, [1, 0.5], [1, 0]),
       marginHorizontal: interpolate(scale.value, [1, 0], [0, 2 * rem]),
-      paddingVertical: scale.value * 0.75 * rem
+      paddingVertical: scale.value * rem
     }))
   ]
 })
