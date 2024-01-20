@@ -5,6 +5,7 @@ import { ActivityIndicator, View } from 'react-native'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { lstrings } from '../../locales/strings'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -18,6 +19,8 @@ export interface ExchangeQuoteProcessingParams {
 }
 
 interface Props extends EdgeSceneProps<'exchangeQuoteProcessing'> {}
+
+const ANIM_DURATION = 5000
 
 export function CryptoExchangeQuoteProcessingScene(props: Props) {
   const theme = useTheme()
@@ -35,7 +38,7 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
     setTimeout(() => {
       if (!mounted.current) return
       setIsLongWait(true)
-    }, 20000)
+    }, 10000)
 
     return () => {
       mounted.current = false
@@ -61,33 +64,43 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
 
   return (
     <SceneWrapper>
-      <View style={styles.container}>
-        <EdgeText style={styles.title}>{lstrings.hang_tight}</EdgeText>
-        <EdgeText style={styles.findingText} numberOfLines={3}>
-          {isLongWait ? lstrings.exchange_slow : lstrings.trying_to_find}
-        </EdgeText>
-        <ActivityIndicator style={styles.spinner} color={theme.iconTappable} />
+      <View style={styles.outerContainer}>
+        <View style={styles.container}>
+          <EdgeAnim enter={{ type: 'fadeInUp', distance: 90, duration: ANIM_DURATION }}>
+            <EdgeText style={styles.title}>{lstrings.hang_tight}</EdgeText>
+          </EdgeAnim>
+          <EdgeAnim enter={{ type: 'fadeInUp', distance: 60, duration: ANIM_DURATION }}>
+            <EdgeText style={styles.findingText} numberOfLines={3}>
+              {isLongWait ? lstrings.exchange_slow : lstrings.trying_to_find}
+            </EdgeText>
+          </EdgeAnim>
+          <EdgeAnim enter={{ type: 'fadeInDown', distance: 90, duration: ANIM_DURATION }}>
+            <ActivityIndicator size="large" style={styles.spinner} color={theme.iconTappable} />
+          </EdgeAnim>
+        </View>
+        {!isLongWait ? null : (
+          <EdgeAnim style={styles.button} enter={{ type: 'fadeInDown', distance: 90 }}>
+            <ButtonsViewUi4
+              absolute
+              primary={{
+                label: lstrings.string_cancel_cap,
+                onPress: () => {
+                  mounted.current = false
+                  onCancel()
+                }
+              }}
+              layout="column"
+              sceneMargin
+            />
+          </EdgeAnim>
+        )}
       </View>
-      {!isLongWait ? null : (
-        <ButtonsViewUi4
-          absolute
-          fade
-          primary={{
-            label: lstrings.string_cancel_cap,
-            onPress: () => {
-              mounted.current = false
-              onCancel()
-            }
-          }}
-          layout="column"
-          sceneMargin
-        />
-      )}
     </SceneWrapper>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  outerContainer: { flexGrow: 1 },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -100,12 +113,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: '100%',
     textAlign: 'center',
     fontWeight: '600',
-    fontSize: theme.rem(1.25),
+    fontSize: theme.rem(1.5),
     marginBottom: theme.rem(1.25)
   },
   findingText: {
     textAlign: 'center',
     fontWeight: '600',
-    fontSize: theme.rem(0.75)
+    fontSize: theme.rem(1)
+  },
+  button: {
+    marginVertical: theme.rem(1)
   }
 }))
