@@ -5,7 +5,7 @@ import { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
 import { Image, ListRenderItemInfo, Platform, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import { FlatList } from 'react-native-gesture-handler'
+import Animated from 'react-native-reanimated'
 
 import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
@@ -20,6 +20,7 @@ import sellPluginJsonOverrideRaw from '../../constants/plugins/sellPluginListOve
 import { ENV } from '../../env'
 import { lstrings } from '../../locales/strings'
 import { executePlugin } from '../../plugins/gui/fiatPlugin'
+import { SceneScrollHandler, useSceneScrollHandler } from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
 import { asBuySellPlugins, asGuiPluginJson, BuySellPlugins, GuiPluginRow } from '../../types/GuiPluginTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -31,7 +32,7 @@ import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { fetchInfo } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { base58ToUuid } from '../../util/utils'
-import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { CountryListModal } from '../modals/CountryListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -88,7 +89,7 @@ interface StateProps {
   developerModeOn: boolean
   deviceId: string
   disablePlugins: NestedDisableMap
-  insetStyle: InsetStyle
+  handleScroll: SceneScrollHandler
 }
 
 interface DispatchProps {
@@ -364,7 +365,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { accountPlugins, accountReferral, countryCode, developerModeOn, disablePlugins, theme, insetStyle } = this.props
+    const { accountPlugins, accountReferral, countryCode, developerModeOn, disablePlugins, theme } = this.props
     const direction = this.getSceneDirection()
     const { buy = [], sell = [] } = this.state.buySellPlugins
     const styles = getStyles(theme)
@@ -386,27 +387,35 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       plugins.push(customPluginRow)
     }
 
+    const renderTop = () => {
+      return (
+        <>
+          <View style={styles.header}>
+            <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline />
+          </View>
+          <SectionHeaderUi4 leftTitle={lstrings.title_select_region} />
+          <CardUi4>
+            <RowUi4
+              onPress={this._handleCountryPress}
+              rightButtonType="none"
+              icon={
+                countryData == null ? undefined : (
+                  <FastImage
+                    source={{ uri: `${FLAG_LOGO_URL}/${countryData.filename || countryData.name.toLowerCase().replace(' ', '-')}.png` }}
+                    style={styles.selectedCountryFlag}
+                  />
+                )
+              }
+              body={countryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}
+            />
+          </CardUi4>
+          <SectionHeaderUi4 leftTitle={lstrings.title_select_payment_method} />
+        </>
+      )
+    }
+
     return (
       <View style={styles.sceneContainer}>
-        <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline />
-
-        <SectionHeaderUi4 leftTitle={lstrings.title_select_region} />
-        <CardUi4>
-          <RowUi4
-            onPress={this._handleCountryPress}
-            rightButtonType="none"
-            icon={
-              countryData == null ? undefined : (
-                <FastImage
-                  source={{ uri: `${FLAG_LOGO_URL}/${countryData.filename || countryData.name.toLowerCase().replace(' ', '-')}.png` }}
-                  style={styles.selectedCountryFlag}
-                />
-              )
-            }
-            body={countryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}
-          />
-        </CardUi4>
-        <SectionHeaderUi4 leftTitle={lstrings.title_select_payment_method} />
         {plugins.length === 0 ? (
           <View style={styles.emptyPluginContainer}>
             <EdgeText style={styles.emptyPluginText} numberOfLines={2}>
@@ -414,11 +423,13 @@ class GuiPluginList extends React.PureComponent<Props, State> {
             </EdgeText>
           </View>
         ) : (
-          <FlatList
+          <Animated.FlatList
             data={plugins}
+            onScroll={this.props.handleScroll}
+            ListHeaderComponent={renderTop}
             renderItem={this.renderPlugin}
             keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
-            contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
+            contentContainerStyle={{ paddingTop: 0 }}
           />
         )}
       </View>
@@ -427,6 +438,10 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  header: {
+    marginLeft: -theme.rem(0.5),
+    width: '100%'
+  },
   sceneContainer: {
     flex: 1
   },
@@ -489,6 +504,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const dispatch = useDispatch()
   const theme = useTheme()
 
+  const handleScroll = useSceneScrollHandler()
   const account = useSelector(state => state.core.account)
   const accountPlugins = useSelector(state => state.account.referralCache.accountPlugins)
   const accountReferral = useSelector(state => state.account.accountReferral)
@@ -505,25 +521,21 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
 
   return (
     <SceneWrapper hasTabs hasNotifications padding={theme.rem(0.5)}>
-      {({ insetStyle, undoInsetStyle }) => (
-        <View style={{ ...undoInsetStyle, marginTop: 0 }}>
-          <GuiPluginList
-            navigation={navigation}
-            route={route}
-            deviceId={deviceId}
-            account={account}
-            accountPlugins={accountPlugins}
-            accountReferral={accountReferral}
-            coreDisklet={coreDisklet}
-            countryCode={countryCode}
-            developerModeOn={developerModeOn}
-            disablePlugins={disablePlugins}
-            updateCountryCode={updateCountryCode}
-            theme={theme}
-            insetStyle={insetStyle}
-          />
-        </View>
-      )}
+      <GuiPluginList
+        handleScroll={handleScroll}
+        navigation={navigation}
+        route={route}
+        deviceId={deviceId}
+        account={account}
+        accountPlugins={accountPlugins}
+        accountReferral={accountReferral}
+        coreDisklet={coreDisklet}
+        countryCode={countryCode}
+        developerModeOn={developerModeOn}
+        disablePlugins={disablePlugins}
+        updateCountryCode={updateCountryCode}
+        theme={theme}
+      />
     </SceneWrapper>
   )
 })
