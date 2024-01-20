@@ -9,7 +9,13 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
     }
   }
 >
-  <View
+  <EdgeAnim
+    enter={
+      {
+        "distance": 90,
+        "type": "fadeInUp",
+      }
+    }
     style={
       {
         "marginLeft": -11,
@@ -22,65 +28,101 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       title="Exchange"
       underline={true}
     />
-  </View>
-  <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
-    buttonText="Select Source Wallet"
-    focusMe={[Function]}
-    headerText="Exchange from BTC Wallet"
-    isFocused={true}
-    launchWalletSelector={[Function]}
-    onCryptoExchangeAmountChanged={[Function]}
-    onNext={[Function]}
-    overridePrimaryNativeAmount=""
-    primaryCurrencyInfo={
+  </EdgeAnim>
+  <EdgeAnim
+    enter={
       {
-        "displayCurrencyCode": "BTC",
-        "exchangeCurrencyCode": "BTC",
+        "distance": 60,
+        "type": "fadeInUp",
       }
     }
-    walletId=""
   >
-    <MiniButton
-      alignSelf="center"
-      label="MAX"
-      marginRem={
-        [
-          0.5,
-          0,
-          1,
-        ]
+    <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
+      buttonText="Select Source Wallet"
+      focusMe={[Function]}
+      headerText="Exchange from BTC Wallet"
+      isFocused={true}
+      launchWalletSelector={[Function]}
+      onCryptoExchangeAmountChanged={[Function]}
+      onNext={[Function]}
+      overridePrimaryNativeAmount=""
+      primaryCurrencyInfo={
+        {
+          "displayCurrencyCode": "BTC",
+          "exchangeCurrencyCode": "BTC",
+        }
       }
-      onPress={[Function]}
+      walletId=""
+    >
+      <MiniButton
+        alignSelf="center"
+        label="MAX"
+        marginRem={
+          [
+            0.5,
+            0,
+            1,
+          ]
+        }
+        onPress={[Function]}
+      />
+    </Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))>
+  </EdgeAnim>
+  <EdgeAnim>
+    <Memo(LineTextDividerComponent)
+      lowerCased={true}
+      title="To"
     />
-  </Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))>
-  <Memo(LineTextDividerComponent)
-    lowerCased={true}
-    title="To"
-  />
-  <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
-    buttonText="Select Receiving Wallet"
-    focusMe={[Function]}
-    headerText="Exchange to ETH Wallet"
-    isFocused={false}
-    launchWalletSelector={[Function]}
-    onCryptoExchangeAmountChanged={[Function]}
-    onNext={[Function]}
-    overridePrimaryNativeAmount=""
-    primaryCurrencyInfo={
+  </EdgeAnim>
+  <EdgeAnim
+    enter={
       {
-        "displayCurrencyCode": "ETH",
-        "displayDenomination": {
-          "multiplier": "100000000",
-          "name": "Ethereum",
-        },
-        "exchangeCurrencyCode": "ETH",
-        "exchangeDenomination": {
-          "multiplier": "10000000",
-          "name": "Gwei",
-        },
+        "distance": 30,
+        "type": "fadeInDown",
       }
     }
-    walletId=""
+  >
+    <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
+      buttonText="Select Receiving Wallet"
+      focusMe={[Function]}
+      headerText="Exchange to ETH Wallet"
+      isFocused={false}
+      launchWalletSelector={[Function]}
+      onCryptoExchangeAmountChanged={[Function]}
+      onNext={[Function]}
+      overridePrimaryNativeAmount=""
+      primaryCurrencyInfo={
+        {
+          "displayCurrencyCode": "ETH",
+          "displayDenomination": {
+            "multiplier": "100000000",
+            "name": "Ethereum",
+          },
+          "exchangeCurrencyCode": "ETH",
+          "exchangeDenomination": {
+            "multiplier": "10000000",
+            "name": "Gwei",
+          },
+        }
+      }
+      walletId=""
+    />
+  </EdgeAnim>
+  <EdgeAnim
+    enter={
+      {
+        "distance": 60,
+        "type": "fadeInDown",
+      }
+    }
+  />
+  <EdgeAnim
+    enter={
+      {
+        "distance": 90,
+        "type": "fadeInDown",
+      }
+    }
   />
 </View>
 `;

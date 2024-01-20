@@ -16,6 +16,7 @@ import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../types/types'
 import { getTokenId, getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, zeroString } from '../../util/utils'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
@@ -235,7 +236,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     const showNext = this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '' && !!parseFloat(primaryNativeAmount)
     if (!showNext) return null
     if (this.checkExceedsAmount()) return null
-    return <MainButton label={lstrings.string_next_capitalized} type="secondary" marginRem={[1.5, 0, 1.5]} paddingRem={[0.5, 2.3]} onPress={this.handleNext} />
+    return <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0.5, 0, 1]} paddingRem={[0.5, 2.3]} onPress={this.handleNext} />
   }
 
   renderAlert = () => {
@@ -293,38 +294,44 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
 
     return (
       <View style={styles.sceneContainer}>
-        <View style={styles.header}>
+        <EdgeAnim style={styles.header} enter={{ type: 'fadeInUp', distance: 90 }}>
           <SceneHeader title={lstrings.title_exchange} underline />
-        </View>
-        <CryptoExchangeFlipInputWrapper
-          walletId={this.props.fromWalletId}
-          buttonText={lstrings.select_src_wallet}
-          headerText={fromHeaderText}
-          primaryCurrencyInfo={this.props.fromWalletPrimaryInfo}
-          overridePrimaryNativeAmount={this.state.fromAmountNative}
-          launchWalletSelector={this.launchFromWalletSelector}
-          onCryptoExchangeAmountChanged={this.fromAmountChanged}
-          isFocused={isFromFocused}
-          focusMe={this.focusFromWallet}
-          onNext={this.handleNext}
-        >
-          {this.props.hasMaxSpend ? <MiniButton alignSelf="center" label={lstrings.string_max_cap} marginRem={[0.5, 0, 1]} onPress={this.handleMax} /> : null}
-        </CryptoExchangeFlipInputWrapper>
-        <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
-        <CryptoExchangeFlipInputWrapper
-          walletId={this.props.toWalletId}
-          buttonText={lstrings.select_recv_wallet}
-          headerText={toHeaderText}
-          primaryCurrencyInfo={this.props.toWalletPrimaryInfo}
-          overridePrimaryNativeAmount={this.state.toAmountNative}
-          launchWalletSelector={this.launchToWalletSelector}
-          onCryptoExchangeAmountChanged={this.toAmountChanged}
-          isFocused={isToFocused}
-          focusMe={this.focusToWallet}
-          onNext={this.handleNext}
-        />
-        {this.renderAlert()}
-        {this.renderButton()}
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
+          <CryptoExchangeFlipInputWrapper
+            walletId={this.props.fromWalletId}
+            buttonText={lstrings.select_src_wallet}
+            headerText={fromHeaderText}
+            primaryCurrencyInfo={this.props.fromWalletPrimaryInfo}
+            overridePrimaryNativeAmount={this.state.fromAmountNative}
+            launchWalletSelector={this.launchFromWalletSelector}
+            onCryptoExchangeAmountChanged={this.fromAmountChanged}
+            isFocused={isFromFocused}
+            focusMe={this.focusFromWallet}
+            onNext={this.handleNext}
+          >
+            {this.props.hasMaxSpend ? <MiniButton alignSelf="center" label={lstrings.string_max_cap} marginRem={[0.5, 0, 1]} onPress={this.handleMax} /> : null}
+          </CryptoExchangeFlipInputWrapper>
+        </EdgeAnim>
+        <EdgeAnim>
+          <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 30 }}>
+          <CryptoExchangeFlipInputWrapper
+            walletId={this.props.toWalletId}
+            buttonText={lstrings.select_recv_wallet}
+            headerText={toHeaderText}
+            primaryCurrencyInfo={this.props.toWalletPrimaryInfo}
+            overridePrimaryNativeAmount={this.state.toAmountNative}
+            launchWalletSelector={this.launchToWalletSelector}
+            onCryptoExchangeAmountChanged={this.toAmountChanged}
+            isFocused={isToFocused}
+            focusMe={this.focusToWallet}
+            onNext={this.handleNext}
+          />
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 60 }}>{this.renderAlert()}</EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 90 }}>{this.renderButton()}</EdgeAnim>
       </View>
     )
   }
