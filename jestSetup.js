@@ -3,6 +3,10 @@ import './node_modules/react-native-gesture-handler/jestSetup.js'
 import { jest } from '@jest/globals'
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock'
 
+require('react-native-reanimated/src/reanimated2/jestUtils').setUpTests()
+
+const mockReanimated = jest.requireMock('react-native-reanimated')
+
 jest.mock('@bugsnag/react-native', () => {
   return {
     isStarted: () => false,
@@ -35,6 +39,17 @@ jest.mock('disklet', () => {
 jest.mock('react-native-image-colors', () => ({
   getColors: jest.fn().mockResolvedValue('')
 }))
+
+jest.mock('react-native-keyboard-controller', () => {
+  const height = mockReanimated.useSharedValue(0)
+  const progress = mockReanimated.useSharedValue(0)
+  return {
+    useReanimatedKeyboardAnimation: () => ({
+      height,
+      progress
+    })
+  }
+})
 
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext)
 

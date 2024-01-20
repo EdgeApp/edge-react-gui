@@ -2,6 +2,7 @@ import { makeReactNativeDisklet } from 'disklet'
 import { EdgeContext } from 'edge-core-js/types'
 import { LoginUiProvider } from 'edge-login-ui-rn'
 import * as React from 'react'
+import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { MenuProvider } from 'react-native-popup-menu'
 import { Provider } from 'react-redux'
 import { applyMiddleware, createStore } from 'redux'
@@ -67,13 +68,15 @@ export function Providers(props: Props) {
         // @ts-expect-error
         themeOverride={theme}
       >
-        {renderStateProviders(
-          <MenuProvider>
-            <Airship>
-              <Main />
-            </Airship>
-          </MenuProvider>
-        )}
+        <KeyboardProvider>
+          {renderStateProviders(
+            <MenuProvider>
+              <Airship>
+                <Main />
+              </Airship>
+            </MenuProvider>
+          )}
+        </KeyboardProvider>
       </LoginUiProvider>
     </Provider>
   )

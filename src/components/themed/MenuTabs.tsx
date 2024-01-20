@@ -2,9 +2,10 @@ import { BottomTabBarProps, BottomTabNavigationEventMap } from '@react-navigatio
 import { NavigationHelpers, ParamListBase } from '@react-navigation/native'
 import * as React from 'react'
 import { useMemo } from 'react'
-import { Animated as RNAnimated, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
+import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
 import LinearGradient from 'react-native-linear-gradient'
-import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
+import Animated, { SharedValue, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
@@ -18,7 +19,6 @@ import { lstrings } from '../../locales/strings'
 import { useFooterOpenRatio, useSceneFooterRenderState } from '../../state/SceneFooterState'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
-import { KeyboardTracker } from '../common/KeyboardTracker'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
 import { BlurBackground } from '../ui4/BlurBackground'
@@ -63,52 +63,55 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const activeTabRoute = state.routes[activeTabFullIndex]
   const activeTabIndex = routes.findIndex(route => route.name === activeTabRoute.name)
 
-  const insets = useSafeAreaInsets()
+  const { bottom: insetBottom } = useSafeAreaInsets()
 
   const { footerOpenRatio, resetFooterRatio } = useFooterOpenRatio()
   const { renderFooter } = useSceneFooterRenderState()
 
-  const downValue = 0
-  const upValue = (keyboardHeight: number) => downValue + Math.max(0, keyboardHeight - MAX_TAB_BAR_HEIGHT - insets.bottom)
+  const { height: keyboardHeight, progress: keyboardProgress } = useReanimatedKeyboardAnimation()
+  const menuTabHeightAndInsetBottomTermForShiftY = useDerivedValue(() => keyboardProgress.value * (insetBottom + MAX_TAB_BAR_HEIGHT), [insetBottom])
+  const shiftY = useDerivedValue(() => keyboardHeight.value + menuTabHeightAndInsetBottomTermForShiftY.value)
 
   return (
-    <KeyboardTracker downValue={downValue} upValue={upValue}>
-      {keyboardAnimation => {
-        return (
-          <Container keyboardAnimation={keyboardAnimation}>
-            <BlurBackground />
-            <LinearGradient colors={theme.tabBarBackground} start={theme.tabBarBackgroundStart} end={theme.tabBarBackgroundEnd}>
-              {renderFooter()}
-              <Tabs>
-                {routes.map((route, index: number) => (
-                  <Tab
-                    currentName={routes[activeTabIndex].name}
-                    navigation={navigation}
-                    key={route.name}
-                    route={route}
-                    isActive={activeTabIndex === index}
-                    footerOpenRatio={footerOpenRatio}
-                    resetFooterRatio={resetFooterRatio}
-                  />
-                ))}
-              </Tabs>
-            </LinearGradient>
-          </Container>
-        )
-      }}
-    </KeyboardTracker>
+    <Container shiftY={shiftY}>
+      <BlurBackground />
+      <LinearGradient colors={theme.tabBarBackground} start={theme.tabBarBackgroundStart} end={theme.tabBarBackgroundEnd}>
+        {renderFooter()}
+        <Tabs>
+          {routes.map((route, index: number) => (
+            <Tab
+              currentName={routes[activeTabIndex].name}
+              navigation={navigation}
+              key={route.name}
+              route={route}
+              isActive={activeTabIndex === index}
+              footerOpenRatio={footerOpenRatio}
+              resetFooterRatio={resetFooterRatio}
+            />
+          ))}
+        </Tabs>
+      </LinearGradient>
+    </Container>
   )
 }
 
-const Container = styled(RNAnimated.View)<{ keyboardAnimation: RNAnimated.Value }>(() => ({ keyboardAnimation }) => ({
-  position: 'absolute',
-  left: 0,
-  right: 0,
-  // Temporary fix weird type issue with styled components and react-native Animated.View
-  bottom: keyboardAnimation as any,
-  justifyContent: 'flex-end',
-  overflow: 'visible'
-}))
+const Container = styled(Animated.View)<{ shiftY: SharedValue<number> }>(() => ({ shiftY }) => [
+  {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'flex-end',
+    overflow: 'visible'
+  },
+  useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateY: shiftY.value
+      }
+    ]
+  }))
+])
 
 const Tabs = styled(View)({
   flexDirection: 'row',
