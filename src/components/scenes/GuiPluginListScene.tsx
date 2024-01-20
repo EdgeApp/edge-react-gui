@@ -364,12 +364,43 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     )
   }
 
+  renderTop = () => {
+    const { countryCode, theme } = this.props
+    const styles = getStyles(theme)
+    const direction = this.getSceneDirection()
+    const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
+
+    return (
+      <>
+        <View style={styles.header}>
+          <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline withTopMargin />
+        </View>
+        <SectionHeaderUi4 leftTitle={lstrings.title_select_region} />
+        <CardUi4>
+          <RowUi4
+            onPress={this._handleCountryPress}
+            rightButtonType="none"
+            icon={
+              countryData == null ? undefined : (
+                <FastImage
+                  source={{ uri: `${FLAG_LOGO_URL}/${countryData.filename || countryData.name.toLowerCase().replace(' ', '-')}.png` }}
+                  style={styles.selectedCountryFlag}
+                />
+              )
+            }
+            body={countryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}
+          />
+        </CardUi4>
+        <SectionHeaderUi4 leftTitle={lstrings.title_select_payment_method} />
+      </>
+    )
+  }
+
   render() {
     const { accountPlugins, accountReferral, countryCode, developerModeOn, disablePlugins, theme } = this.props
     const direction = this.getSceneDirection()
     const { buy = [], sell = [] } = this.state.buySellPlugins
     const styles = getStyles(theme)
-    const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
 
     // Pick a filter based on our direction:
     let plugins = filterGuiPluginJson(direction === 'buy' ? buy : sell, Platform.OS, countryCode, disablePlugins)
@@ -387,33 +418,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       plugins.push(customPluginRow)
     }
 
-    const renderTop = () => {
-      return (
-        <>
-          <View style={styles.header}>
-            <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline />
-          </View>
-          <SectionHeaderUi4 leftTitle={lstrings.title_select_region} />
-          <CardUi4>
-            <RowUi4
-              onPress={this._handleCountryPress}
-              rightButtonType="none"
-              icon={
-                countryData == null ? undefined : (
-                  <FastImage
-                    source={{ uri: `${FLAG_LOGO_URL}/${countryData.filename || countryData.name.toLowerCase().replace(' ', '-')}.png` }}
-                    style={styles.selectedCountryFlag}
-                  />
-                )
-              }
-              body={countryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}
-            />
-          </CardUi4>
-          <SectionHeaderUi4 leftTitle={lstrings.title_select_payment_method} />
-        </>
-      )
-    }
-
     return (
       <View style={styles.sceneContainer}>
         {plugins.length === 0 ? (
@@ -426,10 +430,10 @@ class GuiPluginList extends React.PureComponent<Props, State> {
           <Animated.FlatList
             data={plugins}
             onScroll={this.props.handleScroll}
-            ListHeaderComponent={renderTop}
+            ListHeaderComponent={this.renderTop}
             renderItem={this.renderPlugin}
             keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
-            contentContainerStyle={{ paddingTop: 0 }}
+            style={styles.listStyle}
           />
         )}
       </View>
@@ -441,6 +445,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   header: {
     marginLeft: -theme.rem(0.5),
     width: '100%'
+  },
+  listStyle: {
+    overflow: 'visible'
   },
   sceneContainer: {
     flex: 1
