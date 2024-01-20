@@ -3,109 +3,84 @@
 exports[`CryptoExchangeComponent should render with loading props 1`] = `
 <View
   style={
-    [
-      {
-        "flex": 1,
-      },
-      {
-        "paddingTop": 0,
-      },
-    ]
+    {
+      "flex": 1,
+      "marginHorizontal": 11,
+    }
   }
 >
-  <Memo(SceneHeaderComponent)
-    title="Exchange"
-    underline={true}
-  />
-  <KeyboardAwareScrollView
-    contentContainerStyle={
-      [
-        {
-          "paddingBottom": 0,
-        },
-        {
-          "alignItems": "center",
-          "marginHorizontal": 11,
-        },
-      ]
-    }
-    enableAutomaticScroll={true}
-    enableOnAndroid={false}
-    enableResetScrollToCoords={true}
-    extraHeight={75}
-    extraScrollHeight={0}
-    keyboardOpeningTime={250}
-    keyboardShouldPersistTaps="always"
+  <View
     style={
       {
-        "flex": 1,
+        "marginLeft": -11,
+        "marginVertical": 22,
+        "width": "100%",
       }
     }
-    viewIsInsideTabBar={false}
   >
-    <Memo(LineTextDividerComponent)
-      lowerCased={true}
-      title="From"
+    <Memo(SceneHeaderComponent)
+      title="Exchange"
+      underline={true}
     />
-    <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
-      buttonText="Select Source Wallet"
-      focusMe={[Function]}
-      headerText="Exchange from BTC Wallet"
-      isFocused={true}
-      launchWalletSelector={[Function]}
-      onCryptoExchangeAmountChanged={[Function]}
-      onNext={[Function]}
-      overridePrimaryNativeAmount=""
-      primaryCurrencyInfo={
-        {
-          "displayCurrencyCode": "BTC",
-          "exchangeCurrencyCode": "BTC",
-        }
+  </View>
+  <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
+    buttonText="Select Source Wallet"
+    focusMe={[Function]}
+    headerText="Exchange from BTC Wallet"
+    isFocused={true}
+    launchWalletSelector={[Function]}
+    onCryptoExchangeAmountChanged={[Function]}
+    onNext={[Function]}
+    overridePrimaryNativeAmount=""
+    primaryCurrencyInfo={
+      {
+        "displayCurrencyCode": "BTC",
+        "exchangeCurrencyCode": "BTC",
       }
-      walletId=""
-    >
-      <MiniButton
-        alignSelf="center"
-        label="MAX"
-        marginRem={
-          [
-            0.5,
-            0,
-            1,
-          ]
-        }
-        onPress={[Function]}
-      />
-    </Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))>
-    <Memo(LineTextDividerComponent)
-      lowerCased={true}
-      title="To"
-    />
-    <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
-      buttonText="Select Receiving Wallet"
-      focusMe={[Function]}
-      headerText="Exchange to ETH Wallet"
-      isFocused={false}
-      launchWalletSelector={[Function]}
-      onCryptoExchangeAmountChanged={[Function]}
-      onNext={[Function]}
-      overridePrimaryNativeAmount=""
-      primaryCurrencyInfo={
-        {
-          "displayCurrencyCode": "ETH",
-          "displayDenomination": {
-            "multiplier": "100000000",
-            "name": "Ethereum",
-          },
-          "exchangeCurrencyCode": "ETH",
-          "exchangeDenomination": {
-            "multiplier": "10000000",
-            "name": "Gwei",
-          },
-        }
+    }
+    walletId=""
+  >
+    <MiniButton
+      alignSelf="center"
+      label="MAX"
+      marginRem={
+        [
+          0.5,
+          0,
+          1,
+        ]
       }
-      walletId=""
+      onPress={[Function]}
     />
-  </KeyboardAwareScrollView>
+  </Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))>
+  <Memo(LineTextDividerComponent)
+    lowerCased={true}
+    title="To"
+  />
+  <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
+    buttonText="Select Receiving Wallet"
+    focusMe={[Function]}
+    headerText="Exchange to ETH Wallet"
+    isFocused={false}
+    launchWalletSelector={[Function]}
+    onCryptoExchangeAmountChanged={[Function]}
+    onNext={[Function]}
+    overridePrimaryNativeAmount=""
+    primaryCurrencyInfo={
+      {
+        "displayCurrencyCode": "ETH",
+        "displayDenomination": {
+          "multiplier": "100000000",
+          "name": "Ethereum",
+        },
+        "exchangeCurrencyCode": "ETH",
+        "exchangeDenomination": {
+          "multiplier": "10000000",
+          "name": "Gwei",
+        },
+      }
+    }
+    walletId=""
+  />
 </View>
 `;
