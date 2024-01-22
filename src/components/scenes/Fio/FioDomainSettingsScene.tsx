@@ -1,5 +1,6 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
+import { View } from 'react-native'
 
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import { FIO_ADDRESS_DELIMITER } from '../../../constants/WalletAndCurrencyConstants'
@@ -13,9 +14,10 @@ import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
-import { ClickableText } from '../../themed/ClickableText'
+import { SettingsTappableRow } from '../../settings/SettingsTappableRow'
 import { EdgeText } from '../../themed/EdgeText'
-import { MainButton } from '../../themed/MainButton'
+import { SceneHeader } from '../../themed/SceneHeader'
+import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
@@ -155,60 +157,71 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { route } = this.props
+    const { route, theme } = this.props
     const { fioWallet, fioDomainName, expiration, isPublic } = route.params
 
     const { showRenew, showVisibility, showTransfer } = this.state
+    const styles = getStyles(theme)
 
     return (
-      <SceneWrapper>
-        <RowUi4 title={lstrings.fio_domain_label} body={`${FIO_ADDRESS_DELIMITER} ${fioDomainName}`} />
-        <RowUi4 title={lstrings.fio_address_details_screen_expires} body={formatDate(new Date(expiration))} />
-        {showVisibility && (
-          <FioActionSubmit
-            title={isPublic ? lstrings.title_fio_make_private_domain : lstrings.title_fio_make_public_domain}
-            onSubmit={this.setDomainVisibility}
-            onSuccess={this.afterSuccess}
-            onCancel={this.cancelOperation}
-            getOperationFee={getDomainSetVisibilityFee}
-            successMessage={isPublic ? lstrings.fio_domain_is_private_label : lstrings.fio_domain_is_public_label}
-            fioWallet={fioWallet}
-            showPaymentWalletPicker
-            navigation={this.props.navigation}
-          />
-        )}
-        {showRenew && (
-          <FioActionSubmit
-            onSubmit={this.renewDomain}
-            onSuccess={this.afterSuccess}
-            onCancel={this.cancelOperation}
-            getOperationFee={this.getRenewalFee}
-            successMessage={lstrings.fio_request_renew_domain_ok_text}
-            fioWallet={fioWallet}
-            showPaymentWalletPicker
-            navigation={this.props.navigation}
-          />
-        )}
-        {showTransfer && (
-          <FioActionSubmit goTo={this.goToTransfer} getOperationFee={this.getTransferFee} fioWallet={fioWallet} navigation={this.props.navigation} />
-        )}
-        {!showRenew && !showVisibility && !showTransfer && (
-          <>
-            <MainButton label={lstrings.title_fio_renew_domain} onPress={this.onRenewPress} marginRem={[1.5, 1, 0.25]} />
-            <MainButton label={lstrings.title_fio_transfer_domain} onPress={this.onTransferPress} marginRem={[0.25, 1]} />
-            <ClickableText
-              onPress={this.onVisibilityPress}
-              paddingRem={[0.25, 1]}
-              label={isPublic ? lstrings.title_fio_make_private_domain : lstrings.title_fio_make_public_domain}
+      <SceneWrapper scroll>
+        <SceneHeader title={lstrings.title_fio_domain_settings} underline withTopMargin />
+        <View style={styles.container}>
+          <CardUi4>
+            <RowUi4 title={lstrings.fio_domain_label} body={`${FIO_ADDRESS_DELIMITER} ${fioDomainName}`} />
+          </CardUi4>
+          <CardUi4>
+            <RowUi4 title={lstrings.fio_address_details_screen_expires} body={formatDate(new Date(expiration))} />
+          </CardUi4>
+          {showVisibility && (
+            <FioActionSubmit
+              title={isPublic ? lstrings.title_fio_make_private_domain : lstrings.title_fio_make_public_domain}
+              onSubmit={this.setDomainVisibility}
+              onSuccess={this.afterSuccess}
+              onCancel={this.cancelOperation}
+              getOperationFee={getDomainSetVisibilityFee}
+              successMessage={isPublic ? lstrings.fio_domain_is_private_label : lstrings.fio_domain_is_public_label}
+              fioWallet={fioWallet}
+              showPaymentWalletPicker
+              navigation={this.props.navigation}
             />
-          </>
-        )}
+          )}
+          {showRenew && (
+            <FioActionSubmit
+              onSubmit={this.renewDomain}
+              onSuccess={this.afterSuccess}
+              onCancel={this.cancelOperation}
+              getOperationFee={this.getRenewalFee}
+              successMessage={lstrings.fio_request_renew_domain_ok_text}
+              fioWallet={fioWallet}
+              showPaymentWalletPicker
+              navigation={this.props.navigation}
+            />
+          )}
+          {showTransfer && (
+            <FioActionSubmit goTo={this.goToTransfer} getOperationFee={this.getTransferFee} fioWallet={fioWallet} navigation={this.props.navigation} />
+          )}
+          {!showRenew && !showVisibility && !showTransfer && (
+            <CardUi4 sections>
+              <SettingsTappableRow label={lstrings.title_fio_renew_domain} onPress={this.onRenewPress} />
+              <SettingsTappableRow label={lstrings.title_fio_transfer_domain} onPress={this.onTransferPress} />
+              <SettingsTappableRow
+                label={isPublic ? lstrings.title_fio_make_private_domain : lstrings.title_fio_make_public_domain}
+                onPress={this.onVisibilityPress}
+              />
+            </CardUi4>
+          )}
+        </View>
       </SceneWrapper>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    marginTop: theme.rem(0.5),
+    paddingHorizontal: theme.rem(0.5)
+  },
   spacer: {
     paddingTop: theme.rem(1.25)
   },
