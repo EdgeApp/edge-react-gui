@@ -2,72 +2,76 @@
 
 exports[`FioAddressDetails should render with loading props 1`] = `
 <SceneWrapper>
-  <WithTheme(EdgeTextComponent)
+  <Memo(SceneHeaderComponent)
+    title="Fio@edge"
+    underline={true}
+    withTopMargin={true}
+  />
+  <View
     style={
       {
-        "color": "#FFFFFF",
-        "fontSize": 17,
-        "marginTop": -11,
-        "paddingBottom": 17,
-        "textAlign": "center",
+        "flexGrow": 1,
+        "paddingHorizontal": 11,
       }
     }
   >
-    Remaining bundled transactions: 100
-  </WithTheme(EdgeTextComponent)>
-  <Memo(SettingsTappableRowComponent)
-    label="Crypto Handle Settings"
-    onPress={[Function]}
-  >
-    <Icon
-      allowFontScaling={false}
-      color="#FFFFFF"
-      name="ios-settings"
-      size={12}
+    <WithTheme(EdgeTextComponent)
       style={
         {
-          "fontSize": 34,
-          "paddingHorizontal": 11,
+          "color": "#FFFFFF",
+          "fontSize": 22,
+          "margin": 11,
+        }
+      }
+    >
+      Remaining bundled transactions: 100
+    </WithTheme(EdgeTextComponent)>
+    <CardUi4
+      paddingRem={0.25}
+    >
+      <Memo(SettingsTappableRowComponent)
+        action="setting"
+        label="Crypto Handle Settings"
+        onPress={[Function]}
+      />
+    </CardUi4>
+    <Memo(SettingsHeaderRowComponent)
+      icon={
+        <Icon
+          allowFontScaling={false}
+          color="#FFFFFF"
+          name="ios-link"
+          size={34}
+        />
+      }
+      label="Choose wallets to connect to your FIO Crypto Handle"
+    />
+    <ConnectWallets
+      disabled={false}
+      fioAddressName="Fio@edge"
+      fioWallet={null}
+      navigation={
+        {
+          "addListener": [Function],
+          "canGoBack": [Function],
+          "dispatch": [Function],
+          "getId": [Function],
+          "getParent": [Function],
+          "getState": [Function],
+          "goBack": [Function],
+          "isFocused": [Function],
+          "navigate": [Function],
+          "pop": [Function],
+          "popToTop": [Function],
+          "push": [Function],
+          "removeListener": [Function],
+          "replace": [Function],
+          "reset": [Function],
+          "setOptions": [Function],
+          "setParams": [Function],
         }
       }
     />
-  </Memo(SettingsTappableRowComponent)>
-  <Memo(SettingsHeaderRowComponent)
-    icon={
-      <Icon
-        allowFontScaling={false}
-        color="#FFFFFF"
-        name="ios-link"
-        size={34}
-      />
-    }
-    label="Choose wallets to connect to your FIO Crypto Handle"
-  />
-  <ConnectWallets
-    disabled={false}
-    fioAddressName="Fio@edge"
-    fioWallet={null}
-    navigation={
-      {
-        "addListener": [Function],
-        "canGoBack": [Function],
-        "dispatch": [Function],
-        "getId": [Function],
-        "getParent": [Function],
-        "getState": [Function],
-        "goBack": [Function],
-        "isFocused": [Function],
-        "navigate": [Function],
-        "pop": [Function],
-        "popToTop": [Function],
-        "push": [Function],
-        "removeListener": [Function],
-        "replace": [Function],
-        "reset": [Function],
-        "setOptions": [Function],
-        "setParams": [Function],
-      }
-    }
-  />
+  </View>
 </SceneWrapper>
 `;

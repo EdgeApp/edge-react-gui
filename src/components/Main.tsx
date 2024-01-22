@@ -483,13 +483,7 @@ const EdgeAppStack = () => {
           headerLeft: () => <HeaderTextButton type="help" />
         }}
       />
-      <Stack.Screen
-        name="fioAddressDetails"
-        component={FioAddressDetailsScene}
-        options={{
-          headerTitle: () => <ParamHeaderTitle<'fioAddressDetails'> fromParams={params => params.fioAddressName} />
-        }}
-      />
+      <Stack.Screen name="fioAddressDetails" component={FioAddressDetailsScene} />
       <Stack.Screen name="fioAddressList" component={FioAddressListScene} />
       <Stack.Screen name="fioAddressRegister" component={FioAddressRegisterScene} />
       <Stack.Screen
