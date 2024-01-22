@@ -8606,16 +8606,17 @@ edge-info-server@^1.4.0:
   dependencies:
     cleaners "^0.3.16"
 
-edge-login-ui-rn@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.1.2.tgz#9f099e80fbe99b8fcda1cb34a4eb1bcaf8da59d0"
-  integrity sha512-LyocynAeLs7AUPRVJorPj1zaw2YcIQyqfVMs2Hp8o7d8uzt9ipu3DxcnKN4PxfjOs+xnBLNZiZFHYX4QnlUjDQ==
+edge-login-ui-rn@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.2.0.tgz#c56a8fd16f49c48e8183945755938c57dfd1f039"
+  integrity sha512-5064JJo/HFrGCBc2VDZK9ZZXQZg0U2cmoBsPEcdqxEJSXiY4VqD5IvGEKaodzcuKqsXkk3dKp6YvCSgyKYBHTw==
   dependencies:
     base-x "^4.0.0"
     cleaners "^0.3.12"
     date-fns "^2.23.0"
     qrcode-generator "^1.4.4"
     react-native-airship "^0.2.9"
+    react-native-haptic-feedback "^1.14.0"
     react-native-keyboard-aware-scroll-view "^0.9.5"
     react-native-patina "^0.1.6"
     react-redux "^7.2.4"

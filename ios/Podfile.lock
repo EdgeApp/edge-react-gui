@@ -24,7 +24,7 @@ PODS:
     - React-Core
   - edge-exchange-plugins (2.0.1):
     - React-Core
-  - edge-login-ui-rn (3.1.2):
+  - edge-login-ui-rn (3.2.0):
     - React-Core
   - EXApplication (5.1.1):
     - ExpoModulesCore
@@ -1252,7 +1252,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   _NIODataStructures: 3d45d8e70a1d17a15b1dc59d102c63dbc0525ffd
-  boost: 7dcd2de282d72e344012f7d6564d024930a6a440
+  boost: 57d2868c099736d80fcd648bf211b4431e51a558
   BugsnagReactNative: d9fa0824cea1beb5ab1f12828d79a2bd1b383e60
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   CGRPCZlib: 298dd3237ba4bd7b3eed109e7080ff3324b7d9c9
@@ -1269,7 +1269,7 @@ SPEC CHECKSUMS:
   edge-core-js: 437d3b94b66107b3d3444655ba7e4746b893d6da
   edge-currency-accountbased: 943753dc1605b3f2e56918053a39785e9d23c557
   edge-exchange-plugins: a7340c395f9b99f762858ff568e7889269f5b8da
-  edge-login-ui-rn: c3af266b08ccce88e85d079a54d2f33a88764f84
+  edge-login-ui-rn: 42303801df4ecfcd26ab3b4c1ed2b31dfdabbf89
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXConstants: f348da07e21b23d2b085e270d7b74f282df1a7d9
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
