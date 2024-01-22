@@ -13,6 +13,7 @@ import { ButtonsModal } from '../../modals/ButtonsModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { SceneHeader } from '../../themed/SceneHeader'
+import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
 interface StateProps {
@@ -140,13 +141,15 @@ class FioNameConfirm extends React.PureComponent<Props> {
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper>
-        <SceneHeader title={this.isFioAddress() ? lstrings.title_fio_address_confirmation : lstrings.title_register_fio_domain} underline />
+      <SceneWrapper scroll>
+        <SceneHeader title={this.isFioAddress() ? lstrings.title_fio_address_confirmation : lstrings.title_register_fio_domain} underline withTopMargin />
         <View style={styles.scene}>
-          <RowUi4
-            title={this.isFioAddress() ? lstrings.fio_address_confirm_screen_label : lstrings.fio_domain_label}
-            body={this.isFioAddress() ? fioName : `${FIO_ADDRESS_DELIMITER}${fioName}`}
-          />
+          <CardUi4>
+            <RowUi4
+              title={this.isFioAddress() ? lstrings.fio_address_confirm_screen_label : lstrings.fio_domain_label}
+              body={this.isFioAddress() ? fioName : `${FIO_ADDRESS_DELIMITER}${fioName}`}
+            />
+          </CardUi4>
           <FioActionSubmit
             onSubmit={this.saveFioName}
             getOperationFee={this.getFee}
@@ -166,6 +169,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-start',
+    marginHorizontal: theme.rem(0.5),
     paddingTop: theme.rem(0.5)
   }
 }))
