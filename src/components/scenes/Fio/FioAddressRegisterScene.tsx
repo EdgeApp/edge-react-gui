@@ -1,10 +1,9 @@
 import { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { Image, LayoutChangeEvent, ScrollView, View } from 'react-native'
+import { Image, LayoutChangeEvent, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { createFioWallet } from '../../../actions/FioAddressActions'
-import { Fontello } from '../../../assets/vector'
 import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
@@ -13,17 +12,17 @@ import { FioDomain, FioPublicDomain } from '../../../types/types'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { checkIsDomainPublic } from '../../../util/FioAddressUtils'
 import { openLink } from '../../../util/utils'
+import { EdgeAnim } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { DomainListModal } from '../../FioAddress/DomainListModal'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
-import { ClickableText } from '../../themed/ClickableText'
 import { EdgeText } from '../../themed/EdgeText'
-import { FormError } from '../../themed/FormError'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { ButtonUi4 } from '../../ui4/ButtonUi4'
+import { AlertCardUi4 } from '../../ui4/AlertCardUi4'
+import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
 import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
@@ -255,12 +254,6 @@ export class FioAddressRegister extends React.Component<Props, State> {
     })
   }
 
-  handleFioAddressFocus = () => {
-    // @ts-expect-error
-    // eslint-disable-next-line react/no-string-refs
-    this.refs._scrollView.scrollTo({ x: 0, y: this.state.fieldPos, animated: true })
-  }
-
   fieldViewOnLayout = ({ nativeEvent }: LayoutChangeEvent) => {
     if (nativeEvent) {
       const {
@@ -271,7 +264,6 @@ export class FioAddressRegister extends React.Component<Props, State> {
   }
 
   editAddressPressed = async () => {
-    this.handleFioAddressFocus()
     await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
@@ -323,20 +315,27 @@ export class FioAddressRegister extends React.Component<Props, State> {
   }
 
   renderButton() {
-    const { isValid, isAvailable, loading, walletLoading } = this.state
+    const { isValid, isAvailable, loading, showFreeAddressLink, walletLoading } = this.state
     const styles = getStyles(this.props.theme)
 
-    // TODO: Update ButtonsViewUi4 to handle single button case
+    const primary = {
+      disabled: !isValid || !isAvailable || loading,
+      label: walletLoading ? '' : lstrings.string_next_capitalized,
+      onPress: this.handleNextButton,
+      type: 'primary'
+    }
+    const tertiary =
+      this.props.fioWallets.length && showFreeAddressLink
+        ? {
+            label: lstrings.fio_address_reg_free,
+            onPress: this.registerFreeAddress,
+            type: 'tertiary'
+          }
+        : undefined
+
     return (
       <View style={styles.buttons}>
-        <ButtonUi4
-          layout="row"
-          disabled={!isValid || !isAvailable || loading}
-          label={walletLoading ? '' : lstrings.string_next_capitalized}
-          spinner={walletLoading}
-          onPress={this.handleNextButton}
-          type="primary"
-        />
+        <ButtonsViewUi4 primary={primary} tertiary={tertiary} />
       </View>
     )
   }
@@ -362,7 +361,6 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
   renderErrorMessage() {
     const { fioAddress, isAvailable, isValid, loading, errorMessage } = this.state
-    const styles = getStyles(this.props.theme)
     let chooseHandleErrorMessage = ''
 
     if (loading) return null
@@ -383,85 +381,72 @@ export class FioAddressRegister extends React.Component<Props, State> {
     }
 
     return (
-      <FormError style={styles.error} isVisible={!!chooseHandleErrorMessage}>
-        {chooseHandleErrorMessage}
-      </FormError>
+      <EdgeAnim visible={chooseHandleErrorMessage !== ''} enter={{ type: 'fadeIn' }} exit={{ type: 'fadeOut' }}>
+        <AlertCardUi4 title={chooseHandleErrorMessage} type="error" />
+      </EdgeAnim>
     )
   }
 
   render() {
     const { theme } = this.props
-    const { fioAddress, selectedDomain, domainsLoading, showFreeAddressLink } = this.state
+    const { fioAddress, selectedDomain, domainsLoading } = this.state
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper padding={theme.rem(0.5)}>
-        <SceneHeader style={styles.header} title={lstrings.title_fio_address_confirmation}>
+      <SceneWrapper scroll>
+        <SceneHeader style={styles.header} title={lstrings.title_fio_address_confirmation} underline withTopMargin>
           <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
         </SceneHeader>
-        {/* eslint-disable-next-line react/no-string-refs */}
-        <ScrollView ref="_scrollView" contentContainerStyle={styles.container}>
-          <View style={styles.view}>
-            <View style={[styles.createWalletPromptArea, styles.title]}>
-              <EdgeText style={styles.instructionalText} numberOfLines={2}>
-                {lstrings.fio_address_first_screen_title}
-              </EdgeText>
-            </View>
-            <View style={styles.createWalletPromptArea}>
-              <EdgeText style={styles.handleRequirementsText} numberOfLines={3}>
-                {lstrings.fio_address_features}
-              </EdgeText>
-            </View>
-            <View style={styles.createWalletPromptArea}>
-              <EdgeText style={styles.handleRequirementsText} numberOfLines={5}>
-                {lstrings.fio_address_first_screen_end}
-              </EdgeText>
-            </View>
-
-            <View onLayout={this.fieldViewOnLayout}>
-              <CardUi4 sections>
-                <RowUi4 rightButtonType="editable" title={lstrings.fio_address_choose_label} onPress={this.editAddressPressed}>
-                  <View style={styles.addressTileBody}>
-                    {fioAddress ? (
-                      <EdgeText style={styles.fioAddressName}>{fioAddress}</EdgeText>
-                    ) : (
-                      <EdgeText style={styles.muted}>{lstrings.fio_address_register_placeholder}</EdgeText>
-                    )}
-                    {this.renderLoader()}
-                  </View>
-                </RowUi4>
-                <RowUi4
-                  rightButtonType="touchable"
-                  title={lstrings.fio_address_choose_domain_label}
-                  onPress={this.selectFioDomain}
-                  body={domainsLoading ? lstrings.loading : `${FIO_ADDRESS_DELIMITER}${selectedDomain.name}`}
-                />
-                {this.renderFioWallets()}
-              </CardUi4>
-            </View>
-            {this.renderButton()}
-            {this.props.fioWallets.length && showFreeAddressLink ? (
-              <ClickableText
-                onPress={this.registerFreeAddress}
-                icon={<Fontello name="register-new-fio-icon" color={theme.iconTappable} size={theme.rem(1)} />}
-                label={lstrings.fio_address_reg_free}
-              />
-            ) : null}
-            {this.renderErrorMessage()}
-            <View style={styles.bottomSpace} />
+        <View style={styles.view}>
+          <View style={[styles.createWalletPromptArea, styles.title]}>
+            <EdgeText style={styles.instructionalText} numberOfLines={2}>
+              {lstrings.fio_address_first_screen_title}
+            </EdgeText>
           </View>
-        </ScrollView>
+          <View style={styles.createWalletPromptArea}>
+            <EdgeText style={styles.handleRequirementsText} numberOfLines={3}>
+              {lstrings.fio_address_features}
+            </EdgeText>
+          </View>
+          <View style={styles.createWalletPromptArea}>
+            <EdgeText style={styles.handleRequirementsText} numberOfLines={5}>
+              {lstrings.fio_address_first_screen_end}
+            </EdgeText>
+          </View>
+
+          <View onLayout={this.fieldViewOnLayout}>
+            <CardUi4 sections>
+              <RowUi4 rightButtonType="editable" title={lstrings.fio_address_choose_label} onPress={this.editAddressPressed}>
+                <View style={styles.addressTileBody}>
+                  {fioAddress ? (
+                    <EdgeText style={styles.fioAddressName}>{fioAddress}</EdgeText>
+                  ) : (
+                    <EdgeText style={styles.muted}>{lstrings.fio_address_register_placeholder}</EdgeText>
+                  )}
+                  {this.renderLoader()}
+                </View>
+              </RowUi4>
+              <RowUi4
+                rightButtonType="touchable"
+                title={lstrings.fio_address_choose_domain_label}
+                onPress={this.selectFioDomain}
+                body={domainsLoading ? lstrings.loading : `${FIO_ADDRESS_DELIMITER}${selectedDomain.name}`}
+              />
+              {this.renderFioWallets()}
+            </CardUi4>
+          </View>
+          {this.renderButton()}
+          {this.renderErrorMessage()}
+          <View style={styles.bottomSpace} />
+        </View>
       </SceneWrapper>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    paddingTop: theme.rem(0.5)
-  },
   view: {
-    position: 'relative'
+    marginHorizontal: theme.rem(0.5)
   },
   createWalletPromptArea: {
     paddingHorizontal: theme.rem(0.5),

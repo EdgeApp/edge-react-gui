@@ -490,7 +490,6 @@ const EdgeAppStack = () => {
         name="fioAddressRegisterSelectWallet"
         component={FioAddressRegisterSelectWalletScene}
         options={{
-          title: lstrings.title_fio_address_confirmation,
           headerRight: () => null
         }}
       />
