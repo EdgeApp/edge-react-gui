@@ -534,13 +534,7 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
-      <Stack.Screen
-        name="fioRequestConfirmation"
-        component={FioRequestConfirmationScene}
-        options={{
-          title: lstrings.fio_confirm_request_header
-        }}
-      />
+      <Stack.Screen name="fioRequestConfirmation" component={FioRequestConfirmationScene} />
       <Stack.Screen name="fioRequestList" component={FioRequestListScene} />
       <Stack.Screen
         name="fioSentRequestDetails"
