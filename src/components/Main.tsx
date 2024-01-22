@@ -502,13 +502,7 @@ const EdgeAppStack = () => {
         }}
       />
       <Stack.Screen name="fioAddressSettings" component={FioAddressSettingsScene} />
-      <Stack.Screen
-        name="fioConnectToWalletsConfirm"
-        component={FioConnectWalletConfirmScene}
-        options={{
-          title: lstrings.title_fio_connect_to_wallet
-        }}
-      />
+      <Stack.Screen name="fioConnectToWalletsConfirm" component={FioConnectWalletConfirmScene} />
       <Stack.Screen
         name="fioCreateHandle"
         component={FioCreateHandleScene}

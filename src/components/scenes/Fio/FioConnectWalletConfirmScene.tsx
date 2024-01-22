@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { View } from 'react-native'
 
 import { lstrings } from '../../../locales/strings'
 import { CcWalletMap } from '../../../reducers/FioReducer'
@@ -11,8 +12,10 @@ import { ButtonsModal } from '../../modals/ButtonsModal'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
+import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
 import { Radio } from '../../themed/ThemedButtons'
+import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
 interface State {
@@ -185,31 +188,41 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
 
     return (
       <SceneWrapper scroll>
-        <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
-        {walletsToConnect.length ? <RowUi4 title={lstrings.title_fio_connect_to_wallet}>{walletsToConnect.map(this.renderWalletLine)}</RowUi4> : null}
+        <SceneHeader title={lstrings.title_fio_connect_to_wallet} underline withTopMargin />
+        <View style={styles.container}>
+          <CardUi4 sections>
+            <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
+            {walletsToConnect.length ? <RowUi4 title={lstrings.title_fio_connect_to_wallet}>{walletsToConnect.map(this.renderWalletLine)}</RowUi4> : null}
 
-        {walletsToDisconnect.length ? <RowUi4 title={lstrings.title_fio_disconnect_wallets}>{walletsToDisconnect.map(this.renderWalletLine)}</RowUi4> : null}
+            {walletsToDisconnect.length ? (
+              <RowUi4 title={lstrings.title_fio_disconnect_wallets}>{walletsToDisconnect.map(this.renderWalletLine)}</RowUi4>
+            ) : null}
+          </CardUi4>
 
-        <Radio value={acknowledge} onPress={this.check} marginRem={[2, 2, 0]}>
-          <EdgeText style={styles.checkTitle} numberOfLines={4}>
-            {lstrings.fio_connect_checkbox_text}
-          </EdgeText>
-        </Radio>
-        {showSlider && (
-          <Slider
-            parentStyle={styles.slider}
-            onSlidingComplete={this.confirm}
-            disabled={!acknowledge || connectWalletsLoading}
-            disabledText={lstrings.send_confirmation_slide_to_confirm}
-            showSpinner={connectWalletsLoading}
-          />
-        )}
+          <Radio value={acknowledge} onPress={this.check} marginRem={[2, 2, 0]}>
+            <EdgeText style={styles.checkTitle} numberOfLines={4}>
+              {lstrings.fio_connect_checkbox_text}
+            </EdgeText>
+          </Radio>
+          {showSlider && (
+            <Slider
+              parentStyle={styles.slider}
+              onSlidingComplete={this.confirm}
+              disabled={!acknowledge || connectWalletsLoading}
+              disabledText={lstrings.send_confirmation_slide_to_confirm}
+              showSpinner={connectWalletsLoading}
+            />
+          )}
+        </View>
       </SceneWrapper>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    padding: theme.rem(0.5)
+  },
   content: {
     color: theme.primaryText,
     fontSize: theme.rem(1),
