@@ -1,6 +1,6 @@
 import { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { LayoutChangeEvent, ScrollView, View } from 'react-native'
+import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { createFioWallet } from '../../../actions/FioAddressActions'
@@ -8,15 +8,17 @@ import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
+import { EdgeAnim } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
-import { FormError } from '../../themed/FormError'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
+import { AlertCardUi4 } from '../../ui4/AlertCardUi4'
+import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
 interface LocalState {
@@ -26,7 +28,6 @@ interface LocalState {
   loading: boolean
   walletLoading: boolean
   isAvailable: boolean | null
-  fieldPos: number
   errorMessage: string
 }
 
@@ -54,8 +55,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     isValid: true,
     isAvailable: false,
     loading: false,
-    walletLoading: false,
-    fieldPos: 200
+    walletLoading: false
   }
 
   componentDidMount() {
@@ -163,17 +163,6 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     })
   }
 
-  handleFioDomainFocus = () => {
-    // @ts-expect-error
-    // eslint-disable-next-line react/no-string-refs
-    this.refs._scrollView.scrollTo({ x: 0, y: this.state.fieldPos, animated: true })
-  }
-
-  // @ts-expect-error
-  fieldViewOnLayout = ({ nativeEvent: { layout: { y } } = { layout: { y: this.state.fieldPos } } }: LayoutChangeEvent) => {
-    this.setState({ fieldPos: y })
-  }
-
   handleFioWalletChange = (walletId: string) => {
     this.setState({
       // @ts-expect-error
@@ -197,8 +186,6 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   }
 
   setDomain = async () => {
-    this.handleFioDomainFocus()
-
     const fioDomain = await Airship.show<string | undefined>(bridge => (
       <TextInputModal bridge={bridge} initialValue={this.state.fioDomain} inputLabel={lstrings.fio_domain_label} title={lstrings.fio_domain_choose_label} />
     ))
@@ -210,14 +197,16 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
     if (isValid && isAvailable && !loading) {
       return (
-        <MainButton
-          marginRem={1}
-          label={walletLoading ? '' : lstrings.string_next_capitalized}
-          disabled={!isAvailable || walletLoading}
-          spinner={walletLoading}
-          onPress={this.handleNextButton}
-          type="secondary"
-        />
+        <EdgeAnim enter={{ type: 'fadeIn' }} exit={{ type: 'fadeOut' }}>
+          <MainButton
+            marginRem={1}
+            label={walletLoading ? '' : lstrings.string_next_capitalized}
+            disabled={!isAvailable || walletLoading}
+            spinner={walletLoading}
+            onPress={this.handleNextButton}
+            type="primary"
+          />
+        </EdgeAnim>
       )
     }
 
@@ -256,12 +245,11 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     }
 
     return (
-      <SceneWrapper>
-        <SceneHeader style={styles.header} title={lstrings.title_register_fio_domain}>
+      <SceneWrapper scroll>
+        <SceneHeader style={styles.header} title={lstrings.title_register_fio_domain} underline withTopMargin>
           <IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />
         </SceneHeader>
-        {/* eslint-disable-next-line react/no-string-refs */}
-        <ScrollView ref="_scrollView" contentContainerStyle={styles.container}>
+        <View style={styles.container}>
           <EdgeText style={[styles.paddings, styles.instructionalText, styles.title]} numberOfLines={3}>
             {lstrings.fio_domain_reg_text}
           </EdgeText>
@@ -269,22 +257,23 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
             {lstrings.fio_domain_reg_descr}
           </EdgeText>
 
-          <View onLayout={this.fieldViewOnLayout}>
+          <CardUi4>
             <RowUi4 rightButtonType="editable" title={lstrings.fio_domain_choose_label} onPress={this.onDomainPress}>
               <View style={styles.domainView}>
                 <EdgeText style={styles.domainText}>{fioDomain}</EdgeText>
                 <EdgeText style={styles.loadingText}>{loading ? `(${lstrings.loading})` : ''}</EdgeText>
               </View>
             </RowUi4>
-          </View>
+          </CardUi4>
 
-          <FormError style={styles.error} isVisible={!!chooseHandleErrorMessage}>
-            {chooseHandleErrorMessage}
-          </FormError>
+          <EdgeAnim visible={chooseHandleErrorMessage !== ''} enter={{ type: 'fadeIn' }} exit={{ type: 'fadeOut' }}>
+            <AlertCardUi4 title={chooseHandleErrorMessage} type="error" />
+          </EdgeAnim>
+
           {this.renderFioWallets()}
           {this.renderButton()}
           <View style={styles.bottomSpace} />
-        </ScrollView>
+        </View>
       </SceneWrapper>
     )
   }
@@ -292,11 +281,11 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    paddingTop: theme.rem(0.5)
+    marginHorizontal: theme.rem(0.5)
   },
   paddings: {
     paddingBottom: theme.rem(1),
-    paddingHorizontal: theme.rem(1.25)
+    paddingHorizontal: theme.rem(0.5)
   },
   instructionalText: {
     fontSize: theme.rem(1),
@@ -320,10 +309,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   domainText: {
     color: theme.primaryText,
     marginRight: theme.rem(0.5)
-  },
-  error: {
-    flex: 1,
-    margin: theme.rem(1)
   },
   loadingText: {
     color: theme.deactivatedText
