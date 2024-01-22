@@ -302,18 +302,20 @@ const StakeModifySceneComponent = (props: Props) => {
     }
 
     return (
-      <EditableAmountTile
-        title={title}
-        key={allocationType + pluginId + currencyCode}
-        exchangeRates={guiExchangeRates}
-        nativeAmount={isClaim ? earnedAmount : nativeAmount}
-        wallet={wallet}
-        currencyCode={quoteCurrencyCode}
-        exchangeDenomination={quoteDenom}
-        displayDenomination={quoteDenom}
-        lockInputs={isClaim || (!!mustMaxUnstake && allocationType === 'unstake')}
-        onPress={handleShowFlipInputModal(currencyCode, tokenId)}
-      />
+      <CardUi4>
+        <EditableAmountTile
+          title={title}
+          key={allocationType + pluginId + currencyCode}
+          exchangeRates={guiExchangeRates}
+          nativeAmount={isClaim ? earnedAmount : nativeAmount}
+          wallet={wallet}
+          currencyCode={quoteCurrencyCode}
+          exchangeDenomination={quoteDenom}
+          displayDenomination={quoteDenom}
+          lockInputs={isClaim || (!!mustMaxUnstake && allocationType === 'unstake')}
+          onPress={handleShowFlipInputModal(currencyCode, tokenId)}
+        />
+      </CardUi4>
     )
   }
 
@@ -384,9 +386,11 @@ const StakeModifySceneComponent = (props: Props) => {
       message = sprintf(lstrings.stake_break_even_days_s, days)
     }
     return (
-      <RowUi4 rightButtonType="questionable" title={lstrings.stake_break_even_time} onPress={handlePressBreakEvenDays}>
-        <EdgeText>{message}</EdgeText>
-      </RowUi4>
+      <CardUi4>
+        <RowUi4 rightButtonType="questionable" title={lstrings.stake_break_even_time} onPress={handlePressBreakEvenDays}>
+          <EdgeText>{message}</EdgeText>
+        </RowUi4>
+      </CardUi4>
     )
   }
 
@@ -476,7 +480,7 @@ const StakeModifySceneComponent = (props: Props) => {
   const isSliderDisabled = sliderLocked || changeQuote == null || !changeQuote.allocations.some(quoteAllocation => gt(quoteAllocation.nativeAmount, '0'))
 
   return (
-    <SceneWrapper scroll>
+    <SceneWrapper padding={theme.rem(0.5)} scroll>
       <SceneHeader style={styles.sceneHeader} title={title} underline withTopMargin>
         {icon}
       </SceneHeader>
