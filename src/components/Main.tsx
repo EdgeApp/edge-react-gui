@@ -532,13 +532,7 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
-      <Stack.Screen
-        name="fioDomainSettings"
-        component={FioDomainSettingsScene}
-        options={{
-          title: lstrings.title_fio_domain_settings
-        }}
-      />
+      <Stack.Screen name="fioDomainSettings" component={FioDomainSettingsScene} />
       <Stack.Screen
         name="fioNameConfirm"
         component={FioNameConfirmScene}
