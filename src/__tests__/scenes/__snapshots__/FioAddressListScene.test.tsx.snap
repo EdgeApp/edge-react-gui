@@ -3,23 +3,24 @@
 exports[`FioAddressList should render with loading props 1`] = `
 <React.Fragment>
   <SceneWrapper>
-    <ScrollView
+    <ForwardRef
       style={
         {
           "flex": 1,
-          "marginHorizontal": 11,
         }
       }
     >
       <Memo(SceneHeaderComponent)
         title="FIO Crypto Handles"
         underline={true}
+        withTopMargin={true}
       />
       <View
         style={
           {
             "display": "flex",
             "flexDirection": "column",
+            "marginHorizontal": 11,
             "paddingTop": 11,
           }
         }
@@ -54,6 +55,7 @@ exports[`FioAddressList should render with loading props 1`] = `
           {
             "display": "flex",
             "flexDirection": "column",
+            "marginHorizontal": 11,
             "paddingTop": 11,
           }
         }
@@ -77,7 +79,17 @@ exports[`FioAddressList should render with loading props 1`] = `
           onPress={[Function]}
         />
       </View>
-      <Fade
+      <EdgeAnim
+        enter={
+          {
+            "type": "fadeIn",
+          }
+        }
+        exit={
+          {
+            "type": "fadeOut",
+          }
+        }
         visible={false}
       >
         <ActivityIndicator
@@ -91,96 +103,31 @@ exports[`FioAddressList should render with loading props 1`] = `
             }
           }
         />
-      </Fade>
-    </ScrollView>
-    <View>
-      <ClickableText
-        marginRem={
-          [
-            1,
-            1,
-            0,
-          ]
+      </EdgeAnim>
+    </ForwardRef>
+    <View
+      style={
+        {
+          "alignSelf": "center",
+          "marginBottom": 22,
+          "marginHorizontal": 11,
         }
-        onPress={[Function]}
-      >
-        <View
-          style={
-            {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "justifyContent": "center",
-            }
+      }
+    >
+      <Memo
+        primary={
+          {
+            "label": "Register New FIO Crypto Handle",
+            "onPress": [Function],
           }
-        >
-          <Icon
-            allowFontScaling={false}
-            color="#00f1a2"
-            name="register-new-fio-icon"
-            size={22}
-            style={
-              {
-                "marginTop": 6,
-              }
-            }
-          />
-          <WithTheme(EdgeTextComponent)
-            style={
-              {
-                "color": "#00f1a2",
-                "marginLeft": 11,
-                "textAlign": "center",
-              }
-            }
-          >
-            Register New FIO Crypto Handle
-          </WithTheme(EdgeTextComponent)>
-        </View>
-      </ClickableText>
-      <ClickableText
-        marginRem={
-          [
-            0,
-            1,
-            2,
-            1,
-          ]
         }
-        onPress={[Function]}
-      >
-        <View
-          style={
-            {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "justifyContent": "center",
-            }
+        secondary={
+          {
+            "label": "Register Custom FIO Domain",
+            "onPress": [Function],
           }
-        >
-          <Icon
-            allowFontScaling={false}
-            color="#00f1a2"
-            name="register-custom-fio"
-            size={22}
-            style={
-              {
-                "marginTop": 6,
-              }
-            }
-          />
-          <WithTheme(EdgeTextComponent)
-            style={
-              {
-                "color": "#00f1a2",
-                "marginLeft": 11,
-                "textAlign": "center",
-              }
-            }
-          >
-            Register Custom FIO Domain
-          </WithTheme(EdgeTextComponent)>
-        </View>
-      </ClickableText>
+        }
+      />
     </View>
   </SceneWrapper>
   <FullScreenLoader
