@@ -3,8 +3,9 @@ import { NavigationHelpers, ParamListBase } from '@react-navigation/native'
 import * as React from 'react'
 import { useMemo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
+import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
 import LinearGradient from 'react-native-linear-gradient'
-import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
+import Animated, { SharedValue, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
@@ -15,7 +16,7 @@ import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
-import { useFooterOpenRatio } from '../../state/SceneFooterState'
+import { useFooterOpenRatio, useSceneFooterRenderState } from '../../state/SceneFooterState'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { styled } from '../hoc/styled'
@@ -62,12 +63,20 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const activeTabRoute = state.routes[activeTabFullIndex]
   const activeTabIndex = routes.findIndex(route => route.name === activeTabRoute.name)
 
+  const { bottom: insetBottom } = useSafeAreaInsets()
+
   const { footerOpenRatio, resetFooterRatio } = useFooterOpenRatio()
+  const { renderFooter } = useSceneFooterRenderState()
+
+  const { height: keyboardHeight, progress: keyboardProgress } = useReanimatedKeyboardAnimation()
+  const menuTabHeightAndInsetBottomTermForShiftY = useDerivedValue(() => keyboardProgress.value * (insetBottom + MAX_TAB_BAR_HEIGHT), [insetBottom])
+  const shiftY = useDerivedValue(() => keyboardHeight.value + menuTabHeightAndInsetBottomTermForShiftY.value)
 
   return (
-    <Container>
+    <Container shiftY={shiftY}>
       <BlurBackground />
       <LinearGradient colors={theme.tabBarBackground} start={theme.tabBarBackgroundStart} end={theme.tabBarBackgroundEnd}>
+        {renderFooter()}
         <Tabs>
           {routes.map((route, index: number) => (
             <Tab
@@ -86,14 +95,23 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   )
 }
 
-const Container = styled(View)({
-  position: 'absolute',
-  left: 0,
-  right: 0,
-  bottom: 0,
-  justifyContent: 'flex-end',
-  overflow: 'visible'
-})
+const Container = styled(Animated.View)<{ shiftY: SharedValue<number> }>(() => ({ shiftY }) => [
+  {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'flex-end',
+    overflow: 'visible'
+  },
+  useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateY: shiftY.value
+      }
+    ]
+  }))
+])
 
 const Tabs = styled(View)({
   flexDirection: 'row',

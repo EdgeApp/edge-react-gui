@@ -14,6 +14,7 @@ import { useTransactionList } from '../../hooks/useTransactionList'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { useSceneFooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
@@ -22,7 +23,7 @@ import { fetchInfo } from '../../util/network'
 import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { AssetStatusCard } from '../cards/AssetStatusCard'
 import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
-import { SceneWrapper, SceneWrapperInfo } from '../common/SceneWrapper'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
@@ -243,14 +244,15 @@ function TransactionListComponent(props: Props) {
     return item.txid
   })
 
-  const renderFooter = React.useCallback(
-    (info: SceneWrapperInfo) => {
+  useSceneFooterRender(
+    sceneWrapperInfo => {
       return (
         <SearchFooter
           placeholder={lstrings.transaction_list_search}
           isSearching={isSearching}
           searchText={searchText}
-          sceneWrapperInfo={info}
+          noBackground
+          sceneWrapperInfo={sceneWrapperInfo}
           onStartSearching={handleStartSearching}
           onDoneSearching={handleDoneSearching}
           onChangeText={handleChangeText}
@@ -278,7 +280,6 @@ function TransactionListComponent(props: Props) {
       avoidKeyboard
       hasTabs
       hasNotifications
-      renderFooter={renderFooter}
       backgroundGradientColors={backgroundColors}
       backgroundGradientEnd={theme.assetBackgroundGradientEnd}
       backgroundGradientStart={theme.assetBackgroundGradientStart}

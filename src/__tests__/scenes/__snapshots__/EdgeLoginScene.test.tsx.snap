@@ -664,5 +664,15 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
       </BVLinearGradient>
     </View>
   </View>,
+  <View
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+      }
+    }
+  />,
 ]
 `;

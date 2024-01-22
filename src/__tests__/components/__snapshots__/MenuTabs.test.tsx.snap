@@ -2,15 +2,29 @@
 
 exports[`MenuTabs should render with loading props 1`] = `
 <View
-  style={
+  shiftY={
     {
-      "bottom": 0,
-      "justifyContent": "flex-end",
-      "left": 0,
-      "overflow": "visible",
-      "position": "absolute",
-      "right": 0,
+      "value": 0,
     }
+  }
+  style={
+    [
+      {
+        "bottom": 0,
+        "justifyContent": "flex-end",
+        "left": 0,
+        "overflow": "visible",
+        "position": "absolute",
+        "right": 0,
+      },
+      {
+        "transform": [
+          {
+            "translateY": 0,
+          },
+        ],
+      },
+    ]
   }
 >
   <BlurView

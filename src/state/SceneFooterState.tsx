@@ -1,14 +1,24 @@
 import { useIsFocused } from '@react-navigation/native'
-import { useEffect, useMemo } from 'react'
+import { DependencyList, useCallback, useEffect, useMemo } from 'react'
 import { LayoutChangeEvent, Platform } from 'react-native'
 import { runOnJS, useAnimatedReaction, useSharedValue, withTiming } from 'react-native-reanimated'
 
+import { SceneWrapperInfo } from '../components/common/SceneWrapper'
 import { useHandler } from '../hooks/useHandler'
 import { useSharedEvent } from '../hooks/useSharedEvent'
 import { useState } from '../types/reactHooks'
 import { createStateProvider } from './createStateProvider'
 import { useSceneScrollContext } from './SceneScrollState'
 
+//
+// Providers
+//
+
+/**
+ * This contains footer state with respect to it's dimensions and open/collapse.
+ * This state is more internal and shouldn't be used directly be components and
+ * scenes. Instead use `useFooterOpenRatio` for application components.
+ */
 export const [SceneFooterProvider, useSceneFooterState] = createStateProvider(() => {
   const [keepOpen, setKeepOpen] = useState(false)
   const [footerHeight, setFooterHeight] = useState<number | undefined>(undefined)
@@ -28,6 +38,81 @@ export const [SceneFooterProvider, useSceneFooterState] = createStateProvider(()
   )
 })
 
+export type FooterRender = (sceneWrapperInfo?: SceneWrapperInfo) => React.ReactNode
+const defaultFooterRender: FooterRender = () => null
+
+/**
+ * This is the global provider for the footer render function.
+ */
+export const [SceneFooterRenderProvider, useSceneFooterRenderState] = createStateProvider(() => {
+  const [renderFooter, setRenderFooter] = useState<FooterRender>(() => defaultFooterRender)
+
+  return useMemo(
+    () => ({
+      renderFooter,
+      setRenderFooter
+    }),
+    [renderFooter, setRenderFooter]
+  )
+})
+
+//
+// Derived Hooks
+//
+
+/**
+ * Used by scenes to register a render function for the global footer area.
+ *
+ * @param renderFn the render function to be used in the scene/tab-bar footer
+ * @param deps the dependencies for the render function to trigger re-renders
+ */
+export const useSceneFooterRender = (renderFn: FooterRender = defaultFooterRender, deps: DependencyList) => {
+  const { setRenderFooter } = useSceneFooterRenderState()
+
+  // The callback will allow us to trigger a re-render when the deps change
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const render = useCallback(renderFn, [...deps])
+
+  // This will be used to determine if our render function should be cast
+  // to the global state.
+  const isFocused = useIsFocused()
+
+  useEffect(() => {
+    setRenderFooter((renderFooter: FooterRender) => {
+      // Only cast our render function to the global state if we're focused
+      // and we haven't already cast our function to the global state.
+      if (isFocused && render !== renderFooter) {
+        return render
+      }
+      if (!isFocused && render === renderFooter) {
+        // Reset the global state if we're not focused and our render function
+        // is currently the global state.
+        return defaultFooterRender
+      }
+      // Leave global state unchanged
+      return renderFooter
+    })
+
+    // For unmount:
+    return () => {
+      setRenderFooter((renderFooter: FooterRender) => {
+        if (render === renderFooter) {
+          // Reset the global state our render function is currently the
+          // global state.
+          return defaultFooterRender
+        }
+        // Leave global state unchanged
+        return renderFooter
+      })
+    }
+  }, [isFocused, render, setRenderFooter])
+}
+
+/**
+ * This hook provides access to footer open/collapse state and API to lock the
+ * footer in place. This should be used by scenes or components which should
+ * respond to these values.
+ */
 export const useFooterOpenRatio = () => {
   const { scrollState } = useSceneScrollContext()
   const { scrollBeginEvent, scrollEndEvent, scrollMomentumBeginEvent, scrollMomentumEndEvent, scrollY } = scrollState

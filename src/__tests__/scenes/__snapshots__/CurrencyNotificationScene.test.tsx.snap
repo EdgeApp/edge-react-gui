@@ -462,5 +462,15 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
       </View>
     </View>
   </RCTScrollView>,
+  <View
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+      }
+    }
+  />,
 ]
 `;

@@ -13,7 +13,9 @@ interface SearchFooterProps {
 
   isSearching: boolean
   searchText: string
-  sceneWrapperInfo: SceneWrapperInfo
+
+  noBackground?: boolean
+  sceneWrapperInfo?: SceneWrapperInfo
 
   onChangeText: (value: string) => void
   onDoneSearching: () => void
@@ -21,7 +23,7 @@ interface SearchFooterProps {
 }
 
 export const SearchFooter = (props: SearchFooterProps) => {
-  const { placeholder, isSearching, searchText, sceneWrapperInfo, onChangeText, onDoneSearching, onStartSearching } = props
+  const { placeholder, isSearching, searchText, noBackground, sceneWrapperInfo, onChangeText, onDoneSearching, onStartSearching } = props
 
   const textInputRef = React.useRef<SimpleTextInputRef>(null)
 
@@ -58,7 +60,7 @@ export const SearchFooter = (props: SearchFooterProps) => {
   }, [isSearching, setKeepOpen])
 
   return (
-    <SceneFooterWrapper info={sceneWrapperInfo}>
+    <SceneFooterWrapper noBackgroundBlur={noBackground} sceneWrapperInfo={sceneWrapperInfo}>
       <Space expand horizontal={1} vertical={0.5}>
         <SimpleTextInput
           returnKeyType="search"

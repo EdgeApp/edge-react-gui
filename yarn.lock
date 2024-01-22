@@ -15136,6 +15136,11 @@ react-native-keyboard-aware-scroll-view@^0.9.5:
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
 
+react-native-keyboard-controller@^1.10.2:
+  version "1.10.2"
+  resolved "https://registry.yarnpkg.com/react-native-keyboard-controller/-/react-native-keyboard-controller-1.10.2.tgz#4968cebbeb411add6d5d23fd44282a9c209050dc"
+  integrity sha512-xgAZ2m7J3Dq3DU1zTUwFnTixq2yNOLS157XHzqMchueZjl3ZihukauOs+SLyOMGcq4+fVbP6t7fu4Z1jCJYhKw==
+
 react-native-linear-gradient@^2.8.3:
   version "2.8.3"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz#9a116649f86d74747304ee13db325e20b21e564f"
