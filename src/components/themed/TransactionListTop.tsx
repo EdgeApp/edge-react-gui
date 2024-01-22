@@ -7,6 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
+import { Fontello } from '../../assets/vector'
 import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
@@ -205,6 +206,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               {walletName}
             </EdgeText>
             <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
+          </TouchableOpacity>
+          <TouchableOpacity testID="gearIcon" onPress={this.handleMenu} style={styles.settingsIcon}>
+            <Fontello accessibilityHint={lstrings.wallet_settings_label} color={theme.iconTappable} name="control-panel-settings" size={theme.rem(1.5)} />
           </TouchableOpacity>
         </View>
         <TouchableOpacity accessible={false} onPress={this.props.toggleBalanceVisibility}>

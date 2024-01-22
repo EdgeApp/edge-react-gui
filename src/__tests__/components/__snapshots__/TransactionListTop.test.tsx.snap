@@ -278,6 +278,64 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           
         </Text>
       </View>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignSelf": "flex-end",
+            "opacity": 1,
+          }
+        }
+        testID="gearIcon"
+      >
+        <Text
+          accessibilityHint="Wallet settings"
+          allowFontScaling={false}
+          style={
+            [
+              {
+                "color": "#00f1a2",
+                "fontSize": 34,
+              },
+              undefined,
+              {
+                "fontFamily": "custom",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              {},
+            ]
+          }
+        >
+          
+        </Text>
+      </View>
     </View>
     <View
       accessibilityState={
@@ -996,6 +1054,64 @@ exports[`TransactionListTop should render 1`] = `
           }
         >
           
+        </Text>
+      </View>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignSelf": "flex-end",
+            "opacity": 1,
+          }
+        }
+        testID="gearIcon"
+      >
+        <Text
+          accessibilityHint="Wallet settings"
+          allowFontScaling={false}
+          style={
+            [
+              {
+                "color": "#00f1a2",
+                "fontSize": 34,
+              },
+              undefined,
+              {
+                "fontFamily": "custom",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              {},
+            ]
+          }
+        >
+          
         </Text>
       </View>
     </View>
