@@ -85,7 +85,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
           fioDisplayDenomination,
           isFallback
         )
-        this.setState({ activationCost, feeValue, supportedAssets, supportedCurrencies, paymentInfo })
+        this.setState({ activationCost, feeValue, supportedAssets: [...supportedAssets, { pluginId: 'fio', tokenId: null }], supportedCurrencies, paymentInfo })
       } catch (e: any) {
         showError(e)
         this.setState({ errorMessage: e.message })
@@ -131,7 +131,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
   }
 
   proceed = async (walletId: string, paymentCurrencyCode: string) => {
-    const { isConnected, state, navigation, pluginId, route } = this.props
+    const { isConnected, state, navigation, route } = this.props
     const { selectedWallet, fioAddress } = route.params
     const { feeValue, paymentInfo: allPaymentInfo } = this.state
     const { account } = state.core
@@ -155,7 +155,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
         let nativeAmount = mul(allPaymentInfo[paymentCurrencyCode].amount, exchangeDenomination.multiplier)
         nativeAmount = toFixed(nativeAmount, 0, 0)
 
-        const tokenId = getTokenIdForced(account, pluginId, paymentCurrencyCode)
+        const tokenId = getTokenIdForced(account, wallet.currencyInfo.pluginId, paymentCurrencyCode)
         const sendParams: SendScene2Params = {
           walletId,
           tokenId,
