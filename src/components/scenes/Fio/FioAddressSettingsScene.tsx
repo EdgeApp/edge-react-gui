@@ -1,5 +1,6 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
+import { View } from 'react-native'
 
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import { lstrings } from '../../../locales/strings'
@@ -10,9 +11,11 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
-import { ThemeProps, withTheme } from '../../services/ThemeContext'
+import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
-import { MainButton } from '../../themed/MainButton'
+import { SceneHeader } from '../../themed/SceneHeader'
+import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
+import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
@@ -142,42 +145,54 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
   }
 
   render() {
-    const { route } = this.props
+    const { route, theme } = this.props
     const { fioAddressName, fioWallet, bundledTxs } = route.params
     const { showTransfer, showAddBundledTxs } = this.state
+    const styles = getStyles(theme)
 
     return (
-      <SceneWrapper>
-        <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
-        {bundledTxs != null ? <RowUi4 title={lstrings.fio_address_details_screen_bundled_txs} body={`${bundledTxs}`} /> : null}
-        {showAddBundledTxs && (
-          <FioActionSubmit
-            onSubmit={this.onAddBundledTxsSubmit}
-            onSuccess={this.afterAddBundledTxsSuccess}
-            getOperationFee={getAddBundledTxsFee}
-            successMessage={lstrings.fio_request_add_bundled_txs_ok_text}
-            onCancel={this.cancelOperation}
-            fioWallet={fioWallet}
-            addressTitles
-            showPaymentWalletPicker
-            navigation={this.props.navigation}
-          />
-        )}
-        {showTransfer && (
-          <FioActionSubmit
-            goTo={this.goToTransfer}
-            getOperationFee={this.getTransferFee}
-            fioWallet={fioWallet}
-            addressTitles
-            navigation={this.props.navigation}
-          />
-        )}
-        {!showAddBundledTxs && !showTransfer && (
-          <>
-            <MainButton label={lstrings.title_fio_add_bundled_txs} onPress={this.onAddBundledTxsPress} marginRem={[1.5, 1, 0.25]} />
-            <MainButton label={lstrings.title_fio_transfer_address} onPress={this.onTransferPress} marginRem={[0.25, 1]} />
-          </>
-        )}
+      <SceneWrapper scroll>
+        <SceneHeader title={lstrings.title_fio_address_settings} underline withTopMargin />
+        <View style={styles.container}>
+          <CardUi4 sections>
+            <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
+            {bundledTxs != null ? <RowUi4 title={lstrings.fio_address_details_screen_bundled_txs} body={`${bundledTxs}`} /> : null}
+          </CardUi4>
+          {showAddBundledTxs && (
+            <FioActionSubmit
+              onSubmit={this.onAddBundledTxsSubmit}
+              onSuccess={this.afterAddBundledTxsSuccess}
+              getOperationFee={getAddBundledTxsFee}
+              successMessage={lstrings.fio_request_add_bundled_txs_ok_text}
+              onCancel={this.cancelOperation}
+              fioWallet={fioWallet}
+              addressTitles
+              showPaymentWalletPicker
+              navigation={this.props.navigation}
+            />
+          )}
+          {showTransfer && (
+            <FioActionSubmit
+              goTo={this.goToTransfer}
+              getOperationFee={this.getTransferFee}
+              fioWallet={fioWallet}
+              addressTitles
+              navigation={this.props.navigation}
+            />
+          )}
+          {!showAddBundledTxs && !showTransfer && (
+            <ButtonsViewUi4
+              secondary={{
+                label: lstrings.title_fio_add_bundled_txs,
+                onPress: this.onAddBundledTxsPress
+              }}
+              secondary2={{
+                label: lstrings.title_fio_transfer_address,
+                onPress: this.onTransferPress
+              }}
+            />
+          )}
+        </View>
       </SceneWrapper>
     )
   }
@@ -193,3 +208,9 @@ export const FioAddressSettingsScene = connect<StateProps, DispatchProps, OwnPro
     }
   })
 )(withTheme(FioAddressSettingsComponent))
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    margin: theme.rem(0.5)
+  }
+}))
