@@ -106,7 +106,12 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     const { supportedAssets } = this.state
 
     const result = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={supportedAssets} />
+      <WalletListModal
+        bridge={bridge}
+        navigation={this.props.navigation}
+        headerTitle={lstrings.select_wallet}
+        allowedAssets={[...supportedAssets, { pluginId: 'fio', tokenId: null }]}
+      />
     ))
     if (result?.type === 'wallet') {
       const { walletId, currencyCode } = result
@@ -115,7 +120,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   }
 
   onNextPress = (): void => {
-    const { isConnected, state, navigation, pluginId, route } = this.props
+    const { isConnected, state, navigation, route } = this.props
     const { fioDomain, selectedWallet } = route.params
     const { feeValue, paymentInfo: allPaymentInfo, paymentWallet } = this.state
     const { account } = state.core
@@ -142,7 +147,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
         let nativeAmount = mul(allPaymentInfo[paymentCurrencyCode].amount, exchangeDenomination.multiplier)
         nativeAmount = toFixed(nativeAmount, 0, 0)
 
-        const tokenId = getTokenIdForced(account, pluginId, paymentCurrencyCode)
+        const tokenId = getTokenIdForced(account, wallet.currencyInfo.pluginId, paymentCurrencyCode)
         const sendParams: SendScene2Params = {
           walletId,
           tokenId,
