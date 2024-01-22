@@ -1,24 +1,24 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
+import { ActivityIndicator, Image, View } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import fioAddressLogo from '../../../assets/images/fio/fio_logo.png'
-import { Fontello } from '../../../assets/vector'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { FioAddress, FioDomain } from '../../../types/types'
+import { EdgeAnim } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioNameRow } from '../../FioAddress/FioName'
 import { FullScreenLoader } from '../../progress-indicators/FullScreenLoader'
 import { showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
-import { ClickableText } from '../../themed/ClickableText'
 import { EdgeText } from '../../themed/EdgeText'
-import { Fade } from '../../themed/Fade'
 import { SceneHeader } from '../../themed/SceneHeader'
+import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
 
 interface LocalState {
   initLoading: boolean
@@ -118,7 +118,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
       <>
         <SceneWrapper>
           <ScrollView style={styles.section}>
-            <SceneHeader title={lstrings.title_fio_address} underline />
+            <SceneHeader title={lstrings.title_fio_address} underline withTopMargin />
             <View style={styles.list}>
               {!fioAddresses.length && <EdgeText style={styles.noNames}>{noFioAddressesText}</EdgeText>}
               {fioAddresses.map((address: FioAddress) => (
@@ -144,24 +144,21 @@ export class FioAddressList extends React.Component<Props, LocalState> {
                 />
               ))}
             </View>
-            <Fade visible={loading && !initLoading}>
+            <EdgeAnim visible={loading && !initLoading} enter={{ type: 'fadeIn' }} exit={{ type: 'fadeOut' }}>
               <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="large" />
-            </Fade>
+            </EdgeAnim>
           </ScrollView>
-
-          <View>
-            <ClickableText marginRem={[1, 1, 0]} onPress={() => navigation.navigate('fioAddressRegister', {})}>
-              <View style={styles.actionButton}>
-                <Fontello name="register-new-fio-icon" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
-                <EdgeText style={styles.buttonText}>{lstrings.fio_address_list_screen_button_register}</EdgeText>
-              </View>
-            </ClickableText>
-            <ClickableText marginRem={[0, 1, 2, 1]} onPress={() => navigation.navigate('fioDomainRegister', {})}>
-              <View style={styles.actionButton}>
-                <Fontello name="register-custom-fio" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
-                <EdgeText style={styles.buttonText}>{lstrings.fio_address_list_domain_register}</EdgeText>
-              </View>
-            </ClickableText>
+          <View style={styles.buttons}>
+            <ButtonsViewUi4
+              primary={{
+                label: lstrings.fio_address_list_screen_button_register,
+                onPress: () => navigation.navigate('fioAddressRegister', {})
+              }}
+              secondary={{
+                label: lstrings.fio_address_list_domain_register,
+                onPress: () => navigation.navigate('fioDomainRegister', {})
+              }}
+            />
           </View>
         </SceneWrapper>
 
@@ -172,9 +169,15 @@ export class FioAddressList extends React.Component<Props, LocalState> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  buttons: {
+    alignSelf: 'center',
+    marginBottom: theme.rem(1),
+    marginHorizontal: theme.rem(0.5)
+  },
   list: {
     display: 'flex',
     flexDirection: 'column',
+    marginHorizontal: theme.rem(0.5),
     paddingTop: theme.rem(0.5)
   },
   loading: {
@@ -183,8 +186,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignSelf: 'center'
   },
   section: {
-    flex: 1,
-    marginHorizontal: theme.rem(0.5)
+    flex: 1
   },
   noNames: {
     color: theme.deactivatedText,
@@ -192,24 +194,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'center',
     padding: theme.rem(1)
   },
-  buttonText: {
-    marginLeft: theme.rem(0.5),
-    color: theme.textLink,
-    textAlign: 'center'
-  },
   iconImg: {
     height: theme.rem(2.25)
   },
   iconIon: {
     textAlign: 'center'
-  },
-  actionButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  actionIcon: {
-    marginTop: theme.rem(0.25)
   }
 }))
 
