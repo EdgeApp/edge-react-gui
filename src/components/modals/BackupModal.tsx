@@ -84,7 +84,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    marginTop: theme.rem(2),
     height: '100%'
   },
   image: {
