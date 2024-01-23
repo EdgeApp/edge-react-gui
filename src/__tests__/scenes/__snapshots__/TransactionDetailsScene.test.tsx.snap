@@ -1690,148 +1690,140 @@ exports[`TransactionDetailsScene should render 1`] = `
         layout={BaseAnimationMock {}}
       >
         <View
+          absolute={false}
+          layout="solo"
+          sceneMargin={true}
           style={
             {
-              "opacity": 1,
+              "alignItems": "center",
+              "flex": 1,
+              "justifyContent": "center",
+              "margin": 11,
+              "marginBottom": 67,
+              "marginHorizontal": 11,
+              "marginTop": 22,
             }
           }
         >
           <View
-            absolute={false}
-            layout="solo"
-            sceneMargin={true}
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
               {
                 "alignItems": "center",
-                "flex": 1,
+                "alignSelf": "center",
+                "borderRadius": 34,
                 "justifyContent": "center",
-                "margin": 11,
-                "marginBottom": 67,
-                "marginHorizontal": 11,
-                "marginTop": 22,
+                "opacity": 1,
               }
             }
           >
-            <View
-              accessibilityState={
+            <BVLinearGradient
+              colors={
+                [
+                  4280299823,
+                  4278214733,
+                ]
+              }
+              endPoint={
                 {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": false,
-                  "expanded": undefined,
-                  "selected": undefined,
+                  "x": 1,
+                  "y": 0,
                 }
               }
-              accessibilityValue={
+              locations={null}
+              startPoint={
                 {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
+                  "x": 0,
+                  "y": 0,
                 }
               }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
               style={
-                {
-                  "alignItems": "center",
-                  "alignSelf": "center",
-                  "borderRadius": 34,
-                  "justifyContent": "center",
-                  "opacity": 1,
-                }
-              }
-            >
-              <BVLinearGradient
-                colors={
-                  [
-                    4280299823,
-                    4278214733,
-                  ]
-                }
-                endPoint={
+                [
                   {
-                    "x": 1,
-                    "y": 0,
-                  }
-                }
-                locations={null}
-                startPoint={
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "justifyContent": "center",
+                  },
                   {
-                    "x": 0,
-                    "y": 0,
-                  }
-                }
-                style={
+                    "alignSelf": "auto",
+                    "opacity": 1,
+                  },
+                  {
+                    "height": 67,
+                    "paddingHorizontal": 45,
+                  },
+                  {
+                    "alignItems": "center",
+                    "alignSelf": "stretch",
+                    "borderRadius": 34,
+                    "justifyContent": "center",
+                  },
                   [
-                    {
-                      "alignItems": "center",
-                      "flexDirection": "row",
-                      "justifyContent": "center",
-                    },
-                    {
-                      "alignSelf": "auto",
-                      "opacity": 1,
-                    },
-                    {
-                      "height": 67,
-                      "paddingHorizontal": 45,
-                    },
                     {
                       "alignItems": "center",
                       "alignSelf": "stretch",
                       "borderRadius": 34,
                       "justifyContent": "center",
                     },
-                    [
-                      {
-                        "alignItems": "center",
-                        "alignSelf": "stretch",
-                        "borderRadius": 34,
-                        "justifyContent": "center",
-                      },
-                      {
-                        "alignSelf": "center",
-                      },
-                    ],
-                    undefined,
-                    undefined,
+                    {
+                      "alignSelf": "center",
+                    },
+                  ],
+                  undefined,
+                  undefined,
+                ]
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={false}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Medium",
+                      "fontSize": 22,
+                    },
+                    null,
                   ]
                 }
               >
-                <Text
-                  adjustsFontSizeToFit={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Medium",
-                        "fontSize": 22,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  Done
-                </Text>
-              </BVLinearGradient>
-            </View>
+                Done
+              </Text>
+            </BVLinearGradient>
           </View>
         </View>
       </View>
@@ -3553,148 +3545,140 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         layout={BaseAnimationMock {}}
       >
         <View
+          absolute={false}
+          layout="solo"
+          sceneMargin={true}
           style={
             {
-              "opacity": 1,
+              "alignItems": "center",
+              "flex": 1,
+              "justifyContent": "center",
+              "margin": 11,
+              "marginBottom": 67,
+              "marginHorizontal": 11,
+              "marginTop": 22,
             }
           }
         >
           <View
-            absolute={false}
-            layout="solo"
-            sceneMargin={true}
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
               {
                 "alignItems": "center",
-                "flex": 1,
+                "alignSelf": "center",
+                "borderRadius": 34,
                 "justifyContent": "center",
-                "margin": 11,
-                "marginBottom": 67,
-                "marginHorizontal": 11,
-                "marginTop": 22,
+                "opacity": 1,
               }
             }
           >
-            <View
-              accessibilityState={
+            <BVLinearGradient
+              colors={
+                [
+                  4280299823,
+                  4278214733,
+                ]
+              }
+              endPoint={
                 {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": false,
-                  "expanded": undefined,
-                  "selected": undefined,
+                  "x": 1,
+                  "y": 0,
                 }
               }
-              accessibilityValue={
+              locations={null}
+              startPoint={
                 {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
+                  "x": 0,
+                  "y": 0,
                 }
               }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
               style={
-                {
-                  "alignItems": "center",
-                  "alignSelf": "center",
-                  "borderRadius": 34,
-                  "justifyContent": "center",
-                  "opacity": 1,
-                }
-              }
-            >
-              <BVLinearGradient
-                colors={
-                  [
-                    4280299823,
-                    4278214733,
-                  ]
-                }
-                endPoint={
+                [
                   {
-                    "x": 1,
-                    "y": 0,
-                  }
-                }
-                locations={null}
-                startPoint={
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "justifyContent": "center",
+                  },
                   {
-                    "x": 0,
-                    "y": 0,
-                  }
-                }
-                style={
+                    "alignSelf": "auto",
+                    "opacity": 1,
+                  },
+                  {
+                    "height": 67,
+                    "paddingHorizontal": 45,
+                  },
+                  {
+                    "alignItems": "center",
+                    "alignSelf": "stretch",
+                    "borderRadius": 34,
+                    "justifyContent": "center",
+                  },
                   [
-                    {
-                      "alignItems": "center",
-                      "flexDirection": "row",
-                      "justifyContent": "center",
-                    },
-                    {
-                      "alignSelf": "auto",
-                      "opacity": 1,
-                    },
-                    {
-                      "height": 67,
-                      "paddingHorizontal": 45,
-                    },
                     {
                       "alignItems": "center",
                       "alignSelf": "stretch",
                       "borderRadius": 34,
                       "justifyContent": "center",
                     },
-                    [
-                      {
-                        "alignItems": "center",
-                        "alignSelf": "stretch",
-                        "borderRadius": 34,
-                        "justifyContent": "center",
-                      },
-                      {
-                        "alignSelf": "center",
-                      },
-                    ],
-                    undefined,
-                    undefined,
+                    {
+                      "alignSelf": "center",
+                    },
+                  ],
+                  undefined,
+                  undefined,
+                ]
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={false}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Medium",
+                      "fontSize": 22,
+                    },
+                    null,
                   ]
                 }
               >
-                <Text
-                  adjustsFontSizeToFit={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Medium",
-                        "fontSize": 22,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  Done
-                </Text>
-              </BVLinearGradient>
-            </View>
+                Done
+              </Text>
+            </BVLinearGradient>
           </View>
         </View>
       </View>
