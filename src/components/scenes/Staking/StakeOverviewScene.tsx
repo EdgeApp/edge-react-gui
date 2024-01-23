@@ -57,6 +57,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   // Hooks
   const [stakeAllocations, setStakeAllocations] = React.useState<PositionAllocation[]>([])
   const [rewardAllocations, setRewardAllocations] = React.useState<PositionAllocation[]>([])
+  const [unstakedAllocations, setUnstakedAllocations] = React.useState<PositionAllocation[]>([])
   const [stakePosition, setStakePosition] = React.useState<StakePosition | undefined>(startingStakePosition)
 
   // Background loop to force fetchStakePosition updates
@@ -80,6 +81,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
           const guiAllocations = getPositionAllocations(stakePosition)
           setStakeAllocations(guiAllocations.staked)
           setRewardAllocations(guiAllocations.earned)
+          setUnstakedAllocations(guiAllocations.unstaked)
           setStakePosition(stakePosition)
         }
       } catch (err) {
@@ -121,7 +123,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   // Renderers
   const renderCFAT = ({ item }: { item: PositionAllocation }) => {
     const { allocationType, currencyCode, nativeAmount } = item
-    const titleBase = allocationType === 'staked' ? lstrings.stake_s_staked : lstrings.stake_s_earned
+    const titleBase = allocationType === 'staked' ? lstrings.stake_s_staked : allocationType === 'earned' ? lstrings.stake_s_earned : lstrings.stake_s_unstaked
     const title = `${sprintf(titleBase, currencyCode)} ${getAllocationLocktimeMessage(item)}`
     const denomination = displayDenomMap[currencyCode]
 
@@ -162,7 +164,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
         </>
       ) : null}
       <FlatList
-        data={[...stakeAllocations, ...rewardAllocations]}
+        data={[...stakeAllocations, ...rewardAllocations, ...unstakedAllocations]}
         renderItem={renderCFAT}
         keyExtractor={(allocation: PositionAllocation) =>
           `${allocation.allocationType}${allocation.currencyCode}${allocation.nativeAmount}${getAllocationLocktimeMessage(allocation)}`

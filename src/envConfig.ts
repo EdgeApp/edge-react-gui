@@ -99,6 +99,7 @@ export const asEnvConfig = asObject({
     })
   ),
   AZTECO_API_KEY: asNullable(asString),
+  STAKEKIT_API_KEY: asNullable(asString),
 
   // Core plugin options:
   AVALANCHE_INIT: asCorePluginInit(asEvmApiKeys),
