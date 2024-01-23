@@ -1,9 +1,7 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import { isMaestro } from 'react-native-is-maestro'
 
 import { updateWalletsSort } from '../../actions/WalletListActions'
-import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSceneFooterRender } from '../../state/SceneFooterState'
@@ -11,7 +9,6 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { CrossFade } from '../common/CrossFade'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -35,7 +32,6 @@ export function WalletListScene(props: Props) {
   const [isSearching, setIsSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
 
-  const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
   const sortOption = useSelector(state => state.ui.settings.walletsSort)
 
   const handleSort = useHandler(() => {
@@ -69,18 +65,6 @@ export function WalletListScene(props: Props) {
   const handleChangeText = useHandler((value: string) => {
     setSearchText(value)
   })
-
-  // Show the password reminder on mount if required:
-  useAsyncEffect(
-    async () => {
-      if (needsPasswordCheck && !isMaestro()) {
-        await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation} />)
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-    'WalletListScene'
-  )
 
   // rendering -------------------------------------------------------------
 
