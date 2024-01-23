@@ -98,7 +98,7 @@ export const RowUi4 = (props: Props) => {
       </View>
       {
         // If right action icon button is visible, only the icon dims on row tap
-        isTappable && rightButtonVisible ? (
+        rightButtonVisible ? (
           <TouchableOpacity style={styles.tappableIconContainer} accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={loading}>
             {rightButtonType === 'touchable' ? <FontAwesome5 name="chevron-right" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
             {rightButtonType === 'editable' ? <FontAwesomeIcon name="edit" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
@@ -111,7 +111,9 @@ export const RowUi4 = (props: Props) => {
     </>
   )
 
-  // The entire row dims on tap if not handled by the right action icon button
+  // The entire row dims on tap if not handled by the right action icon button.
+  // TODO: If a right button is specified, onPress/onLogPress is ignored! Refine
+  // API and possibly restructure JSX.
   return isTappable && !rightButtonVisible ? (
     <TouchableOpacity style={[styles.container, margin]} accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={loading}>
       {content}

@@ -241,7 +241,7 @@ exports[`TransactionListRow should render with loading props 1`] = `
             ]
           }
         >
-          Synchronizing
+          Syncing...
         </Text>
         <Text
           adjustsFontSizeToFit={true}
