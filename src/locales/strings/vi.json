@@ -146,7 +146,7 @@
   "fragment_transaction_transfer": "Chuyển giao",
   "fragment_wallet_unconfirmed": "Đang chờ xử lý",
   "fragment_transaction_list_tx_dropped": "Bị bỏ",
-  "fragment_transaction_list_tx_synchronizing": "Đang đồng bộ",
+  "fragment_transaction_list_tx_synchronizing": "Synchronizing...",
   "fragment_transaction_list_confirmation_progress": "%s của %s sự xác nhận",
   "fragment_transaction_list_unconfirmed_rbf": "Awaiting confirmation, may be cancelled",
   "fragment_transaction_list_transaction": "Transactions",
