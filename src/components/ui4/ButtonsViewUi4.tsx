@@ -1,3 +1,8 @@
+/**
+ * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and
+ * edge-login-ui-rn!
+ */
+
 import * as React from 'react'
 import { View, ViewStyle } from 'react-native'
 import Animated from 'react-native-reanimated'
@@ -13,6 +18,8 @@ export interface ButtonInfo {
   label: string
   onPress: () => void | Promise<void>
   disabled?: boolean
+  spinner?: boolean
+  testID?: string
 }
 
 interface Props {
@@ -39,7 +46,7 @@ interface Props {
 
   // Extra bottom margins for scenes to allow scrolling up further into an
   // easier tap area of the screen
-  sceneMargin?: boolean
+  sceneMargin?: boolean // TODO: Synchronize "parentType" change from loginUi
 }
 
 /**
@@ -57,9 +64,9 @@ export const ButtonsViewUi4 = React.memo(({ absolute = false, fade, primary, sec
 
   const renderButton = (type: ButtonTypeUi4, buttonProps?: ButtonInfo) => {
     if (buttonProps == null) return null
-    const { label, onPress, disabled } = buttonProps
+    const { label, onPress, disabled, spinner, testID } = buttonProps
 
-    return <ButtonUi4 layout={layout} label={label} onPress={onPress} type={type} disabled={disabled} />
+    return <ButtonUi4 layout={layout} label={label} onPress={onPress} type={type} disabled={disabled} spinner={spinner} testID={testID} />
   }
 
   // HACK: Workaround for useFadeAnimation not working if visible=true is set
