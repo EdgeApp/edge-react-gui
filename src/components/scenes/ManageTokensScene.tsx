@@ -137,13 +137,12 @@ function ManageTokensSceneComponent(props: Props) {
       {!isCustomTokensSupported ? null : (
         <>
           <DividerLine marginRem={[0, 1]} />
-          {/* TODO: Remove extra padding in ThemedModal so we don't need to compensate margins with this View */}
+          {/* TODO: Create a layout enum in ButtonsViewUi4 for this persistent button area */}
           <View style={styles.buttonsContainer}>
             <ButtonsViewUi4
-              primary={{ label: lstrings.string_next_capitalized, onPress: navigation.goBack }}
+              primary={{ label: lstrings.string_done_cap, onPress: navigation.goBack }}
               secondary={{ label: lstrings.addtoken_add, onPress: handleAdd }}
               layout="column"
-              sceneMargin
             />
           </View>
         </>
@@ -155,7 +154,7 @@ function ManageTokensSceneComponent(props: Props) {
 const keyExtractor = (tokenId: string) => tokenId
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  buttonsContainer: { marginHorizontal: theme.rem(0.5) },
+  buttonsContainer: { marginTop: theme.rem(1), marginBottom: theme.rem(1) },
   rightIcon: {
     color: theme.iconTappable,
     marginRight: theme.rem(1)

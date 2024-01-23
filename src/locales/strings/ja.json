@@ -146,7 +146,7 @@
   "fragment_transaction_transfer": "送る",
   "fragment_wallet_unconfirmed": "保留中",
   "fragment_transaction_list_tx_dropped": "ドロップ",
-  "fragment_transaction_list_tx_synchronizing": "同期中",
+  "fragment_transaction_list_tx_synchronizing": "同期中\u2026",
   "fragment_transaction_list_confirmation_progress": "%s/%s確認",
   "fragment_transaction_list_unconfirmed_rbf": "確認待ちです。キャンセルされることがあります。",
   "fragment_transaction_list_transaction": "トランザクション",
