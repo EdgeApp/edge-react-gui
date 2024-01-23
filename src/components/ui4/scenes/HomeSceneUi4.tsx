@@ -2,12 +2,10 @@ import { asBlogPosts, BlogPost } from 'edge-info-server/types'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import { isMaestro } from 'react-native-is-maestro'
 import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { showBackupForTransferModal } from '../../../actions/BackupModalActions'
-import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { useSceneScrollHandler } from '../../../state/SceneScrollState'
@@ -18,8 +16,6 @@ import { getUi4ImageUri } from '../../../util/CdnUris'
 import { fetchInfo } from '../../../util/network'
 import { EdgeAnim } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
-import { PasswordReminderModal } from '../../modals/PasswordReminderModal'
-import { Airship } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { WiredProgressBar } from '../../themed/WiredProgressBar'
 import { BalanceCardUi4 } from '../BalanceCardUi4'
@@ -46,7 +42,6 @@ export const HomeSceneUi4 = (props: Props) => {
   // Evenly distribute the home cards into 4 quadrants:
   const cardSize = screenWidth / 2 - theme.rem(TEMP_PADDING_REM)
 
-  const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
   const account = useSelector(state => state.core.account)
   const isLightAccount = account.username == null
 
@@ -82,18 +77,6 @@ export const HomeSceneUi4 = (props: Props) => {
       })
       .catch(e => console.log(String(e)))
   }, [])
-
-  // Show the password reminder on mount if required:
-  useAsyncEffect(
-    async () => {
-      if (needsPasswordCheck && !isMaestro()) {
-        await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation} />)
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-    'HomeSceneUi4'
-  )
 
   return (
     <SceneWrapper hasNotifications hasTabs>
