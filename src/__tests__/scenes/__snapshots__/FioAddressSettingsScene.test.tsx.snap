@@ -5,7 +5,7 @@ exports[`FioAddressSettingsComponent should render with loading props 1`] = `
   scroll={true}
 >
   <Memo(SceneHeaderComponent)
-    title="Crypto Handle Settings"
+    title="Reload and Transfer"
     underline={true}
     withTopMargin={true}
   />
@@ -27,13 +27,13 @@ exports[`FioAddressSettingsComponent should render with loading props 1`] = `
     <Memo
       secondary={
         {
-          "label": "Top-Up Bundled Transactions",
+          "label": "Reload Bundled Transactions",
           "onPress": [Function],
         }
       }
       secondary2={
         {
-          "label": "Transfer FIO Address",
+          "label": "Transfer Handle",
           "onPress": [Function],
         }
       }
