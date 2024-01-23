@@ -48,7 +48,7 @@ interface Props {
   sceneMargin?: boolean // TODO: Synchronize "parentType" change from loginUi
 
   // 'distance' prop of the first button
-  animDistanceStart: number
+  animDistanceStart?: number
 }
 
 /**
