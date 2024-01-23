@@ -117,13 +117,13 @@ exports[`FioAddressList should render with loading props 1`] = `
       <Memo
         primary={
           {
-            "label": "Register New FIO Crypto Handle",
+            "label": "Register New Handle",
             "onPress": [Function],
           }
         }
         secondary={
           {
-            "label": "Register Custom FIO Domain",
+            "label": "Register Custom Domain",
             "onPress": [Function],
           }
         }

@@ -71,7 +71,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
         ]
       }
     >
-      FIO Crypto Handle consist of a username and a domain. If you purchase your custom domain, only you will able to register FIO Crypto Handle on it. FIO Crypto Handle registrations will have to be paid for with FIO tokens from the same wallet which owns the domain.
+      A FIO Crypto Handle consists of a username and a domain. If you purchase a custom domain, only you will able to register a Crypto Handle on it. Crypto Handle registrations will have to be paid for with FIO tokens from the same wallet which owns the domain.
     </WithTheme(EdgeTextComponent)>
     <CardUi4>
       <RowUi4
