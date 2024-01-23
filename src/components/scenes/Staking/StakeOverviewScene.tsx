@@ -22,6 +22,7 @@ import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
+import { StyledButtonContainer } from '../../ui4/ButtonsViewUi4'
 
 interface Props extends EdgeSceneProps<'stakeOverview'> {
   wallet: EdgeCurrencyWallet
@@ -143,7 +144,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   const { canStake = false, canClaim = false, canUnstakeAndClaim = false, canUnstake = false } = stakePosition ?? {}
 
   return (
-    <SceneWrapper scroll>
+    <SceneWrapper padding={theme.rem(0.5)} scroll>
       <SceneHeader title={title} withTopMargin />
       <View style={styles.card}>
         <StakingReturnsCard
@@ -170,40 +171,42 @@ const StakeOverviewSceneComponent = (props: Props) => {
           `${allocation.allocationType}${allocation.currencyCode}${allocation.nativeAmount}${getAllocationLocktimeMessage(allocation)}`
         }
       />
-      <MainButton
-        label={lstrings.stake_stake_more_funds}
-        disabled={!canStake}
-        type="primary"
-        onPress={handleModifyPress('stake')}
-        marginRem={[0.5, 0.5, 0.25, 0.5]}
-      />
-      {stakePolicy.hideClaimAction ? null : (
+      <StyledButtonContainer layout="column">
         <MainButton
-          label={lstrings.stake_claim_rewards}
-          disabled={!canClaim}
-          type="secondary"
-          onPress={handleModifyPress('claim')}
-          marginRem={[0.25, 0.5, 0.25, 0.5]}
+          label={lstrings.stake_stake_more_funds}
+          disabled={!canStake}
+          type="primary"
+          onPress={handleModifyPress('stake')}
+          marginRem={[0.5, 0.5, 0.25, 0.5]}
         />
-      )}
-      {stakePolicy.hideUnstakeAndClaimAction ? null : (
-        <MainButton
-          label={lstrings.stake_unstake_claim}
-          disabled={!canUnstakeAndClaim}
-          type="escape"
-          onPress={handleModifyPress('unstakeAndClaim')}
-          marginRem={[0.25, 0.5, 0.25, 0.5]}
-        />
-      )}
-      {stakePolicy.hideUnstakeAction ? null : (
-        <MainButton
-          label={lstrings.stake_unstake}
-          disabled={!canUnstake}
-          type="escape"
-          onPress={handleModifyPress('unstake')}
-          marginRem={[0.25, 0.5, 0.25, 0.5]}
-        />
-      )}
+        {stakePolicy.hideClaimAction ? null : (
+          <MainButton
+            label={lstrings.stake_claim_rewards}
+            disabled={!canClaim}
+            type="secondary"
+            onPress={handleModifyPress('claim')}
+            marginRem={[0.25, 0.5, 0.25, 0.5]}
+          />
+        )}
+        {stakePolicy.hideUnstakeAndClaimAction ? null : (
+          <MainButton
+            label={lstrings.stake_unstake_claim}
+            disabled={!canUnstakeAndClaim}
+            type="escape"
+            onPress={handleModifyPress('unstakeAndClaim')}
+            marginRem={[0.25, 0.5, 0.25, 0.5]}
+          />
+        )}
+        {stakePolicy.hideUnstakeAction ? null : (
+          <MainButton
+            label={lstrings.stake_unstake}
+            disabled={!canUnstake}
+            type="escape"
+            onPress={handleModifyPress('unstake')}
+            marginRem={[0.25, 0.5, 0.25, 0.5]}
+          />
+        )}
+      </StyledButtonContainer>
     </SceneWrapper>
   )
 }
@@ -212,7 +215,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   card: {
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingTop: theme.rem(0.5)
+    padding: theme.rem(0.5)
   },
   shimmer: {
     height: theme.rem(3),

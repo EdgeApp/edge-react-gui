@@ -83,7 +83,8 @@ export const ButtonsViewUi4 = React.memo(({ absolute = false, fade, primary, sec
   )
 })
 
-const StyledButtonContainer = styled(View)<{ absolute: boolean; layout: 'row' | 'column' | 'solo'; sceneMargin?: boolean }>(theme => props => {
+/** @deprecated - Shouldn't use this post-UI4 transition once all our layouts have been codified into this component. */
+export const StyledButtonContainer = styled(View)<{ absolute?: boolean; layout: 'row' | 'column' | 'solo'; sceneMargin?: boolean }>(theme => props => {
   const { absolute, layout, sceneMargin } = props
 
   const marginSize = theme.rem(0.5)
