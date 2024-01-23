@@ -1140,6 +1140,7 @@
   "stake_estimated_return": "Ritorno stimato: %s",
   "stake_s_staked": "%s in Stake",
   "stake_s_earned": "%s Guadagnato",
+  "stake_s_unstaked": "%s Unstaked",
   "stake_lock_message": "bloccato fino al %s",
   "stake_select_options": "Seleziona opzioni di staking:",
   "stake_stake_more_funds": "Metti in stake altri fondi",
