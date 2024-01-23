@@ -1,7 +1,7 @@
 import { add, gt } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
-import { Image, ScrollView, View } from 'react-native'
+import { Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
@@ -20,10 +20,10 @@ import { getFioStakingBalances } from '../../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
-import { ClickableText } from '../../themed/ClickableText'
 import { EdgeText } from '../../themed/EdgeText'
-import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
+import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
+import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
 interface OwnProps extends EdgeSceneProps<'fioStakingOverview'> {}
@@ -113,25 +113,32 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
   const fiatStaked = ` (${fiatSymbol}${stakingFiatBalanceFormat} ${fiatCurrencyCode})`
 
   return (
-    <SceneWrapper>
-      <SceneHeader style={styles.sceneHeader} title={sprintf(lstrings.staking_overview_header, currencyCode)} underline withTopMargin>
-        <Image style={styles.currencyLogo} source={fioLogo} />
-      </SceneHeader>
-      <ScrollView style={styles.scrollContainer}>
-        <EdgeText style={styles.explainerText}>{lstrings.staking_overview_explainer}</EdgeText>
-        <RowUi4 title="Currently Staked">
-          <EdgeText>
-            {staked}
-            <EdgeText style={styles.fiatAmount}>{fiatStaked}</EdgeText>
-          </EdgeText>
-        </RowUi4>
-        {renderItems()}
-      </ScrollView>
-      <View style={styles.buttonContainer}>
-        <MainButton onPress={handlePressStake} type="secondary" label={lstrings.staking_stake_funds_button} />
-        <ClickableText onPress={handlePressUnstake} label={lstrings.staking_unstake_funds_button} />
-      </View>
-    </SceneWrapper>
+    <>
+      <SceneWrapper scroll>
+        <SceneHeader style={styles.sceneHeader} title={sprintf(lstrings.staking_overview_header, currencyCode)} underline withTopMargin>
+          <Image style={styles.currencyLogo} source={fioLogo} />
+        </SceneHeader>
+        <View style={styles.container}>
+          <EdgeText style={styles.explainerText}>{lstrings.staking_overview_explainer}</EdgeText>
+
+          <CardUi4>
+            <RowUi4 title="Currently Staked">
+              <EdgeText>
+                {staked}
+                <EdgeText style={styles.fiatAmount}>{fiatStaked}</EdgeText>
+              </EdgeText>
+            </RowUi4>
+          </CardUi4>
+          <CardUi4 sections>{renderItems()}</CardUi4>
+        </View>
+      </SceneWrapper>
+
+      <ButtonsViewUi4
+        sceneMargin
+        primary={{ label: lstrings.staking_stake_funds_button, onPress: handlePressStake }}
+        tertiary={{ label: lstrings.staking_unstake_funds_button, onPress: handlePressUnstake }}
+      />
+    </>
   )
 }
 
@@ -147,18 +154,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
     resizeMode: 'contain',
     marginLeft: theme.rem(1)
   },
-  scrollContainer: {
-    flex: 1,
-    paddingBottom: theme.rem(0.5),
-    paddingTop: theme.rem(1)
+  container: {
+    marginHorizontal: theme.rem(0.5)
   },
   explainerText: {
     marginVertical: theme.rem(0.5),
     marginHorizontal: theme.rem(1)
   },
   buttonContainer: {
-    alignItems: 'center',
-    marginVertical: theme.rem(0.5)
+    position: 'absolute',
+    bottom: theme.rem(1),
+    alignSelf: 'center'
   },
   fiatAmount: {
     color: theme.secondaryText
