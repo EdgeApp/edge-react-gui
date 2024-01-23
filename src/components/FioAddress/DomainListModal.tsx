@@ -3,7 +3,6 @@ import { TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { FlatList } from 'react-native-gesture-handler'
 
-import { Fontello } from '../../assets/vector'
 import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
@@ -11,10 +10,10 @@ import { NavigationBase } from '../../types/routerTypes'
 import { FioDomain, FlatListItem } from '../../types/types'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { ClickableText } from '../themed/ClickableText'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalFooter } from '../themed/ModalParts'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Item {
@@ -122,12 +121,12 @@ class DomainListModalComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
     if (createNew) {
       return (
-        <View style={[styles.rowContainerTop, styles.registerDomainRow]}>
-          <ClickableText
-            icon={<Fontello name="register-custom-fio" style={styles.domainRegisterIcon} color={theme.iconTappable} size={theme.rem(1)} />}
-            label={lstrings.fio_address_list_domain_register}
-            onPress={this.registerNewDomain}
-            paddingRem={0}
+        <View style={styles.registerDomainRow}>
+          <ButtonsViewUi4
+            tertiary={{
+              label: lstrings.fio_address_list_domain_register,
+              onPress: this.registerNewDomain
+            }}
           />
         </View>
       )
@@ -200,12 +199,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'right'
   },
   registerDomainRow: {
-    paddingLeft: 0,
-    marginLeft: theme.rem(1),
-    marginTop: theme.rem(0.25),
-    paddingTop: theme.rem(1),
-    borderTopWidth: theme.rem(0.05),
-    borderTopColor: theme.lineDivider
+    alignSelf: 'center',
+    borderTopWidth: 1,
+    borderTopColor: theme.lineDivider,
+    width: '100%'
   },
   domainRegisterIcon: {
     marginTop: theme.rem(0.25)
