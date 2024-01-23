@@ -168,7 +168,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props & HookPr
             }
             value={customNetworkFee[key]}
             placeholder={FEE_STRINGS[key] || key}
-            returnKeyType="search"
+            returnKeyType="done"
             keyboardType="numeric"
           />
         ))}
