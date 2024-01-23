@@ -53,7 +53,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     fioDomain: '',
     errorMessage: '',
     isValid: true,
-    isAvailable: false,
+    isAvailable: null,
     loading: false,
     walletLoading: false
   }
@@ -88,7 +88,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   handleNextButton = (): void => {
     const { isConnected, navigation } = this.props
     const { fioDomain, selectedWallet, isValid, isAvailable, loading, walletLoading } = this.state
-    if (isValid && isAvailable && !loading && !walletLoading) {
+    if (isValid && isAvailable === true && !loading && !walletLoading) {
       if (isConnected) {
         if (!selectedWallet) return showError(lstrings.create_wallet_failed_message)
         navigation.navigate('fioDomainRegisterSelectWallet', {
@@ -236,7 +236,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     if (fioDomain && !this.props.isConnected) {
       chooseHandleErrorMessage = lstrings.fio_address_register_screen_cant_check
     }
-    if (fioDomain && !isAvailable) {
+    if (fioDomain && isAvailable === false) {
       chooseHandleErrorMessage = lstrings.fio_address_register_screen_not_available
     }
 
