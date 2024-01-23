@@ -2,7 +2,6 @@ import { div, gt, gte } from 'biggystring'
 import { EdgeAccount, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Keyboard, View } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
 import { getQuoteForTransaction, selectWalletForExchange, SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
@@ -17,7 +16,8 @@ import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../types/types'
 import { getTokenId, getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, zeroString } from '../../util/utils'
-import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
+import { EdgeAnim } from '../common/EdgeAnim'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
@@ -58,8 +58,6 @@ interface StateProps {
   // Errors
   insufficient: boolean
   genericError: string | null
-
-  insetStyle: InsetStyle
 }
 interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => Promise<void>
@@ -238,7 +236,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     const showNext = this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '' && !!parseFloat(primaryNativeAmount)
     if (!showNext) return null
     if (this.checkExceedsAmount()) return null
-    return <MainButton label={lstrings.string_next_capitalized} type="secondary" marginRem={[1.5, 0, 1.5]} paddingRem={[0.5, 2.3]} onPress={this.handleNext} />
+    return <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0.5, 0, 1]} paddingRem={[0.5, 2.3]} onPress={this.handleNext} />
   }
 
   renderAlert = () => {
@@ -285,7 +283,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { fromWalletName, toWalletName, theme, insetStyle } = this.props
+    const { fromWalletName, toWalletName, theme } = this.props
 
     const styles = getStyles(theme)
 
@@ -295,14 +293,11 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     const toHeaderText = sprintf(lstrings.exchange_to_wallet, toWalletName)
 
     return (
-      <View style={[styles.sceneContainer, { paddingTop: insetStyle.paddingTop }]}>
-        <SceneHeader title={lstrings.title_exchange} underline />
-        <KeyboardAwareScrollView
-          style={styles.mainScrollView}
-          keyboardShouldPersistTaps="always"
-          contentContainerStyle={[{ paddingBottom: insetStyle.paddingBottom }, styles.scrollViewContentContainer]}
-        >
-          <LineTextDivider title={lstrings.fragment_send_from_label} lowerCased />
+      <View style={styles.sceneContainer}>
+        <EdgeAnim style={styles.header} enter={{ type: 'fadeInUp', distance: 90 }}>
+          <SceneHeader title={lstrings.title_exchange} underline />
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
           <CryptoExchangeFlipInputWrapper
             walletId={this.props.fromWalletId}
             buttonText={lstrings.select_src_wallet}
@@ -317,7 +312,11 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
           >
             {this.props.hasMaxSpend ? <MiniButton alignSelf="center" label={lstrings.string_max_cap} marginRem={[0.5, 0, 1]} onPress={this.handleMax} /> : null}
           </CryptoExchangeFlipInputWrapper>
+        </EdgeAnim>
+        <EdgeAnim>
           <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 30 }}>
           <CryptoExchangeFlipInputWrapper
             walletId={this.props.toWalletId}
             buttonText={lstrings.select_recv_wallet}
@@ -330,9 +329,9 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             focusMe={this.focusToWallet}
             onNext={this.handleNext}
           />
-          {this.renderAlert()}
-          {this.renderButton()}
-        </KeyboardAwareScrollView>
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 60 }}>{this.renderAlert()}</EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 90 }}>{this.renderButton()}</EdgeAnim>
       </View>
     )
   }
@@ -340,10 +339,16 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   sceneContainer: {
+    marginHorizontal: theme.rem(0.5),
     flex: 1
   },
   mainScrollView: {
     flex: 1
+  },
+  header: {
+    marginLeft: -theme.rem(0.5),
+    width: '100%',
+    marginVertical: theme.rem(1)
   },
   scrollViewContentContainer: {
     alignItems: 'center',
@@ -426,24 +431,19 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   })
 
   return (
-    <SceneWrapper hasTabs hasNotifications>
-      {({ insetStyle, undoInsetStyle }) => (
-        <View style={{ ...undoInsetStyle, marginTop: 0 }}>
-          <CryptoExchangeComponent
-            route={route}
-            onSelectWallet={handleSelectWallet}
-            getQuoteForTransaction={handleGetQuoteForTransaction}
-            theme={theme}
-            navigation={navigation}
-            account={account}
-            {...result}
-            exchangeInfo={exchangeInfo}
-            insufficient={insufficient}
-            genericError={genericError}
-            insetStyle={{ ...insetStyle, paddingTop: 0 }}
-          />
-        </View>
-      )}
+    <SceneWrapper hasTabs hasNotifications scroll>
+      <CryptoExchangeComponent
+        route={route}
+        onSelectWallet={handleSelectWallet}
+        getQuoteForTransaction={handleGetQuoteForTransaction}
+        theme={theme}
+        navigation={navigation}
+        account={account}
+        {...result}
+        exchangeInfo={exchangeInfo}
+        insufficient={insufficient}
+        genericError={genericError}
+      />
     </SceneWrapper>
   )
 }

@@ -208,242 +208,145 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       </RNSVGGroup>
     </RNSVGSvgView>
   </BVLinearGradient>,
-  <View
+  <RCTScrollView
+    collapsable={false}
+    contentContainerStyle={
+      {
+        "paddingBottom": 57,
+        "paddingLeft": 0,
+        "paddingRight": 0,
+        "paddingTop": 64,
+      }
+    }
+    onScroll={[Function]}
+    scrollEventThrottle={0.0001}
+    scrollIndicatorInsets={
+      {
+        "right": 1,
+      }
+    }
     style={
-      [
-        {
-          "alignItems": "stretch",
-          "flexDirection": "column",
-          "justifyContent": "flex-start",
-        },
-        {
-          "height": 1334,
-          "width": 750,
-        },
-        {
-          "paddingBottom": 57,
-          "paddingLeft": 0,
-          "paddingRight": 0,
-          "paddingTop": 64,
-        },
-        {
-          "padding": 11,
-        },
-      ]
+      {
+        "height": 1334,
+        "padding": 0,
+        "width": 750,
+      }
     }
   >
-    <View
-      style={
-        [
-          {
-            "justifyContent": "center",
-            "marginHorizontal": 22,
-            "paddingBottom": 22,
-          },
-          {
-            "marginTop": 22,
-          },
-          undefined,
-        ]
-      }
-    >
+    <View>
       <View
         style={
           {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "justifyContent": "space-between",
+            "marginHorizontal": 11,
+            "paddingTop": 11,
           }
         }
       >
-        <Text
-          adjustsFontSizeToFit={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
-          style={
-            [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
-              {
-                "fontFamily": "Quicksand-Medium",
-                "fontSize": 27,
-              },
-              null,
-            ]
-          }
-        >
-          Exchange
-        </Text>
-      </View>
-    </View>
-    <BVLinearGradient
-      colors={
-        [
-          452984831,
-          452984831,
-        ]
-      }
-      endPoint={
-        {
-          "x": 1,
-          "y": 0.5,
-        }
-      }
-      locations={null}
-      startPoint={
-        {
-          "x": 0,
-          "y": 0.5,
-        }
-      }
-      style={
-        [
-          {
-            "alignSelf": "stretch",
-            "height": 1,
-          },
-          {
-            "marginBottom": 0,
-            "marginLeft": 22,
-            "marginRight": 0,
-            "marginTop": 0,
-          },
-        ]
-      }
-    />
-    <RCTScrollView
-      contentContainerStyle={
-        [
-          {
-            "paddingBottom": 57,
-            "paddingLeft": 0,
-            "paddingRight": 0,
-            "paddingTop": 0,
-          },
-          {
-            "paddingTop": 11,
-          },
-        ]
-      }
-      style={
-        {
-          "flex": 1,
-          "marginBottom": -57,
-          "marginLeft": -0,
-          "marginRight": -0,
-          "marginTop": 0,
-        }
-      }
-    >
-      <View>
         <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
           style={
             {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "justifyContent": "space-between",
-              "marginVertical": 11,
-              "paddingHorizontal": 11,
+              "marginBottom": 22,
+              "marginLeft": -11,
               "width": "100%",
             }
           }
         >
           <View
             style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "flex": 1,
-              }
-            }
-          />
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
-            style={
               [
                 {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
+                  "justifyContent": "center",
+                  "marginHorizontal": 22,
+                  "paddingBottom": 22,
                 },
-                [
-                  {
-                    "color": "#3dd9f4",
-                    "fontFamily": "Quicksand-Medium",
-                    "fontSize": 22,
-                    "paddingHorizontal": 17,
-                  },
-                  {
-                    "textTransform": "lowercase",
-                  },
-                ],
-                null,
+                {
+                  "marginTop": 22,
+                },
+                undefined,
               ]
             }
           >
-            From
-          </Text>
-          <View
-            style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "flex": 1,
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                }
               }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "fontFamily": "Quicksand-Medium",
+                      "fontSize": 27,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Exchange
+              </Text>
+            </View>
+          </View>
+          <BVLinearGradient
+            colors={
+              [
+                452984831,
+                452984831,
+              ]
+            }
+            endPoint={
+              {
+                "x": 1,
+                "y": 0.5,
+              }
+            }
+            locations={null}
+            startPoint={
+              {
+                "x": 0,
+                "y": 0.5,
+              }
+            }
+            style={
+              [
+                {
+                  "alignSelf": "stretch",
+                  "height": 1,
+                },
+                {
+                  "marginBottom": 0,
+                  "marginLeft": 22,
+                  "marginRight": 0,
+                  "marginTop": 0,
+                },
+              ]
             }
           />
         </View>
         <View
-          style={
-            [
-              {
-                "alignSelf": "stretch",
-                "borderRadius": 16,
-              },
-              {
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-              },
-              {
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
-              },
-              undefined,
-            ]
-          }
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
         >
-          <View
-            style={
-              {
-                "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 16,
-                "bottom": 0,
-                "left": 0,
-                "overflow": "hidden",
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-              }
-            }
-          />
           <View
             style={
               [
                 {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                  "justifyContent": "center",
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
                 },
                 {
                   "marginBottom": 11,
@@ -451,850 +354,238 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                   "marginRight": 11,
                   "marginTop": 11,
                 },
+                {
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
+                },
+                undefined,
               ]
             }
           >
             <View
               style={
                 {
-                  "height": 45,
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
-                  "width": 45,
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
                 }
               }
-            >
-              <RNSVGSvgView
-                align="xMidYMid"
-                bbHeight="61"
-                bbWidth="61"
-                focusable={false}
-                height={61}
-                meetOrSlice={0}
-                minX={-8}
-                minY={-8}
-                style={
-                  [
-                    {
-                      "backgroundColor": "transparent",
-                      "borderWidth": 0,
-                    },
-                    {
-                      "left": -8,
-                      "position": "absolute",
-                      "top": -8,
-                      "transform": [
-                        {
-                          "rotateZ": "-90deg",
-                        },
-                      ],
-                    },
-                    {
-                      "flex": 0,
-                      "height": 61,
-                      "width": 61,
-                    },
-                  ]
-                }
-                vbHeight={61}
-                vbWidth={61}
-                width={61}
-              >
-                <RNSVGGroup
-                  fill={
-                    {
-                      "payload": 4278190080,
-                      "type": 0,
-                    }
-                  }
-                >
-                  <RNSVGCircle
-                    cx="22.5"
-                    cy="22.5"
-                    fill={
-                      {
-                        "payload": 4278190080,
-                        "type": 0,
-                      }
-                    }
-                    opacity={0}
-                    propList={
-                      [
-                        "stroke",
-                        "strokeWidth",
-                        "strokeDasharray",
-                        "strokeLinecap",
-                      ]
-                    }
-                    r="24"
-                    stroke={
-                      {
-                        "payload": 4278251938,
-                        "type": 0,
-                      }
-                    }
-                    strokeDasharray={
-                      [
-                        "150.79644737231007",
-                        "150.79644737231007",
-                      ]
-                    }
-                    strokeLinecap={1}
-                    strokeWidth="4"
-                  />
-                </RNSVGGroup>
-              </RNSVGSvgView>
-              <View
-                style={
-                  {
-                    "backgroundColor": "#000000",
-                    "borderRadius": 22.5,
-                    "elevation": 0,
-                    "height": 45,
-                    "shadowColor": "#000000",
-                    "shadowOffset": {
-                      "height": 3,
-                      "width": -3,
-                    },
-                    "shadowOpacity": 0.6,
-                    "shadowRadius": 4,
-                    "width": 45,
-                  }
-                }
-              >
-                <View
-                  style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      },
-                    ]
-                  }
-                >
-                  <FastImageView
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                      }
-                    }
-                    style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
-                    }
-                  />
-                </View>
-              </View>
-            </View>
-            <View
-              style={
-                {
-                  "flexDirection": "column",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "marginLeft": 11,
-                  "marginRight": 6,
-                }
-              }
-            >
-              <View
-                style={
-                  {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "justifyContent": "flex-start",
-                  }
-                }
-              >
-                <Text
-                  accessible={true}
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "fontFamily": "Quicksand-Medium",
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  BTC
-                </Text>
-              </View>
-              <Text
-                accessible={true}
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#3dd9f4",
-                      "fontSize": 17,
-                    },
-                    null,
-                  ]
-                }
-              >
-                My Bitcoin
-              </Text>
-            </View>
-            <View
-              style={
-                {
-                  "alignItems": "flex-end",
-                  "flexDirection": "column",
-                }
-              }
-            >
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    undefined,
-                    null,
-                  ]
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      undefined,
-                      null,
-                    ]
-                  }
-                >
-                  ₿ ●●●●
-                </Text>
-              </Text>
-              <View
-                accessible={true}
-                style={
-                  {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "justifyContent": "flex-start",
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  $ ●●●●
-                </Text>
-              </View>
-            </View>
-          </View>
-          <View
-            style={
-              {
-                "margin": 11,
-                "marginTop": 0,
-              }
-            }
-          >
+            />
             <View
               style={
                 [
                   {
                     "alignItems": "center",
                     "flexDirection": "row",
+                    "justifyContent": "center",
                   },
                   {
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
+                  },
+                ]
+              }
+            >
+              <View
+                style={
+                  {
+                    "height": 45,
                     "marginBottom": 0,
                     "marginLeft": 0,
                     "marginRight": 0,
-                    "marginTop": 17,
-                  },
-                ]
-              }
-            >
-              <View
-                style={
-                  {
-                    "alignItems": "center",
-                    "flex": 1,
-                    "flexDirection": "row",
+                    "marginTop": 0,
+                    "width": 45,
                   }
                 }
               >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                <RNSVGSvgView
+                  align="xMidYMid"
+                  bbHeight="61"
+                  bbWidth="61"
+                  focusable={false}
+                  height={61}
+                  meetOrSlice={0}
+                  minX={-8}
+                  minY={-8}
                   style={
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
+                        "backgroundColor": "transparent",
+                        "borderWidth": 0,
                       },
                       {
-                        "fontSize": 17,
-                        "marginTop": 6,
+                        "left": -8,
+                        "position": "absolute",
+                        "top": -8,
+                        "transform": [
+                          {
+                            "rotateZ": "-90deg",
+                          },
+                        ],
                       },
-                      null,
+                      {
+                        "flex": 0,
+                        "height": 61,
+                        "width": 61,
+                      },
                     ]
                   }
+                  vbHeight={61}
+                  vbWidth={61}
+                  width={61}
                 >
-                  Max network fee
-                </Text>
-              </View>
-              <View
-                style={
-                  {
-                    "marginLeft": 6,
-                    "textAlign": "right",
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "fontSize": 17,
-                        "marginTop": 6,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  0.00000001 BTC (&lt;0.01 USD)
-                </Text>
-              </View>
-            </View>
-            <View
-              style={
-                [
-                  {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                  },
-                  {},
-                ]
-              }
-            >
-              <View
-                style={
-                  {
-                    "alignItems": "center",
-                    "flex": 1,
-                    "flexDirection": "row",
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "fontSize": 17,
-                        "marginTop": 6,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  Total Amount
-                </Text>
-              </View>
-              <View
-                style={
-                  {
-                    "marginLeft": 6,
-                    "textAlign": "right",
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "fontSize": 17,
-                        "marginTop": 6,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  1.84 USD
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-        <View
-          style={
-            {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "justifyContent": "space-between",
-              "marginVertical": 11,
-              "paddingHorizontal": 11,
-              "width": "100%",
-            }
-          }
-        >
-          <View
-            style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "flex": 1,
-              }
-            }
-          />
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
-            style={
-              [
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                [
-                  {
-                    "color": "#3dd9f4",
-                    "fontFamily": "Quicksand-Medium",
-                    "fontSize": 22,
-                    "paddingHorizontal": 17,
-                  },
-                  {
-                    "textTransform": "lowercase",
-                  },
-                ],
-                null,
-              ]
-            }
-          >
-            To
-          </Text>
-          <View
-            style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "flex": 1,
-              }
-            }
-          />
-        </View>
-        <View
-          style={
-            [
-              {
-                "alignSelf": "stretch",
-                "borderRadius": 16,
-              },
-              {
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-              },
-              {
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
-              },
-              undefined,
-            ]
-          }
-        >
-          <View
-            style={
-              {
-                "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 16,
-                "bottom": 0,
-                "left": 0,
-                "overflow": "hidden",
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-              }
-            }
-          />
-          <View
-            style={
-              [
-                {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                  "justifyContent": "center",
-                },
-                {
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
-                },
-              ]
-            }
-          >
-            <View
-              style={
-                {
-                  "height": 45,
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
-                  "width": 45,
-                }
-              }
-            >
-              <RNSVGSvgView
-                align="xMidYMid"
-                bbHeight="61"
-                bbWidth="61"
-                focusable={false}
-                height={61}
-                meetOrSlice={0}
-                minX={-8}
-                minY={-8}
-                style={
-                  [
-                    {
-                      "backgroundColor": "transparent",
-                      "borderWidth": 0,
-                    },
-                    {
-                      "left": -8,
-                      "position": "absolute",
-                      "top": -8,
-                      "transform": [
-                        {
-                          "rotateZ": "-90deg",
-                        },
-                      ],
-                    },
-                    {
-                      "flex": 0,
-                      "height": 61,
-                      "width": 61,
-                    },
-                  ]
-                }
-                vbHeight={61}
-                vbWidth={61}
-                width={61}
-              >
-                <RNSVGGroup
-                  fill={
-                    {
-                      "payload": 4278190080,
-                      "type": 0,
-                    }
-                  }
-                >
-                  <RNSVGCircle
-                    cx="22.5"
-                    cy="22.5"
+                  <RNSVGGroup
                     fill={
                       {
                         "payload": 4278190080,
                         "type": 0,
                       }
                     }
-                    opacity={0}
-                    propList={
-                      [
-                        "stroke",
-                        "strokeWidth",
-                        "strokeDasharray",
-                        "strokeLinecap",
-                      ]
-                    }
-                    r="24"
-                    stroke={
-                      {
-                        "payload": 4278251938,
-                        "type": 0,
+                  >
+                    <RNSVGCircle
+                      cx="22.5"
+                      cy="22.5"
+                      fill={
+                        {
+                          "payload": 4278190080,
+                          "type": 0,
+                        }
                       }
+                      opacity={0}
+                      propList={
+                        [
+                          "stroke",
+                          "strokeWidth",
+                          "strokeDasharray",
+                          "strokeLinecap",
+                        ]
+                      }
+                      r="24"
+                      stroke={
+                        {
+                          "payload": 4278251938,
+                          "type": 0,
+                        }
+                      }
+                      strokeDasharray={
+                        [
+                          "150.79644737231007",
+                          "150.79644737231007",
+                        ]
+                      }
+                      strokeLinecap={1}
+                      strokeWidth="4"
+                    />
+                  </RNSVGGroup>
+                </RNSVGSvgView>
+                <View
+                  style={
+                    {
+                      "backgroundColor": "#000000",
+                      "borderRadius": 22.5,
+                      "elevation": 0,
+                      "height": 45,
+                      "shadowColor": "#000000",
+                      "shadowOffset": {
+                        "height": 3,
+                        "width": -3,
+                      },
+                      "shadowOpacity": 0.6,
+                      "shadowRadius": 4,
+                      "width": 45,
                     }
-                    strokeDasharray={
+                  }
+                >
+                  <View
+                    style={
                       [
-                        "150.79644737231007",
-                        "150.79644737231007",
+                        {
+                          "overflow": "hidden",
+                        },
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        },
                       ]
                     }
-                    strokeLinecap={1}
-                    strokeWidth="4"
-                  />
-                </RNSVGGroup>
-              </RNSVGSvgView>
+                  >
+                    <FastImageView
+                      resizeMode="cover"
+                      source={
+                        {
+                          "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                        }
+                      }
+                      style={
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
+                      }
+                    />
+                  </View>
+                </View>
+              </View>
               <View
                 style={
                   {
-                    "backgroundColor": "#000000",
-                    "borderRadius": 22.5,
-                    "elevation": 0,
-                    "height": 45,
-                    "shadowColor": "#000000",
-                    "shadowOffset": {
-                      "height": 3,
-                      "width": -3,
-                    },
-                    "shadowOpacity": 0.6,
-                    "shadowRadius": 4,
-                    "width": 45,
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "marginLeft": 11,
+                    "marginRight": 6,
                   }
                 }
               >
                 <View
                   style={
-                    [
-                      {
-                        "overflow": "hidden",
-                      },
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      },
-                    ]
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "justifyContent": "flex-start",
+                    }
                   }
                 >
-                  <FastImageView
-                    resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                      }
-                    }
+                  <Text
+                    accessible={true}
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
                     style={
-                      {
-                        "bottom": 0,
-                        "left": 0,
-                        "position": "absolute",
-                        "right": 0,
-                        "top": 0,
-                      }
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontFamily": "Quicksand-Medium",
+                        },
+                        null,
+                      ]
                     }
-                  />
+                  >
+                    BTC
+                  </Text>
                 </View>
-              </View>
-            </View>
-            <View
-              style={
-                {
-                  "flexDirection": "column",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "marginLeft": 11,
-                  "marginRight": 6,
-                }
-              }
-            >
-              <View
-                style={
-                  {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "justifyContent": "flex-start",
-                  }
-                }
-              >
                 <Text
                   accessible={true}
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "fontFamily": "Quicksand-Medium",
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  ETH
-                </Text>
-              </View>
-              <Text
-                accessible={true}
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "color": "#3dd9f4",
-                      "fontSize": 17,
-                    },
-                    null,
-                  ]
-                }
-              >
-                My Ethereum
-              </Text>
-            </View>
-            <View
-              style={
-                {
-                  "alignItems": "flex-end",
-                  "flexDirection": "column",
-                }
-              }
-            >
-              <Text
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.65}
-                numberOfLines={1}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    undefined,
-                    null,
-                  ]
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      undefined,
-                      null,
-                    ]
-                  }
-                >
-                  Ξ ●●●●
-                </Text>
-              </Text>
-              <View
-                accessible={true}
-                style={
-                  {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "justifyContent": "flex-start",
-                  }
-                }
-              >
-                <Text
                   adjustsFontSizeToFit={true}
                   minimumFontScale={0.65}
                   numberOfLines={1}
@@ -1314,20 +605,865 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                     ]
                   }
                 >
-                  $ ●●●●
+                  My Bitcoin
+                </Text>
+              </View>
+              <View
+                style={
+                  {
+                    "alignItems": "flex-end",
+                    "flexDirection": "column",
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      undefined,
+                      null,
+                    ]
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    ₿ ●●●●
+                  </Text>
+                </Text>
+                <View
+                  accessible={true}
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    $ ●●●●
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "margin": 11,
+                  "marginTop": 0,
+                }
+              }
+            >
+              <View
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                    },
+                    {
+                      "marginBottom": 0,
+                      "marginLeft": 0,
+                      "marginRight": 0,
+                      "marginTop": 17,
+                    },
+                  ]
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flex": 1,
+                      "flexDirection": "row",
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Max network fee
+                  </Text>
+                </View>
+                <View
+                  style={
+                    {
+                      "marginLeft": 6,
+                      "textAlign": "right",
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    0.00000001 BTC (&lt;0.01 USD)
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                    },
+                    {},
+                  ]
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flex": 1,
+                      "flexDirection": "row",
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    Total Amount
+                  </Text>
+                </View>
+                <View
+                  style={
+                    {
+                      "marginLeft": 6,
+                      "textAlign": "right",
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontSize": 17,
+                          "marginTop": 6,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    1.84 USD
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          layout={BaseAnimationMock {}}
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "justifyContent": "space-between",
+                "marginVertical": 11,
+                "paddingHorizontal": 11,
+                "width": "100%",
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "flex": 1,
+                }
+              }
+            />
+            <Text
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.65}
+              numberOfLines={1}
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  [
+                    {
+                      "color": "#3dd9f4",
+                      "fontFamily": "Quicksand-Medium",
+                      "fontSize": 22,
+                      "paddingHorizontal": 17,
+                    },
+                    {
+                      "textTransform": "lowercase",
+                    },
+                  ],
+                  null,
+                ]
+              }
+            >
+              To
+            </Text>
+            <View
+              style={
+                {
+                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomWidth": 1,
+                  "flex": 1,
+                }
+              }
+            />
+          </View>
+        </View>
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
+        >
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                },
+                {
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                },
+                {
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "justifyContent": "center",
+                  },
+                  {
+                    "marginBottom": 11,
+                    "marginLeft": 11,
+                    "marginRight": 11,
+                    "marginTop": 11,
+                  },
+                ]
+              }
+            >
+              <View
+                style={
+                  {
+                    "height": 45,
+                    "marginBottom": 0,
+                    "marginLeft": 0,
+                    "marginRight": 0,
+                    "marginTop": 0,
+                    "width": 45,
+                  }
+                }
+              >
+                <RNSVGSvgView
+                  align="xMidYMid"
+                  bbHeight="61"
+                  bbWidth="61"
+                  focusable={false}
+                  height={61}
+                  meetOrSlice={0}
+                  minX={-8}
+                  minY={-8}
+                  style={
+                    [
+                      {
+                        "backgroundColor": "transparent",
+                        "borderWidth": 0,
+                      },
+                      {
+                        "left": -8,
+                        "position": "absolute",
+                        "top": -8,
+                        "transform": [
+                          {
+                            "rotateZ": "-90deg",
+                          },
+                        ],
+                      },
+                      {
+                        "flex": 0,
+                        "height": 61,
+                        "width": 61,
+                      },
+                    ]
+                  }
+                  vbHeight={61}
+                  vbWidth={61}
+                  width={61}
+                >
+                  <RNSVGGroup
+                    fill={
+                      {
+                        "payload": 4278190080,
+                        "type": 0,
+                      }
+                    }
+                  >
+                    <RNSVGCircle
+                      cx="22.5"
+                      cy="22.5"
+                      fill={
+                        {
+                          "payload": 4278190080,
+                          "type": 0,
+                        }
+                      }
+                      opacity={0}
+                      propList={
+                        [
+                          "stroke",
+                          "strokeWidth",
+                          "strokeDasharray",
+                          "strokeLinecap",
+                        ]
+                      }
+                      r="24"
+                      stroke={
+                        {
+                          "payload": 4278251938,
+                          "type": 0,
+                        }
+                      }
+                      strokeDasharray={
+                        [
+                          "150.79644737231007",
+                          "150.79644737231007",
+                        ]
+                      }
+                      strokeLinecap={1}
+                      strokeWidth="4"
+                    />
+                  </RNSVGGroup>
+                </RNSVGSvgView>
+                <View
+                  style={
+                    {
+                      "backgroundColor": "#000000",
+                      "borderRadius": 22.5,
+                      "elevation": 0,
+                      "height": 45,
+                      "shadowColor": "#000000",
+                      "shadowOffset": {
+                        "height": 3,
+                        "width": -3,
+                      },
+                      "shadowOpacity": 0.6,
+                      "shadowRadius": 4,
+                      "width": 45,
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      [
+                        {
+                          "overflow": "hidden",
+                        },
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        },
+                      ]
+                    }
+                  >
+                    <FastImageView
+                      resizeMode="cover"
+                      source={
+                        {
+                          "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
+                        }
+                      }
+                      style={
+                        {
+                          "bottom": 0,
+                          "left": 0,
+                          "position": "absolute",
+                          "right": 0,
+                          "top": 0,
+                        }
+                      }
+                    />
+                  </View>
+                </View>
+              </View>
+              <View
+                style={
+                  {
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "marginLeft": 11,
+                    "marginRight": 6,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <Text
+                    accessible={true}
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "fontFamily": "Quicksand-Medium",
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    ETH
+                  </Text>
+                </View>
+                <Text
+                  accessible={true}
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  My Ethereum
+                </Text>
+              </View>
+              <View
+                style={
+                  {
+                    "alignItems": "flex-end",
+                    "flexDirection": "column",
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      undefined,
+                      null,
+                    ]
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        undefined,
+                        null,
+                      ]
+                    }
+                  >
+                    Ξ ●●●●
+                  </Text>
+                </Text>
+                <View
+                  accessible={true}
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "justifyContent": "flex-start",
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                        },
+                        null,
+                      ]
+                    }
+                  >
+                    $ ●●●●
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "justifyContent": "center",
+              }
+            }
+          >
+            <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                  "opacity": 1,
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "backgroundColor": "rgba(255, 255, 255, .1)",
+                    "borderRadius": 16,
+                    "bottom": 0,
+                    "left": 0,
+                    "overflow": "hidden",
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                  }
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "overflow": "hidden",
+                      },
+                      {
+                        "aspectRatio": 1,
+                        "height": 45,
+                        "width": 45,
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="contain"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/exchangeIcons/bitcoin/icon.png",
+                      }
+                    }
+                    style={
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+                <View
+                  style={
+                    {
+                      "flexDirection": "column",
+                      "paddingHorizontal": 11,
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "flexDirection": "row",
+                      }
+                    }
+                  >
+                    <Text
+                      style={
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                        }
+                      }
+                    >
+                      Powered by 
+                    </Text>
+                    <Text
+                      style={
+                        {
+                          "color": "#3dd9f4",
+                          "fontSize": 17,
+                        }
+                      }
+                    />
+                  </View>
+                  <View
+                    style={
+                      {
+                        "flexDirection": "row",
+                      }
+                    }
+                  >
+                    <Text
+                      style={
+                        {
+                          "color": "#888888",
+                          "fontSize": 17,
+                        }
+                      }
+                    >
+                      Tap to Change Provider
+                    </Text>
+                  </View>
+                </View>
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": "#00f1a2",
+                        "fontSize": 22,
+                      },
+                      undefined,
+                      {
+                        "fontFamily": "FontAwesome5Free-Solid",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {
+                        "fontWeight": "900",
+                      },
+                    ]
+                  }
+                >
+                  
                 </Text>
               </View>
             </View>
           </View>
         </View>
         <View
-          style={
-            {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "justifyContent": "center",
-            }
-          }
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
         >
           <View
             accessibilityState={
@@ -1386,258 +1522,105 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                   "top": 0,
                 }
               }
-            />
+            >
+              <BVLinearGradient
+                colors={
+                  [
+                    1886857999,
+                    1887591201,
+                    1887591201,
+                    1886857999,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 0.9,
+                    "y": 0,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0.9,
+                  }
+                }
+                style={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+            </View>
             <View
               style={
                 {
-                  "alignItems": "center",
-                  "flexDirection": "row",
+                  "margin": 11,
                 }
               }
             >
-              <View
-                style={
-                  [
-                    {
-                      "overflow": "hidden",
-                    },
-                    {
-                      "aspectRatio": 1,
-                      "height": 45,
-                      "width": 45,
-                    },
-                  ]
-                }
-              >
-                <FastImageView
-                  resizeMode="contain"
-                  source={
-                    {
-                      "uri": "https://content.edge.app/exchangeIcons/bitcoin/icon.png",
-                    }
-                  }
-                  style={
-                    {
-                      "bottom": 0,
-                      "left": 0,
-                      "position": "absolute",
-                      "right": 0,
-                      "top": 0,
-                    }
-                  }
-                />
-              </View>
               <View
                 style={
                   {
-                    "flexDirection": "column",
-                    "paddingHorizontal": 11,
+                    "alignItems": "center",
+                    "display": "flex",
+                    "flexDirection": "row",
                   }
                 }
               >
-                <View
+                <Text
+                  allowFontScaling={false}
                   style={
-                    {
-                      "flexDirection": "row",
-                    }
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontSize": 28,
+                      },
+                      {
+                        "marginRight": 4,
+                      },
+                      {
+                        "fontFamily": "Ionicons",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
                   }
                 >
-                  <Text
-                    style={
-                      {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                      }
-                    }
-                  >
-                    Powered by 
-                  </Text>
-                  <Text
-                    style={
-                      {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                      }
-                    }
-                  />
-                </View>
-                <View
+                  
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={0}
                   style={
-                    {
-                      "flexDirection": "row",
-                    }
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "fontFamily": "Quicksand-Medium",
+                        "marginLeft": 4,
+                      },
+                      null,
+                    ]
                   }
                 >
-                  <Text
-                    style={
-                      {
-                        "color": "#888888",
-                        "fontSize": 17,
-                      }
-                    }
-                  >
-                    Tap to Change Provider
-                  </Text>
-                </View>
+                  Estimated Quote
+                </Text>
               </View>
-              <Text
-                allowFontScaling={false}
-                style={
-                  [
-                    {
-                      "color": "#00f1a2",
-                      "fontSize": 22,
-                    },
-                    undefined,
-                    {
-                      "fontFamily": "FontAwesome5Free-Solid",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {
-                      "fontWeight": "900",
-                    },
-                  ]
-                }
-              >
-                
-              </Text>
-            </View>
-          </View>
-        </View>
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={false}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignSelf": "stretch",
-              "borderRadius": 16,
-              "marginBottom": 11,
-              "marginLeft": 11,
-              "marginRight": 11,
-              "marginTop": 11,
-              "opacity": 1,
-              "paddingBottom": 11,
-              "paddingLeft": 11,
-              "paddingRight": 11,
-              "paddingTop": 11,
-            }
-          }
-        >
-          <View
-            style={
-              {
-                "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 16,
-                "bottom": 0,
-                "left": 0,
-                "overflow": "hidden",
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-              }
-            }
-          >
-            <BVLinearGradient
-              colors={
-                [
-                  1886857999,
-                  1887591201,
-                  1887591201,
-                  1886857999,
-                ]
-              }
-              endPoint={
-                {
-                  "x": 0.9,
-                  "y": 0,
-                }
-              }
-              locations={null}
-              startPoint={
-                {
-                  "x": 0,
-                  "y": 0.9,
-                }
-              }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
-          <View
-            style={
-              {
-                "margin": 11,
-              }
-            }
-          >
-            <View
-              style={
-                {
-                  "alignItems": "center",
-                  "display": "flex",
-                  "flexDirection": "row",
-                }
-              }
-            >
-              <Text
-                allowFontScaling={false}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontSize": 28,
-                    },
-                    {
-                      "marginRight": 4,
-                    },
-                    {
-                      "fontFamily": "Ionicons",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
               <Text
                 adjustsFontSizeToFit={true}
                 minimumFontScale={0.65}
-                numberOfLines={0}
+                numberOfLines={10}
                 style={
                   [
                     {
@@ -1647,67 +1630,32 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       "includeFontPadding": false,
                     },
                     {
-                      "fontFamily": "Quicksand-Medium",
-                      "marginLeft": 4,
+                      "fontSize": 17,
+                      "marginHorizontal": 6,
+                      "marginTop": 11,
                     },
                     null,
                   ]
                 }
               >
-                Estimated Quote
+                The amount above is an estimate. This exchange may result in less funds received than quoted.
               </Text>
             </View>
-            <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.65}
-              numberOfLines={10}
-              style={
-                [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
-                  {
-                    "fontSize": 17,
-                    "marginHorizontal": 6,
-                    "marginTop": 11,
-                  },
-                  null,
-                ]
-              }
-            >
-              The amount above is an estimate. This exchange may result in less funds received than quoted.
-            </Text>
           </View>
         </View>
         <View
-          style={
-            [
-              {
-                "marginBottom": 22,
-                "marginTop": 45,
-              },
-              {
-                "alignItems": "center",
-              },
-            ]
-          }
+          entering={BaseAnimationMock {}}
+          layout={BaseAnimationMock {}}
         >
           <View
             style={
               [
                 {
-                  "backgroundColor": "#00604d",
-                  "borderRadius": 27.5,
-                  "height": 55,
-                  "justifyContent": "center",
-                  "width": 295,
+                  "marginBottom": 67,
+                  "marginTop": 22,
                 },
-                null,
                 {
-                  "width": 295,
+                  "alignItems": "center",
                 },
               ]
             }
@@ -1716,103 +1664,121 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
               style={
                 [
                   {
-                    "backgroundColor": "#333333",
+                    "backgroundColor": "#00604d",
                     "borderRadius": 27.5,
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
+                    "height": 55,
+                    "justifyContent": "center",
+                    "width": 295,
                   },
+                  null,
                   {
                     "width": 295,
                   },
                 ]
               }
-            />
-            <View
-              collapsable={false}
-              handlerTag={1}
-              handlerType="PanGestureHandler"
-              onGestureHandlerEvent={[Function]}
-              onGestureHandlerStateChange={[Function]}
-              style={
-                [
-                  {
-                    "alignItems": "center",
-                    "backgroundColor": "#00f1a2",
-                    "borderRadius": 27.5,
-                    "height": 55,
-                    "justifyContent": "center",
-                    "width": 55,
-                    "zIndex": 5,
-                  },
-                  null,
-                  {
-                    "transform": [
-                      {
-                        "translateX": 240,
-                      },
-                    ],
-                  },
-                ]
-              }
             >
-              <Text
-                allowFontScaling={false}
+              <View
                 style={
                   [
                     {
-                      "color": undefined,
-                      "fontSize": 34,
+                      "backgroundColor": "#333333",
+                      "borderRadius": 27.5,
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
                     },
                     {
-                      "color": "#1a1a1a",
-                      "fontSize": 51,
+                      "width": 295,
                     },
+                  ]
+                }
+              />
+              <View
+                collapsable={false}
+                handlerTag={1}
+                handlerType="PanGestureHandler"
+                onGestureHandlerEvent={[Function]}
+                onGestureHandlerStateChange={[Function]}
+                style={
+                  [
                     {
-                      "fontFamily": "Entypo",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
+                      "alignItems": "center",
+                      "backgroundColor": "#00f1a2",
+                      "borderRadius": 27.5,
+                      "height": 55,
+                      "justifyContent": "center",
+                      "width": 55,
+                      "zIndex": 5,
                     },
-                    {},
+                    null,
+                    {
+                      "transform": [
+                        {
+                          "translateX": 240,
+                        },
+                      ],
+                    },
                   ]
                 }
               >
-                
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 34,
+                      },
+                      {
+                        "color": "#1a1a1a",
+                        "fontSize": 51,
+                      },
+                      {
+                        "fontFamily": "Entypo",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "alignSelf": "center",
+                      "color": "#FFFFFF",
+                      "fontSize": 17,
+                      "lineHeight": 55,
+                      "position": "absolute",
+                      "zIndex": 1,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Slide to Confirm
               </Text>
             </View>
-            <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.65}
-              numberOfLines={1}
-              style={
-                [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
-                  {
-                    "alignSelf": "center",
-                    "color": "#FFFFFF",
-                    "fontSize": 17,
-                    "lineHeight": 55,
-                    "position": "absolute",
-                    "zIndex": 1,
-                  },
-                  null,
-                ]
-              }
-            >
-              Slide to Confirm
-            </Text>
           </View>
         </View>
       </View>
-    </RCTScrollView>
-  </View>,
+    </View>
+  </RCTScrollView>,
   <View
     style={
       {
