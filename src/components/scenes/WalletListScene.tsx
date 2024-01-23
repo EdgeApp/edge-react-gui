@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import { updateWalletsSort } from '../../actions/WalletListActions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { useSceneFooterRender } from '../../state/SceneFooterState'
+import { useSceneFooterRender, useSceneFooterState } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { CrossFade } from '../common/CrossFade'
@@ -12,13 +12,13 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { SortOption, WalletListSortModal } from '../modals/WalletListSortModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { MainButton } from '../themed/MainButton'
 import { SceneFooterWrapper } from '../themed/SceneFooterWrapper'
 import { SearchFooter } from '../themed/SearchFooter'
 import { WalletListHeader } from '../themed/WalletListHeader'
 import { WalletListSortable } from '../themed/WalletListSortable'
 import { WalletListSwipeable } from '../themed/WalletListSwipeable'
 import { WiredProgressBar } from '../themed/WiredProgressBar'
+import { ButtonUi4 } from '../ui4/ButtonUi4'
 
 interface Props extends EdgeSceneProps<'walletList'> {}
 
@@ -34,12 +34,21 @@ export function WalletListScene(props: Props) {
 
   const sortOption = useSelector(state => state.ui.settings.walletsSort)
 
+  const { setKeepOpen } = useSceneFooterState()
+
+  //
+  // Handlers
+  //
+
   const handleSort = useHandler(() => {
     Airship.show<SortOption>(bridge => <WalletListSortModal sortOption={sortOption} bridge={bridge} />)
       .then(sort => {
         if (sort == null) return
         if (sort !== sortOption) dispatch(updateWalletsSort(sort))
-        if (sort === 'manual') setSorting(true)
+        if (sort === 'manual') {
+          setKeepOpen(true)
+          setSorting(true)
+        }
       })
       .catch(showError)
   })
@@ -66,20 +75,25 @@ export function WalletListScene(props: Props) {
     setSearchText(value)
   })
 
-  // rendering -------------------------------------------------------------
+  const handlePressDone = useHandler(() => {
+    setKeepOpen(true)
+    setSorting(false)
+  })
 
-  const header = React.useMemo(() => {
+  //
+  // Renders
+  //
+
+  const renderHeader = React.useMemo(() => {
     return <WalletListHeader navigation={navigation} sorting={sorting} searching={isSearching} openSortModal={handleSort} />
   }, [handleSort, navigation, isSearching, sorting])
-
-  const handlePressDone = useHandler(() => setSorting(false))
 
   useSceneFooterRender(
     sceneWrapperInfo => {
       return sorting ? (
-        <SceneFooterWrapper sceneWrapperInfo={sceneWrapperInfo}>
+        <SceneFooterWrapper noBackgroundBlur sceneWrapperInfo={sceneWrapperInfo}>
           <View style={styles.sortFooterContainer}>
-            <MainButton key="doneButton" type="escape" label={lstrings.string_done_cap} onPress={handlePressDone} />
+            <ButtonUi4 key="doneButton" mini type="primary" label={lstrings.string_done_cap} onPress={handlePressDone} />
           </View>
         </SceneFooterWrapper>
       ) : (
@@ -107,7 +121,7 @@ export function WalletListScene(props: Props) {
             <CrossFade activeKey={sorting ? 'sortList' : 'fullList'}>
               <WalletListSwipeable
                 key="fullList"
-                header={header}
+                header={renderHeader}
                 footer={undefined}
                 navigation={navigation}
                 insetStyle={insetStyle}
@@ -127,6 +141,7 @@ export function WalletListScene(props: Props) {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   sortFooterContainer: {
+    padding: theme.rem(0.5),
     flexDirection: 'column',
     alignItems: 'center'
   },
