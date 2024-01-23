@@ -5,6 +5,7 @@ import * as React from 'react'
 import { showBackupModal } from '../../actions/BackupModalActions'
 import { updateExchangeRates } from '../../actions/ExchangeRateActions'
 import { checkFioObtData } from '../../actions/FioActions'
+import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { showReceiveDropdown } from '../../actions/ReceiveDropdown'
 import { checkPasswordRecovery } from '../../actions/RecoveryReminderActions'
 import { updateWalletLoadingProgress, updateWalletsRequest } from '../../actions/WalletActions'
@@ -111,7 +112,12 @@ export function AccountCallbackManager(props: Props) {
 
           // Notify the user to consider backing up their account
           if (account.username == null) {
-            showBackupModal({ navigation })
+            // Avoid showing modal for FIO wallets since the first transaction may be the handle creation
+            if (wallet.currencyInfo.pluginId === 'fio') {
+              dispatch(refreshAllFioAddresses()).catch(err => console.warn(err))
+            } else {
+              showBackupModal({ navigation })
+            }
           }
         }
 
