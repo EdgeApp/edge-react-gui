@@ -146,7 +146,7 @@
   "fragment_transaction_transfer": "转账",
   "fragment_wallet_unconfirmed": "待处理",
   "fragment_transaction_list_tx_dropped": "已下降",
-  "fragment_transaction_list_tx_synchronizing": "Synchronizing...",
+  "fragment_transaction_list_tx_synchronizing": "Syncing...",
   "fragment_transaction_list_confirmation_progress": "%s / %s 确认",
   "fragment_transaction_list_unconfirmed_rbf": "Awaiting confirmation, may be cancelled",
   "fragment_transaction_list_transaction": "Transactions",
