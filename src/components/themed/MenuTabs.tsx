@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
 import LinearGradient from 'react-native-linear-gradient'
-import Animated, { SharedValue, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
+import Animated, { interpolate, SharedValue, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
@@ -215,7 +215,7 @@ const Label = styled(Animated.Text)<{
       if (openRatio == null) return {}
       return {
         height: rem * openRatio.value,
-        opacity: openRatio.value
+        opacity: interpolate(openRatio.value, [0, 0.5, 1], [0, 0, 1])
       }
     })
   ]
