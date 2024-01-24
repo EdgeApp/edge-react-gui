@@ -30,8 +30,9 @@ const NotificationViewComponent = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const detectedTokensRedux = useSelector(state => state.core.enabledDetectedTokens)
   const wallets = useWatch(account, 'currencyWallets')
+  const fioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
 
-  const isBackupWarningShown = account.id != null && account.username == null
+  const isBackupWarningShown = account.id != null && account.username == null && fioAddresses.length > 0
 
   const { bottom: insetBottom } = useSafeAreaInsets()
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
@@ -89,7 +90,7 @@ const NotificationViewComponent = (props: Props) => {
   return (
     <NotificationCardsContainer hasTabs={hasTabs} insetBottom={insetBottom} footerHeight={footerHeight} footerOpenRatio={footerOpenRatio}>
       {isBackupWarningShown ? (
-        <NotificationCard type="warning" title={lstrings.backup_title} message={lstrings.backup_warning_message} onPress={handlePress} />
+        <NotificationCard type="warning" title={lstrings.backup_title} message={lstrings.backup_web3_handle_warning_message} onPress={handlePress} />
       ) : null}
       {autoDetectTokenCards.length > 0 ? autoDetectTokenCards : null}
     </NotificationCardsContainer>
