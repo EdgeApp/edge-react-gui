@@ -161,7 +161,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     const maybeHeaderHeight = hasHeader ? headerBarHeight : 0
     const maybeNotificationHeight = isLightAccount ? notificationHeight : 0
     const maybeTabBarHeight = hasTabs ? MAX_TAB_BAR_HEIGHT : 0
-    const maybeInsetBottom = !hasTabs && !isKeyboardOpen ? safeAreaInsets.bottom : 0
+    const maybeInsetBottom = !isKeyboardOpen ? safeAreaInsets.bottom : 0
     const insets: EdgeInsets = {
       top: safeAreaInsets.top + maybeHeaderHeight,
       right: safeAreaInsets.right,
