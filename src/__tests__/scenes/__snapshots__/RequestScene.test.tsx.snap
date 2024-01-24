@@ -58,7 +58,7 @@ exports[`Request should render with loaded props 1`] = `
         }
       }
     >
-      <WithTheme(EdgeTextComponent)
+      <EdgeText
         style={
           {
             "fontFamily": "Quicksand-Medium",
@@ -67,8 +67,8 @@ exports[`Request should render with loaded props 1`] = `
         }
       >
         Receive
-      </WithTheme(EdgeTextComponent)>
-      <WithTheme(EdgeTextComponent)
+      </EdgeText>
+      <EdgeText
         style={
           {
             "alignSelf": "flex-end",
@@ -78,7 +78,7 @@ exports[`Request should render with loaded props 1`] = `
         }
       >
         1 undefined
-      </WithTheme(EdgeTextComponent)>
+      </EdgeText>
     </EdgeAnim>
     <EdgeAnim
       enter={
@@ -105,11 +105,11 @@ exports[`Request should render with loaded props 1`] = `
           }
         }
       >
-        <WithTheme(EdgeTextComponent)>
+        <EdgeText>
           You have 0.000012 undefined
-        </WithTheme(EdgeTextComponent)>
+        </EdgeText>
       </TouchableOpacity>
-      <WithTheme(EdgeTextComponent)
+      <EdgeText
         style={
           {
             "alignSelf": "flex-end",
@@ -134,7 +134,7 @@ exports[`Request should render with loaded props 1`] = `
             }
           }
         />
-      </WithTheme(EdgeTextComponent)>
+      </EdgeText>
     </EdgeAnim>
     <EdgeAnim
       enter={
@@ -185,9 +185,9 @@ exports[`Request should render with loaded props 1`] = `
             }
           }
         >
-          <WithTheme(EdgeTextComponent)>
+          <EdgeText>
             Your Wallet Address
-          </WithTheme(EdgeTextComponent)>
+          </EdgeText>
           <Icon
             allowFontScaling={false}
             color="#00f1a2"
@@ -195,7 +195,7 @@ exports[`Request should render with loaded props 1`] = `
             size={34}
           />
         </View>
-        <WithTheme(EdgeTextComponent)
+        <EdgeText
           style={
             {
               "fontSize": 17,
@@ -203,7 +203,7 @@ exports[`Request should render with loaded props 1`] = `
           }
         >
           Loading…
-        </WithTheme(EdgeTextComponent)>
+        </EdgeText>
       </TouchableOpacity>
     </EdgeAnim>
   </View>

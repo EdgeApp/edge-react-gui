@@ -46,7 +46,7 @@ exports[`Tile should render with loading props 1`] = `
             }
           }
         />
-        <WithTheme(EdgeTextComponent)
+        <EdgeText
           disableFontScaling={true}
           ellipsizeMode="tail"
           style={
@@ -59,8 +59,8 @@ exports[`Tile should render with loading props 1`] = `
           }
         >
           string
-        </WithTheme(EdgeTextComponent)>
-        <WithTheme(EdgeTextComponent)
+        </EdgeText>
+        <EdgeText
           ellipsizeMode="tail"
           numberOfLines={2}
           style={
@@ -71,7 +71,7 @@ exports[`Tile should render with loading props 1`] = `
           }
         >
           string
-        </WithTheme(EdgeTextComponent)>
+        </EdgeText>
         11
       </View>
     </View>
