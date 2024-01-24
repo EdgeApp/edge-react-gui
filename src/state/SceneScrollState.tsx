@@ -73,13 +73,25 @@ export const useSceneScrollHandler = (isEnabled: boolean = true): SceneScrollHan
   const handler = useAnimatedScrollHandler({
     onScroll: (nativeEvent: NativeScrollEvent) => {
       'worklet'
-      localScrollState.scrollX.value = nativeEvent.contentOffset.x
-      localScrollState.scrollY.value = nativeEvent.contentOffset.y
+      // Condition avoids thrashing
+      if (localScrollState.scrollX.value !== nativeEvent.contentOffset.x) {
+        localScrollState.scrollX.value = nativeEvent.contentOffset.x
+      }
+      // Condition avoids thrashing
+      if (localScrollState.scrollY.value !== nativeEvent.contentOffset.y) {
+        localScrollState.scrollY.value = nativeEvent.contentOffset.y
+      }
     },
     onBeginDrag: (nativeEvent: NativeScrollEvent) => {
       'worklet'
-      localScrollState.dragStartX.value = nativeEvent.contentOffset.x
-      localScrollState.dragStartY.value = nativeEvent.contentOffset.y
+      // Condition avoids thrashing
+      if (localScrollState.dragStartX.value !== nativeEvent.contentOffset.x) {
+        localScrollState.dragStartX.value = nativeEvent.contentOffset.x
+      }
+      // Condition avoids thrashing
+      if (localScrollState.dragStartY.value !== nativeEvent.contentOffset.y) {
+        localScrollState.dragStartY.value = nativeEvent.contentOffset.y
+      }
 
       localScrollState.scrollBeginEvent.value = nativeEvent
     },
