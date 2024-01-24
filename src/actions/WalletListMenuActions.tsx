@@ -244,8 +244,7 @@ export function walletListMenuAction(
           )).then(buttonPressed => {
             // @ts-expect-error
             if (global.__DEV__ && buttonPressed === 'copy') {
-              // @ts-expect-error
-              Clipboard.setString(wallet.displayPrivateSeed)
+              Clipboard.setString(privateKey)
               showToast(lstrings.fragment_wallets_copied_seed)
             }
           })
