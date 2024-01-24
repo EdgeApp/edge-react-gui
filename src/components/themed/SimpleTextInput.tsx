@@ -255,7 +255,7 @@ const Container = styled(Animated.View)<{
     useAnimatedStyle(() => ({
       backgroundColor: interpolateInputBackgroundColor(focusAnimation, disableAnimation),
       borderColor: interpolateOutlineColor(focusAnimation, disableAnimation),
-      opacity: interpolate(scale.value, [1, 0.5], [1, 0]),
+      opacity: interpolate(scale.value, [1, 0.6], [1, 0]),
       marginHorizontal: interpolate(scale.value, [1, 0], [0, 2 * rem]),
       paddingVertical: scale.value * 0.75 * rem
     }))
