@@ -83,7 +83,12 @@ export const HomeSceneUi4 = (props: Props) => {
       {({ insetStyle, undoInsetStyle }) => (
         <>
           <WiredProgressBar />
-          <Animated.ScrollView onScroll={handleScroll} style={[styles.tempMargin, undoInsetStyle]} contentContainerStyle={insetStyle}>
+          <Animated.ScrollView
+            onScroll={handleScroll}
+            style={[styles.tempMargin, undoInsetStyle]}
+            contentContainerStyle={insetStyle}
+            scrollIndicatorInsets={{ right: 1 }}
+          >
             <SectionView extendRight>
               <>
                 <EdgeAnim enter={{ type: 'fadeInUp', distance: 140 }}>
