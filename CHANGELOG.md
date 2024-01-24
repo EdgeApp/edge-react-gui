@@ -19,6 +19,8 @@
 - changed: Make useAsyncEffect tags required
 - changed: Rettry failed WalletConnect initializations
 - changed: Disable RBF for payment protocol transactions
+- changed: Show insufficient funds error when sweeping a key that cannot afford the transaction fee
+- changed: Add proper error message for sweeping keys that don't contain enough funds to cover transaction fee
 - fixed: USP vs legacy landing experiment distribution
 - fixed: Paybis sell from Tron USDT
 - fixed: Remove `minWidth` style from stake option card
@@ -26,7 +28,9 @@
 - fixed: Update Glif Pool APY information endpoints to resolve error message
 - fixed: Don't pass pendingTxs with spendInfo in migrate flow
 - fixed: Fixed title and message handling in AssetStatusCard
+- fixed: (dev mode) Copy private seed
 - removed: Deposit/Send footer buttons in Wallet/Asset List Scene
+- removed: Unused special currency constants
 
 ## 3.23.0
 

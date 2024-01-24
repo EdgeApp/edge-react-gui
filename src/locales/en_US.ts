@@ -789,6 +789,7 @@ const strings = {
   private_key_modal_sweep_from_private_address: 'Sweep Funds From Private Key',
   private_key_modal_sweep_from_private_key_message:
     'This process needs an on-chain transaction from the original wallet to %1$s. Mining fees are applied and depend on the network status.',
+  private_key_modal_sweep_insufficient_funds: 'The private key has insufficient funds to cover the onchain fees required by the sweep.',
   private_key_modal_import: 'Import',
   private_key_modal_cancel: 'Cancel',
 
