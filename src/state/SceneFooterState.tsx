@@ -178,28 +178,15 @@ export const useFooterAccordionEvents = () => {
       // Scrolling hasn't started yet
       if (scrollYStart.value == null) return
 
-      const scrollYDelta = scrollY.value - scrollYStart.value
-      const ratioDelta = scrollYDelta * scrollDeltaToRatioDeltaFactor
-
-      return Math.min(1, Math.max(0, footerOpenRatioStart.value - ratioDelta))
+      return scrollY.value - scrollYStart.value
     },
-    (currentValue, previousValue) => {
-      if (currentValue == null) return
-      if (previousValue == null) return
-      if (currentValue === previousValue) return
+    (scrollYDelta, previousScrollYDelta) => {
+      if (scrollYDelta == null) return
+      if (previousScrollYDelta == null) return
+      if (scrollYDelta === previousScrollYDelta) return
 
-      if (currentValue > previousValue && currentValue > 0.3) {
-        snapTo.value = 1
-        scrollYStart.value = scrollY.value
-        footerOpenRatioStart.value = 1
-        return
-      }
-      if (currentValue < previousValue && currentValue < 0.7) {
-        snapTo.value = 0
-        scrollYStart.value = scrollY.value
-        footerOpenRatioStart.value = 0
-        return
-      }
+      const ratioDelta = scrollYDelta * scrollDeltaToRatioDeltaFactor
+      const currentValue = Math.min(1, Math.max(0, footerOpenRatioStart.value - ratioDelta))
 
       if (snapTo.value !== undefined) {
         snapTo.value = undefined
