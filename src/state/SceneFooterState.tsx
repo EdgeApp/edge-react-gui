@@ -192,7 +192,7 @@ export const useFooterAccordionEvents = () => {
         snapTo.value = undefined
       }
       if (footerOpenRatio.value !== currentValue) {
-        footerOpenRatio.value = currentValue
+        footerOpenRatio.value = withTiming(currentValue, { duration: 200 })
       }
     },
     [keepOpen, scrollDeltaToRatioDeltaFactor]
