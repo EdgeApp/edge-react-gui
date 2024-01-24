@@ -231,10 +231,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
       viewIsInsideTabBar={false}
     >
       <View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -419,10 +416,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -528,11 +522,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   >
                     Send to Address
                   </Text>
-                  <View
-                    entering={BaseAnimationMock {}}
-                    exiting={BaseAnimationMock {}}
-                    layout={BaseAnimationMock {}}
-                  >
+                  <View>
                     <Text
                       adjustsFontSizeToFit={false}
                       minimumFontScale={0.65}
@@ -634,11 +624,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   ]
                 }
               />
-              <View
-                entering={BaseAnimationMock {}}
-                exiting={BaseAnimationMock {}}
-                layout={BaseAnimationMock {}}
-              >
+              <View>
                 <View
                   style={
                     [
@@ -946,10 +932,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -1148,10 +1131,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        />
+        <View />
       </View>
     </RCTScrollView>
     <View
@@ -1166,10 +1146,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
         }
       }
     >
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View>
         <View
           style={
             [
@@ -1561,10 +1538,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       viewIsInsideTabBar={false}
     >
       <View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -1749,10 +1723,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -1858,11 +1829,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   >
                     Send to Address
                   </Text>
-                  <View
-                    entering={BaseAnimationMock {}}
-                    exiting={BaseAnimationMock {}}
-                    layout={BaseAnimationMock {}}
-                  >
+                  <View>
                     <Text
                       adjustsFontSizeToFit={false}
                       minimumFontScale={0.65}
@@ -1964,11 +1931,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   ]
                 }
               />
-              <View
-                entering={BaseAnimationMock {}}
-                exiting={BaseAnimationMock {}}
-                layout={BaseAnimationMock {}}
-              >
+              <View>
                 <View
                   style={
                     [
@@ -2276,10 +2239,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -2666,10 +2626,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        />
+        <View />
       </View>
     </RCTScrollView>
     <View
@@ -2684,10 +2641,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
         }
       }
     >
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View>
         <View
           style={
             [
@@ -3079,10 +3033,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
       viewIsInsideTabBar={false}
     >
       <View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -3267,10 +3218,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -3321,11 +3269,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 ]
               }
             >
-              <View
-                entering={BaseAnimationMock {}}
-                exiting={BaseAnimationMock {}}
-                layout={BaseAnimationMock {}}
-              >
+              <View>
                 <View
                   style={
                     [
@@ -3541,11 +3485,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   >
                     Send to Address 2
                   </Text>
-                  <View
-                    entering={BaseAnimationMock {}}
-                    exiting={BaseAnimationMock {}}
-                    layout={BaseAnimationMock {}}
-                  >
+                  <View>
                     <Text
                       adjustsFontSizeToFit={false}
                       minimumFontScale={0.65}
@@ -3647,11 +3587,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   ]
                 }
               />
-              <View
-                entering={BaseAnimationMock {}}
-                exiting={BaseAnimationMock {}}
-                layout={BaseAnimationMock {}}
-              >
+              <View>
                 <View
                   style={
                     [
@@ -3959,10 +3895,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -4161,10 +4094,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        />
+        <View />
       </View>
     </RCTScrollView>
     <View
@@ -4179,10 +4109,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
         }
       }
     >
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View>
         <View
           style={
             [
@@ -4574,10 +4501,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       viewIsInsideTabBar={false}
     >
       <View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -4762,10 +4686,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -4816,11 +4737,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 ]
               }
             >
-              <View
-                entering={BaseAnimationMock {}}
-                exiting={BaseAnimationMock {}}
-                layout={BaseAnimationMock {}}
-              >
+              <View>
                 <View
                   style={
                     [
@@ -4981,11 +4898,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   ]
                 }
               />
-              <View
-                entering={BaseAnimationMock {}}
-                exiting={BaseAnimationMock {}}
-                layout={BaseAnimationMock {}}
-              >
+              <View>
                 <View
                   style={
                     [
@@ -5155,10 +5068,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -5357,10 +5267,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        />
+        <View />
       </View>
     </RCTScrollView>
     <View
@@ -5375,10 +5282,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
         }
       }
     >
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View>
         <View
           style={
             [
@@ -5770,10 +5674,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       viewIsInsideTabBar={false}
     >
       <View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -5958,10 +5859,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -6012,11 +5910,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 ]
               }
             >
-              <View
-                entering={BaseAnimationMock {}}
-                exiting={BaseAnimationMock {}}
-                layout={BaseAnimationMock {}}
-              >
+              <View>
                 <View
                   style={
                     [
@@ -6232,11 +6126,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   >
                     Send to Address 2
                   </Text>
-                  <View
-                    entering={BaseAnimationMock {}}
-                    exiting={BaseAnimationMock {}}
-                    layout={BaseAnimationMock {}}
-                  >
+                  <View>
                     <Text
                       adjustsFontSizeToFit={false}
                       minimumFontScale={0.65}
@@ -6327,10 +6217,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -6529,10 +6416,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        />
+        <View />
       </View>
     </RCTScrollView>
     <View
@@ -6547,10 +6431,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
         }
       }
     >
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View>
         <View
           style={
             [
@@ -6942,10 +6823,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       viewIsInsideTabBar={false}
     >
       <View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -7130,10 +7008,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -7184,11 +7059,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 ]
               }
             >
-              <View
-                entering={BaseAnimationMock {}}
-                exiting={BaseAnimationMock {}}
-                layout={BaseAnimationMock {}}
-              >
+              <View>
                 <View
                   style={
                     [
@@ -7338,10 +7209,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -7540,10 +7408,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        />
+        <View />
       </View>
     </RCTScrollView>
     <View
@@ -7558,10 +7423,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
         }
       }
     >
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View>
         <View
           style={
             [
@@ -7953,10 +7815,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       viewIsInsideTabBar={false}
     >
       <View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -8141,10 +8000,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -8195,11 +8051,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 ]
               }
             >
-              <View
-                entering={BaseAnimationMock {}}
-                exiting={BaseAnimationMock {}}
-                layout={BaseAnimationMock {}}
-              >
+              <View>
                 <View
                   style={
                     [
@@ -8439,11 +8291,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   >
                     Send to Address 2
                   </Text>
-                  <View
-                    entering={BaseAnimationMock {}}
-                    exiting={BaseAnimationMock {}}
-                    layout={BaseAnimationMock {}}
-                  >
+                  <View>
                     <Text
                       adjustsFontSizeToFit={false}
                       minimumFontScale={0.65}
@@ -8480,11 +8328,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   ]
                 }
               />
-              <View
-                entering={BaseAnimationMock {}}
-                exiting={BaseAnimationMock {}}
-                layout={BaseAnimationMock {}}
-              >
+              <View>
                 <View
                   style={
                     [
@@ -8654,10 +8498,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -8856,10 +8697,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        />
+        <View />
       </View>
     </RCTScrollView>
     <View
@@ -8874,10 +8712,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
         }
       }
     >
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View>
         <View
           style={
             [
@@ -9269,10 +9104,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       viewIsInsideTabBar={false}
     >
       <View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -9457,10 +9289,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -9511,11 +9340,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 ]
               }
             >
-              <View
-                entering={BaseAnimationMock {}}
-                exiting={BaseAnimationMock {}}
-                layout={BaseAnimationMock {}}
-              >
+              <View>
                 <View
                   accessibilityState={
                     {
@@ -9690,11 +9515,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   >
                     Send to Address 2
                   </Text>
-                  <View
-                    entering={BaseAnimationMock {}}
-                    exiting={BaseAnimationMock {}}
-                    layout={BaseAnimationMock {}}
-                  >
+                  <View>
                     <Text
                       adjustsFontSizeToFit={false}
                       minimumFontScale={0.65}
@@ -9796,11 +9617,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   ]
                 }
               />
-              <View
-                entering={BaseAnimationMock {}}
-                exiting={BaseAnimationMock {}}
-                layout={BaseAnimationMock {}}
-              >
+              <View>
                 <View
                   style={
                     [
@@ -9905,10 +9722,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -10107,10 +9921,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        />
+        <View />
       </View>
     </RCTScrollView>
     <View
@@ -10125,10 +9936,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
         }
       }
     >
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View>
         <View
           style={
             [
@@ -10520,10 +10328,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       viewIsInsideTabBar={false}
     >
       <View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -10708,10 +10513,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -10762,11 +10564,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 ]
               }
             >
-              <View
-                entering={BaseAnimationMock {}}
-                exiting={BaseAnimationMock {}}
-                layout={BaseAnimationMock {}}
-              >
+              <View>
                 <View
                   accessibilityState={
                     {
@@ -10965,11 +10763,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   >
                     Send to Address 2
                   </Text>
-                  <View
-                    entering={BaseAnimationMock {}}
-                    exiting={BaseAnimationMock {}}
-                    layout={BaseAnimationMock {}}
-                  >
+                  <View>
                     <Text
                       adjustsFontSizeToFit={false}
                       minimumFontScale={0.65}
@@ -11006,11 +10800,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   ]
                 }
               />
-              <View
-                entering={BaseAnimationMock {}}
-                exiting={BaseAnimationMock {}}
-                layout={BaseAnimationMock {}}
-              >
+              <View>
                 <View
                   style={
                     [
@@ -11115,10 +10905,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -11317,10 +11104,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        />
+        <View />
       </View>
     </RCTScrollView>
     <View
@@ -11335,10 +11119,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
         }
       }
     >
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View>
         <View
           style={
             [
@@ -11730,10 +11511,7 @@ exports[`SendScene2 Render SendScene 1`] = `
       viewIsInsideTabBar={false}
     >
       <View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -11918,10 +11696,7 @@ exports[`SendScene2 Render SendScene 1`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -12052,9 +11827,6 @@ exports[`SendScene2 Render SendScene 1`] = `
                     Send to Address
                   </Text>
                   <View
-                    entering={BaseAnimationMock {}}
-                    exiting={BaseAnimationMock {}}
-                    layout={BaseAnimationMock {}}
                     style={
                       {
                         "alignItems": "flex-start",
@@ -12327,14 +12099,8 @@ exports[`SendScene2 Render SendScene 1`] = `
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        />
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View />
+        <View>
           <View
             style={
               [

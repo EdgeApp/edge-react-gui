@@ -189,10 +189,7 @@ exports[`TransactionDetailsScene should render 1`] = `
     }
   >
     <View>
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View>
         <View
           style={
             [
@@ -406,10 +403,7 @@ exports[`TransactionDetailsScene should render 1`] = `
           </View>
         </View>
       </View>
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View>
         <View
           style={
             [
@@ -1024,10 +1018,7 @@ exports[`TransactionDetailsScene should render 1`] = `
           </View>
         </View>
       </View>
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View>
         <View
           style={
             [
@@ -1385,14 +1376,8 @@ exports[`TransactionDetailsScene should render 1`] = `
           </View>
         </View>
       </View>
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      />
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View />
+      <View>
         <View
           style={
             [
@@ -1685,10 +1670,7 @@ exports[`TransactionDetailsScene should render 1`] = `
           </View>
         </View>
       </View>
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View>
         <View
           style={
             {
@@ -2039,10 +2021,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
     }
   >
     <View>
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View>
         <View
           style={
             [
@@ -2256,10 +2235,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           </View>
         </View>
       </View>
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View>
         <View
           style={
             [
@@ -2874,10 +2850,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           </View>
         </View>
       </View>
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View>
         <View
           style={
             [
@@ -3235,14 +3208,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           </View>
         </View>
       </View>
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      />
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View />
+      <View>
         <View
           style={
             [
@@ -3535,10 +3502,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           </View>
         </View>
       </View>
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
+      <View>
         <View
           style={
             {

@@ -1,7 +1,6 @@
 import * as React from 'react'
-import { ViewProps } from 'react-native'
+import { View, ViewProps } from 'react-native'
 import Animated, {
-  AnimateProps,
   ComplexAnimationBuilder,
   Easing,
   FadeIn,
@@ -37,7 +36,7 @@ interface Anim {
   distance?: number
 }
 
-interface Props extends AnimateProps<ViewProps> {
+interface Props extends ViewProps {
   /**
    * disable animation
    * anim => disable animation but still render a container view
@@ -91,6 +90,8 @@ const getAnimBuilder = (anim?: Anim) => {
   return builder
 }
 
+const NO_ANIM = true
+
 export const EdgeAnim = ({ children, disableType, enter, exit, visible = true, ...rest }: Props): JSX.Element | null => {
   if (!visible) return null
   const entering = getAnimBuilder(enter)
@@ -104,6 +105,9 @@ export const EdgeAnim = ({ children, disableType, enter, exit, visible = true, .
     return <>{children}</>
   }
 
+  if (NO_ANIM) {
+    return <View {...rest}>{children}</View>
+  }
   return (
     <Animated.View layout={LAYOUT_ANIMATION} entering={entering} exiting={exiting} {...rest}>
       {children}

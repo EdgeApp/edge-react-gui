@@ -243,8 +243,6 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
         }
       >
         <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
           style={
             {
               "marginBottom": 22,
@@ -337,10 +335,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
             }
           />
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -854,9 +849,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
             </View>
           </View>
         </View>
-        <View
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               {
@@ -918,10 +911,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
             />
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
@@ -1271,10 +1261,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               {
@@ -1461,10 +1448,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             accessibilityState={
               {
@@ -1643,10 +1627,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
             </View>
           </View>
         </View>
-        <View
-          entering={BaseAnimationMock {}}
-          layout={BaseAnimationMock {}}
-        >
+        <View>
           <View
             style={
               [
