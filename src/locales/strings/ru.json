@@ -146,7 +146,7 @@
   "fragment_transaction_transfer": "Перевести",
   "fragment_wallet_unconfirmed": "Ожидающие",
   "fragment_transaction_list_tx_dropped": "Выброшено",
-  "fragment_transaction_list_tx_synchronizing": "Synchronizing...",
+  "fragment_transaction_list_tx_synchronizing": "Syncing...",
   "fragment_transaction_list_confirmation_progress": "%s из %s подтверждений",
   "fragment_transaction_list_unconfirmed_rbf": "Awaiting confirmation, may be cancelled",
   "fragment_transaction_list_transaction": "Transactions",
