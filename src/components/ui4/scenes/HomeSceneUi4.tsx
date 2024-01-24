@@ -83,13 +83,8 @@ export const HomeSceneUi4 = (props: Props) => {
       {({ insetStyle, undoInsetStyle }) => (
         <>
           <WiredProgressBar />
-          <Animated.ScrollView
-            onScroll={handleScroll}
-            style={[styles.tempMargin, undoInsetStyle]}
-            contentContainerStyle={insetStyle}
-            scrollIndicatorInsets={{ right: 1 }}
-          >
-            <SectionView extendRight>
+          <Animated.ScrollView onScroll={handleScroll} style={undoInsetStyle} contentContainerStyle={[insetStyle]} scrollIndicatorInsets={{ right: 1 }}>
+            <SectionView extendRight marginRem={TEMP_PADDING_REM}>
               <>
                 <EdgeAnim enter={{ type: 'fadeInUp', distance: 140 }}>
                   <BalanceCardUi4 onViewAssetsPress={handleViewAssetsPress} navigation={navigation} />
@@ -199,12 +194,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'space-evenly',
     alignContent: 'center',
     alignItems: 'stretch'
-  },
-
-  // We plan to remove dividers that extend all the way to the right in the
-  // future. In the interim, setting a margin instead of a SceneWrapper padding
-  // lets us do that.
-  tempMargin: {
-    margin: theme.rem(TEMP_PADDING_REM)
   }
 }))
