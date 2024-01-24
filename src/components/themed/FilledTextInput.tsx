@@ -196,7 +196,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   })
 
   const leftIconSize = useDerivedValue(() => (hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0), [hasIcon, hasValue])
-  const rightIconSize = useDerivedValue(() => (hasValue ? themeRem : focusAnimation.value * themeRem), [hasValue])
+  const rightIconSize = useDerivedValue(() => (clearIcon ? (hasValue ? themeRem : focusAnimation.value * themeRem) : 0), [clearIcon, hasValue])
 
   const scale = useDerivedValue(() => scaleProp?.value ?? 1)
 
@@ -270,13 +270,11 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
             </TouchableWithoutFeedback>
           ) : null}
 
-          {clearIcon ? (
-            <TouchableOpacity accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
-              <SideContainer scale={rightIconSize}>
-                <CloseIconAnimated color={iconColor} size={rightIconSize} />
-              </SideContainer>
-            </TouchableOpacity>
-          ) : null}
+          <TouchableOpacity accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
+            <SideContainer scale={rightIconSize}>
+              <CloseIconAnimated color={iconColor} size={rightIconSize} />
+            </SideContainer>
+          </TouchableOpacity>
         </Container>
       </TouchableWithoutFeedback>
       {valid != null || error != null || charactersLeft !== '' ? (
