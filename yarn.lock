@@ -8657,10 +8657,10 @@ edge-currency-monero@^1.1.1:
     buffer "^5.0.6"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^2.5.2:
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-2.5.2.tgz#519a627265093e358f6e04387d26f8130b382480"
-  integrity sha512-4nDKSG8TQpjINtY/gdJAidW/ZSuhWfPb+A1mhTcSMQtJTlq4QJR0xPDeBnWlK/l7/m5yZKofhl1gYhtHgxsEvw==
+edge-currency-plugins@^2.5.3:
+  version "2.5.3"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-2.5.3.tgz#2e004dc71b3d7aa5e6e1527d3572a70e39f033b6"
+  integrity sha512-8M+nD6DKp3Gsc7WUdlAC8tmv1ECa9C+XD3lPo3l0LVgz9AjiG8FlvHOD6FRc5S+Wado3muYODBF905px2eRexg==
   dependencies:
     "@bitcoin-js/tiny-secp256k1-asmjs" "^2.2.3"
     altcoin-js "^1.0.0"
