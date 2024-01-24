@@ -146,7 +146,7 @@
   "fragment_transaction_transfer": "Überweisen",
   "fragment_wallet_unconfirmed": "Ausstehend",
   "fragment_transaction_list_tx_dropped": "Fallen gelassen",
-  "fragment_transaction_list_tx_synchronizing": "Synchronizing...",
+  "fragment_transaction_list_tx_synchronizing": "Syncing...",
   "fragment_transaction_list_confirmation_progress": "%s von %s Bestätigungen",
   "fragment_transaction_list_unconfirmed_rbf": "Awaiting confirmation, may be cancelled",
   "fragment_transaction_list_transaction": "Transaktionen",
