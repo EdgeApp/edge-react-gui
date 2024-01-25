@@ -1,4 +1,4 @@
-import { asArray } from 'cleaners'
+import { asArray, asDate } from 'cleaners'
 import { asInfoRollup, asPromoCard2, PromoCard2 } from 'edge-info-server/types'
 import * as React from 'react'
 import { ListRenderItem, Platform } from 'react-native'
@@ -43,12 +43,14 @@ export const PromoCardsUi4 = (props: Props) => {
 
         const buildNumber = getBuildNumber()
         const countryCode = await getCountryCodeByIp()
-        const currentIsoDate = new Date().toISOString()
+        const currentDate = new Date()
 
         setPromos(
           infoPromoCards.filter(infoPromoCard => {
             const { appVersion, minBuildNum, maxBuildNum, exactBuildNum, countryCodes, excludeCountryCodes, osTypes, osVersions, startIsoDate, endIsoDate } =
               infoPromoCard
+            const startDate = asDate(startIsoDate)
+            const endDate = asDate(endIsoDate)
 
             // Validate app version
             // Ignore everything else if build version is specified and mismatched.
@@ -79,15 +81,8 @@ export const PromoCardsUi4 = (props: Props) => {
             if (osVersions != null && osVersions.length > 0 && !osVersions.includes(osVersion.toString())) return false
 
             // Validate date range
-            // Ignore malformed date range
-            if ((startIsoDate != null && isNaN(Date.parse(startIsoDate))) || (endIsoDate != null && isNaN(Date.parse(endIsoDate)))) {
-              console.error(
-                `PromoCards: Incorrect date ISO format. startIsoDate: ${startIsoDate}, endIsoDate: ${endIsoDate}. Ignoring date range filter and showing promo.`
-              )
-              return true
-            }
-            if (startIsoDate != null && currentIsoDate < startIsoDate) return false
-            if (endIsoDate != null && currentIsoDate > endIsoDate) return false
+            if (startIsoDate != null && currentDate.valueOf() < startDate.valueOf()) return false
+            if (endIsoDate != null && currentDate.valueOf() > endDate.valueOf()) return false
 
             return true
           })
