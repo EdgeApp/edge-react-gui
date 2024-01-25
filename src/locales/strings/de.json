@@ -703,6 +703,7 @@
   "exchange_crypto_modal_message": "Deine %s -Wallet ist leer. Möchtest du eine andere Kryptowährung in %s tauschen?",
   "private_key_modal_sweep_from_private_address": "Guthaben vom privaten Schlüssel verwerfen",
   "private_key_modal_sweep_from_private_key_message": "Dieser Prozess benötigt eine On-Chain-Transaktion von der ursprünglichen Wallet bis zu %1$s. Mining-Gebühren werden erhoben und hängen vom Netzwerkstatus ab.",
+  "private_key_modal_sweep_insufficient_funds": "The private key has insufficient funds to cover the onchain fees required by the sweep.",
   "private_key_modal_import": "Importieren",
   "private_key_modal_cancel": "Abbrechen",
   "restore_wallets_modal_title": "Wallet's wiederherstellen",
