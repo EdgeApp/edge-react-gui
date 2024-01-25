@@ -703,6 +703,7 @@
   "exchange_crypto_modal_message": "Il tuo portafoglio %s è vuoto. Vuoi scambiare delle criptovalute per %s?",
   "private_key_modal_sweep_from_private_address": "Importa fondi da chiave privata",
   "private_key_modal_sweep_from_private_key_message": "Questo processo richiede una transazione on-chain dal portafoglio originale a %1$s. Vengono applicate delle commissioni di mining e queste dipendono dallo stato della rete.",
+  "private_key_modal_sweep_insufficient_funds": "The private key has insufficient funds to cover the onchain fees required by the sweep.",
   "private_key_modal_import": "Importa",
   "private_key_modal_cancel": "Annulla",
   "restore_wallets_modal_title": "Ripristino portafogli",
