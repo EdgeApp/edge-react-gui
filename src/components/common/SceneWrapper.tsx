@@ -192,34 +192,32 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     const info: SceneWrapperInfo = { insets, insetStyle, undoInsetStyle, hasTabs, isKeyboardOpen }
 
     return (
-      <MaybeAnimatedView when={avoidKeyboard} style={[styles.sceneContainer, layoutStyle, insetStyle, { maxHeight: keyboardAnimation, padding }]}>
-        <DotsBackground
-          accentColors={accentColors}
-          overrideDots={overrideDots}
-          backgroundGradientColors={backgroundGradientColors}
-          backgroundGradientStart={backgroundGradientStart}
-          backgroundGradientEnd={backgroundGradientEnd}
-        />
-        <MaybeAnimatedScrollView
-          when={scroll && !avoidKeyboard}
-          style={[layoutStyle, { padding }]}
-          keyboardShouldPersistTaps={keyboardShouldPersistTaps}
-          contentContainerStyle={insetStyle}
-          onScroll={hasTabs || hasHeader ? handleScroll : () => {}}
-          // Fixes middle-floating scrollbar issue
-          scrollIndicatorInsets={{ right: 1 }}
-        >
-          <MaybeView when={!scroll && !avoidKeyboard} style={[styles.sceneContainer, layoutStyle, insetStyle, { padding }]}>
-            {isFuncChildren ? children(info) : children}
-          </MaybeView>
-        </MaybeAnimatedScrollView>
-        {renderFooter != null || hasNotifications ? (
-          <>
-            {hasNotifications ? <NotificationView navigation={navigation} /> : null}
-            {renderFooter != null && !hasTabs ? <SceneFooter>{renderFooter(info)}</SceneFooter> : null}
-          </>
-        ) : null}
-      </MaybeAnimatedView>
+      <>
+        <MaybeAnimatedView when={avoidKeyboard} style={[styles.sceneContainer, layoutStyle, insetStyle, { maxHeight: keyboardAnimation, padding }]}>
+          <DotsBackground
+            accentColors={accentColors}
+            overrideDots={overrideDots}
+            backgroundGradientColors={backgroundGradientColors}
+            backgroundGradientStart={backgroundGradientStart}
+            backgroundGradientEnd={backgroundGradientEnd}
+          />
+          <MaybeAnimatedScrollView
+            when={scroll && !avoidKeyboard}
+            style={[layoutStyle, { padding }]}
+            keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+            contentContainerStyle={insetStyle}
+            onScroll={hasTabs || hasHeader ? handleScroll : () => {}}
+            // Fixes middle-floating scrollbar issue
+            scrollIndicatorInsets={{ right: 1 }}
+          >
+            <MaybeView when={!scroll && !avoidKeyboard} style={[styles.sceneContainer, layoutStyle, insetStyle, { padding }]}>
+              {isFuncChildren ? children(info) : children}
+            </MaybeView>
+          </MaybeAnimatedScrollView>
+          {renderFooter != null && !hasTabs ? <SceneFooter>{renderFooter(info)}</SceneFooter> : null}
+        </MaybeAnimatedView>
+        {hasNotifications ? <NotificationView hasTabs={hasTabs} navigation={navigation} /> : null}
+      </>
     )
   }
 

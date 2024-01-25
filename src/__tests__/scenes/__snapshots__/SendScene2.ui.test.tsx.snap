@@ -1310,21 +1310,34 @@ exports[`SendScene2 1 spendTarget 1`] = `
   <View
     style={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
-      }
-    }
-  />,
-  <View
-    style={
-      {
         "bottom": 0,
         "left": 0,
         "position": "absolute",
         "right": 0,
       }
+    }
+  />,
+  <View
+    footerHeight={0}
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
 ]
@@ -2828,21 +2841,34 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
   <View
     style={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
-      }
-    }
-  />,
-  <View
-    style={
-      {
         "bottom": 0,
         "left": 0,
         "position": "absolute",
         "right": 0,
       }
+    }
+  />,
+  <View
+    footerHeight={0}
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
 ]
@@ -4323,21 +4349,34 @@ exports[`SendScene2 2 spendTargets 1`] = `
   <View
     style={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
-      }
-    }
-  />,
-  <View
-    style={
-      {
         "bottom": 0,
         "left": 0,
         "position": "absolute",
         "right": 0,
       }
+    }
+  />,
+  <View
+    footerHeight={0}
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
 ]
@@ -5519,21 +5558,34 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
   <View
     style={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
-      }
-    }
-  />,
-  <View
-    style={
-      {
         "bottom": 0,
         "left": 0,
         "position": "absolute",
         "right": 0,
       }
+    }
+  />,
+  <View
+    footerHeight={0}
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
 ]
@@ -6691,21 +6743,34 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
   <View
     style={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
-      }
-    }
-  />,
-  <View
-    style={
-      {
         "bottom": 0,
         "left": 0,
         "position": "absolute",
         "right": 0,
       }
+    }
+  />,
+  <View
+    footerHeight={0}
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
 ]
@@ -7702,21 +7767,34 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
   <View
     style={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
-      }
-    }
-  />,
-  <View
-    style={
-      {
         "bottom": 0,
         "left": 0,
         "position": "absolute",
         "right": 0,
       }
+    }
+  />,
+  <View
+    footerHeight={0}
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
 ]
@@ -9018,21 +9096,34 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
   <View
     style={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
-      }
-    }
-  />,
-  <View
-    style={
-      {
         "bottom": 0,
         "left": 0,
         "position": "absolute",
         "right": 0,
       }
+    }
+  />,
+  <View
+    footerHeight={0}
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
 ]
@@ -10269,21 +10360,34 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
   <View
     style={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
-      }
-    }
-  />,
-  <View
-    style={
-      {
         "bottom": 0,
         "left": 0,
         "position": "absolute",
         "right": 0,
       }
+    }
+  />,
+  <View
+    footerHeight={0}
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
 ]
@@ -11479,21 +11583,34 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
   <View
     style={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
-      }
-    }
-  />,
-  <View
-    style={
-      {
         "bottom": 0,
         "left": 0,
         "position": "absolute",
         "right": 0,
       }
+    }
+  />,
+  <View
+    footerHeight={0}
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
 ]
@@ -12674,21 +12791,34 @@ exports[`SendScene2 Render SendScene 1`] = `
   <View
     style={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
-      }
-    }
-  />,
-  <View
-    style={
-      {
         "bottom": 0,
         "left": 0,
         "position": "absolute",
         "right": 0,
       }
+    }
+  />,
+  <View
+    footerHeight={0}
+    footerOpenRatio={
+      {
+        "value": 1,
+      }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
 ]
