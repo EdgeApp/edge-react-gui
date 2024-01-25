@@ -1308,13 +1308,26 @@ exports[`SendScene2 1 spendTarget 1`] = `
     </View>
   </View>,
   <View
-    style={
+    footerHeight={0}
+    footerOpenRatio={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
+        "value": 1,
       }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
   <View
@@ -2826,13 +2839,26 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
     </View>
   </View>,
   <View
-    style={
+    footerHeight={0}
+    footerOpenRatio={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
+        "value": 1,
       }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
   <View
@@ -4321,13 +4347,26 @@ exports[`SendScene2 2 spendTargets 1`] = `
     </View>
   </View>,
   <View
-    style={
+    footerHeight={0}
+    footerOpenRatio={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
+        "value": 1,
       }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
   <View
@@ -5517,13 +5556,26 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
     </View>
   </View>,
   <View
-    style={
+    footerHeight={0}
+    footerOpenRatio={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
+        "value": 1,
       }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
   <View
@@ -6689,13 +6741,26 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
     </View>
   </View>,
   <View
-    style={
+    footerHeight={0}
+    footerOpenRatio={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
+        "value": 1,
       }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
   <View
@@ -7700,13 +7765,26 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
     </View>
   </View>,
   <View
-    style={
+    footerHeight={0}
+    footerOpenRatio={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
+        "value": 1,
       }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
   <View
@@ -9016,13 +9094,26 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
     </View>
   </View>,
   <View
-    style={
+    footerHeight={0}
+    footerOpenRatio={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
+        "value": 1,
       }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
   <View
@@ -10267,13 +10358,26 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
     </View>
   </View>,
   <View
-    style={
+    footerHeight={0}
+    footerOpenRatio={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
+        "value": 1,
       }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
   <View
@@ -11477,13 +11581,26 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
     </View>
   </View>,
   <View
-    style={
+    footerHeight={0}
+    footerOpenRatio={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
+        "value": 1,
       }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
   <View
@@ -12672,13 +12789,26 @@ exports[`SendScene2 Render SendScene 1`] = `
     />
   </View>,
   <View
-    style={
+    footerHeight={0}
+    footerOpenRatio={
       {
-        "alignSelf": "center",
-        "justifyContent": "flex-end",
-        "marginHorizontal": 11,
-        "marginVertical": 11,
+        "value": 1,
       }
+    }
+    hasTabs={false}
+    insetBottom={0}
+    style={
+      [
+        {
+          "alignSelf": "center",
+          "justifyContent": "flex-end",
+          "padding": 11,
+          "position": "absolute",
+        },
+        {
+          "bottom": 0,
+        },
+      ]
     }
   />,
   <View

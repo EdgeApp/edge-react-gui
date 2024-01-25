@@ -215,7 +215,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
         </MaybeAnimatedScrollView>
         {renderFooter != null || hasNotifications ? (
           <>
-            {hasNotifications ? <NotificationView navigation={navigation} /> : null}
+            {hasNotifications ? <NotificationView hasTabs={hasTabs} navigation={navigation} /> : null}
             {renderFooter != null && !hasTabs ? <SceneFooter>{renderFooter(info)}</SceneFooter> : null}
           </>
         ) : null}
