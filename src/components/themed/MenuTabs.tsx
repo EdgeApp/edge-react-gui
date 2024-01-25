@@ -31,7 +31,7 @@ const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_m
 // add 0.75 rem to the bottom padding of the MenuTab's container:
 const ANDROID_MENU_TAB_BAR_EXTRA_PADDING = Platform.OS === 'android' ? scale(16) * 0.75 : 0
 
-export const MAX_TAB_BAR_HEIGHT = 57 + ANDROID_MENU_TAB_BAR_EXTRA_PADDING
+export const MAX_TAB_BAR_HEIGHT = 58 + ANDROID_MENU_TAB_BAR_EXTRA_PADDING
 export const MIN_TAB_BAR_HEIGHT = 40 + ANDROID_MENU_TAB_BAR_EXTRA_PADDING
 
 const title: { readonly [key: string]: string } = {
