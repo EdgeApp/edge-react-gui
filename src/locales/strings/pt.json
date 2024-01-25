@@ -703,6 +703,7 @@
   "exchange_crypto_modal_message": "A sua carteira %s está vazia. Gostaria de trocar outra criptomoeda por %s?",
   "private_key_modal_sweep_from_private_address": "Resgatar Fundos da Chave Privada",
   "private_key_modal_sweep_from_private_key_message": "Este processo precisa de uma transação on-chain da carteira original para %1$s. As taxas de mineração são aplicadas e dependem do status da rede.",
+  "private_key_modal_sweep_insufficient_funds": "The private key has insufficient funds to cover the onchain fees required by the sweep.",
   "private_key_modal_import": "Importar",
   "private_key_modal_cancel": "Cancelar",
   "restore_wallets_modal_title": "Restaurar carteiras",
