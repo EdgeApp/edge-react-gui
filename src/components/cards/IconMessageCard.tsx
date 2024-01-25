@@ -24,7 +24,7 @@ export function IconMessageCard(props: Props) {
   const styles = getStyles(theme)
 
   return (
-    <ButtonBox marginRem={0.5} onPress={onPress}>
+    <ButtonBox onPress={onPress}>
       <CardUi4>
         <View style={styles.cardContainer}>
           {typeof iconOrUri === 'string' ? <FastImage resizeMode="contain" source={{ uri: iconOrUri }} style={styles.icon} /> : iconOrUri}
