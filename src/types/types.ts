@@ -167,7 +167,8 @@ const asLocalAccountSettingsInner = asObject({
   spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({}))
 })
 const asDeviceSettingsInner = asObject({
-  disableAnimations: asMaybe(asBoolean, false)
+  disableAnimations: asMaybe(asBoolean, false),
+  hasInteractedWithBackupModal: asMaybe(asBoolean, false)
 })
 
 export const asLocalAccountSettings = asMaybe(asLocalAccountSettingsInner, () => asLocalAccountSettingsInner({}))

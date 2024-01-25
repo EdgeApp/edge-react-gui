@@ -4,13 +4,16 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
+import { getDeviceSettings, writeHasInteractedWithBackupModal } from '../../actions/DeviceSettingsActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSceneFooterState } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { styled } from '../hoc/styled'
+import { showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { MAX_TAB_BAR_HEIGHT, MIN_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
 import { NotificationCard } from './NotificationCard'
@@ -22,6 +25,11 @@ interface Props {
   footerHeight: number
 }
 
+let hasInteractedWithBackupModalLocal = false
+
+const fadeIn = { type: 'fadeIn' } as const
+const fadeOut = { type: 'fadeOut' } as const
+
 const NotificationViewComponent = (props: Props) => {
   const { navigation, hasTabs, footerHeight } = props
   const theme = useTheme()
@@ -31,16 +39,20 @@ const NotificationViewComponent = (props: Props) => {
   const detectedTokensRedux = useSelector(state => state.core.enabledDetectedTokens)
   const wallets = useWatch(account, 'currencyWallets')
   const fioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
-
-  const isBackupWarningShown = account.id != null && account.username == null && fioAddresses.length > 0
-
+  const [hasInteractedWithBackupModal, setHasInteractedWithBackupModal] = React.useState<boolean>(getDeviceSettings().hasInteractedWithBackupModal)
+  if (hasInteractedWithBackupModal) hasInteractedWithBackupModalLocal = true
+  const isBackupWarningShown = account.id != null && account.username == null && fioAddresses.length > 0 && !hasInteractedWithBackupModalLocal
   const { bottom: insetBottom } = useSafeAreaInsets()
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
 
   const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
 
   const handlePress = useHandler(async () => {
+    writeHasInteractedWithBackupModal(true)
+      .then(() => setHasInteractedWithBackupModal(true))
+      .catch(err => showError(err))
     await showBackupModal({ navigation })
+    hasInteractedWithBackupModalLocal = true
   })
 
   // Show a tokens detected notification per walletId found in newTokens
@@ -89,9 +101,9 @@ const NotificationViewComponent = (props: Props) => {
 
   return (
     <NotificationCardsContainer hasTabs={hasTabs} insetBottom={insetBottom} footerHeight={footerHeight} footerOpenRatio={footerOpenRatio}>
-      {isBackupWarningShown ? (
+      <EdgeAnim visible={isBackupWarningShown} enter={fadeIn} exit={fadeOut}>
         <NotificationCard type="warning" title={lstrings.backup_title} message={lstrings.backup_web3_handle_warning_message} onPress={handlePress} />
-      ) : null}
+      </EdgeAnim>
       {autoDetectTokenCards.length > 0 ? autoDetectTokenCards : null}
     </NotificationCardsContainer>
   )
