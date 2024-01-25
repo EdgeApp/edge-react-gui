@@ -16,25 +16,38 @@ import { useSceneScrollContext } from './SceneScrollState'
 
 /**
  * This contains footer state with respect to it's dimensions and open/collapse.
- * This state is more internal and shouldn't be used directly be components and
- * scenes. Instead use `useFooterOpenRatio` for application components.
+ * The hook provides access to footer open/collapse state and API to lock the
+ * footer in place. This should be used by scenes or components which should
+ * respond to these values.
  */
 export const [SceneFooterProvider, useSceneFooterState] = createStateProvider(() => {
   const [keepOpen, setKeepOpen] = useState(false)
   const [footerHeight, setFooterHeight] = useState<number | undefined>(undefined)
   const footerOpenRatio = useSharedValue(1)
   const footerOpenRatioStart = useSharedValue(1)
+  const snapTo = useSharedValue<number | undefined>(undefined)
+
+  const resetFooterRatio = useCallback(() => {
+    snapTo.value = 1
+  }, [snapTo])
 
   return useMemo(
     () => ({
+      // The scene can animate components using this shared value to
+      // collapse/expand its components. A value of 1 means opened, and 0 means
+      // closed.
       footerOpenRatio,
       footerOpenRatioStart,
       keepOpen,
+      // The scene can use these to lock the footer into an open state.
       setKeepOpen,
       footerHeight,
-      setFooterHeight
+      // The scene can call this to reset the footer state to an open state.
+      resetFooterRatio,
+      setFooterHeight,
+      snapTo
     }),
-    [footerOpenRatio, footerOpenRatioStart, keepOpen, footerHeight]
+    [footerOpenRatio, footerOpenRatioStart, keepOpen, footerHeight, resetFooterRatio, snapTo]
   )
 })
 
@@ -109,21 +122,19 @@ export const useSceneFooterRender = (renderFn: FooterRender = defaultFooterRende
 }
 
 /**
- * This hook provides access to footer open/collapse state and API to lock the
- * footer in place. This should be used by scenes or components which should
- * respond to these values.
+ * This hook registers event handlers for the footer's expanded/collapsed states.
+ * This hook is only required to be used once within the app (Main). Using this
+ * hook multiple times will cause thrashing for the footer state shared values.
  */
-export const useFooterOpenRatio = () => {
+export const useFooterAccordionEvents = () => {
   const { scrollState } = useSceneScrollContext()
   const { scrollBeginEvent, scrollEndEvent, scrollMomentumBeginEvent, scrollMomentumEndEvent, scrollY } = scrollState
 
   const scrollYStart = useSharedValue<number | undefined>(undefined)
-  const snapTo = useSharedValue<number | undefined>(undefined)
-  const { footerOpenRatio, footerOpenRatioStart, keepOpen, setKeepOpen, footerHeight = 1 } = useSceneFooterState()
+  const { footerOpenRatio, footerOpenRatioStart, keepOpen, footerHeight = 1, snapTo } = useSceneFooterState()
 
-  function resetFooterRatio() {
-    snapTo.value = 1
-  }
+  // This factor will convert scroll delta into footer open value delta (a 0 to 1 fraction)
+  const scrollDeltaToRatioDeltaFactor = 1 / footerHeight
 
   function snapWorklet() {
     'worklet'
@@ -138,12 +149,12 @@ export const useFooterOpenRatio = () => {
     setTimeout(snap, 300)
   }
 
-  // Scroll event subscriptions:
   useSharedEvent(scrollBeginEvent, nativeEvent => {
     'worklet'
     scrollYStart.value = nativeEvent?.contentOffset.y
     footerOpenRatioStart.value = footerOpenRatio.value
   })
+
   useSharedEvent(scrollEndEvent, () => {
     'worklet'
     if (Platform.OS === 'android') {
@@ -154,12 +165,14 @@ export const useFooterOpenRatio = () => {
       snapWorklet()
     }
   })
+
   useSharedEvent(scrollMomentumBeginEvent, nativeEvent => {
     'worklet'
     if (Platform.OS === 'android') return
     scrollYStart.value = nativeEvent?.contentOffset.y
     footerOpenRatioStart.value = footerOpenRatio.value
   })
+
   useSharedEvent(scrollMomentumEndEvent, () => {
     'worklet'
     if (Platform.OS === 'android') return
@@ -176,33 +189,24 @@ export const useFooterOpenRatio = () => {
       // Scrolling hasn't started yet
       if (scrollYStart.value == null) return
 
-      const scrollYDelta = scrollY.value - scrollYStart.value
-      const ratioDelta = scrollYDelta / footerHeight // Constant is to lower jumpy-ness
-
-      return Math.min(1, Math.max(0, footerOpenRatioStart.value - ratioDelta))
+      return scrollY.value - scrollYStart.value
     },
-    (currentValue, previousValue) => {
-      if (currentValue == null) return
-      if (previousValue == null) return
-      if (currentValue === previousValue) return
+    (scrollYDelta, previousScrollYDelta) => {
+      if (scrollYDelta == null) return
+      if (previousScrollYDelta == null) return
+      if (scrollYDelta === previousScrollYDelta) return
 
-      if (currentValue > previousValue && currentValue > 0.3) {
-        snapTo.value = 1
-        scrollYStart.value = scrollY.value
-        footerOpenRatioStart.value = 1
-        return
-      }
-      if (currentValue < previousValue && currentValue < 0.7) {
-        snapTo.value = 0
-        scrollYStart.value = scrollY.value
-        footerOpenRatioStart.value = 0
-        return
-      }
+      const ratioDelta = scrollYDelta * scrollDeltaToRatioDeltaFactor
+      const currentValue = Math.min(1, Math.max(0, footerOpenRatioStart.value - ratioDelta))
 
-      snapTo.value = undefined
-      footerOpenRatio.value = currentValue
+      if (snapTo.value !== undefined) {
+        snapTo.value = undefined
+      }
+      if (footerOpenRatio.value !== currentValue) {
+        footerOpenRatio.value = withTiming(currentValue, { duration: 200 })
+      }
     },
-    [keepOpen, footerHeight]
+    [keepOpen, scrollDeltaToRatioDeltaFactor]
   )
 
   useAnimatedReaction(
@@ -220,14 +224,6 @@ export const useFooterOpenRatio = () => {
     },
     [keepOpen]
   )
-
-  return {
-    footerOpenRatio,
-    resetFooterRatio,
-
-    keepOpen,
-    setKeepOpen
-  }
 }
 
 /**

@@ -25,6 +25,7 @@ import { RewardsCardDashboardScene as RewardsCardListSceneComponent } from '../p
 import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { defaultAccount } from '../reducers/CoreReducer'
+import { useFooterAccordionEvents } from '../state/SceneFooterState'
 import { useDispatch, useSelector } from '../types/reactRedux'
 import { AppParamList, NavigationBase } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
@@ -233,6 +234,9 @@ export const Main = () => {
   const theme = useTheme()
   const [legacyLanding, setLegacyLanding] = React.useState<boolean | undefined>(isMaestro() ? false : undefined)
   const [hasInitialScenesLoaded, setHasInitialScenesLoaded] = React.useState(false)
+
+  // Register footer accordion events
+  useFooterAccordionEvents()
 
   // Match react navigation theme background with the patina theme
   const reactNavigationTheme = React.useMemo(() => {

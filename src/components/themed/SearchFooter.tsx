@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
-import { useFooterOpenRatio } from '../../state/SceneFooterState'
+import { useSceneFooterState } from '../../state/SceneFooterState'
 import { SceneWrapperInfo } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { Space } from '../layout/Space'
@@ -27,7 +27,7 @@ export const SearchFooter = (props: SearchFooterProps) => {
 
   const textInputRef = React.useRef<SimpleTextInputRef>(null)
 
-  const { footerOpenRatio, setKeepOpen } = useFooterOpenRatio()
+  const { footerOpenRatio, setKeepOpen } = useSceneFooterState()
 
   const handleSearchChangeText = useHandler((text: string) => {
     onChangeText(text)
