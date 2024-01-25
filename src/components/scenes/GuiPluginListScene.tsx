@@ -450,7 +450,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     overflow: 'visible'
   },
   sceneContainer: {
-    flex: 1
+    flex: 1,
+    paddingHorizontal: theme.rem(0.5)
   },
   selectedCountryRow: {
     marginTop: theme.rem(1.5),
