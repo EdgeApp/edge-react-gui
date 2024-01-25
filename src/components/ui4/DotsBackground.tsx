@@ -19,6 +19,8 @@ interface Props {
   accentColors?: AccentColors
 }
 
+const NO_DOTS = true
+
 export function DotsBackground(props: Props): JSX.Element {
   const { accentColors, backgroundGradientColors, backgroundGradientStart, backgroundGradientEnd, overrideDots } = props
   const theme = useTheme()
@@ -99,6 +101,18 @@ export function DotsBackground(props: Props): JSX.Element {
     const totalR = 2 * blurRadius + Math.max(0, innerR)
 
     return <Circle key={`dot${key}`} cx={circle.cx} cy={circle.cy} r={totalR} fill={`url(#grad${key})`} />
+  }
+
+  if (NO_DOTS) {
+    return (
+      <LinearGradient
+        style={StyleSheet.absoluteFill}
+        colors={backgroundGradientColors ?? theme.backgroundGradientColors}
+        end={backgroundGradientEnd ?? theme.backgroundGradientEnd}
+        start={backgroundGradientStart ?? theme.backgroundGradientStart}
+        onLayout={handleLayout}
+      />
+    )
   }
 
   return (
