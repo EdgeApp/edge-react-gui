@@ -2,48 +2,16 @@
 
 exports[`TransactionDetailsScene should render 1`] = `
 [
-  <BVLinearGradient
-    colors={
-      [
-        4279900698,
-        4279900698,
-      ]
-    }
-    endPoint={
-      {
-        "x": 0,
-        "y": 1,
-      }
-    }
-    locations={null}
-    onLayout={[Function]}
-    startPoint={
-      {
-        "x": 0,
-        "y": 0,
-      }
-    }
-    style={
-      {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
-      }
-    }
-  />,
   <RCTScrollView
     collapsable={false}
     contentContainerStyle={
       {
-        "paddingBottom": 57,
+        "paddingBottom": 0,
         "paddingLeft": 0,
         "paddingRight": 0,
-        "paddingTop": 64,
+        "paddingTop": 0,
       }
     }
-    onScroll={[Function]}
     scrollEventThrottle={0.0001}
     scrollIndicatorInsets={
       {
@@ -1704,48 +1672,16 @@ exports[`TransactionDetailsScene should render 1`] = `
 
 exports[`TransactionDetailsScene should render with negative nativeAmount and fiatAmount 1`] = `
 [
-  <BVLinearGradient
-    colors={
-      [
-        4279900698,
-        4279900698,
-      ]
-    }
-    endPoint={
-      {
-        "x": 0,
-        "y": 1,
-      }
-    }
-    locations={null}
-    onLayout={[Function]}
-    startPoint={
-      {
-        "x": 0,
-        "y": 0,
-      }
-    }
-    style={
-      {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
-      }
-    }
-  />,
   <RCTScrollView
     collapsable={false}
     contentContainerStyle={
       {
-        "paddingBottom": 57,
+        "paddingBottom": 0,
         "paddingLeft": 0,
         "paddingRight": 0,
-        "paddingTop": 64,
+        "paddingTop": 0,
       }
     }
-    onScroll={[Function]}
     scrollEventThrottle={0.0001}
     scrollIndicatorInsets={
       {
