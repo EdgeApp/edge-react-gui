@@ -164,11 +164,7 @@ export function TransactionListRow(props: Props) {
   const unconfirmedOrTimeStyle = isConfirmed ? styles.secondaryText : styles.unconfirmedText
 
   // Transaction Category
-  let categoryText
-  // Only show a category text if the category is not a standard 'income:' or 'expense:'
-  if (edgeCategory.subcategory !== '' || (edgeCategory.category.toLowerCase() !== 'income' && edgeCategory.category.toLowerCase() !== 'expense')) {
-    categoryText = formatCategory(edgeCategory)
-  }
+  const categoryText = formatCategory(edgeCategory)
 
   const handlePress = useHandler(() => {
     if (transaction == null) {

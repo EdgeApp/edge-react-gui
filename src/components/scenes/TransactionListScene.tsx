@@ -282,6 +282,7 @@ function TransactionListComponent(props: Props) {
       avoidKeyboard
       hasTabs
       hasNotifications
+      padding={theme.rem(0.5)}
       backgroundGradientColors={backgroundColors}
       backgroundGradientEnd={theme.assetBackgroundGradientEnd}
       backgroundGradientStart={theme.assetBackgroundGradientStart}
