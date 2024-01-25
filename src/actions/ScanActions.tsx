@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeTokenId } from 'edge-core-js'
+import { asMaybeInsufficientFundsError, EdgeAccount, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
@@ -259,30 +259,31 @@ async function privateKeyModalActivated(wallet: EdgeCurrencyWallet, privateKeys:
 }
 
 async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[]) {
-  const unsignedTx = await wallet.sweepPrivateKeys({
-    tokenId: null,
-    privateKeys,
-    spendTargets: []
-  })
-  const signedTx = await wallet.signTx(unsignedTx)
-  await wallet.broadcastTx(signedTx)
+  try {
+    const unsignedTx = await wallet.sweepPrivateKeys({
+      tokenId: null,
+      privateKeys,
+      spendTargets: []
+    })
+    const signedTx = await wallet.signTx(unsignedTx)
+    await wallet.broadcastTx(signedTx)
 
-  const { name, id, type } = wallet
-  const {
-    currencyCode,
-    nativeAmount,
-    networkFee,
-    parentNetworkFee,
-    txid,
-    ourReceiveAddresses,
-    deviceDescription,
-    networkFeeOption,
-    requestedCustomFee,
-    feeRateUsed
-  } = signedTx
+    const { name, id, type } = wallet
+    const {
+      currencyCode,
+      nativeAmount,
+      networkFee,
+      parentNetworkFee,
+      txid,
+      ourReceiveAddresses,
+      deviceDescription,
+      networkFeeOption,
+      requestedCustomFee,
+      feeRateUsed
+    } = signedTx
 
-  logActivity(`Sweep Private Key: ${name ?? ''} ${type} ${id}`)
-  logActivity(`
+    logActivity(`Sweep Private Key: ${name ?? ''} ${type} ${id}`)
+    logActivity(`
     currencyCode: ${currencyCode}
     nativeAmount: ${nativeAmount}
     txid: ${txid}
@@ -294,6 +295,14 @@ async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[
     requestedCustomFee: ${JSON.stringify(requestedCustomFee)}
     feeRateUsed ${JSON.stringify(feeRateUsed)}
   `)
+  } catch (e) {
+    const insufficientFunds = asMaybeInsufficientFundsError(e)
+    if (insufficientFunds != null) {
+      showError(lstrings.private_key_modal_sweep_insufficient_funds)
+      return
+    }
+    throw e
+  }
 }
 
 const shownWalletGetCryptoModals: string[] = []
