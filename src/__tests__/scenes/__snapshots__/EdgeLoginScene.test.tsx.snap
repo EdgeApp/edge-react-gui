@@ -567,7 +567,8 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
           "marginRight": 22,
           "marginTop": 0,
           "opacity": 1,
-          "padding": 0,
+          "paddingHorizontal": 0,
+          "paddingVertical": 0,
         }
       }
     >
@@ -625,7 +626,8 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
               {
                 "alignSelf": "center",
                 "height": undefined,
-                "padding": 0,
+                "paddingHorizontal": 0,
+                "paddingVertical": 0,
               },
             ],
             {

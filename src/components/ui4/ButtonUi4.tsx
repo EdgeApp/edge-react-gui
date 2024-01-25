@@ -1,3 +1,8 @@
+/**
+ * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and
+ * edge-login-ui-rn!
+ */
+
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, ViewStyle } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -45,6 +50,8 @@ interface Props {
 
   /** @deprecated - Shouldn't use this post-UI4 transition */
   paddingRem?: number[] | number
+
+  testID?: string
 }
 
 /**
@@ -64,7 +71,8 @@ export function ButtonUi4(props: Props) {
     spinner = false,
     mini = false,
     marginRem,
-    paddingRem
+    paddingRem,
+    testID
   } = props
 
   // `onPress` promise logic:
@@ -134,7 +142,7 @@ export function ButtonUi4(props: Props) {
   const finalContainerCommon = [styles.containerCommon, containerStyle, customMargin, customPadding]
 
   return (
-    <TouchableOpacity disabled={disabled || pending} style={finalContainerCommon} onPress={handlePress}>
+    <TouchableOpacity disabled={disabled || pending} style={finalContainerCommon} onPress={handlePress} testID={testID}>
       <LinearGradient
         {...gradientProps}
         style={[styles.contentCommon, dynamicGradientStyles, mini ? styles.contentSizeMini : styles.contentSizeDefault, ...finalContainerCommon]}
@@ -188,8 +196,9 @@ const getStyles = cacheStyles((theme: Theme) => {
       // Reduce the bounds of a tertiary button so it doesn't appear to be too
       // far from other buttons
       alignSelf: 'center',
-      padding: 0,
-      height: undefined
+      height: undefined,
+      paddingVertical: 0,
+      paddingHorizontal: 0
     },
     primaryText: {
       fontFamily: theme.primaryButtonFont,
