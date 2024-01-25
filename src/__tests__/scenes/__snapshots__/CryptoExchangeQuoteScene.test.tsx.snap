@@ -212,7 +212,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
     collapsable={false}
     contentContainerStyle={
       {
-        "paddingBottom": 57,
+        "paddingBottom": 58,
         "paddingLeft": 0,
         "paddingRight": 0,
         "paddingTop": 64,

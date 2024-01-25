@@ -2,7 +2,7 @@ import { BottomTabBarProps, BottomTabNavigationEventMap } from '@react-navigatio
 import { NavigationHelpers, ParamListBase } from '@react-navigation/native'
 import * as React from 'react'
 import { useMemo } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { Platform, TouchableOpacity, View } from 'react-native'
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, { interpolate, SharedValue, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
@@ -19,6 +19,7 @@ import { lstrings } from '../../locales/strings'
 import { useSceneFooterRenderState, useSceneFooterState } from '../../state/SceneFooterState'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
+import { scale } from '../../util/scaling'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
 import { BlurBackground } from '../ui4/BlurBackground'
@@ -26,8 +27,12 @@ import { VectorIcon } from './VectorIcon'
 
 const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_map'
 
-export const MAX_TAB_BAR_HEIGHT = 57
-export const MIN_TAB_BAR_HEIGHT = 40
+// Android doesn't include extra space from the nav-bar like iOS does, so we
+// add 0.75 rem to the bottom padding of the MenuTab's container:
+const ANDROID_MENU_TAB_BAR_EXTRA_PADDING = Platform.OS === 'android' ? scale(16) * 0.75 : 0
+
+export const MAX_TAB_BAR_HEIGHT = 58 + ANDROID_MENU_TAB_BAR_EXTRA_PADDING
+export const MIN_TAB_BAR_HEIGHT = 40 + ANDROID_MENU_TAB_BAR_EXTRA_PADDING
 
 const title: { readonly [key: string]: string } = {
   homeTab: lstrings.title_home,
@@ -190,7 +195,7 @@ const Tab = ({
 const TabContainer = styled(TouchableOpacity)<{ insetBottom: number }>(theme => ({ insetBottom }) => ({
   flex: 1,
   paddingTop: theme.rem(0.75),
-  paddingBottom: insetBottom,
+  paddingBottom: insetBottom + ANDROID_MENU_TAB_BAR_EXTRA_PADDING,
   justifyContent: 'center',
   alignItems: 'center'
 }))
