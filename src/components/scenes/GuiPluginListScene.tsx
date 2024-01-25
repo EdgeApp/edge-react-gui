@@ -32,17 +32,17 @@ import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { fetchInfo } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { base58ToUuid } from '../../util/utils'
-import { SceneWrapper } from '../common/SceneWrapper'
+import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
 import { CountryListModal } from '../modals/CountryListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
+import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { CardUi4 } from '../ui4/CardUi4'
 import { RowUi4 } from '../ui4/RowUi4'
 import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
-import { SectionView } from '../ui4/SectionView'
 
 const buyRaw = buyPluginJsonOverrideRaw.length > 0 ? buyPluginJsonOverrideRaw : buyPluginJsonRaw
 const sellRaw = sellPluginJsonOverrideRaw.length > 0 ? sellPluginJsonOverrideRaw : sellPluginJsonRaw
@@ -89,6 +89,7 @@ interface StateProps {
   developerModeOn: boolean
   deviceId: string
   disablePlugins: NestedDisableMap
+  insetStyle: InsetStyle
   handleScroll: SceneScrollHandler
 }
 
@@ -346,20 +347,22 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         }
         onPress={async () => await this.openPlugin(item).catch(showError)}
         onLongPress={async () => await this.openPlugin(item, true).catch(showError)}
+        paddingRem={[1, 0.5, 1, 0.5]}
       >
-        <SectionView dividerMarginRem={[0.2, 0]} marginRem={0.5}>
-          <>
-            <EdgeText style={styles.titleText}>{item.title}</EdgeText>
-            {item.description === '' ? null : <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>}
-          </>
+        <View style={styles.rowContainer}>
+          <EdgeText style={styles.titleText}>{item.title}</EdgeText>
+          {item.description === '' ? null : <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>}
           {poweredBy != null && item.partnerIconPath != null ? (
-            <View style={styles.pluginRowPoweredByRow}>
-              <EdgeText style={styles.footerText}>{lstrings.plugin_powered_by_space}</EdgeText>
-              <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
-              <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
-            </View>
+            <>
+              <DividerLine marginRem={[0.25, 1, 0.25, 0]} />
+              <View style={styles.pluginRowPoweredByRow}>
+                <EdgeText style={styles.footerText}>{lstrings.plugin_powered_by_space}</EdgeText>
+                <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
+                <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
+              </View>
+            </>
           ) : null}
-        </SectionView>
+        </View>
       </CardUi4>
     )
   }
@@ -397,7 +400,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { accountPlugins, accountReferral, countryCode, developerModeOn, disablePlugins, theme } = this.props
+    const { accountPlugins, accountReferral, countryCode, developerModeOn, disablePlugins, theme, insetStyle } = this.props
     const direction = this.getSceneDirection()
     const { buy = [], sell = [] } = this.state.buySellPlugins
     const styles = getStyles(theme)
@@ -433,7 +436,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
             ListHeaderComponent={this.renderTop}
             renderItem={this.renderPlugin}
             keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
-            style={styles.listStyle}
+            // XXX: Hack. paddingBottom from insetStyle is not sufficient.
+            contentContainerStyle={{ ...insetStyle, paddingBottom: theme.rem(6) }}
           />
         )}
       </View>
@@ -446,8 +450,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginLeft: -theme.rem(0.5),
     width: '100%'
   },
-  listStyle: {
-    overflow: 'visible'
+  rowContainer: {
+    flexDirection: 'column'
   },
   sceneContainer: {
     flex: 1
@@ -528,21 +532,28 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
 
   return (
     <SceneWrapper hasTabs hasNotifications padding={theme.rem(0.5)}>
-      <GuiPluginList
-        handleScroll={handleScroll}
-        navigation={navigation}
-        route={route}
-        deviceId={deviceId}
-        account={account}
-        accountPlugins={accountPlugins}
-        accountReferral={accountReferral}
-        coreDisklet={coreDisklet}
-        countryCode={countryCode}
-        developerModeOn={developerModeOn}
-        disablePlugins={disablePlugins}
-        updateCountryCode={updateCountryCode}
-        theme={theme}
-      />
+      {({ insetStyle, undoInsetStyle }) => {
+        return (
+          <View style={undoInsetStyle}>
+            <GuiPluginList
+              handleScroll={handleScroll}
+              navigation={navigation}
+              route={route}
+              deviceId={deviceId}
+              account={account}
+              accountPlugins={accountPlugins}
+              accountReferral={accountReferral}
+              coreDisklet={coreDisklet}
+              countryCode={countryCode}
+              developerModeOn={developerModeOn}
+              disablePlugins={disablePlugins}
+              updateCountryCode={updateCountryCode}
+              theme={theme}
+              insetStyle={insetStyle}
+            />
+          </View>
+        )
+      }}
     </SceneWrapper>
   )
 })
