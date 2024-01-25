@@ -1,7 +1,7 @@
 import { CreateAccountType, InitialRouteName } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { useEffect } from 'react'
-import { Image, Pressable, Text, View } from 'react-native'
+import { Image, Platform, Pressable, Text, View } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import Animated, {
   Extrapolation,
@@ -171,6 +171,8 @@ export const GettingStartedScene = (props: Props) => {
     }
   }, [isLoggedIn, localUsers, navigation])
 
+  const disableType = Platform.OS === 'android' ? 'view' : undefined
+
   return (
     <SceneWrapper hasHeader={false}>
       <SkipButton swipeOffset={swipeOffset}>
@@ -211,7 +213,7 @@ export const GettingStartedScene = (props: Props) => {
               )
             })}
           </HeroContainer>
-          <EdgeAnim ios enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance: 20 }}>
+          <EdgeAnim disableType={disableType} enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance: 20 }}>
             <Pagination>
               {Array.from({ length: paginationCount + (isFinalSwipeEnabled ? 0 : 1) }).map((_, index) => (
                 <Pressable key={index} onPress={() => handlePressIndicator(index)}>
@@ -235,10 +237,10 @@ export const GettingStartedScene = (props: Props) => {
               })}
             </Sections>
             <Space horizontal={2}>
-              <EdgeAnim ios enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance: 40 }}>
+              <EdgeAnim disableType={disableType} enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance: 40 }}>
                 <MainButton onPress={handlePressSignUp} label={lstrings.account_get_started} />
               </EdgeAnim>
-              <EdgeAnim ios enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance: 60 }}>
+              <EdgeAnim disableType={disableType} enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance: 60 }}>
                 <MainButton type="escape" onPress={handlePressSignIn} label={lstrings.getting_started_button_sign_in} />
               </EdgeAnim>
             </Space>

@@ -199,9 +199,11 @@ function TransactionListComponent(props: Props) {
           onSearchingChange={setIsSearching}
           onSearchTextChange={setSearchText}
         />
-        {assetStatuses.length > 0
+        {assetStatuses.length > 0 && !isSearching
           ? assetStatuses.map(assetStatus => (
-              <AssetStatusCard assetStatus={assetStatus} key={`${String(assetStatus.localeStatusTitle)}-${String(assetStatus.localeStatusBody)}`} />
+              <EdgeAnim enter={{ type: 'fadeInDown', distance: 10 }} key={`${String(assetStatus.localeStatusTitle)}-${String(assetStatus.localeStatusBody)}`}>
+                <AssetStatusCard assetStatus={assetStatus} key={`${String(assetStatus.localeStatusTitle)}-${String(assetStatus.localeStatusBody)}`} />
+              </EdgeAnim>
             ))
           : null}
       </>

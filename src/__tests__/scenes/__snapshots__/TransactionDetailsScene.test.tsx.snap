@@ -2701,7 +2701,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#888888",
+                          "color": "#D9E3ED",
                         },
                         null,
                       ]

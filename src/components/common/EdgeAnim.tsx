@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Platform, ViewProps } from 'react-native'
+import { ViewProps } from 'react-native'
 import Animated, {
   AnimateProps,
   ComplexAnimationBuilder,
@@ -47,8 +47,6 @@ interface Props extends AnimateProps<ViewProps> {
   enter?: Anim
   exit?: Anim
 
-  /** only animate on ios */
-  ios?: boolean
   visible?: boolean
 }
 
@@ -93,12 +91,12 @@ const getAnimBuilder = (anim?: Anim) => {
   return builder
 }
 
-export const EdgeAnim = ({ children, disableType, enter, exit, ios = false, visible = true, ...rest }: Props): JSX.Element | null => {
+export const EdgeAnim = ({ children, disableType, enter, exit, visible = true, ...rest }: Props): JSX.Element | null => {
   if (!visible) return null
   const entering = getAnimBuilder(enter)
   const exiting = getAnimBuilder(exit)
 
-  if (disableType === 'anim' || (ios && Platform.OS !== 'ios')) {
+  if (disableType === 'anim') {
     return <Animated.View {...rest}>{children}</Animated.View>
   }
 

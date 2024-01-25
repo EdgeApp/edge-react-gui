@@ -46,11 +46,11 @@ const getPercentDeltaString = (assetToFiatRate: string, assetToYestFiatRate: str
   const yesterdayDelta = sub(assetToFiatRate, yesterdayExchangeRate)
 
   // Avoid divide by zero if there's no exchange rate from yesterday
-  const yesterdayDeltaPct = zeroString(yesterdayExchangeRate) ? '0' : abs(div(yesterdayDelta, yesterdayExchangeRate, DECIMAL_PRECISION))
+  const yesterdayDeltaPct = zeroString(yesterdayExchangeRate) ? '0' : div(yesterdayDelta, yesterdayExchangeRate, DECIMAL_PRECISION)
 
   let percentString
   // Prepend a < sign if a nonzero delta rounds to zero
-  if (!zeroString(yesterdayDeltaPct) && lt(yesterdayDeltaPct, '0.001')) {
+  if (!zeroString(yesterdayDeltaPct) && lt(abs(yesterdayDeltaPct), '0.001')) {
     percentString = `<${toPercentString(0.0001, { maxPrecision: 2, intlOpts: { noGrouping: true } })}`
   } else {
     percentString = toPercentString(yesterdayDeltaPct, { maxPrecision: 2, intlOpts: { noGrouping: true } })
@@ -61,7 +61,7 @@ const getPercentDeltaString = (assetToFiatRate: string, assetToYestFiatRate: str
   if (gt(yesterdayDeltaPct, '0')) {
     return { percentString: `+${percentString}`, deltaColorStyle: theme.positiveText }
   } else if (lt(yesterdayDeltaPct, '0')) {
-    return { percentString: `-${percentString}`, deltaColorStyle: theme.negativeText }
+    return { percentString: `${percentString}`, deltaColorStyle: theme.negativeText }
   } else {
     return { percentString, deltaColorStyle: theme.negativeText }
   }

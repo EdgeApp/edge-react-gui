@@ -202,7 +202,7 @@ export const edgeDark: Theme = {
   secondaryText: palette.skyBlue,
   warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
-  negativeText: palette.gray,
+  negativeText: palette.lightGray,
   dangerText: palette.accentRed,
   textLink: palette.edgeMint,
   deactivatedText: palette.gray,
