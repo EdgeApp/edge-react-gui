@@ -703,6 +703,7 @@
   "exchange_crypto_modal_message": "您的 %s 钱包现在是空的。您想将另一个加密产品兑转换成 %s？",
   "private_key_modal_sweep_from_private_address": "从私钥移除资金",
   "private_key_modal_sweep_from_private_key_message": "This process needs an on-chain transaction from the original wallet to %1$s. Mining fees are applied and depend on the network status.",
+  "private_key_modal_sweep_insufficient_funds": "The private key has insufficient funds to cover the onchain fees required by the sweep.",
   "private_key_modal_import": "导入",
   "private_key_modal_cancel": "取消",
   "restore_wallets_modal_title": "恢复钱包",
