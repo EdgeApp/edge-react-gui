@@ -211,15 +211,13 @@ export const GettingStartedScene = (props: Props) => {
               )
             })}
           </HeroContainer>
-          <EdgeAnim disableType={disableType} enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance: 20 }}>
-            <Pagination>
-              {Array.from({ length: paginationCount + (isFinalSwipeEnabled ? 0 : 1) }).map((_, index) => (
-                <Pressable key={index} onPress={() => handlePressIndicator(index)}>
-                  <PageIndicator swipeOffset={swipeOffset} itemIndex={index} />
-                </Pressable>
-              ))}
-            </Pagination>
-          </EdgeAnim>
+          <Pagination>
+            {Array.from({ length: paginationCount + (isFinalSwipeEnabled ? 0 : 1) }).map((_, index) => (
+              <Pressable key={index} onPress={() => handlePressIndicator(index)}>
+                <PageIndicator swipeOffset={swipeOffset} itemIndex={index} />
+              </Pressable>
+            ))}
+          </Pagination>
           <SectionCoverAnimated swipeOffset={swipeOffset}>
             <Sections swipeOffset={swipeOffset}>
               {sections.map((section, index) => {
