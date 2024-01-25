@@ -29,9 +29,9 @@ export interface InsetStyle {
 export interface UndoInsetStyle {
   flex: 1
   marginTop: number
-  marginRight: number
+  marginRight?: number
   marginBottom: number
-  marginLeft: number
+  marginLeft?: number
 }
 
 export interface SceneWrapperInfo {
@@ -184,9 +184,9 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     const undoInsetStyle: UndoInsetStyle = {
       flex: 1,
       marginTop: -insets.top,
-      marginRight: -insets.right,
+      marginRight: -insets.right + padding,
       marginBottom: -insets.bottom,
-      marginLeft: -insets.left
+      marginLeft: -insets.left + padding
     }
 
     const info: SceneWrapperInfo = { insets, insetStyle, undoInsetStyle, hasTabs, isKeyboardOpen }

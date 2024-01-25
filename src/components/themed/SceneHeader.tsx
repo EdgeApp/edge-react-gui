@@ -34,7 +34,7 @@ const SceneHeaderComponent = (props: Props) => {
   )
 }
 
-const dividerMargin = [0, 1]
+const dividerMargin = [0, 0, 0.5, 1]
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
