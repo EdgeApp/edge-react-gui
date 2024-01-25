@@ -703,6 +703,7 @@
   "exchange_crypto_modal_message": "あなたの%sウォレットは空です。 別の暗号資産を%sに交換しますか？",
   "private_key_modal_sweep_from_private_address": "プライベートキーから資産をスウィープする",
   "private_key_modal_sweep_from_private_key_message": "このプロセスには、元のウォレットから %1$sへのオンチェーンのトランザクションが必要です。マイニング手数料が適用され、ネットワークの状態に依存します。",
+  "private_key_modal_sweep_insufficient_funds": "The private key has insufficient funds to cover the onchain fees required by the sweep.",
   "private_key_modal_import": "インポート",
   "private_key_modal_cancel": "キャンセル",
   "restore_wallets_modal_title": "ウォレットを復元する",
