@@ -16,7 +16,7 @@ import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
-import { useFooterOpenRatio, useSceneFooterRenderState } from '../../state/SceneFooterState'
+import { useSceneFooterRenderState, useSceneFooterState } from '../../state/SceneFooterState'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { styled } from '../hoc/styled'
@@ -65,7 +65,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
 
   const { bottom: insetBottom } = useSafeAreaInsets()
 
-  const { footerOpenRatio, resetFooterRatio } = useFooterOpenRatio()
+  const { footerOpenRatio, resetFooterRatio } = useSceneFooterState()
   const { renderFooter } = useSceneFooterRenderState()
 
   const { height: keyboardHeight, progress: keyboardProgress } = useReanimatedKeyboardAnimation()

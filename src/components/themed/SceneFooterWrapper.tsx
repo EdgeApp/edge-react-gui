@@ -4,7 +4,7 @@ import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useHandler } from '../../hooks/useHandler'
-import { useFooterOpenRatio, useLayoutHeightInFooter } from '../../state/SceneFooterState'
+import { useLayoutHeightInFooter, useSceneFooterState } from '../../state/SceneFooterState'
 import { SceneWrapperInfo } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { BlurBackground } from '../ui4/BlurBackground'
@@ -20,7 +20,7 @@ export interface SceneFooterProps {
 export const SceneFooterWrapper = (props: SceneFooterProps) => {
   const { children, noBackgroundBlur = false, sceneWrapperInfo } = props
   const { hasTabs = true, isKeyboardOpen = false } = sceneWrapperInfo ?? {}
-  const { footerOpenRatio } = useFooterOpenRatio()
+  const { footerOpenRatio } = useSceneFooterState()
 
   const handleFooterLayout = useLayoutHeightInFooter()
   const safeAreaInsets = useSafeAreaInsets()

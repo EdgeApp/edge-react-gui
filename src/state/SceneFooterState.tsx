@@ -16,8 +16,9 @@ import { useSceneScrollContext } from './SceneScrollState'
 
 /**
  * This contains footer state with respect to it's dimensions and open/collapse.
- * This state is more internal and shouldn't be used directly be components and
- * scenes. Instead use `useFooterOpenRatio` for application components.
+ * The hook provides access to footer open/collapse state and API to lock the
+ * footer in place. This should be used by scenes or components which should
+ * respond to these values.
  */
 export const [SceneFooterProvider, useSceneFooterState] = createStateProvider(() => {
   const [keepOpen, setKeepOpen] = useState(false)
@@ -26,17 +27,27 @@ export const [SceneFooterProvider, useSceneFooterState] = createStateProvider(()
   const footerOpenRatioStart = useSharedValue(1)
   const snapTo = useSharedValue<number | undefined>(undefined)
 
+  const resetFooterRatio = useCallback(() => {
+    snapTo.value = 1
+  }, [snapTo])
+
   return useMemo(
     () => ({
+      // The scene can animate components using this shared value to
+      // collapse/expand its components. A value of 1 means opened, and 0 means
+      // closed.
       footerOpenRatio,
       footerOpenRatioStart,
       keepOpen,
+      // The scene can use these to lock the footer into an open state.
       setKeepOpen,
       footerHeight,
+      // The scene can call this to reset the footer state to an open state.
+      resetFooterRatio,
       setFooterHeight,
       snapTo
     }),
-    [footerOpenRatio, footerOpenRatioStart, keepOpen, footerHeight, snapTo]
+    [footerOpenRatio, footerOpenRatioStart, keepOpen, footerHeight, resetFooterRatio, snapTo]
   )
 })
 
@@ -213,30 +224,6 @@ export const useFooterAccordionEvents = () => {
     },
     [keepOpen]
   )
-}
-
-/**
- * This hook provides access to footer open/collapse state and API to lock the
- * footer in place. This should be used by scenes or components which should
- * respond to these values.
- */
-export const useFooterOpenRatio = () => {
-  const { footerOpenRatio, setKeepOpen, snapTo } = useSceneFooterState()
-
-  function resetFooterRatio() {
-    snapTo.value = 1
-  }
-
-  return {
-    // The scene can animate components using this shared value to
-    // collapse/expand its components. A value of 1 means opened, and 0 means
-    // closed.
-    footerOpenRatio,
-    // The scene can call this to reset the footer state to an open state.
-    resetFooterRatio,
-    // The scene can use these to lock the footer into an open state.
-    setKeepOpen
-  }
 }
 
 /**
