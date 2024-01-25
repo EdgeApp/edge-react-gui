@@ -379,7 +379,7 @@ const TransactionDetailsComponent = (props: Props) => {
           )}
         </CardUi4>
       </EdgeAnim>
-      {transaction.spendTargets == null ? null : (
+      {recipientsAddresses === '' ? null : (
         <EdgeAnim enter={{ type: 'fadeInDown', distance: 60 }}>
           <CardUi4>
             <RowUi4 rightButtonType="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />

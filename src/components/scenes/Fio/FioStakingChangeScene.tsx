@@ -154,7 +154,8 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
     setLoading(true)
     try {
       const signedTx = await currencyWallet.signTx(tx)
-      await currencyWallet.broadcastTx(signedTx)
+      const broadcastedTx = await currencyWallet.broadcastTx(signedTx)
+      await currencyWallet.saveTx(broadcastedTx)
       const messages = {
         add: lstrings.staking_success,
         remove: lstrings.staking_unstake_success
