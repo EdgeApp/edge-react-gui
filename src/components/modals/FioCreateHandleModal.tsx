@@ -40,7 +40,7 @@ export const FioCreateHandleModal = (props: Props) => {
   return (
     <ModalUi4 bridge={bridge} onCancel={handleCancel}>
       <View style={styles.container}>
-        <FastImage source={{ uri: getUi4ImageUri(theme, 'fio/newHandle') }} style={styles.icon} />
+        <FastImage source={{ uri: getUi4ImageUri(theme, 'fio/newHandle') }} style={styles.icon} resizeMode={FastImage.resizeMode.contain} />
         <GetFioHandleTitle numberOfLines={1} adjustsFontSizeToFit>
           {parseMarkedText(lstrings.fio_free_web3_handle_title_m)}
         </GetFioHandleTitle>
@@ -74,13 +74,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: theme.rem(1),
-    paddingVertical: theme.rem(2)
+    flexShrink: 1,
+    paddingHorizontal: theme.rem(0.5),
+    paddingBottom: theme.rem(0.5)
   },
   icon: {
     width: theme.rem(15),
     height: theme.rem(15),
-    marginBottom: theme.rem(3)
+    marginBottom: theme.rem(1.5),
+    marginTop: -theme.rem(1), // Take up some of the modal title area
+    flexShrink: 1
   },
   message: {
     fontSize: theme.rem(1),
@@ -88,6 +91,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginBottom: theme.rem(0.5)
   },
   waitMessage: {
+    marginTop: theme.rem(1),
+    marginBottom: theme.rem(0.5),
     fontSize: theme.rem(0.75),
     textAlign: 'center',
     fontColor: theme.secondaryText
