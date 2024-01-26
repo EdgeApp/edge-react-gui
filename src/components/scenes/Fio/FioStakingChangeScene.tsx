@@ -28,6 +28,8 @@ import { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
 import { ModalMessage, ModalTitle } from '../../themed/ModalParts'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
+import { AlertCardUi4 } from '../../ui4/AlertCardUi4'
+import { CardUi4 } from '../../ui4/CardUi4'
 import { ModalUi4 } from '../../ui4/ModalUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
@@ -295,9 +297,11 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
           <ModalMessage>{lstrings.staking_change_explaner1}</ModalMessage>
           <ModalMessage>{lstrings.staking_change_explaner2}</ModalMessage>
         </View>
-        <RowUi4 rightButtonType="editable" title={lstrings.staking_change_add_amount_title} onPress={handleAmount}>
-          <EdgeText style={styles.amountText}>{exchangeAmount}</EdgeText>
-        </RowUi4>
+        <CardUi4 marginRem={1}>
+          <RowUi4 rightButtonType="editable" title={lstrings.staking_change_add_amount_title} onPress={handleAmount}>
+            <EdgeText style={styles.amountText}>{exchangeAmount}</EdgeText>
+          </RowUi4>
+        </CardUi4>
         {apy != null && apy !== 0 && (
           <View style={styles.estReturn}>
             <EdgeText>{apyValue}</EdgeText>
@@ -319,17 +323,19 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
         <SceneHeader style={styles.sceneHeader} title={sprintf(lstrings.staking_change_remove_header, currencyCode)} underline withTopMargin>
           <Image style={styles.currencyLogo} source={fioLogo} />
         </SceneHeader>
-        <RowUi4 rightButtonType="editable" title={lstrings.staking_change_remove_amount_title} onPress={handleAmount}>
-          <EdgeText style={styles.amountText}>{exchangeAmount}</EdgeText>
-        </RowUi4>
-        {estReward !== '0' && (
-          <RowUi4 title={lstrings.staking_estimated_rewards}>
-            <EdgeText style={styles.amountText}>{estReward}</EdgeText>
+        <CardUi4 sections>
+          <RowUi4 rightButtonType="editable" title={lstrings.staking_change_remove_amount_title} onPress={handleAmount}>
+            <EdgeText style={styles.amountText}>{exchangeAmount}</EdgeText>
           </RowUi4>
-        )}
-        <RowUi4 rightButtonType="questionable" title={lstrings.staking_change_remove_unlock_date} onPress={handleUnlockDate}>
-          <EdgeText>{unlockDateFormat}</EdgeText>
-        </RowUi4>
+          {estReward !== '0' && (
+            <RowUi4 title={lstrings.staking_estimated_rewards}>
+              <EdgeText style={styles.amountText}>{estReward}</EdgeText>
+            </RowUi4>
+          )}
+          <RowUi4 rightButtonType="questionable" title={lstrings.staking_change_remove_unlock_date} onPress={handleUnlockDate}>
+            <EdgeText>{unlockDateFormat}</EdgeText>
+          </RowUi4>
+        </CardUi4>
       </>
     )
   }
@@ -337,17 +343,11 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   const renderError = () => {
     if (error == null) return null
 
-    return (
-      <RowUi4 title={lstrings.send_scene_error_title}>
-        <EdgeText style={styles.errorMessage} numberOfLines={3}>
-          {String(error)}
-        </EdgeText>
-      </RowUi4>
-    )
+    return <AlertCardUi4 marginRem={1} type="error" title={lstrings.fragment_error} body={String(error)} />
   }
 
   return (
-    <SceneWrapper>
+    <SceneWrapper scroll>
       {(() => {
         switch (change) {
           case 'add':

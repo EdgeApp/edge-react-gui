@@ -483,20 +483,13 @@ const EdgeAppStack = () => {
           headerLeft: () => <HeaderTextButton type="help" />
         }}
       />
-      <Stack.Screen
-        name="fioAddressDetails"
-        component={FioAddressDetailsScene}
-        options={{
-          headerTitle: () => <ParamHeaderTitle<'fioAddressDetails'> fromParams={params => params.fioAddressName} />
-        }}
-      />
+      <Stack.Screen name="fioAddressDetails" component={FioAddressDetailsScene} />
       <Stack.Screen name="fioAddressList" component={FioAddressListScene} />
       <Stack.Screen name="fioAddressRegister" component={FioAddressRegisterScene} />
       <Stack.Screen
         name="fioAddressRegisterSelectWallet"
         component={FioAddressRegisterSelectWalletScene}
         options={{
-          title: lstrings.title_fio_address_confirmation,
           headerRight: () => null
         }}
       />
@@ -508,20 +501,8 @@ const EdgeAppStack = () => {
           headerLeft: () => null
         }}
       />
-      <Stack.Screen
-        name="fioAddressSettings"
-        component={FioAddressSettingsScene}
-        options={{
-          title: lstrings.title_fio_address_settings
-        }}
-      />
-      <Stack.Screen
-        name="fioConnectToWalletsConfirm"
-        component={FioConnectWalletConfirmScene}
-        options={{
-          title: lstrings.title_fio_connect_to_wallet
-        }}
-      />
+      <Stack.Screen name="fioAddressSettings" component={FioAddressSettingsScene} />
+      <Stack.Screen name="fioConnectToWalletsConfirm" component={FioConnectWalletConfirmScene} />
       <Stack.Screen
         name="fioCreateHandle"
         component={FioCreateHandleScene}
@@ -545,13 +526,7 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
-      <Stack.Screen
-        name="fioDomainSettings"
-        component={FioDomainSettingsScene}
-        options={{
-          title: lstrings.title_fio_domain_settings
-        }}
-      />
+      <Stack.Screen name="fioDomainSettings" component={FioDomainSettingsScene} />
       <Stack.Screen
         name="fioNameConfirm"
         component={FioNameConfirmScene}
@@ -559,13 +534,7 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
-      <Stack.Screen
-        name="fioRequestConfirmation"
-        component={FioRequestConfirmationScene}
-        options={{
-          title: lstrings.fio_confirm_request_header
-        }}
-      />
+      <Stack.Screen name="fioRequestConfirmation" component={FioRequestConfirmationScene} />
       <Stack.Screen name="fioRequestList" component={FioRequestListScene} />
       <Stack.Screen
         name="fioSentRequestDetails"

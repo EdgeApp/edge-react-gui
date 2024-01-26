@@ -1,7 +1,7 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, Switch, View } from 'react-native'
+import { Switch, View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 
 import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { showError } from '../../components/services/AirshipInstance'
@@ -16,6 +16,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { FioConnectionWalletItem } from '../../types/types'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { convertFIOToEdgeCodes, makeConnectWallets } from '../../util/FioAddressUtils'
+import { AlertCardUi4 } from '../ui4/AlertCardUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface FioConnectWalletsProps {
@@ -157,21 +158,19 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
 
   return (
     <View style={styles.view}>
-      <View style={styles.list}>
-        <ScrollView>
-          {Object.keys(walletItems).length > 0 ? (
-            <FlashList
-              data={Object.values(walletItems)}
-              extraData={flashListToggle}
-              estimatedItemSize={theme.rem(4.25)}
-              keyboardShouldPersistTaps="handled"
-              keyExtractor={keyExtractor}
-              renderItem={renderFioConnectionWalletItem}
-            />
-          ) : (
-            <EdgeText style={styles.no_wallets_text}>{lstrings.fio_connect_no_wallets}</EdgeText>
-          )}
-        </ScrollView>
+      <View>
+        {Object.keys(walletItems).length > 0 ? (
+          <FlatList
+            data={Object.values(walletItems)}
+            extraData={flashListToggle}
+            keyboardShouldPersistTaps="handled"
+            keyExtractor={keyExtractor}
+            renderItem={renderFioConnectionWalletItem}
+            contentContainerStyle={{ paddingBottom: theme.rem(4) }}
+          />
+        ) : (
+          <AlertCardUi4 type="warning" title={lstrings.fio_connect_no_wallets} />
+        )}
       </View>
       <View style={styles.bottomSection}>
         <MainButton onPress={handleContinuePress} label={lstrings.string_next_capitalized} disabled={continueDisabled || disabled} />
@@ -183,9 +182,6 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   view: {
     flex: 1
-  },
-  list: {
-    flex: 5
   },
   no_wallets_text: {
     padding: theme.rem(1.75),
@@ -222,6 +218,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.secondaryText
   },
   bottomSection: {
+    position: 'absolute',
+    alignSelf: 'center',
+    bottom: 0,
     padding: theme.rem(1)
   },
   btnDisabled: {

@@ -2,7 +2,7 @@
 
 exports[`FioAddressRegister should render with loading props 1`] = `
 <SceneWrapper
-  padding={11}
+  scroll={true}
 >
   <Memo(SceneHeaderComponent)
     style={
@@ -14,6 +14,8 @@ exports[`FioAddressRegister should render with loading props 1`] = `
       }
     }
     title="Register FIO Crypto Handle"
+    underline={true}
+    withTopMargin={true}
   >
     <Image
       resizeMode="cover"
@@ -31,161 +33,162 @@ exports[`FioAddressRegister should render with loading props 1`] = `
       }
     />
   </Memo(SceneHeaderComponent)>
-  <ScrollView
-    contentContainerStyle={
+  <View
+    style={
       {
-        "paddingTop": 11,
+        "marginHorizontal": 11,
       }
     }
   >
     <View
       style={
+        [
+          {
+            "paddingBottom": 22,
+            "paddingHorizontal": 11,
+          },
+          {
+            "paddingTop": 34,
+          },
+        ]
+      }
+    >
+      <WithTheme(EdgeTextComponent)
+        numberOfLines={2}
+        style={
+          {
+            "color": "#FFFFFF",
+            "fontSize": 22,
+          }
+        }
+      >
+        Send and Receive with an easy to remember FIO Crypto Handle!
+      </WithTheme(EdgeTextComponent)>
+    </View>
+    <View
+      style={
         {
-          "position": "relative",
+          "paddingBottom": 22,
+          "paddingHorizontal": 11,
         }
       }
     >
-      <View
-        style={
-          [
-            {
-              "paddingBottom": 22,
-              "paddingHorizontal": 11,
-            },
-            {
-              "paddingTop": 34,
-            },
-          ]
-        }
-      >
-        <WithTheme(EdgeTextComponent)
-          numberOfLines={2}
-          style={
-            {
-              "color": "#FFFFFF",
-              "fontSize": 22,
-            }
-          }
-        >
-          Send and Receive with an easy to remember FIO Crypto Handle!
-        </WithTheme(EdgeTextComponent)>
-      </View>
-      <View
+      <WithTheme(EdgeTextComponent)
+        numberOfLines={3}
         style={
           {
-            "paddingBottom": 22,
-            "paddingHorizontal": 11,
+            "color": "#3dd9f4",
+            "fontSize": 22,
+            "textAlign": "left",
           }
         }
       >
-        <WithTheme(EdgeTextComponent)
-          numberOfLines={3}
-          style={
-            {
-              "color": "#3dd9f4",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          • Works across all tokens and coins
+        • Works across all tokens and coins
 • Secured from your wallet
 • Completely decentralized
-        </WithTheme(EdgeTextComponent)>
-      </View>
-      <View
+      </WithTheme(EdgeTextComponent)>
+    </View>
+    <View
+      style={
+        {
+          "paddingBottom": 22,
+          "paddingHorizontal": 11,
+        }
+      }
+    >
+      <WithTheme(EdgeTextComponent)
+        numberOfLines={5}
         style={
           {
-            "paddingBottom": 22,
-            "paddingHorizontal": 11,
+            "color": "#3dd9f4",
+            "fontSize": 22,
+            "textAlign": "left",
           }
         }
       >
-        <WithTheme(EdgeTextComponent)
-          numberOfLines={5}
-          style={
-            {
-              "color": "#3dd9f4",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          Similar to website names, your FIO Crypto Handle can be used to send you tokens/coins without ever having to see or send your public key.
-        </WithTheme(EdgeTextComponent)>
-      </View>
-      <View
-        onLayout={[Function]}
+        Similar to website names, your FIO Crypto Handle can be used to send you tokens/coins without ever having to see or send your public key.
+      </WithTheme(EdgeTextComponent)>
+    </View>
+    <View
+      onLayout={[Function]}
+    >
+      <CardUi4
+        sections={true}
       >
-        <CardUi4
-          sections={true}
+        <RowUi4
+          onPress={[Function]}
+          rightButtonType="editable"
+          title="Choose a FIO Crypto Handle"
         >
-          <RowUi4
-            onPress={[Function]}
-            rightButtonType="editable"
-            title="Choose a FIO Crypto Handle"
+          <View
+            style={
+              {
+                "flexDirection": "row",
+              }
+            }
           >
-            <View
+            <WithTheme(EdgeTextComponent)
               style={
                 {
-                  "flexDirection": "row",
+                  "color": "#888888",
                 }
               }
             >
-              <WithTheme(EdgeTextComponent)
-                style={
-                  {
-                    "color": "#888888",
-                  }
-                }
-              >
-                Your Crypto Handle name here
-              </WithTheme(EdgeTextComponent)>
-            </View>
-          </RowUi4>
-          <RowUi4
-            body="Loading…"
-            onPress={[Function]}
-            rightButtonType="touchable"
-            title="Choose FIO Domain for Your Crypto Handle"
-          />
-        </CardUi4>
-      </View>
-      <View
-        style={
-          {
-            "marginTop": 34,
-          }
-        }
-      >
-        <ButtonUi4
-          disabled={true}
-          label="Next"
-          layout="row"
+              Your Crypto Handle name here
+            </WithTheme(EdgeTextComponent)>
+          </View>
+        </RowUi4>
+        <RowUi4
+          body="Loading…"
           onPress={[Function]}
-          spinner={false}
-          type="primary"
+          rightButtonType="touchable"
+          title="Choose FIO Domain for Your Crypto Handle"
         />
-      </View>
-      <WithTheme(FormErrorComponent)
-        isVisible={false}
-        style={
-          {
-            "flex": 1,
-            "margin": 22,
-          }
+      </CardUi4>
+    </View>
+    <View
+      style={
+        {
+          "marginTop": 34,
         }
-      >
-        
-      </WithTheme(FormErrorComponent)>
-      <View
-        style={
+      }
+    >
+      <Memo
+        primary={
           {
-            "paddingBottom": 674,
+            "disabled": true,
+            "label": "Next",
+            "onPress": [Function],
+            "type": "primary",
           }
         }
       />
     </View>
-  </ScrollView>
+    <EdgeAnim
+      enter={
+        {
+          "type": "fadeIn",
+        }
+      }
+      exit={
+        {
+          "type": "fadeOut",
+        }
+      }
+      visible={false}
+    >
+      <AlertCardUi4
+        title=""
+        type="error"
+      />
+    </EdgeAnim>
+    <View
+      style={
+        {
+          "paddingBottom": 674,
+        }
+      }
+    />
+  </View>
 </SceneWrapper>
 `;

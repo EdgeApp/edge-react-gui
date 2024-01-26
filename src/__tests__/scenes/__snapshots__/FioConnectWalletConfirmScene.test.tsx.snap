@@ -4,44 +4,61 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
 <SceneWrapper
   scroll={true}
 >
-  <RowUi4
-    body="MyFioAddress"
-    title="FIO Crypto Handle"
+  <Memo(SceneHeaderComponent)
+    title="Connect to Wallet"
+    underline={true}
+    withTopMargin={true}
   />
-  <Radio
-    marginRem={
-      [
-        2,
-        2,
-        0,
-      ]
+  <View
+    style={
+      {
+        "padding": 11,
+      }
     }
-    onPress={[Function]}
-    value={false}
   >
-    <WithTheme(EdgeTextComponent)
-      numberOfLines={4}
-      style={
+    <CardUi4
+      sections={true}
+    >
+      <RowUi4
+        body="MyFioAddress"
+        title="FIO Crypto Handle"
+      />
+    </CardUi4>
+    <Radio
+      marginRem={
+        [
+          2,
+          2,
+          0,
+        ]
+      }
+      onPress={[Function]}
+      value={false}
+    >
+      <WithTheme(EdgeTextComponent)
+        numberOfLines={4}
+        style={
+          {
+            "color": "#FFFFFF",
+            "fontSize": 17,
+            "marginLeft": 22,
+          }
+        }
+      >
+        I acknowledge that one address from each wallet will become public. These addresses will remain public even after wallets are disconnected.
+      </WithTheme(EdgeTextComponent)>
+    </Radio>
+    <WithTheme(SliderComponent)
+      disabled={true}
+      disabledText="Slide to Confirm"
+      onSlidingComplete={[Function]}
+      parentStyle={
         {
-          "color": "#FFFFFF",
-          "fontSize": 17,
-          "marginLeft": 22,
+          "paddingVertical": 45,
         }
       }
-    >
-      I acknowledge that one address from each wallet will become public. These addresses will remain public even after wallets are disconnected.
-    </WithTheme(EdgeTextComponent)>
-  </Radio>
-  <WithTheme(SliderComponent)
-    disabled={true}
-    disabledText="Slide to Confirm"
-    onSlidingComplete={[Function]}
-    parentStyle={
-      {
-        "paddingVertical": 45,
-      }
-    }
-    showSpinner={false}
-  />
+      showSpinner={false}
+    />
+  </View>
 </SceneWrapper>
 `;
