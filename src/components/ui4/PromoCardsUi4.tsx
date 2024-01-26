@@ -3,6 +3,7 @@ import { asInfoRollup, asPromoCard2, PromoCard2 } from 'edge-info-server/types'
 import * as React from 'react'
 import { ListRenderItem, Platform } from 'react-native'
 import DeviceInfo, { getBuildNumber, getVersion } from 'react-native-device-info'
+import shajs from 'sha.js'
 
 import { getCountryCodeByIp } from '../../actions/AccountReferralActions'
 import { useHandler } from '../../hooks/useHandler'
@@ -12,7 +13,7 @@ import { fetchInfo } from '../../util/network'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { useTheme } from '../services/ThemeContext'
 import { CarouselUi4 } from './CarouselUi4'
-import { PromoCardUi4 } from './PromoCardUi4'
+import { FilteredPromoCard, PromoCardUi4 } from './PromoCardUi4'
 
 interface Props {
   navigation: NavigationBase
@@ -23,82 +24,127 @@ export const PromoCardsUi4 = (props: Props) => {
   const { navigation, screenWidth } = props
   const theme = useTheme()
 
-  const [promos, setPromos] = React.useState<PromoCard2[]>([])
+  const [promos, setPromos] = React.useState<FilteredPromoCard[]>([])
 
   // Check for PromoCard2 from info server:
   React.useEffect(() => {
-    const osType = Platform.OS.toLowerCase()
-    const osVersionRaw = DeviceInfo.getSystemVersion()
-    const version = getVersion()
-    const osVersion = Array.from({ length: 3 }, (_, i) => osVersionRaw.split('.')[i] || '0').join('.')
-
-    fetchInfo(`v1/inforollup/${config.appId ?? 'edge'}?os=${osType}&osVersion=${osVersion}&appVersion=${version}`)
-      .then(async res => {
-        if (!res.ok) {
-          console.error(await res.text())
-          return
-        }
-        const infoData = await res.json()
-        const infoPromoCards = asArray(asPromoCard2)(asInfoRollup(infoData).promoCards2)
-
-        const buildNumber = getBuildNumber()
+    fetchPromoCards()
+      .then(async cards => {
         const countryCode = await getCountryCodeByIp()
-        const currentDate = new Date()
-
-        setPromos(
-          infoPromoCards.filter(infoPromoCard => {
-            const { appVersion, minBuildNum, maxBuildNum, exactBuildNum, countryCodes, excludeCountryCodes, osTypes, osVersions, startIsoDate, endIsoDate } =
-              infoPromoCard
-            const startDate = asDate(startIsoDate)
-            const endDate = asDate(endIsoDate)
-
-            // Validate app version
-            // Ignore everything else if build version is specified and mismatched.
-            if (exactBuildNum != null && exactBuildNum !== buildNumber) return false
-
-            // Ignore min/max if app version is specified and mismatched.
-            if (appVersion != null && appVersion !== version) return false
-
-            // Look at min/max only if exact build or app version is not specified.
-            if (minBuildNum != null && minBuildNum > buildNumber) return false
-            if (maxBuildNum != null && maxBuildNum < buildNumber) return false
-
-            // Validate country
-            const isCountryInclude =
-              countryCodes == null ||
-              countryCodes.length === 0 ||
-              countryCodes.map(countryCode => countryCode.toLowerCase()).includes(countryCode.toLowerCase())
-            const isCountryExclude =
-              excludeCountryCodes != null &&
-              excludeCountryCodes.length > 0 &&
-              excludeCountryCodes.map(countryCode => countryCode.toLowerCase()).includes(countryCode.toLowerCase())
-            if (!isCountryInclude || isCountryExclude) return false
-
-            // Validate OS type
-            if (osTypes != null && osTypes.length > 0 && !osTypes.map(osType => osType.toLowerCase()).includes(osType)) return false
-
-            // Validate OS version
-            if (osVersions != null && osVersions.length > 0 && !osVersions.includes(osVersion.toString())) return false
-
-            // Validate date range
-            if (startIsoDate != null && currentDate.valueOf() < startDate.valueOf()) return false
-            if (endIsoDate != null && currentDate.valueOf() > endDate.valueOf()) return false
-
-            return true
-          })
-        )
+        const filteredCards = filterPromoCards(cards, countryCode)
+        setPromos(filteredCards)
       })
-      .catch(e => console.log(String(e)))
+      .catch(e => console.log(e))
   }, [])
 
   // List rendering methods:
-  const renderItem: ListRenderItem<PromoCard2> = useHandler(({ item }) => <PromoCardUi4 navigation={navigation} promoInfo={item} />)
+  const keyExtractor = useHandler((item: FilteredPromoCard) => item.messageId)
+  const renderItem: ListRenderItem<FilteredPromoCard> = useHandler(({ item }) => <PromoCardUi4 navigation={navigation} promoInfo={item} />)
 
   if (promos == null || promos.length === 0) return null
 
   return (
     <EdgeAnim style={{ height: theme.rem(11.5) }} enter={{ type: 'fadeInUp', distance: 110 }}>
-      <CarouselUi4 data={promos} height={theme.rem(9.75)} renderItem={renderItem} width={screenWidth} />
+      <CarouselUi4 data={promos} keyExtractor={keyExtractor} renderItem={renderItem} height={theme.rem(9.75)} width={screenWidth} />
     </EdgeAnim>
   )
+}
+
+/**
+ * Reads and normalizes the OS version.
+ */
+function getOsVersion(): string {
+  const osVersionRaw = DeviceInfo.getSystemVersion()
+  return Array.from({ length: 3 }, (_, i) => osVersionRaw.split('.')[i] || '0').join('.')
+}
+
+/**
+ * Visits the info server to obtain relevant promotion cards.
+ */
+async function fetchPromoCards(): Promise<PromoCard2[]> {
+  const osType = Platform.OS.toLowerCase()
+  const osVersion = getOsVersion()
+  const version = getVersion()
+
+  // Visit the server:
+  const res = await fetchInfo(`v1/inforollup/${config.appId ?? 'edge'}?os=${osType}&osVersion=${osVersion}&appVersion=${version}`)
+  if (!res.ok) {
+    throw new Error(`Info server error ${res.status}: ${await res.text()}`)
+  }
+  const infoData = await res.json()
+  return asArray(asPromoCard2)(asInfoRollup(infoData).promoCards2)
+}
+
+/**
+ * Finds the promo cards that are relevant to our application version &
+ * other factors.
+ */
+function filterPromoCards(cards: PromoCard2[], countryCode: string): FilteredPromoCard[] {
+  const buildNumber = getBuildNumber()
+  const currentDate = new Date()
+  const osType = Platform.OS.toLowerCase()
+  const version = getVersion()
+  const osVersion = getOsVersion()
+  countryCode = countryCode.toLowerCase()
+
+  // Find relevant cards:
+  const filteredCards: FilteredPromoCard[] = []
+  for (const card of cards) {
+    const {
+      appVersion,
+      background,
+      countryCodes = [],
+      ctaButton,
+      endIsoDate,
+      exactBuildNum,
+      excludeCountryCodes = [],
+      localeMessages,
+      maxBuildNum,
+      minBuildNum,
+      osTypes = [],
+      osVersions = [],
+      startIsoDate
+    } = card
+    const startDate = asDate(startIsoDate)
+    const endDate = asDate(endIsoDate)
+
+    // Validate app version
+    // Ignore everything else if build version is specified and mismatched.
+    if (exactBuildNum != null && exactBuildNum !== buildNumber) break
+
+    // Ignore min/max if app version is specified and mismatched.
+    if (appVersion != null && appVersion !== version) break
+
+    // Look at min/max only if exact build or app version is not specified.
+    if (minBuildNum != null && minBuildNum > buildNumber) break
+    if (maxBuildNum != null && maxBuildNum < buildNumber) break
+
+    // Validate country
+    const isCountryInclude = countryCodes.length === 0 || countryCodes.map(countryCode => countryCode.toLowerCase()).includes(countryCode)
+    const isCountryExclude = excludeCountryCodes.length > 0 && excludeCountryCodes.map(countryCode => countryCode.toLowerCase()).includes(countryCode)
+    if (!isCountryInclude || isCountryExclude) break
+
+    // Validate OS type
+    if (osTypes.length > 0 && !osTypes.map(osType => osType).includes(osType)) break
+
+    // Validate OS version
+    if (osVersions.length > 0 && !osVersions.includes(osVersion)) break
+
+    // Validate date range
+    if (startIsoDate != null && currentDate.valueOf() < startDate.valueOf()) break
+    if (endIsoDate != null && currentDate.valueOf() > endDate.valueOf()) break
+
+    const messageId = shajs('sha256')
+      .update(localeMessages.en_US ?? JSON.stringify(card), 'utf8')
+      .digest('base64')
+
+    filteredCards.push({
+      background,
+      ctaButton,
+      localeMessages,
+      messageId
+    })
+  }
+
+  return filteredCards
 }

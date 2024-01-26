@@ -15,9 +15,16 @@ import { EdgeText } from '../themed/EdgeText'
 import { ButtonUi4 } from './ButtonUi4'
 import { CardUi4 } from './CardUi4'
 
+export interface FilteredPromoCard {
+  background: PromoCard2['background']
+  ctaButton: PromoCard2['ctaButton']
+  localeMessages: PromoCard2['localeMessages']
+  messageId: string
+}
+
 interface Props {
   navigation: NavigationBase
-  promoInfo: PromoCard2
+  promoInfo: FilteredPromoCard
   // onClose: () => void // TODO: Implement
 }
 
