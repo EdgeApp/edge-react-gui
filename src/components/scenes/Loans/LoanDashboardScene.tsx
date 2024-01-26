@@ -239,6 +239,7 @@ export const LoanDashboardScene = (props: Props) => {
             keyExtractor={(loanAccount: LoanAccount) => loanAccount.id}
             ListFooterComponent={renderFooter()}
             renderItem={renderLoanCard}
+            scrollIndicatorInsets={{ right: 1 }}
           />
         </View>
       )}

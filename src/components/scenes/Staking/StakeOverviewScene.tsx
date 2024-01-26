@@ -170,6 +170,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
         keyExtractor={(allocation: PositionAllocation) =>
           `${allocation.allocationType}${allocation.currencyCode}${allocation.nativeAmount}${getAllocationLocktimeMessage(allocation)}`
         }
+        scrollIndicatorInsets={{ right: 1 }}
       />
       <StyledButtonContainer layout="column">
         <MainButton

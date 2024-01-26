@@ -111,7 +111,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props & HookPr
         overrideDots={theme.backgroundDots.assetOverrideDots}
       >
         <SceneHeader title={lstrings.title_change_mining_fee} underline withTopMargin />
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView contentContainerStyle={styles.container} scrollIndicatorInsets={{ right: 1 }}>
           {Object.keys(feeOptions).map(feeSetting => {
             return (
               <SettingsRadioRow

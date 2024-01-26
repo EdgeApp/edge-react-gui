@@ -172,6 +172,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
           contentContainerStyle={styles.scrollPadding}
+          scrollIndicatorInsets={{ right: 1 }}
         />
       </ModalUi4>
     )

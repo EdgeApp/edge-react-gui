@@ -247,6 +247,7 @@ const CoinRankingComponent = (props: Props) => {
               onEndReached={handleEndReached}
               contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
               onScroll={handleScroll}
+              scrollIndicatorInsets={{ right: 1 }}
             />
           </View>
         </>

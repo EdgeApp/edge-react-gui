@@ -229,6 +229,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
           marginRem={[1, 1]}
           onPress={handleNext}
           alignSelf="center"
+          scrollIndicatorInsets={{ right: 1 }}
         />
       </View>
     </SceneWrapper>

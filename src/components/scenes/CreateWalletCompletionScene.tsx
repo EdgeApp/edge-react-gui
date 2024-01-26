@@ -180,6 +180,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
             ref={flatListRef}
             renderItem={renderRow}
             scrollEnabled={done}
+            scrollIndicatorInsets={{ right: 1 }}
           />
           {renderNextButton}
         </View>

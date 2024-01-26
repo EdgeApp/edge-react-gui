@@ -316,6 +316,7 @@ function TransactionListComponent(props: Props) {
             // stickyHeaderIndices={stickyHeaderIndices}
             onEndReached={handleScrollEnd}
             onScroll={handleScroll}
+            scrollIndicatorInsets={{ right: 1 }}
           />
         </View>
       )}

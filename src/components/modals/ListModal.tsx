@@ -99,6 +99,7 @@ export function ListModal<T>({
         renderItem={renderItem}
         onScroll={() => Keyboard.dismiss()}
         onViewableItemsChanged={onViewableItemsChanged}
+        scrollIndicatorInsets={{ right: 1 }}
       />
     </ModalUi4>
   )

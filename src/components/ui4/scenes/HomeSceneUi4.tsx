@@ -96,6 +96,7 @@ export const HomeSceneUi4 = (props: Props) => {
             onScroll={handleScroll}
             style={undoInsetStyle}
             contentContainerStyle={[{ ...insetStyle, paddingBottom: insetStyle.paddingBottom + safeAreaInsets.bottom }]}
+            scrollIndicatorInsets={{ right: 1 }}
           >
             <SectionView extendRight marginRem={TEMP_PADDING_REM}>
               <>

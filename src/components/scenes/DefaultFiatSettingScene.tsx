@@ -102,6 +102,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
               keyboardShouldPersistTaps="handled"
               keyExtractor={this.keyExtractor}
               renderItem={this.renderFiatTypeResult}
+              scrollIndicatorInsets={{ right: 1 }}
             />
           </View>
         )}

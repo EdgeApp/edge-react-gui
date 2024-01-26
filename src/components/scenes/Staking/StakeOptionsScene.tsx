@@ -104,7 +104,12 @@ const StakeOptionsSceneComponent = (props: Props) => {
       </SceneHeader>
       <View style={styles.optionsContainer}>
         <EdgeText>{lstrings.stake_select_options}</EdgeText>
-        <FlatList data={stakePolicies} renderItem={renderOptions} keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId} />
+        <FlatList
+          data={stakePolicies}
+          renderItem={renderOptions}
+          keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId}
+          scrollIndicatorInsets={{ right: 1 }}
+        />
       </View>
     </SceneWrapper>
   )

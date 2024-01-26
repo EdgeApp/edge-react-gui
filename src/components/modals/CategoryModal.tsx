@@ -157,6 +157,7 @@ export function CategoryModal(props: Props) {
           keyboardShouldPersistTaps="handled"
           keyExtractor={keyExtractor}
           renderItem={renderRow}
+          scrollIndicatorInsets={{ right: 1 }}
         />
         {/* <ModalFooterFade /> */}
       </View>

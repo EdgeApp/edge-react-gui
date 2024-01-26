@@ -145,6 +145,7 @@ function WalletListSwipeableComponent(props: Props) {
       refreshControl={refreshControl}
       renderItem={renderRow}
       onScroll={handleScroll}
+      scrollIndicatorInsets={{ right: 1 }}
     />
   )
 }

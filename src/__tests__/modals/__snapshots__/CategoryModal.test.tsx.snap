@@ -834,6 +834,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         renderItem={[Function]}
         renderScrollComponent={[Function]}
         scrollEventThrottle={50}
+        scrollIndicatorInsets={
+          {
+            "right": 1,
+          }
+        }
         stickyHeaderIndices={[]}
         viewabilityConfigCallbackPairs={[]}
         waitFor={
@@ -2245,6 +2250,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         renderItem={[Function]}
         renderScrollComponent={[Function]}
         scrollEventThrottle={50}
+        scrollIndicatorInsets={
+          {
+            "right": 1,
+          }
+        }
         stickyHeaderIndices={[]}
         viewabilityConfigCallbackPairs={[]}
         waitFor={

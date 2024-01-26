@@ -57,6 +57,7 @@ export function WalletListSortable(props: Props) {
       onDragEnd={handleDragEnd}
       onScroll={handleScroll}
       contentContainerStyle={insetStyle}
+      scrollIndicatorInsets={{ right: 1 }}
     />
   )
 }

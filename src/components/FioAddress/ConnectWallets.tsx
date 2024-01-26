@@ -167,6 +167,7 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
             keyExtractor={keyExtractor}
             renderItem={renderFioConnectionWalletItem}
             contentContainerStyle={{ paddingBottom: theme.rem(4) }}
+            scrollIndicatorInsets={{ right: 1 }}
           />
         ) : (
           <AlertCardUi4 type="warning" title={lstrings.fio_connect_no_wallets} />

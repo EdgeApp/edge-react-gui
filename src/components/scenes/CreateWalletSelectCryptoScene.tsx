@@ -276,6 +276,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             keyboardShouldPersistTaps="handled"
             keyExtractor={keyExtractor}
             renderItem={renderCreateWalletRow}
+            scrollIndicatorInsets={{ right: 1 }}
           />
           {renderNextButton}
         </View>
