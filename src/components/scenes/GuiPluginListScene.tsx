@@ -515,7 +515,6 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const dispatch = useDispatch()
   const theme = useTheme()
 
-  const handleScroll = useSceneScrollHandler()
   const account = useSelector(state => state.core.account)
   const accountPlugins = useSelector(state => state.account.referralCache.accountPlugins)
   const accountReferral = useSelector(state => state.account.accountReferral)
@@ -525,6 +524,8 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const developerModeOn = useSelector(state => state.ui.settings.developerModeOn)
   const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
   const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
+
+  const handleScroll = useSceneScrollHandler()
 
   const updateCountryCode = (countryCode: string) => {
     dispatch(updateOneSetting({ countryCode }))
