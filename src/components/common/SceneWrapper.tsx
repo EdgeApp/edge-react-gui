@@ -126,16 +126,16 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const theme = useTheme()
 
   // Subscribe to the window size:
-  const frame = useSafeAreaFrame()
+  const { height: frameHeight, width: frameWidth } = useSafeAreaFrame()
   const safeAreaInsets = useSafeAreaInsets()
 
   // Get the screen width/height measurements for the scene
   const layoutStyle = useMemo(
     () => ({
-      height: frame.height,
-      width: frame.width
+      height: frameHeight,
+      width: frameWidth
     }),
-    [frame.height, frame.width]
+    [frameHeight, frameWidth]
   )
 
   // If the scene has scroll, this will be required for tabs and/or header animation
@@ -145,7 +145,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
 
   const renderScene = (keyboardAnimation: Animated.Value | undefined, trackerValue: number): JSX.Element => {
     const notificationHeight = theme.rem(4)
-    const headerBarHeight = getDefaultHeaderHeight(frame, false, 0)
+    const headerBarHeight = getDefaultHeaderHeight({ height: frameHeight, width: frameWidth }, false, 0)
 
     // If function children, the caller handles the insets and overscroll
     const isFuncChildren = typeof children === 'function'
@@ -153,7 +153,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     // Derive the keyboard height by getting the difference between screen height
     // and trackerValue. This value should be from zero to keyboard height
     // depending on the open state of the keyboard
-    const keyboardHeight = frame.height - trackerValue
+    const keyboardHeight = frameHeight - trackerValue
     const isKeyboardOpen = avoidKeyboard && keyboardHeight !== 0
 
     // Calculate app insets considering the app's header, tab-bar,
@@ -223,7 +223,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
 
   // These represent the distance from the top of the screen to the top of
   // the keyboard depending if the keyboard is down or up.
-  const downValue = frame.height
+  const downValue = frameHeight
   const upValue = useCallback((keyboardHeight: number) => downValue - keyboardHeight, [downValue])
 
   return avoidKeyboard ? (
