@@ -253,6 +253,11 @@ export const Main = () => {
 
   useMount(() => {
     logEvent('Start_App', { numAccounts: localUsers.length })
+    if (localUsers.length === 0) {
+      logEvent('Start_App_No_Accounts')
+    } else {
+      logEvent('Start_App_With_Accounts')
+    }
 
     // Used to re-enable animations to login scene:
     setTimeout(() => {
