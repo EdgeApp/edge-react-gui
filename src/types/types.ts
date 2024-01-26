@@ -166,11 +166,16 @@ const asLocalAccountSettingsInner = asObject({
   spamFilterOn: asMaybe(asBoolean, true),
   spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({}))
 })
+const asDeviceSettingsInner = asObject({
+  disableAnimations: asMaybe(asBoolean, false)
+})
 
 export const asLocalAccountSettings = asMaybe(asLocalAccountSettingsInner, () => asLocalAccountSettingsInner({}))
+export const asDeviceSettings = asMaybe(asDeviceSettingsInner, () => asDeviceSettingsInner({}))
 
 export type PasswordReminder = ReturnType<typeof asPasswordReminder>
 export type LocalAccountSettings = ReturnType<typeof asLocalAccountSettings>
+export type DeviceSettings = ReturnType<typeof asDeviceSettings>
 export type SpendingLimits = ReturnType<typeof asSpendingLimits>
 
 export type SpendAuthType = 'pin' | 'none'

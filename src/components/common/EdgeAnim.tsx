@@ -1,7 +1,6 @@
 import * as React from 'react'
-import { ViewProps } from 'react-native'
+import { View, ViewProps } from 'react-native'
 import Animated, {
-  AnimateProps,
   ComplexAnimationBuilder,
   Easing,
   FadeIn,
@@ -18,6 +17,8 @@ import Animated, {
   StretchInY,
   StretchOutY
 } from 'react-native-reanimated'
+
+import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
 
 export const DEFAULT_ANIMATION_DURATION_MS = 300
 export const LAYOUT_ANIMATION = LinearTransition.duration(DEFAULT_ANIMATION_DURATION_MS)
@@ -37,7 +38,7 @@ interface Anim {
   distance?: number
 }
 
-interface Props extends AnimateProps<ViewProps> {
+interface Props extends ViewProps {
   /**
    * disable animation
    * anim => disable animation but still render a container view
@@ -95,6 +96,11 @@ export const EdgeAnim = ({ children, disableType, enter, exit, visible = true, .
   if (!visible) return null
   const entering = getAnimBuilder(enter)
   const exiting = getAnimBuilder(exit)
+  const { disableAnimations } = getDeviceSettings()
+
+  if (disableAnimations) {
+    return <View {...rest}>{children}</View>
+  }
 
   if (disableType === 'anim') {
     return <Animated.View {...rest}>{children}</Animated.View>

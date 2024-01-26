@@ -2715,6 +2715,133 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   }
                 }
               >
+                Disable Animations
+              </Text>
+              <View>
+                <View
+                  pending={false}
+                  style={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
+                  }
+                >
+                  <ActivityIndicator
+                    color="#00f1a2"
+                    style={
+                      {
+                        "height": 34,
+                        "marginHorizontal": 11,
+                      }
+                    }
+                  />
+                </View>
+                <View
+                  pending={false}
+                  style={
+                    {
+                      "opacity": 1,
+                    }
+                  }
+                >
+                  <View
+                    pointerEvents="none"
+                    style={
+                      {
+                        "marginHorizontal": 11,
+                        "padding": 0,
+                      }
+                    }
+                  >
+                    <RCTSwitch
+                      accessibilityRole="switch"
+                      onChange={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      onTintColor="#00f1a2"
+                      style={
+                        [
+                          {
+                            "height": 31,
+                            "width": 51,
+                          },
+                          {
+                            "backgroundColor": "#888888",
+                            "borderRadius": 16,
+                          },
+                        ]
+                      }
+                      tintColor="#888888"
+                      value={false}
+                    />
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                [
+                  {
+                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomWidth": 1,
+                    "height": 1,
+                  },
+                  {
+                    "margin": 11,
+                  },
+                ]
+              }
+            />
+            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "marginBottom": 1,
+                  "minHeight": 67,
+                  "padding": 11,
+                }
+              }
+            >
+              <Text
+                style={
+                  {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "paddingHorizontal": 11,
+                    "textAlign": "left",
+                  }
+                }
+              >
                 Restore Wallets
               </Text>
               <View>
@@ -6095,6 +6222,133 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                       }
                       tintColor="#888888"
                       value={true}
+                    />
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                [
+                  {
+                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomWidth": 1,
+                    "height": 1,
+                  },
+                  {
+                    "margin": 11,
+                  },
+                ]
+              }
+            />
+            <View
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "marginBottom": 1,
+                  "minHeight": 67,
+                  "padding": 11,
+                }
+              }
+            >
+              <Text
+                style={
+                  {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "paddingHorizontal": 11,
+                    "textAlign": "left",
+                  }
+                }
+              >
+                Disable Animations
+              </Text>
+              <View>
+                <View
+                  pending={false}
+                  style={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
+                  }
+                >
+                  <ActivityIndicator
+                    color="#00f1a2"
+                    style={
+                      {
+                        "height": 34,
+                        "marginHorizontal": 11,
+                      }
+                    }
+                  />
+                </View>
+                <View
+                  pending={false}
+                  style={
+                    {
+                      "opacity": 1,
+                    }
+                  }
+                >
+                  <View
+                    pointerEvents="none"
+                    style={
+                      {
+                        "marginHorizontal": 11,
+                        "padding": 0,
+                      }
+                    }
+                  >
+                    <RCTSwitch
+                      accessibilityRole="switch"
+                      onChange={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      onTintColor="#00f1a2"
+                      style={
+                        [
+                          {
+                            "height": 31,
+                            "width": 51,
+                          },
+                          {
+                            "backgroundColor": "#888888",
+                            "borderRadius": 16,
+                          },
+                        ]
+                      }
+                      tintColor="#888888"
+                      value={false}
                     />
                   </View>
                 </View>
