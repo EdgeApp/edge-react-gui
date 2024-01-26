@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Dimensions, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
-import { Gesture, GestureDetector, TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
@@ -93,17 +93,20 @@ export function AirshipDropdown(props: Props): JSX.Element {
     }
   })
 
-  const gesture = Gesture.Pan()
-    .onUpdate(e => {
-      offset.value = e.translationY
-    })
-    .onEnd(() => {
-      if (offset.value < -closeThreshold) {
-        runOnJS(handleClose)()
-      }
-      runOnJS(stopTimer)()
-      offset.value = withTiming(0, { duration })
-    })
+  const gesture = Gesture.Race(
+    Gesture.Pan()
+      .onUpdate(e => {
+        offset.value = e.translationY
+      })
+      .onEnd(() => {
+        if (offset.value < -closeThreshold) {
+          runOnJS(handleClose)()
+        }
+        runOnJS(stopTimer)()
+        offset.value = withTiming(0, { duration })
+      }),
+    Gesture.Tap().onEnd(() => runOnJS(onPress ?? handleClose)())
+  )
 
   //
   // Dynamic styles
@@ -116,14 +119,12 @@ export function AirshipDropdown(props: Props): JSX.Element {
 
   return (
     <GestureDetector gesture={gesture}>
-      <TouchableWithoutFeedback onPress={onPress ?? handleClose}>
-        <Animated.View style={[styles.body, bodyStyle]}>
-          {children}
-          <View style={styles.dragBarContainer}>
-            <View style={styles.dragBar} />
-          </View>
-        </Animated.View>
-      </TouchableWithoutFeedback>
+      <Animated.View style={[styles.body, bodyStyle]}>
+        {children}
+        <View style={styles.dragBarContainer}>
+          <View style={styles.dragBar} />
+        </View>
+      </Animated.View>
     </GestureDetector>
   )
 }
@@ -133,6 +134,7 @@ const getStyles = cacheStyles((theme: Theme) => {
   return {
     body: {
       // Layout:
+      alignSelf: 'flex-start',
       flexShrink: 1,
       paddingBottom: theme.rem(0.5),
       paddingTop: safeAreaGap,
