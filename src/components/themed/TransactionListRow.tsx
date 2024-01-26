@@ -188,13 +188,14 @@ export function TransactionListRow(props: Props) {
     Share.open(shareOptions).catch(e => showError(e))
   })
 
+  // HACK: Handle 100% of the margins because of SceneHeader usage on this scene
   return (
     <CardUi4 icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
       <SectionView dividerMarginRem={[0.2, 0.5]} marginRem={[0.25, 0]}>
         <>
           <View style={styles.row}>
             <EdgeText style={styles.titleText}>{name}</EdgeText>
-            <EdgeText style={styles.titleText}>{cryptoAmountString}</EdgeText>
+            <EdgeText style={styles.cryptoText}>{cryptoAmountString}</EdgeText>
           </View>
           <View style={styles.row}>
             <EdgeText style={unconfirmedOrTimeStyle}>{unconfirmedOrTimeText}</EdgeText>
@@ -276,7 +277,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignSelf: 'center',
     fontFamily: theme.fontFaceMedium,
     flexShrink: 1,
-    maxWidth: '60%'
+    marginRight: theme.rem(1)
+  },
+  cryptoText: {
+    alignSelf: 'center',
+    textAlign: 'right',
+    flexShrink: 0
   },
   fiatAmount: {
     fontSize: theme.rem(0.75),
