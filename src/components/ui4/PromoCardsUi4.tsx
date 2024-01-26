@@ -1,11 +1,11 @@
 import { asArray } from 'cleaners'
 import { asInfoRollup, asPromoCard2, PromoCard2 } from 'edge-info-server/types'
 import * as React from 'react'
-import { Platform } from 'react-native'
+import { ListRenderItem, Platform } from 'react-native'
 import DeviceInfo, { getBuildNumber, getVersion } from 'react-native-device-info'
 
 import { getCountryCodeByIp } from '../../actions/AccountReferralActions'
-import { getLocaleOrDefaultString } from '../../locales/intl'
+import { useHandler } from '../../hooks/useHandler'
 import { config } from '../../theme/appConfig'
 import { NavigationBase } from '../../types/routerTypes'
 import { fetchInfo } from '../../util/network'
@@ -96,13 +96,14 @@ export const PromoCardsUi4 = (props: Props) => {
       .catch(e => console.log(String(e)))
   }, [])
 
-  return promos == null || promos.length === 0 ? null : (
+  // List rendering methods:
+  const renderItem: ListRenderItem<PromoCard2> = useHandler(({ item }) => <PromoCardUi4 navigation={navigation} promoInfo={item} />)
+
+  if (promos == null || promos.length === 0) return null
+
+  return (
     <EdgeAnim style={{ height: theme.rem(11.5) }} enter={{ type: 'fadeInUp', distance: 110 }}>
-      <CarouselUi4 height={theme.rem(9.75)} width={screenWidth}>
-        {promos.map(promoInfo => (
-          <PromoCardUi4 navigation={navigation} promoInfo={promoInfo} key={getLocaleOrDefaultString(promoInfo.localeMessages)} />
-        ))}
-      </CarouselUi4>
+      <CarouselUi4 data={promos} height={theme.rem(9.75)} renderItem={renderItem} width={screenWidth} />
     </EdgeAnim>
   )
 }

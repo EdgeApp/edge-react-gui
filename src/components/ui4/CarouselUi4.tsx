@@ -1,11 +1,15 @@
 import React, { useState } from 'react'
-import { View } from 'react-native'
+import { ListRenderItem, View } from 'react-native'
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 
+import { useHandler } from '../../hooks/useHandler'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
-interface Props {
-  children: React.ReactNode
+interface Props<T> {
+  data: T[]
+  keyExtractor?: (item: T) => string
+  renderItem: ListRenderItem<T>
+
   height: number
   width: number
 }
@@ -15,24 +19,25 @@ const DOT_SIZE_REM = 0.5
 /**
  * A horizontal carousel with pagination dots
  */
-export const CarouselUi4 = (props: Props) => {
-  const { children, height, width } = props
+export function CarouselUi4<T>(props: Props<T>): JSX.Element {
+  const { data, keyExtractor, height, width } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const nonNullChildren = React.Children.toArray(children).filter(child => child != null && React.isValidElement(child))
-  const numChildren = nonNullChildren.length
+  const carouselRef = React.useRef(null)
 
   const [activeIndex, setActiveIndex] = useState(0)
 
-  const renderItem = ({ item }: { item: React.ReactNode }) => <View style={[styles.childContainer, { width: width * 0.9, height }]}>{item}</View>
-
-  if (children == null || numChildren === 0) return null
+  const renderItem = useHandler<ListRenderItem<T>>(info => (
+    <View style={[styles.childContainer, { width: width * 0.9, height }]}>{props.renderItem(info)}</View>
+  ))
 
   return (
     <View style={styles.carouselContainer}>
       <Carousel
-        data={nonNullChildren}
+        ref={carouselRef}
+        data={data}
+        keyExtractor={keyExtractor}
         renderItem={renderItem}
         sliderWidth={width}
         itemWidth={width * 0.84}
@@ -46,11 +51,12 @@ export const CarouselUi4 = (props: Props) => {
         lockScrollWhileSnapping
       />
       <Pagination
+        carouselRef={carouselRef.current ?? undefined}
         containerStyle={{
           marginTop: -theme.rem(1),
           marginBottom: -theme.rem(1)
         }}
-        dotsLength={numChildren}
+        dotsLength={data.length}
         activeDotIndex={activeIndex}
         tappableDots
         dotStyle={styles.dotStyle}
