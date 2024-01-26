@@ -52,7 +52,7 @@ export const VisaCardCard = (props: Props) => {
   return (
     <>
       {ioniaPluginIds.includes(pluginId) && tokenId == null && (
-        <CardUi4 paddingRem={0} marginRem={[1, 0.5, -0.5, 0.5]}>
+        <CardUi4 paddingRem={0}>
           <TouchableOpacity onPress={handlePress} style={styles.container}>
             <FastImage resizeMode="contain" source={{ uri: icon.symbolImage }} style={styles.icon} />
             <EdgeText numberOfLines={0} style={styles.text}>

@@ -10,7 +10,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           "borderRadius": 16,
         },
         {
-          "marginBottom": 22,
+          "marginBottom": 11,
           "marginLeft": 11,
           "marginRight": 11,
           "marginTop": 11,
@@ -576,10 +576,10 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           "borderRadius": 16,
         },
         {
-          "marginBottom": -11,
+          "marginBottom": 11,
           "marginLeft": 11,
           "marginRight": 11,
-          "marginTop": 22,
+          "marginTop": 11,
         },
         {
           "paddingBottom": 0,
@@ -699,83 +699,92 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
   </View>,
   <View
     style={
-      [
-        {
-          "justifyContent": "center",
-          "marginHorizontal": 22,
-          "paddingBottom": 22,
-        },
-        null,
-        undefined,
-      ]
+      {
+        "marginRight": -11,
+        "overflow": "visible",
+      }
     }
   >
     <View
       style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "justifyContent": "space-between",
-        }
-      }
-    />
-    <Text
-      adjustsFontSizeToFit={true}
-      minimumFontScale={0.65}
-      numberOfLines={1}
-      style={
         [
           {
-            "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
-            "includeFontPadding": false,
-          },
-          {
-            "fontFamily": "Quicksand-Medium",
+            "justifyContent": "center",
+            "marginHorizontal": 22,
+            "paddingBottom": 22,
           },
           null,
+          undefined,
         ]
       }
     >
-      Transactions
-    </Text>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+          }
+        }
+      />
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "fontFamily": "Quicksand-Medium",
+            },
+            null,
+          ]
+        }
+      >
+        Transactions
+      </Text>
+    </View>
+    <BVLinearGradient
+      colors={
+        [
+          452984831,
+          452984831,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0.5,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0.5,
+        }
+      }
+      style={
+        [
+          {
+            "alignSelf": "stretch",
+            "height": 1,
+          },
+          {
+            "marginBottom": 0,
+            "marginLeft": 22,
+            "marginRight": 0,
+            "marginTop": 0,
+          },
+        ]
+      }
+    />
   </View>,
-  <BVLinearGradient
-    colors={
-      [
-        452984831,
-        452984831,
-      ]
-    }
-    endPoint={
-      {
-        "x": 1,
-        "y": 0.5,
-      }
-    }
-    locations={null}
-    startPoint={
-      {
-        "x": 0,
-        "y": 0.5,
-      }
-    }
-    style={
-      [
-        {
-          "alignSelf": "stretch",
-          "height": 1,
-        },
-        {
-          "marginBottom": 0,
-          "marginLeft": 22,
-          "marginRight": 0,
-          "marginTop": 0,
-        },
-      ]
-    }
-  />,
 ]
 `;
 
@@ -789,7 +798,7 @@ exports[`TransactionListTop should render 1`] = `
           "borderRadius": 16,
         },
         {
-          "marginBottom": 22,
+          "marginBottom": 11,
           "marginLeft": 11,
           "marginRight": 11,
           "marginTop": 11,
@@ -1349,82 +1358,91 @@ exports[`TransactionListTop should render 1`] = `
   </View>,
   <View
     style={
-      [
-        {
-          "justifyContent": "center",
-          "marginHorizontal": 22,
-          "paddingBottom": 22,
-        },
-        null,
-        undefined,
-      ]
+      {
+        "marginRight": -11,
+        "overflow": "visible",
+      }
     }
   >
     <View
       style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "justifyContent": "space-between",
-        }
-      }
-    />
-    <Text
-      adjustsFontSizeToFit={true}
-      minimumFontScale={0.65}
-      numberOfLines={1}
-      style={
         [
           {
-            "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
-            "fontSize": 22,
-            "includeFontPadding": false,
-          },
-          {
-            "fontFamily": "Quicksand-Medium",
+            "justifyContent": "center",
+            "marginHorizontal": 22,
+            "paddingBottom": 22,
           },
           null,
+          undefined,
         ]
       }
     >
-      Transactions
-    </Text>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+          }
+        }
+      />
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "fontFamily": "Quicksand-Medium",
+            },
+            null,
+          ]
+        }
+      >
+        Transactions
+      </Text>
+    </View>
+    <BVLinearGradient
+      colors={
+        [
+          452984831,
+          452984831,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0.5,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0.5,
+        }
+      }
+      style={
+        [
+          {
+            "alignSelf": "stretch",
+            "height": 1,
+          },
+          {
+            "marginBottom": 0,
+            "marginLeft": 22,
+            "marginRight": 0,
+            "marginTop": 0,
+          },
+        ]
+      }
+    />
   </View>,
-  <BVLinearGradient
-    colors={
-      [
-        452984831,
-        452984831,
-      ]
-    }
-    endPoint={
-      {
-        "x": 1,
-        "y": 0.5,
-      }
-    }
-    locations={null}
-    startPoint={
-      {
-        "x": 0,
-        "y": 0.5,
-      }
-    }
-    style={
-      [
-        {
-          "alignSelf": "stretch",
-          "height": 1,
-        },
-        {
-          "marginBottom": 0,
-          "marginLeft": 22,
-          "marginRight": 0,
-          "marginTop": 0,
-        },
-      ]
-    }
-  />,
 ]
 `;

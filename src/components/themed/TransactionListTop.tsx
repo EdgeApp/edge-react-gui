@@ -375,7 +375,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     return (
       <>
         {searching ? null : (
-          <CardUi4 paddingRem={1} marginRem={[0.5, 0.5, 1]}>
+          <CardUi4 paddingRem={1}>
             {this.renderBalanceBox()}
             {isStakingAvailable && this.renderStakedBalance()}
             <View style={styles.buttonsContainer}>
@@ -404,9 +404,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         )}
         {isEmpty || searching ? null : <VisaCardCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} />}
         {isEmpty || searching ? null : (
-          <SceneHeader underline>
-            <EdgeText style={styles.transactionsDividerText}>{lstrings.fragment_transaction_list_transaction}</EdgeText>
-          </SceneHeader>
+          <View style={styles.tempSceneHeader}>
+            <SceneHeader underline>
+              <EdgeText style={styles.transactionsDividerText}>{lstrings.fragment_transaction_list_transaction}</EdgeText>
+            </SceneHeader>
+          </View>
         )}
       </>
     )
@@ -499,6 +501,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     paddingRight: theme.rem(1)
+  },
+
+  // TODO: Fix SceneHeader to be UI4 compatible
+  // This negative margin will cause the SceneHeader's divider-line to touch
+  // the right edge of the screen. This is design roll-off from UI3.
+  tempSceneHeader: {
+    marginRight: -theme.rem(0.5),
+    overflow: 'visible'
   }
 }))
 
