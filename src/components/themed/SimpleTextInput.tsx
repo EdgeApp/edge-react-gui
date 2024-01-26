@@ -109,6 +109,8 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   const hasIcon = Icon != null
   const hasValue = value !== ''
 
+  const [isFocused, setIsFocused] = React.useState(false)
+
   // Imperative methods:
   const inputRef = useAnimatedRef<TextInput>()
   function blur(): void {
@@ -123,14 +125,14 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   function focus(): void {
     if (inputRef.current != null && !disabled) inputRef.current.focus()
   }
-  function isFocused(): boolean {
+  function checkIsFocused(): boolean {
     return inputRef.current != null ? inputRef.current.isFocused() : false
   }
   function setNativeProps(nativeProps: Object): void {
     if (inputRef.current != null) inputRef.current.setNativeProps(nativeProps)
   }
 
-  React.useImperativeHandle(ref, () => ({ blur, clear, focus, isFocused, setNativeProps }))
+  React.useImperativeHandle(ref, () => ({ blur, clear, focus, isFocused: checkIsFocused, setNativeProps }))
 
   // Animates between 0 and 1 based our disabled state:
   const disableAnimation = useSharedValue(0)
@@ -149,6 +151,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   const handleBlur = useHandler(() => {
     focusAnimation.value = withDelay(animationDelay, withTiming(0, { duration: baseDuration }))
     if (onBlur != null) onBlur()
+    setIsFocused(false)
   })
   const handleClearPress = useHandler(() => {
     clear()
@@ -156,6 +159,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   const handleFocus = useHandler(() => {
     focusAnimation.value = withTiming(1, { duration: baseDuration })
     if (onFocus != null) onFocus()
+    setIsFocused(true)
   })
   const handleSubmitEditing = useHandler(() => {
     if (onSubmitEditing != null) onSubmitEditing()
@@ -166,13 +170,12 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
 
   const scale = useDerivedValue(() => scaleProp?.value ?? 1)
 
-  const hasValueAnimation = useDerivedValue(
-    () => (hasValue ? withTiming(1, { duration: baseDuration }) : withTiming(0, { duration: baseDuration })),
-    [hasValue]
-  )
-
   const interpolateIconColor = useAnimatedColorInterpolateFn(theme.textInputIconColor, theme.textInputIconColorFocused, theme.textInputIconColorDisabled)
   const iconColor = useDerivedValue(() => interpolateIconColor(focusAnimation, disableAnimation))
+
+  const placeholderTextColor = useMemo(() => {
+    return disabled ? theme.textInputPlaceholderColorDisabled : isFocused ? theme.textInputPlaceholderColorFocused : theme.textInputPlaceholderColor
+  }, [disabled, isFocused, theme.textInputPlaceholderColor, theme.textInputPlaceholderColorDisabled, theme.textInputPlaceholderColorFocused])
 
   return (
     <TouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
@@ -180,11 +183,6 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
         <SideContainer size={leftIconSize}>{Icon == null ? null : <Icon color={iconColor} size={leftIconSize} />}</SideContainer>
 
         <InnerContainer>
-          {placeholder == null ? null : (
-            <PlaceholderText disableAnimation={disableAnimation} focusAnimation={focusAnimation} hasValueAnimation={hasValueAnimation} scale={scale}>
-              {placeholder}
-            </PlaceholderText>
-          )}
           <InputField
             accessible
             ref={inputRef}
@@ -194,6 +192,8 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
             autoFocus={autoFocus}
             disableAnimation={disableAnimation}
             focusAnimation={focusAnimation}
+            placeholder={placeholder}
+            placeholderTextColor={placeholderTextColor}
             selectionColor={theme.textInputTextColor}
             testID={`${testID}.textInput`}
             textAlignVertical="top"
@@ -277,44 +277,6 @@ const SideContainer = styled(Animated.View)<{ size: SharedValue<number> }>(theme
 
 const InnerContainer = styled(View)({
   flex: 1
-})
-
-const PlaceholderText = styled(Animated.Text)<{
-  disableAnimation: SharedValue<number>
-  focusAnimation: SharedValue<number>
-  hasValueAnimation: SharedValue<number>
-  scale: SharedValue<number>
-}>(theme => ({ disableAnimation, focusAnimation, hasValueAnimation, scale }) => {
-  const rem = theme.rem(1)
-  const interpolatePlaceholderTextColor = useAnimatedColorInterpolateFn(
-    theme.textInputPlaceholderColor,
-    theme.textInputPlaceholderColorFocused,
-    theme.textInputPlaceholderColorDisabled
-  )
-
-  return [
-    {
-      position: 'absolute',
-      top: 0,
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingHorizontal: theme.rem(0.5),
-      paddingVertical: 0,
-      margin: 0
-    },
-    {
-      fontFamily: theme.fontFaceDefault,
-      fontSize: theme.rem(1),
-      includeFontPadding: false
-    },
-    useAnimatedStyle(() => {
-      return {
-        opacity: interpolate(hasValueAnimation.value, [0, 1], [1, 0]),
-        color: interpolatePlaceholderTextColor(focusAnimation, disableAnimation),
-        fontSize: scale.value * rem
-      }
-    })
-  ]
 })
 
 const InputField = styledWithRef(AnimatedTextInput)<{
