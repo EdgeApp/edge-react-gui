@@ -50,7 +50,7 @@ export type SceneScrollHandler = (event: NativeSyntheticEvent<NativeScrollEvent>
  * the hook by the optional `isEnabled` boolean parameter.
  */
 export const useSceneScrollHandler = (isEnabled: boolean = true): SceneScrollHandler => {
-  const { setScrollState } = useSceneScrollContext()
+  const setScrollState = useSceneScrollContext(state => state.setScrollState)
 
   const localScrollState: ScrollState = useScrollState()
   const isFocused = useIsFocused()

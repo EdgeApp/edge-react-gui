@@ -80,7 +80,7 @@ export const [SceneFooterRenderProvider, useSceneFooterRenderState] = createStat
  * @param deps the dependencies for the render function to trigger re-renders
  */
 export const useSceneFooterRender = (renderFn: FooterRender = defaultFooterRender, deps: DependencyList) => {
-  const { setRenderFooter } = useSceneFooterRenderState()
+  const setRenderFooter = useSceneFooterRenderState(state => state.setRenderFooter)
 
   // The callback will allow us to trigger a re-render when the deps change
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -127,11 +127,15 @@ export const useSceneFooterRender = (renderFn: FooterRender = defaultFooterRende
  * hook multiple times will cause thrashing for the footer state shared values.
  */
 export const useFooterAccordionEvents = () => {
-  const { scrollState } = useSceneScrollContext()
+  const scrollState = useSceneScrollContext(state => state.scrollState)
   const { scrollBeginEvent, scrollEndEvent, scrollMomentumBeginEvent, scrollMomentumEndEvent, scrollY } = scrollState
 
   const scrollYStart = useSharedValue<number | undefined>(undefined)
-  const { footerOpenRatio, footerOpenRatioStart, keepOpen, footerHeight = 1, snapTo } = useSceneFooterState()
+  const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
+  const footerOpenRatioStart = useSceneFooterState(state => state.footerOpenRatioStart)
+  const keepOpen = useSceneFooterState(state => state.keepOpen)
+  const footerHeight = useSceneFooterState(state => state.footerHeight ?? 1)
+  const snapTo = useSceneFooterState(state => state.snapTo)
 
   // This factor will convert scroll delta into footer open value delta (a 0 to 1 fraction)
   const scrollDeltaToRatioDeltaFactor = 1 / footerHeight
@@ -234,7 +238,7 @@ export const useFooterAccordionEvents = () => {
  * @returns layout handler for the component which height you want to measure
  */
 export const useLayoutHeightInFooter = (): ((event: LayoutChangeEvent) => void) => {
-  const { setFooterHeight } = useSceneFooterState()
+  const setFooterHeight = useSceneFooterState(state => state.setFooterHeight)
 
   const [layoutHeight, setLayoutHeight] = useState<number | undefined>(undefined)
 
