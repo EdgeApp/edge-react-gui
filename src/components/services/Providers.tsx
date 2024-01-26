@@ -68,7 +68,7 @@ export function Providers(props: Props) {
         // @ts-expect-error
         themeOverride={theme}
       >
-        <KeyboardProvider>
+        <KeyboardProvider navigationBarTranslucent statusBarTranslucent>
           {renderStateProviders(
             <MenuProvider>
               <Airship>
