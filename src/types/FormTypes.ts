@@ -24,7 +24,7 @@ export const FORM_FIELD_DISPLAY_PROPS: {
     textInputProps: undefined
   },
   iban: {
-    widthRem: 20,
+    widthRem: undefined,
     textInputProps: undefined
   },
   name: {

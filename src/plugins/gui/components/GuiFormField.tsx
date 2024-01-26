@@ -47,8 +47,15 @@ export const GuiFormField = React.memo((props: Props) => {
     [theme, widthRem]
   )
 
+  const marginStyle = React.useMemo(
+    () => ({
+      margin: theme.rem(0.5)
+    }),
+    [theme]
+  )
+
   return (
-    <View key={key} style={widthStyle}>
+    <View key={key} style={[widthStyle, marginStyle]}>
       <FilledTextInput
         autoCorrect={false}
         autoFocus={autofocus}
