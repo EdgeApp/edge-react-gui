@@ -2,7 +2,7 @@
 
 exports[`FioAddressList should render with loading props 1`] = `
 <React.Fragment>
-  <SceneWrapper>
+  <Memo(SceneWrapperComponent)>
     <ForwardRef
       style={
         {
@@ -129,7 +129,7 @@ exports[`FioAddressList should render with loading props 1`] = `
         }
       />
     </View>
-  </SceneWrapper>
+  </Memo(SceneWrapperComponent)>
   <FullScreenLoader
     indicatorStyles={
       {
