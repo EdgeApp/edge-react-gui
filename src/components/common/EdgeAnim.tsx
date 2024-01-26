@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, ViewProps } from 'react-native'
+import { ViewProps } from 'react-native'
 import Animated, {
   ComplexAnimationBuilder,
   Easing,
@@ -39,12 +39,7 @@ interface Anim {
 }
 
 interface Props extends ViewProps {
-  /**
-   * disable animation
-   * anim => disable animation but still render a container view
-   * view => render the children with no container view
-   * */
-  disableType?: 'anim' | 'view'
+  disableAnimation?: boolean
   enter?: Anim
   exit?: Anim
 
@@ -92,22 +87,14 @@ const getAnimBuilder = (anim?: Anim) => {
   return builder
 }
 
-export const EdgeAnim = ({ children, disableType, enter, exit, visible = true, ...rest }: Props): JSX.Element | null => {
+export const EdgeAnim = ({ children, disableAnimation, enter, exit, visible = true, ...rest }: Props): JSX.Element | null => {
   if (!visible) return null
   const entering = getAnimBuilder(enter)
   const exiting = getAnimBuilder(exit)
   const { disableAnimations } = getDeviceSettings()
 
-  if (disableAnimations) {
-    return <View {...rest}>{children}</View>
-  }
-
-  if (disableType === 'anim') {
+  if (disableAnimations || disableAnimation) {
     return <Animated.View {...rest}>{children}</Animated.View>
-  }
-
-  if (disableType === 'view') {
-    return <>{children}</>
   }
 
   return (

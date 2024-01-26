@@ -66,10 +66,10 @@ export const ButtonsViewUi4 = React.memo(
       const { label, onPress, disabled, spinner, testID } = buttonProps
 
       const distance = animDistanceStart != null ? animDistanceStart + index * ANIM_DISTANCE_INCREMENT : undefined
-      const disableType = Platform.OS === 'android' ? 'view' : undefined
+      const disableAnimation = Platform.OS === 'android'
 
       return (
-        <MaybeEdgeAnim when={animDistanceStart != null} disableType={disableType} enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance }}>
+        <MaybeEdgeAnim when={animDistanceStart != null} disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance }}>
           <ButtonUi4 layout={layout} label={label} onPress={onPress} type={type} disabled={disabled} spinner={spinner} testID={testID} />
         </MaybeEdgeAnim>
       )

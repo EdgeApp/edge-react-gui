@@ -78,9 +78,8 @@ const CoinRankingComponent = (props: Props) => {
     const key = `${index}-${item}-${rank}-${currencyCode}-${lastUsedFiat}`
     debugLog(LOG_COINRANK, `renderItem ${key.toString()}`)
 
-    const disableType = index >= MAX_LIST_ITEMS_ANIM ? 'view' : undefined
     return (
-      <EdgeAnim disableType={disableType} enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}>
+      <EdgeAnim disableAnimation={index >= MAX_LIST_ITEMS_ANIM} enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}>
         <CoinRankRow
           navigation={navigation}
           index={item}
