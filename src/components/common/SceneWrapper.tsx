@@ -142,17 +142,6 @@ const styles = StyleSheet.create({
   }
 })
 
-const MaybeAnimatedView = maybeComponent(Animated.View)
-const MaybeAnimatedScrollView = maybeComponent(Reanimated.ScrollView)
-const MaybeView = maybeComponent(View)
-
-const SceneFooter = styled(View)({
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  right: 0
-})
-
 interface SceneWrapperInnerProps extends SceneWrapperProps {
   keyboardAnimation: Animated.Value | undefined
   trackerValue: number
@@ -202,8 +191,6 @@ function SceneWrapperInner(props: SceneWrapperInnerProps) {
 
   // If the scene has scroll, this will be required for tabs and/or header animation
   const handleScroll = useSceneScrollHandler(scroll && (hasTabs || hasHeader))
-
-  const renderFooter = useSceneFooterRenderState(state => state.renderFooter)
 
   const notificationHeight = theme.rem(4)
   const headerBarHeight = getDefaultHeaderHeight({ height: frameHeight, width: frameWidth }, false, 0)
@@ -275,9 +262,33 @@ function SceneWrapperInner(props: SceneWrapperInnerProps) {
             {isFuncChildren ? children(info) : children}
           </MaybeView>
         </MaybeAnimatedScrollView>
-        {renderFooter != null && !hasTabs ? <SceneFooter>{renderFooter(info)}</SceneFooter> : null}
+        <SceneWrapperFooterContainer hasTabs={hasTabs} sceneWrapperInfo={info} />
       </MaybeAnimatedView>
       {hasNotifications ? <NotificationView hasTabs={hasTabs} navigation={navigation} /> : null}
     </>
   )
 }
+
+const MaybeAnimatedView = maybeComponent(Animated.View)
+const MaybeAnimatedScrollView = maybeComponent(Reanimated.ScrollView)
+const MaybeView = maybeComponent(View)
+
+interface SceneWrapperFooterContainerProps {
+  hasTabs: boolean
+  sceneWrapperInfo: SceneWrapperInfo
+}
+
+const SceneWrapperFooterContainer = React.memo((props: SceneWrapperFooterContainerProps) => {
+  const { hasTabs, sceneWrapperInfo } = props
+
+  const renderFooter = useSceneFooterRenderState(state => state.renderFooter)
+
+  return renderFooter != null && !hasTabs ? <SceneFooter>{renderFooter(sceneWrapperInfo)}</SceneFooter> : null
+})
+
+const SceneFooter = styled(View)({
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0
+})
