@@ -1,7 +1,7 @@
 import { getDefaultHeaderHeight } from '@react-navigation/elements'
 import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
 import Reanimated from 'react-native-reanimated'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -224,7 +224,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   // These represent the distance from the top of the screen to the top of
   // the keyboard depending if the keyboard is down or up.
   const downValue = frame.height
-  const upValue = (keyboardHeight: number) => downValue - keyboardHeight
+  const upValue = useCallback((keyboardHeight: number) => downValue - keyboardHeight, [downValue])
 
   return avoidKeyboard ? (
     <KeyboardTracker downValue={downValue} upValue={upValue}>
