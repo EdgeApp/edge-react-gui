@@ -99,7 +99,7 @@ export function WalletListScene(props: Props) {
   )
 
   return (
-    <SceneWrapper avoidKeyboard hasTabs hasNotifications padding={theme.rem(0.5)}>
+    <SceneWrapper avoidKeyboard hasTabs hasNotifications>
       {({ insetStyle, undoInsetStyle }) => (
         <>
           <WiredProgressBar />
