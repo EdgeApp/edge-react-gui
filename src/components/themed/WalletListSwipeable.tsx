@@ -1,3 +1,4 @@
+import { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
@@ -8,7 +9,6 @@ import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
-import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { InsetStyle } from '../common/SceneWrapper'
 import { searchWalletList } from '../services/SortedWalletList'
@@ -62,9 +62,7 @@ function WalletListSwipeableComponent(props: Props) {
     [account, searching, searchText, sortedWalletList]
   )
 
-  const handleCreateWallet = useHandler(async (walletId, currencyCode) => {
-    const wallet = account.currencyWallets[walletId]
-    const tokenId = getTokenIdForced(account, wallet.currencyInfo.pluginId, currencyCode)
+  const handleCreateWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId) => {
     dispatch(selectWalletToken({ navigation, walletId, tokenId }))
       .then(() => navigation.navigate('transactionList', { walletId, tokenId }))
       .finally(onReset)
