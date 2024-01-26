@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CryptoExchangeSuccessComponent should render with loading props 1`] = `
-<SceneWrapper
+<Memo
   hasNotifications={true}
 >
   <View
@@ -69,5 +69,5 @@ exports[`CryptoExchangeSuccessComponent should render with loading props 1`] = `
       />
     </Fade>
   </View>
-</SceneWrapper>
+</Memo>
 `;

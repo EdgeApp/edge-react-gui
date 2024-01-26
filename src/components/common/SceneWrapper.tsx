@@ -99,7 +99,7 @@ interface SceneWrapperProps {
  * padding will be passed as `insetStyle` and `undoInsetStyle` will include
  * negative margin style rules to be used to offset these insets.
  */
-export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
+export const SceneWrapper = React.memo((props: SceneWrapperProps): JSX.Element => {
   const { avoidKeyboard = false } = props
 
   // Subscribe to the window size:
@@ -131,7 +131,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
       {...props}
     />
   )
-}
+})
 
 const styles = StyleSheet.create({
   sceneContainer: {
@@ -147,10 +147,8 @@ interface SceneWrapperInnerProps extends SceneWrapperProps {
   trackerValue: number
 }
 
-function SceneWrapperInner(props: SceneWrapperInnerProps) {
-  // Inner props
+const SceneWrapperInner = React.memo((props: SceneWrapperInnerProps) => {
   const { keyboardAnimation, trackerValue } = props
-  // Wrapper props:
   const {
     overrideDots,
     accentColors,
@@ -178,7 +176,6 @@ function SceneWrapperInner(props: SceneWrapperInnerProps) {
 
   // Subscribe to the window size:
   const { height: frameHeight, width: frameWidth } = useSafeAreaFrame()
-
   const safeAreaInsets = useSafeAreaInsets()
 
   // Get the screen width/height measurements for the scene
@@ -196,9 +193,6 @@ function SceneWrapperInner(props: SceneWrapperInnerProps) {
   const notificationHeight = theme.rem(4)
   const headerBarHeight = getDefaultHeaderHeight({ height: frameHeight, width: frameWidth }, false, 0)
 
-  // If function children, the caller handles the insets and overscroll
-  const isFuncChildren = typeof children === 'function'
-
   // Derive the keyboard height by getting the difference between screen height
   // and trackerValue. This value should be from zero to keyboard height
   // depending on the open state of the keyboard
@@ -211,34 +205,58 @@ function SceneWrapperInner(props: SceneWrapperInnerProps) {
   const maybeNotificationHeight = isLightAccount ? notificationHeight : 0
   const maybeTabBarHeight = hasTabs ? MAX_TAB_BAR_HEIGHT : 0
   const maybeInsetBottom = !hasTabs && !isKeyboardOpen ? safeAreaInsets.bottom : 0
-  const insets: EdgeInsets = {
-    top: safeAreaInsets.top + maybeHeaderHeight,
-    right: safeAreaInsets.right,
-    bottom: maybeInsetBottom + maybeNotificationHeight + maybeTabBarHeight + footerHeight,
-    left: safeAreaInsets.left
-  }
+  const insets: EdgeInsets = useMemo(
+    () => ({
+      top: safeAreaInsets.top + maybeHeaderHeight,
+      right: safeAreaInsets.right,
+      bottom: maybeInsetBottom + maybeNotificationHeight + maybeTabBarHeight + footerHeight,
+      left: safeAreaInsets.left
+    }),
+    [
+      footerHeight,
+      maybeHeaderHeight,
+      maybeInsetBottom,
+      maybeNotificationHeight,
+      maybeTabBarHeight,
+      safeAreaInsets.left,
+      safeAreaInsets.right,
+      safeAreaInsets.top
+    ]
+  )
 
   // This is a convenient styles object which may be applied as
   // contentContainerStyles for child scroll components. It will also be
   // used for the ScrollView component internal to the SceneWrapper.
-  const insetStyle: InsetStyle = {
-    paddingTop: insets.top,
-    paddingRight: insets.right,
-    paddingBottom: insets.bottom,
-    paddingLeft: insets.left
-  }
+  const insetStyle: InsetStyle = useMemo(
+    () => ({
+      paddingTop: insets.top,
+      paddingRight: insets.right,
+      paddingBottom: insets.bottom,
+      paddingLeft: insets.left
+    }),
+    [insets.top, insets.right, insets.bottom, insets.left]
+  )
 
   // This is a convenient styles object which may be applied to scene container
   // components to offset the inset styles applied to the SceneWrapper.
-  const undoInsetStyle: UndoInsetStyle = {
-    flex: 1,
-    marginTop: -insets.top,
-    marginRight: -insets.right,
-    marginBottom: -insets.bottom,
-    marginLeft: -insets.left
-  }
+  const undoInsetStyle: UndoInsetStyle = useMemo(
+    () => ({
+      flex: 1,
+      marginTop: -insets.top,
+      marginRight: -insets.right,
+      marginBottom: -insets.bottom,
+      marginLeft: -insets.left
+    }),
+    [insets.top, insets.right, insets.bottom, insets.left]
+  )
 
-  const info: SceneWrapperInfo = { insets, insetStyle, undoInsetStyle, hasTabs, isKeyboardOpen }
+  const info: SceneWrapperInfo = useMemo(
+    () => ({ insets, insetStyle, undoInsetStyle, hasTabs, isKeyboardOpen }),
+    [hasTabs, insetStyle, insets, isKeyboardOpen, undoInsetStyle]
+  )
+
+  // If function children, the caller handles the insets and overscroll
+  const memoizedChildren = useMemo(() => (typeof children === 'function' ? children(info) : children), [children, info])
 
   return (
     <>
@@ -255,12 +273,12 @@ function SceneWrapperInner(props: SceneWrapperInnerProps) {
           style={[layoutStyle, { padding }]}
           keyboardShouldPersistTaps={keyboardShouldPersistTaps}
           contentContainerStyle={insetStyle}
-          onScroll={hasTabs || hasHeader ? handleScroll : () => {}}
+          onScroll={hasTabs || hasHeader ? handleScroll : undefined}
           // Fixes middle-floating scrollbar issue
           scrollIndicatorInsets={{ right: 1 }}
         >
           <MaybeView when={!scroll && !avoidKeyboard} style={[styles.sceneContainer, layoutStyle, insetStyle, { padding }]}>
-            {isFuncChildren ? children(info) : children}
+            {memoizedChildren}
           </MaybeView>
         </MaybeAnimatedScrollView>
         <SceneWrapperFooterContainer hasTabs={hasTabs} sceneWrapperInfo={info} />
@@ -268,7 +286,7 @@ function SceneWrapperInner(props: SceneWrapperInnerProps) {
       {hasNotifications ? <NotificationView hasTabs={hasTabs} navigation={navigation} /> : null}
     </>
   )
-}
+})
 
 const MaybeAnimatedView = maybeComponent(Animated.View)
 const MaybeAnimatedScrollView = maybeComponent(Reanimated.ScrollView)
