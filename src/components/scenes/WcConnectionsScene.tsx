@@ -96,7 +96,7 @@ export const WcConnectionsScene = (props: Props) => {
   return (
     <SceneWrapper>
       <SceneHeader underline title={lstrings.wc_walletconnect_title} />
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} scrollIndicatorInsets={{ right: 1 }}>
         <EdgeText style={styles.subTitle}>{lstrings.wc_walletconnect_subtitle}</EdgeText>
         <MainButton
           label={connecting ? undefined : lstrings.wc_walletconnect_new_connection_button}

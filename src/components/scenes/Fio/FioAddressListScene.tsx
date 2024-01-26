@@ -117,7 +117,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
     return (
       <>
         <SceneWrapper>
-          <ScrollView style={styles.section}>
+          <ScrollView style={styles.section} scrollIndicatorInsets={{ right: 1 }}>
             <SceneHeader title={lstrings.title_fio_address} underline withTopMargin />
             <View style={styles.list}>
               {!fioAddresses.length && <EdgeText style={styles.noNames}>{noFioAddressesText}</EdgeText>}

@@ -265,6 +265,7 @@ export const AddressFormScene = React.memo((props: Props) => {
               enableAutomaticScroll
               enableOnAndroid
               contentContainerStyle={insetStyle}
+              scrollIndicatorInsets={{ right: 1 }}
             >
               <GuiFormField
                 fieldType="address"
@@ -277,7 +278,7 @@ export const AddressFormScene = React.memo((props: Props) => {
                 onBlur={handleHideAddressHints}
               />
               <Animated.View style={[Platform.OS === 'ios' ? styles.dropContainer : styles.dropContainerAndroid, aDropContainerStyle]}>
-                <ScrollView keyboardShouldPersistTaps="always" nestedScrollEnabled>
+                <ScrollView keyboardShouldPersistTaps="always" nestedScrollEnabled scrollIndicatorInsets={{ right: 1 }}>
                   {searchResults.map(searchResult => {
                     const displaySearchResult = `${searchResult.address}\n${searchResult.city}, ${searchResult.state}, ${countryCode}`
                     return (

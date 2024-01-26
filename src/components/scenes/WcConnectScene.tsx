@@ -121,7 +121,7 @@ export const WcConnectScene = (props: Props) => {
   return (
     <SceneWrapper>
       <SceneHeader title={lstrings.wc_confirm_title} underline />
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} scrollIndicatorInsets={{ right: 1 }}>
         <View style={styles.listRow}>
           <FastImage resizeMode="contain" style={styles.currencyLogo} source={{ uri: dAppImage }} />
           <EdgeText style={styles.subTitle} numberOfLines={2}>

@@ -52,7 +52,7 @@ const ConfirmComponent = (props: Props) => {
 
   return (
     <SceneWrapper>
-      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
+      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid scrollIndicatorInsets={{ right: 1 }}>
         <SceneHeader title={titleText} underline />
         <View style={styles.body}>
           <EdgeText disableFontScaling numberOfLines={16}>

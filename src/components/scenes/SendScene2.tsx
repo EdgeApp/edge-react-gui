@@ -1027,6 +1027,7 @@ const SendComponent = (props: Props) => {
             contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: theme.rem(5) + insetStyle.paddingBottom }}
             extraScrollHeight={theme.rem(2.75)}
             enableOnAndroid
+            scrollIndicatorInsets={{ right: 1 }}
           >
             <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
               <CardUi4>{renderSelectedWallet()}</CardUi4>

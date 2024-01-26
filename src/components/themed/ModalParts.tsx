@@ -73,7 +73,9 @@ export function ModalScrollArea(props: { children: React.ReactNode }) {
 
   return (
     <View style={styles.scrollContainer}>
-      <ScrollView contentContainerStyle={styles.scrollPadding}>{children}</ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollPadding} scrollIndicatorInsets={{ right: 1 }}>
+        {children}
+      </ScrollView>
       <ModalFooterFade />
     </View>
   )

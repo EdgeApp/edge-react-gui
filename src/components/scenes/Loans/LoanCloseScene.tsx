@@ -134,7 +134,12 @@ export const LoanCloseSceneComponent = (props: Props) => {
         underline
         withTopMargin
       />
-      <KeyboardAwareScrollView contentContainerStyle={styles.container} extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.container}
+        extraScrollHeight={theme.rem(2.75)}
+        enableOnAndroid
+        scrollIndicatorInsets={{ right: 1 }}
+      >
         <TotalDebtCollateralTile title={lstrings.loan_remaining_principal} wallet={borrowEngineWallet} debtsOrCollaterals={debts} />
         <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeAmountAggregate} />
         {debts.length > 0 ? (

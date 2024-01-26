@@ -143,6 +143,7 @@ const CreateWalletImportComponent = (props: Props) => {
         keyboardShouldPersistTaps="handled"
         onKeyboardDidChangeFrame={() => setScrollEnabled(false)}
         onKeyboardWillChangeFrame={() => setScrollEnabled(true)}
+        scrollIndicatorInsets={{ right: 1 }}
       >
         <View style={styles.icon}>
           <ImportKeySvg accessibilityHint={lstrings.import_key_icon_hint} color={theme.iconTappable} height={svgHeight} width={svgWidth} />

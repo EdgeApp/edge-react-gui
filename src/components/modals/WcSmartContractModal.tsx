@@ -151,7 +151,7 @@ export const WcSmartContractModal = (props: Props) => {
         </View>
       }
     >
-      <ScrollView contentContainerStyle={styles.scrollPadding}>
+      <ScrollView contentContainerStyle={styles.scrollPadding} scrollIndicatorInsets={{ right: 1 }}>
         {renderWarning()}
         {zeroString(nativeAmount) ? null : (
           <CryptoFiatAmountTile

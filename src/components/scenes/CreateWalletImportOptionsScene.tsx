@@ -221,6 +221,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
           keyboardShouldPersistTaps="handled"
           keyExtractor={keyExtractor}
           renderItem={renderOptions}
+          scrollIndicatorInsets={{ right: 1 }}
         />
         <MainButton
           disabled={disableNextButton}
@@ -229,7 +230,6 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
           marginRem={[1, 1]}
           onPress={handleNext}
           alignSelf="center"
-          scrollIndicatorInsets={{ right: 1 }}
         />
       </View>
     </SceneWrapper>

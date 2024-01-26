@@ -146,7 +146,7 @@ function EditTokenSceneComponent(props: Props) {
   return (
     <SceneWrapper avoidKeyboard>
       <SceneHeader title={tokenId == null ? lstrings.title_add_token : lstrings.title_edit_token} underline />
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer} scrollIndicatorInsets={{ right: 1 }}>
         <FilledTextInput
           around={0.5}
           autoCapitalize="characters"

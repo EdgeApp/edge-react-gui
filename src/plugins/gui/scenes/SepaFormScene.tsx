@@ -73,6 +73,7 @@ export const SepaFormScene = React.memo((props: Props) => {
               enableAutomaticScroll
               enableOnAndroid
               contentContainerStyle={insetStyle}
+              scrollIndicatorInsets={{ right: 1 }}
             >
               <GuiFormField fieldType="name" value={name} label={lstrings.form_field_title_account_owner} onChangeText={handleNameInput} autofocus />
               <GuiFormField fieldType="iban" value={iban} label={lstrings.form_field_title_iban} onChangeText={handleIbanInput} />

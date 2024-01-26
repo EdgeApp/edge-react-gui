@@ -151,7 +151,13 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
             </View>
           )}
 
-          {scroll ? <ScrollView style={styles.scroll}>{children}</ScrollView> : children}
+          {scroll ? (
+            <ScrollView style={styles.scroll} scrollIndicatorInsets={{ right: 1 }}>
+              {children}
+            </ScrollView>
+          ) : (
+            children
+          )}
         </Animated.View>
       </GestureDetector>
     </>

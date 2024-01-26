@@ -56,6 +56,11 @@ exports[`SendScene2 1 spendTarget 1`] = `
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
       scrollForExtraHeightOnAndroid={[Function]}
+      scrollIndicatorInsets={
+        {
+          "right": 1,
+        }
+      }
       scrollIntoView={[Function]}
       scrollToEnd={[Function]}
       scrollToFocusedInput={[Function]}
@@ -1238,6 +1243,11 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
       scrollForExtraHeightOnAndroid={[Function]}
+      scrollIndicatorInsets={
+        {
+          "right": 1,
+        }
+      }
       scrollIntoView={[Function]}
       scrollToEnd={[Function]}
       scrollToFocusedInput={[Function]}
@@ -2608,6 +2618,11 @@ exports[`SendScene2 2 spendTargets 1`] = `
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
       scrollForExtraHeightOnAndroid={[Function]}
+      scrollIndicatorInsets={
+        {
+          "right": 1,
+        }
+      }
       scrollIntoView={[Function]}
       scrollToEnd={[Function]}
       scrollToFocusedInput={[Function]}
@@ -3955,6 +3970,11 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
       scrollForExtraHeightOnAndroid={[Function]}
+      scrollIndicatorInsets={
+        {
+          "right": 1,
+        }
+      }
       scrollIntoView={[Function]}
       scrollToEnd={[Function]}
       scrollToFocusedInput={[Function]}
@@ -5003,6 +5023,11 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
       scrollForExtraHeightOnAndroid={[Function]}
+      scrollIndicatorInsets={
+        {
+          "right": 1,
+        }
+      }
       scrollIntoView={[Function]}
       scrollToEnd={[Function]}
       scrollToFocusedInput={[Function]}
@@ -6027,6 +6052,11 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
       scrollForExtraHeightOnAndroid={[Function]}
+      scrollIndicatorInsets={
+        {
+          "right": 1,
+        }
+      }
       scrollIntoView={[Function]}
       scrollToEnd={[Function]}
       scrollToFocusedInput={[Function]}
@@ -6890,6 +6920,11 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
       scrollForExtraHeightOnAndroid={[Function]}
+      scrollIndicatorInsets={
+        {
+          "right": 1,
+        }
+      }
       scrollIntoView={[Function]}
       scrollToEnd={[Function]}
       scrollToFocusedInput={[Function]}
@@ -8058,6 +8093,11 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
       scrollForExtraHeightOnAndroid={[Function]}
+      scrollIndicatorInsets={
+        {
+          "right": 1,
+        }
+      }
       scrollIntoView={[Function]}
       scrollToEnd={[Function]}
       scrollToFocusedInput={[Function]}
@@ -9161,6 +9201,11 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
       scrollForExtraHeightOnAndroid={[Function]}
+      scrollIndicatorInsets={
+        {
+          "right": 1,
+        }
+      }
       scrollIntoView={[Function]}
       scrollToEnd={[Function]}
       scrollToFocusedInput={[Function]}
@@ -10223,6 +10268,11 @@ exports[`SendScene2 Render SendScene 1`] = `
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
       scrollForExtraHeightOnAndroid={[Function]}
+      scrollIndicatorInsets={
+        {
+          "right": 1,
+        }
+      }
       scrollIntoView={[Function]}
       scrollToEnd={[Function]}
       scrollToFocusedInput={[Function]}

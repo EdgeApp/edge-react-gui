@@ -28,7 +28,7 @@ export function RawTextModal(props: Props) {
 
   return (
     <ModalUi4 bridge={bridge} title={title} onCancel={handleCancel}>
-      <ScrollView>
+      <ScrollView scrollIndicatorInsets={{ right: 1 }}>
         <ModalMessage>{body}</ModalMessage>
       </ScrollView>
       {disableCopy ? null : (

@@ -108,7 +108,7 @@ export const LoanStatusSceneComponent = (props: Props) => {
         <FillLoader />
       ) : (
         <View style={styles.container}>
-          <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
+          <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer} scrollIndicatorInsets={{ right: 1 }}>
             <StepProgressBar actionDisplayInfos={steps} />
           </ScrollView>
           <View style={styles.footerContainer}>

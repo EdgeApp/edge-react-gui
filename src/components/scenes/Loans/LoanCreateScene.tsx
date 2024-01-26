@@ -350,7 +350,7 @@ export const LoanCreateScene = (props: Props) => {
         underline
         withTopMargin
       />
-      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
+      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid scrollIndicatorInsets={{ right: 1 }}>
         <Space horizontal={0.5} bottom={1} top={0.5}>
           {/* Amount  to borrow */}
           <FiatAmountInputCard

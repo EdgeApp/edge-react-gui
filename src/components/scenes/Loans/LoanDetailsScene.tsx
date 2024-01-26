@@ -224,7 +224,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         underline
         withTopMargin
       />
-      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
+      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid scrollIndicatorInsets={{ right: 1 }}>
         <Space around={1} top={1.5}>
           {renderProgramStatusCard()}
           <LoanDetailsSummaryCard

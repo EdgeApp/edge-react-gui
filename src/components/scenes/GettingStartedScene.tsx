@@ -223,7 +223,7 @@ export const GettingStartedScene = (props: Props) => {
               {sections.map((section, index) => {
                 return (
                   <Section key={section.key} swipeOffset={swipeOffset} itemIndex={index + 1}>
-                    <ScrollView>
+                    <ScrollView scrollIndicatorInsets={{ right: 1 }}>
                       <SectionTitle numberOfLines={2}>{parseMarkedText(section.title)}</SectionTitle>
                       <SectionParagraph numberOfLines={undefined}>{section.message}</SectionParagraph>
                       {section.footnote == null ? null : <Footnote numberOfLines={undefined}>{lstrings.getting_started_slide_1_footnote}</Footnote>}

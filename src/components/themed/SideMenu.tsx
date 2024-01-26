@@ -124,7 +124,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
         title={lstrings.scan_qr_label}
         textModalAutoFocus={false}
         textModalBody={
-          <ScrollView>
+          <ScrollView scrollIndicatorInsets={{ right: 1 }}>
             <ModalTitle>{lstrings.enter_any_title}</ModalTitle>
             <ModalMessage>{lstrings.enter_any_body}</ModalMessage>
           </ScrollView>
@@ -308,7 +308,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
       <View style={styles.bottomPanel} onLayout={handleBottomPanelLayout}>
         {/* === Dropdown Start === */}
         <Animated.View style={[styles.dropContainer, aBorderBottomRightRadius, aDropdown]}>
-          <ScrollView>
+          <ScrollView scrollIndicatorInsets={{ right: 1 }}>
             {sortedUsers.map(userInfo => (
               <View key={userInfo.loginId} style={styles.rowContainer}>
                 {/* This empty container is required to align the row contents properly */}
@@ -328,7 +328,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
         {!isDropped ? null : <Pressable style={styles.invisibleTapper} onPress={handleToggleDropdown} />}
         {/* === Navigation Rows Start === */}
         <View style={styles.rowsContainer}>
-          <ScrollView overScrollMode="always">
+          <ScrollView overScrollMode="always" scrollIndicatorInsets={{ right: 1 }}>
             {rowDatas.map(rowData => (
               <TouchableOpacity accessible={false} onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
                 <View style={styles.rowIconContainer}>

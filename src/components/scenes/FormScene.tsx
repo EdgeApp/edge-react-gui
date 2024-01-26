@@ -24,7 +24,12 @@ export const FormScene = (props: Props) => {
   return (
     <SceneWrapper>
       <SceneHeader tertiary={headerTertiary} title={headerText} underline withTopMargin />
-      <KeyboardAwareScrollView contentContainerStyle={styles.container} extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.container}
+        extraScrollHeight={theme.rem(2.75)}
+        enableOnAndroid
+        scrollIndicatorInsets={{ right: 1 }}
+      >
         {children}
         <View style={styles.footer}>
           <SafeSlider onSlidingComplete={onSliderComplete} disabled={sliderDisabled} disabledText={lstrings.send_confirmation_slide_to_confirm} />

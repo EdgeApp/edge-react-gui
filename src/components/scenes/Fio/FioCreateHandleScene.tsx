@@ -182,7 +182,7 @@ export const FioCreateHandleScene = (props: Props) => {
 
   return (
     <SceneWrapper>
-      <KeyboardAwareScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+      <KeyboardAwareScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" scrollIndicatorInsets={{ right: 1 }}>
         <FastImage source={{ uri: getFioCustomizeHandleImage(theme) }} style={styles.icon} />
         <EdgeText style={styles.title}>{lstrings.personalize_wallet_title}</EdgeText>
         <View style={styles.inputContainer}>
