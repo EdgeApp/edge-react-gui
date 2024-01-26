@@ -25,7 +25,7 @@ export interface FilteredPromoCard {
 interface Props {
   navigation: NavigationBase
   promoInfo: FilteredPromoCard
-  // onClose: () => void // TODO: Implement
+  onClose: () => Promise<void>
 }
 
 export function PromoCardUi4(props: Props) {
@@ -33,7 +33,7 @@ export function PromoCardUi4(props: Props) {
   const styles = getStyles(theme)
   const dispatch = useDispatch()
 
-  const { navigation, promoInfo } = props
+  const { navigation, promoInfo, onClose } = props
   const { localeMessages, ctaButton, background } = promoInfo
 
   const backgroundInfo = theme.isDark ? background.darkMode : background.lightMode
@@ -54,13 +54,9 @@ export function PromoCardUi4(props: Props) {
     dispatch(linkReferralWithCurrencies(navigation, url)).catch(err => showError(err))
   })
 
-  const handleClose = useHandler(() => {
-    // TODO: Implement
-  })
-
   return (
     <CardUi4
-      onClose={handleClose}
+      onClose={onClose}
       nodeBackground={
         <LinearGradient colors={backgroundGradientColors} start={backgroundGradientStart} end={backgroundGradientEnd} style={styles.backgroundContainer}>
           <FastImage

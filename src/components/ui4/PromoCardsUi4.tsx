@@ -5,9 +5,10 @@ import { ListRenderItem, Platform } from 'react-native'
 import DeviceInfo, { getBuildNumber, getVersion } from 'react-native-device-info'
 import shajs from 'sha.js'
 
-import { getCountryCodeByIp } from '../../actions/AccountReferralActions'
+import { getCountryCodeByIp, hideMessageTweak } from '../../actions/AccountReferralActions'
 import { useHandler } from '../../hooks/useHandler'
 import { config } from '../../theme/appConfig'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { fetchInfo } from '../../util/network'
 import { EdgeAnim } from '../common/EdgeAnim'
@@ -23,8 +24,9 @@ interface Props {
 export const PromoCardsUi4 = (props: Props) => {
   const { navigation, screenWidth } = props
   const theme = useTheme()
+  const dispatch = useDispatch()
 
-  const [promos, setPromos] = React.useState<FilteredPromoCard[]>([])
+  const [cards, setCards] = React.useState<FilteredPromoCard[]>([])
 
   // Check for PromoCard2 from info server:
   React.useEffect(() => {
@@ -32,20 +34,28 @@ export const PromoCardsUi4 = (props: Props) => {
       .then(async cards => {
         const countryCode = await getCountryCodeByIp()
         const filteredCards = filterPromoCards(cards, countryCode)
-        setPromos(filteredCards)
+        setCards(filteredCards)
       })
       .catch(e => console.log(e))
   }, [])
 
+  const hiddenAccountMessages = useSelector(state => state.account.accountReferral.hiddenAccountMessages)
+  const activeCards = React.useMemo(() => cards.filter(card => !hiddenAccountMessages[card.messageId]), [cards, hiddenAccountMessages])
+
   // List rendering methods:
   const keyExtractor = useHandler((item: FilteredPromoCard) => item.messageId)
-  const renderItem: ListRenderItem<FilteredPromoCard> = useHandler(({ item }) => <PromoCardUi4 navigation={navigation} promoInfo={item} />)
+  const renderItem: ListRenderItem<FilteredPromoCard> = useHandler(({ item }) => {
+    const handleClose = async (): Promise<void> => {
+      await dispatch(hideMessageTweak(item.messageId, { type: 'account' }))
+    }
+    return <PromoCardUi4 navigation={navigation} promoInfo={item} onClose={handleClose} />
+  })
 
-  if (promos == null || promos.length === 0) return null
+  if (activeCards == null || activeCards.length === 0) return null
 
   return (
     <EdgeAnim style={{ height: theme.rem(11.5) }} enter={{ type: 'fadeInUp', distance: 110 }}>
-      <CarouselUi4 data={promos} keyExtractor={keyExtractor} renderItem={renderItem} height={theme.rem(9.75)} width={screenWidth} />
+      <CarouselUi4 data={activeCards} keyExtractor={keyExtractor} renderItem={renderItem} height={theme.rem(9.75)} width={screenWidth} />
     </EdgeAnim>
   )
 }
