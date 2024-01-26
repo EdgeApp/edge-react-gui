@@ -15,10 +15,17 @@ import { EdgeText } from '../themed/EdgeText'
 import { ButtonUi4 } from './ButtonUi4'
 import { CardUi4 } from './CardUi4'
 
+export interface FilteredPromoCard {
+  background: PromoCard2['background']
+  ctaButton: PromoCard2['ctaButton']
+  localeMessages: PromoCard2['localeMessages']
+  messageId: string
+}
+
 interface Props {
   navigation: NavigationBase
-  promoInfo: PromoCard2
-  // onClose: () => void // TODO: Implement
+  promoInfo: FilteredPromoCard
+  onClose: () => Promise<void>
 }
 
 export function PromoCardUi4(props: Props) {
@@ -26,7 +33,7 @@ export function PromoCardUi4(props: Props) {
   const styles = getStyles(theme)
   const dispatch = useDispatch()
 
-  const { navigation, promoInfo } = props
+  const { navigation, promoInfo, onClose } = props
   const { localeMessages, ctaButton, background } = promoInfo
 
   const backgroundInfo = theme.isDark ? background.darkMode : background.lightMode
@@ -47,13 +54,9 @@ export function PromoCardUi4(props: Props) {
     dispatch(linkReferralWithCurrencies(navigation, url)).catch(err => showError(err))
   })
 
-  const handleClose = useHandler(() => {
-    // TODO: Implement
-  })
-
   return (
     <CardUi4
-      onClose={handleClose}
+      onClose={onClose}
       nodeBackground={
         <LinearGradient colors={backgroundGradientColors} start={backgroundGradientStart} end={backgroundGradientEnd} style={styles.backgroundContainer}>
           <FastImage

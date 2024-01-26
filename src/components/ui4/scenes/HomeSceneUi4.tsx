@@ -1,6 +1,6 @@
 import { asBlogPosts, BlogPost } from 'edge-info-server/types'
 import * as React from 'react'
-import { View } from 'react-native'
+import { ListRenderItem, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
@@ -77,6 +77,8 @@ export const HomeSceneUi4 = (props: Props) => {
       })
       .catch(e => console.log(String(e)))
   }, [])
+
+  const renderBlog: ListRenderItem<BlogPost> = useHandler(({ item }) => <BlogCard blogPost={item} />)
 
   return (
     <SceneWrapper hasNotifications hasTabs>
@@ -157,11 +159,7 @@ export const HomeSceneUi4 = (props: Props) => {
               {blogPosts == null || blogPosts.length === 0 ? null : (
                 <>
                   <SectionHeaderUi4 leftTitle={lstrings.title_learn} />
-                  <CarouselUi4 height={theme.rem(13)} width={screenWidth}>
-                    {blogPosts.map((blogPost, index) => (
-                      <BlogCard blogPost={blogPost} key={`${JSON.stringify(blogPost.localeTitle)}-${index}`} />
-                    ))}
-                  </CarouselUi4>
+                  <CarouselUi4 data={blogPosts} renderItem={renderBlog} height={theme.rem(13)} width={screenWidth} />
                 </>
               )}
               <SupportCardUi4
