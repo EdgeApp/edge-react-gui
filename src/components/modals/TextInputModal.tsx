@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Platform, View } from 'react-native'
+import { Platform } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
@@ -90,6 +90,10 @@ export function TextInputModal(props: Props) {
     )
   }
 
+  const isAndroid = Platform.OS === 'android'
+  // TODO: Address this in ButtonsViewUi4
+  const androidButtonMargin = isAndroid ? [0.5, 0.5, 2, 0.5] : 0.5
+
   return (
     <ModalUi4 warning={warning} bridge={bridge} title={title} onCancel={() => bridge.resolve(undefined)}>
       {typeof message === 'string' ? <ModalMessage>{message}</ModalMessage> : <>{message}</>}
@@ -115,15 +119,11 @@ export function TextInputModal(props: Props) {
         value={text}
         maxLength={maxLength}
       />
-      {
-        // Hack around the android:windowSoftInputMode="adjustPan" glitch:
-        Platform.OS === 'android' ? <View style={{ flex: 2 }} /> : null
-      }
       {/* TODO: Style ButtonsViewUi4 for Modals */}
       {spinning ? (
-        <MainButton alignSelf="center" disabled marginRem={0.5} type="primary" spinner />
+        <MainButton disabled marginRem={androidButtonMargin} type="primary" spinner />
       ) : (
-        <MainButton alignSelf="center" label={submitLabel} marginRem={0.5} onPress={handleSubmit} type="primary" />
+        <MainButton label={submitLabel} marginRem={androidButtonMargin} onPress={handleSubmit} type="primary" />
       )}
     </ModalUi4>
   )
