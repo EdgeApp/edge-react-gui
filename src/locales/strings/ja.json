@@ -334,6 +334,7 @@
   "settings_developer_mode": "開発者モード",
   "settings_verbose_logging": "詳細なログ",
   "settings_dark_theme": "ダークテーマ",
+  "button_disable_animations": "Disable Animations",
   "settings_button_contacts_access_permission": "連絡先アクセス",
   "settings_button_lock_settings": "アカウント設定をロックするためにタップしてください",
   "settings_button_password_recovery": "パスワード復元をセットアップ",
