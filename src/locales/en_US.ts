@@ -400,6 +400,7 @@ const strings = {
   settings_developer_mode: 'Developer Mode',
   settings_verbose_logging: 'Verbose Logging',
   settings_dark_theme: 'Dark Theme',
+  button_disable_animations: 'Disable Animations',
   settings_button_contacts_access_permission: 'Contacts Access',
   settings_button_lock_settings: 'Tap to Lock Account Settings',
   settings_button_password_recovery: 'Set Up Password Recovery',

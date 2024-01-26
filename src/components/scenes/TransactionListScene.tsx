@@ -225,16 +225,16 @@ function TransactionListComponent(props: Props) {
       return <EmptyLoader />
     }
 
-    const disableType = index >= MAX_LIST_ITEMS_ANIM ? 'view' : undefined
+    const disableAnimation = index >= MAX_LIST_ITEMS_ANIM
     if (typeof item === 'string') {
       return (
-        <EdgeAnim disableType={disableType} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
+        <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
           <SectionHeader title={item} />
         </EdgeAnim>
       )
     }
     return (
-      <EdgeAnim disableType={disableType} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
+      <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
         <TransactionListRow navigation={navigation} transaction={item} wallet={wallet} />
       </EdgeAnim>
     )

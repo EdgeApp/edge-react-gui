@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { ViewProps } from 'react-native'
 import Animated, {
-  AnimateProps,
   ComplexAnimationBuilder,
   Easing,
   FadeIn,
@@ -18,6 +17,8 @@ import Animated, {
   StretchInY,
   StretchOutY
 } from 'react-native-reanimated'
+
+import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
 
 export const DEFAULT_ANIMATION_DURATION_MS = 300
 export const LAYOUT_ANIMATION = LinearTransition.duration(DEFAULT_ANIMATION_DURATION_MS)
@@ -37,13 +38,8 @@ interface Anim {
   distance?: number
 }
 
-interface Props extends AnimateProps<ViewProps> {
-  /**
-   * disable animation
-   * anim => disable animation but still render a container view
-   * view => render the children with no container view
-   * */
-  disableType?: 'anim' | 'view'
+interface Props extends ViewProps {
+  disableAnimation?: boolean
   enter?: Anim
   exit?: Anim
 
@@ -91,17 +87,14 @@ const getAnimBuilder = (anim?: Anim) => {
   return builder
 }
 
-export const EdgeAnim = ({ children, disableType, enter, exit, visible = true, ...rest }: Props): JSX.Element | null => {
+export const EdgeAnim = ({ children, disableAnimation, enter, exit, visible = true, ...rest }: Props): JSX.Element | null => {
   if (!visible) return null
   const entering = getAnimBuilder(enter)
   const exiting = getAnimBuilder(exit)
+  const { disableAnimations } = getDeviceSettings()
 
-  if (disableType === 'anim') {
+  if (disableAnimations || disableAnimation) {
     return <Animated.View {...rest}>{children}</Animated.View>
-  }
-
-  if (disableType === 'view') {
-    return <>{children}</>
   }
 
   return (

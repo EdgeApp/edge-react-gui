@@ -7,6 +7,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
+import { getDeviceSettings, writeDisableAnimations } from '../../actions/DeviceSettingsActions'
 import { setContactsPermissionOn, setDeveloperModeOn, setSpamFilterOn } from '../../actions/LocalSettingsActions'
 import { showClearLogsModal, showSendLogsModal } from '../../actions/LogActions'
 import { logoutRequest } from '../../actions/LoginActions'
@@ -24,6 +25,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
+import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { secondsToDisplay } from '../../util/displayTime'
@@ -51,6 +53,7 @@ interface StateProps {
   context: EdgeContext
   defaultFiat: string
   developerModeOn: boolean
+  disableAnim: boolean
   isLocked: boolean
   pinLoginEnabled: boolean
   spamFilterOn: boolean
@@ -69,6 +72,7 @@ interface DispatchProps {
   showRestoreWalletsModal: (navigation: NavigationBase) => Promise<void>
   showUnlockSettingsModal: () => Promise<void>
   toggleDeveloperMode: (developerModeOn: boolean) => void
+  toggleDisableAnimations: (disableAnim: boolean) => void
   toggleSpamFilter: (spamFilterOn: boolean) => void
   logoutRequest: (navigation: NavigationBase) => Promise<void>
 }
@@ -248,6 +252,10 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     this.props.toggleDeveloperMode(!this.props.developerModeOn)
   }
 
+  handleDisableAnimationsToggle = (): void => {
+    this.props.toggleDisableAnimations(!this.props.disableAnim)
+  }
+
   handleDarkThemeToggle = (): void => {
     this.setState({ darkTheme: !this.state.darkTheme }, () => {
       this.state.darkTheme ? changeTheme(config.darkTheme) : changeTheme(config.lightTheme)
@@ -364,6 +372,12 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
               {this.props.developerModeOn && (
                 <SettingsSwitchRow key="darkTheme" label={lstrings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
               )}
+              <SettingsSwitchRow
+                key="disableAnim"
+                label={lstrings.button_disable_animations}
+                value={this.props.disableAnim}
+                onPress={this.handleDisableAnimationsToggle}
+              />
               <SettingsTappableRow label={lstrings.restore_wallets_modal_title} onPress={async () => await this.props.showRestoreWalletsModal(navigation)} />
               <SettingsTappableRow label={lstrings.migrate_wallets_title} onPress={() => navigation.push('migrateWalletSelectCrypto', {})} />
               <SettingsTappableRow label={lstrings.title_terms_of_service} onPress={this.handleTermsOfService} />
@@ -408,6 +422,7 @@ export const SettingsScene = (props: OwnProps) => {
   const pinLoginEnabled = useSelector(state => state.ui.settings.pinLoginEnabled)
   const supportsTouchId = useSelector(state => state.ui.settings.isTouchSupported)
   const touchIdEnabled = useSelector(state => state.ui.settings.isTouchEnabled)
+  const [disableAnim, setDisableAnim] = useState<boolean>(getDeviceSettings().disableAnimations)
 
   const username = useWatch(account, 'username')
 
@@ -441,6 +456,11 @@ export const SettingsScene = (props: OwnProps) => {
   const handleToggleDeveloperMode = useHandler(async (developerModeOn: boolean) => {
     dispatch(setDeveloperModeOn(developerModeOn))
   })
+  const handleToggleDisableAnimations = useHandler(async (disable: boolean) => {
+    writeDisableAnimations(disable)
+      .then(() => setDisableAnim(disable))
+      .catch(err => showError(err))
+  })
   const handleToggleSpamFilter = useHandler((spamFilterOn: boolean) => {
     dispatch(setSpamFilterOn(spamFilterOn))
   })
@@ -462,6 +482,7 @@ export const SettingsScene = (props: OwnProps) => {
       context={context}
       defaultFiat={defaultFiat}
       developerModeOn={developerModeOn}
+      disableAnim={disableAnim}
       isLocked={isLocked}
       pinLoginEnabled={pinLoginEnabled}
       spamFilterOn={spamFilterOn}
@@ -478,6 +499,7 @@ export const SettingsScene = (props: OwnProps) => {
       showRestoreWalletsModal={handleShowRestoreWalletsModal}
       showUnlockSettingsModal={handleShowUnlockSettingsModal}
       toggleDeveloperMode={handleToggleDeveloperMode}
+      toggleDisableAnimations={handleToggleDisableAnimations}
       toggleSpamFilter={handleToggleSpamFilter}
       logoutRequest={handleLogoutRequest}
     />

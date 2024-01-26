@@ -5,6 +5,7 @@ import { asObject, asString } from 'cleaners'
 import { Text, TextInput } from 'react-native'
 import RNFS from 'react-native-fs'
 
+import { initDeviceSettings } from './actions/DeviceSettingsActions'
 import { changeTheme, getTheme } from './components/services/ThemeContext'
 import { ENV } from './env'
 import { NumberMap } from './types/types'
@@ -213,3 +214,5 @@ if (ENV.DEBUG_THEME) {
   }
   themeFunc().catch(err => console.error(err))
 }
+
+initDeviceSettings().catch(err => console.log(err))
