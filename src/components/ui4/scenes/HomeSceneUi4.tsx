@@ -3,7 +3,7 @@ import * as React from 'react'
 import { ListRenderItem, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
-import { useSafeAreaFrame } from 'react-native-safe-area-context'
+import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { showBackupForTransferModal } from '../../../actions/BackupModalActions'
 import { useHandler } from '../../../hooks/useHandler'
@@ -39,11 +39,18 @@ export const HomeSceneUi4 = (props: Props) => {
 
   const { width: screenWidth } = useSafeAreaFrame()
 
+  // TODO: Include this fix in the SceneWrapper component
+  const safeAreaInsets = useSafeAreaInsets()
+
   // Evenly distribute the home cards into 4 quadrants:
   const cardSize = screenWidth / 2 - theme.rem(TEMP_PADDING_REM)
 
   const account = useSelector(state => state.core.account)
   const isLightAccount = account.username == null
+
+  //
+  // Handlers
+  //
 
   const handleBuyPress = useHandler(() => {
     if (isLightAccount) {
@@ -85,7 +92,11 @@ export const HomeSceneUi4 = (props: Props) => {
       {({ insetStyle, undoInsetStyle }) => (
         <>
           <WiredProgressBar />
-          <Animated.ScrollView onScroll={handleScroll} style={undoInsetStyle} contentContainerStyle={[insetStyle]}>
+          <Animated.ScrollView
+            onScroll={handleScroll}
+            style={undoInsetStyle}
+            contentContainerStyle={[{ ...insetStyle, paddingBottom: insetStyle.paddingBottom + safeAreaInsets.bottom }]}
+          >
             <SectionView extendRight marginRem={TEMP_PADDING_REM}>
               <>
                 <EdgeAnim enter={{ type: 'fadeInUp', distance: 140 }}>
