@@ -147,13 +147,14 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 cy="17"
                 fill={
                   {
-                    "payload": 4278190080,
+                    "payload": 0,
                     "type": 0,
                   }
                 }
                 opacity={0}
                 propList={
                   [
+                    "fill",
                     "stroke",
                     "strokeWidth",
                     "strokeDasharray",
@@ -925,13 +926,14 @@ exports[`TransactionListTop should render 1`] = `
                 cy="17"
                 fill={
                   {
-                    "payload": 4278190080,
+                    "payload": 0,
                     "type": 0,
                   }
                 }
                 opacity={0}
                 propList={
                   [
+                    "fill",
                     "stroke",
                     "strokeWidth",
                     "strokeDasharray",

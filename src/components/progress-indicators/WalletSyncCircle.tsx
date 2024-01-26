@@ -81,6 +81,7 @@ export const WalletSyncCircle = (props: Props) => {
         cx={center}
         cy={center}
         r={radius}
+        fill="transparent"
         stroke={theme.walletProgressIconFill}
         strokeLinecap="round"
         strokeDasharray={circumference}

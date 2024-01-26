@@ -456,13 +456,14 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       cy="22.5"
                       fill={
                         {
-                          "payload": 4278190080,
+                          "payload": 0,
                           "type": 0,
                         }
                       }
                       opacity={0}
                       propList={
                         [
+                          "fill",
                           "stroke",
                           "strokeWidth",
                           "strokeDasharray",
@@ -1037,13 +1038,14 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                       cy="22.5"
                       fill={
                         {
-                          "payload": 4278190080,
+                          "payload": 0,
                           "type": 0,
                         }
                       }
                       opacity={0}
                       propList={
                         [
+                          "fill",
                           "stroke",
                           "strokeWidth",
                           "strokeDasharray",
