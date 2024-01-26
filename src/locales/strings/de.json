@@ -334,6 +334,7 @@
   "settings_developer_mode": "Entwickler-Modus",
   "settings_verbose_logging": "Ausführliche Protokollierung",
   "settings_dark_theme": "Dunkles Design",
+  "button_disable_animations": "Disable Animations",
   "settings_button_contacts_access_permission": "Contacts Access",
   "settings_button_lock_settings": "Tippen um Benutzerkontoeinstellungen zu sperren",
   "settings_button_password_recovery": "Passwortwiederherstellung einrichten",
