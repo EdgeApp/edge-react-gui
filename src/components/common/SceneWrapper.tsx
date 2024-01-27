@@ -160,7 +160,6 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
     hasHeader = true,
     hasNotifications = false,
     hasTabs = false,
-    keyboardShouldPersistTaps,
     padding = 0,
     scroll = false
   } = props
@@ -186,9 +185,6 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
     }),
     [frameHeight, frameWidth]
   )
-
-  // If the scene has scroll, this will be required for tabs and/or header animation
-  const handleScroll = useSceneScrollHandler()
 
   const notificationHeight = theme.rem(4)
   const headerBarHeight = getDefaultHeaderHeight({ height: frameHeight, width: frameWidth }, false, 0)
@@ -280,20 +276,9 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
 
   if (scroll) {
     return (
-      <>
-        <Reanimated.ScrollView
-          style={[layoutStyle, { padding }]}
-          keyboardShouldPersistTaps={keyboardShouldPersistTaps}
-          contentContainerStyle={insetStyle}
-          onScroll={hasTabs || hasHeader ? handleScroll : undefined}
-          // Fixes middle-floating scrollbar issue
-          scrollIndicatorInsets={{ right: 1 }}
-        >
-          {memoizedChildren}
-        </Reanimated.ScrollView>
-        <SceneWrapperFooterContainer hasTabs={hasTabs} sceneWrapperInfo={info} />
-        {hasNotifications ? <NotificationView hasTabs={hasTabs} navigation={navigation} /> : null}
-      </>
+      <SceneWrapperScrollView insetStyle={insetStyle} layoutStyle={layoutStyle} navigation={navigation} sceneWrapperInfo={info} {...props}>
+        {memoizedChildren}
+      </SceneWrapperScrollView>
     )
   }
 
@@ -306,6 +291,43 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
   )
 }
 const SceneWrapperInner = React.memo(SceneWrapperInnerComponent)
+
+interface SceneWrapperScrollViewProps extends Pick<SceneWrapperProps, 'hasNotifications' | 'hasTabs' | 'keyboardShouldPersistTaps' | 'padding'> {
+  children: React.ReactNode
+  insetStyle: InsetStyle
+  layoutStyle: {
+    height: number
+    width: number
+  }
+  navigation: NavigationBase
+  sceneWrapperInfo: SceneWrapperInfo
+}
+
+function SceneWrapperScrollViewComponent(props: SceneWrapperScrollViewProps) {
+  const { children, insetStyle, layoutStyle, navigation, sceneWrapperInfo } = props
+  const { hasNotifications = false, hasTabs = false, keyboardShouldPersistTaps, padding = 0 } = props
+
+  // If the scene has scroll, this will be required for tabs and/or header animation
+  const handleScroll = useSceneScrollHandler()
+
+  return (
+    <>
+      <Reanimated.ScrollView
+        style={[layoutStyle, { padding }]}
+        keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+        contentContainerStyle={insetStyle}
+        onScroll={handleScroll}
+        // Fixes middle-floating scrollbar issue
+        scrollIndicatorInsets={{ right: 1 }}
+      >
+        {children}
+      </Reanimated.ScrollView>
+      <SceneWrapperFooterContainer hasTabs={hasTabs} sceneWrapperInfo={sceneWrapperInfo} />
+      {hasNotifications ? <NotificationView hasTabs={hasTabs} navigation={navigation} /> : null}
+    </>
+  )
+}
+const SceneWrapperScrollView = React.memo(SceneWrapperScrollViewComponent)
 
 interface SceneWrapperFooterContainerProps {
   hasTabs: boolean
