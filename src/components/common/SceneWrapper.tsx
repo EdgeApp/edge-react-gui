@@ -11,7 +11,6 @@ import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { OverrideDots } from '../../types/Theme'
-import { maybeComponent } from '../hoc/maybeComponent'
 import { styled } from '../hoc/styled'
 import { NotificationView } from '../notification/NotificationView'
 import { useTheme } from '../services/ThemeContext'
@@ -259,18 +258,30 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
   // If function children, the caller handles the insets and overscroll
   const memoizedChildren = useMemo(() => (typeof children === 'function' ? children(info) : children), [children, info])
 
-  return (
-    <>
-      <MaybeAnimatedView when={avoidKeyboard} style={[styles.sceneContainer, layoutStyle, insetStyle, { maxHeight: keyboardAnimation, padding }]}>
-        <DotsBackground
-          accentColors={accentColors}
-          overrideDots={overrideDots}
-          backgroundGradientColors={backgroundGradientColors}
-          backgroundGradientStart={backgroundGradientStart}
-          backgroundGradientEnd={backgroundGradientEnd}
-        />
-        <MaybeAnimatedScrollView
-          when={scroll && !avoidKeyboard}
+  if (avoidKeyboard) {
+    return (
+      <>
+        <Animated.View style={[styles.sceneContainer, layoutStyle, insetStyle, { maxHeight: keyboardAnimation, padding }]}>
+          <DotsBackground
+            accentColors={accentColors}
+            overrideDots={overrideDots}
+            backgroundGradientColors={backgroundGradientColors}
+            backgroundGradientStart={backgroundGradientStart}
+            backgroundGradientEnd={backgroundGradientEnd}
+          />
+
+          {memoizedChildren}
+          <SceneWrapperFooterContainer hasTabs={hasTabs} sceneWrapperInfo={info} />
+        </Animated.View>
+        {hasNotifications ? <NotificationView hasTabs={hasTabs} navigation={navigation} /> : null}
+      </>
+    )
+  }
+
+  if (scroll) {
+    return (
+      <>
+        <Reanimated.ScrollView
           style={[layoutStyle, { padding }]}
           keyboardShouldPersistTaps={keyboardShouldPersistTaps}
           contentContainerStyle={insetStyle}
@@ -278,21 +289,23 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
           // Fixes middle-floating scrollbar issue
           scrollIndicatorInsets={{ right: 1 }}
         >
-          <MaybeView when={!scroll && !avoidKeyboard} style={[styles.sceneContainer, layoutStyle, insetStyle, { padding }]}>
-            {memoizedChildren}
-          </MaybeView>
-        </MaybeAnimatedScrollView>
+          {memoizedChildren}
+        </Reanimated.ScrollView>
         <SceneWrapperFooterContainer hasTabs={hasTabs} sceneWrapperInfo={info} />
-      </MaybeAnimatedView>
+        {hasNotifications ? <NotificationView hasTabs={hasTabs} navigation={navigation} /> : null}
+      </>
+    )
+  }
+
+  return (
+    <>
+      <View style={[styles.sceneContainer, layoutStyle, insetStyle, { padding }]}>{memoizedChildren}</View>
+      <SceneWrapperFooterContainer hasTabs={hasTabs} sceneWrapperInfo={info} />
       {hasNotifications ? <NotificationView hasTabs={hasTabs} navigation={navigation} /> : null}
     </>
   )
 }
 const SceneWrapperInner = React.memo(SceneWrapperInnerComponent)
-
-const MaybeAnimatedView = maybeComponent(Animated.View)
-const MaybeAnimatedScrollView = maybeComponent(Reanimated.ScrollView)
-const MaybeView = maybeComponent(View)
 
 interface SceneWrapperFooterContainerProps {
   hasTabs: boolean
