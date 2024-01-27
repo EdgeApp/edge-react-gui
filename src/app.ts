@@ -1,5 +1,11 @@
 /* global __DEV__ */
 
+/**
+ * Uncomment next line to get perfomance logging of component
+ * rerenders
+ */
+// import './wdyr'
+
 import Bugsnag from '@bugsnag/react-native'
 import { asObject, asString } from 'cleaners'
 import { LogBox, Text, TextInput } from 'react-native'
