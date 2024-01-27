@@ -58,7 +58,7 @@ export function CarouselUi4<T>(props: Props<T>): JSX.Element {
         }}
         dotsLength={data.length}
         activeDotIndex={activeIndex}
-        tappableDots
+        tappableDots={carouselRef.current != null}
         dotStyle={styles.dotStyle}
         inactiveDotOpacity={0.4}
         inactiveDotScale={0.7}
