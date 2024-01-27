@@ -24,7 +24,6 @@ import {
 } from '../constants/WalletAndCurrencyConstants'
 import { toLocaleDate, toLocaleDateTime, toLocaleTime, truncateDecimalsPeriod } from '../locales/intl'
 import { lstrings } from '../locales/strings'
-import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { RootState } from '../types/reduxTypes'
 import { GuiExchangeRates, GuiFiatType } from '../types/types'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers'
@@ -146,6 +145,18 @@ export const roundedFee = (nativeAmount: string, decimalPlacesBeyondLeadingZeros
   const truncatedAmount = truncateDecimals(displayAmount, precision)
   if (gt(displayAmount, truncatedAmount)) return `${roundUpToLeastSignificant(truncatedAmount)} `
   return `${truncatedAmount} `
+}
+
+export const convertCurrencyFromExchangeRates = (
+  exchangeRates: { [pair: string]: string },
+  fromCurrencyCode: string,
+  toCurrencyCode: string,
+  amount: string
+): string => {
+  const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
+  const rate = exchangeRates[rateKey] ?? '0'
+  const convertedAmount = mul(amount, rate)
+  return convertedAmount
 }
 
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)
