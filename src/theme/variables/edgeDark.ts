@@ -36,7 +36,7 @@ const palette = {
   darkMint: '#089e73',
   edgeMint: '#00f1a2',
   gray: '#888888',
-  darkGrey: '#333333',
+  darkGrey: '#494949',
   lightGray: '#D9E3ED',
   accentGreen: '#77C513',
   accentRed: '#E85466',
