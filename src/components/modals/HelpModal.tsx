@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Dimensions, Image, Keyboard, Linking, View } from 'react-native'
+import { Image, Keyboard, Linking, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { sprintf } from 'sprintf-js'
@@ -113,28 +113,26 @@ export const HelpModal = (props: Props) => {
   )
 }
 
-const deviceHeight = Dimensions.get('window').height
-
 const getStyles = cacheStyles((theme: Theme) => ({
   titleContainer: {
     flexGrow: 1,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: theme.rem(0.25)
+    marginVertical: theme.rem(0.25)
   },
   logo: {
-    height: theme.rem(2.25)
+    height: theme.rem(2.25),
+    marginVertical: theme.rem(0.5)
   },
   footer: {
-    marginTop: deviceHeight < theme.rem(42) ? 0 : theme.rem(1.5),
-    paddingVertical: deviceHeight < theme.rem(42) ? theme.rem(0.25) : theme.rem(0.5),
+    marginTop: theme.rem(0),
+    paddingVertical: theme.rem(0.5),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'
   },
   version: {
-    color: theme.secondaryText,
-    fontSize: theme.rem(0.75)
+    color: theme.secondaryText
   }
 }))
