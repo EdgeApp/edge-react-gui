@@ -191,7 +191,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -1534,7 +1534,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -3065,7 +3065,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -4573,7 +4573,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -5782,7 +5782,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -6967,7 +6967,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -7991,7 +7991,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -9320,7 +9320,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -10584,7 +10584,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -11807,7 +11807,7 @@ exports[`SendScene2 Render SendScene 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
