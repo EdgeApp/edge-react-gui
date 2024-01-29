@@ -83,23 +83,20 @@ export const AddressFormScene = React.memo((props: Props) => {
 
   const dFinalHeight = useDerivedValue(() => {
     return hintHeight * Math.min(searchResults.length, MAX_DISPLAYED_HINTS)
-  }, [searchResults, hintHeight])
+  })
 
   // Further calculations to determine the height. Also add another
   // conditional animation based on the number of hints changing as
   // the search query changes from user input
-  const aDropContainerStyle = useAnimatedStyle(
-    () => ({
-      height: withTiming(dFinalHeight.value * sAnimationMult.value, {
-        duration: isAnimateHintsNumChange ? 250 : 0,
-        easing: Easing.inOut(Easing.circle)
-      }),
-      opacity: isHintsDropped && searchResults.length > 0 ? sAnimationMult.value : withTiming(0, { duration: 500 }),
-
-      borderColor: interpolateColor(sAnimationMult.value, [0, 1], dropdownBorderColor)
+  const aDropContainerStyle = useAnimatedStyle(() => ({
+    height: withTiming(dFinalHeight.value * sAnimationMult.value, {
+      duration: isAnimateHintsNumChange ? 250 : 0,
+      easing: Easing.inOut(Easing.circle)
     }),
-    [isHintsDropped, searchResults.length]
-  )
+    opacity: isHintsDropped && searchResults.length > 0 ? sAnimationMult.value : withTiming(0, { duration: 500 }),
+
+    borderColor: interpolateColor(sAnimationMult.value, [0, 1], dropdownBorderColor)
+  }))
 
   const handleHintLayout = useHandler(event => {
     if (event != null && hintHeight === 0) {

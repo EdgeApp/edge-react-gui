@@ -165,8 +165,8 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
     if (onSubmitEditing != null) onSubmitEditing()
   })
 
-  const leftIconSize = useDerivedValue(() => (hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0), [hasIcon, hasValue])
-  const rightIconSize = useDerivedValue(() => (hasValue ? themeRem : focusAnimation.value * themeRem), [hasValue])
+  const leftIconSize = useDerivedValue(() => (hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0))
+  const rightIconSize = useDerivedValue(() => (hasValue ? themeRem : focusAnimation.value * themeRem))
 
   const scale = useDerivedValue(() => scaleProp?.value ?? 1)
 

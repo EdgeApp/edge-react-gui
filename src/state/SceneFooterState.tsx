@@ -205,8 +205,7 @@ export const useFooterAccordionEvents = () => {
       if (footerOpenRatio.value !== currentValue) {
         footerOpenRatio.value = withTiming(currentValue, { duration: 200 })
       }
-    },
-    [keepOpen, scrollDeltaToRatioDeltaFactor]
+    }
   )
 
   useAnimatedReaction(
@@ -221,8 +220,7 @@ export const useFooterAccordionEvents = () => {
       if (currentValue == null) return
 
       footerOpenRatio.value = withTiming(currentValue, { duration: 300 })
-    },
-    [keepOpen]
+    }
   )
 }
 

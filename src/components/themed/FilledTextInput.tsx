@@ -195,15 +195,15 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     if (onSubmitEditing != null) onSubmitEditing()
   })
 
-  const leftIconSize = useDerivedValue(() => (hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0), [hasIcon, hasValue])
-  const rightIconSize = useDerivedValue(() => (clearIcon ? (hasValue ? themeRem : focusAnimation.value * themeRem) : 0), [clearIcon, hasValue])
+  const leftIconSize = useDerivedValue(() => (hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0))
+  const rightIconSize = useDerivedValue(() => (clearIcon ? (hasValue ? themeRem : focusAnimation.value * themeRem) : 0))
 
   const scale = useDerivedValue(() => scaleProp?.value ?? 1)
 
   const interpolateIconColor = useAnimatedColorInterpolateFn(theme.textInputIconColor, theme.textInputIconColorFocused, theme.textInputIconColorDisabled)
   const iconColor = useDerivedValue(() => interpolateIconColor(focusAnimation, disableAnimation))
 
-  const focusValue = useDerivedValue(() => (hasValue ? 1 : focusAnimation.value), [hasValue])
+  const focusValue = useDerivedValue(() => (hasValue ? 1 : focusAnimation.value))
 
   // Character Limit:
   const charactersLeft = maxLength === undefined ? '' : `${maxLength - value.length}`
