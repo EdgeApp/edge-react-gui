@@ -138,7 +138,7 @@ export const FooterAccordionEventService = () => {
   const snapTo = useSceneFooterState(state => state.snapTo)
 
   // This factor will convert scroll delta into footer open value delta (a 0 to 1 fraction)
-  const scrollDeltaToRatioDeltaFactor = 1 / footerHeight
+  const scrollDeltaToRatioDeltaFactor = 1 / (footerHeight === 0 ? 1 : footerHeight)
 
   function snapWorklet() {
     'worklet'
