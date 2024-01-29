@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 3.23.4
+
+- added: Added 5x leverage Tarot Finance pools
+
 ## 3.23.3
 
 - fixed: ETC spend error regression caused by EIP-1559 upgrade in EthereumEngine
