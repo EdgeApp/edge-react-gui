@@ -2,6 +2,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { lstrings } from '../../locales/strings'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -28,7 +29,7 @@ export const FormScene = (props: Props) => {
         contentContainerStyle={styles.container}
         extraScrollHeight={theme.rem(2.75)}
         enableOnAndroid
-        scrollIndicatorInsets={{ right: 1 }}
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       >
         {children}
         <View style={styles.footer}>

@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { createWallet } from '../../../actions/CreateWalletActions'
 import { isShowLoanWelcomeModal } from '../../../actions/LoanWelcomeActions'
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { resyncLoanAccounts } from '../../../controllers/loan-manager/redux/actions'
 import { LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
@@ -239,7 +240,7 @@ export const LoanDashboardScene = (props: Props) => {
             keyExtractor={(loanAccount: LoanAccount) => loanAccount.id}
             ListFooterComponent={renderFooter()}
             renderItem={renderLoanCard}
-            scrollIndicatorInsets={{ right: 1 }}
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
         </View>
       )}

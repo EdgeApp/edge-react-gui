@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
 import ImportKeySvg from '../../assets/images/import-key-icon.svg'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -143,7 +144,7 @@ const CreateWalletImportComponent = (props: Props) => {
         keyboardShouldPersistTaps="handled"
         onKeyboardDidChangeFrame={() => setScrollEnabled(false)}
         onKeyboardWillChangeFrame={() => setScrollEnabled(true)}
-        scrollIndicatorInsets={{ right: 1 }}
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       >
         <View style={styles.icon}>
           <ImportKeySvg accessibilityHint={lstrings.import_key_icon_hint} color={theme.iconTappable} height={svgHeight} width={svgWidth} />

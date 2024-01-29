@@ -5,6 +5,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
 import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
@@ -138,7 +139,7 @@ export const LoanCloseSceneComponent = (props: Props) => {
         contentContainerStyle={styles.container}
         extraScrollHeight={theme.rem(2.75)}
         enableOnAndroid
-        scrollIndicatorInsets={{ right: 1 }}
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       >
         <TotalDebtCollateralTile title={lstrings.loan_remaining_principal} wallet={borrowEngineWallet} debtsOrCollaterals={debts} />
         <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeAmountAggregate} />

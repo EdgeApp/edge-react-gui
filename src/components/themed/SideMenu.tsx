@@ -1,5 +1,4 @@
 /* eslint-disable react-native/no-raw-text */
-
 import { DrawerContentComponentProps, useDrawerStatus } from '@react-navigation/drawer'
 import { DrawerActions } from '@react-navigation/native'
 import { EdgeAccount, EdgeUserInfo } from 'edge-core-js'
@@ -20,6 +19,7 @@ import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import { executePluginAction } from '../../actions/PluginActions'
 import { Fontello } from '../../assets/vector'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ENV } from '../../env'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -124,7 +124,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
         title={lstrings.scan_qr_label}
         textModalAutoFocus={false}
         textModalBody={
-          <ScrollView scrollIndicatorInsets={{ right: 1 }}>
+          <ScrollView scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
             <ModalTitle>{lstrings.enter_any_title}</ModalTitle>
             <ModalMessage>{lstrings.enter_any_body}</ModalMessage>
           </ScrollView>
@@ -308,7 +308,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
       <View style={styles.bottomPanel} onLayout={handleBottomPanelLayout}>
         {/* === Dropdown Start === */}
         <Animated.View style={[styles.dropContainer, aBorderBottomRightRadius, aDropdown]}>
-          <ScrollView scrollIndicatorInsets={{ right: 1 }}>
+          <ScrollView scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
             {sortedUsers.map(userInfo => (
               <View key={userInfo.loginId} style={styles.rowContainer}>
                 {/* This empty container is required to align the row contents properly */}
@@ -328,7 +328,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
         {!isDropped ? null : <Pressable style={styles.invisibleTapper} onPress={handleToggleDropdown} />}
         {/* === Navigation Rows Start === */}
         <View style={styles.rowsContainer}>
-          <ScrollView overScrollMode="always" scrollIndicatorInsets={{ right: 1 }}>
+          <ScrollView overScrollMode="always" scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
             {rowDatas.map(rowData => (
               <TouchableOpacity accessible={false} onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
                 <View style={styles.rowIconContainer}>

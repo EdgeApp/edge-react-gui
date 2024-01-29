@@ -6,6 +6,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { createWallet, enableTokensAcrossWallets, getUniqueWalletName, splitCreateWalletItems } from '../../actions/CreateWalletActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -221,7 +222,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
           extraData={walletNames}
           keyExtractor={keyExtractor}
           renderItem={renderCurrencyRow}
-          scrollIndicatorInsets={{ right: 1 }}
+          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
         <MainButton label={lstrings.title_create_wallets} type="secondary" marginRem={[0.5, 0.5, 0]} onPress={handleCreate} alignSelf="center" />
         <MainButton label={lstrings.create_wallet_imports_title} type="escape" marginRem={[0.5, 0.5, 1]} onPress={handleImport} alignSelf="center" />

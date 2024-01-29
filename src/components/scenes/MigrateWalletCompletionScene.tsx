@@ -7,6 +7,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { readSyncedSettings, writeSyncedSettings } from '../../actions/SettingsActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -258,7 +259,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
             ref={flatListRef}
             renderItem={renderRow}
             scrollEnabled={done}
-            scrollIndicatorInsets={{ right: 1 }}
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
           {renderNextButton}
         </View>

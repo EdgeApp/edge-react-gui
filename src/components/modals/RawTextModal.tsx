@@ -3,6 +3,7 @@ import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { lstrings } from '../../locales/strings'
 import { showToast } from '../services/AirshipInstance'
 import { MainButton } from '../themed/MainButton'
@@ -28,7 +29,7 @@ export function RawTextModal(props: Props) {
 
   return (
     <ModalUi4 bridge={bridge} title={title} onCancel={handleCancel}>
-      <ScrollView scrollIndicatorInsets={{ right: 1 }}>
+      <ScrollView scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         <ModalMessage>{body}</ModalMessage>
       </ScrollView>
       {disableCopy ? null : (

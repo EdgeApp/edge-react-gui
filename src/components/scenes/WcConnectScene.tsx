@@ -5,6 +5,7 @@ import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
 import { selectWalletToken } from '../../actions/WalletActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -121,7 +122,7 @@ export const WcConnectScene = (props: Props) => {
   return (
     <SceneWrapper>
       <SceneHeader title={lstrings.wc_confirm_title} underline />
-      <ScrollView contentContainerStyle={styles.container} scrollIndicatorInsets={{ right: 1 }}>
+      <ScrollView contentContainerStyle={styles.container} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         <View style={styles.listRow}>
           <FastImage resizeMode="contain" style={styles.currencyLogo} source={{ uri: dAppImage }} />
           <EdgeText style={styles.subTitle} numberOfLines={2}>

@@ -5,6 +5,7 @@ import { FlatList } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
 
 import { setDefaultFiatRequest } from '../../actions/SettingsActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
@@ -102,7 +103,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
               keyboardShouldPersistTaps="handled"
               keyExtractor={this.keyExtractor}
               renderItem={this.renderFiatTypeResult}
-              scrollIndicatorInsets={{ right: 1 }}
+              scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
             />
           </View>
         )}

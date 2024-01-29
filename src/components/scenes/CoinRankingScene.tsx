@@ -2,6 +2,7 @@ import * as React from 'react'
 import { ListRenderItemInfo, TouchableOpacity, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -247,7 +248,7 @@ const CoinRankingComponent = (props: Props) => {
               onEndReached={handleEndReached}
               contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
               onScroll={handleScroll}
-              scrollIndicatorInsets={{ right: 1 }}
+              scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
             />
           </View>
         </>

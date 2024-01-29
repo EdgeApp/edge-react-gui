@@ -4,6 +4,7 @@ import { View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { lstrings } from '../../../locales/strings'
 import { ChangeQuoteRequest, PositionAllocation, StakePlugin, StakePolicy, StakePosition } from '../../../plugins/stake-plugins/types'
@@ -170,7 +171,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
         keyExtractor={(allocation: PositionAllocation) =>
           `${allocation.allocationType}${allocation.currencyCode}${allocation.nativeAmount}${getAllocationLocktimeMessage(allocation)}`
         }
-        scrollIndicatorInsets={{ right: 1 }}
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       />
       <StyledButtonContainer layout="column">
         <MainButton

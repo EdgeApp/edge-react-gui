@@ -19,6 +19,7 @@ import { sprintf } from 'sprintf-js'
 import { triggerScamWarningModal } from '../../actions/ScamWarningActions'
 import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { playSendSound } from '../../actions/SoundActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { FIO_STR, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
@@ -1027,7 +1028,7 @@ const SendComponent = (props: Props) => {
             contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: theme.rem(5) + insetStyle.paddingBottom }}
             extraScrollHeight={theme.rem(2.75)}
             enableOnAndroid
-            scrollIndicatorInsets={{ right: 1 }}
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           >
             <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
               <CardUi4>{renderSelectedWallet()}</CardUi4>

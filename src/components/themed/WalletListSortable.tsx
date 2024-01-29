@@ -3,6 +3,7 @@ import * as React from 'react'
 import DraggableFlatList, { DragEndParams, RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist'
 import Animated from 'react-native-reanimated'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
@@ -57,7 +58,7 @@ export function WalletListSortable(props: Props) {
       onDragEnd={handleDragEnd}
       onScroll={handleScroll}
       contentContainerStyle={insetStyle}
-      scrollIndicatorInsets={{ right: 1 }}
+      scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
     />
   )
 }

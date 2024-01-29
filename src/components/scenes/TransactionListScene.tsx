@@ -8,6 +8,7 @@ import { getVersion } from 'react-native-device-info'
 import Animated from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useIconColor } from '../../hooks/useIconColor'
@@ -316,7 +317,7 @@ function TransactionListComponent(props: Props) {
             // stickyHeaderIndices={stickyHeaderIndices}
             onEndReached={handleScrollEnd}
             onScroll={handleScroll}
-            scrollIndicatorInsets={{ right: 1 }}
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
         </View>
       )}

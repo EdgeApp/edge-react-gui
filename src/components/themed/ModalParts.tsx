@@ -3,6 +3,7 @@ import { Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { lstrings } from '../../locales/strings'
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { GradientFadeOut } from '../modals/GradientFadeout'
@@ -73,7 +74,7 @@ export function ModalScrollArea(props: { children: React.ReactNode }) {
 
   return (
     <View style={styles.scrollContainer}>
-      <ScrollView contentContainerStyle={styles.scrollPadding} scrollIndicatorInsets={{ right: 1 }}>
+      <ScrollView contentContainerStyle={styles.scrollPadding} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         {children}
       </ScrollView>
       <ModalFooterFade />

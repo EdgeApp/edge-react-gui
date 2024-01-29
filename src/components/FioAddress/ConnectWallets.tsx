@@ -8,6 +8,7 @@ import { showError } from '../../components/services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../components/services/ThemeContext'
 import { EdgeText } from '../../components/themed/EdgeText'
 import { MainButton } from '../../components/themed/MainButton'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -167,7 +168,7 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
             keyExtractor={keyExtractor}
             renderItem={renderFioConnectionWalletItem}
             contentContainerStyle={{ paddingBottom: theme.rem(4) }}
-            scrollIndicatorInsets={{ right: 1 }}
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
         ) : (
           <AlertCardUi4 type="warning" title={lstrings.fio_connect_no_wallets} />

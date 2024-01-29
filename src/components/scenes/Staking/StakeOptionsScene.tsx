@@ -4,6 +4,7 @@ import { View } from 'react-native'
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useIconColor } from '../../../hooks/useIconColor'
 import { lstrings } from '../../../locales/strings'
 import { StakePlugin, StakePolicy, StakePositionMap } from '../../../plugins/stake-plugins/types'
@@ -108,7 +109,7 @@ const StakeOptionsSceneComponent = (props: Props) => {
           data={stakePolicies}
           renderItem={renderOptions}
           keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId}
-          scrollIndicatorInsets={{ right: 1 }}
+          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
       </View>
     </SceneWrapper>

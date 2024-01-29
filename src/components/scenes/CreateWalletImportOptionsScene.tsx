@@ -3,6 +3,7 @@ import { Linking, TouchableOpacity, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ImportKeyOption, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -221,7 +222,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
           keyboardShouldPersistTaps="handled"
           keyExtractor={keyExtractor}
           renderItem={renderOptions}
-          scrollIndicatorInsets={{ right: 1 }}
+          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
         <MainButton
           disabled={disableNextButton}

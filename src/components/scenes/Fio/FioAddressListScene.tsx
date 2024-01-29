@@ -6,6 +6,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import fioAddressLogo from '../../../assets/images/fio/fio_logo.png'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
@@ -117,7 +118,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
     return (
       <>
         <SceneWrapper>
-          <ScrollView style={styles.section} scrollIndicatorInsets={{ right: 1 }}>
+          <ScrollView style={styles.section} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
             <SceneHeader title={lstrings.title_fio_address} underline withTopMargin />
             <View style={styles.list}>
               {!fioAddresses.length && <EdgeText style={styles.noNames}>{noFioAddressesText}</EdgeText>}

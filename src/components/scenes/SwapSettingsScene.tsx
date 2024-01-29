@@ -9,6 +9,7 @@ import { CallbackRemover } from 'yaob'
 
 import { ignoreAccountSwap, removePromotion } from '../../actions/AccountReferralActions'
 import { setPreferredSwapPluginId, setPreferredSwapPluginType } from '../../actions/SettingsActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
@@ -176,7 +177,7 @@ export class SwapSettings extends React.Component<Props, State> {
   render() {
     return (
       <SceneWrapper>
-        <ScrollView contentContainerStyle={{ paddingBottom: this.props.theme.rem(4) }} scrollIndicatorInsets={{ right: 1 }}>
+        <ScrollView contentContainerStyle={{ paddingBottom: this.props.theme.rem(4) }} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
           <SettingsSubHeader label={lstrings.settings_exchange_instruction} />
           <SettingsHeaderRow label={lstrings.swap_preferred_header} />
           {this.renderPreferredArea()}
