@@ -225,7 +225,7 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
     return {
       maxHeight: frameHeight + maybeKeyboardHeightDiff
     }
-  }, [avoidKeyboard, frameHeight])
+  })
 
   // If function children, the caller handles the insets and overscroll
   const memoizedChildren = useMemo(() => (typeof children === 'function' ? children(sceneWrapperInfo) : children), [children, sceneWrapperInfo])

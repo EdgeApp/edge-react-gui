@@ -117,7 +117,7 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
 
   const interpolateIconColor = useAnimatedColorInterpolateFn(theme.textInputIconColor, theme.textInputIconColorFocused, theme.textInputIconColorDisabled)
   const clearIconColor = useDerivedValue(() => interpolateIconColor(focusAnimation, disableAnimation))
-  const clearIconScale = useDerivedValue(() => (hasAmount ? 1 : focusAnimation.value), [hasAmount])
+  const clearIconScale = useDerivedValue(() => (hasAmount ? 1 : focusAnimation.value))
   // We have to use a SharedValue for the icon size event though it's not animated,
   // just because that is the expected type
   const clearIconSize = useSharedValue(themeRem)
