@@ -1,6 +1,6 @@
 import { Picker } from '@react-native-picker/picker'
 import * as React from 'react'
-import { NativeModules, Platform, View } from 'react-native'
+import { Appearance, Platform, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import Feather from 'react-native-vector-icons/Feather'
 
@@ -32,9 +32,8 @@ export const AutoLogoutModal = (props: Props) => {
   const isAndroid = Platform.OS === 'android'
   const textColor = React.useMemo(() => {
     if (isAndroid) {
-      const { UIManagerModule } = NativeModules
-      const uiMode = UIManagerModule && UIManagerModule.getConstants().UI_MODE_NIGHT_YES
-      return uiMode === 32 ? theme.nativeComponentTextDark : theme.nativeComponentTextLight
+      const colorScheme = Appearance.getColorScheme()
+      return colorScheme === 'dark' ? theme.nativeComponentTextDark : theme.nativeComponentTextLight
     } else {
       return theme.pickerText
     }
