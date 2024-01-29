@@ -179,7 +179,7 @@ exports[`TransactionListRow should render with loading props 1`] = `
                 "alignSelf": "center",
                 "flexShrink": 1,
                 "fontFamily": "Quicksand-Medium",
-                "maxWidth": "60%",
+                "marginRight": 22,
               },
               null,
             ]
@@ -201,9 +201,8 @@ exports[`TransactionListRow should render with loading props 1`] = `
               },
               {
                 "alignSelf": "center",
-                "flexShrink": 1,
-                "fontFamily": "Quicksand-Medium",
-                "maxWidth": "60%",
+                "flexShrink": 0,
+                "textAlign": "right",
               },
               null,
             ]

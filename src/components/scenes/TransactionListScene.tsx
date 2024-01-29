@@ -6,6 +6,7 @@ import * as React from 'react'
 import { ListRenderItemInfo, RefreshControl, View } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 import Animated from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -25,7 +26,7 @@ import { AssetStatusCard } from '../cards/AssetStatusCard'
 import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
-import { useTheme } from '../services/ThemeContext'
+import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
 import { ExplorerCard } from '../themed/ExplorerCard'
 import { SearchFooter } from '../themed/SearchFooter'
@@ -47,6 +48,7 @@ interface Props extends EdgeSceneProps<'transactionList'> {
 function TransactionListComponent(props: Props) {
   const { navigation, route, wallet } = props
   const theme = useTheme()
+  const styles = getStyles(theme)
 
   const tokenId = checkToken(route.params.tokenId, wallet.currencyConfig.allTokens)
   const { pluginId } = wallet.currencyInfo
@@ -275,6 +277,9 @@ function TransactionListComponent(props: Props) {
     backgroundColors[0] = scaledColor
   }
 
+  // TODO: Include this fix in the SceneWrapper component
+  const safeAreaInsets = useSafeAreaInsets()
+
   return (
     <SceneWrapper
       accentColors={accentColors}
@@ -289,9 +294,15 @@ function TransactionListComponent(props: Props) {
       {({ insetStyle, undoInsetStyle }) => (
         <View style={undoInsetStyle}>
           <Animated.FlatList
+            style={styles.flatList}
             // @ts-expect-error
             ref={flashListRef}
-            contentContainerStyle={insetStyle}
+            contentContainerStyle={{
+              paddingTop: insetStyle.paddingTop + theme.rem(0.5),
+              paddingBottom: insetStyle.paddingBottom + theme.rem(0.5) + safeAreaInsets.bottom,
+              paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
+              paddingRight: insetStyle.paddingRight + theme.rem(0.5)
+            }}
             data={listItems}
             keyboardShouldPersistTaps="handled"
             keyExtractor={keyExtractor}
@@ -323,3 +334,10 @@ function checkToken(tokenId: EdgeTokenId, allTokens: EdgeTokenMap): EdgeTokenId 
 }
 
 export const TransactionList = withWallet(TransactionListComponent)
+
+const getStyles = cacheStyles(() => ({
+  flatList: {
+    overflow: 'visible',
+    flexShrink: 0
+  }
+}))
