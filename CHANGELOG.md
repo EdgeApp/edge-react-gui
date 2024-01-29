@@ -21,6 +21,7 @@
 - changed: Disable RBF for payment protocol transactions
 - changed: Show insufficient funds error when sweeping a key that cannot afford the transaction fee
 - changed: Add proper error message for sweeping keys that don't contain enough funds to cover transaction fee
+- fixed: Fix the Android date picker appearance in dark mode
 - fixed: USP vs legacy landing experiment distribution
 - fixed: Paybis sell from Tron USDT
 - fixed: Remove `minWidth` style from stake option card
