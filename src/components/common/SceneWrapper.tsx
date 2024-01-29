@@ -190,7 +190,7 @@ function SceneWrapperInner(props: SceneWrapperInnerProps) {
   )
 
   // If the scene has scroll, this will be required for tabs and/or header animation
-  const handleScroll = useSceneScrollHandler(scroll && (hasTabs || hasHeader))
+  const handleScroll = useSceneScrollHandler()
 
   const notificationHeight = theme.rem(4)
   const headerBarHeight = getDefaultHeaderHeight({ height: frameHeight, width: frameWidth }, false, 0)
