@@ -68,6 +68,7 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
   return (
     <ListModal
       bridge={bridge}
+      autoFocus
       title={sprintf(lstrings.transaction_details_person_input, contactType)}
       label={contactType}
       searchIcon={false}
