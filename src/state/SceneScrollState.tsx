@@ -1,17 +1,12 @@
 import { useIsFocused } from '@react-navigation/native'
 import { useEffect, useMemo, useState } from 'react'
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
-import { SharedValue, useAnimatedScrollHandler, useDerivedValue, useSharedValue } from 'react-native-reanimated'
+import { SharedValue, useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 
 import { createStateProvider } from './createStateProvider'
 
 interface ScrollState {
-  dragStartX: SharedValue<number>
-  dragStartY: SharedValue<number>
-  scrollX: SharedValue<number>
   scrollY: SharedValue<number>
-  scrollXDelta: SharedValue<number>
-  scrollYDelta: SharedValue<number>
   scrollBeginEvent: SharedValue<NativeScrollEvent | null>
   scrollEndEvent: SharedValue<NativeScrollEvent | null>
   scrollMomentumBeginEvent: SharedValue<NativeScrollEvent | null>
@@ -74,25 +69,12 @@ export const useSceneScrollHandler = (isEnabled: boolean = true): SceneScrollHan
     onScroll: (nativeEvent: NativeScrollEvent) => {
       'worklet'
       // Condition avoids thrashing
-      if (localScrollState.scrollX.value !== nativeEvent.contentOffset.x) {
-        localScrollState.scrollX.value = nativeEvent.contentOffset.x
-      }
-      // Condition avoids thrashing
       if (localScrollState.scrollY.value !== nativeEvent.contentOffset.y) {
         localScrollState.scrollY.value = nativeEvent.contentOffset.y
       }
     },
     onBeginDrag: (nativeEvent: NativeScrollEvent) => {
       'worklet'
-      // Condition avoids thrashing
-      if (localScrollState.dragStartX.value !== nativeEvent.contentOffset.x) {
-        localScrollState.dragStartX.value = nativeEvent.contentOffset.x
-      }
-      // Condition avoids thrashing
-      if (localScrollState.dragStartY.value !== nativeEvent.contentOffset.y) {
-        localScrollState.dragStartY.value = nativeEvent.contentOffset.y
-      }
-
       localScrollState.scrollBeginEvent.value = nativeEvent
     },
     onEndDrag: nativeEvent => {
@@ -111,12 +93,7 @@ export const useSceneScrollHandler = (isEnabled: boolean = true): SceneScrollHan
 }
 
 const useScrollState = (): ScrollState => {
-  const dragStartX = useSharedValue(0)
-  const dragStartY = useSharedValue(0)
-  const scrollX = useSharedValue(0)
   const scrollY = useSharedValue(0)
-  const scrollXDelta = useDerivedValue(() => scrollX.value - dragStartX.value)
-  const scrollYDelta = useDerivedValue(() => scrollY.value - dragStartY.value)
   const scrollBeginEvent = useSharedValue<NativeScrollEvent | null>(null)
   const scrollEndEvent = useSharedValue<NativeScrollEvent | null>(null)
   const scrollMomentumBeginEvent = useSharedValue<NativeScrollEvent | null>(null)
@@ -124,17 +101,12 @@ const useScrollState = (): ScrollState => {
 
   return useMemo(
     () => ({
-      dragStartX,
-      dragStartY,
-      scrollX,
       scrollY,
-      scrollXDelta,
-      scrollYDelta,
       scrollBeginEvent,
       scrollEndEvent,
       scrollMomentumBeginEvent,
       scrollMomentumEndEvent
     }),
-    [dragStartX, dragStartY, scrollBeginEvent, scrollEndEvent, scrollMomentumBeginEvent, scrollMomentumEndEvent, scrollX, scrollXDelta, scrollY, scrollYDelta]
+    [scrollBeginEvent, scrollEndEvent, scrollMomentumBeginEvent, scrollMomentumEndEvent, scrollY]
   )
 }
