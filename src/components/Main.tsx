@@ -25,7 +25,6 @@ import { RewardsCardDashboardScene as RewardsCardListSceneComponent } from '../p
 import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
 import { defaultAccount } from '../reducers/CoreReducer'
-import { useFooterAccordionEvents } from '../state/SceneFooterState'
 import { useDispatch, useSelector } from '../types/reactRedux'
 import { AppParamList, NavigationBase } from '../types/routerTypes'
 import { logEvent } from '../util/tracking'
@@ -235,9 +234,6 @@ export const Main = () => {
   const [legacyLanding, setLegacyLanding] = React.useState<boolean | undefined>(isMaestro() ? false : undefined)
   const [hasInitialScenesLoaded, setHasInitialScenesLoaded] = React.useState(false)
 
-  // Register footer accordion events
-  useFooterAccordionEvents()
-
   // Match react navigation theme background with the patina theme
   const reactNavigationTheme = React.useMemo(() => {
     return {
@@ -275,21 +271,25 @@ export const Main = () => {
     'setLegacyLanding'
   )
 
-  return legacyLanding == null ? (
-    <LoadingSplashScreen />
-  ) : (
-    <NavigationContainer theme={reactNavigationTheme}>
-      <Stack.Navigator
-        initialRouteName={ENV.USE_WELCOME_SCREENS && !legacyLanding ? 'gettingStarted' : 'login'}
-        screenOptions={{
-          headerShown: false
-        }}
-      >
-        <Stack.Screen name="edgeApp" component={EdgeApp} />
-        <Stack.Screen name="gettingStarted" component={GettingStartedScene} />
-        <Stack.Screen name="login" component={LoginScene} options={{ animationEnabled: hasInitialScenesLoaded }} />
-      </Stack.Navigator>
-    </NavigationContainer>
+  return (
+    <>
+      {legacyLanding == null ? (
+        <LoadingSplashScreen />
+      ) : (
+        <NavigationContainer theme={reactNavigationTheme}>
+          <Stack.Navigator
+            initialRouteName={ENV.USE_WELCOME_SCREENS && !legacyLanding ? 'gettingStarted' : 'login'}
+            screenOptions={{
+              headerShown: false
+            }}
+          >
+            <Stack.Screen name="edgeApp" component={EdgeApp} />
+            <Stack.Screen name="gettingStarted" component={GettingStartedScene} />
+            <Stack.Screen name="login" component={LoginScene} options={{ animationEnabled: hasInitialScenesLoaded }} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      )}
+    </>
   )
 }
 

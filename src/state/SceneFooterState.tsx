@@ -122,11 +122,11 @@ export const useSceneFooterRender = (renderFn: FooterRender = defaultFooterRende
 }
 
 /**
- * This hook registers event handlers for the footer's expanded/collapsed states.
- * This hook is only required to be used once within the app (Main). Using this
- * hook multiple times will cause thrashing for the footer state shared values.
+ * This is a component service which registers event handlers for the footer's
+ * expanded/collapsed states. Using this component multiple times will cause
+ * thrashing for the footer state shared values.
  */
-export const useFooterAccordionEvents = () => {
+export const FooterAccordionEventService = () => {
   const { scrollState } = useSceneScrollContext()
   const { scrollBeginEvent, scrollEndEvent, scrollMomentumBeginEvent, scrollMomentumEndEvent, scrollY } = scrollState
 
@@ -224,6 +224,8 @@ export const useFooterAccordionEvents = () => {
     },
     [keepOpen]
   )
+
+  return null
 }
 
 /**
