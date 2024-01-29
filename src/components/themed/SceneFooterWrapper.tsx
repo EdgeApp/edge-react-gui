@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
-import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
+import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useLayoutHeightInFooter, useSceneFooterState } from '../../state/SceneFooterState'
 import { SceneWrapperInfo } from '../common/SceneWrapper'
-import { styled } from '../hoc/styled'
 import { BlurBackground } from '../ui4/BlurBackground'
 
 export interface SceneFooterProps {
@@ -17,6 +16,10 @@ export interface SceneFooterProps {
   noBackgroundBlur?: boolean
 }
 
+/**
+ * If you want to render a custom scene footer,
+ * put this on the outside of whatever you render.
+ */
 export const SceneFooterWrapper = (props: SceneFooterProps) => {
   const { children, noBackgroundBlur = false, sceneWrapperInfo } = props
   const { hasTabs = true, isKeyboardOpen = false } = sceneWrapperInfo ?? {}
@@ -32,38 +35,19 @@ export const SceneFooterWrapper = (props: SceneFooterProps) => {
     handleFooterLayout(event)
   })
 
+  const animation = useAnimatedStyle(() => {
+    if (containerHeight == null) return { overflow: 'hidden' }
+    const maybeInsetBottom = hasTabs || isKeyboardOpen ? 0 : safeAreaInsets.bottom
+    return {
+      height: containerHeight * footerOpenRatio.value + maybeInsetBottom,
+      overflow: 'hidden'
+    }
+  })
+
   return (
-    <ContainerAnimatedView
-      containerHeight={containerHeight}
-      footerOpenRatio={footerOpenRatio}
-      hasTabs={hasTabs}
-      isKeyboardOpen={isKeyboardOpen}
-      insetBottom={safeAreaInsets.bottom}
-      onLayout={handleFooterInnerLayout}
-    >
+    <Animated.View style={animation} onLayout={handleFooterInnerLayout}>
       {noBackgroundBlur ? null : <BlurBackground />}
       {children}
-    </ContainerAnimatedView>
+    </Animated.View>
   )
 }
-
-const ContainerAnimatedView = styled(Animated.View)<{
-  containerHeight?: number
-  footerOpenRatio: SharedValue<number>
-  hasTabs: boolean
-  isKeyboardOpen: boolean
-  insetBottom: number
-}>(() => ({ containerHeight, footerOpenRatio, hasTabs, isKeyboardOpen, insetBottom }) => {
-  return [
-    {
-      overflow: 'hidden'
-    },
-    useAnimatedStyle(() => {
-      if (containerHeight == null) return {}
-      const maybeInsetBottom = !hasTabs && !isKeyboardOpen ? insetBottom : 0
-      return {
-        height: containerHeight * footerOpenRatio.value + maybeInsetBottom
-      }
-    })
-  ]
-})
