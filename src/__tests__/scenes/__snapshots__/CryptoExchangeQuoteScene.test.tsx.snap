@@ -1683,7 +1683,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                 style={
                   [
                     {
-                      "backgroundColor": "#333333",
+                      "backgroundColor": "#494949",
                       "borderRadius": 27.5,
                       "bottom": 0,
                       "left": 0,

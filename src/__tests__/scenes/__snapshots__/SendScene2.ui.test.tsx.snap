@@ -191,7 +191,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -1191,7 +1191,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   "width": 295,
                 },
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#494949",
                 },
                 {
                   "width": 295,
@@ -1203,7 +1203,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
               style={
                 [
                   {
-                    "backgroundColor": "#333333",
+                    "backgroundColor": "#494949",
                     "borderRadius": 27.5,
                     "bottom": 0,
                     "left": 0,
@@ -1534,7 +1534,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -2722,7 +2722,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   "width": 295,
                 },
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#494949",
                 },
                 {
                   "width": 295,
@@ -2734,7 +2734,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               style={
                 [
                   {
-                    "backgroundColor": "#333333",
+                    "backgroundColor": "#494949",
                     "borderRadius": 27.5,
                     "bottom": 0,
                     "left": 0,
@@ -3065,7 +3065,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -4230,7 +4230,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   "width": 295,
                 },
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#494949",
                 },
                 {
                   "width": 295,
@@ -4242,7 +4242,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
               style={
                 [
                   {
-                    "backgroundColor": "#333333",
+                    "backgroundColor": "#494949",
                     "borderRadius": 27.5,
                     "bottom": 0,
                     "left": 0,
@@ -4573,7 +4573,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -5439,7 +5439,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   "width": 295,
                 },
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#494949",
                 },
                 {
                   "width": 295,
@@ -5451,7 +5451,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
               style={
                 [
                   {
-                    "backgroundColor": "#333333",
+                    "backgroundColor": "#494949",
                     "borderRadius": 27.5,
                     "bottom": 0,
                     "left": 0,
@@ -5782,7 +5782,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -6624,7 +6624,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   "width": 295,
                 },
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#494949",
                 },
                 {
                   "width": 295,
@@ -6636,7 +6636,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
               style={
                 [
                   {
-                    "backgroundColor": "#333333",
+                    "backgroundColor": "#494949",
                     "borderRadius": 27.5,
                     "bottom": 0,
                     "left": 0,
@@ -6967,7 +6967,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -7648,7 +7648,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   "width": 295,
                 },
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#494949",
                 },
                 {
                   "width": 295,
@@ -7660,7 +7660,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
               style={
                 [
                   {
-                    "backgroundColor": "#333333",
+                    "backgroundColor": "#494949",
                     "borderRadius": 27.5,
                     "bottom": 0,
                     "left": 0,
@@ -7991,7 +7991,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -8977,7 +8977,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   "width": 295,
                 },
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#494949",
                 },
                 {
                   "width": 295,
@@ -8989,7 +8989,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
               style={
                 [
                   {
-                    "backgroundColor": "#333333",
+                    "backgroundColor": "#494949",
                     "borderRadius": 27.5,
                     "bottom": 0,
                     "left": 0,
@@ -9320,7 +9320,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -10241,7 +10241,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   "width": 295,
                 },
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#494949",
                 },
                 {
                   "width": 295,
@@ -10253,7 +10253,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
               style={
                 [
                   {
-                    "backgroundColor": "#333333",
+                    "backgroundColor": "#494949",
                     "borderRadius": 27.5,
                     "bottom": 0,
                     "left": 0,
@@ -10584,7 +10584,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -11464,7 +11464,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   "width": 295,
                 },
                 {
-                  "backgroundColor": "#333333",
+                  "backgroundColor": "#494949",
                 },
                 {
                   "width": 295,
@@ -11476,7 +11476,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
               style={
                 [
                   {
-                    "backgroundColor": "#333333",
+                    "backgroundColor": "#494949",
                     "borderRadius": 27.5,
                     "bottom": 0,
                     "left": 0,
@@ -11807,7 +11807,7 @@ exports[`SendScene2 Render SendScene 1`] = `
       automaticallyAdjustContentInsets={false}
       contentContainerStyle={
         {
-          "paddingBottom": 22,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
