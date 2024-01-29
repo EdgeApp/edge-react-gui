@@ -70,8 +70,9 @@ export const MenuTabs = (props: BottomTabBarProps) => {
 
   const { bottom: insetBottom } = useSafeAreaInsets()
 
-  const { footerOpenRatio, resetFooterRatio } = useSceneFooterState()
-  const { renderFooter } = useSceneFooterRenderState()
+  const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
+  const resetFooterRatio = useSceneFooterState(state => state.resetFooterRatio)
+  const renderFooter = useSceneFooterRenderState(state => state.renderFooter)
 
   const { height: keyboardHeight, progress: keyboardProgress } = useReanimatedKeyboardAnimation()
   const menuTabHeightAndInsetBottomTermForShiftY = useDerivedValue(() => keyboardProgress.value * (insetBottom + MAX_TAB_BAR_HEIGHT), [insetBottom])

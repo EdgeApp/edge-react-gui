@@ -27,7 +27,8 @@ export const SearchFooter = (props: SearchFooterProps) => {
 
   const textInputRef = React.useRef<SimpleTextInputRef>(null)
 
-  const { footerOpenRatio, setKeepOpen } = useSceneFooterState()
+  const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
+  const setKeepOpen = useSceneFooterState(state => state.setKeepOpen)
 
   const handleSearchChangeText = useHandler((text: string) => {
     onChangeText(text)

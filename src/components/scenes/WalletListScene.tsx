@@ -34,7 +34,7 @@ export function WalletListScene(props: Props) {
 
   const sortOption = useSelector(state => state.ui.settings.walletsSort)
 
-  const { setKeepOpen } = useSceneFooterState()
+  const setKeepOpen = useSceneFooterState(state => state.setKeepOpen)
 
   //
   // Handlers

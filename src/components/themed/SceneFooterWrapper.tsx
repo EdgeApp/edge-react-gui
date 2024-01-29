@@ -20,7 +20,7 @@ export interface SceneFooterProps {
 export const SceneFooterWrapper = (props: SceneFooterProps) => {
   const { children, noBackgroundBlur = false, sceneWrapperInfo } = props
   const { hasTabs = true, isKeyboardOpen = false } = sceneWrapperInfo ?? {}
-  const { footerOpenRatio } = useSceneFooterState()
+  const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
 
   const handleFooterLayout = useLayoutHeightInFooter()
   const safeAreaInsets = useSafeAreaInsets()

@@ -120,7 +120,7 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const activeUsername = useSelector(state => state.core.account.username)
   const isLightAccount = accountId != null && activeUsername == null
 
-  const { footerHeight = 0 } = useSceneFooterState()
+  const footerHeight = useSceneFooterState(state => state.footerHeight ?? 0)
 
   const navigation = useNavigation<NavigationBase>()
   const theme = useTheme()
@@ -138,15 +138,15 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     [frame.height, frame.width]
   )
 
-  const notificationHeight = theme.rem(4)
-  const headerBarHeight = getDefaultHeaderHeight(frame, false, 0)
-
   // If the scene has scroll, this will be required for tabs and/or header animation
   const handleScroll = useSceneScrollHandler(scroll && (hasTabs || hasHeader))
 
-  const { renderFooter } = useSceneFooterRenderState()
+  const renderFooter = useSceneFooterRenderState(state => state.renderFooter)
 
   const renderScene = (keyboardAnimation: Animated.Value | undefined, trackerValue: number): JSX.Element => {
+    const notificationHeight = theme.rem(4)
+    const headerBarHeight = getDefaultHeaderHeight(frame, false, 0)
+
     // If function children, the caller handles the insets and overscroll
     const isFuncChildren = typeof children === 'function'
 

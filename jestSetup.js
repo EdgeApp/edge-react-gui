@@ -233,3 +233,30 @@ jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock
 for (const log in global.console) {
   global.console[log] = jest.fn()
 }
+
+jest.mock('use-context-selector', () => {
+  const contextValues = new Map()
+  return {
+    createContext: defaultValue => {
+      // Create new provider
+      const Provider = (props, context) => {
+        contextValues.set(Provider, props.value)
+        return props.children
+      }
+      // Get the value for the provider:
+      const currentValue = contextValues.get(Provider)
+      // Set it's default value:
+      contextValues.set(Provider, currentValue ?? defaultValue)
+      // Return provider
+      return {
+        Provider: Provider,
+        displayName: 'test'
+      }
+    },
+    useContextSelector: (context, selector) => {
+      const currentValue = contextValues.get(context.Provider)
+      const selected = selector(currentValue)
+      return selected
+    }
+  }
+})
