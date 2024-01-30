@@ -542,6 +542,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
                 sections={this.pendingRequestHeaders()}
                 onEndReached={this.pendingLazyLoad}
                 onEndReachedThreshold={SCROLL_THRESHOLD}
+                stickySectionHeadersEnabled={false}
               />
             </View>
           </View>
@@ -558,6 +559,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
                 sections={this.sentRequestHeaders()}
                 onEndReached={this.sentLazyLoad}
                 onEndReachedThreshold={SCROLL_THRESHOLD}
+                stickySectionHeadersEnabled={false}
               />
             </View>
           </View>

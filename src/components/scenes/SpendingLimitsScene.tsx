@@ -83,8 +83,9 @@ export const SpendingLimitsScene = (props: Props) => {
           placeholder={lstrings.spending_limits_tx_title}
           autoCorrect={false}
           autoFocus={false}
-          keyboardType="numeric"
+          keyboardType="decimal-pad"
           prefix={currencySymbol}
+          numeric
         />
 
         <View style={styles.spacer} />
