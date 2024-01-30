@@ -27,7 +27,7 @@ import { SectionView } from '../ui4/SectionView'
 
 interface Props extends EdgeSceneProps<'devTab'> {}
 
-export function InputTesterScene(props: Props) {
+export function DevTestScene(props: Props) {
   const { navigation } = props
 
   const selectedWallet = useSelectedWallet()

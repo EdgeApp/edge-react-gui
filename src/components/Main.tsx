@@ -60,6 +60,7 @@ import { CryptoExchangeSuccessScene as CryptoExchangeSuccessSceneComponent } fro
 import { CurrencyNotificationScene as CurrencyNotificationSceneComponent } from './scenes/CurrencyNotificationScene'
 import { CurrencySettingsScene as CurrencySettingsSceneComponent } from './scenes/CurrencySettingsScene'
 import { DefaultFiatSettingScene as DefaultFiatSettingSceneComponent } from './scenes/DefaultFiatSettingScene'
+import { DevTestScene } from './scenes/DevTestScene'
 import { EdgeLoginScene as EdgeLoginSceneComponent } from './scenes/EdgeLoginScene'
 import { EditTokenScene as EditTokenSceneComponent } from './scenes/EditTokenScene'
 import { ExtraTabScene as ExtraTabSceneComponent } from './scenes/ExtraTabScene'
@@ -83,7 +84,6 @@ import { FioStakingOverviewScene as FioStakingOverviewSceneComponent } from './s
 import { GettingStartedScene } from './scenes/GettingStartedScene'
 import { GuiPluginListScene as GuiPluginListSceneComponent } from './scenes/GuiPluginListScene'
 import { GuiPluginViewScene as GuiPluginViewSceneComponent } from './scenes/GuiPluginViewScene'
-import { InputTesterScene } from './scenes/InputTesterScene'
 import { LoanCloseScene as LoanCloseSceneComponent } from './scenes/Loans/LoanCloseScene'
 import { LoanCreateConfirmationScene as LoanCreateConfirmationSceneComponent } from './scenes/Loans/LoanCreateConfirmationScene'
 import { LoanCreateScene as LoanCreateSceneComponent } from './scenes/Loans/LoanCreateScene'
@@ -715,7 +715,7 @@ const EdgeTabs = () => {
       <Tab.Screen name="sellTab" component={EdgeSellTabScreen} />
       <Tab.Screen name="exchangeTab" component={EdgeExchangeTabScreen} />
       <Tab.Screen name="extraTab" component={ExtraTabScene} />
-      <Tab.Screen name="devTab" component={InputTesterScene} />
+      <Tab.Screen name="devTab" component={DevTestScene} />
     </Tab.Navigator>
   )
 }
