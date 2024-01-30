@@ -59,6 +59,7 @@ export const GuiFormField = React.memo((props: Props) => {
         onBlur={handleBlur}
         onChangeText={handleChangeText}
         onFocus={handleFocus}
+        around={0.5}
         {...textInputProps}
       />
     </View>
