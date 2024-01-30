@@ -378,7 +378,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                     layout={BaseAnimationMock {}}
                   >
                     <Text
-                      adjustsFontSizeToFit={false}
+                      adjustsFontSizeToFit={true}
                       minimumFontScale={0.65}
                       numberOfLines={3}
                       style={
@@ -1565,7 +1565,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     layout={BaseAnimationMock {}}
                   >
                     <Text
-                      adjustsFontSizeToFit={false}
+                      adjustsFontSizeToFit={true}
                       minimumFontScale={0.65}
                       numberOfLines={3}
                       style={
@@ -3105,7 +3105,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                     layout={BaseAnimationMock {}}
                   >
                     <Text
-                      adjustsFontSizeToFit={false}
+                      adjustsFontSizeToFit={true}
                       minimumFontScale={0.65}
                       numberOfLines={3}
                       style={
@@ -5510,7 +5510,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                     layout={BaseAnimationMock {}}
                   >
                     <Text
-                      adjustsFontSizeToFit={false}
+                      adjustsFontSizeToFit={true}
                       minimumFontScale={0.65}
                       numberOfLines={3}
                       style={
@@ -7431,7 +7431,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                     layout={BaseAnimationMock {}}
                   >
                     <Text
-                      adjustsFontSizeToFit={false}
+                      adjustsFontSizeToFit={true}
                       minimumFontScale={0.65}
                       numberOfLines={3}
                       style={
@@ -8539,7 +8539,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                     layout={BaseAnimationMock {}}
                   >
                     <Text
-                      adjustsFontSizeToFit={false}
+                      adjustsFontSizeToFit={true}
                       minimumFontScale={0.65}
                       numberOfLines={3}
                       style={
@@ -9671,7 +9671,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                     layout={BaseAnimationMock {}}
                   >
                     <Text
-                      adjustsFontSizeToFit={false}
+                      adjustsFontSizeToFit={true}
                       minimumFontScale={0.65}
                       numberOfLines={3}
                       style={

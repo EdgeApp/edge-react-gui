@@ -288,9 +288,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
       {recipientAddress == null || recipientAddress === '' ? null : (
         <EdgeAnim enter={{ type: 'stretchInY' }} exit={{ type: 'stretchOutY' }}>
           {fioToAddress == null ? null : <EdgeText>{fioToAddress + '\n'}</EdgeText>}
-          <EdgeText numberOfLines={3} disableFontScaling>
-            {recipientAddress}
-          </EdgeText>
+          <EdgeText numberOfLines={3}>{recipientAddress}</EdgeText>
         </EdgeAnim>
       )}
     </RowUi4>
