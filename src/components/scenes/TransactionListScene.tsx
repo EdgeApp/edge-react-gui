@@ -61,6 +61,7 @@ function TransactionListComponent(props: Props) {
   const [searchText, setSearchText] = React.useState('')
   const [assetStatuses, setAssetStatuses] = React.useState<AssetStatus[]>([])
   const iconColor = useIconColor({ pluginId, tokenId })
+  const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
 
   // Selectors:
   const exchangeDenom = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
@@ -174,6 +175,10 @@ function TransactionListComponent(props: Props) {
     setSearchText(value)
   })
 
+  const handleFooterLayoutHeight = useHandler((height: number) => {
+    setFooterHeight(height)
+  })
+
   //
   // Renderers
   //
@@ -261,10 +266,11 @@ function TransactionListComponent(props: Props) {
           onStartSearching={handleStartSearching}
           onDoneSearching={handleDoneSearching}
           onChangeText={handleChangeText}
+          onLayoutHeight={handleFooterLayoutHeight}
         />
       )
     },
-    [handleChangeText, handleDoneSearching, handleStartSearching, isSearching, searchText]
+    [handleChangeText, handleDoneSearching, handleFooterLayoutHeight, handleStartSearching, isSearching, searchText]
   )
 
   const accentColors: AccentColors = {
@@ -286,6 +292,7 @@ function TransactionListComponent(props: Props) {
       accentColors={accentColors}
       overrideDots={theme.backgroundDots.assetOverrideDots}
       avoidKeyboard
+      footerHeight={footerHeight}
       hasTabs
       hasNotifications
       backgroundGradientColors={backgroundColors}

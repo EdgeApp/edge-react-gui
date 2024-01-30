@@ -1,10 +1,9 @@
 import { useIsFocused } from '@react-navigation/native'
 import { useCallback, useEffect, useMemo } from 'react'
-import { LayoutChangeEvent, Platform } from 'react-native'
+import { Platform } from 'react-native'
 import { runOnJS, useAnimatedReaction, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import { SceneWrapperInfo } from '../components/common/SceneWrapper'
-import { useHandler } from '../hooks/useHandler'
 import { useSharedEvent } from '../hooks/useSharedEvent'
 import { useState } from '../types/reactHooks'
 import { createStateProvider } from './createStateProvider'
@@ -22,7 +21,6 @@ import { useSceneScrollContext } from './SceneScrollState'
  */
 export const [SceneFooterProvider, useSceneFooterState] = createStateProvider(() => {
   const [keepOpen, setKeepOpen] = useState(false)
-  const [footerHeight, setFooterHeight] = useState<number | undefined>(undefined)
   const footerOpenRatio = useSharedValue(1)
   const footerOpenRatioStart = useSharedValue(1)
   const snapTo = useSharedValue<number | undefined>(undefined)
@@ -41,13 +39,11 @@ export const [SceneFooterProvider, useSceneFooterState] = createStateProvider(()
       keepOpen,
       // The scene can use these to lock the footer into an open state.
       setKeepOpen,
-      footerHeight,
       // The scene can call this to reset the footer state to an open state.
       resetFooterRatio,
-      setFooterHeight,
       snapTo
     }),
-    [footerOpenRatio, footerOpenRatioStart, keepOpen, footerHeight, resetFooterRatio, snapTo]
+    [footerOpenRatio, footerOpenRatioStart, keepOpen, resetFooterRatio, snapTo]
   )
 })
 
@@ -138,11 +134,11 @@ export const FooterAccordionEventService = () => {
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
   const footerOpenRatioStart = useSceneFooterState(state => state.footerOpenRatioStart)
   const keepOpen = useSceneFooterState(state => state.keepOpen)
-  const footerHeight = useSceneFooterState(state => state.footerHeight ?? 1)
   const snapTo = useSceneFooterState(state => state.snapTo)
 
-  // This factor will convert scroll delta into footer open value delta (a 0 to 1 fraction)
-  const scrollDeltaToRatioDeltaFactor = 1 / (footerHeight === 0 ? 1 : footerHeight)
+  // This factor will convert scroll delta into footer open value delta (0 to 1
+  // fraction). A smaller value makes for a slower gesture animation.
+  const scrollDeltaToRatioDeltaFactor = 1 / 100 // 100 pixels (points) constant
 
   function snapWorklet() {
     'worklet'
@@ -234,38 +230,4 @@ export const FooterAccordionEventService = () => {
   )
 
   return null
-}
-
-/**
- * Registers a component's height via a returned onLayout handler function
- * to the footer's height calculation. This is to be used for the SceneFooter
- * and any component which should expand the footer height value while it's mounted.
- *
- * @returns layout handler for the component which height you want to measure
- */
-export const useLayoutHeightInFooter = (): ((event: LayoutChangeEvent) => void) => {
-  const setFooterHeight = useSceneFooterState(state => state.setFooterHeight)
-
-  const [layoutHeight, setLayoutHeight] = useState<number | undefined>(undefined)
-
-  const isFocused = useIsFocused()
-  const maybeLayoutHeight = isFocused ? layoutHeight ?? 0 : 0
-
-  // One-time layout measurement handler:
-  const handleLayout = useHandler((event: LayoutChangeEvent) => {
-    if (layoutHeight == null) {
-      const layoutHeight = event.nativeEvent.layout.height
-      setLayoutHeight((prev = 0) => prev + layoutHeight)
-    }
-  })
-
-  // Add/subtract container height to the tab-bar height when mounted/unmounted
-  useEffect(() => {
-    setFooterHeight((footerHeight = 0) => footerHeight + maybeLayoutHeight)
-    return () => {
-      setFooterHeight((footerHeight = 0) => footerHeight - maybeLayoutHeight)
-    }
-  }, [maybeLayoutHeight, setFooterHeight])
-
-  return handleLayout
 }

@@ -65,6 +65,7 @@ const CoinRankingComponent = (props: Props) => {
   const [isSearching, setIsSearching] = useState<boolean>(false)
   const [percentChangeTimeFrame, setPercentChangeTimeFrame] = useState<PercentChangeTimeFrame>('hours24')
   const [assetSubText, setPriceSubText] = useState<AssetSubText>('marketCap')
+  const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
 
   const handleScroll = useSceneScrollHandler()
 
@@ -127,6 +128,10 @@ const CoinRankingComponent = (props: Props) => {
 
   const handleChangeText = useHandler((value: string) => {
     setSearchText(value)
+  })
+
+  const handleFooterLayoutHeight = useHandler((height: number) => {
+    setFooterHeight(height)
   })
 
   React.useEffect(() => {
@@ -214,14 +219,15 @@ const CoinRankingComponent = (props: Props) => {
           onStartSearching={handleStartSearching}
           onDoneSearching={handleDoneSearching}
           onChangeText={handleChangeText}
+          onLayoutHeight={handleFooterLayoutHeight}
         />
       )
     },
-    [handleChangeText, handleDoneSearching, handleStartSearching, isSearching, searchText]
+    [handleChangeText, handleDoneSearching, handleFooterLayoutHeight, handleStartSearching, isSearching, searchText]
   )
 
   return (
-    <SceneWrapper avoidKeyboard hasNotifications renderFooter={renderFooter}>
+    <SceneWrapper avoidKeyboard footerHeight={footerHeight} hasNotifications renderFooter={renderFooter}>
       {({ insetStyle, undoInsetStyle }) => (
         <>
           <View style={styles.headerContainer}>
