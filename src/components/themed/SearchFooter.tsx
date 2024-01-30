@@ -19,16 +19,21 @@ interface SearchFooterProps {
 
   onChangeText: (value: string) => void
   onDoneSearching: () => void
+  onLayoutHeight: (height: number) => void
   onStartSearching: () => void
 }
 
 export const SearchFooter = (props: SearchFooterProps) => {
-  const { placeholder, isSearching, searchText, noBackground, sceneWrapperInfo, onChangeText, onDoneSearching, onStartSearching } = props
+  const { placeholder, isSearching, searchText, noBackground, sceneWrapperInfo, onChangeText, onDoneSearching, onLayoutHeight, onStartSearching } = props
 
   const textInputRef = React.useRef<SimpleTextInputRef>(null)
 
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
   const setKeepOpen = useSceneFooterState(state => state.setKeepOpen)
+
+  //
+  // Handlers
+  //
 
   const handleSearchChangeText = useHandler((text: string) => {
     onChangeText(text)
@@ -50,6 +55,10 @@ export const SearchFooter = (props: SearchFooterProps) => {
     onStartSearching()
   })
 
+  //
+  // Effects
+  //
+
   useEffect(() => {
     if (setKeepOpen != null) setKeepOpen(isSearching)
     if (isSearching && textInputRef.current) {
@@ -60,8 +69,12 @@ export const SearchFooter = (props: SearchFooterProps) => {
     }
   }, [isSearching, setKeepOpen])
 
+  //
+  // Renders
+  //
+
   return (
-    <SceneFooterWrapper noBackgroundBlur={noBackground} sceneWrapperInfo={sceneWrapperInfo}>
+    <SceneFooterWrapper noBackgroundBlur={noBackground} sceneWrapperInfo={sceneWrapperInfo} onLayoutHeight={onLayoutHeight}>
       <Space expand horizontal={1} vertical={0.5}>
         <SimpleTextInput
           returnKeyType="search"

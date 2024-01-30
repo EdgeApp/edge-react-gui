@@ -1,38 +1,35 @@
 import { useIsFocused } from '@react-navigation/native'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
-import { SharedValue, useAnimatedScrollHandler, useDerivedValue, useSharedValue } from 'react-native-reanimated'
+import { SharedValue, useAnimatedReaction, useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 
 import { createStateProvider } from './createStateProvider'
 
-interface ScrollState {
-  dragStartX: SharedValue<number>
-  dragStartY: SharedValue<number>
-  scrollX: SharedValue<number>
+export interface ScrollState {
   scrollY: SharedValue<number>
-  scrollXDelta: SharedValue<number>
-  scrollYDelta: SharedValue<number>
   scrollBeginEvent: SharedValue<NativeScrollEvent | null>
   scrollEndEvent: SharedValue<NativeScrollEvent | null>
   scrollMomentumBeginEvent: SharedValue<NativeScrollEvent | null>
   scrollMomentumEndEvent: SharedValue<NativeScrollEvent | null>
 }
 
-export interface ScrollContextValue {
-  scrollState: ScrollState
-  setScrollState: React.Dispatch<React.SetStateAction<ScrollState | undefined>>
-}
+export const [SceneScrollProvider, useSceneScrollContext] = createStateProvider((): ScrollState => {
+  const scrollY = useSharedValue(0)
+  const scrollBeginEvent = useSharedValue<NativeScrollEvent | null>(null)
+  const scrollEndEvent = useSharedValue<NativeScrollEvent | null>(null)
+  const scrollMomentumBeginEvent = useSharedValue<NativeScrollEvent | null>(null)
+  const scrollMomentumEndEvent = useSharedValue<NativeScrollEvent | null>(null)
 
-export const [SceneScrollProvider, useSceneScrollContext] = createStateProvider((): ScrollContextValue => {
-  const defaultScrollState: ScrollState = useScrollState()
-  const [scrollState, setScrollState] = useState<ScrollState | undefined>(undefined)
-
-  return useMemo(() => {
-    return {
-      scrollState: scrollState ?? defaultScrollState,
-      setScrollState
-    }
-  }, [defaultScrollState, scrollState])
+  return useMemo(
+    () => ({
+      scrollY,
+      scrollBeginEvent,
+      scrollEndEvent,
+      scrollMomentumBeginEvent,
+      scrollMomentumEndEvent
+    }),
+    [scrollBeginEvent, scrollEndEvent, scrollMomentumBeginEvent, scrollMomentumEndEvent, scrollY]
+  )
 })
 
 export type SceneScrollHandler = (event: NativeSyntheticEvent<NativeScrollEvent>) => void
@@ -48,91 +45,71 @@ export type SceneScrollHandler = (event: NativeSyntheticEvent<NativeScrollEvent>
  * if the scene is focused (react-navigation's useIsFocused).
  */
 export const useSceneScrollHandler = (): SceneScrollHandler => {
-  const setScrollState = useSceneScrollContext(state => state.setScrollState)
+  const scrollBeginEvent = useSceneScrollContext(state => state.scrollBeginEvent)
+  const scrollEndEvent = useSceneScrollContext(state => state.scrollEndEvent)
+  const scrollMomentumBeginEvent = useSceneScrollContext(state => state.scrollMomentumBeginEvent)
+  const scrollMomentumEndEvent = useSceneScrollContext(state => state.scrollMomentumEndEvent)
+  const scrollY = useSceneScrollContext(state => state.scrollY)
 
-  const localScrollState: ScrollState = useScrollState()
+  // This fixes a bug during scene transition where the scene that is being
+  // left was the last to update the scrollY value.
   const isFocused = useIsFocused()
-
-  useEffect(() => {
-    setScrollState(scrollState => {
-      if (isFocused) {
-        if (scrollState !== localScrollState) {
-          return localScrollState
-        }
+  const localScrollY = useSharedValue(0)
+  useAnimatedReaction(
+    () => {
+      return isFocused
+    },
+    isFocused => {
+      if (isFocused && localScrollY.value !== scrollY.value) {
+        scrollY.value = localScrollY.value
       }
-      if (!isFocused && scrollState === localScrollState) {
-        // Reset to default scroll state
-        return undefined
-      }
-      return scrollState
-    })
-  }, [isFocused, localScrollState, setScrollState])
+    },
+    [isFocused]
+  )
 
+  // In each handler, we check `isFocused` to avoid mutating state if the
+  // scene isn't focused because events to fire after leaving a screen/scene.
   const handler = useAnimatedScrollHandler({
     onScroll: (nativeEvent: NativeScrollEvent) => {
       'worklet'
+      // Avoids unexpected triggers
+      if (!isFocused) return
+
       // Condition avoids thrashing
-      if (localScrollState.scrollX.value !== nativeEvent.contentOffset.x) {
-        localScrollState.scrollX.value = nativeEvent.contentOffset.x
-      }
-      // Condition avoids thrashing
-      if (localScrollState.scrollY.value !== nativeEvent.contentOffset.y) {
-        localScrollState.scrollY.value = nativeEvent.contentOffset.y
+      if (scrollY.value !== nativeEvent.contentOffset.y) {
+        localScrollY.value = nativeEvent.contentOffset.y
+        scrollY.value = localScrollY.value
       }
     },
     onBeginDrag: (nativeEvent: NativeScrollEvent) => {
       'worklet'
-      // Condition avoids thrashing
-      if (localScrollState.dragStartX.value !== nativeEvent.contentOffset.x) {
-        localScrollState.dragStartX.value = nativeEvent.contentOffset.x
-      }
-      // Condition avoids thrashing
-      if (localScrollState.dragStartY.value !== nativeEvent.contentOffset.y) {
-        localScrollState.dragStartY.value = nativeEvent.contentOffset.y
-      }
+      // Avoids unexpected triggers
+      if (!isFocused) return
 
-      localScrollState.scrollBeginEvent.value = nativeEvent
+      scrollBeginEvent.value = nativeEvent
     },
     onEndDrag: nativeEvent => {
       'worklet'
-      localScrollState.scrollEndEvent.value = nativeEvent
+      // Avoids unexpected triggers
+      if (!isFocused) return
+
+      scrollEndEvent.value = nativeEvent
     },
     onMomentumBegin: nativeEvent => {
-      localScrollState.scrollMomentumBeginEvent.value = nativeEvent
+      'worklet'
+      // Avoids unexpected triggers
+      if (!isFocused) return
+
+      scrollMomentumBeginEvent.value = nativeEvent
     },
     onMomentumEnd: nativeEvent => {
-      localScrollState.scrollMomentumEndEvent.value = nativeEvent
+      'worklet'
+      // Avoids unexpected triggers
+      if (!isFocused) return
+
+      scrollMomentumEndEvent.value = nativeEvent
     }
   })
 
   return handler
-}
-
-const useScrollState = (): ScrollState => {
-  const dragStartX = useSharedValue(0)
-  const dragStartY = useSharedValue(0)
-  const scrollX = useSharedValue(0)
-  const scrollY = useSharedValue(0)
-  const scrollXDelta = useDerivedValue(() => scrollX.value - dragStartX.value)
-  const scrollYDelta = useDerivedValue(() => scrollY.value - dragStartY.value)
-  const scrollBeginEvent = useSharedValue<NativeScrollEvent | null>(null)
-  const scrollEndEvent = useSharedValue<NativeScrollEvent | null>(null)
-  const scrollMomentumBeginEvent = useSharedValue<NativeScrollEvent | null>(null)
-  const scrollMomentumEndEvent = useSharedValue<NativeScrollEvent | null>(null)
-
-  return useMemo(
-    () => ({
-      dragStartX,
-      dragStartY,
-      scrollX,
-      scrollY,
-      scrollXDelta,
-      scrollYDelta,
-      scrollBeginEvent,
-      scrollEndEvent,
-      scrollMomentumBeginEvent,
-      scrollMomentumEndEvent
-    }),
-    [dragStartX, dragStartY, scrollBeginEvent, scrollEndEvent, scrollMomentumBeginEvent, scrollMomentumEndEvent, scrollX, scrollXDelta, scrollY, scrollYDelta]
-  )
 }

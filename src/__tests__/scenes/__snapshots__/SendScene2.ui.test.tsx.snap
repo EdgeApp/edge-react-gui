@@ -1153,16 +1153,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
     </View>
   </View>,
   <View
-    style={
-      {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-      }
-    }
-  />,
-  <View
     footerHeight={0}
     footerOpenRatio={
       {
@@ -2529,16 +2519,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
     </View>
   </View>,
   <View
-    style={
-      {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-      }
-    }
-  />,
-  <View
     footerHeight={0}
     footerOpenRatio={
       {
@@ -3882,16 +3862,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
     </View>
   </View>,
   <View
-    style={
-      {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-      }
-    }
-  />,
-  <View
     footerHeight={0}
     footerOpenRatio={
       {
@@ -4936,16 +4906,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
     </View>
   </View>,
   <View
-    style={
-      {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-      }
-    }
-  />,
-  <View
     footerHeight={0}
     footerOpenRatio={
       {
@@ -5966,16 +5926,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
     </View>
   </View>,
   <View
-    style={
-      {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-      }
-    }
-  />,
-  <View
     footerHeight={0}
     footerOpenRatio={
       {
@@ -6834,16 +6784,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       </View>
     </View>
   </View>,
-  <View
-    style={
-      {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-      }
-    }
-  />,
   <View
     footerHeight={0}
     footerOpenRatio={
@@ -8009,16 +7949,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
     </View>
   </View>,
   <View
-    style={
-      {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-      }
-    }
-  />,
-  <View
     footerHeight={0}
     footerOpenRatio={
       {
@@ -9118,16 +9048,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
     </View>
   </View>,
   <View
-    style={
-      {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-      }
-    }
-  />,
-  <View
     footerHeight={0}
     footerOpenRatio={
       {
@@ -10186,16 +10106,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
     </View>
   </View>,
   <View
-    style={
-      {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-      }
-    }
-  />,
-  <View
     footerHeight={0}
     footerOpenRatio={
       {
@@ -11238,16 +11148,6 @@ exports[`SendScene2 Render SendScene 1`] = `
       }
     />
   </View>,
-  <View
-    style={
-      {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-      }
-    }
-  />,
   <View
     footerHeight={0}
     footerOpenRatio={

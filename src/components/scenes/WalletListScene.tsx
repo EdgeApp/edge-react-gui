@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import { updateWalletsSort } from '../../actions/WalletListActions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { useSceneFooterRender, useSceneFooterState } from '../../state/SceneFooterState'
+import { FooterRender, useSceneFooterState } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { CrossFade } from '../common/CrossFade'
@@ -31,6 +31,7 @@ export function WalletListScene(props: Props) {
   const [sorting, setSorting] = React.useState(false)
   const [isSearching, setIsSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
+  const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
 
   const sortOption = useSelector(state => state.ui.settings.walletsSort)
 
@@ -80,6 +81,10 @@ export function WalletListScene(props: Props) {
     setSorting(false)
   })
 
+  const handleFooterLayoutHeight = useHandler((height: number) => {
+    setFooterHeight(height)
+  })
+
   //
   // Renders
   //
@@ -88,10 +93,10 @@ export function WalletListScene(props: Props) {
     return <WalletListHeader navigation={navigation} sorting={sorting} searching={isSearching} openSortModal={handleSort} />
   }, [handleSort, navigation, isSearching, sorting])
 
-  useSceneFooterRender(
+  const renderFooter: FooterRender = React.useCallback(
     sceneWrapperInfo => {
       return sorting ? (
-        <SceneFooterWrapper noBackgroundBlur sceneWrapperInfo={sceneWrapperInfo}>
+        <SceneFooterWrapper noBackgroundBlur sceneWrapperInfo={sceneWrapperInfo} onLayoutHeight={handleFooterLayoutHeight}>
           <View style={styles.sortFooterContainer}>
             <ButtonUi4 key="doneButton" mini type="primary" label={lstrings.string_done_cap} onPress={handlePressDone} />
           </View>
@@ -106,14 +111,25 @@ export function WalletListScene(props: Props) {
           onStartSearching={handleStartSearching}
           onDoneSearching={handleDoneSearching}
           onChangeText={handleChangeText}
+          onLayoutHeight={handleFooterLayoutHeight}
         />
       )
     },
-    [handleChangeText, handleDoneSearching, handlePressDone, handleStartSearching, isSearching, searchText, sorting, styles.sortFooterContainer]
+    [
+      handleChangeText,
+      handleDoneSearching,
+      handleFooterLayoutHeight,
+      handlePressDone,
+      handleStartSearching,
+      isSearching,
+      searchText,
+      sorting,
+      styles.sortFooterContainer
+    ]
   )
 
   return (
-    <SceneWrapper avoidKeyboard hasTabs hasNotifications>
+    <SceneWrapper avoidKeyboard footerHeight={footerHeight} hasTabs hasNotifications renderFooter={renderFooter}>
       {({ insetStyle, undoInsetStyle }) => (
         <>
           <WiredProgressBar />

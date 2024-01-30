@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
-import { LayoutChangeEvent } from 'react-native'
+import React, { useEffect } from 'react'
 import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { useHandler } from '../../hooks/useHandler'
-import { useLayoutHeightInFooter, useSceneFooterState } from '../../state/SceneFooterState'
+import { useLayoutOnce } from '../../hooks/useLayoutOnce'
+import { useSceneFooterState } from '../../state/SceneFooterState'
 import { SceneWrapperInfo } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { BlurBackground } from '../ui4/BlurBackground'
@@ -15,31 +14,44 @@ export interface SceneFooterProps {
 
   // Flags:
   noBackgroundBlur?: boolean
+
+  onLayoutHeight: (height: number) => void
 }
 
 export const SceneFooterWrapper = (props: SceneFooterProps) => {
-  const { children, noBackgroundBlur = false, sceneWrapperInfo } = props
+  const { children, noBackgroundBlur = false, sceneWrapperInfo, onLayoutHeight } = props
   const { hasTabs = true, isKeyboardOpen = false } = sceneWrapperInfo ?? {}
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
 
-  const handleFooterLayout = useLayoutHeightInFooter()
   const safeAreaInsets = useSafeAreaInsets()
 
-  const [containerHeight, setContainerHeight] = useState<number | undefined>(undefined)
-  const handleFooterInnerLayout = useHandler((event: LayoutChangeEvent) => {
-    if (containerHeight != null) return
-    setContainerHeight(event.nativeEvent.layout.height)
-    handleFooterLayout(event)
-  })
+  //
+  // Handlers
+  //
+
+  const [layout, handleLayoutOnce] = useLayoutOnce()
+
+  //
+  // Effects
+  //
+
+  useEffect(() => {
+    if (layout == null) return
+    onLayoutHeight(layout.height)
+  }, [layout, onLayoutHeight])
+
+  //
+  // Render
+  //
 
   return (
     <ContainerAnimatedView
-      containerHeight={containerHeight}
+      containerHeight={layout?.height}
       footerOpenRatio={footerOpenRatio}
       hasTabs={hasTabs}
       isKeyboardOpen={isKeyboardOpen}
       insetBottom={safeAreaInsets.bottom}
-      onLayout={handleFooterInnerLayout}
+      onLayout={handleLayoutOnce}
     >
       {noBackgroundBlur ? null : <BlurBackground />}
       {children}

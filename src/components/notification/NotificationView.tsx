@@ -19,10 +19,11 @@ interface Props {
   navigation: NavigationBase
 
   hasTabs: boolean
+  footerHeight: number
 }
 
 const NotificationViewComponent = (props: Props) => {
-  const { navigation, hasTabs } = props
+  const { navigation, hasTabs, footerHeight } = props
   const theme = useTheme()
   const dispatch = useDispatch()
 
@@ -34,7 +35,6 @@ const NotificationViewComponent = (props: Props) => {
 
   const { bottom: insetBottom } = useSafeAreaInsets()
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
-  const footerHeight = useSceneFooterState(state => state.footerHeight ?? 0)
 
   const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
 

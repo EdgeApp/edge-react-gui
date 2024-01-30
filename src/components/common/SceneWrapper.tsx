@@ -7,7 +7,7 @@ import Reanimated from 'react-native-reanimated'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { useSceneFooterRenderState, useSceneFooterState } from '../../state/SceneFooterState'
+import { FooterRender, PortalSceneFooter } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
@@ -65,6 +65,9 @@ interface SceneWrapperProps {
   backgroundGradientStart?: { x: number; y: number }
   backgroundGradientEnd?: { x: number; y: number }
 
+  // The necessary height of the footer to include in the insets
+  footerHeight?: number
+
   // True if this scene has a header (with back button & such):
   hasHeader?: boolean
 
@@ -82,6 +85,10 @@ interface SceneWrapperProps {
 
   // Padding to add inside the scene border:
   padding?: number
+
+  // Renderer for the footer to be rendered in the SceneWrapper or MenuTabs.
+  // It should be memoized with useCallback to avoid unnecessary re-renders.
+  renderFooter?: FooterRender
 
   // True to make the scene scrolling (if avoidKeyboard is false):
   scroll?: boolean
@@ -158,18 +165,18 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
     backgroundGradientStart,
     backgroundGradientEnd,
     children,
+    footerHeight = 0,
     hasHeader = true,
     hasNotifications = false,
     hasTabs = false,
     padding = 0,
+    renderFooter,
     scroll = false
   } = props
 
   const accountId = useSelector(state => state.core.account.id)
   const activeUsername = useSelector(state => state.core.account.username)
   const isLightAccount = accountId != null && activeUsername == null
-
-  const footerHeight = useSceneFooterState(state => state.footerHeight ?? 0)
 
   const navigation = useNavigation<NavigationBase>()
   const theme = useTheme()
@@ -247,13 +254,13 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
     [insets.top, insets.right, insets.bottom, insets.left]
   )
 
-  const info: SceneWrapperInfo = useMemo(
+  const sceneWrapperInfo: SceneWrapperInfo = useMemo(
     () => ({ insets, insetStyle, undoInsetStyle, hasTabs, isKeyboardOpen }),
     [hasTabs, insetStyle, insets, isKeyboardOpen, undoInsetStyle]
   )
 
   // If function children, the caller handles the insets and overscroll
-  const memoizedChildren = useMemo(() => (typeof children === 'function' ? children(info) : children), [children, info])
+  const memoizedChildren = useMemo(() => (typeof children === 'function' ? children(sceneWrapperInfo) : children), [children, sceneWrapperInfo])
 
   if (avoidKeyboard) {
     return (
@@ -268,16 +275,16 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
           />
 
           {memoizedChildren}
-          <SceneWrapperFooterContainer hasTabs={hasTabs} sceneWrapperInfo={info} />
+          {renderFooter == null ? null : <SceneWrapperFooterContainer hasTabs={hasTabs} renderFooter={renderFooter} sceneWrapperInfo={sceneWrapperInfo} />}
         </Animated.View>
-        {hasNotifications ? <NotificationView hasTabs={hasTabs} navigation={navigation} /> : null}
+        {hasNotifications ? <NotificationView hasTabs={hasTabs} footerHeight={footerHeight} navigation={navigation} /> : null}
       </>
     )
   }
 
   if (scroll) {
     return (
-      <SceneWrapperScrollView insetStyle={insetStyle} layoutStyle={layoutStyle} navigation={navigation} sceneWrapperInfo={info} {...props}>
+      <SceneWrapperScrollView insetStyle={insetStyle} layoutStyle={layoutStyle} navigation={navigation} sceneWrapperInfo={sceneWrapperInfo} {...props}>
         {memoizedChildren}
       </SceneWrapperScrollView>
     )
@@ -286,14 +293,15 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
   return (
     <>
       <View style={[styles.sceneContainer, layoutStyle, insetStyle, { padding }]}>{memoizedChildren}</View>
-      <SceneWrapperFooterContainer hasTabs={hasTabs} sceneWrapperInfo={info} />
-      {hasNotifications ? <NotificationView hasTabs={hasTabs} navigation={navigation} /> : null}
+      {renderFooter == null ? null : <SceneWrapperFooterContainer hasTabs={hasTabs} renderFooter={renderFooter} sceneWrapperInfo={sceneWrapperInfo} />}
+      {hasNotifications ? <NotificationView hasTabs={hasTabs} footerHeight={footerHeight} navigation={navigation} /> : null}
     </>
   )
 }
 const SceneWrapperInner = React.memo(SceneWrapperInnerComponent)
 
-interface SceneWrapperScrollViewProps extends Pick<SceneWrapperProps, 'hasNotifications' | 'hasTabs' | 'keyboardShouldPersistTaps' | 'padding'> {
+interface SceneWrapperScrollViewProps
+  extends Pick<SceneWrapperProps, 'hasNotifications' | 'hasTabs' | 'footerHeight' | 'keyboardShouldPersistTaps' | 'padding' | 'renderFooter'> {
   children: React.ReactNode
   insetStyle: InsetStyle
   layoutStyle: {
@@ -306,7 +314,7 @@ interface SceneWrapperScrollViewProps extends Pick<SceneWrapperProps, 'hasNotifi
 
 function SceneWrapperScrollViewComponent(props: SceneWrapperScrollViewProps) {
   const { children, insetStyle, layoutStyle, navigation, sceneWrapperInfo } = props
-  const { hasNotifications = false, hasTabs = false, keyboardShouldPersistTaps, padding = 0 } = props
+  const { hasNotifications = false, hasTabs = false, footerHeight = 0, keyboardShouldPersistTaps, padding = 0, renderFooter } = props
 
   // If the scene has scroll, this will be required for tabs and/or header animation
   const handleScroll = useSceneScrollHandler()
@@ -323,24 +331,26 @@ function SceneWrapperScrollViewComponent(props: SceneWrapperScrollViewProps) {
       >
         {children}
       </Reanimated.ScrollView>
-      <SceneWrapperFooterContainer hasTabs={hasTabs} sceneWrapperInfo={sceneWrapperInfo} />
-      {hasNotifications ? <NotificationView hasTabs={hasTabs} navigation={navigation} /> : null}
+      {renderFooter == null ? null : <SceneWrapperFooterContainer hasTabs={hasTabs} renderFooter={renderFooter} sceneWrapperInfo={sceneWrapperInfo} />}
+      {hasNotifications ? <NotificationView hasTabs={hasTabs} footerHeight={footerHeight} navigation={navigation} /> : null}
     </>
   )
 }
 const SceneWrapperScrollView = React.memo(SceneWrapperScrollViewComponent)
 
-interface SceneWrapperFooterContainerProps {
-  hasTabs: boolean
+interface SceneWrapperFooterContainerProps extends Required<Pick<SceneWrapperProps, 'hasTabs' | 'renderFooter'>> {
   sceneWrapperInfo: SceneWrapperInfo
 }
 
 function SceneWrapperFooterContainerComponent(props: SceneWrapperFooterContainerProps) {
-  const { hasTabs, sceneWrapperInfo } = props
+  const { hasTabs, sceneWrapperInfo, renderFooter } = props
 
-  const renderFooter = useSceneFooterRenderState(state => state.renderFooter)
+  // Portal the render function to the SceneFooterState
+  if (hasTabs) {
+    return <PortalSceneFooter>{renderFooter}</PortalSceneFooter>
+  }
 
-  return renderFooter != null && !hasTabs ? <SceneFooter>{renderFooter(sceneWrapperInfo)}</SceneFooter> : null
+  return <SceneFooter>{renderFooter(sceneWrapperInfo)}</SceneFooter>
 }
 const SceneWrapperFooterContainer = React.memo(SceneWrapperFooterContainerComponent)
 
