@@ -17,10 +17,10 @@ import Animated, {
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import edgeLogoIcon from '../../assets/images/edgeLogo/Edge_logo_Icon_L.png'
-import slide1HeroImage from '../../assets/images/gettingStarted/slide1HeroImage.png'
-import slide2HeroImage from '../../assets/images/gettingStarted/slide2HeroImage.png'
-import slide3HeroImage from '../../assets/images/gettingStarted/slide3HeroImage.png'
-import slide4HeroImage from '../../assets/images/gettingStarted/slide4HeroImage.png'
+import uspImage0 from '../../assets/images/gettingStarted/usp0.png'
+import uspImage1 from '../../assets/images/gettingStarted/usp1.png'
+import uspImage2 from '../../assets/images/gettingStarted/usp2.png'
+import uspImage3 from '../../assets/images/gettingStarted/usp3.png'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { getExperimentConfigValue } from '../../experimentConfig'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -53,26 +53,26 @@ interface SectionData {
 }
 const sections: SectionData[] = [
   {
-    image: slide1HeroImage,
+    image: uspImage0,
     key: 'slide1',
     message: lstrings.getting_started_slide_1_message,
     title: lstrings.getting_started_slide_1_title,
     footnote: lstrings.getting_started_slide_1_footnote
   },
   {
-    image: slide2HeroImage,
+    image: uspImage1,
     key: 'slide2',
     message: lstrings.getting_started_slide_2_message,
     title: lstrings.getting_started_slide_2_title
   },
   {
-    image: slide3HeroImage,
+    image: uspImage2,
     key: 'slide3',
     message: lstrings.getting_started_slide_3_message,
     title: lstrings.getting_started_slide_3_title
   },
   {
-    image: slide4HeroImage,
+    image: uspImage3,
     key: 'slide4',
     message: lstrings.getting_started_slide_4_message,
     title: lstrings.getting_started_slide_4_title
@@ -394,13 +394,12 @@ const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<nu
     {
       alignItems: 'stretch',
       justifyContent: 'space-between',
-      backgroundColor: '#0F1D26',
       paddingVertical: theme.rem(1),
       paddingBottom: insets.bottom + theme.rem(1),
       marginBottom: -insets.bottom
     },
     useAnimatedStyle(() => {
-      const backgroundColor = interpolateColor(props.swipeOffset.value, [0, 1], [`${theme.modal}00`, `${theme.modal}ff`])
+      const backgroundColor = interpolateColor(props.swipeOffset.value, [0, 1], [`${theme.modal}00`, theme.modalBackground])
       const paddingVertical = interpolate(props.swipeOffset.value, [0, 1], [0, themeRem], Extrapolation.CLAMP)
       const flexGrow = interpolate(props.swipeOffset.value, [0, 1], [0, 1.2], Extrapolation.CLAMP)
       return {
