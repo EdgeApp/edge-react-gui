@@ -68,6 +68,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
       showsVerticalScrollIndicator={true}
       style={
         {
+          "margin": 11,
           "marginBottom": 0,
         }
       }
@@ -1003,7 +1004,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 22,
+          "bottom": 45,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -1255,6 +1256,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       showsVerticalScrollIndicator={true}
       style={
         {
+          "margin": 11,
           "marginBottom": 0,
         }
       }
@@ -2378,7 +2380,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 22,
+          "bottom": 45,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -2630,6 +2632,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
       showsVerticalScrollIndicator={true}
       style={
         {
+          "margin": 11,
           "marginBottom": 0,
         }
       }
@@ -3730,7 +3733,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 22,
+          "bottom": 45,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -3982,6 +3985,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       showsVerticalScrollIndicator={true}
       style={
         {
+          "margin": 11,
           "marginBottom": 0,
         }
       }
@@ -4783,7 +4787,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 22,
+          "bottom": 45,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -5035,6 +5039,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       showsVerticalScrollIndicator={true}
       style={
         {
+          "margin": 11,
           "marginBottom": 0,
         }
       }
@@ -5812,7 +5817,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 22,
+          "bottom": 45,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -6064,6 +6069,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       showsVerticalScrollIndicator={true}
       style={
         {
+          "margin": 11,
           "marginBottom": 0,
         }
       }
@@ -6680,7 +6686,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 22,
+          "bottom": 45,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -6932,6 +6938,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       showsVerticalScrollIndicator={true}
       style={
         {
+          "margin": 11,
           "marginBottom": 0,
         }
       }
@@ -7853,7 +7860,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 22,
+          "bottom": 45,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -8105,6 +8112,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       showsVerticalScrollIndicator={true}
       style={
         {
+          "margin": 11,
           "marginBottom": 0,
         }
       }
@@ -8961,7 +8969,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 22,
+          "bottom": 45,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -9213,6 +9221,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       showsVerticalScrollIndicator={true}
       style={
         {
+          "margin": 11,
           "marginBottom": 0,
         }
       }
@@ -10028,7 +10037,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 22,
+          "bottom": 45,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",
@@ -10280,6 +10289,7 @@ exports[`SendScene2 Render SendScene 1`] = `
       showsVerticalScrollIndicator={true}
       style={
         {
+          "margin": 11,
           "marginBottom": 0,
         }
       }
@@ -11220,7 +11230,7 @@ exports[`SendScene2 Render SendScene 1`] = `
       style={
         {
           "alignItems": "center",
-          "bottom": 22,
+          "bottom": 45,
           "justifyContent": "center",
           "position": "absolute",
           "width": "100%",

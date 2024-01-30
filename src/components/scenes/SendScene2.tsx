@@ -1066,8 +1066,9 @@ const SendComponent = (props: Props) => {
   )
 }
 
-const StyledKeyboardAwareScrollView = styled(KeyboardAwareScrollView)<{ notificationHeight: number }>(_theme => props => ({
-  marginBottom: props.notificationHeight
+const StyledKeyboardAwareScrollView = styled(KeyboardAwareScrollView)<{ notificationHeight: number }>(theme => props => ({
+  marginBottom: props.notificationHeight,
+  margin: theme.rem(0.5)
 }))
 
 const StyledSliderView = styled(View)<{ notificationHeight: number }>(theme => props => {
@@ -1076,7 +1077,7 @@ const StyledSliderView = styled(View)<{ notificationHeight: number }>(theme => p
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    bottom: theme.rem(1) + props.notificationHeight
+    bottom: theme.rem(2) + props.notificationHeight
   }
 })
 
