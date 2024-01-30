@@ -3,6 +3,7 @@ import { NavigationHelpers, ParamListBase } from '@react-navigation/native'
 import * as React from 'react'
 import { useMemo } from 'react'
 import { Platform, TouchableOpacity, View } from 'react-native'
+import DeviceInfo from 'react-native-device-info'
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, { interpolate, SharedValue, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
@@ -27,12 +28,15 @@ import { VectorIcon } from './VectorIcon'
 
 const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_map'
 
-// Android doesn't include extra space from the nav-bar like iOS does, so we
-// add 0.75 rem to the bottom padding of the MenuTab's container:
-const ANDROID_MENU_TAB_BAR_EXTRA_PADDING = Platform.OS === 'android' ? scale(16) * 0.75 : 0
+// Include the correct bottom padding to the menu bar for all devices accept for
+// iOS devices with a nav bar (has a notch). This is because iOS devices with a
+// nav-bar and notch include extra space according to the Apple style-guide.
+// react-native-safe-area-context incorrectly applies no extra padding to iPad
+// devices with a notch.
+const MAYBE_BOTTOM_PADDING = Platform.OS === 'ios' && !Platform.isPad && DeviceInfo.hasNotch() ? 0 : scale(16) * 0.75
 
-export const MAX_TAB_BAR_HEIGHT = 58 + ANDROID_MENU_TAB_BAR_EXTRA_PADDING
-export const MIN_TAB_BAR_HEIGHT = 40 + ANDROID_MENU_TAB_BAR_EXTRA_PADDING
+export const MAX_TAB_BAR_HEIGHT = 58 + MAYBE_BOTTOM_PADDING
+export const MIN_TAB_BAR_HEIGHT = 40 + MAYBE_BOTTOM_PADDING
 
 const title: { readonly [key: string]: string } = {
   homeTab: lstrings.title_home,
@@ -196,7 +200,8 @@ const Tab = ({
 const TabContainer = styled(TouchableOpacity)<{ insetBottom: number }>(theme => ({ insetBottom }) => ({
   flex: 1,
   paddingTop: theme.rem(0.75),
-  paddingBottom: insetBottom + ANDROID_MENU_TAB_BAR_EXTRA_PADDING,
+  paddingBottom: MAYBE_BOTTOM_PADDING,
+  marginBottom: insetBottom,
   justifyContent: 'center',
   alignItems: 'center'
 }))

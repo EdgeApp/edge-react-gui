@@ -125,6 +125,9 @@ jest.mock('react-native-device-info', () => ({
   },
   getVersion() {
     return '1.2.3'
+  },
+  hasNotch() {
+    return false
   }
 }))
 
