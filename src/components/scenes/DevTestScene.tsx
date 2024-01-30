@@ -1,13 +1,15 @@
 import { eq } from 'biggystring'
 import { InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
-import { ReturnKeyType } from 'react-native'
+import { ReturnKeyType, View } from 'react-native'
 
+import { Fontello } from '../../assets/vector'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useState } from '../../types/reactHooks'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { consify } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { styled } from '../hoc/styled'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
@@ -16,10 +18,12 @@ import { FlipInputModal2, FlipInputModalResult } from '../modals/FlipInputModal2
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { Airship } from '../services/AirshipInstance'
+import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { ButtonUi4 } from '../ui4/ButtonUi4'
 import { CardUi4 } from '../ui4/CardUi4'
 import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
@@ -29,6 +33,7 @@ interface Props extends EdgeSceneProps<'devTab'> {}
 
 export function DevTestScene(props: Props) {
   const { navigation } = props
+  const theme = useTheme()
 
   const selectedWallet = useSelectedWallet()
   const [value0, setValue0] = useState<string>('')
@@ -261,7 +266,45 @@ export function DevTestScene(props: Props) {
             }}
           />
         </>
+        <>
+          <SectionHeaderUi4 leftTitle="Buttons" />
+          <ButtonUi4 onPress={() => {}} label="Button With Child" marginRem={0.5} type="secondary">
+            <Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />
+          </ButtonUi4>
+          <EdgeText>Button with spinner and child (child shouldn't show)</EdgeText>
+          <ButtonUi4 onPress={() => {}} label="Button With Child" marginRem={0.5} type="secondary" spinner>
+            <Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />
+          </ButtonUi4>
+          <ButtonUi4 onPress={() => {}} label="Mini" marginRem={0.5} type="secondary" mini />
+          <OutlinedView>
+            <ButtonsViewUi4
+              primary={{ label: 'Primary', onPress: () => {} }}
+              secondary={{ label: 'Secondary', onPress: () => {} }}
+              tertiary={{ label: 'Tertiary Tertiary Tertiary Tertiary', onPress: () => {} }}
+              layout="column"
+            />
+          </OutlinedView>
+          <OutlinedView>
+            <ButtonsViewUi4
+              primary={{ label: 'Primary Primary', onPress: () => {} }}
+              secondary={{ label: 'Secondary', onPress: () => {} }}
+              tertiary={{ label: 'Tertiary', onPress: () => {} }}
+              layout="column"
+            />
+          </OutlinedView>
+          <OutlinedView>
+            <ButtonsViewUi4 primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} layout="row" />
+          </OutlinedView>
+          <OutlinedView>
+            <ButtonsViewUi4 secondary={{ label: 'Secondary', onPress: () => {} }} secondary2={{ label: 'Secondary', onPress: () => {} }} layout="row" />
+          </OutlinedView>
+        </>
       </SectionView>
     </SceneWrapper>
   )
 }
+
+const OutlinedView = styled(View)({
+  borderWidth: 1,
+  borderColor: 'white'
+})
