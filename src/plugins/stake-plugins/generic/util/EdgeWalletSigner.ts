@@ -50,7 +50,8 @@ export class EdgeWalletSigner extends ethers.Signer {
     if (this._lastSignedEdgeTransaction == null) {
       throw new Error('Missing _lastSignedEdgeTransaction after invoking signTransaction')
     }
-    await this.wallet.saveTx(this._lastSignedEdgeTransaction)
+    const broadcastTx = await this.wallet.broadcastTx(this._lastSignedEdgeTransaction)
+    await this.wallet.saveTx(broadcastTx)
 
     return await this.provider.sendTransaction(signedTx)
   }
