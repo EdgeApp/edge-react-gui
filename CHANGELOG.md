@@ -33,7 +33,19 @@
 - removed: Deposit/Send footer buttons in Wallet/Asset List Scene
 - removed: Unused special currency constants
 
-## 3.23.0
+## 3.23.4 (2024-01-30)
+
+- added: Added 5x leverage Tarot Finance pools
+
+## 3.23.3 (2024-01-09)
+
+- fixed: ETC spend error regression caused by EIP-1559 upgrade in EthereumEngine
+
+## 3.23.2 (2024-01-03)
+
+- fixed: Spend regression for non-EIP-1559 transactions
+
+## 3.23.0 (2023-12-20)
 
 - added: Automatically enable tokens with balances
 - added: Add Pokt RPCs as option for Fantom
