@@ -454,7 +454,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'column'
   },
   sceneContainer: {
-    flex: 1
+    flex: 1,
+    padding: theme.rem(0.5)
   },
   selectedCountryRow: {
     marginTop: theme.rem(1.5),
