@@ -1,5 +1,5 @@
 import { StakeProviderInfo } from '../../types'
-import { StakeAdapterConfig } from '../policyAdapters/types'
+import { GlifInfinityPoolAdapterConfig } from '../policyAdapters/GlifInfinityPoolAdapter'
 import { StakePluginInfo, StakePolicyConfig } from '../types'
 
 const stakeProviderInfo: StakeProviderInfo = {
@@ -8,7 +8,7 @@ const stakeProviderInfo: StakeProviderInfo = {
   stakeProviderId: 'glif_infinity_pool'
 }
 
-const filecoinPolicyConfig: Array<StakePolicyConfig<StakeAdapterConfig>> = [
+const filecoinPolicyConfig: Array<StakePolicyConfig<GlifInfinityPoolAdapterConfig>> = [
   {
     stakePolicyId: 'fil_glif_infinity_pool_0',
     stakeProviderInfo: stakeProviderInfo,
