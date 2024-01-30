@@ -33,7 +33,8 @@ const NotificationViewComponent = (props: Props) => {
   const isBackupWarningShown = account.id != null && account.username == null
 
   const { bottom: insetBottom } = useSafeAreaInsets()
-  const { footerOpenRatio, footerHeight = 0 } = useSceneFooterState()
+  const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
+  const footerHeight = useSceneFooterState(state => state.footerHeight ?? 0)
 
   const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
 

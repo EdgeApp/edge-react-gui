@@ -45,19 +45,17 @@ export type SceneScrollHandler = (event: NativeSyntheticEvent<NativeScrollEvent>
  * are updated based on the scroll component's scroll position. This local state is
  * passed to the global scroll state update function which stomps the global shared
  * values with the local ones as the context provider's value. This will only happen
- * if the scene is focused (react-navigation's useIsFocused). In addition to scene
- * focus requirement, the caller of this hook has the option to control enabling
- * the hook by the optional `isEnabled` boolean parameter.
+ * if the scene is focused (react-navigation's useIsFocused).
  */
-export const useSceneScrollHandler = (isEnabled: boolean = true): SceneScrollHandler => {
-  const { setScrollState } = useSceneScrollContext()
+export const useSceneScrollHandler = (): SceneScrollHandler => {
+  const setScrollState = useSceneScrollContext(state => state.setScrollState)
 
   const localScrollState: ScrollState = useScrollState()
   const isFocused = useIsFocused()
 
   useEffect(() => {
     setScrollState(scrollState => {
-      if (isFocused && isEnabled) {
+      if (isFocused) {
         if (scrollState !== localScrollState) {
           return localScrollState
         }
@@ -68,7 +66,7 @@ export const useSceneScrollHandler = (isEnabled: boolean = true): SceneScrollHan
       }
       return scrollState
     })
-  }, [isEnabled, isFocused, localScrollState, setScrollState])
+  }, [isFocused, localScrollState, setScrollState])
 
   const handler = useAnimatedScrollHandler({
     onScroll: (nativeEvent: NativeScrollEvent) => {

@@ -519,6 +519,8 @@ PODS:
     - React-Core
   - react-native-netinfo (8.3.0):
     - React-Core
+  - react-native-performance (5.1.0):
+    - React-Core
   - react-native-piratechain (0.4.3):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
@@ -951,6 +953,7 @@ DEPENDENCIES:
   - react-native-mail (from `../node_modules/react-native-mail`)
   - react-native-mymonero-core (from `../node_modules/react-native-mymonero-core`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
+  - react-native-performance (from `../node_modules/react-native-performance`)
   - react-native-piratechain (from `../node_modules/react-native-piratechain`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -1164,6 +1167,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-mymonero-core"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
+  react-native-performance:
+    :path: "../node_modules/react-native-performance"
   react-native-piratechain:
     :path: "../node_modules/react-native-piratechain"
   react-native-safari-view:
@@ -1347,6 +1352,7 @@ SPEC CHECKSUMS:
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408
   react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
+  react-native-performance: cef2b618d47b277fb5c3280b81a3aad1e72f2886
   react-native-piratechain: 7576ad2a4f0dd983da3d622f03db89d6a4b54bd7
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: 68b07eabfb0d14547d36f6929c0e98d818064f02

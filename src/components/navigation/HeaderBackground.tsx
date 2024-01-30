@@ -13,7 +13,7 @@ import { BlurBackground } from '../ui4/BlurBackground'
 export const HeaderBackground = (props: any) => {
   const theme = useTheme()
 
-  const { scrollState } = useSceneScrollContext()
+  const scrollState = useSceneScrollContext(state => state.scrollState)
 
   return (
     <HeaderBackgroundContainerView scrollY={scrollState.scrollY}>

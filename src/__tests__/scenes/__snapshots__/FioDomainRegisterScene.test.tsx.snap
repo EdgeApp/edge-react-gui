@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FioDomainRegister should render with loading props 1`] = `
-<SceneWrapper
+<Memo(SceneWrapperComponent)
   scroll={true}
 >
   <Memo(SceneHeaderComponent)
@@ -127,5 +127,5 @@ exports[`FioDomainRegister should render with loading props 1`] = `
       />
     </EdgeAnim>
   </View>
-</SceneWrapper>
+</Memo(SceneWrapperComponent)>
 `;

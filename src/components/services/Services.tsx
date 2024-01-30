@@ -12,6 +12,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useRefresher } from '../../hooks/useRefresher'
 import { makeStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { defaultAccount } from '../../reducers/CoreReducer'
+import { FooterAccordionEventService } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { height, ratioHorizontal, ratioVertical, width } from '../../util/scaling'
@@ -148,6 +149,7 @@ export function Services(props: Props) {
       {account == null ? null : <WalletConnectService account={account} />}
       <WalletLifecycle />
       <WipeLogsService />
+      <FooterAccordionEventService />
     </>
   )
 }

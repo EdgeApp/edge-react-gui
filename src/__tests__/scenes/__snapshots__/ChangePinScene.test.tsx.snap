@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ChangePinComponent should render with loading props 1`] = `
-<SceneWrapper>
+<Memo(SceneWrapperComponent)>
   <UNDEFINED
     account={{}}
     context={
@@ -13,5 +13,5 @@ exports[`ChangePinComponent should render with loading props 1`] = `
     onComplete={[Function]}
     onLogEvent={[Function]}
   />
-</SceneWrapper>
+</Memo(SceneWrapperComponent)>
 `;

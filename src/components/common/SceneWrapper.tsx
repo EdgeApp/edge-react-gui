@@ -1,7 +1,7 @@
 import { getDefaultHeaderHeight } from '@react-navigation/elements'
 import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
 import Reanimated from 'react-native-reanimated'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -11,7 +11,6 @@ import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { OverrideDots } from '../../types/Theme'
-import { maybeComponent } from '../hoc/maybeComponent'
 import { styled } from '../hoc/styled'
 import { NotificationView } from '../notification/NotificationView'
 import { useTheme } from '../services/ThemeContext'
@@ -99,7 +98,57 @@ interface SceneWrapperProps {
  * padding will be passed as `insetStyle` and `undoInsetStyle` will include
  * negative margin style rules to be used to offset these insets.
  */
-export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
+function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
+  const { avoidKeyboard = false } = props
+
+  // Subscribe to the window size:
+  const { height: frameHeight } = useSafeAreaFrame()
+
+  // These represent the distance from the top of the screen to the top of
+  // the keyboard depending if the keyboard is down or up.
+  const downValue = frameHeight
+  const upValue = useCallback((keyboardHeight: number) => downValue - keyboardHeight, [downValue])
+
+  return avoidKeyboard ? (
+    <KeyboardTracker downValue={downValue} upValue={upValue}>
+      {(keyboardAnimation, trackerValue) => (
+        <SceneWrapperInner
+          /* Animation between downValue and upValue */
+          keyboardAnimation={keyboardAnimation}
+          /* downValue or upValue depending on if the keyboard state */
+          trackerValue={trackerValue}
+          {...props}
+        />
+      )}
+    </KeyboardTracker>
+  ) : (
+    <SceneWrapperInner
+      /* Animation between downValue and upValue */
+      keyboardAnimation={undefined}
+      /* downValue or upValue depending on if the keyboard state */
+      trackerValue={0}
+      {...props}
+    />
+  )
+}
+export const SceneWrapper = React.memo(SceneWrapperComponent)
+
+const styles = StyleSheet.create({
+  sceneContainer: {
+    // Children:
+    alignItems: 'stretch',
+    flexDirection: 'column',
+    justifyContent: 'flex-start'
+  }
+})
+
+interface SceneWrapperInnerProps extends SceneWrapperProps {
+  keyboardAnimation: Animated.Value | undefined
+  trackerValue: number
+}
+
+function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
+  const { keyboardAnimation, trackerValue } = props
   const {
     overrideDots,
     accentColors,
@@ -111,7 +160,6 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
     hasHeader = true,
     hasNotifications = false,
     hasTabs = false,
-    keyboardShouldPersistTaps,
     padding = 0,
     scroll = false
   } = props
@@ -120,80 +168,96 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
   const activeUsername = useSelector(state => state.core.account.username)
   const isLightAccount = accountId != null && activeUsername == null
 
-  const { footerHeight = 0 } = useSceneFooterState()
+  const footerHeight = useSceneFooterState(state => state.footerHeight ?? 0)
 
   const navigation = useNavigation<NavigationBase>()
   const theme = useTheme()
 
   // Subscribe to the window size:
-  const frame = useSafeAreaFrame()
+  const { height: frameHeight, width: frameWidth } = useSafeAreaFrame()
   const safeAreaInsets = useSafeAreaInsets()
 
   // Get the screen width/height measurements for the scene
   const layoutStyle = useMemo(
     () => ({
-      height: frame.height,
-      width: frame.width
+      height: frameHeight,
+      width: frameWidth
     }),
-    [frame.height, frame.width]
+    [frameHeight, frameWidth]
   )
 
   const notificationHeight = theme.rem(4)
-  const headerBarHeight = getDefaultHeaderHeight(frame, false, 0)
+  const headerBarHeight = getDefaultHeaderHeight({ height: frameHeight, width: frameWidth }, false, 0)
 
-  // If the scene has scroll, this will be required for tabs and/or header animation
-  const handleScroll = useSceneScrollHandler(scroll && (hasTabs || hasHeader))
+  // Derive the keyboard height by getting the difference between screen height
+  // and trackerValue. This value should be from zero to keyboard height
+  // depending on the open state of the keyboard
+  const keyboardHeight = frameHeight - trackerValue
+  const isKeyboardOpen = avoidKeyboard && keyboardHeight !== 0
 
-  const { renderFooter } = useSceneFooterRenderState()
-
-  const renderScene = (keyboardAnimation: Animated.Value | undefined, trackerValue: number): JSX.Element => {
-    // If function children, the caller handles the insets and overscroll
-    const isFuncChildren = typeof children === 'function'
-
-    // Derive the keyboard height by getting the difference between screen height
-    // and trackerValue. This value should be from zero to keyboard height
-    // depending on the open state of the keyboard
-    const keyboardHeight = frame.height - trackerValue
-    const isKeyboardOpen = avoidKeyboard && keyboardHeight !== 0
-
-    // Calculate app insets considering the app's header, tab-bar,
-    // notification area, etc:
-    const maybeHeaderHeight = hasHeader ? headerBarHeight : 0
-    const maybeNotificationHeight = isLightAccount ? notificationHeight : 0
-    const maybeTabBarHeight = hasTabs ? MAX_TAB_BAR_HEIGHT : 0
-    const maybeInsetBottom = !hasTabs && !isKeyboardOpen ? safeAreaInsets.bottom : 0
-    const insets: EdgeInsets = {
+  // Calculate app insets considering the app's header, tab-bar,
+  // notification area, etc:
+  const maybeHeaderHeight = hasHeader ? headerBarHeight : 0
+  const maybeNotificationHeight = isLightAccount ? notificationHeight : 0
+  const maybeTabBarHeight = hasTabs ? MAX_TAB_BAR_HEIGHT : 0
+  const maybeInsetBottom = !hasTabs && !isKeyboardOpen ? safeAreaInsets.bottom : 0
+  const insets: EdgeInsets = useMemo(
+    () => ({
       top: safeAreaInsets.top + maybeHeaderHeight,
       right: safeAreaInsets.right,
       bottom: maybeInsetBottom + maybeNotificationHeight + maybeTabBarHeight + footerHeight,
       left: safeAreaInsets.left
-    }
+    }),
+    [
+      footerHeight,
+      maybeHeaderHeight,
+      maybeInsetBottom,
+      maybeNotificationHeight,
+      maybeTabBarHeight,
+      safeAreaInsets.left,
+      safeAreaInsets.right,
+      safeAreaInsets.top
+    ]
+  )
 
-    // This is a convenient styles object which may be applied as
-    // contentContainerStyles for child scroll components. It will also be
-    // used for the ScrollView component internal to the SceneWrapper.
-    const insetStyle: InsetStyle = {
+  // This is a convenient styles object which may be applied as
+  // contentContainerStyles for child scroll components. It will also be
+  // used for the ScrollView component internal to the SceneWrapper.
+  const insetStyle: InsetStyle = useMemo(
+    () => ({
       paddingTop: insets.top,
       paddingRight: insets.right,
       paddingBottom: insets.bottom,
       paddingLeft: insets.left
-    }
+    }),
+    [insets.top, insets.right, insets.bottom, insets.left]
+  )
 
-    // This is a convenient styles object which may be applied to scene container
-    // components to offset the inset styles applied to the SceneWrapper.
-    const undoInsetStyle: UndoInsetStyle = {
+  // This is a convenient styles object which may be applied to scene container
+  // components to offset the inset styles applied to the SceneWrapper.
+  const undoInsetStyle: UndoInsetStyle = useMemo(
+    () => ({
       flex: 1,
       marginTop: -insets.top,
       marginRight: -insets.right,
       marginBottom: -insets.bottom,
       marginLeft: -insets.left
-    }
+    }),
+    [insets.top, insets.right, insets.bottom, insets.left]
+  )
 
-    const info: SceneWrapperInfo = { insets, insetStyle, undoInsetStyle, hasTabs, isKeyboardOpen }
+  const info: SceneWrapperInfo = useMemo(
+    () => ({ insets, insetStyle, undoInsetStyle, hasTabs, isKeyboardOpen }),
+    [hasTabs, insetStyle, insets, isKeyboardOpen, undoInsetStyle]
+  )
 
+  // If function children, the caller handles the insets and overscroll
+  const memoizedChildren = useMemo(() => (typeof children === 'function' ? children(info) : children), [children, info])
+
+  if (avoidKeyboard) {
     return (
       <>
-        <MaybeAnimatedView when={avoidKeyboard} style={[styles.sceneContainer, layoutStyle, insetStyle, { maxHeight: keyboardAnimation, padding }]}>
+        <Animated.View style={[styles.sceneContainer, layoutStyle, insetStyle, { maxHeight: keyboardAnimation, padding }]}>
           <DotsBackground
             accentColors={accentColors}
             overrideDots={overrideDots}
@@ -201,54 +265,83 @@ export function SceneWrapper(props: SceneWrapperProps): JSX.Element {
             backgroundGradientStart={backgroundGradientStart}
             backgroundGradientEnd={backgroundGradientEnd}
           />
-          <MaybeAnimatedScrollView
-            when={scroll && !avoidKeyboard}
-            style={[layoutStyle, { padding }]}
-            keyboardShouldPersistTaps={keyboardShouldPersistTaps}
-            contentContainerStyle={insetStyle}
-            onScroll={hasTabs || hasHeader ? handleScroll : () => {}}
-            // Fixes middle-floating scrollbar issue
-            scrollIndicatorInsets={{ right: 1 }}
-          >
-            <MaybeView when={!scroll && !avoidKeyboard} style={[styles.sceneContainer, layoutStyle, insetStyle, { padding }]}>
-              {isFuncChildren ? children(info) : children}
-            </MaybeView>
-          </MaybeAnimatedScrollView>
-          {renderFooter != null && !hasTabs ? <SceneFooter>{renderFooter(info)}</SceneFooter> : null}
-        </MaybeAnimatedView>
+
+          {memoizedChildren}
+          <SceneWrapperFooterContainer hasTabs={hasTabs} sceneWrapperInfo={info} />
+        </Animated.View>
         {hasNotifications ? <NotificationView hasTabs={hasTabs} navigation={navigation} /> : null}
       </>
     )
   }
 
-  // These represent the distance from the top of the screen to the top of
-  // the keyboard depending if the keyboard is down or up.
-  const downValue = frame.height
-  const upValue = (keyboardHeight: number) => downValue - keyboardHeight
+  if (scroll) {
+    return (
+      <SceneWrapperScrollView insetStyle={insetStyle} layoutStyle={layoutStyle} navigation={navigation} sceneWrapperInfo={info} {...props}>
+        {memoizedChildren}
+      </SceneWrapperScrollView>
+    )
+  }
 
-  return avoidKeyboard ? (
-    <KeyboardTracker downValue={downValue} upValue={upValue}>
-      {(keyboardAnimation, trackerValue) =>
-        renderScene(keyboardAnimation /* Animation between downValue and upValue */, trackerValue /* downValue or upValue depending on if the keyboard state */)
-      }
-    </KeyboardTracker>
-  ) : (
-    renderScene(undefined, 0)
+  return (
+    <>
+      <View style={[styles.sceneContainer, layoutStyle, insetStyle, { padding }]}>{memoizedChildren}</View>
+      <SceneWrapperFooterContainer hasTabs={hasTabs} sceneWrapperInfo={info} />
+      {hasNotifications ? <NotificationView hasTabs={hasTabs} navigation={navigation} /> : null}
+    </>
   )
 }
+const SceneWrapperInner = React.memo(SceneWrapperInnerComponent)
 
-const styles = StyleSheet.create({
-  sceneContainer: {
-    // Children:
-    alignItems: 'stretch',
-    flexDirection: 'column',
-    justifyContent: 'flex-start'
+interface SceneWrapperScrollViewProps extends Pick<SceneWrapperProps, 'hasNotifications' | 'hasTabs' | 'keyboardShouldPersistTaps' | 'padding'> {
+  children: React.ReactNode
+  insetStyle: InsetStyle
+  layoutStyle: {
+    height: number
+    width: number
   }
-})
+  navigation: NavigationBase
+  sceneWrapperInfo: SceneWrapperInfo
+}
 
-const MaybeAnimatedView = maybeComponent(Animated.View)
-const MaybeAnimatedScrollView = maybeComponent(Reanimated.ScrollView)
-const MaybeView = maybeComponent(View)
+function SceneWrapperScrollViewComponent(props: SceneWrapperScrollViewProps) {
+  const { children, insetStyle, layoutStyle, navigation, sceneWrapperInfo } = props
+  const { hasNotifications = false, hasTabs = false, keyboardShouldPersistTaps, padding = 0 } = props
+
+  // If the scene has scroll, this will be required for tabs and/or header animation
+  const handleScroll = useSceneScrollHandler()
+
+  return (
+    <>
+      <Reanimated.ScrollView
+        style={[layoutStyle, { padding }]}
+        keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+        contentContainerStyle={insetStyle}
+        onScroll={handleScroll}
+        // Fixes middle-floating scrollbar issue
+        scrollIndicatorInsets={{ right: 1 }}
+      >
+        {children}
+      </Reanimated.ScrollView>
+      <SceneWrapperFooterContainer hasTabs={hasTabs} sceneWrapperInfo={sceneWrapperInfo} />
+      {hasNotifications ? <NotificationView hasTabs={hasTabs} navigation={navigation} /> : null}
+    </>
+  )
+}
+const SceneWrapperScrollView = React.memo(SceneWrapperScrollViewComponent)
+
+interface SceneWrapperFooterContainerProps {
+  hasTabs: boolean
+  sceneWrapperInfo: SceneWrapperInfo
+}
+
+function SceneWrapperFooterContainerComponent(props: SceneWrapperFooterContainerProps) {
+  const { hasTabs, sceneWrapperInfo } = props
+
+  const renderFooter = useSceneFooterRenderState(state => state.renderFooter)
+
+  return renderFooter != null && !hasTabs ? <SceneFooter>{renderFooter(sceneWrapperInfo)}</SceneFooter> : null
+}
+const SceneWrapperFooterContainer = React.memo(SceneWrapperFooterContainerComponent)
 
 const SceneFooter = styled(View)({
   position: 'absolute',
