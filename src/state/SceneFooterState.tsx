@@ -1,5 +1,5 @@
 import { useIsFocused } from '@react-navigation/native'
-import { DependencyList, useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { LayoutChangeEvent, Platform } from 'react-native'
 import { runOnJS, useAnimatedReaction, useSharedValue, withTiming } from 'react-native-reanimated'
 
@@ -74,17 +74,16 @@ export const [SceneFooterRenderProvider, useSceneFooterRenderState] = createStat
 //
 
 /**
- * Used by scenes to register a render function for the global footer area.
- *
- * @param renderFn the render function to be used in the scene/tab-bar footer
- * @param deps the dependencies for the render function to trigger re-renders
+ * Used by the SceneWrapper to give rendering control of the footer to the
+ * MenuTabs component.
  */
-export const useSceneFooterRender = (renderFn: FooterRender = defaultFooterRender, deps: DependencyList) => {
+interface PortalSceneFooterProps {
+  // The render function which should be memoized with useCallback
+  children: FooterRender
+}
+export const PortalSceneFooter = (props: PortalSceneFooterProps) => {
+  const { children: render = defaultFooterRender } = props
   const setRenderFooter = useSceneFooterRenderState(state => state.setRenderFooter)
-
-  // The callback will allow us to trigger a re-render when the deps change
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const render = useCallback(renderFn, [...deps])
 
   // This will be used to determine if our render function should be cast
   // to the global state.
@@ -119,6 +118,8 @@ export const useSceneFooterRender = (renderFn: FooterRender = defaultFooterRende
       })
     }
   }, [isFocused, render, setRenderFooter])
+
+  return null
 }
 
 /**

@@ -16,7 +16,7 @@ import { useTransactionList } from '../../hooks/useTransactionList'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
-import { useSceneFooterRender } from '../../state/SceneFooterState'
+import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
@@ -249,7 +249,7 @@ function TransactionListComponent(props: Props) {
     return item.txid
   })
 
-  useSceneFooterRender(
+  const renderFooter: FooterRender = React.useCallback(
     sceneWrapperInfo => {
       return (
         <SearchFooter
@@ -291,6 +291,7 @@ function TransactionListComponent(props: Props) {
       backgroundGradientColors={backgroundColors}
       backgroundGradientEnd={theme.assetBackgroundGradientEnd}
       backgroundGradientStart={theme.assetBackgroundGradientStart}
+      renderFooter={renderFooter}
     >
       {({ insetStyle, undoInsetStyle }) => (
         <View style={undoInsetStyle}>

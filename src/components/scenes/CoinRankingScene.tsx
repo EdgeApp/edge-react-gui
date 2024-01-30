@@ -7,7 +7,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
-import { useSceneFooterRender } from '../../state/SceneFooterState'
+import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { asCoinranking, AssetSubText, CoinRanking, PercentChangeTimeFrame } from '../../types/coinrankTypes'
 import { useState } from '../../types/reactHooks'
@@ -203,7 +203,7 @@ const CoinRankingComponent = (props: Props) => {
   const timeFrameString = percentChangeStrings[percentChangeTimeFrame]
   const assetSubTextString = assetSubTextStrings[assetSubText]
 
-  useSceneFooterRender(
+  const renderFooter: FooterRender = React.useCallback(
     sceneWrapperInfo => {
       return (
         <SearchFooter
@@ -221,7 +221,7 @@ const CoinRankingComponent = (props: Props) => {
   )
 
   return (
-    <SceneWrapper avoidKeyboard hasNotifications>
+    <SceneWrapper avoidKeyboard hasNotifications renderFooter={renderFooter}>
       {({ insetStyle, undoInsetStyle }) => (
         <>
           <View style={styles.headerContainer}>

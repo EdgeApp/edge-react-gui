@@ -1,251 +1,54 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = `
-[
+<View
+  style={
+    [
+      {
+        "alignItems": "stretch",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      {
+        "height": 1334,
+        "width": 750,
+      },
+      {
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "paddingRight": 0,
+        "paddingTop": 64,
+      },
+      {
+        "padding": 0,
+      },
+    ]
+  }
+>
   <View
     style={
       [
         {
-          "alignItems": "stretch",
-          "flexDirection": "column",
-          "justifyContent": "flex-start",
+          "justifyContent": "center",
+          "marginHorizontal": 22,
+          "paddingBottom": 22,
         },
         {
-          "height": 1334,
-          "width": 750,
+          "marginTop": 22,
         },
-        {
-          "paddingBottom": 0,
-          "paddingLeft": 0,
-          "paddingRight": 0,
-          "paddingTop": 64,
-        },
-        {
-          "padding": 0,
-        },
+        undefined,
       ]
     }
   >
     <View
       style={
-        [
-          {
-            "justifyContent": "center",
-            "marginHorizontal": 22,
-            "paddingBottom": 22,
-          },
-          {
-            "marginTop": 22,
-          },
-          undefined,
-        ]
-      }
-    >
-      <View
-        style={
-          {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "justifyContent": "space-between",
-          }
-        }
-      >
-        <Text
-          adjustsFontSizeToFit={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
-          style={
-            [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
-              {
-                "fontFamily": "Quicksand-Medium",
-                "fontSize": 27,
-              },
-              null,
-            ]
-          }
-        >
-          Create Wallet
-        </Text>
-      </View>
-    </View>
-    <View
-      style={
         {
-          "flex": 1,
-          "paddingTop": 11,
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
         }
       }
     >
-      <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={false}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          {
-            "alignSelf": "stretch",
-            "borderRadius": 16,
-            "marginBottom": 11,
-            "marginLeft": 11,
-            "marginRight": 11,
-            "marginTop": 11,
-            "opacity": 1,
-            "paddingBottom": 11,
-            "paddingLeft": 11,
-            "paddingRight": 11,
-            "paddingTop": 11,
-          }
-        }
-      >
-        <View
-          style={
-            {
-              "backgroundColor": "rgba(255, 255, 255, .1)",
-              "borderRadius": 16,
-              "bottom": 0,
-              "left": 0,
-              "overflow": "hidden",
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
-          }
-        />
-        <View
-          style={
-            {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "justifyContent": "space-between",
-              "width": "100%",
-            }
-          }
-        >
-          <View
-            style={
-              {
-                "margin": 11,
-              }
-            }
-          >
-            <View
-              style={
-                [
-                  {
-                    "overflow": "hidden",
-                  },
-                  {
-                    "borderRadius": 22,
-                    "height": 45,
-                    "marginLeft": 6,
-                    "width": 45,
-                  },
-                ]
-              }
-            >
-              <FastImageView
-                resizeMode="cover"
-                source={
-                  {
-                    "uri": "https://content.edge.app/country-logos/united-states-of-america.png",
-                  }
-                }
-                style={
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
-                }
-              />
-            </View>
-          </View>
-          <View
-            style={
-              {
-                "alignItems": "flex-start",
-                "flex": 1,
-                "flexDirection": "column",
-                "margin": 11,
-              }
-            }
-          >
-            <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.65}
-              numberOfLines={1}
-              style={
-                [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
-                  undefined,
-                  null,
-                ]
-              }
-            >
-              USD
-            </Text>
-            <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.65}
-              numberOfLines={2}
-              style={
-                [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
-                  {
-                    "color": "#3dd9f4",
-                    "fontSize": 17,
-                    "marginTop": 6,
-                  },
-                  null,
-                ]
-              }
-            >
-              United States Dollar
-            </Text>
-          </View>
-        </View>
-      </View>
       <Text
         adjustsFontSizeToFit={true}
         minimumFontScale={0.65}
@@ -259,973 +62,1158 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
               "includeFontPadding": false,
             },
             {
-              "color": "#FFFFFF",
-              "fontSize": 17,
-              "paddingBottom": 11,
-              "paddingHorizontal": 22,
-              "textAlign": "left",
+              "fontFamily": "Quicksand-Medium",
+              "fontSize": 27,
             },
             null,
           ]
         }
       >
-        Tap on wallet to edit name
+        Create Wallet
       </Text>
-      <RCTScrollView
-        automaticallyAdjustContentInsets={false}
-        collapsable={false}
-        data={
-          [
-            {
-              "currencyCode": "BTC",
-              "displayName": "Bitcoin (no Segwit)",
-              "key": "create-wallet:bitcoin-bip44-bitcoin",
-              "pluginId": "bitcoin",
-              "tokenId": null,
-              "walletType": "wallet:bitcoin-bip44",
-            },
-            {
-              "currencyCode": "ETH",
-              "displayName": "Ethereum",
-              "key": "create-wallet:ethereum-ethereum",
-              "pluginId": "ethereum",
-              "tokenId": null,
-              "walletType": "wallet:ethereum",
-            },
-            {
-              "createWalletIds": [
-                "bNBAI/Z4YE1h6qk1p28jhjGJwMiARqvZPfnAt6LyxkA=",
-              ],
-              "currencyCode": "POLY",
-              "displayName": "Polymath Network",
-              "key": "create-ethereum-9992ec3cf6a55b00978cddf2b27bc6882d88d1ec",
-              "pluginId": "ethereum",
-              "tokenId": "9992ec3cf6a55b00978cddf2b27bc6882d88d1ec",
-            },
-          ]
-        }
-        extraData={
-          {
-            "create-ethereum-9992ec3cf6a55b00978cddf2b27bc6882d88d1ec": "My Ether 2",
-            "create-wallet:bitcoin-bip44-bitcoin": "My Bitcoin",
-            "create-wallet:ethereum-ethereum": "My Ether 2",
-          }
-        }
-        getItem={[Function]}
-        getItemCount={[Function]}
-        handlerTag={1}
-        handlerType="NativeViewGestureHandler"
-        keyExtractor={[Function]}
-        onContentSizeChange={[Function]}
-        onGestureHandlerEvent={[Function]}
-        onGestureHandlerStateChange={[Function]}
-        onLayout={[Function]}
-        onMomentumScrollBegin={[Function]}
-        onMomentumScrollEnd={[Function]}
-        onScroll={[Function]}
-        onScrollBeginDrag={[Function]}
-        onScrollEndDrag={[Function]}
-        removeClippedSubviews={false}
-        renderItem={[Function]}
-        renderScrollComponent={[Function]}
-        scrollEventThrottle={50}
-        scrollIndicatorInsets={
-          {
-            "right": 1,
-          }
-        }
-        stickyHeaderIndices={[]}
-        viewabilityConfigCallbackPairs={[]}
-        waitFor={
-          [
-            {
-              "current": null,
-            },
-            {
-              "current": null,
-            },
-          ]
-        }
-      >
-        <View>
-          <View
-            onFocusCapture={[Function]}
-            onLayout={[Function]}
-            style={null}
-          >
-            <View
-              accessibilityState={
-                {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": false,
-                  "expanded": undefined,
-                  "selected": undefined,
-                }
-              }
-              accessibilityValue={
-                {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
-                }
-              }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              style={
-                {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                  "justifyContent": "center",
-                  "minHeight": 96,
-                  "opacity": 1,
-                }
-              }
-            >
-              <View
-                style={
-                  {
-                    "height": 45,
-                    "marginBottom": 22,
-                    "marginLeft": 22,
-                    "marginRight": 22,
-                    "marginTop": 22,
-                    "width": 45,
-                  }
-                }
-              >
-                <View
-                  style={
-                    {
-                      "backgroundColor": "#000000",
-                      "borderRadius": 22.5,
-                      "elevation": 0,
-                      "height": 45,
-                      "shadowColor": "#000000",
-                      "shadowOffset": {
-                        "height": 3,
-                        "width": -3,
-                      },
-                      "shadowOpacity": 0.6,
-                      "shadowRadius": 4,
-                      "width": 45,
-                    }
-                  }
-                >
-                  <View
-                    style={
-                      [
-                        {
-                          "overflow": "hidden",
-                        },
-                        {
-                          "bottom": 0,
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        },
-                      ]
-                    }
-                  >
-                    <FastImageView
-                      resizeMode="cover"
-                      source={
-                        {
-                          "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                        }
-                      }
-                      style={
-                        {
-                          "bottom": 0,
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        }
-                      }
-                    />
-                  </View>
-                </View>
-              </View>
-              <View
-                style={
-                  {
-                    "flexDirection": "column",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "marginRight": 11,
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "flexBasis": "auto",
-                        "flexShrink": 1,
-                        "fontFamily": "Quicksand-Medium",
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  BTC
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  My Bitcoin
-                </Text>
-              </View>
-              <View
-                style={
-                  {
-                    "paddingRight": 11,
-                  }
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#00f1a2",
-                        "fontSize": 34,
-                      },
-                      undefined,
-                      {
-                        "fontFamily": "Ionicons",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
-                    ]
-                  }
-                >
-                  
-                </Text>
-              </View>
-            </View>
-          </View>
-          <View
-            onFocusCapture={[Function]}
-            onLayout={[Function]}
-            style={null}
-          >
-            <View
-              accessibilityState={
-                {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": false,
-                  "expanded": undefined,
-                  "selected": undefined,
-                }
-              }
-              accessibilityValue={
-                {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
-                }
-              }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              style={
-                {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                  "justifyContent": "center",
-                  "minHeight": 96,
-                  "opacity": 1,
-                }
-              }
-            >
-              <View
-                style={
-                  {
-                    "height": 45,
-                    "marginBottom": 22,
-                    "marginLeft": 22,
-                    "marginRight": 22,
-                    "marginTop": 22,
-                    "width": 45,
-                  }
-                }
-              >
-                <View
-                  style={
-                    {
-                      "backgroundColor": "#000000",
-                      "borderRadius": 22.5,
-                      "elevation": 0,
-                      "height": 45,
-                      "shadowColor": "#000000",
-                      "shadowOffset": {
-                        "height": 3,
-                        "width": -3,
-                      },
-                      "shadowOpacity": 0.6,
-                      "shadowRadius": 4,
-                      "width": 45,
-                    }
-                  }
-                >
-                  <View
-                    style={
-                      [
-                        {
-                          "overflow": "hidden",
-                        },
-                        {
-                          "bottom": 0,
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        },
-                      ]
-                    }
-                  >
-                    <FastImageView
-                      resizeMode="cover"
-                      source={
-                        {
-                          "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                        }
-                      }
-                      style={
-                        {
-                          "bottom": 0,
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        }
-                      }
-                    />
-                  </View>
-                </View>
-              </View>
-              <View
-                style={
-                  {
-                    "flexDirection": "column",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "marginRight": 11,
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "flexBasis": "auto",
-                        "flexShrink": 1,
-                        "fontFamily": "Quicksand-Medium",
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  ETH
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  My Ether 2
-                </Text>
-              </View>
-              <View
-                style={
-                  {
-                    "paddingRight": 11,
-                  }
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  style={
-                    [
-                      {
-                        "color": "#00f1a2",
-                        "fontSize": 34,
-                      },
-                      undefined,
-                      {
-                        "fontFamily": "Ionicons",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
-                    ]
-                  }
-                >
-                  
-                </Text>
-              </View>
-            </View>
-          </View>
-          <View
-            onFocusCapture={[Function]}
-            onLayout={[Function]}
-            style={null}
-          >
-            <View
-              accessibilityState={
-                {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": true,
-                  "expanded": undefined,
-                  "selected": undefined,
-                }
-              }
-              accessibilityValue={
-                {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
-                }
-              }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              style={
-                {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                  "justifyContent": "center",
-                  "minHeight": 96,
-                  "opacity": 1,
-                }
-              }
-            >
-              <View
-                style={
-                  {
-                    "height": 45,
-                    "marginBottom": 22,
-                    "marginLeft": 22,
-                    "marginRight": 22,
-                    "marginTop": 22,
-                    "width": 45,
-                  }
-                }
-              >
-                <View
-                  style={
-                    {
-                      "backgroundColor": "#000000",
-                      "borderRadius": 22.5,
-                      "elevation": 0,
-                      "height": 45,
-                      "shadowColor": "#000000",
-                      "shadowOffset": {
-                        "height": 3,
-                        "width": -3,
-                      },
-                      "shadowOpacity": 0.6,
-                      "shadowRadius": 4,
-                      "width": 45,
-                    }
-                  }
-                >
-                  <View
-                    style={
-                      [
-                        {
-                          "overflow": "hidden",
-                        },
-                        {
-                          "bottom": 0,
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        },
-                      ]
-                    }
-                  >
-                    <FastImageView
-                      resizeMode="cover"
-                      source={
-                        {
-                          "uri": "https://content.edge.app/currencyIconsV3/ethereum/9992ec3cf6a55b00978cddf2b27bc6882d88d1ec.png",
-                        }
-                      }
-                      style={
-                        {
-                          "bottom": 0,
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        }
-                      }
-                    />
-                  </View>
-                  <View
-                    style={
-                      [
-                        {
-                          "overflow": "hidden",
-                        },
-                        {
-                          "bottom": 0,
-                          "height": "50%",
-                          "position": "absolute",
-                          "right": 0,
-                          "width": "50%",
-                        },
-                      ]
-                    }
-                  >
-                    <FastImageView
-                      resizeMode="cover"
-                      source={
-                        {
-                          "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                        }
-                      }
-                      style={
-                        {
-                          "bottom": 0,
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        }
-                      }
-                    />
-                  </View>
-                </View>
-              </View>
-              <View
-                style={
-                  {
-                    "flexDirection": "column",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "marginRight": 11,
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "flexBasis": "auto",
-                        "flexShrink": 1,
-                        "fontFamily": "Quicksand-Medium",
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  POLY (undefined)
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "color": "#3dd9f4",
-                        "fontSize": 17,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  My Ether
-                </Text>
-              </View>
-              <View
-                style={
-                  {
-                    "paddingRight": 11,
-                  }
-                }
-              />
-            </View>
-          </View>
-        </View>
-      </RCTScrollView>
-      <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": false,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          {
-            "alignItems": "center",
-            "alignSelf": "center",
-            "borderRadius": 34,
-            "justifyContent": "center",
-            "marginBottom": 0,
-            "marginLeft": 11,
-            "marginRight": 11,
-            "marginTop": 11,
-            "opacity": 1,
-          }
-        }
-      >
-        <BVLinearGradient
-          colors={
-            [
-              872415231,
-              872415231,
-            ]
-          }
-          endPoint={
-            {
-              "x": 1,
-              "y": 1,
-            }
-          }
-          locations={null}
-          startPoint={
-            {
-              "x": 0,
-              "y": 0,
-            }
-          }
-          style={
-            [
-              {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "justifyContent": "center",
-              },
-              {
-                "alignSelf": "center",
-                "opacity": 1,
-              },
-              {
-                "height": 67,
-                "paddingHorizontal": 45,
-              },
-              {
-                "alignItems": "center",
-                "alignSelf": "stretch",
-                "borderRadius": 34,
-                "justifyContent": "center",
-              },
-              [
-                {
-                  "alignItems": "center",
-                  "alignSelf": "stretch",
-                  "borderRadius": 34,
-                  "justifyContent": "center",
-                },
-                {
-                  "alignSelf": "center",
-                },
-              ],
-              {
-                "marginBottom": 0,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-              },
-              undefined,
-            ]
-          }
-        >
-          <Text
-            adjustsFontSizeToFit={false}
-            minimumFontScale={0.65}
-            numberOfLines={1}
-            style={
-              [
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                },
-                null,
-              ]
-            }
-          >
-            Create Wallets
-          </Text>
-        </BVLinearGradient>
-      </View>
-      <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": false,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          {
-            "alignItems": "center",
-            "alignSelf": "center",
-            "borderRadius": 34,
-            "height": undefined,
-            "justifyContent": "center",
-            "marginBottom": 22,
-            "marginLeft": 11,
-            "marginRight": 11,
-            "marginTop": 11,
-            "opacity": 1,
-            "paddingHorizontal": 0,
-            "paddingVertical": 0,
-          }
-        }
-      >
-        <BVLinearGradient
-          colors={
-            [
-              16777215,
-              16777215,
-            ]
-          }
-          endPoint={
-            {
-              "x": 1,
-              "y": 1,
-            }
-          }
-          locations={null}
-          startPoint={
-            {
-              "x": 0,
-              "y": 0,
-            }
-          }
-          style={
-            [
-              {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "justifyContent": "center",
-              },
-              {
-                "alignSelf": "center",
-                "opacity": 1,
-              },
-              {
-                "height": 67,
-                "paddingHorizontal": 45,
-              },
-              {
-                "alignItems": "center",
-                "alignSelf": "stretch",
-                "borderRadius": 34,
-                "justifyContent": "center",
-              },
-              [
-                {
-                  "alignItems": "center",
-                  "alignSelf": "stretch",
-                  "borderRadius": 34,
-                  "justifyContent": "center",
-                },
-                {
-                  "alignSelf": "center",
-                },
-                {
-                  "alignSelf": "center",
-                  "height": undefined,
-                  "paddingHorizontal": 0,
-                  "paddingVertical": 0,
-                },
-              ],
-              {
-                "marginBottom": 22,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-              },
-              undefined,
-            ]
-          }
-        >
-          <Text
-            adjustsFontSizeToFit={false}
-            minimumFontScale={0.65}
-            numberOfLines={1}
-            style={
-              [
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#00f1a2",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                },
-                null,
-              ]
-            }
-          >
-            Import Wallets
-          </Text>
-        </BVLinearGradient>
-      </View>
     </View>
-  </View>,
+  </View>
   <View
     style={
       {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
+        "flex": 1,
+        "paddingTop": 11,
       }
     }
-  />,
-]
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignSelf": "stretch",
+          "borderRadius": 16,
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+          "opacity": 1,
+          "paddingBottom": 11,
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "paddingTop": 11,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "backgroundColor": "rgba(255, 255, 255, .1)",
+            "borderRadius": 16,
+            "bottom": 0,
+            "left": 0,
+            "overflow": "hidden",
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+            "width": "100%",
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "margin": 11,
+            }
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "overflow": "hidden",
+                },
+                {
+                  "borderRadius": 22,
+                  "height": 45,
+                  "marginLeft": 6,
+                  "width": 45,
+                },
+              ]
+            }
+          >
+            <FastImageView
+              resizeMode="cover"
+              source={
+                {
+                  "uri": "https://content.edge.app/country-logos/united-states-of-america.png",
+                }
+              }
+              style={
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+          </View>
+        </View>
+        <View
+          style={
+            {
+              "alignItems": "flex-start",
+              "flex": 1,
+              "flexDirection": "column",
+              "margin": 11,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={1}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                undefined,
+                null,
+              ]
+            }
+          >
+            USD
+          </Text>
+          <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.65}
+            numberOfLines={2}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                  "marginTop": 6,
+                },
+                null,
+              ]
+            }
+          >
+            United States Dollar
+          </Text>
+        </View>
+      </View>
+    </View>
+    <Text
+      adjustsFontSizeToFit={true}
+      minimumFontScale={0.65}
+      numberOfLines={1}
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          {
+            "color": "#FFFFFF",
+            "fontSize": 17,
+            "paddingBottom": 11,
+            "paddingHorizontal": 22,
+            "textAlign": "left",
+          },
+          null,
+        ]
+      }
+    >
+      Tap on wallet to edit name
+    </Text>
+    <RCTScrollView
+      automaticallyAdjustContentInsets={false}
+      collapsable={false}
+      data={
+        [
+          {
+            "currencyCode": "BTC",
+            "displayName": "Bitcoin (no Segwit)",
+            "key": "create-wallet:bitcoin-bip44-bitcoin",
+            "pluginId": "bitcoin",
+            "tokenId": null,
+            "walletType": "wallet:bitcoin-bip44",
+          },
+          {
+            "currencyCode": "ETH",
+            "displayName": "Ethereum",
+            "key": "create-wallet:ethereum-ethereum",
+            "pluginId": "ethereum",
+            "tokenId": null,
+            "walletType": "wallet:ethereum",
+          },
+          {
+            "createWalletIds": [
+              "bNBAI/Z4YE1h6qk1p28jhjGJwMiARqvZPfnAt6LyxkA=",
+            ],
+            "currencyCode": "POLY",
+            "displayName": "Polymath Network",
+            "key": "create-ethereum-9992ec3cf6a55b00978cddf2b27bc6882d88d1ec",
+            "pluginId": "ethereum",
+            "tokenId": "9992ec3cf6a55b00978cddf2b27bc6882d88d1ec",
+          },
+        ]
+      }
+      extraData={
+        {
+          "create-ethereum-9992ec3cf6a55b00978cddf2b27bc6882d88d1ec": "My Ether 2",
+          "create-wallet:bitcoin-bip44-bitcoin": "My Bitcoin",
+          "create-wallet:ethereum-ethereum": "My Ether 2",
+        }
+      }
+      getItem={[Function]}
+      getItemCount={[Function]}
+      handlerTag={1}
+      handlerType="NativeViewGestureHandler"
+      keyExtractor={[Function]}
+      onContentSizeChange={[Function]}
+      onGestureHandlerEvent={[Function]}
+      onGestureHandlerStateChange={[Function]}
+      onLayout={[Function]}
+      onMomentumScrollBegin={[Function]}
+      onMomentumScrollEnd={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onScrollEndDrag={[Function]}
+      removeClippedSubviews={false}
+      renderItem={[Function]}
+      renderScrollComponent={[Function]}
+      scrollEventThrottle={50}
+      scrollIndicatorInsets={
+        {
+          "right": 1,
+        }
+      }
+      stickyHeaderIndices={[]}
+      viewabilityConfigCallbackPairs={[]}
+      waitFor={
+        [
+          {
+            "current": null,
+          },
+          {
+            "current": null,
+          },
+        ]
+      }
+    >
+      <View>
+        <View
+          onFocusCapture={[Function]}
+          onLayout={[Function]}
+          style={null}
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "minHeight": 96,
+                "opacity": 1,
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "height": 45,
+                  "marginBottom": 22,
+                  "marginLeft": 22,
+                  "marginRight": 22,
+                  "marginTop": 22,
+                  "width": 45,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "backgroundColor": "#000000",
+                    "borderRadius": 22.5,
+                    "elevation": 0,
+                    "height": 45,
+                    "shadowColor": "#000000",
+                    "shadowOffset": {
+                      "height": 3,
+                      "width": -3,
+                    },
+                    "shadowOpacity": 0.6,
+                    "shadowRadius": 4,
+                    "width": 45,
+                  }
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "overflow": "hidden",
+                      },
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                      }
+                    }
+                    style={
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "marginRight": 11,
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "flexBasis": "auto",
+                      "flexShrink": 1,
+                      "fontFamily": "Quicksand-Medium",
+                    },
+                    null,
+                  ]
+                }
+              >
+                BTC
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                    },
+                    null,
+                  ]
+                }
+              >
+                My Bitcoin
+              </Text>
+            </View>
+            <View
+              style={
+                {
+                  "paddingRight": 11,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  [
+                    {
+                      "color": "#00f1a2",
+                      "fontSize": 34,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "Ionicons",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View
+          onFocusCapture={[Function]}
+          onLayout={[Function]}
+          style={null}
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "minHeight": 96,
+                "opacity": 1,
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "height": 45,
+                  "marginBottom": 22,
+                  "marginLeft": 22,
+                  "marginRight": 22,
+                  "marginTop": 22,
+                  "width": 45,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "backgroundColor": "#000000",
+                    "borderRadius": 22.5,
+                    "elevation": 0,
+                    "height": 45,
+                    "shadowColor": "#000000",
+                    "shadowOffset": {
+                      "height": 3,
+                      "width": -3,
+                    },
+                    "shadowOpacity": 0.6,
+                    "shadowRadius": 4,
+                    "width": 45,
+                  }
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "overflow": "hidden",
+                      },
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
+                      }
+                    }
+                    style={
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "marginRight": 11,
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "flexBasis": "auto",
+                      "flexShrink": 1,
+                      "fontFamily": "Quicksand-Medium",
+                    },
+                    null,
+                  ]
+                }
+              >
+                ETH
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                    },
+                    null,
+                  ]
+                }
+              >
+                My Ether 2
+              </Text>
+            </View>
+            <View
+              style={
+                {
+                  "paddingRight": 11,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  [
+                    {
+                      "color": "#00f1a2",
+                      "fontSize": 34,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "Ionicons",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View
+          onFocusCapture={[Function]}
+          onLayout={[Function]}
+          style={null}
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": true,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "minHeight": 96,
+                "opacity": 1,
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "height": 45,
+                  "marginBottom": 22,
+                  "marginLeft": 22,
+                  "marginRight": 22,
+                  "marginTop": 22,
+                  "width": 45,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "backgroundColor": "#000000",
+                    "borderRadius": 22.5,
+                    "elevation": 0,
+                    "height": 45,
+                    "shadowColor": "#000000",
+                    "shadowOffset": {
+                      "height": 3,
+                      "width": -3,
+                    },
+                    "shadowOpacity": 0.6,
+                    "shadowRadius": 4,
+                    "width": 45,
+                  }
+                }
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "overflow": "hidden",
+                      },
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/9992ec3cf6a55b00978cddf2b27bc6882d88d1ec.png",
+                      }
+                    }
+                    style={
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+                <View
+                  style={
+                    [
+                      {
+                        "overflow": "hidden",
+                      },
+                      {
+                        "bottom": 0,
+                        "height": "50%",
+                        "position": "absolute",
+                        "right": 0,
+                        "width": "50%",
+                      },
+                    ]
+                  }
+                >
+                  <FastImageView
+                    resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
+                      }
+                    }
+                    style={
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
+                      }
+                    }
+                  />
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "marginRight": 11,
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "flexBasis": "auto",
+                      "flexShrink": 1,
+                      "fontFamily": "Quicksand-Medium",
+                    },
+                    null,
+                  ]
+                }
+              >
+                POLY (undefined)
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                    },
+                    null,
+                  ]
+                }
+              >
+                My Ether
+              </Text>
+            </View>
+            <View
+              style={
+                {
+                  "paddingRight": 11,
+                }
+              }
+            />
+          </View>
+        </View>
+      </View>
+    </RCTScrollView>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "alignSelf": "center",
+          "borderRadius": 34,
+          "justifyContent": "center",
+          "marginBottom": 0,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+          "opacity": 1,
+        }
+      }
+    >
+      <BVLinearGradient
+        colors={
+          [
+            872415231,
+            872415231,
+          ]
+        }
+        endPoint={
+          {
+            "x": 1,
+            "y": 1,
+          }
+        }
+        locations={null}
+        startPoint={
+          {
+            "x": 0,
+            "y": 0,
+          }
+        }
+        style={
+          [
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "center",
+            },
+            {
+              "alignSelf": "center",
+              "opacity": 1,
+            },
+            {
+              "height": 67,
+              "paddingHorizontal": 45,
+            },
+            {
+              "alignItems": "center",
+              "alignSelf": "stretch",
+              "borderRadius": 34,
+              "justifyContent": "center",
+            },
+            [
+              {
+                "alignItems": "center",
+                "alignSelf": "stretch",
+                "borderRadius": 34,
+                "justifyContent": "center",
+              },
+              {
+                "alignSelf": "center",
+              },
+            ],
+            {
+              "marginBottom": 0,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
+            },
+            undefined,
+          ]
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={false}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              null,
+            ]
+          }
+        >
+          Create Wallets
+        </Text>
+      </BVLinearGradient>
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "alignSelf": "center",
+          "borderRadius": 34,
+          "height": undefined,
+          "justifyContent": "center",
+          "marginBottom": 22,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+          "opacity": 1,
+          "paddingHorizontal": 0,
+          "paddingVertical": 0,
+        }
+      }
+    >
+      <BVLinearGradient
+        colors={
+          [
+            16777215,
+            16777215,
+          ]
+        }
+        endPoint={
+          {
+            "x": 1,
+            "y": 1,
+          }
+        }
+        locations={null}
+        startPoint={
+          {
+            "x": 0,
+            "y": 0,
+          }
+        }
+        style={
+          [
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "center",
+            },
+            {
+              "alignSelf": "center",
+              "opacity": 1,
+            },
+            {
+              "height": 67,
+              "paddingHorizontal": 45,
+            },
+            {
+              "alignItems": "center",
+              "alignSelf": "stretch",
+              "borderRadius": 34,
+              "justifyContent": "center",
+            },
+            [
+              {
+                "alignItems": "center",
+                "alignSelf": "stretch",
+                "borderRadius": 34,
+                "justifyContent": "center",
+              },
+              {
+                "alignSelf": "center",
+              },
+              {
+                "alignSelf": "center",
+                "height": undefined,
+                "paddingHorizontal": 0,
+                "paddingVertical": 0,
+              },
+            ],
+            {
+              "marginBottom": 22,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
+            },
+            undefined,
+          ]
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={false}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#00f1a2",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              null,
+            ]
+          }
+        >
+          Import Wallets
+        </Text>
+      </BVLinearGradient>
+    </View>
+  </View>
+</View>
 `;

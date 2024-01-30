@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import { updateWalletsSort } from '../../actions/WalletListActions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { useSceneFooterRender, useSceneFooterState } from '../../state/SceneFooterState'
+import { FooterRender, useSceneFooterState } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { CrossFade } from '../common/CrossFade'
@@ -88,7 +88,7 @@ export function WalletListScene(props: Props) {
     return <WalletListHeader navigation={navigation} sorting={sorting} searching={isSearching} openSortModal={handleSort} />
   }, [handleSort, navigation, isSearching, sorting])
 
-  useSceneFooterRender(
+  const renderFooter: FooterRender = React.useCallback(
     sceneWrapperInfo => {
       return sorting ? (
         <SceneFooterWrapper noBackgroundBlur sceneWrapperInfo={sceneWrapperInfo}>
@@ -113,7 +113,7 @@ export function WalletListScene(props: Props) {
   )
 
   return (
-    <SceneWrapper avoidKeyboard hasTabs hasNotifications>
+    <SceneWrapper avoidKeyboard hasTabs hasNotifications renderFooter={renderFooter}>
       {({ insetStyle, undoInsetStyle }) => (
         <>
           <WiredProgressBar />
