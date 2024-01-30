@@ -25,7 +25,6 @@ import { expiredFioNamesCheckDates } from './FioActions'
 import { readLocalSettings } from './LocalSettingsActions'
 import { registerNotificationsV2 } from './NotificationActions'
 import { trackAccountEvent } from './TrackingActions'
-import { updateWalletsRequest } from './WalletActions'
 
 function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; currencyCode: string } {
   // Find the first wallet:
@@ -87,7 +86,6 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         }
 
         await createWalletsPromise
-        await updateWalletsRequest()(dispatch, getState)
       }
 
       navigation.navigate('edgeApp', {
@@ -207,7 +205,6 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
       await dispatch(refreshAccountReferral())
       await dispatch(expiredFioNamesCheckDates(navigation))
-      await updateWalletsRequest()(dispatch, getState)
     } catch (error: any) {
       showError(error)
     }

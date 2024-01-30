@@ -4,8 +4,9 @@ import * as React from 'react'
 import { isMaestro } from 'react-native-is-maestro'
 
 import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
+import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { registerNotificationsV2 } from '../../actions/NotificationActions'
-import { checkCompromisedKeys } from '../../actions/WalletActions'
+import { checkCompromisedKeys, updateWalletsRequest } from '../../actions/WalletActions'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -109,6 +110,9 @@ export function Services(props: Props) {
       dispatch(registerNotificationsV2()).catch(e => {
         console.warn('registerNotificationsV2 error:', e)
       })
+
+      await dispatch(updateWalletsRequest()).catch(err => console.warn(err))
+      await dispatch(refreshAllFioAddresses()).catch(err => console.warn(err))
 
       // HACK: The balances object isn't full when the above promise resolves so we need to wait a few seconds before proceeding
       await snooze(5000)
