@@ -127,8 +127,11 @@ export const useSceneFooterRender = (renderFn: FooterRender = defaultFooterRende
  * thrashing for the footer state shared values.
  */
 export const FooterAccordionEventService = () => {
-  const scrollState = useSceneScrollContext(state => state.scrollState)
-  const { scrollBeginEvent, scrollEndEvent, scrollMomentumBeginEvent, scrollMomentumEndEvent, scrollY } = scrollState
+  const scrollBeginEvent = useSceneScrollContext(state => state.scrollBeginEvent)
+  const scrollEndEvent = useSceneScrollContext(state => state.scrollEndEvent)
+  const scrollMomentumBeginEvent = useSceneScrollContext(state => state.scrollMomentumBeginEvent)
+  const scrollMomentumEndEvent = useSceneScrollContext(state => state.scrollMomentumEndEvent)
+  const scrollY = useSceneScrollContext(state => state.scrollY)
 
   const scrollYStart = useSharedValue<number | undefined>(undefined)
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
