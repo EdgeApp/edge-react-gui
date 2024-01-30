@@ -6,6 +6,7 @@ import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { showBackupForTransferModal } from '../../../actions/BackupModalActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { useSceneScrollHandler } from '../../../state/SceneScrollState'
@@ -96,6 +97,7 @@ export const HomeSceneUi4 = (props: Props) => {
             onScroll={handleScroll}
             style={undoInsetStyle}
             contentContainerStyle={[{ ...insetStyle, paddingBottom: insetStyle.paddingBottom + safeAreaInsets.bottom }]}
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           >
             <SectionView extendRight marginRem={TEMP_PADDING_REM}>
               <>

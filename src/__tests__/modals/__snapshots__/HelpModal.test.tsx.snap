@@ -242,6 +242,11 @@ exports[`HelpModal should render with loading props 1`] = `
       handlerType="NativeViewGestureHandler"
       onGestureHandlerEvent={[Function]}
       onGestureHandlerStateChange={[Function]}
+      scrollIndicatorInsets={
+        {
+          "right": 1,
+        }
+      }
       style={
         {
           "flexGrow": 0,

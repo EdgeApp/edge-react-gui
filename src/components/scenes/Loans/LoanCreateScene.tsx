@@ -8,6 +8,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import { PaymentMethod } from '../../../controllers/action-queue/PaymentMethod'
 import { useAllTokens } from '../../../hooks/useAllTokens'
@@ -350,7 +351,7 @@ export const LoanCreateScene = (props: Props) => {
         underline
         withTopMargin
       />
-      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
+      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         <Space horizontal={0.5} bottom={1} top={0.5}>
           {/* Amount  to borrow */}
           <FiatAmountInputCard

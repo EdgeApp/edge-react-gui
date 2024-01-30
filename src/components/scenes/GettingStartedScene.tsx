@@ -21,6 +21,7 @@ import slide1HeroImage from '../../assets/images/gettingStarted/slide1HeroImage.
 import slide2HeroImage from '../../assets/images/gettingStarted/slide2HeroImage.png'
 import slide3HeroImage from '../../assets/images/gettingStarted/slide3HeroImage.png'
 import slide4HeroImage from '../../assets/images/gettingStarted/slide4HeroImage.png'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { getExperimentConfigValue } from '../../experimentConfig'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -223,7 +224,7 @@ export const GettingStartedScene = (props: Props) => {
               {sections.map((section, index) => {
                 return (
                   <Section key={section.key} swipeOffset={swipeOffset} itemIndex={index + 1}>
-                    <ScrollView>
+                    <ScrollView scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
                       <SectionTitle numberOfLines={2}>{parseMarkedText(section.title)}</SectionTitle>
                       <SectionParagraph numberOfLines={undefined}>{section.message}</SectionParagraph>
                       {section.footnote == null ? null : <Footnote numberOfLines={undefined}>{lstrings.getting_started_slide_1_footnote}</Footnote>}

@@ -4,6 +4,11 @@ exports[`FioAddressList should render with loading props 1`] = `
 <React.Fragment>
   <Memo(SceneWrapperComponent)>
     <ForwardRef
+      scrollIndicatorInsets={
+        {
+          "right": 1,
+        }
+      }
       style={
         {
           "flex": 1,

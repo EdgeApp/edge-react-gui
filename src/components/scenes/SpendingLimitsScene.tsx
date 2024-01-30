@@ -3,6 +3,7 @@ import { Alert, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { writeSpendingLimits } from '../../actions/LocalSettingsActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -64,7 +65,7 @@ export const SpendingLimitsScene = (props: Props) => {
   const enableSlider = password.length > 8 && !isNaN(amount) && amount > 0
   return (
     <SceneWrapper>
-      <KeyboardAwareScrollView contentContainerStyle={styles.scene}>
+      <KeyboardAwareScrollView contentContainerStyle={styles.scene} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         <FilledTextInput secureTextEntry autoFocus placeholder={lstrings.enter_your_password} value={password} onChangeText={setPassword} />
 
         <View style={styles.switchRow}>

@@ -6,6 +6,7 @@ import { cacheStyles } from 'react-native-patina'
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -151,7 +152,13 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
             </View>
           )}
 
-          {scroll ? <ScrollView style={styles.scroll}>{children}</ScrollView> : children}
+          {scroll ? (
+            <ScrollView style={styles.scroll} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+              {children}
+            </ScrollView>
+          ) : (
+            children
+          )}
         </Animated.View>
       </GestureDetector>
     </>

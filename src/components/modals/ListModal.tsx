@@ -3,6 +3,7 @@ import { Keyboard, ListRenderItem, ViewStyle, ViewToken } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { FlatList } from 'react-native-gesture-handler'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useFilter } from '../../hooks/useFilter'
 import { useTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
@@ -99,6 +100,7 @@ export function ListModal<T>({
         renderItem={renderItem}
         onScroll={() => Keyboard.dismiss()}
         onViewableItemsChanged={onViewableItemsChanged}
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       />
     </ModalUi4>
   )

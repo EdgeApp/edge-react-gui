@@ -2,6 +2,7 @@ import * as React from 'react'
 import { ListRenderItemInfo, Switch, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -149,6 +150,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
             keyboardShouldPersistTaps="handled"
             keyExtractor={keyExtractor}
             renderItem={renderCreateWalletRow}
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
           {renderNextButton}
         </View>

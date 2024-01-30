@@ -4,6 +4,7 @@ import { ScrollView, View } from 'react-native'
 import Evilicons from 'react-native-vector-icons/EvilIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants'
 import { useIconColor } from '../../hooks/useIconColor'
 import { lstrings } from '../../locales/strings'
@@ -111,7 +112,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props & HookPr
         overrideDots={theme.backgroundDots.assetOverrideDots}
       >
         <SceneHeader title={lstrings.title_change_mining_fee} underline withTopMargin />
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView contentContainerStyle={styles.container} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
           {Object.keys(feeOptions).map(feeSetting => {
             return (
               <SettingsRadioRow

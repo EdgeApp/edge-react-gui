@@ -4,6 +4,7 @@ import { AirshipBridge } from 'react-native-airship'
 import { FlatList } from 'react-native-gesture-handler'
 
 import { Category, displayCategories, formatCategory, getSubcategories, joinCategory, setNewSubcategory, splitCategory } from '../../actions/CategoriesActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -157,6 +158,7 @@ export function CategoryModal(props: Props) {
           keyboardShouldPersistTaps="handled"
           keyExtractor={keyExtractor}
           renderItem={renderRow}
+          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
         {/* <ModalFooterFade /> */}
       </View>

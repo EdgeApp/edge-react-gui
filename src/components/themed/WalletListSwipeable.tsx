@@ -6,6 +6,7 @@ import Animated from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { selectWalletToken } from '../../actions/WalletActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -145,6 +146,7 @@ function WalletListSwipeableComponent(props: Props) {
       refreshControl={refreshControl}
       renderItem={renderRow}
       onScroll={handleScroll}
+      scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
     />
   )
 }

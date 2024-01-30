@@ -11,6 +11,7 @@ import { EdgeText } from '../../../components/themed/EdgeText'
 import { FilledTextInputRef } from '../../../components/themed/FilledTextInput'
 import { MainButton } from '../../../components/themed/MainButton'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
@@ -265,6 +266,7 @@ export const AddressFormScene = React.memo((props: Props) => {
               enableAutomaticScroll
               enableOnAndroid
               contentContainerStyle={insetStyle}
+              scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
             >
               <GuiFormField
                 fieldType="address"
@@ -277,7 +279,7 @@ export const AddressFormScene = React.memo((props: Props) => {
                 onBlur={handleHideAddressHints}
               />
               <Animated.View style={[Platform.OS === 'ios' ? styles.dropContainer : styles.dropContainerAndroid, aDropContainerStyle]}>
-                <ScrollView keyboardShouldPersistTaps="always" nestedScrollEnabled>
+                <ScrollView keyboardShouldPersistTaps="always" nestedScrollEnabled scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
                   {searchResults.map(searchResult => {
                     const displaySearchResult = `${searchResult.address}\n${searchResult.city}, ${searchResult.state}, ${countryCode}`
                     return (

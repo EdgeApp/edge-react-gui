@@ -8,6 +8,7 @@ import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
 import { createFioWallet, refreshAllFioAddresses } from '../../../actions/FioAddressActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { FIO_ADDRESS_DELIMITER } from '../../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
@@ -182,7 +183,7 @@ export const FioCreateHandleScene = (props: Props) => {
 
   return (
     <SceneWrapper>
-      <KeyboardAwareScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+      <KeyboardAwareScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         <FastImage source={{ uri: getFioCustomizeHandleImage(theme) }} style={styles.icon} />
         <EdgeText style={styles.title}>{lstrings.personalize_wallet_title}</EdgeText>
         <View style={styles.inputContainer}>

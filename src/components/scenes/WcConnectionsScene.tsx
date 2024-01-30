@@ -8,6 +8,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupForTransferModal } from '../../actions/BackupModalActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useMount } from '../../hooks/useMount'
@@ -96,7 +97,7 @@ export const WcConnectionsScene = (props: Props) => {
   return (
     <SceneWrapper>
       <SceneHeader underline title={lstrings.wc_walletconnect_title} />
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         <EdgeText style={styles.subTitle}>{lstrings.wc_walletconnect_subtitle}</EdgeText>
         <MainButton
           label={connecting ? undefined : lstrings.wc_walletconnect_new_connection_button}

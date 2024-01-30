@@ -4,6 +4,7 @@ import * as React from 'react'
 import { ActivityIndicator, ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -231,6 +232,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
           extraData={feeState}
           keyExtractor={keyExtractor}
           renderItem={renderCurrencyRow}
+          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
         <SafeSlider
           parentStyle={{ marginTop: theme.rem(0.5), marginBottom: theme.rem(1) }}

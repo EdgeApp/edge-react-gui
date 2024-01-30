@@ -3,6 +3,7 @@ import { TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { FlatList } from 'react-native-gesture-handler'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
@@ -172,6 +173,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
           contentContainerStyle={styles.scrollPadding}
+          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
       </ModalUi4>
     )

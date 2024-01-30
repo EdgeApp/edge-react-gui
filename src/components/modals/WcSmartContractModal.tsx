@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import WalletConnectLogo from '../../assets/images/walletconnect-logo.png'
 import { FlashNotification } from '../../components/navigation/FlashNotification'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
@@ -151,7 +152,7 @@ export const WcSmartContractModal = (props: Props) => {
         </View>
       }
     >
-      <ScrollView contentContainerStyle={styles.scrollPadding}>
+      <ScrollView contentContainerStyle={styles.scrollPadding} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         {renderWarning()}
         {zeroString(nativeAmount) ? null : (
           <CryptoFiatAmountTile

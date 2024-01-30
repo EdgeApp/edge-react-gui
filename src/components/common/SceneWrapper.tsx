@@ -6,6 +6,7 @@ import { Animated, StyleSheet, View } from 'react-native'
 import Reanimated from 'react-native-reanimated'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useSceneFooterRenderState, useSceneFooterState } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
@@ -318,7 +319,7 @@ function SceneWrapperScrollViewComponent(props: SceneWrapperScrollViewProps) {
         contentContainerStyle={insetStyle}
         onScroll={handleScroll}
         // Fixes middle-floating scrollbar issue
-        scrollIndicatorInsets={{ right: 1 }}
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       >
         {children}
       </Reanimated.ScrollView>
