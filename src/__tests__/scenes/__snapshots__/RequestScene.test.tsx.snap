@@ -1,9 +1,39 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Request should render with loaded props 1`] = `
-<SceneWrapper
-  background="theme"
-  hasTabs={false}
+<Memo(SceneWrapperComponent)
+  accentColors={
+    {
+      "iconAccentColor": "#00000000",
+    }
+  }
+  backgroundGradientColors={
+    [
+      "#1a1a1a",
+      "#1a1a1a",
+    ]
+  }
+  backgroundGradientEnd={
+    {
+      "x": 0,
+      "y": 1,
+    }
+  }
+  backgroundGradientStart={
+    {
+      "x": 0,
+      "y": 0,
+    }
+  }
+  overrideDots={
+    [
+      undefined,
+      {
+        "accentColor": "iconAccentColor",
+      },
+      null,
+    ]
+  }
 >
   <View
     style={
@@ -14,7 +44,13 @@ exports[`Request should render with loaded props 1`] = `
       }
     }
   >
-    <View
+    <EdgeAnim
+      enter={
+        {
+          "distance": 75,
+          "type": "fadeInUp",
+        }
+      }
       style={
         {
           "flexDirection": "row",
@@ -43,8 +79,14 @@ exports[`Request should render with loaded props 1`] = `
       >
         1 undefined
       </WithTheme(EdgeTextComponent)>
-    </View>
-    <View
+    </EdgeAnim>
+    <EdgeAnim
+      enter={
+        {
+          "distance": 50,
+          "type": "fadeInUp",
+        }
+      }
       style={
         {
           "flexDirection": "row",
@@ -64,7 +106,7 @@ exports[`Request should render with loaded props 1`] = `
         }
       >
         <WithTheme(EdgeTextComponent)>
-          You have 0 undefined
+          You have 0.000012 undefined
         </WithTheme(EdgeTextComponent)>
       </TouchableOpacity>
       <WithTheme(EdgeTextComponent)
@@ -79,10 +121,11 @@ exports[`Request should render with loaded props 1`] = `
         <FiatText
           appendFiatCurrencyCode={true}
           nativeCryptoAmount="100000000"
+          tokenId={null}
           wallet={
             {
-              "balances": {
-                "BTC": "1234",
+              "balanceMap": Map {
+                null => "1234",
               },
               "currencyInfo": {
                 "displayName": "Bitcoin",
@@ -92,63 +135,93 @@ exports[`Request should render with loaded props 1`] = `
           }
         />
       </WithTheme(EdgeTextComponent)>
-    </View>
-    <WithTheme(CardComponent)>
-      <Memo
-        forceField="crypto"
-        headerCallback={[Function]}
-        headerText="Receive to My Bitcoin"
-        keyboardVisible={false}
-        onAmountChanged={[Function]}
-        returnKeyType="done"
-      />
-    </WithTheme(CardComponent)>
+    </EdgeAnim>
+    <EdgeAnim
+      enter={
+        {
+          "distance": 25,
+          "type": "fadeInUp",
+        }
+      }
+    >
+      <CardUi4
+        marginRem={0}
+      >
+        <Memo
+          forceField="crypto"
+          headerCallback={[Function]}
+          headerText="Receive to My Bitcoin"
+          keyboardVisible={false}
+          onAmountChanged={[Function]}
+          returnKeyType="done"
+          tokenId={null}
+        />
+      </CardUi4>
+    </EdgeAnim>
     <Carousel
       items={[]}
       keyExtractor={[Function]}
       onChangeItem={[Function]}
       renderItem={[Function]}
     />
-    <TouchableOpacity
-      accessible={false}
-      disabled={false}
-      onPress={[Function]}
+    <EdgeAnim
+      enter={
+        {
+          "distance": 50,
+          "type": "fadeInDown",
+        }
+      }
     >
-      <View
-        style={
-          {
-            "alignItems": "center",
-            "flexDirection": "row",
-          }
-        }
+      <TouchableOpacity
+        accessible={false}
+        disabled={false}
+        onPress={[Function]}
       >
-        <WithTheme(EdgeTextComponent)>
-          Your Wallet Address
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+            }
+          }
+        >
+          <WithTheme(EdgeTextComponent)>
+            Your Wallet Address
+          </WithTheme(EdgeTextComponent)>
+          <Icon
+            allowFontScaling={false}
+            color="#00f1a2"
+            name="chevron-forward"
+            size={34}
+          />
+        </View>
+        <WithTheme(EdgeTextComponent)
+          style={
+            {
+              "fontSize": 17,
+            }
+          }
+        >
+          Loading…
         </WithTheme(EdgeTextComponent)>
-        <Icon
-          allowFontScaling={false}
-          color="#00f1a2"
-          name="chevron-forward"
-          size={34}
-        />
-      </View>
-      <WithTheme(EdgeTextComponent)
-        style={
-          {
-            "fontSize": 17,
-          }
-        }
-      >
-        Loading…
-      </WithTheme(EdgeTextComponent)>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </EdgeAnim>
   </View>
-  <ShareButtons
-    copyToClipboard={[Function]}
-    openFioAddressModal={[Function]}
-    openShareModal={[Function]}
-  />
-</SceneWrapper>
+  <EdgeAnim
+    enter={
+      {
+        "distance": 75,
+        "type": "fadeInDown",
+      }
+    }
+  >
+    <ShareButtons
+      copyToClipboard={[Function]}
+      openFioAddressModal={[Function]}
+      openShareModal={[Function]}
+    />
+  </EdgeAnim>
+</Memo(SceneWrapperComponent)>
 `;
 
 exports[`Request should render with loading props 1`] = `

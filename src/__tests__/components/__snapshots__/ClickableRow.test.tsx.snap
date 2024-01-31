@@ -1,31 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ClickableRow should render with loading props 1`] = `
-<TouchableHighlight
+<TouchableOpacity
   accessible={false}
   onLongPress={[Function]}
   onPress={[Function]}
-  underlayColor="#06090c"
 >
-  <LinearGradient
-    colors={
-      [
-        "#06090c",
-        "#1b2f3b",
-      ]
-    }
-    end={
-      {
-        "x": 1,
-        "y": 0,
-      }
-    }
-    start={
-      {
-        "x": 0,
-        "y": 0,
-      }
-    }
+  <View
     style={
       [
         {
@@ -62,6 +43,6 @@ exports[`ClickableRow should render with loading props 1`] = `
     }
   >
     String
-  </LinearGradient>
-</TouchableHighlight>
+  </View>
+</TouchableOpacity>
 `;

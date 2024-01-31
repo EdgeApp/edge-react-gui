@@ -1,6 +1,6 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { Alert } from 'react-native'
+import { Alert, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../../locales/strings'
@@ -8,12 +8,15 @@ import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { BUNDLED_TXS_AMOUNT_ALERT, findWalletByFioAddress } from '../../../util/FioAddressUtils'
 import { SceneWrapper } from '../../common/SceneWrapper'
-import { ConnectWalletsConnector as ConnectWallets } from '../../FioAddress/ConnectWallets'
+import { ConnectWallets } from '../../FioAddress/ConnectWallets'
 import { showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { SettingsHeaderRow } from '../../settings/SettingsHeaderRow'
 import { SettingsTappableRow } from '../../settings/SettingsTappableRow'
 import { EdgeText } from '../../themed/EdgeText'
+import { SceneHeader } from '../../themed/SceneHeader'
+import { AlertCardUi4 } from '../../ui4/AlertCardUi4'
+import { CardUi4 } from '../../ui4/CardUi4'
 
 interface StateProps {
   fioWallets: EdgeCurrencyWallet[]
@@ -72,28 +75,21 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
 
   renderAccountSettings = () => {
     const {
-      theme,
       route: {
         params: { bundledTxs }
       }
     } = this.props
-    const styles = getStyles(theme)
 
     if (bundledTxs < BUNDLED_TXS_AMOUNT_ALERT) {
-      return (
-        <SettingsTappableRow onPress={this._onPressAccountSettings}>
-          <IonIcon name="ios-warning" color={theme.warningIcon} style={styles.settingsIcon} />
-          <EdgeText style={styles.settingsWarning} numberOfLines={4}>
-            {!bundledTxs ? lstrings.fio_address_details_no_bundled_txs : lstrings.fio_address_details_bundled_txs_out_soon}
-          </EdgeText>
-        </SettingsTappableRow>
-      )
+      const title = !bundledTxs ? lstrings.title_no_bundled_txs : lstrings.title_low_on_bundled_txs
+      const msg = !bundledTxs ? lstrings.fio_address_details_no_bundled_txs : lstrings.fio_address_details_bundled_txs_out_soon
+      return <AlertCardUi4 title={title} body={msg} type="warning" onPress={this._onPressAccountSettings} />
     }
 
     return (
-      <SettingsTappableRow label={lstrings.fio_address_details_screen_manage_account_settings} onPress={this._onPressAccountSettings}>
-        <IonIcon name="ios-settings" color={theme.icon} style={styles.settingsIcon} />
-      </SettingsTappableRow>
+      <CardUi4 paddingRem={0.25}>
+        <SettingsTappableRow action="setting" label={lstrings.fio_address_details_screen_manage_account_settings} onPress={this._onPressAccountSettings} />
+      </CardUi4>
     )
   }
 
@@ -104,30 +100,35 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
     const bundledTxsLabel = `${lstrings.fio_address_details_screen_bundled_txs}: ${bundledTxs}`
 
     return (
-      <SceneWrapper background="theme">
-        <EdgeText style={styles.bundledTxs}>{bundledTxsLabel}</EdgeText>
-        {this.renderAccountSettings()}
-        <SettingsHeaderRow
-          icon={<IonIcon name="ios-link" color={theme.primaryText} size={theme.rem(1.5)} />}
-          label={lstrings.fio_address_details_connect_to_wallets}
-        />
-        <ConnectWallets fioAddressName={fioAddressName} fioWallet={this.state.fioWallet} navigation={navigation} disabled={this.state.fioWalletLoading} />
+      <SceneWrapper>
+        <SceneHeader title={fioAddressName} underline withTopMargin />
+        <View style={styles.container}>
+          <EdgeText style={styles.bundledTxs}>{bundledTxsLabel}</EdgeText>
+          {this.renderAccountSettings()}
+          <SettingsHeaderRow
+            icon={<IonIcon name="ios-link" color={theme.primaryText} size={theme.rem(1.5)} />}
+            label={lstrings.fio_address_details_connect_to_wallets}
+          />
+          <ConnectWallets fioAddressName={fioAddressName} fioWallet={this.state.fioWallet} navigation={navigation} disabled={this.state.fioWalletLoading} />
+        </View>
       </SceneWrapper>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    flexGrow: 1,
+    paddingHorizontal: theme.rem(0.5)
+  },
   text: {
     color: theme.primaryText,
     fontSize: theme.rem(1)
   },
   bundledTxs: {
-    fontSize: theme.rem(0.75),
+    fontSize: theme.rem(1),
     color: theme.primaryText,
-    textAlign: 'center',
-    marginTop: theme.rem(-0.5),
-    paddingBottom: theme.rem(0.75)
+    margin: theme.rem(0.5)
   },
   settingsIcon: {
     fontSize: theme.rem(1.5),

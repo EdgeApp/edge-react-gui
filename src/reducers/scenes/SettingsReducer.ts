@@ -54,7 +54,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
           // @ts-expect-error
           newState.denominationSettings[pluginId][currencyCode] = currencyInfo.denominations[0]
         }
-        for (const token of currencyInfo.metaTokens) {
+        for (const token of currencyInfo.metaTokens ?? []) {
           const tokenCode = token.currencyCode
           // @ts-expect-error
           newState.denominationSettings[pluginId][tokenCode] = token.denominations[0]

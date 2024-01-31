@@ -1,5 +1,6 @@
 import { EdgeAccount, EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
+import { sprintf } from 'sprintf-js'
 
 import { FioExpiredModal } from '../components/modals/FioExpiredModal'
 import { Airship } from '../components/services/AirshipInstance'
@@ -75,6 +76,7 @@ export function checkFioObtData(wallet: EdgeCurrencyWallet, transactions: EdgeTr
       const obtDataRecords = await getFioObtData(fioWallets)
 
       for (const transaction of transactions) {
+        const { tokenId } = transaction
         const edgeMetadata: EdgeMetadata = transaction.metadata != null ? transaction.metadata : { notes: '' }
         try {
           const { name } = edgeMetadata
@@ -88,7 +90,7 @@ export function checkFioObtData(wallet: EdgeCurrencyWallet, transactions: EdgeTr
         if (obtForTx == null) return
 
         if (edgeMetadata.notes == null) edgeMetadata.notes = ''
-        let fioNotes = `${lstrings.fragment_transaction_list_sent_prefix}${lstrings.word_to_in_convert_from_to_string} ${obtForTx.payee_fio_address}`
+        let fioNotes = sprintf(lstrings.transaction_sent_1s, `${lstrings.word_to_in_convert_from_to_string} ${obtForTx.payee_fio_address}`)
         if (obtForTx.content.memo != null && obtForTx.content.memo !== '') fioNotes += `\n${lstrings.fio_sender_memo_label}: ${obtForTx.content.memo}`
         edgeMetadata.notes = `${fioNotes}\n${edgeMetadata.notes || ''}`
         edgeMetadata.name = obtForTx.payer_fio_address
@@ -96,7 +98,7 @@ export function checkFioObtData(wallet: EdgeCurrencyWallet, transactions: EdgeTr
         await addToFioAddressCache(state.core.account, [obtForTx.payer_fio_address])
 
         try {
-          await wallet.saveTxMetadata(transaction.txid, transaction.currencyCode, edgeMetadata)
+          await wallet.saveTxMetadata({ txid: transaction.txid, tokenId, metadata: edgeMetadata })
         } catch (err: any) {
           console.warn(err)
         }

@@ -19,8 +19,8 @@ export interface ShowErrorWarningOptions {
  */
 export function showError(error: unknown, options: ShowErrorWarningOptions = {}): void {
   const { trackError = true, tag } = options
-  const tagMessage = tag == null ? '' : `Tag: ${tag}. `
-  const translatedMessage = tagMessage + translateError(error)
+  const tagMessage = tag == null ? '' : ` Tag: ${tag}.`
+  const translatedMessage = translateError(error) + tagMessage
   if (trackError) {
     if (error instanceof Error) {
       // Log error with stack trace and a translated message to Bugsnag:

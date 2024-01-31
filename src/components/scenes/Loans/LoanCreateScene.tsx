@@ -1,5 +1,5 @@
 import { div, lt, max, mul } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -8,6 +8,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import { PaymentMethod } from '../../../controllers/action-queue/PaymentMethod'
 import { useAllTokens } from '../../../hooks/useAllTokens'
@@ -26,10 +27,9 @@ import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getTokenId, getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { enableToken } from '../../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../../util/utils'
-import { Card } from '../../cards/Card'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
 import { TappableAccountCard } from '../../cards/TappableAccountCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -43,6 +43,7 @@ import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { AprCard } from '../../tiles/AprCard'
+import { CardUi4 } from '../../ui4/CardUi4'
 
 interface Props extends EdgeSceneProps<'loanCreate'> {}
 
@@ -57,10 +58,14 @@ export const LoanCreateScene = (props: Props) => {
   const { currencyWallet: borrowEngineWallet } = borrowEngine
 
   // Force enable tokens required for loan
-  useAsyncEffect(async () => {
-    await enableToken('WBTC', borrowEngineWallet)
-    await enableToken('USDC', borrowEngineWallet)
-  }, [])
+  useAsyncEffect(
+    async () => {
+      await enableToken('WBTC', borrowEngineWallet)
+      await enableToken('USDC', borrowEngineWallet)
+    },
+    [],
+    'LoanCreateScene:1'
+  )
 
   // #endregion Initialization
 
@@ -83,9 +88,12 @@ export const LoanCreateScene = (props: Props) => {
   // user selected src/dest that don't involve the borrowEngineWallet.
   // Currently, the only use case is selecting fiat (bank) as a src/dest.
   const hardCollateralCurrencyCode = 'WBTC'
-  const hardSrcTokenAddr = React.useMemo(() => getTokenId(account, borrowEnginePluginId, hardCollateralCurrencyCode), [account, borrowEnginePluginId])
-  const hardDestTokenAddr = React.useMemo(() => getTokenId(account, borrowEnginePluginId, 'USDC'), [account, borrowEnginePluginId])
-  const hardAllowedSrcAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardSrcTokenAddr }, { pluginId: 'bitcoin' }]
+  const hardSrcTokenAddr = React.useMemo(() => getTokenIdForced(account, borrowEnginePluginId, hardCollateralCurrencyCode), [account, borrowEnginePluginId])
+  const hardDestTokenAddr = React.useMemo(() => getTokenIdForced(account, borrowEnginePluginId, 'USDC'), [account, borrowEnginePluginId])
+  const hardAllowedSrcAsset = [
+    { pluginId: borrowEnginePluginId, tokenId: hardSrcTokenAddr },
+    { pluginId: 'bitcoin', tokenId: null }
+  ]
   const hardAllowedDestAsset = [{ pluginId: borrowEnginePluginId, tokenId: hardDestTokenAddr }]
 
   const ltvRatio = borrowPlugin.borrowInfo.maxLtvRatio.toString()
@@ -112,7 +120,7 @@ export const LoanCreateScene = (props: Props) => {
   // #region Source Wallet Data
 
   const [srcWalletId, setSrcWalletId] = React.useState<string | undefined>(undefined)
-  const [srcTokenId, setSrcTokenId] = React.useState<string | undefined>(undefined)
+  const [srcTokenId, setSrcTokenId] = React.useState<EdgeTokenId>(null)
   const [srcCurrencyCode, setSrcCurrencyCode] = React.useState<string | undefined>(undefined)
 
   const srcWallet = srcWalletId == null ? undefined : wallets[srcWalletId]
@@ -131,15 +139,19 @@ export const LoanCreateScene = (props: Props) => {
   // #region Destination Wallet/Bank Data
 
   const [destWallet, setDestWallet] = React.useState<EdgeCurrencyWallet | undefined>(undefined)
-  const [destTokenId, setDestTokenId] = React.useState<string | undefined>(undefined)
+  const [destTokenId, setDestTokenId] = React.useState<EdgeTokenId>(null)
   const [destBankId, setDestBankId] = React.useState<string | undefined>(undefined)
 
   const [bankAccountsMap, setBankAccountsMap] = React.useState<{ [paymentMethodId: string]: PaymentMethod } | undefined>(undefined)
 
-  useAsyncEffect(async () => {
-    // TODO: Re-enable when new fiat ramp partner is avialable:
-    setBankAccountsMap(undefined)
-  }, [account])
+  useAsyncEffect(
+    async () => {
+      // TODO: Re-enable when new fiat ramp partner is avialable:
+      setBankAccountsMap(undefined)
+    },
+    [account],
+    'LoanCreateScene:2'
+  )
   const paymentMethod = destBankId == null || bankAccountsMap == null || Object.keys(bankAccountsMap).length === 0 ? undefined : bankAccountsMap[destBankId]
 
   // #endregion Destination Wallet/Bank Data
@@ -155,15 +167,19 @@ export const LoanCreateScene = (props: Props) => {
   const [isLoading, setIsLoading] = React.useState(false)
   const debts = useWatch(borrowEngine, 'debts')
   const [apr, setApr] = React.useState(0)
-  useAsyncEffect(async () => {
-    if (destTokenId != null) {
-      const destDebt = debts.find(debt => debt.tokenId === destTokenId)
-      if (destDebt != null) {
-        const apr = await borrowEngine.getAprQuote(destTokenId)
-        setApr(apr)
+  useAsyncEffect(
+    async () => {
+      if (destTokenId != null) {
+        const destDebt = debts.find(debt => debt.tokenId === destTokenId)
+        if (destDebt != null) {
+          const apr = await borrowEngine.getAprQuote(destTokenId)
+          setApr(apr)
+        }
       }
-    }
-  }, [debts, destTokenId])
+    },
+    [debts, destTokenId],
+    'LoanCreateScene:3'
+  )
   // #endregion APR
 
   // #region Required Collateral, LTV
@@ -250,23 +266,24 @@ export const LoanCreateScene = (props: Props) => {
         filterActivation
       />
     ))
-      .then(async ({ walletId, currencyCode, isBankSignupRequest, fiatAccountId }) => {
-        if (isBankSignupRequest) {
+      .then(async result => {
+        if (result?.type === 'bankSignupRequest') {
           // Open bank plugin for new user signup
           navigation.navigate('pluginView', {
             plugin: guiPlugins.wyre,
             deepPath: '',
             deepQuery: {}
           })
-        } else if (fiatAccountId != null) {
+        } else if (result?.type === 'wyre') {
+          const { fiatAccountId } = result
           // Set a hard-coded intermediate AAVE loan destination asset (USDC) to
           // use for the bank sell step that comes after the initial loan
           setDestBankId(fiatAccountId)
           setDestWallet(borrowEngineWallet)
           setDestTokenId(hardDestTokenAddr)
-        } else if (walletId != null && currencyCode != null) {
+        } else if (result?.type === 'wallet') {
+          const { walletId, currencyCode, tokenId } = result
           const selectedWallet = wallets[walletId]
-          const tokenId = getTokenId(account, selectedWallet.currencyInfo.pluginId, currencyCode)
           if (isSrc) {
             setSrcWalletId(walletId)
             setSrcTokenId(tokenId)
@@ -334,7 +351,7 @@ export const LoanCreateScene = (props: Props) => {
         underline
         withTopMargin
       />
-      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
+      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         <Space horizontal={0.5} bottom={1} top={0.5}>
           {/* Amount  to borrow */}
           <FiatAmountInputCard
@@ -377,7 +394,7 @@ export const LoanCreateScene = (props: Props) => {
 
           {/* Collateral Amount Required / Collateral Amount */}
           <EdgeText style={styles.textTitle}>{lstrings.loan_collateral_required}</EdgeText>
-          <Card marginRem={[0, 0.5, 0.5, 0.5]}>
+          <CardUi4 marginRem={[0, 0.5, 0.5, 0.5]}>
             {srcWallet == null || destWallet == null ? (
               <EdgeText style={[styles.textInitial, { margin: theme.rem(0.5) }]}>
                 {srcWallet == null ? lstrings.loan_select_source_collateral : lstrings.loan_select_receiving_wallet}
@@ -385,7 +402,7 @@ export const LoanCreateScene = (props: Props) => {
             ) : (
               <CryptoFiatAmountRow nativeAmount={totalRequiredCollateralNativeAmount} tokenId={srcTokenId} wallet={srcWallet} marginRem={0.25} />
             )}
-          </Card>
+          </CardUi4>
 
           {/* Insufficient Collateral Warning Card */}
           {renderWarning()}

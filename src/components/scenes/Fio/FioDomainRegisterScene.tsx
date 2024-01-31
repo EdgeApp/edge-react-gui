@@ -1,6 +1,6 @@
 import { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { LayoutChangeEvent, ScrollView, View } from 'react-native'
+import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { createFioWallet } from '../../../actions/FioAddressActions'
@@ -8,16 +8,18 @@ import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
+import { EdgeAnim } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
-import { FormError } from '../../themed/FormError'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { Tile } from '../../tiles/Tile'
+import { AlertCardUi4 } from '../../ui4/AlertCardUi4'
+import { CardUi4 } from '../../ui4/CardUi4'
+import { RowUi4 } from '../../ui4/RowUi4'
 
 interface LocalState {
   selectedWallet: EdgeCurrencyWallet | null
@@ -26,7 +28,6 @@ interface LocalState {
   loading: boolean
   walletLoading: boolean
   isAvailable: boolean | null
-  fieldPos: number
   errorMessage: string
 }
 
@@ -52,10 +53,9 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     fioDomain: '',
     errorMessage: '',
     isValid: true,
-    isAvailable: false,
+    isAvailable: null,
     loading: false,
-    walletLoading: false,
-    fieldPos: 200
+    walletLoading: false
   }
 
   componentDidMount() {
@@ -88,7 +88,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   handleNextButton = (): void => {
     const { isConnected, navigation } = this.props
     const { fioDomain, selectedWallet, isValid, isAvailable, loading, walletLoading } = this.state
-    if (isValid && isAvailable && !loading && !walletLoading) {
+    if (isValid && isAvailable === true && !loading && !walletLoading) {
       if (isConnected) {
         if (!selectedWallet) return showError(lstrings.create_wallet_failed_message)
         navigation.navigate('fioDomainRegisterSelectWallet', {
@@ -163,17 +163,6 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     })
   }
 
-  handleFioDomainFocus = () => {
-    // @ts-expect-error
-    // eslint-disable-next-line react/no-string-refs
-    this.refs._scrollView.scrollTo({ x: 0, y: this.state.fieldPos, animated: true })
-  }
-
-  // @ts-expect-error
-  fieldViewOnLayout = ({ nativeEvent: { layout: { y } } = { layout: { y: this.state.fieldPos } } }: LayoutChangeEvent) => {
-    this.setState({ fieldPos: y })
-  }
-
   handleFioWalletChange = (walletId: string) => {
     this.setState({
       // @ts-expect-error
@@ -182,17 +171,21 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   }
 
   selectFioWallet = async () => {
-    const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={[{ pluginId: 'fio' }]} />
+    const result = await Airship.show<WalletListResult>(bridge => (
+      <WalletListModal
+        bridge={bridge}
+        navigation={this.props.navigation}
+        headerTitle={lstrings.select_wallet}
+        allowedAssets={[{ pluginId: 'fio', tokenId: null }]}
+      />
     ))
-    if (walletId && currencyCode) {
+    if (result?.type === 'wallet') {
+      const { walletId } = result
       this.handleFioWalletChange(walletId)
     }
   }
 
   setDomain = async () => {
-    this.handleFioDomainFocus()
-
     const fioDomain = await Airship.show<string | undefined>(bridge => (
       <TextInputModal bridge={bridge} initialValue={this.state.fioDomain} inputLabel={lstrings.fio_domain_label} title={lstrings.fio_domain_choose_label} />
     ))
@@ -204,14 +197,16 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
     if (isValid && isAvailable && !loading) {
       return (
-        <MainButton
-          marginRem={1}
-          label={walletLoading ? '' : lstrings.string_next_capitalized}
-          disabled={!isAvailable || walletLoading}
-          spinner={walletLoading}
-          onPress={this.handleNextButton}
-          type="secondary"
-        />
+        <EdgeAnim enter={{ type: 'fadeIn' }} exit={{ type: 'fadeOut' }}>
+          <MainButton
+            marginRem={1}
+            label={walletLoading ? '' : lstrings.string_next_capitalized}
+            disabled={!isAvailable || walletLoading}
+            spinner={walletLoading}
+            onPress={this.handleNextButton}
+            type="primary"
+          />
+        </EdgeAnim>
       )
     }
 
@@ -223,8 +218,8 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     const { selectedWallet } = this.state
     if (fioWallets && fioWallets.length > 1) {
       return (
-        <Tile
-          type="touchable"
+        <RowUi4
+          rightButtonType="touchable"
           title={lstrings.title_fio_connect_to_wallet}
           onPress={this.onWalletPress}
           body={selectedWallet == null ? lstrings.fio_address_register_no_wallet_name : getWalletName(selectedWallet)}
@@ -241,7 +236,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     if (fioDomain && !this.props.isConnected) {
       chooseHandleErrorMessage = lstrings.fio_address_register_screen_cant_check
     }
-    if (fioDomain && !isAvailable) {
+    if (fioDomain && isAvailable === false) {
       chooseHandleErrorMessage = lstrings.fio_address_register_screen_not_available
     }
 
@@ -250,12 +245,11 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     }
 
     return (
-      <SceneWrapper background="theme" bodySplit={theme.rem(1.5)}>
-        <SceneHeader style={styles.header} title={lstrings.title_register_fio_domain}>
+      <SceneWrapper scroll>
+        <SceneHeader style={styles.header} title={lstrings.title_register_fio_domain} underline withTopMargin>
           <IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />
         </SceneHeader>
-        {/* eslint-disable-next-line react/no-string-refs */}
-        <ScrollView ref="_scrollView" contentContainerStyle={styles.container}>
+        <View style={styles.container}>
           <EdgeText style={[styles.paddings, styles.instructionalText, styles.title]} numberOfLines={3}>
             {lstrings.fio_domain_reg_text}
           </EdgeText>
@@ -263,22 +257,22 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
             {lstrings.fio_domain_reg_descr}
           </EdgeText>
 
-          <View onLayout={this.fieldViewOnLayout}>
-            <Tile type="editable" title={lstrings.fio_domain_choose_label} onPress={this.onDomainPress}>
+          <CardUi4>
+            <RowUi4 rightButtonType="editable" title={lstrings.fio_domain_choose_label} onPress={this.onDomainPress}>
               <View style={styles.domainView}>
                 <EdgeText style={styles.domainText}>{fioDomain}</EdgeText>
                 <EdgeText style={styles.loadingText}>{loading ? `(${lstrings.loading})` : ''}</EdgeText>
               </View>
-            </Tile>
-          </View>
+            </RowUi4>
+          </CardUi4>
 
-          <FormError style={styles.error} isVisible={!!chooseHandleErrorMessage}>
-            {chooseHandleErrorMessage}
-          </FormError>
+          <EdgeAnim visible={chooseHandleErrorMessage !== ''} enter={{ type: 'fadeIn' }} exit={{ type: 'fadeOut' }}>
+            <AlertCardUi4 title={chooseHandleErrorMessage} type="error" />
+          </EdgeAnim>
+
           {this.renderFioWallets()}
           {this.renderButton()}
-          <View style={styles.bottomSpace} />
-        </ScrollView>
+        </View>
       </SceneWrapper>
     )
   }
@@ -286,11 +280,11 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    paddingTop: theme.rem(0.5)
+    marginHorizontal: theme.rem(0.5)
   },
   paddings: {
     paddingBottom: theme.rem(1),
-    paddingHorizontal: theme.rem(1.25)
+    paddingHorizontal: theme.rem(0.5)
   },
   instructionalText: {
     fontSize: theme.rem(1),
@@ -305,19 +299,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginRight: theme.rem(1),
     marginTop: theme.rem(0.5)
   },
-  bottomSpace: {
-    paddingBottom: theme.rem(30)
-  },
   domainView: {
     flexDirection: 'row'
   },
   domainText: {
     color: theme.primaryText,
     marginRight: theme.rem(0.5)
-  },
-  error: {
-    flex: 1,
-    margin: theme.rem(1)
   },
   loadingText: {
     color: theme.deactivatedText

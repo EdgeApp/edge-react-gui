@@ -35,7 +35,7 @@ const fakeCurrencyConfig: any = {
 }
 
 const fakeCoreWallet: any = {
-  balances: { BTC: '123123' },
+  balanceMap: new Map([[null, '123123']]),
   blockHeight: 12345,
   currencyConfig: fakeCurrencyConfig,
   currencyInfo,
@@ -85,6 +85,7 @@ describe('TransactionDetailsScene', () => {
               otherParams: {},
               ourReceiveAddresses: ['this is an address'],
               signedTx: 'this is a signed tx',
+              tokenId: null,
               txid: 'this is the txid',
               walletId: fakeCoreWallet.id
             },
@@ -110,7 +111,7 @@ describe('TransactionDetailsScene', () => {
               isSend: true,
               memos: [],
               metadata: {
-                amountFiat: -6392.93,
+                exchangeAmount: { 'iso:USD': -6392.93 },
                 name: 'timmy'
               },
               nativeAmount: '-12300000',
@@ -118,6 +119,7 @@ describe('TransactionDetailsScene', () => {
               otherParams: {},
               ourReceiveAddresses: ['this is an address'],
               signedTx: 'this is a signed tx',
+              tokenId: null,
               txid: 'this is the txid',
               walletId: fakeCoreWallet.id
             },

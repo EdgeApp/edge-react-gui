@@ -2,7 +2,7 @@ import { asArray, asEither, asNull, asNumber, asObject, asOptional, asString } f
 
 import { asFiatPaymentType, FiatPaymentType, FiatPluginFactory } from '../plugins/gui/fiatPluginTypes'
 import { Permission } from '../reducers/PermissionsReducer'
-import { EdgeTokenId } from '../types/types'
+import { EdgeAsset } from '../types/types'
 import { UriQueryMap } from './WebTypes'
 /**
  * A unique WebView-based plugin.
@@ -62,7 +62,7 @@ export interface GuiPlugin {
   mandatoryPermissions?: boolean
 
   // Sometimes plugins pass weird strings for their currency codes:
-  fixCurrencyCodes?: { [badString: string]: EdgeTokenId }
+  fixCurrencyCodes?: { [badString: string]: EdgeAsset }
 
   // Plugin would show only with BETA_FEATURE env flag
   betaOnly?: boolean

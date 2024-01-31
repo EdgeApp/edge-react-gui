@@ -37,7 +37,7 @@ describe('TransactionListTop', () => {
   }
 
   const fakeWallet: any = {
-    balances: { BTC: '123123' },
+    balanceMap: new Map([[null, '123123']]),
     blockHeight: 12345,
     currencyConfig: fakeCurrencyConfig,
     currencyInfo,
@@ -68,10 +68,11 @@ describe('TransactionListTop', () => {
           isEmpty={false}
           navigation={fakeNavigation}
           searching={false}
-          tokenId={undefined}
+          tokenId={null}
           wallet={fakeWallet}
           onSearchingChange={() => undefined}
           onSearchTextChange={() => undefined}
+          isLightAccount={false}
         />
       </FakeProviders>
     )
@@ -88,10 +89,11 @@ describe('TransactionListTop', () => {
           isEmpty={false}
           navigation={fakeNavigation}
           searching={false}
-          tokenId={undefined}
+          tokenId={null}
           wallet={fakeWallet}
           onSearchingChange={() => undefined}
           onSearchTextChange={() => undefined}
+          isLightAccount={false}
         />
       </FakeProviders>
     )

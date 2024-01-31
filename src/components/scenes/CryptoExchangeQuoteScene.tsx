@@ -1,7 +1,7 @@
 import { div, gte } from 'biggystring'
 import { EdgeSwapQuote } from 'edge-core-js'
 import React, { useEffect, useState } from 'react'
-import { ScrollView, SectionList, TouchableOpacity, ViewStyle } from 'react-native'
+import { SectionList, TouchableOpacity, View, ViewStyle } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
@@ -13,21 +13,22 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { logEvent } from '../../util/tracking'
 import { PoweredByCard } from '../cards/PoweredByCard'
-import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { EdgeAnim } from '../common/EdgeAnim'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { SwapProviderRow } from '../data/row/SwapProviderRow'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal'
 import { CircleTimer } from '../progress-indicators/CircleTimer'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { Alert } from '../themed/Alert'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Slider } from '../themed/Slider'
-import { ThemedModal } from '../themed/ThemedModal'
 import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
+import { AlertCardUi4 } from '../ui4/AlertCardUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 export interface CryptoExchangeQuoteParams {
   selectedQuote: EdgeSwapQuote
@@ -140,7 +141,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
 
   const handlePoweredByTap = useHandler(async () => {
     await Airship.show(bridge => (
-      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve()}>
+      <ModalUi4 bridge={bridge} onCancel={() => bridge.resolve()}>
         <ModalTitle>{lstrings.quote_swap_provider}</ModalTitle>
         <SectionList
           style={styles.container}
@@ -152,7 +153,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
           renderSectionHeader={renderSectionHeader}
           sections={sectionList}
         />
-      </ThemedModal>
+      </ModalUi4>
     ))
   })
 
@@ -183,51 +184,67 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
     ))
   }
   return (
-    <NotificationSceneWrapper hasTabs navigation={navigation} background="theme">
-      {(gap, notificationHeight) => (
-        <>
+    <SceneWrapper hasTabs hasNotifications scroll>
+      <View style={styles.container}>
+        <EdgeAnim style={styles.header} enter={{ type: 'fadeInUp', distance: 90 }}>
           <SceneHeader title={lstrings.title_exchange} underline withTopMargin />
-          <ScrollView contentContainerStyle={[{ paddingBottom: notificationHeight }, styles.container]}>
-            <LineTextDivider title={lstrings.fragment_send_from_label} lowerCased />
-            {showFeeWarning && <Alert marginRem={[0, 1, 1.5, 1]} title={lstrings.transaction_details_fee_warning} type="warning" />}
-            <ExchangeQuote quote={selectedQuote} fromTo="from" showFeeWarning={showFeeWarning} />
-            <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
-            <ExchangeQuote quote={selectedQuote} fromTo="to" />
-            <PoweredByCard iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)} poweredByText={exchangeName} onPress={handlePoweredByTap} />
-            {selectedQuote.isEstimate && (
-              <Alert
-                title={lstrings.estimated_quote}
-                message={lstrings.estimated_exchange_message}
-                type="warning"
-                marginRem={[1, 1]}
-                onPress={handleForEstimateExplanation}
-              />
-            )}
-            {selectedQuote.canBePartial === true && (
-              <Alert
-                title={lstrings.can_be_partial_quote_title}
-                message={lstrings.can_be_partial_quote_message}
-                type="warning"
-                marginRem={[1, 1]}
-                onPress={handleCanBePartialExplanation}
-              />
-            )}
+        </EdgeAnim>
 
-            <Slider parentStyle={styles.slider} onSlidingComplete={doShift} disabled={pending} showSpinner={pending} />
-            {renderTimer()}
-          </ScrollView>
-        </>
-      )}
-    </NotificationSceneWrapper>
+        {showFeeWarning ? (
+          <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
+            <AlertCardUi4 title={lstrings.transaction_details_fee_warning} type="warning" />
+          </EdgeAnim>
+        ) : null}
+
+        <EdgeAnim enter={{ type: 'fadeInUp', distance: 30 }}>
+          <ExchangeQuote quote={selectedQuote} fromTo="from" showFeeWarning={showFeeWarning} />
+        </EdgeAnim>
+        <EdgeAnim>
+          <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 30 }}>
+          <ExchangeQuote quote={selectedQuote} fromTo="to" />
+        </EdgeAnim>
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 60 }}>
+          <PoweredByCard iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)} poweredByText={exchangeName} onPress={handlePoweredByTap} />
+        </EdgeAnim>
+        {selectedQuote.isEstimate ? (
+          <EdgeAnim enter={{ type: 'fadeInDown', distance: 90 }}>
+            <AlertCardUi4 title={lstrings.estimated_quote} body={lstrings.estimated_exchange_message} type="warning" onPress={handleForEstimateExplanation} />
+          </EdgeAnim>
+        ) : null}
+        {selectedQuote.canBePartial ? (
+          <EdgeAnim enter={{ type: 'fadeInDown', distance: 90 }}>
+            <AlertCardUi4
+              title={lstrings.can_be_partial_quote_title}
+              body={lstrings.can_be_partial_quote_message}
+              type="warning"
+              onPress={handleCanBePartialExplanation}
+            />
+          </EdgeAnim>
+        ) : null}
+
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
+          <Slider parentStyle={styles.slider} onSlidingComplete={doShift} disabled={pending} showSpinner={pending} />
+        </EdgeAnim>
+        {renderTimer()}
+      </View>
+    </SceneWrapper>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
+    marginHorizontal: theme.rem(0.5),
     paddingTop: theme.rem(0.5)
   },
-  slider: {
-    marginTop: theme.rem(0.5),
+  header: {
+    marginLeft: -theme.rem(0.5),
+    width: '100%',
     marginBottom: theme.rem(1)
+  },
+  slider: {
+    marginTop: theme.rem(1),
+    marginBottom: theme.rem(3)
   }
 }))

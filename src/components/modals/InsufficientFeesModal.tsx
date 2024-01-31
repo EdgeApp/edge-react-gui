@@ -9,10 +9,11 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { roundedFee } from '../../util/utils'
-import { MainButton } from '../themed/MainButton'
-import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalMessage } from '../themed/ModalParts'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
   bridge: AirshipBridge<void>
@@ -35,7 +36,8 @@ export function InsufficientFeesModal(props: Props) {
 
   // Get the display amount:
   const { currencyInfo } = wallet
-  const { currencyCode = currencyInfo.currencyCode, networkFee = '' } = coreError
+  const { tokenId, networkFee = '' } = coreError
+  const currencyCode = getCurrencyCode(wallet, tokenId)
   const { multiplier, name } = useDisplayDenom(currencyInfo.pluginId, currencyCode)
   const amountString = roundedFee(networkFee, 2, multiplier)
 
@@ -52,12 +54,13 @@ export function InsufficientFeesModal(props: Props) {
   })
 
   return (
-    <ThemedModal bridge={bridge} paddingRem={1} onCancel={handleCancel}>
-      <ModalTitle>{lstrings.buy_crypto_modal_title}</ModalTitle>
+    <ModalUi4 bridge={bridge} title={lstrings.buy_crypto_modal_title} onCancel={handleCancel}>
       <ModalMessage>{sprintf(lstrings.buy_parent_crypto_modal_message_2s, amountString, name)}</ModalMessage>
-      <MainButton label={sprintf(lstrings.buy_crypto_modal_buy_action, currencyCode)} type="primary" marginRem={0.5} onPress={handleBuy} />
-      <MainButton label={lstrings.buy_crypto_modal_exchange} type="primary" marginRem={0.5} onPress={handleSwap} />
-      <MainButton label={lstrings.buy_crypto_decline} type="secondary" marginRem={0.5} onPress={handleCancel} />
-    </ThemedModal>
+      <ButtonsViewUi4
+        primary={{ label: sprintf(lstrings.buy_crypto_modal_buy_action, currencyCode), onPress: handleBuy }}
+        secondary={{ label: lstrings.buy_crypto_modal_exchange, onPress: handleSwap }}
+        tertiary={{ label: lstrings.buy_crypto_decline, onPress: handleCancel }}
+      />
+    </ModalUi4>
   )
 }

@@ -4,20 +4,29 @@ import { ScrollView, View } from 'react-native'
 import Evilicons from 'react-native-vector-icons/EvilIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants'
+import { useIconColor } from '../../hooks/useIconColor'
 import { lstrings } from '../../locales/strings'
+import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { FeeOption } from '../../types/types'
+import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { darkenHexColor } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { SettingsRadioRow } from '../settings/SettingsRadioRow'
 import { Alert } from '../themed/Alert'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
+import { AccentColors } from '../ui4/DotsBackground'
 
-interface OwnProps extends EdgeSceneProps<'changeMiningFee'> {}
+interface OwnProps extends EdgeSceneProps<'changeMiningFee2'> {}
+
+interface HookProps {
+  iconColor?: string
+}
 
 type Props = OwnProps & ThemeProps
 
@@ -41,10 +50,10 @@ const feeOptions = {
   }
 }
 
-export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> {
+export class ChangeMiningFeeComponent extends React.PureComponent<Props & HookProps, State> {
   constructor(props: Props) {
     super(props)
-    const { networkFeeOption = 'standard', customNetworkFee = {} } = this.props.route.params.guiMakeSpendInfo
+    const { networkFeeOption = 'standard', customNetworkFee = {} } = this.props.route.params.spendInfo
     const customFormat = this.getCustomFormat()
 
     if (customFormat != null && Object.keys(customNetworkFee).length !== customFormat.length) {
@@ -59,7 +68,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
     }
   }
 
-  getCustomFormat(): string[] | undefined {
+  getCustomFormat(): Array<keyof typeof FEE_STRINGS> | undefined {
     const { route } = this.props
     const { wallet } = route.params
     if (wallet.currencyInfo.defaultSettings != null) {
@@ -71,41 +80,39 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
   onSubmit = () => {
     const { networkFeeOption, customNetworkFee } = this.state
     const { navigation, route } = this.props
-    const { guiMakeSpendInfo, wallet, maxSpendSet } = route.params
-    const { currencyCode, spendTargets = [] } = guiMakeSpendInfo
-    const testSpendInfo = {
-      spendTargets: spendTargets.map(spendTarget => ({
-        ...spendTarget,
-        nativeAmount: maxSpendSet || spendTarget.nativeAmount === '' ? '0' : spendTarget.nativeAmount
-      })),
-      networkFeeOption,
-      customNetworkFee,
-      currencyCode
-    }
-    wallet
-      .makeSpend(testSpendInfo)
-      .then(() => {
-        this.props.route.params.onSubmit(networkFeeOption, customNetworkFee)
-        navigation.goBack()
-      })
-      .catch(e => {
-        let message = e.message
-        if (e.name === 'ErrorBelowMinimumFee') message = `${lstrings.invalid_custom_fee} ${e.message}`
-        showError(message)
-      })
+    route.params.onSubmit(networkFeeOption, customNetworkFee)
+    navigation.goBack()
   }
 
   render() {
-    const { theme } = this.props
+    const { iconColor, theme } = this.props
     const styles = getStyles(theme)
 
     const customFormat = this.getCustomFormat()
     const { networkFeeOption } = this.state
 
+    const accentColors: AccentColors = {
+      // Transparent fallback for while iconColor is loading
+      iconAccentColor: iconColor ?? '#00000000'
+    }
+
+    const backgroundColors = [...theme.assetBackgroundGradientColors]
+    if (iconColor != null) {
+      const scaledColor = darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+      backgroundColors[0] = scaledColor
+    }
+
     return (
-      <SceneWrapper background="theme" hasTabs={false} avoidKeyboard>
+      <SceneWrapper
+        accentColors={accentColors}
+        avoidKeyboard
+        backgroundGradientColors={backgroundColors}
+        backgroundGradientEnd={theme.assetBackgroundGradientEnd}
+        backgroundGradientStart={theme.assetBackgroundGradientStart}
+        overrideDots={theme.backgroundDots.assetOverrideDots}
+      >
         <SceneHeader title={lstrings.title_change_mining_fee} underline withTopMargin />
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView contentContainerStyle={styles.container} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
           {Object.keys(feeOptions).map(feeSetting => {
             return (
               <SettingsRadioRow
@@ -143,18 +150,17 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
     )
   }
 
-  renderCustomFeeTextInput(customFormat: string[]) {
-    const { theme } = this.props
-    const styles = getStyles(theme)
+  renderCustomFeeTextInput(customFormat: Array<keyof typeof FEE_STRINGS>) {
     const { networkFeeOption, customNetworkFee } = this.state
     if (networkFeeOption !== 'custom') return null
 
     return (
-      <View style={styles.view}>
+      <>
         {customFormat.map(key => (
-          <OutlinedTextInput
-            autoFocus={false}
+          <FilledTextInput
+            around={1}
             key={key}
+            autoFocus={false}
             autoCorrect={false}
             onChangeText={text =>
               this.setState({
@@ -162,14 +168,12 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
               })
             }
             value={customNetworkFee[key]}
-            // @ts-expect-error
-            label={FEE_STRINGS[key] || key}
-            returnKeyType="search"
-            marginRem={[1.75, 1.75]}
+            placeholder={FEE_STRINGS[key] || key}
+            returnKeyType="done"
             keyboardType="numeric"
           />
         ))}
-      </View>
+      </>
     )
   }
 
@@ -210,4 +214,16 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-export const ChangeMiningFeeScene = withTheme(ChangeMiningFeeComponent)
+const ChangeMiningFeeSceneThemed = withTheme(ChangeMiningFeeComponent)
+
+export const ChangeMiningFeeScene = (props: OwnProps) => {
+  const account = useSelector(state => state.core.account)
+  const currencyCode = useSelector(state => state.ui.wallets.selectedCurrencyCode)
+  const walletId = useSelector(state => state.ui.wallets.selectedWalletId)
+  const wallet = account.currencyWallets[walletId] ?? {}
+  const { pluginId = '' } = wallet.currencyInfo ?? {}
+  const tokenId = getTokenId(account, pluginId, currencyCode)
+
+  const iconColor = useIconColor({ pluginId, tokenId: tokenId !== undefined ? tokenId : '' })
+  return <ChangeMiningFeeSceneThemed {...props} iconColor={iconColor} />
+}

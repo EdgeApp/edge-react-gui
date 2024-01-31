@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AddressModalComponent should render with loaded props 1`] = `
-<ThemedModal
+<ModalUi4
   bridge={
     {
       "on": [Function],
@@ -12,69 +12,41 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
     }
   }
   onCancel={[Function]}
-  paddingRem={1}
+  title="string"
 >
-  <ModalTitle
-    center={true}
-    paddingRem={
-      [
-        0,
-        2,
-        1,
-      ]
-    }
-  >
-    string
-  </ModalTitle>
+  <ForwardRef
+    around={0.5}
+    autoCapitalize="none"
+    autoCorrect={false}
+    bottom={1}
+    onChangeText={[Function]}
+    onSubmitEditing={[Function]}
+    placeholder="Address"
+    returnKeyType="search"
+    showSpinner={false}
+    value=""
+  />
   <View
     style={
       {
+        "alignItems": "center",
         "flex": 1,
-        "flexDirection": "column",
-        "width": "100%",
+        "justifyContent": "center",
       }
     }
   >
-    <ForwardRef
-      autoCapitalize="none"
-      autoCorrect={false}
-      label="Address"
-      marginRem={
-        [
-          0,
-          1,
-        ]
-      }
-      onChangeText={[Function]}
-      onSubmitEditing={[Function]}
-      returnKeyType="search"
-      showSpinner={false}
-      value=""
-    />
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flex": 1,
-          "justifyContent": "center",
-        }
-      }
-    >
-      <ActivityIndicator
-        color="#00f1a2"
-      />
-    </View>
-    <MainButton
-      label="Submit"
-      marginRem={
-        [
-          0,
-          4,
-        ]
-      }
-      onPress={[Function]}
-      type="secondary"
+    <ActivityIndicator
+      color="#00f1a2"
     />
   </View>
-</ThemedModal>
+  <Memo
+    primary={
+      {
+        "label": "Next",
+        "onPress": [Function],
+      }
+    }
+    sceneMargin={true}
+  />
+</ModalUi4>
 `;

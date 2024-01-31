@@ -1,43 +1,64 @@
 import * as React from 'react'
-import { StyleSheet, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import LinearGradient, { LinearGradientProps } from 'react-native-linear-gradient'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
 import { triggerHaptic } from '../../util/haptic'
+import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SectionView } from './SectionView'
 
-export type CardType = 'default' | 'warning' | 'error'
-
 interface Props {
-  children: React.ReactNode | React.ReactNode[] // Top layer
+  // Top layer:
+  overlay?: React.ReactNode // Rendered above/on top of children
 
-  icon?: React.ReactNode
-  overlay?: React.ReactNode
+  // children & icon share the same 2nd layer:
+  children: React.ReactNode | React.ReactNode[]
+  icon?: React.ReactNode | string
 
-  // These two override the default theme background:
-  underlayForeground?: React.ReactNode // Middle layer, e.g. embedded images as part of the background
-  underlayBackground?: LinearGradientProps // Bottom layer gradient
+  // Everything else underneath, in order:
+  gradientBackground?: LinearGradientProps // 3rd layer
+  nodeBackground?: React.ReactNode // 4th layer, anything goes
 
-  onClose?: () => Promise<void> | void
+  /** @deprecated Only to be used during the UI4 transition */
+  marginRem?: number[] | number
+  /** @deprecated Only to be used during the UI4 transition */
+  paddingRem?: number[] | number
+
+  // Options:
+  fill?: boolean // Set flex to 1 for tiling
+  sections?: boolean // Automatic section dividers, only if chilren are multiple nodes
+  onClose?: () => Promise<void> | void // If specified, adds a close button, absolutely positioned in the top right
+
+  // Touchable area for the following span the entire card:
   onLongPress?: () => Promise<void> | void
   onPress?: () => Promise<void> | void
-  // cardType?: CardType // TODO
 }
 
 /**
- * Rounded card that automatically adds horizontal dividers between each child,
- * aligned in a column layout. Adds no dividers if only one child is given.
+ * Rounded card
  *
- * The background is divided into two 'underlay' props.
- * If unspecified, defaults to the theme-defined background.
+ * sections: Automatically adds horizontal dividers between each child, aligned
+ * in a column layout. Adds no dividers if only one child is given.
+ *
+ * gradientBackground/nodeBackground: For specifying a complex background
+ * that can include embedded images or any other component.
+ *
+ * onClose: If specified, adds a close button
  */
 export const CardUi4 = (props: Props) => {
-  const { children, icon, overlay, underlayForeground, underlayBackground, onClose, onLongPress, onPress } = props
+  const { children, icon, marginRem, paddingRem, overlay, sections, gradientBackground, nodeBackground, fill = false, onClose, onLongPress, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  const margin = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
+  const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0.5), theme.rem))
+  const fillStyle = fill ? styles.fill : undefined
+
+  const isPressable = onPress != null || onLongPress != null
 
   const handlePress = useHandler(async () => {
     if (onPress != null) {
@@ -61,68 +82,116 @@ export const CardUi4 = (props: Props) => {
     }
   })
 
-  const handleClose = useHandler(() => {
-    triggerHaptic('impactLight')
+  const handleClose = useHandler(async () => {
+    if (onClose != null) {
+      triggerHaptic('impactLight')
+      try {
+        await onClose()
+      } catch (err) {
+        showError(err)
+      }
+    }
   })
 
-  return (
-    <TouchableHighlight
-      accessible={false}
-      onPress={handlePress}
-      onLongPress={handleLongPress}
-      disabled={handlePress == null && handleLongPress == null}
-      underlayColor={theme.touchHighlightUi4}
-      style={styles.cardContainer}
-    >
+  const nonNullChildren = React.Children.toArray(children).filter(child => child != null && React.isValidElement(child))
+  if (nonNullChildren.length === 0) return null
+
+  const background = (
+    <View style={styles.backgroundFill}>
+      {nodeBackground}
+      {gradientBackground == null ? null : <LinearGradient {...gradientBackground} style={StyleSheet.absoluteFill} />}
+    </View>
+  )
+
+  const maybeIcon =
+    icon == null ? null : (
+      <View style={styles.iconContainer}>{typeof icon === 'string' ? <FastImage source={{ uri: icon }} style={styles.iconBuiltin} /> : icon}</View>
+    )
+
+  const content = sections ? <SectionView>{children}</SectionView> : children
+
+  const maybeCloseButton =
+    onClose == null ? null : (
+      <TouchableOpacity style={styles.cornerContainer} onPress={handleClose}>
+        <AntDesignIcon color={theme.primaryText} name="close" size={theme.rem(1.25)} />
+      </TouchableOpacity>
+    )
+
+  const maybeOverlay = overlay == null ? null : <View style={styles.overlayContainer}>{overlay}</View>
+
+  const allContent =
+    icon == null ? (
       <>
-        <LinearGradient {...theme.cardBackgroundUi4} {...underlayBackground} style={[StyleSheet.absoluteFill, styles.backgroundFill]}>
-          {underlayForeground}
-        </LinearGradient>
-        {icon == null ? null : <View style={styles.iconContainer}>{icon}</View>}
-        <SectionView>{children}</SectionView>
-        {onClose == null ? null : (
-          <TouchableOpacity style={styles.cornerContainer} onPress={handleClose}>
-            <AntDesignIcon color={theme.iconTappableAltUi4} name="close" size={theme.rem(1.25)} />
-          </TouchableOpacity>
-        )}
-        {overlay == null ? null : <View style={styles.overlayContainer}>{overlay}</View>}
+        {background}
+        {content}
+        {maybeCloseButton}
+        {maybeOverlay}
       </>
-    </TouchableHighlight>
+    ) : (
+      <>
+        {background}
+        <View style={styles.iconRowContainer}>
+          {maybeIcon}
+          {content}
+        </View>
+        {maybeCloseButton}
+        {maybeOverlay}
+      </>
+    )
+
+  return isPressable ? (
+    <TouchableOpacity accessible={false} onPress={handlePress} onLongPress={handleLongPress} style={[styles.cardContainer, margin, padding, fillStyle]}>
+      {allContent}
+    </TouchableOpacity>
+  ) : (
+    <View style={[styles.cardContainer, margin, padding, fillStyle]}>{allContent}</View>
   )
 }
 
-// TODO: Adjust margin/padding so everything combines with correct layout no
-// matter the combination of UI4 components.
 const getStyles = cacheStyles((theme: Theme) => ({
   backgroundFill: {
-    borderRadius: theme.rem(theme.cardRadiusRemUi4)
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: theme.cardBorderRadius,
+    backgroundColor: theme.cardBaseColor,
+    overflow: 'hidden'
   },
   cardContainer: {
-    borderRadius: theme.rem(theme.cardRadiusRemUi4),
-    margin: theme.rem(0.5),
-    padding: theme.rem(0.5),
-    flexDirection: 'row'
+    borderRadius: theme.cardBorderRadius,
+    alignSelf: 'stretch'
   },
   cornerContainer: {
-    margin: theme.rem(0.25),
-    justifyContent: 'flex-start',
-    alignContent: 'center'
+    margin: theme.rem(1),
+    top: 0,
+    right: 0,
+    position: 'absolute'
   },
   overlayContainer: {
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
-    backgroundColor: theme.cardDisabledOverlayUi4,
-    borderRadius: theme.rem(theme.cardRadiusRemUi4),
+    backgroundColor: theme.cardOverlayDisabled,
+    borderRadius: theme.cardBorderRadius,
     justifyContent: 'center',
     margin: 2,
     pointerEvents: 'none'
+  },
+  iconRowContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   iconContainer: {
     margin: theme.rem(0.25),
     justifyContent: 'center',
     alignContent: 'center'
   },
-  warning: {
-    borderColor: theme.warningIcon
+  iconBuiltin: {
+    // When uri strings are given to this component as an icon prop, handle
+    // the icon styling
+    height: theme.rem(1.5),
+    width: theme.rem(1.5),
+    resizeMode: 'contain'
+  },
+  fill: {
+    flex: 1
   }
 }))

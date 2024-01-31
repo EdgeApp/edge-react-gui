@@ -211,7 +211,3 @@ if (hasProperty('storeFile')) {
 
 // Integrate react-native-vector-icons fonts
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
-
-bugsnag {
-  uploadReactNativeMappings = true
-}

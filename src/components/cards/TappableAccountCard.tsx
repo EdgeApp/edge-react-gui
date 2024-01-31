@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
@@ -21,7 +21,7 @@ interface TappableAccountCardProps {
 export interface SelectableAsset {
   customAsset?: CustomAsset
   paymentMethod?: PaymentMethod
-  tokenId?: string
+  tokenId: EdgeTokenId
   wallet?: EdgeCurrencyWallet
 }
 

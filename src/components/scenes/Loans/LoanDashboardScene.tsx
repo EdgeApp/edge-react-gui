@@ -1,13 +1,14 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { ListRenderItemInfo, TouchableOpacity, View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { createWallet } from '../../../actions/CreateWalletActions'
 import { isShowLoanWelcomeModal } from '../../../actions/LoanWelcomeActions'
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { resyncLoanAccounts } from '../../../controllers/loan-manager/redux/actions'
 import { LoanAccount } from '../../../controllers/loan-manager/types'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
@@ -19,10 +20,8 @@ import { borrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { Theme } from '../../../types/Theme'
-import { FlatListItem } from '../../../types/types'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getCurrencyInfos } from '../../../util/CurrencyInfoHelpers'
-import { Card } from '../../cards/Card'
 import { LoanSummaryCard } from '../../cards/LoanSummaryCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { Space } from '../../layout/Space'
@@ -33,6 +32,7 @@ import { Airship, redText } from '../../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
+import { CardUi4 } from '../../ui4/CardUi4'
 
 interface Props extends EdgeSceneProps<'loanDashboard'> {}
 
@@ -62,10 +62,14 @@ export const LoanDashboardScene = (props: Props) => {
   const currencyWallets = useWatch(account, 'currencyWallets')
 
   const [isWalletsLoaded, setIsWalletsLoaded] = React.useState(false)
-  useAsyncEffect(async () => {
-    await account.waitForAllWallets()
-    setIsWalletsLoaded(true)
-  }, [account])
+  useAsyncEffect(
+    async () => {
+      await account.waitForAllWallets()
+      setIsWalletsLoaded(true)
+    },
+    [account],
+    'LoanDashboardScene:1'
+  )
 
   const [isNewLoanLoading, setIsNewLoanLoading] = React.useState(false)
 
@@ -76,16 +80,24 @@ export const LoanDashboardScene = (props: Props) => {
   // Effects
   //
 
-  useAsyncEffect(async () => {
-    if (await isShowLoanWelcomeModal(account.disklet)) await Airship.show<'ok' | undefined>(bridge => <LoanWelcomeModal bridge={bridge} />)
-  }, [])
+  useAsyncEffect(
+    async () => {
+      if (await isShowLoanWelcomeModal(account.disklet)) await Airship.show<'ok' | undefined>(bridge => <LoanWelcomeModal bridge={bridge} />)
+    },
+    [],
+    'LoanDashboardScene:2'
+  )
 
-  useAsyncEffect(async () => {
-    // Only resync on scene mount every 5 minutes
-    if (Date.now() - lastResyncTimestamp > 5 * 60 * 1000) {
-      await dispatch(resyncLoanAccounts(account))
-    }
-  }, [account, dispatch, lastResyncTimestamp])
+  useAsyncEffect(
+    async () => {
+      // Only resync on scene mount every 5 minutes
+      if (Date.now() - lastResyncTimestamp > 5 * 60 * 1000) {
+        await dispatch(resyncLoanAccounts(account))
+      }
+    },
+    [account, dispatch, lastResyncTimestamp],
+    'LoanDashboardScene:3'
+  )
 
   //
   // Handlers
@@ -95,10 +107,10 @@ export const LoanDashboardScene = (props: Props) => {
     let newLoanWallet
 
     if (hardPluginWalletIds.length > 1) {
-      const allowedAssets = SUPPORTED_WALLET_PLUGIN_IDS.map(pluginId => ({ pluginId }))
+      const allowedAssets = SUPPORTED_WALLET_PLUGIN_IDS.map(pluginId => ({ pluginId, tokenId: null }))
 
       // Only show the wallet picker if the user owns more than one polygon wallet.
-      const { walletId: newWalletId } = await Airship.show<WalletListResult>(bridge => (
+      const result = await Airship.show<WalletListResult>(bridge => (
         <WalletListModal
           bridge={bridge}
           navigation={navigation}
@@ -107,7 +119,9 @@ export const LoanDashboardScene = (props: Props) => {
           excludeWalletIds={Object.keys(loanAccountsMap)}
         />
       ))
-      newLoanWallet = newWalletId == null ? null : currencyWallets[newWalletId]
+      if (result?.type === 'wallet') {
+        newLoanWallet = currencyWallets[result.walletId]
+      }
     } else if (hardPluginWalletIds.length === 1) {
       // If the user owns one polygon wallet, auto-select that wallet for the loan creation
       newLoanWallet = currencyWallets[hardPluginWalletIds[0]]
@@ -145,7 +159,7 @@ export const LoanDashboardScene = (props: Props) => {
   // Render
   //
 
-  const renderLoanCard = useHandler((item: FlatListItem<LoanAccount>) => {
+  const renderLoanCard = useHandler((item: ListRenderItemInfo<LoanAccount>) => {
     const loanAccount: LoanAccount = item.item
     const iconUri = getBorrowPluginIconUri(loanAccount.borrowPlugin.borrowInfo)
 
@@ -159,9 +173,9 @@ export const LoanDashboardScene = (props: Props) => {
     return (
       <>
         {isNewLoanLoading ? (
-          <Card marginRem={[0, 0.5, 0, 0.5, 0]}>
+          <CardUi4 marginRem={[0, 0.5, 0, 0.5, 0]}>
             <FillLoader />
-          </Card>
+          </CardUi4>
         ) : null}
         {isLoansLoading ? (
           <Space around={1}>
@@ -179,7 +193,7 @@ export const LoanDashboardScene = (props: Props) => {
 
   if (!isWalletsLoaded) {
     return (
-      <SceneWrapper background="theme" hasTabs={false}>
+      <SceneWrapper>
         <SceneHeader title={lstrings.loan_dashboard_title} underline />
         <FillLoader />
       </SceneWrapper>
@@ -187,7 +201,7 @@ export const LoanDashboardScene = (props: Props) => {
   }
 
   return (
-    <SceneWrapper background="theme" hasTabs={false}>
+    <SceneWrapper>
       <SceneHeader
         tertiary={
           <TouchableOpacity onPress={handleInfoIconPress}>
@@ -220,12 +234,13 @@ export const LoanDashboardScene = (props: Props) => {
         </>
       ) : (
         <View style={styles.listMargin}>
-          <FlashList
+          <FlatList
             data={Object.values(loanAccountsMap)}
             keyboardShouldPersistTaps="handled"
             keyExtractor={(loanAccount: LoanAccount) => loanAccount.id}
             ListFooterComponent={renderFooter()}
             renderItem={renderLoanCard}
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
         </View>
       )}

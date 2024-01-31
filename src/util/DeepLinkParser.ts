@@ -43,6 +43,8 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
     // If the URI started with 'bitcoin:', etc.
     uri = betterUrl.query.r
     return { type: 'paymentProto', uri }
+  } else if (betterUrl.hostname.includes('bitpay.com')) {
+    return { type: 'paymentProto', uri }
   }
 
   // Handle the edge:// scheme:

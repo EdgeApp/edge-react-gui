@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
 import { getDisplayDenomination } from '../selectors/DenominationSelectors'
 import { useSelector } from '../types/reactRedux'
@@ -7,12 +7,13 @@ import { useTokenDisplayData } from './useTokenDisplayData'
 
 interface Props {
   nativeAmount: string
-  tokenId?: string
   wallet: EdgeCurrencyWallet
+  hideBalance?: boolean
+  tokenId: EdgeTokenId
   withSymbol?: boolean
 }
 
-export const useCryptoText = ({ wallet, tokenId, nativeAmount, withSymbol }: Props): string => {
+export const useCryptoText = ({ wallet, tokenId, nativeAmount, withSymbol, hideBalance }: Props): string => {
   const {
     denomination: exchangeDenomination,
     fiatDenomination,
@@ -31,7 +32,8 @@ export const useCryptoText = ({ wallet, tokenId, nativeAmount, withSymbol }: Pro
     exchangeRate: assetToFiatRate,
     fiatDenomination,
     nativeAmount,
-    currencyCode: withSymbol ? undefined : displayDenomination.name
+    currencyCode: withSymbol ? undefined : displayDenomination.name,
+    hideBalance
   })
 
   return cryptoText

@@ -15,10 +15,8 @@ export const AssetStatusCard = (props: { assetStatus: AssetStatus }) => {
   const curDate = new Date().toISOString()
   const isWithinDate = statusStartIsoDate != null && statusEndIsoDate != null && statusStartIsoDate <= curDate && statusEndIsoDate >= curDate
 
-  const titleLocale = getLocaleOrDefaultString(localeStatusTitle)
-  const messageLocale = getLocaleOrDefaultString(localeStatusBody)
-  const title = titleLocale == null ? null : localeStatusTitle[titleLocale]
-  const message = messageLocale == null ? null : localeStatusBody[messageLocale]
+  const title = getLocaleOrDefaultString(localeStatusTitle)
+  const message = getLocaleOrDefaultString(localeStatusBody)
   const isValidText = title != null && message != null
 
   return isWithinDate && isValidText ? (

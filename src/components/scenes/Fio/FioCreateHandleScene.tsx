@@ -8,6 +8,7 @@ import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
 import { createFioWallet, refreshAllFioAddresses } from '../../../actions/FioAddressActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { FIO_ADDRESS_DELIMITER } from '../../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
@@ -19,8 +20,8 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { showError, showToast } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
+import { FilledTextInput } from '../../themed/FilledTextInput'
 import { MainButton } from '../../themed/MainButton'
-import { OutlinedTextInput } from '../../themed/OutlinedTextInput'
 
 export interface FioCreateHandleParams {
   freeRegApiToken: string
@@ -112,7 +113,7 @@ export const FioCreateHandleScene = (props: Props) => {
         body: JSON.stringify({
           address: fioAccountName,
           referralCode: freeRegRefCode,
-          publicKey: (await wallet.getReceiveAddress()).publicAddress,
+          publicKey: (await wallet.getReceiveAddress({ tokenId: null })).publicAddress,
           redirectUrl: '',
           apiToken: freeRegApiToken
         })
@@ -144,25 +145,29 @@ export const FioCreateHandleScene = (props: Props) => {
   })
 
   // Create the new FIO wallet, default the handle to a cleaned version of the username
-  useAsyncEffect(async () => {
-    const domains = await fioPlugin.otherMethods.getDomains(freeRegRefCode)
-    if (domains.length === 1) {
-      if (!mounted.current) return
-      try {
-        setDomainStr(`${FIO_ADDRESS_DELIMITER}${asFreeFioDomain(domains[0]).domain}`)
-      } catch (e) {
-        setErrorText(lstrings.fio_register_handle_error)
-        return
+  useAsyncEffect(
+    async () => {
+      const domains = await fioPlugin.otherMethods.getDomains(freeRegRefCode)
+      if (domains.length === 1) {
+        if (!mounted.current) return
+        try {
+          setDomainStr(`${FIO_ADDRESS_DELIMITER}${asFreeFioDomain(domains[0]).domain}`)
+        } catch (e) {
+          setErrorText(lstrings.fio_register_handle_error)
+          return
+        }
       }
-    }
-    handleChangeFioHandle(account.username ?? '')
+      handleChangeFioHandle(account.username ?? '')
 
-    const wallet = await dispatch(createFioWallet())
+      const wallet = await dispatch(createFioWallet())
 
-    if (!mounted.current) return
-    setWallet(wallet)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+      if (!mounted.current) return
+      setWallet(wallet)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [],
+    'FioCreateHandleScene'
+  )
 
   React.useEffect(() => {
     // Clear error, if there was one
@@ -177,12 +182,12 @@ export const FioCreateHandleScene = (props: Props) => {
   }, [])
 
   return (
-    <SceneWrapper background="theme">
-      <KeyboardAwareScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+    <SceneWrapper>
+      <KeyboardAwareScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         <FastImage source={{ uri: getFioCustomizeHandleImage(theme) }} style={styles.icon} />
         <EdgeText style={styles.title}>{lstrings.personalize_wallet_title}</EdgeText>
         <View style={styles.inputContainer}>
-          <OutlinedTextInput
+          <FilledTextInput
             ref={inputRef}
             suffix={domainStr}
             value={domainStr === '' ? '' : fioHandle}

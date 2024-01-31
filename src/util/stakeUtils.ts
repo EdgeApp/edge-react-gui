@@ -1,4 +1,5 @@
-import { EdgeCurrencyInfo } from 'edge-core-js'
+import { add } from 'biggystring'
+import { EdgeCurrencyInfo, EdgeStakingStatus } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { formatTimeDate } from '../locales/intl'
@@ -23,7 +24,8 @@ const getAssetDisplayName = (stakePolicy: StakePolicy, assetType: 'stakeAssets' 
 export const getPositionAllocations = (stakePosition: StakePosition) => {
   return {
     staked: stakePosition.allocations.filter(positionAllocation => positionAllocation.allocationType === 'staked'),
-    earned: stakePosition.allocations.filter(positionAllocation => positionAllocation.allocationType === 'earned')
+    earned: stakePosition.allocations.filter(positionAllocation => positionAllocation.allocationType === 'earned'),
+    unstaked: stakePosition.allocations.filter(positionAllocation => positionAllocation.allocationType === 'unstaked')
   }
 }
 
@@ -64,7 +66,7 @@ export const getAllocationLocktimeMessage = (allocation: PositionAllocation) => 
  * Returns the icon uris of stake and reward assets.
  */
 export const getPolicyIconUris = (
-  { metaTokens, pluginId }: EdgeCurrencyInfo,
+  { metaTokens = [], pluginId }: EdgeCurrencyInfo,
   stakePolicy: StakePolicy
 ): { stakeAssetUris: string[]; rewardAssetUris: string[] } => {
   const stakeAssetNames = getAssetCurrencyCodes(stakePolicy, 'stakeAssets')
@@ -77,12 +79,43 @@ export const getPolicyIconUris = (
     (rewardAssetName, i) => stakePolicy.rewardAssets[i].cdnName ?? metaTokens.find(metaToken => metaToken.currencyCode === rewardAssetName)?.contractAddress
   )
 
-  const stakeAssetUris = stakeContractAddresses.map(stakeContractAddress => getCurrencyIconUris(pluginId, stakeContractAddress).symbolImage)
-  const rewardAssetUris = rewardContractAddresses.map(rewardContractAddress => getCurrencyIconUris(pluginId, rewardContractAddress).symbolImage)
+  const stakeAssetUris = stakeContractAddresses.map(stakeContractAddress => getCurrencyIconUris(pluginId, stakeContractAddress ?? null).symbolImage)
+  const rewardAssetUris = rewardContractAddresses.map(rewardContractAddress => getCurrencyIconUris(pluginId, rewardContractAddress ?? null).symbolImage)
 
   return { stakeAssetUris, rewardAssetUris }
 }
 
 export const getPluginFromPolicy = (stakePlugins: StakePlugin[], stakePolicy: StakePolicy): StakePlugin | undefined => {
   return stakePlugins.find(plugin => plugin.getPolicies().find(policy => policy.stakePolicyId === stakePolicy.stakePolicyId))
+}
+
+/**
+ * FIO specific staking util functions. FIO still uses a direct connection
+ * to the FIO plugin for staking info instead of the newer staking plugin
+ * architecture. Extract balance info using the stakingStatus similar to how
+ * the tronStakePlugin does for BANDWIDTH and ENERYGY
+ */
+
+/**
+ * `locked` signifies total locked balance that is not spendable
+ * `staked` signifies subset of locked balance that is locked
+ */
+export type FioStakingBalanceType = 'staked' | 'locked'
+export type FioStakingBalances = Record<FioStakingBalanceType, string>
+
+export const getFioStakingBalances = (stakingStatus?: EdgeStakingStatus): FioStakingBalances => {
+  const stakingBalances: FioStakingBalances = {
+    staked: '0',
+    locked: '0'
+  }
+
+  for (const stakedAmount of stakingStatus?.stakedAmounts ?? []) {
+    const type = stakedAmount.otherParams?.type
+    if (type === 'STAKED') {
+      stakingBalances.staked = add(stakingBalances.staked, stakedAmount.nativeAmount)
+    } else if (type === 'LOCKED') {
+      stakingBalances.locked = add(stakingBalances.locked, stakedAmount.nativeAmount)
+    }
+  }
+  return stakingBalances
 }

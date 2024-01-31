@@ -1,0 +1,136 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AdvancedDetailsCard should render with loading props 1`] = `
+<View
+  style={
+    [
+      {
+        "alignSelf": "stretch",
+        "borderRadius": 16,
+      },
+      {
+        "marginBottom": 11,
+        "marginLeft": 11,
+        "marginRight": 11,
+        "marginTop": 11,
+      },
+      {
+        "paddingBottom": 11,
+        "paddingLeft": 11,
+        "paddingRight": 11,
+        "paddingTop": 11,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    style={
+      {
+        "backgroundColor": "rgba(255, 255, 255, .1)",
+        "borderRadius": 16,
+        "bottom": 0,
+        "left": 0,
+        "overflow": "hidden",
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />
+  <View
+    style={
+      [
+        {
+          "flex": 1,
+          "flexDirection": "column",
+        },
+        {
+          "marginVertical": 0,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "alignItems": "center",
+            "alignSelf": "stretch",
+            "backgroundColor": "rgba(255, 255, 255, 0)",
+            "flexDirection": "row",
+          },
+          {
+            "marginBottom": 11,
+            "marginLeft": 11,
+            "marginRight": 11,
+            "marginTop": 11,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "column",
+              "flexShrink": 1,
+            },
+            {
+              "flexGrow": 1,
+            },
+          ]
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={false}
+          ellipsizeMode="tail"
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#3dd9f4",
+                "fontSize": 17,
+                "paddingRight": 22,
+              },
+              null,
+            ]
+          }
+        >
+          My Receive Addresses
+        </Text>
+        <Text
+          adjustsFontSizeToFit={true}
+          ellipsizeMode="tail"
+          minimumFontScale={0.65}
+          numberOfLines={3}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              },
+              null,
+            ]
+          }
+        >
+          123123123
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;

@@ -1,5 +1,5 @@
 import { FlashList, ListRenderItem } from '@shopify/flash-list'
-import { EdgeAccount } from 'edge-core-js'
+import { EdgeAccount, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -13,44 +13,47 @@ import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { BooleanMap, EdgeTokenId } from '../../types/types'
-import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
+import { BooleanMap, EdgeAsset } from '../../types/types'
+import { getCurrencyCode, getTokenIdForced, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { CustomAsset } from '../data/row/CustomAssetRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
+import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { ModalFooterFade, ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalTitle } from '../themed/ModalParts'
+import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { WalletList } from '../themed/WalletList'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
+import { ModalUi4 } from '../ui4/ModalUi4'
 import { ButtonsModal } from './ButtonsModal'
 
-export interface WalletListResult {
-  currencyCode?: string
-  tokenId?: string
-  walletId?: string
-
-  // Wyre buy/sell
-  isBankSignupRequest?: boolean
-  fiatAccountId?: string
-
-  // Custom asset selection
-  customAsset?: CustomAsset
-}
+export type WalletListResult =
+  | {
+      type: 'wallet'
+      walletId: string
+      tokenId: EdgeTokenId
+      /** @deprecated Use tokenId instead */
+      currencyCode: string
+    }
+  | { type: 'wyre'; fiatAccountId: string }
+  | { type: 'bankSignupRequest' }
+  | { type: 'custom'; customAsset?: CustomAsset }
+  // User cancelled.
+  // This is consistent with other modals that return `T | undefined`:
+  | undefined
 
 interface Props {
   bridge: AirshipBridge<WalletListResult>
   navigation: NavigationBase
 
   // Filtering:
-  allowedAssets?: EdgeTokenId[]
+  allowedAssets?: EdgeAsset[]
   allowedWalletIds?: string[]
   allowKeysOnlyMode?: boolean
   customAssets?: CustomAsset[]
-  excludeAssets?: EdgeTokenId[]
+  excludeAssets?: EdgeAsset[]
   excludeWalletIds?: string[]
   filterActivation?: boolean
 
@@ -61,10 +64,11 @@ interface Props {
   showCreateWallet?: boolean
 }
 
-const KeysOnlyModeTokenIds: EdgeTokenId[] = Object.keys(SPECIAL_CURRENCY_INFO)
+const keysOnlyModeAssets: EdgeAsset[] = Object.keys(SPECIAL_CURRENCY_INFO)
   .filter(pluginId => isKeysOnlyPlugin(pluginId))
   .map(pluginId => ({
-    pluginId
+    pluginId,
+    tokenId: null
   }))
 
 export function WalletListModal(props: Props) {
@@ -93,6 +97,7 @@ export function WalletListModal(props: Props) {
   const showCustomAssets = customAssets != null && customAssets.length > 0
 
   const account = useSelector(state => state.core.account)
+  const currencyWallets = useSelector(state => state.core.account.currencyWallets)
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -115,7 +120,7 @@ export function WalletListModal(props: Props) {
   // Prevent plugins that are "watch only" from being used unless it's explicitly allowed
   const walletListExcludeAssets = React.useMemo(() => {
     const result = excludeAssets
-    return allowKeysOnlyMode ? result : KeysOnlyModeTokenIds.concat(result ?? [])
+    return allowKeysOnlyMode ? result : keysOnlyModeAssets.concat(result ?? [])
   }, [allowKeysOnlyMode, excludeAssets])
 
   // #endregion Init
@@ -123,16 +128,22 @@ export function WalletListModal(props: Props) {
   // #region Handlers
 
   const handleCancel = useHandler(() => {
-    bridge.resolve({})
+    bridge.resolve(undefined)
   })
   const handlePaymentMethodPress = useHandler((fiatAccountId: string) => () => {
-    bridge.resolve({ fiatAccountId })
+    bridge.resolve({ type: 'wyre', fiatAccountId })
   })
-  const handleWalletListPress = useHandler((walletId: string, currencyCode: string, tokenId?: string, customAsset?: CustomAsset) => {
+  const handleWalletListPress = useHandler((walletId: string, tokenId: EdgeTokenId, customAsset?: CustomAsset) => {
     if (walletId === '') {
       handleCancel()
       showError(lstrings.network_alert_title)
-    } else bridge.resolve({ walletId, currencyCode, customAsset, tokenId })
+    } else if (customAsset != null) {
+      bridge.resolve({ type: 'custom', customAsset })
+    } else {
+      const wallet = currencyWallets[walletId]
+      const currencyCode = getCurrencyCode(wallet, tokenId)
+      bridge.resolve({ type: 'wallet', walletId, currencyCode, tokenId })
+    }
   })
   const handleSearchClear = useHandler(() => {
     setSearchText('')
@@ -153,7 +164,7 @@ export function WalletListModal(props: Props) {
         }}
       />
     ))
-    if (result === 'continue') await bridge.resolve({ isBankSignupRequest: true })
+    if (result === 'continue') await bridge.resolve({ type: 'bankSignupRequest' })
   })
 
   // #endregion Handlers
@@ -209,58 +220,60 @@ export function WalletListModal(props: Props) {
   // #endregion Renderers
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel}>
-      <ModalTitle center>{headerTitle}</ModalTitle>
+    <ModalUi4
+      bridge={bridge}
+      scroll
+      title={
+        <View style={styles.header}>
+          <ModalTitle>{headerTitle}</ModalTitle>
+          <SimpleTextInput
+            around={0.5}
+            returnKeyType="search"
+            placeholder={lstrings.search_wallets}
+            onChangeText={setSearchText}
+            onFocus={handleSearchFocus}
+            onBlur={handleSearchUnfocus}
+            onClear={handleSearchClear}
+            value={searchText}
+            iconComponent={SearchIconAnimated}
+          />
+        </View>
+      }
+      onCancel={handleCancel}
+    >
       {bankSection}
       {customAssetSection}
       {showBankOptions || showCustomAssets ? <EdgeText>{lstrings.your_wallets}</EdgeText> : null}
-      <OutlinedTextInput
-        returnKeyType="search"
-        label={lstrings.search_wallets}
-        onChangeText={setSearchText}
-        onFocus={handleSearchFocus}
-        onBlur={handleSearchUnfocus}
-        onClear={handleSearchClear}
-        value={searchText}
-        marginRem={[0.5, 0, 1.25, 0]}
-        searchIcon
+      <WalletList
+        allowedAssets={allowedAssets}
+        allowedWalletIds={allowedWalletIds}
+        excludeAssets={walletListExcludeAssets}
+        excludeWalletIds={excludeWalletIds}
+        filterActivation={filterActivation}
+        searching={searching}
+        searchText={searchText}
+        showCreateWallet={showCreateWallet}
+        createWalletId={createWalletId}
+        onPress={handleWalletListPress}
+        navigation={navigation}
       />
-      <View style={styles.walletsMargin}>
-        <WalletList
-          allowedAssets={allowedAssets}
-          allowedWalletIds={allowedWalletIds}
-          excludeAssets={walletListExcludeAssets}
-          excludeWalletIds={excludeWalletIds}
-          filterActivation={filterActivation}
-          searching={searching}
-          searchText={searchText}
-          showCreateWallet={showCreateWallet}
-          createWalletId={createWalletId}
-          onPress={handleWalletListPress}
-          navigation={navigation}
-        />
-        <ModalFooterFade />
-      </View>
-    </ThemedModal>
+    </ModalUi4>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  header: {
+    flexGrow: 1
+  },
   bankMargin: {
     flex: 1,
     marginBottom: theme.rem(1),
-    marginHorizontal: theme.rem(-1),
     marginTop: theme.rem(-1)
   },
   customAssetMargin: {
     flex: 1,
     marginBottom: theme.rem(1),
-    marginHorizontal: theme.rem(-1),
     marginTop: theme.rem(-0.5)
-  },
-  walletsMargin: {
-    flex: 1,
-    marginHorizontal: theme.rem(-1)
   }
 }))
 
@@ -276,11 +289,11 @@ export const pickWallet = async ({
 }: {
   account: EdgeAccount
   allowedWalletIds?: string[]
-  assets?: EdgeTokenId[]
+  assets?: EdgeAsset[]
   headerTitle?: string
   navigation: NavigationBase
   showCreateWallet?: boolean
-}): Promise<WalletListResult | undefined> => {
+}): Promise<WalletListResult> => {
   const { currencyWallets } = account
 
   const walletIdMap: BooleanMap = {}
@@ -315,7 +328,8 @@ export const pickWallet = async ({
   if (assets != null && matchingAssets.length === 1 && Object.keys(walletIdMap).length === 1) {
     // Only one matching wallet and asset. Auto pick the wallet
     const [walletId, currencyCode] = Object.keys(walletIdMap)[0].split(':')
-    return { walletId, currencyCode }
+    const tokenId = getTokenIdForced(account, currencyWallets[walletId].currencyInfo.pluginId, currencyCode)
+    return { type: 'wallet', walletId, currencyCode, tokenId }
   } else {
     const walletListResult = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal

@@ -11,7 +11,8 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { formatLargeNumberString as formatLargeNumber } from '../../util/utils'
 import { SwipeChart } from '../charts/SwipeChart'
-import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { EdgeAnim } from '../common/EdgeAnim'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -74,7 +75,7 @@ const COLUMN_RIGHT_DATA_KEYS: Array<keyof CoinRankingData> = [
 const CoinRankingDetailsSceneComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { navigation, route } = props
+  const { route } = props
   const { coinRankingData } = route.params
   const { currencyCode, currencyName } = coinRankingData
   const currencyCodeUppercase = currencyCode.toUpperCase()
@@ -133,24 +134,29 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
     return `${baseString} ${extendedString}`
   }
 
-  const renderRow = (dataKey: string, data: CoinRankingDataValueType): JSX.Element => {
+  const renderRow = (dataKey: string, data: CoinRankingDataValueType, index: number): JSX.Element => {
     return (
-      <View style={styles.row} key={dataKey}>
+      <EdgeAnim style={styles.row} key={dataKey} enter={{ type: 'fadeInDown', distance: 20 * index }}>
         <EdgeText style={styles.rowTitle}>{COINRANKINGDATA_TITLE_MAP[dataKey]}</EdgeText>
         <EdgeText style={styles.rowBody}>{parseCoinRankingData(dataKey, data)}</EdgeText>
-      </View>
+      </EdgeAnim>
     )
   }
 
   const renderRows = (coinRankingData: CoinRankingData | CoinRankingDataPercentChange, keysFilter: string[]): JSX.Element[] => {
+    return renderRowsInner(coinRankingData, keysFilter, 0)
+  }
+
+  const renderRowsInner = (coinRankingData: CoinRankingData | CoinRankingDataPercentChange, keysFilter: string[], index: number): JSX.Element[] => {
     const rows: JSX.Element[] = []
 
     keysFilter.forEach((key: string) => {
       if (Object.keys(coinRankingData).some(coinRankingDataKey => coinRankingDataKey === key)) {
         if (key === 'percentChange') {
-          rows.push(...renderRows((coinRankingData as CoinRankingData).percentChange, PERCENT_CHANGE_DATA_KEYS))
+          rows.push(...renderRowsInner((coinRankingData as CoinRankingData).percentChange, PERCENT_CHANGE_DATA_KEYS, index))
         } else {
-          rows.push(renderRow(key, coinRankingData[key as keyof (CoinRankingData | CoinRankingDataPercentChange)]))
+          index++
+          rows.push(renderRow(key, coinRankingData[key as keyof (CoinRankingData | CoinRankingDataPercentChange)], index))
         }
       }
     })
@@ -159,19 +165,19 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   }
 
   return (
-    <NotificationSceneWrapper navigation={navigation} background="theme" scroll>
+    <SceneWrapper hasTabs hasNotifications scroll>
       <View style={styles.container}>
-        <View style={styles.titleContainer}>
+        <EdgeAnim style={styles.titleContainer} enter={{ type: 'fadeInLeft' }}>
           <FastImage style={styles.icon} source={imageUrlObject} />
           <EdgeText style={styles.title}>{`${currencyName} (${currencyCodeUppercase})`}</EdgeText>
-        </View>
+        </EdgeAnim>
         <SwipeChart assetId={coinRankingData.assetId} currencyCode={currencyCodeUppercase} />
         <View style={styles.columns}>
           <View style={styles.column}>{renderRows(coinRankingData, COLUMN_LEFT_DATA_KEYS)}</View>
           <View style={styles.column}>{renderRows(coinRankingData, COLUMN_RIGHT_DATA_KEYS)}</View>
         </View>
       </View>
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 }
 

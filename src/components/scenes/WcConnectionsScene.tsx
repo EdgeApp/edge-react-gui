@@ -5,15 +5,18 @@ import * as React from 'react'
 import { ScrollView, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import { sprintf } from 'sprintf-js'
 
+import { showBackupForTransferModal } from '../../actions/BackupModalActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useMount } from '../../hooks/useMount'
-import { useWalletConnect } from '../../hooks/useWalletConnect'
+import { useWalletConnect, walletConnectClient } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { EdgeTokenId, WcConnectionInfo } from '../../types/types'
+import { EdgeAsset, WcConnectionInfo } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ScanModal } from '../modals/ScanModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -37,17 +40,23 @@ export const WcConnectionsScene = (props: Props) => {
   const [connecting, setConnecting] = React.useState(false)
 
   const account = useSelector(state => state.core.account)
+  const activeUsername = useSelector(state => state.core.account.username)
   const walletConnect = useWalletConnect()
+  const isLightAccount = activeUsername == null
 
   useMount(() => {
     if (uri != null) onScanSuccess(uri).catch(err => showError(err))
   })
 
-  useAsyncEffect(async () => {
-    const connections = await walletConnect.getActiveSessions()
-    setConnections(connections)
-    // We want to trigger another lookup whenever the props change ie. navigating from the connect or disconnect scenes
-  }, [walletConnect, props])
+  useAsyncEffect(
+    async () => {
+      const connections = await walletConnect.getActiveSessions()
+      setConnections(connections)
+      // We want to trigger another lookup whenever the props change ie. navigating from the connect or disconnect scenes
+    },
+    [walletConnect, props],
+    'WcConnectionsScene'
+  )
 
   const onScanSuccess = async (qrResult: string) => {
     setConnecting(true)
@@ -66,35 +75,44 @@ export const WcConnectionsScene = (props: Props) => {
   }
 
   const handleNewConnectionPress = async () => {
-    const result = await Airship.show<string | undefined>(bridge => (
-      <ScanModal
-        bridge={bridge}
-        title={lstrings.scan_qr_label}
-        textModalHint={lstrings.wc_scan_modal_text_modal_hint}
-        textModalTitle={lstrings.wc_scan_modal_text_modal_title}
-      />
-    ))
-    if (result != null) {
-      await onScanSuccess(result)
+    if (isLightAccount) {
+      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
     } else {
-      showError(lstrings.no_scan_results_message)
+      const result = await Airship.show<string | undefined>(bridge => (
+        <ScanModal
+          bridge={bridge}
+          title={lstrings.scan_qr_label}
+          textModalHint={lstrings.wc_scan_modal_text_modal_hint}
+          textModalTitle={lstrings.wc_scan_modal_text_modal_title}
+        />
+      ))
+      if (result != null) {
+        await onScanSuccess(result)
+      } else {
+        showError(lstrings.no_scan_results_message)
+      }
     }
   }
 
   return (
-    <SceneWrapper background="theme" hasTabs={false}>
+    <SceneWrapper>
       <SceneHeader underline title={lstrings.wc_walletconnect_title} />
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         <EdgeText style={styles.subTitle}>{lstrings.wc_walletconnect_subtitle}</EdgeText>
         <MainButton
           label={connecting ? undefined : lstrings.wc_walletconnect_new_connection_button}
-          type="secondary"
+          type="primary"
           marginRem={[1, 0.5]}
           onPress={async () => await handleNewConnectionPress()}
           alignSelf="center"
           spinner={connecting}
         />
         <EdgeText style={styles.listTitle}>{lstrings.wc_walletconnect_active_connections}</EdgeText>
+        {walletConnectClient.client != null ? null : (
+          <EdgeText style={{ ...styles.listTitle, color: theme.dangerText }}>
+            {sprintf(lstrings.wc_dapp_disconnected, lstrings.wc_walletconnect_title)}
+          </EdgeText>
+        )}
         <View style={styles.list}>
           {connections.map((dAppConnection: WcConnectionInfo, index) => (
             <TouchableOpacity key={index} style={styles.listRow} onPress={() => handleActiveConnectionPress(dAppConnection)}>
@@ -169,10 +187,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const getProposalNamespaceCompatibleEdgeTokenIds = (
-  proposal: Web3WalletTypes.SessionProposal,
-  currencyConfig: EdgeAccount['currencyConfig']
-): EdgeTokenId[] => {
+const getProposalNamespaceCompatibleEdgeTokenIds = (proposal: Web3WalletTypes.SessionProposal, currencyConfig: EdgeAccount['currencyConfig']): EdgeAsset[] => {
   // The type definition implies optionalNamespaces will be present but is actually unchecked and not all dapps provide it
   const { requiredNamespaces, optionalNamespaces = {} } = proposal.params
 
@@ -194,7 +209,7 @@ const getProposalNamespaceCompatibleEdgeTokenIds = (
   const optionalChainIds: Set<string> = requiredChainIds.size === 0 ? getChainIdsFromNamespaces(optionalNamespaces) : new Set()
 
   let hasWalletForRequiredNamespace = false
-  const edgeTokenIdMap = new Map<string, EdgeTokenId>()
+  const edgeTokenIdMap = new Map<string, EdgeAsset>()
   for (const pluginId of Object.keys(currencyConfig)) {
     const chainId = SPECIAL_CURRENCY_INFO[pluginId].walletConnectV2ChainId
     if (chainId == null) continue
@@ -203,12 +218,12 @@ const getProposalNamespaceCompatibleEdgeTokenIds = (
     if (requiredChainIds.has(chainIdString)) {
       hasWalletForRequiredNamespace = true
       if (!edgeTokenIdMap.has(pluginId)) {
-        edgeTokenIdMap.set(pluginId, { pluginId })
+        edgeTokenIdMap.set(pluginId, { pluginId, tokenId: null })
       }
     }
     if (optionalChainIds.has(chainIdString)) {
       if (!edgeTokenIdMap.has(pluginId)) {
-        edgeTokenIdMap.set(pluginId, { pluginId })
+        edgeTokenIdMap.set(pluginId, { pluginId, tokenId: null })
       }
     }
   }

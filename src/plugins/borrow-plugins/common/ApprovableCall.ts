@@ -3,6 +3,7 @@ import { EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeToken, EdgeTransac
 import { ethers } from 'ethers'
 
 import { PendingTxMap } from '../../../controllers/action-queue/types'
+import { getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import { ApprovableAction } from '../types'
 import { asBigNumber } from './cleaners/asBigNumber'
 import { SIDE_EFFECT_CURRENCY_CODE } from './constants'
@@ -33,8 +34,10 @@ export const makeApprovableCall = async (params: CallInfo): Promise<ApprovableAc
 
   const makeApprovableCallSpend = async (dryrun: boolean, pendingTxMap: Readonly<PendingTxMap>): Promise<EdgeTransaction> => {
     const pendingTxs = pendingTxMap[walletId]
+    const currencyCode = spendToken?.currencyCode ?? wallet.currencyInfo.currencyCode
+    const tokenId = getWalletTokenId(wallet, currencyCode)
     const edgeSpendInfo: EdgeSpendInfo = {
-      currencyCode: spendToken?.currencyCode ?? wallet.currencyInfo.currencyCode,
+      tokenId,
       skipChecks: dryrun,
       spendTargets: [
         {

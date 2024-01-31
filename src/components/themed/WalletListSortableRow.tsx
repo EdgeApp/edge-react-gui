@@ -9,10 +9,11 @@ import { formatNumber, formatNumberInput } from '../../locales/intl'
 import { getDisplayDenominationFromState, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { calculateFiatBalance } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
+import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, decimalOrZero, truncateDecimals } from '../../util/utils'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -49,8 +50,9 @@ function WalletListSortableRowComponent(props: Props) {
   const multiplier = displayDenomination.multiplier
   const name = getWalletName(wallet)
   const symbol = displayDenomination.symbol
+  const tokenId = getWalletTokenId(wallet, currencyCode)
 
-  const balance = wallet.balances[currencyCode] ?? '0'
+  const balance = wallet.balanceMap.get(tokenId) ?? '0'
   const preliminaryCryptoAmount = truncateDecimals(div(balance, multiplier, DECIMAL_PRECISION))
   const finalCryptoAmount = formatNumberInput(decimalOrZero(preliminaryCryptoAmount, 6)) // make it show zero if infinitesimal number
   const finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
@@ -66,7 +68,7 @@ function WalletListSortableRowComponent(props: Props) {
           <Ionicon name="ios-menu" size={theme.rem(1.25)} color={theme.icon} />
         </View>
         <View style={styles.iconContainer}>
-          <CryptoIcon pluginId={wallet.currencyInfo.pluginId} walletId={wallet.id} />
+          <CryptoIconUi4 pluginId={wallet.currencyInfo.pluginId} walletId={wallet.id} tokenId={null} />
         </View>
         <View style={styles.detailsContainer}>
           <View style={styles.detailsRow}>

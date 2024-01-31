@@ -1,3 +1,5 @@
+import { EdgeTokenId } from 'edge-core-js'
+
 import { EDGE_CONTENT_SERVER_URI } from '../constants/CdnConstants'
 import { BorrowPluginInfo } from '../plugins/borrow-plugins/types'
 import { edgeDark } from '../theme/variables/edgeDark'
@@ -8,10 +10,6 @@ import { removeHexPrefix } from './utils'
 /**
  * New user FIO handle signup flow
  */
-export const getFioNewHandleImage = (theme: Theme) => {
-  return getThemedIconUri(theme, 'FIO/fioNewHandle')
-}
-
 export const getFioCustomizeHandleImage = (theme: Theme) => {
   return getThemedIconUri(theme, 'FIO/fioCustomizeHandle')
 }
@@ -46,8 +44,9 @@ export interface CurrencyIcons {
   symbolImageDarkMono: string
 }
 
-export function getCurrencyIconUris(pluginId: string, contractAddress: string = pluginId): CurrencyIcons {
-  const currencyPath = `${pluginId}/${removeHexPrefix(contractAddress)}`.toLowerCase()
+export function getCurrencyIconUris(pluginId: string, tokenId: EdgeTokenId): CurrencyIcons {
+  const iconFile = tokenId ?? pluginId
+  const currencyPath = `${pluginId}/${removeHexPrefix(iconFile)}`.toLowerCase()
   return {
     symbolImage: `${edgeLight.iconServerBaseUri}/currencyIconsV3/${currencyPath}.png`,
     symbolImageDarkMono: `${edgeDark.iconServerBaseUri}/currencyIconsV3/${currencyPath}_dark.png`
@@ -71,4 +70,8 @@ export function getPartnerIconUri(partnerIconPath: string) {
  */
 export const getThemedIconUri = (theme: Theme, path: string) => {
   return `${theme.iconServerBaseUri}/${path}.png`
+}
+
+export const getUi4ImageUri = (theme: Theme, path: string) => {
+  return `${EDGE_CONTENT_SERVER_URI}/UI4/${path}.png?`
 }

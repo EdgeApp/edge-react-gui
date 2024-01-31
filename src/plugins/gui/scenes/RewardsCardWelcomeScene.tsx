@@ -21,7 +21,7 @@ export const RewardsCardWelcomeScene = (props: Props) => {
   const { onMoreInfo, onNewCard } = props.route.params
 
   return (
-    <SceneWrapper keyboardShouldPersistTaps="handled" background="theme">
+    <SceneWrapper keyboardShouldPersistTaps="handled">
       <SceneContainer>
         <WelcomeContainer>
           <IllustrationImage source={visaCardSayAnythingIllustration} />

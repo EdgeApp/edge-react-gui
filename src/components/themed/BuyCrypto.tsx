@@ -1,16 +1,18 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { DONE_THRESHOLD, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 import { ButtonBox } from './ThemedButtons'
 
@@ -18,7 +20,7 @@ const allowedPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(pluginId => !
 
 interface OwnProps {
   wallet: EdgeCurrencyWallet
-  tokenId?: string
+  tokenId: EdgeTokenId
   navigation: NavigationBase
 }
 
@@ -29,10 +31,17 @@ export const BuyCrypto = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const account = useSelector(state => state.core.account)
+  const isLightAccount = account.username == null
+
   const syncRatio = useWatch(wallet, 'syncRatio')
 
   const handlePress = useHandler(() => {
-    navigation.navigate('buyTab', { screen: 'pluginListBuy' })
+    if (isLightAccount) {
+      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+    } else {
+      navigation.navigate('buyTab', { screen: 'pluginListBuy' })
+    }
   })
 
   const { displayName, pluginId } = wallet.currencyInfo
@@ -43,7 +52,7 @@ export const BuyCrypto = (props: Props) => {
         <ButtonBox onPress={handlePress} paddingRem={1}>
           <View style={styles.container}>
             <View style={styles.buyCrypto}>
-              <CryptoIcon walletId={wallet.id} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
+              <CryptoIconUi4 walletId={wallet.id} tokenId={tokenId} marginRem={[0.25, 0]} sizeRem={2.25} />
 
               <EdgeText style={styles.buyCryptoText}>{sprintf(lstrings.transaction_list_buy_crypto_message, displayName)}</EdgeText>
             </View>

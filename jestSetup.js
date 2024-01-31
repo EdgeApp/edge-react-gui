@@ -1,5 +1,28 @@
+import './node_modules/react-native-gesture-handler/jestSetup.js'
+
 import { jest } from '@jest/globals'
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock'
+
+require('react-native-reanimated/src/reanimated2/jestUtils').setUpTests()
+
+const mockReanimated = jest.requireMock('react-native-reanimated')
+
+jest.mock('@bugsnag/react-native', () => {
+  return {
+    isStarted: () => false,
+    leaveBreadcrumb: () => {},
+    notify: () => {},
+    start: () => false,
+    getPlugin: () => {
+      return {
+        createErrorBoundary:
+          () =>
+          ({ children }) =>
+            children
+      }
+    }
+  }
+})
 
 jest.mock('disklet', () => {
   const originalModule = jest.requireActual('disklet')
@@ -9,6 +32,21 @@ jest.mock('disklet', () => {
     makeReactNativeDisklet: () => ({
       setText: () => {},
       getText: () => {}
+    })
+  }
+})
+
+jest.mock('react-native-image-colors', () => ({
+  getColors: jest.fn().mockResolvedValue('')
+}))
+
+jest.mock('react-native-keyboard-controller', () => {
+  const height = mockReanimated.useSharedValue(0)
+  const progress = mockReanimated.useSharedValue(0)
+  return {
+    useReanimatedKeyboardAnimation: () => ({
+      height,
+      progress
     })
   }
 })
@@ -40,12 +78,6 @@ jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
 
 jest.mock('@react-navigation/elements', () => ({
   getDefaultHeaderHeight: () => 44
-}))
-
-jest.mock('react-native-gesture-handler', () => ({
-  PanGestureHandler({ children }) {
-    return children
-  }
 }))
 
 jest.mock('rn-qr-generator', () => ({
@@ -93,6 +125,9 @@ jest.mock('react-native-device-info', () => ({
   },
   getVersion() {
     return '1.2.3'
+  },
+  hasNotch() {
+    return false
   }
 }))
 
@@ -201,3 +236,30 @@ jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock
 for (const log in global.console) {
   global.console[log] = jest.fn()
 }
+
+jest.mock('use-context-selector', () => {
+  const contextValues = new Map()
+  return {
+    createContext: defaultValue => {
+      // Create new provider
+      const Provider = (props, context) => {
+        contextValues.set(Provider, props.value)
+        return props.children
+      }
+      // Get the value for the provider:
+      const currentValue = contextValues.get(Provider)
+      // Set it's default value:
+      contextValues.set(Provider, currentValue ?? defaultValue)
+      // Return provider
+      return {
+        Provider: Provider,
+        displayName: 'test'
+      }
+    },
+    useContextSelector: (context, selector) => {
+      const currentValue = contextValues.get(context.Provider)
+      const selected = selector(currentValue)
+      return selected
+    }
+  }
+})

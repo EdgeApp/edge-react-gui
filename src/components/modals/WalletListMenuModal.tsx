@@ -1,3 +1,4 @@
+import { EdgeTokenId } from 'edge-core-js'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -14,11 +15,11 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { getCurrencyCode, getCurrencyInfos, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { ModalScrollArea, ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalTitle } from '../themed/ModalParts'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Option {
   value: WalletListMenuKey
@@ -30,7 +31,7 @@ interface Props {
   navigation: NavigationProp<'walletList'> | NavigationProp<'transactionList'>
 
   // Wallet identity:
-  tokenId?: string
+  tokenId: EdgeTokenId
   walletId: string
 }
 
@@ -139,101 +140,106 @@ export function WalletListMenuModal(props: Props) {
     dispatch(walletListMenuAction(navigation, walletId, option, tokenId)).catch(error => showError(error))
   })
 
-  useAsyncEffect(async () => {
-    if (wallet == null) {
-      setOptions([
-        { label: lstrings.string_get_raw_keys, value: 'getRawKeys' },
-        { label: lstrings.string_archive_wallet, value: 'rawDelete' }
-      ])
-      return
-    }
-
-    if (tokenId != null) {
-      setOptions([
-        {
-          label: lstrings.string_resync,
-          value: 'resync'
-        },
-        {
-          label: lstrings.fragment_wallets_export_transactions,
-          value: 'exportWalletTransactions'
-        },
-        {
-          label: lstrings.fragment_wallets_delete_token,
-          value: 'delete'
-        }
-      ])
-      return
-    }
-
-    const result: Option[] = []
-
-    const { pluginId } = wallet.currencyInfo
-    if (pausedWallets != null && !isKeysOnlyPlugin(pluginId)) {
-      result.push({
-        label: pausedWallets.has(walletId) ? lstrings.fragment_wallets_unpause_wallet : lstrings.fragment_wallets_pause_wallet,
-        value: 'togglePause'
-      })
-    }
-
-    for (const option of WALLET_LIST_MENU) {
-      const { pluginIds, label, value } = option
-
-      if (Array.isArray(pluginIds) && !pluginIds.includes(pluginId)) continue
-
-      // Special case for `manageTokens`. Only allow pluginsIds that have metatokens
-      if (value === 'manageTokens') {
-        if (Object.keys(account.currencyConfig[pluginId].builtinTokens).length === 0) continue
+  useAsyncEffect(
+    async () => {
+      if (wallet == null) {
+        setOptions([
+          { label: lstrings.string_get_raw_keys, value: 'getRawKeys' },
+          { label: lstrings.string_archive_wallet, value: 'rawDelete' }
+        ])
+        return
       }
 
-      // Special case for light accounts. Don't allow `getSeed` or `getRawKeys`
-      if (account.username == null && (value === 'getSeed' || value === 'getRawKeys')) continue
+      if (tokenId != null) {
+        setOptions([
+          {
+            label: lstrings.string_resync,
+            value: 'resync'
+          },
+          {
+            label: lstrings.fragment_wallets_export_transactions,
+            value: 'exportWalletTransactions'
+          },
+          {
+            label: lstrings.fragment_wallets_delete_token,
+            value: 'delete'
+          }
+        ])
+        return
+      }
 
-      result.push({ label, value })
-    }
+      const result: Option[] = []
 
-    const splittable = await account.listSplittableWalletTypes(wallet.id)
+      const { pluginId } = wallet.currencyInfo
+      if (pausedWallets != null && !isKeysOnlyPlugin(pluginId)) {
+        result.push({
+          label: pausedWallets.has(walletId) ? lstrings.fragment_wallets_unpause_wallet : lstrings.fragment_wallets_pause_wallet,
+          value: 'togglePause'
+        })
+      }
 
-    const currencyInfos = getCurrencyInfos(account)
-    for (const splitWalletType of splittable) {
-      const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
-      if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
-      result.push({ label: sprintf(lstrings.string_split_wallet, info.displayName), value: `split${info.pluginId}` })
-    }
+      for (const option of WALLET_LIST_MENU) {
+        const { pluginIds, label, value } = option
 
-    setOptions(result)
+        if (Array.isArray(pluginIds) && !pluginIds.includes(pluginId)) continue
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+        // Special case for `manageTokens`. Only allow pluginsIds that have metatokens
+        if (value === 'manageTokens') {
+          if (Object.keys(account.currencyConfig[pluginId].builtinTokens).length === 0) continue
+        }
+
+        // Special case for light accounts. Don't allow `getSeed` or `getRawKeys`
+        if (account.username == null && (value === 'getSeed' || value === 'getRawKeys')) continue
+
+        result.push({ label, value })
+      }
+
+      const splittable = await account.listSplittableWalletTypes(wallet.id)
+
+      const currencyInfos = getCurrencyInfos(account)
+      for (const splitWalletType of splittable) {
+        const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
+        if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
+        result.push({ label: sprintf(lstrings.string_split_wallet, info.displayName), value: `split${info.pluginId}` })
+      }
+
+      setOptions(result)
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [],
+    'WalletListMenuModal'
+  )
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel}>
-      {wallet != null && (
-        <View>
-          <ModalTitle>{getWalletName(wallet)}</ModalTitle>
-          <View style={styles.row}>
-            <CryptoIcon marginRem={[0, 0, 0, 0.5]} sizeRem={1} tokenId={tokenId} walletId={walletId} />
-            <ModalTitle>{getCurrencyCode(wallet, tokenId)}</ModalTitle>
+    <ModalUi4
+      bridge={bridge}
+      title={
+        wallet == null ? null : (
+          <View>
+            <ModalTitle paddingRem={[0, 0, 0.5]}>{getWalletName(wallet)}</ModalTitle>
+            <View style={styles.row}>
+              <CryptoIconUi4 marginRem={[0, 0, 0, 0.5]} sizeRem={1} tokenId={tokenId} walletId={walletId} />
+              <ModalTitle>{getCurrencyCode(wallet, tokenId)}</ModalTitle>
+            </View>
           </View>
-        </View>
-      )}
-
-      <View style={styles.scrollViewContainer}>
-        <ModalScrollArea>
-          {options.map((option: Option) => (
-            <TouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
-              <AntDesignIcon
-                // @ts-expect-error
-                name={icons[option.value] ?? 'arrowsalt'} // for split keys like splitBCH, splitETH, etc.
-                size={theme.rem(1)}
-                style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
-              />
-              <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </ModalScrollArea>
-      </View>
-    </ThemedModal>
+        )
+      }
+      onCancel={handleCancel}
+      scroll
+    >
+      {options.map((option: Option) => (
+        <TouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
+          <AntDesignIcon
+            // @ts-expect-error
+            name={icons[option.value] ?? 'arrowsalt'} // for split keys like splitBCH, splitETH, etc.
+            size={theme.rem(1)}
+            style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
+          />
+          <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
+        </TouchableOpacity>
+      ))}
+    </ModalUi4>
   )
 }
 
@@ -258,12 +264,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     right: 0,
     bottom: theme.rem(4),
     height: theme.rem(3)
-  },
-  scrollViewContainer: {
-    flexShrink: 1
-  },
-  scrollViewPadding: {
-    paddingBottom: theme.rem(3)
   },
   warningColor: {
     color: theme.warningText

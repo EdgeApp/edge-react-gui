@@ -1,12 +1,13 @@
+import { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { Platform, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { ShadowedView } from 'react-native-fast-shadow'
 
 import compromisedIcon from '../../assets/images/compromisedIcon.png'
 import { useWatch } from '../../hooks/useWatch'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyIconUris } from '../../util/CdnUris'
-import { guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { WalletSyncCircle } from '../progress-indicators/WalletSyncCircle'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -14,7 +15,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 interface Props {
   // Main props - If non is specified, would just render an empty view
   pluginId?: string // Needed when walletId is not supplied and we still want to get an icon
-  tokenId?: string // Needed when it's a token (not the plugin's native currency)
+  tokenId: EdgeTokenId // Needed when it's a token (not the plugin's native currency)
   walletId?: string // To allow showing the progress ratio sync circle
 
   // Image props
@@ -24,13 +25,10 @@ interface Props {
   // Styling props
   marginRem?: number | number[]
   sizeRem?: number
-
-  /** @deprecated Provide tokenId instead. */
-  currencyCode?: string
 }
 
-const CryptoIconComponent = (props: Props) => {
-  const { currencyCode, hideSecondary = false, marginRem, mono = false, sizeRem = 2, walletId } = props
+export const CryptoIconUi4 = (props: Props) => {
+  const { hideSecondary = false, marginRem, mono = false, sizeRem = 2, tokenId, walletId } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -40,35 +38,32 @@ const CryptoIconComponent = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
   const wallet = walletId != null ? currencyWallets[walletId] : null
+
   const compromised = useSelector(state => {
     if (walletId == null) return 0
     const { modalShown = 0 } = state.ui?.settings?.securityCheckedWallets?.[walletId] ?? {}
     return modalShown > 0
   })
 
-  // If we have a wallet, get the pluginId from it in case it's missing
-  let { pluginId = wallet?.currencyInfo.pluginId, tokenId } = props
-
-  // ---------------------------------------------------------------------
-  // HACK to maintain Backward compatibility for now
-  // ---------------------------------------------------------------------
-  const ids = guessFromCurrencyCode(account, { currencyCode, pluginId, tokenId })
-  pluginId = ids.pluginId
-  tokenId = ids.tokenId
-
-  // //////////////////////////////////////////////////////////////////////////////// //
+  const { pluginId = wallet?.currencyInfo.pluginId } = props
 
   // Primary Currency icon
-  const primaryCurrencyIcon = React.useMemo(() => {
+  const primaryCurrencyIconUrl = React.useMemo(() => {
     if (pluginId == null) return null
 
     // Get Currency Icon URI
     const icon = getCurrencyIconUris(pluginId, tokenId)
-    const source = { uri: mono ? icon.symbolImageDarkMono : icon.symbolImage }
+    return mono ? icon.symbolImageDarkMono : icon.symbolImage
+  }, [pluginId, tokenId, mono])
+
+  const primaryCurrencyIcon = React.useMemo(() => {
+    if (primaryCurrencyIconUrl == null) return null
+
+    const source = { uri: primaryCurrencyIconUrl }
 
     // Return Currency logo from the edge server
     return <FastImage style={StyleSheet.absoluteFill} source={source} />
-  }, [pluginId, tokenId, mono])
+  }, [primaryCurrencyIconUrl])
 
   // Secondary (parent) currency icon (if it's a token)
   const secondaryCurrencyIcon = React.useMemo(() => {
@@ -82,7 +77,7 @@ const CryptoIconComponent = (props: Props) => {
     }
 
     // Get Parent Icon URI
-    const icon = getCurrencyIconUris(pluginId)
+    const icon = getCurrencyIconUris(pluginId, null)
     const source = { uri: mono ? icon.symbolImageDarkMono : icon.symbolImage }
 
     // Return Parent logo from the edge server
@@ -99,35 +94,13 @@ const CryptoIconComponent = (props: Props) => {
     [marginRem, size, theme]
   )
 
-  // Apply platform-specific shadow stylings. Android has limited shadow props,
-  // so we are fudging the values to keep them looking consistent.
-  // TODO: Use Skia instead
-  const shadowStyle = React.useMemo(() => {
-    const androidShadowSize = size * 1.15
-
-    return Platform.OS === 'ios'
-      ? {
-          height: size,
-          width: size,
-          borderRadius: size / 2,
-          backgroundColor: theme.shadowColorUi4,
-          shadowColor: theme.shadowColorUi4,
-          shadowOffset: {
-            width: -3,
-            height: 3
-          },
-          shadowOpacity: 0.6,
-          shadowRadius: 4
-        }
-      : {
-          elevation: 3,
-          left: -10,
-          top: -2,
-          height: androidShadowSize,
-          width: androidShadowSize,
-          borderRadius: androidShadowSize / 2
-        }
-  }, [size, theme])
+  const shadowStyle = {
+    height: size,
+    width: size,
+    borderRadius: size / 2,
+    backgroundColor: theme.iconShadow.shadowColor,
+    ...theme.iconShadow
+  }
 
   return (
     <View style={spacingStyle}>
@@ -139,9 +112,10 @@ const CryptoIconComponent = (props: Props) => {
           wallet={wallet}
         />
       )}
-      <View style={shadowStyle} />
-      {primaryCurrencyIcon}
-      {hideSecondary ? null : secondaryCurrencyIcon}
+      <ShadowedView style={shadowStyle}>
+        {primaryCurrencyIcon}
+        {hideSecondary ? null : secondaryCurrencyIcon}
+      </ShadowedView>
     </View>
   )
 }
@@ -155,5 +129,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: '50%'
   }
 }))
-
-export const CryptoIconUi4 = React.memo(CryptoIconComponent)

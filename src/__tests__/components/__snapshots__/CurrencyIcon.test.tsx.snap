@@ -62,13 +62,14 @@ exports[`CryptoIcon should render with loading props 1`] = `
         cy="22.5"
         fill={
           {
-            "payload": 4278190080,
+            "payload": 0,
             "type": 0,
           }
         }
         opacity={0}
         propList={
           [
+            "fill",
             "stroke",
             "strokeWidth",
             "strokeDasharray",
@@ -95,37 +96,56 @@ exports[`CryptoIcon should render with loading props 1`] = `
   </RNSVGSvgView>
   <View
     style={
-      [
-        {
-          "overflow": "hidden",
+      {
+        "backgroundColor": "#000000",
+        "borderRadius": 22.5,
+        "elevation": 0,
+        "height": 45,
+        "shadowColor": "#000000",
+        "shadowOffset": {
+          "height": 3,
+          "width": -3,
         },
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-      ]
+        "shadowOpacity": 0.6,
+        "shadowRadius": 4,
+        "width": 45,
+      }
     }
   >
-    <FastImageView
-      resizeMode="cover"
-      source={
-        {
-          "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-        }
-      }
+    <View
       style={
-        {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        }
+        [
+          {
+            "overflow": "hidden",
+          },
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+        ]
       }
-    />
+    >
+      <FastImageView
+        resizeMode="cover"
+        source={
+          {
+            "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+          }
+        }
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+    </View>
   </View>
 </View>
 `;

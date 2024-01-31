@@ -11,10 +11,10 @@ import { GuiExchangeRates } from '../../types/types'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
 import { WarningCard } from '../cards/WarningCard'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalMessage } from '../themed/ModalParts'
 import { Slider } from '../themed/Slider'
-import { ThemedModal } from '../themed/ThemedModal'
-import { Tile } from '../tiles/Tile'
+import { ModalUi4 } from '../ui4/ModalUi4'
+import { RowUi4 } from '../ui4/RowUi4'
 
 interface OwnProps {
   acceleratedTx: EdgeTransaction
@@ -111,12 +111,11 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
     const isSending = status === 'sending'
 
     return (
-      <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
-        <ModalTitle>{lstrings.transaction_details_accelerate_transaction_header}</ModalTitle>
+      <ModalUi4 bridge={bridge} onCancel={this.handleCancel} title={lstrings.transaction_details_accelerate_transaction_header}>
         <ModalMessage>{lstrings.transaction_details_accelerate_transaction_instructional}</ModalMessage>
         <View style={styles.container}>
-          <Tile type="static" title={lstrings.transaction_details_accelerate_transaction_old_fee_title} body={oldFee} />
-          {newFee == null ? null : <Tile type="static" title={lstrings.transaction_details_accelerate_transaction_new_fee_title} body={newFee} />}
+          <RowUi4 title={lstrings.transaction_details_accelerate_transaction_old_fee_title} body={oldFee} />
+          {newFee == null ? null : <RowUi4 title={lstrings.transaction_details_accelerate_transaction_new_fee_title} body={newFee} />}
         </View>
         {isLowerAmount ? (
           <WarningCard
@@ -140,7 +139,7 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
             disabledText={lstrings.transaction_details_accelerate_transaction_slider_disabled}
           />
         </View>
-      </ThemedModal>
+      </ModalUi4>
     )
   }
 }

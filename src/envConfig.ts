@@ -99,6 +99,7 @@ export const asEnvConfig = asObject({
     })
   ),
   AZTECO_API_KEY: asNullable(asString),
+  STAKEKIT_API_KEY: asNullable(asString),
 
   // Core plugin options:
   AVALANCHE_INIT: asCorePluginInit(asEvmApiKeys),
@@ -167,6 +168,7 @@ export const asEnvConfig = asObject({
   ),
   SOLANA_INIT: asCorePluginInit(
     asObject({
+      alchemyApiKey: asOptional(asString, ''),
       poktPortalApiKey: asOptional(asString, '')
     }).withRest
   ),
@@ -228,6 +230,7 @@ export const asEnvConfig = asObject({
 
   // Debug options:
   ALLOW_DEVELOPER_MODE: asOptional(asBoolean, true),
+  DEV_TAB: asOptional(asBoolean, false),
   DEBUG_CORE: asOptional(asBoolean, false),
   DEBUG_PLUGINS: asOptional(asBoolean, false),
   DEBUG_ACCOUNTBASED: asOptional(asBoolean, false),

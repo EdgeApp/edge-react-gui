@@ -1,6 +1,6 @@
 import { add, div, gt, gte, lt, min, mul } from 'biggystring'
 import { asMaybe, Cleaner } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import { BigNumber, BigNumberish, ethers, Overrides } from 'ethers'
 import { ContractMethod, ParaSwap, SwapSide } from 'paraswap'
 
@@ -38,7 +38,7 @@ export interface BorrowEngineBlueprint {
 export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) => {
   return async (wallet: EdgeCurrencyWallet): Promise<BorrowEngine> => {
     const { aaveNetwork, asTokenContractAddress } = blueprint
-    const walletAddress = (await wallet.getReceiveAddress()).publicAddress
+    const walletAddress = (await wallet.getReceiveAddress({ tokenId: null })).publicAddress
 
     const REFERRAL_CODE = 0 // No referral code is used for AAVE contract calls
     const INTEREST_RATE_MODE = 2 // Only variable is supported for now
@@ -47,7 +47,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
     // Private Methods
     //
 
-    const addressToTokenId = (address: string): string | undefined => {
+    const addressToTokenId = (address: string): EdgeTokenId => {
       const addressNormalized = address.toLowerCase()
       const tokenIds = Object.keys(wallet.currencyConfig.allTokens)
       for (const tokenId of tokenIds) {
@@ -60,8 +60,9 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
           return tokenId
         }
       }
+      throw new Error(`Cannot find token for contract address: ${address}`)
     }
-    const adjustCollateral = (tokenId: string | undefined, amount: string) => {
+    const adjustCollateral = (tokenId: EdgeTokenId, amount: string) => {
       if (instance.collaterals.length === 0) throw new Error(`Invalid execution time; too early invocation`)
       const index = instance.collaterals.findIndex(collateral => collateral.tokenId === tokenId)
       if (index === -1) throw new Error(`Could not find tokenId ${tokenId}`)
@@ -71,7 +72,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
       // Update entries field to trigger change event
       instance.collaterals = [...instance.collaterals]
     }
-    const adjustDebt = (tokenId: string | undefined, amount: string) => {
+    const adjustDebt = (tokenId: EdgeTokenId, amount: string) => {
       if (instance.debts.length === 0) throw new Error(`Invalid execution time; too early invocation`)
       const index = instance.debts.findIndex(debt => debt.tokenId === tokenId)
       if (index === -1) throw new Error(`Could not find tokenId ${tokenId}`)
@@ -81,7 +82,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
       // Update entries field to trigger change event
       instance.debts = [...instance.debts]
     }
-    const getToken = (tokenId?: string): EdgeToken => {
+    const getToken = (tokenId: EdgeTokenId): EdgeToken => {
       if (tokenId == null) throw new Error('Getting wrapped native token not supported yet. ' + 'Explicitly pass in tokenId for the wrapped token.')
       const token = wallet.currencyConfig.allTokens[tokenId]
       if (token == null) throw new Error(`Unable to find token on wallet for ${tokenId} tokenId`)
@@ -217,11 +218,11 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         const token = getToken(tokenId)
         const tokenAddress = getTokenAddress(token)
 
-        const spenderAddress = (await wallet.getReceiveAddress()).publicAddress
+        const spenderAddress = (await wallet.getReceiveAddress({ tokenId: null })).publicAddress
 
         const asset = tokenAddress
         const amount = BigNumber.from(nativeAmount)
-        const onBehalfOf = fromWallet === wallet ? spenderAddress : (await fromWallet.getReceiveAddress()).publicAddress
+        const onBehalfOf = fromWallet === wallet ? spenderAddress : (await fromWallet.getReceiveAddress({ tokenId: null })).publicAddress
         const tokenContract = await aaveNetwork.makeTokenContract(tokenAddress)
 
         const gasPrice = await aaveNetwork.provider.getGasPrice()
@@ -281,7 +282,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         // Anything above the current collateral amount will be automatically
         // converted to the MAX_AMOUNT in order to withdraw all collateral.
         const contractTokenAmount = BigNumber.from(gt(nativeAmount, collateral.nativeAmount) ? MAX_AMOUNT : request.nativeAmount)
-        const to = (await toWallet.getReceiveAddress()).publicAddress
+        const to = (await toWallet.getReceiveAddress({ tokenId: null })).publicAddress
 
         const gasPrice = await aaveNetwork.provider.getGasPrice()
 
@@ -318,7 +319,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
 
         const asset = tokenAddress
         const amount = BigNumber.from(nativeAmount)
-        const onBehalfOf = (await fromWallet.getReceiveAddress()).publicAddress
+        const onBehalfOf = (await fromWallet.getReceiveAddress({ tokenId: null })).publicAddress
 
         const gasPrice = await aaveNetwork.provider.getGasPrice()
 
@@ -359,7 +360,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
         // nativeAmount can't be zero
         if (nativeAmount === '0') throw new Error('BorrowEngine: repay request contains no nativeAmount.')
 
-        const fromAddress = (await fromWallet.getReceiveAddress()).publicAddress
+        const fromAddress = (await fromWallet.getReceiveAddress({ tokenId: null })).publicAddress
 
         const debtToken = getToken(tokenId)
         const debtTokenAddress = getTokenAddress(getToken(tokenId))
@@ -392,7 +393,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
           // Build ParaSwap swap info
           // Cap the amount to swap at the debt amount
           const amountToSwap = amountToCover.mul(100 + PARASWAP_SLIPPAGE_PERCENT).div(100)
-          const chainId = fromWallet.currencyInfo.defaultSettings.otherSettings.chainParams.chainId
+          const chainId = fromWallet.currencyInfo.defaultSettings?.otherSettings.chainParams.chainId
           const paraswap = new ParaSwap(chainId, 'https://apiv5.paraswap.io')
           const priceRoute = await paraswap.getRate(collateralTokenAddress, debtTokenAddress, amountToSwap.toString(), fromAddress, SwapSide.BUY, {
             partner: 'aave',
@@ -518,7 +519,7 @@ export const makeAaveBorrowEngineFactory = (blueprint: BorrowEngineBlueprint) =>
       },
 
       // Utilities
-      async getAprQuote(tokenId?: string): Promise<number> {
+      async getAprQuote(tokenId: EdgeTokenId): Promise<number> {
         const token = getToken(tokenId)
         const tokenAddress = getTokenAddress(token)
 

@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Text, View } from 'react-native'
 
@@ -13,13 +13,12 @@ import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
 import { AssetChangeTextUi4 } from './AssetChangeTextUi4'
 import { CryptoIconUi4 } from './CryptoIconUi4'
-import { SplitRowView } from './SplitRowView'
+import { SplitRowsView } from './SplitRowsView'
 
 interface Props {
   nativeAmount?: string
-  showRate?: boolean
   token?: EdgeToken
-  tokenId?: string
+  tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
 }
 
@@ -27,7 +26,7 @@ interface Props {
  * A view representing the data from a wallet, used for rows, cards, etc.
  */
 const CurrencyViewUi4Component = (props: Props) => {
-  const { nativeAmount, showRate = false, token, tokenId, wallet } = props
+  const { nativeAmount, token, tokenId, wallet } = props
   const { currencyConfig, currencyInfo } = wallet
   const { pluginId } = currencyInfo
   const { showTokenNames = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
@@ -54,15 +53,15 @@ const CurrencyViewUi4Component = (props: Props) => {
   }
 
   // Balance stuff:
-  const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
+  const hideBalance = useSelector(state => !state.ui.settings.isAccountBalanceVisible)
   const balance = useWalletBalance(wallet, tokenId)
   const { denominations } = token != null ? token : currencyInfo
   const [denomination] = denominations
 
   const icon = <CryptoIconUi4 sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
-  const tickerText = showRate && wallet != null ? <AssetChangeTextUi4 wallet={wallet} tokenId={tokenId} style={styles.primaryText} /> : null
-  const cryptoText = showBalance ? <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol /> : null
-  const fiatBalanceText = showBalance ? <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} /> : null
+  const tickerText = wallet != null ? <AssetChangeTextUi4 wallet={wallet} tokenId={tokenId} style={styles.primaryText} /> : null
+  const cryptoText = <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol hideBalance={hideBalance} />
+  const fiatBalanceText = <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} hideBalance={hideBalance} />
   const fiatRateText = <FiatText nativeCryptoAmount={denomination.multiplier} tokenId={tokenId} wallet={wallet} />
 
   let displayCurrencyCode = currencyCode
@@ -108,7 +107,7 @@ const CurrencyViewUi4Component = (props: Props) => {
     <View style={styles.container}>
       <View style={styles.iconContainer}>{icon}</View>
       <View style={styles.innerContainer}>
-        <SplitRowView>{rows}</SplitRowView>
+        <SplitRowsView>{rows}</SplitRowsView>
       </View>
     </View>
   )
@@ -118,7 +117,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    margin: theme.rem(0.5),
+    marginHorizontal: theme.rem(0.5),
+    marginVertical: theme.rem(0.25),
     flex: 1
   },
   iconContainer: {
@@ -127,11 +127,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   innerContainer: {
     flexDirection: 'column',
     justifyContent: 'space-between',
-    flex: 1,
-    marginLeft: theme.rem(0.25)
+    flex: 1
   },
   primaryText: {
-    fontSize: theme.rem(0.75)
+    fontSize: theme.rem(0.75),
+    marginRight: theme.rem(0.25)
   },
   secondaryText: {
     fontSize: theme.rem(0.75),

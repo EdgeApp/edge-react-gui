@@ -1,8 +1,8 @@
 import { div, log10, toFixed } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { memo, useState } from 'react'
-import { Dimensions, Platform, TouchableWithoutFeedback, View } from 'react-native'
+import { TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
@@ -16,14 +16,14 @@ import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION } from '../../util/utils'
-import { Card } from '../cards/Card'
 import { ExchangeRate2 } from '../common/ExchangeRate2'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
 import { MiniButton } from '../themed/MiniButton'
-import { ThemedModal } from '../themed/ThemedModal'
+import { CardUi4 } from '../ui4/CardUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 export interface FlipInputModalResult {
   nativeAmount: string
@@ -32,7 +32,7 @@ export interface FlipInputModalResult {
 }
 
 export interface SetFeesParams {
-  feeTokenId?: string
+  feeTokenId: EdgeTokenId
   feeNativeAmount: string
 }
 export interface FlipInputModalRef {
@@ -46,11 +46,11 @@ type FeeStyleTypes = 'dangerText' | 'warningText'
 interface Props {
   bridge: AirshipBridge<FlipInputModalResult>
   wallet: EdgeCurrencyWallet
-  tokenId?: string
+  tokenId: EdgeTokenId
   startNativeAmount?: string
   forceField?: ExchangeFlipInputFields
   // Fees
-  feeTokenId?: string
+  feeTokenId: EdgeTokenId
   feeNativeAmount?: string
   feeStyle?: FeeStyleTypes
   onFeesChange?: () => void
@@ -82,9 +82,9 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
 
   const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
 
-  const balances = useWatch(wallet, 'balances')
+  const balanceMap = useWatch(wallet, 'balanceMap')
   const currencyCode = getCurrencyCode(wallet, tokenId)
-  const [feeTokenId, setFeeTokenId] = useState<string | undefined>(startingFeeTokenId)
+  const [feeTokenId, setFeeTokenId] = useState<EdgeTokenId>(startingFeeTokenId)
   const [feeNativeAmount, setFeeNativeAmount] = useState<string>(startingFeeNativeAmount)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [amounts, setAmounts] = useState<ExchangedFlipInputAmounts>({
@@ -151,7 +151,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
 
   const renderBalance = () => {
     const { multiplier, name } = displayDenom
-    const balanceCrypto = balances[currencyCode] ?? '0'
+    const balanceCrypto = balanceMap.get(tokenId) ?? '0'
     const balance = `${formatNumber(div(balanceCrypto, multiplier, DECIMAL_PRECISION))} ${name} (`
     const parenString = ')'
     return (
@@ -181,7 +181,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
         </View>
         <EdgeText style={feeTextStyle}>
           {feeCryptoText}
-          <FiatText nativeCryptoAmount={feeNativeAmount} wallet={wallet} maxPrecision={2} subCentTruncation />
+          <FiatText nativeCryptoAmount={feeNativeAmount} wallet={wallet} maxPrecision={2} subCentTruncation tokenId={feeTokenId} />
           {parenString}
         </EdgeText>
       </View>
@@ -190,7 +190,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
 
   const renderFlipInput = () => {
     return (
-      <Card>
+      <CardUi4 marginRem={[0, 0.5, 0.5]}>
         <ExchangedFlipInput2
           ref={exchangedFlipInputRef}
           walletId={wallet.id}
@@ -205,7 +205,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
         {getSpecialCurrencyInfo(pluginId).noMaxSpend !== true && hideMaxButton !== true ? (
           <MiniButton alignSelf="center" label={lstrings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={handleSendMaxAmount} />
         ) : null}
-      </Card>
+      </CardUi4>
     )
   }
 
@@ -219,34 +219,27 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
   }))
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCloseModal}>
-      {/* Extra view needed here to fullscreen the modal on small devices */}
-      <View style={styles.hackContainer}>
-        <View style={styles.flipInput}>{renderFlipInput()}</View>
-        <TouchableWithoutFeedback onPress={handleFeesChange} style={styles.content}>
-          <View>
-            {renderFees()}
-            {renderExchangeRates()}
-            {renderBalance()}
-            {renderErrorMessage()}
-          </View>
-        </TouchableWithoutFeedback>
-      </View>
-    </ThemedModal>
+    <ModalUi4 bridge={bridge} onCancel={handleCloseModal}>
+      <View style={styles.flipInput}>{renderFlipInput()}</View>
+      <TouchableWithoutFeedback onPress={handleFeesChange}>
+        <View style={styles.fees}>
+          {renderFees()}
+          {renderExchangeRates()}
+          {renderBalance()}
+          {renderErrorMessage()}
+        </View>
+      </TouchableWithoutFeedback>
+    </ModalUi4>
   )
 })
 
-const deviceHeight = Dimensions.get('window').height
-
 const getStyles = cacheStyles((theme: Theme) => ({
-  hackContainer: {
-    flex: deviceHeight <= 580 || Platform.OS === 'android' ? 1 : 0
-  },
   flipInput: {
     justifyContent: 'flex-start'
   },
-  content: {
-    justifyContent: 'flex-end'
+  fees: {
+    justifyContent: 'flex-end',
+    margin: theme.rem(0.5)
   },
   headerContainer: {
     flexDirection: 'row',

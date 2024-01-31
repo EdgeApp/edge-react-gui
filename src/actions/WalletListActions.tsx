@@ -60,7 +60,7 @@ const getFirstCurrencyAddress = async (currencyCode: string, getState: GetState)
   })
   if (walletId) {
     const wallet = edgeWallets[walletId]
-    return (await wallet.getReceiveAddress()).publicAddress
+    return (await wallet.getReceiveAddress({ tokenId: null })).publicAddress
   }
 
   // Wallet Creation
@@ -79,7 +79,7 @@ const getFirstCurrencyAddress = async (currencyCode: string, getState: GetState)
   const wallet = await showFullScreenSpinner(lstrings.wallet_list_referral_link_currency_loading, createWallet)
   logActivity(`Create Wallet (wallet list): ${account.username} -- ${createWalletTypes.walletType} -- ${defaultIsoFiat ?? ''}`)
 
-  const receiveAddress = await wallet.getReceiveAddress()
+  const receiveAddress = await wallet.getReceiveAddress({ tokenId: null })
   return receiveAddress.publicAddress
 }
 

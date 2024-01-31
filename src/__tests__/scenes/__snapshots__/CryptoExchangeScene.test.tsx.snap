@@ -1,41 +1,42 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CryptoExchangeComponent should render with loading props 1`] = `
-<React.Fragment>
-  <Memo(SceneHeaderComponent)
-    title="Exchange"
-    underline={true}
-  />
-  <KeyboardAwareScrollView
-    contentContainerStyle={
-      [
-        {
-          "paddingBottom": 0,
-        },
-        {
-          "alignItems": "center",
-          "paddingTop": 11,
-        },
-      ]
+<View
+  style={
+    {
+      "flex": 1,
+      "marginHorizontal": 11,
     }
-    enableAutomaticScroll={true}
-    enableOnAndroid={false}
-    enableResetScrollToCoords={true}
-    extraHeight={75}
-    extraScrollHeight={0}
-    keyboardOpeningTime={250}
-    keyboardShouldPersistTaps="always"
-    style={
+  }
+>
+  <EdgeAnim
+    enter={
       {
-        "flex": 1,
+        "distance": 90,
+        "type": "fadeInUp",
       }
     }
-    viewIsInsideTabBar={false}
+    style={
+      {
+        "marginLeft": -11,
+        "marginVertical": 22,
+        "width": "100%",
+      }
+    }
   >
-    <Memo(LineTextDividerComponent)
-      lowerCased={true}
-      title="From"
+    <Memo(SceneHeaderComponent)
+      title="Exchange"
+      underline={true}
     />
+  </EdgeAnim>
+  <EdgeAnim
+    enter={
+      {
+        "distance": 60,
+        "type": "fadeInUp",
+      }
+    }
+  >
     <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
       buttonText="Select Source Wallet"
       focusMe={[Function]}
@@ -51,23 +52,6 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
           "exchangeCurrencyCode": "BTC",
         }
       }
-      secondaryCurrencyInfo={
-        {
-          "displayCurrencyCode": "USD",
-          "displayDenomination": {
-            "multiplier": "100",
-            "name": "USD",
-            "symbol": "$",
-          },
-          "exchangeCurrencyCode": "iso:USD",
-          "exchangeDenomination": {
-            "multiplier": "100",
-            "name": "USD",
-            "symbol": "$",
-          },
-          "walletId": "",
-        }
-      }
       walletId=""
     >
       <MiniButton
@@ -75,18 +59,29 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
         label="MAX"
         marginRem={
           [
-            1.2,
+            0.5,
             0,
-            0,
+            1,
           ]
         }
         onPress={[Function]}
       />
     </Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))>
+  </EdgeAnim>
+  <EdgeAnim>
     <Memo(LineTextDividerComponent)
       lowerCased={true}
       title="To"
     />
+  </EdgeAnim>
+  <EdgeAnim
+    enter={
+      {
+        "distance": 30,
+        "type": "fadeInDown",
+      }
+    }
+  >
     <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
       buttonText="Select Receiving Wallet"
       focusMe={[Function]}
@@ -110,25 +105,24 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
           },
         }
       }
-      secondaryCurrencyInfo={
-        {
-          "displayCurrencyCode": "USD",
-          "displayDenomination": {
-            "multiplier": "100",
-            "name": "USD",
-            "symbol": "$",
-          },
-          "exchangeCurrencyCode": "iso:USD",
-          "exchangeDenomination": {
-            "multiplier": "100",
-            "name": "USD",
-            "symbol": "$",
-          },
-          "walletId": "",
-        }
-      }
       walletId=""
     />
-  </KeyboardAwareScrollView>
-</React.Fragment>
+  </EdgeAnim>
+  <EdgeAnim
+    enter={
+      {
+        "distance": 60,
+        "type": "fadeInDown",
+      }
+    }
+  />
+  <EdgeAnim
+    enter={
+      {
+        "distance": 90,
+        "type": "fadeInDown",
+      }
+    }
+  />
+</View>
 `;

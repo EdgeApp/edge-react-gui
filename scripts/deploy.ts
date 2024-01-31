@@ -67,7 +67,6 @@ interface BuildObj extends BuildConfigFile {
   buildNum: string
   bundleMapFile: string
   bundlePath: string
-  bundleUrl: string
   guiHash: string
   version: string
 
@@ -159,11 +158,9 @@ function makeCommonPost(buildObj: BuildObj) {
 
   if (buildObj.platformType === 'android') {
     buildObj.bundlePath = `${buildObj.guiPlatformDir}/app/build/intermediates/assets/release/index.android.bundle`
-    buildObj.bundleUrl = 'index.android.bundle'
-    buildObj.bundleMapFile = '../android-release.bundle.map'
+    buildObj.bundleMapFile = `${buildObj.guiPlatformDir}/app/build/generated/sourcemaps/react/release/index.android.bundle.map`
   } else if (buildObj.platformType === 'ios') {
     buildObj.bundlePath = `${buildObj.guiPlatformDir}/main.jsbundle`
-    buildObj.bundleUrl = 'main.jsbundle'
     buildObj.bundleMapFile = '../ios-release.bundle.map'
   }
   buildObj.productNameClean = buildObj.productName.replace(' ', '')
@@ -423,6 +420,23 @@ function buildCommonPost(buildObj: BuildObj) {
       `-F dsym=@${buildObj.tmpDir}/${escapePath(buildObj.productName)} ` +
       `-F projectRoot=${buildObj.guiPlatformDir}`
     call(curl)
+  }
+
+  if (buildObj.bugsnagApiKey && buildObj.platformType === 'android' && !simBuild) {
+    mylog('\n\nUploading Android map files to Bugsnag')
+    mylog('*********************\n')
+    chdir(buildObj.guiDir)
+    call(
+      `yarn run bugsnag-source-maps upload-react-native \
+      --api-key ${buildObj.bugsnagApiKey} \
+      --app-version ${buildObj.version} \
+      --app-version-code ${buildObj.buildNum} \
+      --bundle ${buildObj.bundlePath} \
+      --platform ${buildObj.platformType} \
+      --project-root ${buildObj.guiPlatformDir} \
+      --source-map ${buildObj.bundleMapFile} \
+    `
+    )
   }
 
   if (buildObj.appCenterApiToken && buildObj.appCenterAppName && buildObj.appCenterGroupName && !simBuild) {

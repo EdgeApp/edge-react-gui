@@ -2,7 +2,6 @@ import { add, mul } from 'biggystring'
 
 import { ApprovableAction, BorrowEngine, BorrowPlugin } from '../../../plugins/borrow-plugins/types'
 import { queryBorrowPlugins } from '../../../plugins/helpers/borrowPluginHelpers'
-import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getOrCreateLoanAccount } from '../../loan-manager/redux/actions'
 import { waitForBorrowEngineSync } from '../../loan-manager/util/waitForLoanAccountSync'
 import { ActionEffect, ActionProgram, ActionProgramState, BroadcastTx, ExecutableAction, ExecutionContext, ExecutionOutput, PendingTxMap } from '../types'
@@ -242,15 +241,12 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
       const toWallet = await account.waitForCurrencyWallet(toWalletId)
       if (toWallet == null) throw new Error(`Wallet '${toWalletId}' not found for toWalletId`)
 
-      const fromCurrencyCode = getCurrencyCode(fromWallet, fromTokenId)
-      const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
-
       const execute = async (): Promise<ExecutionOutput> => {
         const swapQuote = await account.fetchSwapQuote({
           fromWallet,
           toWallet,
-          fromCurrencyCode,
-          toCurrencyCode,
+          fromTokenId,
+          toTokenId,
           nativeAmount,
           quoteFor: amountFor
         })
@@ -294,7 +290,7 @@ export async function evaluateAction(context: ExecutionContext, program: ActionP
         // quotes since the swap payout amount is not guaranteed.
         const swapPayoutNativeAmount =
           payoutNativeAmount != null ? payoutNativeAmount : amountFor === 'from' ? mul(swapData.payoutNativeAmount, '0.9') : swapData.payoutNativeAmount
-        const walletBalance = toWallet.balances[toCurrencyCode] ?? '0'
+        const walletBalance = toWallet.balanceMap.get(toTokenId) ?? '0'
         const aboveAmount = add(walletBalance, swapPayoutNativeAmount)
 
         const broadcastTxs: BroadcastTx[] = [

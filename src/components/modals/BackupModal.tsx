@@ -25,6 +25,8 @@ export const BackupModal = (props: { bridge: AirshipBridge<BackupModalResult | u
   const theme = useTheme()
   const styles = getStyles(theme)
   const context = useSelector(state => state.core.context)
+  const fioHandles = useSelector(state => state.ui.fioAddress.fioAddresses)
+  const backupText = fioHandles.length > 0 ? lstrings.backup_web3_handle_warning_message : lstrings.backup_warning_message
 
   const handleDeletePress = useHandler(async () => {
     // Warn the user that this is permanent:
@@ -67,7 +69,7 @@ export const BackupModal = (props: { bridge: AirshipBridge<BackupModalResult | u
           {lstrings.backup_info_message}
         </EdgeText>
         <EdgeText style={styles.warningText} numberOfLines={2}>
-          {lstrings.backup_warning_message}
+          {backupText}
         </EdgeText>
         <Text style={styles.linkText} onPress={() => openBrowserUri(config.backupAccountSite)}>
           {lstrings.tap_to_learn_more}
@@ -82,7 +84,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    marginTop: theme.rem(2),
     height: '100%'
   },
   image: {

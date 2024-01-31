@@ -1,14 +1,13 @@
 import * as React from 'react'
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { lstrings } from '../../locales/strings'
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { GradientFadeOut } from '../modals/GradientFadeout'
 import { Theme, useTheme } from '../services/ThemeContext'
-// TODO:
-// KeyboardAwareScrollView (login) instead of ScrollView (here)
 
 interface ModalTitleProps {
   children: React.ReactNode
@@ -26,11 +25,13 @@ export function ModalTitle(props: ModalTitleProps) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
+  const androidAdjust = Platform.OS === 'android' ? styles.androidAdjust : null
+  const centerStyle = center ? styles.titleCenter : null
 
   return (
     <View style={styles.titleContainer}>
       {icon ? <View style={styles.titleIconContainer}>{icon}</View> : null}
-      <Text style={[styles.titleText, center ? styles.titleCenter : null, padding]}>{children}</Text>
+      <Text style={[styles.titleText, centerStyle, padding, androidAdjust]}>{children}</Text>
     </View>
   )
 }
@@ -40,8 +41,10 @@ export function ModalMessage(props: { children: React.ReactNode; paddingRem?: nu
   const theme = useTheme()
   const styles = getStyles(theme)
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
+  const warningStyle = isWarning ? styles.warningText : null
+  const androidAdjust = Platform.OS === 'android' ? styles.androidAdjust : null
 
-  return <Text style={[styles.messageText, padding, isWarning && styles.warningText]}>{children}</Text>
+  return <Text style={[styles.messageText, padding, warningStyle, androidAdjust]}>{children}</Text>
 }
 
 /**
@@ -71,7 +74,9 @@ export function ModalScrollArea(props: { children: React.ReactNode }) {
 
   return (
     <View style={styles.scrollContainer}>
-      <ScrollView contentContainerStyle={styles.scrollPadding}>{children}</ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollPadding} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+        {children}
+      </ScrollView>
       <ModalFooterFade />
     </View>
   )
@@ -93,6 +98,9 @@ export const ModalFooterFade = () => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  androidAdjust: {
+    top: -1
+  },
   closeContainer: {
     alignItems: 'center',
     padding: theme.rem(1),
@@ -107,7 +115,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   titleContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    margin: theme.rem(0.5)
+    marginHorizontal: theme.rem(0.5)
   },
   titleIconContainer: {
     marginRight: theme.rem(0.5)
@@ -115,11 +123,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   titleText: {
     color: theme.primaryText,
     fontFamily: theme.fontFaceMedium,
-    fontSize: theme.rem(1.2),
-    marginVertical: theme.rem(0.5)
+    fontSize: theme.rem(1.2)
   },
   titleCenter: {
-    textAlign: 'center'
+    textAlign: 'center',
+    flexGrow: 1
   },
   warningText: {
     color: theme.warningText

@@ -40,6 +40,8 @@ export type TrackingEventName =
   | 'Signup_Wallets_Selected_Next'
   | 'Signup_Complete'
   | 'Start_App'
+  | 'Start_App_No_Accounts'
+  | 'Start_App_With_Accounts'
   | 'purchase'
   | 'Visa_Card_Launch'
   // No longer used:

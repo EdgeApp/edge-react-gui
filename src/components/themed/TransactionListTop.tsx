@@ -1,14 +1,14 @@
 import { add, gt, mul, round } from 'biggystring'
-import { EdgeAccount, EdgeBalances, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
+import { EdgeAccount, EdgeBalanceMap, EdgeCurrencyWallet, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import { AirshipBridge } from 'react-native-airship'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { Fontello } from '../../assets/vector'
-import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../../constants/WalletAndCurrencyConstants'
+import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
@@ -23,23 +23,26 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
-import { getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
+import { getFioStakingBalances, getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
 import { convertNativeToDenomination, datelog } from '../../util/utils'
 import { VisaCardCard } from '../cards/VisaCardCard'
-import { CryptoIcon } from '../icons/CryptoIcon'
+import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupForTransferModal'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
+import { CardUi4 } from '../ui4/CardUi4'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
-import { OutlinedTextInput, OutlinedTextInputRef } from './OutlinedTextInput'
 import { SceneHeader } from './SceneHeader'
 
 interface OwnProps {
   navigation: NavigationProp<'transactionList'>
 
+  isLightAccount: boolean
+
   // Wallet identity:
-  tokenId: string | undefined
+  tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
 
   // Scene state:
@@ -51,7 +54,7 @@ interface OwnProps {
 
 interface StateProps {
   account: EdgeAccount
-  balances: EdgeBalances
+  balanceMap: EdgeBalanceMap
   currencyCode: string
   displayDenomination: EdgeDenomination
   exchangeDenomination: EdgeDenomination
@@ -75,8 +78,6 @@ interface State {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 export class TransactionListTopComponent extends React.PureComponent<Props, State> {
-  textInput = React.createRef<OutlinedTextInputRef>()
-
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -89,10 +90,6 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (!prevProps.searching && this.props.searching && this.textInput.current) {
-      this.textInput.current.focus()
-    }
-
     // Update staking policies if the wallet changes
     if (prevProps.wallet !== this.props.wallet) {
       this.updatePluginsAndPolicies().catch(err => showError(err))
@@ -166,9 +163,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     triggerHaptic('impactLight')
     Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={navigation} />)
-      .then((result: WalletListResult) => {
-        const { currencyCode, walletId } = result
-        if (walletId != null && currencyCode != null) {
+      .then(result => {
+        if (result?.type === 'wallet') {
+          const { currencyCode, walletId } = result
           const wallet = account.currencyWallets[walletId]
           if (wallet == null) return
           const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
@@ -185,14 +182,13 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   renderBalanceBox = () => {
-    const { balances, currencyCode, displayDenomination, exchangeDenomination, exchangeRate, isAccountBalanceVisible, theme, tokenId, wallet, walletName } =
-      this.props
+    const { balanceMap, displayDenomination, exchangeDenomination, exchangeRate, isAccountBalanceVisible, theme, tokenId, wallet, walletName } = this.props
     const styles = getStyles(theme)
 
     const fiatCurrencyCode = wallet.fiatCurrencyCode.replace(/^iso:/, '')
     const fiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode)
 
-    const nativeBalance = balances[currencyCode] ?? '0'
+    const nativeBalance = balanceMap.get(tokenId) ?? '0'
     const cryptoAmount = convertNativeToDenomination(displayDenomination.multiplier)(nativeBalance) // convert to correct denomination
     const cryptoAmountFormat = formatNumber(add(cryptoAmount, '0'))
 
@@ -202,40 +198,36 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const fiatBalanceFormat = formatNumber(fiatBalance && gt(fiatBalance, '0.000001') ? fiatBalance : 0, { toFixed: 2 })
 
     return (
-      <View style={styles.balanceBoxContainer}>
-        <View style={styles.balanceBoxRow}>
-          <View style={styles.balanceBoxBalanceContainer}>
-            <View style={styles.balanceBoxWalletNameCurrencyContainer}>
-              <TouchableOpacity accessible={false} style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
-                <CryptoIcon sizeRem={1.5} tokenId={tokenId} walletId={wallet.id} />
-                <EdgeText accessible style={styles.balanceBoxWalletName}>
-                  {walletName}
-                </EdgeText>
-                <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
-              </TouchableOpacity>
-              <TouchableOpacity testID="gearIcon" onPress={this.handleMenu} style={styles.settingsIcon}>
-                <Fontello accessibilityHint={lstrings.wallet_settings_label} color={theme.iconTappable} name="control-panel-settings" size={theme.rem(1.5)} />
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity accessible={false} onPress={this.props.toggleBalanceVisibility}>
-              {isAccountBalanceVisible ? (
-                <>
-                  <EdgeText accessible style={styles.balanceBoxCurrency} minimumFontScale={0.3}>
-                    {cryptoAmountFormat + ' ' + displayDenomination.name}
-                  </EdgeText>
-                  <EdgeText accessible style={styles.balanceFiatBalance}>
-                    {fiatSymbol + fiatBalanceFormat + ' ' + fiatCurrencyCode}
-                  </EdgeText>
-                </>
-              ) : (
-                <EdgeText accessible style={styles.balanceFiatShow}>
-                  {lstrings.string_show_balance}
-                </EdgeText>
-              )}
-            </TouchableOpacity>
-          </View>
+      <>
+        <View style={styles.balanceBoxWalletNameCurrencyContainer}>
+          <TouchableOpacity accessible={false} style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
+            <CryptoIconUi4 sizeRem={1.5} tokenId={tokenId} walletId={wallet.id} />
+            <EdgeText accessible style={styles.balanceBoxWalletName}>
+              {walletName}
+            </EdgeText>
+            <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
+          </TouchableOpacity>
+          <TouchableOpacity testID="gearIcon" onPress={this.handleMenu} style={styles.settingsIcon}>
+            <Fontello accessibilityHint={lstrings.wallet_settings_label} color={theme.iconTappable} name="control-panel-settings" size={theme.rem(1.5)} />
+          </TouchableOpacity>
         </View>
-      </View>
+        <TouchableOpacity accessible={false} onPress={this.props.toggleBalanceVisibility}>
+          {isAccountBalanceVisible ? (
+            <>
+              <EdgeText accessible style={styles.balanceBoxCurrency} minimumFontScale={0.3}>
+                {cryptoAmountFormat + ' ' + displayDenomination.name}
+              </EdgeText>
+              <EdgeText accessible style={styles.balanceFiatBalance}>
+                {fiatSymbol + fiatBalanceFormat + ' ' + fiatCurrencyCode}
+              </EdgeText>
+            </>
+          ) : (
+            <EdgeText accessible style={styles.balanceFiatShow}>
+              {lstrings.string_show_balance}
+            </EdgeText>
+          )}
+        </TouchableOpacity>
+      </>
     )
   }
 
@@ -245,7 +237,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
    * spinner.
    */
   renderStakedBalance() {
-    const { theme, currencyCode, wallet, displayDenomination, exchangeDenomination, exchangeRate } = this.props
+    const { theme, wallet, displayDenomination, exchangeDenomination, exchangeRate } = this.props
     const styles = getStyles(theme)
 
     if (SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]?.isStakingSupported !== true) return null
@@ -253,7 +245,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const fiatCurrencyCode = wallet.fiatCurrencyCode.replace(/^iso:/, '')
     const fiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode)
 
-    const walletBalanceLocked = wallet.balances[`${currencyCode}${STAKING_BALANCES.locked}`] ?? '0'
+    const { locked } = getFioStakingBalances(wallet.stakingStatus)
+
+    const walletBalanceLocked = locked
     const nativeLocked = add(walletBalanceLocked, this.state.lockedNativeAmount)
     if (nativeLocked === '0') return null
 
@@ -310,10 +304,22 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleRequest = (): void => {
-    const { navigation } = this.props
+    const { navigation, isLightAccount } = this.props
 
     triggerHaptic('impactLight')
-    navigation.push('request', {})
+    if (isLightAccount) {
+      Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
+        return <BackupForTransferModal bridge={bridge} />
+      })
+        .then((userSel?: BackupForTransferModalResult) => {
+          if (userSel === 'upgrade') {
+            navigation.navigate('upgradeUsername', {})
+          }
+        })
+        .catch(error => showError(error))
+    } else {
+      navigation.push('request', {})
+    }
   }
 
   handleSend = (): void => {
@@ -324,23 +330,15 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     navigation.push('send2', { walletId: wallet.id, tokenId, hiddenFeaturesMap: { scamWarning: false } })
   }
 
-  handleSearchDone = () => {
-    triggerHaptic('impactLight')
-    this.props.onSearchingChange(false)
-    if (this.textInput.current) {
-      this.textInput.current.clear()
-    }
-  }
-
   handleStakePress = () => {
     triggerHaptic('impactLight')
-    const { currencyCode, wallet, navigation } = this.props
+    const { currencyCode, wallet, navigation, tokenId } = this.props
     const { stakePlugins, stakePolicies, stakePositionMap } = this.state
 
     // Handle FIO staking
     if (currencyCode === 'FIO') {
       navigation.push('fioStakingOverview', {
-        currencyCode,
+        tokenId,
         walletId: wallet.id
       })
     }
@@ -366,15 +364,6 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     }
   }
 
-  clearText = () => {
-    triggerHaptic('impactLight')
-    this.setState({ input: '' })
-    this.props.onSearchTextChange('')
-    if (this.textInput.current) {
-      this.textInput.current.blur()
-    }
-  }
-
   render() {
     const { wallet, isEmpty, searching, theme, tokenId } = this.props
     const { stakePolicies } = this.state
@@ -385,67 +374,41 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     return (
       <>
-        <View style={styles.container}>
-          {!searching && isEmpty ? null : (
-            <View style={styles.searchContainer}>
-              <View style={{ flex: 1, flexDirection: 'column' }}>
-                <OutlinedTextInput
-                  returnKeyType="search"
-                  label={lstrings.transaction_list_search}
-                  onChangeText={this.handleOnChangeText}
-                  value={this.state.input}
-                  onFocus={this.handleTextFieldFocus}
-                  onBlur={this.handleTextFieldBlur}
-                  ref={this.textInput}
-                  marginRem={0}
-                  searchIcon
-                />
-              </View>
-              {!searching ? null : (
-                <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
-                  <EdgeText style={{ color: theme.textLink }}>{lstrings.string_done_cap}</EdgeText>
-                </TouchableOpacity>
+        {searching ? null : (
+          <CardUi4 paddingRem={1}>
+            {this.renderBalanceBox()}
+            {isStakingAvailable && this.renderStakedBalance()}
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity accessible={false} onPress={this.handleRequest} style={styles.buttons}>
+                <EdgeText accessible style={styles.buttonsText}>
+                  {lstrings.fragment_request_subtitle}
+                </EdgeText>
+              </TouchableOpacity>
+              <TouchableOpacity accessible={false} onPress={this.handleSend} style={styles.buttons}>
+                <EdgeText accessible style={styles.buttonsText}>
+                  {lstrings.fragment_send_subtitle}
+                </EdgeText>
+              </TouchableOpacity>
+              {!isStakePoliciesLoaded ? (
+                <ActivityIndicator color={theme.textLink} style={styles.stakingButton} />
+              ) : (
+                isStakingAvailable && (
+                  <TouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
+                    <EdgeText style={styles.buttonsText}>{lstrings.stake_earn_button_label}</EdgeText>
+                    {bestApy != null ? <EdgeText style={styles.apyText}>{bestApy}</EdgeText> : null}
+                  </TouchableOpacity>
+                )
               )}
             </View>
-          )}
-
-          {searching ? null : (
-            <>
-              {this.renderBalanceBox()}
-              {isStakingAvailable && this.renderStakedBalance()}
-              <View style={styles.buttonsContainer}>
-                <TouchableOpacity accessible={false} onPress={this.handleRequest} style={styles.buttons}>
-                  <AntDesignIcon name="arrowdown" size={theme.rem(1)} color={theme.iconTappable} />
-                  <EdgeText accessible style={styles.buttonsText}>
-                    {lstrings.fragment_request_subtitle}
-                  </EdgeText>
-                </TouchableOpacity>
-                <TouchableOpacity accessible={false} onPress={this.handleSend} style={styles.buttons}>
-                  <AntDesignIcon name="arrowup" size={theme.rem(1)} color={theme.iconTappable} />
-                  <EdgeText accessible style={styles.buttonsText}>
-                    {lstrings.fragment_send_subtitle}
-                  </EdgeText>
-                </TouchableOpacity>
-                {!isStakePoliciesLoaded ? (
-                  <ActivityIndicator color={theme.textLink} style={styles.stakingButton} />
-                ) : (
-                  isStakingAvailable && (
-                    <TouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
-                      <AntDesignIcon name="barschart" size={theme.rem(1)} color={theme.iconTappable} />
-                      <EdgeText style={styles.buttonsText}>{lstrings.stake_earn_button_label}</EdgeText>
-                      {bestApy != null ? <EdgeText style={styles.apyText}>{bestApy}</EdgeText> : null}
-                    </TouchableOpacity>
-                  )
-                )}
-              </View>
-            </>
-          )}
-          {isEmpty || searching ? null : <VisaCardCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} />}
-        </View>
+          </CardUi4>
+        )}
+        {isEmpty || searching ? null : <VisaCardCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} />}
         {isEmpty || searching ? null : (
-          <SceneHeader underline>
-            <EdgeText style={styles.transactionsDividerText}>{lstrings.fragment_transaction_list_transaction}</EdgeText>
-          </SceneHeader>
+          <View style={styles.tempSceneHeader}>
+            <SceneHeader underline>
+              <EdgeText style={styles.transactionsDividerText}>{lstrings.fragment_transaction_list_transaction}</EdgeText>
+            </SceneHeader>
+          </View>
         )}
       </>
     )
@@ -453,26 +416,14 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    flex: 1,
-    paddingHorizontal: theme.rem(1),
-    paddingBottom: theme.rem(1),
-    marginBottom: theme.rem(0.5)
-  },
-
   // Balance Box
   balanceBoxContainer: {
     marginTop: theme.rem(1.5)
   },
-  balanceBoxRow: {
-    flexDirection: 'row'
-  },
-  balanceBoxBalanceContainer: {
-    flex: 1
-  },
   balanceBoxWalletNameCurrencyContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginBottom: theme.rem(0.5)
   },
   balanceBoxWalletNameContainer: {
     flexShrink: 1,
@@ -497,25 +448,26 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(2)
   },
   settingsIcon: {
-    alignSelf: 'center'
+    alignSelf: 'flex-end'
   },
   // Send/Receive Buttons
   buttonsContainer: {
+    flex: 1,
     marginTop: theme.rem(1),
-    flexDirection: 'row'
+    marginHorizontal: -theme.rem(1),
+    flexDirection: 'row',
+    justifyContent: 'space-evenly'
   },
   buttons: {
     flexShrink: 1,
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingRight: theme.rem(1.5)
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   buttonsText: {
     fontSize: theme.rem(1),
     color: theme.textLink,
-    fontFamily: theme.fontFaceMedium,
-    marginLeft: theme.rem(0.25)
+    fontFamily: theme.fontFaceMedium
   },
   apyText: {
     fontSize: theme.rem(0.75),
@@ -528,15 +480,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // Transactions Divider
   transactionsDividerText: {
     fontFamily: theme.fontFaceMedium
-  },
-
-  searchContainer: {
-    flexDirection: 'row',
-    marginTop: theme.rem(0.5)
-  },
-  searchDoneButton: {
-    justifyContent: 'center',
-    paddingLeft: theme.rem(0.75)
   },
 
   // Staking Box
@@ -558,6 +501,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     paddingRight: theme.rem(1)
+  },
+
+  // TODO: Fix SceneHeader to be UI4 compatible
+  // This negative margin will cause the SceneHeader's divider-line to touch
+  // the right edge of the screen. This is design roll-off from UI3.
+  tempSceneHeader: {
+    marginRight: -theme.rem(0.5),
+    overflow: 'visible'
   }
 }))
 
@@ -574,9 +525,10 @@ export function TransactionListTop(props: OwnProps) {
   const exchangeDenomination = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
   const exchangeRate = useSelector(state => getExchangeRate(state, currencyCode, wallet.fiatCurrencyCode))
   const isAccountBalanceVisible = useSelector(state => state.ui.settings.isAccountBalanceVisible)
+  const activeUsername = useSelector(state => state.core.account.username)
 
   const walletName = useWalletName(wallet)
-  const balances = useWatch(wallet, 'balances')
+  const balanceMap = useWatch(wallet, 'balanceMap')
 
   const handleBalanceVisibility = useHandler(() => {
     dispatch(toggleAccountBalanceVisibility())
@@ -586,7 +538,7 @@ export function TransactionListTop(props: OwnProps) {
     <TransactionListTopComponent
       {...props}
       account={account}
-      balances={balances}
+      balanceMap={balanceMap}
       currencyCode={currencyCode}
       displayDenomination={displayDenomination}
       exchangeDenomination={exchangeDenomination}
@@ -595,6 +547,7 @@ export function TransactionListTop(props: OwnProps) {
       isAccountBalanceVisible={isAccountBalanceVisible}
       toggleBalanceVisibility={handleBalanceVisibility}
       theme={theme}
+      isLightAccount={activeUsername == null}
     />
   )
 }

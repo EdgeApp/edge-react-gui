@@ -1,25 +1,28 @@
-import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { ListRenderItemInfo, TouchableOpacity, View } from 'react-native'
+import Animated from 'react-native-reanimated'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
+import { FooterRender } from '../../state/SceneFooterState'
+import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { asCoinranking, AssetSubText, CoinRanking, PercentChangeTimeFrame } from '../../types/coinrankTypes'
 import { useState } from '../../types/reactHooks'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { FlatListItem } from '../../types/types'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
-import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { CoinRankRow } from '../data/row/CoinRankRow'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
-import { OutlinedTextInput, OutlinedTextInputRef } from '../themed/OutlinedTextInput'
+import { SearchFooter } from '../themed/SearchFooter'
 
 const coinRanking: CoinRanking = { coinRankingDatas: [] }
 
@@ -54,21 +57,23 @@ const CoinRankingComponent = (props: Props) => {
   const [lastUsedFiat, setLastUsedFiat] = useState<string>(defaultIsoFiat)
 
   const mounted = React.useRef<boolean>(true)
-  const textInput = React.useRef<OutlinedTextInputRef>(null)
   const timeoutHandler = React.useRef<Timeout | undefined>()
 
   const [requestDataSize, setRequestDataSize] = useState<number>(QUERY_PAGE_SIZE)
   const [dataSize, setDataSize] = useState<number>(0)
   const [searchText, setSearchText] = useState<string>('')
-  const [searching, setSearching] = useState<boolean>(false)
+  const [isSearching, setIsSearching] = useState<boolean>(false)
   const [percentChangeTimeFrame, setPercentChangeTimeFrame] = useState<PercentChangeTimeFrame>('hours24')
   const [assetSubText, setPriceSubText] = useState<AssetSubText>('marketCap')
+  const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
+
+  const handleScroll = useSceneScrollHandler()
 
   const extraData = React.useMemo(() => ({ assetSubText, lastUsedFiat, percentChangeTimeFrame }), [assetSubText, lastUsedFiat, percentChangeTimeFrame])
 
   const { coinRankingDatas } = coinRanking
 
-  const renderItem = useHandler((itemObj: FlatListItem<number>) => {
+  const renderItem = (itemObj: ListRenderItemInfo<number>) => {
     const { index, item } = itemObj
     const currencyCode = coinRankingDatas[index]?.currencyCode ?? 'NO_CURRENCY_CODE'
     const rank = coinRankingDatas[index]?.rank ?? 'NO_RANK'
@@ -76,16 +81,18 @@ const CoinRankingComponent = (props: Props) => {
     debugLog(LOG_COINRANK, `renderItem ${key.toString()}`)
 
     return (
-      <CoinRankRow
-        navigation={navigation}
-        index={item}
-        key={key}
-        coinRanking={coinRanking}
-        percentChangeTimeFrame={percentChangeTimeFrame}
-        assetSubText={assetSubText}
-      />
+      <EdgeAnim disableAnimation={index >= MAX_LIST_ITEMS_ANIM} enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}>
+        <CoinRankRow
+          navigation={navigation}
+          index={item}
+          key={key}
+          coinRanking={coinRanking}
+          percentChangeTimeFrame={percentChangeTimeFrame}
+          assetSubText={assetSubText}
+        />
+      </EdgeAnim>
     )
-  })
+  }
 
   const handleEndReached = useHandler(() => {
     debugLog(LOG_COINRANK, `handleEndReached. setRequestDataSize ${requestDataSize + QUERY_PAGE_SIZE}`)
@@ -110,21 +117,21 @@ const CoinRankingComponent = (props: Props) => {
     setPriceSubText(newPriceSubText)
   })
 
-  const handleOnChangeText = useHandler((input: string) => {
-    setSearchText(input)
+  const handleStartSearching = useHandler(() => {
+    setIsSearching(true)
   })
-  const handleTextFieldFocus = useHandler(() => {
-    setSearching(true)
-  })
-  const handleSearchDone = useHandler(() => {
+
+  const handleDoneSearching = useHandler(() => {
     setSearchText('')
-    setSearching(false)
-    textInput.current?.blur()
+    setIsSearching(false)
   })
-  const handleSubmit = useHandler(() => {
-    if (searchText === '') {
-      setSearching(false)
-    }
+
+  const handleChangeText = useHandler((value: string) => {
+    setSearchText(value)
+  })
+
+  const handleFooterLayoutHeight = useHandler((height: number) => {
+    setFooterHeight(height)
   })
 
   React.useEffect(() => {
@@ -136,43 +143,47 @@ const CoinRankingComponent = (props: Props) => {
     }
   }, [])
 
-  useAsyncEffect(async () => {
-    const queryLoop = async () => {
-      try {
-        let start = 1
-        debugLog(LOG_COINRANK, `queryLoop ${defaultIsoFiat} dataSize=${dataSize} requestDataSize=${requestDataSize}`)
-        while (start < requestDataSize) {
-          const url = `v2/coinrank?fiatCode=${defaultIsoFiat}&start=${start}&length=${QUERY_PAGE_SIZE}`
-          const response = await fetchRates(url)
-          if (!response.ok) {
-            const text = await response.text()
-            console.warn(text)
-            break
+  useAsyncEffect(
+    async () => {
+      const queryLoop = async () => {
+        try {
+          let start = 1
+          debugLog(LOG_COINRANK, `queryLoop ${defaultIsoFiat} dataSize=${dataSize} requestDataSize=${requestDataSize}`)
+          while (start < requestDataSize) {
+            const url = `v2/coinrank?fiatCode=${defaultIsoFiat}&start=${start}&length=${QUERY_PAGE_SIZE}`
+            const response = await fetchRates(url)
+            if (!response.ok) {
+              const text = await response.text()
+              console.warn(text)
+              break
+            }
+            const replyJson = await response.json()
+            const listings = asCoinranking(replyJson)
+            for (let i = 0; i < listings.data.length; i++) {
+              const rankIndex = start - 1 + i
+              const row = listings.data[i]
+              coinRankingDatas[rankIndex] = row
+              debugLog(LOG_COINRANK, `queryLoop: ${rankIndex.toString()} ${row.rank} ${row.currencyCode}`)
+            }
+            start += QUERY_PAGE_SIZE
           }
-          const replyJson = await response.json()
-          const listings = asCoinranking(replyJson)
-          for (let i = 0; i < listings.data.length; i++) {
-            const rankIndex = start - 1 + i
-            const row = listings.data[i]
-            coinRankingDatas[rankIndex] = row
-            debugLog(LOG_COINRANK, `queryLoop: ${rankIndex.toString()} ${row.rank} ${row.currencyCode}`)
+          setDataSize(coinRankingDatas.length)
+          if (lastUsedFiat !== defaultIsoFiat) {
+            setLastUsedFiat(defaultIsoFiat)
           }
-          start += QUERY_PAGE_SIZE
+        } catch (e: any) {
+          console.warn(e.message)
         }
-        setDataSize(coinRankingDatas.length)
-        if (lastUsedFiat !== defaultIsoFiat) {
-          setLastUsedFiat(defaultIsoFiat)
-        }
-      } catch (e: any) {
-        console.warn(e.message)
+        timeoutHandler.current = setTimeout(queryLoop, LISTINGS_REFRESH_INTERVAL)
       }
-      timeoutHandler.current = setTimeout(queryLoop, LISTINGS_REFRESH_INTERVAL)
-    }
-    if (timeoutHandler.current != null) {
-      clearTimeout(timeoutHandler.current)
-    }
-    queryLoop().catch(e => debugLog(LOG_COINRANK, e.message))
-  }, [requestDataSize, defaultIsoFiat])
+      if (timeoutHandler.current != null) {
+        clearTimeout(timeoutHandler.current)
+      }
+      queryLoop().catch(e => debugLog(LOG_COINRANK, e.message))
+    },
+    [requestDataSize, defaultIsoFiat],
+    'CoinRankingComponent'
+  )
 
   const listdata: number[] = React.useMemo(() => {
     debugLog(LOG_COINRANK, `Updating listdata dataSize=${dataSize} searchText=${searchText}`)
@@ -197,32 +208,29 @@ const CoinRankingComponent = (props: Props) => {
   const timeFrameString = percentChangeStrings[percentChangeTimeFrame]
   const assetSubTextString = assetSubTextStrings[assetSubText]
 
-  return (
-    <NotificationSceneWrapper navigation={navigation} background="theme" hasTabs>
-      {(gap, notificationHeight) => (
-        <>
-          <View style={styles.searchContainer}>
-            <View style={styles.searchTextInputContainer}>
-              <OutlinedTextInput
-                returnKeyType="search"
-                label={lstrings.search_assets}
-                onChangeText={handleOnChangeText}
-                value={searchText ?? ''}
-                onFocus={handleTextFieldFocus}
-                onSubmitEditing={handleSubmit}
-                ref={textInput}
-                marginRem={0}
-                searchIcon
-              />
-            </View>
-            {searching && (
-              <TouchableOpacity onPress={handleSearchDone} style={styles.searchDoneButton}>
-                <EdgeText style={styles.tappableHeaderText}>{lstrings.string_done_cap}</EdgeText>
-              </TouchableOpacity>
-            )}
-          </View>
+  const renderFooter: FooterRender = React.useCallback(
+    sceneWrapperInfo => {
+      return (
+        <SearchFooter
+          placeholder={lstrings.search_assets}
+          isSearching={isSearching}
+          searchText={searchText}
+          sceneWrapperInfo={sceneWrapperInfo}
+          onStartSearching={handleStartSearching}
+          onDoneSearching={handleDoneSearching}
+          onChangeText={handleChangeText}
+          onLayoutHeight={handleFooterLayoutHeight}
+        />
+      )
+    },
+    [handleChangeText, handleDoneSearching, handleFooterLayoutHeight, handleStartSearching, isSearching, searchText]
+  )
 
-          <View style={styles.container}>
+  return (
+    <SceneWrapper avoidKeyboard footerHeight={footerHeight} hasNotifications renderFooter={renderFooter}>
+      {({ insetStyle, undoInsetStyle }) => (
+        <>
+          <View style={styles.headerContainer}>
             <View style={styles.rankView}>
               <EdgeText style={styles.rankText}>{lstrings.coin_rank_rank}</EdgeText>
             </View>
@@ -237,18 +245,21 @@ const CoinRankingComponent = (props: Props) => {
             </View>
           </View>
           <DividerLine marginRem={[0, 0, 0, 1]} />
-          <FlashList
-            estimatedItemSize={theme.rem(3.75)}
-            data={listdata}
-            extraData={extraData}
-            renderItem={renderItem}
-            onEndReachedThreshold={1}
-            onEndReached={handleEndReached}
-            contentContainerStyle={{ paddingBottom: notificationHeight }}
-          />
+          <View style={{ ...undoInsetStyle, marginTop: 0 }}>
+            <Animated.FlatList
+              data={listdata}
+              extraData={extraData}
+              renderItem={renderItem}
+              onEndReachedThreshold={1}
+              onEndReached={handleEndReached}
+              contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
+              onScroll={handleScroll}
+              scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+            />
+          </View>
         </>
       )}
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 }
 
@@ -263,20 +274,11 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 
   return {
-    container: {
+    headerContainer: {
       flexDirection: 'row',
       alignItems: 'center',
       marginLeft: theme.rem(1),
       paddingRight: theme.rem(1)
-    },
-    searchContainer: {
-      flexDirection: 'row',
-      marginVertical: theme.rem(0.5),
-      marginHorizontal: theme.rem(1)
-    },
-    searchTextInputContainer: {
-      flex: 1,
-      flexDirection: 'column'
     },
     searchDoneButton: {
       justifyContent: 'center',

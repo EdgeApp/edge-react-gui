@@ -5,6 +5,7 @@
 #import <React/RCTRootView.h>
 
 // Edge additions:
+#import "ExpoModulesCore-Swift.h"
 #import "Edge-Swift.h"
 #import "RNBootSplash.h"
 #import <Bugsnag/Bugsnag.h>

@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 import { useCryptoText } from '../../hooks/useCryptoText'
@@ -6,9 +6,10 @@ import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
   nativeAmount: string
-  tokenId?: string
+  tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
   withSymbol?: boolean
+  hideBalance?: boolean
 }
 
 /**
@@ -19,8 +20,9 @@ interface Props {
  * 2. Display Denomination
  * 3. Localization: commas, decimals, spaces
  **/
-export const CryptoText = React.memo(({ wallet, tokenId, nativeAmount, withSymbol }: Props) => {
-  const cryptoText = useCryptoText({ wallet, tokenId, nativeAmount, withSymbol })
+export const CryptoText = React.memo((props: Props) => {
+  const { wallet, tokenId, nativeAmount, withSymbol, hideBalance = false } = props
+  const cryptoText = useCryptoText({ wallet, tokenId, nativeAmount, withSymbol, hideBalance })
 
   return <EdgeText>{cryptoText}</EdgeText>
 })

@@ -15,14 +15,12 @@ describe('CryptoExchangeComponent', () => {
 
     const actual = renderer.render(
       <CryptoExchangeComponent
-        overscroll={0}
         {...fakeSceneProps('exchange', {})}
         account={fakeAccount}
         exchangeInfo={initialState}
         fromWalletId=""
-        fromWalletBalances={[''] as any}
-        fromFiatCurrencyCode="USD"
-        fromIsoFiatCurrencyCode="iso:USD"
+        fromTokenId={null}
+        fromWalletBalanceMap={new Map()}
         fromWalletName="BTC Wallet"
         fromExchangeAmount="1000"
         fromWalletPrimaryInfo={
@@ -32,8 +30,6 @@ describe('CryptoExchangeComponent', () => {
           } as any
         }
         toWalletId=""
-        toFiatCurrencyCode="USD"
-        toIsoFiatCurrencyCode="iso:USD"
         toWalletName="ETH Wallet"
         toExchangeAmount="1000"
         toWalletPrimaryInfo={

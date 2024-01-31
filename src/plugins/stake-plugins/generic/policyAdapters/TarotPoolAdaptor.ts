@@ -231,9 +231,9 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
       }
 
       // check if we have enough balance to cover amounts
-      const token0Balance = wallet.balances[token0.symbol]
-      const token1Balance = wallet.balances[token1.symbol]
-      if (token0Amount.gt(token0Balance) || token1Amount.gt(token1Balance)) throw new InsufficientFundsError()
+      const token0Balance = wallet.balanceMap.get(token0.tokenId) ?? '0'
+      const token1Balance = wallet.balanceMap.get(token1.tokenId) ?? '0'
+      if (token0Amount.gt(token0Balance) || token1Amount.gt(token1Balance)) throw new InsufficientFundsError({ tokenId: null })
 
       // see if we need to add approval transactions
       const token0ApprovedAmount = await token0Contract.allowance(walletAddress, velodromeRouterContractAddress)
@@ -552,8 +552,8 @@ export const makeTarotPoolAdapter = (policyConfig: StakePolicyConfig<TarotPoolAd
       // Actions available for the user:
       //
 
-      const token0WalletBalance = wallet.balances[token0Asset.currencyCode] ?? '0'
-      const token1WalletBalance = wallet.balances[token1Asset.currencyCode] ?? '0'
+      const token0WalletBalance = wallet.balanceMap.get(token0.tokenId) ?? '0'
+      const token1WalletBalance = wallet.balanceMap.get(token1.tokenId) ?? '0'
 
       // Can stake if wallet has balances for each token and they don't currently any of the borrowable
       const canStake = !eq(token0WalletBalance, '0') && !eq(token1WalletBalance, '0') && eq(token0NativeAmount, '0') && eq(token1NativeAmount, '0')

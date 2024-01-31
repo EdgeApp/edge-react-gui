@@ -19,7 +19,7 @@ export const UpgradeUsernameScene = (props: Props) => {
     navigation.goBack()
   }
   return (
-    <SceneWrapper hasTabs={false} background="theme">
+    <SceneWrapper>
       <UpgradeUsernameScreen account={account} context={context} onComplete={handleComplete} onLogEvent={logEvent} />
     </SceneWrapper>
   )

@@ -1,4 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard'
+import { Disklet } from 'disklet'
 import { EdgeAccount, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Platform } from 'react-native'
@@ -14,6 +15,7 @@ import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { Airship, showError, showToast, showToastSpinner } from '../../components/services/AirshipInstance'
+import { requestPermissionOnSettings } from '../../components/services/PermissionsManager'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AccountReferral } from '../../types/ReferralTypes'
@@ -24,12 +26,15 @@ import {
   FiatPaymentType,
   FiatPluginAddressFormParams,
   FiatPluginListModalParams,
+  FiatPluginPermissions,
   FiatPluginRegionCode,
   FiatPluginSepaFormParams,
   FiatPluginSepaTransferParams,
   FiatPluginStartParams,
   FiatPluginUi,
-  FiatPluginWalletPickerResult
+  FiatPluginWalletPickerResult,
+  SaveTxActionParams,
+  SaveTxMetadataParams
 } from './fiatPluginTypes'
 
 export const SendErrorNoTransaction = 'SendErrorNoTransaction'
@@ -38,6 +43,7 @@ export const SendErrorBackPressed = 'SendErrorBackPressed'
 export const executePlugin = async (params: {
   account: EdgeAccount
   accountReferral: AccountReferral
+  disklet: Disklet
   deviceId: string
   direction: 'buy' | 'sell'
   disablePlugins?: NestedDisableMap
@@ -54,6 +60,7 @@ export const executePlugin = async (params: {
     accountReferral,
     deviceId,
     direction,
+    disklet,
     guiPlugin,
     longPress = false,
     navigation,
@@ -89,12 +96,12 @@ export const executePlugin = async (params: {
       if (Platform.OS === 'ios') await SafariView.show({ url: params.url })
       else await CustomTabs.openURL(params.url)
     },
-    walletPicker: async (params): Promise<FiatPluginWalletPickerResult> => {
+    walletPicker: async (params): Promise<FiatPluginWalletPickerResult | undefined> => {
       const { headerTitle, allowedAssets, showCreateWallet } = params
-      const walletListResult = await Airship.show<WalletListResult>(bridge => (
+      const result = await Airship.show<WalletListResult>(bridge => (
         <WalletListModal bridge={bridge} navigation={navigation} headerTitle={headerTitle} allowedAssets={allowedAssets} showCreateWallet={showCreateWallet} />
       ))
-      return walletListResult
+      if (result?.type === 'wallet') return result
     },
     showError: async (e: Error): Promise<void> => showError(e),
     listModal: async (params: FiatPluginListModalParams): Promise<string | undefined> => {
@@ -121,6 +128,15 @@ export const executePlugin = async (params: {
           }
         })
       })
+    },
+    requestPermission: async (permissions: FiatPluginPermissions, displayName: string, mandatory: boolean = true) => {
+      for (const permission of permissions) {
+        const deniedPermission = await requestPermissionOnSettings(disklet, permission, displayName, mandatory)
+        if (deniedPermission) {
+          return false
+        }
+      }
+      return true
     },
     async rewardsCardDashboard(params) {
       maybeNavigateToCorrectTabScene()
@@ -159,6 +175,19 @@ export const executePlugin = async (params: {
           }
         })
       })
+    },
+    saveTxMetadata: async ({ txid, walletId, tokenId, metadata }: SaveTxMetadataParams) => {
+      const wallet = account.currencyWallets[walletId]
+      if (wallet == null) throw new Error(`Unknown walletId:${walletId}`)
+
+      if (metadata != null) {
+        await wallet.saveTxMetadata({ txid, tokenId, metadata })
+      }
+    },
+    saveTxAction: async ({ txid, walletId, tokenId, assetAction, savedAction }: SaveTxActionParams) => {
+      const wallet = account.currencyWallets[walletId]
+      if (wallet == null) throw new Error(`Unknown walletId:${walletId}`)
+      await wallet.saveTxAction({ txid, tokenId, assetAction, savedAction })
     },
     send: async (params: SendScene2Params) => {
       // Always avoid the scam warning with plugins since we trust our plugins

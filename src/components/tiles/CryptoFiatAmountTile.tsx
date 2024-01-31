@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-raw-text */
 import { abs, div } from 'biggystring'
-import { EdgeDenomination } from 'edge-core-js'
+import { EdgeDenomination, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 import { MAX_CRYPTO_AMOUNT_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
@@ -9,7 +9,10 @@ import { useSelector } from '../../types/reactRedux'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
-import { Tile, TileType } from './Tile'
+import { CardUi4 } from '../ui4/CardUi4'
+import { RowActionIcon, RowUi4 } from '../ui4/RowUi4'
+
+// TODO: Check contentPadding
 
 interface Props {
   denomination: EdgeDenomination
@@ -17,13 +20,13 @@ interface Props {
   nativeCryptoAmount: string
   title: string
   walletId: string
-  tokenId?: string
-  type?: TileType
+  tokenId: EdgeTokenId
+  type?: RowActionIcon
   onPress?: () => Promise<void> | void
 }
 
 export const CryptoFiatAmountTile = (props: Props) => {
-  const { denomination, maxCryptoChars, nativeCryptoAmount, title, walletId, tokenId, type = 'static', onPress } = props
+  const { denomination, maxCryptoChars, nativeCryptoAmount, title, walletId, tokenId, type = 'none', onPress } = props
   const wallet = useSelector(state => state.core.account.currencyWallets[walletId])
 
   const { name: cryptoName, multiplier: cryptoDenomMult } = denomination
@@ -41,11 +44,13 @@ export const CryptoFiatAmountTile = (props: Props) => {
   const absCryptoAmount = abs(nativeCryptoAmount)
 
   return (
-    <Tile type={type} title={title} contentPadding={false} onPress={onPress}>
-      <EdgeText>
-        {cryptoAmountText}
-        (<FiatText wallet={wallet} tokenId={tokenId} nativeCryptoAmount={absCryptoAmount} />)
-      </EdgeText>
-    </Tile>
+    <CardUi4>
+      <RowUi4 rightButtonType={type} title={title} onPress={onPress}>
+        <EdgeText>
+          {cryptoAmountText}
+          (<FiatText wallet={wallet} tokenId={tokenId} nativeCryptoAmount={absCryptoAmount} />)
+        </EdgeText>
+      </RowUi4>
+    </CardUi4>
   )
 }

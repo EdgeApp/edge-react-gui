@@ -1,98 +1,83 @@
-import { FlashList } from '@shopify/flash-list'
-import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, Switch, View } from 'react-native'
+import { Switch, View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 
-import { CryptoIcon } from '../../components/icons/CryptoIcon'
+import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { showError } from '../../components/services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../../components/services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../../components/services/ThemeContext'
 import { EdgeText } from '../../components/themed/EdgeText'
 import { MainButton } from '../../components/themed/MainButton'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
+import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { connect } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { FioConnectionWalletItem } from '../../types/types'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { convertFIOToEdgeCodes, makeConnectWallets } from '../../util/FioAddressUtils'
+import { AlertCardUi4 } from '../ui4/AlertCardUi4'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
-interface LocalState {
-  connectWalletsMap: { [walletId: string]: FioConnectionWalletItem }
-  disconnectWalletsMap: { [walletId: string]: FioConnectionWalletItem }
-  prevItemsConnected: { [key: string]: boolean }
-}
-
-interface StateProps {
-  account: EdgeAccount
-  walletItems: { [key: string]: FioConnectionWalletItem }
-  loading: boolean
-}
-
-interface OwnProps {
+interface FioConnectWalletsProps {
   disabled: boolean
   fioAddressName: string
   fioWallet: EdgeCurrencyWallet | null
   navigation: NavigationBase
 }
 
-type Props = StateProps & OwnProps & ThemeProps
-
 let flashListToggle = false // TODO: Hack to get FlashList to rerender when select wallet is tapped. Cache this with useMemo once we switch to hooks.
 
-class ConnectWallets extends React.Component<Props, LocalState> {
-  state = {
-    connectWalletsMap: {},
-    disconnectWalletsMap: {},
-    prevItemsConnected: {}
-  }
+export const ConnectWallets = (props: FioConnectWalletsProps) => {
+  const { disabled, fioAddressName, fioWallet, navigation } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
-  // @ts-expect-error
-  static getDerivedStateFromProps(props, state) {
-    const { walletItems } = props
-    const { prevItemsConnected } = state
+  const account = useSelector(state => state.core.account)
+  const isLightAccount = account.username == null
+  const edgeWallets = useWatch(account, 'currencyWallets')
+  const ccWalletMap = useSelector(state => state.ui.fio.connectedWalletsByFioAddress[fioAddressName] ?? {})
+  const walletItems = React.useMemo(() => makeConnectWallets(edgeWallets, ccWalletMap), [edgeWallets, ccWalletMap])
+
+  const [connectWalletsMap, setConnectWalletsMap] = React.useState<{ [walletId: string]: FioConnectionWalletItem }>({})
+  const [disconnectWalletsMap, setDisconnectWalletsMap] = React.useState<{ [walletId: string]: FioConnectionWalletItem }>({})
+  const [prevItemsConnected, setPrevItemsConnected] = React.useState<{ [key: string]: boolean }>({})
+
+  const continueDisabled = Object.keys(connectWalletsMap).length === 0 && Object.keys(disconnectWalletsMap).length === 0
+
+  React.useEffect(() => {
     for (const walletKey of Object.keys(prevItemsConnected)) {
       if (prevItemsConnected[walletKey] !== walletItems[walletKey]?.isConnected) {
-        return {
-          connectWalletsMap: {},
-          disconnectWalletsMap: {},
-          prevItemsConnected: {}
-        }
+        setConnectWalletsMap({})
+        setDisconnectWalletsMap({})
+        setPrevItemsConnected({})
       }
     }
-    return null
-  }
+  }, [prevItemsConnected, walletItems])
 
-  componentDidMount(): void {
-    this.setState({
-      connectWalletsMap: {},
-      disconnectWalletsMap: {}
-    })
-  }
-
-  _onContinuePress = (): void => {
-    const { fioAddressName, fioWallet, navigation, walletItems } = this.props
-    const { connectWalletsMap, disconnectWalletsMap } = this.state
+  const handleContinuePress = useHandler(() => {
+    if (isLightAccount) {
+      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+      return
+    }
     const walletsToDisconnect: FioConnectionWalletItem[] = []
     for (const walletKey of Object.keys(disconnectWalletsMap)) {
       if (
-        !Object.keys(connectWalletsMap).find(
-          // @ts-expect-error
+        Object.keys(connectWalletsMap).find(
           (cWalletKey: string) => connectWalletsMap[cWalletKey].fullCurrencyCode === disconnectWalletsMap[walletKey].fullCurrencyCode
-        )
+        ) == null
       ) {
-        // @ts-expect-error
         walletsToDisconnect.push(disconnectWalletsMap[walletKey])
       }
     }
 
-    if (fioWallet) {
-      this.setState({
-        prevItemsConnected: Object.keys(walletItems).reduce((acc, walletKey: string) => {
-          // @ts-expect-error
-          acc[walletKey] = walletItems[walletKey].isConnected
-          return acc
-        }, {})
-      })
-      // @ts-expect-error
+    if (fioWallet != null) {
+      const prevItemsConnected = Object.keys(walletItems).reduce<{ [key: string]: boolean }>((acc, walletKey: string) => {
+        acc[walletKey] = walletItems[walletKey].isConnected
+        return acc
+      }, {})
+      setPrevItemsConnected(prevItemsConnected)
       const walletsToConnect: FioConnectionWalletItem[] = Object.keys(connectWalletsMap).map(key => connectWalletsMap[key])
       navigation.navigate('fioConnectToWalletsConfirm', {
         fioAddressName,
@@ -103,54 +88,41 @@ class ConnectWallets extends React.Component<Props, LocalState> {
     } else {
       showError(lstrings.fio_wallet_missing_for_fio_address)
     }
-  }
+  })
 
-  selectWallet(value: boolean, wallet: FioConnectionWalletItem): void {
-    const { connectWalletsMap, disconnectWalletsMap } = this.state
+  const handleSelectWallet = (value: boolean, wallet: FioConnectionWalletItem): void => {
     if (value) {
-      // @ts-expect-error
-      if (disconnectWalletsMap[wallet.key]) {
-        // @ts-expect-error
+      if (disconnectWalletsMap[wallet.key] != null) {
         delete disconnectWalletsMap[wallet.key]
       } else {
-        // @ts-expect-error
         connectWalletsMap[wallet.key] = wallet
       }
     } else {
-      // @ts-expect-error
-      if (connectWalletsMap[wallet.key]) {
-        // @ts-expect-error
+      if (connectWalletsMap[wallet.key] != null) {
         delete connectWalletsMap[wallet.key]
       } else {
-        // @ts-expect-error
         disconnectWalletsMap[wallet.key] = wallet
       }
     }
 
-    this.setState({ connectWalletsMap, disconnectWalletsMap })
+    setConnectWalletsMap({ ...connectWalletsMap })
+    setDisconnectWalletsMap({ ...disconnectWalletsMap })
     flashListToggle = !flashListToggle
   }
 
-  keyExtractor = (item: FioConnectionWalletItem): string => `${item.fullCurrencyCode}${item.edgeWallet.id}`
+  const keyExtractor = useHandler((item: FioConnectionWalletItem): string => `${item.fullCurrencyCode}${item.edgeWallet.id}`)
 
-  renderFioConnectionWalletItem = ({ item: wallet }: { item: FioConnectionWalletItem }) => {
-    const { account, walletItems, theme } = this.props
-    const { connectWalletsMap, disconnectWalletsMap } = this.state
-    const styles = getStyles(theme)
-
-    if (wallet) {
-      // @ts-expect-error
+  const renderFioConnectionWalletItem = ({ item: wallet }: { item: FioConnectionWalletItem }) => {
+    if (wallet != null) {
       const value = wallet.isConnected ? !disconnectWalletsMap[wallet.key] : !!connectWalletsMap[wallet.key]
       const disabled =
         !value &&
-        // @ts-expect-error
         (!!Object.keys(connectWalletsMap).find((walletItemKey: string) => connectWalletsMap[walletItemKey].fullCurrencyCode === wallet.fullCurrencyCode) ||
           !!Object.keys(walletItems).find(
             (walletKey: string) =>
               walletItems[walletKey].fullCurrencyCode === wallet.fullCurrencyCode &&
               walletItems[walletKey].isConnected &&
               walletItems[walletKey].id !== wallet.id &&
-              // @ts-expect-error
               !disconnectWalletsMap[walletKey]
           ))
       const noWalletSymbol = '-'
@@ -159,13 +131,13 @@ class ConnectWallets extends React.Component<Props, LocalState> {
       const pluginId = wallet.edgeWallet.currencyInfo.pluginId
       const { tokenCode: currencyCode } = convertFIOToEdgeCodes(pluginId, wallet.chainCode, wallet.currencyCode)
 
-      const tokenId = getTokenId(account, pluginId, currencyCode)
+      const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
       return (
         <View style={[styles.wallet, disabled ? styles.walletDisabled : null]}>
           <View style={styles.rowContainerTop}>
             <View style={styles.containerLeft}>
-              {wallet != null ? <CryptoIcon pluginId={pluginId} tokenId={tokenId} /> : <EdgeText>{noWalletSymbol}</EdgeText>}
+              {wallet != null ? <CryptoIconUi4 pluginId={pluginId} tokenId={tokenId} /> : <EdgeText>{noWalletSymbol}</EdgeText>}
             </View>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsCol}>
@@ -174,7 +146,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
               </View>
               <View style={styles.walletDetailsCol}>
                 <View style={styles.switchContainer}>
-                  <Switch disabled={disabled} onChange={() => this.selectWallet(!value, wallet)} value={value} />
+                  <Switch disabled={disabled} onChange={() => handleSelectWallet(!value, wallet)} value={value} />
                 </View>
               </View>
             </View>
@@ -185,50 +157,33 @@ class ConnectWallets extends React.Component<Props, LocalState> {
     return null
   }
 
-  renderNoWallets() {
-    const { loading, theme } = this.props
-    const styles = getStyles(theme)
-    return <EdgeText style={styles.no_wallets_text}>{loading ? lstrings.loading : lstrings.fio_connect_no_wallets}</EdgeText>
-  }
-
-  render() {
-    const { walletItems, disabled, theme } = this.props
-    const { connectWalletsMap, disconnectWalletsMap } = this.state
-    const styles = getStyles(theme)
-    const continueDisabled = !Object.keys(connectWalletsMap).length && !Object.keys(disconnectWalletsMap).length
-
-    return (
-      <View style={styles.view}>
-        <View style={styles.list}>
-          <ScrollView>
-            {walletItems && Object.keys(walletItems).length ? (
-              <FlashList
-                data={Object.values(walletItems)}
-                extraData={flashListToggle}
-                estimatedItemSize={theme.rem(4.25)}
-                keyboardShouldPersistTaps="handled"
-                keyExtractor={this.keyExtractor}
-                renderItem={this.renderFioConnectionWalletItem}
-              />
-            ) : (
-              this.renderNoWallets()
-            )}
-          </ScrollView>
-        </View>
-        <View style={styles.bottomSection}>
-          <MainButton onPress={this._onContinuePress} label={lstrings.string_next_capitalized} disabled={continueDisabled || disabled} />
-        </View>
+  return (
+    <View style={styles.view}>
+      <View>
+        {Object.keys(walletItems).length > 0 ? (
+          <FlatList
+            data={Object.values(walletItems)}
+            extraData={flashListToggle}
+            keyboardShouldPersistTaps="handled"
+            keyExtractor={keyExtractor}
+            renderItem={renderFioConnectionWalletItem}
+            contentContainerStyle={{ paddingBottom: theme.rem(4) }}
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+          />
+        ) : (
+          <AlertCardUi4 type="warning" title={lstrings.fio_connect_no_wallets} />
+        )}
       </View>
-    )
-  }
+      <View style={styles.bottomSection}>
+        <MainButton onPress={handleContinuePress} label={lstrings.string_next_capitalized} disabled={continueDisabled || disabled} />
+      </View>
+    </View>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   view: {
     flex: 1
-  },
-  list: {
-    flex: 5
   },
   no_wallets_text: {
     padding: theme.rem(1.75),
@@ -265,8 +220,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.secondaryText
   },
   bottomSection: {
-    flex: 1,
-    backgroundColor: theme.backgroundGradientColors[1],
+    position: 'absolute',
+    alignSelf: 'center',
+    bottom: 0,
     padding: theme.rem(1)
   },
   btnDisabled: {
@@ -293,25 +249,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(1.5)
   }
 }))
-
-export const ConnectWalletsConnector = connect<StateProps, {}, OwnProps>(
-  (state, ownProps) => {
-    const edgeWallets = state.core.account.currencyWallets
-    const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
-
-    if (!ccWalletMap) {
-      return {
-        account: state.core.account,
-        walletItems: {},
-        loading: true
-      }
-    }
-
-    return {
-      account: state.core.account,
-      walletItems: makeConnectWallets(edgeWallets, ccWalletMap),
-      loading: false
-    }
-  },
-  dispatch => ({})
-)(withTheme(ConnectWallets))

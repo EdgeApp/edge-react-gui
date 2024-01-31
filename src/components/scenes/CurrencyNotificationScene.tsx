@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { ScrollView } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { newPriceChangeEvent, updateNotificationSettings } from '../../actions/NotificationActions'
@@ -38,21 +37,19 @@ export const CurrencyNotificationScene = (props: Props) => {
   const handleDailyPress = useHandler(updateSettings('daily'))
 
   return (
-    <SceneWrapper background="theme" hasTabs={false}>
-      <ScrollView>
-        <SettingsSwitchRow
-          key="hourly"
-          label={sprintf(lstrings.settings_currency_notifications_percent_change_hour, 3)}
-          value={settings.plugins[pluginId].hourlyChange != null}
-          onPress={handleHourlyPress}
-        />
-        <SettingsSwitchRow
-          key="daily"
-          label={sprintf(lstrings.settings_currency_notifications_percent_change_hours, 10, 24)}
-          value={settings.plugins[pluginId].dailyChange != null}
-          onPress={handleDailyPress}
-        />
-      </ScrollView>
+    <SceneWrapper scroll>
+      <SettingsSwitchRow
+        key="hourly"
+        label={sprintf(lstrings.settings_currency_notifications_percent_change_hour, 3)}
+        value={settings.plugins[pluginId].hourlyChange != null}
+        onPress={handleHourlyPress}
+      />
+      <SettingsSwitchRow
+        key="daily"
+        label={sprintf(lstrings.settings_currency_notifications_percent_change_hours, 10, 24)}
+        value={settings.plugins[pluginId].dailyChange != null}
+        onPress={handleDailyPress}
+      />
     </SceneWrapper>
   )
 }

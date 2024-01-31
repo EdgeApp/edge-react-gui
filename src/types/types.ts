@@ -1,9 +1,24 @@
-import { asBoolean, asMaybe, asNumber, asObject, asString } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeSpendTarget, EdgeToken, EdgeTransaction, JsonObject } from 'edge-core-js/types'
+import { asBoolean, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString } from 'cleaners'
+import { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeToken, EdgeTokenId } from 'edge-core-js/types'
 
 import { LocaleStringKey } from '../locales/en_US'
 import { RootState } from './reduxTypes'
 import { Theme } from './Theme'
+
+/** @deprecated Only to be used for payloads that still allow undefined for
+ *  tokenId such as notification server
+ */
+export const asLegacyTokenId = asOptional(asString, null)
+
+export const asEdgeTokenId = asEither(asString, asNull)
+export const asEdgeAsset = asObject({
+  pluginId: asString,
+  tokenId: asEdgeTokenId
+})
+export const asEdgeCurrencyCode = asObject({
+  pluginId: asString,
+  currencyCode: asString
+})
 
 export interface BooleanMap {
   [key: string]: boolean
@@ -18,15 +33,13 @@ export interface MapObject<T> {
   [key: string]: T
 }
 
-export type GuiDenomination = EdgeDenomination
 export interface GuiCurrencyInfo {
   walletId: string
-  pluginId?: string
-  tokenId?: string
+  tokenId: EdgeTokenId
   displayCurrencyCode: string
   exchangeCurrencyCode: string
-  displayDenomination: GuiDenomination
-  exchangeDenomination: GuiDenomination
+  displayDenomination: EdgeDenomination
+  exchangeDenomination: EdgeDenomination
 }
 
 export interface GuiContact {
@@ -79,6 +92,7 @@ export interface GuiFiatType {
   value: string
 }
 
+// @deprecated use ListRenderItemInfo from FlashList or FlatList components
 export interface FlatListItem<T> {
   index: number
   item: T
@@ -110,20 +124,19 @@ export interface CurrencyConverter {
   convertCurrency: (state: RootState, currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
 }
 
-export const emptyGuiDenomination: GuiDenomination = {
-  name: '',
-  symbol: '',
-  multiplier: '',
-  // @ts-expect-error
-  precision: 0,
-  currencyCode: ''
-}
 export const emptyCurrencyInfo: GuiCurrencyInfo = {
   walletId: '',
+  tokenId: null,
   displayCurrencyCode: '',
   exchangeCurrencyCode: '',
-  displayDenomination: emptyGuiDenomination,
-  exchangeDenomination: emptyGuiDenomination
+  displayDenomination: {
+    name: '',
+    multiplier: '1'
+  },
+  exchangeDenomination: {
+    name: '',
+    multiplier: '1'
+  }
 }
 
 const asPasswordReminder = asObject({
@@ -153,11 +166,16 @@ const asLocalAccountSettingsInner = asObject({
   spamFilterOn: asMaybe(asBoolean, true),
   spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({}))
 })
+const asDeviceSettingsInner = asObject({
+  disableAnimations: asMaybe(asBoolean, false)
+})
 
 export const asLocalAccountSettings = asMaybe(asLocalAccountSettingsInner, () => asLocalAccountSettingsInner({}))
+export const asDeviceSettings = asMaybe(asDeviceSettingsInner, () => asDeviceSettingsInner({}))
 
 export type PasswordReminder = ReturnType<typeof asPasswordReminder>
 export type LocalAccountSettings = ReturnType<typeof asLocalAccountSettings>
+export type DeviceSettings = ReturnType<typeof asDeviceSettings>
 export type SpendingLimits = ReturnType<typeof asSpendingLimits>
 
 export type SpendAuthType = 'pin' | 'none'
@@ -247,27 +265,6 @@ export interface FioObtRecord {
 
 export type FeeOption = 'custom' | 'high' | 'low' | 'standard'
 
-export interface GuiMakeSpendInfo {
-  currencyCode?: string
-  metadata?: any
-  nativeAmount?: string
-  networkFeeOption?: FeeOption
-  customNetworkFee?: JsonObject
-  publicAddress?: string
-  spendTargets?: EdgeSpendTarget[]
-  lockInputs?: boolean
-  uniqueIdentifier?: string
-  otherParams?: JsonObject
-  dismissAlert?: boolean
-  fioAddress?: string
-  fioPendingRequest?: FioRequest
-  isSendUsingFioAddress?: boolean
-  onBack?: () => void
-  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
-  beforeTransaction?: () => Promise<void>
-  alternateBroadcast?: (edgeTransaction: EdgeTransaction) => Promise<EdgeTransaction>
-}
-
 export interface WcConnectionInfo {
   dAppName: string
   dAppUrl: string
@@ -311,6 +308,7 @@ export interface AppConfig {
   referralServers?: string[]
   supportsEdgeLogin: boolean
   supportEmail: string
+  supportContactSite: string
   supportSite: string
   termsOfServiceSite: string
   website: string
@@ -330,19 +328,19 @@ export interface AppConfig {
  */
 export interface WalletListItem {
   key: string
+  tokenId: EdgeTokenId
+  walletId: string
 
-  // These will be set for token rows:
+  // `token` will be set for token rows:
   token?: EdgeToken
-  tokenId?: string
 
   // The wallet will be present once it loads:
   wallet?: EdgeCurrencyWallet
-  walletId: string
 }
 
-export interface EdgeTokenId {
+export interface EdgeAsset {
   pluginId: string
-  tokenId?: string
+  tokenId: EdgeTokenId
 }
 
 export interface TempActionDisplayInfo {

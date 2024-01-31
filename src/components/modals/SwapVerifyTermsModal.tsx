@@ -10,7 +10,7 @@ import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface TermsUri {
   termsUri?: string
@@ -59,11 +59,16 @@ function SwapVerifyTermsModal(props: Props) {
   const styles = getStyles(theme)
 
   return (
-    <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(false)}>
-      <View style={styles.titleContainer}>
-        <FastImage style={styles.titleImage} source={{ uri: getSwapPluginIconUri(pluginId, theme) }} resizeMode="contain" />
-        <ModalTitle>{displayName}</ModalTitle>
-      </View>
+    <ModalUi4
+      bridge={bridge}
+      title={
+        <View style={styles.titleContainer}>
+          <FastImage style={styles.titleImage} source={{ uri: getSwapPluginIconUri(pluginId, theme) }} resizeMode="contain" />
+          <ModalTitle>{displayName}</ModalTitle>
+        </View>
+      }
+      onCancel={() => bridge.resolve(false)}
+    >
       <ModalMessage>{lstrings.swap_terms_statement}</ModalMessage>
       <MainButton label={lstrings.swap_terms_accept_button} marginRem={0.5} onPress={() => bridge.resolve(true)} />
       <MainButton label={lstrings.swap_terms_reject_button} marginRem={0.5} type="secondary" onPress={() => bridge.resolve(false)} />
@@ -84,7 +89,7 @@ function SwapVerifyTermsModal(props: Props) {
           </Text>
         )}
       </View>
-    </ThemedModal>
+    </ModalUi4>
   )
 }
 

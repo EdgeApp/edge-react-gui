@@ -1,6 +1,6 @@
 import { lt, toFixed } from 'biggystring'
 import { asArray, asEither, asMaybe, asNumber, asObject, asString, asValue } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeSpendInfo } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeSpendInfo, EdgeTokenId } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../../locales/strings'
@@ -22,6 +22,8 @@ const providerId = 'bity'
 const storeId = 'com.bity'
 const partnerIcon = 'logoBity.png'
 const pluginDisplayName = 'Bity'
+const providerDisplayName = pluginDisplayName
+const supportEmail = 'support@bity.com'
 const supportedPaymentType: FiatPaymentType = 'sepa'
 const partnerFee = 0.005
 
@@ -250,7 +252,7 @@ const approveBityQuote = async (
 
   if (orderData.message_to_sign != null) {
     const { body } = orderData.message_to_sign
-    const { publicAddress } = await wallet.getReceiveAddress()
+    const { publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
     const signedMessage = await wallet.signMessage(body, { otherParams: { publicAddress } })
     const signUrl = baseUrl + orderData.message_to_sign.signature_submission_url
     const request = {
@@ -345,6 +347,7 @@ export const bityProvider: FiatProviderFactory = {
           paymentTypes,
           regionCode,
           pluginId,
+          tokenId,
           displayCurrencyCode
         } = params
         const isBuy = direction === 'buy'
@@ -408,7 +411,7 @@ export const bityProvider: FiatProviderFactory = {
             // Bity only checks SEPA info format validity.
             // Home address and KYC is only required for sell.
 
-            const cryptoAddress = (await coreWallet.getReceiveAddress()).publicAddress
+            const cryptoAddress = (await coreWallet.getReceiveAddress({ tokenId: null })).publicAddress
 
             await showUi.sepaForm({
               headerTitle: lstrings.sepa_form_title,
@@ -451,7 +454,7 @@ export const bityProvider: FiatProviderFactory = {
                 if (isBuy) {
                   await completeBuyOrder(approveQuoteRes, showUi)
                 } else {
-                  await completeSellOrder(approveQuoteRes, coreWallet, showUi)
+                  await completeSellOrder(approveQuoteRes, coreWallet, showUi, fiatCurrencyCode, tokenId)
                 }
 
                 showUi.exitScene()
@@ -477,9 +480,16 @@ const addToAllowedCurrencies = (pluginId: string, currency: BityCurrency, curren
  * Transition to the send scene pre-populted with the payment address from the
  * previously opened/approved sell order
  */
-const completeSellOrder = async (approveQuoteRes: BityApproveQuoteResponse, coreWallet: EdgeCurrencyWallet, showUi: FiatPluginUi) => {
-  const { input, id, payment_details: paymentDetails } = asBitySellApproveQuoteResponse(approveQuoteRes)
+const completeSellOrder = async (
+  approveQuoteRes: BityApproveQuoteResponse,
+  coreWallet: EdgeCurrencyWallet,
+  showUi: FiatPluginUi,
+  fiatCurrencyCode: string,
+  tokenId: EdgeTokenId
+) => {
+  const { input, id, payment_details: paymentDetails, output } = asBitySellApproveQuoteResponse(approveQuoteRes)
   const { amount: inputAmount, currency: inputCurrencyCode } = input
+  const { amount: fiatAmount } = output
 
   const nativeAmount = await coreWallet.denominationToNative(inputAmount, inputCurrencyCode)
 
@@ -490,19 +500,38 @@ const completeSellOrder = async (approveQuoteRes: BityApproveQuoteResponse, core
   }
 
   const spendInfo: EdgeSpendInfo = {
-    currencyCode: inputCurrencyCode,
+    tokenId,
+    assetAction: {
+      assetActionType: 'sell'
+    },
+    savedAction: {
+      actionType: 'fiat',
+      orderId: id,
+      isEstimate: true,
+      fiatPlugin: {
+        providerId,
+        providerDisplayName,
+        supportEmail
+      },
+      payinAddress: paymentDetails.crypto_address,
+      cryptoAsset: {
+        pluginId: coreWallet.currencyInfo.pluginId,
+        tokenId,
+        nativeAmount
+      },
+      fiatAsset: {
+        fiatCurrencyCode,
+        fiatAmount
+      }
+    },
     spendTargets: [
       {
         nativeAmount,
         publicAddress: paymentDetails.crypto_address
       }
-    ],
-    metadata: {
-      category: `Exchange: ${inputCurrencyCode} to EUR`,
-      notes: `${pluginDisplayName} ${lstrings.transaction_details_exchange_order_id}: ${id}`
-    }
+    ]
   }
-  await showUi.send({ walletId: coreWallet.id, spendInfo })
+  await showUi.send({ walletId: coreWallet.id, spendInfo, tokenId })
 }
 
 /**

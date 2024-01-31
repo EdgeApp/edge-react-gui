@@ -18,6 +18,7 @@ exports[`initialState 1`] = `
       "multiplier": "1",
       "name": "",
     },
+    "tokenId": null,
     "walletId": "",
   },
   "genericShapeShiftError": null,
@@ -39,6 +40,7 @@ exports[`initialState 1`] = `
       "multiplier": "1",
       "name": "",
     },
+    "tokenId": null,
     "walletId": "",
   },
 }

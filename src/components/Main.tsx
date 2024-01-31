@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createDrawerNavigator } from '@react-navigation/drawer'
-import { HeaderTitleProps } from '@react-navigation/elements'
 import { DefaultTheme, NavigationContainer, useNavigation } from '@react-navigation/native'
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import * as React from 'react'
@@ -12,6 +11,7 @@ import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
 import { logoutRequest } from '../actions/LoginActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CryptoExchangeScene as CryptoExchangeSceneComponent } from '../components/scenes/CryptoExchangeScene'
+import { HomeSceneUi4 as HomeSceneUi4Component } from '../components/ui4/scenes/HomeSceneUi4'
 import { ENV } from '../env'
 import { getExperimentConfigValue } from '../experimentConfig'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
@@ -32,16 +32,16 @@ import { ifLoggedIn } from './hoc/IfLoggedIn'
 import { useBackEvent } from './hoc/useBackEvent'
 import { BackButton } from './navigation/BackButton'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle'
-import { EdgeLogoHeader } from './navigation/EdgeLogoHeader'
+import { EdgeHeader } from './navigation/EdgeHeader'
 import { PluginBackButton } from './navigation/GuiPluginBackButton'
+import { HeaderBackground } from './navigation/HeaderBackground'
 import { HeaderTextButton } from './navigation/HeaderTextButton'
-import { HeaderTitle } from './navigation/HeaderTitle'
 import { ParamHeaderTitle } from './navigation/ParamHeaderTitle'
 import { SideMenuButton } from './navigation/SideMenuButton'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle'
+import { LoadingSplashScreen } from './progress-indicators/LoadingSplashScreen'
 import { AssetSettingsScene as AssetSettingsSceneComponent } from './scenes/AssetSettingsScene'
 import { ChangeMiningFeeScene as ChangeMiningFeeSceneComponent } from './scenes/ChangeMiningFeeScene'
-import { ChangeMiningFeeScene2 as ChangeMiningFeeScene2Component } from './scenes/ChangeMiningFeeScene2'
 import { ChangePasswordScene as ChangePasswordSceneComponent } from './scenes/ChangePasswordScene'
 import { ChangePinScene as ChangePinSceneComponent } from './scenes/ChangePinScene'
 import { CoinRankingDetailsScene as CoinRankingDetailsSceneComponent } from './scenes/CoinRankingDetailsScene'
@@ -60,6 +60,7 @@ import { CryptoExchangeSuccessScene as CryptoExchangeSuccessSceneComponent } fro
 import { CurrencyNotificationScene as CurrencyNotificationSceneComponent } from './scenes/CurrencyNotificationScene'
 import { CurrencySettingsScene as CurrencySettingsSceneComponent } from './scenes/CurrencySettingsScene'
 import { DefaultFiatSettingScene as DefaultFiatSettingSceneComponent } from './scenes/DefaultFiatSettingScene'
+import { DevTestScene } from './scenes/DevTestScene'
 import { EdgeLoginScene as EdgeLoginSceneComponent } from './scenes/EdgeLoginScene'
 import { EditTokenScene as EditTokenSceneComponent } from './scenes/EditTokenScene'
 import { ExtraTabScene as ExtraTabSceneComponent } from './scenes/ExtraTabScene'
@@ -83,7 +84,6 @@ import { FioStakingOverviewScene as FioStakingOverviewSceneComponent } from './s
 import { GettingStartedScene } from './scenes/GettingStartedScene'
 import { GuiPluginListScene as GuiPluginListSceneComponent } from './scenes/GuiPluginListScene'
 import { GuiPluginViewScene as GuiPluginViewSceneComponent } from './scenes/GuiPluginViewScene'
-import { LoadingScene } from './scenes/LoadingScene'
 import { LoanCloseScene as LoanCloseSceneComponent } from './scenes/Loans/LoanCloseScene'
 import { LoanCreateConfirmationScene as LoanCreateConfirmationSceneComponent } from './scenes/Loans/LoanCreateConfirmationScene'
 import { LoanCreateScene as LoanCreateSceneComponent } from './scenes/Loans/LoanCreateScene'
@@ -125,7 +125,6 @@ import { MenuTabs } from './themed/MenuTabs'
 import { SideMenu } from './themed/SideMenu'
 
 const ChangeMiningFeeScene = ifLoggedIn(ChangeMiningFeeSceneComponent)
-const ChangeMiningFeeScene2 = ifLoggedIn(ChangeMiningFeeScene2Component)
 const ChangePasswordScene = ifLoggedIn(ChangePasswordSceneComponent)
 const ChangePinScene = ifLoggedIn(ChangePinSceneComponent)
 const ChangeRecoveryScene = ifLoggedIn(ChangeRecoverySceneComponent)
@@ -205,6 +204,7 @@ const WcConnectionsScene = ifLoggedIn(WcConnectionsSceneComponent)
 const WcConnectScene = ifLoggedIn(WcConnectSceneComponent)
 const WcDisconnectScene = ifLoggedIn(WcDisconnectSceneComponent)
 const WebViewScene = ifLoggedIn(WebViewSceneComponent)
+const HomeSceneUi4 = ifLoggedIn(HomeSceneUi4Component)
 
 const Drawer = createDrawerNavigator<AppParamList>()
 const Stack = createStackNavigator<AppParamList>()
@@ -214,17 +214,18 @@ const headerMode = isMaestro() && Platform.OS === 'android' ? 'float' : undefine
 
 const defaultScreenOptions: StackNavigationOptions = {
   title: '',
-  headerTitle: ({ children }: HeaderTitleProps) => <HeaderTitle title={children} />,
+  headerTitle: EdgeHeader,
   headerLeft: () => <BackButton />,
   headerRight: () => <SideMenuButton />,
   headerShown: true,
   headerMode,
   headerTitleAlign: 'center',
+  headerBackground: HeaderBackground,
   headerTransparent: true
 }
 const firstSceneScreenOptions: StackNavigationOptions = {
   headerLeft: () => <HeaderTextButton type="help" />,
-  headerTitle: EdgeLogoHeader,
+  headerTitle: EdgeHeader,
   headerTitleAlign: 'center'
 }
 
@@ -248,6 +249,11 @@ export const Main = () => {
 
   useMount(() => {
     logEvent('Start_App', { numAccounts: localUsers.length })
+    if (localUsers.length === 0) {
+      logEvent('Start_App_No_Accounts')
+    } else {
+      logEvent('Start_App_With_Accounts')
+    }
 
     // Used to re-enable animations to login scene:
     setTimeout(() => {
@@ -256,26 +262,34 @@ export const Main = () => {
   })
 
   // Wait for the experiment config to initialize before rendering anything
-  useAsyncEffect(async () => {
-    if (isMaestro()) return
-    setLegacyLanding((await getExperimentConfigValue('legacyLanding')) === 'legacyLanding')
-  }, [])
+  useAsyncEffect(
+    async () => {
+      if (isMaestro()) return
+      setLegacyLanding((await getExperimentConfigValue('legacyLanding')) === 'legacyLanding')
+    },
+    [],
+    'setLegacyLanding'
+  )
 
-  return legacyLanding == null ? (
-    <LoadingScene />
-  ) : (
-    <NavigationContainer theme={reactNavigationTheme}>
-      <Stack.Navigator
-        initialRouteName={ENV.USE_WELCOME_SCREENS && !legacyLanding ? 'gettingStarted' : 'login'}
-        screenOptions={{
-          headerShown: false
-        }}
-      >
-        <Stack.Screen name="edgeApp" component={EdgeApp} />
-        <Stack.Screen name="gettingStarted" component={GettingStartedScene} />
-        <Stack.Screen name="login" component={LoginScene} options={{ animationEnabled: hasInitialScenesLoaded }} />
-      </Stack.Navigator>
-    </NavigationContainer>
+  return (
+    <>
+      {legacyLanding == null ? (
+        <LoadingSplashScreen />
+      ) : (
+        <NavigationContainer theme={reactNavigationTheme}>
+          <Stack.Navigator
+            initialRouteName={ENV.USE_WELCOME_SCREENS && !legacyLanding ? 'gettingStarted' : 'login'}
+            screenOptions={{
+              headerShown: false
+            }}
+          >
+            <Stack.Screen name="edgeApp" component={EdgeApp} />
+            <Stack.Screen name="gettingStarted" component={GettingStartedScene} />
+            <Stack.Screen name="login" component={LoginScene} options={{ animationEnabled: hasInitialScenesLoaded }} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      )}
+    </>
   )
 }
 
@@ -334,15 +348,8 @@ const EdgeAppStack = () => {
       />
 
       <Stack.Screen
-        name="changeMiningFee"
-        component={ChangeMiningFeeScene}
-        options={{
-          headerRight: () => <HeaderTextButton type="help" />
-        }}
-      />
-      <Stack.Screen
         name="changeMiningFee2"
-        component={ChangeMiningFeeScene2}
+        component={ChangeMiningFeeScene}
         options={{
           headerRight: () => <HeaderTextButton type="help" />
         }}
@@ -364,12 +371,13 @@ const EdgeAppStack = () => {
         }}
       />
       <Stack.Screen
-        name="coinRankingDetails"
-        component={CoinRankingDetailsScene}
-        options={{
-          headerTitle: () => <EdgeLogoHeader />
+        name="coinRanking"
+        component={CoinRankingScene}
+        listeners={{
+          focus: () => dispatch(checkEnabledExchanges())
         }}
       />
+      <Stack.Screen name="coinRankingDetails" component={CoinRankingDetailsScene} />
       <Stack.Screen name="confirmScene" component={ConfirmScene} />
       <Stack.Screen
         name="createWalletAccountSelect"
@@ -415,7 +423,6 @@ const EdgeAppStack = () => {
         component={CreateWalletSelectCryptoScene}
         options={{
           headerRight: () => null,
-          headerTitle: () => <EdgeLogoHeader />,
           headerLeft: () => null
         }}
       />
@@ -481,26 +488,13 @@ const EdgeAppStack = () => {
           headerLeft: () => <HeaderTextButton type="help" />
         }}
       />
-      <Stack.Screen
-        name="fioAddressDetails"
-        component={FioAddressDetailsScene}
-        options={{
-          headerTitle: () => <ParamHeaderTitle<'fioAddressDetails'> fromParams={params => params.fioAddressName} />
-        }}
-      />
+      <Stack.Screen name="fioAddressDetails" component={FioAddressDetailsScene} />
       <Stack.Screen name="fioAddressList" component={FioAddressListScene} />
-      <Stack.Screen
-        name="fioAddressRegister"
-        component={FioAddressRegisterScene}
-        options={{
-          headerTitle: () => <EdgeLogoHeader />
-        }}
-      />
+      <Stack.Screen name="fioAddressRegister" component={FioAddressRegisterScene} />
       <Stack.Screen
         name="fioAddressRegisterSelectWallet"
         component={FioAddressRegisterSelectWalletScene}
         options={{
-          title: lstrings.title_fio_address_confirmation,
           headerRight: () => null
         }}
       />
@@ -512,20 +506,8 @@ const EdgeAppStack = () => {
           headerLeft: () => null
         }}
       />
-      <Stack.Screen
-        name="fioAddressSettings"
-        component={FioAddressSettingsScene}
-        options={{
-          title: lstrings.title_fio_address_settings
-        }}
-      />
-      <Stack.Screen
-        name="fioConnectToWalletsConfirm"
-        component={FioConnectWalletConfirmScene}
-        options={{
-          title: lstrings.title_fio_connect_to_wallet
-        }}
-      />
+      <Stack.Screen name="fioAddressSettings" component={FioAddressSettingsScene} />
+      <Stack.Screen name="fioConnectToWalletsConfirm" component={FioConnectWalletConfirmScene} />
       <Stack.Screen
         name="fioCreateHandle"
         component={FioCreateHandleScene}
@@ -540,13 +522,7 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
-      <Stack.Screen
-        name="fioDomainRegister"
-        component={FioDomainRegisterScene}
-        options={{
-          headerTitle: () => <EdgeLogoHeader />
-        }}
-      />
+      <Stack.Screen name="fioDomainRegister" component={FioDomainRegisterScene} />
       <Stack.Screen
         name="fioDomainRegisterSelectWallet"
         component={FioDomainRegisterSelectWalletScene}
@@ -555,13 +531,7 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
-      <Stack.Screen
-        name="fioDomainSettings"
-        component={FioDomainSettingsScene}
-        options={{
-          title: lstrings.title_fio_domain_settings
-        }}
-      />
+      <Stack.Screen name="fioDomainSettings" component={FioDomainSettingsScene} />
       <Stack.Screen
         name="fioNameConfirm"
         component={FioNameConfirmScene}
@@ -569,13 +539,7 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
-      <Stack.Screen
-        name="fioRequestConfirmation"
-        component={FioRequestConfirmationScene}
-        options={{
-          title: lstrings.fio_confirm_request_header
-        }}
-      />
+      <Stack.Screen name="fioRequestConfirmation" component={FioRequestConfirmationScene} />
       <Stack.Screen name="fioRequestList" component={FioRequestListScene} />
       <Stack.Screen
         name="fioSentRequestDetails"
@@ -607,48 +571,12 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
-      <Stack.Screen
-        name="loanClose"
-        component={LoanCloseScene}
-        options={{
-          headerTitle: () => <EdgeLogoHeader />
-        }}
-      />
-      <Stack.Screen
-        name="loanCreate"
-        component={LoanCreateScene}
-        options={{
-          headerTitle: () => <EdgeLogoHeader />
-        }}
-      />
-      <Stack.Screen
-        name="loanCreateConfirmation"
-        component={LoanCreateConfirmationScene}
-        options={{
-          headerTitle: () => <EdgeLogoHeader />
-        }}
-      />
-      <Stack.Screen
-        name="loanDashboard"
-        component={LoanDashboardScene}
-        options={{
-          headerTitle: () => <EdgeLogoHeader />
-        }}
-      />
-      <Stack.Screen
-        name="loanDetails"
-        component={LoanDetailsScene}
-        options={{
-          headerTitle: () => <EdgeLogoHeader />
-        }}
-      />
-      <Stack.Screen
-        name="loanManage"
-        component={LoanManageScene}
-        options={{
-          headerTitle: () => <EdgeLogoHeader />
-        }}
-      />
+      <Stack.Screen name="loanClose" component={LoanCloseScene} />
+      <Stack.Screen name="loanCreate" component={LoanCreateScene} />
+      <Stack.Screen name="loanCreateConfirmation" component={LoanCreateConfirmationScene} />
+      <Stack.Screen name="loanDashboard" component={LoanDashboardScene} />
+      <Stack.Screen name="loanDetails" component={LoanDetailsScene} />
+      <Stack.Screen name="loanManage" component={LoanManageScene} />
       <Stack.Screen name="loanStatus" component={LoanStatusScene} />
       <Stack.Screen
         name="manageTokens"
@@ -657,6 +585,7 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
+
       <Stack.Screen name="migrateWalletCalculateFee" component={MigrateWalletCalculateFeeScene} />
       <Stack.Screen
         name="migrateWalletCompletion"
@@ -716,13 +645,7 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
-      <Stack.Screen
-        name="request"
-        component={RequestScene}
-        options={{
-          headerTitle: () => <EdgeLogoHeader />
-        }}
-      />
+      <Stack.Screen name="request" component={RequestScene} />
       <Stack.Screen name="securityAlerts" component={SecurityAlertsScene} options={{ headerShown: false }} />
       <Stack.Screen name="send2" component={SendScene2} />
       <Stack.Screen
@@ -780,19 +703,28 @@ const EdgeAppStack = () => {
 const EdgeTabs = () => {
   return (
     <Tab.Navigator
-      initialRouteName="walletsTab"
+      initialRouteName="homeTab"
       tabBar={props => <MenuTabs {...props} />}
       screenOptions={{
         headerShown: false
       }}
     >
+      <Tab.Screen name="homeTab" component={EdgeHomeTabScreen} />
       <Tab.Screen name="walletsTab" component={EdgeWalletsTabScreen} />
       <Tab.Screen name="buyTab" component={EdgeBuyTabScreen} />
       <Tab.Screen name="sellTab" component={EdgeSellTabScreen} />
       <Tab.Screen name="exchangeTab" component={EdgeExchangeTabScreen} />
-      <Tab.Screen name="marketsTab" component={EdgeMarketsTabScreen} />
       <Tab.Screen name="extraTab" component={ExtraTabScene} />
+      <Tab.Screen name="devTab" component={DevTestScene} />
     </Tab.Navigator>
+  )
+}
+
+const EdgeHomeTabScreen = () => {
+  return (
+    <Stack.Navigator initialRouteName="home" screenOptions={defaultScreenOptions}>
+      <Stack.Screen name="home" component={HomeSceneUi4} options={firstSceneScreenOptions} />
+    </Stack.Navigator>
   )
 }
 
@@ -806,8 +738,8 @@ const EdgeWalletsTabScreen = () => {
           headerTitle: () => <TransactionDetailsTitle />
         }}
       />
-      <Stack.Screen name="transactionList" component={TransactionList} />
       <Stack.Screen name="walletList" component={WalletListScene} options={firstSceneScreenOptions} />
+      <Stack.Screen name="transactionList" component={TransactionList} />
     </Stack.Navigator>
   )
 }
@@ -841,27 +773,9 @@ const EdgeSellTabScreen = () => {
     <Stack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
       <Stack.Screen name="guiPluginEnterAmount" component={FiatPluginEnterAmountScene} />
       <Stack.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
-      <Stack.Screen
-        name="guiPluginWebView"
-        options={{
-          headerTitle: () => <EdgeLogoHeader />
-        }}
-        component={FiatPluginWebViewComponent}
-      />
-      <Stack.Screen
-        name="rewardsCardDashboard"
-        options={{
-          headerTitle: () => <EdgeLogoHeader />
-        }}
-        component={RewardsCardDashboardScene}
-      />
-      <Stack.Screen
-        name="rewardsCardWelcome"
-        options={{
-          headerTitle: () => <EdgeLogoHeader />
-        }}
-        component={RewardsCardWelcomeScene}
-      />
+      <Stack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
+      <Stack.Screen name="rewardsCardDashboard" component={RewardsCardDashboardScene} />
+      <Stack.Screen name="rewardsCardWelcome" component={RewardsCardWelcomeScene} />
       <Stack.Screen
         name="pluginViewSell"
         component={GuiPluginViewScene}
@@ -894,29 +808,6 @@ const EdgeExchangeTabScreen = () => {
         options={{
           headerLeft: () => null,
           headerRight: () => null
-        }}
-      />
-    </Stack.Navigator>
-  )
-}
-
-const EdgeMarketsTabScreen = () => {
-  const dispatch = useDispatch()
-  return (
-    <Stack.Navigator initialRouteName="coinRanking" screenOptions={defaultScreenOptions}>
-      <Stack.Screen
-        name="coinRanking"
-        component={CoinRankingScene}
-        options={firstSceneScreenOptions}
-        listeners={{
-          focus: () => dispatch(checkEnabledExchanges())
-        }}
-      />
-      <Stack.Screen
-        name="coinRankingDetails"
-        component={CoinRankingDetailsScene}
-        options={{
-          headerTitle: () => <EdgeLogoHeader />
         }}
       />
     </Stack.Navigator>

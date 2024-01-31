@@ -13,6 +13,7 @@ import { asActionProgram, asActionProgramState } from '../controllers/action-que
 import { ActionProgram, ActionProgramState } from '../controllers/action-queue/types'
 import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
+import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { clearLogs, logWithType, readLogs } from '../util/logger'
 
 const logsUri = 'https://logs1.edge.app/v1/log/'
@@ -162,13 +163,11 @@ export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
         // Wallet TX summary
         const wallet = currencyWallets[walletId]
         const { enabledTokenIds } = wallet
-        const codes = enabledTokenIds.map(id => wallet.currencyConfig.allTokens[id].currencyCode)
-        if (codes.length === 0) {
-          codes.push(wallet.currencyInfo.currencyCode)
-        }
-        for (const code of codes) {
-          const txs = await wallet.getNumTransactions({ currencyCode: code })
-          logOutput.data += `${code}: ${txs} txs\n`
+        const tokenIds = [null, ...enabledTokenIds]
+        for (const tokenId of tokenIds) {
+          const txs = await wallet.getNumTransactions({ tokenId })
+          const currencyCode = getCurrencyCode(wallet, tokenId)
+          logOutput.data += `${currencyCode}: ${txs} txs\n`
         }
         const { imported, syncKey } = await account.getRawPrivateKey(wallet.id)
 

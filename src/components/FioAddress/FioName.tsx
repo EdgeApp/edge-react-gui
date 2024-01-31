@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { ClickableRow } from '../themed/ClickableRow'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { CardUi4 } from '../ui4/CardUi4'
+import { RowUi4 } from '../ui4/RowUi4'
 
 interface FioNameProps {
   name: string
@@ -16,8 +16,9 @@ interface FioNameProps {
   onPress: () => void
 }
 
-const FioName = (props: FioNameProps & ThemeProps) => {
-  const { name, expiration, bundledTxs, onPress, icon, theme } = props
+export const FioNameRow = (props: FioNameProps) => {
+  const { name, expiration, bundledTxs, onPress, icon } = props
+  const theme = useTheme()
   const styles = getStyles(theme)
 
   const renderSubTitle = () => {
@@ -35,31 +36,26 @@ const FioName = (props: FioNameProps & ThemeProps) => {
   }
 
   return (
-    <ClickableRow paddingRem={[0, 1]} onPress={() => onPress()}>
-      <View style={styles.icon}>{icon}</View>
-      <View style={styles.info}>
-        <EdgeText style={styles.infoTitle}>{name}</EdgeText>
-        {renderSubTitle()}
-      </View>
-      <View style={styles.arrow}>
-        <FontAwesomeIcon name="angle-right" size={theme.rem(1.5)} color={theme.icon} />
-      </View>
-    </ClickableRow>
+    <CardUi4>
+      <RowUi4 icon={<View style={styles.icon}>{icon}</View>} onPress={onPress}>
+        <View style={styles.info}>
+          <EdgeText style={styles.infoTitle}>{name}</EdgeText>
+          {renderSubTitle()}
+        </View>
+      </RowUi4>
+    </CardUi4>
   )
 }
 
-export const FioNameRow = withTheme(FioName)
-
 const getStyles = cacheStyles((theme: Theme) => ({
-  lastItem: {
-    marginBottom: 0
-  },
   icon: {
     alignItems: 'center',
-    justifyContent: 'flex-start'
+    justifyContent: 'center',
+    width: theme.rem(1.5),
+    marginRight: theme.rem(0.5)
   },
   info: {
-    flex: 4
+    flex: 1
   },
   infoTitle: {
     color: theme.primaryText,
@@ -68,11 +64,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
   infoSubtitle: {
     color: theme.secondaryText,
     fontSize: theme.rem(0.75)
-  },
-  arrow: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    marginLeft: 'auto'
   }
 }))

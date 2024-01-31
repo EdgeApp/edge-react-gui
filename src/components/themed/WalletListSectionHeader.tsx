@@ -17,8 +17,7 @@ export function WalletListSectionHeader(props: { title: string; rightTitle?: str
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    backgroundColor: theme.modal,
-    paddingHorizontal: theme.rem(1),
+    paddingHorizontal: theme.rem(0.5),
     flexDirection: 'row',
     justifyContent: 'space-between'
   },

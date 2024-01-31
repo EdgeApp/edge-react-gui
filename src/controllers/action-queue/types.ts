@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeNetworkFee, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeNetworkFee, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
 
 import { Dispatch, GetState } from '../../types/reduxTypes'
 import { CleanError } from './cleaners'
@@ -30,7 +30,7 @@ export interface WyreBuyActionOp {
   type: 'wyre-buy'
   nativeAmount: string
   walletId: string
-  tokenId?: string
+  tokenId: EdgeTokenId
 }
 
 export interface WyreSellActionOp {
@@ -38,7 +38,7 @@ export interface WyreSellActionOp {
   wyreAccountId: string
   nativeAmount: string
   walletId: string
-  tokenId?: string
+  tokenId: EdgeTokenId
 }
 
 export interface LoanBorrowActionOp {
@@ -46,7 +46,7 @@ export interface LoanBorrowActionOp {
   borrowPluginId: string
   nativeAmount: string
   walletId: string
-  tokenId?: string
+  tokenId: EdgeTokenId
 }
 
 export interface LoanDepositActionOp {
@@ -54,7 +54,7 @@ export interface LoanDepositActionOp {
   borrowPluginId: string
   nativeAmount: string
   walletId: string
-  tokenId?: string
+  tokenId: EdgeTokenId
 }
 
 export interface LoanRepayActionOp {
@@ -62,8 +62,8 @@ export interface LoanRepayActionOp {
   borrowPluginId: string
   nativeAmount: string
   walletId: string
-  tokenId?: string
-  fromTokenId?: string
+  tokenId: EdgeTokenId
+  fromTokenId: EdgeTokenId
 }
 
 export interface LoanWithdrawActionOp {
@@ -71,16 +71,16 @@ export interface LoanWithdrawActionOp {
   borrowPluginId: string
   nativeAmount: string
   walletId: string
-  tokenId?: string
+  tokenId: EdgeTokenId
 }
 
 export interface SwapActionOp {
   type: 'swap'
   amountFor: 'from' | 'to'
-  fromTokenId?: string
+  fromTokenId: EdgeTokenId
   fromWalletId: string
   nativeAmount: string
-  toTokenId?: string
+  toTokenId: EdgeTokenId
   toWalletId: string
   displayKey?: SwapActionOpDisplayKey
 
@@ -130,7 +130,7 @@ export interface AddressBalanceEffect {
   aboveAmount?: string
   belowAmount?: string
   walletId: string
-  tokenId?: string
+  tokenId: EdgeTokenId
 }
 export interface PushEventEffect {
   type: 'push-event'

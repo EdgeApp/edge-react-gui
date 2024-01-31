@@ -2,10 +2,12 @@
 // Triggers that may cause an event to fire.
 //
 
+import { EdgeTokenId } from 'edge-core-js'
+
 export interface AddressBalanceTrigger {
   readonly type: 'address-balance'
   readonly pluginId: string
-  readonly tokenId?: string
+  readonly tokenId: EdgeTokenId
   readonly address: string
   readonly aboveAmount?: string // Satoshis or Wei or such
   readonly belowAmount?: string // Satoshis or Wei or such

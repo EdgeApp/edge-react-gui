@@ -7,7 +7,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../selectors
 import { useSelector } from '../../types/reactRedux'
 import { getCryptoText } from '../../util/cryptoTextUtils'
 import { getDenomFromIsoCode } from '../../util/utils'
-import { Tile } from './Tile'
+import { RowUi4 } from '../ui4/RowUi4'
 
 // TODO: Integrate into SendScene, FlipInputModal, and AdvancedDetailsModal
 export const NetworkFeeTile = (props: { wallet: EdgeCurrencyWallet; nativeAmount: string }) => {
@@ -59,5 +59,5 @@ export const NetworkFeeTile = (props: { wallet: EdgeCurrencyWallet; nativeAmount
   const title = lstrings.loan_estimate_fee
   const body = `${feeCryptoAmount} (${feeFiatAmount})`
 
-  return <Tile type="static" title={title} body={body} />
+  return <RowUi4 title={title} body={body} />
 }

@@ -1,4 +1,4 @@
-import { EdgeTokenId } from '../types/types'
+import { EdgeAsset } from '../types/types'
 import { CurrencyConfigMap } from './utils'
 
 /**
@@ -9,10 +9,10 @@ import { CurrencyConfigMap } from './utils'
  * The goal is to delete this once the wallet stops using this legacy format
  * internally.
  */
-export function upgradeCurrencyCodes(lookup: (currencyCode: string) => EdgeTokenId[], currencyCodes?: string[]): EdgeTokenId[] | undefined {
+export function upgradeCurrencyCodes(lookup: (currencyCode: string) => EdgeAsset[], currencyCodes?: string[]): EdgeAsset[] | undefined {
   if (currencyCodes == null || currencyCodes.length === 0) return
 
-  const out: EdgeTokenId[] = []
+  const out: EdgeAsset[] = []
   for (const currencyCode of currencyCodes) {
     const [parentCode, tokenCode] = currencyCode.split('-')
 
@@ -32,10 +32,10 @@ export function upgradeCurrencyCodes(lookup: (currencyCode: string) => EdgeToken
 /**
  * Creates a function that returns all matching tokenId's for a currency code.
  */
-export function makeCurrencyCodeTable(currencyConfigMap: CurrencyConfigMap): (currencyCode: string) => EdgeTokenId[] {
-  const map = new Map<string, EdgeTokenId[]>()
+export function makeCurrencyCodeTable(currencyConfigMap: CurrencyConfigMap): (currencyCode: string) => EdgeAsset[] {
+  const map = new Map<string, EdgeAsset[]>()
 
-  function addMatch(currencyCode: string, location: EdgeTokenId): void {
+  function addMatch(currencyCode: string, location: EdgeAsset): void {
     const key = currencyCode.toLowerCase()
     const list = map.get(key)
     if (list != null) list.push(location)
@@ -46,7 +46,7 @@ export function makeCurrencyCodeTable(currencyConfigMap: CurrencyConfigMap): (cu
     const currencyConfig = currencyConfigMap[pluginId]
     const { allTokens, currencyInfo } = currencyConfig
 
-    addMatch(currencyInfo.currencyCode, { pluginId })
+    addMatch(currencyInfo.currencyCode, { pluginId, tokenId: null })
 
     for (const tokenId of Object.keys(allTokens)) {
       const token = allTokens[tokenId]

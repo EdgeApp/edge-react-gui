@@ -32,6 +32,7 @@ describe('AccelerateTxModalComponent', () => {
           otherParams: {},
           ourReceiveAddresses: ['123123123'],
           signedTx: '',
+          tokenId: null,
           txid: '',
           walletId: ''
         }}
@@ -46,6 +47,7 @@ describe('AccelerateTxModalComponent', () => {
           otherParams: {},
           ourReceiveAddresses: ['123123123'],
           signedTx: '',
+          tokenId: null,
           txid: '',
           walletId: ''
         }}

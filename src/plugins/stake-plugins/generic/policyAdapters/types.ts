@@ -1,11 +1,12 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 
 import { AssetId, ChangeQuote, StakePolicy, StakePosition } from '../../types'
+import { CoreumNativeSkateKitAdapterConfig } from './CoreumStakeKitAdaptor'
 import { GlifInfinityPoolAdapterConfig } from './GlifInfinityPoolAdapter'
 import { TarotPoolAdapterConfig } from './TarotPoolAdaptor'
 
 // Union of all adapter configs
-export type StakeAdapterConfig = GlifInfinityPoolAdapterConfig | TarotPoolAdapterConfig
+export type StakeAdapterConfig = GlifInfinityPoolAdapterConfig | TarotPoolAdapterConfig | CoreumNativeSkateKitAdapterConfig
 
 export interface StakePolicyAdapter {
   stakePolicyId: string

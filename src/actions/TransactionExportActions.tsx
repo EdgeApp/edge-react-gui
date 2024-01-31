@@ -41,15 +41,20 @@ export function updateTxsFiat(wallet: EdgeCurrencyWallet, currencyCode: string, 
 
     let promises: Array<Promise<void>> = []
     for (const tx of txs) {
-      if ((tx.metadata?.amountFiat ?? 0) === 0) {
+      const amountFiat = tx.metadata?.exchangeAmount?.[fiatCurrencyCode] ?? 0
+
+      if (amountFiat === 0) {
         const date = new Date(tx.date * 1000).toISOString()
         promises.push(
           getHistoricalRate(`${currencyCode}_${fiatCurrencyCode}`, date)
             .then(rate => {
-              if (tx.metadata == null) {
-                tx.metadata = {}
+              tx.metadata = {
+                ...tx.metadata,
+                exchangeAmount: {
+                  ...tx.metadata?.exchangeAmount,
+                  [fiatCurrencyCode]: rate * Number(div(tx.nativeAmount, exchangeDenom.multiplier, DECIMAL_PRECISION))
+                }
               }
-              tx.metadata.amountFiat = rate * Number(div(tx.nativeAmount, exchangeDenom.multiplier, DECIMAL_PRECISION))
             })
             .catch(e => console.warn(e.message))
         )
@@ -173,7 +178,7 @@ function makeBitwaveDateTime(date: number): string {
 //      2. category set to 'Expense:Network Fee'
 //      3. txid set to old txid + '-TRANSFER_TX'
 
-export function getTransferTx(oldEdgeTransaction: EdgeTransaction): EdgeTransaction[] | null {
+export function getTransferTx(oldEdgeTransaction: EdgeTransaction, fiatCurrencyCode: string): EdgeTransaction[] | null {
   const edgeTransaction = { ...oldEdgeTransaction }
   edgeTransaction.metadata = { ...oldEdgeTransaction.metadata }
 
@@ -184,7 +189,7 @@ export function getTransferTx(oldEdgeTransaction: EdgeTransaction): EdgeTransact
 
   const nativeAmountNoFee = add(edgeTransaction.nativeAmount, edgeTransaction.networkFee)
   let newTxFiatFee = 0
-  let amountFiat = edgeTransaction.metadata?.amountFiat ?? 0
+  let amountFiat = edgeTransaction.metadata?.exchangeAmount?.[fiatCurrencyCode] ?? 0
 
   if (amountFiat > 0) {
     const exchangeRate: string = div(amountFiat.toString(), edgeTransaction.nativeAmount, 16)
@@ -195,13 +200,24 @@ export function getTransferTx(oldEdgeTransaction: EdgeTransaction): EdgeTransact
 
   const newEdgeTransaction: EdgeTransaction = { ...edgeTransaction }
   newEdgeTransaction.nativeAmount = `-${edgeTransaction.networkFee}`
-  newEdgeTransaction.metadata = { ...edgeTransaction.metadata }
-  newEdgeTransaction.metadata.category = `Expense:Network Fee`
-  newEdgeTransaction.metadata.amountFiat = newTxFiatFee
+  newEdgeTransaction.metadata = {
+    ...edgeTransaction.metadata,
+    category: `Expense:Network Fee`,
+    exchangeAmount: {
+      ...edgeTransaction.metadata?.exchangeAmount,
+      [fiatCurrencyCode]: newTxFiatFee
+    }
+  }
   newEdgeTransaction.txid += '-TRANSFER_TX'
   edgeTransaction.nativeAmount = nativeAmountNoFee
   edgeTransaction.networkFee = '0'
-  edgeTransaction.metadata.amountFiat = amountFiat
+  edgeTransaction.metadata = {
+    ...edgeTransaction.metadata,
+    exchangeAmount: {
+      ...edgeTransaction.metadata?.exchangeAmount,
+      [fiatCurrencyCode]: amountFiat
+    }
+  }
   return [edgeTransaction, newEdgeTransaction]
 }
 
@@ -216,7 +232,7 @@ export function exportTransactionsToQBOInner(
   const now = makeOfxDate(dateNow / 1000)
 
   for (const tx of edgeTransactions) {
-    const newTxs = getTransferTx(tx)
+    const newTxs = getTransferTx(tx, fiatCurrencyCode)
     if (newTxs != null) {
       edgeTxToQbo(newTxs[0])
       edgeTxToQbo(newTxs[1])
@@ -229,16 +245,11 @@ export function exportTransactionsToQBOInner(
     const TRNAMT: string = denom ? div(edgeTx.nativeAmount, denom, DECIMAL_PRECISION) : edgeTx.nativeAmount
     const TRNTYPE = lt(edgeTx.nativeAmount, '0') ? 'DEBIT' : 'CREDIT'
     const DTPOSTED = makeOfxDate(edgeTx.date)
-    let NAME: string = ''
-    let amountFiat: number = 0
-    let category: string = ''
-    let notes: string = ''
-    if (edgeTx.metadata) {
-      NAME = edgeTx.metadata.name ? edgeTx.metadata.name : ''
-      amountFiat = edgeTx.metadata.amountFiat ? edgeTx.metadata.amountFiat : 0
-      category = edgeTx.metadata.category ? edgeTx.metadata.category : ''
-      notes = edgeTx.metadata.notes ? edgeTx.metadata.notes : ''
-    }
+    const NAME: string = edgeTx.metadata?.name ?? ''
+    const amountFiat: number = edgeTx.metadata?.exchangeAmount?.[fiatCurrencyCode] ?? 0
+    const category: string = edgeTx.metadata?.category ?? ''
+    const notes: string = edgeTx.metadata?.notes ?? ''
+
     const absFiat = abs(amountFiat.toString())
     const absAmount = abs(TRNAMT)
     const CURRATE = absAmount !== '0' ? div(absFiat, absAmount, 8) : '0'
@@ -343,7 +354,7 @@ export function exportTransactionsToCSVInner(
   const items: any[] = []
 
   for (const tx of edgeTransactions) {
-    const newTxs = getTransferTx(tx)
+    const newTxs = getTransferTx(tx, fiatCurrencyCode)
     if (newTxs != null) {
       edgeTxToCsv(newTxs[0])
       edgeTxToCsv(newTxs[1])
@@ -356,16 +367,10 @@ export function exportTransactionsToCSVInner(
     const amount: string = denom ? div(edgeTx.nativeAmount, denom, DECIMAL_PRECISION) : edgeTx.nativeAmount
     const networkFeeField: string = denom ? div(edgeTx.networkFee, denom, DECIMAL_PRECISION) : edgeTx.networkFee
     const { date, time } = makeCsvDateTime(edgeTx.date)
-    let name: string = ''
-    let amountFiat: number = 0
-    let category: string = ''
-    let notes: string = ''
-    if (edgeTx.metadata) {
-      name = edgeTx.metadata.name ? edgeTx.metadata.name : ''
-      amountFiat = edgeTx.metadata.amountFiat ? edgeTx.metadata.amountFiat : 0
-      category = edgeTx.metadata.category ? edgeTx.metadata.category : ''
-      notes = edgeTx.metadata.notes ? edgeTx.metadata.notes : ''
-    }
+    const name: string = edgeTx.metadata?.name ?? ''
+    const amountFiat: number = edgeTx.metadata?.exchangeAmount?.[fiatCurrencyCode] ?? 0
+    const category: string = edgeTx.metadata?.category ?? ''
+    const notes: string = edgeTx.metadata?.notes ?? ''
 
     items.push({
       CURRENCY_CODE: currencyCode,

@@ -1,6 +1,6 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import { lt } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeEncodeUri, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
 import Share, { ShareOptions } from 'react-native-share'
@@ -12,18 +12,19 @@ import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActio
 import { selectWalletToken } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { useIconColor } from '../../hooks/useIconColor'
 import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
-import { connect } from '../../types/reactRedux'
+import { connect, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
-import { GuiCurrencyInfo, GuiDenomination } from '../../types/types'
-import { getTokenId, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
+import { GuiCurrencyInfo } from '../../types/types'
+import { getTokenId, getTokenIdForced, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
-import { convertNativeToDenomination, getDenomFromIsoCode, truncateDecimals, zeroString } from '../../util/utils'
-import { Card } from '../cards/Card'
+import { convertNativeToDenomination, darkenHexColor, truncateDecimals, zeroString } from '../../util/utils'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -40,11 +41,12 @@ import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef }
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ShareButtons } from '../themed/ShareButtons'
+import { CardUi4 } from '../ui4/CardUi4'
+import { AccentColors } from '../ui4/DotsBackground'
 
 interface OwnProps extends EdgeSceneProps<'request'> {}
 
 interface StateProps {
-  account: EdgeAccount
   currencyCode?: string
   wallet?: EdgeCurrencyWallet
   exchangeSecondaryToPrimaryRatio?: string
@@ -52,17 +54,20 @@ interface StateProps {
   isConnected: boolean
   showBalance: boolean
   primaryCurrencyInfo?: GuiCurrencyInfo
-  secondaryCurrencyInfo?: GuiCurrencyInfo
 }
 
 interface DispatchProps {
   refreshAllFioAddresses: () => Promise<void>
-  onSelectWallet: (navigation: NavigationBase, walletId: string, tokenId?: string) => Promise<void>
+  onSelectWallet: (navigation: NavigationBase, walletId: string, tokenId: EdgeTokenId) => Promise<void>
   toggleAccountBalanceVisibility: () => void
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 interface CurrencyMinimumPopupState {
   [pluginId: string]: ModalState
+}
+
+interface HookProps {
+  iconColor?: string
 }
 
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
@@ -83,7 +88,7 @@ interface AddressInfo {
 
 const inputAccessoryViewID: string = 'cancelHeaderId'
 
-export class RequestSceneComponent extends React.Component<Props, State> {
+export class RequestSceneComponent extends React.Component<Props & HookProps, State> {
   flipInputRef: React.RefObject<ExchangedFlipInputRef>
   unsubscribeAddressChanged: (() => void) | undefined
 
@@ -128,7 +133,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     if (wallet == null) return
     if (isKeysOnlyPlugin(wallet.currencyInfo.pluginId)) return
 
-    const receiveAddress = await wallet.getReceiveAddress()
+    const receiveAddress = await wallet.getReceiveAddress({ tokenId: null })
     const addresses: AddressInfo[] = []
 
     // Handle segwitAddress
@@ -243,12 +248,10 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   handleOpenWalletListModal = () => {
-    const { account } = this.props
     Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={this.props.navigation} />)
-      .then(async ({ walletId, currencyCode }: WalletListResult) => {
-        if (walletId && currencyCode) {
-          const wallet = account.currencyWallets[walletId]
-          const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+      .then(async result => {
+        if (result?.type === 'wallet') {
+          const { walletId, tokenId } = result
           await this.props.onSelectWallet(this.props.navigation, walletId, tokenId)
 
           if (this.flipInputRef.current != null) {
@@ -265,7 +268,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   renderKeysOnlyMode = () => {
     const styles = getStyles(this.props.theme)
     return (
-      <SceneWrapper background="theme" hasTabs={false}>
+      <SceneWrapper>
         <SceneHeader title={sprintf(lstrings.request_deprecated_header, this.props.wallet?.currencyInfo.displayName)} underline withTopMargin />
         <Text style={styles.keysOnlyModeText}>{sprintf(lstrings.request_deprecated_currency_code, this.props.primaryCurrencyInfo?.displayCurrencyCode)}</Text>
         <MainButton onPress={this.handleKeysOnlyModePress} label={lstrings.help_support} marginRem={2} type="secondary">
@@ -289,10 +292,10 @@ export class RequestSceneComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { currencyCode, exchangeSecondaryToPrimaryRatio, wallet, primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
+    const { currencyCode, exchangeSecondaryToPrimaryRatio, iconColor, wallet, primaryCurrencyInfo, theme } = this.props
     const styles = getStyles(theme)
 
-    if (currencyCode == null || primaryCurrencyInfo == null || secondaryCurrencyInfo == null || exchangeSecondaryToPrimaryRatio == null || wallet == null) {
+    if (currencyCode == null || primaryCurrencyInfo == null || exchangeSecondaryToPrimaryRatio == null || wallet == null) {
       return <ActivityIndicator color={theme.primaryText} style={styles.loader} size="large" />
     }
 
@@ -310,16 +313,33 @@ export class RequestSceneComponent extends React.Component<Props, State> {
     // Selected denomination
     const denomString = `1 ${primaryCurrencyInfo.displayDenomination.name}`
 
+    const accentColors: AccentColors = {
+      // Transparent fallback for while iconColor is loading
+      iconAccentColor: iconColor ?? '#00000000'
+    }
+
+    const backgroundColors = [...theme.assetBackgroundGradientColors]
+    if (iconColor != null) {
+      const scaledColor = darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+      backgroundColors[0] = scaledColor
+    }
+
     return keysOnlyMode ? (
       this.renderKeysOnlyMode()
     ) : (
-      <SceneWrapper background="theme" hasTabs={false}>
+      <SceneWrapper
+        accentColors={accentColors}
+        backgroundGradientColors={backgroundColors}
+        backgroundGradientEnd={theme.assetBackgroundGradientEnd}
+        backgroundGradientStart={theme.assetBackgroundGradientStart}
+        overrideDots={theme.backgroundDots.assetOverrideDots}
+      >
         <View style={styles.container}>
-          <View style={styles.requestContainer}>
+          <EdgeAnim style={styles.requestContainer} enter={{ type: 'fadeInUp', distance: 75 }}>
             <EdgeText style={styles.title}>{lstrings.fragment_request_subtitle}</EdgeText>
             <EdgeText style={styles.exchangeRate}>{denomString}</EdgeText>
-          </View>
-          <View style={styles.balanceContainer}>
+          </EdgeAnim>
+          <EdgeAnim style={styles.balanceContainer} enter={{ type: 'fadeInUp', distance: 50 }}>
             <TouchableOpacity onPress={this.toggleBalanceVisibility} style={styles.balanceAmountContainer}>
               {this.props.showBalance ? <EdgeText>{displayBalanceString}</EdgeText> : <EdgeText>{lstrings.string_show_balance}</EdgeText>}
             </TouchableOpacity>
@@ -331,23 +351,25 @@ export class RequestSceneComponent extends React.Component<Props, State> {
                 wallet={wallet}
               />
             </EdgeText>
-          </View>
+          </EdgeAnim>
           {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}
 
-          <Card>
-            <ExchangedFlipInput2
-              forceField="crypto"
-              headerCallback={this.handleOpenWalletListModal}
-              headerText={flipInputHeaderText}
-              inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : undefined}
-              keyboardVisible={false}
-              onAmountChanged={this.onExchangeAmountChanged}
-              ref={this.flipInputRef}
-              returnKeyType={this.state.isFioMode ? 'next' : 'done'}
-              tokenId={primaryCurrencyInfo.tokenId}
-              walletId={wallet.id}
-            />
-          </Card>
+          <EdgeAnim enter={{ type: 'fadeInUp', distance: 25 }}>
+            <CardUi4 marginRem={0}>
+              <ExchangedFlipInput2
+                forceField="crypto"
+                headerCallback={this.handleOpenWalletListModal}
+                headerText={flipInputHeaderText}
+                inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : undefined}
+                keyboardVisible={false}
+                onAmountChanged={this.onExchangeAmountChanged}
+                ref={this.flipInputRef}
+                returnKeyType={this.state.isFioMode ? 'next' : 'done'}
+                tokenId={primaryCurrencyInfo.tokenId}
+                walletId={wallet.id}
+              />
+            </CardUi4>
+          </EdgeAnim>
 
           <Carousel
             items={this.state.addresses}
@@ -363,16 +385,21 @@ export class RequestSceneComponent extends React.Component<Props, State> {
               />
             )}
           />
-          <TouchableOpacity accessible={false} disabled={addressExplorerDisabled} onPress={this.handleAddressBlockExplorer}>
-            <View style={styles.rightChevronContainer}>
-              <EdgeText>{selectedAddress?.label ?? lstrings.request_qr_your_wallet_address}</EdgeText>
-              {addressExplorerDisabled ? null : <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />}
-            </View>
-            <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
-          </TouchableOpacity>
+
+          <EdgeAnim enter={{ type: 'fadeInDown', distance: 50 }}>
+            <TouchableOpacity accessible={false} disabled={addressExplorerDisabled} onPress={this.handleAddressBlockExplorer}>
+              <View style={styles.rightChevronContainer}>
+                <EdgeText>{selectedAddress?.label ?? lstrings.request_qr_your_wallet_address}</EdgeText>
+                {addressExplorerDisabled ? null : <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />}
+              </View>
+              <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
+            </TouchableOpacity>
+          </EdgeAnim>
         </View>
 
-        <ShareButtons openShareModal={this.openShareModal} copyToClipboard={this.copyToClipboard} openFioAddressModal={this.openFioAddressModal} />
+        <EdgeAnim enter={{ type: 'fadeInDown', distance: 75 }}>
+          <ShareButtons openShareModal={this.openShareModal} copyToClipboard={this.copyToClipboard} openFioAddressModal={this.openFioAddressModal} />
+        </EdgeAnim>
       </SceneWrapper>
     )
   }
@@ -405,7 +432,7 @@ export class RequestSceneComponent extends React.Component<Props, State> {
       if (this.state.minimumPopupModalState[pluginId] === 'NOT_YET_SHOWN') {
         const { minimumPopupModals } = getSpecialCurrencyInfo(pluginId)
         const minBalance = minimumPopupModals != null ? minimumPopupModals.minimumNativeBalance : '0'
-        if (lt(wallet.balances[currencyCode] ?? '0', minBalance)) {
+        if (lt(wallet.balanceMap.get(null) ?? '0', minBalance)) {
           return true
         }
       }
@@ -535,7 +562,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
+const RequestSceneConnected = connect<StateProps, DispatchProps, OwnProps & HookProps>(
   state => {
     const { account } = state.core
     const { currencyWallets } = account
@@ -545,7 +572,6 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
 
     if (currencyCode == null || wallet == null) {
       return {
-        account,
         publicAddress: '',
         fioAddressesExist: false,
         isConnected: state.network.isConnected,
@@ -554,41 +580,28 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     }
 
     const { pluginId } = wallet.currencyInfo
-    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
-    const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
-    const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(wallet.fiatCurrencyCode.replace('iso:', ''))
-    const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
+    const primaryDisplayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+    const primaryExchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
-    const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
-    const tokenId = getTokenId(state.core.account, pluginId, currencyCode)
+    const tokenId = getTokenIdForced(state.core.account, pluginId, currencyCode)
 
     const primaryCurrencyInfo: GuiCurrencyInfo = {
       walletId: walletId,
-      pluginId,
       tokenId,
       displayCurrencyCode: currencyCode,
       displayDenomination: primaryDisplayDenomination,
       exchangeCurrencyCode: primaryExchangeCurrencyCode,
       exchangeDenomination: primaryExchangeDenomination
     }
-    const secondaryCurrencyInfo: GuiCurrencyInfo = {
-      walletId: walletId,
-      displayCurrencyCode: wallet.fiatCurrencyCode.replace('iso:', ''),
-      displayDenomination: secondaryDisplayDenomination,
-      exchangeCurrencyCode: secondaryExchangeCurrencyCode,
-      exchangeDenomination: secondaryExchangeDenomination
-    }
     const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
     const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
     const fioAddressesExist = !!state.ui.fioAddress.fioAddresses.length
 
     return {
-      account,
       currencyCode,
       wallet,
       exchangeSecondaryToPrimaryRatio,
       primaryCurrencyInfo,
-      secondaryCurrencyInfo,
       fioAddressesExist,
       isConnected: state.network.isConnected,
       showBalance: state.ui.settings.isAccountBalanceVisible
@@ -598,7 +611,7 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     async refreshAllFioAddresses() {
       await dispatch(refreshAllFioAddresses())
     },
-    async onSelectWallet(navigation: NavigationBase, walletId: string, tokenId?: string) {
+    async onSelectWallet(navigation: NavigationBase, walletId: string, tokenId: EdgeTokenId) {
       await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
     },
     toggleAccountBalanceVisibility() {
@@ -606,3 +619,16 @@ export const RequestScene = connect<StateProps, DispatchProps, OwnProps>(
     }
   })
 )(withTheme(RequestSceneComponent))
+
+export const RequestScene = (props: OwnProps) => {
+  const account = useSelector(state => state.core.account)
+  const currencyCode = useSelector(state => state.ui.wallets.selectedCurrencyCode)
+  const walletId = useSelector(state => state.ui.wallets.selectedWalletId)
+  const wallet = account.currencyWallets[walletId] ?? {}
+
+  const { pluginId = '' } = wallet.currencyInfo ?? {}
+  const tokenId = getTokenId(account, pluginId, currencyCode)
+
+  const iconColor = useIconColor({ pluginId, tokenId: tokenId !== undefined ? tokenId : '' })
+  return <RequestSceneConnected {...props} iconColor={iconColor} />
+}

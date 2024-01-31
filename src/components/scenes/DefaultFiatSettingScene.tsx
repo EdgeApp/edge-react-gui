@@ -1,10 +1,11 @@
-import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
 import { Alert, Keyboard, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { FlatList } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
 
 import { setDefaultFiatRequest } from '../../actions/SettingsActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
@@ -12,14 +13,14 @@ import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { Theme } from '../../types/Theme'
 import { FlatListItem, GuiFiatType } from '../../types/types'
-import { scale } from '../../util/scaling'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { showError } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
+import { SimpleTextInput } from '../themed/SimpleTextInput'
 
 interface OwnProps extends EdgeSceneProps<'defaultFiatSetting'> {}
 
@@ -74,36 +75,35 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { theme } = this.props
-    const styles = getStyles(this.props.theme)
     const filteredArray = this.props.supportedFiats.filter(entry => {
       return entry.label.toLowerCase().includes(this.state.searchTerm.toLowerCase())
     })
 
     return (
-      <SceneWrapper avoidKeyboard background="theme" hasTabs={false}>
-        {gap => (
-          <View style={[styles.content, { marginBottom: -gap.bottom }]}>
+      <SceneWrapper avoidKeyboard>
+        {({ insetStyle, undoInsetStyle }) => (
+          <View style={{ ...undoInsetStyle, marginTop: 0 }}>
             <SceneHeader title={lstrings.title_create_wallet_select_fiat} underline withTopMargin>
-              <OutlinedTextInput
+              <SimpleTextInput
+                top={1}
+                horizontal={0.5}
                 autoCorrect={false}
                 autoCapitalize="words"
                 onChangeText={this.handleSearchTermChange}
                 value={this.state.searchTerm}
-                label={lstrings.fragment_wallets_addwallet_fiat_hint}
+                placeholder={lstrings.fragment_wallets_addwallet_fiat_hint}
                 returnKeyType="search"
-                marginRem={[1, 0.5, 0]}
-                searchIcon
+                iconComponent={SearchIconAnimated}
               />
             </SceneHeader>
-            <FlashList
+            <FlatList
               automaticallyAdjustContentInsets={false}
-              contentContainerStyle={{ paddingBottom: gap.bottom }}
+              contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
               data={filteredArray}
-              estimatedItemSize={theme.rem(1.75)}
               keyboardShouldPersistTaps="handled"
               keyExtractor={this.keyExtractor}
               renderItem={this.renderFiatTypeResult}
+              scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
             />
           </View>
         )}
@@ -135,16 +135,11 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  content: {
-    flex: 1,
-    paddingTop: scale(5)
-  },
   cryptoTypeLogo: {
     width: theme.rem(2),
     height: theme.rem(2),
     borderRadius: theme.rem(1),
-    marginLeft: theme.rem(0.25),
-    backgroundColor: theme.backgroundGradientColors[1]
+    marginLeft: theme.rem(0.25)
   }
 }))
 

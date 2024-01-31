@@ -17,10 +17,9 @@ import { checkPubAddress, FioAddresses, getFioAddressCache } from '../../util/Fi
 import { FormattedText as Text } from '../legacy/FormattedText/FormattedText.ui'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { MainButton } from '../themed/MainButton'
-import { ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
-import { ThemedModal } from '../themed/ThemedModal'
+import { FilledTextInput } from '../themed/FilledTextInput'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface OwnProps {
   bridge: AirshipBridge<string | undefined>
@@ -304,54 +303,45 @@ export class AddressModalComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <ThemedModal bridge={this.props.bridge} onCancel={this.handleClose} paddingRem={1}>
-        <ModalTitle center paddingRem={[0, 2, 1]}>
-          {title || lstrings.address_modal_default_header}
-        </ModalTitle>
-        <View style={styles.container}>
-          <OutlinedTextInput
-            autoCorrect={false}
-            returnKeyType="search"
-            autoCapitalize="none"
-            label={lstrings.fragment_send_address}
-            onChangeText={this.onChangeTextDelayed}
-            onSubmitEditing={this.handleSubmit}
-            value={uri}
-            marginRem={[0, 1]}
-            error={errorLabel}
-            valid={validLabel}
-            showSpinner={showSpinner}
+      <ModalUi4 bridge={this.props.bridge} onCancel={this.handleClose} title={title ?? lstrings.address_modal_default_header}>
+        <FilledTextInput
+          around={0.5}
+          bottom={1}
+          autoCorrect={false}
+          returnKeyType="search"
+          autoCapitalize="none"
+          placeholder={lstrings.fragment_send_address}
+          onChangeText={this.onChangeTextDelayed}
+          onSubmitEditing={this.handleSubmit}
+          value={uri}
+          error={errorLabel}
+          valid={validLabel}
+          showSpinner={showSpinner}
+        />
+        {!userFioAddressesLoading ? (
+          <FlashList
+            data={filteredFioAddresses}
+            estimatedItemSize={theme.rem(4.25)}
+            keyboardShouldPersistTaps="handled"
+            keyExtractor={this.keyExtractor}
+            renderItem={this.renderFioAddressRow}
           />
-          {!userFioAddressesLoading ? (
-            <FlashList
-              data={filteredFioAddresses}
-              estimatedItemSize={theme.rem(4.25)}
-              keyboardShouldPersistTaps="handled"
-              keyExtractor={this.keyExtractor}
-              renderItem={this.renderFioAddressRow}
-            />
-          ) : (
-            <View style={styles.loaderContainer}>
-              <ActivityIndicator color={this.props.theme.iconTappable} />
-            </View>
-          )}
-          <MainButton label={lstrings.submit} marginRem={[0, 4]} type="secondary" onPress={this.handleSubmit} />
-        </View>
-      </ThemedModal>
+        ) : (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator color={this.props.theme.iconTappable} />
+          </View>
+        )}
+        <ButtonsViewUi4 sceneMargin primary={{ label: lstrings.string_next_capitalized, onPress: this.handleSubmit }} />
+      </ModalUi4>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    flex: 1,
-    width: '100%',
-    flexDirection: 'column'
-  },
   rowContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: theme.rem(0.5)
+    margin: theme.rem(0.5)
   },
   fioAddressAvatarContainer: {
     width: theme.rem(1.25),

@@ -1,17 +1,19 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { Keyboard, Switch, View } from 'react-native'
+import { Keyboard, ListRenderItemInfo, Switch, View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { enableTokensAcrossWallets, MainWalletCreateItem, PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationProp } from '../../types/routerTypes'
-import { EdgeTokenId } from '../../types/types'
+import { EdgeAsset } from '../../types/types'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { ListModal } from '../modals/ListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -19,14 +21,14 @@ import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoR
 import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
+import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../themed/WalletList'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 
 export interface CreateWalletSelectCryptoParams {
   newAccountFlow?: (navigation: NavigationProp<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'>, items: WalletCreateItem[]) => Promise<void>
-  defaultSelection?: EdgeTokenId[]
+  defaultSelection?: EdgeAsset[]
 }
 
 interface Props extends EdgeSceneProps<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'> {}
@@ -141,6 +143,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
               return (
                 <CreateWalletSelectCryptoRow
                   pluginId={pluginId}
+                  tokenId={null}
                   walletName=""
                   onPress={() => {
                     bridge.resolve(PLACEHOLDER_WALLET_ID)
@@ -151,7 +154,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             }
 
             const wallet = currencyWallets[walletId]
-            return <WalletListCurrencyRow wallet={wallet} onPress={walletId => bridge.resolve(walletId)} />
+            return <WalletListCurrencyRow wallet={wallet} tokenId={null} onPress={walletId => bridge.resolve(walletId)} />
           }
 
           const displayNames = newTokenItems
@@ -204,7 +207,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     Keyboard.dismiss()
   })
 
-  const renderCreateWalletRow: ListRenderItem<WalletCreateItem> = useHandler(item => {
+  const renderCreateWalletRow = useHandler((item: ListRenderItemInfo<WalletCreateItem>) => {
     const { key, displayName, pluginId, tokenId } = item.item
 
     const accessibilityHint = sprintf(lstrings.create_wallet_hint, displayName)
@@ -240,7 +243,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     () => (
       <Fade noFadeIn={defaultSelection.length > 0} visible={numSelected > 0} duration={300}>
         <View style={styles.bottomButton}>
-          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, -0.5]} onPress={handleNextPress} alignSelf="center" />
+          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, -0.5, 0.5]} onPress={handleNextPress} alignSelf="center" />
         </View>
       </Fade>
     ),
@@ -248,33 +251,33 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   )
 
   return (
-    <SceneWrapper background="theme">
-      {gap => (
-        <View style={[styles.content, { marginBottom: -gap.bottom }]}>
+    <SceneWrapper>
+      {({ insetStyle, undoInsetStyle }) => (
+        <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <SceneHeader title={lstrings.title_create_wallet_select_crypto} withTopMargin />
-          <OutlinedTextInput
+          <SimpleTextInput
+            vertical={0.5}
+            horizontal={1}
             autoCorrect={false}
             autoCapitalize="words"
             onChangeText={setSearchTerm}
             value={searchTerm}
-            label={lstrings.wallet_list_wallet_search}
-            marginRem={[0.5, 1]}
-            searchIcon
-            clearIcon
+            placeholder={lstrings.wallet_list_wallet_search}
+            iconComponent={SearchIconAnimated}
             blurOnClear={false}
             onClear={() => setSearchTerm('')}
             onSubmitEditing={handleSubmitEditing}
           />
-          <FlashList
+          <FlatList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ paddingBottom: gap.bottom + theme.rem(4.25) }}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
             data={filteredCreateWalletList}
-            estimatedItemSize={theme.rem(4.25)}
             extraData={selectedItems}
             keyboardDismissMode="on-drag"
             keyboardShouldPersistTaps="handled"
             keyExtractor={keyExtractor}
             renderItem={renderCreateWalletRow}
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
           {renderNextButton}
         </View>
@@ -288,9 +291,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignSelf: 'center',
     bottom: theme.rem(1),
     position: 'absolute'
-  },
-  content: {
-    flex: 1
   }
 }))
 

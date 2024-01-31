@@ -1,0 +1,468 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BalanceCard should render with loading props 1`] = `
+<View
+  style={
+    [
+      {
+        "alignSelf": "stretch",
+        "borderRadius": 16,
+      },
+      {
+        "marginBottom": 11,
+        "marginLeft": 11,
+        "marginRight": 11,
+        "marginTop": 11,
+      },
+      {
+        "paddingBottom": 11,
+        "paddingLeft": 11,
+        "paddingRight": 11,
+        "paddingTop": 11,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    style={
+      {
+        "backgroundColor": "rgba(255, 255, 255, .1)",
+        "borderRadius": 16,
+        "bottom": 0,
+        "left": 0,
+        "overflow": "hidden",
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "margin": 11,
+        "opacity": 1,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "textShadowColor": "rgba(0, 0, 0, 0.514)",
+              "textShadowOffset": {
+                "height": 0,
+                "width": 0,
+              },
+              "textShadowRadius": 3,
+            },
+            null,
+          ]
+        }
+      >
+        Total Balance
+      </Text>
+      <Text
+        allowFontScaling={false}
+        style={
+          [
+            {
+              "color": "#00f1a2",
+              "fontSize": 22,
+            },
+            [
+              {
+                "alignSelf": "center",
+                "marginLeft": 6,
+                "marginRight": 0,
+              },
+              {
+                "textShadowColor": "rgba(0, 0, 0, 0.514)",
+                "textShadowOffset": {
+                  "height": 0,
+                  "width": 0,
+                },
+                "textShadowRadius": 3,
+              },
+            ],
+            {
+              "fontFamily": "Ionicons",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "height": 51,
+          "marginBottom": 11,
+          "marginTop": 6,
+        }
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "height": 51,
+                "marginBottom": 11,
+                "marginTop": 6,
+              },
+              {
+                "textShadowColor": "rgba(0, 0, 0, 0.514)",
+                "textShadowOffset": {
+                  "height": 0,
+                  "width": 0,
+                },
+                "textShadowRadius": 3,
+              },
+            ],
+            null,
+          ]
+        }
+      >
+        Exchange Rates Loading...
+      </Text>
+    </View>
+  </View>
+  <View
+    absolute={false}
+    layout="row"
+    style={
+      {
+        "flex": 1,
+        "flexDirection": "row-reverse",
+        "justifyContent": "center",
+        "margin": 11,
+      }
+    }
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "borderRadius": 34,
+          "flex": 1,
+          "justifyContent": "center",
+          "opacity": 1,
+        }
+      }
+    >
+      <BVLinearGradient
+        colors={
+          [
+            872415231,
+            872415231,
+          ]
+        }
+        endPoint={
+          {
+            "x": 1,
+            "y": 1,
+          }
+        }
+        locations={null}
+        startPoint={
+          {
+            "x": 0,
+            "y": 0,
+          }
+        }
+        style={
+          [
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "center",
+            },
+            {
+              "alignSelf": "auto",
+              "opacity": 1,
+            },
+            {
+              "height": 67,
+              "paddingHorizontal": 45,
+            },
+            {
+              "alignItems": "center",
+              "alignSelf": "stretch",
+              "borderRadius": 34,
+              "justifyContent": "center",
+            },
+            [
+              {
+                "alignItems": "center",
+                "alignSelf": "stretch",
+                "borderRadius": 34,
+                "justifyContent": "center",
+              },
+              {
+                "flex": 1,
+              },
+            ],
+            undefined,
+            undefined,
+          ]
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={false}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
+            ]
+          }
+        >
+          Deposit
+        </Text>
+      </BVLinearGradient>
+    </View>
+    <View
+      style={
+        [
+          {
+            "alignItems": undefined,
+            "flex": undefined,
+            "flexDirection": "column",
+            "justifyContent": undefined,
+            "marginBottom": 11,
+            "marginLeft": 11,
+            "marginRight": 11,
+            "marginTop": 11,
+          },
+          undefined,
+        ]
+      }
+    />
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "borderRadius": 34,
+          "flex": 1,
+          "justifyContent": "center",
+          "opacity": 1,
+        }
+      }
+    >
+      <BVLinearGradient
+        colors={
+          [
+            872415231,
+            872415231,
+          ]
+        }
+        endPoint={
+          {
+            "x": 1,
+            "y": 1,
+          }
+        }
+        locations={null}
+        startPoint={
+          {
+            "x": 0,
+            "y": 0,
+          }
+        }
+        style={
+          [
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "center",
+            },
+            {
+              "alignSelf": "auto",
+              "opacity": 1,
+            },
+            {
+              "height": 67,
+              "paddingHorizontal": 45,
+            },
+            {
+              "alignItems": "center",
+              "alignSelf": "stretch",
+              "borderRadius": 34,
+              "justifyContent": "center",
+            },
+            [
+              {
+                "alignItems": "center",
+                "alignSelf": "stretch",
+                "borderRadius": 34,
+                "justifyContent": "center",
+              },
+              {
+                "flex": 1,
+              },
+            ],
+            undefined,
+            undefined,
+          ]
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={false}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
+            ]
+          }
+        >
+          Send
+        </Text>
+      </BVLinearGradient>
+    </View>
+  </View>
+</View>
+`;

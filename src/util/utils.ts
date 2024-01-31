@@ -26,9 +26,9 @@ import { toLocaleDate, toLocaleDateTime, toLocaleTime, truncateDecimalsPeriod } 
 import { lstrings } from '../locales/strings'
 import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { RootState } from '../types/reduxTypes'
-import { GuiDenomination, GuiExchangeRates, GuiFiatType } from '../types/types'
+import { GuiExchangeRates, GuiFiatType } from '../types/types'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers'
-import { getTokenId } from './CurrencyInfoHelpers'
+import { getCurrencyCode, getTokenId } from './CurrencyInfoHelpers'
 import { base58 } from './encoding'
 
 export const DECIMAL_PRECISION = 18
@@ -167,7 +167,7 @@ export const getNewArrayWithItem = (array: any[], item: any) => (!array.includes
 
 const restrictedCurrencyCodes = ['BTC']
 
-export function getDenomFromIsoCode(currencyCode: string): GuiDenomination {
+export function getDenomFromIsoCode(currencyCode: string): EdgeDenomination {
   if (restrictedCurrencyCodes.findIndex(item => item === currencyCode) !== -1) {
     return {
       name: '',
@@ -176,7 +176,7 @@ export function getDenomFromIsoCode(currencyCode: string): GuiDenomination {
     }
   }
   const symbol = getSymbolFromCurrency(currencyCode)
-  const denom: GuiDenomination = {
+  const denom: EdgeDenomination = {
     name: currencyCode,
     symbol,
     multiplier: '100'
@@ -277,8 +277,9 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
   for (const walletId of Object.keys(state.core.account.currencyWallets)) {
     const wallet = state.core.account.currencyWallets[walletId]
     log.push(`LogTot: pluginId:${wallet.currencyInfo.pluginId} wallet=${wallet.id.slice(0, 5)} isoFiat=${isoFiatCurrencyCode}`)
-    for (const currencyCode of Object.keys(wallet.balances)) {
-      const nativeBalance = wallet.balances[currencyCode] ?? '0'
+    for (const tokenId of wallet.balanceMap.keys()) {
+      const nativeBalance = wallet.balanceMap.get(tokenId) ?? '0'
+      const currencyCode = getCurrencyCode(wallet, tokenId)
       const rate = exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? '0'
       log.push(`\nLogTot: code=${currencyCode} rate=${rate} nb=${nativeBalance}`)
 
@@ -518,11 +519,6 @@ export const shuffleArray = <T>(array: T[]): T[] => {
   return array
 }
 
-export const pickRandom = <T>(array?: T[]): T | null => {
-  if (array == null || array.length === 0) return null
-  return array[Math.floor(Math.random() * array.length)]
-}
-
 /**
  * Waits for a collection of promises.
  * Returns all the promises that manage to resolve within the timeout.
@@ -598,4 +594,41 @@ export const base58ToUuid = (base58String: string): string => {
   const bytes = base58.parse(base58String)
   const uuid = v4({ random: bytes })
   return uuid
+}
+
+/**
+ * Darken a color by a scale factor.
+ * @param hexColor of format '#1f1f1f1f'
+ * @param scaleFactor 0-1 with 0 being black, 1 is unchanged
+ * @returns darkened hex color string
+ */
+export const darkenHexColor = (hexColor: string, scaleFactor: number): string => {
+  if (scaleFactor < 0 || scaleFactor > 1) throw new Error('scaleFactor must be between 0-1')
+  hexColor = hexColor.replace('#', '')
+
+  // Check for short and long hexadecimal color codes
+  if (hexColor.length === 3) {
+    // Expand short color code (e.g., #abc to #aabbcc)
+    hexColor = hexColor
+      .split('')
+      .map(char => char + char)
+      .join('')
+  } else if (hexColor.length !== 6) {
+    throw new Error('Invalid hexadecimal color code')
+  }
+
+  // Parse the hexadecimal values
+  const r = parseInt(hexColor.slice(0, 2), 16)
+  const g = parseInt(hexColor.slice(2, 4), 16)
+  const b = parseInt(hexColor.slice(4, 6), 16)
+
+  // Multiply each color component by the scale factor
+  const scaledR = Math.round(r * scaleFactor)
+  const scaledG = Math.round(g * scaleFactor)
+  const scaledB = Math.round(b * scaleFactor)
+
+  // Convert the scaled values back to hexadecimal
+  const scaledHexColor = `#${scaledR.toString(16).padStart(2, '0')}${scaledG.toString(16).padStart(2, '0')}${scaledB.toString(16).padStart(2, '0')}`
+
+  return scaledHexColor
 }

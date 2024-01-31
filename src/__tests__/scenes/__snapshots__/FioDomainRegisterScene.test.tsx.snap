@@ -1,9 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FioDomainRegister should render with loading props 1`] = `
-<SceneWrapper
-  background="theme"
-  bodySplit={34}
+<Memo(SceneWrapperComponent)
+  scroll={true}
 >
   <Memo(SceneHeaderComponent)
     style={
@@ -15,6 +14,8 @@ exports[`FioDomainRegister should render with loading props 1`] = `
       }
     }
     title="Register FIO Domain"
+    underline={true}
+    withTopMargin={true}
   >
     <Icon
       allowFontScaling={false}
@@ -28,10 +29,10 @@ exports[`FioDomainRegister should render with loading props 1`] = `
       }
     />
   </Memo(SceneHeaderComponent)>
-  <ScrollView
-    contentContainerStyle={
+  <View
+    style={
       {
-        "paddingTop": 11,
+        "marginHorizontal": 11,
       }
     }
   >
@@ -41,10 +42,10 @@ exports[`FioDomainRegister should render with loading props 1`] = `
         [
           {
             "paddingBottom": 22,
-            "paddingHorizontal": 28,
+            "paddingHorizontal": 11,
           },
           {
-            "color": "#A4C7DF",
+            "color": "#3dd9f4",
             "fontSize": 22,
           },
           {
@@ -61,24 +62,22 @@ exports[`FioDomainRegister should render with loading props 1`] = `
         [
           {
             "paddingBottom": 22,
-            "paddingHorizontal": 28,
+            "paddingHorizontal": 11,
           },
           {
-            "color": "#A4C7DF",
+            "color": "#3dd9f4",
             "fontSize": 22,
           },
         ]
       }
     >
-      FIO Crypto Handle consist of a username and a domain. If you purchase your custom domain, only you will able to register FIO Crypto Handle on it. FIO Crypto Handle registrations will have to be paid for with FIO tokens from the same wallet which owns the domain.
+      A FIO Crypto Handle consists of a username and a domain. If you purchase a custom domain, only you will able to register a Crypto Handle on it. Crypto Handle registrations will have to be paid for with FIO tokens from the same wallet which owns the domain.
     </WithTheme(EdgeTextComponent)>
-    <View
-      onLayout={[Function]}
-    >
-      <WithTheme(TileComponent)
+    <CardUi4>
+      <RowUi4
         onPress={[Function]}
+        rightButtonType="editable"
         title="Choose a FIO Domain"
-        type="editable"
       >
         <View
           style={
@@ -100,33 +99,33 @@ exports[`FioDomainRegister should render with loading props 1`] = `
           <WithTheme(EdgeTextComponent)
             style={
               {
-                "color": "#87939E",
+                "color": "#888888",
               }
             }
           >
             
           </WithTheme(EdgeTextComponent)>
         </View>
-      </WithTheme(TileComponent)>
-    </View>
-    <WithTheme(FormErrorComponent)
-      isVisible={false}
-      style={
+      </RowUi4>
+    </CardUi4>
+    <EdgeAnim
+      enter={
         {
-          "flex": 1,
-          "margin": 22,
+          "type": "fadeIn",
         }
       }
+      exit={
+        {
+          "type": "fadeOut",
+        }
+      }
+      visible={false}
     >
-      
-    </WithTheme(FormErrorComponent)>
-    <View
-      style={
-        {
-          "paddingBottom": 674,
-        }
-      }
-    />
-  </ScrollView>
-</SceneWrapper>
+      <AlertCardUi4
+        title=""
+        type="error"
+      />
+    </EdgeAnim>
+  </View>
+</Memo(SceneWrapperComponent)>
 `;

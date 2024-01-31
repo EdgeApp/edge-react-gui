@@ -1,7 +1,7 @@
 import { mul, toFixed } from 'biggystring'
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
+import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -12,8 +12,8 @@ import { config } from '../../../theme/appConfig'
 import { connect } from '../../../types/reactRedux'
 import { RootState } from '../../../types/reduxTypes'
 import { EdgeSceneProps } from '../../../types/routerTypes'
-import { EdgeTokenId } from '../../../types/types'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+import { EdgeAsset } from '../../../types/types'
+import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getDomainRegInfo } from '../../../util/FioAddressUtils'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -23,7 +23,9 @@ import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
-import { Tile } from '../../tiles/Tile'
+import { AlertCardUi4 } from '../../ui4/AlertCardUi4'
+import { CardUi4 } from '../../ui4/CardUi4'
+import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
 interface StateProps {
@@ -44,7 +46,7 @@ interface DispatchProps {
 
 interface LocalState {
   loading: boolean
-  supportedAssets: EdgeTokenId[]
+  supportedAssets: EdgeAsset[]
   supportedCurrencies: { [currencyCode: string]: boolean }
   paymentInfo: { [currencyCode: string]: { amount: string; address: string } }
   activationCost: number
@@ -86,7 +88,6 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
         )
         this.setState({ activationCost, feeValue, supportedAssets, supportedCurrencies, paymentInfo })
       } catch (e: any) {
-        showError(e)
         this.setState({ errorMessage: e.message })
       }
     }
@@ -105,16 +106,22 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   selectWallet = async () => {
     const { supportedAssets } = this.state
 
-    const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={supportedAssets} />
+    const result = await Airship.show<WalletListResult>(bridge => (
+      <WalletListModal
+        bridge={bridge}
+        navigation={this.props.navigation}
+        headerTitle={lstrings.select_wallet}
+        allowedAssets={[...supportedAssets, { pluginId: 'fio', tokenId: null }]}
+      />
     ))
-    if (walletId && currencyCode) {
+    if (result?.type === 'wallet') {
+      const { walletId, currencyCode } = result
       this.setState({ paymentWallet: { id: walletId, currencyCode } })
     }
   }
 
   onNextPress = (): void => {
-    const { isConnected, state, navigation, pluginId, route } = this.props
+    const { isConnected, state, navigation, route } = this.props
     const { fioDomain, selectedWallet } = route.params
     const { feeValue, paymentInfo: allPaymentInfo, paymentWallet } = this.state
     const { account } = state.core
@@ -141,7 +148,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
         let nativeAmount = mul(allPaymentInfo[paymentCurrencyCode].amount, exchangeDenomination.multiplier)
         nativeAmount = toFixed(nativeAmount, 0, 0)
 
-        const tokenId = getTokenId(account, pluginId, paymentCurrencyCode)
+        const tokenId = getTokenIdForced(account, wallet.currencyInfo.pluginId, paymentCurrencyCode)
         const sendParams: SendScene2Params = {
           walletId,
           tokenId,
@@ -152,6 +159,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
             wallet: true
           },
           spendInfo: {
+            tokenId,
             spendTargets: [
               {
                 nativeAmount,
@@ -177,7 +185,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
                   buttons={{ ok: { label: lstrings.string_ok_cap } }}
                 />
               )).catch(err => showError(err))
-              navigation.navigate('walletsTab', { screen: 'walletList' })
+              navigation.navigate('homeTab', { screen: 'home' })
             }
           }
         }
@@ -202,32 +210,33 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     }
 
     return (
-      <SceneWrapper background="theme" bodySplit={theme.rem(1.5)}>
-        <ScrollView>
+      <SceneWrapper scroll>
+        <View style={styles.container}>
           <IonIcon name="ios-at" style={styles.iconIon} color={theme.primaryText} size={theme.rem(4)} />
           <EdgeText style={styles.instructionalText} numberOfLines={7}>
             {detailsText}
           </EdgeText>
-          <Tile type="static" title={lstrings.fio_domain_label} body={fioDomain} />
-          <Tile type="static" title={lstrings.create_wallet_account_amount_due} body={loading ? lstrings.loading : `${activationCost} ${FIO_STR}`} />
-          <Tile
-            type="touchable"
-            title={lstrings.create_wallet_account_select_wallet}
-            body={paymentWalletBody}
-            onPress={this.onWalletPress}
-            // @ts-expect-error
-            disabled={!activationCost || activationCost === 0}
-          />
+          <CardUi4>
+            <RowUi4 title={lstrings.fio_domain_label} body={fioDomain} />
+          </CardUi4>
+          <CardUi4>
+            <RowUi4 title={lstrings.create_wallet_account_amount_due} body={loading ? lstrings.loading : `${activationCost} ${FIO_STR}`} />
+          </CardUi4>
+          <CardUi4>
+            <RowUi4
+              rightButtonType="touchable"
+              title={lstrings.create_wallet_account_select_wallet}
+              body={paymentWalletBody}
+              onPress={this.onWalletPress}
+              // @ts-expect-error
+              disabled={!activationCost || activationCost === 0}
+            />
+          </CardUi4>
           {!loading && paymentWallet && paymentWallet.id && (
-            <MainButton label={lstrings.string_next_capitalized} marginRem={1} onPress={this.onNextPress} type="secondary" />
+            <MainButton label={lstrings.string_next_capitalized} marginRem={1} onPress={this.onNextPress} type="primary" />
           )}
-          {errorMessage && (
-            <EdgeText style={styles.errorMessage} numberOfLines={3}>
-              {errorMessage}
-            </EdgeText>
-          )}
-          <View style={styles.bottomSpace} />
-        </ScrollView>
+          {errorMessage != null && <AlertCardUi4 title={lstrings.error_unexpected_title} body={errorMessage} type="error" />}
+        </View>
       </SceneWrapper>
     )
   }
@@ -242,7 +251,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'center',
     color: theme.secondaryText
   },
-  bottomSpace: {
+  container: {
+    marginHorizontal: theme.rem(0.5),
     paddingBottom: theme.rem(30)
   },
   iconIon: {

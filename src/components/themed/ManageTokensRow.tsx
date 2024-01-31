@@ -11,8 +11,8 @@ import { lstrings } from '../../locales/strings'
 import { NavigationProp } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 
 export interface Props {
@@ -72,7 +72,7 @@ export const ManageTokensRowComponent = (props: Props) => {
 
   return (
     <Pressable style={styles.row} onPress={handleToggle}>
-      <CryptoIcon
+      <CryptoIconUi4
         marginRem={0.5}
         sizeRem={2}
         // Use the pluginId to avoid showing the wallet loading spinner:

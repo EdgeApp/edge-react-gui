@@ -1,119 +1,168 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CreateWalletAccountSelect renders 1`] = `
-<BVLinearGradient
-  colors={
-    [
-      4278585612,
-      4279971643,
-    ]
-  }
-  endPoint={
+<RCTScrollView
+  collapsable={false}
+  contentContainerStyle={
     {
-      "x": 1,
-      "y": 0,
+      "paddingBottom": 0,
+      "paddingLeft": 0,
+      "paddingRight": 0,
+      "paddingTop": 64,
     }
   }
-  locations={null}
-  startPoint={
+  onScroll={[Function]}
+  scrollEventThrottle={0.0001}
+  scrollIndicatorInsets={
     {
-      "x": 0,
-      "y": 0,
+      "right": 1,
     }
   }
   style={
     {
-      "bottom": 0,
-      "left": 0,
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
+      "height": 1334,
+      "padding": 0,
+      "width": 750,
     }
   }
 >
-  <RCTScrollView
-    contentContainerStyle={
-      {
-        "padding": 0,
+  <View>
+    <View
+      style={
+        {
+          "alignSelf": "center",
+        }
       }
-    }
-    style={
-      {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 64,
-      }
-    }
-  >
-    <View>
+    >
       <View
         style={
           {
-            "alignSelf": "center",
+            "height": 90,
+            "marginBottom": 22,
+            "marginLeft": 22,
+            "marginRight": 22,
+            "marginTop": 22,
+            "width": 90,
           }
         }
       >
         <View
           style={
             {
+              "backgroundColor": "#000000",
+              "borderRadius": 45,
+              "elevation": 0,
               "height": 90,
-              "marginBottom": 22,
-              "marginLeft": 22,
-              "marginRight": 22,
-              "marginTop": 22,
+              "shadowColor": "#000000",
+              "shadowOffset": {
+                "height": 3,
+                "width": -3,
+              },
+              "shadowOpacity": 0.6,
+              "shadowRadius": 4,
               "width": 90,
             }
           }
-        />
+        >
+          <View
+            style={
+              [
+                {
+                  "overflow": "hidden",
+                },
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+              ]
+            }
+          >
+            <FastImageView
+              resizeMode="cover"
+              source={
+                {
+                  "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                }
+              }
+              style={
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+          </View>
+        </View>
       </View>
-      <Text
-        style={
-          [
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "margin": 11,
-              "textAlign": "left",
-            },
-            {
-              "paddingBottom": 0,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 0,
-            },
-            undefined,
-          ]
-        }
-      >
-        Create a unique account handle, this will also be the name of your BTC wallet:
-      </Text>
-      <Text
-        style={
-          [
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "margin": 11,
-              "textAlign": "left",
-            },
-            {
-              "paddingBottom": 0,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 0,
-            },
-            undefined,
-          ]
-        }
-      >
-        • Must be exactly 12 characters
+    </View>
+    <Text
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "margin": 11,
+            "textAlign": "left",
+          },
+          {
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "paddingRight": 0,
+            "paddingTop": 0,
+          },
+          null,
+          null,
+        ]
+      }
+    >
+      Create a unique account handle, this will also be the name of your BTC wallet:
+    </Text>
+    <Text
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "margin": 11,
+            "textAlign": "left",
+          },
+          {
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "paddingRight": 0,
+            "paddingTop": 0,
+          },
+          null,
+          null,
+        ]
+      }
+    >
+      • Must be exactly 12 characters
 • Must include only lowercase letters a-z or numbers 1-5
 
-      </Text>
+    </Text>
+    <View
+      style={
+        {
+          "alignItems": undefined,
+          "flex": undefined,
+          "flexDirection": "column",
+          "justifyContent": undefined,
+          "marginBottom": 45,
+          "marginLeft": 22,
+          "marginRight": 22,
+          "marginTop": 22,
+        }
+      }
+    >
       <View
         accessibilityState={
           {
@@ -125,391 +174,463 @@ exports[`CreateWalletAccountSelect renders 1`] = `
           }
         }
         accessible={false}
+        disableAnimation={
+          {
+            "value": 0,
+          }
+        }
+        focusAnimation={
+          {
+            "value": 0,
+          }
+        }
         focusable={true}
+        multiline={false}
         onClick={[Function]}
-        onLayout={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
         onResponderRelease={[Function]}
         onResponderTerminate={[Function]}
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
+        scale={
+          {
+            "value": 1,
+          }
+        }
         style={
           [
             {
               "alignItems": "center",
-              "backgroundColor": "rgba(255, 255, 255, 0)",
               "borderRadius": 11,
+              "borderWidth": 1,
+              "flex": undefined,
               "flexDirection": "row",
-              "minHeight": 67,
-              "paddingHorizontal": 22,
+              "paddingHorizontal": 17,
             },
             {
-              "flexGrow": 0,
-              "marginBottom": 45,
-              "marginLeft": 22,
-              "marginRight": 22,
-              "marginTop": 22,
-              "paddingLeft": 22,
-              "paddingRight": 65,
-              "paddingVertical": 0,
+              "backgroundColor": undefined,
+              "borderColor": undefined,
+              "marginHorizontal": undefined,
+              "opacity": undefined,
+              "paddingVertical": 22,
             },
           ]
         }
       >
         <View
+          scale={
+            {
+              "value": 0,
+            }
+          }
           style={
             [
               {
-                "borderTopWidth": 1,
-                "bottom": 0,
-                "left": 22,
-                "position": "absolute",
-                "right": 22,
+                "alignItems": "stretch",
+                "aspectRatio": 1,
               },
               {
-                "borderColor": undefined,
-                "right": 22,
+                "opacity": 0,
+                "width": 0,
               },
             ]
           }
         />
         <View
+          focusValue={
+            {
+              "value": 0,
+            }
+          }
+          hasPlaceholder={true}
           style={
             [
               {
-                "borderBottomLeftRadius": 11,
-                "borderBottomWidth": 1,
-                "borderLeftWidth": 1,
-                "borderRightWidth": 0,
-                "borderTopLeftRadius": 11,
-                "borderTopWidth": 1,
-                "bottom": 0,
+                "alignItems": "flex-start",
+                "alignSelf": "flex-start",
+                "flex": 1,
+                "flexDirection": "row",
                 "left": 0,
-                "position": "absolute",
-                "top": 0,
-                "width": 22,
               },
               {
-                "borderColor": undefined,
-              },
-            ]
-          }
-        />
-        <View
-          style={
-            [
-              {
-                "borderBottomRightRadius": 11,
-                "borderBottomWidth": 1,
-                "borderLeftWidth": 0,
-                "borderRightWidth": 1,
-                "borderTopRightRadius": 11,
-                "borderTopWidth": 1,
-                "bottom": 0,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-                "width": 22,
-              },
-              {
-                "borderColor": undefined,
-              },
-            ]
-          }
-        />
-        <View
-          style={
-            [
-              {
-                "borderTopWidth": 1,
-                "left": 22,
-                "position": "absolute",
-                "right": 22,
-                "top": 0,
-              },
-              {
-                "borderColor": undefined,
-                "left": 22,
-              },
-            ]
-          }
-        />
-        <View
-          style={
-            [
-              {
-                "height": 67,
-                "justifyContent": "center",
-                "left": 0,
-                "paddingHorizontal": 22,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-              },
-              {
-                "paddingLeft": 22,
-                "paddingRight": 65,
+                "marginBottom": NaN,
+                "marginTop": undefined,
               },
             ]
           }
         >
-          <Text
-            accessible={true}
-            numberOfLines={1}
-            onLayout={[Function]}
+          <View
+            shift={
+              {
+                "value": 0,
+              }
+            }
             style={
               [
                 {
-                  "alignSelf": "flex-start",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "padding": 0,
+                  "alignItems": "center",
+                  "justifyContent": "center",
+                  "left": 8.8,
+                  "margin": 0,
+                  "paddingHorizontal": 0,
+                  "paddingVertical": 0,
+                  "position": "absolute",
+                  "top": 0,
                 },
                 {
-                  "color": undefined,
                   "transform": [
                     {
-                      "translateX": 0,
+                      "translateY": undefined,
                     },
                     {
-                      "translateY": -0,
-                    },
-                    {
-                      "scale": 1,
+                      "translateX": undefined,
                     },
                   ],
                 },
               ]
             }
-            testID="undefined.labelText"
           >
-            Account Handle
-          </Text>
-        </View>
-        <View
-          style={
-            {
-              "bottom": -45,
-              "height": 45,
-              "left": 0,
-              "paddingLeft": 22,
-              "paddingRight": 39,
-              "position": "absolute",
-              "right": 0,
+            <Text
+              disableAnimation={
+                {
+                  "value": 0,
+                }
+              }
+              focusAnimation={
+                {
+                  "value": 0,
+                }
+              }
+              scale={
+                {
+                  "value": 1,
+                }
+              }
+              shift={
+                {
+                  "value": 0,
+                }
+              }
+              style={
+                [
+                  {
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": undefined,
+                    "fontSize": undefined,
+                  },
+                ]
+              }
+            >
+              Account Handle
+            </Text>
+          </View>
+          <TextInput
+            accessibilityState={
+              {
+                "disabled": false,
+              }
             }
-          }
-        >
-          <Text
             accessible={true}
-            numberOfLines={2}
+            animated={true}
+            autoCapitalize="none"
+            autoCorrect={false}
+            autoFocus={true}
+            disableAnimation={
+              {
+                "value": 0,
+              }
+            }
+            focusAnimation={
+              {
+                "value": 0,
+              }
+            }
+            maxLength={12}
+            multiline={false}
+            onBlur={[Function]}
+            onChangeText={[Function]}
+            onFocus={[Function]}
+            onSubmitEditing={[Function]}
+            returnKeyType="next"
+            scale={
+              {
+                "value": 1,
+              }
+            }
+            secureTextEntry={false}
+            selectionColor="#FFFFFF"
             style={
               [
                 {
-                  "color": "#00f1a2",
+                  "color": "hsla(0, 0%, 100%, 0.20)",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
                   "fontFamily": "Quicksand-Regular",
-                  "fontSize": 17,
+                  "margin": 0,
+                  "paddingHorizontal": 0,
+                  "paddingVertical": 0,
+                  "transform": [
+                    {
+                      "translateY": -0,
+                    },
+                  ],
                 },
                 {
-                  "opacity": 0,
+                  "color": undefined,
+                  "fontSize": 22,
                 },
               ]
             }
-            testID="undefined.subText"
+            testID="undefined.textInput"
+            textAlignVertical="top"
+            value=""
           />
         </View>
-        <Text
-          accessible={true}
-          numberOfLines={1}
-          onLayout={[Function]}
-          style={
-            [
-              {
-                "bottom": -10,
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 17,
-                "position": "absolute",
-                "right": 28,
-              },
-              {
-                "color": undefined,
-                "opacity": 0,
-                "transform": [
-                  {
-                    "translateX": 6,
-                  },
-                  {
-                    "scale": 0,
-                  },
-                ],
-              },
-            ]
-          }
-          testID="undefined.charLimit"
-        >
-          12
-        </Text>
-        <TextInput
+        <View
           accessibilityState={
             {
-              "disabled": false,
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
             }
           }
           accessible={true}
-          autoCapitalize="none"
-          autoCorrect={false}
-          autoFocus={true}
-          editable={true}
-          maxLength={12}
-          multiline={false}
-          onBlur={[Function]}
-          onChangeText={[Function]}
-          onFocus={[Function]}
-          onSubmitEditing={[Function]}
-          returnKeyType="next"
-          secureTextEntry={false}
-          selectionColor="#FFFFFF"
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "opacity": 1,
+            }
+          }
+          testID="undefined.clearIcon"
+        >
+          <View
+            scale={
+              {
+                "value": 0,
+              }
+            }
+            style={
+              [
+                {
+                  "alignItems": "stretch",
+                  "aspectRatio": 1,
+                },
+                {
+                  "opacity": 0,
+                  "width": 0,
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "anticon",
+                  "fontSize": 0,
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                }
+              }
+            >
+              
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+            "paddingHorizontal": 11,
+          }
+        }
+      >
+        <Text
+          danger={false}
+          style={
+            [
+              {
+                "color": "#3dd9f4",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 17,
+                "includeFontPadding": false,
+              },
+            ]
+          }
+        />
+        <Text
+          style={
+            [
+              {
+                "color": "#3dd9f4",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 17,
+                "includeFontPadding": false,
+              },
+            ]
+          }
+        >
+          12
+        </Text>
+      </View>
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": true,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "alignSelf": "center",
+          "borderRadius": 34,
+          "justifyContent": "center",
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+          "opacity": 1,
+        }
+      }
+    >
+      <BVLinearGradient
+        colors={
+          [
+            4280299823,
+            4278214733,
+          ]
+        }
+        endPoint={
+          {
+            "x": 1,
+            "y": 0,
+          }
+        }
+        locations={null}
+        startPoint={
+          {
+            "x": 0,
+            "y": 0,
+          }
+        }
+        style={
+          [
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "center",
+            },
+            {
+              "alignSelf": "center",
+              "opacity": 0.3,
+            },
+            {
+              "height": 67,
+              "paddingHorizontal": 45,
+            },
+            {
+              "alignItems": "center",
+              "alignSelf": "stretch",
+              "borderRadius": 34,
+              "justifyContent": "center",
+            },
+            [
+              {
+                "alignItems": "center",
+                "alignSelf": "stretch",
+                "borderRadius": 34,
+                "justifyContent": "center",
+              },
+              {
+                "alignSelf": "center",
+              },
+            ],
+            {
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
+            },
+            undefined,
+          ]
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={false}
+          minimumFontScale={0.65}
+          numberOfLines={1}
           style={
             [
               {
                 "color": "#FFFFFF",
-                "flexGrow": 1,
-                "flexShrink": 1,
                 "fontFamily": "Quicksand-Regular",
-                "padding": 0,
-              },
-              {
                 "fontSize": 22,
+                "includeFontPadding": false,
               },
-            ]
-          }
-          testID="undefined.textInput"
-          textAlignVertical="top"
-          value=""
-        />
-      </View>
-      <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": true,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          {
-            "elevation": 2,
-            "opacity": 1,
-            "shadowColor": "#FFFFFF",
-            "shadowOffset": {
-              "height": 0,
-              "width": 0,
-            },
-            "shadowOpacity": 0.25,
-            "shadowRadius": 8,
-          }
-        }
-      >
-        <BVLinearGradient
-          colors={
-            [
-              4278754931,
-              4278251938,
-            ]
-          }
-          endPoint={
-            {
-              "x": 1,
-              "y": 0,
-            }
-          }
-          locations={null}
-          startPoint={
-            {
-              "x": 0,
-              "y": 0,
-            }
-          }
-          style={
-            [
-              {
-                "alignItems": "center",
-                "borderColor": "rgba(255, 255, 255, 0)",
-                "borderRadius": 6,
-                "borderWidth": 0,
-                "flexDirection": "row",
-                "justifyContent": "center",
-                "minHeight": 67,
-                "minWidth": 202,
-              },
-              {
-                "alignSelf": "center",
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-                "opacity": 0.3,
-                "paddingBottom": 0,
-                "paddingLeft": 0,
-                "paddingRight": 0,
-                "paddingTop": 0,
-              },
-              {
-                "borderRadius": 6,
-                "paddingLeft": 0,
-                "paddingRight": 0,
-              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
             ]
           }
         >
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.75}
-            numberOfLines={1}
-            style={
-              {
-                "color": "#1b2f3b",
-                "fontFamily": "Quicksand-Medium",
-                "fontSize": 22,
-                "marginHorizontal": 0,
-                "paddingBottom": 11,
-                "paddingLeft": 17,
-                "paddingRight": 17,
-                "paddingTop": 11,
-                "textShadowColor": "#000000",
-                "textShadowOffset": {
-                  "height": 0,
-                  "width": 0,
-                },
-                "textShadowRadius": 0,
-              }
-            }
-          >
-            Next
-          </Text>
-        </BVLinearGradient>
-      </View>
+          Next
+        </Text>
+      </BVLinearGradient>
     </View>
-  </RCTScrollView>
-</BVLinearGradient>
+  </View>
+</RCTScrollView>
 `;

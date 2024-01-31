@@ -1,15 +1,15 @@
 import { eq, round } from 'biggystring'
 import { asArray, asDate, asMaybe, asObject, asOptional, asString, asValue } from 'cleaners'
-import { EdgeFetchOptions, EdgeSpendInfo, JsonObject } from 'edge-core-js'
+import { EdgeAssetAction, EdgeFetchOptions, EdgeSpendInfo, EdgeTxActionFiat, JsonObject } from 'edge-core-js'
 import URL from 'url-parse'
 
 import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { locale } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
-import { EdgeTokenId, StringMap } from '../../../types/types'
+import { EdgeAsset, StringMap } from '../../../types/types'
 import { makeUuid } from '../../../util/utils'
 import { SendErrorNoTransaction } from '../fiatPlugin'
-import { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
+import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
@@ -26,6 +26,8 @@ const providerId = 'paybis'
 const storeId = 'paybis'
 const partnerIcon = 'paybis.png'
 const pluginDisplayName = 'Paybis'
+const providerDisplayName = pluginDisplayName
+const supportEmail = 'support@paybis.com'
 
 type AllowedPaymentTypes = Record<FiatDirection, { [Payment in FiatPaymentType]?: boolean }>
 
@@ -204,7 +206,7 @@ interface PaybisPairs {
 
 const paybisPairs: PaybisPairs = { buy: undefined, sell: undefined }
 
-interface ExtendedTokenId extends EdgeTokenId {
+interface ExtendedTokenId extends EdgeAsset {
   currencyCode?: string
 }
 
@@ -216,20 +218,20 @@ const CRYPTO_DECIMALS = -8
 
 const PAYBIS_TO_EDGE_CURRENCY_MAP: Record<string, ExtendedTokenId> = {
   // ADA: { pluginId: 'cardano' },
-  BNB: { pluginId: 'binancechain' },
-  BCH: { pluginId: 'bitcoincash' },
-  BTC: { pluginId: 'bitcoin' },
-  'BTC-TESTNET': { pluginId: 'bitcointestnet', currencyCode: 'TESTBTC' },
-  DOGE: { pluginId: 'dogecoin' },
-  ETH: { pluginId: 'ethereum' },
-  LTC: { pluginId: 'litecoin' },
-  DOT: { pluginId: 'polkadot' },
-  'MATIC-POLYGON': { pluginId: 'polygon', currencyCode: 'MATIC' },
-  SOL: { pluginId: 'solana' },
-  TRX: { pluginId: 'tron' },
-  XLM: { pluginId: 'stellar' },
-  XRP: { pluginId: 'ripple' },
-  XTZ: { pluginId: 'tezos' },
+  BNB: { pluginId: 'binancechain', tokenId: null },
+  BCH: { pluginId: 'bitcoincash', tokenId: null },
+  BTC: { pluginId: 'bitcoin', tokenId: null },
+  'BTC-TESTNET': { pluginId: 'bitcointestnet', currencyCode: 'TESTBTC', tokenId: null },
+  DOGE: { pluginId: 'dogecoin', tokenId: null },
+  ETH: { pluginId: 'ethereum', tokenId: null },
+  LTC: { pluginId: 'litecoin', tokenId: null },
+  DOT: { pluginId: 'polkadot', tokenId: null },
+  'MATIC-POLYGON': { pluginId: 'polygon', currencyCode: 'MATIC', tokenId: null },
+  SOL: { pluginId: 'solana', tokenId: null },
+  TRX: { pluginId: 'tron', tokenId: null },
+  XLM: { pluginId: 'stellar', tokenId: null },
+  XRP: { pluginId: 'ripple', tokenId: null },
+  XTZ: { pluginId: 'tezos', tokenId: null },
   USDT: { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' },
   USDC: { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' },
   SHIB: { pluginId: 'ethereum', tokenId: '95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce' },
@@ -456,7 +458,11 @@ export const paybisProvider: FiatProviderFactory = {
           paymentTypes,
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
             const { coreWallet, showUi } = approveParams
-            const receiveAddress = await coreWallet.getReceiveAddress()
+            const success = await showUi.requestPermission(['camera'], pluginDisplayName, true)
+            if (!success) {
+              await showUi.showError(new Error(lstrings.fiat_plugin_cannot_continue_camera_permission))
+            }
+            const receiveAddress = await coreWallet.getReceiveAddress({ tokenId: null })
 
             let bodyParams
             if (direction === 'buy') {
@@ -529,8 +535,36 @@ export const paybisProvider: FiatProviderFactory = {
                       console.log(`  tokenId: ${tokenId}`)
                       const nativeAmount = await coreWallet.denominationToNative(amount, displayCurrencyCode)
 
+                      const assetAction: EdgeAssetAction = {
+                        assetActionType: 'sell'
+                      }
+                      const savedAction: EdgeTxActionFiat = {
+                        actionType: 'fiat',
+                        orderId: invoice,
+                        orderUri: `${widgetUrl}?requestId=${requestId}`,
+                        isEstimate: true,
+                        fiatPlugin: {
+                          providerId,
+                          providerDisplayName,
+                          supportEmail
+                        },
+                        payinAddress: depositAddress,
+                        cryptoAsset: {
+                          pluginId: coreWallet.currencyInfo.pluginId,
+                          tokenId,
+                          nativeAmount
+                        },
+                        fiatAsset: {
+                          fiatCurrencyCode,
+                          fiatAmount
+                        }
+                      }
+
                       // Launch the SendScene to make payment
                       const spendInfo: EdgeSpendInfo = {
+                        tokenId,
+                        assetAction,
+                        savedAction,
                         spendTargets: [
                           {
                             nativeAmount,
@@ -562,7 +596,7 @@ export const paybisProvider: FiatProviderFactory = {
                           address: true
                         }
                       }
-                      await showUi.send(sendParams)
+                      const tx = await showUi.send(sendParams)
                       await showUi.trackConversion('Sell_Success', {
                         destCurrencyCode: fiatCurrencyCode,
                         destExchangeAmount: fiatAmount,
@@ -572,6 +606,18 @@ export const paybisProvider: FiatProviderFactory = {
                         pluginId: providerId,
                         orderId: invoice
                       })
+
+                      // Save separate metadata/action for token transaction fee
+                      if (tokenId != null) {
+                        const params: SaveTxActionParams = {
+                          walletId: coreWallet.id,
+                          tokenId,
+                          txid: tx.txid,
+                          savedAction,
+                          assetAction: { ...assetAction, assetActionType: 'sell' }
+                        }
+                        await showUi.saveTxAction(params)
+                      }
 
                       // Route back to the original URL to show Paybis confirmation screen
                       await showUi.exitScene()

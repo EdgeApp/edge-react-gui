@@ -1,9 +1,8 @@
 import { gte } from 'biggystring'
 import { Platform } from 'react-native'
 
-import { OutlinedTextInputProps } from '../components/themed/OutlinedTextInput'
 import { lstrings } from '../locales/strings'
-import { StringMap, WalletConnectChainId } from '../types/types'
+import { WalletConnectChainId } from '../types/types'
 
 export const MAX_TOKEN_CODE_CHARACTERS = 7
 
@@ -120,7 +119,7 @@ export interface ImportKeyOption {
     knowledgeBaseUri?: string
   }
   required: boolean
-  inputType: OutlinedTextInputProps['keyboardType']
+  inputType: 'default' | 'number-pad'
   inputValidation: (input: string) => boolean
 }
 
@@ -156,13 +155,11 @@ interface SpecialCurrencyInfo {
   noChangeMiningFee?: boolean
   noMaxSpend?: boolean
   keysOnlyMode?: boolean
-  isPrivateKeySweepable?: boolean
   isPaymentProtocolSupported?: boolean
   isTransactionListUnsupported?: boolean
   isSplittingDisabled?: boolean
   isStakingSupported?: boolean
   stakeActions?: { [stakeActionKey: string]: string }
-  stakeLockPeriod?: number
   stakeMaxApy?: number
   maxSpendTargets?: number
   walletConnectV2ChainId?: WalletConnectChainId
@@ -196,7 +193,6 @@ export const SPECIAL_CURRENCY_INFO: {
     displayIoniaRewards: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   bitcointestnet: {
@@ -206,7 +202,6 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'TESTBTC',
     displayBuyCrypto: true,
     isImportKeySupported: true,
-    isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   bitcoincash: {
@@ -217,7 +212,6 @@ export const SPECIAL_CURRENCY_INFO: {
     displayIoniaRewards: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   bitcoinsv: {
@@ -226,7 +220,6 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'BSV',
     keysOnlyMode: true,
     isImportKeySupported: true,
-    isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   digibyte: {
@@ -235,7 +228,6 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'DGB',
     displayBuyCrypto: true,
     isImportKeySupported: true,
-    isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   litecoin: {
@@ -247,7 +239,6 @@ export const SPECIAL_CURRENCY_INFO: {
     displayIoniaRewards: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   rsk: {
@@ -455,7 +446,6 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: true,
     isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
-    isTransactionListUnsupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '324'
@@ -474,6 +464,7 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_coreum_wallet_name,
     chainCode: 'CORE',
     dummyPublicAddress: 'core18rv2a6cjkk3lnayy29hez6s2ftpe9llqnce2vu',
+    isStakingSupported: true,
     isImportKeySupported: true
   },
   osmosis: {
@@ -542,7 +533,6 @@ export const SPECIAL_CURRENCY_INFO: {
       add: 'stakeFioTokens',
       remove: 'unStakeFioTokens'
     },
-    stakeLockPeriod: 1000 * 60 * 60 * 24 * 7,
     stakeMaxApy: 450
   },
   dash: {
@@ -551,7 +541,6 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'DASH',
     displayIoniaRewards: true,
     isImportKeySupported: true,
-    isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   ravencoin: {
@@ -559,7 +548,6 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_ravencoin_wallet_name,
     chainCode: 'RVN',
     isImportKeySupported: true,
-    isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   dogecoin: {
@@ -569,7 +557,6 @@ export const SPECIAL_CURRENCY_INFO: {
     displayIoniaRewards: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   zcoin: {
@@ -577,7 +564,6 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_zcoin_wallet_name,
     chainCode: 'FIRO',
     isImportKeySupported: true,
-    isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   smartcash: {
@@ -585,7 +571,6 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_smartcash_wallet_name,
     chainCode: 'SMART',
     isImportKeySupported: true,
-    isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true,
     keysOnlyMode: true
   },
@@ -594,7 +579,6 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_vertcoin_wallet_name,
     chainCode: 'VTC',
     isImportKeySupported: true,
-    isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   bitcoingold: {
@@ -602,7 +586,6 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_bitcoin_gold_wallet_name,
     chainCode: 'BTG',
     isImportKeySupported: true,
-    isPrivateKeySweepable: true,
     isSplittingDisabled: true,
     isPaymentProtocolSupported: true
   },
@@ -611,7 +594,6 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_feather_coin_wallet_name,
     chainCode: 'FTC',
     isImportKeySupported: true,
-    isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   groestlcoin: {
@@ -619,7 +601,6 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_groestlcoin_wallet_name,
     chainCode: 'GRS',
     isImportKeySupported: true,
-    isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   qtum: {
@@ -627,7 +608,6 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_qtum_wallet_name,
     chainCode: 'QTUM',
     isImportKeySupported: true,
-    isPrivateKeySweepable: true,
     isPaymentProtocolSupported: true
   },
   eboost: {
@@ -635,15 +615,13 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_eboost_wallet_name,
     chainCode: 'EBST',
     isImportKeySupported: true,
-    isPrivateKeySweepable: true,
     keysOnlyMode: true
   },
   ufo: {
     maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
     initWalletName: lstrings.string_first_ufo_wallet_name,
     chainCode: 'ufo',
-    isImportKeySupported: true,
-    isPrivateKeySweepable: true
+    isImportKeySupported: true
   },
   fantom: {
     initWalletName: lstrings.string_first_fantom_wallet_name,
@@ -978,11 +956,6 @@ export const FIAT_CODES_SYMBOLS: { [code: string]: string } = {
   YER: '﷼',
   ZAR: 'R',
   ZMW: 'ZK'
-}
-
-export const STAKING_BALANCES: StringMap = {
-  staked: ':STAKED',
-  locked: ':LOCKED'
 }
 
 export const FIO_WALLET_TYPE = 'wallet:fio'

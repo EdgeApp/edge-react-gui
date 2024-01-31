@@ -15,7 +15,7 @@ import { AccountInitPayload, initialState } from '../reducers/scenes/SettingsRed
 import { config } from '../theme/appConfig'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase, NavigationProp } from '../types/routerTypes'
-import { EdgeTokenId, GuiTouchIdInfo } from '../types/types'
+import { EdgeAsset, GuiTouchIdInfo } from '../types/types'
 import { logActivity } from '../util/logger'
 import { logEvent } from '../util/tracking'
 import { runWithTimeout } from '../util/utils'
@@ -68,9 +68,9 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
       const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
         navigation.replace('edgeTabs', {
-          screen: 'walletsTab',
+          screen: 'homeTab',
           params: {
-            screen: 'walletList'
+            screen: 'home'
           }
         })
         const selectedEdgetokenIds = items.map(item => ({ pluginId: item.pluginId, tokenId: item.tokenId }))
@@ -256,7 +256,7 @@ async function safeCreateWallet(account: EdgeAccount, walletType: string, wallet
 }
 
 // The `currencyCodes` are in the format "ETH:DAI",
-const currencyCodesToEdgeTokenIds = (account: EdgeAccount, currencyCodes: string[]): EdgeTokenId[] => {
+const currencyCodesToEdgeTokenIds = (account: EdgeAccount, currencyCodes: string[]): EdgeAsset[] => {
   const chainCodePluginIdMap = Object.keys(account.currencyConfig).reduce(
     (map: { [chainCode: string]: string }, pluginId) => {
       const chainCode = account.currencyConfig[pluginId].currencyInfo.currencyCode
@@ -266,7 +266,7 @@ const currencyCodesToEdgeTokenIds = (account: EdgeAccount, currencyCodes: string
     { BNB: 'binancesmartchain' } // HACK: Prefer BNB Smart Chain over Beacon Chain if provided a BNB currency code)
   )
 
-  const edgeTokenIds: EdgeTokenId[] = []
+  const edgeTokenIds: EdgeAsset[] = []
 
   for (const code of currencyCodes) {
     const [parent, child] = code.split(':')
@@ -274,9 +274,9 @@ const currencyCodesToEdgeTokenIds = (account: EdgeAccount, currencyCodes: string
     const currencyConfig = account.currencyConfig[pluginId]
     if (currencyConfig == null) continue
 
-    // Add the mainnet EdgeTokenId if we haven't yet
+    // Add the mainnet EdgeAsset if we haven't yet
     if (edgeTokenIds.find(edgeTokenId => edgeTokenId.tokenId == null && edgeTokenId.pluginId === pluginId) == null) {
-      edgeTokenIds.push({ pluginId })
+      edgeTokenIds.push({ pluginId, tokenId: null })
     }
 
     // Add tokens
@@ -292,7 +292,7 @@ const currencyCodesToEdgeTokenIds = (account: EdgeAccount, currencyCodes: string
 /**
  * Creates wallets inside a new account.
  */
-async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: string, edgeTokenIds: EdgeTokenId[], dispatch: Dispatch) {
+async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: string, edgeTokenIds: EdgeAsset[], dispatch: Dispatch) {
   if (edgeTokenIds.length === 0) return await createDefaultWallets(account, fiatCurrencyCode, dispatch)
 
   const pluginIdTokenIdMap: { [pluginId: string]: string[] } = {}
