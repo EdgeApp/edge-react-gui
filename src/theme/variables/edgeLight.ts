@@ -156,6 +156,8 @@ export const edgeLight: Theme = {
   modalSceneOverlayColor: palette.black,
   modalDragbarColor: palette.gray,
 
+  modalLikeBackground: '#333232',
+
   sideMenuBorderColor: palette.transparent,
   sideMenuBorderWidth: 0,
   sideMenuFont: palette.QuicksandMedium,

@@ -399,7 +399,7 @@ const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<nu
       marginBottom: -insets.bottom
     },
     useAnimatedStyle(() => {
-      const backgroundColor = interpolateColor(props.swipeOffset.value, [0, 1], [`${theme.modal}00`, theme.modalBackground])
+      const backgroundColor = interpolateColor(props.swipeOffset.value, [0, 1], [`${theme.modal}00`, theme.modalLikeBackground])
       const paddingVertical = interpolate(props.swipeOffset.value, [0, 1], [0, themeRem], Extrapolation.CLAMP)
       const flexGrow = interpolate(props.swipeOffset.value, [0, 1], [0, 1.2], Extrapolation.CLAMP)
       return {

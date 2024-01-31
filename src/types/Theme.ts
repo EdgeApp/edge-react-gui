@@ -125,6 +125,11 @@ export interface Theme {
   modalSceneOverlayColor: string
   modalDragbarColor: string
 
+  // Modal content backgrounds have a number of dynamic layers that affect the
+  // resulting color.
+  // This color represents an approximation of a modal's background color
+  modalLikeBackground: string
+
   sideMenuBorderColor: string
   sideMenuBorderWidth: number
   sideMenuFont: string
