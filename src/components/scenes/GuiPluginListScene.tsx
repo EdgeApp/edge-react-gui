@@ -349,8 +349,10 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         onLongPress={async () => await this.openPlugin(item, true).catch(showError)}
         paddingRem={[1, 0.5, 1, 0.5]}
       >
-        <View style={styles.rowContainer}>
-          <EdgeText style={styles.titleText}>{item.title}</EdgeText>
+        <View style={styles.cardContentContainer}>
+          <EdgeText style={styles.titleText} numberOfLines={1}>
+            {item.title}
+          </EdgeText>
           {item.description === '' ? null : <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>}
           {poweredBy != null && item.partnerIconPath != null ? (
             <>
@@ -450,8 +452,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginLeft: -theme.rem(0.5),
     width: '100%'
   },
-  rowContainer: {
-    flexDirection: 'column'
+  cardContentContainer: {
+    flexDirection: 'column',
+    flexShrink: 1,
+    marginRight: theme.rem(0.5)
   },
   sceneContainer: {
     flex: 1,
