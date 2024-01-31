@@ -1,5 +1,5 @@
 import { getDefaultHeaderHeight } from '@react-navigation/elements'
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { useCallback, useMemo } from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
@@ -7,7 +7,7 @@ import Reanimated from 'react-native-reanimated'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { FooterRender, PortalSceneFooter } from '../../state/SceneFooterState'
+import { FooterRender, PortalSceneFooter, useSceneFooterState } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
@@ -180,6 +180,14 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
 
   const navigation = useNavigation<NavigationBase>()
   const theme = useTheme()
+
+  // Reset the footer ratio when focused
+  // We can do this because multiple calls to resetFooterRatio isn't costly
+  // because it just sets snapTo SharedValue to `1`
+  const resetFooterRatio = useSceneFooterState(state => state.resetFooterRatio)
+  useFocusEffect(() => {
+    resetFooterRatio()
+  })
 
   // Subscribe to the window size:
   const { height: frameHeight, width: frameWidth } = useSafeAreaFrame()
