@@ -30,6 +30,7 @@ export const SearchFooter = (props: SearchFooterProps) => {
 
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
   const setKeepOpen = useSceneFooterState(state => state.setKeepOpen)
+  const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
 
   //
   // Handlers
@@ -55,6 +56,11 @@ export const SearchFooter = (props: SearchFooterProps) => {
     onStartSearching()
   })
 
+  const handleFooterLayoutHeight = useHandler((height: number) => {
+    setFooterHeight(height)
+    onLayoutHeight(height)
+  })
+
   //
   // Effects
   //
@@ -74,7 +80,7 @@ export const SearchFooter = (props: SearchFooterProps) => {
   //
 
   return (
-    <SceneFooterWrapper noBackgroundBlur={noBackground} sceneWrapperInfo={sceneWrapperInfo} onLayoutHeight={onLayoutHeight}>
+    <SceneFooterWrapper noBackgroundBlur={noBackground} sceneWrapperInfo={sceneWrapperInfo} onLayoutHeight={handleFooterLayoutHeight}>
       <Space expand horizontal={1} vertical={0.5}>
         <SimpleTextInput
           returnKeyType="search"
@@ -86,7 +92,7 @@ export const SearchFooter = (props: SearchFooterProps) => {
           onFocus={handleSearchFocus}
           ref={textInputRef}
           iconComponent={SearchIconAnimated}
-          scale={footerOpenRatio}
+          scale={footerHeight == null ? undefined : footerOpenRatio}
         />
       </Space>
     </SceneFooterWrapper>
