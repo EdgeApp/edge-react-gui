@@ -23,6 +23,18 @@ export const writeDisableAnimations = async (disableAnimations: boolean) => {
   return await writeDeviceSettings(updatedSettings)
 }
 
+export const writeHasInteractedWithBackupModal = async (hasInteractedWithBackupModal: boolean) => {
+  try {
+    const raw = await disklet.getText(DEVICE_SETTINGS_FILENAME)
+    const json = JSON.parse(raw)
+    deviceSettings = asDeviceSettings(json)
+  } catch (e) {
+    console.log(e)
+  }
+  const updatedSettings = { ...deviceSettings, hasInteractedWithBackupModal }
+  return await writeDeviceSettings(updatedSettings)
+}
+
 const readDeviceSettings = async (): Promise<DeviceSettings> => {
   try {
     const text = await disklet.getText(DEVICE_SETTINGS_FILENAME)
