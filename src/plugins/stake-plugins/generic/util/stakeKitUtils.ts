@@ -9,6 +9,8 @@ import type {
   YieldBalanceRequestDto,
   YieldDto
 } from '@stakekit/api-hooks'
+import { asMaybe, asObject, asValue } from 'cleaners'
+import { InsufficientFundsError } from 'edge-core-js'
 
 import { ENV } from '../../../../env'
 
@@ -39,13 +41,19 @@ const fetchPost = async <Body, Res>(path: string, body: Body): Promise<Res> => {
 }
 
 export const actionEnter = async (actionRequestDto: ActionRequestDto): Promise<ActionDto> => {
-  return await fetchPost<ActionRequestDto, ActionDto>('/v1/actions/enter', actionRequestDto)
+  const out = await fetchPost<ActionRequestDto, ActionDto>('/v1/actions/enter', actionRequestDto)
+  checkInsufficientFunds(out)
+  return out
 }
 export const actionExit = async (actionRequestDto: ActionRequestDto): Promise<ActionDto> => {
-  return await fetchPost<ActionRequestDto, ActionDto>('/v1/actions/exit', actionRequestDto)
+  const out = await fetchPost<ActionRequestDto, ActionDto>('/v1/actions/exit', actionRequestDto)
+  checkInsufficientFunds(out)
+  return out
 }
 export const actionPending = async (pendingActionRequestDto: PendingActionRequestDto): Promise<ActionDto> => {
-  return await fetchPost<PendingActionRequestDto, ActionDto>('/v1/actions/pending', pendingActionRequestDto)
+  const out = await fetchPost<PendingActionRequestDto, ActionDto>('/v1/actions/pending', pendingActionRequestDto)
+  checkInsufficientFunds(out)
+  return out
 }
 export const transactionConstruct = async (transactionId: string, constructTransactionRequestDto: ConstructTransactionRequestDto): Promise<TransactionDto> => {
   return await fetchPatch<ConstructTransactionRequestDto, TransactionDto>(`/v1/transactions/${transactionId}`, constructTransactionRequestDto)
@@ -62,4 +70,11 @@ export const yieldGetSingleYieldBalances = async (integrationId: string, yieldBa
 }
 export const yieldYieldOpportunity = async (integrationId: string): Promise<YieldDto> => {
   return await fetchGet<YieldDto>(`/v1/yields/${integrationId}`)
+}
+
+const checkInsufficientFunds = (res: unknown): void => {
+  const maybeStakeKitInsufficientFundsError = asMaybe(asObject({ message: asValue('InsufficientFundsError') }))(res)
+  if (maybeStakeKitInsufficientFundsError != null) {
+    throw new InsufficientFundsError({ tokenId: null })
+  }
 }
