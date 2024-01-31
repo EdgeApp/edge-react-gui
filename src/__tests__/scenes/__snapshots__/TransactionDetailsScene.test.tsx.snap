@@ -6,7 +6,7 @@ exports[`TransactionDetailsScene should render 1`] = `
     collapsable={false}
     contentContainerStyle={
       {
-        "paddingBottom": 58,
+        "paddingBottom": 74.85492957746479,
         "paddingLeft": 0,
         "paddingRight": 0,
         "paddingTop": 64,
@@ -1703,7 +1703,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
     collapsable={false}
     contentContainerStyle={
       {
-        "paddingBottom": 58,
+        "paddingBottom": 74.85492957746479,
         "paddingLeft": 0,
         "paddingRight": 0,
         "paddingTop": 64,
