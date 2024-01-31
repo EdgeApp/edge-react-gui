@@ -82,7 +82,7 @@ export const RowUi4 = (props: Props) => {
       {icon == null ? null : icon}
       <View style={[styles.content, rightButtonVisible ? styles.tappableIconMargin : styles.fullWidth]}>
         {title == null ? null : (
-          <EdgeText disableFontScaling ellipsizeMode="tail" style={error ? styles.textHeaderError : styles.textHeader}>
+          <EdgeText ellipsizeMode="tail" style={error ? styles.textHeaderError : styles.textHeader}>
             {title}
           </EdgeText>
         )}
@@ -163,7 +163,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   textHeader: {
     color: theme.secondaryText,
     fontSize: theme.rem(0.75),
-    paddingRight: theme.rem(1)
+    paddingRight: theme.rem(1) // TODO: Remove
   },
   textHeaderError: {
     color: theme.dangerText,
