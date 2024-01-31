@@ -205,18 +205,18 @@ export const FooterAccordionEventService = () => {
       // Use a threshold animation trigger for Android because gestures are slow
       if (isAndroid) {
         if (footerOpenRatioStart.value === 1) {
-          if (scrollYDelta < 50) {
+          if (snapTo.value !== 1 && scrollYDelta < 50) {
             snapTo.value = 1
           }
-          if (scrollYDelta > 50) {
+          if (snapTo.value !== 0 && scrollYDelta > 50) {
             snapTo.value = 0
           }
         }
         if (footerOpenRatioStart.value === 0) {
-          if (scrollYDelta > -50) {
+          if (snapTo.value !== 0 && scrollYDelta > -50) {
             snapTo.value = 0
           }
-          if (scrollYDelta < -50) {
+          if (snapTo.value !== 1 && scrollYDelta < -50) {
             snapTo.value = 1
           }
         }
