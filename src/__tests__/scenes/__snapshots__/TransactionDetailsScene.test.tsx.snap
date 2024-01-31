@@ -1640,7 +1640,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               }
             >
               <Text
-                adjustsFontSizeToFit={false}
+                adjustsFontSizeToFit={true}
                 minimumFontScale={0.65}
                 numberOfLines={1}
                 style={
@@ -3342,7 +3342,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               }
             >
               <Text
-                adjustsFontSizeToFit={false}
+                adjustsFontSizeToFit={true}
                 minimumFontScale={0.65}
                 numberOfLines={1}
                 style={

@@ -3184,7 +3184,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           }
         >
           <Text
-            adjustsFontSizeToFit={false}
+            adjustsFontSizeToFit={true}
             minimumFontScale={0.65}
             numberOfLines={1}
             style={
@@ -3324,7 +3324,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           }
         >
           <Text
-            adjustsFontSizeToFit={false}
+            adjustsFontSizeToFit={true}
             minimumFontScale={0.65}
             numberOfLines={1}
             style={
@@ -6540,7 +6540,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           }
         >
           <Text
-            adjustsFontSizeToFit={false}
+            adjustsFontSizeToFit={true}
             minimumFontScale={0.65}
             numberOfLines={1}
             style={
@@ -6680,7 +6680,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           }
         >
           <Text
-            adjustsFontSizeToFit={false}
+            adjustsFontSizeToFit={true}
             minimumFontScale={0.65}
             numberOfLines={1}
             style={
