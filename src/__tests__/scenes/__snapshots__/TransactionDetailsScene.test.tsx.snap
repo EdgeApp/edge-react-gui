@@ -1651,11 +1651,14 @@ exports[`TransactionDetailsScene should render 1`] = `
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Medium",
-                      "fontSize": 22,
-                    },
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Medium",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ],
                     null,
                   ]
                 }
@@ -3345,11 +3348,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Medium",
-                      "fontSize": 22,
-                    },
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Medium",
+                        "fontSize": 22,
+                      },
+                      null,
+                    ],
                     null,
                   ]
                 }

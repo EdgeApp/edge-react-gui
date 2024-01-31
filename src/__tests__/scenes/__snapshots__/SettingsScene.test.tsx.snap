@@ -3195,11 +3195,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
-                },
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Medium",
+                    "fontSize": 22,
+                  },
+                  null,
+                ],
                 null,
               ]
             }
@@ -3332,11 +3335,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                },
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                  },
+                  null,
+                ],
                 null,
               ]
             }
@@ -6545,11 +6551,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
-                },
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Medium",
+                    "fontSize": 22,
+                  },
+                  null,
+                ],
                 null,
               ]
             }
@@ -6682,11 +6691,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                },
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                  },
+                  null,
+                ],
                 null,
               ]
             }

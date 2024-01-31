@@ -544,11 +544,14 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               "fontSize": 22,
               "includeFontPadding": false,
             },
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              null,
+            ],
             null,
           ]
         }
