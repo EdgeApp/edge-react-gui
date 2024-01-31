@@ -43,10 +43,16 @@
 ## 3.23.3 (2024-01-09)
 
 - fixed: ETC spend error regression caused by EIP-1559 upgrade in EthereumEngine
+- fixed: Update Glif Pool APY information endpoints to resolve error message
 
 ## 3.23.2 (2024-01-03)
 
 - fixed: Spend regression for non-EIP-1559 transactions
+
+## 3.23.1
+
+- fixed: Paybis sell from Tron USDT
+- fixed: Fix accelerate for EIP-1559 transactions
 
 ## 3.23.0 (2023-12-20)
 
@@ -80,10 +86,12 @@
 
 ## 3.22.0 (2023-11-26)
 
+- added: Support for Thorchain Savers EVM token deposits
 - added: Add THORChain (RUNE)
 - added: Posthog analytics support
 - added: New 'Lower Send Amount' warning for transaction acceleration
 - added: Allow buy/sell plugins local override and info server patching
+- changed: Use memos for Thorchain Savers withdrawals
 - changed: Disable max-spend for Filecoin wallets
 - changed: Disabled signupCaptcha experiment
 - changed: Don't show recovery, password, or otp reminders in Maestro
