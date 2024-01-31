@@ -75,7 +75,6 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const { bottom: insetBottom } = useSafeAreaInsets()
 
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
-  const resetFooterRatio = useSceneFooterState(state => state.resetFooterRatio)
   const renderFooter = useSceneFooterRenderState(state => state.renderFooter)
 
   const { height: keyboardHeight, progress: keyboardProgress } = useReanimatedKeyboardAnimation()
@@ -96,7 +95,6 @@ export const MenuTabs = (props: BottomTabBarProps) => {
               route={route}
               isActive={activeTabIndex === index}
               footerOpenRatio={footerOpenRatio}
-              resetFooterRatio={resetFooterRatio}
             />
           ))}
         </Tabs>
@@ -133,7 +131,6 @@ const Tab = ({
   route,
   isActive,
   footerOpenRatio,
-  resetFooterRatio,
   currentName,
   navigation
 }: {
@@ -141,7 +138,6 @@ const Tab = ({
   currentName: string
   route: BottomTabBarProps['state']['routes'][number]
   footerOpenRatio: SharedValue<number>
-  resetFooterRatio: () => void
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>
 }) => {
   const theme = useTheme()
@@ -162,8 +158,6 @@ const Tab = ({
   }
 
   const handleOnPress = useHandler(() => {
-    resetFooterRatio()
-
     switch (route.name) {
       case 'homeTab':
         return navigation.navigate('home', currentName === 'homeTab' ? { screen: 'home' } : {})
