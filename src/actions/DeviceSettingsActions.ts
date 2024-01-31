@@ -11,6 +11,18 @@ export const initDeviceSettings = async () => {
   deviceSettings = await readDeviceSettings()
 }
 
+export const writeDeveloperPluginUri = async (developerPluginUri: string) => {
+  try {
+    const raw = await disklet.getText(DEVICE_SETTINGS_FILENAME)
+    const json = JSON.parse(raw)
+    deviceSettings = asDeviceSettings(json)
+  } catch (e) {
+    console.log(e)
+  }
+  const updatedSettings = { ...deviceSettings, developerPluginUri }
+  return await writeDeviceSettings(updatedSettings)
+}
+
 export const writeDisableAnimations = async (disableAnimations: boolean) => {
   try {
     const raw = await disklet.getText(DEVICE_SETTINGS_FILENAME)
