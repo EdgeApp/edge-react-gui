@@ -9,6 +9,8 @@ import { useState } from '../types/reactHooks'
 import { createStateProvider } from './createStateProvider'
 import { useSceneScrollContext } from './SceneScrollState'
 
+const isAndroid = Platform.OS === 'android'
+
 //
 // Providers
 //
@@ -161,7 +163,7 @@ export const FooterAccordionEventService = () => {
 
   useSharedEvent(scrollEndEvent, () => {
     'worklet'
-    if (Platform.OS === 'android') {
+    if (isAndroid) {
       runOnJS(delayedSnap)()
       return
     }
@@ -172,14 +174,14 @@ export const FooterAccordionEventService = () => {
 
   useSharedEvent(scrollMomentumBeginEvent, nativeEvent => {
     'worklet'
-    if (Platform.OS === 'android') return
+    if (isAndroid) return
     scrollYStart.value = nativeEvent?.contentOffset.y
     footerOpenRatioStart.value = footerOpenRatio.value
   })
 
   useSharedEvent(scrollMomentumEndEvent, () => {
     'worklet'
-    if (Platform.OS === 'android') return
+    if (isAndroid) return
     if (scrollYStart.value != null) {
       snapWorklet()
     }
@@ -200,6 +202,29 @@ export const FooterAccordionEventService = () => {
       if (previousScrollYDelta == null) return
       if (scrollYDelta === previousScrollYDelta) return
 
+      // Use a threshold animation trigger for Android because gestures are slow
+      if (isAndroid) {
+        if (footerOpenRatioStart.value === 1) {
+          if (scrollYDelta < 50) {
+            snapTo.value = 1
+          }
+          if (scrollYDelta > 50) {
+            snapTo.value = 0
+          }
+        }
+        if (footerOpenRatioStart.value === 0) {
+          if (scrollYDelta > -50) {
+            snapTo.value = 0
+          }
+          if (scrollYDelta < -50) {
+            snapTo.value = 1
+          }
+        }
+
+        return
+      }
+
+      // Gesture-based handling:
       const ratioDelta = scrollYDelta * scrollDeltaToRatioDeltaFactor
       const currentValue = Math.min(1, Math.max(0, footerOpenRatioStart.value - ratioDelta))
 
