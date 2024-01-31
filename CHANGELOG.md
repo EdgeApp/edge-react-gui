@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.0.0
+
 - added: `minerTip` to `feeRateUsed` processing
 - added: Make the alert drop-down swipeable.
 - added: Multi output payments for UTXO currencies
