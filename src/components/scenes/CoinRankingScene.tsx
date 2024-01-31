@@ -304,7 +304,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     percentChangeView: {
       ...baseTextView,
       justifyContent: 'center',
-      width: theme.rem(5)
+      width: theme.rem(4)
     },
     percentChangeText: {
       ...baseTextStyle,
