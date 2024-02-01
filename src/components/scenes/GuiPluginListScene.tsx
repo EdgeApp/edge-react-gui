@@ -401,6 +401,20 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     )
   }
 
+  renderEmptyList = () => {
+    const { countryCode, theme } = this.props
+    const styles = getStyles(theme)
+    if (countryCode === '') return null
+
+    return (
+      <View style={styles.emptyPluginContainer}>
+        <EdgeText style={styles.emptyPluginText} numberOfLines={2}>
+          {lstrings.buy_sell_crypto_no_provider_region}
+        </EdgeText>
+      </View>
+    )
+  }
+
   render() {
     const { accountPlugins, accountReferral, countryCode, developerModeOn, disablePlugins, theme, insetStyle } = this.props
     const direction = this.getSceneDirection()
@@ -425,23 +439,16 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     return (
       <View style={styles.sceneContainer}>
-        {plugins.length === 0 ? (
-          <View style={styles.emptyPluginContainer}>
-            <EdgeText style={styles.emptyPluginText} numberOfLines={2}>
-              {lstrings.buy_sell_crypto_no_provider_region}
-            </EdgeText>
-          </View>
-        ) : (
-          <Animated.FlatList
-            data={plugins}
-            onScroll={this.props.handleScroll}
-            ListHeaderComponent={this.renderTop}
-            renderItem={this.renderPlugin}
-            keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
-            // XXX: Hack. paddingBottom from insetStyle is not sufficient.
-            contentContainerStyle={{ ...insetStyle, paddingBottom: theme.rem(6) }}
-          />
-        )}
+        <Animated.FlatList
+          data={plugins}
+          onScroll={this.props.handleScroll}
+          ListHeaderComponent={this.renderTop}
+          ListEmptyComponent={this.renderEmptyList}
+          renderItem={this.renderPlugin}
+          keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
+          // XXX: Hack. paddingBottom from insetStyle is not sufficient.
+          contentContainerStyle={{ ...insetStyle, paddingBottom: theme.rem(6) }}
+        />
       </View>
     )
   }
