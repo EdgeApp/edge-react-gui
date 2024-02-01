@@ -551,10 +551,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceBold
   },
   qrContainer: {
-    margin: theme.rem(0.5),
+    margin: theme.rem(1),
     alignSelf: 'center',
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'column'
   },
   title: {
     fontFamily: theme.fontFaceMedium,
