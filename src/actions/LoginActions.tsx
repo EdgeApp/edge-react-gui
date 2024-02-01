@@ -1,6 +1,7 @@
 import { EdgeAccount } from 'edge-core-js/types'
 import { hasSecurityAlerts } from 'edge-login-ui-rn'
 import * as React from 'react'
+import { Keyboard } from 'react-native'
 import { getCurrencies } from 'react-native-localize'
 import { sprintf } from 'sprintf-js'
 
@@ -215,6 +216,7 @@ export function logoutRequest(navigation: NavigationBase, nextLoginId?: string):
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
+    Keyboard.dismiss()
     Airship.clear()
     dispatch({ type: 'LOGOUT', data: { nextLoginId } })
     if (typeof account.logout === 'function') await account.logout()
