@@ -2,7 +2,7 @@ import { BottomTabBarProps, BottomTabNavigationEventMap } from '@react-navigatio
 import { NavigationHelpers, ParamListBase } from '@react-navigation/native'
 import * as React from 'react'
 import { useMemo } from 'react'
-import { Platform, TouchableOpacity, View } from 'react-native'
+import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
 import LinearGradient from 'react-native-linear-gradient'
@@ -69,11 +69,14 @@ export const MenuTabs = (props: BottomTabBarProps) => {
     [state.routes]
   )
 
+  const tabLabelHeight = theme.rem(1.1)
+
   const activeTabRoute = state.routes[activeTabFullIndex]
   const activeTabIndex = routes.findIndex(route => route.name === activeTabRoute.name)
 
   const { bottom: insetBottom } = useSafeAreaInsets()
 
+  const footerHeight = useSceneFooterState(state => state.footerHeight)
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
   const renderFooter = useSceneFooterRenderState(state => state.renderFooter)
 
@@ -82,23 +85,24 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const shiftY = useDerivedValue(() => keyboardHeight.value + menuTabHeightAndInsetBottomTermForShiftY.value)
 
   return (
-    <Container shiftY={shiftY}>
-      <BlurBackground />
-      <LinearGradient colors={theme.tabBarBackground} start={theme.tabBarBackgroundStart} end={theme.tabBarBackgroundEnd}>
-        {renderFooter()}
-        <Tabs>
-          {routes.map((route, index: number) => (
-            <Tab
-              currentName={routes[activeTabIndex].name}
-              navigation={navigation}
-              key={route.name}
-              route={route}
-              isActive={activeTabIndex === index}
-              footerOpenRatio={footerOpenRatio}
-            />
-          ))}
-        </Tabs>
-      </LinearGradient>
+    <Container shiftY={shiftY} pointerEvents="box-none">
+      <Background footerHeight={footerHeight} openRatio={footerOpenRatio} tabLabelHeight={tabLabelHeight} pointerEvents="none">
+        <BlurBackground />
+        <LinearGradient colors={theme.tabBarBackground} start={theme.tabBarBackgroundStart} end={theme.tabBarBackgroundEnd} />
+      </Background>
+      {renderFooter()}
+      <Tabs openRatio={footerOpenRatio} tabLabelHeight={tabLabelHeight}>
+        {routes.map((route, index: number) => (
+          <Tab
+            currentName={routes[activeTabIndex].name}
+            navigation={navigation}
+            key={route.name}
+            route={route}
+            isActive={activeTabIndex === index}
+            footerOpenRatio={footerOpenRatio}
+          />
+        ))}
+      </Tabs>
     </Container>
   )
 }
@@ -121,10 +125,44 @@ const Container = styled(Animated.View)<{ shiftY: SharedValue<number> }>(() => (
   }))
 ])
 
-const Tabs = styled(View)({
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center'
+const Background = styled(Animated.View)<{ footerHeight: SharedValue<number>; openRatio: SharedValue<number>; tabLabelHeight: number }>(
+  () =>
+    ({ footerHeight: footerHeightRef, openRatio, tabLabelHeight }) => {
+      return [
+        {
+          ...StyleSheet.absoluteFillObject
+        },
+        useAnimatedStyle(() => {
+          const openRatioInverted = interpolate(openRatio.value, [0, 1], [1, 0])
+          const offsetFooterHeight = openRatioInverted * footerHeightRef.value
+          const offsetTabLabelHeight = openRatioInverted * tabLabelHeight
+          return {
+            transform: [
+              {
+                translateY: offsetFooterHeight + offsetTabLabelHeight
+              }
+            ]
+          }
+        })
+      ]
+    }
+)
+
+const Tabs = styled(Animated.View)<{ openRatio: SharedValue<number>; tabLabelHeight: number }>(() => ({ openRatio, tabLabelHeight }) => {
+  return [
+    {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    useAnimatedStyle(() => ({
+      transform: [
+        {
+          translateY: interpolate(openRatio.value, [1, 0], [0, 1]) * tabLabelHeight
+        }
+      ]
+    }))
+  ]
 })
 
 const Tab = ({
@@ -204,7 +242,6 @@ const Label = styled(Animated.Text)<{
   isActive: boolean
   openRatio: SharedValue<number>
 }>(theme => ({ isActive, openRatio }) => {
-  const rem = theme.rem(1)
   return [
     {
       // Copied from EdgeText
@@ -213,14 +250,14 @@ const Label = styled(Animated.Text)<{
 
       color: isActive ? theme.tabBarIconHighlighted : theme.tabBarIcon,
       fontSize: theme.rem(0.75),
-      marginTop: theme.rem(2 / 16)
+      paddingTop: theme.rem(2 / 16),
+      height: theme.rem(1.1)
     },
     useAnimatedStyle(() => {
       'worklet'
       if (openRatio == null) return {}
       return {
-        height: rem * openRatio.value,
-        opacity: interpolate(openRatio.value, [0, 0.5, 1], [0, 0, 1])
+        opacity: interpolate(openRatio.value, [1, 0.5], [1, 0])
       }
     })
   ]

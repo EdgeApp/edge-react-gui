@@ -1684,12 +1684,17 @@ exports[`TransactionDetailsScene should render 1`] = `
       [
         {
           "alignSelf": "center",
+          "bottom": 0,
           "justifyContent": "flex-end",
           "padding": 11,
           "position": "absolute",
         },
         {
-          "bottom": NaN,
+          "transform": [
+            {
+              "translateY": NaN,
+            },
+          ],
         },
       ]
     }
@@ -3381,12 +3386,17 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
       [
         {
           "alignSelf": "center",
+          "bottom": 0,
           "justifyContent": "flex-end",
           "padding": 11,
           "position": "absolute",
         },
         {
-          "bottom": NaN,
+          "transform": [
+            {
+              "translateY": NaN,
+            },
+          ],
         },
       ]
     }
