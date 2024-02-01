@@ -325,7 +325,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
         </Animated.View>
         {/* === Dropdown End === */}
         <Animated.View style={[styles.disable, styles.invisibleTapper, aFade]} pointerEvents="none" />
-        {!isDropped ? null : <Pressable style={styles.invisibleTapper} onPress={handleToggleDropdown} />}
+        <Pressable style={[styles.invisibleTapper, { zIndex: isDropped ? 1 : 0 }]} onPress={handleToggleDropdown} />
         {/* === Navigation Rows Start === */}
         <View style={styles.rowsContainer}>
           <ScrollView overScrollMode="always" scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
