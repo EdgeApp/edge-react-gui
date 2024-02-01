@@ -127,7 +127,7 @@ export function ButtonUi4(props: Props) {
 
   const maybeText =
     label == null ? null : (
-      <EdgeText numberOfLines={1} disableFontScaling style={[textStyle, children == null ? null : styles.leftMarginedText]}>
+      <EdgeText numberOfLines={1} style={[textStyle, children == null ? null : styles.leftMarginedText]}>
         {label}
       </EdgeText>
     )
