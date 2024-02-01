@@ -4,6 +4,7 @@
 
 - changed: Reword of the CrashScene to help users to force close (not uninstall) Edge
 - changed: Upgrade to Android NDK version 26.1.10909125.
+- changed: Re-enable fake signup captcha experiment at 50%
 
 ## 4.0.1
 

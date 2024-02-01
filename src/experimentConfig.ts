@@ -77,7 +77,7 @@ const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
   swipeLastUsp: asMaybe(asValue('true', 'false'), generateExperimentConfigVal('swipeLastUsp', ['true', 'false'])),
   createAccountType: asMaybe(asValue('full', 'light'), generateExperimentConfigVal('createAccountType', ['full', 'light'])),
   legacyLanding: asMaybe(asValue('uspLanding', 'legacyLanding'), generateExperimentConfigVal('legacyLanding', ['legacyLanding', 'uspLanding'])),
-  signupCaptcha: asMaybe(asValue('withoutCaptcha'), 'withoutCaptcha')
+  signupCaptcha: asMaybe(asValue('withoutCaptcha', 'withCaptcha'), generateExperimentConfigVal('signupCaptcha', ['withoutCaptcha', 'withCaptcha']))
 })
 
 /**
