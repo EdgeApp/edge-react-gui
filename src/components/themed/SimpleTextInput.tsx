@@ -197,7 +197,6 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
             selectionColor={theme.textInputTextColor}
             testID={`${testID}.textInput`}
             textAlignVertical="top"
-            scale={scale}
             value={value}
             // Callbacks:
             onBlur={handleBlur}
@@ -230,7 +229,6 @@ const Container = styled(Animated.View)<{
   scale: SharedValue<number>
   spaceProps: SpaceProps
 }>(theme => ({ disableAnimation, focusAnimation, scale, spaceProps }) => {
-  const rem = theme.rem(1)
   const interpolateInputBackgroundColor = useAnimatedColorInterpolateFn(
     theme.textInputBackgroundColor,
     theme.textInputBackgroundColorFocused,
@@ -250,14 +248,18 @@ const Container = styled(Animated.View)<{
       borderWidth: theme.textInputBorderWidth,
       borderRadius: theme.rem(theme.textInputBorderRadius),
       flexDirection: 'row',
-      paddingHorizontal: theme.rem(1)
+      paddingHorizontal: theme.rem(1),
+      paddingVertical: theme.rem(0.75)
     },
     useAnimatedStyle(() => ({
       backgroundColor: interpolateInputBackgroundColor(focusAnimation, disableAnimation),
       borderColor: interpolateOutlineColor(focusAnimation, disableAnimation),
-      opacity: interpolate(scale.value, [1, 0.6], [1, 0]),
-      marginHorizontal: interpolate(scale.value, [1, 0], [0, 2 * rem]),
-      paddingVertical: scale.value * 0.75 * rem
+      opacity: interpolate(scale.value, [1, 0.5], [1, 0]),
+      transform: [
+        {
+          scale: interpolate(scale.value, [1, 0], [1, 0.75])
+        }
+      ]
     }))
   ]
 })
@@ -282,9 +284,7 @@ const InnerContainer = styled(View)({
 const InputField = styledWithRef(AnimatedTextInput)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
-  scale: SharedValue<number>
-}>(theme => ({ disableAnimation, focusAnimation, scale }) => {
-  const rem = theme.rem(1)
+}>(theme => ({ disableAnimation, focusAnimation }) => {
   const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused, theme.textInputTextColorDisabled)
 
   return [
@@ -294,11 +294,11 @@ const InputField = styledWithRef(AnimatedTextInput)<{
       fontFamily: theme.fontFaceDefault,
       paddingHorizontal: theme.rem(0.5),
       paddingVertical: 0,
-      margin: 0
+      margin: 0,
+      fontSize: theme.rem(1)
     },
     useAnimatedStyle(() => ({
-      color: interpolateTextColor(focusAnimation, disableAnimation),
-      fontSize: scale.value * rem
+      color: interpolateTextColor(focusAnimation, disableAnimation)
     }))
   ]
 })
