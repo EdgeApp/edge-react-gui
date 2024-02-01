@@ -1076,7 +1076,9 @@ const strings = {
 
   error_boundary_title: 'Oops!',
   error_boundary_message_s:
-    "We're sorry but something went wrong. Please force close the app and reopen to continue using Edge.\n\nIf the problem persists, contact us at %1$s, and we'll do our best to fix the problem. \n\nNOTE: Do not uninstall the app before contacting Edge.",
+    "We're sorry but something went wrong\n\n*** DO NOT UNINSTALL %1$s ***\n\nPlease force close the app and reopen to continue using %1$s.\n\nFor help on how to force close the app, tap below",
+  error_boundary_message2: "If the problem persists, tap below to contact us, and we'll do our best to fix the problem.",
+  error_boundary_help_button: 'Help Closing App',
   error_unexpected_title: 'Unexpected Error',
 
   export_transaction_date_range: 'Date Range',

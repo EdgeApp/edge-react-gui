@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Reword of the CrashScene to help users to force close (not uninstall) Edge
+
 ## 4.0.0
 
 - added: `minerTip` to `feeRateUsed` processing

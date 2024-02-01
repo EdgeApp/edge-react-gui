@@ -11,6 +11,8 @@ export const testConfig: AppConfig = {
   configName: 'test',
   darkTheme: testDark,
   defaultWallets: ['BTC', 'FTM:TOMB', 'ETH:USDC'],
+  forceCloseUrlIos: 'https://support.apple.com/en-us/HT201330 ',
+  forceCloseUrlAndroid: 'https://support.google.com/android/answer/9079646?hl=en',
   knowledgeBase: 'https://support.testy.com/knowledge',
   lightTheme: testLight,
   notificationServers: ['https://notif1.edge.app'],
