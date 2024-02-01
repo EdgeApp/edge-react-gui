@@ -371,20 +371,32 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
             </CardUi4>
           </EdgeAnim>
 
-          <Carousel
-            items={this.state.addresses}
-            keyExtractor={item => item.addressString}
-            onChangeItem={this.handleChangeAddressItem}
-            renderItem={item => (
+          {this.state.addresses.length === 1 ? (
+            <View style={styles.qrContainer}>
               <AddressQr
-                address={item.addressString}
+                address={this.state.addresses[0].addressString}
                 wallet={wallet}
                 currencyCode={currencyCode}
                 nativeAmount={this.state.amounts?.nativeAmount}
                 onPress={this.handlePressAddressItem}
               />
-            )}
-          />
+            </View>
+          ) : (
+            <Carousel
+              items={this.state.addresses}
+              keyExtractor={item => item.addressString}
+              onChangeItem={this.handleChangeAddressItem}
+              renderItem={item => (
+                <AddressQr
+                  address={item.addressString}
+                  wallet={wallet}
+                  currencyCode={currencyCode}
+                  nativeAmount={this.state.amounts?.nativeAmount}
+                  onPress={this.handlePressAddressItem}
+                />
+              )}
+            />
+          )}
 
           <EdgeAnim enter={{ type: 'fadeInDown', distance: 50 }}>
             <TouchableOpacity accessible={false} disabled={addressExplorerDisabled} onPress={this.handleAddressBlockExplorer}>
@@ -537,6 +549,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'right',
     alignSelf: 'flex-end',
     fontFamily: theme.fontFaceBold
+  },
+  qrContainer: {
+    margin: theme.rem(0.5),
+    alignSelf: 'center',
+    flex: 1,
+    flexDirection: 'row'
   },
   title: {
     fontFamily: theme.fontFaceMedium,
