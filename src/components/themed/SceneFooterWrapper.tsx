@@ -1,5 +1,6 @@
+import { useIsFocused } from '@react-navigation/native'
 import React, { useEffect } from 'react'
-import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
+import Animated, { interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useLayoutOnce } from '../../hooks/useLayoutOnce'
@@ -22,8 +23,10 @@ export const SceneFooterWrapper = (props: SceneFooterProps) => {
   const { children, noBackgroundBlur = false, sceneWrapperInfo, onLayoutHeight } = props
   const { hasTabs = true, isKeyboardOpen = false } = sceneWrapperInfo ?? {}
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
+  const footerHeightShared = useSceneFooterState(state => state.footerHeight)
 
   const safeAreaInsets = useSafeAreaInsets()
+  const maybeInsetBottom = !hasTabs ? safeAreaInsets.bottom : 0
 
   //
   // Handlers
@@ -37,8 +40,22 @@ export const SceneFooterWrapper = (props: SceneFooterProps) => {
 
   useEffect(() => {
     if (layout == null) return
-    onLayoutHeight(layout.height)
-  }, [layout, onLayoutHeight])
+    // Exclude the inset from the height for when there are no tabs
+    const footerHeight = layout.height - maybeInsetBottom
+    onLayoutHeight(footerHeight)
+  }, [layout, maybeInsetBottom, onLayoutHeight])
+
+  // Set the global shared value for the footerHeight so that way the
+  // background in the MenuTabs can translate accordingly
+  const isFocused = useIsFocused()
+  useEffect(() => {
+    if (isFocused) {
+      footerHeightShared.value = layout?.height ?? 0
+      return () => {
+        footerHeightShared.value = 0
+      }
+    }
+  }, [footerHeightShared, isFocused, layout?.height])
 
   //
   // Render
@@ -48,9 +65,8 @@ export const SceneFooterWrapper = (props: SceneFooterProps) => {
     <ContainerAnimatedView
       containerHeight={layout?.height}
       footerOpenRatio={footerOpenRatio}
-      hasTabs={hasTabs}
       isKeyboardOpen={isKeyboardOpen}
-      insetBottom={safeAreaInsets.bottom}
+      insetBottom={maybeInsetBottom}
       onLayout={handleLayoutOnce}
     >
       {noBackgroundBlur ? null : <BlurBackground />}
@@ -62,19 +78,28 @@ export const SceneFooterWrapper = (props: SceneFooterProps) => {
 const ContainerAnimatedView = styled(Animated.View)<{
   containerHeight?: number
   footerOpenRatio: SharedValue<number>
-  hasTabs: boolean
   isKeyboardOpen: boolean
   insetBottom: number
-}>(() => ({ containerHeight, footerOpenRatio, hasTabs, isKeyboardOpen, insetBottom }) => {
+}>(() => ({ containerHeight, footerOpenRatio, isKeyboardOpen, insetBottom }) => {
+  // Exclude inset if the keyboard is open
+  const maybeInsetBottom = !isKeyboardOpen ? insetBottom : 0
+
   return [
     {
-      overflow: 'hidden'
+      overflow: 'hidden',
+      paddingBottom: maybeInsetBottom
     },
     useAnimatedStyle(() => {
       if (containerHeight == null) return {}
-      const maybeInsetBottom = !hasTabs && !isKeyboardOpen ? insetBottom : 0
+      const openRatioInverted = interpolate(footerOpenRatio.value, [0, 1], [1, 0])
+      const offsetFooterHeight = openRatioInverted * containerHeight
+      const offsetInsetBottom = openRatioInverted * maybeInsetBottom
       return {
-        height: containerHeight * footerOpenRatio.value + maybeInsetBottom
+        transform: [
+          {
+            translateY: offsetFooterHeight - offsetInsetBottom
+          }
+        ]
       }
     })
   ]

@@ -142,13 +142,17 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             "borderWidth": 1,
             "flexDirection": "row",
             "paddingHorizontal": 22,
+            "paddingVertical": 17,
           },
           {
             "backgroundColor": undefined,
             "borderColor": undefined,
-            "marginHorizontal": undefined,
             "opacity": undefined,
-            "paddingVertical": 16.5,
+            "transform": [
+              {
+                "scale": undefined,
+              },
+            ],
           },
         ]
       }
@@ -219,11 +223,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           onSubmitEditing={[Function]}
           placeholder="Search Wallets"
           placeholderTextColor="rgba(255, 255, 255, .5)"
-          scale={
-            {
-              "value": 1,
-            }
-          }
           selectionColor="#FFFFFF"
           style={
             [
@@ -231,13 +230,13 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "flexGrow": 1,
                 "flexShrink": 1,
                 "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
                 "margin": 0,
                 "paddingHorizontal": 11,
                 "paddingVertical": 0,
               },
               {
                 "color": undefined,
-                "fontSize": 22,
               },
             ]
           }
