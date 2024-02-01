@@ -1165,12 +1165,17 @@ exports[`SendScene2 1 spendTarget 1`] = `
       [
         {
           "alignSelf": "center",
+          "bottom": 0,
           "justifyContent": "flex-end",
           "padding": 11,
           "position": "absolute",
         },
         {
-          "bottom": 0,
+          "transform": [
+            {
+              "translateY": -0,
+            },
+          ],
         },
       ]
     }
@@ -2531,12 +2536,17 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       [
         {
           "alignSelf": "center",
+          "bottom": 0,
           "justifyContent": "flex-end",
           "padding": 11,
           "position": "absolute",
         },
         {
-          "bottom": 0,
+          "transform": [
+            {
+              "translateY": -0,
+            },
+          ],
         },
       ]
     }
@@ -3874,12 +3884,17 @@ exports[`SendScene2 2 spendTargets 1`] = `
       [
         {
           "alignSelf": "center",
+          "bottom": 0,
           "justifyContent": "flex-end",
           "padding": 11,
           "position": "absolute",
         },
         {
-          "bottom": 0,
+          "transform": [
+            {
+              "translateY": -0,
+            },
+          ],
         },
       ]
     }
@@ -4918,12 +4933,17 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       [
         {
           "alignSelf": "center",
+          "bottom": 0,
           "justifyContent": "flex-end",
           "padding": 11,
           "position": "absolute",
         },
         {
-          "bottom": 0,
+          "transform": [
+            {
+              "translateY": -0,
+            },
+          ],
         },
       ]
     }
@@ -5938,12 +5958,17 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       [
         {
           "alignSelf": "center",
+          "bottom": 0,
           "justifyContent": "flex-end",
           "padding": 11,
           "position": "absolute",
         },
         {
-          "bottom": 0,
+          "transform": [
+            {
+              "translateY": -0,
+            },
+          ],
         },
       ]
     }
@@ -6797,12 +6822,17 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       [
         {
           "alignSelf": "center",
+          "bottom": 0,
           "justifyContent": "flex-end",
           "padding": 11,
           "position": "absolute",
         },
         {
-          "bottom": 0,
+          "transform": [
+            {
+              "translateY": -0,
+            },
+          ],
         },
       ]
     }
@@ -7961,12 +7991,17 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       [
         {
           "alignSelf": "center",
+          "bottom": 0,
           "justifyContent": "flex-end",
           "padding": 11,
           "position": "absolute",
         },
         {
-          "bottom": 0,
+          "transform": [
+            {
+              "translateY": -0,
+            },
+          ],
         },
       ]
     }
@@ -9060,12 +9095,17 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       [
         {
           "alignSelf": "center",
+          "bottom": 0,
           "justifyContent": "flex-end",
           "padding": 11,
           "position": "absolute",
         },
         {
-          "bottom": 0,
+          "transform": [
+            {
+              "translateY": -0,
+            },
+          ],
         },
       ]
     }
@@ -10118,12 +10158,17 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       [
         {
           "alignSelf": "center",
+          "bottom": 0,
           "justifyContent": "flex-end",
           "padding": 11,
           "position": "absolute",
         },
         {
-          "bottom": 0,
+          "transform": [
+            {
+              "translateY": -0,
+            },
+          ],
         },
       ]
     }
@@ -11161,12 +11206,17 @@ exports[`SendScene2 Render SendScene 1`] = `
       [
         {
           "alignSelf": "center",
+          "bottom": 0,
           "justifyContent": "flex-end",
           "padding": 11,
           "position": "absolute",
         },
         {
-          "bottom": 0,
+          "transform": [
+            {
+              "translateY": -0,
+            },
+          ],
         },
       ]
     }

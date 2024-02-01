@@ -1588,12 +1588,17 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
       [
         {
           "alignSelf": "center",
+          "bottom": 0,
           "justifyContent": "flex-end",
           "padding": 11,
           "position": "absolute",
         },
         {
-          "bottom": NaN,
+          "transform": [
+            {
+              "translateY": NaN,
+            },
+          ],
         },
       ]
     }

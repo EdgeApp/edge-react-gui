@@ -2,6 +2,7 @@
 
 exports[`MenuTabs should render with loading props 1`] = `
 <View
+  pointerEvents="box-none"
   shiftY={
     {
       "value": 0,
@@ -27,51 +28,98 @@ exports[`MenuTabs should render with loading props 1`] = `
     ]
   }
 >
-  <BlurView
-    blurAmount={10}
-    blurType="dark"
-    overlayColor="rgba(0, 0, 0, 0)"
-    style={
+  <View
+    footerHeight={
       {
-        "backgroundColor": undefined,
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
+        "value": 0,
       }
     }
-  />
-  <BVLinearGradient
-    colors={
+    openRatio={
+      {
+        "value": 1,
+      }
+    }
+    pointerEvents="none"
+    style={
       [
-        436207616,
-        3003121664,
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "transform": [
+            {
+              "translateY": NaN,
+            },
+          ],
+        },
       ]
     }
-    endPoint={
-      {
-        "x": 0,
-        "y": 1,
-      }
-    }
-    locations={null}
-    startPoint={
-      {
-        "x": 0,
-        "y": 0.5,
-      }
-    }
+    tabLabelHeight={25}
   >
-    <View
+    <BlurView
+      blurAmount={10}
+      blurType="dark"
+      overlayColor="rgba(0, 0, 0, 0)"
       style={
+        {
+          "backgroundColor": undefined,
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    />
+    <BVLinearGradient
+      colors={
+        [
+          436207616,
+          3003121664,
+        ]
+      }
+      endPoint={
+        {
+          "x": 0,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0.5,
+        }
+      }
+    />
+  </View>
+  <View
+    openRatio={
+      {
+        "value": 1,
+      }
+    }
+    style={
+      [
         {
           "alignItems": "center",
           "flexDirection": "row",
           "justifyContent": "center",
-        }
-      }
-    />
-  </BVLinearGradient>
+        },
+        {
+          "transform": [
+            {
+              "translateY": NaN,
+            },
+          ],
+        },
+      ]
+    }
+    tabLabelHeight={25}
+  />
 </View>
 `;

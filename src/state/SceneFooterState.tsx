@@ -21,6 +21,7 @@ import { useSceneScrollContext } from './SceneScrollState'
  */
 export const [SceneFooterProvider, useSceneFooterState] = createStateProvider(() => {
   const [keepOpen, setKeepOpen] = useState(false)
+  const footerHeight = useSharedValue(0)
   const footerOpenRatio = useSharedValue(1)
   const footerOpenRatioStart = useSharedValue(1)
   const snapTo = useSharedValue<number | undefined>(undefined)
@@ -31,6 +32,7 @@ export const [SceneFooterProvider, useSceneFooterState] = createStateProvider(()
 
   return useMemo(
     () => ({
+      footerHeight,
       // The scene can animate components using this shared value to
       // collapse/expand its components. A value of 1 means opened, and 0 means
       // closed.
@@ -43,7 +45,7 @@ export const [SceneFooterProvider, useSceneFooterState] = createStateProvider(()
       resetFooterRatio,
       snapTo
     }),
-    [footerOpenRatio, footerOpenRatioStart, keepOpen, resetFooterRatio, snapTo]
+    [footerHeight, footerOpenRatio, footerOpenRatioStart, keepOpen, resetFooterRatio, snapTo]
   )
 })
 
