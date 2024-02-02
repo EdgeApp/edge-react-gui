@@ -94,7 +94,7 @@ export function DevTestScene(props: Props) {
   const returnKeyType: ReturnKeyType = 'done'
 
   return (
-    <SceneWrapper scroll hasTabs hasHeader={false}>
+    <SceneWrapper avoidKeyboard scroll hasTabs hasHeader={false}>
       <SectionView marginRem={1}>
         <FilledTextInput
           iconComponent={SearchIconAnimated}

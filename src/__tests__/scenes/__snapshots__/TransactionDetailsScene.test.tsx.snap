@@ -183,6 +183,7 @@ exports[`TransactionDetailsScene should render 1`] = `
     style={
       {
         "height": 1334,
+        "maxHeight": 1334,
         "padding": 11,
         "width": 750,
       }
@@ -2046,6 +2047,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
     style={
       {
         "height": 1334,
+        "maxHeight": 1334,
         "padding": 11,
         "width": 750,
       }

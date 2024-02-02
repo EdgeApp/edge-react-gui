@@ -3,7 +3,8 @@ import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/n
 import * as React from 'react'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
-import Reanimated from 'react-native-reanimated'
+import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
+import Reanimated, { useAnimatedStyle } from 'react-native-reanimated'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -272,6 +273,23 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
   // If function children, the caller handles the insets and overscroll
   const memoizedChildren = useMemo(() => (typeof children === 'function' ? children(sceneWrapperInfo) : children), [children, sceneWrapperInfo])
 
+  if (scroll) {
+    return (
+      <>
+        <DotsBackground
+          accentColors={accentColors}
+          overrideDots={overrideDots}
+          backgroundGradientColors={backgroundGradientColors}
+          backgroundGradientStart={backgroundGradientStart}
+          backgroundGradientEnd={backgroundGradientEnd}
+        />
+        <SceneWrapperScrollView insetStyle={insetStyle} layoutStyle={layoutStyle} navigation={navigation} sceneWrapperInfo={sceneWrapperInfo} {...props}>
+          {memoizedChildren}
+        </SceneWrapperScrollView>
+      </>
+    )
+  }
+
   if (avoidKeyboard) {
     return (
       <>
@@ -290,23 +308,6 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
           )}
         </Animated.View>
         {hasNotifications ? <NotificationView hasTabs={hasTabs} footerHeight={footerHeight} navigation={navigation} /> : null}
-      </>
-    )
-  }
-
-  if (scroll) {
-    return (
-      <>
-        <DotsBackground
-          accentColors={accentColors}
-          overrideDots={overrideDots}
-          backgroundGradientColors={backgroundGradientColors}
-          backgroundGradientStart={backgroundGradientStart}
-          backgroundGradientEnd={backgroundGradientEnd}
-        />
-        <SceneWrapperScrollView insetStyle={insetStyle} layoutStyle={layoutStyle} navigation={navigation} sceneWrapperInfo={sceneWrapperInfo} {...props}>
-          {memoizedChildren}
-        </SceneWrapperScrollView>
       </>
     )
   }
@@ -334,7 +335,10 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
 const SceneWrapperInner = React.memo(SceneWrapperInnerComponent)
 
 interface SceneWrapperScrollViewProps
-  extends Pick<SceneWrapperProps, 'hasNotifications' | 'hasTabs' | 'footerHeight' | 'keyboardShouldPersistTaps' | 'padding' | 'renderFooter'> {
+  extends Pick<
+    SceneWrapperProps,
+    'avoidKeyboard' | 'hasNotifications' | 'hasTabs' | 'footerHeight' | 'keyboardShouldPersistTaps' | 'padding' | 'renderFooter'
+  > {
   children: React.ReactNode
   insetStyle: InsetStyle
   layoutStyle: {
@@ -347,15 +351,24 @@ interface SceneWrapperScrollViewProps
 
 function SceneWrapperScrollViewComponent(props: SceneWrapperScrollViewProps) {
   const { children, insetStyle, layoutStyle, navigation, sceneWrapperInfo } = props
-  const { hasNotifications = false, hasTabs = false, footerHeight = 0, keyboardShouldPersistTaps, padding = 0, renderFooter } = props
+  const { avoidKeyboard = false, hasNotifications = false, hasTabs = false, footerHeight = 0, keyboardShouldPersistTaps, padding = 0, renderFooter } = props
 
   // If the scene has scroll, this will be required for tabs and/or header animation
   const handleScroll = useSceneScrollHandler()
 
+  const frameHeight = layoutStyle.height
+  const { height: keyboardHeightDiff } = useReanimatedKeyboardAnimation()
+  const animatedLayoutStyle = useAnimatedStyle(() => {
+    const maybeKeyboardHeightDiff = avoidKeyboard ? keyboardHeightDiff.value : 0
+    return {
+      maxHeight: frameHeight + maybeKeyboardHeightDiff
+    }
+  }, [avoidKeyboard, frameHeight])
+
   return (
     <>
       <Reanimated.ScrollView
-        style={[layoutStyle, { padding }]}
+        style={[layoutStyle, animatedLayoutStyle, { padding }]}
         keyboardShouldPersistTaps={keyboardShouldPersistTaps}
         contentContainerStyle={insetStyle}
         onScroll={handleScroll}

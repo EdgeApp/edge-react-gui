@@ -228,6 +228,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
     style={
       {
         "height": 1334,
+        "maxHeight": 1334,
         "padding": 0,
         "width": 750,
       }
