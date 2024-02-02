@@ -302,6 +302,8 @@ export interface AppConfig {
   configName: string
   darkTheme: Theme
   defaultWallets: string[]
+  forceCloseUrlIos: string
+  forceCloseUrlAndroid: string
   knowledgeBase: string
   lightTheme: Theme
   notificationServers: string[]
