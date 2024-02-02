@@ -135,7 +135,7 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
       /* Animation between downValue and upValue */
       keyboardAnimation={undefined}
       /* downValue or upValue depending on if the keyboard state */
-      trackerValue={0}
+      trackerValue={frameHeight}
       {...props}
     />
   )
@@ -210,7 +210,7 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
   // and trackerValue. This value should be from zero to keyboard height
   // depending on the open state of the keyboard
   const keyboardHeight = frameHeight - trackerValue
-  const isKeyboardOpen = avoidKeyboard && keyboardHeight !== 0
+  const isKeyboardOpen = keyboardHeight !== 0
 
   // Calculate app insets considering the app's header, tab-bar,
   // notification area, etc:
