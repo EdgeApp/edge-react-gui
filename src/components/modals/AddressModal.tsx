@@ -1,7 +1,7 @@
 import { FlashList } from '@shopify/flash-list'
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Image, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
@@ -14,7 +14,6 @@ import { connect } from '../../types/reactRedux'
 import { ResolutionError } from '../../types/ResolutionError'
 import { FioAddress, FlatListItem } from '../../types/types'
 import { checkPubAddress, FioAddresses, getFioAddressCache } from '../../util/FioAddressUtils'
-import { FormattedText as Text } from '../legacy/FormattedText/FormattedText.ui'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
@@ -350,9 +349,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   fioAddressText: {
+    color: theme.primaryText,
+    fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
-    paddingLeft: theme.rem(0.75),
-    color: theme.primaryText
+    paddingLeft: theme.rem(0.75)
   },
   loaderContainer: {
     flex: 1,

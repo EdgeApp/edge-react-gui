@@ -36,7 +36,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
       }
     }
   >
-    <WithTheme(EdgeTextComponent)
+    <EdgeText
       numberOfLines={3}
       style={
         [
@@ -55,8 +55,8 @@ exports[`FioDomainRegister should render with loading props 1`] = `
       }
     >
       Note that you need to use FIO to register a Crypto Handle on a custom domain.
-    </WithTheme(EdgeTextComponent)>
-    <WithTheme(EdgeTextComponent)
+    </EdgeText>
+    <EdgeText
       numberOfLines={8}
       style={
         [
@@ -72,7 +72,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
       }
     >
       A FIO Crypto Handle consists of a username and a domain. If you purchase a custom domain, only you will able to register a Crypto Handle on it. Crypto Handle registrations will have to be paid for with FIO tokens from the same wallet which owns the domain.
-    </WithTheme(EdgeTextComponent)>
+    </EdgeText>
     <CardUi4>
       <RowUi4
         onPress={[Function]}
@@ -86,7 +86,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
             }
           }
         >
-          <WithTheme(EdgeTextComponent)
+          <EdgeText
             style={
               {
                 "color": "#FFFFFF",
@@ -95,8 +95,8 @@ exports[`FioDomainRegister should render with loading props 1`] = `
             }
           >
             
-          </WithTheme(EdgeTextComponent)>
-          <WithTheme(EdgeTextComponent)
+          </EdgeText>
+          <EdgeText
             style={
               {
                 "color": "#888888",
@@ -104,7 +104,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
             }
           >
             
-          </WithTheme(EdgeTextComponent)>
+          </EdgeText>
         </View>
       </RowUi4>
     </CardUi4>
