@@ -194,11 +194,15 @@ export function TransactionListRow(props: Props) {
       <SectionView dividerMarginRem={[0.2, 0.5]} marginRem={[0.25, 0]}>
         <>
           <View style={styles.row}>
-            <EdgeText style={styles.titleText}>{name}</EdgeText>
+            <EdgeText ellipsizeMode="tail" style={styles.titleText}>
+              {name}
+            </EdgeText>
             <EdgeText style={styles.cryptoText}>{cryptoAmountString}</EdgeText>
           </View>
           <View style={styles.row}>
-            <EdgeText style={unconfirmedOrTimeStyle}>{unconfirmedOrTimeText}</EdgeText>
+            <EdgeText ellipsizeMode="tail" style={unconfirmedOrTimeStyle}>
+              {unconfirmedOrTimeText}
+            </EdgeText>
             <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
           </View>
         </>
@@ -290,10 +294,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'right'
   },
   secondaryText: {
+    flexShrink: 1,
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
   },
   unconfirmedText: {
+    flexShrink: 1,
     fontSize: theme.rem(0.75),
     color: theme.warningText
   }
