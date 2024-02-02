@@ -95,14 +95,16 @@ export function WalletListScene(props: Props) {
 
   const renderFooter: FooterRender = React.useCallback(
     sceneWrapperInfo => {
+      const key = 'WalletListScene-SearchFooter'
       return sorting ? (
-        <SceneFooterWrapper noBackgroundBlur sceneWrapperInfo={sceneWrapperInfo} onLayoutHeight={handleFooterLayoutHeight}>
+        <SceneFooterWrapper key={key} noBackgroundBlur sceneWrapperInfo={sceneWrapperInfo} onLayoutHeight={handleFooterLayoutHeight}>
           <View style={styles.sortFooterContainer}>
             <ButtonUi4 key="doneButton" mini type="primary" label={lstrings.string_done_cap} onPress={handlePressDone} />
           </View>
         </SceneFooterWrapper>
       ) : (
         <SearchFooter
+          key={key}
           placeholder={lstrings.wallet_list_wallet_search}
           isSearching={isSearching}
           searchText={searchText}
