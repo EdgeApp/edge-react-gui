@@ -27,7 +27,7 @@ const experimentConfigDisklet = makeReactNativeDisklet()
 // The probability of an experiment config feature being set for a given key
 const experimentDistribution = {
   swipeLastUsp: [50, 50],
-  createAccountType: [100],
+  createAccountType: [50, 50],
   legacyLanding: [50, 50],
   signupCaptcha: [50, 50]
 }
