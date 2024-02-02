@@ -108,7 +108,7 @@ interface SceneWrapperProps {
  * negative margin style rules to be used to offset these insets.
  */
 function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
-  const { avoidKeyboard = false } = props
+  const { avoidKeyboard = props.scroll ?? false } = props
 
   // Subscribe to the window size:
   const { height: frameHeight } = useSafeAreaFrame()
@@ -161,7 +161,7 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
   const {
     overrideDots,
     accentColors,
-    avoidKeyboard = false,
+    avoidKeyboard = props.scroll ?? false,
     backgroundGradientColors,
     backgroundGradientStart,
     backgroundGradientEnd,
@@ -351,7 +351,7 @@ interface SceneWrapperScrollViewProps
 
 function SceneWrapperScrollViewComponent(props: SceneWrapperScrollViewProps) {
   const { children, insetStyle, layoutStyle, navigation, sceneWrapperInfo } = props
-  const { avoidKeyboard = false, hasNotifications = false, hasTabs = false, footerHeight = 0, keyboardShouldPersistTaps, padding = 0, renderFooter } = props
+  const { avoidKeyboard = true, hasNotifications = false, hasTabs = false, footerHeight = 0, keyboardShouldPersistTaps, padding = 0, renderFooter } = props
 
   // If the scene has scroll, this will be required for tabs and/or header animation
   const handleScroll = useSceneScrollHandler()
