@@ -442,8 +442,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
           ListEmptyComponent={this.renderEmptyList}
           renderItem={this.renderPlugin}
           keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
-          // XXX: Hack. paddingBottom from insetStyle is not sufficient.
-          contentContainerStyle={{ ...insetStyle, paddingBottom: theme.rem(6) }}
+          contentContainerStyle={insetStyle}
         />
       </View>
     )

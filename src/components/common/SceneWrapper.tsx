@@ -216,7 +216,8 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
   const maybeHeaderHeight = hasHeader ? headerBarHeight : 0
   const maybeNotificationHeight = isLightAccount ? notificationHeight : 0
   const maybeTabBarHeight = hasTabs ? MAX_TAB_BAR_HEIGHT : 0
-  const maybeInsetBottom = !hasTabs && !isKeyboardOpen ? safeAreaInsets.bottom : 0
+  // Ignore inset bottom when keyboard is open because it is rendered behind it
+  const maybeInsetBottom = !isKeyboardOpen ? safeAreaInsets.bottom : 0
   const insets: EdgeInsets = useMemo(
     () => ({
       top: safeAreaInsets.top + maybeHeaderHeight,

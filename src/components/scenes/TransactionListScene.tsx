@@ -6,7 +6,6 @@ import * as React from 'react'
 import { ListRenderItemInfo, RefreshControl, View } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 import Animated from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
@@ -285,9 +284,6 @@ function TransactionListComponent(props: Props) {
     backgroundColors[0] = scaledColor
   }
 
-  // TODO: Include this fix in the SceneWrapper component
-  const safeAreaInsets = useSafeAreaInsets()
-
   return (
     <SceneWrapper
       accentColors={accentColors}
@@ -309,7 +305,7 @@ function TransactionListComponent(props: Props) {
             ref={flashListRef}
             contentContainerStyle={{
               paddingTop: insetStyle.paddingTop + theme.rem(0.5),
-              paddingBottom: insetStyle.paddingBottom + theme.rem(0.5) + safeAreaInsets.bottom,
+              paddingBottom: insetStyle.paddingBottom + theme.rem(0.5),
               paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
               paddingRight: insetStyle.paddingRight + theme.rem(0.5)
             }}
