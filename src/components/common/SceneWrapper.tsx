@@ -292,15 +292,34 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
 
   if (scroll) {
     return (
-      <SceneWrapperScrollView insetStyle={insetStyle} layoutStyle={layoutStyle} navigation={navigation} sceneWrapperInfo={sceneWrapperInfo} {...props}>
-        {memoizedChildren}
-      </SceneWrapperScrollView>
+      <>
+        <DotsBackground
+          accentColors={accentColors}
+          overrideDots={overrideDots}
+          backgroundGradientColors={backgroundGradientColors}
+          backgroundGradientStart={backgroundGradientStart}
+          backgroundGradientEnd={backgroundGradientEnd}
+        />
+        <SceneWrapperScrollView insetStyle={insetStyle} layoutStyle={layoutStyle} navigation={navigation} sceneWrapperInfo={sceneWrapperInfo} {...props}>
+          {memoizedChildren}
+        </SceneWrapperScrollView>
+      </>
     )
   }
 
   return (
     <>
-      <View style={[styles.sceneContainer, layoutStyle, insetStyle, { padding }]}>{memoizedChildren}</View>
+      <View style={[styles.sceneContainer, layoutStyle, insetStyle, { padding }]}>
+        <DotsBackground
+          accentColors={accentColors}
+          overrideDots={overrideDots}
+          backgroundGradientColors={backgroundGradientColors}
+          backgroundGradientStart={backgroundGradientStart}
+          backgroundGradientEnd={backgroundGradientEnd}
+        />
+
+        {memoizedChildren}
+      </View>
       {renderFooter == null ? null : <SceneWrapperFooterContainer hasTabs={hasTabs} renderFooter={renderFooter} sceneWrapperInfo={sceneWrapperInfo} />}
       {hasNotifications ? <NotificationView hasTabs={hasTabs} footerHeight={footerHeight} navigation={navigation} /> : null}
     </>
