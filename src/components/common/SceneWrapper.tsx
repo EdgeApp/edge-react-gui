@@ -1,10 +1,10 @@
 import { getDefaultHeaderHeight } from '@react-navigation/elements'
 import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native'
 import * as React from 'react'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Animated, StyleSheet, View, ViewStyle } from 'react-native'
-import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
-import Reanimated, { useAnimatedStyle } from 'react-native-reanimated'
+import { useKeyboardHandler, useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
+import Reanimated, { runOnJS, useAnimatedStyle } from 'react-native-reanimated'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -157,7 +157,6 @@ interface SceneWrapperInnerProps extends SceneWrapperProps {
 }
 
 function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
-  const { trackerValue } = props
   const {
     overrideDots,
     accentColors,
@@ -182,6 +181,15 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
   const navigation = useNavigation<NavigationBase>()
   const theme = useTheme()
 
+  // We need to track this state in the JS thread because insets are not shared values
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
+  useKeyboardHandler({
+    onStart(event) {
+      'worklet'
+      runOnJS(setIsKeyboardOpen)(event.progress === 1)
+    }
+  })
+
   // Reset the footer ratio when focused
   // We can do this because multiple calls to resetFooterRatio isn't costly
   // because it just sets snapTo SharedValue to `1`
@@ -205,12 +213,6 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
 
   const notificationHeight = theme.rem(4)
   const headerBarHeight = getDefaultHeaderHeight({ height: frameHeight, width: frameWidth }, false, 0)
-
-  // Derive the keyboard height by getting the difference between screen height
-  // and trackerValue. This value should be from zero to keyboard height
-  // depending on the open state of the keyboard
-  const keyboardHeight = frameHeight - trackerValue
-  const isKeyboardOpen = keyboardHeight !== 0
 
   // Calculate app insets considering the app's header, tab-bar,
   // notification area, etc:

@@ -47,7 +47,8 @@ jest.mock('react-native-keyboard-controller', () => {
     useReanimatedKeyboardAnimation: () => ({
       height,
       progress
-    })
+    }),
+    useKeyboardHandler: handlers => {}
   }
 })
 
