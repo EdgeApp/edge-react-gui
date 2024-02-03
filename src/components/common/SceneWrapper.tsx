@@ -1,8 +1,8 @@
 import { getDefaultHeaderHeight } from '@react-navigation/elements'
 import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native'
 import * as React from 'react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Animated, StyleSheet, View, ViewStyle } from 'react-native'
+import { useEffect, useMemo, useState } from 'react'
+import { StyleSheet, View, ViewStyle } from 'react-native'
 import { useKeyboardHandler, useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
 import Reanimated, { runOnJS, useAnimatedStyle } from 'react-native-reanimated'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -18,7 +18,6 @@ import { NotificationView } from '../notification/NotificationView'
 import { useTheme } from '../services/ThemeContext'
 import { MAX_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
 import { AccentColors, DotsBackground } from '../ui4/DotsBackground'
-import { KeyboardTracker } from './KeyboardTracker'
 
 export interface InsetStyle {
   paddingTop: number
@@ -108,55 +107,6 @@ interface SceneWrapperProps {
  * negative margin style rules to be used to offset these insets.
  */
 function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
-  const { avoidKeyboard = props.scroll ?? false } = props
-
-  // Subscribe to the window size:
-  const { height: frameHeight } = useSafeAreaFrame()
-
-  // These represent the distance from the top of the screen to the top of
-  // the keyboard depending if the keyboard is down or up.
-  const downValue = frameHeight
-  const upValue = useCallback((keyboardHeight: number) => downValue - keyboardHeight, [downValue])
-
-  return avoidKeyboard ? (
-    <KeyboardTracker downValue={downValue} upValue={upValue}>
-      {(keyboardAnimation, trackerValue) => (
-        <SceneWrapperInner
-          /* Animation between downValue and upValue */
-          keyboardAnimation={keyboardAnimation}
-          /* downValue or upValue depending on if the keyboard state */
-          trackerValue={trackerValue}
-          {...props}
-        />
-      )}
-    </KeyboardTracker>
-  ) : (
-    <SceneWrapperInner
-      /* Animation between downValue and upValue */
-      keyboardAnimation={undefined}
-      /* downValue or upValue depending on if the keyboard state */
-      trackerValue={frameHeight}
-      {...props}
-    />
-  )
-}
-export const SceneWrapper = React.memo(SceneWrapperComponent)
-
-const styles = StyleSheet.create({
-  sceneContainer: {
-    // Children:
-    alignItems: 'stretch',
-    flexDirection: 'column',
-    justifyContent: 'flex-start'
-  }
-})
-
-interface SceneWrapperInnerProps extends SceneWrapperProps {
-  keyboardAnimation: Animated.Value | undefined
-  trackerValue: number
-}
-
-function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
   const {
     overrideDots,
     accentColors,
@@ -350,7 +300,16 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
     </>
   )
 }
-const SceneWrapperInner = React.memo(SceneWrapperInnerComponent)
+export const SceneWrapper = React.memo(SceneWrapperComponent)
+
+const styles = StyleSheet.create({
+  sceneContainer: {
+    // Children:
+    alignItems: 'stretch',
+    flexDirection: 'column',
+    justifyContent: 'flex-start'
+  }
+})
 
 interface SceneWrapperScrollViewProps
   extends Pick<
