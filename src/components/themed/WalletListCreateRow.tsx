@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -13,11 +13,11 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { ThunkAction } from '../../types/reduxTypes'
-import { guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { logEvent, TrackingEventName } from '../../util/tracking'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { ListModal } from '../modals/ListModal'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 import { WalletListCurrencyRow } from './WalletListCurrencyRow'
 
@@ -27,15 +27,15 @@ export interface WalletListCreateRowProps {
   trackingEventFailed?: TrackingEventName
   trackingEventSuccess?: TrackingEventName
   createWalletIds?: string[]
-  pluginId?: string
+  pluginId: string
   walletType?: string
 
-  onPress?: (walletId: string, currencyCode: string) => void
+  onPress?: (walletId: string, tokenId: EdgeTokenId) => void
 }
 
 export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) => {
   const {
-    currencyCode = '',
+    currencyCode,
     currencyName = '',
     trackingEventFailed,
     trackingEventSuccess,
@@ -54,18 +54,27 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { tokenId } = guessFromCurrencyCode(account, { currencyCode, pluginId })
+  const tokenId = getTokenIdForced(account, pluginId, currencyCode)
+
   const networkName = pluginId != null && tokenId != null ? ` (${account.currencyConfig[pluginId].currencyInfo.displayName})` : ''
 
-  const handlePress = useHandler(() => {
-    const handleRes = (walletId: string) => (onPress != null ? onPress(walletId, currencyCode) : null)
+  const pressMutexRef = React.useRef<boolean>(false)
+
+  const handlePress = useHandler(async () => {
+    if (pressMutexRef.current) {
+      return
+    }
+    pressMutexRef.current = true
+
+    const handleRes = (walletId: string) => (onPress != null ? onPress(walletId, tokenId) : null)
     if (walletType != null) {
-      dispatch(createAndSelectWallet({ walletType }))
+      await dispatch(createAndSelectWallet({ walletType }))
         .then(handleRes)
         .catch(err => showError(err))
+        .finally(() => (pressMutexRef.current = false))
     } else if (pluginId != null && tokenId != null) {
       if (createWalletIds.length < 2) {
-        dispatch(
+        await dispatch(
           createAndSelectToken({
             tokenId,
             pluginId,
@@ -76,13 +85,15 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
         )
           .then(handleRes)
           .catch(err => showError(err))
+          .finally(() => (pressMutexRef.current = false))
       } else {
-        Airship.show(bridge => {
+        await Airship.show(bridge => {
           const renderRow = (wallet: EdgeCurrencyWallet) => (
             <WalletListCurrencyRow
+              tokenId={null}
               wallet={wallet}
-              onPress={walletId => {
-                dispatch(
+              onPress={async walletId => {
+                await dispatch(
                   createAndSelectToken({
                     tokenId,
                     pluginId: currencyWallets[walletId].currencyInfo.pluginId,
@@ -92,7 +103,10 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
                   })
                 )
                   .then(handleRes)
-                  .finally(() => bridge.resolve())
+                  .finally(() => {
+                    pressMutexRef.current = false
+                    bridge.resolve()
+                  })
               }}
             />
           )
@@ -107,14 +121,18 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
               rowsData={createWalletIds.map(walletId => currencyWallets[walletId])}
             />
           )
-        }).catch(err => showError(err))
+        })
+          .catch(err => showError(err))
+          .finally(() => (pressMutexRef.current = false))
       }
     }
+
+    pressMutexRef.current = false
   })
 
   return (
     <TouchableOpacity style={styles.row} onPress={handlePress}>
-      <CryptoIcon marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
+      <CryptoIconUi4 marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
       <View style={styles.nameColumn}>
         <EdgeText style={styles.currencyText}>{`${currencyCode}${networkName}`}</EdgeText>
         <EdgeText style={styles.nameText}>{currencyName}</EdgeText>

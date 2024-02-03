@@ -5,6 +5,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { makeActionProgram } from '../../../controllers/action-queue/ActionProgram'
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
 import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
@@ -32,12 +33,14 @@ import { Alert } from '../../themed/Alert'
 import { SafeSlider } from '../../themed/SafeSlider'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
-import { Tile } from '../../tiles/Tile'
 import { TotalDebtCollateralTile } from '../../tiles/TotalDebtCollateralTile'
+import { RowUi4 } from '../../ui4/RowUi4'
 
 export interface Props extends EdgeSceneProps<'loanClose'> {
   loanAccount: LoanAccount
 }
+
+// TODO: Check contentPadding
 
 export const LoanCloseSceneComponent = (props: Props) => {
   const theme = useTheme()
@@ -132,22 +135,27 @@ export const LoanCloseSceneComponent = (props: Props) => {
         underline
         withTopMargin
       />
-      <KeyboardAwareScrollView contentContainerStyle={styles.container} extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.container}
+        extraScrollHeight={theme.rem(2.75)}
+        enableOnAndroid
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+      >
         <TotalDebtCollateralTile title={lstrings.loan_remaining_principal} wallet={borrowEngineWallet} debtsOrCollaterals={debts} />
         <NetworkFeeTile wallet={borrowEngineWallet} nativeAmount={networkFeeAmountAggregate} />
         {debts.length > 0 ? (
-          <Tile title={lstrings.loan_remaining_principal} type="static" contentPadding={false}>
+          <RowUi4 title={lstrings.loan_remaining_principal}>
             {debts.map(debt => (
               <CryptoFiatAmountRow nativeAmount={debt.nativeAmount} tokenId={debt.tokenId} wallet={borrowEngineWallet} key={debt.tokenId} />
             ))}
-          </Tile>
+          </RowUi4>
         ) : null}
         {collaterals.length > 0 ? (
-          <Tile title={lstrings.loan_collateral_amount} type="static" contentPadding={false}>
+          <RowUi4 title={lstrings.loan_collateral_amount}>
             {collaterals.map(collateral => (
               <CryptoFiatAmountRow nativeAmount={collateral.nativeAmount} tokenId={collateral.tokenId} wallet={borrowEngineWallet} key={collateral.tokenId} />
             ))}
-          </Tile>
+          </RowUi4>
         ) : null}
         {aggregateErrorMessage.length > 0 ? (
           <Alert

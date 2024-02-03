@@ -1,10 +1,12 @@
 import { sub } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { showFullScreenSpinner } from '../components/modals/AirshipFullScreenSpinner'
-import { SPECIAL_CURRENCY_INFO, STAKING_BALANCES } from '../constants/WalletAndCurrencyConstants'
+import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
+import { getWalletTokenId } from './CurrencyInfoHelpers'
+import { getFioStakingBalances } from './stakeUtils'
 
 /**
  * Safely get a wallet name, returning a fallback when the name is null.
@@ -22,13 +24,31 @@ export function getWalletFiat(wallet: EdgeCurrencyWallet): { fiatCurrencyCode: s
   return { fiatCurrencyCode: fiatCurrencyCode.replace('iso:', ''), isoFiatCurrencyCode: fiatCurrencyCode }
 }
 
+/**
+ * Takes any form of fiat currency code and returns a version with and without
+ * the "iso:" prefix
+ */
+export function cleanFiatCurrencyCode(fiatCurrencyCode: string): { fiatCurrencyCode: string; isoFiatCurrencyCode: string } {
+  if (fiatCurrencyCode.startsWith('iso:')) {
+    return { fiatCurrencyCode: fiatCurrencyCode.replace('iso:', ''), isoFiatCurrencyCode: fiatCurrencyCode }
+  } else {
+    return { fiatCurrencyCode, isoFiatCurrencyCode: `iso:${fiatCurrencyCode}` }
+  }
+}
+
 export const getAvailableBalance = (wallet: EdgeCurrencyWallet, tokenCode?: string): string => {
   const { currencyCode, pluginId } = wallet.currencyInfo
-  const cCode = tokenCode ?? currencyCode
-  let balance = wallet.balances[cCode] ?? '0'
-  if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported) {
-    const lockedBalance = wallet.balances[`${cCode}${STAKING_BALANCES.locked}`] ?? '0'
-    balance = sub(balance, lockedBalance)
+  let tokenId: EdgeTokenId
+  if (tokenCode == null || tokenCode === currencyCode) {
+    tokenId = null
+  } else {
+    tokenId = getWalletTokenId(wallet, tokenCode)
+  }
+  let balance = wallet.balanceMap.get(tokenId) ?? '0'
+  if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported && tokenId == null) {
+    // Special case for FIO mainnet (no token)
+    const { locked } = getFioStakingBalances(wallet.stakingStatus)
+    balance = sub(balance, locked)
   }
   return balance
 }

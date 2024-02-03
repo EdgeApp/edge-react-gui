@@ -1,23 +1,26 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
+import { useIconColor } from '../../../hooks/useIconColor'
 import { lstrings } from '../../../locales/strings'
 import { StakePlugin, StakePolicy, StakePositionMap } from '../../../plugins/stake-plugins/types'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getPluginFromPolicy, getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
+import { darkenHexColor } from '../../../util/utils'
 import { StakingOptionCard } from '../../cards/StakingOptionCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
-import { CryptoIcon } from '../../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
+import { CryptoIconUi4 } from '../../ui4/CryptoIconUi4'
+import { AccentColors } from '../../ui4/DotsBackground'
 
 interface Props extends EdgeSceneProps<'stakeOptions'> {
   wallet: EdgeCurrencyWallet
@@ -39,7 +42,8 @@ const StakeOptionsSceneComponent = (props: Props) => {
 
   const account = useSelector(state => state.core.account)
   const pluginId = wallet?.currencyInfo.pluginId
-  const tokenId = pluginId ? getTokenId(account, pluginId, currencyCode) : undefined
+  const tokenId = pluginId ? getTokenIdForced(account, pluginId, currencyCode) : null
+  const iconColor = useIconColor({ pluginId, tokenId })
 
   //
   // Handlers
@@ -76,14 +80,37 @@ const StakeOptionsSceneComponent = (props: Props) => {
     )
   }
 
+  const accentColors: AccentColors = {
+    // Transparent fallback for while iconColor is loading
+    iconAccentColor: iconColor ?? '#00000000'
+  }
+
+  const backgroundColors = [...theme.assetBackgroundGradientColors]
+  if (iconColor != null) {
+    const scaledColor = darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+    backgroundColors[0] = scaledColor
+  }
+
   return (
-    <SceneWrapper scroll background="theme">
+    <SceneWrapper
+      accentColors={accentColors}
+      scroll
+      backgroundGradientColors={backgroundColors}
+      backgroundGradientEnd={theme.assetBackgroundGradientEnd}
+      backgroundGradientStart={theme.assetBackgroundGradientStart}
+      overrideDots={theme.backgroundDots.assetOverrideDots}
+    >
       <SceneHeader style={styles.sceneHeader} title={sprintf(lstrings.staking_change_add_header, currencyCode)} underline withTopMargin>
-        <CryptoIcon marginRem={[0, 0, 0, 0.5]} walletId={walletId} tokenId={tokenId} sizeRem={1.5} />
+        <CryptoIconUi4 marginRem={[0, 0, 0, 0.5]} walletId={walletId} tokenId={tokenId} sizeRem={1.5} />
       </SceneHeader>
       <View style={styles.optionsContainer}>
         <EdgeText>{lstrings.stake_select_options}</EdgeText>
-        <FlashList data={stakePolicies} renderItem={renderOptions} keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId} />
+        <FlatList
+          data={stakePolicies}
+          renderItem={renderOptions}
+          keyExtractor={(stakePolicy: StakePolicy) => stakePolicy.stakePolicyId}
+          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+        />
       </View>
     </SceneWrapper>
   )

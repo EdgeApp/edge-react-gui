@@ -1,7 +1,9 @@
-import { mul, toFixed } from 'biggystring'
+import { gt, mul, toFixed } from 'biggystring'
+import { asMaybe } from 'cleaners'
 import { format } from 'date-fns'
 import { getLocales, getNumberFormatSettings } from 'react-native-localize'
 
+import { asBiggystring } from '../util/cleaners'
 import { locales } from './dateLocales'
 
 export interface IntlLocaleType {
@@ -279,25 +281,22 @@ export const trimEnd = (val: string): string => {
  * and greater than -1.0
  **/
 export const toPercentString = (
-  percentVal: string | number,
+  ratio: string | number,
   opts?: {
+    intlOpts?: IntlNumberFormatOptionsType
     maxPrecision?: number
     minPrecision?: number
-    intlOpts?: IntlNumberFormatOptionsType
+    plusSign?: boolean
   }
 ): string => {
-  const { maxPrecision = 1, minPrecision = 0, intlOpts } = opts ?? {}
+  const { maxPrecision = 1, minPrecision = 0, intlOpts, plusSign = false } = opts ?? {}
 
-  if (typeof percentVal === 'string') {
-    // Remove negative sign
-    const checkVal = percentVal.replace('-', '')
-    // Check that this is a regular decimal (not hex) number
-    if (!/^\d*\.?\d+$/.test(checkVal)) {
-      return ''
-    }
-  }
-  const percentString = mul('100', String(percentVal))
-  return `${formatNumber(toFixed(percentString, minPrecision, maxPrecision), intlOpts)}%`
+  const ratioStr = asMaybe(asBiggystring)(String(ratio))
+  if (ratioStr == null) return ''
+
+  const percentString = mul('100', ratioStr)
+  const signStr = plusSign && gt(percentString, '0') ? '+' : ''
+  return `${signStr}${formatNumber(toFixed(percentString, minPrecision, maxPrecision), intlOpts)}%`
 }
 
 const normalizeLang = (l: string) => l.replace('-', '').replace('_', '').toLowerCase()

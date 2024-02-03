@@ -3,6 +3,7 @@ import { Alert, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { writeSpendingLimits } from '../../actions/LocalSettingsActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -14,8 +15,8 @@ import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { EdgeText } from '../themed/EdgeText'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 
 interface Props extends EdgeSceneProps<'spendingLimits'> {}
 
@@ -63,9 +64,9 @@ export const SpendingLimitsScene = (props: Props) => {
   const amount = parseFloat(transactionAmount)
   const enableSlider = password.length > 8 && !isNaN(amount) && amount > 0
   return (
-    <SceneWrapper hasHeader>
-      <KeyboardAwareScrollView contentContainerStyle={styles.scene}>
-        <OutlinedTextInput secureTextEntry autoFocus label={lstrings.enter_your_password} value={password} onChangeText={setPassword} />
+    <SceneWrapper>
+      <KeyboardAwareScrollView contentContainerStyle={styles.scene} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+        <FilledTextInput secureTextEntry autoFocus placeholder={lstrings.enter_your_password} value={password} onChangeText={setPassword} />
 
         <View style={styles.switchRow}>
           <View style={styles.textBlock}>
@@ -75,15 +76,16 @@ export const SpendingLimitsScene = (props: Props) => {
           <SettingsSwitchRow value={transactionIsEnabled} onPress={handleTransactionIsEnabledChanged} />
         </View>
 
-        <OutlinedTextInput
+        <FilledTextInput
           disabled={!transactionIsEnabled}
           value={transactionAmount}
           onChangeText={setTransactionAmount}
-          label={lstrings.spending_limits_tx_title}
+          placeholder={lstrings.spending_limits_tx_title}
           autoCorrect={false}
           autoFocus={false}
-          keyboardType="numeric"
+          keyboardType="decimal-pad"
           prefix={currencySymbol}
+          numeric
         />
 
         <View style={styles.spacer} />

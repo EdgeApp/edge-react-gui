@@ -17,10 +17,11 @@ import Animated, {
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import edgeLogoIcon from '../../assets/images/edgeLogo/Edge_logo_Icon_L.png'
-import slide1HeroImage from '../../assets/images/gettingStarted/slide1HeroImage.png'
-import slide2HeroImage from '../../assets/images/gettingStarted/slide2HeroImage.png'
-import slide3HeroImage from '../../assets/images/gettingStarted/slide3HeroImage.png'
-import slide4HeroImage from '../../assets/images/gettingStarted/slide4HeroImage.png'
+import uspImage0 from '../../assets/images/gettingStarted/usp0.png'
+import uspImage1 from '../../assets/images/gettingStarted/usp1.png'
+import uspImage2 from '../../assets/images/gettingStarted/usp2.png'
+import uspImage3 from '../../assets/images/gettingStarted/usp3.png'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { getExperimentConfigValue } from '../../experimentConfig'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -31,12 +32,15 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { ImageProp } from '../../types/Theme'
 import { parseMarkedText } from '../../util/parseMarkedText'
 import { logEvent } from '../../util/tracking'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwipeOffsetDetector } from '../interactions/SwipeOffsetDetector'
 import { Space } from '../layout/Space'
 import { EdgeText } from '../themed/EdgeText'
-import { MainButton } from '../themed/MainButton'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+
+const ANIM_DURATION = 1000
 
 interface Props extends EdgeSceneProps<'gettingStarted'> {}
 
@@ -49,26 +53,26 @@ interface SectionData {
 }
 const sections: SectionData[] = [
   {
-    image: slide1HeroImage,
+    image: uspImage0,
     key: 'slide1',
     message: lstrings.getting_started_slide_1_message,
     title: lstrings.getting_started_slide_1_title,
     footnote: lstrings.getting_started_slide_1_footnote
   },
   {
-    image: slide2HeroImage,
+    image: uspImage1,
     key: 'slide2',
     message: lstrings.getting_started_slide_2_message,
     title: lstrings.getting_started_slide_2_title
   },
   {
-    image: slide3HeroImage,
+    image: uspImage2,
     key: 'slide3',
     message: lstrings.getting_started_slide_3_message,
     title: lstrings.getting_started_slide_3_title
   },
   {
-    image: slide4HeroImage,
+    image: uspImage3,
     key: 'slide4',
     message: lstrings.getting_started_slide_4_message,
     title: lstrings.getting_started_slide_4_title
@@ -149,10 +153,14 @@ export const GettingStartedScene = (props: Props) => {
   )
 
   // Initialize variant config values
-  useAsyncEffect(async () => {
-    setIsFinalSwipeEnabled((await getExperimentConfigValue('swipeLastUsp')) === 'true')
-    setCreateAccountType(await getExperimentConfigValue('createAccountType'))
-  }, [])
+  useAsyncEffect(
+    async () => {
+      setIsFinalSwipeEnabled((await getExperimentConfigValue('swipeLastUsp')) === 'true')
+      setCreateAccountType(await getExperimentConfigValue('createAccountType'))
+    },
+    [],
+    'GettingStartedScene'
+  )
 
   // Redirect to login screen if device has memory of accounts
   // HACK: It's unknown how the localUsers dependency makes the routing work
@@ -177,12 +185,22 @@ export const GettingStartedScene = (props: Props) => {
         <Container>
           <HeroContainer>
             <WelcomeHero swipeOffset={swipeOffset}>
-              <Image source={edgeLogoIcon} />
-              <WelcomeHeroTitle numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.5}>
-                {parseMarkedText(lstrings.getting_started_welcome_title)}
-              </WelcomeHeroTitle>
-              <WelcomeHeroMessage>{lstrings.getting_started_welcome_message}</WelcomeHeroMessage>
-              <WelcomeHeroPrompt>{lstrings.getting_started_welcome_prompt}</WelcomeHeroPrompt>
+              <EdgeAnim enter={{ type: 'fadeInUp', duration: ANIM_DURATION, distance: 80 }}>
+                <Image source={edgeLogoIcon} />
+              </EdgeAnim>
+
+              <EdgeAnim enter={{ type: 'fadeInUp', duration: ANIM_DURATION, distance: 60 }}>
+                <WelcomeHeroTitle numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.5}>
+                  {parseMarkedText(lstrings.getting_started_welcome_title)}
+                </WelcomeHeroTitle>
+              </EdgeAnim>
+              <EdgeAnim enter={{ type: 'fadeInUp', duration: ANIM_DURATION, distance: 40 }}>
+                <WelcomeHeroMessage>{lstrings.getting_started_welcome_message}</WelcomeHeroMessage>
+              </EdgeAnim>
+
+              <EdgeAnim enter={{ type: 'fadeInUp', duration: ANIM_DURATION, distance: 20 }}>
+                <WelcomeHeroPrompt>{lstrings.getting_started_welcome_prompt}</WelcomeHeroPrompt>
+              </EdgeAnim>
             </WelcomeHero>
             {sections.map((section, index) => {
               return (
@@ -206,7 +224,7 @@ export const GettingStartedScene = (props: Props) => {
               {sections.map((section, index) => {
                 return (
                   <Section key={section.key} swipeOffset={swipeOffset} itemIndex={index + 1}>
-                    <ScrollView>
+                    <ScrollView scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
                       <SectionTitle numberOfLines={2}>{parseMarkedText(section.title)}</SectionTitle>
                       <SectionParagraph numberOfLines={undefined}>{section.message}</SectionParagraph>
                       {section.footnote == null ? null : <Footnote numberOfLines={undefined}>{lstrings.getting_started_slide_1_footnote}</Footnote>}
@@ -215,10 +233,17 @@ export const GettingStartedScene = (props: Props) => {
                 )
               })}
             </Sections>
-            <Space horizontal={2}>
-              <MainButton onPress={handlePressSignUp} label={lstrings.account_get_started} />
-              <MainButton type="escape" onPress={handlePressSignIn} label={lstrings.getting_started_button_sign_in} />
-            </Space>
+            <ButtonsViewUi4
+              animDistanceStart={40}
+              primary={{
+                label: lstrings.account_get_started,
+                onPress: handlePressSignUp
+              }}
+              tertiary={{
+                label: lstrings.getting_started_button_sign_in,
+                onPress: handlePressSignIn
+              }}
+            />
           </SectionCoverAnimated>
         </Container>
       </SwipeOffsetDetector>
@@ -369,13 +394,12 @@ const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<nu
     {
       alignItems: 'stretch',
       justifyContent: 'space-between',
-      backgroundColor: '#0F1D26',
       paddingVertical: theme.rem(1),
-      paddingBottom: insets.bottom,
+      paddingBottom: insets.bottom + theme.rem(1),
       marginBottom: -insets.bottom
     },
     useAnimatedStyle(() => {
-      const backgroundColor = interpolateColor(props.swipeOffset.value, [0, 1], [`${theme.modal}00`, `${theme.modal}ff`])
+      const backgroundColor = interpolateColor(props.swipeOffset.value, [0, 1], [`${theme.modal}00`, theme.modalLikeBackground])
       const paddingVertical = interpolate(props.swipeOffset.value, [0, 1], [0, themeRem], Extrapolation.CLAMP)
       const flexGrow = interpolate(props.swipeOffset.value, [0, 1], [0, 1.2], Extrapolation.CLAMP)
       return {

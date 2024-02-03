@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Text } from 'react-native'
 
@@ -7,11 +7,11 @@ import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { useWalletName } from '../../../hooks/useWalletName'
 import { lstrings } from '../../../locales/strings'
 import { useSelector } from '../../../types/reactRedux'
-import { CryptoIcon } from '../../icons/CryptoIcon'
 import { useTheme } from '../../services/ThemeContext'
 import { CryptoText } from '../../text/CryptoText'
 import { FiatText } from '../../text/FiatText'
 import { TickerText } from '../../text/TickerText'
+import { CryptoIconUi4 } from '../../ui4/CryptoIconUi4'
 import { IconDataRow } from './IconDataRow'
 
 interface Props {
@@ -19,7 +19,7 @@ interface Props {
   nativeAmount?: string
   showRate?: boolean
   token?: EdgeToken
-  tokenId?: string
+  tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
 }
 
@@ -52,12 +52,12 @@ const CurrencyRowComponent = (props: Props) => {
   }
 
   // Balance stuff:
-  const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
+  const hideBalance = useSelector(state => !state.ui.settings.isAccountBalanceVisible)
   const balance = useWalletBalance(wallet, tokenId)
-  const icon = <CryptoIcon sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
+  const icon = <CryptoIconUi4 sizeRem={2} tokenId={tokenId} walletId={wallet.id} />
   const tickerText = showRate && wallet != null ? <TickerText wallet={wallet} tokenId={tokenId} /> : null
-  const cryptoText = showBalance ? <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol /> : null
-  const fiatText = showBalance ? <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} /> : null
+  const cryptoText = <CryptoText wallet={wallet} tokenId={tokenId} nativeAmount={nativeAmount ?? balance} withSymbol hideBalance={hideBalance} />
+  const fiatText = <FiatText nativeCryptoAmount={nativeAmount ?? balance} tokenId={tokenId} wallet={wallet} hideBalance={hideBalance} />
 
   let displayCurrencyCode = currencyCode
   if (showTokenNames && tokenFromId != null) {

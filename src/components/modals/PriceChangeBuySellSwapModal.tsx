@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
+import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { PriceChangePayload } from '../../controllers/action-queue/types/pushPayloadTypes'
 import { lstrings } from '../../locales/strings'
 import { ThunkAction } from '../../types/reduxTypes'
@@ -28,7 +29,11 @@ export function launchPriceChangeBuySellSwapModal(navigation: NavigationBase, da
     ))
 
     if (threeButtonModal === 'buy') {
-      navigation.navigate('buyTab', { screen: 'pluginListBuy' })
+      if (state.core.account.username == null) {
+        showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+      } else {
+        navigation.navigate('buyTab', { screen: 'pluginListBuy' })
+      }
     } else if (threeButtonModal === 'sell') {
       navigation.navigate('sellTab', { screen: 'pluginListSell' })
     } else if (threeButtonModal === 'exchange') {

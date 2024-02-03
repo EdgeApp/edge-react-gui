@@ -1,0 +1,23 @@
+diff --git a/node_modules/react-native-reanimated/src/reanimated2/mock.ts b/node_modules/react-native-reanimated/src/reanimated2/mock.ts
+index 37b838a..2e02365 100644
+--- a/node_modules/react-native-reanimated/src/reanimated2/mock.ts
++++ b/node_modules/react-native-reanimated/src/reanimated2/mock.ts
+@@ -18,6 +18,10 @@ class BaseAnimationMock {
+     return this;
+   }
+ 
++  easing(_: number) {
++    return this;
++  }
++
+   springify(_: number) {
+     return this;
+   }
+@@ -205,6 +209,7 @@ const ReanimatedV2 = {
+   'LightSpeedInLeft',
+   'LightSpeedOutRight',
+   'LightSpeedOutLeft',
++  'LinearTransition',
+ 
+   'PinwheelOut',
+ 

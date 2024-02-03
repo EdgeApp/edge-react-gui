@@ -18,6 +18,7 @@ export const edgeConfig: AppConfig = {
   referralServers: ['https://referral1.edge.app'],
   supportsEdgeLogin: true,
   supportEmail: 'support@edge.app',
+  supportContactSite: 'https://support.edge.app/hc/en-us/requests/new',
   supportSite: 'https://help.edge.app/support/tickets/new',
   termsOfServiceSite: 'https://edge.app/tos/',
   website: 'https://edge.app'

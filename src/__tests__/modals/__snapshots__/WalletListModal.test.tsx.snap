@@ -13,7 +13,6 @@ exports[`WalletListModal should render with loading props 1`] = `
       }
     }
     accessible={true}
-    collapsable={false}
     focusable={true}
     onClick={[Function]}
     onResponderGrant={[Function]}
@@ -23,22 +22,60 @@ exports[`WalletListModal should render with loading props 1`] = `
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
     style={
-      {
-        "backgroundColor": "transparent",
-        "bottom": 0,
-        "left": 0,
-        "opacity": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
-      }
+      [
+        {
+          "backgroundColor": "#000000",
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "opacity": 0,
+        },
+      ]
+    }
+  />,
+  <View
+    collapsable={false}
+    style={
+      [
+        {
+          "alignSelf": "flex-end",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "borderTopLeftRadius": 22,
+          "borderTopRightRadius": 22,
+          "flexShrink": 1,
+          "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "width": 674,
+        },
+        {
+          "transform": [
+            {
+              "translateY": 1334,
+            },
+          ],
+        },
+        {
+          "borderColor": "rgba(255, 255, 255, 0)",
+          "borderWidth": 0,
+          "marginBottom": -86,
+          "paddingBottom": 86,
+          "paddingTop": 0,
+        },
+      ]
     }
   >
     <BlurView
       blurAmount={10}
-      blurType="light"
+      blurType="dark"
+      overlayColor="rgba(0, 0, 0, 0)"
       style={
         {
+          "backgroundColor": undefined,
           "bottom": 0,
           "left": 0,
           "position": "absolute",
@@ -47,698 +84,600 @@ exports[`WalletListModal should render with loading props 1`] = `
         }
       }
     />
-  </View>,
-  <View
-    collapsable={false}
-    style={
-      {
-        "alignSelf": "flex-end",
-        "backgroundColor": "#121d25",
-        "borderColor": "rgba(255, 255, 255, 0)",
-        "borderTopLeftRadius": 22,
-        "borderTopRightRadius": 22,
-        "borderWidth": 0,
-        "flexDirection": undefined,
-        "flexShrink": 1,
-        "justifyContent": undefined,
-        "marginBottom": -64,
-        "marginLeft": 0,
-        "marginRight": 0,
-        "marginTop": 0,
-        "maxHeight": undefined,
-        "overflow": "visible",
-        "paddingBottom": 86,
-        "paddingLeft": 22,
-        "paddingRight": 22,
-        "paddingTop": 22,
-        "shadowOffset": {
-          "height": 0,
-          "width": 0,
-        },
-        "shadowOpacity": 1,
-        "shadowRadius": 10,
-        "transform": [
-          {
-            "translateY": 1334,
-          },
-        ],
-        "width": 512,
-      }
-    }
-  >
     <View
       style={
         {
           "alignItems": "center",
-          "flexDirection": "row",
-          "margin": 11,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
         }
       }
     >
-      <Text
+      <View
         style={
-          [
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Medium",
-              "fontSize": 27,
-              "marginVertical": 11,
-            },
-            {
-              "textAlign": "center",
-            },
-            {
-              "paddingBottom": 0,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 0,
-            },
-          ]
+          {
+            "backgroundColor": "hsla(0, 0%, 53%, 0.3)",
+            "borderRadius": 3,
+            "height": 6,
+            "marginTop": 6,
+            "width": 67,
+          }
         }
-      >
-        Wallet List
-      </Text>
+      />
     </View>
     <View
-      accessibilityState={
+      style={
         {
-          "busy": undefined,
-          "checked": undefined,
-          "disabled": undefined,
-          "expanded": undefined,
-          "selected": undefined,
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+          "marginBottom": 11,
+          "marginTop": 28,
         }
       }
-      accessible={false}
-      focusable={true}
-      onClick={[Function]}
-      onLayout={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
+    >
+      <View
+        style={
+          {
+            "flexGrow": 1,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "marginHorizontal": 11,
+            }
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 27,
+                },
+                null,
+                {
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
+                },
+                null,
+              ]
+            }
+          >
+            Wallet List
+          </Text>
+        </View>
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessible={false}
+          disableAnimation={
+            {
+              "value": 0,
+            }
+          }
+          focusAnimation={
+            {
+              "value": 0,
+            }
+          }
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          scale={
+            {
+              "value": 1,
+            }
+          }
+          spaceProps={
+            {
+              "around": 0.5,
+              "returnKeyType": "search",
+            }
+          }
+          style={
+            [
+              {
+                "alignItems": undefined,
+                "flex": undefined,
+                "flexDirection": "column",
+                "justifyContent": undefined,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
+              },
+              {
+                "alignItems": "center",
+                "borderRadius": 2247,
+                "borderWidth": 1,
+                "flexDirection": "row",
+                "paddingHorizontal": 22,
+                "paddingVertical": 17,
+              },
+              {
+                "backgroundColor": undefined,
+                "borderColor": undefined,
+                "opacity": undefined,
+                "transform": [
+                  {
+                    "scale": undefined,
+                  },
+                ],
+              },
+            ]
+          }
+        >
+          <View
+            size={
+              {
+                "value": undefined,
+              }
+            }
+            style={
+              [
+                {
+                  "alignItems": "stretch",
+                  "aspectRatio": 1,
+                },
+                {
+                  "opacity": undefined,
+                  "width": undefined,
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "anticon",
+                  "fontSize": 22,
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                }
+              }
+            >
+              
+            </Text>
+          </View>
+          <View
+            style={
+              {
+                "flex": 1,
+              }
+            }
+          >
+            <TextInput
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
+              accessible={true}
+              autoFocus={false}
+              disableAnimation={
+                {
+                  "value": 0,
+                }
+              }
+              focusAnimation={
+                {
+                  "value": 0,
+                }
+              }
+              onBlur={[Function]}
+              onChangeText={[Function]}
+              onFocus={[Function]}
+              onSubmitEditing={[Function]}
+              placeholder="Search Wallets"
+              placeholderTextColor="rgba(255, 255, 255, .5)"
+              returnKeyType="search"
+              selectionColor="#FFFFFF"
+              style={
+                [
+                  {
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "margin": 0,
+                    "paddingHorizontal": 11,
+                    "paddingVertical": 0,
+                  },
+                  {
+                    "color": undefined,
+                  },
+                ]
+              }
+              testID="undefined.textInput"
+              textAlignVertical="top"
+              value=""
+            />
+          </View>
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+            testID="undefined.clearIcon"
+          >
+            <View
+              size={
+                {
+                  "value": 0,
+                }
+              }
+              style={
+                [
+                  {
+                    "alignItems": "stretch",
+                    "aspectRatio": 1,
+                  },
+                  {
+                    "opacity": 0,
+                    "width": 0,
+                  },
+                ]
+              }
+            >
+              <Text
+                style={
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "anticon",
+                    "fontSize": 0,
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  }
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "opacity": 1,
+            "position": "absolute",
+            "right": 6,
+            "top": 3,
+          }
+        }
+      >
+        <Text
+          allowFontScaling={false}
+          style={
+            [
+              {
+                "color": "#888888",
+                "fontSize": 28,
+              },
+              undefined,
+              {
+                "fontFamily": "anticon",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              {},
+            ]
+          }
+        >
+          
+        </Text>
+      </View>
+    </View>
+    <RCTScrollView
+      collapsable={false}
+      handlerTag={2}
+      handlerType="NativeViewGestureHandler"
+      onGestureHandlerEvent={[Function]}
+      onGestureHandlerStateChange={[Function]}
+      scrollIndicatorInsets={
+        {
+          "right": 1,
+        }
+      }
       style={
+        {
+          "flexGrow": 0,
+          "flexShrink": 1,
+        }
+      }
+      waitFor={
         [
           {
-            "alignItems": "center",
-            "backgroundColor": "rgba(255, 255, 255, 0)",
-            "borderRadius": 11,
-            "flexDirection": "row",
-            "minHeight": 67,
-            "paddingHorizontal": 22,
-          },
-          {
-            "flexGrow": 0,
-            "marginBottom": 28,
-            "marginLeft": 0,
-            "marginRight": 0,
-            "marginTop": 11,
-            "paddingLeft": 65,
-            "paddingRight": 65,
-            "paddingVertical": 0,
+            "current": null,
           },
         ]
       }
     >
-      <View
-        style={
-          [
-            {
-              "borderTopWidth": 1,
-              "bottom": 0,
-              "left": 22,
-              "position": "absolute",
-              "right": 22,
-            },
-            {
-              "borderColor": undefined,
-              "right": 11,
-            },
-          ]
-        }
-      />
-      <View
-        style={
-          [
-            {
-              "borderBottomLeftRadius": 11,
-              "borderBottomWidth": 1,
-              "borderLeftWidth": 1,
-              "borderRightWidth": 0,
-              "borderTopLeftRadius": 11,
-              "borderTopWidth": 1,
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "top": 0,
-              "width": 22,
-            },
-            {
-              "borderColor": undefined,
-            },
-          ]
-        }
-      />
-      <View
-        style={
-          [
-            {
-              "borderBottomRightRadius": 11,
-              "borderBottomWidth": 1,
-              "borderLeftWidth": 0,
-              "borderRightWidth": 1,
-              "borderTopRightRadius": 11,
-              "borderTopWidth": 1,
-              "bottom": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-              "width": 22,
-            },
-            {
-              "borderColor": undefined,
-            },
-          ]
-        }
-      />
-      <View
-        style={
-          [
-            {
-              "borderTopWidth": 1,
-              "left": 22,
-              "position": "absolute",
-              "right": 22,
-              "top": 0,
-            },
-            {
-              "borderColor": undefined,
-              "left": 22,
-            },
-          ]
-        }
-      />
-      <View
-        style={
-          [
-            {
-              "height": 67,
-              "justifyContent": "center",
-              "left": 0,
-              "paddingHorizontal": 22,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            },
-            {
-              "paddingLeft": 65,
-              "paddingRight": 65,
-            },
-          ]
-        }
-      >
-        <Text
-          accessible={true}
-          numberOfLines={1}
-          onLayout={[Function]}
+      <View>
+        <View
           style={
-            [
-              {
-                "alignSelf": "flex-start",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "padding": 0,
-              },
-              {
-                "color": undefined,
-                "transform": [
-                  {
-                    "translateX": -0,
-                  },
-                  {
-                    "translateY": -0,
-                  },
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "flex": 1,
+              "overflow": "hidden",
+            }
           }
-          testID="undefined.labelText"
         >
-          Search Wallets
-        </Text>
-      </View>
-      <View
-        style={
-          {
-            "bottom": -45,
-            "height": 45,
-            "left": 0,
-            "paddingLeft": 22,
-            "paddingRight": 39,
-            "position": "absolute",
-            "right": 0,
-          }
-        }
-      >
-        <Text
-          accessible={true}
-          numberOfLines={2}
-          style={
-            [
+          <RCTScrollView
+            applyWindowCorrection={[Function]}
+            canChangeSize={true}
+            contentContainerStyle={
               {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 17,
-              },
-              {
-                "opacity": 0,
-              },
-            ]
-          }
-          testID="undefined.subText"
-        />
-      </View>
-      <Text
-        accessible={true}
-        numberOfLines={1}
-        onLayout={[Function]}
-        style={
-          [
-            {
-              "bottom": -10,
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 17,
-              "position": "absolute",
-              "right": 28,
-            },
-            {
-              "color": undefined,
-              "opacity": 0,
-              "transform": [
-                {
-                  "translateX": 6,
-                },
-                {
-                  "scale": 0,
-                },
-              ],
-            },
-          ]
-        }
-        testID="undefined.charLimit"
-      />
-      <Text
-        allowFontScaling={false}
-        style={
-          [
-            {
-              "color": undefined,
-              "fontSize": 12,
-            },
-            {
-              "color": "rgba(255, 255, 255, .75)",
-              "fontSize": 22,
-              "left": 0,
-              "padding": 22,
-              "position": "absolute",
-              "top": 0,
-            },
-            {
-              "fontFamily": "anticon",
-              "fontStyle": "normal",
-              "fontWeight": "normal",
-            },
-            {},
-          ]
-        }
-      >
-        
-      </Text>
-      <TextInput
-        accessibilityState={
-          {
-            "disabled": false,
-          }
-        }
-        accessible={true}
-        autoFocus={false}
-        editable={true}
-        multiline={false}
-        onBlur={[Function]}
-        onChangeText={[Function]}
-        onFocus={[Function]}
-        onSubmitEditing={[Function]}
-        returnKeyType="search"
-        secureTextEntry={false}
-        selectionColor="#FFFFFF"
-        style={
-          [
-            {
-              "color": "#FFFFFF",
-              "flexGrow": 1,
-              "flexShrink": 1,
-              "fontFamily": "Quicksand-Regular",
-              "padding": 0,
-            },
-            {
-              "fontSize": 22,
-            },
-          ]
-        }
-        testID="undefined.textInput"
-        textAlignVertical="top"
-        value=""
-      />
-    </View>
-    <View
-      style={
-        {
-          "flex": 1,
-          "marginHorizontal": -22,
-        }
-      }
-    >
-      <View
-        style={
-          {
-            "flex": 1,
-            "overflow": "hidden",
-          }
-        }
-      >
-        <RCTScrollView
-          applyWindowCorrection={[Function]}
-          canChangeSize={true}
-          contentContainerStyle={
-            {
-              "backgroundColor": undefined,
-              "minHeight": 1,
-              "minWidth": 1,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-            }
-          }
-          contentHeight={0}
-          contentWidth={0}
-          data={[]}
-          dataProvider={
-            DataProvider {
-              "_data": [],
-              "_firstIndexToProcess": 0,
-              "_hasStableIds": false,
-              "_requiresDataChangeHandling": false,
-              "_size": 0,
-              "getStableId": [Function],
-              "rowHasChanged": [Function],
-            }
-          }
-          disableRecycling={false}
-          estimatedItemSize={96}
-          extendedState={{}}
-          externalScrollView={[Function]}
-          finalRenderAheadOffset={250}
-          forceNonDeterministicRendering={true}
-          horizontal={false}
-          initialOffset={0}
-          initialRenderIndex={0}
-          isHorizontal={false}
-          keyboardShouldPersistTaps="handled"
-          layoutProvider={
-            GridLayoutProviderWithProps {
-              "_acceptableRelayoutDelta": 1,
-              "_getHeightOrWidth": [Function],
-              "_getLayoutTypeForIndex": [Function],
-              "_getSpan": [Function],
-              "_hasExpired": false,
-              "_maxSpan": 1,
-              "_setLayoutForType": [Function],
-              "_tempDim": {
-                "height": 0,
-                "width": 0,
-              },
-              "averageWindow": AverageWindow {
-                "currentAverage": 96,
-                "currentCount": 1,
-                "inputValues": [
-                  96,
-                ],
-                "nextIndex": 1,
-              },
-              "defaultEstimatedItemSize": 100,
-              "layoutObject": {
-                "size": undefined,
-                "span": undefined,
-              },
-              "props": {
-                "contentContainerStyle": {
-                  "paddingBottom": 67,
-                },
-                "data": [],
-                "estimatedItemSize": 96,
-                "keyboardShouldPersistTaps": "handled",
-                "numColumns": 1,
-                "renderItem": [Function],
-              },
-              "renderWindowInsets": {
-                "height": 0,
-                "width": 0,
-              },
-              "shouldRefreshWithAnchoring": true,
-            }
-          }
-          maxRenderAhead={750}
-          numColumns={1}
-          onEndReached={[Function]}
-          onEndReachedThreshold={0}
-          onEndReachedThresholdRelative={0}
-          onItemLayout={[Function]}
-          onLayout={[Function]}
-          onScroll={[Function]}
-          onScrollBeginDrag={[Function]}
-          onSizeChanged={[Function]}
-          onVisibleIndicesChanged={[Function]}
-          removeClippedSubviews={false}
-          renderAheadOffset={0}
-          renderAheadStep={250}
-          renderContentContainer={[Function]}
-          renderItem={[Function]}
-          renderItemContainer={[Function]}
-          rowRenderer={[Function]}
-          scrollEventThrottle={16}
-          scrollThrottle={16}
-          scrollViewProps={
-            {
-              "contentContainerStyle": {
                 "backgroundColor": undefined,
                 "minHeight": 1,
                 "minWidth": 1,
                 "paddingLeft": 0,
                 "paddingRight": 0,
-              },
-              "onLayout": [Function],
-              "onScrollBeginDrag": [Function],
-              "refreshControl": undefined,
-              "style": {
+              }
+            }
+            contentHeight={0}
+            contentWidth={0}
+            data={[]}
+            dataProvider={
+              DataProvider {
+                "_data": [],
+                "_firstIndexToProcess": 0,
+                "_hasStableIds": false,
+                "_requiresDataChangeHandling": false,
+                "_size": 0,
+                "getStableId": [Function],
+                "rowHasChanged": [Function],
+              }
+            }
+            disableRecycling={false}
+            estimatedItemSize={96}
+            extendedState={{}}
+            externalScrollView={[Function]}
+            finalRenderAheadOffset={250}
+            forceNonDeterministicRendering={true}
+            horizontal={false}
+            initialOffset={0}
+            initialRenderIndex={0}
+            isHorizontal={false}
+            keyboardShouldPersistTaps="handled"
+            layoutProvider={
+              GridLayoutProviderWithProps {
+                "_acceptableRelayoutDelta": 1,
+                "_getHeightOrWidth": [Function],
+                "_getLayoutTypeForIndex": [Function],
+                "_getSpan": [Function],
+                "_hasExpired": false,
+                "_maxSpan": 1,
+                "_setLayoutForType": [Function],
+                "_tempDim": {
+                  "height": 0,
+                  "width": 0,
+                },
+                "averageWindow": AverageWindow {
+                  "currentAverage": 96,
+                  "currentCount": 1,
+                  "inputValues": [
+                    96,
+                  ],
+                  "nextIndex": 1,
+                },
+                "defaultEstimatedItemSize": 100,
+                "layoutObject": {
+                  "size": undefined,
+                  "span": undefined,
+                },
+                "props": {
+                  "contentContainerStyle": {
+                    "paddingBottom": 67,
+                  },
+                  "data": [],
+                  "estimatedItemSize": 96,
+                  "keyboardShouldPersistTaps": "handled",
+                  "numColumns": 1,
+                  "renderItem": [Function],
+                },
+                "renderWindowInsets": {
+                  "height": 0,
+                  "width": 0,
+                },
+                "shouldRefreshWithAnchoring": true,
+              }
+            }
+            maxRenderAhead={750}
+            numColumns={1}
+            onEndReached={[Function]}
+            onEndReachedThreshold={0}
+            onEndReachedThresholdRelative={0}
+            onItemLayout={[Function]}
+            onLayout={[Function]}
+            onScroll={[Function]}
+            onScrollBeginDrag={[Function]}
+            onSizeChanged={[Function]}
+            onVisibleIndicesChanged={[Function]}
+            removeClippedSubviews={false}
+            renderAheadOffset={0}
+            renderAheadStep={250}
+            renderContentContainer={[Function]}
+            renderItem={[Function]}
+            renderItemContainer={[Function]}
+            rowRenderer={[Function]}
+            scrollEventThrottle={16}
+            scrollThrottle={16}
+            scrollViewProps={
+              {
+                "contentContainerStyle": {
+                  "backgroundColor": undefined,
+                  "minHeight": 1,
+                  "minWidth": 1,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                },
+                "onLayout": [Function],
+                "onScrollBeginDrag": [Function],
+                "refreshControl": undefined,
+                "style": {
+                  "minHeight": 1,
+                  "minWidth": 1,
+                },
+              }
+            }
+            style={
+              {
                 "minHeight": 1,
                 "minWidth": 1,
-              },
-            }
-          }
-          style={
-            {
-              "minHeight": 1,
-              "minWidth": 1,
-            }
-          }
-          suppressBoundedSizeException={true}
-          windowCorrectionConfig={
-            {
-              "applyToInitialOffset": true,
-              "applyToItemScroll": true,
-              "value": {
-                "endCorrection": 0,
-                "startCorrection": 0,
-                "windowShift": -0,
-              },
-            }
-          }
-        >
-          <View>
-            <View
-              style={
-                {
-                  "flexDirection": "column",
-                }
               }
-            >
+            }
+            suppressBoundedSizeException={true}
+            windowCorrectionConfig={
+              {
+                "applyToInitialOffset": true,
+                "applyToItemScroll": true,
+                "value": {
+                  "endCorrection": 0,
+                  "startCorrection": 0,
+                  "windowShift": -0,
+                },
+              }
+            }
+          >
+            <View>
               <View
                 style={
                   {
-                    "paddingLeft": 0,
-                    "paddingTop": 0,
+                    "flexDirection": "column",
                   }
                 }
-              />
-              <View
-                style={
-                  [
-                    undefined,
-                    undefined,
-                  ]
-                }
-              />
-              <AutoLayoutView
-                enableInstrumentation={false}
-                horizontal={false}
-                onBlankAreaEvent={[Function]}
-                onLayout={[Function]}
-                renderAheadOffset={0}
-                scrollOffset={0}
-                style={
-                  {
-                    "height": 0,
-                    "width": 0,
+              >
+                <View
+                  style={
+                    {
+                      "paddingLeft": 0,
+                      "paddingTop": 0,
+                    }
                   }
-                }
-                windowSize={0}
-              />
-              <CellContainer
-                index={-1}
-                style={
-                  [
-                    undefined,
-                    undefined,
-                  ]
-                }
-              />
-              <View
-                style={
-                  {
-                    "paddingBottom": 67,
-                    "paddingRight": 0,
+                />
+                <View
+                  style={
+                    [
+                      undefined,
+                      undefined,
+                    ]
                   }
-                }
-              />
+                />
+                <AutoLayoutView
+                  enableInstrumentation={false}
+                  horizontal={false}
+                  onBlankAreaEvent={[Function]}
+                  onLayout={[Function]}
+                  renderAheadOffset={0}
+                  scrollOffset={0}
+                  style={
+                    {
+                      "height": 0,
+                      "width": 0,
+                    }
+                  }
+                  windowSize={0}
+                />
+                <CellContainer
+                  index={-1}
+                  style={
+                    [
+                      undefined,
+                      undefined,
+                    ]
+                  }
+                />
+                <View
+                  style={
+                    {
+                      "paddingBottom": 67,
+                      "paddingRight": 0,
+                    }
+                  }
+                />
+              </View>
             </View>
-          </View>
-        </RCTScrollView>
+          </RCTScrollView>
+        </View>
       </View>
-      <View
-        style={
-          {
-            "bottom": 0,
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "zIndex": 1,
-          }
-        }
-      >
-        <BVLinearGradient
-          colors={
-            [
-              1187109,
-              856825125,
-              3205635365,
-              4279377189,
-            ]
-          }
-          endPoint={
-            {
-              "x": 0,
-              "y": 1,
-            }
-          }
-          locations={
-            [
-              0,
-              0.2,
-              0.75,
-              1,
-            ]
-          }
-          pointerEvents="none"
-          startPoint={
-            {
-              "x": 0,
-              "y": 0,
-            }
-          }
-          style={
-            {
-              "bottom": 0,
-              "height": 67,
-              "position": "absolute",
-              "width": "100%",
-            }
-          }
-        />
-      </View>
-    </View>
-    <View
-      accessibilityState={
-        {
-          "busy": undefined,
-          "checked": undefined,
-          "disabled": undefined,
-          "expanded": undefined,
-          "selected": undefined,
-        }
-      }
-      accessibilityValue={
-        {
-          "max": undefined,
-          "min": undefined,
-          "now": undefined,
-          "text": undefined,
-        }
-      }
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      style={
-        {
-          "alignItems": "center",
-          "marginBottom": -22,
-          "opacity": 1,
-          "padding": 22,
-        }
-      }
-    >
-      <Text
-        accessibilityHint="Close modal"
-        allowFontScaling={false}
-        style={
-          [
-            {
-              "color": "#00f1a2",
-              "fontSize": 28,
-            },
-            undefined,
-            {
-              "fontFamily": "anticon",
-              "fontStyle": "normal",
-              "fontWeight": "normal",
-            },
-            {},
-          ]
-        }
-      >
-        
-      </Text>
-    </View>
+    </RCTScrollView>
   </View>,
 ]
 `;

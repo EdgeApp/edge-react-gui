@@ -112,6 +112,7 @@ describe('ExchangeQuote', () => {
                   ourReceiveAddresses: ['receiveaddress1', 'receiveaddress2'],
                   parentNetworkFee: '10002',
                   signedTx: '298t983y4t983y4t93y4g98oeshfgi4t89w394t',
+                  tokenId: null,
                   txid: 'txid1',
                   walletId: ''
                 }

@@ -2,7 +2,6 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { useMount } from '../../hooks/useMount'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
@@ -10,9 +9,10 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface Props extends EdgeSceneProps<'createWalletAccountSetup'> {}
 
@@ -62,27 +62,28 @@ export function CreateWalletAccountSetupScene(props: Props): JSX.Element {
       .finally(() => setSpinning(false))
   }
 
-  const tokenId = getTokenId(account, pluginId, currencyCode)
+  const tokenId = getTokenId(account, pluginId, currencyCode) ?? null
 
   useMount(() => logEvent('Activate_Wallet_Start'))
 
   return (
     <SceneWrapper scroll>
       <View style={{ alignSelf: 'center' }}>
-        <CryptoIcon marginRem={1} pluginId={pluginId} sizeRem={4} tokenId={tokenId} />
+        <CryptoIconUi4 marginRem={1} pluginId={pluginId} sizeRem={4} tokenId={tokenId} />
       </View>
       {/* This is an abuse of ModalMessage,
       but EdgeText breaks this text by setting numberOfLines.
       Switch to MessageText if we ever define that: */}
       <ModalMessage>{sprintf(lstrings.create_wallet_account_review_instructions, currencyCode)}</ModalMessage>
       <ModalMessage>{lstrings.create_wallet_account_requirements_eos}</ModalMessage>
-      <OutlinedTextInput
+      <FilledTextInput
+        around={1}
+        bottom={2}
         autoCorrect={false}
         autoCapitalize="none"
         autoFocus
         error={errorMessage}
-        label={lstrings.create_wallet_account_handle}
-        marginRem={[1, 1, 2]}
+        placeholder={lstrings.create_wallet_account_handle}
         maxLength={12}
         returnKeyType="next"
         value={text}

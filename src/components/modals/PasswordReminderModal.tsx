@@ -1,17 +1,16 @@
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Platform, ScrollView, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { showError, showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
-import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
-import { ThemedModal } from '../themed/ThemedModal'
+import { FilledTextInput } from '../themed/FilledTextInput'
+import { ModalMessage } from '../themed/ModalParts'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface OwnProps {
   bridge: AirshipBridge<void>
@@ -75,39 +74,31 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
   handleChangeText = (password: string) => this.setState({ password })
 
   render() {
-    const { bridge, theme } = this.props
+    const { bridge } = this.props
     const { errorMessage, password, checkingPassword } = this.state
 
     return (
-      <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
-        <ModalTitle>{lstrings.password_reminder_remember_your_password}</ModalTitle>
-        <ScrollView style={{ maxHeight: theme.rem(9) }}>
-          <ModalMessage>{lstrings.password_reminder_you_will_need_your_password}</ModalMessage>
-          <ModalMessage>{lstrings.password_reminder_enter_password_below}</ModalMessage>
-        </ScrollView>
-        <OutlinedTextInput
+      <ModalUi4 bridge={bridge} title={lstrings.password_reminder_remember_your_password} onCancel={this.handleCancel}>
+        <ModalMessage>{lstrings.password_reminder_you_will_need_your_password}</ModalMessage>
+        <ModalMessage>{lstrings.password_reminder_enter_password_below}</ModalMessage>
+        <FilledTextInput
+          top={0.5}
+          bottom={2}
+          horizontal={0.5}
           autoFocus={false}
           error={errorMessage}
-          label={lstrings.password}
+          placeholder={lstrings.password}
           onChangeText={this.handleChangeText}
           onSubmitEditing={this.handleSubmit}
           secureTextEntry
           value={password}
         />
-        {/* HACK: Extra padding to accommodate potential error message
-            TODO: Roll this into the built-in OutlinedTextInput margins and
-            update all callers */}
-        <View style={{ margin: theme.rem(0.5) }} />
-        {
-          // Hack around the Android keyboard glitch:
-          Platform.OS === 'android' ? <View style={{ flex: 1 }} /> : null
-        }
-        <ButtonsContainer
+        <ButtonsViewUi4
           primary={{ label: lstrings.password_reminder_check_password, onPress: this.handleSubmit, disabled: password.length === 0 }}
           secondary={{ label: lstrings.password_reminder_forgot_password, onPress: this.handleRequestChangePassword, disabled: checkingPassword }}
           layout="column"
         />
-      </ThemedModal>
+      </ModalUi4>
     )
   }
 }

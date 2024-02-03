@@ -1,11 +1,12 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { View } from 'react-native'
+import { ListRenderItemInfo, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { FlatList } from 'react-native-gesture-handler'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { createWallet, enableTokensAcrossWallets, getUniqueWalletName, splitCreateWalletItems } from '../../actions/CreateWalletActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -173,7 +174,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     if (fiat != null) setFiat(fiat)
   })
 
-  const renderCurrencyRow: ListRenderItem<WalletCreateItem> = useHandler(data => {
+  const renderCurrencyRow = useHandler((data: ListRenderItemInfo<WalletCreateItem>) => {
     const { key, pluginId, tokenId, walletType, createWalletIds } = data.item
 
     if (walletType != null) {
@@ -184,6 +185,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
       return (
         <CreateWalletSelectCryptoRow
           pluginId={pluginId}
+          tokenId={tokenId}
           walletName={walletName}
           onPress={async () => await handleEditWalletName(key, walletName)}
           rightSide={chevron}
@@ -207,20 +209,20 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
   const keyExtractor = useHandler((item: WalletCreateItem) => item.key)
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper>
       <SceneHeader title={lstrings.title_create_wallet} withTopMargin />
       <View style={styles.content}>
         {renderSelectedFiatRow()}
         <EdgeText style={styles.instructionalText} numberOfLines={1}>
           {lstrings.fragment_create_wallet_instructions}
         </EdgeText>
-        <FlashList
+        <FlatList
           automaticallyAdjustContentInsets={false}
           data={createWalletList}
-          estimatedItemSize={theme.rem(4.25)}
           extraData={walletNames}
           keyExtractor={keyExtractor}
           renderItem={renderCurrencyRow}
+          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
         <MainButton label={lstrings.title_create_wallets} type="secondary" marginRem={[0.5, 0.5, 0]} onPress={handleCreate} alignSelf="center" />
         <MainButton label={lstrings.create_wallet_imports_title} type="escape" marginRem={[0.5, 0.5, 1]} onPress={handleImport} alignSelf="center" />
@@ -238,8 +240,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(2),
     height: theme.rem(2),
     borderRadius: theme.rem(1),
-    marginLeft: theme.rem(0.25),
-    backgroundColor: theme.backgroundGradientColors[1]
+    marginLeft: theme.rem(0.25)
   },
   instructionalText: {
     fontSize: theme.rem(0.75),

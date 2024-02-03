@@ -30,6 +30,7 @@ describe('MyComponent', () => {
           // StateProps:
           account={account}
           context={context}
+          disableAnim={false}
           autoLogoutTimeInSeconds={600}
           contactsPermissionOn
           defaultFiat="iso:USD"
@@ -50,6 +51,7 @@ describe('MyComponent', () => {
           showRestoreWalletsModal={async () => {}}
           showUnlockSettingsModal={async () => {}}
           toggleDeveloperMode={() => undefined}
+          toggleDisableAnimations={() => undefined}
           toggleSpamFilter={() => undefined}
           logoutRequest={async () => undefined}
         />
@@ -70,6 +72,7 @@ describe('MyComponent', () => {
           // StateProps:
           account={account}
           context={context}
+          disableAnim={false}
           autoLogoutTimeInSeconds={600}
           contactsPermissionOn
           defaultFiat="iso:USD"
@@ -90,6 +93,7 @@ describe('MyComponent', () => {
           showRestoreWalletsModal={async () => {}}
           showUnlockSettingsModal={async () => {}}
           toggleDeveloperMode={() => undefined}
+          toggleDisableAnimations={() => undefined}
           toggleSpamFilter={() => undefined}
           logoutRequest={async () => undefined}
         />

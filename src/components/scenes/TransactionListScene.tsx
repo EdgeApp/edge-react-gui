@@ -1,42 +1,47 @@
-import { FlashList } from '@shopify/flash-list'
 import { abs, lt } from 'biggystring'
 import { asArray } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { asAssetStatus, AssetStatus } from 'edge-info-server/types'
 import * as React from 'react'
-import { RefreshControl } from 'react-native'
+import { ListRenderItemInfo, RefreshControl, View } from 'react-native'
 import { getVersion } from 'react-native-device-info'
+import Animated from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
+import { useIconColor } from '../../hooks/useIconColor'
 import { useTransactionList } from '../../hooks/useTransactionList'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { FooterRender } from '../../state/SceneFooterState'
+import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { FlatListItem } from '../../types/types'
 import { fetchInfo } from '../../util/network'
-import { calculateSpamThreshold, unixToLocaleDateTime, zeroString } from '../../util/utils'
+import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { AssetStatusCard } from '../cards/AssetStatusCard'
-import { NotificationSceneWrapper } from '../common/SceneWrapper'
+import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
+import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
-import { useTheme } from '../services/ThemeContext'
+import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
 import { ExplorerCard } from '../themed/ExplorerCard'
+import { SearchFooter } from '../themed/SearchFooter'
 import { EmptyLoader, SectionHeader, SectionHeaderCentered } from '../themed/TransactionListComponents'
 import { TransactionListRow } from '../themed/TransactionListRow'
 import { TransactionListTop } from '../themed/TransactionListTop'
-import { ExchangedFlipInputTester } from './ExchangedFlipInputTester'
-
-const SHOW_FLIP_INPUT_TESTER = false
+import { AccentColors } from '../ui4/DotsBackground'
 
 export interface TransactionListParams {
   walletId: string
-  tokenId: string | undefined
+  tokenId: EdgeTokenId
 }
 
+type ListItem = EdgeTransaction | string | null
 interface Props extends EdgeSceneProps<'transactionList'> {
   wallet: EdgeCurrencyWallet
 }
@@ -44,25 +49,30 @@ interface Props extends EdgeSceneProps<'transactionList'> {
 function TransactionListComponent(props: Props) {
   const { navigation, route, wallet } = props
   const theme = useTheme()
+  const styles = getStyles(theme)
 
   const tokenId = checkToken(route.params.tokenId, wallet.currencyConfig.allTokens)
   const { pluginId } = wallet.currencyInfo
   const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
 
   // State:
-  const flashList = React.useRef<FlashList<ListItem>>(null)
-  const [searching, setSearching] = React.useState(false)
+  const flashListRef = React.useRef<Animated.FlatList<ListItem> | null>(null)
+  const [isSearching, setIsSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
   const [assetStatuses, setAssetStatuses] = React.useState<AssetStatus[]>([])
+  const iconColor = useIconColor({ pluginId, tokenId })
+  const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
 
   // Selectors:
   const exchangeDenom = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
   const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${wallet.fiatCurrencyCode}`])
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
+  const activeUsername = useSelector(state => state.core.account.username)
+  const isLightAccount = activeUsername == null
 
   // Watchers:
   const enabledTokenIds = useWatch(wallet, 'enabledTokenIds')
-  const transactionList = useTransactionList(wallet, tokenId, searching ? searchText : undefined)
+  const transactionList = useTransactionList(wallet, tokenId, isSearching ? searchText : undefined)
   const { transactions, atEnd, requestMore: handleScrollEnd } = transactionList
 
   // ---------------------------------------------------------------------------
@@ -78,7 +88,6 @@ function TransactionListComponent(props: Props) {
   const { isTransactionListUnsupported = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
 
   // Assemble the data for the section list:
-  type ListItem = EdgeTransaction | string | null
   const listItems = React.useMemo(() => {
     if (isTransactionListUnsupported) return []
 
@@ -107,14 +116,16 @@ function TransactionListComponent(props: Props) {
     return out
   }, [atEnd, isTransactionListUnsupported, spamThreshold, transactions])
 
+  // TODO: Comment out sticky header indices until we figure out how to
+  // give the headers a background only when they're sticking.
   // Figure out where the section headers are located:
-  const stickyHeaderIndices = React.useMemo<number[]>(() => {
-    const out: number[] = []
-    for (let i = 0; i < listItems.length; ++i) {
-      if (typeof listItems[i] === 'string') out.push(i)
-    }
-    return out
-  }, [listItems])
+  // const stickyHeaderIndices = React.useMemo<number[]>(() => {
+  //   const out: number[] = []
+  //   for (let i = 0; i < listItems.length; ++i) {
+  //     if (typeof listItems[i] === 'string') out.push(i)
+  //   }
+  //   return out
+  // }, [listItems])
 
   // ---------------------------------------------------------------------------
   // Side-Effects
@@ -126,22 +137,6 @@ function TransactionListComponent(props: Props) {
       navigation.goBack()
     }
   }, [enabledTokenIds, navigation, tokenId])
-
-  // Hide the search box when not in use,
-  // and we have received our first batch of core transactions:
-  const hideSearch = !searching && listItems.length > 1
-  React.useEffect(() => {
-    if (hideSearch) {
-      // There is a lag between updating the items and re-rendering the list,
-      // so we need to let that settle:
-      requestAnimationFrame(() => {
-        flashList.current?.scrollToOffset({
-          animated: true,
-          offset: theme.rem(4.5)
-        })
-      })
-    }
-  }, [hideSearch, theme])
 
   // Check for AssetStatuses from info server (known sync issues, etc):
   React.useEffect(() => {
@@ -161,9 +156,32 @@ function TransactionListComponent(props: Props) {
       .catch(e => console.log(String(e)))
   }, [pluginId, tokenId])
 
-  // ---------------------------------------------------------------------------
+  //
+  // Handlers
+  //
+
+  const handleScroll = useSceneScrollHandler()
+
+  const handleStartSearching = useHandler(() => {
+    setIsSearching(true)
+  })
+
+  const handleDoneSearching = useHandler(() => {
+    setSearchText('')
+    setIsSearching(false)
+  })
+
+  const handleChangeText = useHandler((value: string) => {
+    setSearchText(value)
+  })
+
+  const handleFooterLayoutHeight = useHandler((height: number) => {
+    setFooterHeight(height)
+  })
+
+  //
   // Renderers
-  // ---------------------------------------------------------------------------
+  //
 
   const refreshControl = React.useMemo(() => {
     return (
@@ -171,7 +189,7 @@ function TransactionListComponent(props: Props) {
         refreshing={false}
         tintColor={theme.searchListRefreshControlIndicator}
         // useHandler isn't needed, since we're already in useMemo:
-        onRefresh={() => setSearching(true)}
+        onRefresh={() => setIsSearching(true)}
       />
     )
   }, [theme])
@@ -182,45 +200,52 @@ function TransactionListComponent(props: Props) {
         <TransactionListTop
           isEmpty={listItems.length < 1}
           navigation={navigation}
-          searching={searching}
+          searching={isSearching}
           tokenId={tokenId}
           wallet={wallet}
-          onSearchingChange={setSearching}
+          isLightAccount={isLightAccount}
+          onSearchingChange={setIsSearching}
           onSearchTextChange={setSearchText}
         />
-        {assetStatuses.length > 0
+        {assetStatuses.length > 0 && !isSearching
           ? assetStatuses.map(assetStatus => (
-              <AssetStatusCard assetStatus={assetStatus} key={`${String(assetStatus.localeStatusTitle)}-${String(assetStatus.localeStatusBody)}`} />
+              <EdgeAnim enter={{ type: 'fadeInDown', distance: 10 }} key={`${String(assetStatus.localeStatusTitle)}-${String(assetStatus.localeStatusBody)}`}>
+                <AssetStatusCard assetStatus={assetStatus} key={`${String(assetStatus.localeStatusTitle)}-${String(assetStatus.localeStatusBody)}`} />
+              </EdgeAnim>
             ))
           : null}
       </>
     )
-  }, [assetStatuses, listItems.length, navigation, searching, tokenId, wallet])
+  }, [assetStatuses, isLightAccount, listItems.length, navigation, isSearching, tokenId, wallet])
 
   const emptyComponent = React.useMemo(() => {
     if (isTransactionListUnsupported) {
       return <ExplorerCard wallet={wallet} tokenId={tokenId} />
-    } else if (searching) {
+    } else if (isSearching) {
       return <SectionHeaderCentered title={lstrings.transaction_list_search_no_result} />
     } else {
       return <BuyCrypto navigation={navigation} wallet={wallet} tokenId={tokenId} />
     }
-  }, [isTransactionListUnsupported, navigation, searching, tokenId, wallet])
+  }, [isTransactionListUnsupported, navigation, isSearching, tokenId, wallet])
 
-  const renderItem = useHandler(({ item }: FlatListItem<ListItem>) => {
+  const renderItem = useHandler(({ index, item }: ListRenderItemInfo<ListItem>) => {
     if (item == null) {
       return <EmptyLoader />
     }
-    if (typeof item === 'string') {
-      return <SectionHeader title={item} />
-    }
-    return <TransactionListRow currencyCode={currencyCode} navigation={navigation} transaction={item} wallet={wallet} />
-  })
 
-  const getItemType = useHandler((item: ListItem) => {
-    if (item == null) return 'spinner'
-    if (typeof item === 'string') return 'header'
-    return 'tx'
+    const disableAnimation = index >= MAX_LIST_ITEMS_ANIM
+    if (typeof item === 'string') {
+      return (
+        <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
+          <SectionHeader title={item} />
+        </EdgeAnim>
+      )
+    }
+    return (
+      <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
+        <TransactionListRow navigation={navigation} transaction={item} wallet={wallet} />
+      </EdgeAnim>
+    )
   })
 
   const keyExtractor = useHandler((item: ListItem) => {
@@ -229,33 +254,82 @@ function TransactionListComponent(props: Props) {
     return item.txid
   })
 
+  const renderFooter: FooterRender = React.useCallback(
+    sceneWrapperInfo => {
+      return (
+        <SearchFooter
+          placeholder={lstrings.transaction_list_search}
+          isSearching={isSearching}
+          searchText={searchText}
+          noBackground
+          sceneWrapperInfo={sceneWrapperInfo}
+          onStartSearching={handleStartSearching}
+          onDoneSearching={handleDoneSearching}
+          onChangeText={handleChangeText}
+          onLayoutHeight={handleFooterLayoutHeight}
+        />
+      )
+    },
+    [handleChangeText, handleDoneSearching, handleFooterLayoutHeight, handleStartSearching, isSearching, searchText]
+  )
+
+  const accentColors: AccentColors = {
+    // Transparent fallback for while iconColor is loading
+    iconAccentColor: iconColor ?? '#00000000'
+  }
+
+  const backgroundColors = [...theme.assetBackgroundGradientColors]
+  if (iconColor != null) {
+    const scaledColor = darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+    backgroundColors[0] = scaledColor
+  }
+
+  // TODO: Include this fix in the SceneWrapper component
+  const safeAreaInsets = useSafeAreaInsets()
+
   return (
-    <NotificationSceneWrapper navigation={navigation} hasTabs scroll>
-      {(gap, notificationHeight) => (
-        <>
-          {SHOW_FLIP_INPUT_TESTER ? (
-            <ExchangedFlipInputTester />
-          ) : (
-            <FlashList
-              ref={flashList}
-              contentContainerStyle={{ paddingBottom: notificationHeight }}
-              data={listItems}
-              estimatedItemSize={theme.rem(4.25)}
-              getItemType={getItemType}
-              keyboardShouldPersistTaps="handled"
-              keyExtractor={keyExtractor}
-              ListEmptyComponent={emptyComponent}
-              ListHeaderComponent={topArea}
-              onEndReachedThreshold={0.5}
-              refreshControl={refreshControl}
-              renderItem={renderItem}
-              stickyHeaderIndices={stickyHeaderIndices}
-              onEndReached={handleScrollEnd}
-            />
-          )}
-        </>
+    <SceneWrapper
+      accentColors={accentColors}
+      overrideDots={theme.backgroundDots.assetOverrideDots}
+      avoidKeyboard
+      footerHeight={footerHeight}
+      hasTabs
+      hasNotifications
+      backgroundGradientColors={backgroundColors}
+      backgroundGradientEnd={theme.assetBackgroundGradientEnd}
+      backgroundGradientStart={theme.assetBackgroundGradientStart}
+      renderFooter={renderFooter}
+    >
+      {({ insetStyle, undoInsetStyle }) => (
+        <View style={undoInsetStyle}>
+          <Animated.FlatList
+            style={styles.flatList}
+            // @ts-expect-error
+            ref={flashListRef}
+            contentContainerStyle={{
+              paddingTop: insetStyle.paddingTop + theme.rem(0.5),
+              paddingBottom: insetStyle.paddingBottom + theme.rem(0.5) + safeAreaInsets.bottom,
+              paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
+              paddingRight: insetStyle.paddingRight + theme.rem(0.5)
+            }}
+            data={listItems}
+            keyboardShouldPersistTaps="handled"
+            keyExtractor={keyExtractor}
+            ListEmptyComponent={emptyComponent}
+            ListHeaderComponent={topArea}
+            onEndReachedThreshold={0.5}
+            refreshControl={refreshControl}
+            renderItem={renderItem}
+            // TODO: Comment out sticky header indices until we figure out how to
+            // give the headers a background only when they're sticking.
+            // stickyHeaderIndices={stickyHeaderIndices}
+            onEndReached={handleScrollEnd}
+            onScroll={handleScroll}
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+          />
+        </View>
       )}
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 }
 
@@ -263,10 +337,17 @@ function TransactionListComponent(props: Props) {
  * If the token gets deleted, the scene will crash.
  * Fall back to the main currency code if this happens.
  */
-function checkToken(tokenId: string | undefined, allTokens: EdgeTokenMap): string | undefined {
-  if (tokenId == null) return undefined
-  if (allTokens[tokenId] == null) return undefined
+function checkToken(tokenId: EdgeTokenId, allTokens: EdgeTokenMap): EdgeTokenId {
+  if (tokenId == null) return null
+  if (allTokens[tokenId] == null) return null
   return tokenId
 }
 
 export const TransactionList = withWallet(TransactionListComponent)
+
+const getStyles = cacheStyles(() => ({
+  flatList: {
+    overflow: 'visible',
+    flexShrink: 0
+  }
+}))

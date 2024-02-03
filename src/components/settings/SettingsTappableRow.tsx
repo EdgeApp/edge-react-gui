@@ -2,13 +2,14 @@ import * as React from 'react'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
+import { Fontello } from '../../assets/vector'
 import { useTheme } from '../services/ThemeContext'
 import { SettingsRow } from './SettingsRow'
 
 interface Props {
   // The icon to show on the right.
   // Defaults to navigate, which shows an arrow.
-  action?: 'navigate' | 'add' | 'delete' | 'lock' | 'unlock'
+  action?: 'navigate' | 'add' | 'delete' | 'lock' | 'unlock' | 'setting'
 
   children?: React.ReactNode
 
@@ -47,6 +48,8 @@ const SettingsTappableRowComponent = (props: Props) => {
       <AntDesignIcon name="plus" style={style} />
     ) : action === 'delete' ? (
       <AntDesignIcon name="close" style={style} />
+    ) : action === 'setting' ? (
+      <Fontello name="control-panel-settings" style={style} />
     ) : (
       <AntDesignIcon name={action} style={style} />
     )

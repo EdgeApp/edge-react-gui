@@ -30,7 +30,7 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { LoanAsset, makeAaveBorrowAction, makeAaveDepositAction } from '../../../util/ActionProgramUtils'
 import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { zeroString } from '../../../util/utils'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
@@ -135,10 +135,10 @@ export const LoanManageSceneComponent = (props: Props) => {
 
   // Src/dest Wallet Picker
   const wallets = useWatch(account, 'currencyWallets')
-  const hardDebtTokenId = React.useMemo(() => getTokenId(account, borrowEnginePluginId, 'USDC'), [account, borrowEnginePluginId])
-  const hardCollateralTokenId = React.useMemo(() => getTokenId(account, borrowEnginePluginId, 'WBTC'), [account, borrowEnginePluginId])
+  const hardDebtTokenId = React.useMemo(() => getTokenIdForced(account, borrowEnginePluginId, 'USDC'), [account, borrowEnginePluginId])
+  const hardCollateralTokenId = React.useMemo(() => getTokenIdForced(account, borrowEnginePluginId, 'WBTC'), [account, borrowEnginePluginId])
   const hardAllowedCollateralAssets = [{ pluginId: borrowEnginePluginId, tokenId: hardCollateralTokenId }]
-  if (loanManageType === 'loan-manage-deposit') hardAllowedCollateralAssets.push({ pluginId: 'bitcoin', tokenId: undefined })
+  if (loanManageType === 'loan-manage-deposit') hardAllowedCollateralAssets.push({ pluginId: 'bitcoin', tokenId: null })
   const hardAllowedDebtAssets = [{ pluginId: borrowEnginePluginId, tokenId: hardDebtTokenId }]
 
   // Selected debt/collateral
@@ -203,87 +203,95 @@ export const LoanManageSceneComponent = (props: Props) => {
   // -----------------------------------------------------------------------------
 
   // TODO: Full max button implementation and behavior
-  useAsyncEffect(async () => {
-    const currentLoanAssetNativeAmount =
-      manageActionData.actionSide === 'collaterals'
-        ? collaterals.find(collateral => collateral.tokenId === selectedAsset.tokenId)?.nativeAmount ?? '0'
-        : debts.find(debt => debt.tokenId === selectedAsset.tokenId)?.nativeAmount ?? '0'
+  useAsyncEffect(
+    async () => {
+      const currentLoanAssetNativeAmount =
+        manageActionData.actionSide === 'collaterals'
+          ? collaterals.find(collateral => collateral.tokenId === selectedAsset.tokenId)?.nativeAmount ?? '0'
+          : debts.find(debt => debt.tokenId === selectedAsset.tokenId)?.nativeAmount ?? '0'
 
-    setPendingDebtOrCollateral({
-      nativeAmount: max(add(currentLoanAssetNativeAmount, mul(actionAmountSign, actionNativeAmount)), '0'),
-      tokenId: selectedAsset.tokenId,
-      apr: 0
-    })
+      setPendingDebtOrCollateral({
+        nativeAmount: max(add(currentLoanAssetNativeAmount, mul(actionAmountSign, actionNativeAmount)), '0'),
+        tokenId: selectedAsset.tokenId,
+        apr: 0
+      })
 
-    return () => {}
-  }, [actionNativeAmount, selectedAsset.tokenId])
+      return () => {}
+    },
+    [actionNativeAmount, selectedAsset.tokenId],
+    'LoanManageSceneComponent:1'
+  )
 
   // Build Action Program
-  useAsyncEffect(async () => {
-    if (zeroString(actionNativeAmount) || isLtvExceeded) {
-      setActionProgram(undefined)
-    } else {
-      let actionOp: ActionOp
-      switch (loanManageType) {
-        case 'loan-manage-deposit':
-          actionOp = await makeAaveDepositAction({
-            borrowPluginId,
-            depositTokenId: hardAllowedCollateralAssets[0].tokenId,
-            nativeAmount: actionNativeAmount,
-            borrowEngineWallet: borrowEngineWallet,
-            srcTokenId: selectedAsset.tokenId,
-            srcWallet: selectedAsset.wallet ?? borrowEngineWallet
-          })
-          break
-        case 'loan-manage-borrow':
-          {
-            const destination: LoanAsset = {
-              wallet: borrowEngineWallet,
-              tokenId: selectedAsset.tokenId,
-              nativeAmount: actionNativeAmount,
-              ...(selectedAsset.paymentMethod != null ? { paymentMethodId: selectedAsset.paymentMethod.id } : {}),
-              ...(selectedAsset.tokenId != null ? { tokenId: selectedAsset.tokenId } : {})
-            }
-            actionOp = await makeAaveBorrowAction({
-              borrowEngineWallet,
+  useAsyncEffect(
+    async () => {
+      if (zeroString(actionNativeAmount) || isLtvExceeded) {
+        setActionProgram(undefined)
+      } else {
+        let actionOp: ActionOp
+        switch (loanManageType) {
+          case 'loan-manage-deposit':
+            actionOp = await makeAaveDepositAction({
               borrowPluginId,
-              destination
+              depositTokenId: hardAllowedCollateralAssets[0].tokenId,
+              nativeAmount: actionNativeAmount,
+              borrowEngineWallet: borrowEngineWallet,
+              srcTokenId: selectedAsset.tokenId,
+              srcWallet: selectedAsset.wallet ?? borrowEngineWallet
             })
-          }
-          break
-        case 'loan-manage-repay':
-          actionOp = {
-            type: 'seq',
-            actions: [
-              {
-                type: 'loan-repay',
-                borrowPluginId,
+            break
+          case 'loan-manage-borrow':
+            {
+              const destination: LoanAsset = {
+                wallet: borrowEngineWallet,
+                tokenId: selectedAsset.tokenId,
                 nativeAmount: actionNativeAmount,
-                walletId: borrowEngineWallet.id,
-                tokenId: hardAllowedDebtAssets[0].tokenId,
-                fromTokenId: selectedAsset.customAsset != null ? hardAllowedCollateralAssets[0].tokenId : undefined
+                ...(selectedAsset.paymentMethod != null ? { paymentMethodId: selectedAsset.paymentMethod.id } : {}),
+                ...(selectedAsset.tokenId != null ? { tokenId: selectedAsset.tokenId } : {})
               }
-            ]
-          }
-          break
-        case 'loan-manage-withdraw':
-          actionOp = {
-            type: 'seq',
-            actions: [
-              {
-                type: 'loan-withdraw',
+              actionOp = await makeAaveBorrowAction({
+                borrowEngineWallet,
                 borrowPluginId,
-                nativeAmount: actionNativeAmount,
-                walletId: borrowEngineWallet.id,
-                tokenId: selectedAsset.tokenId
-              }
-            ]
-          }
-          break
+                destination
+              })
+            }
+            break
+          case 'loan-manage-repay':
+            actionOp = {
+              type: 'seq',
+              actions: [
+                {
+                  type: 'loan-repay',
+                  borrowPluginId,
+                  nativeAmount: actionNativeAmount,
+                  walletId: borrowEngineWallet.id,
+                  tokenId: hardAllowedDebtAssets[0].tokenId,
+                  fromTokenId: selectedAsset.customAsset != null ? hardAllowedCollateralAssets[0].tokenId : null
+                }
+              ]
+            }
+            break
+          case 'loan-manage-withdraw':
+            actionOp = {
+              type: 'seq',
+              actions: [
+                {
+                  type: 'loan-withdraw',
+                  borrowPluginId,
+                  nativeAmount: actionNativeAmount,
+                  walletId: borrowEngineWallet.id,
+                  tokenId: selectedAsset.tokenId
+                }
+              ]
+            }
+            break
+        }
+        setActionProgram(await makeActionProgram(actionOp))
       }
-      setActionProgram(await makeActionProgram(actionOp))
-    }
-  }, [actionNativeAmount, loanManageType, borrowEngineWallet, borrowPluginId, isLtvExceeded, selectedAsset])
+    },
+    [actionNativeAmount, loanManageType, borrowEngineWallet, borrowPluginId, isLtvExceeded, selectedAsset],
+    'LoanManageSceneComponent:2'
+  )
 
   // Get Network Fees
   const [networkFeeMap = {}] = useAsyncValue(async () => {
@@ -296,13 +304,17 @@ export const LoanManageSceneComponent = (props: Props) => {
   }, [account, actionProgram, clientId])
 
   // APR
-  useAsyncEffect(async () => {
-    if (isShowAprChange) {
-      const apr = await borrowEngine.getAprQuote(selectedAsset.tokenId)
-      setNewApr(apr)
-    }
-    return () => {}
-  }, [borrowEngine, selectedAsset.tokenId, isShowAprChange])
+  useAsyncEffect(
+    async () => {
+      if (isShowAprChange) {
+        const apr = await borrowEngine.getAprQuote(selectedAsset.tokenId)
+        setNewApr(apr)
+      }
+      return () => {}
+    },
+    [borrowEngine, selectedAsset.tokenId, isShowAprChange],
+    'LoanManageSceneComponent:3'
+  )
 
   // #endregion Hooks
 
@@ -369,24 +381,26 @@ export const LoanManageSceneComponent = (props: Props) => {
         filterActivation
       />
     ))
-      .then(async ({ walletId, currencyCode, isBankSignupRequest, fiatAccountId: wyreAccountId, customAsset }) => {
-        if (isBankSignupRequest) {
+      .then(async result => {
+        if (result?.type === 'bankSignupRequest') {
           // Open bank plugin for new user signup
           navigation.navigate('pluginView', {
             plugin: guiPlugins.wyre,
             deepPath: '',
             deepQuery: {}
           })
-        } else if (customAsset != null) {
-          setSelectedAsset({ wallet: borrowEngineWallet, tokenId: hardAllowedDebtAssets[0].tokenId, customAsset: customAsset })
-        } else if (wyreAccountId != null) {
-          const paymentMethod = bankAccountsMap[wyreAccountId]
+        } else if (result?.type === 'custom') {
+          const { customAsset } = result
+          setSelectedAsset({ wallet: borrowEngineWallet, tokenId: hardAllowedDebtAssets[0].tokenId, customAsset })
+        } else if (result?.type === 'wyre') {
+          const { fiatAccountId } = result
+          const paymentMethod = bankAccountsMap[fiatAccountId]
           // Set a hard-coded intermediate AAVE loan destination asset (USDC) to
           // use for the bank sell step that comes after the initial loan
           setSelectedAsset({ wallet: borrowEngineWallet, tokenId: hardDebtTokenId, paymentMethod })
-        } else if (walletId != null && currencyCode != null) {
+        } else if (result?.type === 'wallet') {
+          const { walletId, tokenId } = result
           const selectedWallet = wallets[walletId]
-          const tokenId = getTokenId(account, selectedWallet.currencyInfo.pluginId, currencyCode)
           setSelectedAsset({ wallet: selectedWallet, tokenId })
         }
       })

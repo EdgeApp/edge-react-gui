@@ -1,7 +1,7 @@
 import { div, log10, mul, round } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import React, { useMemo, useState } from 'react'
-import { ActivityIndicator, Platform, ReturnKeyType, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, Platform, ReturnKeyType } from 'react-native'
 
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useExchangeDenom } from '../../hooks/useExchangeDenom'
@@ -10,12 +10,11 @@ import { useWatch } from '../../hooks/useWatch'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, maxPrimaryCurrencyConversionDecimals, precisionAdjust } from '../../util/utils'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
+import { RowUi4 } from '../ui4/RowUi4'
 import { EdgeText } from './EdgeText'
-import { FieldNum, FlipInput2, FlipInputFieldInfo, FlipInputRef } from './FlipInput2'
-import { RightChevronButton } from './ThemedButtons'
-
+import { FieldNum, FlipInput2, FlipInputFieldInfos, FlipInputRef } from './FlipInput2'
 export type ExchangeFlipInputFields = 'fiat' | 'crypto'
 
 export interface ExchangedFlipInputRef {
@@ -31,7 +30,7 @@ export interface ExchangedFlipInputAmounts {
 
 export interface Props {
   walletId: string
-  tokenId?: string
+  tokenId: EdgeTokenId
   startNativeAmount?: string
   keyboardVisible?: boolean
   headerText: string
@@ -96,7 +95,7 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
     exchangeSecondaryToPrimaryRatio: exchangeRates[`${cryptoCurrencyCode}_${fiatCurrencyCode}`]
   })
   const cryptoMaxPrecision = maxPrimaryCurrencyConversionDecimals(log10(cryptoDisplayDenom.multiplier), precisionAdjustVal)
-  const fieldInfos: FlipInputFieldInfo[] = [
+  const fieldInfos: FlipInputFieldInfos = [
     { currencyName: cryptoDisplayDenom.name, maxEntryDecimals: log10(cryptoDisplayDenom.multiplier) },
     { currencyName: fiatDenom.name.replace('iso:', ''), maxEntryDecimals: log10(fiatDenom.multiplier) }
   ]
@@ -208,10 +207,9 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
 
   return coreWallet != null ? (
     <>
-      <TouchableOpacity accessible={false} onPress={headerCallback} style={styles.headerContainer}>
-        <CryptoIcon marginRem={[0, 1, 0, 0]} pluginId={pluginId} sizeRem={1.5} tokenId={tokenId} />
-        {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
-      </TouchableOpacity>
+      <RowUi4 onPress={headerCallback} icon={<CryptoIconUi4 marginRem={[0, 0.5, 0, 0]} pluginId={pluginId} sizeRem={1.5} tokenId={tokenId} />}>
+        <EdgeText style={styles.headerText}>{headerText}</EdgeText>
+      </RowUi4>
 
       <FlipInput2
         onBlur={onBlur}

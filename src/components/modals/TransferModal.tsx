@@ -7,16 +7,16 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
+import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
-import { useDispatch } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { Airship } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
-import { ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalUi4 } from '../ui4/ModalUi4'
 import { WalletListModal, WalletListResult } from './WalletListModal'
 
 interface Props {
@@ -41,19 +41,31 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
   const style = styles(theme)
   const dispatch = useDispatch()
 
+  const activeUsername = useSelector(state => state.core.account.username)
+  const isLightAccount = activeUsername == null
+
   const handleSell = useHandler(() => {
-    navigation.navigate('sellTab', { screen: 'pluginListSell' })
+    if (isLightAccount) {
+      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+    } else {
+      navigation.navigate('sellTab', { screen: 'pluginListSell' })
+    }
     Airship.clear()
   })
   const handleBuy = useHandler(() => {
-    navigation.navigate('buyTab', { screen: 'pluginListBuy' })
+    if (isLightAccount) {
+      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+    } else {
+      navigation.navigate('buyTab', { screen: 'pluginListBuy' })
+    }
     Airship.clear()
   })
   const handleSend = useHandler(async () => {
-    const { walletId, tokenId } = await Airship.show<WalletListResult>(bridge => (
+    const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet_to_send_from} navigation={navigation} />
     ))
-    if (walletId != null) {
+    if (result?.type === 'wallet') {
+      const { walletId, tokenId } = result
       navigation.push('send2', { walletId, tokenId, hiddenFeaturesMap: { scamWarning: false } })
     }
     Airship.clear()
@@ -61,13 +73,18 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
 
   const handleReceive = useHandler(async () => {
     Airship.clear()
-    const { walletId, tokenId } = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={lstrings.select_receive_asset} navigation={navigation} showCreateWallet />
-    ))
+    if (isLightAccount) {
+      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+    } else {
+      const result = await Airship.show<WalletListResult>(bridge => (
+        <WalletListModal bridge={bridge} headerTitle={lstrings.select_receive_asset} navigation={navigation} showCreateWallet />
+      ))
 
-    if (walletId != null) {
-      await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
-      navigation.navigate('request', {})
+      if (result?.type === 'wallet') {
+        const { walletId, tokenId } = result
+        await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
+        navigation.navigate('request', {})
+      }
     }
   })
 
@@ -134,34 +151,19 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
 
   const options = depositOrSend === 'deposit' ? depositOptions : sendOptions
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel}>
-      <ModalTitle>{depositOrSend === 'deposit' ? lstrings.loan_fragment_deposit : lstrings.fragment_send_subtitle}</ModalTitle>
+    <ModalUi4 bridge={bridge} title={depositOrSend === 'deposit' ? lstrings.loan_fragment_deposit : lstrings.fragment_send_subtitle} onCancel={handleCancel}>
       {options.map((option, index) => {
         const { title, icon, onPress } = option
-        return (
-          <SelectableRow
-            key={title}
-            title={title}
-            onPress={onPress}
-            icon={<View style={style.iconContainer}>{icon}</View>}
-            arrowTappable
-            autoHeight
-            underline={index !== options.length - 1}
-            // HACK: ThemedModal has 1 rem padding all around, making it
-            // impossible to use components expecting split 0.5rem
-            // margin/padding.
-            marginRem={[0, -0.5, 0, -0.5]}
-          />
-        )
+        return <SelectableRow marginRem={0.5} key={title} title={title} onPress={onPress} icon={<View style={style.iconContainer}>{icon}</View>} />
       })}
-    </ThemedModal>
+    </ModalUi4>
   )
 }
 
-export const styles = cacheStyles((theme: Theme) => ({
+const styles = cacheStyles((theme: Theme) => ({
   iconContainer: {
     flexDirection: 'row',
-    paddingVertical: theme.rem(0.75),
+    paddingVertical: theme.rem(0.5),
     width: theme.rem(2.5),
     marginHorizontal: theme.rem(0)
   }

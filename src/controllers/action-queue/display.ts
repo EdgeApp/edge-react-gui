@@ -271,7 +271,7 @@ async function getActionOpDisplayKeyMessage(account: EdgeAccount, actionOp: ParA
 
         const fromCurrencyCode = getCurrencyCode(fromWallet, fromTokenId)
         const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
-        const feeCurrencyCode = getCurrencyCode(toWallet)
+        const feeCurrencyCode = getCurrencyCode(toWallet, null)
 
         titleData = { stringKey: `action_display_title_swap` }
         messageData = {

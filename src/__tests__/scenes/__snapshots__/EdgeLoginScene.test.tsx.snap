@@ -1,188 +1,138 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`EdgeLoginScene should render with loading props 1`] = `
-<BVLinearGradient
-  colors={
-    [
-      4278585612,
-      4279971643,
-    ]
-  }
-  endPoint={
-    {
-      "x": 1,
-      "y": 0,
-    }
-  }
-  locations={null}
-  startPoint={
-    {
-      "x": 0,
-      "y": 0,
-    }
-  }
+<View
   style={
-    {
-      "bottom": 0,
-      "left": 0,
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
-    }
+    [
+      {
+        "alignItems": "stretch",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+      {
+        "height": 1334,
+        "width": 750,
+      },
+      {
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "paddingRight": 0,
+        "paddingTop": 64,
+      },
+      {
+        "padding": 0,
+      },
+    ]
   }
 >
   <View
     style={
-      [
-        {
-          "alignItems": "stretch",
-          "flexDirection": "column",
-          "justifyContent": "flex-start",
-          "position": "absolute",
-        },
-        {
-          "bottom": 0,
-          "left": 0,
-          "padding": 0,
-          "right": 0,
-          "top": 64,
-        },
-      ]
+      {
+        "flex": 1,
+      }
     }
   >
     <View
       style={
-        {
-          "flex": 1,
-        }
+        [
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
       }
     >
       <View
         style={
-          [
-            {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            },
-            {
-              "opacity": 1,
-            },
-          ]
+          {
+            "alignItems": "center",
+            "flexGrow": 1,
+            "justifyContent": "center",
+          }
         }
       >
-        <View
-          style={
-            {
-              "alignItems": "center",
-              "flexGrow": 1,
-              "justifyContent": "center",
-            }
-          }
-        >
-          <ActivityIndicator
-            accessibilityHint="Loading"
-            color="#00f1a2"
-            size="large"
-          />
-        </View>
+        <ActivityIndicator
+          accessibilityHint="Loading"
+          color="#00f1a2"
+          size="large"
+        />
       </View>
     </View>
+  </View>
+  <View
+    pointerEvents="none"
+    style={
+      {
+        "opacity": 0,
+      }
+    }
+  >
     <View
-      pointerEvents="none"
       style={
-        {
-          "opacity": 0,
-        }
+        [
+          {
+            "alignSelf": "stretch",
+            "borderColor": "#F1AA19",
+            "borderRadius": 16,
+            "borderWidth": 1,
+            "margin": 22,
+          },
+          {
+            "marginBottom": 22,
+            "marginLeft": 22,
+            "marginRight": 22,
+            "marginTop": 22,
+          },
+          {
+            "paddingBottom": 22,
+            "paddingLeft": 22,
+            "paddingRight": 22,
+            "paddingTop": 22,
+          },
+        ]
       }
     >
       <View
         style={
-          [
-            {
-              "alignSelf": "stretch",
-              "borderColor": "#F1AA19",
-              "borderRadius": 4,
-              "borderWidth": 1,
-              "margin": 22,
-            },
-            {
-              "marginBottom": 22,
-              "marginLeft": 22,
-              "marginRight": 22,
-              "marginTop": 22,
-            },
-            {
-              "paddingBottom": 22,
-              "paddingLeft": 22,
-              "paddingRight": 22,
-              "paddingTop": 22,
-            },
-          ]
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+          }
         }
       >
-        <View
+        <Text
+          allowFontScaling={false}
           style={
-            {
-              "alignItems": "center",
-              "display": "flex",
-              "flexDirection": "row",
-            }
+            [
+              {
+                "color": "#F1AA19",
+                "fontSize": 18,
+              },
+              {
+                "marginRight": 11,
+              },
+              {
+                "fontFamily": "Ionicons",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              {},
+            ]
           }
         >
-          <Text
-            allowFontScaling={false}
-            style={
-              [
-                {
-                  "color": "#F1AA19",
-                  "fontSize": 18,
-                },
-                {
-                  "marginRight": 11,
-                },
-                {
-                  "fontFamily": "Ionicons",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                {},
-              ]
-            }
-          >
-            
-          </Text>
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
-            style={
-              [
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#F1AA19",
-                  "fontFamily": "Quicksand-Bold",
-                  "fontSize": 17,
-                  "marginLeft": 6,
-                },
-                null,
-              ]
-            }
-          >
-            Warning
-          </Text>
-        </View>
+          
+        </Text>
         <Text
           adjustsFontSizeToFit={true}
           minimumFontScale={0.65}
-          numberOfLines={0}
+          numberOfLines={1}
           style={
             [
               {
@@ -193,150 +143,53 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
               },
               {
                 "color": "#F1AA19",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "Quicksand-Bold",
                 "fontSize": 17,
-                "marginTop": 22,
+                "marginLeft": 6,
               },
               null,
             ]
           }
         >
-          This application would like to create or access its wallet in your Edge account.
-
- It will not have access to any other wallets.
+          Warning
         </Text>
       </View>
-    </View>
-    <View
-      pointerEvents="none"
-      style={
-        {
-          "opacity": 0,
-        }
-      }
-    >
-      <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": false,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={0}
         style={
-          {
-            "elevation": 2,
-            "opacity": 1,
-            "shadowColor": "#FFFFFF",
-            "shadowOffset": {
-              "height": 0,
-              "width": 0,
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
             },
-            "shadowOpacity": 0.25,
-            "shadowRadius": 8,
-          }
+            {
+              "color": "#F1AA19",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 17,
+              "marginTop": 22,
+            },
+            null,
+          ]
         }
       >
-        <BVLinearGradient
-          colors={
-            [
-              4278754931,
-              4278251938,
-            ]
-          }
-          endPoint={
-            {
-              "x": 1,
-              "y": 0,
-            }
-          }
-          locations={null}
-          startPoint={
-            {
-              "x": 0,
-              "y": 0,
-            }
-          }
-          style={
-            [
-              {
-                "alignItems": "center",
-                "borderColor": "rgba(255, 255, 255, 0)",
-                "borderRadius": 6,
-                "borderWidth": 0,
-                "flexDirection": "row",
-                "justifyContent": "center",
-                "minHeight": 67,
-                "minWidth": 202,
-              },
-              {
-                "alignSelf": "auto",
-                "marginBottom": 22,
-                "marginLeft": 22,
-                "marginRight": 22,
-                "marginTop": 22,
-                "opacity": 1,
-                "paddingBottom": 0,
-                "paddingLeft": 0,
-                "paddingRight": 0,
-                "paddingTop": 0,
-              },
-              {
-                "borderRadius": 6,
-                "paddingLeft": 0,
-                "paddingRight": 0,
-              },
-            ]
-          }
-        >
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.75}
-            numberOfLines={1}
-            style={
-              {
-                "color": "#1b2f3b",
-                "fontFamily": "Quicksand-Medium",
-                "fontSize": 22,
-                "marginHorizontal": 0,
-                "paddingBottom": 11,
-                "paddingLeft": 17,
-                "paddingRight": 17,
-                "paddingTop": 11,
-                "textShadowColor": "#000000",
-                "textShadowOffset": {
-                  "height": 0,
-                  "width": 0,
-                },
-                "textShadowRadius": 0,
-              }
-            }
-          >
-            Accept
-          </Text>
-        </BVLinearGradient>
-      </View>
+        This application would like to create or access its wallet in your Edge account.
+
+ It will not have access to any other wallets.
+      </Text>
     </View>
+  </View>
+  <View
+    pointerEvents="none"
+    style={
+      {
+        "opacity": 0,
+      }
+    }
+  >
     <View
       accessibilityState={
         {
@@ -367,29 +220,29 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
       onStartShouldSetResponder={[Function]}
       style={
         {
-          "elevation": 0,
+          "alignItems": "center",
+          "alignSelf": "center",
+          "borderRadius": 34,
+          "justifyContent": "center",
+          "marginBottom": 22,
+          "marginLeft": 22,
+          "marginRight": 22,
+          "marginTop": 22,
           "opacity": 1,
-          "shadowColor": "#000000",
-          "shadowOffset": {
-            "height": 0,
-            "width": 0,
-          },
-          "shadowOpacity": 0,
-          "shadowRadius": 0,
         }
       }
     >
       <BVLinearGradient
         colors={
           [
-            16777215,
-            16777215,
+            4280299823,
+            4278214733,
           ]
         }
         endPoint={
           {
             "x": 1,
-            "y": 1,
+            "y": 0,
           }
         }
         locations={null}
@@ -403,55 +256,213 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
           [
             {
               "alignItems": "center",
-              "borderColor": "rgba(255, 255, 255, 0)",
-              "borderRadius": 6,
-              "borderWidth": 0,
               "flexDirection": "row",
               "justifyContent": "center",
-              "minHeight": 67,
-              "minWidth": 202,
             },
             {
               "alignSelf": "auto",
+              "opacity": 1,
+            },
+            {
+              "height": 67,
+              "paddingHorizontal": 45,
+            },
+            {
+              "alignItems": "center",
+              "alignSelf": "stretch",
+              "borderRadius": 34,
+              "justifyContent": "center",
+            },
+            [
+              {
+                "alignItems": "center",
+                "alignSelf": "stretch",
+                "borderRadius": 34,
+                "justifyContent": "center",
+              },
+              {
+                "alignSelf": "center",
+              },
+            ],
+            {
               "marginBottom": 22,
               "marginLeft": 22,
               "marginRight": 22,
-              "marginTop": 0,
-              "opacity": 1,
-              "paddingBottom": 0,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 0,
+              "marginTop": 22,
             },
-            {
-              "borderRadius": 6,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-            },
+            undefined,
           ]
         }
       >
         <Text
           adjustsFontSizeToFit={true}
-          minimumFontScale={0.75}
+          minimumFontScale={0.65}
           numberOfLines={1}
           style={
-            {
-              "color": "#00f1a2",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "marginHorizontal": 0,
-              "paddingBottom": 11,
-              "paddingLeft": 17,
-              "paddingRight": 17,
-              "paddingTop": 11,
-            }
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
+            ]
           }
         >
-          Cancel
+          Accept
         </Text>
       </BVLinearGradient>
     </View>
   </View>
-</BVLinearGradient>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "borderRadius": 34,
+        "height": undefined,
+        "justifyContent": "center",
+        "marginBottom": 22,
+        "marginLeft": 22,
+        "marginRight": 22,
+        "marginTop": 0,
+        "opacity": 1,
+        "paddingHorizontal": 0,
+        "paddingVertical": 0,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          16777215,
+          16777215,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "auto",
+            "opacity": 1,
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 45,
+          },
+          {
+            "alignItems": "center",
+            "alignSelf": "stretch",
+            "borderRadius": 34,
+            "justifyContent": "center",
+          },
+          [
+            {
+              "alignItems": "center",
+              "alignSelf": "stretch",
+              "borderRadius": 34,
+              "justifyContent": "center",
+            },
+            {
+              "alignSelf": "center",
+            },
+            {
+              "alignSelf": "center",
+              "height": undefined,
+              "paddingHorizontal": 0,
+              "paddingVertical": 0,
+            },
+          ],
+          {
+            "marginBottom": 22,
+            "marginLeft": 22,
+            "marginRight": 22,
+            "marginTop": 0,
+          },
+          undefined,
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#00f1a2",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Cancel
+      </Text>
+    </BVLinearGradient>
+  </View>
+</View>
 `;

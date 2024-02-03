@@ -24,14 +24,14 @@ export function ExtraTabScene(props: Props) {
     }
 
     return (
-      <SceneWrapper background="theme" hasTabs>
+      <SceneWrapper hasTabs>
         <EdgeProviderComponent plugin={plugin} navigation={navigation} />
       </SceneWrapper>
     )
   }
 
   return (
-    <SceneWrapper background="legacy" hasTabs avoidKeyboard>
+    <SceneWrapper hasTabs avoidKeyboard>
       <WebView
         allowFileAccess
         allowsInlineMediaPlayback

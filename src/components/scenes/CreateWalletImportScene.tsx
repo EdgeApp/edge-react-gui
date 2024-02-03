@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
 import ImportKeySvg from '../../assets/images/import-key-icon.svg'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -16,8 +17,8 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
-import { OutlinedTextInput, OutlinedTextInputRef } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 import { WalletCreateItem } from '../themed/WalletList'
 
@@ -41,7 +42,7 @@ const CreateWalletImportComponent = (props: Props) => {
   const [importText, setImportText] = React.useState('')
   const [scrollEnabled, setScrollEnabled] = React.useState(false)
 
-  const textInputRef = React.useRef<OutlinedTextInputRef>(null)
+  const textInputRef = React.useRef<FilledTextInputRef>(null)
 
   const handleNext = useHandler(async () => {
     textInputRef.current?.blur()
@@ -135,7 +136,7 @@ const CreateWalletImportComponent = (props: Props) => {
   const svgWidth = React.useMemo(() => 83 * theme.rem(0.0625), [theme])
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper>
       <SceneHeader title={lstrings.create_wallet_import_title} withTopMargin />
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
@@ -143,6 +144,7 @@ const CreateWalletImportComponent = (props: Props) => {
         keyboardShouldPersistTaps="handled"
         onKeyboardDidChangeFrame={() => setScrollEnabled(false)}
         onKeyboardWillChangeFrame={() => setScrollEnabled(true)}
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       >
         <View style={styles.icon}>
           <ImportKeySvg accessibilityHint={lstrings.import_key_icon_hint} color={theme.iconTappable} height={svgHeight} width={svgWidth} />
@@ -150,16 +152,17 @@ const CreateWalletImportComponent = (props: Props) => {
         <EdgeText style={styles.instructionalText} numberOfLines={2}>
           {lstrings.create_wallet_import_all_instructions}
         </EdgeText>
-        <OutlinedTextInput
+        <FilledTextInput
+          top={1}
+          horizontal={0.75}
+          bottom={1.25}
           value={importText}
           returnKeyType="next"
-          label={lstrings.create_wallet_import_input_key_or_seed_prompt}
+          placeholder={lstrings.create_wallet_import_input_key_or_seed_prompt}
           autoCapitalize="none"
           autoCorrect={false}
-          blurOnClear={false}
           onChangeText={setImportText}
           onSubmitEditing={handleNext}
-          marginRem={[1, 0.75, 1.25]}
           ref={textInputRef}
         />
         <MainButton label={lstrings.string_next_capitalized} type="secondary" marginRem={[0.5, 0.5]} onPress={handleNext} alignSelf="center" />

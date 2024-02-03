@@ -65,15 +65,16 @@ export class ProgressBarComponent extends React.PureComponent<Props, State> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
+    zIndex: 100,
     flexDirection: 'row'
   },
   bar: {
     position: 'absolute',
     left: 0,
-    top: -3,
-    bottom: 0,
-    backgroundColor: theme.walletProgressIconFill,
-    zIndex: 100
+    top: 0,
+    right: 0,
+    height: 3,
+    backgroundColor: theme.walletProgressIconFill
   }
 }))
 

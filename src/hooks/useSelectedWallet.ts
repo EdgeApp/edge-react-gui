@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
 import { useWatch } from '../hooks/useWatch'
 import { useSelector } from '../types/reactRedux'
@@ -6,7 +6,7 @@ import { getTokenId } from '../util/CurrencyInfoHelpers'
 
 export interface SelectedWallet {
   currencyCode: string
-  tokenId?: string
+  tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
 }
 
@@ -25,6 +25,7 @@ export function useSelectedWallet(): SelectedWallet | undefined {
   // because the selected token must exist before being selected,
   // so the selector above will force us to render in any case:
   const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+  if (tokenId === undefined) return
 
   return {
     currencyCode,

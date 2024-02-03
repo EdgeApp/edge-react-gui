@@ -249,7 +249,7 @@ export const moonpayProvider: FiatProviderFactory = {
           expirationDate: new Date(Date.now() + 8000),
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
             const { coreWallet, showUi } = approveParams
-            const receiveAddress = await coreWallet.getReceiveAddress()
+            const receiveAddress = await coreWallet.getReceiveAddress({ tokenId: null })
             const url = new URL('https://buy.moonpay.com?', true)
             const queryObj: MoonpayWidgetQueryParams = {
               apiKey,

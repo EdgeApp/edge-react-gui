@@ -1,9 +1,10 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { TouchableHighlight, View } from 'react-native'
+import { ListRenderItem, TouchableHighlight, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
+import { FlatList } from 'react-native-gesture-handler'
 
 import { Category, displayCategories, formatCategory, getSubcategories, joinCategory, setNewSubcategory, splitCategory } from '../../actions/CategoriesActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -13,9 +14,9 @@ import { MinimalButton } from '../buttons/MinimalButton'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
-import { ModalFooter, ModalFooterFade, ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
-import { ThemedModal } from '../themed/ThemedModal'
+import { FilledTextInput } from '../themed/FilledTextInput'
+import { ModalFooter } from '../themed/ModalParts'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
   bridge: AirshipBridge<string | undefined>
@@ -47,9 +48,13 @@ export function CategoryModal(props: Props) {
   const categories = useSelector(state => state.ui.subcategories)
 
   // Load the categories from disk:
-  useAsyncEffect(async () => {
-    await dispatch(getSubcategories())
-  }, [dispatch])
+  useAsyncEffect(
+    async () => {
+      await dispatch(getSubcategories())
+    },
+    [dispatch],
+    'categoryModal'
+  )
 
   const sortedCategories = React.useMemo(() => {
     // Transform the raw categories into row objects:
@@ -129,34 +134,35 @@ export function CategoryModal(props: Props) {
   ))
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel}>
-      <ModalTitle center>{lstrings.category_modal_title}</ModalTitle>
+    <ModalUi4 bridge={bridge} onCancel={handleCancel} title={lstrings.category_modal_title}>
       <View style={styles.inputCategoryRow}>
         {categoryOrder.map(item => (
           <MinimalButton key={item} highlighted={category === item} label={displayCategories[item]} onPress={() => setCategory(item)} />
         ))}
       </View>
-      <OutlinedTextInput
+      <FilledTextInput
+        around={0.5}
         autoFocus
         returnKeyType="done"
         autoCapitalize="words"
-        label={lstrings.sub_category_label}
+        placeholder={lstrings.sub_category_label}
         onChangeText={setSubcategory}
         onSubmitEditing={handleSubmit}
         value={subcategory}
       />
       <View style={styles.categoryListContainer}>
-        <FlashList
+        <FlatList
           contentContainerStyle={styles.scrollPadding}
           data={sortedCategories}
-          estimatedItemSize={theme.rem(3)}
+          // estimatedItemSize={theme.rem(3)}
           keyboardShouldPersistTaps="handled"
           keyExtractor={keyExtractor}
           renderItem={renderRow}
+          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
-        <ModalFooterFade />
+        {/* <ModalFooterFade /> */}
       </View>
-    </ThemedModal>
+    </ModalUi4>
   )
 }
 
@@ -168,8 +174,7 @@ const getStyle = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginHorizontal: theme.rem(1),
-    marginBottom: theme.rem(1)
+    margin: theme.rem(0.5)
   },
   categoryListContainer: {
     flex: 1

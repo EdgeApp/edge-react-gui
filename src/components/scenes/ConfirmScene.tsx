@@ -2,6 +2,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -11,7 +12,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SafeSlider } from '../themed/SafeSlider'
 import { SceneHeader } from '../themed/SceneHeader'
-import { Tile } from '../tiles/Tile'
+import { RowUi4 } from '../ui4/RowUi4'
 
 interface Props extends EdgeSceneProps<'confirmScene'> {}
 
@@ -32,7 +33,7 @@ const ConfirmComponent = (props: Props) => {
 
   const renderInfoTiles = () => {
     if (infoTiles == null) return null
-    return infoTiles.map(({ label, value }) => <Tile key={label} type="static" title={label} body={value} />)
+    return infoTiles.map(({ label, value }) => <RowUi4 key={label} title={label} body={value} />)
   }
 
   const handleSliderComplete = useHandler(async (resetSlider: () => void) => {
@@ -51,8 +52,8 @@ const ConfirmComponent = (props: Props) => {
   }, [onBack])
 
   return (
-    <SceneWrapper background="theme">
-      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
+    <SceneWrapper>
+      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         <SceneHeader title={titleText} underline />
         <View style={styles.body}>
           <EdgeText disableFontScaling numberOfLines={16}>

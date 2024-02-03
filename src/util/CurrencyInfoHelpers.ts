@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 
 import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants'
@@ -108,53 +108,49 @@ export function getCreateWalletType(account: EdgeAccount, currencyCode: string):
   return currencyInfo ? makeCreateWalletType(currencyInfo) : null
 }
 
-export const getTokenId = (account: EdgeAccount, pluginId: string, currencyCode: string): string | undefined => {
+export const getTokenId = (account: EdgeAccount, pluginId: string, currencyCode: string): EdgeTokenId | undefined => {
   const currencyConfig = account.currencyConfig[pluginId]
   if (currencyConfig == null) return
+  if (currencyConfig.currencyInfo.currencyCode === currencyCode) return null
   const { allTokens } = currencyConfig
-  return Object.keys(allTokens).find(edgeToken => allTokens[edgeToken].currencyCode === currencyCode)
+  const tokenId = Object.keys(allTokens).find(edgeToken => allTokens[edgeToken].currencyCode === currencyCode)
+  return tokenId
+}
+
+export const getTokenIdForced = (account: EdgeAccount, pluginId: string, currencyCode: string): EdgeTokenId => {
+  const tokenId = getTokenId(account, pluginId, currencyCode)
+  if (tokenId === undefined) throw new Error('getTokenIdForced: tokenId not found')
+  return tokenId
+}
+
+export const getWalletTokenId = (wallet: EdgeCurrencyWallet, currencyCode: string): EdgeTokenId => {
+  const { currencyConfig, currencyInfo } = wallet
+  if (currencyInfo.currencyCode === currencyCode) return null
+  const { allTokens } = currencyConfig ?? {}
+  const tokenId = Object.keys(allTokens).find(edgeToken => allTokens[edgeToken].currencyCode === currencyCode)
+  if (tokenId == null) {
+    throw new Error(`Cannot find tokenId for currencyCode ${currencyCode}`)
+  }
+  return tokenId
 }
 
 /**
  * Get the currencyCode associated with a tokenId
  */
-export const getCurrencyCode = (wallet: EdgeCurrencyWallet, tokenId?: string): string => {
+export const getCurrencyCode = (wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): string => {
   const { currencyCode } = tokenId != null ? wallet.currencyConfig.allTokens[tokenId] : wallet.currencyInfo
   return currencyCode
 }
 
 /**
- * If we have a currency code, guess the pluginId and tokenId from that.
- * @deprecated Use getTokenId when you know the pluginId for sure.
+ * Get the currencyCode associated with a tokenId
  */
-export const guessFromCurrencyCode = (account: EdgeAccount, opts: { currencyCode?: string; pluginId?: string; tokenId?: string }) => {
-  let { pluginId, tokenId } = opts
-  const { currencyCode } = opts
-
-  if (currencyCode == null) return { pluginId, tokenId }
-
-  // If you already have a main network code but not a tokenId, check if you are a token and get the right tokenId
-  if (pluginId != null && tokenId == null) {
-    tokenId = getTokenId(account, pluginId, currencyCode)
-  }
-
-  // If we don't have a pluginId, try to get one for a main network first
-  if (pluginId == null) {
-    pluginId = Object.keys(account.currencyConfig).find(id => account.currencyConfig[id].currencyInfo.currencyCode === currencyCode)
-  }
-
-  // If we still don't have a pluginId, try to get a pluginId and tokenId for a token
-  if (pluginId == null) {
-    pluginId = Object.keys(account.currencyConfig).find(id => {
-      tokenId = getTokenId(account, id, currencyCode)
-      return tokenId != null
-    })
-  }
-
-  return { pluginId, tokenId }
+export const getCurrencyCodeWithAccount = (account: EdgeAccount, pluginId: string, tokenId: EdgeTokenId): string => {
+  const { currencyCode } = tokenId != null ? account.currencyConfig[pluginId].allTokens[tokenId] : account.currencyConfig[pluginId].currencyInfo
+  return currencyCode
 }
 
-export const getToken = (wallet: EdgeCurrencyWallet, tokenId?: string): EdgeToken | undefined => {
+export const getToken = (wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): EdgeToken | undefined => {
   if (tokenId == null) {
     // Either special handling should be done by the caller, or the workflow should not allow this to execute.
   } else {

@@ -7,6 +7,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
 import { cancelActionProgram } from '../../../controllers/action-queue/redux/actions'
 import { ActionDisplayInfo, ActionQueueMap } from '../../../controllers/action-queue/types'
@@ -93,7 +94,7 @@ export const LoanStatusSceneComponent = (props: Props) => {
   const isProgramDone = steps.length > 0 && steps[steps.length - 1].status === 'done'
 
   return (
-    <SceneWrapper background="theme" hasHeader hasTabs={false}>
+    <SceneWrapper>
       <SceneHeader
         tertiary={
           <TouchableOpacity onPress={handleInfoIconPress}>
@@ -108,7 +109,7 @@ export const LoanStatusSceneComponent = (props: Props) => {
         <FillLoader />
       ) : (
         <View style={styles.container}>
-          <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer}>
+          <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
             <StepProgressBar actionDisplayInfos={steps} />
           </ScrollView>
           <View style={styles.footerContainer}>

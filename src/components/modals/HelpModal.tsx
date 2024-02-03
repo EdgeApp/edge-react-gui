@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Dimensions, Image, Keyboard, Linking, View } from 'react-native'
+import { Image, Keyboard, Linking, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { sprintf } from 'sprintf-js'
@@ -17,7 +17,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 const buildNumber = getBuildNumber()
 const versionNumber = getVersion()
@@ -61,51 +61,45 @@ export const HelpModal = (props: Props) => {
   const helpSiteMoreInfoText = sprintf(lstrings.help_site_more_info_text, config.appName)
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]} scroll>
-      <View style={styles.titleContainer}>
-        <Image source={theme.primaryLogo} style={styles.logo} resizeMode="contain" />
-        <ModalTitle center paddingRem={[0, 1]}>
-          {helpModalTitle}
-        </ModalTitle>
-      </View>
-
+    <ModalUi4
+      bridge={bridge}
+      title={
+        <View style={styles.titleContainer}>
+          <Image source={theme.primaryLogo} style={styles.logo} resizeMode="contain" />
+          <ModalTitle center>{helpModalTitle}</ModalTitle>
+        </View>
+      }
+      onCancel={handleClose}
+      scroll
+    >
       <SelectableRow
-        arrowTappable
         icon={<Fontello name="help_idea" color={theme.iconTappable} size={theme.rem(1.5)} />}
         subTitle={lstrings.help_knowledge_base_text}
         title={lstrings.help_knowledge_base}
-        underline
         onPress={() => handleSitePress(lstrings.help_knowledge_base, config.knowledgeBase)}
       />
 
       <SelectableRow
-        arrowTappable
         icon={<Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />}
         subTitle={lstrings.help_support_text}
         title={lstrings.help_support}
-        underline
         onPress={() => handleSitePress(lstrings.help_support, config.supportSite)}
       />
 
       <SelectableRow
-        arrowTappable
         icon={<Fontello name="help_call" color={theme.iconTappable} size={theme.rem(1.5)} />}
         subTitle={lstrings.help_call_text}
         title={lstrings.help_call}
-        underline
         onPress={async () => await Linking.openURL(`tel:${config.phoneNumber}`)}
       />
 
       <SelectableRow
-        arrowTappable
         icon={<Fontello name="globe" color={theme.iconTappable} size={theme.rem(1.5)} />}
         subTitle={helpSiteMoreInfoText}
         title={sprintf(lstrings.help_visit_site, config.appName)}
-        underline
         onPress={() => handleSitePress(helpSiteMoreInfoText, config.website)}
       />
       <SelectableRow
-        arrowTappable
         icon={<Fontello name="doc-text" color={theme.iconTappable} size={theme.rem(1.5)} />}
         subTitle={lstrings.help_terms_of_service_text}
         title={lstrings.title_terms_of_service}
@@ -115,31 +109,30 @@ export const HelpModal = (props: Props) => {
         <EdgeText style={styles.version}>{versionText}</EdgeText>
         <EdgeText style={styles.version}>{buildText}</EdgeText>
       </View>
-    </ThemedModal>
+    </ModalUi4>
   )
 }
 
-const deviceHeight = Dimensions.get('window').height
-
 const getStyles = cacheStyles((theme: Theme) => ({
   titleContainer: {
-    marginTop: theme.rem(0.5),
+    flexGrow: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginVertical: theme.rem(0.25)
   },
   logo: {
-    height: theme.rem(2.25)
+    height: theme.rem(2.25),
+    marginVertical: theme.rem(0.5)
   },
   footer: {
-    marginTop: deviceHeight < theme.rem(42) ? 0 : theme.rem(1.5),
-    paddingVertical: deviceHeight < theme.rem(42) ? theme.rem(0.25) : theme.rem(0.5),
+    marginTop: theme.rem(0),
+    paddingVertical: theme.rem(0.5),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'
   },
   version: {
-    color: theme.secondaryText,
-    fontSize: theme.rem(0.75)
+    color: theme.secondaryText
   }
 }))

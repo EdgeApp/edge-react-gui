@@ -2,16 +2,50 @@
 
 ## Unreleased
 
-## 3.23.4
+## 4.0.0
+
+- added: `minerTip` to `feeRateUsed` processing
+- added: Make the alert drop-down swipeable.
+- added: Multi output payments for UTXO currencies
+- changed: Update various scenes with UI4 components
+- changed: Light account re-enabled at 50% distribution
+- changed: Block Buy/Sell/Receive for Light Accounts
+- changed: Free FIO handle modal visual design
+- changed: New dynamic menu tabs that responds to scene scroll
+- changed: New dynamic search drawer above tabs for wallet list, transaction list, and markets list
+- changed: Scene layout to support transparent and blurred header and tab-bar
+- changed: Bity and Paybis plugins to use EdgeTxAction for sell transactions
+- changed: Do not write tx.metadata in fiat sell transactions
+- changed: Use new EdgeTransaction.savedAction to show extended transaction info in tx list and tx details
+- changed: Use new EdgeTxAction data for Thorchain and Tron stake plugins
+- changed: Make useAsyncEffect tags required
+- changed: Rettry failed WalletConnect initializations
+- changed: Disable RBF for payment protocol transactions
+- changed: Show insufficient funds error when sweeping a key that cannot afford the transaction fee
+- changed: Add proper error message for sweeping keys that don't contain enough funds to cover transaction fee
+- changed: Update GettingStartedScene images and colors
+- fixed: Fix the Android date picker appearance in dark mode
+- fixed: USP vs legacy landing experiment distribution
+- fixed: Paybis sell from Tron USDT
+- fixed: Remove `minWidth` style from stake option card
+- fixed: Send scene no-longer accesses clipboard immediately
+- fixed: Update Glif Pool APY information endpoints to resolve error message
+- fixed: Don't pass pendingTxs with spendInfo in migrate flow
+- fixed: Fixed title and message handling in AssetStatusCard
+- fixed: (dev mode) Copy private seed
+- removed: Deposit/Send footer buttons in Wallet/Asset List Scene
+- removed: Unused special currency constants
+
+## 3.23.4 (2024-01-30)
 
 - added: Added 5x leverage Tarot Finance pools
 
-## 3.23.3
+## 3.23.3 (2024-01-09)
 
 - fixed: ETC spend error regression caused by EIP-1559 upgrade in EthereumEngine
 - fixed: Update Glif Pool APY information endpoints to resolve error message
 
-## 3.23.2
+## 3.23.2 (2024-01-03)
 
 - fixed: Spend regression for non-EIP-1559 transactions
 
@@ -20,12 +54,15 @@
 - fixed: Paybis sell from Tron USDT
 - fixed: Fix accelerate for EIP-1559 transactions
 
-## 3.23.0
+## 3.23.0 (2023-12-20)
 
 - added: Automatically enable tokens with balances
 - added: Add Pokt RPCs as option for Fantom
 - added: GLIF Infinity Pool staking plugin for Filecoin FEVM currency
+- added: New FilledTextInput component
+- added: New SimpleTextInput component
 - added: Support for Thorchain Savers EVM token deposits
+- added: Transaction support for zkSync
 - added: Add Solana init options
 - added: BSC staking on Thorchain Savers
 - added: Ability to clear datastore of fiat providers

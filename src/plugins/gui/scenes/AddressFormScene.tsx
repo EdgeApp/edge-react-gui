@@ -5,12 +5,13 @@ import { Platform, ScrollView, TouchableOpacity, View, ViewStyle } from 'react-n
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Animated, { Easing, interpolateColor, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated'
 
-import { NotificationSceneWrapper } from '../../../components/common/SceneWrapper'
+import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
+import { FilledTextInputRef } from '../../../components/themed/FilledTextInput'
 import { MainButton } from '../../../components/themed/MainButton'
-import { OutlinedTextInputRef } from '../../../components/themed/OutlinedTextInput'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
@@ -55,7 +56,7 @@ const asKmootValidProperties = asObject({
 export const AddressFormScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { navigation, route } = props
+  const { route } = props
   const { countryCode, headerTitle, /* headerIconUri, */ onSubmit } = route.params
   const disklet = useSelector(state => state.core.disklet)
   const dropdownBorderColor = React.useMemo(() => [theme.iconDeactivated, theme.iconTappable], [theme])
@@ -75,7 +76,7 @@ export const AddressFormScene = React.memo((props: Props) => {
   const [isAnimateHintsNumChange, setIsAnimateHintsNumChange] = React.useState(false)
   const [hintHeight, setHintHeight] = React.useState<number>(0)
 
-  const rAddressInput = React.createRef<OutlinedTextInputRef>()
+  const rAddressInput = React.createRef<FilledTextInputRef>()
 
   const mounted = React.useRef<boolean>(true)
 
@@ -237,12 +238,16 @@ export const AddressFormScene = React.memo((props: Props) => {
   }, [searchResults])
 
   // Initialize scene with any saved form data from disklet
-  useAsyncEffect(async () => {
-    const diskletFormData = await getDiskletFormData(disklet, ADDRESS_FORM_DISKLET_NAME, asHomeAddress)
-    if (diskletFormData != null && diskletFormData.country === countryCode) {
-      setFormData(diskletFormData)
-    }
-  }, [])
+  useAsyncEffect(
+    async () => {
+      const diskletFormData = await getDiskletFormData(disklet, ADDRESS_FORM_DISKLET_NAME, asHomeAddress)
+      if (diskletFormData != null && diskletFormData.country === countryCode) {
+        setFormData(diskletFormData)
+      }
+    },
+    [],
+    'AddressFormScene'
+  )
 
   const disableNextButton = (Object.keys(formData) as Array<keyof HomeAddress>).some(
     key =>
@@ -250,8 +255,8 @@ export const AddressFormScene = React.memo((props: Props) => {
       key !== 'address2' && formData[key].trim() === ''
   )
   return (
-    <NotificationSceneWrapper navigation={navigation} background="theme">
-      {(gap, notificationHeight) => (
+    <SceneWrapper hasNotifications>
+      {({ insetStyle }) => (
         <>
           <SceneHeader title={headerTitle} underline withTopMargin />
           <View style={styles.container}>
@@ -260,7 +265,8 @@ export const AddressFormScene = React.memo((props: Props) => {
               extraScrollHeight={theme.rem(2.75)}
               enableAutomaticScroll
               enableOnAndroid
-              contentContainerStyle={{ paddingBottom: notificationHeight }}
+              contentContainerStyle={insetStyle}
+              scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
             >
               <GuiFormField
                 fieldType="address"
@@ -273,7 +279,7 @@ export const AddressFormScene = React.memo((props: Props) => {
                 onBlur={handleHideAddressHints}
               />
               <Animated.View style={[Platform.OS === 'ios' ? styles.dropContainer : styles.dropContainerAndroid, aDropContainerStyle]}>
-                <ScrollView keyboardShouldPersistTaps="always" nestedScrollEnabled>
+                <ScrollView keyboardShouldPersistTaps="always" nestedScrollEnabled scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
                   {searchResults.map(searchResult => {
                     const displaySearchResult = `${searchResult.address}\n${searchResult.city}, ${searchResult.state}, ${countryCode}`
                     return (
@@ -328,7 +334,7 @@ export const AddressFormScene = React.memo((props: Props) => {
           </View>
         </>
       )}
-    </NotificationSceneWrapper>
+    </SceneWrapper>
   )
 })
 

@@ -14,22 +14,19 @@ import { cacheStyles, Theme, useTheme } from '../../components/services/ThemeCon
 import { ENV } from '../../env'
 import { ExperimentConfig, getExperimentConfig } from '../../experimentConfig'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
-import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { ImageProp } from '../../types/Theme'
 import { GuiTouchIdInfo } from '../../types/types'
 import { logEvent, trackError } from '../../util/tracking'
-import { pickRandom } from '../../util/utils'
 import { withServices } from '../hoc/withServices'
 import { showHelpModal } from '../modals/HelpModal'
 import { UpdateModal } from '../modals/UpdateModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { getBackgroundImage } from './../../util/ThemeCache'
+import { DotsBackground } from '../ui4/DotsBackground'
 import { LoadingScene } from './LoadingScene'
 
 // Sneak the BlurView over to the login UI:
@@ -75,14 +72,10 @@ export function LoginSceneComponent(props: Props) {
   // Effects
   // ---------------------------------------------------------------------
 
-  const [backgroundImage = theme.backgroundImage] = useAsyncValue<ImageProp | undefined>(async () => {
-    const url = pickRandom(theme.backgroundImageServerUrls)
-    return await getBackgroundImage(disklet, url, theme.backgroundImage)
-  }, [disklet, theme])
-
   React.useEffect(() => {
+    if (!firstRun) return
     const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
-    if (YOLO_USERNAME != null && (Boolean(YOLO_PASSWORD) || Boolean(YOLO_PIN)) && firstRun) {
+    if (YOLO_USERNAME != null && (Boolean(YOLO_PASSWORD) || Boolean(YOLO_PIN))) {
       firstRun = false
       if (YOLO_PIN != null) {
         context
@@ -100,8 +93,17 @@ export function LoginSceneComponent(props: Props) {
           })
           .catch(showError)
       }
+    } else if (YOLO_USERNAME == null && account.username == null && context.localUsers[0]?.loginId != null && typeof YOLO_PIN === 'string') {
+      // Allow YOLO_PIN with light accounts
+      firstRun = false
+      context
+        .loginWithPIN(context.localUsers[0].loginId, YOLO_PIN, { useLoginId: true })
+        .then(async account => {
+          await dispatch(initializeAccount(navigation, account, dummyTouchIdInfo))
+        })
+        .catch(showError)
     }
-  }, [context, dispatch, navigation])
+  }, [account, context, dispatch, navigation])
 
   React.useEffect(() => {
     if (pendingDeepLink != null && pendingDeepLink.type === 'passwordRecovery') {
@@ -181,10 +183,14 @@ export function LoginSceneComponent(props: Props) {
   })
 
   // Wait for the experiment config to initialize before rendering anything
-  useAsyncEffect(async () => {
-    const experimentConfig = await getExperimentConfig()
-    setExperimentConfig(experimentConfig)
-  }, [])
+  useAsyncEffect(
+    async () => {
+      const experimentConfig = await getExperimentConfig()
+      setExperimentConfig(experimentConfig)
+    },
+    [],
+    'LoginSceneComponent'
+  )
 
   const inMaestro = isMaestro()
 
@@ -192,13 +198,13 @@ export function LoginSceneComponent(props: Props) {
     <LoadingScene />
   ) : (
     <View style={styles.container} testID="edge: login-scene">
+      <DotsBackground />
       <LoginScreen
         key={String(counter)}
         accountOptions={accountOptions}
         appConfig={config}
         appId={config.appId}
         appName={config.appNameShort}
-        backgroundImage={backgroundImage}
         context={context}
         fontDescription={fontDescription}
         initialLoginId={nextLoginId ?? undefined}
@@ -231,8 +237,7 @@ const dummyTouchIdInfo: GuiTouchIdInfo = {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
-    paddingTop: StatusBar.currentHeight,
-    backgroundColor: theme.backgroundGradientColors[0]
+    paddingTop: StatusBar.currentHeight
   }
 }))
 

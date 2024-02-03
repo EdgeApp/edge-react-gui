@@ -1,36 +1,43 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FioAddressSettingsComponent should render with loading props 1`] = `
-<SceneWrapper
-  background="theme"
+<Memo(SceneWrapperComponent)
+  scroll={true}
 >
-  <WithTheme(TileComponent)
-    body="MyFioAddress"
-    title="FIO Crypto Handle"
-    type="static"
+  <Memo(SceneHeaderComponent)
+    title="Reload and Transfer"
+    underline={true}
+    withTopMargin={true}
   />
-  <React.Fragment>
-    <MainButton
-      label="Purchase more bundled transactions"
-      marginRem={
-        [
-          1.5,
-          1,
-          0.25,
-        ]
+  <View
+    style={
+      {
+        "margin": 11,
       }
-      onPress={[Function]}
-    />
-    <MainButton
-      label="Transfer FIO Address"
-      marginRem={
-        [
-          0.25,
-          1,
-        ]
+    }
+  >
+    <CardUi4
+      sections={true}
+    >
+      <RowUi4
+        body="MyFioAddress"
+        title="FIO Crypto Handle"
+      />
+    </CardUi4>
+    <Memo
+      secondary={
+        {
+          "label": "Reload Bundled Transactions",
+          "onPress": [Function],
+        }
       }
-      onPress={[Function]}
+      secondary2={
+        {
+          "label": "Transfer Handle",
+          "onPress": [Function],
+        }
+      }
     />
-  </React.Fragment>
-</SceneWrapper>
+  </View>
+</Memo(SceneWrapperComponent)>
 `;

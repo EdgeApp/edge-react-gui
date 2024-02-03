@@ -75,11 +75,11 @@ export const FiatListModal = (props: Props) => {
 
   return (
     <ListModal
+      textInput
       bridge={bridge}
       title={lstrings.title_create_wallet_select_fiat}
       label={lstrings.fragment_wallets_addwallet_fiat_hint}
       autoFocus
-      blurOnClear={false}
       rowsData={supportedFiats}
       onSubmitEditing={onSubmitEditing}
       rowComponent={item => renderFiatChoiceModalRow(item)}

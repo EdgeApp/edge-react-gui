@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FioAddressRegister should render with loading props 1`] = `
-<SceneWrapper
-  background="theme"
+<Memo(SceneWrapperComponent)
+  scroll={true}
 >
   <Memo(SceneHeaderComponent)
     style={
@@ -14,6 +14,8 @@ exports[`FioAddressRegister should render with loading props 1`] = `
       }
     }
     title="Register FIO Crypto Handle"
+    underline={true}
+    withTopMargin={true}
   >
     <Image
       resizeMode="cover"
@@ -31,96 +33,92 @@ exports[`FioAddressRegister should render with loading props 1`] = `
       }
     />
   </Memo(SceneHeaderComponent)>
-  <ScrollView
-    contentContainerStyle={
+  <View
+    style={
       {
-        "paddingTop": 11,
+        "marginHorizontal": 11,
       }
     }
   >
     <View
       style={
+        [
+          {
+            "paddingBottom": 22,
+            "paddingHorizontal": 11,
+          },
+          {
+            "paddingTop": 34,
+          },
+        ]
+      }
+    >
+      <WithTheme(EdgeTextComponent)
+        numberOfLines={2}
+        style={
+          {
+            "color": "#FFFFFF",
+            "fontSize": 22,
+          }
+        }
+      >
+        Send and Receive with an easy to remember FIO Crypto Handle!
+      </WithTheme(EdgeTextComponent)>
+    </View>
+    <View
+      style={
         {
-          "position": "relative",
+          "paddingBottom": 22,
+          "paddingHorizontal": 11,
         }
       }
     >
-      <View
-        style={
-          [
-            {
-              "paddingBottom": 22,
-              "paddingHorizontal": 22,
-            },
-            {
-              "paddingTop": 34,
-            },
-          ]
-        }
-      >
-        <WithTheme(EdgeTextComponent)
-          numberOfLines={2}
-          style={
-            {
-              "color": "#FFFFFF",
-              "fontSize": 22,
-            }
-          }
-        >
-          Send and Receive with an easy to remember FIO Crypto Handle!
-        </WithTheme(EdgeTextComponent)>
-      </View>
-      <View
+      <WithTheme(EdgeTextComponent)
+        numberOfLines={3}
         style={
           {
-            "paddingBottom": 22,
-            "paddingHorizontal": 22,
+            "color": "#3dd9f4",
+            "fontSize": 22,
+            "textAlign": "left",
           }
         }
       >
-        <WithTheme(EdgeTextComponent)
-          numberOfLines={3}
-          style={
-            {
-              "color": "#A4C7DF",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          • Works across all tokens and coins
+        • Works across all tokens and coins
 • Secured from your wallet
 • Completely decentralized
-        </WithTheme(EdgeTextComponent)>
-      </View>
-      <View
+      </WithTheme(EdgeTextComponent)>
+    </View>
+    <View
+      style={
+        {
+          "paddingBottom": 22,
+          "paddingHorizontal": 11,
+        }
+      }
+    >
+      <WithTheme(EdgeTextComponent)
+        numberOfLines={5}
         style={
           {
-            "paddingBottom": 22,
-            "paddingHorizontal": 22,
+            "color": "#3dd9f4",
+            "fontSize": 22,
+            "textAlign": "left",
           }
         }
       >
-        <WithTheme(EdgeTextComponent)
-          numberOfLines={5}
-          style={
-            {
-              "color": "#A4C7DF",
-              "fontSize": 22,
-              "textAlign": "left",
-            }
-          }
-        >
-          Similar to website names, your FIO Crypto Handle can be used to send you tokens/coins without ever having to see or send your public key.
-        </WithTheme(EdgeTextComponent)>
-      </View>
-      <View
-        onLayout={[Function]}
+        Similar to website names, your FIO Crypto Handle can be used to send you tokens/coins without ever having to see or send your public key.
+      </WithTheme(EdgeTextComponent)>
+    </View>
+    <View
+      onLayout={[Function]}
+    >
+      <CardUi4
+        sections={true}
       >
-        <WithTheme(TileComponent)
+        <RowUi4
           onPress={[Function]}
+          rightButtonType="editable"
           title="Choose a FIO Crypto Handle"
-          type="editable"
         >
           <View
             style={
@@ -132,40 +130,65 @@ exports[`FioAddressRegister should render with loading props 1`] = `
             <WithTheme(EdgeTextComponent)
               style={
                 {
-                  "color": "#87939E",
+                  "color": "#888888",
                 }
               }
             >
               Your Crypto Handle name here
             </WithTheme(EdgeTextComponent)>
           </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
+        </RowUi4>
+        <RowUi4
           body="Loading…"
           onPress={[Function]}
+          rightButtonType="touchable"
           title="Choose FIO Domain for Your Crypto Handle"
-          type="touchable"
         />
-      </View>
-      <WithTheme(FormErrorComponent)
-        isVisible={false}
-        style={
-          {
-            "flex": 1,
-            "margin": 22,
-          }
+      </CardUi4>
+    </View>
+    <View
+      style={
+        {
+          "marginTop": 34,
         }
-      >
-        
-      </WithTheme(FormErrorComponent)>
-      <View
-        style={
+      }
+    >
+      <Memo
+        primary={
           {
-            "paddingBottom": 674,
+            "disabled": true,
+            "label": "Next",
+            "onPress": [Function],
+            "type": "primary",
           }
         }
       />
     </View>
-  </ScrollView>
-</SceneWrapper>
+    <EdgeAnim
+      enter={
+        {
+          "type": "fadeIn",
+        }
+      }
+      exit={
+        {
+          "type": "fadeOut",
+        }
+      }
+      visible={false}
+    >
+      <AlertCardUi4
+        title=""
+        type="error"
+      />
+    </EdgeAnim>
+    <View
+      style={
+        {
+          "paddingBottom": 674,
+        }
+      }
+    />
+  </View>
+</Memo(SceneWrapperComponent)>
 `;

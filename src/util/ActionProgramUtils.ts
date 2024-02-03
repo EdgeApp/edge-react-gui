@@ -1,5 +1,5 @@
 import { add, div, gt, gte, log10, max, mul, sub, toFixed } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js/types'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js/types'
 import { sprintf } from 'sprintf-js'
 
 import { MAX_AMOUNT } from '../constants/valueConstants'
@@ -26,7 +26,7 @@ export interface LoanAsset {
   wallet: EdgeCurrencyWallet
   nativeAmount: string
   paymentMethodId?: string
-  tokenId?: string
+  tokenId: EdgeTokenId
 }
 
 interface AaveCreateActionParams {
@@ -65,6 +65,7 @@ export const makeAaveCreateActionProgram = async (params: AaveCreateActionParams
   await enableToken(depositTokenCc, borrowEngineWallet)
 
   const toTokenId = source.tokenId ?? Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === 'WBTC')
+  if (toTokenId == null) throw new Error(`makeAaveCreateActionProgram: Cannot find toTokenId`)
 
   // If deposit source wallet is not the borrowEngineWallet, swap first into the borrow engine wallet + deposit token before depositing.
 
@@ -178,9 +179,9 @@ export const makeAaveDepositAction = async ({
 }: {
   borrowEngineWallet: EdgeCurrencyWallet
   borrowPluginId: string
-  depositTokenId?: string
+  depositTokenId: EdgeTokenId
   nativeAmount: string
-  srcTokenId?: string
+  srcTokenId: EdgeTokenId
   srcWallet: EdgeCurrencyWallet
 }): Promise<ActionOp> => {
   const sequenceActions: ActionOp[] = []
@@ -197,6 +198,7 @@ export const makeAaveDepositAction = async ({
   await enableToken(depositTokenCc, borrowEngineWallet)
   const allTokens = borrowEngineWallet.currencyConfig.allTokens
   const tokenId = depositTokenId ?? Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === 'WBTC')
+  if (tokenId == null) throw new Error(`makeAaveDepositAction: Cannot find tokenId`)
 
   // If deposit source wallet is not the borrowEngineWallet, swap first into the borrow engine wallet + deposit token before depositing.
   if (srcWallet.id !== borrowEngineWallet.id) {
@@ -289,7 +291,7 @@ export const makeAaveCloseAction = async ({
         isoFiatCurrencyCode,
         convertNativeToExchange(debtDenom.multiplier)(debt.nativeAmount)
       )
-      const debtBalanceNativeAmount = wallet.balances[debtCurrencyCode]
+      const debtBalanceNativeAmount = wallet.balanceMap.get(debtTokenId) ?? '0'
       const debtBalanceFiat = convertCurrencyFromExchangeRates(
         exchangeRates,
         debtCurrencyCode,
@@ -352,14 +354,19 @@ export const makeAaveCloseAction = async ({
       }
 
       // Repay with balance actions
-      if (!zeroString(repayWithBalanceNativeAmount))
-        evmActions.push({
-          type: 'loan-repay',
-          nativeAmount: repayWithBalanceNativeAmount,
-          borrowPluginId,
-          tokenId: debtTokenId,
-          walletId: wallet.id
-        })
+      if (!zeroString(repayWithBalanceNativeAmount)) {
+        throw new Error('Need to revisit what fromTokenId should be assigned to due to core2.0')
+        // evmActions.push({
+        //   type: 'loan-repay',
+        //   nativeAmount: repayWithBalanceNativeAmount,
+        //   borrowPluginId,
+        //   tokenId: debtTokenId,
+
+        //   // XXX what should fromTokenId be?
+        //   fromTokenId: null,
+        //   walletId: wallet.id
+        // })
+      }
 
       // Repay with collateral actions
       if (!zeroString(repayWithCollateralNativeAmount))

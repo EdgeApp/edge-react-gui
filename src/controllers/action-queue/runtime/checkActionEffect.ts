@@ -1,6 +1,5 @@
 import { gte, lte } from 'biggystring'
 
-import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { filterNull } from '../../../util/safeFilters'
 import { checkPushEvent } from '../push'
 import { ActionEffect, EffectCheckResult, ExecutionContext, SeqEffect } from '../types'
@@ -101,8 +100,7 @@ export async function checkActionEffect(context: ExecutionContext, effect: Actio
       // TODO: Use effect.address when we can check address balances
       const { aboveAmount, belowAmount, tokenId, walletId } = effect
       const wallet = await account.waitForCurrencyWallet(walletId)
-      const currencyCode = getCurrencyCode(wallet, tokenId)
-      const walletBalance = wallet.balances[currencyCode] ?? '0'
+      const walletBalance = wallet.balanceMap.get(tokenId) ?? '0'
 
       return {
         delay: 15000,
@@ -128,6 +126,7 @@ export async function checkActionEffect(context: ExecutionContext, effect: Actio
       // Get transaction
       const txs = await wallet.getTransactions({
         // TODO: Add a parameter to limit to one transaction in result
+        tokenId: null,
         searchString: txId
       })
 

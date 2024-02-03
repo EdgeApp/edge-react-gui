@@ -2,6 +2,7 @@ import { PromoCard2 } from 'edge-info-server/types'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import LinearGradient from 'react-native-linear-gradient'
 
 import { linkReferralWithCurrencies } from '../../actions/WalletListActions'
 import { useHandler } from '../../hooks/useHandler'
@@ -14,17 +15,25 @@ import { EdgeText } from '../themed/EdgeText'
 import { ButtonUi4 } from './ButtonUi4'
 import { CardUi4 } from './CardUi4'
 
-interface Props {
-  navigation: NavigationBase
-  promoInfo: PromoCard2
+export interface FilteredPromoCard {
+  background: PromoCard2['background']
+  ctaButton: PromoCard2['ctaButton']
+  localeMessages: PromoCard2['localeMessages']
+  messageId: string
 }
 
-export function PromoCardUi4Component(props: Props) {
+interface Props {
+  navigation: NavigationBase
+  promoInfo: FilteredPromoCard
+  onClose: () => Promise<void>
+}
+
+export function PromoCardUi4(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
 
-  const { navigation, promoInfo } = props
+  const { navigation, promoInfo, onClose } = props
   const { localeMessages, ctaButton, background } = promoInfo
 
   const backgroundInfo = theme.isDark ? background.darkMode : background.lightMode
@@ -35,19 +44,21 @@ export function PromoCardUi4Component(props: Props) {
 
   const handlePress = useHandler(() => {
     if (ctaButton == null) return
-    const { url } = ctaButton
+    const { localeUrls } = ctaButton
+    const url = getLocaleOrDefaultString(localeUrls)
+    if (url == null) {
+      showError('No PromoCard URL found')
+      return
+    }
 
     dispatch(linkReferralWithCurrencies(navigation, url)).catch(err => showError(err))
   })
 
-  const handleClose = useHandler(() => {})
-
   return (
     <CardUi4
-      onClose={handleClose}
-      underlayBackground={{ colors: backgroundGradientColors, start: backgroundGradientStart, end: backgroundGradientEnd }}
-      underlayForeground={
-        <View style={styles.backgroundContainer}>
+      onClose={onClose}
+      nodeBackground={
+        <LinearGradient colors={backgroundGradientColors} start={backgroundGradientStart} end={backgroundGradientEnd} style={styles.backgroundContainer}>
           <FastImage
             source={{
               uri: imageUri
@@ -55,14 +66,16 @@ export function PromoCardUi4Component(props: Props) {
             style={styles.backgroundImage}
             resizeMode="stretch"
           />
-        </View>
+        </LinearGradient>
       }
     >
       <View style={styles.contentContainer}>
-        <EdgeText numberOfLines={3}>{message}</EdgeText>
+        <EdgeText numberOfLines={4} disableFontScaling style={styles.text}>
+          {message}
+        </EdgeText>
         {ctaLabel == null ? null : (
           <View style={styles.cornerButtonContainer}>
-            <ButtonUi4 type="secondary" label={ctaLabel} onPress={handlePress} />
+            <ButtonUi4 layout="solo" type="secondary" label={ctaLabel} mini onPress={handlePress} />
           </View>
         )}
       </View>
@@ -74,17 +87,20 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'flex-end',
     justifyContent: 'flex-end'
   },
+  text: {
+    fontSize: theme.rem(0.75)
+  },
   backgroundImage: {
     aspectRatio: 1,
     height: '100%'
   },
   contentContainer: {
     justifyContent: 'space-between',
-    width: '75%', // Leave space for right-justified background image
-    margin: theme.rem(0.5)
+    width: '70%', // Leave space for right-justified background image
+    margin: theme.rem(0.5),
+    height: theme.rem(7)
   },
   cornerButtonContainer: {
-    marginTop: theme.rem(1),
-    alignItems: 'flex-start'
+    alignSelf: 'flex-start'
   }
 }))

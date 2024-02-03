@@ -1,14 +1,15 @@
 import * as React from 'react'
 import { useEffect } from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image, Text, TextStyle, View } from 'react-native'
 
 import { PoweredByCard } from '../../../components/cards/PoweredByCard'
-import { NotificationSceneWrapper } from '../../../components/common/SceneWrapper'
+import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { showError } from '../../../components/services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
+import { FilledTextInput } from '../../../components/themed/FilledTextInput'
 import { MainButton } from '../../../components/themed/MainButton'
-import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
+import { SectionView } from '../../../components/ui4/SectionView'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { EdgeSceneProps } from '../../../types/routerTypes'
@@ -60,7 +61,7 @@ const defaultEnterAmountState: EnterAmountState = {
 export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { navigation, route } = props
+  const { route } = props
   const { initState, headerIconUri, headerTitle, onSubmit, convertValue, onPoweredByClick, onChangeText = () => {}, label1, label2 } = route.params
   const lastUsed = React.useRef<number>(1)
 
@@ -129,86 +130,92 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
 
   const poweredByIconPath = poweredBy != null ? getPartnerIconUri(poweredBy.poweredByIcon) : undefined
   return (
-    <NotificationSceneWrapper navigation={navigation} scroll keyboardShouldPersistTaps="handled" background="theme">
+    <SceneWrapper scroll keyboardShouldPersistTaps="handled" hasNotifications>
       <SceneHeader style={styles.sceneHeader} title={headerTitle} underline withTopMargin>
         {headerIcon}
       </SceneHeader>
-      <View style={styles.container}>
-        <View style={styles.textFields}>
-          <OutlinedTextInput
-            numeric
-            maxDecimals={2}
-            autoCorrect={false}
-            autoFocus
-            autoCapitalize="none"
-            keyboardType="decimal-pad"
-            label={label1}
-            onChangeText={handleChangeText1}
-            onSubmitEditing={handleSubmit}
-            showSpinner={spinner1}
-            value={value1 ?? '0'}
-          />
-          <OutlinedTextInput
-            numeric
-            maxDecimals={6}
-            autoCorrect={false}
-            autoFocus={false}
-            autoCapitalize="none"
-            keyboardType="decimal-pad"
-            label={label2}
-            onChangeText={handleChangeText2}
-            onSubmitEditing={handleSubmit}
-            showSpinner={spinner2}
-            value={value2 ?? '0'}
-          />
+      <SectionView>
+        <View style={styles.container}>
+          <View style={styles.textFields}>
+            <FilledTextInput
+              numeric
+              maxDecimals={2}
+              autoCorrect={false}
+              autoFocus
+              autoCapitalize="none"
+              keyboardType="decimal-pad"
+              placeholder={label1}
+              onChangeText={handleChangeText1}
+              onSubmitEditing={handleSubmit}
+              showSpinner={spinner1}
+              textsizeRem={1.5}
+              value={value1 ?? '0'}
+              vertical={0.5}
+            />
+            <FilledTextInput
+              numeric
+              maxDecimals={6}
+              autoCorrect={false}
+              autoFocus={false}
+              autoCapitalize="none"
+              keyboardType="decimal-pad"
+              placeholder={label2}
+              onChangeText={handleChangeText2}
+              onSubmitEditing={handleSubmit}
+              showSpinner={spinner2}
+              textsizeRem={1.5}
+              value={value2 ?? '0'}
+              vertical={0.5}
+            />
+          </View>
+          {statusText != null ? <Text style={statusTextStyle}>{statusText.content}</Text> : null}
+          {poweredBy != null ? <PoweredByCard iconUri={poweredByIconPath} poweredByText={poweredBy.poweredByText} onPress={handlePoweredByPress} /> : null}
+          <MainButton disabled={spinner1 || spinner2} label={lstrings.string_next_capitalized} marginRem={[0.25, 0]} onPress={handleSubmit} />
         </View>
-        {statusText != null ? <Text style={statusTextStyle}>{statusText.content}</Text> : null}
-        {poweredBy != null ? <PoweredByCard iconUri={poweredByIconPath} poweredByText={poweredBy.poweredByText} onPress={handlePoweredByPress} /> : null}
-        <MainButton disabled={spinner1 || spinner2} label={lstrings.string_next_capitalized} marginRem={[1, 0]} type="secondary" onPress={handleSubmit} />
-      </View>
-    </NotificationSceneWrapper>
+      </SectionView>
+    </SceneWrapper>
   )
 })
 
-const getStyles = cacheStyles((theme: Theme) => ({
-  sceneHeader: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
-  },
-  container: {
-    alignItems: 'center',
-    paddingTop: theme.rem(0.5),
-    width: '100%'
-  },
-  textFields: {
-    flexDirection: 'column',
-    minWidth: theme.rem(15),
-    maxWidth: theme.rem(20)
-  },
-  text: {
-    color: theme.primaryText,
+const getStyles = cacheStyles((theme: Theme) => {
+  const textCommon: TextStyle = {
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1),
     includeFontPadding: false
-  },
-  textWarning: {
-    color: theme.warningText,
-    fontFamily: theme.fontFaceMedium,
-    fontSize: theme.rem(1),
-    includeFontPadding: false
-  },
-  textError: {
-    color: theme.dangerText,
-    fontFamily: theme.fontFaceMedium,
-    fontSize: theme.rem(1),
-    includeFontPadding: false
-  },
-  icon: {
-    height: theme.rem(1.5),
-    width: theme.rem(1.5),
-    marginRight: theme.rem(0.5),
-    marginLeft: theme.rem(0.5),
-    resizeMode: 'contain'
   }
-}))
+  return {
+    sceneHeader: {
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center'
+    },
+    container: {
+      alignItems: 'center',
+      paddingTop: theme.rem(0.5),
+      width: '100%'
+    },
+    textFields: {
+      flexDirection: 'column',
+      width: theme.rem(15)
+    },
+    text: {
+      ...textCommon,
+      color: theme.primaryText
+    },
+    textWarning: {
+      ...textCommon,
+      color: theme.warningText
+    },
+    textError: {
+      ...textCommon,
+      color: theme.dangerText
+    },
+    icon: {
+      height: theme.rem(1.5),
+      width: theme.rem(1.5),
+      marginRight: theme.rem(0.5),
+      marginLeft: theme.rem(0.5),
+      resizeMode: 'contain'
+    }
+  }
+})

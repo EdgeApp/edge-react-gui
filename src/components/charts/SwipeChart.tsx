@@ -171,76 +171,80 @@ const SwipeChartComponent = (params: Props) => {
   const maxPriceDataPoint = React.useMemo(() => chartData.find(point => point.y === maxPrice), [chartData, maxPrice])
 
   // Fetch/cache chart data, set shared animation transition values
-  useAsyncEffect(async () => {
-    if (!isLoading) {
-      setIsLoading(true)
-      setChartData([])
-      sMinMaxOpacity.value = 0
+  useAsyncEffect(
+    async () => {
+      if (!isLoading) {
+        setIsLoading(true)
+        setChartData([])
+        sMinMaxOpacity.value = 0
 
-      // Use cached data, if available
-      const cachedChartData = cachedTimespanChartData.get(selectedTimespan)
+        // Use cached data, if available
+        const cachedChartData = cachedTimespanChartData.get(selectedTimespan)
 
-      const delayShowMinMaxLabels = () => {
-        // Delay the appearance of the min/max price labels while the chart
-        // price line finishes its entering animation
-        sMinMaxOpacity.value = withDelay(ANIMATION_DURATION.maxMinFadeInDelay, withTiming(1, { duration: ANIMATION_DURATION.maxMinFadeIn }))
-      }
+        const delayShowMinMaxLabels = () => {
+          // Delay the appearance of the min/max price labels while the chart
+          // price line finishes its entering animation
+          sMinMaxOpacity.value = withDelay(ANIMATION_DURATION.maxMinFadeInDelay, withTiming(1, { duration: ANIMATION_DURATION.maxMinFadeIn }))
+        }
 
-      try {
-        if (cachedChartData != null) {
-          // The chart price line animation is slow when transitioning directly
-          // between datasets.
-          // Add a delay so the component can get re-mounted with fresh data
-          // instead.
-          setTimeout(() => {
-            setChartData(cachedChartData)
-            setIsLoading(false)
-            delayShowMinMaxLabels()
-          }, 10)
-        } else {
-          const unixNow = Math.trunc(new Date().getTime() / 1000)
-          const fromParam = unixNow - queryFromTimeOffset
-          const fetchPath = sprintf(DATASET_URL_4S, assetId, defaultFiat, fromParam, unixNow)
-          let fetchUrl = `${COINGECKO_URL}${fetchPath}`
-          do {
-            // Construct the dataset query
-            const response = await fetch(fetchUrl)
-            const result = await response.json()
-            const marketChartRange = asCoinGeckoMarketApi(result)
-            if ('status' in marketChartRange) {
-              if (marketChartRange.status.error_code === 429) {
-                // Rate limit error
-                if (!fetchUrl.includes('x_cg_pro_api_key')) {
-                  fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
-                  continue
-                }
-              }
-              throw new Error(String(marketChartRange))
-            } else {
-              const rawChartData = marketChartRange.prices.map(rawDataPoint => {
-                return {
-                  x: new Date(rawDataPoint[0]),
-                  y: rawDataPoint[1]
-                }
-              })
-              const reducedChartData = reduceChartData(rawChartData, selectedTimespan)
-
-              setChartData(reducedChartData)
-              cachedTimespanChartData.set(selectedTimespan, reducedChartData)
-              setCachedChartData(cachedTimespanChartData)
+        try {
+          if (cachedChartData != null) {
+            // The chart price line animation is slow when transitioning directly
+            // between datasets.
+            // Add a delay so the component can get re-mounted with fresh data
+            // instead.
+            setTimeout(() => {
+              setChartData(cachedChartData)
               setIsLoading(false)
               delayShowMinMaxLabels()
-              break
-            }
-          } while (true)
+            }, 10)
+          } else {
+            const unixNow = Math.trunc(new Date().getTime() / 1000)
+            const fromParam = unixNow - queryFromTimeOffset
+            const fetchPath = sprintf(DATASET_URL_4S, assetId, defaultFiat, fromParam, unixNow)
+            let fetchUrl = `${COINGECKO_URL}${fetchPath}`
+            do {
+              // Construct the dataset query
+              const response = await fetch(fetchUrl)
+              const result = await response.json()
+              const marketChartRange = asCoinGeckoMarketApi(result)
+              if ('status' in marketChartRange) {
+                if (marketChartRange.status.error_code === 429) {
+                  // Rate limit error
+                  if (!fetchUrl.includes('x_cg_pro_api_key')) {
+                    fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
+                    continue
+                  }
+                }
+                throw new Error(String(marketChartRange))
+              } else {
+                const rawChartData = marketChartRange.prices.map(rawDataPoint => {
+                  return {
+                    x: new Date(rawDataPoint[0]),
+                    y: rawDataPoint[1]
+                  }
+                })
+                const reducedChartData = reduceChartData(rawChartData, selectedTimespan)
+
+                setChartData(reducedChartData)
+                cachedTimespanChartData.set(selectedTimespan, reducedChartData)
+                setCachedChartData(cachedTimespanChartData)
+                setIsLoading(false)
+                delayShowMinMaxLabels()
+                break
+              }
+            } while (true)
+          }
+        } catch (e: any) {
+          showWarning(`Failed to retrieve market data for ${currencyCode}.`)
+          console.error(e)
         }
-      } catch (e: any) {
-        showWarning(`Failed to retrieve market data for ${currencyCode}.`)
-        console.error(e)
       }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTimespan])
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [selectedTimespan],
+    'swipeChart'
+  )
 
   React.useEffect(() => {
     if (chartData.length > 0) {

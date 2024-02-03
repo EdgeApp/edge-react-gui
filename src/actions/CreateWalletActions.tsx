@@ -14,7 +14,8 @@ import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { EdgeTokenId } from '../types/types'
+import { EdgeAsset } from '../types/types'
+import { getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { filterNull } from '../util/safeFilters'
 import { logEvent, TrackingEventName } from '../util/tracking'
@@ -70,19 +71,19 @@ export function fetchAccountActivationInfo(walletType: string): ThunkAction<Prom
       ])
 
       // Translate ambiguous currency codes:
-      const supportedAssets: EdgeTokenId[] = []
+      const supportedAssets: EdgeAsset[] = []
       for (const currency of Object.keys(supportedCurrencies.result)) {
         // Handle special cases:
         if (currency === 'FTC') continue
         if (currency === 'ETH') {
-          supportedAssets.push({ pluginId: 'ethereum' })
+          supportedAssets.push({ pluginId: 'ethereum', tokenId: null })
           continue
         }
 
         // Find a top-level currency:
         const pluginId = Object.keys(account.currencyConfig).find(pluginId => account.currencyConfig[pluginId].currencyInfo.currencyCode === currency)
         if (pluginId != null) {
-          supportedAssets.push({ pluginId })
+          supportedAssets.push({ pluginId, tokenId: null })
           continue
         }
 
@@ -158,10 +159,13 @@ export function createAccountTransaction(
     const paymentDenom = getExchangeDenomination(state, paymentWallet.currencyInfo.pluginId, currencyCode)
     let nativeAmount = mul(amount, paymentDenom.multiplier)
     nativeAmount = toFixed(nativeAmount, 0, 0)
+    const tokenId = getWalletTokenId(paymentWallet, currencyCode)
+
     if (handleAvailability.result === 'AccountAvailable') {
       navigation.push('send2', {
+        tokenId,
         spendInfo: {
-          currencyCode,
+          tokenId,
           spendTargets: [
             {
               nativeAmount,
@@ -196,7 +200,7 @@ export function createAccountTransaction(
               category: 'Expense:' + sprintf(lstrings.create_wallet_account_metadata_category, createdWalletCurrencyCode),
               notes: sprintf(lstrings.create_wallet_account_metadata_notes, createdWalletCurrencyCode, createdWalletCurrencyCode, config.supportEmail)
             }
-            paymentWallet.saveTxMetadata(edgeTransaction.txid, currencyCode, edgeMetadata).catch(err => console.warn(err))
+            paymentWallet.saveTxMetadata({ txid: edgeTransaction.txid, tokenId, metadata: edgeMetadata }).catch(err => console.warn(err))
             navigation.navigate('walletsTab', { screen: 'walletList' })
             setTimeout(() => {
               Alert.alert(lstrings.create_wallet_account_payment_sent_title, lstrings.create_wallet_account_payment_sent_message)

@@ -1,13 +1,14 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { Keyboard, ViewStyle, ViewToken } from 'react-native'
+import { Keyboard, ListRenderItem, ViewStyle, ViewToken } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
+import { FlatList } from 'react-native-gesture-handler'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useFilter } from '../../hooks/useFilter'
 import { useTheme } from '../services/ThemeContext'
-import { ModalFooter, ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
-import { ThemedModal } from '../themed/ThemedModal'
+import { FilledTextInput } from '../themed/FilledTextInput'
+import { ModalFooter, ModalMessage } from '../themed/ModalParts'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props<T> {
   bridge: AirshipBridge<any>
@@ -16,7 +17,7 @@ interface Props<T> {
   message?: string
   textInput?: boolean // Defaults to 'true'
   initialValue?: string // Defaults to ''
-  // OutlinedTextInput properties:
+  // FilledTextInput properties:
   searchIcon?: boolean // Defaults to 'true'
   label?: string // Defaults to ''
   autoCorrect?: boolean // Defaults to 'false'
@@ -29,15 +30,12 @@ interface Props<T> {
   onSubmitEditing?: (text: string) => void
   secureTextEntry?: boolean // Defaults to 'false'
   autoFocus?: boolean // Defaults to 'false'
-  blurOnClear?: boolean // Defaults to 'true'
   // List Props
   rowsData?: T[] // Defaults to []
   fullScreen?: boolean
   rowComponent?: (props: T) => React.ReactElement
   rowDataFilter?: (filterText: string, data: T, index: number) => boolean
   onViewableItemsChanged?: (info: { viewableItems: ViewToken[]; changed: ViewToken[] }) => void
-  // Footer Props
-  closeArrow?: boolean // Defaults to 'true'
 }
 
 export function ListModal<T>({
@@ -50,9 +48,9 @@ export function ListModal<T>({
   fullScreen = true,
   rowComponent,
   rowDataFilter,
-  closeArrow = true,
   onSubmitEditing,
   onViewableItemsChanged,
+  label: placeholder,
   ...textProps
 }: Props<T>) {
   const theme = useTheme()
@@ -72,36 +70,38 @@ export function ListModal<T>({
   }, [theme])
 
   return (
-    <ThemedModal bridge={bridge} closeButton={closeArrow} onCancel={handleCancel}>
-      {title == null ? null : <ModalTitle>{title}</ModalTitle>}
+    <ModalUi4 title={title} bridge={bridge} onCancel={handleCancel}>
       {message == null ? null : <ModalMessage>{message}</ModalMessage>}
-      {textInput == null ? null : (
-        <OutlinedTextInput
+      {!textInput ? null : (
+        <FilledTextInput
+          vertical={1}
+          horizontal={0.5}
           // Our props:
           searchIcon
-          blurOnClear
+          blurOnClear={false}
           autoCorrect={false}
           autoCapitalize="words"
           returnKeyType="done"
-          marginRem={[1, 0.5]}
           testID={title}
           onChangeText={handleChangeText}
           onSubmitEditing={handleSubmitEditing}
           value={text}
+          placeholder={placeholder}
           // Outlined Text input props:
           {...textProps}
         />
       )}
-      <FlashList
+      <FlatList
         contentContainerStyle={scrollPadding}
         data={filteredRows}
-        estimatedItemSize={theme.rem(5)}
+        // estimatedItemSize={theme.rem(5)}
         keyboardShouldPersistTaps="handled"
         keyExtractor={(_, i) => `${i}`}
         renderItem={renderItem}
         onScroll={() => Keyboard.dismiss()}
         onViewableItemsChanged={onViewableItemsChanged}
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       />
-    </ThemedModal>
+    </ModalUi4>
   )
 }

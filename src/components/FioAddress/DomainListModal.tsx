@@ -1,20 +1,21 @@
-import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
+import { FlatList } from 'react-native-gesture-handler'
 
-import { Fontello } from '../../assets/vector'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { FioDomain, FlatListItem } from '../../types/types'
+import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { ClickableText } from '../themed/ClickableText'
 import { EdgeText } from '../themed/EdgeText'
-import { ModalFooter, ModalFooterFade, ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalFooter } from '../themed/ModalParts'
+import { SimpleTextInput } from '../themed/SimpleTextInput'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Item {
   label: string
@@ -121,12 +122,12 @@ class DomainListModalComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
     if (createNew) {
       return (
-        <View style={[styles.rowContainerTop, styles.registerDomainRow]}>
-          <ClickableText
-            icon={<Fontello name="register-custom-fio" style={styles.domainRegisterIcon} color={theme.iconTappable} size={theme.rem(1)} />}
-            label={lstrings.fio_address_list_domain_register}
-            onPress={this.registerNewDomain}
-            paddingRem={0}
+        <View style={styles.registerDomainRow}>
+          <ButtonsViewUi4
+            tertiary={{
+              label: lstrings.fio_address_list_domain_register,
+              onPress: this.registerNewDomain
+            }}
           />
         </View>
       )
@@ -153,33 +154,28 @@ class DomainListModalComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(undefined)} paddingRem={[1, 0]}>
-        <ModalTitle center paddingRem={[0, 3, 1]}>
-          {lstrings.fio_address_choose_domain_label}
-        </ModalTitle>
-        <View style={{ marginHorizontal: theme.rem(0.75) }}>
-          <OutlinedTextInput
-            autoCorrect={false}
-            returnKeyType="search"
-            autoCapitalize="none"
-            label={lstrings.fio_domain_label}
-            onChangeText={this.onSearchFilterChange}
-            onSubmitEditing={this.selectCustom}
-            value={input}
-            marginRem={[0, 1]}
-            searchIcon
-          />
-        </View>
-        <FlashList
+      <ModalUi4 bridge={bridge} onCancel={() => bridge.resolve(undefined)} title={lstrings.fio_address_choose_domain_label}>
+        <SimpleTextInput
+          around={0.5}
+          autoCorrect={false}
+          returnKeyType="search"
+          autoCapitalize="none"
+          placeholder={lstrings.fio_domain_label}
+          onChangeText={this.onSearchFilterChange}
+          onSubmitEditing={this.selectCustom}
+          value={input}
+          iconComponent={SearchIconAnimated}
+        />
+        <FlatList
           data={items}
-          estimatedItemSize={theme.rem(3.5)}
+          // estimatedItemSize={theme.rem(3.5)}
           keyboardShouldPersistTaps="handled"
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
           contentContainerStyle={styles.scrollPadding}
+          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
-        <ModalFooterFade />
-      </ThemedModal>
+      </ModalUi4>
     )
   }
 }
@@ -205,12 +201,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'right'
   },
   registerDomainRow: {
-    paddingLeft: 0,
-    marginLeft: theme.rem(1),
-    marginTop: theme.rem(0.25),
-    paddingTop: theme.rem(1),
-    borderTopWidth: theme.rem(0.05),
-    borderTopColor: theme.lineDivider
+    alignSelf: 'center',
+    borderTopWidth: 1,
+    borderTopColor: theme.lineDivider,
+    width: '100%'
   },
   domainRegisterIcon: {
     marginTop: theme.rem(0.25)

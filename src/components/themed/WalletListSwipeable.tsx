@@ -1,13 +1,19 @@
-import { FlashList } from '@shopify/flash-list'
+import { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { RefreshControl } from 'react-native'
+import { useMemo } from 'react'
+import { FlatList, RefreshControl } from 'react-native'
+import Animated from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { selectWalletToken } from '../../actions/WalletActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
+import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
+import { InsetStyle } from '../common/SceneWrapper'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
 import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from './WalletList'
@@ -21,12 +27,14 @@ interface Props {
   navigation: NavigationProp<'walletList'>
   searching: boolean
   searchText: string
-  overscroll?: number
+  insetStyle: InsetStyle
 
   // Callbacks:
   onRefresh?: () => void
   onReset?: () => void
 }
+
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList)
 
 /**
  * The main wallet list used in a scene.
@@ -38,7 +46,7 @@ function WalletListSwipeableComponent(props: Props) {
     navigation,
     searching,
     searchText,
-    overscroll = 0,
+    insetStyle,
 
     // Callbacks:
     onRefresh,
@@ -57,9 +65,7 @@ function WalletListSwipeableComponent(props: Props) {
     [account, searching, searchText, sortedWalletList]
   )
 
-  const handleCreateWallet = useHandler(async (walletId, currencyCode) => {
-    const wallet = account.currencyWallets[walletId]
-    const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+  const handleCreateWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId) => {
     dispatch(selectWalletToken({ navigation, walletId, tokenId }))
       .then(() => navigation.navigate('transactionList', { walletId, tokenId }))
       .finally(onReset)
@@ -76,6 +82,7 @@ function WalletListSwipeableComponent(props: Props) {
 
   // Renders a single row:
   const renderRow = useHandler((item: FlatListItem<any>) => {
+    const { index } = item
     if (item.item.key.includes('create-')) {
       const createItem: WalletCreateItem = item.item
       const { currencyCode, displayName, pluginId, walletType, createWalletIds } = createItem
@@ -95,30 +102,51 @@ function WalletListSwipeableComponent(props: Props) {
 
     const { token, tokenId, wallet, walletId } = item.item
 
+    const disableAnimation = index >= MAX_LIST_ITEMS_ANIM
     if (wallet != null) {
-      return <WalletListSwipeableCurrencyRow navigation={navigation} token={token} tokenId={tokenId} wallet={wallet} />
+      return (
+        <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}>
+          <WalletListSwipeableCurrencyRow navigation={navigation} token={token} tokenId={tokenId} wallet={wallet} />
+        </EdgeAnim>
+      )
     }
     if (walletId != null) {
-      return <WalletListSwipeableLoadingRow navigation={navigation} walletId={walletId} />
+      return (
+        <EdgeAnim disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}>
+          <WalletListSwipeableLoadingRow navigation={navigation} walletId={walletId} />
+        </EdgeAnim>
+      )
     }
     return null
   })
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const flatListContentOffset = React.useMemo(() => ({ x: 0, y: searching ? 0 : theme.rem(4.5) }), [searching])
   const data = React.useMemo(() => [...searchedWalletList, ...createWalletList], [searchedWalletList, createWalletList])
 
+  const handleScroll = useSceneScrollHandler()
+
+  // TODO: Include this fix in the SceneWrapper component
+  const safeAreaInsets = useSafeAreaInsets()
+
+  const contentContainerStyle = useMemo(() => {
+    return {
+      paddingTop: insetStyle.paddingTop + theme.rem(0.5),
+      paddingBottom: insetStyle.paddingBottom + theme.rem(0.5) + safeAreaInsets.bottom,
+      paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
+      paddingRight: insetStyle.paddingRight + theme.rem(0.5)
+    }
+  }, [insetStyle.paddingBottom, insetStyle.paddingLeft, insetStyle.paddingRight, insetStyle.paddingTop, safeAreaInsets.bottom, theme])
+
   return (
-    <FlashList
-      estimatedItemSize={theme.rem(4.25)}
-      contentOffset={flatListContentOffset}
-      contentContainerStyle={{ paddingBottom: overscroll }}
+    <AnimatedFlatList
+      contentContainerStyle={contentContainerStyle}
       data={data}
       keyboardShouldPersistTaps="handled"
       ListFooterComponent={footer}
       ListHeaderComponent={header}
       refreshControl={refreshControl}
       renderItem={renderRow}
+      onScroll={handleScroll}
+      scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
     />
   )
 }

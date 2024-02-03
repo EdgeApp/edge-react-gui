@@ -1,69 +1,125 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`MenuTabs should render with loading props 1`] = `
-<View>
-  <BVLinearGradient
-    colors={
-      [
-        4279377189,
-        4279377189,
-      ]
+<View
+  pointerEvents="box-none"
+  shiftY={
+    {
+      "value": 0,
     }
-    endPoint={
+  }
+  style={
+    [
       {
-        "x": 1,
-        "y": 0.5,
+        "bottom": 0,
+        "justifyContent": "flex-end",
+        "left": 0,
+        "overflow": "visible",
+        "position": "absolute",
+        "right": 0,
+      },
+      {
+        "transform": [
+          {
+            "translateY": 0,
+          },
+        ],
+      },
+    ]
+  }
+>
+  <View
+    footerHeight={
+      {
+        "value": 0,
       }
     }
-    locations={null}
-    startPoint={
+    openRatio={
       {
-        "x": 0,
-        "y": 0.5,
+        "value": 1,
+      }
+    }
+    pointerEvents="none"
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "transform": [
+            {
+              "translateY": NaN,
+            },
+          ],
+        },
+      ]
+    }
+    tabLabelHeight={25}
+  >
+    <BlurView
+      blurAmount={10}
+      blurType="dark"
+      overlayColor="rgba(0, 0, 0, 0)"
+      style={
+        {
+          "backgroundColor": undefined,
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    />
+    <BVLinearGradient
+      colors={
+        [
+          436207616,
+          3003121664,
+        ]
+      }
+      endPoint={
+        {
+          "x": 0,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0.5,
+        }
+      }
+    />
+  </View>
+  <View
+    openRatio={
+      {
+        "value": 1,
       }
     }
     style={
       [
         {
-          "alignSelf": "stretch",
-          "height": 1,
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "center",
         },
         {
-          "marginBottom": 0,
-          "marginLeft": 0,
-          "marginRight": -22,
-          "marginTop": 0,
+          "transform": [
+            {
+              "translateY": NaN,
+            },
+          ],
         },
       ]
     }
-  />
-  <BVLinearGradient
-    colors={
-      [
-        4279377189,
-        4279377189,
-      ]
-    }
-    endPoint={
-      {
-        "x": 1,
-        "y": 1,
-      }
-    }
-    locations={null}
-    startPoint={
-      {
-        "x": 0,
-        "y": 0,
-      }
-    }
-    style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "justifyContent": "center",
-      }
-    }
+    tabLabelHeight={25}
   />
 </View>
 `;

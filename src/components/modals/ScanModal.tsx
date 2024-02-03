@@ -208,11 +208,13 @@ export const ScanModal = (props: Props) => {
     >
       {renderModalContent()}
       <ModalFooter onPress={handleClose} />
+      <View style={styles.bottomSpace} />
     </AirshipModal>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  bottomSpace: { height: theme.rem(1.5) },
   cameraPermissionContainer: {
     padding: theme.rem(0.5)
   },

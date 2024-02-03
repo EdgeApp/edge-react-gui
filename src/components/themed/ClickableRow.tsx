@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { TouchableHighlight, TouchableOpacity, View } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import { TouchableOpacity, View } from 'react-native'
 
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { showError } from '../services/AirshipInstance'
@@ -9,8 +8,6 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeCont
 interface Props {
   onPress: () => void | Promise<void>
   onLongPress?: () => void | Promise<void>
-  highlight?: boolean
-  gradient?: boolean
   autoHeight?: boolean
   children?: React.ReactNode
   underline?: boolean
@@ -21,7 +18,7 @@ interface Props {
 
 export class ClickableRowComponent extends React.PureComponent<Props & ThemeProps> {
   renderContent() {
-    const { gradient, children, marginRem, paddingRem, underline, autoHeight, theme } = this.props
+    const { children, marginRem, paddingRem, underline, autoHeight, theme } = this.props
     const styles = getStyles(theme)
     const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
     const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
@@ -36,13 +33,6 @@ export class ClickableRowComponent extends React.PureComponent<Props & ThemeProp
         borderWidth: 0
       }
     ]
-    if (gradient) {
-      return (
-        <LinearGradient colors={theme.backgroundGradientColors} end={theme.backgroundGradientEnd} start={theme.backgroundGradientStart} style={containerStyles}>
-          {children}
-        </LinearGradient>
-      )
-    }
 
     return <View style={containerStyles}>{children}</View>
   }
@@ -53,15 +43,7 @@ export class ClickableRowComponent extends React.PureComponent<Props & ThemeProp
   }
 
   render() {
-    const { onLongPress, highlight, theme } = this.props
-
-    if (highlight) {
-      return (
-        <TouchableHighlight accessible={false} onPress={this.handlePress} onLongPress={onLongPress} underlayColor={theme.backgroundGradientColors[0]}>
-          {this.renderContent()}
-        </TouchableHighlight>
-      )
-    }
+    const { onLongPress } = this.props
 
     return (
       <TouchableOpacity accessible={false} onPress={this.handlePress} onLongPress={onLongPress}>

@@ -1,5 +1,5 @@
 import { add, div, gt, max, mul, sub } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import { Fontello } from '../../../assets/vector'
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
 import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
 import { ActionDisplayInfo } from '../../../controllers/action-queue/types'
@@ -25,12 +26,10 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { GuiExchangeRates } from '../../../types/types'
 import { getToken } from '../../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, zeroString } from '../../../util/utils'
-import { Card } from '../../cards/Card'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
 import { TappableCard } from '../../cards/TappableCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withLoanAccount } from '../../hoc/withLoanAccount'
-import { CryptoIcon } from '../../icons/CryptoIcon'
 import { FiatIcon } from '../../icons/FiatIcon'
 import { Space } from '../../layout/Space'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
@@ -39,6 +38,8 @@ import { SectionHeading } from '../../text/SectionHeading'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
+import { CardUi4 } from '../../ui4/CardUi4'
+import { CryptoIconUi4 } from '../../ui4/CryptoIconUi4'
 
 interface Props extends EdgeSceneProps<'loanDetails'> {
   loanAccount: LoanAccount
@@ -77,17 +78,21 @@ export const LoanDetailsSceneComponent = (props: Props) => {
   const [runningProgramMessage, setRunningProgramMessage] = React.useState<string | undefined>(undefined)
   const isActionProgramRunning = runningProgramMessage != null
 
-  useAsyncEffect(async () => {
-    if (runningActionQueueItem != null) {
-      const displayInfo: ActionDisplayInfo = await getActionProgramDisplayInfo(account, runningActionQueueItem.program, runningActionQueueItem.state)
-      const activeStep = displayInfo.steps.find(step => step.status === 'active')
-      setRunningProgramMessage(activeStep != null ? activeStep.title : undefined)
-    } else {
-      setRunningProgramMessage(undefined)
-    }
+  useAsyncEffect(
+    async () => {
+      if (runningActionQueueItem != null) {
+        const displayInfo: ActionDisplayInfo = await getActionProgramDisplayInfo(account, runningActionQueueItem.program, runningActionQueueItem.state)
+        const activeStep = displayInfo.steps.find(step => step.status === 'active')
+        setRunningProgramMessage(activeStep != null ? activeStep.title : undefined)
+      } else {
+        setRunningProgramMessage(undefined)
+      }
 
-    return () => {}
-  }, [account, runningActionQueueItem])
+      return () => {}
+    },
+    [account, runningActionQueueItem],
+    'LoanDetailsSceneComponent'
+  )
 
   const summaryDetails = [
     { label: lstrings.loan_collateral_value, value: displayFiatTotal(wallet, collateralTotal) },
@@ -108,14 +113,14 @@ export const LoanDetailsSceneComponent = (props: Props) => {
     if (runningProgramMessage != null && runningProgramEdge != null) {
       return (
         <TouchableOpacity onPress={() => handleProgramStatusCardPress(runningProgramEdge)}>
-          <Card marginRem={[0, 0, 1]}>
+          <CardUi4 marginRem={[0, 0, 1]}>
             <Space sideways>
               <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
               <EdgeText style={styles.programStatusText} numberOfLines={2}>
                 {runningProgramMessage}
               </EdgeText>
             </Space>
-          </Card>
+          </CardUi4>
         </TouchableOpacity>
       )
     } else return null
@@ -220,7 +225,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         underline
         withTopMargin
       />
-      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
+      <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         <Space around={1} top={1.5}>
           {renderProgramStatusCard()}
           <LoanDetailsSummaryCard
@@ -239,10 +244,10 @@ export const LoanDetailsSceneComponent = (props: Props) => {
             if (zeroString(debt.nativeAmount)) return null
             const aprText = sprintf(lstrings.loan_apr_s, toPercentString(debt.apr))
             return (
-              <Card key={debt.tokenId} marginRem={[0, 0, 1]}>
+              <CardUi4 key={debt.tokenId} marginRem={[0, 0, 1]}>
                 <Space sideways>
                   <Space right={1}>
-                    <CryptoIcon hideSecondary pluginId={pluginId} tokenId={debt.tokenId} />
+                    <CryptoIconUi4 hideSecondary pluginId={pluginId} tokenId={debt.tokenId} />
                   </Space>
                   <Space>
                     <EdgeText style={styles.breakdownText}>
@@ -251,7 +256,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
                     <EdgeText style={styles.breakdownSubText}>{aprText}</EdgeText>
                   </Space>
                 </Space>
-              </Card>
+              </CardUi4>
             )
           })}
         </Space>
@@ -304,7 +309,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const LoanDetailsScene = withLoanAccount(LoanDetailsSceneComponent)
 
-export const useFiatTotal = (wallet: EdgeCurrencyWallet, tokenAmounts: Array<{ tokenId?: string; nativeAmount: string }>): string => {
+export const useFiatTotal = (wallet: EdgeCurrencyWallet, tokenAmounts: Array<{ tokenId: EdgeTokenId; nativeAmount: string }>): string => {
   const exchangeRates = useSelector(state => state.exchangeRates)
 
   return tokenAmounts.reduce((sum, tokenAmount) => {
@@ -320,7 +325,7 @@ export const displayFiatTotal = (wallet: EdgeCurrencyWallet, fiatAmount: string)
   return `${fiatSymbol}${formatFiatString({ autoPrecision: true, fiatAmount })}`
 }
 
-export const calculateFiatAmount = (wallet: EdgeCurrencyWallet, exchangeRates: GuiExchangeRates, tokenId: string | undefined, nativeAmount: string): string => {
+export const calculateFiatAmount = (wallet: EdgeCurrencyWallet, exchangeRates: GuiExchangeRates, tokenId: EdgeTokenId, nativeAmount: string): string => {
   if (tokenId == null) return '0' // TODO: Support wrapped native token
 
   const token = getToken(wallet, tokenId)

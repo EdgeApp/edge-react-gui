@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeParsedUri, EdgeTokenId } from 'edge-core-js'
 
 import { launchPriceChangeBuySellSwapModal } from '../components/modals/PriceChangeBuySellSwapModal'
 import { pickWallet } from '../components/modals/WalletListModal'
@@ -9,8 +9,7 @@ import { executePlugin } from '../plugins/gui/fiatPlugin'
 import { DeepLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { EdgeTokenId } from '../types/types'
-import { getTokenId } from '../util/CurrencyInfoHelpers'
+import { EdgeAsset } from '../types/types'
 import { base58ToUuid } from '../util/utils'
 import { activatePromotion } from './AccountReferralActions'
 import { launchPaymentProto } from './PaymentProtoActions'
@@ -62,7 +61,7 @@ export function retryPendingDeepLink(navigation: NavigationBase): ThunkAction<vo
  * Launches a link if it app is able to do so.
  */
 export async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootState, link: DeepLink): Promise<boolean> {
-  const { account } = state.core
+  const { account, disklet } = state.core
   const { accountReferral } = state.account
   const { activeWalletIds, currencyWallets } = account
   const deviceId = base58ToUuid(state.core.context.clientId)
@@ -124,6 +123,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
         accountReferral,
         deviceId,
         disablePlugins: disableProviders,
+        disklet,
         guiPlugin: plugin,
         direction,
         regionCode: { countryCode: state.ui.settings.countryCode },
@@ -154,8 +154,8 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
 
     case 'azteco': {
       if (!allWalletsLoaded) return false
-      const result = await pickWallet({ account, assets: [{ pluginId: 'bitcoin' }], navigation, showCreateWallet: true })
-      if (result == null) {
+      const result = await pickWallet({ account, assets: [{ pluginId: 'bitcoin', tokenId: null }], navigation, showCreateWallet: true })
+      if (result?.type !== 'wallet') {
         // pickWallet returning undefined means user has no matching wallet.
         // This should never happen. Even if the user doesn't have a bitcoin wallet, they will be presented with
         // the option to create one.
@@ -189,21 +189,14 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     }
 
     case 'other': {
-      const matchingWalletIdsAndUris: Array<{ walletId: string; parsedUri: EdgeParsedUri; currencyCode?: string; tokenId?: string }> = []
+      const matchingWalletIdsAndUris: Array<{ walletId: string; parsedUri: EdgeParsedUri; currencyCode?: string; tokenId: EdgeTokenId }> = []
 
       // Try to parse with all wallets
       for (const wallet of Object.values(currencyWallets)) {
         const parsedUri = await wallet.parseUri(link.uri).catch(e => undefined)
         if (parsedUri != null) {
-          if (parsedUri.currencyCode != null && parsedUri.currencyCode !== wallet.currencyInfo.currencyCode) {
-            // Check if the user has this token enabled
-            const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, parsedUri.currencyCode)
-            if (tokenId != null) {
-              matchingWalletIdsAndUris.push({ currencyCode: parsedUri.currencyCode, walletId: wallet.id, parsedUri, tokenId })
-            }
-          } else {
-            matchingWalletIdsAndUris.push({ currencyCode: parsedUri.currencyCode, walletId: wallet.id, parsedUri })
-          }
+          const { tokenId = null } = parsedUri
+          matchingWalletIdsAndUris.push({ currencyCode: parsedUri.currencyCode, walletId: wallet.id, parsedUri, tokenId })
         }
       }
 
@@ -221,11 +214,10 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       }
 
       const allowedWalletIds = matchingWalletIdsAndUris.map(wid => wid.walletId)
-      const assets: EdgeTokenId[] = matchingWalletIdsAndUris.map(({ currencyCode: cc, tokenId, walletId }) => {
+      const assets: EdgeAsset[] = matchingWalletIdsAndUris.map(({ currencyCode: cc, tokenId, walletId }) => {
         const wallet = currencyWallets[walletId]
         const { pluginId } = wallet.currencyInfo
 
-        if (cc == null) return { pluginId }
         return { pluginId, tokenId }
       })
       const walletListResult = await pickWallet({ account, allowedWalletIds, assets, navigation })
@@ -235,7 +227,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       }
 
       // User backed out of choosing a wallet
-      if (walletListResult.walletId == null) return true
+      if (walletListResult.type !== 'wallet') return true
       const widUri = matchingWalletIdsAndUris.find(({ walletId }) => walletId === walletListResult.walletId)
 
       if (widUri == null) {
@@ -260,7 +252,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
 }
 
 async function launchAzteco(navigation: NavigationBase, edgeWallet: EdgeCurrencyWallet, uri: string): Promise<void> {
-  const address = await edgeWallet.getReceiveAddress()
+  const address = await edgeWallet.getReceiveAddress({ tokenId: null })
   const response = await fetch(`${uri}${address.publicAddress}`)
   if (response.ok) {
     showToast(lstrings.azteco_success)
@@ -269,5 +261,5 @@ async function launchAzteco(navigation: NavigationBase, edgeWallet: EdgeCurrency
   } else {
     showError(lstrings.azteco_service_unavailable)
   }
-  navigation.navigate('walletsTab', { screen: 'walletList' })
+  navigation.navigate('homeTab', { screen: 'home' })
 }

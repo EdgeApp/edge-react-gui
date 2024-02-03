@@ -46,7 +46,6 @@ describe('TransactionListRow', () => {
         <TransactionListRow
           navigation={fakeNavigation}
           wallet={fakeWallet}
-          currencyCode="BTC"
           transaction={{
             blockHeight: 10,
             currencyCode: 'BTC',
@@ -57,6 +56,7 @@ describe('TransactionListRow', () => {
             networkFee: '100000',
             ourReceiveAddresses: [],
             signedTx: '0x12897491827459823745',
+            tokenId: null,
             txid: '0x182748768724897ef897234',
             walletId: 'lmnop'
           }}

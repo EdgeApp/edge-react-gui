@@ -16,7 +16,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { allPlugins } from '../../util/corePlugins'
 import { fakeUser } from '../../util/fake-user'
-import { LoadingScene } from '../scenes/LoadingScene'
+import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
 import { showError } from './AirshipInstance'
 import { Providers } from './Providers'
 
@@ -77,10 +77,14 @@ export function EdgeCoreManager(props: Props) {
   const isAppForeground = useIsAppForeground()
 
   // Keep the core in sync with the application state:
-  useAsyncEffect(async () => {
-    if (context == null) return
-    await context.changePaused(!isAppForeground, { secondsDelay: !isAppForeground ? 20 : 0 })
-  }, [context, isAppForeground])
+  useAsyncEffect(
+    async () => {
+      if (context == null) return
+      await context.changePaused(!isAppForeground, { secondsDelay: !isAppForeground ? 20 : 0 })
+    },
+    [context, isAppForeground],
+    'EdgeCoreManager'
+  )
 
   function hideSplash() {
     if (!splashHidden.current) {
@@ -156,7 +160,7 @@ export function EdgeCoreManager(props: Props) {
           syncServer={syncServer}
         />
       )}
-      {context == null ? <LoadingScene /> : <Providers key={`redux${counter.current}`} context={context} />}
+      {context == null ? <LoadingSplashScreen /> : <Providers key={`redux${counter.current}`} context={context} />}
     </>
   )
 }

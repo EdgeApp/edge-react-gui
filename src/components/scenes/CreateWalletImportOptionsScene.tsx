@@ -1,8 +1,9 @@
-import { FlashList } from '@shopify/flash-list'
 import * as React from 'react'
 import { Linking, TouchableOpacity, View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ImportKeyOption, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -10,7 +11,6 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -19,7 +19,8 @@ import { MainButton } from '../themed/MainButton'
 import { ModalMessage } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
 import { WalletCreateItem } from '../themed/WalletList'
-import { Tile } from '../tiles/Tile'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
+import { RowUi4 } from '../ui4/RowUi4'
 
 export interface CreateWalletImportOptionsParams {
   createWalletList: WalletCreateItem[]
@@ -145,7 +146,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
     return (
       <View style={styles.optionContainer}>
         <View style={styles.optionHeader}>
-          <CryptoIcon sizeRem={1.25} pluginId={pluginId} />
+          <CryptoIconUi4 sizeRem={1.25} pluginId={pluginId} tokenId={null} />
           <EdgeText style={styles.pluginIdText}>{currencyConfig[pluginId].currencyInfo.displayName}</EdgeText>
         </View>
         {arr.map(opt => {
@@ -157,8 +158,8 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
 
           return (
             <View key={key} style={styles.optionInput}>
-              <Tile
-                type="editable"
+              <RowUi4
+                rightButtonType="editable"
                 title={opt.displayName}
                 maximumHeight="large"
                 onPress={async () => await handleEditValue(value, pluginId, opt)}
@@ -182,7 +183,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
                     {lstrings.fragment_required}
                   </EdgeText>
                 </View>
-              </Tile>
+              </RowUi4>
             </View>
           )
         })}
@@ -211,17 +212,17 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
   const keyExtractor = useHandler((item: [string, Set<ImportKeyOption>]) => item[0])
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper>
       <SceneHeader title={lstrings.create_wallet_import_options_title} withTopMargin />
       <View style={styles.content}>
-        <FlashList
+        <FlatList
           automaticallyAdjustContentInsets={false}
           data={[...importOpts.entries()]}
-          estimatedItemSize={(importOpts.size * theme.rem(1.375) + values.size * theme.rem(4.25)) / (importOpts.size + values.size)}
           extraData={values}
           keyboardShouldPersistTaps="handled"
           keyExtractor={keyExtractor}
           renderItem={renderOptions}
+          scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
         <MainButton
           disabled={disableNextButton}

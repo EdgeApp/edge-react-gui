@@ -2,6 +2,7 @@ import { abs, div, lt, toFixed } from 'biggystring'
 
 import { getSymbolFromCurrency, USD_FIAT } from '../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../locales/intl'
+import { lstrings } from '../locales/strings'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { useSelector } from '../types/reactRedux'
 import { toBigNumberString } from '../util/toBigNumberString'
@@ -21,6 +22,7 @@ interface Props {
   nativeCryptoAmount?: string
   noGrouping?: boolean
   subCentTruncation?: boolean
+  hideBalance?: boolean
 }
 
 export const useFiatText = (props: Props): string => {
@@ -36,7 +38,8 @@ export const useFiatText = (props: Props): string => {
     minPrecision,
     nativeCryptoAmount = cryptoExchangeMultiplier,
     noGrouping,
-    subCentTruncation
+    subCentTruncation,
+    hideBalance = false
   } = props
 
   // Convert native to fiat amount.
@@ -50,19 +53,20 @@ export const useFiatText = (props: Props): string => {
   const isSubCentTruncationActive = subCentTruncation && lt(abs(fiatAmount), '0.01')
 
   // Convert the amount to an internationalized string or '0'
-  const fiatString =
-    autoPrecision || !zeroString(fiatAmount)
-      ? formatFiatString({
-          fiatAmount: isSubCentTruncationActive ? '0.01' : fiatAmount,
-          autoPrecision,
-          minPrecision,
-          maxPrecision: isSubCentTruncationActive ? 2 : maxPrecision,
-          noGrouping
-        })
-      : '0'
+  const fiatString = hideBalance
+    ? lstrings.redacted_placeholder
+    : autoPrecision || !zeroString(fiatAmount)
+    ? formatFiatString({
+        fiatAmount: isSubCentTruncationActive ? '0.01' : fiatAmount,
+        autoPrecision,
+        minPrecision,
+        maxPrecision: isSubCentTruncationActive ? 2 : maxPrecision,
+        noGrouping
+      })
+    : '0'
 
   const lessThanSymbol = isSubCentTruncationActive ? '<' : ''
-  const fiatSymbol = hideFiatSymbol ? '' : `${getSymbolFromCurrency(isoFiatCurrencyCode)}${fiatSymbolSpace ? ' ' : ''}`
+  const fiatSymbol = hideFiatSymbol ? '' : `${getSymbolFromCurrency(isoFiatCurrencyCode)}${fiatSymbolSpace || hideBalance ? ' ' : ''}`
   const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
   return `${lessThanSymbol}${fiatSymbol}${fiatString}${fiatCurrencyCode}`
 }

@@ -1,14 +1,14 @@
 import * as React from 'react'
-import { Platform, View } from 'react-native'
+import { Platform } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalMessage } from '../themed/ModalParts'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
   // Resolves to the entered string, or void if cancelled.
@@ -90,38 +90,41 @@ export function TextInputModal(props: Props) {
     )
   }
 
+  const isAndroid = Platform.OS === 'android'
+  // TODO: Address this in ButtonsViewUi4
+  const androidButtonMargin = isAndroid ? [0.5, 0.5, 2, 0.5] : 0.5
+
   return (
-    <ThemedModal warning={warning} bridge={bridge} onCancel={() => bridge.resolve(undefined)}>
-      {title != null ? <ModalTitle>{title}</ModalTitle> : null}
+    <ModalUi4 warning={warning} bridge={bridge} title={title} onCancel={() => bridge.resolve(undefined)}>
       {typeof message === 'string' ? <ModalMessage>{message}</ModalMessage> : <>{message}</>}
       {warningMessage != null ? <Alert type="warning" title={lstrings.string_warning} marginRem={0.5} message={warningMessage} numberOfLines={0} /> : null}
-      <OutlinedTextInput
+      <FilledTextInput
+        top={1}
+        horizontal={0.5}
+        bottom={1.5}
+        expand
         // Text input props:
         autoCapitalize={autoCapitalize}
         autoFocus={autoFocus}
         autoCorrect={autoCorrect}
         keyboardType={keyboardType}
-        label={inputLabel}
+        placeholder={inputLabel}
         returnKeyType={returnKeyType}
         secureTextEntry={secureTextEntry}
         multiline={multiline}
         // Our props:
         error={errorMessage}
-        marginRem={[1, 0.5, 1.5, 0.5]}
         onChangeText={handleChangeText}
         onSubmitEditing={handleSubmit}
         value={text}
         maxLength={maxLength}
       />
-      {
-        // Hack around the android:windowSoftInputMode="adjustPan" glitch:
-        Platform.OS === 'android' ? <View style={{ flex: 2 }} /> : null
-      }
+      {/* TODO: Style ButtonsViewUi4 for Modals */}
       {spinning ? (
-        <MainButton alignSelf="center" disabled marginRem={0.5} type="secondary" spinner />
+        <MainButton disabled marginRem={androidButtonMargin} type="primary" spinner />
       ) : (
-        <MainButton alignSelf="center" label={submitLabel} marginRem={0.5} onPress={handleSubmit} type="secondary" />
+        <MainButton label={submitLabel} marginRem={androidButtonMargin} onPress={handleSubmit} type="primary" />
       )}
-    </ThemedModal>
+    </ModalUi4>
   )
 }

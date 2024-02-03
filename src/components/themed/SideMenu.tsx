@@ -1,5 +1,4 @@
 /* eslint-disable react-native/no-raw-text */
-
 import { DrawerContentComponentProps, useDrawerStatus } from '@react-navigation/drawer'
 import { DrawerActions } from '@react-navigation/native'
 import { EdgeAccount, EdgeUserInfo } from 'edge-core-js'
@@ -20,6 +19,7 @@ import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import { executePluginAction } from '../../actions/PluginActions'
 import { Fontello } from '../../assets/vector'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ENV } from '../../env'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -29,10 +29,9 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
-import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
-import { LoadingScene } from '../scenes/LoadingScene'
+import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { TitleText } from '../text/TitleText'
@@ -125,7 +124,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
         title={lstrings.scan_qr_label}
         textModalAutoFocus={false}
         textModalBody={
-          <ScrollView>
+          <ScrollView scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
             <ModalTitle>{lstrings.enter_any_title}</ModalTitle>
             <ModalMessage>{lstrings.enter_any_body}</ModalMessage>
           </ScrollView>
@@ -140,6 +139,10 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
         }
       })
       .catch(err => showError(err))
+  }
+
+  const handleMarketsPress = () => {
+    navigation.navigate('coinRanking', {})
   }
 
   const handleShareApp = () => {
@@ -233,6 +236,11 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
       iconName: 'control-panel-scan-qr',
       title: lstrings.drawer_scan_qr_send
     },
+    {
+      pressHandler: () => handleMarketsPress(),
+      iconNameFontAwesome: 'chart-line',
+      title: lstrings.title_markets
+    },
     ...(ENV.BETA_FEATURES ? [{ pressHandler: handleBorrow, iconName: 'control-panel-borrow', title: lstrings.drawer_borrow_dollars }] : []),
     { pressHandler: handleShareApp, iconName: 'control-panel-share', title: lstrings.string_share + ' ' + config.appName },
     {
@@ -274,7 +282,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
   const xButtonBottomColor = theme.modal
 
   return (
-    <SceneWrapper hasHeader={false} hasTabs background="none">
+    <View style={{ flex: 1, paddingTop: insets.top }}>
       {/* ==== Top Panel Start ==== */}
       <View style={styles.topPanel}>
         <Image style={styles.logoImage} source={theme.primaryLogo} resizeMode="contain" />
@@ -300,7 +308,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
       <View style={styles.bottomPanel} onLayout={handleBottomPanelLayout}>
         {/* === Dropdown Start === */}
         <Animated.View style={[styles.dropContainer, aBorderBottomRightRadius, aDropdown]}>
-          <ScrollView>
+          <ScrollView scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
             {sortedUsers.map(userInfo => (
               <View key={userInfo.loginId} style={styles.rowContainer}>
                 {/* This empty container is required to align the row contents properly */}
@@ -317,10 +325,10 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
         </Animated.View>
         {/* === Dropdown End === */}
         <Animated.View style={[styles.disable, styles.invisibleTapper, aFade]} pointerEvents="none" />
-        {!isDropped ? null : <Pressable style={styles.invisibleTapper} onPress={handleToggleDropdown} />}
+        <Pressable style={[styles.invisibleTapper, { zIndex: isDropped ? 1 : 0 }]} onPress={handleToggleDropdown} />
         {/* === Navigation Rows Start === */}
         <View style={styles.rowsContainer}>
-          <ScrollView overScrollMode="always">
+          <ScrollView overScrollMode="always" scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
             {rowDatas.map(rowData => (
               <TouchableOpacity accessible={false} onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
                 <View style={styles.rowIconContainer}>
@@ -352,7 +360,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
         {/* === Translucent X Close Button End === */}
       </View>
       {/* ==== Bottom Panel End ==== */}
-    </SceneWrapper>
+    </View>
   )
 }
 
@@ -403,7 +411,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     bottom: 0,
     height: theme.rem(3),
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderBottomLeftRadius: theme.rem(1)
   },
   bottomPanel: {
     flex: 1,
@@ -487,5 +496,5 @@ export function SideMenu(props: DrawerContentComponentProps) {
     if (!loggedIn) navigation.navigate('login')
   }, [loggedIn, navigation])
 
-  return loggedIn ? <SideMenuComponent {...props} /> : <LoadingScene />
+  return loggedIn ? <SideMenuComponent {...props} /> : <LoadingSplashScreen />
 }

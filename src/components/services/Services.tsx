@@ -1,22 +1,26 @@
 import { asDate, asJSON, asObject, uncleaner } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
+import { isMaestro } from 'react-native-is-maestro'
 
 import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
+import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { registerNotificationsV2 } from '../../actions/NotificationActions'
-import { checkCompromisedKeys } from '../../actions/WalletActions'
+import { checkCompromisedKeys, updateWalletsRequest } from '../../actions/WalletActions'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useRefresher } from '../../hooks/useRefresher'
 import { makeStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { defaultAccount } from '../../reducers/CoreReducer'
+import { FooterAccordionEventService } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { height, ratioHorizontal, ratioVertical, width } from '../../util/scaling'
 import { updateAssetOverrides } from '../../util/serverState'
 import { snooze } from '../../util/utils'
 import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
+import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { AccountCallbackManager } from './AccountCallbackManager'
 import { ActionQueueService } from './ActionQueueService'
 import { Airship } from './AirshipInstance'
@@ -53,6 +57,7 @@ const asFioCreateHandleRecord = asJSON(
 export function Services(props: Props) {
   const dispatch = useDispatch()
   const account = useSelector(state => (state.core.account !== defaultAccount ? state.core.account : undefined))
+  const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
   const { navigation } = props
 
   // Show FIO handle modal for new accounts or existing accounts without a FIO wallet:
@@ -85,11 +90,14 @@ export function Services(props: Props) {
   // Methods to call immediately after login:
   useAsyncEffect(
     async () => {
-      if (account != null) {
+      // Show the password reminder on mount if required:
+      if (needsPasswordCheck && !isMaestro()) {
+        await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation} />)
+      } else if (account != null) {
         await maybeShowFioHandleModal(account)
       }
     },
-    [account, maybeShowFioHandleModal],
+    [account, maybeShowFioHandleModal, needsPasswordCheck],
     'Services 1'
   )
 
@@ -102,6 +110,9 @@ export function Services(props: Props) {
       dispatch(registerNotificationsV2()).catch(e => {
         console.warn('registerNotificationsV2 error:', e)
       })
+
+      await dispatch(updateWalletsRequest()).catch(err => console.warn(err))
+      await dispatch(refreshAllFioAddresses()).catch(err => console.warn(err))
 
       // HACK: The balances object isn't full when the above promise resolves so we need to wait a few seconds before proceeding
       await snooze(5000)
@@ -142,6 +153,7 @@ export function Services(props: Props) {
       {account == null ? null : <WalletConnectService account={account} />}
       <WalletLifecycle />
       <WipeLogsService />
+      <FooterAccordionEventService />
     </>
   )
 }

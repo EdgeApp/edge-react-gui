@@ -1,6 +1,6 @@
 import * as NavigationCore from '@react-navigation/core'
 import { StackActionHelpers } from '@react-navigation/native'
-import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, JsonObject, OtpError } from 'edge-core-js'
+import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTokenId, JsonObject, OtpError } from 'edge-core-js'
 import { InitialRouteName } from 'edge-login-ui-rn'
 
 import { CoinRankingDetailsParams } from '../components/scenes/CoinRankingDetailsScene'
@@ -34,7 +34,7 @@ import { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWeb
 import { RewardsCardDashboardParams } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
-import { CreateWalletType, FeeOption, FioConnectionWalletItem, FioDomain, FioRequest, GuiMakeSpendInfo } from './types'
+import { CreateWalletType, FeeOption, FioConnectionWalletItem, FioDomain, FioRequest } from './types'
 
 /**
  * Defines the acceptable route parameters for each scene key.
@@ -51,11 +51,13 @@ export interface RouteParamList {
   gettingStarted: {}
 
   // Tabs
+  homeTab: {}
   walletsTab: {}
   buyTab: {}
   sellTab: {}
   exchangeTab: {}
-  marketsTab: {}
+  extraTab: undefined
+  devTab: undefined
 
   // Gui Plugins
   guiPluginEnterAmount: FiatPluginEnterAmountParams
@@ -68,12 +70,6 @@ export interface RouteParamList {
 
   // Logged-in scenes:
   assetSettings: {}
-  changeMiningFee: {
-    guiMakeSpendInfo: GuiMakeSpendInfo
-    maxSpendSet: boolean
-    onSubmit: (networkFeeOption: FeeOption, customNetworkFee: JsonObject) => void
-    wallet: EdgeCurrencyWallet
-  }
   changeMiningFee2: {
     spendInfo: EdgeSpendInfo
     maxSpendSet: boolean
@@ -117,7 +113,7 @@ export interface RouteParamList {
     displayName?: string
     multiplier?: string
     networkLocation?: JsonObject
-    tokenId?: string // Acts like "add token" if this is missing
+    tokenId?: EdgeTokenId // Acts like "add token" if this is missing
     walletId: string
   }
   exchange: {}
@@ -125,7 +121,6 @@ export interface RouteParamList {
   exchangeQuoteProcessing: ExchangeQuoteProcessingParams
   exchangeSettings: {}
   exchangeSuccess: {}
-  extraTab: undefined
   fioCreateHandle: FioCreateHandleParams
   fioAddressDetails: {
     fioAddressName: string
@@ -190,13 +185,14 @@ export interface RouteParamList {
   }
   fioStakingChange: {
     change: 'add' | 'remove'
-    currencyCode: string
+    tokenId: EdgeTokenId
     walletId: string
   }
   fioStakingOverview: {
-    currencyCode: string
+    tokenId: EdgeTokenId
     walletId: string
   }
+  home: {}
   loanDashboard: {}
   loanDetails: {
     loanAccountId: string
@@ -208,12 +204,12 @@ export interface RouteParamList {
   loanCreateConfirmation: {
     borrowEngine: BorrowEngine
     borrowPlugin: BorrowPlugin
-    destTokenId: string
+    destTokenId: EdgeTokenId
     destWallet: EdgeCurrencyWallet
     nativeDestAmount: string
     nativeSrcAmount: string
     paymentMethod?: PaymentMethod
-    srcTokenId?: string
+    srcTokenId: EdgeTokenId
     srcWallet: EdgeCurrencyWallet
   }
   loanClose: {

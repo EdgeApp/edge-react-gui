@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 import { Space } from '../../components/layout/Space'
 import { showError } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
-import { EdgeTokenId } from '../../types/types'
+import { EdgeAsset } from '../../types/types'
 import { logActivity } from '../../util/logger'
 import { runWithTimeout, snooze } from '../../util/utils'
 import { openBrowserUri } from '../../util/WebUtils'
@@ -46,7 +46,9 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
   // Get supported crypto assets:
   const supportedAssetMap = await provider.getSupportedAssets({ direction: 'sell', paymentTypes: [], regionCode: { countryCode: 'US' } })
-  const allowedAssets: EdgeTokenId[] = Object.keys(supportedAssetMap.crypto).map(pluginId => ({ pluginId }))
+
+  // Only supporting mainnet currencies for now
+  const allowedAssets: EdgeAsset[] = Object.keys(supportedAssetMap.crypto).map(pluginId => ({ pluginId, tokenId: null }))
 
   //
   // Helpers:
@@ -136,7 +138,6 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
 
   const showNewCardEnterAmount = async (walletListResult: FiatPluginWalletPickerResult) => {
     const { walletId, currencyCode, tokenId } = walletListResult
-    if (walletId == null || currencyCode == null) return
 
     const wallet = account.currencyWallets[walletId]
     if (wallet == null) return await showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
@@ -230,12 +231,12 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
   }
 
   const showNewCardWalletListModal = async () => {
-    const walletListResult: FiatPluginWalletPickerResult = await showUi.walletPicker({
+    const result = await showUi.walletPicker({
       headerTitle: lstrings.select_wallet_to_purchase_card_title,
       allowedAssets,
       showCreateWallet: false
     })
-    await showNewCardEnterAmount(walletListResult)
+    if (result != null) await showNewCardEnterAmount(result)
   }
 
   const showWelcome = async () => {

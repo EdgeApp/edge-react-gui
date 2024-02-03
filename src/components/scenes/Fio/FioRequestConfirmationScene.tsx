@@ -10,7 +10,8 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../../select
 import { getExchangeRate, getSelectedCurrencyWallet } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
-import { emptyCurrencyInfo, GuiCurrencyInfo, GuiDenomination } from '../../../types/types'
+import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../../types/types'
+import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import {
   addToFioAddressCache,
   checkPubAddress,
@@ -19,22 +20,23 @@ import {
   fioSignAndBroadcast,
   getRemainingBundles
 } from '../../../util/FioAddressUtils'
-import { DECIMAL_PRECISION, getDenomFromIsoCode } from '../../../util/utils'
+import { DECIMAL_PRECISION } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { AddressModal } from '../../modals/AddressModal'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
+import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
-import { Tile } from '../../tiles/Tile'
+import { CardUi4 } from '../../ui4/CardUi4'
+import { RowUi4 } from '../../ui4/RowUi4'
 
 interface StateProps {
   exchangeSecondaryToPrimaryRatio: string
   edgeWallet: EdgeCurrencyWallet
   chainCode: string
   primaryCurrencyInfo: GuiCurrencyInfo
-  secondaryCurrencyInfo: GuiCurrencyInfo
   fioWallets: EdgeCurrencyWallet[]
   account: EdgeAccount
   isConnected: boolean
@@ -115,7 +117,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     const { amounts } = route.params
     const { walletAddresses, fioAddressFrom } = this.state
     const walletAddress = walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)
-    const { publicAddress } = await edgeWallet.getReceiveAddress()
+    const { publicAddress } = await edgeWallet.getReceiveAddress({ tokenId: null })
 
     if (walletAddress && fioPlugin) {
       const { fioWallet } = walletAddress
@@ -278,12 +280,12 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   render() {
-    const { primaryCurrencyInfo, secondaryCurrencyInfo, theme, exchangeSecondaryToPrimaryRatio, route } = this.props
+    const { edgeWallet, exchangeSecondaryToPrimaryRatio, primaryCurrencyInfo, route, theme } = this.props
     const { amounts } = route.params
 
     const { fioAddressFrom, fioAddressTo, loading, memo, settingFioAddressTo, showSlider } = this.state
 
-    if (!primaryCurrencyInfo || !secondaryCurrencyInfo) return null
+    if (!primaryCurrencyInfo) return null
     let cryptoAmount, exchangeAmount
     try {
       cryptoAmount = div(amounts.nativeAmount, primaryCurrencyInfo.displayDenomination.multiplier, DECIMAL_PRECISION)
@@ -296,23 +298,28 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
     const fiatAmount = formatNumber(mul(exchangeSecondaryToPrimaryRatio, exchangeAmount), { toFixed: 2 }) || '0'
     const cryptoName = primaryCurrencyInfo.displayDenomination.name
-    const fiatName = secondaryCurrencyInfo.displayDenomination.name
+    const fiatName = edgeWallet.fiatCurrencyCode.replace('iso:', '')
 
     return (
-      <SceneWrapper background="theme">
-        <Tile type="editable" title={lstrings.fio_confirm_request_from} body={fioAddressFrom} onPress={this.onAddressFromPressed} />
-        <Tile
-          type="editable"
-          title={lstrings.fio_confirm_request_to}
-          body={settingFioAddressTo ? lstrings.resolving : fioAddressTo}
-          onPress={this.onAddressToPressed}
-        />
-        <Tile type="static" title={lstrings.fio_confirm_request_amount} body={`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`} />
-        <Tile type="editable" title={lstrings.fio_confirm_request_memo} body={memo} onPress={this.onMemoPressed} />
-        <View style={styles.sliderContainer}>
-          {fioAddressFrom.length > 0 && fioAddressTo.length > 0 && showSlider ? (
-            <Slider onSlidingComplete={this.onConfirm} disabled={loading} showSpinner={loading} disabledText={lstrings.loading} />
-          ) : null}
+      <SceneWrapper scroll>
+        <SceneHeader title={lstrings.fio_confirm_request_header} underline withTopMargin />
+        <View style={styles.container}>
+          <CardUi4 sections>
+            <RowUi4 rightButtonType="editable" title={lstrings.fio_confirm_request_from} body={fioAddressFrom} onPress={this.onAddressFromPressed} />
+            <RowUi4
+              rightButtonType="editable"
+              title={lstrings.fio_confirm_request_to}
+              body={settingFioAddressTo ? lstrings.resolving : fioAddressTo}
+              onPress={this.onAddressToPressed}
+            />
+            <RowUi4 title={lstrings.fio_confirm_request_amount} body={`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`} />
+            <RowUi4 maximumHeight="large" rightButtonType="editable" title={lstrings.fio_confirm_request_memo} body={memo} onPress={this.onMemoPressed} />
+          </CardUi4>
+          <View style={styles.sliderContainer}>
+            {fioAddressFrom.length > 0 && fioAddressTo.length > 0 && showSlider ? (
+              <Slider onSlidingComplete={this.onConfirm} disabled={loading} showSpinner={loading} disabledText={lstrings.loading} />
+            ) : null}
+          </View>
         </View>
       </SceneWrapper>
     )
@@ -320,6 +327,9 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    padding: theme.rem(0.5)
+  },
   sliderContainer: {
     marginTop: theme.rem(2)
   }
@@ -338,7 +348,6 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
         exchangeSecondaryToPrimaryRatio: '0',
         chainCode: '',
         primaryCurrencyInfo: emptyCurrencyInfo,
-        secondaryCurrencyInfo: emptyCurrencyInfo,
         edgeWallet: selectedWallet,
         fioWallets,
         account,
@@ -350,26 +359,17 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
       }
     }
 
-    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, selectedWallet.currencyInfo.pluginId, currencyCode)
-    const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, selectedWallet.currencyInfo.pluginId, currencyCode)
-    const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(selectedWallet.fiatCurrencyCode.replace('iso:', ''))
-    const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
+    const primaryDisplayDenomination = getDisplayDenomination(state, selectedWallet.currencyInfo.pluginId, currencyCode)
+    const primaryExchangeDenomination = getExchangeDenomination(state, selectedWallet.currencyInfo.pluginId, currencyCode)
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
-    const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
 
     const primaryCurrencyInfo: GuiCurrencyInfo = {
       walletId: state.ui.wallets.selectedWalletId,
+      tokenId: getTokenIdForced(account, selectedWallet.currencyInfo.pluginId, currencyCode),
       displayCurrencyCode: currencyCode,
       displayDenomination: primaryDisplayDenomination,
       exchangeCurrencyCode: primaryExchangeCurrencyCode,
       exchangeDenomination: primaryExchangeDenomination
-    }
-    const secondaryCurrencyInfo: GuiCurrencyInfo = {
-      walletId: state.ui.wallets.selectedWalletId,
-      displayCurrencyCode: selectedWallet.fiatCurrencyCode.replace('iso:', ''),
-      displayDenomination: secondaryDisplayDenomination,
-      exchangeCurrencyCode: secondaryExchangeCurrencyCode,
-      exchangeDenomination: secondaryExchangeDenomination
     }
     const isoFiatCurrencyCode: string = selectedWallet.fiatCurrencyCode
     const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
@@ -379,7 +379,6 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
       edgeWallet: selectedWallet,
       chainCode: selectedWallet.currencyInfo.currencyCode,
       primaryCurrencyInfo,
-      secondaryCurrencyInfo,
       fioWallets,
       account,
       isConnected,

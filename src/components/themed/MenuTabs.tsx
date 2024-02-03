@@ -1,46 +1,64 @@
-import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
+import { BottomTabBarProps, BottomTabNavigationEventMap } from '@react-navigation/bottom-tabs'
+import { NavigationHelpers, ParamListBase } from '@react-navigation/native'
 import * as React from 'react'
 import { useMemo } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
+import DeviceInfo from 'react-native-device-info'
+import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
 import LinearGradient from 'react-native-linear-gradient'
+import Animated, { interpolate, SharedValue, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import Foundation from 'react-native-vector-icons/Foundation'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
+import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { Fontello } from '../../assets/vector/index'
+import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
+import { useSceneFooterRenderState, useSceneFooterState } from '../../state/SceneFooterState'
 import { config } from '../../theme/appConfig'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { DividerLine } from './DividerLine'
-import { EdgeText } from './EdgeText'
+import { useSelector } from '../../types/reactRedux'
+import { scale } from '../../util/scaling'
+import { styled } from '../hoc/styled'
+import { useTheme } from '../services/ThemeContext'
+import { BlurBackground } from '../ui4/BlurBackground'
 import { VectorIcon } from './VectorIcon'
 
 const extraTabString: LocaleStringKey = config.extraTab?.tabTitleKey ?? 'title_map'
 
+// Include the correct bottom padding to the menu bar for all devices accept for
+// iOS devices with a nav bar (has a notch). This is because iOS devices with a
+// nav-bar and notch include extra space according to the Apple style-guide.
+// react-native-safe-area-context incorrectly applies no extra padding to iPad
+// devices with a notch.
+const MAYBE_BOTTOM_PADDING = Platform.OS === 'ios' && !Platform.isPad && DeviceInfo.hasNotch() ? 0 : scale(16) * 0.75
+
+export const MAX_TAB_BAR_HEIGHT = 58 + MAYBE_BOTTOM_PADDING
+export const MIN_TAB_BAR_HEIGHT = 40 + MAYBE_BOTTOM_PADDING
+
 const title: { readonly [key: string]: string } = {
-  marketsTab: lstrings.title_markets,
-  walletsTab: lstrings.title_wallets,
+  homeTab: lstrings.title_home,
+  walletsTab: lstrings.title_assets,
   buyTab: lstrings.title_buy,
   sellTab: lstrings.title_sell,
   exchangeTab: lstrings.title_exchange,
-  extraTab: lstrings[extraTabString]
+  extraTab: lstrings[extraTabString],
+  devTab: lstrings.title_dev_tab
 }
 
 export const MenuTabs = (props: BottomTabBarProps) => {
   const { navigation, state } = props
   const theme = useTheme()
-  const insets = useSafeAreaInsets()
-  const styles = getStyles(theme)
   const activeTabFullIndex = state.index
-  const colors = theme.tabBarBackground
-  const start = theme.tabBarBackgroundStart
-  const end = theme.tabBarBackgroundEnd
   const routes = useMemo(
     () =>
       state.routes.filter(route => {
         if (config.extraTab == null && route.name === 'extraTab') {
+          return false
+        }
+        if (!ENV.DEV_TAB && route.name === 'devTab') {
           return false
         }
         if (config.disableSwaps === true && route.name === 'exchangeTab') {
@@ -51,74 +69,196 @@ export const MenuTabs = (props: BottomTabBarProps) => {
     [state.routes]
   )
 
+  const tabLabelHeight = theme.rem(1.1)
+
   const activeTabRoute = state.routes[activeTabFullIndex]
   const activeTabIndex = routes.findIndex(route => route.name === activeTabRoute.name)
 
-  const handleOnPress = useHandler((route: string) => {
-    const currentName = routes[activeTabIndex].name
-    switch (route) {
+  const { bottom: insetBottom } = useSafeAreaInsets()
+
+  const footerHeight = useSceneFooterState(state => state.footerHeight)
+  const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
+  const renderFooter = useSceneFooterRenderState(state => state.renderFooter)
+
+  const { height: keyboardHeight, progress: keyboardProgress } = useReanimatedKeyboardAnimation()
+  const menuTabHeightAndInsetBottomTermForShiftY = useDerivedValue(() => keyboardProgress.value * (insetBottom + MAX_TAB_BAR_HEIGHT), [insetBottom])
+  const shiftY = useDerivedValue(() => keyboardHeight.value + menuTabHeightAndInsetBottomTermForShiftY.value)
+
+  return (
+    <Container shiftY={shiftY} pointerEvents="box-none">
+      <Background footerHeight={footerHeight} openRatio={footerOpenRatio} tabLabelHeight={tabLabelHeight} pointerEvents="none">
+        <BlurBackground />
+        <LinearGradient colors={theme.tabBarBackground} start={theme.tabBarBackgroundStart} end={theme.tabBarBackgroundEnd} />
+      </Background>
+      {renderFooter()}
+      <Tabs openRatio={footerOpenRatio} tabLabelHeight={tabLabelHeight}>
+        {routes.map((route, index: number) => (
+          <Tab
+            currentName={routes[activeTabIndex].name}
+            navigation={navigation}
+            key={route.name}
+            route={route}
+            isActive={activeTabIndex === index}
+            footerOpenRatio={footerOpenRatio}
+          />
+        ))}
+      </Tabs>
+    </Container>
+  )
+}
+
+const Container = styled(Animated.View)<{ shiftY: SharedValue<number> }>(() => ({ shiftY }) => [
+  {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'flex-end',
+    overflow: 'visible'
+  },
+  useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateY: shiftY.value
+      }
+    ]
+  }))
+])
+
+const Background = styled(Animated.View)<{ footerHeight: SharedValue<number>; openRatio: SharedValue<number>; tabLabelHeight: number }>(
+  () =>
+    ({ footerHeight: footerHeightRef, openRatio, tabLabelHeight }) => {
+      return [
+        {
+          ...StyleSheet.absoluteFillObject
+        },
+        useAnimatedStyle(() => {
+          const openRatioInverted = interpolate(openRatio.value, [0, 1], [1, 0])
+          const offsetFooterHeight = openRatioInverted * footerHeightRef.value
+          const offsetTabLabelHeight = openRatioInverted * tabLabelHeight
+          return {
+            transform: [
+              {
+                translateY: offsetFooterHeight + offsetTabLabelHeight
+              }
+            ]
+          }
+        })
+      ]
+    }
+)
+
+const Tabs = styled(Animated.View)<{ openRatio: SharedValue<number>; tabLabelHeight: number }>(() => ({ openRatio, tabLabelHeight }) => {
+  return [
+    {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    useAnimatedStyle(() => ({
+      transform: [
+        {
+          translateY: interpolate(openRatio.value, [1, 0], [0, 1]) * tabLabelHeight
+        }
+      ]
+    }))
+  ]
+})
+
+const Tab = ({
+  route,
+  isActive,
+  footerOpenRatio,
+  currentName,
+  navigation
+}: {
+  isActive: boolean
+  currentName: string
+  route: BottomTabBarProps['state']['routes'][number]
+  footerOpenRatio: SharedValue<number>
+  navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>
+}) => {
+  const theme = useTheme()
+  const insets = useSafeAreaInsets()
+  const color = isActive ? theme.tabBarIconHighlighted : theme.tabBarIcon
+
+  const activeUsername = useSelector(state => state.core.account.username)
+  const isLightAccount = activeUsername == null
+
+  const icon: { readonly [key: string]: JSX.Element } = {
+    homeTab: <SimpleLineIcons name="home" size={theme.rem(1.25)} color={color} />,
+    walletsTab: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
+    buyTab: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
+    sellTab: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
+    exchangeTab: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />,
+    extraTab: <VectorIcon font="Feather" name="map-pin" size={theme.rem(1.25)} color={color} />,
+    devTab: <SimpleLineIcons name="wrench" size={theme.rem(1.25)} color={color} />
+  }
+
+  const handleOnPress = useHandler(() => {
+    switch (route.name) {
+      case 'homeTab':
+        return navigation.navigate('home', currentName === 'homeTab' ? { screen: 'home' } : {})
       case 'walletsTab':
         return navigation.navigate('walletsTab', currentName === 'walletsTab' ? { screen: 'walletList' } : {})
       case 'buyTab':
-        return navigation.navigate('buyTab', currentName === 'buyTab' ? { screen: 'pluginListBuy' } : {})
+        if (isLightAccount) {
+          showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+        } else {
+          return navigation.navigate('buyTab', currentName === 'buyTab' ? { screen: 'pluginListBuy' } : {})
+        }
+        break
       case 'sellTab':
         return navigation.navigate('sellTab', currentName === 'sellTab' ? { screen: 'pluginListSell' } : {})
       case 'exchangeTab':
         return navigation.navigate('exchangeTab', currentName === 'exchangeTab' ? { screen: 'exchange' } : {})
-      case 'marketsTab':
-        return navigation.navigate('marketsTab', currentName === 'marketsTab' ? { screen: 'coinRanking' } : {})
       case 'extraTab':
         return navigation.navigate('extraTab')
+      case 'devTab':
+        return navigation.navigate('devTab')
     }
   })
 
-  const contentStyle = React.useMemo(() => {
-    const paddingBottom = insets.bottom === 0 ? theme.rem(0.75) : insets.bottom
-    return [styles.content, { paddingBottom }]
-  }, [insets.bottom, styles.content, theme])
-
   return (
-    <View>
-      <DividerLine colors={theme.tabBarTopOutlineColors} />
-      <LinearGradient colors={colors} start={start} end={end} style={styles.container}>
-        {routes.map((route, index: number) => {
-          const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
-          const icon: { readonly [key: string]: JSX.Element } = {
-            marketsTab: <Foundation name="list-number" size={theme.rem(1.25)} color={color} />,
-            walletsTab: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
-            buyTab: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
-            sellTab: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
-            exchangeTab: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />,
-            extraTab: <VectorIcon font="Feather" name="map-pin" size={theme.rem(1.25)} color={color} />
-          }
-          return (
-            <TouchableOpacity accessible={false} style={contentStyle} key={route.key} onPress={() => handleOnPress(route.name)}>
-              {icon[route.name]}
-              <EdgeText accessible style={{ ...styles.text, color: color }}>
-                {title[route.name]}
-              </EdgeText>
-            </TouchableOpacity>
-          )
-        })}
-      </LinearGradient>
-    </View>
+    <TabContainer accessible={false} insetBottom={insets.bottom} key={route.key} onPress={handleOnPress}>
+      {icon[route.name]}
+      <Label accessible numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.65} isActive={isActive} openRatio={footerOpenRatio}>
+        {title[route.name]}
+      </Label>
+    </TabContainer>
   )
 }
 
-const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  content: {
-    flex: 1,
-    paddingTop: theme.rem(0.75),
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  text: {
-    fontSize: theme.rem(0.75),
-    marginTop: theme.rem(2 / 16)
-  }
+const TabContainer = styled(TouchableOpacity)<{ insetBottom: number }>(theme => ({ insetBottom }) => ({
+  flex: 1,
+  paddingTop: theme.rem(0.75),
+  paddingBottom: MAYBE_BOTTOM_PADDING,
+  marginBottom: insetBottom,
+  justifyContent: 'center',
+  alignItems: 'center'
 }))
+
+const Label = styled(Animated.Text)<{
+  isActive: boolean
+  openRatio: SharedValue<number>
+}>(theme => ({ isActive, openRatio }) => {
+  return [
+    {
+      // Copied from EdgeText
+      fontFamily: theme.fontFaceDefault,
+      includeFontPadding: false,
+
+      color: isActive ? theme.tabBarIconHighlighted : theme.tabBarIcon,
+      fontSize: theme.rem(0.75),
+      paddingTop: theme.rem(2 / 16),
+      height: theme.rem(1.1)
+    },
+    useAnimatedStyle(() => {
+      'worklet'
+      if (openRatio == null) return {}
+      return {
+        opacity: interpolate(openRatio.value, [1, 0.5], [1, 0])
+      }
+    })
+  ]
+})

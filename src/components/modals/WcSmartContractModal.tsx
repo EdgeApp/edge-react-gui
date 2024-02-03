@@ -8,9 +8,11 @@ import { sprintf } from 'sprintf-js'
 
 import WalletConnectLogo from '../../assets/images/walletconnect-logo.png'
 import { FlashNotification } from '../../components/navigation/FlashNotification'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
+import { asEdgeTokenId } from '../../types/types'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -18,13 +20,13 @@ import { zeroString } from '../../util/utils'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
-import { EdgeText } from '../themed/EdgeText'
-import { ModalFooter, ModalFooterFade, ModalTitle } from '../themed/ModalParts'
+import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { SafeSlider } from '../themed/SafeSlider'
-import { ThemedModal } from '../themed/ThemedModal'
 import { CryptoFiatAmountTile } from '../tiles/CryptoFiatAmountTile'
 import { FiatAmountTile } from '../tiles/FiatAmountTile'
-import { IconTile } from '../tiles/IconTile'
+import { CardUi4 } from '../ui4/CardUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
+import { RowUi4 } from '../ui4/RowUi4'
 
 interface Props extends WcSmartContractModalProps {
   bridge: AirshipBridge<void>
@@ -37,16 +39,16 @@ export const WcSmartContractModal = (props: Props) => {
   const styles = getStyles(theme)
   const walletConnect = useWalletConnect()
   const dAppName = dApp.peerMeta.name
-  const icon = dApp.peerMeta.icons[0]
+  const iconUri = dApp.peerMeta.icons[0]
 
   const walletName = getWalletName(wallet)
 
   const amountCurrencyCode = getCurrencyCode(wallet, tokenId)
 
-  const { currencyCode: feeCurrencyCode, displayName: feeDisplayName, pluginId, metaTokens } = wallet.currencyInfo
+  const { currencyCode: feeCurrencyCode, displayName: feeDisplayName, pluginId } = wallet.currencyInfo
 
   const feeCurrencyStr = `${feeDisplayName} (${feeCurrencyCode})`
-  const feeCurrencyBalance = wallet.balances[feeCurrencyCode]
+  const feeCurrencyBalance = wallet.balanceMap.get(null) ?? '0'
 
   const amountDenom = useDisplayDenom(pluginId, amountCurrencyCode)
   const feeDenom = useDisplayDenom(pluginId, feeCurrencyCode)
@@ -134,19 +136,23 @@ export const WcSmartContractModal = (props: Props) => {
     }
   }
 
-  const contractAddress = metaTokens.find(token => token.currencyCode === amountCurrencyCode)?.contractAddress
-  const walletImageUri = getCurrencyIconUris(pluginId, contractAddress).symbolImage
+  const walletImageUri = getCurrencyIconUris(pluginId, tokenId).symbolImage
   const slider = isInsufficientBal ? null : (
     <SafeSlider parentStyle={styles.slider} onSlidingComplete={handleSubmit} disabledText={lstrings.send_confirmation_slide_to_confirm} disabled={false} />
   )
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleClose} paddingRem={[1, 0]}>
-      <View style={styles.title}>
-        <Image style={styles.logo} source={WalletConnectLogo} />
-        <ModalTitle>{lstrings.wc_smartcontract_title}</ModalTitle>
-      </View>
-      <ScrollView contentContainerStyle={styles.scrollPadding}>
+    <ModalUi4
+      bridge={bridge}
+      onCancel={handleClose}
+      title={
+        <View style={styles.title}>
+          <Image style={styles.logo} source={WalletConnectLogo} />
+          <ModalTitle>{lstrings.wc_smartcontract_title}</ModalTitle>
+        </View>
+      }
+    >
+      <ScrollView contentContainerStyle={styles.scrollPadding} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         {renderWarning()}
         {zeroString(nativeAmount) ? null : (
           <CryptoFiatAmountTile
@@ -157,22 +163,28 @@ export const WcSmartContractModal = (props: Props) => {
             tokenId={tokenId}
           />
         )}
-        <IconTile title={lstrings.wc_smartcontract_wallet} iconUri={walletImageUri}>
-          <EdgeText>{walletName}</EdgeText>
-        </IconTile>
-        <IconTile title={lstrings.wc_smartcontract_dapp} iconUri={icon}>
-          <EdgeText>{dAppName}</EdgeText>
-        </IconTile>
+        <CardUi4 icon={walletImageUri}>
+          <RowUi4 title={lstrings.wc_smartcontract_wallet} body={walletName} />
+        </CardUi4>
+        <CardUi4 icon={iconUri}>
+          <RowUi4 title={lstrings.wc_smartcontract_dapp} body={dAppName} />
+        </CardUi4>
         {zeroString(networkFee) ? null : (
-          <CryptoFiatAmountTile title={lstrings.wc_smartcontract_network_fee} nativeCryptoAmount={networkFee} denomination={feeDenom} walletId={wallet.id} />
+          <CryptoFiatAmountTile
+            title={lstrings.wc_smartcontract_network_fee}
+            nativeCryptoAmount={networkFee}
+            denomination={feeDenom}
+            tokenId={null}
+            walletId={wallet.id}
+          />
         )}
         {zeroString(totalNativeCrypto) ? null : (
-          <FiatAmountTile title={lstrings.wc_smartcontract_max_total} nativeCryptoAmount={totalNativeCrypto} wallet={wallet} />
+          <FiatAmountTile title={lstrings.wc_smartcontract_max_total} nativeCryptoAmount={totalNativeCrypto} tokenId={null} wallet={wallet} />
         )}
         {slider}
       </ScrollView>
-      <ModalFooterFade />
-    </ThemedModal>
+      {/* <ModalFooterFade /> */}
+    </ModalUi4>
   )
 }
 
@@ -180,7 +192,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   title: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: theme.rem(1)
+    paddingHorizontal: theme.rem(1),
+    paddingTop: theme.rem(1)
   },
   logo: {
     height: theme.rem(2),
@@ -245,7 +258,7 @@ export const asWcSmartContractModalProps = asObject({
   }),
   nativeAmount: asString,
   networkFee: asString,
-  tokenId: asOptional(asString),
+  tokenId: asEdgeTokenId,
   topic: asString,
   requestId: asNumber,
   payload: asUnknown

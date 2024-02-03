@@ -1,36 +1,58 @@
 import * as React from 'react'
-import { View } from 'react-native'
+import Animated, { interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
+import { getDeviceSettings, writeHasInteractedWithBackupModal } from '../../actions/DeviceSettingsActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { useSceneFooterState } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { styled } from '../hoc/styled'
+import { showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
+import { MAX_TAB_BAR_HEIGHT, MIN_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
 import { NotificationCard } from './NotificationCard'
 
 interface Props {
   navigation: NavigationBase
+
+  hasTabs: boolean
+  footerHeight: number
 }
 
+let hasInteractedWithBackupModalLocal = false
+
+const fadeIn = { type: 'fadeIn' } as const
+const fadeOut = { type: 'fadeOut' } as const
+
 const NotificationViewComponent = (props: Props) => {
-  const { navigation } = props
+  const { navigation, hasTabs, footerHeight } = props
   const theme = useTheme()
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
   const detectedTokensRedux = useSelector(state => state.core.enabledDetectedTokens)
   const wallets = useWatch(account, 'currencyWallets')
-
-  const isBackupWarningShown = account.username == null
+  const fioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
+  const [hasInteractedWithBackupModal, setHasInteractedWithBackupModal] = React.useState<boolean>(getDeviceSettings().hasInteractedWithBackupModal)
+  if (hasInteractedWithBackupModal) hasInteractedWithBackupModalLocal = true
+  const isBackupWarningShown = account.id != null && account.username == null && fioAddresses.length > 0 && !hasInteractedWithBackupModalLocal
+  const { bottom: insetBottom } = useSafeAreaInsets()
+  const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
 
   const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
 
   const handlePress = useHandler(async () => {
+    writeHasInteractedWithBackupModal(true)
+      .then(() => setHasInteractedWithBackupModal(true))
+      .catch(err => showError(err))
     await showBackupModal({ navigation })
+    hasInteractedWithBackupModalLocal = true
   })
 
   // Show a tokens detected notification per walletId found in newTokens
@@ -78,23 +100,40 @@ const NotificationViewComponent = (props: Props) => {
   }, [detectedTokensRedux, handlePress, theme])
 
   return (
-    <NotificationCardsContainer>
-      {isBackupWarningShown ? (
-        <NotificationCard type="warning" title={lstrings.backup_title} message={lstrings.backup_warning_message} onPress={handlePress} />
-      ) : null}
+    <NotificationCardsContainer hasTabs={hasTabs} insetBottom={insetBottom} footerHeight={footerHeight} footerOpenRatio={footerOpenRatio}>
+      <EdgeAnim visible={isBackupWarningShown} enter={fadeIn} exit={fadeOut}>
+        <NotificationCard type="warning" title={lstrings.backup_title} message={lstrings.backup_web3_handle_warning_message} onPress={handlePress} />
+      </EdgeAnim>
       {autoDetectTokenCards.length > 0 ? autoDetectTokenCards : null}
     </NotificationCardsContainer>
   )
 }
 
-const NotificationCardsContainer = styled(View)(theme => ({
-  alignSelf: 'center',
-  height: theme.rem(3.5),
-  marginHorizontal: theme.rem(0.5),
-  justifyContent: 'flex-end',
-  bottom: theme.rem(0.25),
-  position: 'absolute'
-}))
+const NotificationCardsContainer = styled(Animated.View)<{ hasTabs: boolean; insetBottom: number; footerHeight: number; footerOpenRatio: SharedValue<number> }>(
+  theme =>
+    ({ hasTabs, insetBottom, footerHeight, footerOpenRatio }) => {
+      return [
+        {
+          position: 'absolute',
+          padding: theme.rem(0.5),
+          alignSelf: 'center',
+          justifyContent: 'flex-end',
+          bottom: 0
+        },
+        useAnimatedStyle(() => {
+          const maybeMenuBarHeight = hasTabs ? interpolate(footerOpenRatio.value, [0, 1], [MIN_TAB_BAR_HEIGHT, MAX_TAB_BAR_HEIGHT]) : 0
+          const offsetFooterHeight = footerOpenRatio.value * footerHeight
+          return {
+            transform: [
+              {
+                translateY: -(maybeMenuBarHeight + offsetFooterHeight + insetBottom)
+              }
+            ]
+          }
+        })
+      ]
+    }
+)
 
 /**
  * Manages which notification cards are shown in a persistent app-wide view.

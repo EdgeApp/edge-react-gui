@@ -8,10 +8,10 @@ import { MultiLogOutput, sendLogs } from '../../actions/LogActions'
 import { lstrings } from '../../locales/strings'
 import { WarningCard } from '../cards/WarningCard'
 import { showToast } from '../services/AirshipInstance'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ModalMessage } from '../themed/ModalParts'
+import { ModalUi4 } from '../ui4/ModalUi4'
 interface Props {
   bridge: AirshipBridge<void>
   logs: MultiLogOutput
@@ -71,15 +71,14 @@ export const LogsModal = (props: Props) => {
   }
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel} scroll>
-      <ModalTitle>{lstrings.settings_button_export_logs}</ModalTitle>
+    <ModalUi4 bridge={bridge} onCancel={handleCancel} title={lstrings.settings_button_export_logs} scroll>
       {!isDangerous ? null : <WarningCard key="warning" title={lstrings.string_warning} footer={lstrings.settings_modal_send_unsafe} marginRem={0.5} />}
       {isDangerous ? null : <ModalMessage>{lstrings.settings_modal_export_logs_message}</ModalMessage>}
-      <OutlinedTextInput
+      <FilledTextInput
+        around={1}
         autoCorrect
         autoFocus={false}
-        label={lstrings.settings_modal_send_logs_label}
-        marginRem={1}
+        placeholder={lstrings.settings_modal_send_logs_label}
         maxLength={1000}
         onChangeText={setUserMessage}
         returnKeyType="done"
@@ -89,6 +88,6 @@ export const LogsModal = (props: Props) => {
         <MainButton label={lstrings.settings_button_send_logs} marginRem={0.5} type="primary" onPress={handleSend} disabled={isDangerous} />
       )}
       <MainButton label={lstrings.settings_button_export_logs} marginRem={0.5} type="secondary" onPress={handleShare} />
-    </ThemedModal>
+    </ModalUi4>
   )
 }

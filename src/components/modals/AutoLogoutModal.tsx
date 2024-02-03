@@ -1,17 +1,16 @@
 import { Picker } from '@react-native-picker/picker'
 import * as React from 'react'
-import { NativeModules, Platform, View } from 'react-native'
+import { Appearance, Platform, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import Feather from 'react-native-vector-icons/Feather'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { DisplayTime, displayToSeconds, secondsToDisplay } from '../../util/displayTime'
-import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ModalTitle } from '../themed/ModalParts'
-import { ThemedModal } from '../themed/ThemedModal'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
   bridge: AirshipBridge<number | undefined>
@@ -33,9 +32,8 @@ export const AutoLogoutModal = (props: Props) => {
   const isAndroid = Platform.OS === 'android'
   const textColor = React.useMemo(() => {
     if (isAndroid) {
-      const { UIManagerModule } = NativeModules
-      const uiMode = UIManagerModule && UIManagerModule.getConstants().UI_MODE_NIGHT_YES
-      return uiMode === 32 ? theme.nativeComponentTextDark : theme.nativeComponentTextLight
+      const colorScheme = Appearance.getColorScheme()
+      return colorScheme === 'dark' ? theme.nativeComponentTextDark : theme.nativeComponentTextLight
     } else {
       return theme.pickerText
     }
@@ -76,8 +74,7 @@ export const AutoLogoutModal = (props: Props) => {
   }, [])
 
   return (
-    <ThemedModal bridge={bridge} onCancel={handleCancel}>
-      <ModalTitle>{lstrings.dialog_title}</ModalTitle>
+    <ModalUi4 bridge={bridge} onCancel={handleCancel} title={lstrings.dialog_title}>
       <View style={styles.pickerContainer}>
         {isAndroid ? (
           <View style={styles.androidPickerContainer}>
@@ -115,8 +112,8 @@ export const AutoLogoutModal = (props: Props) => {
           </Picker>
         )}
       </View>
-      <ButtonsContainer primary={{ label: lstrings.string_save, onPress: handleDone }} layout="column" />
-    </ThemedModal>
+      <ButtonsViewUi4 primary={{ label: lstrings.string_save, onPress: handleDone }} layout="column" />
+    </ModalUi4>
   )
 }
 

@@ -12,7 +12,7 @@ import { getExchangeDenominationFromState } from '../../../selectors/Denominatio
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { FioAddress, FioRequest } from '../../../types/types'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import {
   addToFioAddressCache,
   cancelFioRequest,
@@ -373,13 +373,14 @@ class FioRequestList extends React.Component<Props, LocalState> {
     }
 
     const { tokenCode } = convertFIOToEdgeCodes(pluginId, content.chain_code.toUpperCase(), content.token_code.toUpperCase())
-    const tokenId = getTokenId(account, pluginId, tokenCode)
+    const tokenId = getTokenIdForced(account, pluginId, tokenCode)
     const allowedAssets = [{ pluginId, tokenId }]
 
-    const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
+    const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.fio_src_wallet} allowedAssets={allowedAssets} />
     ))
-    if (walletId && currencyCode) {
+    if (result?.type === 'wallet') {
+      const { walletId, currencyCode } = result
       onSelectWallet(walletId, currencyCode)
       await this.sendCrypto(selectedFioPendingRequest, walletId, currencyCode)
     }
@@ -397,7 +398,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
 
     const parsedUri = await currencyWallet.parseUri(pendingRequest.content.payee_public_address, currencyCode)
     const { pluginId } = currencyWallet.currencyInfo
-    const tokenId = getTokenId(account, pluginId, currencyCode)
+    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
     const memos: EdgeMemo[] | undefined = parsedUri.uniqueIdentifier != null ? [{ type: 'text', value: parsedUri.uniqueIdentifier }] : undefined
     const sendParams: SendScene2Params = {
@@ -405,6 +406,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       fioPendingRequest: pendingRequest,
       tokenId,
       spendInfo: {
+        tokenId,
         metadata: parsedUri.metadata,
         spendTargets: [
           {
@@ -524,7 +526,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper background="theme">
+      <SceneWrapper>
         {fullScreenLoader && <FullScreenLoader indicatorStyles={styles.fullScreenLoader} />}
         <View style={styles.scene}>
           <View style={styles.row}>
@@ -540,6 +542,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
                 sections={this.pendingRequestHeaders()}
                 onEndReached={this.pendingLazyLoad}
                 onEndReachedThreshold={SCROLL_THRESHOLD}
+                stickySectionHeadersEnabled={false}
               />
             </View>
           </View>
@@ -556,6 +559,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
                 sections={this.sentRequestHeaders()}
                 onEndReached={this.sentLazyLoad}
                 onEndReachedThreshold={SCROLL_THRESHOLD}
+                stickySectionHeadersEnabled={false}
               />
             </View>
           </View>
@@ -570,7 +574,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'stretch'
+    alignItems: 'stretch',
+    marginHorizontal: theme.rem(0.5)
   },
   container: {
     alignItems: 'stretch',

@@ -1,12 +1,10 @@
 import { add, div, eq, gt, lt, max, mul, sub, toFixed } from 'biggystring'
 import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString } from 'cleaners'
 import { EdgeAccount, EdgeCurrencyWallet, EdgeMemo, EdgeSpendInfo, EdgeTransaction, InsufficientFundsError } from 'edge-core-js'
-import { sprintf } from 'sprintf-js'
 
 import { asMaybeContractLocation } from '../../../components/scenes/EditTokenScene'
-import { lstrings } from '../../../locales/strings'
 import { StringMap } from '../../../types/types'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getTokenId, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getHistoricalRate } from '../../../util/exchangeRates'
 import { cleanMultiFetch, fetchInfo, fetchWaterfall } from '../../../util/network'
 import { assert } from '../../gui/pluginUtils'
@@ -429,11 +427,11 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
   const { wallet, nativeAmount, currencyCode, stakePolicyId, account } = request
   const { pluginId } = wallet.currencyInfo
 
-  const tokenId = getTokenId(account, pluginId, currencyCode)
+  const tokenId = getWalletTokenId(wallet, currencyCode)
   const isToken = tokenId != null
   const isEvm = EVM_PLUGINIDS[pluginId]
 
-  const walletBalance = wallet.balances[currencyCode]
+  const walletBalance = wallet.balanceMap.get(tokenId) ?? '0'
   const exchangeAmount = await wallet.nativeToDenomination(nativeAmount, currencyCode)
   const thorAmount = toFixed(mul(exchangeAmount, THOR_LIMIT_UNITS), 0, 0)
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
@@ -443,7 +441,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
   }
 
   if (lt(walletBalance, nativeAmount)) {
-    throw new InsufficientFundsError({ currencyCode })
+    throw new InsufficientFundsError({ tokenId })
   }
 
   await updateInboundAddresses(opts)
@@ -526,7 +524,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     assert(memoValue != null, 'Missing memoValue')
 
     if (lt(walletBalance, nativeAmount)) {
-      throw new InsufficientFundsError({ currencyCode: parentCurrencyCode })
+      throw new InsufficientFundsError({ tokenId: null })
     }
   } else {
     assert(router == null, 'router must be null')
@@ -559,7 +557,18 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     // 2. Only use UTXOs from the primary address (index 0)
     // 3. Force change to go to the primary address
     otherParams: { outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
-    metadata: { name: 'Thorchain Savers', category: `Transfer:Thorchain Savers ${sprintf(lstrings.transaction_details_stake_subcat_1s, currencyCode)}` }
+    assetAction: { assetActionType: 'stake' },
+    savedAction: {
+      actionType: 'stake',
+      pluginId: stakeProviderInfo.pluginId,
+      stakeAssets: [
+        {
+          pluginId,
+          tokenId,
+          nativeAmount
+        }
+      ]
+    }
   }
 
   if (isEvm && !isToken) {
@@ -594,13 +603,25 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     // 1. Fund the primary address with the requestedAmount + fees for tx #2
     // 2. Send the requested amount to the pool address
     fundingSpendInfo = {
+      tokenId: null,
       spendTargets: [
         {
           publicAddress: primaryAddress,
           nativeAmount: nativeAmount
         }
       ],
-      metadata: { name: 'Thorchain Savers', category: `Expense:${lstrings.wc_smartcontract_network_fee}` },
+      assetAction: { assetActionType: 'stakeNetworkFee' },
+      savedAction: {
+        actionType: 'stake',
+        pluginId: stakeProviderInfo.pluginId,
+        stakeAssets: [
+          {
+            pluginId,
+            tokenId,
+            nativeAmount
+          }
+        ]
+      },
       otherParams: { forceChangeAddress }
     }
 
@@ -613,7 +634,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 
     const remainingBalance = sub(sub(walletBalance, mul(networkFee, '2')), nativeAmount)
     if (lt(remainingBalance, '0')) {
-      throw new InsufficientFundsError({ currencyCode })
+      throw new InsufficientFundsError({ tokenId: null })
     }
   }
 
@@ -636,9 +657,16 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
           publicAddress: sourceTokenContractAddress
         }
       ],
-      metadata: {
-        name: 'Thorchain Savers',
-        category: `Expense:${lstrings.transaction_details_token_approval_subcat}`
+      assetAction: { assetActionType: 'tokenApproval' },
+      savedAction: {
+        actionType: 'tokenApproval',
+        tokenApproved: {
+          pluginId,
+          tokenId,
+          nativeAmount
+        },
+        tokenContractAddress: sourceTokenContractAddress ?? '',
+        contractAddress: router ?? ''
       }
     }
     approvalTx = await wallet.makeSpend(spendInfo)
@@ -759,7 +787,9 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
   const { action, wallet, nativeAmount: requestNativeAmount, currencyCode, account } = request
   const { pluginId } = wallet.currencyInfo
-  const isToken = wallet.currencyInfo.currencyCode !== currencyCode
+
+  const tokenId = getTokenId(account, pluginId, currencyCode) ?? null
+  const isToken = tokenId != null
   const isEvm = EVM_PLUGINIDS[pluginId]
 
   const policyCurrencyInfo = policyCurrencyInfos[pluginId]
@@ -847,12 +877,20 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
   }
 
   const spendInfo: EdgeSpendInfo = {
+    tokenId,
     spendTargets: [{ publicAddress: poolAddress, nativeAmount: sendNativeAmount }],
     otherParams: { outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
-    metadata: {
-      name: 'Thorchain Savers',
-      category: `Expense:${sprintf(lstrings.transaction_details_unstake_order_subcat)}`,
-      notes: sprintf(lstrings.transaction_details_unstake_order_notes_1s, currencyCode)
+    assetAction: { assetActionType: 'unstakeOrder' },
+    savedAction: {
+      actionType: 'stake',
+      pluginId: stakeProviderInfo.pluginId,
+      stakeAssets: [
+        {
+          pluginId,
+          tokenId,
+          nativeAmount
+        }
+      ]
     },
     memos: [
       {
@@ -893,19 +931,32 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
     // 2. Send the requested amount to the pool address
 
     const estimateTx = await wallet.makeSpend({
+      tokenId: null,
       spendTargets: [{ publicAddress: primaryAddress, nativeAmount: sendNativeAmount }],
       memos: [
         {
           type: memoType,
           value: memoValue
         }
-      ]
+      ],
+      assetAction: { assetActionType: 'unstakeNetworkFee' },
+      savedAction: {
+        actionType: 'stake',
+        pluginId: stakeProviderInfo.pluginId,
+        stakeAssets: [
+          {
+            pluginId,
+            tokenId,
+            nativeAmount
+          }
+        ]
+      }
     })
     networkFee = estimateTx.networkFee
 
     const remainingBalance = sub(sub(parentBalance, mul(networkFee, '2')), sendNativeAmount)
     if (lt(remainingBalance, '0')) {
-      throw new InsufficientFundsError({ currencyCode })
+      throw new InsufficientFundsError({ tokenId: null })
     }
   }
 
@@ -935,13 +986,25 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
       if (needsFundingPrimary) {
         // Transfer funds into the primary address
         const tx = await wallet.makeSpend({
+          tokenId: null,
           spendTargets: [
             {
               publicAddress: primaryAddress,
               nativeAmount: add(networkFee, sendNativeAmount)
             }
           ],
-          metadata: { name: 'Thorchain Savers', category: `Expense:${lstrings.wc_smartcontract_network_fee}` },
+          assetAction: { assetActionType: 'unstakeNetworkFee' },
+          savedAction: {
+            actionType: 'stake',
+            pluginId: stakeProviderInfo.pluginId,
+            stakeAssets: [
+              {
+                pluginId,
+                tokenId,
+                nativeAmount
+              }
+            ]
+          },
           otherParams: { forceChangeAddress }
         })
         const signedTx = await wallet.signTx(tx)
@@ -1100,20 +1163,21 @@ const getPrimaryAddress = async (
   parentBalance: string
 }> => {
   const displayPublicKey = await account.getDisplayPublicKey(wallet.id)
+  const tokenId = getWalletTokenId(wallet, currencyCode)
   const { publicAddress, nativeBalance } = await wallet.getReceiveAddress({
     forceIndex: 0,
-    currencyCode
+    tokenId
   })
 
   // If this is a single address chain (ie ETH, AVAX)
   // then the address balance is always the wallet balance
   const hasSingleAddress = displayPublicKey.toLowerCase() === publicAddress.toLowerCase()
-  const parentCurrencyCode = wallet.currencyInfo.currencyCode
+  const assetBalance = wallet.balanceMap.get(tokenId) ?? '0'
 
   return {
     primaryAddress: publicAddress,
-    addressBalance: hasSingleAddress ? wallet.balances[currencyCode] : nativeBalance ?? '0',
-    parentBalance: wallet.balances[parentCurrencyCode]
+    addressBalance: hasSingleAddress ? assetBalance : nativeBalance ?? '0',
+    parentBalance: wallet.balanceMap.get(null) ?? '0'
   }
 }
 

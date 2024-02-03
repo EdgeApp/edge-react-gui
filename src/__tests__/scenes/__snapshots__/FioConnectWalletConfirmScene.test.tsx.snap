@@ -1,15 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FioConnectWalletConfirm should render with loading props 1`] = `
-<SceneWrapper
-  background="theme"
+<Memo(SceneWrapperComponent)
+  scroll={true}
 >
-  <ScrollView>
-    <WithTheme(TileComponent)
-      body="MyFioAddress"
-      title="FIO Crypto Handle"
-      type="static"
-    />
+  <Memo(SceneHeaderComponent)
+    title="Connect to Wallet"
+    underline={true}
+    withTopMargin={true}
+  />
+  <View
+    style={
+      {
+        "padding": 11,
+      }
+    }
+  >
+    <CardUi4
+      sections={true}
+    >
+      <RowUi4
+        body="MyFioAddress"
+        title="FIO Crypto Handle"
+      />
+    </CardUi4>
     <Radio
       marginRem={
         [
@@ -45,6 +59,6 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
       }
       showSpinner={false}
     />
-  </ScrollView>
-</SceneWrapper>
+  </View>
+</Memo(SceneWrapperComponent)>
 `;

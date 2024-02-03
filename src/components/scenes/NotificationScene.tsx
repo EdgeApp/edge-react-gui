@@ -1,8 +1,6 @@
 import * as React from 'react'
-import { ScrollView } from 'react-native'
 
 import { NotificationSettings, updateNotificationSettings } from '../../actions/NotificationActions'
-import { CryptoIcon } from '../../components/icons/CryptoIcon'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -12,6 +10,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface Props extends EdgeSceneProps<'notificationSettings'> {}
 
@@ -43,41 +42,39 @@ export const NotificationScene = (props: Props) => {
   )
 
   return (
-    <SceneWrapper background="theme" hasTabs={false}>
-      <ScrollView>
-        <SettingsSwitchRow
-          key="marketing-notifications"
-          label={lstrings.settings_marketing_notifications_switch}
-          value={!settings.ignoreMarketing}
-          onPress={async () => await handlePressToggleSetting('ignoreMarketing')}
-        />
-        <SettingsSwitchRow
-          key="price-notifications"
-          label={lstrings.settings_price_notifications_switch}
-          value={!settings.ignorePriceChanges}
-          onPress={async () => await handlePressToggleSetting('ignorePriceChanges')}
-        />
-        {pluginIds.map(pluginId => {
-          const { currencyInfo } = currencyConfigs[pluginId]
-          const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
+    <SceneWrapper scroll>
+      <SettingsSwitchRow
+        key="marketing-notifications"
+        label={lstrings.settings_marketing_notifications_switch}
+        value={!settings.ignoreMarketing}
+        onPress={async () => await handlePressToggleSetting('ignoreMarketing')}
+      />
+      <SettingsSwitchRow
+        key="price-notifications"
+        label={lstrings.settings_price_notifications_switch}
+        value={!settings.ignorePriceChanges}
+        onPress={async () => await handlePressToggleSetting('ignorePriceChanges')}
+      />
+      {pluginIds.map(pluginId => {
+        const { currencyInfo } = currencyConfigs[pluginId]
+        const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
 
-          const handlePress = () => {
-            if (!settings.ignorePriceChanges) {
-              navigation.navigate('currencyNotificationSettings', {
-                currencyInfo
-              })
-            }
+        const handlePress = () => {
+          if (!settings.ignorePriceChanges) {
+            navigation.navigate('currencyNotificationSettings', {
+              currencyInfo
+            })
           }
+        }
 
-          if (keysOnlyMode) return null
+        if (keysOnlyMode) return null
 
-          return (
-            <SettingsTappableRow disabled={settings.ignorePriceChanges} key={pluginId} label={currencyInfo.displayName} onPress={handlePress}>
-              <CryptoIcon pluginId={pluginId} />
-            </SettingsTappableRow>
-          )
-        })}
-      </ScrollView>
+        return (
+          <SettingsTappableRow disabled={settings.ignorePriceChanges} key={pluginId} label={currencyInfo.displayName} onPress={handlePress}>
+            <CryptoIconUi4 pluginId={pluginId} tokenId={null} />
+          </SettingsTappableRow>
+        )
+      })}
     </SceneWrapper>
   )
 }

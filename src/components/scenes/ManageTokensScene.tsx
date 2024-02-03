@@ -1,7 +1,7 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 
 import { PREFERRED_TOKENS, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
@@ -11,17 +11,18 @@ import { lstrings } from '../../locales/strings'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
-import { ButtonsContainer } from '../buttons/ButtonsContainer'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
-import { CryptoIcon } from '../icons/CryptoIcon'
+import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
+import { FilledTextInput } from '../themed/FilledTextInput'
 import { ManageTokensRow } from '../themed/ManageTokensRow'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Title } from '../themed/Title'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface Props extends EdgeSceneProps<'manageTokens'> {
   wallet: EdgeCurrencyWallet
@@ -121,25 +122,25 @@ function ManageTokensSceneComponent(props: Props) {
   return (
     <SceneWrapper>
       <SceneHeader underline>
-        <Title leftIcon={<CryptoIcon sizeRem={1.5} walletId={wallet.id} />} text={walletName} />
+        <Title leftIcon={<CryptoIconUi4 sizeRem={1.5} tokenId={null} walletId={wallet.id} />} text={walletName} />
         <EdgeText style={styles.subTitle}>{lstrings.managetokens_top_instructions}</EdgeText>
-        <OutlinedTextInput
-          label={lstrings.search_tokens}
-          marginRem={[1, 0, 0, 0]}
+        <FilledTextInput
+          top={1}
+          placeholder={lstrings.search_tokens}
           returnKeyType="search"
-          searchIcon
+          iconComponent={SearchIconAnimated}
           value={searchValue}
           onChangeText={setSearchValue}
         />
       </SceneHeader>
-      <FlashList estimatedItemSize={theme.rem(4.25)} data={filteredTokenIds} extraData={extraData} keyExtractor={keyExtractor} renderItem={renderRow} />
+      <FlatList data={filteredTokenIds} extraData={extraData} keyExtractor={keyExtractor} renderItem={renderRow} />
       {!isCustomTokensSupported ? null : (
         <>
           <DividerLine marginRem={[0, 1]} />
-          {/* TODO: Remove extra padding in ThemedModal so we don't need to compensate margins with this View */}
+          {/* TODO: Create a layout enum in ButtonsViewUi4 for this persistent button area */}
           <View style={styles.buttonsContainer}>
-            <ButtonsContainer
-              primary={{ label: lstrings.string_next_capitalized, onPress: navigation.goBack }}
+            <ButtonsViewUi4
+              primary={{ label: lstrings.string_done_cap, onPress: navigation.goBack }}
               secondary={{ label: lstrings.addtoken_add, onPress: handleAdd }}
               layout="column"
             />
@@ -153,7 +154,7 @@ function ManageTokensSceneComponent(props: Props) {
 const keyExtractor = (tokenId: string) => tokenId
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  buttonsContainer: { marginHorizontal: theme.rem(0.5) },
+  buttonsContainer: { marginTop: theme.rem(1), marginBottom: theme.rem(1) },
   rightIcon: {
     color: theme.iconTappable,
     marginRight: theme.rem(1)

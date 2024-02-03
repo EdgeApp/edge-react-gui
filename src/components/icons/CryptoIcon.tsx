@@ -1,3 +1,4 @@
+import { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -6,7 +7,6 @@ import compromisedIcon from '../../assets/images/compromisedIcon.png'
 import { useWatch } from '../../hooks/useWatch'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyIconUris } from '../../util/CdnUris'
-import { guessFromCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { WalletSyncCircle } from '../progress-indicators/WalletSyncCircle'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -14,7 +14,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 interface Props {
   // Main props - If non is specified, would just render an empty view
   pluginId?: string // Needed when walletId is not supplied and we still want to get an icon
-  tokenId?: string // Needed when it's a token (not the plugin's native currency)
+  tokenId: EdgeTokenId // Needed when it's a token (not the plugin's native currency)
   walletId?: string // To allow showing the progress ratio sync circle
 
   // Image props
@@ -24,13 +24,10 @@ interface Props {
   // Styling props
   marginRem?: number | number[]
   sizeRem?: number
-
-  /** @deprecated Provide tokenId instead. */
-  currencyCode?: string
 }
 
 const CryptoIconComponent = (props: Props) => {
-  const { currencyCode, hideSecondary = false, marginRem, mono = false, sizeRem = 2, walletId } = props
+  const { hideSecondary = false, marginRem, mono = false, sizeRem = 2, tokenId, walletId } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -46,17 +43,7 @@ const CryptoIconComponent = (props: Props) => {
     return modalShown > 0
   })
 
-  // If we have a wallet, get the pluginId from it in case it's missing
-  let { pluginId = wallet?.currencyInfo.pluginId, tokenId } = props
-
-  // ---------------------------------------------------------------------
-  // HACK to maintain Backward compatibility for now
-  // ---------------------------------------------------------------------
-  const ids = guessFromCurrencyCode(account, { currencyCode, pluginId, tokenId })
-  pluginId = ids.pluginId
-  tokenId = ids.tokenId
-
-  // //////////////////////////////////////////////////////////////////////////////// //
+  const { pluginId = wallet?.currencyInfo.pluginId } = props
 
   // Primary Currency icon
   const primaryCurrencyIcon = React.useMemo(() => {
@@ -82,7 +69,7 @@ const CryptoIconComponent = (props: Props) => {
     }
 
     // Get Parent Icon URI
-    const icon = getCurrencyIconUris(pluginId)
+    const icon = getCurrencyIconUris(pluginId, null)
     const source = { uri: mono ? icon.symbolImageDarkMono : icon.symbolImage }
 
     // Return Parent logo from the edge server

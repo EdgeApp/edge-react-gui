@@ -44,10 +44,10 @@ NEWFILEUID:NONE
 <TRNAMT>1230000
 <FITID>txid1
 <NAME>Crazy Person
-<MEMO>// Rate=0.00975646 USD=12000.45 category="Income:Mo Money" memo="Hell yeah! Thanks for the fish &lt;&lt;&amp;&amp;&gt;&gt;"
+<MEMO>// Rate=0.00975646 iso:USD=12000.45 category="Income:Mo Money" memo="Hell yeah! Thanks for the fish &lt;&lt;&amp;&amp;&gt;&gt;"
 <CURRENCY>
 <CURRATE>0.00975646
-<CURSYM>USD
+<CURSYM>iso:USD
 </CURRENCY>
 </STMTTRN>
 <STMTTRN>
@@ -56,10 +56,10 @@ NEWFILEUID:NONE
 <TRNAMT>-3210000
 <FITID>txid2
 <NAME>Crazy Person 2
-<MEMO>// Rate=0.0112154 USD=36001.45 category="Expense:Less Money" memo="Hell yeah! Here's a fish""
+<MEMO>// Rate=0.0112154 iso:USD=36001.45 category="Expense:Less Money" memo="Hell yeah! Here's a fish""
 <CURRENCY>
 <CURRATE>0.0112154
-<CURSYM>USD
+<CURSYM>iso:USD
 </CURRENCY>
 </STMTTRN>
 <STMTTRN>
@@ -68,10 +68,10 @@ NEWFILEUID:NONE
 <TRNAMT>-3209980
 <FITID>txid3
 <NAME>Transfer
-<MEMO>// Rate=0.0112154 USD=36001.22569188851 category="Transfer:Edge" memo=""
+<MEMO>// Rate=0.0112154 iso:USD=36001.22569188851 category="Transfer:Edge" memo=""
 <CURRENCY>
 <CURRATE>0.0112154
-<CURSYM>USD
+<CURSYM>iso:USD
 </CURRENCY>
 </STMTTRN>
 <STMTTRN>
@@ -80,10 +80,10 @@ NEWFILEUID:NONE
 <TRNAMT>-20
 <FITID>txid3-TRANSFER_TX
 <NAME>Transfer
-<MEMO>// Rate=0.0112154 USD=0.2243080996884 category="Expense:Network Fee" memo=""
+<MEMO>// Rate=0.0112154 iso:USD=0.2243080996884 category="Expense:Network Fee" memo=""
 <CURRENCY>
 <CURRATE>0.0112154
-<CURSYM>USD
+<CURSYM>iso:USD
 </CURRENCY>
 </STMTTRN>
 <STMTTRN>
@@ -92,10 +92,10 @@ NEWFILEUID:NONE
 <TRNAMT>3210000
 <FITID>txid4
 <NAME>Transfer but actually income
-<MEMO>// Rate=0.0112154 USD=36001.45 category="Transfer:Edge" memo=""
+<MEMO>// Rate=0.0112154 iso:USD=36001.45 category="Transfer:Edge" memo=""
 <CURRENCY>
 <CURRATE>0.0112154
-<CURSYM>USD
+<CURSYM>iso:USD
 </CURRENCY>
 </STMTTRN>
 <STMTTRN>
@@ -104,10 +104,10 @@ NEWFILEUID:NONE
 <TRNAMT>-3210000
 <FITID>txid4
 <NAME>Transfer but no fee
-<MEMO>// Rate=0.0112154 USD=36001.45 category="Transfer:Edge" memo=""
+<MEMO>// Rate=0.0112154 iso:USD=36001.45 category="Transfer:Edge" memo=""
 <CURRENCY>
 <CURRATE>0.0112154
-<CURSYM>USD
+<CURSYM>iso:USD
 </CURRENCY>
 </STMTTRN>
 <STMTTRN>
@@ -116,10 +116,10 @@ NEWFILEUID:NONE
 <TRNAMT>-3209980
 <FITID>txid5
 <NAME>Transfer but no fiat amount
-<MEMO>// Rate=0 USD=0 category="Transfer:Edge" memo=""
+<MEMO>// Rate=0 iso:USD=0 category="Transfer:Edge" memo=""
 <CURRENCY>
 <CURRATE>0
-<CURSYM>USD
+<CURSYM>iso:USD
 </CURRENCY>
 </STMTTRN>
 <STMTTRN>
@@ -128,10 +128,10 @@ NEWFILEUID:NONE
 <TRNAMT>-20
 <FITID>txid5-TRANSFER_TX
 <NAME>Transfer but no fiat amount
-<MEMO>// Rate=0 USD=0 category="Expense:Network Fee" memo=""
+<MEMO>// Rate=0 iso:USD=0 category="Expense:Network Fee" memo=""
 <CURRENCY>
 <CURRATE>0
-<CURSYM>USD
+<CURSYM>iso:USD
 </CURRENCY>
 </STMTTRN>
 <STMTTRN>
@@ -139,10 +139,10 @@ NEWFILEUID:NONE
 <DTPOSTED>20180430082940.000
 <TRNAMT>-3210000
 <FITID>txid6
-<MEMO>// Rate=0 USD=0 category="" memo=""
+<MEMO>// Rate=0 iso:USD=0 category="" memo=""
 <CURRENCY>
 <CURRATE>0
-<CURSYM>USD
+<CURSYM>iso:USD
 </CURRENCY>
 </STMTTRN>
 </BANKTRANLIST>

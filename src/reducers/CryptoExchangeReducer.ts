@@ -1,7 +1,7 @@
 import { Reducer } from 'redux'
 
 import { Action } from '../types/reduxTypes'
-import { GuiCurrencyInfo } from '../types/types'
+import { emptyCurrencyInfo, GuiCurrencyInfo } from '../types/types'
 
 export interface CryptoExchangeState {
   fromWalletId: string | null
@@ -26,33 +26,19 @@ export interface CryptoExchangeState {
   shiftPendingTransaction: boolean
 }
 
-const dummyCurrencyInfo: GuiCurrencyInfo = {
-  walletId: '',
-  displayCurrencyCode: '',
-  exchangeCurrencyCode: '',
-  displayDenomination: {
-    name: '',
-    multiplier: '1'
-  },
-  exchangeDenomination: {
-    name: '',
-    multiplier: '1'
-  }
-}
-
 const initialState: CryptoExchangeState = {
   fromWalletId: null,
   fromCurrencyCode: null,
   fromNativeAmount: '0',
   fromDisplayAmount: '0',
-  fromWalletPrimaryInfo: dummyCurrencyInfo,
+  fromWalletPrimaryInfo: emptyCurrencyInfo,
   fromBalanceMessage: '',
 
   toWalletId: null,
   toCurrencyCode: null,
   toNativeAmount: '0',
   toDisplayAmount: '0',
-  toWalletPrimaryInfo: dummyCurrencyInfo,
+  toWalletPrimaryInfo: emptyCurrencyInfo,
   toBalanceMessage: '',
 
   insufficientError: false,

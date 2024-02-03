@@ -1,6 +1,19 @@
 import { asNumber, asObject } from 'cleaners'
 
+import { AccentColors } from '../components/ui4/DotsBackground'
+
 export type ImageProp = { uri: string } | number
+
+export interface ThemeDot {
+  accentColor?: keyof AccentColors
+  color: string
+  cx: number | string
+  cy: number | string
+  r: number
+}
+
+// Updates to dots. undefined keeps the dots, null deletes them
+export type OverrideDots = Array<Partial<ThemeDot> | undefined | null>
 
 interface ThemeGradientParams {
   colors: string[]
@@ -16,9 +29,11 @@ interface ThemeShadowParams {
   }
   shadowOpacity: number
   shadowRadius: number
+  /** @deprecated Android-specific prop no longer needed. */
   elevation: number
 }
 
+/** @depreated Use textShadow props from text-shadow-component */
 interface TextShadowParams {
   textShadowColor: string
   textShadowOffset: {
@@ -26,20 +41,6 @@ interface TextShadowParams {
     height: number
   }
   textShadowRadius: number
-}
-
-interface ButtomParamsUi4 {
-  textStyle: {
-    fontFamily: string
-    color: string
-  }
-  gradientProps: ThemeGradientParams
-  shadowParams: ThemeShadowParams // TODO: Address android/ios inconsistencies with lib
-  containerStyle: {
-    borderColor: string
-    borderWidth: number
-  }
-  spinnerColor: string
 }
 
 const asGradientCoords = asObject({
@@ -92,17 +93,22 @@ export interface Theme {
   warningIcon: string
   dangerIcon: string
   iconLoadingOverlay: string
-  transactionListIconBackground: string
-  buySellCustomPluginModalIcon: string
+  loadingIcon: string
 
   // Background
   backgroundGradientColors: string[]
   backgroundGradientStart: { x: number; y: number }
   backgroundGradientEnd: { x: number; y: number }
-
-  backgroundImageServerUrls: string[]
-  backgroundImage?: ImageProp
-  backgroundLoadingOverlay: string
+  backgroundDots: {
+    blurRadius: number
+    dotOpacity: number
+    dots: ThemeDot[]
+    assetOverrideDots: OverrideDots
+  }
+  assetBackgroundGradientColors: string[]
+  assetBackgroundGradientStart: { x: number; y: number }
+  assetBackgroundGradientEnd: { x: number; y: number }
+  assetBackgroundColorScale: number
 
   // Camera Overlay
   cameraOverlayColor: string
@@ -115,8 +121,15 @@ export interface Theme {
   modalBorderColor: string
   modalBorderWidth: number
   modalBorderRadiusRem: number
+  modalBackground: string
+  modalSceneOverlayColor: string
+  modalDragbarColor: string
 
-  sideMenuColor: string
+  // Modal content backgrounds have a number of dynamic layers that affect the
+  // resulting color.
+  // This color represents an approximation of a modal's background color
+  modalLikeBackground: string
+
   sideMenuBorderColor: string
   sideMenuBorderWidth: number
   sideMenuFont: string
@@ -128,8 +141,8 @@ export interface Theme {
 
   // Section Lists
   listSectionHeaderBackgroundGradientColors: string[]
-  listSectionHeaderBackgroundGradientStart?: { x: number; y: number }
-  listSectionHeaderBackgroundGradientEnd?: { x: number; y: number }
+  listSectionHeaderBackgroundGradientStart: { x: number; y: number } | null
+  listSectionHeaderBackgroundGradientEnd: { x: number; y: number } | null
 
   // NOTE: List of components/screens that uses the tileBackground
   // - promoCard
@@ -140,16 +153,9 @@ export interface Theme {
   // - otpSettingsKey
   // - tileComponent
 
-  // WalletList
-  walletListBackground: string
-  walletListMutedBackground: string
-
   // Settings Row
   settingsRowBackground: string
   settingsRowPressed: string
-  settingsRowHeaderBackground: string[]
-  settingsRowHeaderBackgroundStart: GradientCoords
-  settingsRowHeaderBackgroundEnd: GradientCoords
 
   settingsRowHeaderFont: string
   settingsRowHeaderFontSizeRem: number
@@ -169,6 +175,10 @@ export interface Theme {
 
   // Header
   headerIcon: ImageProp
+  headerBackground: string[]
+  headerBackgroundStart: GradientCoords
+  headerBackgroundEnd: GradientCoords
+  headerOutlineColors: string[]
 
   // Buttons
   buttonBorderRadiusRem: number
@@ -255,6 +265,7 @@ export interface Theme {
   cardBorder: number
   cardBorderColor: string
   cardBorderRadius: number
+  cardTextShadow: TextShadowParams // For added contrast against complex card backgrounds
 
   tabBarBackground: string[]
   tabBarBackgroundStart: GradientCoords
@@ -283,8 +294,12 @@ export interface Theme {
 
   // warningBubble: string,
 
-  // Confirmation slider
+  // Confirmation slider background left of thumb
   confirmationSlider: string
+
+  // Section of slider to right of thumb
+  confirmationSliderCompleted: string
+
   confirmationSliderText: string
   confirmationSliderArrow: string
   confirmationSliderThumb: string
@@ -336,7 +351,6 @@ export interface Theme {
   // pressedOpacity: number,
   searchListRefreshControlIndicator: string
   clipboardPopupText: string
-  flipInputBorder: string
 
   // Fonts
   fontFaceDefault: string
@@ -371,16 +385,24 @@ export interface Theme {
   inputAccessoryBackground: string
   inputAccessoryText: string
 
-  // Outline Text Input
-  outlineTextInputColor: string
-  outlineTextInputTextColor: string
-  outlineTextInputBorderWidth: number
-  outlineTextInputBorderColor: string
-  outlineTextInputBorderColorDisabled: string
-  outlineTextInputBorderColorFocused: string
-  outlineTextInputLabelColor: string
-  outlineTextInputLabelColorDisabled: string
-  outlineTextInputLabelColorFocused: string
+  // Text Input
+  textInputTextColor: string
+  textInputTextColorDisabled: string
+  textInputTextColorFocused: string
+  textInputBackgroundColor: string
+  textInputBackgroundColorDisabled: string
+  textInputBackgroundColorFocused: string
+  textInputBorderWidth: number
+  textInputBorderColor: string
+  textInputBorderColorDisabled: string
+  textInputBorderColorFocused: string
+  textInputBorderRadius: number
+  textInputIconColor: string
+  textInputIconColorDisabled: string
+  textInputIconColorFocused: string
+  textInputPlaceholderColor: string
+  textInputPlaceholderColorDisabled: string
+  textInputPlaceholderColorFocused: string
 
   // Animation
   fadeDisable: string
@@ -414,22 +436,27 @@ export interface Theme {
   guiPluginLogoMoonpay: ImageProp
 
   // UI 4.0:
-  buttonBorderRadiusRemUi4: number
-  buttonFontSizeRemUi4: number
 
-  buttonPrimaryUi4: ButtomParamsUi4
-  buttonSecondaryUi4: ButtomParamsUi4
-  buttonTertiaryUi4: ButtomParamsUi4
+  // Shadows
+  iconShadow: ThemeShadowParams
 
-  cardBackgroundUi4: ThemeGradientParams
-  cardDisabledOverlayUi4: string
-  cardRadiusRemUi4: number
+  // Basic Card Styles
+  cardBaseColor: string
+  cardGradientWarning: ThemeGradientParams
+  cardGradientError: ThemeGradientParams
+  cardGradientLearn: ThemeGradientParams
+  cardOverlayDisabled: string
 
-  iconTappableAltUi4: string
+  // Special Home Scene Tiled Cards
+  buyCardGradient: ThemeGradientParams
+  sellCardGradient: ThemeGradientParams
+  fioCardGradient: ThemeGradientParams
+  swapCardGradient: ThemeGradientParams
 
-  negativeTextMutedUi4: string
-
-  shadowColorUi4: string
-
-  touchHighlightUi4: string
+  txDirBgReceive: string
+  txDirBgSend: string
+  txDirBgSwap: string
+  txDirFgReceive: string
+  txDirFgSend: string
+  txDirFgSwap: string
 }

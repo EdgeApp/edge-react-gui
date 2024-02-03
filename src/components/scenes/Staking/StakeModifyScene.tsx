@@ -1,8 +1,7 @@
 import { eq, gt, toFixed } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId, InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../../locales/strings'
@@ -11,7 +10,7 @@ import { getDisplayDenomination, getExchangeDenominationFromAccount } from '../.
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+import { getTokenIdForced, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getPolicyIconUris, getPositionAllocations } from '../../../util/stakeUtils'
 import { toBigNumberString } from '../../../util/toBigNumberString'
@@ -31,12 +30,14 @@ import { Slider } from '../../themed/Slider'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 import { EditableAmountTile } from '../../tiles/EditableAmountTile'
 import { ErrorTile } from '../../tiles/ErrorTile'
-import { IconTile } from '../../tiles/IconTile'
-import { Tile } from '../../tiles/Tile'
+import { CardUi4 } from '../../ui4/CardUi4'
+import { RowUi4 } from '../../ui4/RowUi4'
 
 interface Props extends EdgeSceneProps<'stakeModify'> {
   wallet: EdgeCurrencyWallet
 }
+
+// TODO: Check contentPadding
 
 const StakeModifySceneComponent = (props: Props) => {
   const { navigation, route, wallet } = props
@@ -128,6 +129,8 @@ const StakeModifySceneComponent = (props: Props) => {
             const { currencyCode } = err
             const errMessage = sprintf(lstrings.state_error_pool_full_s, currencyCode)
             setErrorMessage(errMessage)
+          } else if (err instanceof InsufficientFundsError) {
+            setErrorMessage(lstrings.exchange_insufficient_funds_title)
           } else {
             showError(err)
             setErrorMessage(lstrings.unknown_error_occurred_fragment)
@@ -156,7 +159,8 @@ const StakeModifySceneComponent = (props: Props) => {
         if (allocationToMod == null) throw new Error(`Existing stake not found for ${modCurrencyCode}`)
         setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: allocationToMod.nativeAmount })
       } else if (modification === 'stake' && existingStaked.length === 1) {
-        setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: wallet.balances[modCurrencyCode] })
+        const tokenId = getWalletTokenId(wallet, modCurrencyCode)
+        setChangeQuoteRequest({ ...changeQuoteRequest, currencyCode: modCurrencyCode, nativeAmount: wallet.balanceMap.get(tokenId) ?? '0' })
       }
     }
   }
@@ -188,7 +192,7 @@ const StakeModifySceneComponent = (props: Props) => {
     }
   }
 
-  const handleShowFlipInputModal = (currencyCode: string, tokenId?: string) => () => {
+  const handleShowFlipInputModal = (currencyCode: string, tokenId: EdgeTokenId) => () => {
     const header = modification === 'stake' ? lstrings.stake_modal_modify_stake_title : lstrings.stake_modal_modify_unstake_title
 
     // TODO: Max button needs to be enabled after max calculation for
@@ -201,6 +205,7 @@ const StakeModifySceneComponent = (props: Props) => {
         bridge={bridge}
         wallet={wallet}
         tokenId={tokenId}
+        feeTokenId={null}
         startNativeAmount={eq(changeQuoteRequest.nativeAmount, '0') ? undefined : changeQuoteRequest.nativeAmount}
         onAmountsChanged={() => {}}
         onMaxSet={handleMaxButtonPress(currencyCode)}
@@ -270,7 +275,7 @@ const StakeModifySceneComponent = (props: Props) => {
 
   const renderEditableQuoteAmountRow = (allocationType: 'stake' | 'unstake' | 'claim', asset: { pluginId: string; currencyCode: string }) => {
     const { pluginId, currencyCode } = asset
-    const tokenId = getTokenId(account, pluginId, currencyCode)
+    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
     const quoteAllocation: QuoteAllocation | undefined =
       changeQuote != null
         ? changeQuote.allocations.find(
@@ -299,18 +304,20 @@ const StakeModifySceneComponent = (props: Props) => {
     }
 
     return (
-      <EditableAmountTile
-        title={title}
-        key={allocationType + pluginId + currencyCode}
-        exchangeRates={guiExchangeRates}
-        nativeAmount={isClaim ? earnedAmount : nativeAmount}
-        wallet={wallet}
-        currencyCode={quoteCurrencyCode}
-        exchangeDenomination={quoteDenom}
-        displayDenomination={quoteDenom}
-        lockInputs={isClaim || (!!mustMaxUnstake && allocationType === 'unstake')}
-        onPress={handleShowFlipInputModal(currencyCode, tokenId)}
-      />
+      <CardUi4>
+        <EditableAmountTile
+          title={title}
+          key={allocationType + pluginId + currencyCode}
+          exchangeRates={guiExchangeRates}
+          nativeAmount={isClaim ? earnedAmount : nativeAmount}
+          wallet={wallet}
+          currencyCode={quoteCurrencyCode}
+          exchangeDenomination={quoteDenom}
+          displayDenomination={quoteDenom}
+          lockInputs={isClaim || (!!mustMaxUnstake && allocationType === 'unstake')}
+          onPress={handleShowFlipInputModal(currencyCode, tokenId)}
+        />
+      </CardUi4>
     )
   }
 
@@ -327,7 +334,7 @@ const StakeModifySceneComponent = (props: Props) => {
 
     const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, currencyCode)
     const title = modification === 'stake' ? lstrings.stake_estimated_staking_fee : lstrings.stake_estimated_unstaking_fee
-    const tokenId = getTokenId(account, pluginId, currencyCode)
+    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
     return (
       <CryptoFiatAmountTile
@@ -354,7 +361,7 @@ const StakeModifySceneComponent = (props: Props) => {
     if (quoteAllocation == null) return null
 
     const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, currencyCode)
-    const tokenId = getTokenId(account, pluginId, currencyCode)
+    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
     return (
       <CryptoFiatAmountTile
@@ -381,9 +388,11 @@ const StakeModifySceneComponent = (props: Props) => {
       message = sprintf(lstrings.stake_break_even_days_s, days)
     }
     return (
-      <Tile type="questionable" title={lstrings.stake_break_even_time} contentPadding={false} onPress={handlePressBreakEvenDays}>
-        <EdgeText>{message}</EdgeText>
-      </Tile>
+      <CardUi4>
+        <RowUi4 rightButtonType="questionable" title={lstrings.stake_break_even_time} onPress={handlePressBreakEvenDays}>
+          <EdgeText>{message}</EdgeText>
+        </RowUi4>
+      </CardUi4>
     )
   }
 
@@ -417,9 +426,9 @@ const StakeModifySceneComponent = (props: Props) => {
 
     return (
       <View style={styles.amountTilesContainer}>
-        <IconTile title={lstrings.wc_smartcontract_wallet} iconUri={getCurrencyIconUris(wallet.currencyInfo.pluginId).symbolImage}>
-          <EdgeText>{getWalletName(wallet)}</EdgeText>
-        </IconTile>
+        <CardUi4 icon={getCurrencyIconUris(wallet.currencyInfo.pluginId, null).symbolImage}>
+          <RowUi4 title={lstrings.wc_smartcontract_wallet} body={getWalletName(wallet)} />
+        </CardUi4>
         {
           // Render stake/unstake amount tiles
           modification === 'stake' || modification === 'unstake'
@@ -439,6 +448,7 @@ const StakeModifySceneComponent = (props: Props) => {
         {
           // Render network fee tile
           <CryptoFiatAmountTile
+            tokenId={null}
             title={lstrings.wc_smartcontract_network_fee}
             nativeCryptoAmount={networkFeeQuote?.nativeAmount ?? '0'}
             walletId={wallet.id}
@@ -463,7 +473,7 @@ const StakeModifySceneComponent = (props: Props) => {
 
   if (stakePosition.allocations.length === 0) {
     return (
-      <SceneWrapper background="theme">
+      <SceneWrapper>
         <FillLoader />
       </SceneWrapper>
     )
@@ -472,22 +482,15 @@ const StakeModifySceneComponent = (props: Props) => {
   const isSliderDisabled = sliderLocked || changeQuote == null || !changeQuote.allocations.some(quoteAllocation => gt(quoteAllocation.nativeAmount, '0'))
 
   return (
-    <SceneWrapper scroll background="theme">
-      <ScrollView>
-        <SceneHeader style={styles.sceneHeader} title={title} underline withTopMargin>
-          {icon}
-        </SceneHeader>
-        {renderChangeQuoteAmountTiles(modification)}
-        {renderWarning()}
-        <View style={styles.footer}>
-          <Slider
-            onSlidingComplete={handleSlideComplete}
-            disabled={isSliderDisabled}
-            showSpinner={sliderLocked}
-            disabledText={lstrings.stake_disabled_slider}
-          />
-        </View>
-      </ScrollView>
+    <SceneWrapper padding={theme.rem(0.5)} scroll>
+      <SceneHeader style={styles.sceneHeader} title={title} underline withTopMargin>
+        {icon}
+      </SceneHeader>
+      {renderChangeQuoteAmountTiles(modification)}
+      {renderWarning()}
+      <View style={styles.footer}>
+        <Slider onSlidingComplete={handleSlideComplete} disabled={isSliderDisabled} showSpinner={sliderLocked} disabledText={lstrings.stake_disabled_slider} />
+      </View>
     </SceneWrapper>
   )
 }

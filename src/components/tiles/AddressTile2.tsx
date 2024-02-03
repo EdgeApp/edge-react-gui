@@ -2,7 +2,7 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import { ethers } from 'ethers'
 import * as React from 'react'
-import { AppState, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -16,16 +16,17 @@ import { lstrings } from '../../locales/strings'
 import { PaymentProtoError } from '../../types/PaymentProtoError'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getTokenId, getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
+import { EdgeAnim } from '../common/EdgeAnim'
 import { AddressModal } from '../modals/AddressModal'
 import { ScanModal } from '../modals/ScanModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { Tile } from './Tile'
+import { RowUi4 } from '../ui4/RowUi4'
 
 export interface ChangeAddressResult {
   fioAddress?: string
@@ -67,7 +68,6 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   const styles = getStyles(theme)
 
   // State:
-  const [clipboard, setClipboard] = React.useState('')
   const [loading, setLoading] = React.useState(false)
 
   // Selectors:
@@ -99,7 +99,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
         fioAddress = address.toLowerCase()
         address = publicAddress
       } catch (e: any) {
-        if (!e.code || e.code !== fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
+        if (!e.code || e.code !== fioPlugin.currencyInfo.defaultSettings?.errorCodes.INVALID_FIO_ADDRESS) {
           setLoading(false)
           return showError(e)
         }
@@ -163,24 +163,15 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
     }
   })
 
-  const checkClipboard = useHandler(async () => {
+  const handlePasteFromClipboard = useHandler(async () => {
+    const clipboard = await Clipboard.getString()
     try {
-      setLoading(true)
-      const uri = await Clipboard.getString()
-
       // Will throw in case uri is invalid
-      await coreWallet.parseUri(uri, currencyCode)
-      setClipboard(uri)
-      setLoading(false)
-    } catch (e: any) {
-      // Failure is acceptable
-      setClipboard('')
-      setLoading(false)
+      await coreWallet.parseUri(clipboard, currencyCode)
+      await changeAddress(clipboard)
+    } catch (error) {
+      showError(error)
     }
-  })
-
-  const handlePasteFromClipboard = useHandler(() => {
-    changeAddress(clipboard).catch(err => showError(err))
   })
 
   const handleScan = useHandler(() => {
@@ -227,17 +218,17 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
         bridge={bridge}
         headerTitle={lstrings.your_wallets}
         navigation={navigation}
-        allowedAssets={[{ pluginId, tokenId: getTokenId(account, pluginId, currencyCode) }]}
+        allowedAssets={[{ pluginId, tokenId: getTokenIdForced(account, pluginId, currencyCode) }]}
         excludeWalletIds={[coreWallet.id]}
       />
     ))
-      .then(async walletList => {
-        const { walletId } = walletList
-        if (walletId == null) return
+      .then(async result => {
+        if (result?.type !== 'wallet') return
+        const { walletId } = result
         const wallet = currencyWallets[walletId]
 
         // Prefer segwit address if the selected wallet has one
-        const { segwitAddress, publicAddress } = await wallet.getReceiveAddress()
+        const { segwitAddress, publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
         const address = segwitAddress != null ? segwitAddress : publicAddress
         await changeAddress(address)
       })
@@ -246,7 +237,6 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
 
   const handleTilePress = useHandler(async () => {
     if (!lockInputs && !!recipientAddress) {
-      await checkClipboard()
       resetSendTransaction()
     }
   })
@@ -254,15 +244,6 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   // ---------------------------------------------------------------------------
   // Side-Effects
   // ---------------------------------------------------------------------------
-
-  React.useEffect(() => {
-    const cleanup = AppState.addEventListener('change', appState => {
-      if (appState === 'active') checkClipboard().catch(err => showError(err))
-    })
-    checkClipboard().catch(err => showError(err))
-
-    return () => cleanup.remove()
-  }, [checkClipboard])
 
   useMount(() => {
     if (isCameraOpen) handleScan()
@@ -278,63 +259,61 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   // Rendering
   // ---------------------------------------------------------------------------
 
-  const copyMessage = clipboard !== '' ? `${lstrings.string_paste}: ${clipboard}` : null
-  const tileType = loading ? 'loading' : !!recipientAddress && !lockInputs ? 'delete' : 'static'
+  const tileType = !!recipientAddress && !lockInputs ? 'delete' : 'none'
 
   return (
-    <View>
-      <Tile type={tileType} title={title} onPress={handleTilePress}>
-        {!recipientAddress && (
-          <View style={styles.buttonsContainer}>
-            <TouchableOpacity style={styles.buttonContainer} onPress={handleChangeAddress}>
-              <FontAwesome name="edit" size={theme.rem(2)} color={theme.iconTappable} />
-              <EdgeText style={styles.buttonText}>{lstrings.enter_as_in_enter_address_with_keyboard}</EdgeText>
+    <RowUi4 rightButtonType={tileType} loading={loading} title={title} onPress={handleTilePress}>
+      {!recipientAddress && (
+        <EdgeAnim style={styles.buttonsContainer} enter={{ type: 'stretchInY' }} exit={{ type: 'stretchOutY' }}>
+          <TouchableOpacity style={styles.buttonContainer} onPress={handleChangeAddress}>
+            <FontAwesome name="edit" size={theme.rem(2)} color={theme.iconTappable} />
+            <EdgeText style={styles.buttonText}>{lstrings.enter_as_in_enter_address_with_keyboard}</EdgeText>
+          </TouchableOpacity>
+          {canSelfTransfer ? (
+            <TouchableOpacity style={styles.buttonContainer} onPress={handleSelfTransfer}>
+              <AntDesign name="wallet" size={theme.rem(2)} color={theme.iconTappable} />
+              <EdgeText style={styles.buttonText}>{lstrings.fragment_send_myself}</EdgeText>
             </TouchableOpacity>
-            {canSelfTransfer ? (
-              <TouchableOpacity style={styles.buttonContainer} onPress={handleSelfTransfer}>
-                <AntDesign name="wallet" size={theme.rem(2)} color={theme.iconTappable} />
-                <EdgeText style={styles.buttonText}>{lstrings.fragment_send_myself}</EdgeText>
-              </TouchableOpacity>
-            ) : null}
-            <TouchableOpacity style={styles.buttonContainer} onPress={handleScan}>
-              <FontAwesome5 name="expand" size={theme.rem(2)} color={theme.iconTappable} />
-              <EdgeText style={styles.buttonText}>{lstrings.scan_as_in_scan_barcode}</EdgeText>
-            </TouchableOpacity>
-            {copyMessage ? (
-              <TouchableOpacity style={styles.buttonContainer} onPress={handlePasteFromClipboard}>
-                <FontAwesome5 name="clipboard" size={theme.rem(2)} color={theme.iconTappable} />
-                <EdgeText style={styles.buttonText}>{lstrings.string_paste}</EdgeText>
-              </TouchableOpacity>
-            ) : null}
-          </View>
-        )}
-        {recipientAddress == null || recipientAddress === '' ? null : (
-          <>
-            {fioToAddress == null ? null : <EdgeText>{fioToAddress + '\n'}</EdgeText>}
-            <EdgeText numberOfLines={3} disableFontScaling>
-              {recipientAddress}
-            </EdgeText>
-          </>
-        )}
-      </Tile>
-    </View>
+          ) : null}
+          <TouchableOpacity style={styles.buttonContainer} onPress={handleScan}>
+            <FontAwesome5 name="expand" size={theme.rem(2)} color={theme.iconTappable} />
+            <EdgeText style={styles.buttonText}>{lstrings.scan_as_in_scan_barcode}</EdgeText>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonContainer} onPress={handlePasteFromClipboard}>
+            <FontAwesome5 name="clipboard" size={theme.rem(2)} color={theme.iconTappable} />
+            <EdgeText style={styles.buttonText}>{lstrings.string_paste}</EdgeText>
+          </TouchableOpacity>
+        </EdgeAnim>
+      )}
+      {recipientAddress == null || recipientAddress === '' ? null : (
+        <EdgeAnim enter={{ type: 'stretchInY' }} exit={{ type: 'stretchOutY' }}>
+          {fioToAddress == null ? null : <EdgeText>{fioToAddress + '\n'}</EdgeText>}
+          <EdgeText numberOfLines={3}>{recipientAddress}</EdgeText>
+        </EdgeAnim>
+      )}
+    </RowUi4>
   )
 })
 
 const getStyles = cacheStyles((theme: Theme) => ({
   buttonsContainer: {
-    paddingTop: theme.rem(1),
+    paddingTop: theme.rem(0.75),
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: 'space-between',
+    alignItems: 'flex-start', // Align items to the top
+    alignSelf: 'stretch'
   },
   buttonContainer: {
-    flex: 1,
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    height: theme.rem(3), // Unify height of all buttons regardless of icon dimensions
+    flex: 1
   },
   buttonText: {
+    alignSelf: 'center',
     fontSize: theme.rem(0.75),
+    marginTop: theme.rem(0.25),
     color: theme.textLink
   }
 }))

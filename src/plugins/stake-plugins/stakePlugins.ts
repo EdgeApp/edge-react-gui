@@ -29,7 +29,13 @@ export const makeStakePlugins = async (): Promise<void> => {
     makeTronStakePlugin().catch(e => {
       console.warn(e.message)
     }),
-    ...genericPlugins.map(async genericPlugin => await makeGenericStakePlugin(genericPlugin)(/* INIT OPTIONS */))
+    ...genericPlugins.map(
+      async genericPlugin =>
+        await makeGenericStakePlugin(genericPlugin)(/* INIT OPTIONS */).catch(e => {
+          console.error(String(e))
+          return null
+        })
+    )
   ]
 
   const results = await Promise.all(promises)

@@ -1,33 +1,33 @@
-import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
+import { useIconColor } from '../../hooks/useIconColor'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
-import { CurrencyRow } from '../data/row/CurrencyRow'
 import { CustomAsset, CustomAssetRow } from '../data/row/CustomAssetRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { CardUi4 } from '../ui4/CardUi4'
+import { CurrencyViewUi4 } from '../ui4/CurrencyViewUi4'
 import { EdgeText } from './EdgeText'
 
 interface Props {
   customAsset?: CustomAsset
-  showRate?: boolean
   token?: EdgeToken
-  tokenId?: string
+  tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
 
   // Callbacks:
   onLongPress?: () => void
-  onPress?: (walletId: string, currencyCode: string, tokenId?: string, customAsset?: CustomAsset) => void
+  onPress?: (walletId: string, tokenId: EdgeTokenId, customAsset?: CustomAsset) => void
 }
 
 const WalletListCurrencyRowComponent = (props: Props) => {
   const {
     customAsset,
-    showRate = false,
     token,
     tokenId,
     wallet,
@@ -40,13 +40,20 @@ const WalletListCurrencyRowComponent = (props: Props) => {
   const styles = getStyles(theme)
   const pausedWallets = useSelector(state => state.ui.settings.userPausedWalletsSet)
   const isPaused = (pausedWallets != null && pausedWallets.has(wallet.id)) || isKeysOnlyPlugin(wallet.currencyInfo.pluginId)
+  const { pluginId } = wallet.currencyInfo
 
-  // Currency code and wallet name for display:
-  const currencyCode = customAsset?.currencyCode ?? token?.currencyCode ?? wallet.currencyInfo.currencyCode
+  //
+  // State
+  //
+  const iconColor = useIconColor({ pluginId, tokenId })
+  const primaryColor = iconColor != null ? `${iconColor}88` : 'rgba(0, 0, 0, 0)'
 
+  //
+  // Handlers
+  //
   const handlePress = useHandler(() => {
     triggerHaptic('impactLight')
-    if (onPress != null) onPress(wallet.id, currencyCode, tokenId, customAsset)
+    if (onPress != null) onPress(wallet.id, tokenId, customAsset)
   })
 
   const handleLongPress = useHandler(() => {
@@ -54,31 +61,26 @@ const WalletListCurrencyRowComponent = (props: Props) => {
     if (onLongPress != null) onLongPress()
   })
 
-  return (
+  return customAsset != null ? (
+    // TODO: Update to UI4
     <TouchableOpacity accessible={false} style={styles.row} onLongPress={handleLongPress} onPress={handlePress}>
-      {customAsset != null ? (
-        <CustomAssetRow customAsset={customAsset} />
-      ) : (
-        <CurrencyRow showRate={showRate && !isPaused} token={token} tokenId={tokenId} wallet={wallet} />
-      )}
-      {isPaused ? (
-        <View style={styles.overlayContainer}>
-          <EdgeText style={styles.overlayLabel}>{lstrings.fragment_wallets_wallet_paused}</EdgeText>
-        </View>
-      ) : null}
+      <CustomAssetRow customAsset={customAsset} />
     </TouchableOpacity>
+  ) : (
+    <CardUi4
+      overlay={isPaused ? <EdgeText style={styles.overlayLabel}>{lstrings.fragment_wallets_wallet_paused}</EdgeText> : null}
+      onLongPress={handleLongPress}
+      onPress={handlePress}
+      gradientBackground={{ colors: [primaryColor, '#00000000'], start: { x: 0, y: 0 }, end: { x: 1, y: 0 } }}
+    >
+      <CurrencyViewUi4 token={token} tokenId={tokenId} wallet={wallet} />
+    </CardUi4>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   overlayLabel: {
     color: theme.overlayDisabledTextColor
-  },
-  overlayContainer: {
-    ...StyleSheet.absoluteFillObject,
-    alignItems: 'center',
-    backgroundColor: theme.overlayDisabledColor,
-    justifyContent: 'center'
   },
   row: {
     alignItems: 'center',

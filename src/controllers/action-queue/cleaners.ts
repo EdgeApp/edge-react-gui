@@ -3,6 +3,7 @@
 //
 import { asArray, asBoolean, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
 
+import { asEdgeTokenId } from '../../types/types'
 import { asBase64 } from '../../util/cleaners/asBase64'
 import {
   ActionEffect,
@@ -87,7 +88,7 @@ const asWyreBuyActionOp = asObject<WyreBuyActionOp>({
   type: asValue('wyre-buy'),
   nativeAmount: asString,
   walletId: asString,
-  tokenId: asOptional(asString)
+  tokenId: asEdgeTokenId
 })
 
 const asWyreSellActionOp = asObject<WyreSellActionOp>({
@@ -95,7 +96,7 @@ const asWyreSellActionOp = asObject<WyreSellActionOp>({
   wyreAccountId: asString,
   nativeAmount: asString,
   walletId: asString,
-  tokenId: asOptional(asString)
+  tokenId: asEdgeTokenId
 })
 
 const asLoanBorrowActionOp = asObject<LoanBorrowActionOp>({
@@ -103,7 +104,7 @@ const asLoanBorrowActionOp = asObject<LoanBorrowActionOp>({
   borrowPluginId: asString,
   nativeAmount: asString,
   walletId: asString,
-  tokenId: asOptional(asString)
+  tokenId: asEdgeTokenId
 })
 
 const asLoanDepositActionOp = asObject<LoanDepositActionOp>({
@@ -111,7 +112,7 @@ const asLoanDepositActionOp = asObject<LoanDepositActionOp>({
   borrowPluginId: asString,
   nativeAmount: asString,
   walletId: asString,
-  tokenId: asOptional(asString)
+  tokenId: asEdgeTokenId
 })
 
 const asLoanRepayActionOp = asObject<LoanRepayActionOp>({
@@ -119,7 +120,8 @@ const asLoanRepayActionOp = asObject<LoanRepayActionOp>({
   borrowPluginId: asString,
   nativeAmount: asString,
   walletId: asString,
-  tokenId: asOptional(asString)
+  tokenId: asEdgeTokenId,
+  fromTokenId: asEdgeTokenId
 })
 
 const asLoanWithdrawActionOp = asObject<LoanWithdrawActionOp>({
@@ -127,17 +129,17 @@ const asLoanWithdrawActionOp = asObject<LoanWithdrawActionOp>({
   borrowPluginId: asString,
   nativeAmount: asString,
   walletId: asString,
-  tokenId: asOptional(asString)
+  tokenId: asEdgeTokenId
 })
 
 const asSwapActionOp = asObject<SwapActionOp>({
   type: asValue('swap'),
   amountFor: asValue('from', 'to'),
-  fromTokenId: asOptional(asString),
+  fromTokenId: asEdgeTokenId,
   fromWalletId: asString,
   nativeAmount: asString,
   expectedPayoutNativeAmount: asOptional(asString),
-  toTokenId: asOptional(asString),
+  toTokenId: asEdgeTokenId,
   toWalletId: asString,
   displayKey: (raw: unknown) => asOptional(asSwapActionOpDisplayKey)(raw)
 })
@@ -175,7 +177,7 @@ const asAddressBalanceEffect = asObject<AddressBalanceEffect>({
   aboveAmount: asOptional(asString),
   belowAmount: asOptional(asString),
   walletId: asString,
-  tokenId: asOptional(asString)
+  tokenId: asEdgeTokenId
 })
 const asPushEventEffect = asObject<PushEventEffect>({
   type: asValue('push-event'),

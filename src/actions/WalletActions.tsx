@@ -1,6 +1,6 @@
 import { div, log10, lt, round } from 'biggystring'
 import { asArray, asBoolean, asMaybe, asObject, asString, asUnknown } from 'cleaners'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import hashjs from 'hash.js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
@@ -23,7 +23,7 @@ import { refreshConnectedWallets } from './FioActions'
 export interface SelectWalletTokenParams {
   navigation: NavigationBase
   walletId: string
-  tokenId?: string
+  tokenId: EdgeTokenId
   alwaysActivate?: boolean
 }
 
@@ -95,7 +95,7 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
       currencyInfo: { currencyCode, pluginId }
     } = wallet
     const walletName = name ?? ''
-    const { publicAddress } = await wallet.getReceiveAddress()
+    const { publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
 
     if (publicAddress !== '') {
       // already activated
@@ -222,8 +222,10 @@ const activateWalletTokens = async (
     const activationQuote = await account.activateWallet({
       activateWalletId: wallet.id,
       activateTokenIds: tokenIds,
-      paymentWalletId,
-      paymentTokenId: tokenId
+      paymentInfo: {
+        walletId: paymentWalletId,
+        tokenId
+      }
     })
     const tokensText = tokenIds.map(tokenId => {
       const { currencyCode, displayName } = getToken(wallet, tokenId) ?? {}
@@ -260,7 +262,7 @@ const activateWalletTokens = async (
         { label: lstrings.mining_fee, value: feeString }
       ],
       onConfirm: (resetSlider: () => void) => {
-        if (lt(wallet.balances[paymentCurrencyCode] ?? '0', nativeFee)) {
+        if (lt(wallet.balanceMap.get(feeTokenId) ?? '0', nativeFee)) {
           const msg = tokenIds.length > 1 ? lstrings.activate_wallet_tokens_insufficient_funds_s : lstrings.activate_wallet_token_insufficient_funds_s
           Airship.show<'ok' | undefined>(bridge => (
             <ButtonsModal

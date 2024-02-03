@@ -1,7 +1,7 @@
 import { mul, toFixed } from 'biggystring'
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Alert, Image, ScrollView, View } from 'react-native'
+import { Alert, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
@@ -11,8 +11,8 @@ import { config } from '../../../theme/appConfig'
 import { connect } from '../../../types/reactRedux'
 import { RootState } from '../../../types/reduxTypes'
 import { EdgeSceneProps } from '../../../types/routerTypes'
-import { EdgeTokenId } from '../../../types/types'
-import { getTokenId } from '../../../util/CurrencyInfoHelpers'
+import { EdgeAsset } from '../../../types/types'
+import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getRegInfo } from '../../../util/FioAddressUtils'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -20,8 +20,9 @@ import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
-import { MainButton } from '../../themed/MainButton'
-import { Tile } from '../../tiles/Tile'
+import { ButtonUi4 } from '../../ui4/ButtonUi4'
+import { CardUi4 } from '../../ui4/CardUi4'
+import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
 interface StateProps {
@@ -42,7 +43,7 @@ interface DispatchProps {
 
 interface LocalState {
   loading: boolean
-  supportedAssets: EdgeTokenId[]
+  supportedAssets: EdgeAsset[]
   supportedCurrencies: { [currencyCode: string]: boolean }
   paymentInfo: { [currencyCode: string]: { amount: string; address: string } }
   activationCost: number
@@ -84,7 +85,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
           fioDisplayDenomination,
           isFallback
         )
-        this.setState({ activationCost, feeValue, supportedAssets, supportedCurrencies, paymentInfo })
+        this.setState({ activationCost, feeValue, supportedAssets: [...supportedAssets, { pluginId: 'fio', tokenId: null }], supportedCurrencies, paymentInfo })
       } catch (e: any) {
         showError(e)
         this.setState({ errorMessage: e.message })
@@ -120,16 +121,17 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
   selectWallet = async () => {
     const { supportedAssets } = this.state
 
-    const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
+    const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={supportedAssets} />
     ))
-    if (walletId && currencyCode) {
+    if (result?.type === 'wallet') {
+      const { walletId, currencyCode } = result
       this.setState({ paymentWallet: { id: walletId, currencyCode } })
     }
   }
 
   proceed = async (walletId: string, paymentCurrencyCode: string) => {
-    const { isConnected, state, navigation, pluginId, route } = this.props
+    const { isConnected, state, navigation, route } = this.props
     const { selectedWallet, fioAddress } = route.params
     const { feeValue, paymentInfo: allPaymentInfo } = this.state
     const { account } = state.core
@@ -153,7 +155,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
         let nativeAmount = mul(allPaymentInfo[paymentCurrencyCode].amount, exchangeDenomination.multiplier)
         nativeAmount = toFixed(nativeAmount, 0, 0)
 
-        const tokenId = getTokenId(account, pluginId, paymentCurrencyCode)
+        const tokenId = getTokenIdForced(account, wallet.currencyInfo.pluginId, paymentCurrencyCode)
         const sendParams: SendScene2Params = {
           walletId,
           tokenId,
@@ -164,6 +166,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
             wallet: true
           },
           spendInfo: {
+            tokenId,
             spendTargets: [
               {
                 nativeAmount,
@@ -186,7 +189,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
                 sprintf(lstrings.fio_address_register_pending, lstrings.fio_address_register_form_field_label),
                 [{ text: lstrings.string_ok_cap }]
               )
-              navigation.navigate('walletsTab', { screen: 'walletList' })
+              navigation.navigate('homeTab', { screen: 'home' })
             }
           }
         }
@@ -198,7 +201,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
   }
 
   renderSelectWallet = () => {
-    const { account, theme, route } = this.props
+    const { account, route } = this.props
     const { selectedDomain, fioAddress } = route.params
     const { activationCost, paymentWallet, loading } = this.state
 
@@ -208,15 +211,14 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
 
     return (
       <>
-        <Tile type="static" title={lstrings.fio_address_register_form_field_label} body={fioAddress} />
-        {!selectedDomain.walletId && (
-          <Tile type="touchable" title={lstrings.create_wallet_account_select_wallet} body={walletName} onPress={this.onWalletPress} />
-        )}
-        <Tile type="static" title={lstrings.create_wallet_account_amount_due} body={costStr} />
-        {!loading && ((paymentWallet && paymentWallet.id) || selectedDomain.walletId !== '') && (
-          <MainButton disabled={nextDisabled} onPress={this.onNextPress} label={lstrings.string_next_capitalized} marginRem={1} type="secondary" />
-        )}
-        {loading && <ActivityIndicator color={theme.iconTappable} />}
+        <CardUi4 sections marginRem={[0.5, 0.5, 2, 0.5]}>
+          <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddress} />
+          {!selectedDomain.walletId && (
+            <RowUi4 rightButtonType="touchable" title={lstrings.create_wallet_account_select_wallet} body={walletName} onPress={this.onWalletPress} />
+          )}
+          <RowUi4 title={lstrings.create_wallet_account_amount_due} body={costStr} loading={loading} />
+        </CardUi4>
+        <ButtonUi4 disabled={nextDisabled} onPress={this.onNextPress} label={lstrings.string_next_capitalized} type="primary" />
       </>
     )
   }
@@ -227,33 +229,27 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     const styles = getStyles(theme)
     const detailsText = sprintf(lstrings.fio_address_payment_required_text, config.appName)
     return (
-      <SceneWrapper background="theme">
-        <ScrollView>
-          <View style={styles.header}>
-            <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
-            <EdgeText style={styles.instructionalText} numberOfLines={10}>
-              {detailsText}
-            </EdgeText>
-          </View>
-          {this.renderSelectWallet()}
-          {errorMessage && (
-            <EdgeText style={styles.errorMessage} numberOfLines={3}>
-              {errorMessage}
-            </EdgeText>
-          )}
-          <View style={styles.bottomSpace} />
-        </ScrollView>
+      <SceneWrapper scroll padding={theme.rem(0.5)}>
+        <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
+        <EdgeText style={styles.instructionalText} numberOfLines={10}>
+          {detailsText}
+        </EdgeText>
+        {this.renderSelectWallet()}
+        {errorMessage && (
+          <EdgeText style={styles.errorMessage} numberOfLines={3}>
+            {errorMessage}
+          </EdgeText>
+        )}
+        <View style={styles.bottomSpace} />
       </SceneWrapper>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  header: {
-    paddingHorizontal: theme.rem(1.25)
-  },
   instructionalText: {
     paddingVertical: theme.rem(1.5),
+    paddingHorizontal: theme.rem(0.5),
     fontSize: theme.rem(1),
     textAlign: 'center',
     color: theme.secondaryText

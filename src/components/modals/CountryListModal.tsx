@@ -22,9 +22,11 @@ interface CountryListViewToken extends ViewToken {
   item: CountryData
 }
 
-export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }: Props) => {
+export const CountryListModal = ({ countryCode: rawCountryCode, bridge }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  const countryCode = rawCountryCode === '' ? getCountry() ?? 'US' : rawCountryCode
 
   const [visibleRows, setVisibleRows] = React.useState<CountryListViewToken[]>([])
 
@@ -32,15 +34,7 @@ export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }:
     const logoName = filename ?? name.toLowerCase().replace(' ', '-')
     const source = { uri: `${FLAG_LOGO_URL}/${logoName}.png` }
 
-    return (
-      <SelectableRow
-        arrowTappable
-        icon={<FastImage source={source} style={styles.image} />}
-        subTitle={alpha}
-        title={name}
-        onPress={() => bridge.resolve(alpha)}
-      />
-    )
+    return <SelectableRow icon={<FastImage source={source} style={styles.image} />} subTitle={alpha} title={name} onPress={() => bridge.resolve(alpha)} />
   }
 
   const rowDataFilter = (searchText: string, country: CountryData) => {
@@ -76,7 +70,6 @@ export const CountryListModal = ({ countryCode = getCountry() ?? 'US', bridge }:
       title={lstrings.buy_sell_crypto_select_country_button}
       label={lstrings.search_region}
       autoFocus
-      blurOnClear={false}
       rowsData={countryCodes}
       onSubmitEditing={handleSubmitEditing}
       rowComponent={rowComponent}

@@ -1,15 +1,16 @@
 import { asValue } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
-import { EdgeTransaction } from 'edge-core-js/types'
+import { EdgeAssetAction, EdgeMetadata, EdgeTokenId, EdgeTransaction, EdgeTxAction } from 'edge-core-js/types'
 
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
 import { ButtonInfo, ButtonModalProps } from '../../components/modals/ButtonsModal'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
+import { Permission } from '../../reducers/PermissionsReducer'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList } from '../../types/routerTypes'
-import { EdgeTokenId } from '../../types/types'
+import { EdgeAsset } from '../../types/types'
 import { TrackingEventName } from '../../util/tracking'
 import { FiatPluginOpenWebViewParams } from './scenes/FiatPluginWebView'
 import { RewardsCardDashboardParams } from './scenes/RewardsCardDashboardScene'
@@ -96,10 +97,28 @@ export interface FiatPluginOpenExternalWebViewParams {
 }
 
 export interface FiatPluginWalletPickerResult {
-  walletId?: string
-  tokenId?: string
-  currencyCode?: string
+  walletId: string
+  tokenId: EdgeTokenId
+  /** @deprecated Use tokenId instead */
+  currencyCode: string
 }
+
+export interface SaveTxMetadataParams {
+  txid: string
+  walletId: string
+  tokenId: EdgeTokenId
+  metadata?: EdgeMetadata
+}
+
+export interface SaveTxActionParams {
+  txid: string
+  walletId: string
+  tokenId: EdgeTokenId
+  savedAction: EdgeTxAction
+  assetAction: EdgeAssetAction
+}
+
+export type FiatPluginPermissions = Permission[]
 
 export interface FiatPluginUi {
   addressWarnings: (parsedUri: any, currencyCode: string) => Promise<boolean>
@@ -107,13 +126,16 @@ export interface FiatPluginUi {
   showToastSpinner: <T>(message: string, promise: Promise<T>) => Promise<T>
   openWebView: (params: FiatPluginOpenWebViewParams) => Promise<void>
   openExternalWebView: (params: FiatPluginOpenExternalWebViewParams) => Promise<void>
-  walletPicker: (params: { headerTitle: string; allowedAssets?: EdgeTokenId[]; showCreateWallet?: boolean }) => Promise<FiatPluginWalletPickerResult>
+  walletPicker: (params: { headerTitle: string; allowedAssets?: EdgeAsset[]; showCreateWallet?: boolean }) => Promise<FiatPluginWalletPickerResult | undefined>
   showError: (error: Error) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
   enterAmount: (params: AppParamList['guiPluginEnterAmount']) => void
   addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress>
+  requestPermission: (permissions: FiatPluginPermissions, displayName: string, mandatory: boolean) => Promise<boolean>
   rewardsCardDashboard: (params: RewardsCardDashboardParams) => Promise<void>
   rewardsCardWelcome: (params: RewardsCardWelcomeParams) => Promise<void>
+  saveTxAction: (params: SaveTxActionParams) => Promise<void>
+  saveTxMetadata: (params: SaveTxMetadataParams) => Promise<void>
   send: (params: SendScene2Params) => Promise<EdgeTransaction>
   sendPaymentProto: (params: { uri: string; params: LaunchPaymentProtoParams }) => Promise<void>
   sepaForm: (params: FiatPluginSepaFormParams) => Promise<SepaInfo>

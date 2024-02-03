@@ -13,7 +13,7 @@ import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { UriQueryMap } from '../../types/WebTypes'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { makePluginUri } from '../../util/GuiPluginTools'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { setPluginScene } from '../navigation/GuiPluginBackButton'
@@ -67,18 +67,22 @@ export function EdgeProviderComponent(props: Props): JSX.Element {
   }, [accountPlugins, accountReferral, pluginId])
 
   // Make sure we have the permissions the plugin requires:
-  useAsyncEffect(async () => {
-    for (const permission of permissions) {
-      const deniedPermission = await requestPermissionOnSettings(disklet, permission, displayName, mandatoryPermissions)
-      if (deniedPermission) {
-        navigation.goBack()
-        return
+  useAsyncEffect(
+    async () => {
+      for (const permission of permissions) {
+        const deniedPermission = await requestPermissionOnSettings(disklet, permission, displayName, mandatoryPermissions)
+        if (deniedPermission) {
+          navigation.goBack()
+          return
+        }
       }
-    }
 
-    // Now show the promo message, if we have one:
-    if (promoMessage != null) showToast(promoMessage)
-  }, [displayName, mandatoryPermissions, navigation, permissions, promoMessage, disklet])
+      // Now show the promo message, if we have one:
+      if (promoMessage != null) showToast(promoMessage)
+    },
+    [displayName, mandatoryPermissions, navigation, permissions, promoMessage, disklet],
+    'EdgeProviderComponent'
+  )
 
   // Sign up for back-button events:
   const webView = React.useRef<WebView>(null)
@@ -113,7 +117,7 @@ export function EdgeProviderComponent(props: Props): JSX.Element {
   // Build our EdgeProvider instance one time:
   const [edgeProvider] = React.useState(() => {
     const selectedWallet = account.currencyWallets[selectedWalletId]
-    const selectedTokenId = selectedWallet == null ? undefined : getTokenId(account, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode)
+    const selectedTokenId = selectedWallet == null ? null : getTokenIdForced(account, selectedWallet.currencyInfo.pluginId, selectedCurrencyCode)
     return new EdgeProviderServer({
       account,
       dispatch,

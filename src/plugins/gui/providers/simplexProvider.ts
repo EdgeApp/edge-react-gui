@@ -315,7 +315,7 @@ export const simplexProvider: FiatProviderFactory = {
           expirationDate: new Date(Date.now() + 8000),
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
             const { showUi, coreWallet } = approveParams
-            const receiveAddress = await coreWallet.getReceiveAddress()
+            const receiveAddress = await coreWallet.getReceiveAddress({ tokenId: null })
 
             const data = {
               ts: Math.floor(Date.now() / 1000),

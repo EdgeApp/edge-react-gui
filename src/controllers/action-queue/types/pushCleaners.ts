@@ -1,5 +1,6 @@
 import { asArray, asDate, asEither, asNumber, asObject, asOptional, asString, asTuple, asValue, Cleaner } from 'cleaners'
 
+import { asLegacyTokenId } from '../../../types/types'
 import { asBase64 } from '../../../util/cleaners/asBase64'
 import { NewPushEvent } from './pushApiTypes'
 import {
@@ -19,7 +20,7 @@ import {
 export const asAddressBalanceTrigger: Cleaner<AddressBalanceTrigger> = asObject({
   type: asValue('address-balance'),
   pluginId: asString,
-  tokenId: asOptional(asString),
+  tokenId: asLegacyTokenId,
   address: asString,
   aboveAmount: asOptional(asString), // Satoshis or Wei or such
   belowAmount: asOptional(asString) // Satoshis or Wei or such

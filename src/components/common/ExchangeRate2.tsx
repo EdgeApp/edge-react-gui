@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { memo } from 'react'
 
@@ -10,7 +10,7 @@ import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
   wallet: EdgeCurrencyWallet
-  tokenId?: string
+  tokenId: EdgeTokenId
 }
 
 export const ExchangeRate2 = memo<Props>((props: Props) => {

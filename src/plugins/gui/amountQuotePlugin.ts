@@ -5,9 +5,9 @@ import { sprintf } from 'sprintf-js'
 import { formatNumber, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
-import { EdgeTokenId } from '../../types/types'
+import { EdgeAsset } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../util/network'
 import { logEvent } from '../../util/tracking'
 import { fuzzyTimeout } from '../../util/utils'
@@ -116,7 +116,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
       const assetArray = await showUi.showToastSpinner(lstrings.fiat_plugin_fetching_assets, ps)
 
-      const allowedAssets: EdgeTokenId[] = []
+      const allowedAssets: EdgeAsset[] = []
       const allowedFiats: { [fiatCurrencyCode: string]: boolean } = {}
       for (const assetMap of assetArray) {
         if (assetMap == null) continue
@@ -125,7 +125,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           for (const currencyCode in currencyCodeMap) {
             if (currencyCodeMap[currencyCode]) {
               try {
-                const currencyTokenId = getTokenId(account, currencyPluginId, currencyCode)
+                const currencyTokenId = getTokenIdForced(account, currencyPluginId, currencyCode)
                 allowedAssets.push({ pluginId: currencyPluginId, tokenId: currencyTokenId })
               } catch (e: any) {
                 // This is ok. We might not support a specific pluginId
@@ -146,8 +146,8 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         showCreateWallet: direction === 'buy'
       })
 
+      if (walletListResult == null) return
       const { walletId, currencyCode, tokenId } = walletListResult
-      if (walletId == null || currencyCode == null) return
 
       const coreWallet = account.currencyWallets[walletId]
       const currencyPluginId = coreWallet.currencyInfo.pluginId

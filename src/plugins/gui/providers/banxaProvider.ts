@@ -468,7 +468,11 @@ export const banxaProvider: FiatProviderFactory = {
           expirationDate: new Date(Date.now() + 50000),
           approveQuote: async (approveParams: FiatProviderApproveQuoteParams): Promise<void> => {
             const { showUi, coreWallet } = approveParams
-            const receiveAddress = await coreWallet.getReceiveAddress()
+            const success = await showUi.requestPermission(['camera'], pluginDisplayName, true)
+            if (!success) {
+              await showUi.showError(new Error(lstrings.fiat_plugin_cannot_continue_camera_permission))
+            }
+            const receiveAddress = await coreWallet.getReceiveAddress({ tokenId: null })
 
             const bodyParams: any = {
               payment_method_id: paymentObj?.id ?? '',
@@ -550,6 +554,7 @@ export const banxaProvider: FiatProviderFactory = {
                               walletId: coreWallet.id,
                               tokenId,
                               spendInfo: {
+                                tokenId,
                                 spendTargets: [
                                   {
                                     nativeAmount,
@@ -765,7 +770,7 @@ const getPaymentIdLimit = (direction: FiatDirection, fiat: string, banxaCoin: st
   } catch (e) {}
 }
 
-// Takes an EdgeTokenId and returns the corresponding Banxa chain code and coin code
+// Takes an EdgeAsset and returns the corresponding Banxa chain code and coin code
 const edgeToBanxaCrypto = (pluginId: string, direction: FiatDirection, displayCurrencyCode: string): { banxaChain: string; banxaCoin: string } => {
   const tokens = allowedCurrencyCodes[direction].crypto[pluginId]
   if (tokens == null) throw new Error(`edgeToBanxaCrypto ${pluginId} not allowed`)

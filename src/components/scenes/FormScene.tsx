@@ -2,6 +2,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { lstrings } from '../../locales/strings'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -22,9 +23,14 @@ export const FormScene = (props: Props) => {
   const styles = getStyles(theme)
 
   return (
-    <SceneWrapper background="theme">
+    <SceneWrapper>
       <SceneHeader tertiary={headerTertiary} title={headerText} underline withTopMargin />
-      <KeyboardAwareScrollView contentContainerStyle={styles.container} extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.container}
+        extraScrollHeight={theme.rem(2.75)}
+        enableOnAndroid
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+      >
         {children}
         <View style={styles.footer}>
           <SafeSlider onSlidingComplete={onSliderComplete} disabled={sliderDisabled} disabledText={lstrings.send_confirmation_slide_to_confirm} />

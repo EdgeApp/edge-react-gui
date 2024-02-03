@@ -26,7 +26,7 @@ export const FiatIconComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const fiatBackgroundIcon = getCurrencyIconUris('fiat')
+  const fiatBackgroundIcon = getCurrencyIconUris('fiat', null)
   const source = { uri: mono ? fiatBackgroundIcon.symbolImageDarkMono : fiatBackgroundIcon.symbolImage }
   const fiatSymbol = getSymbolFromCurrency(fixFiatCurrencyCode(fiatCurrencyCode))
   const fiatSymbolSizing = { fontSize: theme.rem(sizeRem * 0.625) }

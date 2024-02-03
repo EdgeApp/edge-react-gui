@@ -4,9 +4,9 @@ import { sprintf } from 'sprintf-js'
 
 import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { Card } from '../cards/Card'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { CardUi4 } from '../ui4/CardUi4'
 
 interface Props {
   apr?: number
@@ -22,9 +22,9 @@ const AprCardComponent = (props: Props) => {
 
   return (
     <View style={styles.cardContainer}>
-      <Card paddingRem={[0.5, 1]}>
+      <CardUi4 paddingRem={[0.5, 1]}>
         <EdgeText>{displayApr}</EdgeText>
-      </Card>
+      </CardUi4>
     </View>
   )
 }

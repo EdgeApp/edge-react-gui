@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ScrollView } from 'react-native'
+import { View } from 'react-native'
 
 import { lstrings } from '../../../locales/strings'
 import { CcWalletMap } from '../../../reducers/FioReducer'
@@ -12,9 +12,11 @@ import { ButtonsModal } from '../../modals/ButtonsModal'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
+import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
 import { Radio } from '../../themed/ThemedButtons'
-import { Tile } from '../../tiles/Tile'
+import { CardUi4 } from '../../ui4/CardUi4'
+import { RowUi4 } from '../../ui4/RowUi4'
 
 interface State {
   acknowledge: boolean
@@ -53,7 +55,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
           walletId: wallet.id,
           tokenCode: wallet.currencyCode,
           chainCode: wallet.chainCode,
-          publicAddress: (await wallet.edgeWallet.getReceiveAddress()).publicAddress
+          publicAddress: (await wallet.edgeWallet.getReceiveAddress({ tokenId: null })).publicAddress
         }))
 
         let publicAddresses = await Promise.all(promiseArray)
@@ -70,7 +72,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
           walletId: wallet.id,
           tokenCode: wallet.currencyCode,
           chainCode: wallet.chainCode,
-          publicAddress: (await wallet.edgeWallet.getReceiveAddress()).publicAddress
+          publicAddress: (await wallet.edgeWallet.getReceiveAddress({ tokenId: null })).publicAddress
         }))
 
         publicAddresses = await Promise.all(promiseArray)
@@ -185,20 +187,17 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper background="theme">
-        <ScrollView>
-          <Tile type="static" title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
-          {walletsToConnect.length ? (
-            <Tile type="static" title={lstrings.title_fio_connect_to_wallet}>
-              {walletsToConnect.map(this.renderWalletLine)}
-            </Tile>
-          ) : null}
+      <SceneWrapper scroll>
+        <SceneHeader title={lstrings.title_fio_connect_to_wallet} underline withTopMargin />
+        <View style={styles.container}>
+          <CardUi4 sections>
+            <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
+            {walletsToConnect.length ? <RowUi4 title={lstrings.title_fio_connect_to_wallet}>{walletsToConnect.map(this.renderWalletLine)}</RowUi4> : null}
 
-          {walletsToDisconnect.length ? (
-            <Tile type="static" title={lstrings.title_fio_disconnect_wallets}>
-              {walletsToDisconnect.map(this.renderWalletLine)}
-            </Tile>
-          ) : null}
+            {walletsToDisconnect.length ? (
+              <RowUi4 title={lstrings.title_fio_disconnect_wallets}>{walletsToDisconnect.map(this.renderWalletLine)}</RowUi4>
+            ) : null}
+          </CardUi4>
 
           <Radio value={acknowledge} onPress={this.check} marginRem={[2, 2, 0]}>
             <EdgeText style={styles.checkTitle} numberOfLines={4}>
@@ -214,13 +213,16 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
               showSpinner={connectWalletsLoading}
             />
           )}
-        </ScrollView>
+        </View>
       </SceneWrapper>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    padding: theme.rem(0.5)
+  },
   content: {
     color: theme.primaryText,
     fontSize: theme.rem(1),

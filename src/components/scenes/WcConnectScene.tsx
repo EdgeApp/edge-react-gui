@@ -5,6 +5,7 @@ import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
 import { selectWalletToken } from '../../actions/WalletActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -16,26 +17,25 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { EdgeTokenId } from '../../types/types'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { EdgeAsset } from '../../types/types'
+import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { truncateString } from '../../util/utils'
-import { Card } from '../cards/Card'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { CryptoIcon } from '../icons/CryptoIcon'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { FlashNotification } from '../navigation/FlashNotification'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface Props extends EdgeSceneProps<'wcConnect'> {}
 
 export interface WcConnectParams {
   proposal: Web3WalletTypes.SessionProposal
-  edgeTokenIds: EdgeTokenId[]
+  edgeTokenIds: EdgeAsset[]
 }
 
 export const WcConnectScene = (props: Props) => {
@@ -62,10 +62,14 @@ export const WcConnectScene = (props: Props) => {
     return { subTitleText, bodyTitleText, dAppImage }
   }, [proposal])
 
-  useAsyncEffect(async () => {
-    const r = await wallet.getReceiveAddress()
-    setWalletAddress(r.publicAddress)
-  }, [wallet])
+  useAsyncEffect(
+    async () => {
+      const r = await wallet.getReceiveAddress({ tokenId: null })
+      setWalletAddress(r.publicAddress)
+    },
+    [wallet],
+    'WcConnectScene'
+  )
 
   const dispatch = useDispatch()
 
@@ -82,12 +86,13 @@ export const WcConnectScene = (props: Props) => {
   }
 
   const handleWalletListModal = useHandler(async () => {
-    const { walletId, currencyCode } = await Airship.show<WalletListResult>(bridge => (
+    const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} allowedAssets={edgeTokenIds} showCreateWallet navigation={navigation} />
     ))
-    if (walletId && currencyCode) {
+    if (result?.type === 'wallet') {
+      const { walletId, currencyCode } = result
       const wallet = account.currencyWallets[walletId]
-      const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+      const tokenId = getTokenIdForced(account, wallet.currencyInfo.pluginId, currencyCode)
       await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
       setSelectedWallet({ walletId, currencyCode })
     }
@@ -103,21 +108,21 @@ export const WcConnectScene = (props: Props) => {
 
   const renderWalletSelect = () => {
     if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
-      return <SelectableRow arrowTappable title={lstrings.wc_confirm_select_wallet} onPress={handleWalletListModal} />
+      return <SelectableRow title={lstrings.wc_confirm_select_wallet} onPress={handleWalletListModal} />
     } else {
       const walletNameStr = truncateString(walletName || '', MAX_ADDRESS_CHARACTERS)
       const walletImage = (
-        <CryptoIcon pluginId={wallet.currencyInfo.pluginId} tokenId={getTokenId(account, wallet.currencyInfo.pluginId, selectedWallet.currencyCode)} />
+        <CryptoIconUi4 pluginId={wallet.currencyInfo.pluginId} tokenId={getTokenIdForced(account, wallet.currencyInfo.pluginId, selectedWallet.currencyCode)} />
       )
       const walletAddressStr = truncateString(walletAddress, MAX_ADDRESS_CHARACTERS, true)
-      return <SelectableRow arrowTappable icon={walletImage} subTitle={walletAddressStr} title={walletNameStr} onPress={handleWalletListModal} />
+      return <SelectableRow icon={walletImage} subTitle={walletAddressStr} title={walletNameStr} onPress={handleWalletListModal} />
     }
   }
 
   return (
-    <SceneWrapper background="theme" hasTabs={false}>
+    <SceneWrapper>
       <SceneHeader title={lstrings.wc_confirm_title} underline />
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         <View style={styles.listRow}>
           <FastImage resizeMode="contain" style={styles.currencyLogo} source={{ uri: dAppImage }} />
           <EdgeText style={styles.subTitle} numberOfLines={2}>
@@ -127,12 +132,8 @@ export const WcConnectScene = (props: Props) => {
 
         <EdgeText style={styles.bodyTitle}>{bodyTitleText}</EdgeText>
         <EdgeText style={styles.body}>{lstrings.wc_confirm_body}</EdgeText>
-        <Card paddingRem={0} marginRem={[2.5, 0.5, 2]}>
-          {renderWalletSelect()}
-        </Card>
-        {subTitleText !== '' && (
-          <MainButton label={lstrings.wc_confirm_connect_button} type="secondary" marginRem={[3.5, 0.5]} onPress={handleConnect} alignSelf="center" />
-        )}
+        {renderWalletSelect()}
+        {subTitleText === '' ? null : <ButtonsViewUi4 sceneMargin primary={{ label: lstrings.wc_confirm_connect_button, onPress: handleConnect }} />}
       </ScrollView>
     </SceneWrapper>
   )
@@ -141,7 +142,8 @@ export const WcConnectScene = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   currencyLogo: {
     height: theme.rem(2),
-    width: theme.rem(2)
+    width: theme.rem(2),
+    marginLeft: theme.rem(0.5)
   },
   container: {
     padding: theme.rem(0.5),
@@ -166,7 +168,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   body: {
     color: theme.secondaryText,
-    marginLeft: theme.rem(0.5)
+    marginLeft: theme.rem(0.5),
+    marginBottom: theme.rem(1)
   },
   icon: {
     alignSelf: 'center',

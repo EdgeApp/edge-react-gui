@@ -5,6 +5,7 @@ import * as React from 'react'
 import { showBackupModal } from '../../actions/BackupModalActions'
 import { updateExchangeRates } from '../../actions/ExchangeRateActions'
 import { checkFioObtData } from '../../actions/FioActions'
+import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { showReceiveDropdown } from '../../actions/ReceiveDropdown'
 import { checkPasswordRecovery } from '../../actions/RecoveryReminderActions'
 import { updateWalletLoadingProgress, updateWalletsRequest } from '../../actions/WalletActions'
@@ -13,8 +14,11 @@ import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { stakeMetadataCache } from '../../plugins/stake-plugins/metadataCache'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { makePeriodicTask } from '../../util/PeriodicTask'
 import { datelog, snooze } from '../../util/utils'
 import { Airship } from './AirshipInstance'
+
+const REFRESH_RATES_MS = 30000
 
 interface Props {
   account: EdgeAccount
@@ -66,14 +70,7 @@ export function AccountCallbackManager(props: Props) {
         if (hasAlerts) {
           navigation.navigate('securityAlerts', {})
         }
-      }),
-
-      account.rateCache.on('update', () =>
-        setDirty(dirty => ({
-          ...dirty,
-          rates: true
-        }))
-      )
+      })
     ]
 
     return () => cleanups.forEach(cleanup => cleanup())
@@ -115,7 +112,12 @@ export function AccountCallbackManager(props: Props) {
 
           // Notify the user to consider backing up their account
           if (account.username == null) {
-            showBackupModal({ navigation })
+            // Avoid showing modal for FIO wallets since the first transaction may be the handle creation
+            if (wallet.currencyInfo.pluginId === 'fio') {
+              dispatch(refreshAllFioAddresses()).catch(err => console.warn(err))
+            } else {
+              showBackupModal({ navigation })
+            }
           }
         }
 
@@ -136,7 +138,7 @@ export function AccountCallbackManager(props: Props) {
       }),
 
       // These ones defer their work until later:
-      wallet.watch('balances', () => setRatesDirty()),
+      wallet.watch('balanceMap', () => setRatesDirty()),
       wallet.watch('enabledTokenIds', () => setRatesDirty())
     ]
 
@@ -179,6 +181,17 @@ export function AccountCallbackManager(props: Props) {
     [dirty.rates],
     'AccountCallbackManager:rates'
   )
+
+  React.useEffect(() => {
+    const task = makePeriodicTask(() => {
+      setDirty(dirty => ({
+        ...dirty,
+        rates: true
+      }))
+    }, REFRESH_RATES_MS)
+    task.start()
+    return () => task.stop()
+  }, [])
 
   return null
 }

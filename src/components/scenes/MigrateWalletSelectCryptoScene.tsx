@@ -1,14 +1,15 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import * as React from 'react'
-import { Switch, View } from 'react-native'
+import { ListRenderItemInfo, Switch, View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -41,9 +42,8 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
     Object.keys(currencyWallets).forEach(walletId => {
       const wallet = currencyWallets[walletId]
       const {
-        currencyInfo: { currencyCode, pluginId, walletType },
-        currencyConfig: { allTokens },
-        balances,
+        currencyInfo: { pluginId, walletType },
+        balanceMap,
         enabledTokenIds
       } = wallet
 
@@ -52,32 +52,19 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
       if (pluginId === 'ripple') return // ignore currencies with token approval since they can't do bulk approvals
 
       const walletAssetList: MigrateWalletItem[] = []
-      for (const [cc, bal] of Object.entries(balances)) {
-        if (cc === currencyCode) {
-          if (zeroString(bal)) return // ignore wallet
-          walletAssetList.unshift({
-            createWalletIds: [walletId],
-            currencyCode: cc,
-            displayName: getWalletName(wallet),
-            key: walletId,
-            pluginId: pluginId,
-            walletType
-          })
-        } else {
-          if (zeroString(bal)) continue // ignore token
-          const tokenId = Object.keys(allTokens).find(tokenId => cc === allTokens[tokenId].currencyCode)
-
-          if (tokenId == null || !enabledTokenIds.includes(tokenId)) continue // ignore token
-          walletAssetList.push({
-            createWalletIds: [walletId],
-            currencyCode: cc,
-            displayName: getWalletName(wallet),
-            key: `${walletId}:${cc}`,
-            pluginId: pluginId,
-            tokenId,
-            walletType
-          })
-        }
+      for (const [tokenId, bal] of Array.from(balanceMap.entries())) {
+        if (zeroString(bal)) continue // ignore token
+        if (tokenId != null && !enabledTokenIds.includes(tokenId)) continue // ignore token
+        const currencyCode = getCurrencyCode(wallet, tokenId)
+        walletAssetList.push({
+          createWalletIds: [walletId],
+          currencyCode,
+          displayName: getWalletName(wallet),
+          key: `${walletId}:${tokenId ?? 'PARENT_TOKEN'}`,
+          pluginId: pluginId,
+          tokenId,
+          walletType
+        })
       }
       list = [...list, ...walletAssetList]
     })
@@ -111,7 +98,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
     navigation.push('migrateWalletCalculateFee', { migrateWalletList: filteredMigrateWalletList })
   })
 
-  const renderCreateWalletRow: ListRenderItem<MigrateWalletItem> = useHandler(item => {
+  const renderCreateWalletRow = useHandler((item: ListRenderItemInfo<MigrateWalletItem>) => {
     const { key, displayName, pluginId, tokenId } = item.item
 
     const toggle = (
@@ -140,30 +127,30 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
   const renderNextButton = React.useMemo(
     () => (
       <Fade noFadeIn={numSelected > 0} visible={numSelected > 0} duration={300}>
-        <View style={{ position: 'absolute', bottom: '1%', alignSelf: 'center' }}>
-          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0.5, -0.5]} onPress={handleNext} alignSelf="center" />
+        <View style={styles.bottomButton}>
+          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, -0.5, 0.5]} onPress={handleNext} alignSelf="center" />
         </View>
       </Fade>
     ),
-    [handleNext, numSelected]
+    [handleNext, numSelected, styles.bottomButton]
   )
 
   const keyExtractor = useHandler((item: MigrateWalletItem) => item.key)
 
   return (
-    <SceneWrapper background="theme">
-      {gap => (
-        <View style={[styles.content, { marginBottom: -gap.bottom }]}>
+    <SceneWrapper>
+      {({ insetStyle, undoInsetStyle }) => (
+        <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <SceneHeader title={lstrings.migrate_wallets_select_crypto_title} withTopMargin />
-          <FlashList
+          <FlatList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ paddingBottom: gap.bottom, paddingTop: theme.rem(0.5) }}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
             data={migrateWalletList}
-            estimatedItemSize={theme.rem(4.25)}
             extraData={selectedItems}
             keyboardShouldPersistTaps="handled"
             keyExtractor={keyExtractor}
             renderItem={renderCreateWalletRow}
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
           {renderNextButton}
         </View>
@@ -173,8 +160,10 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  content: {
-    flex: 1
+  bottomButton: {
+    alignSelf: 'center',
+    bottom: theme.rem(1),
+    position: 'absolute'
   }
 }))
 

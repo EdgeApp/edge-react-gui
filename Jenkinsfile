@@ -47,7 +47,6 @@ def buildProduction(String stageName) {
       }
     }
   }
-  deleteDir()
 }
 
 def buildSim(String stageName) {

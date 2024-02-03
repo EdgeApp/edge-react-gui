@@ -2,6 +2,7 @@ import { makeReactNativeDisklet } from 'disklet'
 import { EdgeContext } from 'edge-core-js/types'
 import { LoginUiProvider } from 'edge-login-ui-rn'
 import * as React from 'react'
+import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { MenuProvider } from 'react-native-popup-menu'
 import { Provider } from 'react-redux'
 import { applyMiddleware, createStore } from 'redux'
@@ -10,6 +11,7 @@ import thunk from 'redux-thunk'
 import { loadDeviceReferral } from '../../actions/DeviceReferralActions'
 import { ENV } from '../../env'
 import { rootReducer } from '../../reducers/RootReducer'
+import { renderStateProviders } from '../../state/renderStateProviders'
 import { Dispatch, RootState, Store } from '../../types/reduxTypes'
 import { loginStatusChecker } from '../../util/middleware/loginStatusChecker'
 import { perfLogger } from '../../util/middleware/perfLogger'
@@ -66,11 +68,15 @@ export function Providers(props: Props) {
         // @ts-expect-error
         themeOverride={theme}
       >
-        <MenuProvider>
-          <Airship>
-            <Main />
-          </Airship>
-        </MenuProvider>
+        <KeyboardProvider statusBarTranslucent>
+          {renderStateProviders(
+            <MenuProvider>
+              <Airship>
+                <Main />
+              </Airship>
+            </MenuProvider>
+          )}
+        </KeyboardProvider>
       </LoginUiProvider>
     </Provider>
   )

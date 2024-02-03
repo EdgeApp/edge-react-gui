@@ -76,6 +76,7 @@ export function ContactListModal({ bridge, contactType, contactName }: Props) {
       rowsData={contacts}
       rowComponent={rowComponent}
       rowDataFilter={rowDataFilter}
+      autoFocus
     />
   )
 }

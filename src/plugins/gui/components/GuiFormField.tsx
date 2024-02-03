@@ -2,7 +2,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { useTheme } from '../../../components/services/ThemeContext'
-import { OutlinedTextInput, OutlinedTextInputRef, OutlinedTextInputReturnKeyType } from '../../../components/themed/OutlinedTextInput'
+import { FilledTextInput, FilledTextInputRef, FilledTextInputReturnKeyType } from '../../../components/themed/FilledTextInput'
 import { FORM_FIELD_DISPLAY_PROPS, FormFieldType } from '../../../types/FormTypes'
 
 // TODO: Consolidate with FormField
@@ -12,8 +12,8 @@ interface Props {
   fieldType?: FormFieldType
   key?: string
   autofocus?: boolean
-  returnKeyType?: OutlinedTextInputReturnKeyType
-  fieldRef?: React.Ref<OutlinedTextInputRef> | undefined
+  returnKeyType?: FilledTextInputReturnKeyType
+  fieldRef?: React.Ref<FilledTextInputRef> | undefined
   value?: string
   onChangeText: ((text: string) => void) | undefined
   onFocus?: (() => void) | undefined
@@ -49,16 +49,17 @@ export const GuiFormField = React.memo((props: Props) => {
 
   return (
     <View key={key} style={widthStyle}>
-      <OutlinedTextInput
+      <FilledTextInput
         autoCorrect={false}
         autoFocus={autofocus}
-        label={label}
+        placeholder={label}
         ref={fieldRef}
         returnKeyType={returnKeyType}
         value={value ?? ''}
         onBlur={handleBlur}
         onChangeText={handleChangeText}
         onFocus={handleFocus}
+        around={0.5}
         {...textInputProps}
       />
     </View>

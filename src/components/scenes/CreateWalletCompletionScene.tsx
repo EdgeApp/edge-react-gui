@@ -1,11 +1,12 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { createWallet, enableTokensAcrossWallets, PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -82,34 +83,38 @@ const CreateWalletCompletionComponent = (props: Props) => {
     }, {})
   )
 
-  const flatListRef = React.useRef<FlashList<WalletCreateItem>>(null)
+  const flatListRef = React.useRef<FlatList<WalletCreateItem>>(null)
 
   // Create the wallets and enable the tokens
-  useAsyncEffect(async () => {
-    const promises: Array<(() => Promise<EdgeCurrencyWallet>) | (() => Promise<void>)> = [...walletPromises]
-    if (tokenKey != null) promises.push(tokenPromise)
+  useAsyncEffect(
+    async () => {
+      const promises: Array<(() => Promise<EdgeCurrencyWallet>) | (() => Promise<void>)> = [...walletPromises]
+      if (tokenKey != null) promises.push(tokenPromise)
 
-    for (const [i, promise] of promises.entries()) {
-      try {
-        const wallet = await promise()
-        // We created a wallet so let's Update relevant pending tokens with the new walletId
-        if (wallet != null) {
-          newTokenItems
-            .filter(item => item.pluginId === wallet.currencyInfo.pluginId && item.createWalletIds[0] === PLACEHOLDER_WALLET_ID)
-            .forEach(item => (item.createWalletIds = [wallet.id]))
+      for (const [i, promise] of promises.entries()) {
+        try {
+          const wallet = await promise()
+          // We created a wallet so let's Update relevant pending tokens with the new walletId
+          if (wallet != null) {
+            newTokenItems
+              .filter(item => item.pluginId === wallet.currencyInfo.pluginId && item.createWalletIds[0] === PLACEHOLDER_WALLET_ID)
+              .forEach(item => (item.createWalletIds = [wallet.id]))
+          }
+          setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'complete' }))
+        } catch (e) {
+          showError(e)
+          setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'error' }))
         }
-        setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'complete' }))
-      } catch (e) {
-        showError(e)
-        setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'error' }))
+
+        flatListRef.current?.scrollToIndex({ animated: true, index: i, viewPosition: 0.5 })
       }
+      setDone(true)
 
-      flatListRef.current?.scrollToIndex({ animated: true, index: i, viewPosition: 0.5 })
-    }
-    setDone(true)
-
-    return () => {}
-  }, [])
+      return () => {}
+    },
+    [],
+    'CreateWalletCompletionComponent'
+  )
 
   const renderStatus = useHandler((item: WalletCreateItem) => {
     let icon = <ActivityIndicator style={{ paddingRight: theme.rem(0.3125) }} color={theme.iconTappable} />
@@ -122,7 +127,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
   const renderRow = useHandler(({ item }) => {
     if (item.walletType != null) {
       // Mainnet
-      return <CreateWalletSelectCryptoRow pluginId={item.pluginId} walletName={walletNames[item.key]} rightSide={renderStatus(item)} />
+      return <CreateWalletSelectCryptoRow tokenId={null} pluginId={item.pluginId} walletName={walletNames[item.key]} rightSide={renderStatus(item)} />
     } else if (item.key === tokenKey) {
       // Single token row
       const tokenNameString = newTokenItems.map(item => item.currencyCode).join(', ')
@@ -145,36 +150,38 @@ const CreateWalletCompletionComponent = (props: Props) => {
 
   const renderNextButton = React.useMemo(() => {
     return (
-      <MainButton
-        spinner={!done}
-        disabled={!done}
-        label={!done ? undefined : lstrings.string_done_cap}
-        type="secondary"
-        marginRem={[1]}
-        onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
-        alignSelf="center"
-      />
+      <View style={styles.bottomButton}>
+        <MainButton
+          spinner={!done}
+          disabled={!done}
+          label={!done ? undefined : lstrings.string_done_cap}
+          type="secondary"
+          marginRem={[0, 0, 0.5]}
+          onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
+          alignSelf="center"
+        />
+      </View>
     )
-  }, [done, navigation])
+  }, [done, navigation, styles.bottomButton])
 
   const keyExtractor = useHandler((item: WalletCreateItem) => item.key)
 
   return (
-    <SceneWrapper background="theme">
-      {gap => (
-        <View style={[styles.content, { marginBottom: -gap.bottom }]}>
+    <SceneWrapper>
+      {({ insetStyle, undoInsetStyle }) => (
+        <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <SceneHeader title={lstrings.title_create_wallets} withTopMargin />
-          <FlashList
+          <FlatList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ paddingTop: theme.rem(0.5), paddingBottom: gap.bottom }}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
             data={filteredCreateItemsForDisplay}
-            estimatedItemSize={theme.rem(4.25)}
             fadingEdgeLength={10}
             keyExtractor={keyExtractor}
             extraData={itemStatus}
             ref={flatListRef}
             renderItem={renderRow}
             scrollEnabled={done}
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
           {renderNextButton}
         </View>
@@ -184,8 +191,10 @@ const CreateWalletCompletionComponent = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  content: {
-    flex: 1
+  bottomButton: {
+    alignSelf: 'center',
+    bottom: theme.rem(1),
+    position: 'absolute'
   }
 }))
 
