@@ -58,15 +58,23 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
 
   const networkName = pluginId != null && tokenId != null ? ` (${account.currencyConfig[pluginId].currencyInfo.displayName})` : ''
 
-  const handlePress = useHandler(() => {
+  const pressMutexRef = React.useRef<boolean>(false)
+
+  const handlePress = useHandler(async () => {
+    if (pressMutexRef.current) {
+      return
+    }
+    pressMutexRef.current = true
+
     const handleRes = (walletId: string) => (onPress != null ? onPress(walletId, tokenId) : null)
     if (walletType != null) {
-      dispatch(createAndSelectWallet({ walletType }))
+      await dispatch(createAndSelectWallet({ walletType }))
         .then(handleRes)
         .catch(err => showError(err))
+        .finally(() => (pressMutexRef.current = false))
     } else if (pluginId != null && tokenId != null) {
       if (createWalletIds.length < 2) {
-        dispatch(
+        await dispatch(
           createAndSelectToken({
             tokenId,
             pluginId,
@@ -77,14 +85,15 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
         )
           .then(handleRes)
           .catch(err => showError(err))
+          .finally(() => (pressMutexRef.current = false))
       } else {
-        Airship.show(bridge => {
+        await Airship.show(bridge => {
           const renderRow = (wallet: EdgeCurrencyWallet) => (
             <WalletListCurrencyRow
               tokenId={null}
               wallet={wallet}
-              onPress={walletId => {
-                dispatch(
+              onPress={async walletId => {
+                await dispatch(
                   createAndSelectToken({
                     tokenId,
                     pluginId: currencyWallets[walletId].currencyInfo.pluginId,
@@ -94,7 +103,10 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
                   })
                 )
                   .then(handleRes)
-                  .finally(() => bridge.resolve())
+                  .finally(() => {
+                    pressMutexRef.current = false
+                    bridge.resolve()
+                  })
               }}
             />
           )
@@ -109,9 +121,13 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
               rowsData={createWalletIds.map(walletId => currencyWallets[walletId])}
             />
           )
-        }).catch(err => showError(err))
+        })
+          .catch(err => showError(err))
+          .finally(() => (pressMutexRef.current = false))
       }
     }
+
+    pressMutexRef.current = false
   })
 
   return (
