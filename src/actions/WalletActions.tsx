@@ -11,13 +11,13 @@ import { Airship, showError, showToast } from '../components/services/AirshipIns
 import { FIO_WALLET_TYPE, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { getDisplayDenomination } from '../selectors/DenominationSelectors'
-import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { MapObject } from '../types/types'
 import { getCurrencyCode, getCurrencyInfos, getToken, isKeysOnlyPlugin, makeCreateWalletType } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { fetchInfo } from '../util/network'
+import { convertCurrencyFromExchangeRates } from '../util/utils'
 import { refreshConnectedWallets } from './FioActions'
 
 export interface SelectWalletTokenParams {
