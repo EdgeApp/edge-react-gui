@@ -399,11 +399,11 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
       async getSupportedAssets() {
         const fiatProviderAssetMap: FiatProviderAssetMap = {
           crypto: {
-            bitcoin: { BTC: true },
-            bitcoincash: { BCH: true },
-            dash: { DASH: true },
-            dogecoin: { DOGE: true },
-            litecoin: { LTC: true }
+            bitcoin: [{ tokenId: null }],
+            bitcoincash: [{ tokenId: null }],
+            dash: [{ tokenId: null }],
+            dogecoin: [{ tokenId: null }],
+            litecoin: [{ tokenId: null }]
           },
           fiat: {
             'iso:USD': true

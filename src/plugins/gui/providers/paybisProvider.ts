@@ -719,19 +719,12 @@ const initializeBuyPairs = async ({ url, apiKey }: InitializePairs): Promise<voi
           const edgeTokenId = PAYBIS_TO_EDGE_CURRENCY_MAP[code.currencyCode]
           if (edgeTokenId != null) {
             const { pluginId: currencyPluginId } = edgeTokenId
-            let { currencyCode: ccode } = edgeTokenId
-
-            if (ccode == null) {
-              ccode = code.currencyCode
+            let tokens = paymentMethodObj.crypto[currencyPluginId]
+            if (tokens == null) {
+              tokens = []
+              paymentMethodObj.crypto[currencyPluginId] = tokens
             }
-            // If the edgeTokenId has a tokenId, use it. If not use the currencyCode.
-            // If no currencyCode, use the key of PAYBIS_TO_EDGE_CURRENCY_MAP
-            let tokenMap = paymentMethodObj.crypto[currencyPluginId]
-            if (tokenMap == null) {
-              tokenMap = {}
-              paymentMethodObj.crypto[currencyPluginId] = tokenMap
-            }
-            tokenMap[ccode] = true
+            tokens.push({ tokenId: edgeTokenId.tokenId })
           }
         }
       }
@@ -778,12 +771,12 @@ const initializeSellPairs = async ({ url, apiKey }: InitializePairs): Promise<vo
 
         // If the edgeTokenId has a tokenId, use it. If not use the currencyCode.
         // If no currencyCode, use the key of PAYBIS_TO_EDGE_CURRENCY_MAP
-        let tokenMap = paymentMethodObj.crypto[currencyPluginId]
-        if (tokenMap == null) {
-          tokenMap = {}
-          paymentMethodObj.crypto[currencyPluginId] = tokenMap
+        let tokens = paymentMethodObj.crypto[currencyPluginId]
+        if (tokens == null) {
+          tokens = []
+          paymentMethodObj.crypto[currencyPluginId] = tokens
         }
-        tokenMap[ccode] = true
+        tokens.push({ tokenId: edgeTokenId.tokenId })
 
         for (const fiat of to) {
           paymentMethodObj.fiat[`iso:${fiat}`] = true
