@@ -86,8 +86,6 @@ jest.mock('rn-qr-generator', () => ({
   }
 }))
 
-jest.mock('@react-native-async-storage/async-storage', () => require('@react-native-async-storage/async-storage/jest/async-storage-mock'))
-
 // force timezone to UTC
 jest.mock('dateformat', () => (number, format) => require('dateformat')(number, format, true))
 

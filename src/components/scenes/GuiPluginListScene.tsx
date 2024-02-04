@@ -1,5 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { asObject, asString } from 'cleaners'
 import { Disklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
@@ -8,6 +6,7 @@ import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
 
 import { showBackupForTransferModal } from '../../actions/BackupModalActions'
+import { getDeviceSettings, writeDeveloperPluginUri } from '../../actions/DeviceSettingsActions'
 import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { readSyncedSettings, updateOneSetting, writeSyncedSettings } from '../../actions/SettingsActions'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
@@ -104,9 +103,7 @@ interface State {
 }
 
 const BUY_SELL_PLUGIN_REFRESH_INTERVAL = 60000
-const DEVELOPER_PLUGIN_KEY = 'developerPlugin'
 const PLUGIN_LIST_FILE = 'buySellPlugins.json'
-const asDeveloperUri = asObject({ uri: asString })
 
 class GuiPluginList extends React.PureComponent<Props, State> {
   componentMounted: boolean
@@ -124,10 +121,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   async componentDidMount() {
     this.updatePlugins().catch(err => showError(err))
     this.checkCountry()
-    const text = await AsyncStorage.getItem(DEVELOPER_PLUGIN_KEY)
-    if (text != null) {
-      const clean = asDeveloperUri(JSON.parse(text))
-      this.setState({ developerUri: clean.uri })
+    const { developerPluginUri } = getDeviceSettings()
+    if (developerPluginUri != null) {
+      this.setState({ developerUri: developerPluginUri })
     }
   }
 
@@ -266,7 +262,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         this.setState({ developerUri: deepPath })
 
         // Write to disk lazily:
-        AsyncStorage.setItem(DEVELOPER_PLUGIN_KEY, JSON.stringify({ uri: deepPath })).catch(showError)
+        writeDeveloperPluginUri(deepPath).catch(error => showError(error))
       }
     }
 
