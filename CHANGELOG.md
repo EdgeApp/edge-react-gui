@@ -5,6 +5,13 @@
 - changed: Reword of the CrashScene to help users to force close (not uninstall) Edge
 - changed: Upgrade to Android NDK version 26.1.10909125.
 
+## 4.0.1
+
+- fixed: Missing background blurred dots on most scenes
+- fixed: Missing promo cards when multiple are on info server
+- fixed: Hidden Next button on Change PIN scene
+- fixed: Disable auto-capitalization of username when creating account
+
 ## 4.0.0
 
 - added: `minerTip` to `feeRateUsed` processing
