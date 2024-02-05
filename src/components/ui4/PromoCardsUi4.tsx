@@ -120,29 +120,29 @@ function filterPromoCards(cards: PromoCard2[], countryCode: string): FilteredPro
 
     // Validate app version
     // Ignore everything else if build version is specified and mismatched.
-    if (exactBuildNum != null && exactBuildNum !== buildNumber) break
+    if (exactBuildNum != null && exactBuildNum !== buildNumber) continue
 
     // Ignore min/max if app version is specified and mismatched.
-    if (appVersion != null && appVersion !== version) break
+    if (appVersion != null && appVersion !== version) continue
 
     // Look at min/max only if exact build or app version is not specified.
-    if (minBuildNum != null && minBuildNum > buildNumber) break
-    if (maxBuildNum != null && maxBuildNum < buildNumber) break
+    if (minBuildNum != null && minBuildNum > buildNumber) continue
+    if (maxBuildNum != null && maxBuildNum < buildNumber) continue
 
     // Validate country
     const isCountryInclude = countryCodes.length === 0 || countryCodes.map(countryCode => countryCode.toLowerCase()).includes(countryCode)
     const isCountryExclude = excludeCountryCodes.length > 0 && excludeCountryCodes.map(countryCode => countryCode.toLowerCase()).includes(countryCode)
-    if (!isCountryInclude || isCountryExclude) break
+    if (!isCountryInclude || isCountryExclude) continue
 
     // Validate OS type
-    if (osTypes.length > 0 && !osTypes.map(osType => osType).includes(osType)) break
+    if (osTypes.length > 0 && !osTypes.map(osType => osType).includes(osType)) continue
 
     // Validate OS version
-    if (osVersions.length > 0 && !osVersions.includes(osVersion)) break
+    if (osVersions.length > 0 && !osVersions.includes(osVersion)) continue
 
     // Validate date range
-    if (startIsoDate != null && currentDate.valueOf() < startDate.valueOf()) break
-    if (endIsoDate != null && currentDate.valueOf() > endDate.valueOf()) break
+    if (startIsoDate != null && currentDate.valueOf() < startDate.valueOf()) continue
+    if (endIsoDate != null && currentDate.valueOf() > endDate.valueOf()) continue
 
     const messageId = shajs('sha256')
       .update(localeMessages.en_US ?? JSON.stringify(card), 'utf8')
