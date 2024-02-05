@@ -244,16 +244,13 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
           backgroundGradientStart={backgroundGradientStart}
           backgroundGradientEnd={backgroundGradientEnd}
         />
-        <SceneWrapperScrollView
-          keyboardAwareStyle={keyboardAwareStyle}
-          insetStyle={insetStyle}
-          layoutStyle={layoutStyle}
-          navigation={navigation}
-          sceneWrapperInfo={sceneWrapperInfo}
-          {...props}
-        >
+        <SceneWrapperScrollView keyboardAwareStyle={keyboardAwareStyle} insetStyle={insetStyle} layoutStyle={layoutStyle} {...props}>
           {memoizedChildren}
         </SceneWrapperScrollView>
+        {renderFooter == null ? null : (
+          <SceneWrapperFooterContainer footerHeight={footerHeight} hasTabs={hasTabs} renderFooter={renderFooter} sceneWrapperInfo={sceneWrapperInfo} />
+        )}
+        {hasNotifications ? <NotificationView hasTabs={hasTabs} footerHeight={footerHeight} navigation={navigation} /> : null}
       </>
     )
   }
@@ -311,46 +308,34 @@ const styles = StyleSheet.create({
   }
 })
 
-interface SceneWrapperScrollViewProps
-  extends Pick<
-    SceneWrapperProps,
-    'avoidKeyboard' | 'hasNotifications' | 'hasTabs' | 'footerHeight' | 'keyboardShouldPersistTaps' | 'padding' | 'renderFooter'
-  > {
-  keyboardAwareStyle: ViewStyle
+interface SceneWrapperScrollViewProps extends Pick<SceneWrapperProps, 'keyboardShouldPersistTaps' | 'padding'> {
   children: React.ReactNode
+  keyboardAwareStyle: ViewStyle
   insetStyle: InsetStyle
   layoutStyle: {
     height: number
     width: number
   }
-  navigation: NavigationBase
-  sceneWrapperInfo: SceneWrapperInfo
 }
 
 function SceneWrapperScrollViewComponent(props: SceneWrapperScrollViewProps) {
-  const { children, insetStyle, layoutStyle, navigation, sceneWrapperInfo } = props
-  const { keyboardAwareStyle, hasNotifications = false, hasTabs = false, footerHeight = 0, keyboardShouldPersistTaps, padding = 0, renderFooter } = props
+  const { children, keyboardAwareStyle, insetStyle, layoutStyle } = props
+  const { keyboardShouldPersistTaps, padding = 0 } = props
 
   // If the scene has scroll, this will be required for tabs and/or header animation
   const handleScroll = useSceneScrollHandler()
 
   return (
-    <>
-      <Reanimated.ScrollView
-        style={[layoutStyle, keyboardAwareStyle, { padding }]}
-        keyboardShouldPersistTaps={keyboardShouldPersistTaps}
-        contentContainerStyle={insetStyle}
-        onScroll={handleScroll}
-        // Fixes middle-floating scrollbar issue
-        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-      >
-        {children}
-      </Reanimated.ScrollView>
-      {renderFooter == null ? null : (
-        <SceneWrapperFooterContainer footerHeight={footerHeight} hasTabs={hasTabs} renderFooter={renderFooter} sceneWrapperInfo={sceneWrapperInfo} />
-      )}
-      {hasNotifications ? <NotificationView hasTabs={hasTabs} footerHeight={footerHeight} navigation={navigation} /> : null}
-    </>
+    <Reanimated.ScrollView
+      style={[layoutStyle, keyboardAwareStyle, { padding }]}
+      keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+      contentContainerStyle={insetStyle}
+      onScroll={handleScroll}
+      // Fixes middle-floating scrollbar issue
+      scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+    >
+      {children}
+    </Reanimated.ScrollView>
   )
 }
 const SceneWrapperScrollView = React.memo(SceneWrapperScrollViewComponent)
