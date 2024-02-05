@@ -1,7 +1,7 @@
 import { getDefaultHeaderHeight } from '@react-navigation/elements'
-import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native'
 import * as React from 'react'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
 import Reanimated from 'react-native-reanimated'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -283,7 +283,9 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
           />
 
           {memoizedChildren}
-          {renderFooter == null ? null : <SceneWrapperFooterContainer hasTabs={hasTabs} renderFooter={renderFooter} sceneWrapperInfo={sceneWrapperInfo} />}
+          {renderFooter == null ? null : (
+            <SceneWrapperFooterContainer footerHeight={footerHeight} hasTabs={hasTabs} renderFooter={renderFooter} sceneWrapperInfo={sceneWrapperInfo} />
+          )}
         </Animated.View>
         {hasNotifications ? <NotificationView hasTabs={hasTabs} footerHeight={footerHeight} navigation={navigation} /> : null}
       </>
@@ -320,7 +322,9 @@ function SceneWrapperInnerComponent(props: SceneWrapperInnerProps) {
 
         {memoizedChildren}
       </View>
-      {renderFooter == null ? null : <SceneWrapperFooterContainer hasTabs={hasTabs} renderFooter={renderFooter} sceneWrapperInfo={sceneWrapperInfo} />}
+      {renderFooter == null ? null : (
+        <SceneWrapperFooterContainer footerHeight={footerHeight} hasTabs={hasTabs} renderFooter={renderFooter} sceneWrapperInfo={sceneWrapperInfo} />
+      )}
       {hasNotifications ? <NotificationView hasTabs={hasTabs} footerHeight={footerHeight} navigation={navigation} /> : null}
     </>
   )
@@ -358,19 +362,34 @@ function SceneWrapperScrollViewComponent(props: SceneWrapperScrollViewProps) {
       >
         {children}
       </Reanimated.ScrollView>
-      {renderFooter == null ? null : <SceneWrapperFooterContainer hasTabs={hasTabs} renderFooter={renderFooter} sceneWrapperInfo={sceneWrapperInfo} />}
+      {renderFooter == null ? null : (
+        <SceneWrapperFooterContainer footerHeight={footerHeight} hasTabs={hasTabs} renderFooter={renderFooter} sceneWrapperInfo={sceneWrapperInfo} />
+      )}
       {hasNotifications ? <NotificationView hasTabs={hasTabs} footerHeight={footerHeight} navigation={navigation} /> : null}
     </>
   )
 }
 const SceneWrapperScrollView = React.memo(SceneWrapperScrollViewComponent)
 
-interface SceneWrapperFooterContainerProps extends Required<Pick<SceneWrapperProps, 'hasTabs' | 'renderFooter'>> {
+interface SceneWrapperFooterContainerProps extends Required<Pick<SceneWrapperProps, 'footerHeight' | 'hasTabs' | 'renderFooter'>> {
   sceneWrapperInfo: SceneWrapperInfo
 }
 
 function SceneWrapperFooterContainerComponent(props: SceneWrapperFooterContainerProps) {
-  const { hasTabs, sceneWrapperInfo, renderFooter } = props
+  const { footerHeight, hasTabs, sceneWrapperInfo, renderFooter } = props
+
+  // Set the global shared value for the footerHeight so that way the
+  // background in the MenuTabs can translate accordingly
+  const footerHeightShared = useSceneFooterState(state => state.footerHeight)
+  const isFocused = useIsFocused()
+  useEffect(() => {
+    if (isFocused) {
+      footerHeightShared.value = footerHeight
+      return () => {
+        footerHeightShared.value = 0
+      }
+    }
+  }, [footerHeight, footerHeightShared, isFocused])
 
   // Portal the render function to the SceneFooterState
   if (hasTabs) {
