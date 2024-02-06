@@ -7,7 +7,6 @@ import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { EdgeAsset } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
-import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { fetchInfo } from '../../util/network'
 import { logEvent } from '../../util/tracking'
 import { fuzzyTimeout } from '../../util/utils'
@@ -121,16 +120,9 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       for (const assetMap of assetArray) {
         if (assetMap == null) continue
         for (const currencyPluginId in assetMap.crypto) {
-          const currencyCodeMap = assetMap.crypto[currencyPluginId]
-          for (const currencyCode in currencyCodeMap) {
-            if (currencyCodeMap[currencyCode]) {
-              try {
-                const currencyTokenId = getTokenIdForced(account, currencyPluginId, currencyCode)
-                allowedAssets.push({ pluginId: currencyPluginId, tokenId: currencyTokenId })
-              } catch (e: any) {
-                // This is ok. We might not support a specific pluginId
-              }
-            }
+          const providerTokens = assetMap.crypto[currencyPluginId]
+          for (const { tokenId } of providerTokens) {
+            allowedAssets.push({ pluginId: currencyPluginId, tokenId })
           }
           for (const fiatCode in assetMap.fiat) {
             allowedFiats[fiatCode] = true

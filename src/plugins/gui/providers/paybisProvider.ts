@@ -21,6 +21,7 @@ import {
   FiatProviderQuote
 } from '../fiatProviderTypes'
 import { assert, isWalletTestnet } from '../pluginUtils'
+import { addTokenToArray } from '../util/providerUtils'
 import { NOT_SUCCESS_TOAST_HIDE_MS, RETURN_URL_FAIL, RETURN_URL_PAYMENT, RETURN_URL_SUCCESS } from './common'
 const providerId = 'paybis'
 const storeId = 'paybis'
@@ -719,19 +720,12 @@ const initializeBuyPairs = async ({ url, apiKey }: InitializePairs): Promise<voi
           const edgeTokenId = PAYBIS_TO_EDGE_CURRENCY_MAP[code.currencyCode]
           if (edgeTokenId != null) {
             const { pluginId: currencyPluginId } = edgeTokenId
-            let { currencyCode: ccode } = edgeTokenId
-
-            if (ccode == null) {
-              ccode = code.currencyCode
+            let tokens = paymentMethodObj.crypto[currencyPluginId]
+            if (tokens == null) {
+              tokens = []
+              paymentMethodObj.crypto[currencyPluginId] = tokens
             }
-            // If the edgeTokenId has a tokenId, use it. If not use the currencyCode.
-            // If no currencyCode, use the key of PAYBIS_TO_EDGE_CURRENCY_MAP
-            let tokenMap = paymentMethodObj.crypto[currencyPluginId]
-            if (tokenMap == null) {
-              tokenMap = {}
-              paymentMethodObj.crypto[currencyPluginId] = tokenMap
-            }
-            tokenMap[ccode] = true
+            addTokenToArray({ tokenId: edgeTokenId.tokenId }, tokens)
           }
         }
       }
@@ -778,12 +772,12 @@ const initializeSellPairs = async ({ url, apiKey }: InitializePairs): Promise<vo
 
         // If the edgeTokenId has a tokenId, use it. If not use the currencyCode.
         // If no currencyCode, use the key of PAYBIS_TO_EDGE_CURRENCY_MAP
-        let tokenMap = paymentMethodObj.crypto[currencyPluginId]
-        if (tokenMap == null) {
-          tokenMap = {}
-          paymentMethodObj.crypto[currencyPluginId] = tokenMap
+        let tokens = paymentMethodObj.crypto[currencyPluginId]
+        if (tokens == null) {
+          tokens = []
+          paymentMethodObj.crypto[currencyPluginId] = tokens
         }
-        tokenMap[ccode] = true
+        addTokenToArray({ tokenId: edgeTokenId.tokenId }, tokens)
 
         for (const fiat of to) {
           paymentMethodObj.fiat[`iso:${fiat}`] = true

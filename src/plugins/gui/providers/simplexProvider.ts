@@ -15,6 +15,7 @@ import {
   FiatProviderGetQuoteParams,
   FiatProviderQuote
 } from '../fiatProviderTypes'
+import { addTokenToArray } from '../util/providerUtils'
 const providerId = 'simplex'
 const storeId = 'co.edgesecure.simplex'
 const partnerIcon = 'simplex-logo-sm-square.png'
@@ -127,14 +128,6 @@ const allowedCurrencyCodes: FiatProviderAssetMap = { crypto: {}, fiat: {} }
 const allowedCountryCodes: { [code: string]: boolean } = {}
 const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { applepay: true, credit: true, googlepay: true }
 
-for (const pluginId in SIMPLEX_ID_MAP) {
-  const codesObject = SIMPLEX_ID_MAP[pluginId]
-  for (const currencyCode in codesObject) {
-    if (allowedCurrencyCodes.crypto[pluginId] == null) allowedCurrencyCodes.crypto[pluginId] = {}
-    allowedCurrencyCodes.crypto[pluginId][currencyCode] = true
-  }
-}
-
 const asSimplexApiKeys = asObject({
   partner: asString,
   jwtTokenProvider: asString,
@@ -178,8 +171,21 @@ export const simplexProvider: FiatProviderFactory = {
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const {
       apiKeys,
+      getTokenId,
       io: { store }
     } = params
+
+    for (const pluginId in SIMPLEX_ID_MAP) {
+      const codesObject = SIMPLEX_ID_MAP[pluginId]
+      for (const currencyCode in codesObject) {
+        if (allowedCurrencyCodes.crypto[pluginId] == null) allowedCurrencyCodes.crypto[pluginId] = []
+        const tokens = allowedCurrencyCodes.crypto[pluginId]
+        const tokenId = getTokenId(pluginId, currencyCode)
+        if (tokenId === undefined) continue
+        addTokenToArray({ tokenId }, tokens)
+      }
+    }
+
     let simplexUserId = await store.getItem('simplex_user_id').catch(e => undefined)
     if (simplexUserId == null || simplexUserId === '') {
       simplexUserId = makeUuid()
