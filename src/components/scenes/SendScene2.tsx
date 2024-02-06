@@ -893,7 +893,7 @@ const SendComponent = (props: Props) => {
   // Mount/Unmount life-cycle events:
   useMount(() => {
     if (doCheckAndShowGetCryptoModal) {
-      dispatch(checkAndShowGetCryptoModal(navigation, route.params.walletId, route.params.spendInfo?.tokenId)).catch(err => showError(err))
+      dispatch(checkAndShowGetCryptoModal(navigation, coreWallet, tokenId)).catch(err => showError(err))
     }
   })
   useUnmount(() => {
