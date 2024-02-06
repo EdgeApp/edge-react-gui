@@ -312,7 +312,8 @@ const SendComponent = (props: Props) => {
     navigation.navigate('changeMiningFee2', {
       spendInfo,
       maxSpendSet: maxSpendSetter >= 0,
-      wallet: coreWallet,
+      tokenId,
+      walletId: coreWallet.id,
       onSubmit: (networkFeeOption, customNetworkFee) => {
         setSpendInfo({ ...spendInfo, networkFeeOption, customNetworkFee })
         setPinValue(undefined)
