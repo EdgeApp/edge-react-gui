@@ -33,6 +33,7 @@ import type { MigrateWalletCalculateFeeParams } from '../components/scenes/Migra
 import type { MigrateWalletCompletionParams } from '../components/scenes/MigrateWalletCompletionScene'
 import type { MigrateWalletSelectCryptoParams } from '../components/scenes/MigrateWalletSelectCryptoScene'
 import type { OtpRepairParams } from '../components/scenes/OtpRepairScene'
+import type { RequestParams } from '../components/scenes/RequestScene'
 import type { SendScene2Params } from '../components/scenes/SendScene2'
 import type { StakeModifyParams } from '../components/scenes/Staking/StakeModifyScene'
 import type { StakeOptionsParams } from '../components/scenes/Staking/StakeOptionsScene'
@@ -201,7 +202,7 @@ export interface RouteParamList {
   pluginViewSell: PluginViewParams
   pluginView: PluginViewParams
   promotionSettings: {}
-  request: {}
+  request: RequestParams
   securityAlerts: {}
   send2: SendScene2Params
   settingsOverview: {}

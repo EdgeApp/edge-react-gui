@@ -12,7 +12,7 @@ describe('Request', () => {
 
     const actual = renderer.render(
       <RequestSceneComponent
-        {...fakeSceneProps('request', {})}
+        {...fakeSceneProps('request', { tokenId: null, walletId: '' })}
         isConnected={false}
         currencyCode={null as any}
         wallet={null as any}
@@ -39,7 +39,7 @@ describe('Request', () => {
 
     const actual = renderer.render(
       <RequestSceneComponent
-        {...fakeSceneProps('request', {})}
+        {...fakeSceneProps('request', { tokenId: null, walletId: '' })}
         isConnected={false}
         currencyCode="BTC"
         wallet={fakeWallet}

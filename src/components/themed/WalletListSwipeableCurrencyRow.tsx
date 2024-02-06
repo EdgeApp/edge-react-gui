@@ -69,7 +69,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
       dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true }))
         .then(activated => {
           if (activated) {
-            navigation.navigate('request', {})
+            navigation.navigate('request', { tokenId, walletId: wallet.id })
           }
         })
         .catch(err => showError(err))

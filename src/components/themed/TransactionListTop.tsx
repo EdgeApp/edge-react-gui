@@ -304,7 +304,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleRequest = (): void => {
-    const { navigation, isLightAccount } = this.props
+    const { isLightAccount, navigation, tokenId, wallet } = this.props
 
     triggerHaptic('impactLight')
     if (isLightAccount) {
@@ -318,7 +318,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         })
         .catch(error => showError(error))
     } else {
-      navigation.push('request', {})
+      navigation.push('request', { tokenId, walletId: wallet.id })
     }
   }
 

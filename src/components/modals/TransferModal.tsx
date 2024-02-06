@@ -83,7 +83,7 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
       if (result?.type === 'wallet') {
         const { walletId, tokenId } = result
         await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
-        navigation.navigate('request', {})
+        navigation.navigate('request', { tokenId, walletId })
       }
     }
   })
