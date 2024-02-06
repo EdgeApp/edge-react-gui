@@ -3,7 +3,6 @@ import * as React from 'react'
 import { useMemo } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { selectWalletToken } from '../../actions/WalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -124,17 +123,14 @@ function WalletListSwipeableComponent(props: Props) {
 
   const handleScroll = useSceneScrollHandler()
 
-  // TODO: Include this fix in the SceneWrapper component
-  const safeAreaInsets = useSafeAreaInsets()
-
   const contentContainerStyle = useMemo(() => {
     return {
       paddingTop: insetStyle.paddingTop + theme.rem(0.5),
-      paddingBottom: insetStyle.paddingBottom + theme.rem(0.5) + safeAreaInsets.bottom,
+      paddingBottom: insetStyle.paddingBottom + theme.rem(0.5),
       paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
       paddingRight: insetStyle.paddingRight + theme.rem(0.5)
     }
-  }, [insetStyle.paddingBottom, insetStyle.paddingLeft, insetStyle.paddingRight, insetStyle.paddingTop, safeAreaInsets.bottom, theme])
+  }, [insetStyle.paddingBottom, insetStyle.paddingLeft, insetStyle.paddingRight, insetStyle.paddingTop, theme])
 
   return (
     <AnimatedFlatList

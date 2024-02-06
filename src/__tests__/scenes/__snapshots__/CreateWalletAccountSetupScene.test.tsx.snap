@@ -228,6 +228,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
     style={
       {
         "height": 1334,
+        "maxHeight": 1334,
         "padding": 0,
         "width": 750,
       }

@@ -228,6 +228,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
     style={
       {
         "height": 1334,
+        "maxHeight": 1334,
         "padding": 0,
         "width": 750,
       }
@@ -3792,6 +3793,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
     style={
       {
         "height": 1334,
+        "maxHeight": 1334,
         "padding": 0,
         "width": 750,
       }

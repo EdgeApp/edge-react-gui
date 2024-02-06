@@ -3,7 +3,7 @@ import * as React from 'react'
 import { ListRenderItem, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
-import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { showBackupForTransferModal } from '../../../actions/BackupModalActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
@@ -39,9 +39,6 @@ export const HomeSceneUi4 = (props: Props) => {
   const styles = getStyles(theme)
 
   const { width: screenWidth } = useSafeAreaFrame()
-
-  // TODO: Include this fix in the SceneWrapper component
-  const safeAreaInsets = useSafeAreaInsets()
 
   // Evenly distribute the home cards into 4 quadrants:
   const cardSize = screenWidth / 2 - theme.rem(TEMP_PADDING_REM)
@@ -96,7 +93,7 @@ export const HomeSceneUi4 = (props: Props) => {
           <Animated.ScrollView
             onScroll={handleScroll}
             style={undoInsetStyle}
-            contentContainerStyle={[{ ...insetStyle, paddingBottom: insetStyle.paddingBottom + safeAreaInsets.bottom }]}
+            contentContainerStyle={[{ ...insetStyle, paddingBottom: insetStyle.paddingBottom }]}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           >
             <SectionView extendRight marginRem={TEMP_PADDING_REM}>
