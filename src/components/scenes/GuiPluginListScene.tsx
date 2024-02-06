@@ -17,6 +17,7 @@ import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
 import sellPluginJsonRaw from '../../constants/plugins/sellPluginList.json'
 import sellPluginJsonOverrideRaw from '../../constants/plugins/sellPluginListOverride.json'
 import { ENV } from '../../env'
+import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { executePlugin } from '../../plugins/gui/fiatPlugin'
 import { SceneScrollHandler, useSceneScrollHandler } from '../../state/SceneScrollState'
@@ -30,6 +31,7 @@ import { getPartnerIconUri } from '../../util/CdnUris'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { fetchInfo } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
+import { logEvent, OnLogEvent } from '../../util/tracking'
 import { base58ToUuid } from '../../util/utils'
 import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
@@ -95,6 +97,7 @@ interface StateProps {
   disablePlugins: NestedDisableMap
   insetStyle: InsetStyle
   handleScroll: SceneScrollHandler
+  onLogEvent: OnLogEvent
 }
 
 interface DispatchProps {
@@ -235,7 +238,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow, longPress: boolean = false) {
-    const { accountReferral, coreDisklet, countryCode, deviceId, disablePlugins, navigation, account } = this.props
+    const { coreDisklet, countryCode, deviceId, disablePlugins, navigation, account, onLogEvent } = this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -280,7 +283,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
       await executePlugin({
         account,
-        accountReferral,
         deviceId,
         direction,
         disablePlugins: disableProviders,
@@ -289,7 +291,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         longPress,
         navigation,
         paymentType,
-        regionCode: { countryCode }
+        regionCode: { countryCode },
+        onLogEvent
       })
     } else {
       // Launch!
@@ -543,6 +546,10 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
     dispatch(updateOneSetting({ countryCode }))
   }
 
+  const handleLogEvent = useHandler((event, values) => {
+    dispatch(logEvent(event, values))
+  })
+
   return (
     <SceneWrapper hasTabs hasNotifications padding={theme.rem(0.5)}>
       {({ insetStyle, undoInsetStyle }) => {
@@ -563,6 +570,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
               updateCountryCode={updateCountryCode}
               theme={theme}
               insetStyle={insetStyle}
+              onLogEvent={handleLogEvent}
             />
           </View>
         )

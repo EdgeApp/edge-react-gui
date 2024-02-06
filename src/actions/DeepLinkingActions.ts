@@ -10,6 +10,7 @@ import { DeepLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { EdgeAsset } from '../types/types'
+import { logEvent } from '../util/tracking'
 import { base58ToUuid } from '../util/utils'
 import { activatePromotion } from './AccountReferralActions'
 import { launchPaymentProto } from './PaymentProtoActions'
@@ -62,7 +63,6 @@ export function retryPendingDeepLink(navigation: NavigationBase): ThunkAction<vo
  */
 export async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootState, link: DeepLink): Promise<boolean> {
   const { account, disklet } = state.core
-  const { accountReferral } = state.account
   const { activeWalletIds, currencyWallets } = account
   const deviceId = base58ToUuid(state.core.context.clientId)
 
@@ -120,7 +120,6 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
 
       await executePlugin({
         account,
-        accountReferral,
         deviceId,
         disablePlugins: disableProviders,
         disklet,
@@ -129,7 +128,8 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
         regionCode: { countryCode: state.ui.settings.countryCode },
         paymentType,
         providerId,
-        navigation
+        navigation,
+        onLogEvent: (event, values) => dispatch(logEvent(event, values))
       })
       return true
     }

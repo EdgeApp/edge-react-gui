@@ -2,11 +2,14 @@ import Bugsnag from '@bugsnag/react-native'
 import analytics from '@react-native-firebase/analytics'
 import { TrackingEventName as LoginTrackingEventName, TrackingValues as LoginTrackingValues } from 'edge-login-ui-rn/lib/util/analytics'
 import PostHog from 'posthog-react-native'
-import { getUniqueId, getVersion } from 'react-native-device-info'
+import { getBuildNumber, getUniqueId, getVersion } from 'react-native-device-info'
 
 import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { ENV } from '../env'
 import { ExperimentConfig, getExperimentConfig } from '../experimentConfig'
+import { convertCurrency } from '../selectors/WalletSelectors'
+import { ThunkAction } from '../types/reduxTypes'
+import { asBiggystring } from './cleaners'
 import { fetchReferral } from './network'
 import { makeErrorLog } from './translateError'
 import { consify } from './utils'
@@ -48,12 +51,12 @@ export type TrackingEventName =
   | 'Earn_Spend_Launch'
   | LoginTrackingEventName
 
+export type OnLogEvent = (event: TrackingEventName, values?: TrackingValues) => void
+
 export interface TrackingValues extends LoginTrackingValues {
-  accountDate?: string // Account creation date
   currencyCode?: string // Wallet currency code
   dollarValue?: number // Conversion amount, in USD
   error?: unknown | string // Any error
-  installerId?: string // Account installerId, i.e. referralId
   orderId?: string // Unique order identifier provided by plugin
   pluginId?: string // Plugin that provided the conversion
   numSelectedWallets?: number // Number of wallets to be created
@@ -64,6 +67,7 @@ export interface TrackingValues extends LoginTrackingValues {
   sourceExchangeAmount?: string
   sourcePluginId?: string // currency pluginId of dest asset
   numAccounts?: number // Number of full accounts saved on the device
+  exchangeAmount?: string
 }
 
 // Set up the global Firebase analytics instance at boot:
@@ -128,34 +132,67 @@ export function trackError(
 /**
  * Send a raw event to all backends.
  */
-export function logEvent(event: TrackingEventName, values: TrackingValues = {}) {
-  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error } = values
-  getExperimentConfig()
-    .then(async (experimentConfig: ExperimentConfig) => {
-      // Persistent & Unchanged params:
-      const { isFirstOpen, deviceId, firstOpenEpoch } = await getFirstOpenInfo()
-      const params: any = { edgeVersion: getVersion(), isFirstOpen, deviceId, firstOpenEpoch, ...values }
+export function logEvent(event: TrackingEventName, values: TrackingValues = {}): ThunkAction<void> {
+  return async (dispatch, getState) => {
+    const { currencyCode, dollarValue, pluginId, error, exchangeAmount, sourceExchangeAmount, destExchangeAmount } = values
+    getExperimentConfig()
+      .then(async (experimentConfig: ExperimentConfig) => {
+        // Persistent & Unchanged params:
+        const { isFirstOpen, deviceId, firstOpenEpoch } = await getFirstOpenInfo()
 
-      // Adjust params:
-      if (accountDate != null) params.adate = accountDate
-      if (currencyCode != null) params.currency = currencyCode
-      if (dollarValue != null) {
-        params.currency = 'USD'
-        params.value = Number(dollarValue.toFixed(2))
-        params.items = [String(event)]
-      }
-      if (installerId != null) params.aid = installerId
-      if (pluginId != null) params.plugin = pluginId
-      if (error != null) params.error = makeErrorLog(error)
+        const params: any = { edgeVersion: getVersion(), buildNumber: getBuildNumber(), isFirstOpen, deviceId, firstOpenEpoch, ...values }
 
-      // Add all 'sticky' remote config variant values:
-      for (const key of Object.keys(experimentConfig)) params[`svar_${key}`] = experimentConfig[key as keyof ExperimentConfig]
+        // Populate referral params:
+        const state = getState()
+        const { deviceReferral, account } = state
+        const { accountReferral } = account
+        params.refDeviceInstallerId = deviceReferral.installerId
+        params.refDeviceCurrencyCodes = deviceReferral.currencyCodes
 
-      consify({ logEvent: { event, params } })
+        const { creationDate, installerId } = accountReferral
+        params.refAccountDate = installerId == null || creationDate == null ? undefined : creationDate.toISOString().replace(/-\d\dT.*/, '')
+        params.refAccountInstallerId = accountReferral.installerId
+        params.refAccountCurrencyCodes = accountReferral.currencyCodes
 
-      Promise.all([logToPosthog(event, params), logToFirebase(event, params), logToUtilServer(event, params)]).catch(error => console.warn(error))
-    })
-    .catch(console.error)
+        // Adjust params:
+        if (currencyCode != null) params.currency = currencyCode
+        if (dollarValue != null) {
+          // If an explicit dollarValue was given, prioritize it
+          params.currency = 'USD'
+          params.value = Number(dollarValue.toFixed(2))
+          params.items = [String(event)]
+        } else if (exchangeAmount != null && currencyCode != null) {
+          // Else, calculate the dollar value from exchangeAmount, if given
+          params.value = parseFloat(
+            convertCurrency(state, currencyCode, 'iso:USD', typeof destExchangeAmount === 'string' ? destExchangeAmount : String(destExchangeAmount))
+          )
+        } else if (sourceExchangeAmount != null) {
+          try {
+            asBiggystring(sourceExchangeAmount)
+          } catch (e) {
+            trackError('Error in tracking sourceExchangeAmount: ' + JSON.stringify({ event, values }))
+          }
+          params.sourceExchangeAmount = sourceExchangeAmount
+        } else if (destExchangeAmount != null) {
+          try {
+            asBiggystring(destExchangeAmount)
+          } catch (e) {
+            trackError('Error in tracking destExchangeAmount: ' + JSON.stringify({ event, values }))
+          }
+          params.destExchangeAmount = destExchangeAmount
+        }
+        if (pluginId != null) params.plugin = pluginId
+        if (error != null) params.error = makeErrorLog(error)
+
+        // Add all 'sticky' remote config variant values:
+        for (const key of Object.keys(experimentConfig)) params[`svar_${key}`] = experimentConfig[key as keyof ExperimentConfig]
+
+        consify({ logEvent: { event, params } })
+
+        Promise.all([logToPosthog(event, params), logToFirebase(event, params), logToUtilServer(event, params)]).catch(error => console.warn(error))
+      })
+      .catch(console.error)
+  }
 }
 
 /**

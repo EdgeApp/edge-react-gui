@@ -26,7 +26,6 @@ import { getUniqueWalletName } from './CreateWalletActions'
 import { expiredFioNamesCheckDates } from './FioActions'
 import { readLocalSettings } from './LocalSettingsActions'
 import { registerNotificationsV2 } from './NotificationActions'
-import { trackAccountEvent } from './TrackingActions'
 
 function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; currencyCode: string } {
   // Find the first wallet:
@@ -244,13 +243,13 @@ async function safeCreateWallet(account: EdgeAccount, walletType: string, wallet
         data: { currencyCode: wallet.currencyInfo.currencyCode, walletId: wallet.id }
       })
     }
-    dispatch(trackAccountEvent('Signup_Wallets_Created_Success'))
+    dispatch(logEvent('Signup_Wallets_Created_Success'))
     logActivity(`Create Wallet (login): ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${walletName}`)
 
     return wallet
   } catch (error) {
     showError(error)
-    dispatch(trackAccountEvent('Signup_Wallets_Created_Failed', { error }))
+    dispatch(logEvent('Signup_Wallets_Created_Failed', { error }))
     throw error
   }
 }
@@ -312,7 +311,7 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
     if (pluginIdTokenIdMap[pluginId].length > 0) await wallet.changeEnabledTokenIds(pluginIdTokenIdMap[pluginId])
   }
 
-  logEvent('Signup_Complete')
+  dispatch(logEvent('Signup_Complete'))
 }
 
 /**

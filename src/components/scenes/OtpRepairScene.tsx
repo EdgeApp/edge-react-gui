@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
 import { config } from '../../theme/appConfig'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -20,8 +20,13 @@ export const OtpRepairScene = (props: Props) => {
   const { otpError } = route.params
   const account = useSelector(state => state.core.account)
   const context = useSelector(state => state.core.context)
+  const dispatch = useDispatch()
 
   const handleComplete = useHandler(() => navigation.goBack())
+
+  const handleLogEvent = useHandler((event, values) => {
+    dispatch(logEvent(event, values))
+  })
 
   return (
     <SceneWrapper>
@@ -31,7 +36,7 @@ export const OtpRepairScene = (props: Props) => {
         context={context}
         onComplete={handleComplete}
         otpError={otpError}
-        onLogEvent={logEvent}
+        onLogEvent={handleLogEvent}
       />
     </SceneWrapper>
   )
