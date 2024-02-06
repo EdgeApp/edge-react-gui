@@ -10,6 +10,7 @@ import { changeTheme, getTheme } from './components/services/ThemeContext'
 import { ENV } from './env'
 import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
+import { initInfoServer } from './util/network'
 
 LogBox.ignoreLogs(['Require cycle:'])
 
@@ -218,3 +219,4 @@ if (ENV.DEBUG_THEME) {
 }
 
 initDeviceSettings().catch(err => console.log(err))
+initInfoServer().catch(err => console.log(err))

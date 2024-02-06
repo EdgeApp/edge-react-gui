@@ -1,10 +1,15 @@
 import { Cleaner } from 'cleaners'
 import { EdgeFetchFunction, EdgeFetchOptions, EdgeFetchResponse } from 'edge-core-js'
+import { asInfoRollup, InfoRollup } from 'edge-info-server'
+import { Platform } from 'react-native'
+import { getVersion } from 'react-native-device-info'
 
 import { config } from '../theme/appConfig'
-import { asyncWaterfall, shuffleArray } from './utils'
+import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
 const INFO_SERVERS = ['https://info1.edge.app', 'https://info2.edge.app']
 const RATES_SERVERS = ['https://rates1.edge.app', 'https://rates2.edge.app']
+
+const INFO_FETCH_INTERVAL = 60000
 
 export async function fetchWaterfall(
   servers: string[],
@@ -65,4 +70,29 @@ export const fetchReferral = async (path: string, options?: EdgeFetchOptions, ti
 }
 export const fetchPush = async (path: string, options?: EdgeFetchOptions, timeout?: number, doFetch?: EdgeFetchFunction): Promise<EdgeFetchResponse> => {
   return await multiFetch(config.notificationServers, path, options, timeout, doFetch)
+}
+
+export const infoServerData: { rollup?: InfoRollup } = {}
+
+export const initInfoServer = async () => {
+  const osType = Platform.OS.toLowerCase()
+  const osVersion = getOsVersion()
+  const version = getVersion()
+
+  const queryInfo = async () => {
+    try {
+      const response = await fetchInfo(`v1/inforollup/${config.appId ?? 'edge'}?os=${osType}&osVersion=${osVersion}&appVersion=${version}`)
+      if (!response.ok) {
+        console.warn(`initInfoServer error ${response.status}: ${await response.text()}`)
+      } else {
+        const infoData = await response.json()
+        infoServerData.rollup = asInfoRollup(infoData)
+      }
+    } catch (e) {
+      console.warn('initInfoServer: Failed to ping info server')
+    }
+  }
+
+  await queryInfo()
+  setInterval(queryInfo, INFO_FETCH_INTERVAL)
 }
