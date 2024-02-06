@@ -9,7 +9,6 @@ import SafariView from 'react-native-safari-view'
 import { DisablePluginMap, NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { launchPaymentProto, LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
 import { addressWarnings } from '../../actions/ScanActions'
-import { trackConversionWithReferral } from '../../actions/TrackingActions'
 import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import { RadioListModal } from '../../components/modals/RadioListModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
@@ -18,10 +17,9 @@ import { Airship, showError, showToast, showToastSpinner } from '../../component
 import { requestPermissionOnSettings } from '../../components/services/PermissionsManager'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
-import { AccountReferral } from '../../types/ReferralTypes'
 import { AppParamList, NavigationBase } from '../../types/routerTypes'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
-import { TrackingEventName } from '../../util/tracking'
+import { OnLogEvent, TrackingEventName } from '../../util/tracking'
 import {
   FiatPaymentType,
   FiatPluginAddressFormParams,
@@ -42,7 +40,6 @@ export const SendErrorBackPressed = 'SendErrorBackPressed'
 
 export const executePlugin = async (params: {
   account: EdgeAccount
-  accountReferral: AccountReferral
   disklet: Disklet
   deviceId: string
   direction: 'buy' | 'sell'
@@ -53,11 +50,11 @@ export const executePlugin = async (params: {
   paymentType?: FiatPaymentType
   providerId?: string
   regionCode: FiatPluginRegionCode
+  onLogEvent: OnLogEvent
 }): Promise<void> => {
   const {
     disablePlugins = {},
     account,
-    accountReferral,
     deviceId,
     direction,
     disklet,
@@ -66,7 +63,8 @@ export const executePlugin = async (params: {
     navigation,
     paymentType,
     providerId,
-    regionCode
+    regionCode,
+    onLogEvent
   } = params
   const { defaultFiatAmount, forceFiatCurrencyCode, pluginId } = guiPlugin
 
@@ -228,16 +226,16 @@ export const executePlugin = async (params: {
       event: TrackingEventName,
       opts: {
         destCurrencyCode: string
-        destExchangeAmount: string
+        destExchangeAmount: number
         destPluginId?: string
         sourceCurrencyCode: string
-        sourceExchangeAmount: string
+        sourceExchangeAmount: number
         sourcePluginId?: string
         pluginId: string
         orderId?: string
       }
     ) => {
-      await trackConversionWithReferral(event, opts, accountReferral)
+      onLogEvent(event, opts)
     },
     exitScene: async () => {
       navigation.pop()

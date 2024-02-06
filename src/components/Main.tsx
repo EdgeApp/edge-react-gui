@@ -231,6 +231,7 @@ const firstSceneScreenOptions: StackNavigationOptions = {
 
 export const Main = () => {
   const theme = useTheme()
+  const dispatch = useDispatch()
   const [legacyLanding, setLegacyLanding] = React.useState<boolean | undefined>(isMaestro() ? false : undefined)
   const [hasInitialScenesLoaded, setHasInitialScenesLoaded] = React.useState(false)
 
@@ -248,11 +249,11 @@ export const Main = () => {
   const localUsers = useSelector(state => state.core.context.localUsers)
 
   useMount(() => {
-    logEvent('Start_App', { numAccounts: localUsers.length })
+    dispatch(logEvent('Start_App', { numAccounts: localUsers.length }))
     if (localUsers.length === 0) {
-      logEvent('Start_App_No_Accounts')
+      dispatch(logEvent('Start_App_No_Accounts'))
     } else {
-      logEvent('Start_App_With_Accounts')
+      dispatch(logEvent('Start_App_With_Accounts'))
     }
 
     // Used to re-enable animations to login scene:

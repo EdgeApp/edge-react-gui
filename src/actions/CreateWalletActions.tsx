@@ -181,9 +181,11 @@ export function createAccountTransaction(
         walletId: paymentWalletId,
         onBack: () => {
           // Hack. Keyboard pops up for some reason. Close it
-          logEvent('Activate_Wallet_Cancel', {
-            currencyCode: createdWalletCurrencyCode
-          })
+          dispatch(
+            logEvent('Activate_Wallet_Cancel', {
+              currencyCode: createdWalletCurrencyCode
+            })
+          )
         },
         onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
           if (error) {
@@ -192,9 +194,11 @@ export function createAccountTransaction(
               Alert.alert(lstrings.create_wallet_account_error_sending_transaction)
             }, 750)
           } else if (edgeTransaction) {
-            logEvent('Activate_Wallet_Done', {
-              currencyCode: createdWalletCurrencyCode
-            })
+            dispatch(
+              logEvent('Activate_Wallet_Done', {
+                currencyCode: createdWalletCurrencyCode
+              })
+            )
             const edgeMetadata: EdgeMetadata = {
               name: sprintf(lstrings.create_wallet_account_metadata_name, createdWalletCurrencyCode),
               category: 'Expense:' + sprintf(lstrings.create_wallet_account_metadata_category, createdWalletCurrencyCode),

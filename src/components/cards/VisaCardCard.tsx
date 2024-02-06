@@ -35,7 +35,7 @@ export const VisaCardCard = (props: Props) => {
   const dispatch = useDispatch()
 
   const handlePress = useHandler(() => {
-    logEvent('Visa_Card_Launch')
+    dispatch(logEvent('Visa_Card_Launch'))
     dispatch(executePluginAction(navigation, 'rewardscard', 'sell')).catch(err => showError(err))
   })
 

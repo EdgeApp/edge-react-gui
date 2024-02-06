@@ -754,7 +754,8 @@ const SendComponent = (props: Props) => {
       if (alternateBroadcast != null) {
         broadcastedTx = await alternateBroadcast(signedTx)
       } else {
-        broadcastedTx = await coreWallet.broadcastTx(signedTx)
+        // broadcastedTx = await coreWallet.broadcastTx(signedTx)
+        console.debug('sent')
       }
 
       // Figure out metadata

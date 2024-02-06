@@ -1,7 +1,8 @@
 import { ChangePinScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 
-import { useSelector } from '../../types/reactRedux'
+import { useHandler } from '../../hooks/useHandler'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
 import { logEvent } from '../../util/tracking'
@@ -11,17 +12,22 @@ interface Props extends EdgeSceneProps<'changePin'> {}
 
 export const ChangePinScene = (props: Props) => {
   const { navigation } = props
-
   const account = useSelector(state => state.core.account)
   const context = useSelector(state => state.core.context)
+  const dispatch = useDispatch()
 
   const handleComplete = () => {
     logActivity(`PIN Changed: ${account.username}`)
     navigation.goBack()
   }
+
+  const handleLogEvent = useHandler((event, values) => {
+    dispatch(logEvent(event, values))
+  })
+
   return (
     <SceneWrapper>
-      <ChangePinScreen account={account} context={context} onComplete={handleComplete} onLogEvent={logEvent} />
+      <ChangePinScreen account={account} context={context} onComplete={handleComplete} onLogEvent={handleLogEvent} />
     </SceneWrapper>
   )
 }

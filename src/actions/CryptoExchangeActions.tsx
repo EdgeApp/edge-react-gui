@@ -14,7 +14,6 @@ import * as React from 'react'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { trackConversion } from '../actions/TrackingActions'
 import { InsufficientFeesModal } from '../components/modals/InsufficientFeesModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { formatNumber } from '../locales/intl'
@@ -308,7 +307,7 @@ export function shiftCryptoCurrency(navigation: NavigationBase, quote: EdgeSwapQ
     const { toWallet, toTokenId } = request
     const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
     try {
-      logEvent('Exchange_Shift_Start')
+      dispatch(logEvent('Exchange_Shift_Start'))
       const result: EdgeSwapResult = await quote.approve()
 
       logActivity(`Swap Exchange Executed: ${account.username}`)
@@ -340,7 +339,7 @@ export function shiftCryptoCurrency(navigation: NavigationBase, quote: EdgeSwapQ
 
       const exchangeAmount = await toWallet.nativeToDenomination(toNativeAmount, toCurrencyCode)
       dispatch(
-        trackConversion('Exchange_Shift_Success', {
+        logEvent('Exchange_Shift_Success', {
           pluginId,
           currencyCode: toCurrencyCode,
           exchangeAmount: Number(exchangeAmount),
@@ -349,7 +348,7 @@ export function shiftCryptoCurrency(navigation: NavigationBase, quote: EdgeSwapQ
       )
     } catch (error: any) {
       console.log(error)
-      logEvent('Exchange_Shift_Failed', { error: String(error) }) // TODO: Do we need to parse/clean all cases?
+      dispatch(logEvent('Exchange_Shift_Failed', { error: String(error) })) // TODO: Do we need to parse/clean all cases?
       dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
       setTimeout(() => {
         showError(`${lstrings.exchange_failed}. ${error.message}`)

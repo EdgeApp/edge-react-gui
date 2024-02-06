@@ -41,7 +41,7 @@ export function loadDeviceReferral(): ThunkAction<Promise<void>> {
     } catch (error: any) {
       // If all else fails, we just don't have a reason:
       console.log('Failed to load install reason', error)
-      logEvent('Load_Install_Reason_Fail', { error: String(error) })
+      dispatch(logEvent('Load_Install_Reason_Fail', { error: String(error) }))
     }
   }
 }

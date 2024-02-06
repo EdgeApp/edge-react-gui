@@ -146,10 +146,10 @@ export interface FiatPluginUi {
     event: TrackingEventName,
     opts: {
       destCurrencyCode: string
-      destExchangeAmount: string
+      destExchangeAmount: number
       destPluginId?: string
       sourceCurrencyCode: string
-      sourceExchangeAmount: string
+      sourceExchangeAmount: number
       sourcePluginId?: string
       pluginId: string
       orderId?: string
