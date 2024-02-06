@@ -248,13 +248,14 @@ const CoinRankingComponent = (props: Props) => {
           <DividerLine marginRem={[0, 0, 0, 1]} />
           <View style={{ ...undoInsetStyle, marginTop: 0 }}>
             <Animated.FlatList
+              contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
               data={listdata}
               extraData={extraData}
-              renderItem={renderItem}
+              keyboardDismissMode="on-drag"
               onEndReachedThreshold={1}
               onEndReached={handleEndReached}
-              contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
               onScroll={handleScroll}
+              renderItem={renderItem}
               scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
             />
           </View>

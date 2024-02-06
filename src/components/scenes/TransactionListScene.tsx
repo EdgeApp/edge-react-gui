@@ -310,6 +310,7 @@ function TransactionListComponent(props: Props) {
               paddingRight: insetStyle.paddingRight + theme.rem(0.5)
             }}
             data={listItems}
+            keyboardDismissMode="on-drag"
             keyboardShouldPersistTaps="handled"
             keyExtractor={keyExtractor}
             ListEmptyComponent={emptyComponent}
