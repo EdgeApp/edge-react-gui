@@ -1,5 +1,5 @@
 import { mul, toFixed } from 'biggystring'
-import { EdgeAccount, EdgeCreateCurrencyWallet, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeCreateCurrencyWallet, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeMetadata, EdgeResult, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -19,6 +19,19 @@ import { getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { filterNull } from '../util/safeFilters'
 import { logEvent } from '../util/tracking'
+
+export const createWallets = async (account: EdgeAccount, items: EdgeCreateCurrencyWallet[]): Promise<Array<EdgeResult<EdgeCurrencyWallet>>> => {
+  const out = await account.createCurrencyWallets(items)
+
+  // Log the results:
+  for (let i = 0; i < items.length; ++i) {
+    if (!out[i].ok) continue
+    const { fiatCurrencyCode, name = '', walletType } = items[i]
+    logActivity(`Create Wallet: ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${name}`)
+  }
+
+  return out
+}
 
 export const createWallet = async (account: EdgeAccount, opts: EdgeCreateCurrencyWallet): Promise<EdgeCurrencyWallet> => {
   const { walletType, name, fiatCurrencyCode } = opts
