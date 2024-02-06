@@ -1,5 +1,5 @@
 import { asArray, asDate } from 'cleaners'
-import { asInfoRollup, asPromoCard2, PromoCard2 } from 'edge-info-server/types'
+import { asInfoRollup, asPromoCard2, PromoCard2 } from 'edge-info-server'
 import * as React from 'react'
 import { ListRenderItem, Platform } from 'react-native'
 import DeviceInfo, { getBuildNumber, getVersion } from 'react-native-device-info'
