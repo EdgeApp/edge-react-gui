@@ -265,7 +265,7 @@ export const Main = () => {
   useAsyncEffect(
     async () => {
       if (isMaestro()) return
-      setLegacyLanding((await getExperimentConfigValue('legacyLanding')) === 'legacyLanding')
+      setLegacyLanding((await getExperimentConfigValue('landingType')) === 'A_legacy')
     },
     [],
     'setLegacyLanding'

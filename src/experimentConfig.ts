@@ -6,17 +6,20 @@ import { isMaestro } from 'react-native-is-maestro'
 import { LOCAL_EXPERIMENT_CONFIG } from './constants/constantSettings'
 import { ENV } from './env'
 
+export type LandingType = 'A_legacy' | 'B_Usps' | 'C_UspsMinusWGYC' | 'D_UspsAltWGYC'
+
 // Persistent experiment config for A/B testing. Values initialized in this
 // config persist throughout the liftetime of the app install.
 export interface ExperimentConfig {
   createAccountType: CreateAccountType
-  legacyLanding: 'legacyLanding' | 'uspLanding'
+  landingType: LandingType
   signupCaptcha: 'withCaptcha' | 'withoutCaptcha'
 }
 
+// Defined default "unchanged" values before experimentation.
 const DEFAULT_EXPERIMENT_CONFIG: ExperimentConfig = {
   createAccountType: 'full',
-  legacyLanding: 'uspLanding',
+  landingType: 'B_Usps',
   signupCaptcha: 'withoutCaptcha'
 }
 
@@ -25,7 +28,7 @@ const experimentConfigDisklet = makeReactNativeDisklet()
 // The probability of an experiment config feature being set for a given key
 const experimentDistribution = {
   createAccountType: [50, 50],
-  legacyLanding: [50, 50],
+  landingType: [25, 25, 25, 25],
   signupCaptcha: [50, 50]
 }
 
@@ -65,14 +68,12 @@ const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution
   return configVals[configVals.length - 1]
 }
 
-// It's important to define string literals instead of booleans as values so
-// that they are properly captured in the analytics dashboard reports. The first
-// values are the variant values that differ from the default feature
-// behavior/appearance, while the last value represents unchanged
-// behavior/appearance.
 const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
   createAccountType: asMaybe(asValue('full', 'light'), generateExperimentConfigVal('createAccountType', ['full', 'light'])),
-  legacyLanding: asMaybe(asValue('uspLanding', 'legacyLanding'), generateExperimentConfigVal('legacyLanding', ['legacyLanding', 'uspLanding'])),
+  landingType: asMaybe(
+    asValue('A_legacy', 'B_Usps', 'C_UspsMinusWGYC', 'D_UspsAltWGYC'),
+    generateExperimentConfigVal('landingType', ['A_legacy', 'B_Usps', 'C_UspsMinusWGYC', 'D_UspsAltWGYC'])
+  ),
   signupCaptcha: asMaybe(asValue('withoutCaptcha', 'withCaptcha'), generateExperimentConfigVal('signupCaptcha', ['withoutCaptcha', 'withCaptcha']))
 })
 

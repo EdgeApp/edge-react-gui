@@ -162,7 +162,7 @@ export function LoginSceneComponent(props: Props) {
   )
 
   const maybeHandleComplete =
-    ENV.USE_WELCOME_SCREENS && experimentConfig != null && experimentConfig.legacyLanding === 'uspLanding'
+    ENV.USE_WELCOME_SCREENS && experimentConfig != null && experimentConfig.landingType !== 'A_legacy'
       ? () => {
           navigation.navigate('gettingStarted', {})
         }
