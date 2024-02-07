@@ -151,7 +151,10 @@ export const getCurrencyCode = (wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId
 /**
  * Get the currencyCode associated with a tokenId
  */
-export const getCurrencyCodeWithAccount = (account: EdgeAccount, pluginId: string, tokenId: EdgeTokenId): string => {
+export const getCurrencyCodeWithAccount = (account: EdgeAccount, pluginId: string, tokenId: EdgeTokenId): string | undefined => {
+  if (account.currencyConfig[pluginId] == null) {
+    return
+  }
   const { currencyCode } = tokenId != null ? account.currencyConfig[pluginId].allTokens[tokenId] : account.currencyConfig[pluginId].currencyInfo
   return currencyCode
 }

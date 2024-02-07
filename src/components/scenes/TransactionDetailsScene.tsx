@@ -462,6 +462,7 @@ const convertActionToSwapData = (account: EdgeAccount, transaction: EdgeTransact
   const { swapInfo, orderId, orderUri, isEstimate, toAsset, payoutAddress, payoutWalletId, refundAddress } = action
 
   const payoutCurrencyCode = getCurrencyCodeWithAccount(account, toAsset.pluginId, toAsset.tokenId)
+  if (payoutCurrencyCode == null) return
 
   const out: EdgeTxSwap = {
     orderId,
