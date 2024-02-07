@@ -11,6 +11,7 @@ import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { CreateWalletType } from '../../types/types'
 import { getTokenIdForced, getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
@@ -22,6 +23,12 @@ import { EdgeText } from '../themed/EdgeText'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { CardUi4 } from '../ui4/CardUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
+
+export interface CreateWalletAccountSelectParams {
+  accountName: string
+  existingWalletId: string
+  selectedWalletType: CreateWalletType
+}
 
 export interface ActivationPaymentInfo {
   requestedAccountName: string

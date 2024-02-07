@@ -23,6 +23,10 @@ import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
 
+export interface MigrateWalletCompletionParams {
+  migrateWalletList: MigrateWalletItem[]
+}
+
 interface Props extends EdgeSceneProps<'migrateWalletCompletion'> {}
 
 interface MigrateWalletTokenItem extends MigrateWalletItem {

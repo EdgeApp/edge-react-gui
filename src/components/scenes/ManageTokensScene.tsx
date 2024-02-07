@@ -24,6 +24,10 @@ import { Title } from '../themed/Title'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
+export interface ManageTokensParams {
+  walletId: string
+}
+
 interface Props extends EdgeSceneProps<'manageTokens'> {
   wallet: EdgeCurrencyWallet
 }

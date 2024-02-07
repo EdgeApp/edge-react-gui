@@ -1,3 +1,4 @@
+import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Text } from 'react-native'
 
@@ -12,6 +13,10 @@ import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsRadioRow } from '../settings/SettingsRadioRow'
 import { MaybeBlockbookSetting, MaybeCustomServersSetting, MaybeElectrumSetting } from '../themed/MaybeCustomServersSetting'
 import { MaybeMoneroUserSettings } from '../themed/MaybeMoneroUserSettings'
+
+export interface CurrencySettingsParams {
+  currencyInfo: EdgeCurrencyInfo
+}
 
 interface Props extends EdgeSceneProps<'currencySettings'> {}
 

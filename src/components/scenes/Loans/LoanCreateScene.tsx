@@ -21,6 +21,7 @@ import { useWalletName } from '../../../hooks/useWalletName'
 import { useWatch } from '../../../hooks/useWatch'
 import { toPercentString } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
+import { BorrowEngine, BorrowPlugin } from '../../../plugins/borrow-plugins/types'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { config } from '../../../theme/appConfig'
 import { useSelector } from '../../../types/reactRedux'
@@ -44,6 +45,11 @@ import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { AprCard } from '../../tiles/AprCard'
 import { CardUi4 } from '../../ui4/CardUi4'
+
+export interface LoanCreateParams {
+  borrowEngine: BorrowEngine
+  borrowPlugin: BorrowPlugin
+}
 
 interface Props extends EdgeSceneProps<'loanCreate'> {}
 

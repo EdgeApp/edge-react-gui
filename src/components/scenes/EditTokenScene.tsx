@@ -1,5 +1,5 @@
 import { asMaybe, asObject, asString } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -21,6 +21,15 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+
+export interface EditTokenParams {
+  currencyCode?: string
+  displayName?: string
+  multiplier?: string
+  networkLocation?: JsonObject
+  tokenId?: EdgeTokenId // Acts like "add token" if this is missing
+  walletId: string
+}
 
 interface Props extends EdgeSceneProps<'editToken'> {
   wallet: EdgeCurrencyWallet

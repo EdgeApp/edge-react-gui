@@ -41,6 +41,10 @@ import { SceneHeader } from '../../themed/SceneHeader'
 import { CardUi4 } from '../../ui4/CardUi4'
 import { CryptoIconUi4 } from '../../ui4/CryptoIconUi4'
 
+export interface LoanDetailsParams {
+  loanAccountId: string
+}
+
 interface Props extends EdgeSceneProps<'loanDetails'> {
   loanAccount: LoanAccount
 }

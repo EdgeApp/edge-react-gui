@@ -21,6 +21,10 @@ import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { WalletCreateItem } from '../themed/WalletList'
 
+export interface MigrateWalletSelectCryptoParams {
+  preSelectedWalletIds?: string[]
+}
+
 interface Props extends EdgeSceneProps<'migrateWalletSelectCrypto'> {}
 
 export interface MigrateWalletItem extends WalletCreateItem {

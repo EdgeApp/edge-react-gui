@@ -6,6 +6,7 @@ import { useMount } from '../../hooks/useMount'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { CreateWalletType } from '../../types/types'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -13,6 +14,13 @@ import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage } from '../themed/ModalParts'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
+
+export interface CreateWalletAccountSetupParams {
+  accountHandle?: string
+  existingWalletId: string
+  isReactivation?: boolean
+  selectedWalletType: CreateWalletType
+}
 
 interface Props extends EdgeSceneProps<'createWalletAccountSetup'> {}
 

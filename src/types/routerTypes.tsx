@@ -1,10 +1,12 @@
 import * as NavigationCore from '@react-navigation/core'
 import type { StackActionHelpers } from '@react-navigation/native'
-import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeSpendInfo, EdgeTokenId, JsonObject, OtpError } from 'edge-core-js'
-import type { InitialRouteName } from 'edge-login-ui-rn'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
+import type { ChangeMiningFeeParams } from '../components/scenes/ChangeMiningFeeScene'
 import type { CoinRankingDetailsParams } from '../components/scenes/CoinRankingDetailsScene'
 import type { ConfirmSceneParams } from '../components/scenes/ConfirmScene'
+import type { CreateWalletAccountSelectParams } from '../components/scenes/CreateWalletAccountSelectScene'
+import type { CreateWalletAccountSetupParams } from '../components/scenes/CreateWalletAccountSetupScene'
 import type { CreateWalletCompletionParams } from '../components/scenes/CreateWalletCompletionScene'
 import type { CreateWalletImportOptionsParams } from '../components/scenes/CreateWalletImportOptionsScene'
 import type { CreateWalletImportParams } from '../components/scenes/CreateWalletImportScene'
@@ -12,38 +14,50 @@ import type { CreateWalletSelectCryptoParams } from '../components/scenes/Create
 import type { CreateWalletSelectFiatParams } from '../components/scenes/CreateWalletSelectFiatScene'
 import type { ExchangeQuoteProcessingParams } from '../components/scenes/CryptoExchangeQuoteProcessingScene'
 import type { CryptoExchangeQuoteParams } from '../components/scenes/CryptoExchangeQuoteScene'
+import type { CurrencyNotificationParams } from '../components/scenes/CurrencyNotificationScene'
+import type { CurrencySettingsParams } from '../components/scenes/CurrencySettingsScene'
+import type { EdgeLoginParams } from '../components/scenes/EdgeLoginScene'
+import type { EditTokenParams } from '../components/scenes/EditTokenScene'
 import type { FioCreateHandleParams } from '../components/scenes/Fio/FioCreateHandleScene'
+import type { GuiPluginListParams } from '../components/scenes/GuiPluginListScene'
 import type { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
-import type { LoanManageType } from '../components/scenes/Loans/LoanManageScene'
-import type { MigrateWalletItem } from '../components/scenes/MigrateWalletSelectCryptoScene'
+import type { LoanCloseParams } from '../components/scenes/Loans/LoanCloseScene'
+import type { LoanCreateConfirmationParams } from '../components/scenes/Loans/LoanCreateConfirmationScene'
+import type { LoanCreateParams } from '../components/scenes/Loans/LoanCreateScene'
+import type { LoanDetailsParams } from '../components/scenes/Loans/LoanDetailsScene'
+import type { LoanManageParams } from '../components/scenes/Loans/LoanManageScene'
+import type { LoanStatusParams } from '../components/scenes/Loans/LoanStatusScene'
+import type { LoginParams } from '../components/scenes/LoginScene'
+import type { ManageTokensParams } from '../components/scenes/ManageTokensScene'
+import type { MigrateWalletCalculateFeeParams } from '../components/scenes/MigrateWalletCalculateFeeScene'
+import type { MigrateWalletCompletionParams } from '../components/scenes/MigrateWalletCompletionScene'
+import type { MigrateWalletSelectCryptoParams } from '../components/scenes/MigrateWalletSelectCryptoScene'
+import type { OtpRepairParams } from '../components/scenes/OtpRepairScene'
 import type { SendScene2Params } from '../components/scenes/SendScene2'
+import type { StakeModifyParams } from '../components/scenes/Staking/StakeModifyScene'
 import type { StakeOptionsParams } from '../components/scenes/Staking/StakeOptionsScene'
 import type { StakeOverviewParams } from '../components/scenes/Staking/StakeOverviewScene'
 import type { TransactionDetailsParams } from '../components/scenes/TransactionDetailsScene'
 import type { TransactionListParams } from '../components/scenes/TransactionListScene'
+import type { TransactionsExportParams } from '../components/scenes/TransactionsExportScene'
 import type { WcConnectionsParams } from '../components/scenes/WcConnectionsScene'
 import type { WcConnectParams } from '../components/scenes/WcConnectScene'
 import type { WcDisconnectParams } from '../components/scenes/WcDisconnectScene'
 import type { WebViewSceneParams } from '../components/scenes/WebViewScene'
 import type { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput2'
-import type { PaymentMethod } from '../controllers/action-queue/PaymentMethod'
-import type { BorrowEngine, BorrowPlugin } from '../plugins/borrow-plugins/types'
 import type { FiatPluginAddressFormParams, FiatPluginSepaFormParams, FiatPluginSepaTransferParams } from '../plugins/gui/fiatPluginTypes'
 import type { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import type { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWebView'
 import type { RewardsCardDashboardParams } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import type { RewardsCardWelcomeParams } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
-import type { ChangeQuoteRequest, StakePlugin, StakePolicy, StakePosition } from '../plugins/stake-plugins/types'
-import type { CreateWalletType, FeeOption, FioConnectionWalletItem, FioDomain, FioRequest } from './types'
+import type { FioConnectionWalletItem, FioDomain, FioRequest } from './types'
 
 /**
  * Defines the acceptable route parameters for each scene key.
  */
 export interface RouteParamList {
   // Top-level router:
-  login: {
-    loginUiInitialRoute?: InitialRouteName
-  }
+  login: LoginParams
   edgeApp: {}
   edgeAppStack: {}
   edgeTabs: {}
@@ -69,52 +83,25 @@ export interface RouteParamList {
 
   // Logged-in scenes:
   assetSettings: {}
-  changeMiningFee2: {
-    spendInfo: EdgeSpendInfo
-    maxSpendSet: boolean
-    onSubmit: (networkFeeOption: FeeOption, customNetworkFee: JsonObject) => void
-    wallet: EdgeCurrencyWallet
-  }
+  changeMiningFee2: ChangeMiningFeeParams
   changePassword: {}
   changePin: {}
   coinRanking: {}
   coinRankingDetails: CoinRankingDetailsParams
   confirmScene: ConfirmSceneParams
-  createWalletAccountSelect: {
-    accountName: string
-    existingWalletId: string
-    selectedWalletType: CreateWalletType
-  }
-  createWalletAccountSetup: {
-    accountHandle?: string
-    existingWalletId: string
-    isReactivation?: boolean
-    selectedWalletType: CreateWalletType
-  }
+  createWalletAccountSelect: CreateWalletAccountSelectParams
+  createWalletAccountSetup: CreateWalletAccountSetupParams
   createWalletCompletion: CreateWalletCompletionParams
   createWalletImport: CreateWalletImportParams
   createWalletImportOptions: CreateWalletImportOptionsParams
   createWalletSelectCrypto: CreateWalletSelectCryptoParams
   createWalletSelectCryptoNewAccount: CreateWalletSelectCryptoParams
   createWalletSelectFiat: CreateWalletSelectFiatParams
-  currencyNotificationSettings: {
-    currencyInfo: EdgeCurrencyInfo
-  }
-  currencySettings: {
-    currencyInfo: EdgeCurrencyInfo
-  }
+  currencyNotificationSettings: CurrencyNotificationParams
+  currencySettings: CurrencySettingsParams
   defaultFiatSetting: {}
-  edgeLogin: {
-    lobbyId: string
-  }
-  editToken: {
-    currencyCode?: string
-    displayName?: string
-    multiplier?: string
-    networkLocation?: JsonObject
-    tokenId?: EdgeTokenId // Acts like "add token" if this is missing
-    walletId: string
-  }
+  edgeLogin: EdgeLoginParams
+  editToken: EditTokenParams
   exchange: {}
   exchangeQuote: CryptoExchangeQuoteParams
   exchangeQuoteProcessing: ExchangeQuoteProcessingParams
@@ -193,60 +180,23 @@ export interface RouteParamList {
   }
   home: {}
   loanDashboard: {}
-  loanDetails: {
-    loanAccountId: string
-  }
-  loanCreate: {
-    borrowEngine: BorrowEngine
-    borrowPlugin: BorrowPlugin
-  }
-  loanCreateConfirmation: {
-    borrowEngine: BorrowEngine
-    borrowPlugin: BorrowPlugin
-    destTokenId: EdgeTokenId
-    destWallet: EdgeCurrencyWallet
-    nativeDestAmount: string
-    nativeSrcAmount: string
-    paymentMethod?: PaymentMethod
-    srcTokenId: EdgeTokenId
-    srcWallet: EdgeCurrencyWallet
-  }
-  loanClose: {
-    loanAccountId: string
-  }
-  loanManage: {
-    loanManageType: LoanManageType
-    loanAccountId: string
-  }
-  loanStatus: {
-    actionQueueId: string
-    loanAccountId: string
-  }
-  manageTokens: {
-    walletId: string
-  }
-  migrateWalletCompletion: {
-    migrateWalletList: MigrateWalletItem[]
-  }
-  migrateWalletCalculateFee: {
-    migrateWalletList: MigrateWalletItem[]
-  }
-  migrateWalletSelectCrypto: {
-    preSelectedWalletIds?: string[]
-  }
+  loanDetails: LoanDetailsParams
+  loanCreate: LoanCreateParams
+  loanCreateConfirmation: LoanCreateConfirmationParams
+  loanClose: LoanCloseParams
+  loanManage: LoanManageParams
+  loanStatus: LoanStatusParams
+  manageTokens: ManageTokensParams
+  migrateWalletCompletion: MigrateWalletCompletionParams
+  migrateWalletCalculateFee: MigrateWalletCalculateFeeParams
+  migrateWalletSelectCrypto: MigrateWalletSelectCryptoParams
   notificationSettings: {}
-  otpRepair: {
-    otpError: OtpError
-  }
+  otpRepair: OtpRepairParams
   otpSetup: {}
   passwordRecovery: {}
   upgradeUsername: {}
-  pluginListBuy: {
-    launchPluginId?: string
-  }
-  pluginListSell: {
-    launchPluginId?: string
-  }
+  pluginListBuy: GuiPluginListParams
+  pluginListSell: GuiPluginListParams
   pluginViewBuy: PluginViewParams
   pluginViewSell: PluginViewParams
   pluginView: PluginViewParams
@@ -257,23 +207,13 @@ export interface RouteParamList {
   settingsOverview: {}
   settingsOverviewTab: {}
   spendingLimits: {}
-  stakeModify: {
-    title: string
-    stakePlugin: StakePlugin
-    walletId: string
-    stakePolicy: StakePolicy
-    stakePosition: StakePosition
-    modification: ChangeQuoteRequest['action']
-  }
+  stakeModify: StakeModifyParams
   stakeOptions: StakeOptionsParams
   stakeOverview: StakeOverviewParams
   testScene: {}
   transactionDetails: TransactionDetailsParams
   transactionList: TransactionListParams
-  transactionsExport: {
-    sourceWallet: EdgeCurrencyWallet
-    currencyCode: string
-  }
+  transactionsExport: TransactionsExportParams
   walletList: {}
   webView: WebViewSceneParams
   wcConnections: WcConnectionsParams

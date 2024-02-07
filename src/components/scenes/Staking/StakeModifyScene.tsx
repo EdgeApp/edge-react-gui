@@ -5,7 +5,16 @@ import { Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../../locales/strings'
-import { ChangeQuote, ChangeQuoteRequest, QuoteAllocation, StakeBelowLimitError, StakePoolFullError } from '../../../plugins/stake-plugins/types'
+import {
+  ChangeQuote,
+  ChangeQuoteRequest,
+  QuoteAllocation,
+  StakeBelowLimitError,
+  StakePlugin,
+  StakePolicy,
+  StakePoolFullError,
+  StakePosition
+} from '../../../plugins/stake-plugins/types'
 import { getDisplayDenomination, getExchangeDenominationFromAccount } from '../../../selectors/DenominationSelectors'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
@@ -32,6 +41,15 @@ import { EditableAmountTile } from '../../tiles/EditableAmountTile'
 import { ErrorTile } from '../../tiles/ErrorTile'
 import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
+
+export interface StakeModifyParams {
+  title: string
+  stakePlugin: StakePlugin
+  walletId: string
+  stakePolicy: StakePolicy
+  stakePosition: StakePosition
+  modification: ChangeQuoteRequest['action']
+}
 
 interface Props extends EdgeSceneProps<'stakeModify'> {
   wallet: EdgeCurrencyWallet

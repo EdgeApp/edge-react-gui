@@ -1,5 +1,5 @@
 import { EdgeAccount } from 'edge-core-js'
-import { LoginScreen } from 'edge-login-ui-rn'
+import { InitialRouteName, LoginScreen } from 'edge-login-ui-rn'
 import { NotificationPermissionsInfo } from 'edge-login-ui-rn/lib/types/ReduxTypes'
 import * as React from 'react'
 import { Keyboard, StatusBar, View } from 'react-native'
@@ -28,6 +28,10 @@ import { UpdateModal } from '../modals/UpdateModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { DotsBackground } from '../ui4/DotsBackground'
 import { LoadingScene } from './LoadingScene'
+
+export interface LoginParams {
+  loginUiInitialRoute?: InitialRouteName
+}
 
 // Sneak the BlurView over to the login UI:
 // @ts-expect-error

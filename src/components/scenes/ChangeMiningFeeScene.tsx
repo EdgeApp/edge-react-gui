@@ -1,4 +1,4 @@
-import { JsonObject } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeSpendInfo, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import Evilicons from 'react-native-vector-icons/EvilIcons'
@@ -21,6 +21,13 @@ import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { AccentColors } from '../ui4/DotsBackground'
+
+export interface ChangeMiningFeeParams {
+  spendInfo: EdgeSpendInfo
+  maxSpendSet: boolean
+  onSubmit: (networkFeeOption: FeeOption, customNetworkFee: JsonObject) => void
+  wallet: EdgeCurrencyWallet
+}
 
 interface OwnProps extends EdgeSceneProps<'changeMiningFee2'> {}
 

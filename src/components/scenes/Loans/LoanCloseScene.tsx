@@ -36,6 +36,10 @@ import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
 import { TotalDebtCollateralTile } from '../../tiles/TotalDebtCollateralTile'
 import { RowUi4 } from '../../ui4/RowUi4'
 
+export interface LoanCloseParams {
+  loanAccountId: string
+}
+
 export interface Props extends EdgeSceneProps<'loanClose'> {
   loanAccount: LoanAccount
 }
