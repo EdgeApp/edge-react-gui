@@ -1,40 +1,27 @@
-import { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { ChangePinScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 
-import { connect } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { logActivity } from '../../util/logger'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 
-interface OwnProps extends EdgeSceneProps<'changePin'> {}
+interface Props extends EdgeSceneProps<'changePin'> {}
 
-interface StateProps {
-  account: EdgeAccount
-  context: EdgeContext
-}
-type Props = StateProps & OwnProps
+export const ChangePinScene = (props: Props) => {
+  const { navigation } = props
 
-export class ChangePinComponent extends React.Component<Props> {
-  render() {
-    const { context, account, navigation } = this.props
-    const handleComplete = () => {
-      logActivity(`PIN Changed: ${account.username}`)
-      navigation.goBack()
-    }
-    return (
-      <SceneWrapper>
-        <ChangePinScreen account={account} context={context} onComplete={handleComplete} onLogEvent={logEvent} />
-      </SceneWrapper>
-    )
+  const account = useSelector(state => state.core.account)
+  const context = useSelector(state => state.core.context)
+
+  const handleComplete = () => {
+    logActivity(`PIN Changed: ${account.username}`)
+    navigation.goBack()
   }
+  return (
+    <SceneWrapper>
+      <ChangePinScreen account={account} context={context} onComplete={handleComplete} onLogEvent={logEvent} />
+    </SceneWrapper>
+  )
 }
-
-export const ChangePinScene = connect<StateProps, {}, OwnProps>(
-  state => ({
-    context: state.core.context,
-    account: state.core.account
-  }),
-  dispatch => ({})
-)(ChangePinComponent)

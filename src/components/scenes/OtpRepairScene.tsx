@@ -1,55 +1,33 @@
-import { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { OtpRepairScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { StatusBar, StyleSheet, View } from 'react-native'
 
+import { useHandler } from '../../hooks/useHandler'
 import { config } from '../../theme/appConfig'
-import { THEME } from '../../theme/variables/airbitz'
-import { connect } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
+import { SceneWrapper } from '../common/SceneWrapper'
 
-interface OwnProps extends EdgeSceneProps<'otpRepair'> {}
+interface Props extends EdgeSceneProps<'otpRepair'> {}
 
-interface StateProps {
-  account: EdgeAccount
-  context: EdgeContext
+export const OtpRepairScene = (props: Props) => {
+  const { navigation, route } = props
+  const { otpError } = route.params
+  const account = useSelector(state => state.core.account)
+  const context = useSelector(state => state.core.context)
+
+  const handleComplete = useHandler(() => navigation.goBack())
+
+  return (
+    <SceneWrapper>
+      <OtpRepairScreen
+        account={account}
+        branding={{ appName: config.appName }}
+        context={context}
+        onComplete={handleComplete}
+        otpError={otpError}
+        onLogEvent={logEvent}
+      />
+    </SceneWrapper>
+  )
 }
-type Props = OwnProps & StateProps
-
-class OtpRepairComponent extends React.Component<Props> {
-  render() {
-    const { context, account, navigation, route } = this.props
-    const { otpError } = route.params
-    const handleComplete = () => navigation.goBack()
-
-    return (
-      <View style={styles.container}>
-        <OtpRepairScreen
-          account={account}
-          branding={{ appName: config.appName }}
-          context={context}
-          onComplete={handleComplete}
-          otpError={otpError}
-          onLogEvent={logEvent}
-        />
-      </View>
-    )
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight,
-    backgroundColor: THEME.COLORS.PRIMARY
-  }
-})
-
-export const OtpRepairScene = connect<StateProps, {}, OwnProps>(
-  state => ({
-    context: state.core.context,
-    account: state.core.account
-  }),
-  dispatch => ({})
-)(OtpRepairComponent)
