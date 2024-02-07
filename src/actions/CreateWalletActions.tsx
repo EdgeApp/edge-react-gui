@@ -8,7 +8,7 @@ import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { ActivationPaymentInfo } from '../components/scenes/CreateWalletAccountSelectScene'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { WalletCreateItem } from '../components/themed/WalletList'
-import { getPluginId, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
+import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { config } from '../theme/appConfig'
@@ -58,12 +58,11 @@ export function createCurrencyWallet(
 }
 
 // can move to component in the future, just account and currencyConfig, etc to component through connector
-export function fetchAccountActivationInfo(walletType: string): ThunkAction<Promise<void>> {
+export function fetchAccountActivationInfo(pluginId: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    const currencyPluginName = getPluginId(walletType)
-    const currencyPlugin: EdgeCurrencyConfig = account.currencyConfig[currencyPluginName]
+    const currencyPlugin: EdgeCurrencyConfig = account.currencyConfig[pluginId]
     try {
       const [supportedCurrencies, activationCost] = await Promise.all([
         currencyPlugin.otherMethods.getActivationSupportedCurrencies(),

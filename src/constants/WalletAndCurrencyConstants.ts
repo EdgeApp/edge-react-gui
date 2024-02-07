@@ -108,9 +108,6 @@ export const WALLET_TYPE_ORDER = [
 // Put these in reverse order of preference
 export const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REPV2', 'RIF']
 
-// Strip away 'wallet:' prefix and '-bip' suffix, if present
-export const getPluginId = (walletType: string): string => walletType.replace('wallet:', '').split('-')[0]
-
 export interface ImportKeyOption {
   optionName: string
   displayName: string

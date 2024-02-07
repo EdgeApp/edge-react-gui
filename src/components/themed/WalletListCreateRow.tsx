@@ -3,11 +3,10 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-import { createWallet, CreateWalletOptions, getUniqueWalletName } from '../../actions/CreateWalletActions'
+import { createWallet, getUniqueWalletName } from '../../actions/CreateWalletActions'
 import { approveTokenTerms } from '../../actions/TokenTermsActions'
 import { showFullScreenSpinner } from '../../components/modals/AirshipFullScreenSpinner'
 import { Airship, showError } from '../../components/services/AirshipInstance'
-import { getPluginId } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -68,7 +67,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
 
     const handleRes = (walletId: string) => (onPress != null ? onPress(walletId, tokenId) : null)
     if (walletType != null) {
-      await dispatch(createAndSelectWallet({ walletType }))
+      await dispatch(createAndSelectWallet(pluginId))
         .then(handleRes)
         .catch(err => showError(err))
         .finally(() => (pressMutexRef.current = false))
@@ -196,15 +195,21 @@ function createAndSelectToken({
   }
 }
 
-function createAndSelectWallet({ walletType, fiatCurrencyCode }: CreateWalletOptions): ThunkAction<Promise<string>> {
+function createAndSelectWallet(pluginId: string): ThunkAction<Promise<string>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    const walletName = getUniqueWalletName(account, getPluginId(walletType))
+    const { defaultIsoFiat } = state.ui.settings
+    const { walletType } = account.currencyConfig[pluginId].currencyInfo
+
     try {
       const wallet = await showFullScreenSpinner(
         lstrings.wallet_list_modal_creating_wallet,
-        createWallet(account, { walletName, walletType, fiatCurrencyCode })
+        createWallet(account, {
+          fiatCurrencyCode: defaultIsoFiat,
+          walletName: getUniqueWalletName(account, pluginId),
+          walletType
+        })
       )
       return wallet.id
     } catch (error: any) {

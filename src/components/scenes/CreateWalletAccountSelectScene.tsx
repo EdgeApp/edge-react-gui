@@ -116,8 +116,8 @@ export const CreateWalletAccountSelectScene = (props: Props) => {
 
   React.useEffect(() => {
     logEvent('Activate_Wallet_Select')
-    dispatch(fetchAccountActivationInfo(selectedWalletType.walletType)).catch(err => showError(err))
-  }, [selectedWalletType.walletType, dispatch])
+    dispatch(fetchAccountActivationInfo(selectedWalletType.pluginId)).catch(err => showError(err))
+  }, [selectedWalletType.pluginId, dispatch])
 
   return (
     <SceneWrapper>
