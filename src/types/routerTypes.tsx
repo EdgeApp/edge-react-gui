@@ -252,9 +252,6 @@ export interface RouteParamList {
   pluginView: PluginViewParams
   promotionSettings: {}
   request: {}
-  scan: {
-    data?: 'sweepPrivateKey' | 'loginQR'
-  } // TODO
   securityAlerts: {}
   send2: SendScene2Params
   settingsOverview: {}
