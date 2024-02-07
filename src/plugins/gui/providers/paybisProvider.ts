@@ -285,8 +285,8 @@ const SELL_REVERSE_PAYMENT_METHOD_MAP: Partial<{ [Payment in FiatPaymentType]: P
 }
 
 const allowedCurrencyCodes: Record<FiatDirection, { [F in FiatPaymentType]?: FiatProviderAssetMap }> = {
-  buy: { credit: { fiat: {}, crypto: {} } },
-  sell: { credit: { fiat: {}, crypto: {} } }
+  buy: { credit: { providerId, fiat: {}, crypto: {} } },
+  sell: { credit: { providerId, fiat: {}, crypto: {} } }
 }
 export const paybisProvider: FiatProviderFactory = {
   providerId,
@@ -711,7 +711,7 @@ const initializeBuyPairs = async ({ url, apiKey }: InitializePairs): Promise<voi
         // Add the fiat
         let paymentMethodObj = allowedCurrencyCodes.buy[edgePaymentType]
         if (paymentMethodObj == null) {
-          paymentMethodObj = { crypto: {}, fiat: {} }
+          paymentMethodObj = { providerId, crypto: {}, fiat: {} }
           allowedCurrencyCodes.buy[edgePaymentType] = paymentMethodObj
         }
         paymentMethodObj.fiat[`iso:${from}`] = true
@@ -759,7 +759,7 @@ const initializeSellPairs = async ({ url, apiKey }: InitializePairs): Promise<vo
 
         let paymentMethodObj = allowedCurrencyCodes.sell[edgePaymentType]
         if (paymentMethodObj == null) {
-          paymentMethodObj = { crypto: {}, fiat: {} }
+          paymentMethodObj = { providerId, crypto: {}, fiat: {} }
           allowedCurrencyCodes.sell[edgePaymentType] = paymentMethodObj
         }
 

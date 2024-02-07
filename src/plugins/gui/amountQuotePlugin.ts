@@ -110,15 +110,16 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
       const ps = fuzzyTimeout(assetPromises, 5000).catch(e => {
         console.error('amountQuotePlugin error fetching assets: ', String(e))
-        return []
       })
 
       const assetArray = await showUi.showToastSpinner(lstrings.fiat_plugin_fetching_assets, ps)
 
       const allowedAssets: EdgeAsset[] = []
       const allowedFiats: { [fiatCurrencyCode: string]: boolean } = {}
-      for (const assetMap of assetArray) {
+      const allowedProviders: { [providerId: string]: boolean } = {}
+      for (const assetMap of assetArray ?? []) {
         if (assetMap == null) continue
+        allowedProviders[assetMap.providerId] = true
         for (const currencyPluginId in assetMap.crypto) {
           const providerTokens = assetMap.crypto[currencyPluginId]
           for (const { tokenId } of providerTokens) {
@@ -217,7 +218,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             }
           }
 
-          const quotePromises = providers.filter(p => (providerId == null ? true : providerId === p.providerId)).map(async p => await p.getQuote(quoteParams))
+          const allowedProvidersArray = providers.filter(p => allowedProviders[p.providerId])
+          const quotePromises = allowedProvidersArray
+            .filter(p => (providerId == null ? true : providerId === p.providerId))
+            .map(async p => await p.getQuote(quoteParams))
           let errors: unknown[] = []
           const quotes = await fuzzyTimeout(quotePromises, 5000).catch(e => {
             errors = e

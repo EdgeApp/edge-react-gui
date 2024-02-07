@@ -29,7 +29,7 @@ const supportEmail = 'support@bity.com'
 const supportedPaymentType: FiatPaymentType = 'sepa'
 const partnerFee = 0.005
 
-const allowedCurrencyCodes: FiatProviderAssetMap = { crypto: {}, fiat: {} }
+const allowedCurrencyCodes: FiatProviderAssetMap = { providerId, crypto: {}, fiat: {} }
 const allowedCountryCodes: { readonly [code: string]: boolean } = {
   AT: true,
   BE: true,

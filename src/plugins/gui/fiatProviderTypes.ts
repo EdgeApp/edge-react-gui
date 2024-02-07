@@ -56,6 +56,7 @@ export interface ProviderToken {
 
 // Supported fiats and cryptos per provider
 export interface FiatProviderAssetMap {
+  providerId: string
   crypto: { [pluginId: string]: ProviderToken[] }
   fiat: { [currencyCode: string]: boolean | any }
 }

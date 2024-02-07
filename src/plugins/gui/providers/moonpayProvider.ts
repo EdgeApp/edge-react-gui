@@ -21,7 +21,7 @@ const storeId = 'com.moonpay'
 const partnerIcon = 'moonpay_symbol_prp.png'
 const pluginDisplayName = 'Moonpay'
 
-const allowedCurrencyCodes: FiatProviderAssetMap = { crypto: {}, fiat: {} }
+const allowedCurrencyCodes: FiatProviderAssetMap = { providerId, crypto: {}, fiat: {} }
 const allowedCountryCodes: { [code: string]: boolean } = {}
 const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { applepay: true, credit: true, googlepay: true, iach: true }
 

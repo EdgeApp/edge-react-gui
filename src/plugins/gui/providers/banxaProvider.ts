@@ -285,7 +285,10 @@ const COIN_TO_CURRENCY_CODE_MAP: StringMap = { BTC: 'BTC' }
 
 const asInfoCreateHmacResponse = asObject({ signature: asString })
 
-const allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap> = { buy: { fiat: {}, crypto: {} }, sell: { fiat: {}, crypto: {} } }
+const allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap> = {
+  buy: { providerId, fiat: {}, crypto: {} },
+  sell: { providerId, fiat: {}, crypto: {} }
+}
 const banxaPaymentsMap: Record<FiatDirection, BanxaPaymentMap> = { buy: {}, sell: {} }
 
 export const banxaProvider: FiatProviderFactory = {

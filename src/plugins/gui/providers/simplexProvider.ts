@@ -124,7 +124,7 @@ const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } }
   wax: { WAX: 'WAXP' }
 }
 
-const allowedCurrencyCodes: FiatProviderAssetMap = { crypto: {}, fiat: {} }
+const allowedCurrencyCodes: FiatProviderAssetMap = { providerId, crypto: {}, fiat: {} }
 const allowedCountryCodes: { [code: string]: boolean } = {}
 const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { applepay: true, credit: true, googlepay: true }
 
