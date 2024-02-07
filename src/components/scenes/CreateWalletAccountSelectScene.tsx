@@ -108,7 +108,7 @@ export const CreateWalletAccountSelectScene = (props: Props) => {
   const handleCancel = useHandler(() => setWalletId(''))
 
   React.useEffect(() => {
-    logEvent('Activate_Wallet_Select')
+    dispatch(logEvent('Activate_Wallet_Select'))
     dispatch(fetchAccountActivationInfo(selectedWalletType.walletType)).catch(err => showError(err))
   }, [selectedWalletType.walletType, dispatch])
 

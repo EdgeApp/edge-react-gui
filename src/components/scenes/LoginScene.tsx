@@ -182,6 +182,10 @@ export function LoginSceneComponent(props: Props) {
     dispatch(showSendLogsModal()).catch(err => showError(err))
   })
 
+  const handleLogEvent = useHandler((event, values) => {
+    dispatch(logEvent(event, values))
+  })
+
   // Wait for the experiment config to initialize before rendering anything
   useAsyncEffect(
     async () => {
@@ -217,7 +221,7 @@ export function LoginSceneComponent(props: Props) {
         skipSecurityAlerts
         experimentConfig={experimentConfig}
         onComplete={maybeHandleComplete}
-        onLogEvent={logEvent}
+        onLogEvent={handleLogEvent}
         onLogin={handleLogin}
         onNotificationPermit={setNotificationPermissionsInfo}
       />

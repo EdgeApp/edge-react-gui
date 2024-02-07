@@ -95,7 +95,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   useEffect(() => {
     const swapConfig = account.swapConfig[pluginId]
 
-    logEvent('Exchange_Shift_Quote')
+    dispatch(logEvent('Exchange_Shift_Quote'))
     swapVerifyTerms(swapConfig)
       .then(async result => {
         if (!result) await dispatch(exchangeTimerExpired(navigation, selectedQuote, onApprove))

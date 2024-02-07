@@ -599,9 +599,9 @@ export const paybisProvider: FiatProviderFactory = {
                       const tx = await showUi.send(sendParams)
                       await showUi.trackConversion('Sell_Success', {
                         destCurrencyCode: fiatCurrencyCode,
-                        destExchangeAmount: fiatAmount,
+                        destExchangeAmount: Number(fiatAmount),
                         sourceCurrencyCode: displayCurrencyCode,
-                        sourceExchangeAmount: amount,
+                        sourceExchangeAmount: Number(amount),
                         sourcePluginId: coreWallet.currencyInfo.pluginId,
                         pluginId: providerId,
                         orderId: invoice

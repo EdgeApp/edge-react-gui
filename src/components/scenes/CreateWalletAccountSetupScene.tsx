@@ -2,9 +2,10 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { useHandler } from '../../hooks/useHandler'
 import { useMount } from '../../hooks/useMount'
 import { lstrings } from '../../locales/strings'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { logEvent } from '../../util/tracking'
@@ -24,6 +25,7 @@ export function CreateWalletAccountSetupScene(props: Props): JSX.Element {
   const { accountHandle: initialValue = '', existingWalletId, selectedWalletType } = route.params
   const { currencyCode, pluginId } = selectedWalletType
 
+  const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
   const [errorMessage, setErrorMessage] = React.useState<string | undefined>()
   const [spinning, setSpinning] = React.useState(false)
@@ -64,7 +66,10 @@ export function CreateWalletAccountSetupScene(props: Props): JSX.Element {
 
   const tokenId = getTokenId(account, pluginId, currencyCode) ?? null
 
-  useMount(() => logEvent('Activate_Wallet_Start'))
+  const trackWalletActivate = useHandler(() => {
+    dispatch(logEvent('Activate_Wallet_Start'))
+  })
+  useMount(trackWalletActivate)
 
   return (
     <SceneWrapper scroll>

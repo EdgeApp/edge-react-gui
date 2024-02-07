@@ -1,17 +1,95 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ChangePinComponent should render with loading props 1`] = `
-<Memo(SceneWrapperComponent)>
-  <UNDEFINED
-    account={{}}
-    context={
-      {
-        "apiKey": "",
-        "appId": "",
-      }
+<SafeAreaProvider
+  initialMetrics={
+    {
+      "frame": {
+        "height": 1334,
+        "width": 750,
+        "x": 0,
+        "y": 0,
+      },
+      "insets": {
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "top": 20,
+      },
     }
-    onComplete={[Function]}
-    onLogEvent={[Function]}
-  />
-</Memo(SceneWrapperComponent)>
+  }
+>
+  <WithContext>
+    <WithContext>
+      <WithContext>
+        <Context.Provider
+          value={
+            {
+              "addListener": [Function],
+              "canGoBack": [Function],
+              "dispatch": [Function],
+              "getId": [Function],
+              "getParent": [Function],
+              "getState": [Function],
+              "goBack": [Function],
+              "isFocused": [Function],
+              "navigate": [Function],
+              "pop": [Function],
+              "popToTop": [Function],
+              "push": [Function],
+              "removeListener": [Function],
+              "replace": [Function],
+              "reset": [Function],
+              "setOptions": [Function],
+              "setParams": [Function],
+            }
+          }
+        >
+          <Provider
+            store={
+              {
+                "@@observable": [Function],
+                "dispatch": [Function],
+                "getState": [Function],
+                "replaceReducer": [Function],
+                "subscribe": [Function],
+              }
+            }
+          >
+            <ChangePinScene
+              navigation={
+                {
+                  "addListener": [Function],
+                  "canGoBack": [Function],
+                  "dispatch": [Function],
+                  "getId": [Function],
+                  "getParent": [Function],
+                  "getState": [Function],
+                  "goBack": [Function],
+                  "isFocused": [Function],
+                  "navigate": [Function],
+                  "pop": [Function],
+                  "popToTop": [Function],
+                  "push": [Function],
+                  "removeListener": [Function],
+                  "replace": [Function],
+                  "reset": [Function],
+                  "setOptions": [Function],
+                  "setParams": [Function],
+                }
+              }
+              route={
+                {
+                  "key": "changePin-0",
+                  "name": "changePin",
+                  "params": {},
+                }
+              }
+            />
+          </Provider>
+        </Context.Provider>
+      </WithContext>
+    </WithContext>
+  </WithContext>
+</SafeAreaProvider>
 `;

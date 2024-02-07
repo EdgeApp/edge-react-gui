@@ -579,9 +579,9 @@ export const banxaProvider: FiatProviderFactory = {
 
                             await showUi.trackConversion('Sell_Success', {
                               destCurrencyCode: fiatCurrencyCode,
-                              destExchangeAmount: priceQuote.fiat_amount,
+                              destExchangeAmount: Number(priceQuote.fiat_amount),
                               sourceCurrencyCode: displayCurrencyCode,
-                              sourceExchangeAmount: coinAmount.toString(),
+                              sourceExchangeAmount: coinAmount,
                               sourcePluginId: coreWallet.currencyInfo.pluginId,
                               pluginId: providerId,
                               orderId: id
