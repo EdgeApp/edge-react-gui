@@ -60,6 +60,11 @@ export function SwapDetailsCard(props: Props) {
         isHTML: true
       },
       (error, event) => {
+        if (String(error) === 'not_available') {
+          showError(lstrings.error_no_email_account)
+          return
+        }
+
         if (error) showError(error)
       }
     )

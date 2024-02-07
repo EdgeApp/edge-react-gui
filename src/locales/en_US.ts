@@ -89,6 +89,7 @@ const strings = {
 
   // Error messages:
 
+  error_no_email_account: 'No email account setup on phone. Please setup an email account on your phone to use this feature.',
   error_paymentprotocol_empty_output_invoice: 'Received no output in payment request',
   error_paymentprotocol_empty_verification_hex_req: 'Generated empty transaction hex(es)',
   error_paymentprotocol_currency_not_supported: 'Payment Protocol invoice payments in %s not currently supported. Please choose another payment currency.',
