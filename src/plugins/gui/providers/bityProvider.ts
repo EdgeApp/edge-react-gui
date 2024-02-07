@@ -299,7 +299,7 @@ export const bityProvider: FiatProviderFactory = {
       pluginDisplayName,
       getSupportedAssets: async ({ paymentTypes }): Promise<FiatProviderAssetMap> => {
         // Return nothing if 'sepa' is not included in the props
-        if (!paymentTypes.includes(supportedPaymentType)) return { crypto: {}, fiat: {} }
+        if (!paymentTypes.includes(supportedPaymentType)) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
         const response = await fetch(`https://exchange.api.bity.com/v2/currencies`).catch(e => undefined)
         if (response == null || !response.ok) {

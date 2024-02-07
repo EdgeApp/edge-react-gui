@@ -316,7 +316,8 @@ export const banxaProvider: FiatProviderFactory = {
       pluginDisplayName,
       getSupportedAssets: async ({ direction, paymentTypes }): Promise<FiatProviderAssetMap> => {
         // Return nothing if paymentTypes are not supported by this provider
-        if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true)) return { crypto: {}, fiat: {} }
+        if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
+          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
         const fiats = allowedCurrencyCodes[direction].fiat
         const cryptos = allowedCurrencyCodes[direction].fiat

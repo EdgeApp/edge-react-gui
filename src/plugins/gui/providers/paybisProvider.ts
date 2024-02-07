@@ -311,7 +311,7 @@ export const paybisProvider: FiatProviderFactory = {
       getSupportedAssets: async ({ direction, paymentTypes }): Promise<FiatProviderAssetMap> => {
         // Return nothing if paymentTypes are not supported by this provider
         const paymentType = paymentTypes.find(paymentType => allowedPaymentTypes[direction][paymentType] === true)
-        if (paymentType == null) return { crypto: {}, fiat: {} }
+        if (paymentType == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
         const fiats = allowedCurrencyCodes[direction][paymentType]?.fiat
         const cryptos = allowedCurrencyCodes[direction][paymentType]?.crypto
@@ -331,7 +331,8 @@ export const paybisProvider: FiatProviderFactory = {
           await initializeSellPairs({ url, apiKey })
         }
 
-        const out = allowedCurrencyCodes[direction][paymentType] ?? { fiat: {}, crypto: {} }
+        const out = allowedCurrencyCodes[direction][paymentType]
+        if (out == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         return out
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {

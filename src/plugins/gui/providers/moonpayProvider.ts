@@ -124,10 +124,11 @@ export const moonpayProvider: FiatProviderFactory = {
       pluginDisplayName,
       getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
         if (direction !== 'buy') {
-          return { crypto: {}, fiat: {} }
+          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         }
         // Return nothing if paymentTypes are not supported by this provider
-        if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true)) return { crypto: {}, fiat: {} }
+        if (!paymentTypes.some(paymentType => allowedPaymentTypes[paymentType] === true))
+          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
         const response = await fetch(`https://api.moonpay.com/v3/currencies?apiKey=${apiKey}`).catch(e => undefined)
         if (response == null || !response.ok) return allowedCurrencyCodes
