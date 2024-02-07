@@ -23,7 +23,7 @@ import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { CardUi4 } from '../ui4/CardUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
-export interface AccountPaymentParams {
+export interface ActivationPaymentInfo {
   requestedAccountName: string
   currencyCode: string
   ownerPublicKey: string
@@ -87,7 +87,7 @@ export const CreateWalletAccountSelectScene = (props: Props) => {
           dispatch({ type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: '' })
           setWalletId(walletId)
           const createdWalletInstance = await handleRenameAndReturnWallet()
-          const paymentInfo: AccountPaymentParams = {
+          const paymentInfo: ActivationPaymentInfo = {
             requestedAccountName: accountName,
             currencyCode,
             ownerPublicKey: createdWalletInstance.publicWalletInfo.keys.ownerPublicKey,

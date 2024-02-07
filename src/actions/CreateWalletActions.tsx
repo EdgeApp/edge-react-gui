@@ -5,7 +5,7 @@ import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
-import { AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene'
+import { ActivationPaymentInfo } from '../components/scenes/CreateWalletAccountSelectScene'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { getPluginId, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
@@ -109,7 +109,7 @@ export function fetchAccountActivationInfo(walletType: string): ThunkAction<Prom
   }
 }
 
-export function fetchWalletAccountActivationPaymentInfo(paymentParams: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet): ThunkAction<void> {
+export function fetchWalletAccountActivationPaymentInfo(paymentParams: ActivationPaymentInfo, createdCoreWallet: EdgeCurrencyWallet): ThunkAction<void> {
   return (dispatch, getState) => {
     try {
       const networkTimeout = setTimeout(() => {
