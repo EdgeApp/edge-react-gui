@@ -52,6 +52,7 @@
   "fio_domain_choose_label": "Elegir un dominio FIO",
   "fio_address_choose_domain_label": "Elige un dominio FIO para tu ususario",
   "scan_qr_label": "Escanear código QR",
+  "error_no_email_account": "No email account setup on phone. Please setup an email account on your phone to use this feature.",
   "error_paymentprotocol_empty_output_invoice": "No se ha recibido respuesta en la solicitud de pago",
   "error_paymentprotocol_empty_verification_hex_req": "Generado hex(s) de transacción vacía",
   "error_paymentprotocol_currency_not_supported": "Payment Protocol invoice payments in %s not currently supported. Please choose another payment currency.",
