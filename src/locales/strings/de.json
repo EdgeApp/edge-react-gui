@@ -52,6 +52,7 @@
   "fio_domain_choose_label": "Wählen Sie eine FIO-Domain",
   "fio_address_choose_domain_label": "Wähle FIO-Domain für deinen Krypto-Handle aus",
   "scan_qr_label": "QR-Code scannen",
+  "error_no_email_account": "No email account setup on phone. Please setup an email account on your phone to use this feature.",
   "error_paymentprotocol_empty_output_invoice": "Keine Ausgabe in Zahlungsanforderung erhalten",
   "error_paymentprotocol_empty_verification_hex_req": "Erstellte leere Transaktionshex(en)",
   "error_paymentprotocol_currency_not_supported": "Zahlungsprotokoll Rechnungen in %s werden derzeit nicht unterstützt. Bitte wählen Sie eine andere Zahlungswährung.",
