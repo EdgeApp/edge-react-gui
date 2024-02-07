@@ -47,7 +47,6 @@ export interface RouteParamList {
   edgeApp: {}
   edgeAppStack: {}
   edgeTabs: {}
-  controlPanel: {}
   gettingStarted: {}
 
   // Tabs
