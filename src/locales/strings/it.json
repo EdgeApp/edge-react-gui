@@ -52,6 +52,7 @@
   "fio_domain_choose_label": "Scegli un dominio FIO",
   "fio_address_choose_domain_label": "Scegli un dominio FIO per il tuo Crypto Handle",
   "scan_qr_label": "Scansiona il codice QR",
+  "error_no_email_account": "No email account setup on phone. Please setup an email account on your phone to use this feature.",
   "error_paymentprotocol_empty_output_invoice": "Nessun output nella richiesta di pagamento è stato ricevuto",
   "error_paymentprotocol_empty_verification_hex_req": "Hex di transazione vuota generato",
   "error_paymentprotocol_currency_not_supported": "I pagamenti per le invoice in %s che seguono lo standard Payment Protocol, attualmente non supportati. Si prega di scegliere un'altra valuta di pagamento.",
