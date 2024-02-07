@@ -52,6 +52,7 @@
   "fio_domain_choose_label": "FIOドメインを選択してください",
   "fio_address_choose_domain_label": "クリプトハンドル用のFIOドメインを選択してください",
   "scan_qr_label": "QR コードをスキャン",
+  "error_no_email_account": "No email account setup on phone. Please setup an email account on your phone to use this feature.",
   "error_paymentprotocol_empty_output_invoice": "支払いリクエストで出力を受信しませんでした",
   "error_paymentprotocol_empty_verification_hex_req": "空のトランザクションhexが生成されました",
   "error_paymentprotocol_currency_not_supported": "%s でのペイメント・プロトコルの請求書支払いは現在サポートされていません。別の支払い通貨を選択してください。",
