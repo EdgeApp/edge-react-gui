@@ -59,6 +59,10 @@ export interface FiatProviderAssetMap {
   providerId: string
   crypto: { [pluginId: string]: ProviderToken[] }
   fiat: { [currencyCode: string]: boolean | any }
+
+  // This provider REQUIRES that the user enter the amount
+  // in the specified currency.
+  requiredAmountType?: 'fiat' | 'crypto'
 }
 
 export interface FiatProviderGetQuoteParams {

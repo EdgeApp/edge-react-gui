@@ -11,7 +11,7 @@ import { fetchInfo } from '../../util/network'
 import { logEvent } from '../../util/tracking'
 import { fuzzyTimeout } from '../../util/utils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginStartParams } from './fiatPluginTypes'
-import { FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
+import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
 import { getBestError, getRateFromQuote } from './pluginUtils'
 import { banxaProvider } from './providers/banxaProvider'
 import { bityProvider } from './providers/bityProvider'
@@ -114,12 +114,23 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
       const assetArray = await showUi.showToastSpinner(lstrings.fiat_plugin_fetching_assets, ps)
 
+      const requireAmountFiat: { [providerId: string]: boolean } = {}
+      const requireAmountCrypto: { [providerId: string]: boolean } = {}
+
       const allowedAssets: EdgeAsset[] = []
       const allowedFiats: { [fiatCurrencyCode: string]: boolean } = {}
       const allowedProviders: { [providerId: string]: boolean } = {}
       for (const assetMap of assetArray ?? []) {
         if (assetMap == null) continue
         allowedProviders[assetMap.providerId] = true
+        requireAmountCrypto[assetMap.providerId] = false
+        requireAmountFiat[assetMap.providerId] = false
+        if (assetMap.requiredAmountType === 'fiat') {
+          requireAmountFiat[assetMap.providerId] = true
+        } else if (assetMap.requiredAmountType === 'crypto') {
+          requireAmountCrypto[assetMap.providerId] = true
+        }
+
         for (const currencyPluginId in assetMap.crypto) {
           const providerTokens = assetMap.crypto[currencyPluginId]
           for (const { tokenId } of providerTokens) {
@@ -129,6 +140,33 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             allowedFiats[fiatCode] = true
           }
         }
+      }
+
+      const allowedProvidersArray = providers.filter(p => allowedProviders[p.providerId])
+      const fiatAmountProviders = allowedProvidersArray.filter(p => !requireAmountCrypto[p.providerId])
+      const cryptoAmountProviders = allowedProvidersArray.filter(p => !requireAmountFiat[p.providerId])
+      const hasProviderWithoutRequire = allowedProvidersArray.some(p => !requireAmountFiat[p.providerId] && !requireAmountCrypto[p.providerId])
+
+      // Filter out providers that have a required amount type if there are ANY providers
+      // that do not have a required amount type.
+      let requireCrypto = false
+      let requireFiat = false
+      if (!hasProviderWithoutRequire) {
+        // We don't have a fully flexible provider that can take fiat or crypto inputs
+        // Validate if we need to force a specific input type
+        for (const p of allowedProvidersArray) {
+          if (requireAmountFiat[p.providerId] && requireAmountCrypto[p.providerId]) {
+            throw new Error('Provider must not require both fiat and crypto amounts')
+          }
+          if (requireAmountFiat[p.providerId]) {
+            requireFiat = true
+          } else if (requireAmountCrypto[p.providerId]) {
+            requireCrypto = true
+          }
+        }
+        // We prefer fiat input so in a pinch where some providers require crypto and
+        // another requires fiat, we'll force fiat
+        if (requireFiat) requireCrypto = false
       }
 
       // Pop up modal to pick wallet/asset
@@ -157,17 +195,20 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       const fiatCurrencyCode = forceFiatCurrencyCode ?? coreWallet.fiatCurrencyCode
       const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
       const isBuy = direction === 'buy'
+      const disableInput = requireCrypto ? 1 : requireFiat ? 2 : undefined
 
       logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
       // Navigate to scene to have user enter amount
       showUi.enterAmount({
+        disableInput,
         headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),
         initState: {
-          value1: defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
+          value1: requireCrypto ? undefined : defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
         },
         label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
         label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),
+        swapInputLocations: requireCrypto,
         async onChangeText() {},
         async convertValue(sourceFieldNum, value, stateManager) {
           if (!isValidInput(value)) {
@@ -188,8 +229,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
           // TODO: Design UX that supports quoting fiatCurrencyCodes that differ
           // from the the selected wallet's fiatCurrencyCode
+          let finalProvidersArray: FiatProvider[]
           if (sourceFieldNum === 1) {
             // User entered a fiat value. Convert to crypto
+            finalProvidersArray = fiatAmountProviders
             sourceFieldCurrencyCode = displayFiatCurrencyCode
             quoteParams = {
               pluginId: currencyPluginId,
@@ -204,6 +247,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             }
           } else {
             // User entered a crypto value. Convert to fiat
+            finalProvidersArray = cryptoAmountProviders
             sourceFieldCurrencyCode = currencyCode
             quoteParams = {
               pluginId: currencyPluginId,
@@ -218,8 +262,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             }
           }
 
-          const allowedProvidersArray = providers.filter(p => allowedProviders[p.providerId])
-          const quotePromises = allowedProvidersArray
+          const quotePromises = finalProvidersArray
             .filter(p => (providerId == null ? true : providerId === p.providerId))
             .map(async p => await p.getQuote(quoteParams))
           let errors: unknown[] = []

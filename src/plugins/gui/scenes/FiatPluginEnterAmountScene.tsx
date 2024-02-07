@@ -27,6 +27,8 @@ export interface FiatPluginEnterAmountParams {
   onPoweredByClick: (stateManager: StateManager<EnterAmountState>) => Promise<void>
   onSubmit: (event: { response: FiatPluginEnterAmountResponse }, stateManager: StateManager<EnterAmountState>) => Promise<void>
   headerIconUri?: string
+  swapInputLocations?: boolean
+  disableInput?: 1 | 2
 }
 
 export interface EnterAmountState {
@@ -62,7 +64,22 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { route } = props
-  const { initState, headerIconUri, headerTitle, onSubmit, convertValue, onPoweredByClick, onChangeText = () => {}, label1, label2 } = route.params
+  const {
+    disableInput,
+    initState,
+    headerIconUri,
+    headerTitle,
+    onSubmit,
+    convertValue,
+    onPoweredByClick,
+    onChangeText = () => {},
+    label1,
+    label2,
+    swapInputLocations = false
+  } = route.params
+  if (disableInput != null && (disableInput < 1 || disableInput > 2)) {
+    throw new Error('disableInput must be 1 or 2')
+  }
   const lastUsed = React.useRef<number>(1)
 
   const stateManager = useStateManager<EnterAmountState>({ ...defaultEnterAmountState, ...initState })
@@ -136,38 +153,77 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
       </SceneHeader>
       <SectionView>
         <View style={styles.container}>
-          <View style={styles.textFields}>
-            <FilledTextInput
-              numeric
-              maxDecimals={2}
-              autoCorrect={false}
-              autoFocus
-              autoCapitalize="none"
-              keyboardType="decimal-pad"
-              placeholder={label1}
-              onChangeText={handleChangeText1}
-              onSubmitEditing={handleSubmit}
-              showSpinner={spinner1}
-              textsizeRem={1.5}
-              value={value1 ?? '0'}
-              vertical={0.5}
-            />
-            <FilledTextInput
-              numeric
-              maxDecimals={6}
-              autoCorrect={false}
-              autoFocus={false}
-              autoCapitalize="none"
-              keyboardType="decimal-pad"
-              placeholder={label2}
-              onChangeText={handleChangeText2}
-              onSubmitEditing={handleSubmit}
-              showSpinner={spinner2}
-              textsizeRem={1.5}
-              value={value2 ?? '0'}
-              vertical={0.5}
-            />
-          </View>
+          {swapInputLocations ? (
+            <View style={styles.textFields}>
+              <FilledTextInput
+                disabled={disableInput === 2}
+                numeric
+                maxDecimals={6}
+                autoCorrect={false}
+                autoFocus
+                autoCapitalize="none"
+                keyboardType="decimal-pad"
+                placeholder={label2}
+                onChangeText={handleChangeText2}
+                onSubmitEditing={handleSubmit}
+                showSpinner={spinner2}
+                textsizeRem={1.5}
+                value={value2 ?? '0'}
+                vertical={0.5}
+              />
+              <FilledTextInput
+                disabled={disableInput === 1}
+                numeric
+                maxDecimals={2}
+                autoCorrect={false}
+                autoFocus={false}
+                autoCapitalize="none"
+                keyboardType="decimal-pad"
+                placeholder={label1}
+                onChangeText={handleChangeText1}
+                onSubmitEditing={handleSubmit}
+                showSpinner={spinner1}
+                textsizeRem={1.5}
+                value={value1 ?? '0'}
+                vertical={0.5}
+              />
+            </View>
+          ) : (
+            <View style={styles.textFields}>
+              <FilledTextInput
+                disabled={disableInput === 1}
+                numeric
+                maxDecimals={2}
+                autoCorrect={false}
+                autoFocus
+                autoCapitalize="none"
+                keyboardType="decimal-pad"
+                placeholder={label1}
+                onChangeText={handleChangeText1}
+                onSubmitEditing={handleSubmit}
+                showSpinner={spinner1}
+                textsizeRem={1.5}
+                value={value1 ?? '0'}
+                vertical={0.5}
+              />
+              <FilledTextInput
+                disabled={disableInput === 2}
+                numeric
+                maxDecimals={6}
+                autoCorrect={false}
+                autoFocus={false}
+                autoCapitalize="none"
+                keyboardType="decimal-pad"
+                placeholder={label2}
+                onChangeText={handleChangeText2}
+                onSubmitEditing={handleSubmit}
+                showSpinner={spinner2}
+                textsizeRem={1.5}
+                value={value2 ?? '0'}
+                vertical={0.5}
+              />
+            </View>
+          )}
           {statusText != null ? <Text style={statusTextStyle}>{statusText.content}</Text> : null}
           {poweredBy != null ? <PoweredByCard iconUri={poweredByIconPath} poweredByText={poweredBy.poweredByText} onPress={handlePoweredByPress} /> : null}
           <MainButton disabled={spinner1 || spinner2} label={lstrings.string_next_capitalized} marginRem={[0.25, 0]} onPress={handleSubmit} />
