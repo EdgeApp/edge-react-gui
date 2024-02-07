@@ -31,15 +31,13 @@ export interface CreateWalletOptions {
 }
 
 export const createWallet = async (account: EdgeAccount, { walletType, walletName, fiatCurrencyCode, importText, keyOptions = {} }: CreateWalletOptions) => {
-  // Try and get the new format param from the legacy walletType if it's mentioned
-  const [type, format] = walletType.split('-')
   const opts = {
     name: walletName,
     fiatCurrencyCode,
-    keyOptions: format != null ? { ...keyOptions, format } : { ...keyOptions },
+    keyOptions,
     importText
   }
-  const out = await account.createCurrencyWallet(type, opts)
+  const out = await account.createCurrencyWallet(walletType, opts)
   logActivity(`Create Wallet: ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${opts.name ?? ''}`)
   return out
 }

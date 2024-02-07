@@ -231,7 +231,7 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
   // Maps pluginId's to core options:
   const optionsMap = new Map<string, EdgeCreateCurrencyWallet>()
   for (const item of items) {
-    const { pluginId, tokenId } = item
+    const { keyOptions, pluginId, tokenId } = item
 
     // Ensure we create the wallet:
     let row = optionsMap.get(pluginId)
@@ -239,6 +239,7 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
       const { walletType } = account.currencyConfig[pluginId].currencyInfo
       row = {
         fiatCurrencyCode,
+        keyOptions,
         name: getUniqueWalletName(account, pluginId),
         walletType
       }

@@ -1,4 +1,4 @@
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -40,7 +40,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
     // Callbacks:
     onPress
   } = props
-  const { currencyCode, displayName: currencyName = '', pluginId, walletType } = createItem
+  const { currencyCode, displayName: currencyName = '', keyOptions = {}, pluginId, walletType } = createItem
   const createWalletIds = createWalletId != null ? [createWalletId] : createItem.createWalletIds ?? []
 
   const account = useSelector(state => state.core.account)
@@ -64,7 +64,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
 
     const handleRes = (walletId: string) => (onPress != null ? onPress(walletId, tokenId) : null)
     if (walletType != null) {
-      await dispatch(createAndSelectWallet(pluginId))
+      await dispatch(createAndSelectWallet(pluginId, keyOptions))
         .then(handleRes)
         .catch(err => showError(err))
         .finally(() => (pressMutexRef.current = false))
@@ -192,7 +192,7 @@ function createAndSelectToken({
   }
 }
 
-function createAndSelectWallet(pluginId: string): ThunkAction<Promise<string>> {
+function createAndSelectWallet(pluginId: string, keyOptions: JsonObject): ThunkAction<Promise<string>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -204,6 +204,7 @@ function createAndSelectWallet(pluginId: string): ThunkAction<Promise<string>> {
         lstrings.wallet_list_modal_creating_wallet,
         createWallet(account, {
           fiatCurrencyCode: defaultIsoFiat,
+          keyOptions,
           walletName: getUniqueWalletName(account, pluginId),
           walletType
         })

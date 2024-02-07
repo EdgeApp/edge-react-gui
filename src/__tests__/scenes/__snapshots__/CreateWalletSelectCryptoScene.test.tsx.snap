@@ -540,6 +540,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             "currencyCode": "ETH",
             "displayName": "Ethereum",
             "key": "create-undefined-ethereum",
+            "keyOptions": {},
             "pluginId": "ethereum",
             "tokenId": null,
             "walletType": undefined,
