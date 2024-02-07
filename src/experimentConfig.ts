@@ -9,14 +9,12 @@ import { ENV } from './env'
 // Persistent experiment config for A/B testing. Values initialized in this
 // config persist throughout the liftetime of the app install.
 export interface ExperimentConfig {
-  swipeLastUsp: 'true' | 'false'
   createAccountType: CreateAccountType
   legacyLanding: 'legacyLanding' | 'uspLanding'
   signupCaptcha: 'withCaptcha' | 'withoutCaptcha'
 }
 
 const DEFAULT_EXPERIMENT_CONFIG: ExperimentConfig = {
-  swipeLastUsp: 'false',
   createAccountType: 'full',
   legacyLanding: 'uspLanding',
   signupCaptcha: 'withoutCaptcha'
@@ -26,7 +24,6 @@ const experimentConfigDisklet = makeReactNativeDisklet()
 
 // The probability of an experiment config feature being set for a given key
 const experimentDistribution = {
-  swipeLastUsp: [50, 50],
   createAccountType: [50, 50],
   legacyLanding: [50, 50],
   signupCaptcha: [50, 50]
@@ -74,7 +71,6 @@ const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution
 // behavior/appearance, while the last value represents unchanged
 // behavior/appearance.
 const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
-  swipeLastUsp: asMaybe(asValue('true', 'false'), generateExperimentConfigVal('swipeLastUsp', ['true', 'false'])),
   createAccountType: asMaybe(asValue('full', 'light'), generateExperimentConfigVal('createAccountType', ['full', 'light'])),
   legacyLanding: asMaybe(asValue('uspLanding', 'legacyLanding'), generateExperimentConfigVal('legacyLanding', ['legacyLanding', 'uspLanding'])),
   signupCaptcha: asMaybe(asValue('withoutCaptcha', 'withCaptcha'), generateExperimentConfigVal('signupCaptcha', ['withoutCaptcha', 'withCaptcha']))

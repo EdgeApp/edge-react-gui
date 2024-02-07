@@ -86,14 +86,12 @@ export const GettingStartedScene = (props: Props) => {
   const localUsers = useWatch(context, 'localUsers')
   const hasLocalUsers = localUsers.length > 0
 
-  const [isFinalSwipeEnabled, setIsFinalSwipeEnabled] = React.useState(true)
   const [createAccountType, setCreateAccountType] = React.useState<CreateAccountType>('full')
 
   // An extra index is added to account for the extra initial usp slide OR to
   // allow the SwipeOffsetDetector extra room for the user to swipe beyond to
   // trigger the final navigation.
-  // Feature is under A/B testing.
-  const paginationCount = sections.length + (isFinalSwipeEnabled ? 1 : 0)
+  const paginationCount = sections.length + 1
   const swipeOffset = useSharedValue(0)
 
   // Route helpers
@@ -105,21 +103,19 @@ export const GettingStartedScene = (props: Props) => {
   }
 
   const handleFinalSwipe = useHandler(() => {
-    if (isFinalSwipeEnabled) {
-      // This delay is necessary to properly reset the scene since it remains on
-      // the stack.
-      setTimeout(() => {
-        swipeOffset.value = 0
-      }, 500)
+    // This delay is necessary to properly reset the scene since it remains on
+    // the stack.
+    setTimeout(() => {
+      swipeOffset.value = 0
+    }, 500)
 
-      logEvent('Signup_Welcome')
+    logEvent('Signup_Welcome')
 
-      // Either route to password login or account creation
-      if (hasLocalUsers) {
-        navigation.navigate('login', { loginUiInitialRoute: getPasswordLoginRoute(createAccountType) })
-      } else {
-        navigation.navigate('login', { loginUiInitialRoute: getNewAccountRoute(createAccountType) })
-      }
+    // Either route to password login or account creation
+    if (hasLocalUsers) {
+      navigation.navigate('login', { loginUiInitialRoute: getPasswordLoginRoute(createAccountType) })
+    } else {
+      navigation.navigate('login', { loginUiInitialRoute: getNewAccountRoute(createAccountType) })
     }
   })
 
@@ -155,7 +151,6 @@ export const GettingStartedScene = (props: Props) => {
   // Initialize variant config values
   useAsyncEffect(
     async () => {
-      setIsFinalSwipeEnabled((await getExperimentConfigValue('swipeLastUsp')) === 'true')
       setCreateAccountType(await getExperimentConfigValue('createAccountType'))
     },
     [],
@@ -213,7 +208,7 @@ export const GettingStartedScene = (props: Props) => {
             })}
           </HeroContainer>
           <Pagination>
-            {Array.from({ length: paginationCount + (isFinalSwipeEnabled ? 0 : 1) }).map((_, index) => (
+            {Array.from({ length: paginationCount }).map((_, index) => (
               <Pressable key={index} onPress={() => handlePressIndicator(index)}>
                 <PageIndicator swipeOffset={swipeOffset} itemIndex={index} />
               </Pressable>
