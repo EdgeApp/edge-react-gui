@@ -104,16 +104,6 @@ export function getCreateWalletTypes(account: EdgeAccount, filterActivation: boo
   return out
 }
 
-/**
- * Get specific wallet for the wallet creation scenes. BTC will always result in segwit
- */
-export function getCreateWalletType(account: EdgeAccount, currencyCode: string): CreateWalletType | null {
-  const infos = getCurrencyInfos(account)
-  const currencyCodeFormatted = currencyCode.toUpperCase()
-  const currencyInfo = infos.find(info => info.currencyCode === currencyCodeFormatted)
-  return currencyInfo ? makeCreateWalletType(currencyInfo) : null
-}
-
 export const getTokenId = (account: EdgeAccount, pluginId: string, currencyCode: string): EdgeTokenId | undefined => {
   const currencyConfig = account.currencyConfig[pluginId]
   if (currencyConfig == null) return

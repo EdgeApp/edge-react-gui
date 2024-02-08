@@ -10,9 +10,9 @@ import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { GetState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { getCreateWalletType } from '../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../util/DeepLinkParser'
 import { logActivity } from '../util/logger'
+import { getUniqueWalletName } from './CreateWalletActions'
 import { launchDeepLink } from './DeepLinkingActions'
 
 export function updateWalletsSort(walletsSort: SortOption): ThunkAction<void> {
@@ -36,7 +36,7 @@ export function linkReferralWithCurrencies(navigation: NavigationBase, uri: stri
       for (const match of currencyCodeMatches) {
         const currencyCode = match.toUpperCase().replace(/%/g, '')
         const address = await getFirstCurrencyAddress(currencyCode, getState)
-        if (address == null) continue
+        if (address == null) return
         uri = uri.replace(match, address)
       }
     }
@@ -47,43 +47,20 @@ export function linkReferralWithCurrencies(navigation: NavigationBase, uri: stri
   }
 }
 
-const getFirstCurrencyAddress = async (currencyCode: string, getState: GetState) => {
-  // Wallet Check
+const getFirstCurrencyAddress = async (currencyCode: string, getState: GetState): Promise<string | undefined> => {
   const state = getState()
   const { account } = state.core
-  const edgeWallets = state.core.account.currencyWallets
-  const walletIds = Object.keys(edgeWallets)
-  const walletId = walletIds.find(id => {
-    const edgeWallet = edgeWallets[id]
-    const walletCurrency = edgeWallet.currencyInfo.currencyCode.toUpperCase()
-    return walletCurrency === currencyCode
-  })
-  if (walletId) {
-    const wallet = edgeWallets[walletId]
-    return (await wallet.getReceiveAddress({ tokenId: null })).publicAddress
+  const { currencyWallets, currencyConfig } = account
+
+  // If we have a wallet, use that:
+  const walletId = Object.keys(currencyWallets).find(walletId => currencyWallets[walletId].currencyInfo.currencyCode === currencyCode)
+  if (walletId != null) {
+    const wallet = currencyWallets[walletId]
+    const address = await wallet.getReceiveAddress({ tokenId: null })
+    return address.publicAddress
   }
 
-  // Wallet Creation
-  const { defaultIsoFiat } = state.ui.settings
-
-  const createWalletTypes = getCreateWalletType(account, currencyCode)
-  if (!createWalletTypes) throw new Error(lstrings.wallet_list_referral_link_currency_invalid)
-
-  const askUserToCreateWallet = await createWalletCheckModal(currencyCode)
-  if (!askUserToCreateWallet) throw new Error(lstrings.wallet_list_referral_link_cancelled_wallet_creation)
-
-  const createWallet = account.createCurrencyWallet(createWalletTypes.walletType, {
-    name: createWalletTypes.currencyName,
-    fiatCurrencyCode: defaultIsoFiat
-  })
-  const wallet = await showFullScreenSpinner(lstrings.wallet_list_referral_link_currency_loading, createWallet)
-  logActivity(`Create Wallet (wallet list): ${account.username} -- ${createWalletTypes.walletType} -- ${defaultIsoFiat ?? ''}`)
-
-  const receiveAddress = await wallet.getReceiveAddress({ tokenId: null })
-  return receiveAddress.publicAddress
-}
-
-const createWalletCheckModal = async (currencyCode: string): Promise<boolean> => {
+  // Ask the user if they want a wallet:
   const result = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
     <ButtonsModal
       bridge={bridge}
@@ -95,5 +72,24 @@ const createWalletCheckModal = async (currencyCode: string): Promise<boolean> =>
       }}
     />
   ))
-  return result === 'ok'
+  if (result !== 'ok') return
+
+  // Create the wallet:
+  const pluginId = Object.keys(currencyConfig).find(pluginId => currencyConfig[pluginId].currencyInfo.currencyCode === currencyCode)
+  if (pluginId == null) {
+    throw new Error(lstrings.wallet_list_referral_link_currency_invalid)
+  }
+
+  const { walletType } = currencyConfig[pluginId].currencyInfo
+  const { defaultIsoFiat } = state.ui.settings
+
+  const walletPromise = account.createCurrencyWallet(walletType, {
+    fiatCurrencyCode: defaultIsoFiat,
+    name: getUniqueWalletName(account, pluginId)
+  })
+  const wallet = await showFullScreenSpinner(lstrings.wallet_list_referral_link_currency_loading, walletPromise)
+  logActivity(`Create Wallet (wallet list): ${account.username} -- ${walletType} -- ${defaultIsoFiat ?? ''}`)
+
+  const address = await wallet.getReceiveAddress({ tokenId: null })
+  return address.publicAddress
 }
