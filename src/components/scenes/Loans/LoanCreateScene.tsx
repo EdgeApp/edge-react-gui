@@ -434,7 +434,6 @@ export const LoanCreateScene = (props: Props) => {
                     srcTokenId
                   })
                 }}
-                alignSelf="center"
               />
             </Space>
           )}

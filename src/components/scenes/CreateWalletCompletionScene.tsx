@@ -158,7 +158,6 @@ const CreateWalletCompletionComponent = (props: Props) => {
           type="secondary"
           marginRem={[0, 0, 0.5]}
           onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
-          alignSelf="center"
         />
       </View>
     )

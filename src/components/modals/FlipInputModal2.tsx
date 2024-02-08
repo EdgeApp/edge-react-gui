@@ -203,7 +203,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
           onNext={handleCloseModal}
         />
         {getSpecialCurrencyInfo(pluginId).noMaxSpend !== true && hideMaxButton !== true ? (
-          <MiniButton alignSelf="center" label={lstrings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={handleSendMaxAmount} />
+          <MiniButton label={lstrings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={handleSendMaxAmount} />
         ) : null}
       </CardUi4>
     )

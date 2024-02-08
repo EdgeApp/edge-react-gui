@@ -152,7 +152,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props & HookPr
           ) : null}
           {customFormat != null ? this.renderCustomFeeTextInput(customFormat) : null}
           {this.renderFeeWarning()}
-          <MainButton alignSelf="center" label={lstrings.string_done_cap} marginRem={2} type="secondary" onPress={this.onSubmit} />
+          <MainButton label={lstrings.string_done_cap} marginRem={2} type="secondary" onPress={this.onSubmit} />
         </ScrollView>
       </SceneWrapper>
     )

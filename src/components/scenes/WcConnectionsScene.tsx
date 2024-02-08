@@ -104,7 +104,6 @@ export const WcConnectionsScene = (props: Props) => {
           type="primary"
           marginRem={[1, 0.5]}
           onPress={async () => await handleNewConnectionPress()}
-          alignSelf="center"
           spinner={connecting}
         />
         <EdgeText style={styles.listTitle}>{lstrings.wc_walletconnect_active_connections}</EdgeText>

@@ -54,7 +54,7 @@ export const WcDisconnectScene = (props: Props) => {
       </View>
       <RowUi4 title={lstrings.string_expiration} body={wcConnectionInfo.expiration} />
       <RowUi4 title={lstrings.wc_details_connected_wallet} body={wcConnectionInfo.walletName} />
-      <MainButton label={lstrings.wc_details_disconnect_button} type="secondary" marginRem={[3.5, 0.5]} onPress={handleDisconnect} alignSelf="center" />
+      <MainButton label={lstrings.wc_details_disconnect_button} type="secondary" marginRem={[3.5, 0.5]} onPress={handleDisconnect} />
     </SceneWrapper>
   )
 }

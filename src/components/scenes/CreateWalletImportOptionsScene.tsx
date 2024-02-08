@@ -224,14 +224,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
           renderItem={renderOptions}
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
-        <MainButton
-          disabled={disableNextButton}
-          label={lstrings.string_next_capitalized}
-          type="secondary"
-          marginRem={[1, 1]}
-          onPress={handleNext}
-          alignSelf="center"
-        />
+        <MainButton disabled={disableNextButton} label={lstrings.string_next_capitalized} type="secondary" marginRem={[1, 1]} onPress={handleNext} />
       </View>
     </SceneWrapper>
   )

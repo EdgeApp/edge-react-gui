@@ -22,8 +22,6 @@ interface Props {
   // and show a spinner until the promise resolves.
   onPress?: () => void | Promise<void>
 
-  alignSelf?: 'auto' | 'stretch' | 'center' // TODO: Remove
-
   // True to dim the button & prevent interactions:
   disabled?: boolean
 

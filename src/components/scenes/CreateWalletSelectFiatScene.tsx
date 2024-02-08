@@ -224,8 +224,8 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
           renderItem={renderCurrencyRow}
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
-        <MainButton label={lstrings.title_create_wallets} type="secondary" marginRem={[0.5, 0.5, 0]} onPress={handleCreate} alignSelf="center" />
-        <MainButton label={lstrings.create_wallet_imports_title} type="escape" marginRem={[0.5, 0.5, 1]} onPress={handleImport} alignSelf="center" />
+        <MainButton label={lstrings.title_create_wallets} type="secondary" marginRem={[0.5, 0.5, 0]} onPress={handleCreate} />
+        <MainButton label={lstrings.create_wallet_imports_title} type="escape" marginRem={[0.5, 0.5, 1]} onPress={handleImport} />
       </View>
     </SceneWrapper>
   )

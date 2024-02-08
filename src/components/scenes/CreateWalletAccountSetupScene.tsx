@@ -103,7 +103,6 @@ export const CreateWalletAccountSetupScene = withWallet((props: Props) => {
         onSubmitEditing={handleSubmit}
       />
       <MainButton
-        alignSelf="center"
         disabled={spinning || text.length !== 12}
         label={spinning ? undefined : lstrings.string_next_capitalized}
         marginRem={0.5}
