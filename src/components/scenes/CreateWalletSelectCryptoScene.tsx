@@ -80,10 +80,10 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     return out
   })
 
-  const createMainnetItem = useHandler(pluginId => {
+  const findMainnetItem = (pluginId: string): MainWalletCreateItem => {
     const newItem = createWalletList.find(item => item.pluginId === pluginId)
     return newItem as MainWalletCreateItem
-  })
+  }
 
   const handleCreateWalletToggle = useHandler((key: string) => {
     setSelectedItems(state => {
@@ -111,7 +111,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       const existingWalletIds = [...(pluginIdWalletIdsMap[pluginId] ?? [])]
 
       // Determine if the user selected a new wallet for this pluginId.
-      const newItem = createMainnetItem(pluginId)
+      const newItem = findMainnetItem(pluginId)
       if (selectedItems.has(newItem.key)) {
         existingWalletIds.push(PLACEHOLDER_WALLET_ID)
       }
@@ -119,7 +119,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       if (existingWalletIds.length === 0) {
         // If the user hasn't selected the parent wallet to create, add it for them
         if (!newWalletItems.some(item => item.pluginId === pluginId)) {
-          const newItem = createMainnetItem(pluginId)
+          const newItem = findMainnetItem(pluginId)
           newWalletItems.push(newItem)
         }
         newTokenItems.forEach(item => {
