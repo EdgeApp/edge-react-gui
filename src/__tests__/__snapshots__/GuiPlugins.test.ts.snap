@@ -248,7 +248,7 @@ Settlement: 2 - 3 days",
     "cryptoCodes": [],
     "deepPath": "",
     "deepQuery": {},
-    "description": "Fee: 2.5%
+    "description": "Fee: 4.0%
 Settlement: 5 min - 24 hours",
     "paymentType": "credit",
     "paymentTypeLogoKey": "bank",
