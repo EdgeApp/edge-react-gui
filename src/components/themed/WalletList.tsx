@@ -10,7 +10,7 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset, FlatListItem, WalletListItem } from '../../types/types'
-import { getCreateWalletTypes, getTokenIdForced } from '../../util/CurrencyInfoHelpers'
+import { checkAssetFilter, getCreateWalletTypes, getTokenIdForced, hasAsset } from '../../util/CurrencyInfoHelpers'
 import { assetOverrides } from '../../util/serverState'
 import { normalizeForSearch } from '../../util/utils'
 import { showError } from '../services/AirshipInstance'
@@ -120,7 +120,7 @@ export function WalletList(props: Props) {
 
       // Apply the currency filters:
       const { pluginId } = wallet.currencyInfo
-      return checkFilterWallet({ pluginId, tokenId }, allowedAssets, excludeAssets)
+      return checkAssetFilter({ pluginId, tokenId }, allowedAssets, excludeAssets)
     })
   }, [allowedAssets, allowedWalletIds, excludeAssets, excludeWalletIds, sortedWalletList])
 
@@ -309,7 +309,7 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
       tokenId
     })
   }
-  const out = walletList.filter(item => !hasAsset(existingWallets, item) && checkFilterWallet(item, allowedAssets, excludeAssets))
+  const out = walletList.filter(item => !hasAsset(existingWallets, item) && checkAssetFilter(item, allowedAssets, excludeAssets))
   return out.filter(item => !assetOverrides.disable[item.pluginId])
 }
 
@@ -328,26 +328,4 @@ export const filterWalletCreateItemListBySearchText = (createWalletList: WalletC
     }
   }
   return out
-}
-
-function checkFilterWallet(details: EdgeAsset, allowedAssets?: EdgeAsset[], excludeAssets?: EdgeAsset[]): boolean {
-  if (allowedAssets != null && !hasAsset(allowedAssets, details)) {
-    return false
-  }
-  if (excludeAssets != null && hasAsset(excludeAssets, details)) {
-    return false
-  }
-  return true
-}
-
-/**
- * Returns true if the asset array includes the given asset.
- */
-function hasAsset(assets: EdgeAsset[], target: EdgeAsset): boolean {
-  for (const asset of assets) {
-    if (asset.pluginId === target.pluginId && asset.tokenId === target.tokenId) {
-      return true
-    }
-  }
-  return false
 }

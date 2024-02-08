@@ -3,6 +3,7 @@ import { EdgeAccount, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeToken, EdgeToken
 import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants'
 import { ENV } from '../env'
+import { EdgeAsset } from '../types/types'
 
 interface CreateWalletType {
   currencyName: string
@@ -160,4 +161,26 @@ export const getToken = (wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): Edge
     }
     return allTokens[tokenId]
   }
+}
+
+export function checkAssetFilter(details: EdgeAsset, allowedAssets?: EdgeAsset[], excludeAssets?: EdgeAsset[]): boolean {
+  if (allowedAssets != null && !hasAsset(allowedAssets, details)) {
+    return false
+  }
+  if (excludeAssets != null && hasAsset(excludeAssets, details)) {
+    return false
+  }
+  return true
+}
+
+/**
+ * Returns true if the asset array includes the given asset.
+ */
+export function hasAsset(assets: EdgeAsset[], target: EdgeAsset): boolean {
+  for (const asset of assets) {
+    if (asset.pluginId === target.pluginId && asset.tokenId === target.tokenId) {
+      return true
+    }
+  }
+  return false
 }
