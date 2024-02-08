@@ -10,6 +10,7 @@ import { Airship, showError } from '../../components/services/AirshipInstance'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { ThunkAction } from '../../types/reduxTypes'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
@@ -21,31 +22,27 @@ import { EdgeText } from './EdgeText'
 import { WalletListCurrencyRow } from './WalletListCurrencyRow'
 
 export interface WalletListCreateRowProps {
-  currencyCode: string
-  currencyName: string
+  createItem: WalletCreateItem
+  createWalletId?: string
+
   trackingEventFailed?: TrackingEventName
   trackingEventSuccess?: TrackingEventName
-  createWalletIds?: string[]
-  pluginId: string
-  walletType?: string
-
   onPress?: (walletId: string, tokenId: EdgeTokenId) => void
 }
 
 export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) => {
   const {
-    currencyCode,
-    currencyName = '',
+    createItem,
+    createWalletId,
     trackingEventFailed,
     trackingEventSuccess,
-
-    createWalletIds = [],
-    walletType,
-    pluginId,
 
     // Callbacks:
     onPress
   } = props
+  const { currencyCode, displayName: currencyName = '', pluginId, walletType } = createItem
+  const createWalletIds = createWalletId != null ? [createWalletId] : createItem.createWalletIds ?? []
+
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
 

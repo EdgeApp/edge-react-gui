@@ -84,17 +84,12 @@ function WalletListSwipeableComponent(props: Props) {
     const { index } = item
     if (item.item.key.includes('create-')) {
       const createItem: WalletCreateItem = item.item
-      const { currencyCode, displayName, pluginId, walletType, createWalletIds } = createItem
       return (
         <WalletListCreateRow
-          currencyCode={currencyCode}
-          currencyName={displayName}
-          pluginId={pluginId}
-          walletType={walletType}
-          onPress={handleCreateWallet}
-          createWalletIds={createWalletIds}
+          createItem={createItem}
           trackingEventFailed="Create_Wallet_From_Search_Failed"
           trackingEventSuccess="Create_Wallet_From_Search_Success"
+          onPress={handleCreateWallet}
         />
       )
     }

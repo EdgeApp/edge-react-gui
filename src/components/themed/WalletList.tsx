@@ -186,17 +186,7 @@ export function WalletList(props: Props) {
   const renderRow = useHandler((item: FlatListItem<any>) => {
     if (item.item.walletId == null) {
       const createItem: WalletCreateItem = item.item
-      const { currencyCode, displayName, pluginId, walletType, createWalletIds } = createItem
-      return (
-        <WalletListCreateRow
-          currencyCode={currencyCode}
-          currencyName={displayName}
-          pluginId={pluginId}
-          walletType={walletType}
-          onPress={handlePress}
-          createWalletIds={createWalletId != null ? [createWalletId] : createWalletIds}
-        />
-      )
+      return <WalletListCreateRow createItem={createItem} createWalletId={createWalletId} onPress={handlePress} />
     }
 
     const walletItem: WalletListItem = item.item
