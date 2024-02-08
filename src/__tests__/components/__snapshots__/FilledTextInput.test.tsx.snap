@@ -169,7 +169,9 @@ exports[`FilledTextInput should render with some props 1`] = `
       </TouchableOpacity>
     </StyledComponent(View)>
   </TouchableWithoutFeedback>
-  <StyledComponent(View)>
+  <StyledComponent(View)
+    noLayoutFlow={false}
+  >
     <StyledComponent(Text)
       danger={true}
     >

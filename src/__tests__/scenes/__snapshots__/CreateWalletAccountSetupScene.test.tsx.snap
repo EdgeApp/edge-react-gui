@@ -670,12 +670,17 @@ exports[`CreateWalletAccountSelect renders 1`] = `
           </View>
         </View>
         <View
+          noLayoutFlow={false}
           style={
-            {
-              "flexDirection": "row",
-              "justifyContent": "space-between",
-              "paddingHorizontal": 11,
-            }
+            [
+              {
+                "flexDirection": "row",
+                "height": 22,
+                "justifyContent": "space-between",
+                "paddingHorizontal": 11,
+              },
+              {},
+            ]
           }
         >
           <Text

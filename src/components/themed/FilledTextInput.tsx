@@ -1,3 +1,8 @@
+/**
+ * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and
+ * edge-login-ui-rn!
+ */
+
 import * as React from 'react'
 import { useMemo } from 'react'
 import { ActivityIndicator, Platform, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
@@ -278,7 +283,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
         </Container>
       </TouchableWithoutFeedback>
       {valid != null || error != null || charactersLeft !== '' ? (
-        <MessagesContainer>
+        <MessagesContainer noLayoutFlow={charactersLeft === ''}>
           <Message danger={error != null}>{valid ?? error ?? null}</Message>
           <Message>{charactersLeft}</Message>
         </MessagesContainer>
@@ -516,11 +521,24 @@ const StyledNumericInput = styledWithRef(NumericInput)<{
   ]
 })
 
-const MessagesContainer = styled(Animated.View)(theme => ({
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  paddingHorizontal: theme.rem(0.5)
-}))
+const MessagesContainer = styled(Animated.View)<{ noLayoutFlow?: boolean }>(theme => props => [
+  {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: theme.rem(0.5),
+    height: theme.rem(1)
+  },
+  props.noLayoutFlow
+    ? {
+        // HACK: If this field has a potential error message, counter-act the
+        // layout flow to avoid the effect of the error message's appearance
+        // pushing components below the this text field down.
+        // If there's a counter, this field is already taking up the maximum
+        // amount of vertical space, so the above is not an issue.
+        marginBottom: -theme.rem(1)
+      }
+    : {}
+])
 
 const Message = styled(Text)<{ danger?: boolean }>(theme => props => [
   {
