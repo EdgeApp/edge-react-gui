@@ -131,14 +131,16 @@ export const StyledButtonContainer = styled(View)<{ absolute?: boolean; layout: 
           justifyContent: 'center',
           marginHorizontal: theme.rem(0.5),
           alignItems: 'center',
-          flex: 1
+          flexGrow: 1,
+          flexShrink: 1
         }
       : {}
 
   const rowStyle: ViewStyle =
     layout === 'row'
       ? {
-          flex: 1,
+          flexGrow: 1,
+          flexShrink: 1,
           flexDirection: 'row-reverse',
           justifyContent: 'center'
         }

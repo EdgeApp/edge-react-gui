@@ -197,7 +197,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       alignSelf: 'center'
     },
     containerRow: {
-      flex: 1
+      flex: 1 // Size equally with other buttons
     },
     containerTertiary: {
       // Reduce the bounds of a tertiary button so it doesn't appear to be too
