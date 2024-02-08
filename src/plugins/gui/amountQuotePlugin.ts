@@ -103,9 +103,12 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         throw new Error('Multiple paymentTypes not implemented')
       }
 
+      const paymentProviderPriority = providerPriority[paymentTypes[0]]
+      const priorityProviders = providers.filter(p => paymentProviderPriority[p.providerId] != null && paymentProviderPriority[p.providerId] > 0)
+
       // Fetch supported assets from all providers, based on the given
       // paymentTypes this plugin was initialized with.
-      for (const provider of providers) {
+      for (const provider of priorityProviders) {
         assetPromises.push(provider.getSupportedAssets({ direction, regionCode, paymentTypes }))
       }
 
@@ -135,6 +138,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         for (const currencyPluginId in assetMap.crypto) {
           const providerTokens = assetMap.crypto[currencyPluginId]
           for (const { tokenId } of providerTokens) {
+            console.log('Adding asset:', assetMap.providerId, currencyPluginId, tokenId)
             allowedAssets.push({ pluginId: currencyPluginId, tokenId })
           }
           for (const fiatCode in assetMap.fiat) {
@@ -143,7 +147,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         }
       }
 
-      const allowedProvidersArray = providers.filter(p => allowedProviders[p.providerId])
+      const allowedProvidersArray = priorityProviders.filter(p => allowedProviders[p.providerId])
       const fiatAmountProviders = allowedProvidersArray.filter(p => !requireAmountCrypto[p.providerId])
       const cryptoAmountProviders = allowedProvidersArray.filter(p => !requireAmountFiat[p.providerId])
       const hasProviderWithoutRequire = allowedProvidersArray.some(p => !requireAmountFiat[p.providerId] && !requireAmountCrypto[p.providerId])
