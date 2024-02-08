@@ -5,7 +5,6 @@ import { sprintf } from 'sprintf-js'
 import { showFullScreenSpinner } from '../components/modals/AirshipFullScreenSpinner'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
-import { getWalletTokenId } from './CurrencyInfoHelpers'
 import { getFioStakingBalances } from './stakeUtils'
 
 /**
@@ -36,14 +35,9 @@ export function cleanFiatCurrencyCode(fiatCurrencyCode: string): { fiatCurrencyC
   }
 }
 
-export const getAvailableBalance = (wallet: EdgeCurrencyWallet, tokenCode?: string): string => {
-  const { currencyCode, pluginId } = wallet.currencyInfo
-  let tokenId: EdgeTokenId
-  if (tokenCode == null || tokenCode === currencyCode) {
-    tokenId = null
-  } else {
-    tokenId = getWalletTokenId(wallet, tokenCode)
-  }
+export const getAvailableBalance = (wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): string => {
+  const { pluginId } = wallet.currencyInfo
+
   let balance = wallet.balanceMap.get(tokenId) ?? '0'
   if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported && tokenId == null) {
     // Special case for FIO mainnet (no token)

@@ -314,7 +314,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
     const addressExplorerDisabled = wallet.currencyInfo.addressExplorer === ''
 
     // Balance
-    const nativeBalance = getAvailableBalance(wallet, primaryCurrencyInfo.displayCurrencyCode)
+    const nativeBalance = getAvailableBalance(wallet, primaryCurrencyInfo.tokenId)
     const displayBalanceAmount = convertNativeToDenomination(primaryCurrencyInfo.displayDenomination.multiplier)(nativeBalance)
     const displayBalanceString = sprintf(lstrings.request_balance, `${truncateDecimals(displayBalanceAmount)} ${primaryCurrencyInfo.displayDenomination.name}`)
 

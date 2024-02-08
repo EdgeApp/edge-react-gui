@@ -168,7 +168,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     const { addressTitles } = this.props
     const { paymentWallet } = this.state
     if (paymentWallet) {
-      const availbleBalance = getAvailableBalance(paymentWallet)
+      const availbleBalance = getAvailableBalance(paymentWallet, null)
       this.setState({ balance: this.formatFio(availbleBalance) })
     } else {
       showError(addressTitles ? lstrings.fio_wallet_missing_for_fio_address : lstrings.fio_wallet_missing_for_fio_domain)
