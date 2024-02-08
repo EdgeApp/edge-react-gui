@@ -20,6 +20,7 @@ export const asFiatDirection = asValue('buy', 'sell')
 export type FiatDirection = ReturnType<typeof asFiatDirection>
 
 export const asFiatPaymentType = asValue(
+  'ach',
   'applepay',
   'colombiabank',
   'credit',

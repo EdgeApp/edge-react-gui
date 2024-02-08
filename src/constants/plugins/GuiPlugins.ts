@@ -108,7 +108,8 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     baseUri: '',
     lockUriPath: true,
     nativePlugin: amountQuoteFiatPlugin,
-    displayName: 'ACH Bank Transfer'
+    forceFiatCurrencyCode: 'iso:USD',
+    displayName: 'Instant ACH Bank Transfer'
   },
   ideal: {
     pluginId: 'amountquote',

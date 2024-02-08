@@ -15,6 +15,7 @@ import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatPro
 import { getBestError, getRateFromQuote } from './pluginUtils'
 import { banxaProvider } from './providers/banxaProvider'
 import { bityProvider } from './providers/bityProvider'
+import { kadoProvider } from './providers/kadoProvider'
 import { moonpayProvider } from './providers/moonpayProvider'
 import { paybisProvider } from './providers/paybisProvider'
 import { simplexProvider } from './providers/simplexProvider'
@@ -33,7 +34,7 @@ type PaymentTypeProviderPriorityMap = ReturnType<typeof asPaymentTypeProviderPri
 
 type PriorityArray = Array<{ [pluginId: string]: boolean }>
 
-const providerFactories = [banxaProvider, bityProvider, moonpayProvider, paybisProvider, simplexProvider]
+const providerFactories = [banxaProvider, bityProvider, kadoProvider, moonpayProvider, paybisProvider, simplexProvider]
 
 const DEFAULT_FIAT_AMOUNT = '500'
 
