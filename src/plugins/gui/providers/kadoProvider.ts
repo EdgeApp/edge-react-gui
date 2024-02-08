@@ -74,7 +74,12 @@ const PLUGINIDS_WITH_TOKENS: { [pluginId: string]: boolean } = {
   optimism: true,
   litecoin: false,
   ethereum: true,
+  solana: true,
   avalanche: true
+}
+
+const WHITE_LIST_TOKENS: { [pluginId: string]: string[] } = {
+  solana: ['USDC']
 }
 
 const CHAIN_ID_TO_PLUGIN_MAP: { [chainId: string]: string } = Object.entries(PLUGIN_TO_CHAIN_ID_MAP).reduce(
@@ -436,7 +441,7 @@ export const kadoProvider: FiatProviderFactory = {
   providerId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
-    const { apiKeys } = params
+    const { apiKeys, getTokenId } = params
     const { apiKey } = asApiKeys(apiKeys)
     const out: FiatProvider = {
       providerId,
@@ -483,6 +488,11 @@ export const kadoProvider: FiatProviderFactory = {
               if (asset.address != null && asset.address !== '0x0000000000000000000000000000000000000000') {
                 if (asset.rampProducts != null && asset.rampProducts.includes(direction)) {
                   const tokenId = asset.address.toLowerCase().replace('0x', '')
+                  tokens.push({ tokenId, otherInfo: { symbol: asset.symbol } })
+                }
+              } else if (WHITE_LIST_TOKENS[pluginId]?.includes(asset.symbol)) {
+                const tokenId = getTokenId(pluginId, asset.symbol)
+                if (tokenId != null) {
                   tokens.push({ tokenId, otherInfo: { symbol: asset.symbol } })
                 }
               }
@@ -675,6 +685,8 @@ export const kadoProvider: FiatProviderFactory = {
                       let paymentTokenId: EdgeTokenId = null
                       if (address !== '0x0000000000000000000000000000000000000000') {
                         paymentTokenId = address.toLowerCase().replace('0x', '')
+                      } else if (WHITE_LIST_TOKENS[paymentPluginId]?.includes(unit)) {
+                        paymentTokenId = getTokenId(paymentPluginId, unit) ?? null
                       }
 
                       if (paymentTokenId !== tokenId) {
