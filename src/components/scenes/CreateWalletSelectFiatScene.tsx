@@ -80,7 +80,11 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     if (newWalletItems.length === 1 && newTokenItems.length === 0) {
       const item = newWalletItems[0]
       try {
-        await createWallet(account, { walletType: item.walletType, walletName: walletNames[item.key], fiatCurrencyCode: `iso:${fiat.value}` })
+        await createWallet(account, {
+          fiatCurrencyCode: `iso:${fiat.value}`,
+          name: walletNames[item.key],
+          walletType: item.walletType
+        })
         dispatch(logEvent('Create_Wallet_Success'))
       } catch (error: any) {
         showError(error)

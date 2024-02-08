@@ -62,7 +62,7 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
     }
     pressMutexRef.current = true
 
-    const handleRes = (walletId: string) => (onPress != null ? onPress(walletId, tokenId) : null)
+    const handleRes = (wallet?: EdgeCurrencyWallet) => (onPress != null && wallet != null ? onPress(wallet.id, tokenId) : null)
     if (walletType != null) {
       await dispatch(createAndSelectWallet(pluginId, keyOptions))
         .then(handleRes)
@@ -152,7 +152,7 @@ function createAndSelectToken({
   trackingEventFailed?: TrackingEventName
   trackingEventSuccess?: TrackingEventName
   createWalletId?: string
-}): ThunkAction<Promise<string>> {
+}): ThunkAction<Promise<EdgeCurrencyWallet | undefined>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -171,9 +171,9 @@ function createAndSelectToken({
               lstrings.wallet_list_modal_enabling_token,
               (async (): Promise<EdgeCurrencyWallet> => {
                 return await createWallet(account, {
-                  walletType,
-                  walletName: getUniqueWalletName(account, pluginId),
-                  fiatCurrencyCode: defaultIsoFiat
+                  fiatCurrencyCode: defaultIsoFiat,
+                  name: getUniqueWalletName(account, pluginId),
+                  walletType
                 })
               })()
             )
@@ -183,16 +183,15 @@ function createAndSelectToken({
 
       await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, tokenId])
       if (trackingEventSuccess != null) logEvent(trackingEventSuccess)
-      return wallet.id
+      return wallet
     } catch (error: any) {
       showError(error)
       if (trackingEventFailed != null) logEvent(trackingEventFailed, { error: String(error) })
     }
-    return ''
   }
 }
 
-function createAndSelectWallet(pluginId: string, keyOptions: JsonObject): ThunkAction<Promise<string>> {
+function createAndSelectWallet(pluginId: string, keyOptions: JsonObject): ThunkAction<Promise<EdgeCurrencyWallet | undefined>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -205,15 +204,14 @@ function createAndSelectWallet(pluginId: string, keyOptions: JsonObject): ThunkA
         createWallet(account, {
           fiatCurrencyCode: defaultIsoFiat,
           keyOptions,
-          walletName: getUniqueWalletName(account, pluginId),
+          name: getUniqueWalletName(account, pluginId),
           walletType
         })
       )
-      return wallet.id
+      return wallet
     } catch (error: any) {
       showError(error)
     }
-    return ''
   }
 }
 

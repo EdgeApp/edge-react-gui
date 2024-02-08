@@ -53,11 +53,11 @@ const CreateWalletCompletionComponent = (props: Props) => {
     return newWalletItems.map(item => {
       return async () =>
         await createWallet(account, {
-          walletType: item.walletType,
-          walletName: walletNames[item.key],
           fiatCurrencyCode: `iso:${fiatCode}`,
+          importText,
           keyOptions: keyOptions.get(item.pluginId),
-          importText
+          name: walletNames[item.key],
+          walletType: item.walletType
         })
     })
   }, [account, fiatCode, importText, keyOptions, newWalletItems, walletNames])

@@ -1,5 +1,5 @@
 import { mul, toFixed } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction, JsonObject } from 'edge-core-js'
+import { EdgeAccount, EdgeCreateCurrencyWallet, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -18,41 +18,15 @@ import { EdgeAsset } from '../types/types'
 import { getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { filterNull } from '../util/safeFilters'
-import { logEvent, TrackingEventName } from '../util/tracking'
+import { logEvent } from '../util/tracking'
 
-export interface CreateWalletOptions {
-  walletType: string
-  fiatCurrencyCode?: string
-  importText?: string // for creating wallet from private seed / key
-  trackingEventFailed?: TrackingEventName
-  trackingEventSuccess?: TrackingEventName
-  walletName?: string
-  keyOptions?: JsonObject
-}
-
-export const createWallet = async (account: EdgeAccount, { walletType, walletName, fiatCurrencyCode, importText, keyOptions = {} }: CreateWalletOptions) => {
-  const opts = {
-    name: walletName,
-    fiatCurrencyCode,
-    keyOptions,
-    importText
-  }
+export const createWallet = async (account: EdgeAccount, opts: EdgeCreateCurrencyWallet): Promise<EdgeCurrencyWallet> => {
+  const { walletType, name, fiatCurrencyCode } = opts
   const out = await account.createCurrencyWallet(walletType, opts)
-  logActivity(`Create Wallet: ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${opts.name ?? ''}`)
-  return out
-}
 
-export function createCurrencyWallet(
-  walletName: string,
-  walletType: string,
-  fiatCurrencyCode?: string,
-  importText?: string
-): ThunkAction<Promise<EdgeCurrencyWallet>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    fiatCurrencyCode = fiatCurrencyCode ?? state.ui.settings.defaultIsoFiat
-    return await createWallet(state.core.account, { walletName, walletType, fiatCurrencyCode, importText })
-  }
+  logActivity(`Create Wallet: ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${name ?? ''}`)
+
+  return out
 }
 
 // can move to component in the future, just account and currencyConfig, etc to component through connector
