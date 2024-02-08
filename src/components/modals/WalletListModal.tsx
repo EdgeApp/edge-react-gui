@@ -222,7 +222,6 @@ export function WalletListModal(props: Props) {
   return (
     <ModalUi4
       bridge={bridge}
-      scroll
       title={
         <View style={styles.header}>
           <ModalTitle>{headerTitle}</ModalTitle>

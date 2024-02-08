@@ -240,6 +240,7 @@ export function WalletList(props: Props) {
   ) : (
     <SectionList
       contentContainerStyle={scrollPadding}
+      stickySectionHeadersEnabled={false}
       getItemLayout={handleItemLayout}
       keyboardShouldPersistTaps="handled"
       renderItem={renderRow}
