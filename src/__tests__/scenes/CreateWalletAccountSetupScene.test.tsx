@@ -3,24 +3,33 @@ import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
 import { CreateWalletAccountSetupScene } from '../../components/scenes/CreateWalletAccountSetupScene'
-import { FakeProviders } from '../../util/fake/FakeProviders'
+import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
+import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('CreateWalletAccountSelect', () => {
   it('renders', () => {
+    const mockState: FakeState = {
+      core: {
+        account: {
+          currencyConfig: {
+            bitcoin: { currencyInfo: btcCurrencyInfo }
+          },
+          currencyWallets: {
+            '332s0ds39f': { currencyInfo: btcCurrencyInfo }
+          },
+          watch: () => () => {}
+        }
+      }
+    }
+
     const renderer = TestRenderer.create(
-      <FakeProviders>
+      <FakeProviders initialState={mockState}>
         <CreateWalletAccountSetupScene
           {...fakeSceneProps('createWalletAccountSetup', {
             accountHandle: '',
-            selectedWalletType: {
-              currencyName: 'bitcoin',
-              walletType: 'wallet:bitcoin',
-              pluginId: 'bitcoin',
-              currencyCode: 'BTC'
-            } as any,
             isReactivation: true,
-            existingWalletId: 'myWallet'
+            walletId: '332s0ds39f'
           })}
         />
       </FakeProviders>

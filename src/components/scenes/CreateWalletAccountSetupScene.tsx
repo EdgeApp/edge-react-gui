@@ -1,3 +1,4 @@
+import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -6,10 +7,9 @@ import { useMount } from '../../hooks/useMount'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { CreateWalletType } from '../../types/types'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { withWallet } from '../hoc/withWallet'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage } from '../themed/ModalParts'
@@ -17,20 +17,21 @@ import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 export interface CreateWalletAccountSetupParams {
   accountHandle?: string
-  existingWalletId: string
   isReactivation?: boolean
-  selectedWalletType: CreateWalletType
+  walletId: string
 }
 
-interface Props extends EdgeSceneProps<'createWalletAccountSetup'> {}
+interface Props extends EdgeSceneProps<'createWalletAccountSetup'> {
+  wallet: EdgeCurrencyWallet
+}
 
 /**
  * Allows the user to choose an EOS handle.
  */
-export function CreateWalletAccountSetupScene(props: Props): JSX.Element {
-  const { navigation, route } = props
-  const { accountHandle: initialValue = '', existingWalletId, selectedWalletType } = route.params
-  const { currencyCode, pluginId } = selectedWalletType
+export const CreateWalletAccountSetupScene = withWallet((props: Props) => {
+  const { navigation, route, wallet: existingWallet } = props
+  const { accountHandle: initialValue = '' } = route.params
+  const { currencyCode: existingCurrencyCode, pluginId: existingPluginId } = existingWallet.currencyInfo
 
   const account = useSelector(state => state.core.account)
   const [errorMessage, setErrorMessage] = React.useState<string | undefined>()
@@ -43,13 +44,12 @@ export function CreateWalletAccountSetupScene(props: Props): JSX.Element {
   }
 
   async function checkHandle() {
-    const currencyPlugin = account.currencyConfig[pluginId]
+    const currencyPlugin = account.currencyConfig[existingPluginId]
     const data = await currencyPlugin.otherMethods.validateAccount(text)
     if (data.result === 'AccountAvailable') {
       navigation.navigate('createWalletAccountSelect', {
-        selectedWalletType,
         accountName: text,
-        existingWalletId
+        walletId: existingWallet.id
       })
     }
   }
@@ -70,19 +70,17 @@ export function CreateWalletAccountSetupScene(props: Props): JSX.Element {
       .finally(() => setSpinning(false))
   }
 
-  const tokenId = getTokenId(account, pluginId, currencyCode) ?? null
-
   useMount(() => logEvent('Activate_Wallet_Start'))
 
   return (
     <SceneWrapper scroll>
       <View style={{ alignSelf: 'center' }}>
-        <CryptoIconUi4 marginRem={1} pluginId={pluginId} sizeRem={4} tokenId={tokenId} />
+        <CryptoIconUi4 marginRem={1} pluginId={existingPluginId} sizeRem={4} tokenId={null} />
       </View>
       {/* This is an abuse of ModalMessage,
       but EdgeText breaks this text by setting numberOfLines.
       Switch to MessageText if we ever define that: */}
-      <ModalMessage>{sprintf(lstrings.create_wallet_account_review_instructions, currencyCode)}</ModalMessage>
+      <ModalMessage>{sprintf(lstrings.create_wallet_account_review_instructions, existingCurrencyCode)}</ModalMessage>
       <ModalMessage>{lstrings.create_wallet_account_requirements_eos}</ModalMessage>
       <FilledTextInput
         around={1}
@@ -109,4 +107,4 @@ export function CreateWalletAccountSetupScene(props: Props): JSX.Element {
       />
     </SceneWrapper>
   )
-}
+})

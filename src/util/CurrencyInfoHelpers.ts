@@ -3,7 +3,13 @@ import { EdgeAccount, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeToken, EdgeToken
 import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants'
 import { ENV } from '../env'
-import { CreateWalletType } from '../types/types'
+
+interface CreateWalletType {
+  currencyName: string
+  walletType: string
+  pluginId: string
+  currencyCode: string
+}
 
 /**
  * Returns true if this currency supports existing wallets,
@@ -53,7 +59,7 @@ export function sortCurrencyInfos(infos: EdgeCurrencyInfo[]): EdgeCurrencyInfo[]
  * The wallet creation scenes use a truncated version of EdgeCurrencyInfo,
  * so make that.
  */
-export function makeCreateWalletType(currencyInfo: EdgeCurrencyInfo): CreateWalletType {
+function makeCreateWalletType(currencyInfo: EdgeCurrencyInfo): CreateWalletType {
   const { currencyCode, walletType, displayName: currencyName, pluginId } = currencyInfo
   return {
     currencyName,

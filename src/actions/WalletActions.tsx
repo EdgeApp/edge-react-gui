@@ -14,7 +14,7 @@ import { getDisplayDenomination } from '../selectors/DenominationSelectors'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { MapObject } from '../types/types'
-import { getCurrencyCode, getCurrencyInfos, getToken, isKeysOnlyPlugin, makeCreateWalletType } from '../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getToken, isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { fetchInfo } from '../util/network'
 import { convertCurrencyFromExchangeRates } from '../util/utils'
@@ -90,11 +90,7 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
   return async (dispatch, getState) => {
     const state = getState()
     const wallet = state.core.account.currencyWallets[walletId]
-    const {
-      name,
-      currencyInfo: { currencyCode, pluginId }
-    } = wallet
-    const walletName = name ?? ''
+    const { currencyCode, pluginId } = wallet.currencyInfo
     const { publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
 
     if (publicAddress !== '') {
@@ -110,25 +106,18 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
       await dispatch(updateWalletsRequest())
       // not activated yet
       // find fiat and crypto (EOSIO) types and populate scene props
-      const currencyInfos = getCurrencyInfos(state.core.account)
-      const currencyInfo = currencyInfos.find(info => info.currencyCode === currencyCode)
-      if (!currencyInfo) throw new Error('CannotFindCurrencyInfo')
-      const selectedWalletType = makeCreateWalletType(currencyInfo)
       const specialCurrencyInfo = getSpecialCurrencyInfo(pluginId)
       if (specialCurrencyInfo.skipAccountNameValidation) {
         navigation.push('createWalletAccountSelect', {
-          selectedWalletType,
-          accountName: walletName,
-          existingWalletId: walletId
+          accountName: getWalletName(wallet),
+          walletId
         })
       } else {
-        const createWalletAccountSetupSceneProps = {
+        navigation.push('createWalletAccountSetup', {
           accountHandle: '',
-          selectedWalletType,
           isReactivation: true,
-          existingWalletId: walletId
-        }
-        navigation.push('createWalletAccountSetup', createWalletAccountSetupSceneProps)
+          walletId
+        })
       }
 
       Airship.show<'ok' | undefined>(bridge => (

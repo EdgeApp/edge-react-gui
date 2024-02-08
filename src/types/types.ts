@@ -75,13 +75,6 @@ export interface ExchangeData {
   secondaryCurrencyCode: string
 }
 
-export interface CreateWalletType {
-  currencyName: string
-  walletType: string
-  pluginId: string
-  currencyCode: string
-}
-
 export interface CustomNodeSetting {
   isEnabled: boolean
   nodesList: string[]
