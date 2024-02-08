@@ -586,15 +586,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           },
         ]
       }
-      extraData={
-        {
-          "create-ethereum-1985365e9f78359a9b6ad760e32412f4a445e862": false,
-          "create-ethereum-221657776846890989a759ba2973e427dff5c9bb": false,
-          "create-ethereum-2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1": false,
-          "create-ethereum-6b175474e89094c44da98b954eedeac495271d0f": false,
-          "create-undefined-ethereum": false,
-        }
-      }
+      extraData={Set {}}
       getItem={[Function]}
       getItemCount={[Function]}
       handlerTag={1}
