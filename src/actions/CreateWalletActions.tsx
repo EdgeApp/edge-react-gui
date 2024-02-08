@@ -10,7 +10,7 @@ import { Airship, showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
-import { WalletCreateItem } from '../selectors/getCreateWalletList'
+import { TokenWalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -242,27 +242,6 @@ export function createHandleUnavailableModal(navigation: NavigationBase, newWall
 }
 
 export const PLACEHOLDER_WALLET_ID = 'NEW_WALLET_UNIQUE_STRING'
-export interface MainWalletCreateItem extends WalletCreateItem {
-  walletType: string
-}
-interface TokenWalletCreateItem extends WalletCreateItem {
-  tokenId: string
-  createWalletIds: string[]
-}
-
-export const splitCreateWalletItems = (createItems: WalletCreateItem[]): { newWalletItems: MainWalletCreateItem[]; newTokenItems: TokenWalletCreateItem[] } => {
-  const newWalletItems: MainWalletCreateItem[] = []
-  const newTokenItems: TokenWalletCreateItem[] = []
-  createItems.forEach(item => {
-    if (item.walletType != null) {
-      newWalletItems.push(item as MainWalletCreateItem)
-    } else if (item.tokenId != null) {
-      if (item.createWalletIds == null) item.createWalletIds = []
-      newTokenItems.push(item as TokenWalletCreateItem)
-    }
-  })
-  return { newWalletItems, newTokenItems }
-}
 
 export function enableTokensAcrossWallets(newTokenItems: TokenWalletCreateItem[]): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {

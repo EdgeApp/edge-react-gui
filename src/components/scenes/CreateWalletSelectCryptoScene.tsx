@@ -3,12 +3,18 @@ import { Keyboard, ListRenderItemInfo, Switch, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
-import { enableTokensAcrossWallets, MainWalletCreateItem, PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
+import { enableTokensAcrossWallets, PLACEHOLDER_WALLET_ID } from '../../actions/CreateWalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../../selectors/getCreateWalletList'
+import {
+  filterWalletCreateItemListBySearchText,
+  getCreateWalletList,
+  MainWalletCreateItem,
+  splitCreateWalletItems,
+  WalletCreateItem
+} from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationProp } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
