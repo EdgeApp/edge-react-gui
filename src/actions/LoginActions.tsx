@@ -18,6 +18,7 @@ import { config } from '../theme/appConfig'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase, NavigationProp } from '../types/routerTypes'
 import { EdgeAsset, GuiTouchIdInfo } from '../types/types'
+import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { logEvent } from '../util/tracking'
 import { runWithTimeout } from '../util/utils'
@@ -63,7 +64,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       }
       // Ensure the creation reason is available before creating wallets:
       const currencyCodes = getState().account.accountReferral.currencyCodes ?? config.defaultWallets
-      const defaultSelection = currencyCodesToEdgeTokenIds(account, currencyCodes)
+      const defaultSelection = currencyCodesToEdgeAssets(account, currencyCodes)
       const fiatCurrencyCode = 'iso:' + defaultFiat
 
       const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
@@ -254,40 +255,6 @@ async function safeCreateWallet(account: EdgeAccount, walletType: string, wallet
   }
 }
 
-// The `currencyCodes` are in the format "ETH:DAI",
-const currencyCodesToEdgeTokenIds = (account: EdgeAccount, currencyCodes: string[]): EdgeAsset[] => {
-  const chainCodePluginIdMap = Object.keys(account.currencyConfig).reduce(
-    (map: { [chainCode: string]: string }, pluginId) => {
-      const chainCode = account.currencyConfig[pluginId].currencyInfo.currencyCode
-      if (map[chainCode] == null) map[chainCode] = pluginId
-      return map
-    },
-    { BNB: 'binancesmartchain' } // HACK: Prefer BNB Smart Chain over Beacon Chain if provided a BNB currency code)
-  )
-
-  const edgeTokenIds: EdgeAsset[] = []
-
-  for (const code of currencyCodes) {
-    const [parent, child] = code.split(':')
-    const pluginId = chainCodePluginIdMap[parent]
-    const currencyConfig = account.currencyConfig[pluginId]
-    if (currencyConfig == null) continue
-
-    // Add the mainnet EdgeAsset if we haven't yet
-    if (edgeTokenIds.find(edgeTokenId => edgeTokenId.tokenId == null && edgeTokenId.pluginId === pluginId) == null) {
-      edgeTokenIds.push({ pluginId, tokenId: null })
-    }
-
-    // Add tokens
-    if (child != null) {
-      const tokenId = Object.keys(currencyConfig.builtinTokens).find(tokenId => currencyConfig.builtinTokens[tokenId].currencyCode === child)
-      if (tokenId != null) edgeTokenIds.push({ pluginId, tokenId })
-    }
-  }
-
-  return edgeTokenIds
-}
-
 /**
  * Creates wallets inside a new account.
  */
@@ -318,7 +285,7 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
  * Creates the default wallets inside a new account.
  */
 async function createDefaultWallets(account: EdgeAccount, fiatCurrencyCode: string, dispatch: Dispatch) {
-  const defaultEdgeTokenIds = currencyCodesToEdgeTokenIds(account, config.defaultWallets)
+  const defaultEdgeTokenIds = currencyCodesToEdgeAssets(account, config.defaultWallets)
   // TODO: Run these in parallel once the Core has safer locking:
   await createCustomWallets(account, fiatCurrencyCode, defaultEdgeTokenIds, dispatch)
 }

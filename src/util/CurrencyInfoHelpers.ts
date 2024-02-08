@@ -101,3 +101,39 @@ export function hasAsset(assets: EdgeAsset[], target: EdgeAsset): boolean {
   }
   return false
 }
+
+/**
+ * The `currencyCodes` are in the format "ETH:DAI",
+ */
+export const currencyCodesToEdgeAssets = (account: EdgeAccount, currencyCodes: string[]): EdgeAsset[] => {
+  const chainCodePluginIdMap = Object.keys(account.currencyConfig).reduce(
+    (map: { [chainCode: string]: string }, pluginId) => {
+      const chainCode = account.currencyConfig[pluginId].currencyInfo.currencyCode
+      if (map[chainCode] == null) map[chainCode] = pluginId
+      return map
+    },
+    { BNB: 'binancesmartchain' } // HACK: Prefer BNB Smart Chain over Beacon Chain if provided a BNB currency code)
+  )
+
+  const edgeTokenIds: EdgeAsset[] = []
+
+  for (const code of currencyCodes) {
+    const [parent, child] = code.split(':')
+    const pluginId = chainCodePluginIdMap[parent]
+    const currencyConfig = account.currencyConfig[pluginId]
+    if (currencyConfig == null) continue
+
+    // Add the mainnet EdgeAsset if we haven't yet
+    if (edgeTokenIds.find(edgeTokenId => edgeTokenId.tokenId == null && edgeTokenId.pluginId === pluginId) == null) {
+      edgeTokenIds.push({ pluginId, tokenId: null })
+    }
+
+    // Add tokens
+    if (child != null) {
+      const tokenId = Object.keys(currencyConfig.builtinTokens).find(tokenId => currencyConfig.builtinTokens[tokenId].currencyCode === child)
+      if (tokenId != null) edgeTokenIds.push({ pluginId, tokenId })
+    }
+  }
+
+  return edgeTokenIds
+}
