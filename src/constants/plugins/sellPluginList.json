@@ -1,5 +1,16 @@
 [
   {
+    "id": "ach",
+    "pluginId": "ach",
+    "paymentType": "ach",
+    "paymentTypes": ["ach"],
+    "title": "ACH Bank Transfer",
+    "description": "Fee: 1.5%\nSettlement: 2 - 3 days",
+    "forCountries": ["US"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
     "id": "directtobank",
     "pluginId": "directtobank",
     "paymentType": "directtobank",
