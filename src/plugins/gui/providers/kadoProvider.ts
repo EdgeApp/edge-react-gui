@@ -566,7 +566,7 @@ export const kadoProvider: FiatProviderFactory = {
           paymentTypes,
           pluginDisplayName,
           displayCurrencyCode: params.displayCurrencyCode,
-          isEstimate: false,
+          isEstimate: true,
           fiatCurrencyCode: params.fiatCurrencyCode,
           fiatAmount,
           cryptoAmount,

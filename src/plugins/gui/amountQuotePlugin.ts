@@ -299,7 +299,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
           const exchangeRateText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
           stateManager.update({
-            statusText: { content: exchangeRateText },
+            statusText: { content: exchangeRateText, textType: bestQuote.isEstimate ? 'warning' : undefined },
             poweredBy: { poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon }
           })
 

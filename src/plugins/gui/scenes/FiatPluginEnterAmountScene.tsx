@@ -166,6 +166,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
                 placeholder={label2}
                 onChangeText={handleChangeText2}
                 onSubmitEditing={handleSubmit}
+                returnKeyType="done"
                 showSpinner={spinner2}
                 textsizeRem={1.5}
                 value={value2 ?? '0'}
@@ -182,6 +183,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
                 placeholder={label1}
                 onChangeText={handleChangeText1}
                 onSubmitEditing={handleSubmit}
+                returnKeyType="done"
                 showSpinner={spinner1}
                 textsizeRem={1.5}
                 value={value1 ?? '0'}
@@ -201,6 +203,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
                 placeholder={label1}
                 onChangeText={handleChangeText1}
                 onSubmitEditing={handleSubmit}
+                returnKeyType="done"
                 showSpinner={spinner1}
                 textsizeRem={1.5}
                 value={value1 ?? '0'}
@@ -217,6 +220,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
                 placeholder={label2}
                 onChangeText={handleChangeText2}
                 onSubmitEditing={handleSubmit}
+                returnKeyType="done"
                 showSpinner={spinner2}
                 textsizeRem={1.5}
                 value={value2 ?? '0'}
