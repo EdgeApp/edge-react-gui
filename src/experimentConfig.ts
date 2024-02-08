@@ -17,7 +17,7 @@ export interface ExperimentConfig {
 }
 
 // Defined default "unchanged" values before experimentation.
-const DEFAULT_EXPERIMENT_CONFIG: ExperimentConfig = {
+export const DEFAULT_EXPERIMENT_CONFIG: ExperimentConfig = {
   createAccountType: 'full',
   landingType: 'B_Usps',
   signupCaptcha: 'withoutCaptcha'

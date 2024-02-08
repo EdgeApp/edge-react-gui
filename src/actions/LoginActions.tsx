@@ -11,6 +11,7 @@ import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { WalletCreateItem } from '../components/themed/WalletList'
 import { ENV } from '../env'
+import { getExperimentConfig } from '../experimentConfig'
 import { lstrings } from '../locales/strings'
 import { AccountInitPayload, initialState } from '../reducers/scenes/SettingsReducer'
 import { config } from '../theme/appConfig'
@@ -220,7 +221,7 @@ export function logoutRequest(navigation: NavigationBase, nextLoginId?: string):
     Airship.clear()
     dispatch({ type: 'LOGOUT', data: { nextLoginId } })
     if (typeof account.logout === 'function') await account.logout()
-    navigation.navigate('login', {})
+    navigation.navigate('login', { experimentConfig: await getExperimentConfig() })
   }
 }
 

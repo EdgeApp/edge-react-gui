@@ -19,6 +19,7 @@ import type { CurrencySettingsParams } from '../components/scenes/CurrencySettin
 import type { EdgeLoginParams } from '../components/scenes/EdgeLoginScene'
 import type { EditTokenParams } from '../components/scenes/EditTokenScene'
 import type { FioCreateHandleParams } from '../components/scenes/Fio/FioCreateHandleScene'
+import type { GettingStartedParams } from '../components/scenes/GettingStartedScene'
 import type { GuiPluginListParams } from '../components/scenes/GuiPluginListScene'
 import type { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
 import type { LoanCloseParams } from '../components/scenes/Loans/LoanCloseScene'
@@ -62,7 +63,7 @@ export interface RouteParamList {
   edgeApp: {}
   edgeAppStack: {}
   edgeTabs: {}
-  gettingStarted: {}
+  gettingStarted: GettingStartedParams
 
   // Tabs
   homeTab: {}

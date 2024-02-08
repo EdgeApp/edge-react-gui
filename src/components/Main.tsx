@@ -13,7 +13,7 @@ import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CryptoExchangeScene as CryptoExchangeSceneComponent } from '../components/scenes/CryptoExchangeScene'
 import { HomeSceneUi4 as HomeSceneUi4Component } from '../components/ui4/scenes/HomeSceneUi4'
 import { ENV } from '../env'
-import { getExperimentConfigValue } from '../experimentConfig'
+import { DEFAULT_EXPERIMENT_CONFIG, ExperimentConfig, getExperimentConfig } from '../experimentConfig'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
 import { useMount } from '../hooks/useMount'
 import { lstrings } from '../locales/strings'
@@ -231,7 +231,10 @@ const firstSceneScreenOptions: StackNavigationOptions = {
 
 export const Main = () => {
   const theme = useTheme()
-  const [legacyLanding, setLegacyLanding] = React.useState<boolean | undefined>(isMaestro() ? false : undefined)
+
+  // TODO: Create a new provider instead to serve the experimentConfig globally
+  const [experimentConfig, setExperimentConfig] = React.useState<ExperimentConfig | undefined>(isMaestro() ? DEFAULT_EXPERIMENT_CONFIG : undefined)
+
   const [hasInitialScenesLoaded, setHasInitialScenesLoaded] = React.useState(false)
 
   // Match react navigation theme background with the patina theme
@@ -265,7 +268,7 @@ export const Main = () => {
   useAsyncEffect(
     async () => {
       if (isMaestro()) return
-      setLegacyLanding((await getExperimentConfigValue('landingType')) === 'A_legacy')
+      setExperimentConfig(await getExperimentConfig())
     },
     [],
     'setLegacyLanding'
@@ -273,19 +276,19 @@ export const Main = () => {
 
   return (
     <>
-      {legacyLanding == null ? (
+      {experimentConfig == null ? (
         <LoadingSplashScreen />
       ) : (
         <NavigationContainer theme={reactNavigationTheme}>
           <Stack.Navigator
-            initialRouteName={ENV.USE_WELCOME_SCREENS && !legacyLanding ? 'gettingStarted' : 'login'}
+            initialRouteName={ENV.USE_WELCOME_SCREENS && experimentConfig.landingType !== 'A_legacy' ? 'gettingStarted' : 'login'}
             screenOptions={{
               headerShown: false
             }}
           >
             <Stack.Screen name="edgeApp" component={EdgeApp} />
-            <Stack.Screen name="gettingStarted" component={GettingStartedScene} />
-            <Stack.Screen name="login" component={LoginScene} options={{ animationEnabled: hasInitialScenesLoaded }} />
+            <Stack.Screen name="gettingStarted" component={GettingStartedScene} initialParams={{ experimentConfig }} />
+            <Stack.Screen name="login" component={LoginScene} initialParams={{ experimentConfig }} options={{ animationEnabled: hasInitialScenesLoaded }} />
           </Stack.Navigator>
         </NavigationContainer>
       )}
