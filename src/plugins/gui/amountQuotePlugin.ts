@@ -4,10 +4,9 @@ import { sprintf } from 'sprintf-js'
 
 import { formatNumber, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { config } from '../../theme/appConfig'
 import { EdgeAsset } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
-import { fetchInfo } from '../../util/network'
+import { infoServerData } from '../../util/network'
 import { logEvent } from '../../util/tracking'
 import { fuzzyTimeout } from '../../util/utils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginStartParams } from './fiatPluginTypes'
@@ -92,9 +91,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         // Fetch provider priorities from the info server based on the payment
         // type
         try {
-          const response = await fetchInfo(`v1/fiatPluginPriority/${config.appId ?? 'edge'}`)
-          providerPriority = asPaymentTypeProviderPriorityMap(await response.json())
-          priorityArray = createPriorityArray(providerPriority[paymentTypes[0]])
+          if (infoServerData.rollup?.fiatPluginPriority != null) {
+            providerPriority = infoServerData.rollup.fiatPluginPriority
+            priorityArray = createPriorityArray(providerPriority[paymentTypes[0]])
+          }
         } catch (e: any) {
           console.warn('Failed to fetch provider priorities:', e)
           // This is ok. We will use all configured providers at equal priority.
