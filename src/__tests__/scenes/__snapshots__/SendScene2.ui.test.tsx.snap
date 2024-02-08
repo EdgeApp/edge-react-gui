@@ -470,8 +470,9 @@ exports[`SendScene2 1 spendTarget 1`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -997,8 +998,9 @@ exports[`SendScene2 1 spendTarget 1`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -1814,8 +1816,9 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -2341,8 +2344,9 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -3346,8 +3350,9 @@ exports[`SendScene2 2 spendTargets 1`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -4038,8 +4043,9 @@ exports[`SendScene2 2 spendTargets 1`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -4855,8 +4861,9 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -5248,8 +5255,9 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -6065,8 +6073,9 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -6434,8 +6443,9 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -7251,8 +7261,9 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -7459,8 +7470,9 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -8276,8 +8288,9 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -8789,8 +8802,9 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -9606,8 +9620,9 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -10054,8 +10069,9 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -10871,8 +10887,9 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -11278,8 +11295,9 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,
@@ -12095,8 +12113,9 @@ exports[`SendScene2 Render SendScene 1`] = `
               style={
                 [
                   {
-                    "flex": 1,
                     "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
                   },
                   {
                     "marginVertical": 0,

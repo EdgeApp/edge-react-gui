@@ -63,8 +63,9 @@ exports[`TransactionListRow should render with loading props 1`] = `
     style={
       {
         "alignItems": "center",
-        "flex": 1,
         "flexDirection": "row",
+        "flexGrow": 1,
+        "flexShrink": 1,
       }
     }
   >
@@ -142,8 +143,9 @@ exports[`TransactionListRow should render with loading props 1`] = `
       style={
         [
           {
-            "flex": 1,
             "flexDirection": "column",
+            "flexGrow": 1,
+            "flexShrink": 1,
           },
           {
             "marginBottom": 6,
