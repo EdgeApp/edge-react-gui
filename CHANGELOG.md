@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: ACH buy/sell through Kado
 - changed: Require Android 9 or above.
 - changed: Reword of the CrashScene to help users to force close (not uninstall) Edge
 - changed: Upgrade to Android NDK version 26.1.10909125.
