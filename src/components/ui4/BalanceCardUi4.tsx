@@ -134,12 +134,14 @@ const getStyles = cacheStyles((theme: Theme) => {
       alignItems: 'center',
       justifyContent: 'center',
       position: 'absolute',
-      top: theme.rem(1) + 5, // Fudge factor to align with the larger text on the left
-      right: theme.rem(1)
+      top: 0,
+      right: 0
     },
     tappableText: {
       fontSize: theme.rem(0.75),
       color: theme.iconTappable,
+      margin: theme.rem(1),
+      marginTop: theme.rem(1) + 3, // Fudge factor to align with the larger text on the left
       ...theme.cardTextShadow
     },
 
