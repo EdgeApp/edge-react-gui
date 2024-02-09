@@ -28,6 +28,7 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
+import { base58ToUuid } from '../../util/utils'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
@@ -147,10 +148,11 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
 
   const handleShareApp = () => {
     const message = `${sprintf(lstrings.share_subject, config.appName)}\n\n${lstrings.share_message}\n\n`
+    const website = `${config.website}?af=appreferred-${base58ToUuid(context.clientId)}`
 
     const shareOptions = {
-      message: Platform.OS === 'ios' ? message : message + config.website,
-      url: Platform.OS === 'ios' ? config.website : ''
+      message: Platform.OS === 'ios' ? message : message + website,
+      url: Platform.OS === 'ios' ? website : ''
     }
     Share.open(shareOptions).catch(e => console.log(e))
   }
