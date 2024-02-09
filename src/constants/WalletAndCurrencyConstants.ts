@@ -485,7 +485,7 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   coreum: {
     initWalletName: lstrings.string_first_coreum_wallet_name,
-    chainCode: 'CORE',
+    chainCode: 'COREUM',
     dummyPublicAddress: 'core18rv2a6cjkk3lnayy29hez6s2ftpe9llqnce2vu',
     isStakingSupported: true,
     isImportKeySupported: true
