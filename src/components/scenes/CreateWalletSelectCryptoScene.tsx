@@ -243,7 +243,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     () => (
       <Fade noFadeIn={defaultSelection.length > 0} visible={numSelected > 0} duration={300}>
         <View style={styles.bottomButton}>
-          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, -0.5, 0.5]} onPress={handleNextPress} />
+          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, 0, 1]} onPress={handleNextPress} />
         </View>
       </Fade>
     ),

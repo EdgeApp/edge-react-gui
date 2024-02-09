@@ -199,7 +199,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
       return (
         <EdgeAnim enter={fadeIn} exit={fadeOut}>
           <MainButton
-            marginRem={1}
+            marginRem={[2, 0, 2]}
             label={walletLoading ? '' : lstrings.string_next_capitalized}
             disabled={!isAvailable || walletLoading}
             spinner={walletLoading}

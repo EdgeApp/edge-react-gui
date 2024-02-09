@@ -70,8 +70,8 @@ function SwapVerifyTermsModal(props: Props) {
       onCancel={() => bridge.resolve(false)}
     >
       <ModalMessage>{lstrings.swap_terms_statement}</ModalMessage>
-      <MainButton label={lstrings.swap_terms_accept_button} marginRem={0.5} onPress={() => bridge.resolve(true)} />
-      <MainButton label={lstrings.swap_terms_reject_button} marginRem={0.5} type="secondary" onPress={() => bridge.resolve(false)} />
+      <MainButton label={lstrings.swap_terms_accept_button} marginRem={1} onPress={() => bridge.resolve(true)} />
+      <MainButton label={lstrings.swap_terms_reject_button} marginRem={1} type="secondary" onPress={() => bridge.resolve(false)} />
       <View style={styles.linkContainer}>
         {termsUri == null ? null : (
           <Text style={styles.linkText} onPress={async () => await Linking.openURL(termsUri)}>

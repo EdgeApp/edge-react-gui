@@ -1,7 +1,7 @@
 import { div, gt, gte } from 'biggystring'
 import { EdgeAccount, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { Keyboard, View } from 'react-native'
+import { Keyboard } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { getQuoteForTransaction, selectWalletForExchange, SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
@@ -24,10 +24,10 @@ import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeConte
 import { CryptoExchangeFlipInputWrapper } from '../themed/CryptoExchangeFlipInputWrapperComponent'
 import { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput2'
 import { LineTextDivider } from '../themed/LineTextDivider'
-import { MainButton } from '../themed/MainButton'
 import { MiniButton } from '../themed/MiniButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { AlertCardUi4 } from '../ui4/AlertCardUi4'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 interface OwnProps extends EdgeSceneProps<'exchange'> {}
 
@@ -236,7 +236,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     const showNext = this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '' && !!parseFloat(primaryNativeAmount)
     if (!showNext) return null
     if (this.checkExceedsAmount()) return null
-    return <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0.5, 0, 1]} paddingRem={[0.5, 2.3]} onPress={this.handleNext} />
+    return <ButtonsViewUi4 primary={{ label: lstrings.string_next_capitalized, onPress: this.handleNext }} sceneMargin />
   }
 
   renderAlert = () => {
@@ -293,7 +293,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     const toHeaderText = sprintf(lstrings.exchange_to_wallet, toWalletName)
 
     return (
-      <View style={styles.sceneContainer}>
+      <>
         <EdgeAnim style={styles.header} enter={fadeInUp90}>
           <SceneHeader title={lstrings.title_exchange} underline />
         </EdgeAnim>
@@ -332,16 +332,12 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
         </EdgeAnim>
         <EdgeAnim enter={fadeInDown60}>{this.renderAlert()}</EdgeAnim>
         <EdgeAnim enter={fadeInDown90}>{this.renderButton()}</EdgeAnim>
-      </View>
+      </>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  sceneContainer: {
-    marginHorizontal: theme.rem(0.5),
-    flex: 1
-  },
   mainScrollView: {
     flex: 1
   },
@@ -431,7 +427,7 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   })
 
   return (
-    <SceneWrapper hasTabs hasNotifications scroll>
+    <SceneWrapper hasTabs hasNotifications scroll padding={theme.rem(0.5)}>
       <CryptoExchangeComponent
         route={route}
         onSelectWallet={handleSelectWallet}

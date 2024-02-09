@@ -283,6 +283,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
     style={
       {
         "flex": 1,
+        "margin": 11,
         "paddingTop": 11,
       }
     }
@@ -1190,10 +1191,10 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
           "flexShrink": 1,
           "justifyContent": "center",
           "opacity": 1,
-          "paddingBottom": 0,
-          "paddingLeft": 11,
-          "paddingRight": 11,
-          "paddingTop": 11,
+          "paddingBottom": 11,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 22,
         }
       }
     >
@@ -1234,7 +1235,6 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
               "height": 67,
               "paddingHorizontal": 34,
             },
-            {},
             {
               "opacity": 1,
             },
@@ -1307,8 +1307,8 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
           "justifyContent": "center",
           "opacity": 1,
           "paddingBottom": 22,
-          "paddingLeft": 11,
-          "paddingRight": 11,
+          "paddingLeft": 0,
+          "paddingRight": 0,
           "paddingTop": 11,
         }
       }
@@ -1353,7 +1353,6 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
               "height": undefined,
               "padding": 0,
             },
-            {},
             {
               "opacity": 1,
             },

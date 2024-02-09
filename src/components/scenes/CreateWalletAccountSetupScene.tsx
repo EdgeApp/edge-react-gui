@@ -105,7 +105,7 @@ export const CreateWalletAccountSetupScene = withWallet((props: Props) => {
       <MainButton
         disabled={spinning || text.length !== 12}
         label={spinning ? undefined : lstrings.string_next_capitalized}
-        marginRem={0.5}
+        marginRem={1}
         spinner={spinning}
         type="primary"
         onPress={handleSubmit}

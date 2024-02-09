@@ -1,14 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CryptoExchangeComponent should render with loading props 1`] = `
-<View
-  style={
-    {
-      "flex": 1,
-      "marginHorizontal": 11,
-    }
-  }
->
+<React.Fragment>
   <Memo(EdgeAnimInner)
     enter={
       {
@@ -55,7 +48,6 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       walletId=""
     >
       <MiniButton
-        alignSelf="center"
         label="MAX"
         marginRem={
           [
@@ -124,5 +116,5 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       }
     }
   />
-</View>
+</React.Fragment>
 `;

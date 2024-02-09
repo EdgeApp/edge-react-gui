@@ -40,7 +40,7 @@ interface Props {
  * A stand-alone button to perform the primary action in a modal or scene.
  */
 export function MainButton(props: Props) {
-  const { children, disabled = false, label, marginRem = [0, 1, 0, 1], onPress, type = 'primary', paddingRem, layout, spinner = false } = props
+  const { children, disabled = false, label, marginRem, onPress, type = 'primary', paddingRem, layout, spinner = false } = props
 
   return (
     <ButtonUi4

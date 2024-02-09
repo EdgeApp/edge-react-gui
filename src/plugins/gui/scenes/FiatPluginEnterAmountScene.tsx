@@ -248,7 +248,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
               <PoweredByCard iconUri={poweredByIconPath} poweredByText={poweredBy?.poweredByText ?? ''} onPress={handlePoweredByPress} />
             </EdgeAnim>
             <EdgeAnim enter={fadeInDown90}>
-              <MainButton disabled={spinner1 || spinner2} label={lstrings.string_next_capitalized} marginRem={[0.25, 0]} onPress={handleSubmit} />
+              <MainButton disabled={spinner1 || spinner2} label={lstrings.string_next_capitalized} marginRem={[0.5, 0]} onPress={handleSubmit} />
             </EdgeAnim>
           </>
         </View>

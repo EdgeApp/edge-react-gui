@@ -224,8 +224,8 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
           renderItem={renderCurrencyRow}
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
-        <MainButton label={lstrings.title_create_wallets} type="secondary" marginRem={[0.5, 0.5, 0]} onPress={handleCreate} />
-        <MainButton label={lstrings.create_wallet_imports_title} type="escape" marginRem={[0.5, 0.5, 1]} onPress={handleImport} />
+        <MainButton label={lstrings.title_create_wallets} type="secondary" marginRem={[1, 0, 0.5]} onPress={handleCreate} />
+        <MainButton label={lstrings.create_wallet_imports_title} type="escape" marginRem={[0.5, 0, 1]} onPress={handleImport} />
       </View>
     </SceneWrapper>
   )
@@ -234,6 +234,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   content: {
     flex: 1,
+    margin: theme.rem(0.5),
     paddingTop: theme.rem(0.5)
   },
   cryptoTypeLogo: {

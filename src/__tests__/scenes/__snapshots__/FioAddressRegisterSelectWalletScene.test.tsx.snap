@@ -65,7 +65,13 @@ exports[`FioAddressRegistered should render with loading props 1`] = `
     </View>
     <MainButton
       label="FIO Names"
-      marginRem={2}
+      marginRem={
+        [
+          4,
+          0,
+          2,
+        ]
+      }
       onPress={[Function]}
     />
   </View>

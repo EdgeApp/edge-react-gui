@@ -3378,7 +3378,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "height": 67,
                   "paddingHorizontal": 34,
                 },
-                {},
                 {
                   "opacity": 1,
                 },
@@ -3509,7 +3508,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "height": 67,
                   "paddingHorizontal": 34,
                 },
-                {},
                 {
                   "opacity": 1,
                 },
@@ -6928,7 +6926,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "height": 67,
                   "paddingHorizontal": 34,
                 },
-                {},
                 {
                   "opacity": 1,
                 },
@@ -7059,7 +7056,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "height": 67,
                   "paddingHorizontal": 34,
                 },
-                {},
                 {
                   "opacity": 1,
                 },

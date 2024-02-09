@@ -72,7 +72,7 @@ export function ConfirmContinueModal(props: Props) {
         </View>
       </TouchableWithoutFeedback>
       <Fade visible={isAgreed}>
-        <MainButton label={lstrings.confirm_finish} marginRem={0.5} type="primary" onPress={handleAgreed} />
+        <MainButton label={lstrings.confirm_finish} marginRem={1} type="primary" onPress={handleAgreed} />
       </Fade>
     </ModalUi4>
   )

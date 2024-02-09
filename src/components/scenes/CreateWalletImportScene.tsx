@@ -165,7 +165,7 @@ const CreateWalletImportComponent = (props: Props) => {
           onSubmitEditing={handleNext}
           ref={textInputRef}
         />
-        <MainButton label={lstrings.string_next_capitalized} type="secondary" marginRem={[0.5, 0.5]} onPress={handleNext} />
+        <MainButton label={lstrings.string_next_capitalized} type="secondary" marginRem={1} onPress={handleNext} />
       </KeyboardAwareScrollView>
     </SceneWrapper>
   )

@@ -754,10 +754,10 @@ exports[`CreateWalletAccountSelect renders 1`] = `
             "flexShrink": 1,
             "justifyContent": "center",
             "opacity": 1,
-            "paddingBottom": 11,
-            "paddingLeft": 11,
-            "paddingRight": 11,
-            "paddingTop": 11,
+            "paddingBottom": 22,
+            "paddingLeft": 22,
+            "paddingRight": 22,
+            "paddingTop": 22,
           }
         }
       >
@@ -798,7 +798,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 "height": 67,
                 "paddingHorizontal": 34,
               },
-              {},
               {
                 "opacity": 0.3,
               },

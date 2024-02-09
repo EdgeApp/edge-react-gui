@@ -32,7 +32,7 @@ export function RawTextModal(props: Props) {
       <ScrollView scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         <ModalMessage>{body}</ModalMessage>
       </ScrollView>
-      {disableCopy ? null : <MainButton label={lstrings.fragment_request_copy_title} marginRem={0.5} onPress={handleCopy} type="secondary" />}
+      {disableCopy ? null : <MainButton label={lstrings.fragment_request_copy_title} marginRem={1} onPress={handleCopy} type="secondary" />}
     </ModalUi4>
   )
 }

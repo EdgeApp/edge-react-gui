@@ -279,7 +279,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
       <SceneWrapper>
         <SceneHeader title={sprintf(lstrings.request_deprecated_header, this.props.wallet?.currencyInfo.displayName)} underline withTopMargin />
         <Text style={styles.keysOnlyModeText}>{sprintf(lstrings.request_deprecated_currency_code, this.props.primaryCurrencyInfo?.displayCurrencyCode)}</Text>
-        <MainButton onPress={this.handleKeysOnlyModePress} label={lstrings.help_support} marginRem={2} type="secondary">
+        <MainButton onPress={this.handleKeysOnlyModePress} label={lstrings.help_support} marginRem={[4, 0, 2]} type="secondary">
           <Fontello name="help_headset" color={this.props.theme.iconTappable} size={this.props.theme.rem(1.5)} />
         </MainButton>
       </SceneWrapper>

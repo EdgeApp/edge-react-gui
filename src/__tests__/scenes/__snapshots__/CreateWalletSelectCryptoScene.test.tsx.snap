@@ -1836,9 +1836,9 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               "flexShrink": 1,
               "justifyContent": "center",
               "opacity": 1,
-              "paddingBottom": 11,
-              "paddingLeft": -11,
-              "paddingRight": -11,
+              "paddingBottom": 22,
+              "paddingLeft": 0,
+              "paddingRight": 0,
               "paddingTop": 0,
             }
           }
@@ -1880,7 +1880,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "height": 67,
                   "paddingHorizontal": 34,
                 },
-                {},
                 {
                   "opacity": 1,
                 },

@@ -92,7 +92,7 @@ export function TextInputModal(props: Props) {
 
   const isAndroid = Platform.OS === 'android'
   // TODO: Address this in ButtonsViewUi4
-  const androidButtonMargin = isAndroid ? [0.5, 0.5, 2, 0.5] : 0.5
+  const androidButtonMargin = isAndroid ? [1, 1, 2, 1] : 1
 
   return (
     <ModalUi4 warning={warning} bridge={bridge} title={title} onCancel={() => bridge.resolve(undefined)}>

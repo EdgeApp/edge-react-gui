@@ -132,7 +132,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
     () => (
       <Fade noFadeIn={numSelected > 0} visible={numSelected > 0} duration={300}>
         <View style={styles.bottomButton}>
-          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, -0.5, 0.5]} onPress={handleNext} />
+          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, 0, 0.75]} onPress={handleNext} />
         </View>
       </Fade>
     ),

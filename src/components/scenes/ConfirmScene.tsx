@@ -63,7 +63,7 @@ const ConfirmComponent = (props: Props) => {
         {renderInfoTiles()}
         <View style={styles.footer}>
           <SafeSlider disabled={false} onSlidingComplete={handleSliderComplete} />
-          <MainButton label={lstrings.string_cancel_cap} type="escape" marginRem={[1]} onPress={handleBackButton} />
+          <MainButton label={lstrings.string_cancel_cap} type="escape" marginRem={0.5} onPress={handleBackButton} />
         </View>
       </KeyboardAwareScrollView>
     </SceneWrapper>

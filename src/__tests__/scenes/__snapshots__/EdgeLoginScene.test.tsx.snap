@@ -477,7 +477,6 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
               "height": 67,
               "paddingHorizontal": 34,
             },
-            {},
             {
               "opacity": 1,
             },
@@ -597,7 +596,6 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
             "height": undefined,
             "padding": 0,
           },
-          {},
           {
             "opacity": 1,
           },
