@@ -33,9 +33,8 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { CardUi4 } from '../ui4/CardUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
+import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
-import { SceneHeader } from './SceneHeader'
-
 interface OwnProps {
   navigation: NavigationProp<'transactionList'>
 
@@ -405,9 +404,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         {isEmpty || searching ? null : <VisaCardCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} />}
         {isEmpty || searching ? null : (
           <View style={styles.tempSceneHeader}>
-            <SceneHeader underline>
-              <EdgeText style={styles.transactionsDividerText}>{lstrings.fragment_transaction_list_transaction}</EdgeText>
-            </SceneHeader>
+            <DividerLine marginRem={[0.5, 0, 0.5, 0.5]} />
           </View>
         )}
       </>
