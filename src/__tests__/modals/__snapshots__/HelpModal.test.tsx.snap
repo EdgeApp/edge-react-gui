@@ -207,10 +207,17 @@ exports[`HelpModal should render with loading props 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           {
+            "marginBottom": -17,
+            "marginRight": -22,
+            "marginTop": -22,
             "opacity": 1,
+            "paddingBottom": 17,
+            "paddingLeft": 22,
+            "paddingRight": 28,
+            "paddingTop": 22,
             "position": "absolute",
-            "right": 6,
-            "top": 3,
+            "right": 0,
+            "top": 0,
           }
         }
       >

@@ -269,18 +269,18 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
 
           {showSpinner ? <ActivityIndicator /> : null}
           {secureTextEntry ? (
-            <TouchableWithoutFeedback testID={`${testID}.eyeIcon`} onPress={handleHidePassword}>
+            <TouchContainer testID={`${testID}.eyeIcon`} onPress={handleHidePassword}>
               <IconContainer>
                 <EyeIconAnimated accessible color={iconColor} off={!hidePassword} />
               </IconContainer>
-            </TouchableWithoutFeedback>
+            </TouchContainer>
           ) : null}
 
-          <TouchableOpacity accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
+          <TouchContainer accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
             <SideContainer scale={rightIconSize}>
               <CloseIconAnimated color={iconColor} size={rightIconSize} />
             </SideContainer>
-          </TouchableOpacity>
+          </TouchContainer>
         </Container>
       </TouchableWithoutFeedback>
       {valid != null || error != null || charactersLeft !== '' ? (
@@ -329,6 +329,14 @@ const Container = styled(Animated.View)<{
     }))
   ]
 })
+
+const TouchContainer = styled(TouchableOpacity)(theme => ({
+  // Increase tappable area with padding, while net 0 with negative margin to visually appear as if 0 margins/padding
+  paddingHorizontal: theme.rem(1),
+  paddingVertical: theme.rem(1.25),
+  marginHorizontal: -theme.rem(1),
+  marginVertical: -theme.rem(1.25)
+}))
 
 const IconContainer = styled(View)(theme => ({
   paddingHorizontal: theme.rem(0.25)

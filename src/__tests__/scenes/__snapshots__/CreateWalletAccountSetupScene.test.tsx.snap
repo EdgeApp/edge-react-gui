@@ -630,7 +630,11 @@ exports[`CreateWalletAccountSelect renders 1`] = `
             onStartShouldSetResponder={[Function]}
             style={
               {
+                "marginHorizontal": -22,
+                "marginVertical": -28,
                 "opacity": 1,
+                "paddingHorizontal": 22,
+                "paddingVertical": 28,
               }
             }
             testID="undefined.clearIcon"
