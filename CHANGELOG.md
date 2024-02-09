@@ -7,6 +7,7 @@
 - changed: Upgrade to Android NDK version 26.1.10909125.
 - changed: Re-enable fake signup captcha experiment at 50%
 - fixed: Show a useful, localized error message when device doesn't have an email account
+- fixed: Make FilledTextInputs take up constant vertical space
 
 ## 4.0.1
 

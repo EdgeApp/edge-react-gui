@@ -45,6 +45,7 @@ export function DevTestScene(props: Props) {
   const [filledTextInputValue5, setFilledTextInputValue5] = useState<string>('')
   const [filledTextInputValue6, setFilledTextInputValue6] = useState<string>('')
   const [filledTextInputValue7, setFilledTextInputValue7] = useState<string>('')
+  const [filledTextInputValue8, setFilledTextInputValue8] = useState<string>('')
   const walletId = selectedWallet?.wallet.id ?? ''
   const tokenId = selectedWallet?.tokenId ?? null
   const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
@@ -164,6 +165,17 @@ export function DevTestScene(props: Props) {
           error="Error"
           maxLength={100}
         />
+        <>
+          <FilledTextInput
+            vertical={1}
+            value={filledTextInputValue8}
+            onChangeText={setFilledTextInputValue8}
+            autoFocus={false}
+            placeholder="Test FilledTextInput Custom Error"
+            error={filledTextInputValue8 === '' ? undefined : filledTextInputValue8}
+          />
+          <EdgeText>Ensure errors above don't push me down</EdgeText>
+        </>
         <CardUi4>
           <ExchangedFlipInput2
             ref={exchangedFlipInputRef}
