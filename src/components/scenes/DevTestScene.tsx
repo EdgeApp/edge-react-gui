@@ -288,6 +288,7 @@ export function DevTestScene(props: Props) {
             <Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />
           </ButtonUi4>
           <ButtonUi4 onPress={() => {}} label="Mini" marginRem={0.5} type="secondary" mini />
+          <EdgeText style={{ marginVertical: theme.rem(0.5) }}>ButtonsViews</EdgeText>
           <OutlinedView>
             <ButtonsViewUi4
               primary={{ label: 'Primary', onPress: () => {} }}
@@ -310,6 +311,17 @@ export function DevTestScene(props: Props) {
           <OutlinedView>
             <ButtonsViewUi4 secondary={{ label: 'Secondary', onPress: () => {} }} secondary2={{ label: 'Secondary', onPress: () => {} }} layout="row" />
           </OutlinedView>
+
+          <EdgeText style={{ marginVertical: theme.rem(0.5) }}>Loose Buttons (0.5rem margin)</EdgeText>
+          <OutlinedView>
+            <ButtonUi4 marginRem={0.5} onPress={() => {}} label="Mini" type="secondary" mini />
+            <ButtonUi4 marginRem={0.5} onPress={() => {}} label="Mini" type="secondary" mini />
+          </OutlinedView>
+          <OutlinedView>
+            <ButtonUi4 marginRem={0.5} onPress={() => {}} label="Primary" type="primary" />
+            <ButtonUi4 marginRem={0.5} onPress={() => {}} label="Secondary" type="secondary" />
+            <ButtonUi4 marginRem={0.5} onPress={() => {}} label="Tertiary" type="tertiary" />
+          </OutlinedView>
         </>
       </SectionView>
     </SceneWrapper>
@@ -318,5 +330,7 @@ export function DevTestScene(props: Props) {
 
 const OutlinedView = styled(View)({
   borderWidth: 1,
-  borderColor: 'white'
+  borderColor: 'white',
+  alignItems: 'center',
+  justifyContent: 'center'
 })
