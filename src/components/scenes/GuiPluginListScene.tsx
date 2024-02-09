@@ -31,6 +31,7 @@ import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { fetchInfo } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { base58ToUuid } from '../../util/utils'
+import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
 import { CountryListModal } from '../modals/CountryListModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -323,7 +324,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     this.showCountrySelectionModal().catch(showError)
   }
 
-  renderPlugin = ({ item }: ListRenderItemInfo<GuiPluginRow>) => {
+  renderPlugin = ({ item, index }: ListRenderItemInfo<GuiPluginRow>) => {
     const { theme } = this.props
     const { pluginId } = item
     const plugin = guiPlugins[pluginId]
@@ -337,35 +338,37 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const poweredBy = plugin.poweredBy ?? plugin.displayName
 
     return (
-      <CardUi4
-        icon={
-          <Image
-            style={styles.logo}
-            // @ts-expect-error
-            source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]}
-          />
-        }
-        onPress={async () => await this.openPlugin(item).catch(showError)}
-        onLongPress={async () => await this.openPlugin(item, true).catch(showError)}
-        paddingRem={[1, 0.5, 1, 0.5]}
-      >
-        <View style={styles.cardContentContainer}>
-          <EdgeText style={styles.titleText} numberOfLines={1}>
-            {item.title}
-          </EdgeText>
-          {item.description === '' ? null : <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>}
-          {poweredBy != null && item.partnerIconPath != null ? (
-            <>
-              <DividerLine marginRem={[0.25, 1, 0.25, 0]} />
-              <View style={styles.pluginRowPoweredByRow}>
-                <EdgeText style={styles.footerText}>{lstrings.plugin_powered_by_space}</EdgeText>
-                <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
-                <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
-              </View>
-            </>
-          ) : null}
-        </View>
-      </CardUi4>
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
+        <CardUi4
+          icon={
+            <Image
+              style={styles.logo}
+              // @ts-expect-error
+              source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]}
+            />
+          }
+          onPress={async () => await this.openPlugin(item).catch(showError)}
+          onLongPress={async () => await this.openPlugin(item, true).catch(showError)}
+          paddingRem={[1, 0.5, 1, 0.5]}
+        >
+          <View style={styles.cardContentContainer}>
+            <EdgeText style={styles.titleText} numberOfLines={1}>
+              {item.title}
+            </EdgeText>
+            {item.description === '' ? null : <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>}
+            {poweredBy != null && item.partnerIconPath != null ? (
+              <>
+                <DividerLine marginRem={[0.25, 1, 0.25, 0]} />
+                <View style={styles.pluginRowPoweredByRow}>
+                  <EdgeText style={styles.footerText}>{lstrings.plugin_powered_by_space}</EdgeText>
+                  <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
+                  <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
+                </View>
+              </>
+            ) : null}
+          </View>
+        </CardUi4>
+      </EdgeAnim>
     )
   }
 
@@ -379,18 +382,22 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     return (
       <>
-        <View style={styles.header}>
+        <EdgeAnim style={styles.header} enter={fadeInUp90}>
           <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline withTopMargin />
-        </View>
-        <SectionHeaderUi4 leftTitle={lstrings.title_select_region} />
-        <CardUi4>
-          <RowUi4
-            onPress={this._handleCountryPress}
-            rightButtonType="none"
-            icon={countryData == null ? undefined : <FastImage source={imageSrc} style={styles.selectedCountryFlag} />}
-            body={countryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}
-          />
-        </CardUi4>
+        </EdgeAnim>
+        <EdgeAnim enter={fadeInUp60}>
+          <SectionHeaderUi4 leftTitle={lstrings.title_select_region} />
+        </EdgeAnim>
+        <EdgeAnim enter={fadeInUp30}>
+          <CardUi4>
+            <RowUi4
+              onPress={this._handleCountryPress}
+              rightButtonType="none"
+              icon={countryData == null ? undefined : <FastImage source={imageSrc} style={styles.selectedCountryFlag} />}
+              body={countryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}
+            />
+          </CardUi4>
+        </EdgeAnim>
         <SectionHeaderUi4 leftTitle={lstrings.title_select_payment_method} />
       </>
     )
