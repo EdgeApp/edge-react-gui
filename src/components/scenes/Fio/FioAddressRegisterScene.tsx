@@ -12,7 +12,7 @@ import { FioDomain, FioPublicDomain } from '../../../types/types'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { checkIsDomainPublic } from '../../../util/FioAddressUtils'
 import { openLink } from '../../../util/utils'
-import { EdgeAnim } from '../../common/EdgeAnim'
+import { EdgeAnim, fadeIn, fadeOut } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { DomainListModal } from '../../FioAddress/DomainListModal'
 import { TextInputModal } from '../../modals/TextInputModal'
@@ -381,7 +381,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
     }
 
     return (
-      <EdgeAnim visible={chooseHandleErrorMessage !== ''} enter={{ type: 'fadeIn' }} exit={{ type: 'fadeOut' }}>
+      <EdgeAnim visible={chooseHandleErrorMessage !== ''} enter={fadeIn} exit={fadeOut}>
         <AlertCardUi4 title={chooseHandleErrorMessage} type="error" />
       </EdgeAnim>
     )

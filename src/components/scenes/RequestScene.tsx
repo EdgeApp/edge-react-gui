@@ -24,7 +24,7 @@ import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelper
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { convertNativeToDenomination, darkenHexColor, truncateDecimals, zeroString } from '../../util/utils'
-import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeAnim, fadeInDown50, fadeInDown75, fadeInUp25, fadeInUp50, fadeInUp80 } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { AddressModal } from '../modals/AddressModal'
@@ -343,11 +343,11 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
         overrideDots={theme.backgroundDots.assetOverrideDots}
       >
         <View style={styles.container}>
-          <EdgeAnim style={styles.requestContainer} enter={{ type: 'fadeInUp', distance: 75 }}>
+          <EdgeAnim style={styles.requestContainer} enter={fadeInUp80}>
             <EdgeText style={styles.title}>{lstrings.fragment_request_subtitle}</EdgeText>
             <EdgeText style={styles.exchangeRate}>{denomString}</EdgeText>
           </EdgeAnim>
-          <EdgeAnim style={styles.balanceContainer} enter={{ type: 'fadeInUp', distance: 50 }}>
+          <EdgeAnim style={styles.balanceContainer} enter={fadeInUp50}>
             <TouchableOpacity onPress={this.toggleBalanceVisibility} style={styles.balanceAmountContainer}>
               {this.props.showBalance ? <EdgeText>{displayBalanceString}</EdgeText> : <EdgeText>{lstrings.string_show_balance}</EdgeText>}
             </TouchableOpacity>
@@ -362,7 +362,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
           </EdgeAnim>
           {this.state.errorMessage != null ? <EdgeText style={styles.errorText}>{this.state.errorMessage}</EdgeText> : null}
 
-          <EdgeAnim enter={{ type: 'fadeInUp', distance: 25 }}>
+          <EdgeAnim enter={fadeInUp25}>
             <CardUi4 marginRem={0}>
               <ExchangedFlipInput2
                 forceField="crypto"
@@ -406,7 +406,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
             />
           )}
 
-          <EdgeAnim enter={{ type: 'fadeInDown', distance: 50 }}>
+          <EdgeAnim enter={fadeInDown50}>
             <TouchableOpacity accessible={false} disabled={addressExplorerDisabled} onPress={this.handleAddressBlockExplorer}>
               <View style={styles.rightChevronContainer}>
                 <EdgeText>{selectedAddress?.label ?? lstrings.request_qr_your_wallet_address}</EdgeText>
@@ -417,7 +417,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
           </EdgeAnim>
         </View>
 
-        <EdgeAnim enter={{ type: 'fadeInDown', distance: 75 }}>
+        <EdgeAnim enter={fadeInDown75}>
           <ShareButtons openShareModal={this.openShareModal} copyToClipboard={this.copyToClipboard} openFioAddressModal={this.openFioAddressModal} />
         </EdgeAnim>
       </SceneWrapper>

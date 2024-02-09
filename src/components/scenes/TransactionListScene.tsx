@@ -23,7 +23,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { fetchInfo } from '../../util/network'
 import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { AssetStatusCard } from '../cards/AssetStatusCard'
-import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
+import { EdgeAnim, fadeInDown10, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
@@ -208,7 +208,7 @@ function TransactionListComponent(props: Props) {
         />
         {assetStatuses.length > 0 && !isSearching
           ? assetStatuses.map(assetStatus => (
-              <EdgeAnim enter={{ type: 'fadeInDown', distance: 10 }} key={`${String(assetStatus.localeStatusTitle)}-${String(assetStatus.localeStatusBody)}`}>
+              <EdgeAnim enter={fadeInDown10} key={`${String(assetStatus.localeStatusTitle)}-${String(assetStatus.localeStatusBody)}`}>
                 <AssetStatusCard assetStatus={assetStatus} key={`${String(assetStatus.localeStatusTitle)}-${String(assetStatus.localeStatusBody)}`} />
               </EdgeAnim>
             ))

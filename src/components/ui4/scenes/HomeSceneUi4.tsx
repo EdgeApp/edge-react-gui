@@ -15,7 +15,7 @@ import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getUi4ImageUri } from '../../../util/CdnUris'
 import { fetchInfo } from '../../../util/network'
-import { EdgeAnim } from '../../common/EdgeAnim'
+import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp80, fadeInUp140 } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { WiredProgressBar } from '../../themed/WiredProgressBar'
@@ -104,12 +104,12 @@ export const HomeSceneUi4 = (props: Props) => {
           >
             <SectionView extendRight marginRem={TEMP_PADDING_REM}>
               <>
-                <EdgeAnim enter={{ type: 'fadeInUp', distance: 140 }}>
+                <EdgeAnim enter={fadeInUp140}>
                   <BalanceCardUi4 onViewAssetsPress={handleViewAssetsPress} navigation={navigation} />
                 </EdgeAnim>
                 {/* Animation inside PromoCardsUi4 component */}
                 <PromoCardsUi4 navigation={navigation} screenWidth={screenWidth} />
-                <EdgeAnim style={homeRowStyle} enter={{ type: 'fadeInUp', distance: 80 }}>
+                <EdgeAnim style={homeRowStyle} enter={fadeInUp80}>
                   <HomeCardUi4
                     title={lstrings.buy_crypto}
                     footer={lstrings.buy_crypto_footer}
@@ -133,7 +133,7 @@ export const HomeSceneUi4 = (props: Props) => {
                     onPress={handleSellPress}
                   />
                 </EdgeAnim>
-                <EdgeAnim style={homeRowStyle} enter={{ type: 'fadeInUp', distance: 60 }}>
+                <EdgeAnim style={homeRowStyle} enter={fadeInUp60}>
                   <HomeCardUi4
                     title={lstrings.fio_web3}
                     footer={lstrings.fio_web3_footer}
@@ -160,7 +160,7 @@ export const HomeSceneUi4 = (props: Props) => {
               </>
               <>
                 <SectionHeaderUi4 leftTitle={lstrings.title_markets} rightNode={lstrings.see_all} onRightPress={() => navigation.navigate('coinRanking', {})} />
-                <EdgeAnim enter={{ type: 'fadeInUp', distance: 30 }}>
+                <EdgeAnim enter={fadeInUp30}>
                   <MarketsCardUi4 navigation={navigation} numRows={5} />
                 </EdgeAnim>
               </>
