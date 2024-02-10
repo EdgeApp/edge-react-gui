@@ -205,11 +205,13 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
       // Navigate to scene to have user enter amount
+      const initialValue1 = requireCrypto ? undefined : defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
       showUi.enterAmount({
         disableInput,
         headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),
         initState: {
-          value1: requireCrypto ? undefined : defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
+          value1: initialValue1,
+          statusText: initialValue1 == null ? { content: lstrings.enter_amount_label } : { content: '' }
         },
         label1: sprintf(lstrings.fiat_plugin_amount_currencycode, displayFiatCurrencyCode),
         label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),
@@ -225,6 +227,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           lastSourceFieldNum = sourceFieldNum
 
           if (eq(value, '0')) {
+            stateManager.update({
+              statusText: { content: lstrings.enter_amount_label },
+              poweredBy: undefined
+            })
             return ''
           }
 
