@@ -53,6 +53,11 @@ import { FormScene } from '../FormScene'
 
 export type LoanManageType = 'loan-manage-borrow' | 'loan-manage-deposit' | 'loan-manage-repay' | 'loan-manage-withdraw'
 
+export interface LoanManageParams {
+  loanManageType: LoanManageType
+  loanAccountId: string
+}
+
 // User input display strings
 const MANAGE_ACTION_DATA_MAP: {
   [key: string]: {

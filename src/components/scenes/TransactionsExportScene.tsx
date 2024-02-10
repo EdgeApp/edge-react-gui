@@ -27,6 +27,11 @@ import { SettingsRow } from '../settings/SettingsRow'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { MainButton } from '../themed/MainButton'
 
+export interface TransactionsExportParams {
+  sourceWallet: EdgeCurrencyWallet
+  currencyCode: string
+}
+
 interface File {
   contents: string
   mimeType: string // 'text/csv'

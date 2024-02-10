@@ -17,15 +17,16 @@ import { lstrings } from '../../locales/strings'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
-import { connect, useSelector } from '../../types/reactRedux'
+import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
 import { GuiCurrencyInfo } from '../../types/types'
-import { getTokenId, getTokenIdForced, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { convertNativeToDenomination, darkenHexColor, truncateDecimals, zeroString } from '../../util/utils'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { withWallet } from '../hoc/withWallet'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { QrModal } from '../modals/QrModal'
@@ -44,7 +45,14 @@ import { ShareButtons } from '../themed/ShareButtons'
 import { CardUi4 } from '../ui4/CardUi4'
 import { AccentColors } from '../ui4/DotsBackground'
 
-interface OwnProps extends EdgeSceneProps<'request'> {}
+export interface RequestParams {
+  tokenId: EdgeTokenId
+  walletId: string
+}
+
+interface OwnProps extends EdgeSceneProps<'request'> {
+  wallet: EdgeCurrencyWallet
+}
 
 interface StateProps {
   currencyCode?: string
@@ -306,7 +314,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
     const addressExplorerDisabled = wallet.currencyInfo.addressExplorer === ''
 
     // Balance
-    const nativeBalance = getAvailableBalance(wallet, primaryCurrencyInfo.displayCurrencyCode)
+    const nativeBalance = getAvailableBalance(wallet, primaryCurrencyInfo.tokenId)
     const displayBalanceAmount = convertNativeToDenomination(primaryCurrencyInfo.displayDenomination.multiplier)(nativeBalance)
     const displayBalanceString = sprintf(lstrings.request_balance, `${truncateDecimals(displayBalanceAmount)} ${primaryCurrencyInfo.displayDenomination.name}`)
 
@@ -581,30 +589,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 const RequestSceneConnected = connect<StateProps, DispatchProps, OwnProps & HookProps>(
-  state => {
-    const { account } = state.core
-    const { currencyWallets } = account
-    const walletId = state.ui.wallets.selectedWalletId
-    const currencyCode: string = state.ui.wallets.selectedCurrencyCode
-    const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
+  (state, ownProps) => {
+    const { route, wallet } = ownProps
+    const { tokenId } = route.params
+    const currencyCode = getCurrencyCode(wallet, tokenId)
 
-    if (currencyCode == null || wallet == null) {
-      return {
-        publicAddress: '',
-        fioAddressesExist: false,
-        isConnected: state.network.isConnected,
-        showBalance: state.ui.settings.isAccountBalanceVisible
-      }
-    }
-
-    const { pluginId } = wallet.currencyInfo
     const primaryDisplayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
     const primaryExchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
-    const tokenId = getTokenIdForced(state.core.account, pluginId, currencyCode)
 
     const primaryCurrencyInfo: GuiCurrencyInfo = {
-      walletId: walletId,
+      walletId: wallet.id,
       tokenId,
       displayCurrencyCode: currencyCode,
       displayDenomination: primaryDisplayDenomination,
@@ -638,15 +633,11 @@ const RequestSceneConnected = connect<StateProps, DispatchProps, OwnProps & Hook
   })
 )(withTheme(RequestSceneComponent))
 
-export const RequestScene = (props: OwnProps) => {
-  const account = useSelector(state => state.core.account)
-  const currencyCode = useSelector(state => state.ui.wallets.selectedCurrencyCode)
-  const walletId = useSelector(state => state.ui.wallets.selectedWalletId)
-  const wallet = account.currencyWallets[walletId] ?? {}
+export const RequestScene = withWallet((props: OwnProps) => {
+  const { route, wallet } = props
+  const { tokenId } = route.params
+  const { pluginId } = wallet.currencyInfo
 
-  const { pluginId = '' } = wallet.currencyInfo ?? {}
-  const tokenId = getTokenId(account, pluginId, currencyCode)
-
-  const iconColor = useIconColor({ pluginId, tokenId: tokenId !== undefined ? tokenId : '' })
+  const iconColor = useIconColor({ pluginId, tokenId })
   return <RequestSceneConnected {...props} iconColor={iconColor} />
-}
+})

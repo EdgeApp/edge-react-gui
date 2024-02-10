@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeContext } from 'edge-core-js'
+import { EdgeAccount, EdgeContext, OtpError } from 'edge-core-js'
 import { OtpRepairScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { StatusBar, StyleSheet, View } from 'react-native'
@@ -8,6 +8,10 @@ import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
+
+export interface OtpRepairParams {
+  otpError: OtpError
+}
 
 interface OwnProps extends EdgeSceneProps<'otpRepair'> {}
 
