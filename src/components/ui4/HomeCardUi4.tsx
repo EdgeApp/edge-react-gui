@@ -32,7 +32,7 @@ export const HomeCardUi4 = (props: Props) => {
     <CardUi4 gradientBackground={gradientBackground} nodeBackground={nodeBackground} onPress={handlePress} fill>
       <View style={styles.verticalSplitContainer}>
         <EdgeText style={theme.cardTextShadow}>{title}</EdgeText>
-        <EdgeText style={[styles.footerText, theme.cardTextShadow]} numberOfLines={3} disableFontScaling>
+        <EdgeText style={styles.footerText} numberOfLines={3} disableFontScaling>
           {footer}
         </EdgeText>
       </View>
@@ -42,7 +42,8 @@ export const HomeCardUi4 = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   footerText: {
-    fontSize: theme.rem(0.75)
+    fontSize: theme.rem(0.75),
+    ...theme.cardTextShadow
   },
   verticalSplitContainer: {
     flex: 1, // Make sure the card fills the space

@@ -68,30 +68,25 @@ export const BalanceCardUi4 = (props: Props) => {
       <TouchableOpacity style={styles.balanceContainer} onPress={handleToggleAccountBalanceVisibility}>
         <View style={styles.titleContainer}>
           <EdgeText style={theme.cardTextShadow}>{lstrings.fragment_wallets_balance_text}</EdgeText>
-          <IonIcon
-            name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'}
-            style={[styles.eyeIcon, theme.cardTextShadow]}
-            color={theme.iconTappable}
-            size={theme.rem(1)}
-          />
+          <IonIcon name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'} style={styles.eyeIcon} color={theme.iconTappable} size={theme.rem(1)} />
         </View>
         {!exchangeRatesReady ? (
           <View style={styles.balanceTextContainer}>
-            <EdgeText style={[styles.balanceTextContainer, theme.cardTextShadow]}>{lstrings.exchange_rates_loading}</EdgeText>
+            <EdgeText style={styles.ratesLoading}>{lstrings.exchange_rates_loading}</EdgeText>
           </View>
         ) : animateNumber ? (
           <View style={styles.balanceTextContainer}>
-            <AnimatedNumber numberString={balanceString} style={styles.balanceTextContainer} textStyle={{ ...styles.balanceText, ...theme.cardTextShadow }} />
+            <AnimatedNumber numberString={balanceString} style={styles.balanceTextContainer} textStyle={styles.balanceText} />
           </View>
         ) : (
           <View style={styles.balanceTextContainer}>
-            <EdgeText style={[styles.balanceTextContainer, styles.balanceText, theme.cardTextShadow]}>{balanceString}</EdgeText>
+            <EdgeText style={styles.balanceTextNoAnim}>{balanceString}</EdgeText>
           </View>
         )}
       </TouchableOpacity>
       {onViewAssetsPress == null ? null : (
         <TouchableOpacity style={styles.rightButtonContainer} onPress={onViewAssetsPress}>
-          <EdgeText style={[styles.tappableText, theme.cardTextShadow]}>{lstrings.view_assets}</EdgeText>
+          <EdgeText style={styles.tappableText}>{lstrings.view_assets}</EdgeText>
         </TouchableOpacity>
       )}
 
@@ -110,55 +105,69 @@ export const BalanceCardUi4 = (props: Props) => {
   )
 }
 
-const getStyles = cacheStyles((theme: Theme) => ({
-  balanceContainer: {
-    margin: theme.rem(0.5)
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-
-  rightButtonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    top: theme.rem(1) + 5, // Fudge factor to align with the larger text on the left
-    right: theme.rem(1)
-  },
-  tappableText: {
-    fontSize: theme.rem(0.75),
-    color: theme.iconTappable
-  },
-
-  // These two icons have different bounding boxes. Adjusted to match
-  eyeIcon: {
-    alignSelf: 'center',
-    marginLeft: theme.rem(0.25),
-    marginRight: theme.rem(0)
-  },
-  balanceText: {
-    fontSize: theme.rem(1.75),
-    fontFamily: theme.fontFaceMedium,
-    color: theme.primaryText,
-    includeFontPadding: false
-  },
-  balanceTextContainer: {
+const getStyles = cacheStyles((theme: Theme) => {
+  const balanceTextContainer = {
     marginTop: theme.rem(0.25),
     marginBottom: theme.rem(0.5),
     height: theme.rem(2.25)
-  },
-  balanceBoxContainer: {
-    height: theme.rem(3.25),
-    marginTop: theme.rem(0.5)
-  },
-  balanceHeader: {
-    fontSize: theme.rem(1),
-    color: theme.secondaryText
-  },
-  showBalance: {
-    fontSize: theme.rem(1.5),
-    fontFamily: theme.fontFaceMedium
   }
-}))
+
+  const balanceText = {
+    fontSize: theme.rem(1.75),
+    fontFamily: theme.fontFaceMedium,
+    color: theme.primaryText,
+    includeFontPadding: false,
+    ...theme.cardTextShadow
+  }
+
+  return {
+    balanceContainer: {
+      margin: theme.rem(0.5)
+    },
+    titleContainer: {
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+
+    rightButtonContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
+      top: theme.rem(1) + 5, // Fudge factor to align with the larger text on the left
+      right: theme.rem(1)
+    },
+    tappableText: {
+      fontSize: theme.rem(0.75),
+      color: theme.iconTappable,
+      ...theme.cardTextShadow
+    },
+
+    // These two icons have different bounding boxes. Adjusted to match
+    eyeIcon: {
+      alignSelf: 'center',
+      marginLeft: theme.rem(0.25),
+      marginRight: theme.rem(0),
+      ...theme.cardTextShadow
+    },
+    balanceText,
+    balanceTextContainer,
+    balanceTextNoAnim: {
+      ...balanceTextContainer,
+      ...balanceText
+    },
+    balanceBoxContainer: {
+      height: theme.rem(3.25),
+      marginTop: theme.rem(0.5)
+    },
+    balanceHeader: {
+      fontSize: theme.rem(1),
+      color: theme.secondaryText
+    },
+    ratesLoading: { ...balanceTextContainer, ...theme.cardTextShadow },
+    showBalance: {
+      fontSize: theme.rem(1.5),
+      fontFamily: theme.fontFaceMedium
+    }
+  }
+})

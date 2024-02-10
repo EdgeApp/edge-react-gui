@@ -374,6 +374,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const styles = getStyles(theme)
     const direction = this.getSceneDirection()
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
+    const uri = `${FLAG_LOGO_URL}/${countryData?.filename || countryData?.name.toLowerCase().replace(' ', '-')}.png`
+    const imageSrc = React.useMemo(() => ({ uri }), [uri])
 
     return (
       <>
@@ -385,14 +387,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
           <RowUi4
             onPress={this._handleCountryPress}
             rightButtonType="none"
-            icon={
-              countryData == null ? undefined : (
-                <FastImage
-                  source={{ uri: `${FLAG_LOGO_URL}/${countryData.filename || countryData.name.toLowerCase().replace(' ', '-')}.png` }}
-                  style={styles.selectedCountryFlag}
-                />
-              )
-            }
+            icon={countryData == null ? undefined : <FastImage source={imageSrc} style={styles.selectedCountryFlag} />}
             body={countryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}
           />
         </CardUi4>

@@ -46,60 +46,70 @@ interface Props {
   numRows: number
 }
 
-/**
- * Card that displays balance, deposit/send buttons, and a link to view assets
- */
-export const MarketsCardUi4 = (props: Props) => {
-  const { navigation, numRows } = props
+interface CoinRowProps {
+  coinRow: CoinRankingData
+  index: number
+  navigation: NavigationBase
+}
+
+const CoinRow = (props: CoinRowProps) => {
+  const { coinRow, index, navigation } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
-  const defaultIsoFiat = useSelector(state => `iso:${getDefaultFiat(state)}`)
   const defaultFiat = useSelector(state => getDefaultFiat(state))
   const fiatSymbol = React.useMemo(() => getSymbolFromCurrency(defaultFiat), [defaultFiat])
 
-  const [coinRankingDatas, setCoinRankingDatas] = React.useState<CoinRankingData[]>([])
+  const { assetId, currencyCode, price, percentChange, imageUrl } = coinRow
+  const key = `${index}-${currencyCode}`
 
-  const renderCoinRow = (coinRow: CoinRankingData, index: number) => {
-    const { assetId, currencyCode, price, percentChange, imageUrl } = coinRow
-    const key = `${index}-${currencyCode}`
+  // Price & percent change string
+  const percentChangeRaw = String(percentChange.hours24)
+  const decimalChangeRaw = div(percentChangeRaw, '100', DECIMAL_PRECISION)
 
-    // Price & percent change string
-    const percentChangeRaw = String(percentChange.hours24)
-    const decimalChangeRaw = div(percentChangeRaw, '100', DECIMAL_PRECISION)
+  const percentString = toPercentString(decimalChangeRaw, { plusSign: true, intlOpts: { noGrouping: true } })
+  const percentStyle = lt(percentChangeRaw, '0') ? styles.negativeText : styles.positiveText
 
-    const percentString = toPercentString(decimalChangeRaw, { plusSign: true, intlOpts: { noGrouping: true } })
-    const percentStyle = lt(percentChangeRaw, '0') ? styles.negativeText : styles.positiveText
+  const priceString = `${fiatSymbol}${formatFiatString({ fiatAmount: price.toString() })} `
 
-    const priceString = `${fiatSymbol}${formatFiatString({ fiatAmount: price.toString() })} `
+  // See if we have an Edge custom icons from a small list of top assets
 
-    // See if we have an Edge custom icons from a small list of top assets
+  const imageSrc = React.useMemo(() => {
     let edgeIconUri
     const edgeAsset = COINGECKO_TO_EDGE_ASSET[assetId]
     if (edgeAsset != null) {
       const icon = getCurrencyIconUris(edgeAsset.pluginId, edgeAsset.tokenId)
       edgeIconUri = icon.symbolImage
     }
-
     const iconUrl = edgeIconUri ?? imageUrl
+    return { uri: iconUrl }
+  }, [assetId, imageUrl])
 
-    return (
-      <RowUi4
-        key={key}
-        icon={iconUrl == null ? null : <FastImage style={styles.icon} source={{ uri: iconUrl }} />}
-        onPress={() => navigation.navigate('coinRankingDetails', { coinRankingData: coinRow })}
-        rightButtonType="none"
-      >
-        <View style={styles.rowBody}>
-          <EdgeText>{currencyCode.toUpperCase() ?? 'N/A'}</EdgeText>
-          <View style={styles.rowRight}>
-            <EdgeText>{priceString}</EdgeText>
-            <EdgeText style={percentStyle}>{percentString}</EdgeText>
-          </View>
+  return (
+    <RowUi4
+      key={key}
+      icon={<FastImage style={styles.icon} source={imageSrc} />}
+      onPress={() => navigation.navigate('coinRankingDetails', { coinRankingData: coinRow })}
+      rightButtonType="none"
+    >
+      <View style={styles.rowBody}>
+        <EdgeText>{currencyCode.toUpperCase() ?? 'N/A'}</EdgeText>
+        <View style={styles.rowRight}>
+          <EdgeText>{priceString}</EdgeText>
+          <EdgeText style={percentStyle}>{percentString}</EdgeText>
         </View>
-      </RowUi4>
-    )
-  }
+      </View>
+    </RowUi4>
+  )
+}
+
+/**
+ * Card that displays market summary info for top coins
+ */
+export const MarketsCardUi4 = (props: Props) => {
+  const { numRows } = props
+  const defaultIsoFiat = useSelector(state => `iso:${getDefaultFiat(state)}`)
+  const [coinRankingDatas, setCoinRankingDatas] = React.useState<CoinRankingData[]>([])
 
   /**
    * Fetch Markets Data
@@ -138,7 +148,13 @@ export const MarketsCardUi4 = (props: Props) => {
     return () => task.stop()
   }, [defaultIsoFiat, numRows])
 
-  return <CardUi4 sections>{coinRankingDatas.map((coinRow, index) => renderCoinRow(coinRow, index))}</CardUi4>
+  return (
+    <CardUi4 sections>
+      {coinRankingDatas.map((coinRow, index) => (
+        <CoinRow key={coinRow.assetId} coinRow={coinRow} index={index} {...props} />
+      ))}
+    </CardUi4>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

@@ -85,6 +85,12 @@ export const HomeSceneUi4 = (props: Props) => {
 
   const renderBlog: ListRenderItem<BlogPost> = useHandler(({ item }) => <BlogCard blogPost={item} />)
 
+  const buyCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto') }), [theme])
+  const sellCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-sell-crypto') }), [theme])
+  const fioIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-fio') }), [theme])
+  const tradeCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-trade') }), [theme])
+  const homeRowStyle = React.useMemo(() => [styles.homeRowContainer, { height: cardSize }], [styles, cardSize])
+
   return (
     <SceneWrapper hasNotifications hasTabs>
       {({ insetStyle, undoInsetStyle }) => (
@@ -103,18 +109,14 @@ export const HomeSceneUi4 = (props: Props) => {
                 </EdgeAnim>
                 {/* Animation inside PromoCardsUi4 component */}
                 <PromoCardsUi4 navigation={navigation} screenWidth={screenWidth} />
-                <EdgeAnim style={[styles.homeRowContainer, { height: cardSize }]} enter={{ type: 'fadeInUp', distance: 80 }}>
+                <EdgeAnim style={homeRowStyle} enter={{ type: 'fadeInUp', distance: 80 }}>
                   <HomeCardUi4
                     title={lstrings.buy_crypto}
                     footer={lstrings.buy_crypto_footer}
                     gradientBackground={theme.buyCardGradient}
                     nodeBackground={
                       <View style={styles.backroundImageContainer}>
-                        <FastImage
-                          source={{ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto') }}
-                          style={styles.backgroundImage}
-                          resizeMode="stretch"
-                        />
+                        <FastImage source={buyCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
                       </View>
                     }
                     onPress={handleBuyPress}
@@ -125,24 +127,20 @@ export const HomeSceneUi4 = (props: Props) => {
                     gradientBackground={theme.sellCardGradient}
                     nodeBackground={
                       <View style={styles.backroundImageContainer}>
-                        <FastImage
-                          source={{ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-sell-crypto') }}
-                          style={styles.backgroundImage}
-                          resizeMode="stretch"
-                        />
+                        <FastImage source={sellCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
                       </View>
                     }
                     onPress={handleSellPress}
                   />
                 </EdgeAnim>
-                <EdgeAnim style={[styles.homeRowContainer, { height: cardSize }]} enter={{ type: 'fadeInUp', distance: 60 }}>
+                <EdgeAnim style={homeRowStyle} enter={{ type: 'fadeInUp', distance: 60 }}>
                   <HomeCardUi4
                     title={lstrings.fio_web3}
                     footer={lstrings.fio_web3_footer}
                     gradientBackground={theme.fioCardGradient}
                     nodeBackground={
                       <View style={styles.backroundImageContainer}>
-                        <FastImage source={{ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-fio') }} style={styles.backgroundImage} resizeMode="stretch" />
+                        <FastImage source={fioIcon} style={styles.backgroundImage} resizeMode="stretch" />
                       </View>
                     }
                     onPress={handleFioPress}
@@ -153,7 +151,7 @@ export const HomeSceneUi4 = (props: Props) => {
                     gradientBackground={theme.swapCardGradient}
                     nodeBackground={
                       <View style={styles.backroundImageContainer}>
-                        <FastImage source={{ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-trade') }} style={styles.backgroundImage} resizeMode="stretch" />
+                        <FastImage source={tradeCryptoIcon} style={styles.backgroundImage} resizeMode="stretch" />
                       </View>
                     }
                     onPress={handleSwapPress}
