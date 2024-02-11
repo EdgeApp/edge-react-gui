@@ -732,6 +732,7 @@
   "cannot_delete_last_wallet_modal_title": "No se puede archivar billetera",
   "cannot_delete_last_wallet_modal_message_part_1": "At least one wallet required in this account.",
   "cannot_delete_last_wallet_modal_message_part_2": "Si desea archivar esta cartera, necesitará añadir una cartera adicional a esta cuenta.",
+  "enter_amount_label": "Enter Amount",
   "enter_your_password": "Introduce tu contraseña",
   "spending_limits": "Límites de gasto",
   "spending_limits_tx_title": "Límite de gasto por transacción",
