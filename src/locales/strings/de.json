@@ -732,6 +732,7 @@
   "cannot_delete_last_wallet_modal_title": "Wallet kann nicht archiviert werden",
   "cannot_delete_last_wallet_modal_message_part_1": "Mindestens eine Wallet ist in diesem Konto erforderlich.",
   "cannot_delete_last_wallet_modal_message_part_2": "Wenn Sie diese Brieftasche archivieren möchten, müssen Sie diesem Konto eine zusätzliche Wallet hinzufügen.",
+  "enter_amount_label": "Enter Amount",
   "enter_your_password": "Geben Sie Ihr Passwort ein",
   "spending_limits": "Ausgabelimits",
   "spending_limits_tx_title": "Transaktions-Ausgabelimit",
