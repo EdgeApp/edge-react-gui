@@ -732,6 +732,7 @@
   "cannot_delete_last_wallet_modal_title": "Não é Possível Arquivar a Carteira",
   "cannot_delete_last_wallet_modal_message_part_1": "Pelo menos uma carteira é necessária nesta conta.",
   "cannot_delete_last_wallet_modal_message_part_2": "Se você deseja arquivar esta carteira, precisará adicionar uma carteira adicional a esta conta.",
+  "enter_amount_label": "Enter Amount",
   "enter_your_password": "Entre sua senha",
   "spending_limits": "Limites de Gasto",
   "spending_limits_tx_title": "Limite de despesa de transação",
