@@ -732,6 +732,7 @@
   "cannot_delete_last_wallet_modal_title": "ウォレットをアーカイブできません",
   "cannot_delete_last_wallet_modal_message_part_1": "このアカウントには少なくとも1つのウォレットが必要です。",
   "cannot_delete_last_wallet_modal_message_part_2": "このウォレットをアーカイブしたい場合、このアカウントに追加のウォレットを追加する必要があります。",
+  "enter_amount_label": "Enter Amount",
   "enter_your_password": "パスワードを入力",
   "spending_limits": "限度額",
   "spending_limits_tx_title": "取引限度額",
