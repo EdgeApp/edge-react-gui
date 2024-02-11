@@ -136,6 +136,7 @@ function WalletListSwipeableComponent(props: Props) {
     <AnimatedFlatList
       contentContainerStyle={contentContainerStyle}
       data={data}
+      keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="handled"
       ListFooterComponent={footer}
       ListHeaderComponent={header}
