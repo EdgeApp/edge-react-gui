@@ -478,7 +478,7 @@ export const banxaProvider: FiatProviderFactory = {
             const { showUi, coreWallet } = approveParams
             const success = await showUi.requestPermission(['camera'], pluginDisplayName, true)
             if (!success) {
-              await showUi.showError(new Error(lstrings.fiat_plugin_cannot_continue_camera_permission))
+              await showUi.showError(lstrings.fiat_plugin_cannot_continue_camera_permission)
             }
             const receiveAddress = await coreWallet.getReceiveAddress({ tokenId: null })
 

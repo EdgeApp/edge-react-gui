@@ -128,7 +128,7 @@ export interface FiatPluginUi {
   openWebView: (params: FiatPluginOpenWebViewParams) => Promise<void>
   openExternalWebView: (params: FiatPluginOpenExternalWebViewParams) => Promise<void>
   walletPicker: (params: { headerTitle: string; allowedAssets?: EdgeAsset[]; showCreateWallet?: boolean }) => Promise<FiatPluginWalletPickerResult | undefined>
-  showError: (error: Error) => Promise<void>
+  showError: (error: unknown) => Promise<void>
   listModal: (params: FiatPluginListModalParams) => Promise<string | undefined>
   enterAmount: (params: AppParamList['guiPluginEnterAmount']) => void
   addressForm: (params: FiatPluginAddressFormParams) => Promise<HomeAddress>

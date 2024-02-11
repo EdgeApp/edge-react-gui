@@ -640,7 +640,7 @@ export const kadoProvider: FiatProviderFactory = {
 
                       const orderInfo = asOrderInfo(result)
                       if (!orderInfo.success) {
-                        await showUi.showError(new Error(lstrings.fiat_plugin_sell_failed_try_again + '\n\norderInfo.success=false'))
+                        await showUi.showError(lstrings.fiat_plugin_sell_failed_try_again + '\n\norderInfo.success=false')
                         inPayment = false
                         return
                       }
@@ -651,14 +651,14 @@ export const kadoProvider: FiatProviderFactory = {
 
                       if (amount == null) {
                         inPayment = false
-                        await showUi.showError(new Error(lstrings.fiat_plugin_sell_failed_try_again + '\n\nMissing amount'))
+                        await showUi.showError(lstrings.fiat_plugin_sell_failed_try_again + '\n\nMissing amount')
                         return
                       }
                       const paymentExchangeAmount = amount.toString()
                       const paymentPluginId = CHAIN_ID_TO_PLUGIN_MAP[blockchain]
                       if (paymentPluginId == null || paymentPluginId !== pluginId) {
                         inPayment = false
-                        await showUi.showError(new Error(lstrings.fiat_plugin_sell_failed_try_again + '\n\nMismatched pluginId'))
+                        await showUi.showError(lstrings.fiat_plugin_sell_failed_try_again + '\n\nMismatched pluginId')
                         return
                       }
 
@@ -678,14 +678,12 @@ export const kadoProvider: FiatProviderFactory = {
 
                       if (paymentTokenId !== tokenId) {
                         inPayment = false
-                        await showUi.showError(new Error(lstrings.fiat_plugin_sell_failed_try_again + '\n\nMismatched tokenId'))
+                        await showUi.showError(lstrings.fiat_plugin_sell_failed_try_again + '\n\nMismatched tokenId')
                         return
                       }
 
                       if (providerDisbursementStatus !== 'pending') {
-                        await showUi.showError(
-                          new Error(lstrings.fiat_plugin_sell_failed_try_again + `\n\nproviderDisbursementStatus=${providerDisbursementStatus}`)
-                        )
+                        await showUi.showError(lstrings.fiat_plugin_sell_failed_try_again + `\n\nproviderDisbursementStatus=${providerDisbursementStatus}`)
                         inPayment = false
                         return
                       }

@@ -103,7 +103,7 @@ export const executePlugin = async (params: {
       ))
       if (result?.type === 'wallet') return result
     },
-    showError: async (e: Error): Promise<void> => showError(e),
+    showError: async (e: unknown): Promise<void> => showError(e),
     listModal: async (params: FiatPluginListModalParams): Promise<string | undefined> => {
       const result = await Airship.show<string | undefined>(bridge => (
         <RadioListModal bridge={bridge} title={params.title} selected={params.selected} items={params.items} />
