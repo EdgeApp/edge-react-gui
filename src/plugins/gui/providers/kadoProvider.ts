@@ -51,35 +51,8 @@ const PLUGIN_TO_CHAIN_ID_MAP: { [pluginId: string]: string } = {
   litecoin: 'litecoin',
   ethereum: 'ethereum',
   avalanche: 'avalanche',
-  cosmos: 'cosmos hub',
+  // cosmos: 'cosmos hub',
   bitcoin: 'bitcoin'
-}
-
-const PLUGINDS_TO_SYMBOL: { [pluginId: string]: string } = {
-  // stellar: 'XLM',
-  solana: 'SOL',
-  // ripple: 'XRP',
-  polygon: 'MATIC',
-  osmosis: 'OSMO',
-  optimism: 'ETH',
-  litecoin: 'LTC',
-  ethereum: 'ETH',
-  avalanche: 'AVAX',
-  cosmos: 'ATOM',
-  bitcoin: 'BTC'
-}
-
-const PLUGINIDS_WITH_TOKENS: { [pluginId: string]: boolean } = {
-  polygon: true,
-  optimism: true,
-  litecoin: false,
-  ethereum: true,
-  solana: true,
-  avalanche: true
-}
-
-const WHITE_LIST_TOKENS: { [pluginId: string]: string[] } = {
-  solana: ['USDC']
 }
 
 const CHAIN_ID_TO_PLUGIN_MAP: { [chainId: string]: string } = Object.entries(PLUGIN_TO_CHAIN_ID_MAP).reduce(
@@ -140,6 +113,7 @@ const asAssociatedAsset = asObject({
   // __v: asOptional(asNumber),
   // priority: asOptional(asNumber),
   address: asOptional(asString),
+  isNative: asBoolean,
   // blockExplorerURI: asOptional(asString),
   // decimals: asOptional(asNumber),
   // officialChainId: asOptional(asString),
@@ -169,9 +143,9 @@ const asBlockchain = asObject({
   // network: asString,
   origin: asString,
   // label: asString,
-  associatedAssets: asArray(asAssociatedAsset)
+  associatedAssets: asArray(asAssociatedAsset),
   // avgTransactionTimeSeconds: asNumber,
-  // liveOnRamp: asBoolean
+  liveOnRamp: asBoolean
   // createdAt: asDate,
   // updatedAt: asDate,
   // __v: asOptional(asNumber),
@@ -325,7 +299,8 @@ const asCryptoCurrency = asObject({
   // fortressSymbol: asString,
   // fortressChainId: asString,
   // coingeckoId: asString,
-  address: asString
+  address: asOptional(asString),
+  isNative: asBoolean
   // blockExplorerURI: asString,
   // decimals: asNumber,
   // officialChainId: asString,
@@ -441,7 +416,7 @@ export const kadoProvider: FiatProviderFactory = {
   providerId,
   storeId,
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
-    const { apiKeys, getTokenId } = params
+    const { apiKeys } = params
     const { apiKey } = asApiKeys(apiKeys)
     const out: FiatProvider = {
       providerId,
@@ -476,26 +451,31 @@ export const kadoProvider: FiatProviderFactory = {
         }
 
         for (const blockchain of blockchains.data.blockchains) {
+          const { liveOnRamp } = blockchain
+          if (!liveOnRamp) continue
           const pluginId = CHAIN_ID_TO_PLUGIN_MAP[blockchain.origin]
           if (pluginId == null) continue
           allowedCurrencyCodes.crypto[pluginId] = []
           const tokens = allowedCurrencyCodes.crypto[pluginId]
-          tokens.push({ tokenId: null, otherInfo: { symbol: PLUGINDS_TO_SYMBOL[pluginId] } })
 
-          if (PLUGINIDS_WITH_TOKENS[pluginId]) {
-            for (const asset of blockchain.associatedAssets) {
-              if (asset.liveOnRamp !== true) continue
-              if (asset.address != null && asset.address !== '0x0000000000000000000000000000000000000000') {
-                if (asset.rampProducts != null && asset.rampProducts.includes(direction)) {
-                  const tokenId = asset.address.toLowerCase().replace('0x', '')
-                  tokens.push({ tokenId, otherInfo: { symbol: asset.symbol } })
-                }
-              } else if (WHITE_LIST_TOKENS[pluginId]?.includes(asset.symbol)) {
-                const tokenId = getTokenId(pluginId, asset.symbol)
-                if (tokenId != null) {
-                  tokens.push({ tokenId, otherInfo: { symbol: asset.symbol } })
-                }
+          for (const asset of blockchain.associatedAssets) {
+            const { isNative, address } = asset
+
+            if (asset.rampProducts == null || !asset.rampProducts.includes(direction)) continue
+            if (isNative) {
+              tokens.push({ tokenId: null, otherInfo: { symbol: asset.symbol } })
+              continue
+            }
+
+            if (address != null && address !== '0x0000000000000000000000000000000000000000') {
+              let tokenId: string
+              if (address.startsWith('0x')) {
+                // For EVM tokens only, lowercase and remove 0x
+                tokenId = address.toLowerCase().replace('0x', '')
+              } else {
+                tokenId = address
               }
+              tokens.push({ tokenId, otherInfo: { symbol: asset.symbol } })
             }
           }
         }
@@ -667,7 +647,7 @@ export const kadoProvider: FiatProviderFactory = {
 
                       const { depositAddress, blockchain, cryptoCurrency, payAmount, providerDisbursementStatus } = orderInfo.data
                       const { amount, unit } = payAmount
-                      const { address } = cryptoCurrency
+                      const { address, isNative } = cryptoCurrency
 
                       if (amount == null) {
                         inPayment = false
@@ -682,11 +662,18 @@ export const kadoProvider: FiatProviderFactory = {
                         return
                       }
 
-                      let paymentTokenId: EdgeTokenId = null
-                      if (address !== '0x0000000000000000000000000000000000000000') {
-                        paymentTokenId = address.toLowerCase().replace('0x', '')
-                      } else if (WHITE_LIST_TOKENS[paymentPluginId]?.includes(unit)) {
-                        paymentTokenId = getTokenId(paymentPluginId, unit) ?? null
+                      let paymentTokenId: EdgeTokenId
+                      if (isNative) {
+                        paymentTokenId = null
+                      } else if (address != null && address !== '0x0000000000000000000000000000000000000000') {
+                        if (address.startsWith('0x')) {
+                          // For EVM tokens only, lowercase and remove 0x
+                          paymentTokenId = address.toLowerCase().replace('0x', '')
+                        } else {
+                          paymentTokenId = address
+                        }
+                      } else {
+                        throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
                       }
 
                       if (paymentTokenId !== tokenId) {
