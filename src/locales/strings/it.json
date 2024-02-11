@@ -732,6 +732,7 @@
   "cannot_delete_last_wallet_modal_title": "Impossibile archiviare il portafoglio",
   "cannot_delete_last_wallet_modal_message_part_1": "Almeno un portafoglio è richiesto in questo account.",
   "cannot_delete_last_wallet_modal_message_part_2": "Se desideri archiviare questo portafoglio, dovrai aggiungere un portafoglio aggiuntivo a questo account.",
+  "enter_amount_label": "Enter Amount",
   "enter_your_password": "Inserisci la tua password",
   "spending_limits": "Limiti di spesa",
   "spending_limits_tx_title": "Limite di spesa per transazione",
