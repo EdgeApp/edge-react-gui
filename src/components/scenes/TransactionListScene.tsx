@@ -1,7 +1,7 @@
 import { abs, lt } from 'biggystring'
 import { asArray } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
-import { asAssetStatus, AssetStatus } from 'edge-info-server/types'
+import { asAssetStatus, AssetStatus } from 'edge-info-server'
 import * as React from 'react'
 import { ListRenderItemInfo, RefreshControl, View } from 'react-native'
 import { getVersion } from 'react-native-device-info'

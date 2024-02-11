@@ -49,10 +49,20 @@ export class FiatProviderError extends Error {
   }
 }
 
+export interface ProviderToken {
+  tokenId: EdgeTokenId
+  otherInfo?: unknown
+}
+
 // Supported fiats and cryptos per provider
 export interface FiatProviderAssetMap {
-  crypto: { [pluginId: string]: { [tokenId: string]: boolean | any } }
+  providerId: string
+  crypto: { [pluginId: string]: ProviderToken[] }
   fiat: { [currencyCode: string]: boolean | any }
+
+  // This provider REQUIRES that the user enter the amount
+  // in the specified currency.
+  requiredAmountType?: 'fiat' | 'crypto'
 }
 
 export interface FiatProviderGetQuoteParams {
@@ -90,9 +100,12 @@ export interface FiatProvider<OtherMethods = null> {
   otherMethods: OtherMethods
 }
 
+export type FiatProviderGetTokenId = (pluginId: string, currencyCode: string) => EdgeTokenId | undefined
+
 export interface FiatProviderFactoryParams {
   deviceId: string
   io: { store: FiatProviderStore }
+  getTokenId: FiatProviderGetTokenId
   apiKeys?: unknown // Data specific to the requirements of each provider,
   // which lets the provider know that these orders were made from within Edge.
   // Typically an API key, but can be some other information like a client ID.

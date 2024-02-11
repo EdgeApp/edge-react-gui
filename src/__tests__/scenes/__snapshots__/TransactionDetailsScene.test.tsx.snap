@@ -1393,6 +1393,10 @@ exports[`TransactionDetailsScene should render 1`] = `
       <View
         entering={BaseAnimationMock {}}
         layout={BaseAnimationMock {}}
+      />
+      <View
+        entering={BaseAnimationMock {}}
+        layout={BaseAnimationMock {}}
       >
         <View
           style={
@@ -3250,6 +3254,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           </View>
         </View>
       </View>
+      <View
+        entering={BaseAnimationMock {}}
+        layout={BaseAnimationMock {}}
+      />
       <View
         entering={BaseAnimationMock {}}
         layout={BaseAnimationMock {}}

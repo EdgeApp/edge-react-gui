@@ -1,4 +1,4 @@
-import { BlogPost } from 'edge-info-server/types'
+import { BlogPost } from 'edge-info-server'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'

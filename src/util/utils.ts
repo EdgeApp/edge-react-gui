@@ -10,6 +10,7 @@ import {
   EdgeTransaction
 } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
+import DeviceInfo from 'react-native-device-info'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 import { v4 } from 'uuid'
@@ -642,4 +643,12 @@ export const darkenHexColor = (hexColor: string, scaleFactor: number): string =>
   const scaledHexColor = `#${scaledR.toString(16).padStart(2, '0')}${scaledG.toString(16).padStart(2, '0')}${scaledB.toString(16).padStart(2, '0')}`
 
   return scaledHexColor
+}
+
+/**
+ * Reads and normalizes the OS version.
+ */
+export function getOsVersion(): string {
+  const osVersionRaw = DeviceInfo.getSystemVersion()
+  return Array.from({ length: 3 }, (_, i) => osVersionRaw.split('.')[i] || '0').join('.')
 }

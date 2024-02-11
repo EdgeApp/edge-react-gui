@@ -657,6 +657,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 "value": 0,
               }
             }
+            editable={true}
             focusAnimation={
               {
                 "value": 0,
@@ -2073,6 +2074,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 "value": 0,
               }
             }
+            editable={true}
             focusAnimation={
               {
                 "value": 0,

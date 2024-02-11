@@ -234,6 +234,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
             <InputComponent
               accessible
               animated
+              editable={!disabled}
               ref={inputRef}
               keyboardType={props.keyboardType}
               returnKeyType={props.returnKeyType}

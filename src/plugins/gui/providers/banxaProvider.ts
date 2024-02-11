@@ -1,6 +1,7 @@
 // import { div, gt, lt, mul, toFixed } from 'biggystring'
 import { gt, lt } from 'biggystring'
 import { asArray, asEither, asMaybe, asNumber, asObject, asString, asValue } from 'cleaners'
+import { EdgeTokenId } from 'edge-core-js'
 import URL from 'url-parse'
 
 import { SendScene2Params } from '../../../components/scenes/SendScene2'
@@ -18,8 +19,10 @@ import {
   FiatProviderFactory,
   FiatProviderFactoryParams,
   FiatProviderGetQuoteParams,
+  FiatProviderGetTokenId,
   FiatProviderQuote
 } from '../fiatProviderTypes'
+import { addTokenToArray } from '../util/providerUtils'
 import { NOT_SUCCESS_TOAST_HIDE_MS, RETURN_URL_CANCEL, RETURN_URL_FAIL, RETURN_URL_SUCCESS } from './common'
 const providerId = 'banxa'
 const storeId = 'banxa'
@@ -282,7 +285,10 @@ const COIN_TO_CURRENCY_CODE_MAP: StringMap = { BTC: 'BTC' }
 
 const asInfoCreateHmacResponse = asObject({ signature: asString })
 
-const allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap> = { buy: { fiat: {}, crypto: {} }, sell: { fiat: {}, crypto: {} } }
+const allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap> = {
+  buy: { providerId, fiat: {}, crypto: {} },
+  sell: { providerId, fiat: {}, crypto: {} }
+}
 const banxaPaymentsMap: Record<FiatDirection, BanxaPaymentMap> = { buy: {}, sell: {} }
 
 export const banxaProvider: FiatProviderFactory = {
@@ -291,6 +297,7 @@ export const banxaProvider: FiatProviderFactory = {
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const {
       apiKeys,
+      getTokenId,
       io: { store }
     } = params
     const { apiKey, hmacUser, partnerUrl: url } = asBanxaApiKeys(apiKeys)
@@ -312,7 +319,8 @@ export const banxaProvider: FiatProviderFactory = {
       pluginDisplayName,
       getSupportedAssets: async ({ direction, paymentTypes }): Promise<FiatProviderAssetMap> => {
         // Return nothing if paymentTypes are not supported by this provider
-        if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true)) return { crypto: {}, fiat: {} }
+        if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
+          throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
         const fiats = allowedCurrencyCodes[direction].fiat
         const cryptos = allowedCurrencyCodes[direction].fiat
@@ -339,7 +347,7 @@ export const banxaProvider: FiatProviderFactory = {
                 const currencyPluginId = CURRENCY_PLUGINID_MAP[chain.code]
                 if (currencyPluginId != null) {
                   const edgeCurrencyCode = COIN_TO_CURRENCY_CODE_MAP[coin.coin_code] ?? coin.coin_code
-                  addToAllowedCurrencies(currencyPluginId, direction, edgeCurrencyCode, coin)
+                  addToAllowedCurrencies(getTokenId, currencyPluginId, direction, edgeCurrencyCode, coin)
                 }
               }
             }
@@ -371,7 +379,7 @@ export const banxaProvider: FiatProviderFactory = {
 
         let banxaCrypto
         try {
-          banxaCrypto = edgeToBanxaCrypto(pluginId, direction, displayCurrencyCode)
+          banxaCrypto = edgeToBanxaCrypto(pluginId, direction, tokenId)
         } catch (e: any) {
           throw new FiatProviderError({ providerId, errorType: 'assetUnsupported' })
         }
@@ -470,7 +478,7 @@ export const banxaProvider: FiatProviderFactory = {
             const { showUi, coreWallet } = approveParams
             const success = await showUi.requestPermission(['camera'], pluginDisplayName, true)
             if (!success) {
-              await showUi.showError(new Error(lstrings.fiat_plugin_cannot_continue_camera_permission))
+              await showUi.showError(lstrings.fiat_plugin_cannot_continue_camera_permission)
             }
             const receiveAddress = await coreWallet.getReceiveAddress({ tokenId: null })
 
@@ -682,9 +690,18 @@ const banxaFetch = async (params: {
   return reply
 }
 
-const addToAllowedCurrencies = (pluginId: string, direction: FiatDirection, currencyCode: string, coin: BanxaCryptoCoin) => {
-  if (allowedCurrencyCodes[direction].crypto[pluginId] == null) allowedCurrencyCodes[direction].crypto[pluginId] = {}
-  allowedCurrencyCodes[direction].crypto[pluginId][currencyCode] = coin
+const addToAllowedCurrencies = (
+  getTokenId: FiatProviderGetTokenId,
+  pluginId: string,
+  direction: FiatDirection,
+  currencyCode: string,
+  coin: BanxaCryptoCoin
+) => {
+  if (allowedCurrencyCodes[direction].crypto[pluginId] == null) allowedCurrencyCodes[direction].crypto[pluginId] = []
+  const tokens = allowedCurrencyCodes[direction].crypto[pluginId]
+  const tokenId = getTokenId(pluginId, currencyCode)
+  if (tokenId === undefined) return
+  addTokenToArray({ tokenId, otherInfo: coin }, tokens)
 }
 
 const typeMap: { [Payment in BanxaPaymentType]: FiatPaymentType } = {
@@ -771,11 +788,12 @@ const getPaymentIdLimit = (direction: FiatDirection, fiat: string, banxaCoin: st
 }
 
 // Takes an EdgeAsset and returns the corresponding Banxa chain code and coin code
-const edgeToBanxaCrypto = (pluginId: string, direction: FiatDirection, displayCurrencyCode: string): { banxaChain: string; banxaCoin: string } => {
+const edgeToBanxaCrypto = (pluginId: string, direction: FiatDirection, tokenId: EdgeTokenId): { banxaChain: string; banxaCoin: string } => {
   const tokens = allowedCurrencyCodes[direction].crypto[pluginId]
   if (tokens == null) throw new Error(`edgeToBanxaCrypto ${pluginId} not allowed`)
-  const banxaCoin = asBanxaCryptoCoin(tokens[displayCurrencyCode])
-  if (banxaCoin == null) throw new Error(`edgeToBanxaCrypto ${pluginId} ${displayCurrencyCode} not allowed`)
+  const providerToken = tokens.find(t => t.tokenId === tokenId)
+  const banxaCoin = asBanxaCryptoCoin(providerToken?.otherInfo)
+  if (banxaCoin == null) throw new Error(`edgeToBanxaCrypto ${pluginId} ${tokenId} not allowed`)
   for (const chain of banxaCoin.blockchains) {
     // @ts-expect-error
     const edgePluginId = CURRENCY_PLUGINID_MAP[chain.code]

@@ -755,6 +755,7 @@ const EdgeBuyTabScreen = () => {
         }}
       />
       <Stack.Screen name="pluginListBuy" component={GuiPluginListScene} options={firstSceneScreenOptions} />
+      <Stack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
       <Stack.Screen
         name="pluginViewBuy"
         component={GuiPluginViewScene}

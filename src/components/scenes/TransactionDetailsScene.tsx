@@ -38,6 +38,7 @@ import { AdvancedDetailsCard } from '../ui4/AdvancedDetailsCard'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { CardUi4 } from '../ui4/CardUi4'
 import { AccentColors } from '../ui4/DotsBackground'
+import { FiatExchangeDetailsCard } from '../ui4/FiatExchangeDetailsCard'
 import { RowUi4 } from '../ui4/RowUi4'
 import { SwapDetailsCard } from '../ui4/SwapDetailsCard'
 import { TxCryptoAmountRow } from '../ui4/TxCryptoAmountRow'
@@ -63,7 +64,7 @@ const TransactionDetailsComponent = (props: Props) => {
   const iconColor = useIconColor({ pluginId: currencyInfo.pluginId, tokenId })
 
   // Choose a default category based on metadata or the txAction
-  const { direction, iconPluginId, mergedData, savedData } = getTxActionDisplayInfo(transaction, account, wallet)
+  const { action, assetAction, direction, iconPluginId, mergedData, savedData } = getTxActionDisplayInfo(transaction, account, wallet)
 
   const swapData = convertActionToSwapData(account, transaction) ?? transaction.swapData
 
@@ -308,6 +309,8 @@ const TransactionDetailsComponent = (props: Props) => {
     backgroundColors[0] = scaledColor
   }
 
+  const fiatAction = action?.actionType === 'fiat' ? action : undefined
+
   return (
     <SceneWrapper
       accentColors={accentColors}
@@ -388,6 +391,11 @@ const TransactionDetailsComponent = (props: Props) => {
 
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
         {swapData == null ? null : <SwapDetailsCard swapData={swapData} transaction={transaction} wallet={wallet} />}
+      </EdgeAnim>
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+        {fiatAction == null || assetAction == null ? null : (
+          <FiatExchangeDetailsCard action={fiatAction} assetAction={assetAction} transaction={transaction} wallet={wallet} />
+        )}
       </EdgeAnim>
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 100 }}>
         <AdvancedDetailsCard transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />

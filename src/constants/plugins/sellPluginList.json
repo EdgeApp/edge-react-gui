@@ -1,5 +1,16 @@
 [
   {
+    "id": "ach",
+    "pluginId": "ach",
+    "paymentType": "ach",
+    "paymentTypes": ["ach"],
+    "title": "ACH Bank Transfer",
+    "description": "Fee: 1.5%\nSettlement: 2 - 3 days",
+    "forCountries": ["US"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
     "id": "directtobank",
     "pluginId": "directtobank",
     "paymentType": "directtobank",
@@ -16,7 +27,7 @@
     "paymentType": "credit",
     "paymentTypes": ["credit"],
     "title": "Bank Transfer via Debit Card",
-    "description": "Fee: 2.5%\nSettlement: 5 min - 24 hours",
+    "description": "Fee: 4.0%\nSettlement: 5 min - 24 hours",
     "forCountries": ["US"],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"

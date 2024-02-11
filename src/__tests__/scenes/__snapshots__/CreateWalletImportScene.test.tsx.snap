@@ -518,6 +518,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               "value": 0,
             }
           }
+          editable={true}
           focusAnimation={
             {
               "value": 0,

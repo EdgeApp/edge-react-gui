@@ -553,6 +553,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                   "value": 0,
                 }
               }
+              editable={true}
               focusAnimation={
                 {
                   "value": 0,
