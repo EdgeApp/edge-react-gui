@@ -1,8 +1,9 @@
-import React from 'react'
-import { LayoutChangeEvent, Text, TextStyle, View, ViewStyle } from 'react-native'
+import React, { useMemo } from 'react'
+import { LayoutChangeEvent, StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native'
 import Animated, { Easing, EasingFunction, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 const ANIMATION_DURATION_DEFAULT = 1000
 const NUMBERS = Array(10)
@@ -26,10 +27,13 @@ export const AnimatedNumber = (props: AnimatedNumberProps): JSX.Element => {
     setDigitHeight(event.nativeEvent.layout.height)
   })
 
+  const numberStyle: StyleProp<ViewStyle> = useMemo(() => [style, { flexDirection: 'row' }], [style])
+  const zeroStyle: StyleProp<ViewStyle> = useMemo(() => [textStyle, { position: 'absolute', top: -999999 }], [textStyle])
+
   return (
     <>
       {digitHeight !== 0 ? (
-        <View style={[style, { flexDirection: 'row' }]}>
+        <View style={numberStyle}>
           {animateToNumbersArr.map((n, index) => {
             return (
               <AnimatedDigit
@@ -45,7 +49,7 @@ export const AnimatedNumber = (props: AnimatedNumberProps): JSX.Element => {
           })}
         </View>
       ) : (
-        <Text style={[textStyle, { position: 'absolute', top: -999999 }]} onLayout={handleDigitLayout}>
+        <Text style={zeroStyle} onLayout={handleDigitLayout}>
           0
         </Text>
       )}
@@ -72,6 +76,9 @@ interface AnimatedDigitProps {
 const AnimatedDigit = (props: AnimatedDigitProps): JSX.Element => {
   const { animationDuration, digit, easing, textStyle, index, numberHeight } = props
   const animY = useSharedValue(0)
+  const textStyleProp: StyleProp<ViewStyle> = useMemo(() => [textStyle, { height: numberHeight }], [numberHeight, textStyle])
+  const containerStyle: StyleProp<ViewStyle> = useMemo(() => ({ height: numberHeight, overflow: 'hidden' }), [numberHeight])
+  const styles = getStyles(useTheme())
 
   if (!isIntegerDigit(digit)) {
     animY.value = withTiming(0, { duration: animationDuration, easing })
@@ -91,21 +98,28 @@ const AnimatedDigit = (props: AnimatedDigitProps): JSX.Element => {
   })
   if (!isIntegerDigit(digit)) {
     return (
-      <Text key={index} style={[textStyle, { height: numberHeight }]}>
+      <Text key={index} style={textStyleProp}>
         {digit}
       </Text>
     )
   }
 
   return (
-    <View key={index} style={{ height: numberHeight, overflow: 'hidden' }}>
+    <View key={index} style={containerStyle}>
       <Animated.View style={animStyle}>
         {NUMBERS.map(number => (
-          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} key={number}>
-            <Text style={[textStyle, { height: numberHeight }]}>{number}</Text>
+          <View style={styles.textContainer} key={number}>
+            <Text style={textStyleProp}>{number}</Text>
           </View>
         ))}
       </Animated.View>
     </View>
   )
 }
+const getStyles = cacheStyles((theme: Theme) => ({
+  textContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+}))

@@ -62,13 +62,13 @@ export const CryptoIconUi4 = (props: Props) => {
     const source = { uri: primaryCurrencyIconUrl }
 
     // Return Currency logo from the edge server
-    return <FastImage style={StyleSheet.absoluteFill} source={source} />
+    return source
   }, [primaryCurrencyIconUrl])
 
   // Secondary (parent) currency icon (if it's a token)
   const secondaryCurrencyIcon = React.useMemo(() => {
     if (compromised) {
-      return <FastImage source={compromisedIcon} style={styles.parentIcon} />
+      return compromisedIcon
     }
 
     // Skip if this is not a token:
@@ -80,9 +80,9 @@ export const CryptoIconUi4 = (props: Props) => {
     const icon = getCurrencyIconUris(pluginId, null)
     const source = { uri: mono ? icon.symbolImageDarkMono : icon.symbolImage }
 
+    return source
     // Return Parent logo from the edge server
-    return <FastImage style={styles.parentIcon} source={source} />
-  }, [compromised, mono, pluginId, styles.parentIcon, tokenId])
+  }, [compromised, mono, pluginId, tokenId])
 
   // Main view styling
   const spacingStyle = React.useMemo(
@@ -94,13 +94,16 @@ export const CryptoIconUi4 = (props: Props) => {
     [marginRem, size, theme]
   )
 
-  const shadowStyle = {
-    height: size,
-    width: size,
-    borderRadius: size / 2,
-    backgroundColor: theme.iconShadow.shadowColor,
-    ...theme.iconShadow
-  }
+  const shadowStyle = React.useMemo(
+    () => ({
+      height: size,
+      width: size,
+      borderRadius: size / 2,
+      backgroundColor: theme.iconShadow.shadowColor,
+      ...theme.iconShadow
+    }),
+    [size, theme]
+  )
 
   return (
     <View style={spacingStyle}>
@@ -113,8 +116,8 @@ export const CryptoIconUi4 = (props: Props) => {
         />
       )}
       <ShadowedView style={shadowStyle}>
-        {primaryCurrencyIcon}
-        {hideSecondary ? null : secondaryCurrencyIcon}
+        {primaryCurrencyIcon != null ? <FastImage style={StyleSheet.absoluteFill} source={primaryCurrencyIcon} /> : null}
+        {hideSecondary ? null : secondaryCurrencyIcon != null ? <FastImage style={styles.parentIcon} source={secondaryCurrencyIcon} /> : null}
       </ShadowedView>
     </View>
   )

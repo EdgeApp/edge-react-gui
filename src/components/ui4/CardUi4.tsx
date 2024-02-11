@@ -92,6 +92,8 @@ export const CardUi4 = (props: Props) => {
       }
     }
   })
+  const imageSrc = React.useMemo(() => (typeof icon === 'string' ? { uri: icon } : { uri: '' }), [icon])
+  const viewStyle = React.useMemo(() => [styles.cardContainer, margin, padding, fillStyle], [styles.cardContainer, margin, padding, fillStyle])
 
   const nonNullChildren = React.Children.toArray(children).filter(child => child != null && React.isValidElement(child))
   if (nonNullChildren.length === 0) return null
@@ -105,7 +107,7 @@ export const CardUi4 = (props: Props) => {
 
   const maybeIcon =
     icon == null ? null : (
-      <View style={styles.iconContainer}>{typeof icon === 'string' ? <FastImage source={{ uri: icon }} style={styles.iconBuiltin} /> : icon}</View>
+      <View style={styles.iconContainer}>{typeof icon === 'string' ? <FastImage source={imageSrc} style={styles.iconBuiltin} /> : icon}</View>
     )
 
   const content = sections ? <SectionView>{children}</SectionView> : children
@@ -140,11 +142,11 @@ export const CardUi4 = (props: Props) => {
     )
 
   return isPressable ? (
-    <TouchableOpacity accessible={false} onPress={handlePress} onLongPress={handleLongPress} style={[styles.cardContainer, margin, padding, fillStyle]}>
+    <TouchableOpacity accessible={false} onPress={handlePress} onLongPress={handleLongPress} style={viewStyle}>
       {allContent}
     </TouchableOpacity>
   ) : (
-    <View style={[styles.cardContainer, margin, padding, fillStyle]}>{allContent}</View>
+    <View style={viewStyle}>{allContent}</View>
   )
 }
 

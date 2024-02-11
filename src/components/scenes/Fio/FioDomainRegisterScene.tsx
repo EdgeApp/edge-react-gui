@@ -8,7 +8,7 @@ import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
-import { EdgeAnim } from '../../common/EdgeAnim'
+import { EdgeAnim, fadeIn, fadeOut } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
@@ -197,7 +197,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
     if (isValid && isAvailable && !loading) {
       return (
-        <EdgeAnim enter={{ type: 'fadeIn' }} exit={{ type: 'fadeOut' }}>
+        <EdgeAnim enter={fadeIn} exit={fadeOut}>
           <MainButton
             marginRem={1}
             label={walletLoading ? '' : lstrings.string_next_capitalized}
@@ -266,7 +266,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
             </RowUi4>
           </CardUi4>
 
-          <EdgeAnim visible={chooseHandleErrorMessage !== ''} enter={{ type: 'fadeIn' }} exit={{ type: 'fadeOut' }}>
+          <EdgeAnim visible={chooseHandleErrorMessage !== ''} enter={fadeIn} exit={fadeOut}>
             <AlertCardUi4 title={chooseHandleErrorMessage} type="error" />
           </EdgeAnim>
 

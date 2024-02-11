@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { infoServerData } from '../../util/network'
 import { getOsVersion } from '../../util/utils'
-import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeAnim, fadeInUp110 } from '../common/EdgeAnim'
 import { useTheme } from '../services/ThemeContext'
 import { CarouselUi4 } from './CarouselUi4'
 import { FilteredPromoCard, PromoCardUi4 } from './PromoCardUi4'
@@ -52,11 +52,11 @@ export const PromoCardsUi4 = (props: Props) => {
     }
     return <PromoCardUi4 navigation={navigation} promoInfo={item} onClose={handleClose} />
   })
+  const style = React.useMemo(() => ({ height: theme.rem(11.5) }), [theme])
 
   if (activeCards == null || activeCards.length === 0) return null
-
   return (
-    <EdgeAnim style={{ height: theme.rem(11.5) }} enter={{ type: 'fadeInUp', distance: 110 }}>
+    <EdgeAnim style={style} enter={fadeInUp110}>
       <CarouselUi4 data={activeCards} keyExtractor={keyExtractor} renderItem={renderItem} height={theme.rem(9.75)} width={screenWidth} />
     </EdgeAnim>
   )

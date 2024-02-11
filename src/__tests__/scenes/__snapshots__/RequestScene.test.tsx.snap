@@ -44,10 +44,10 @@ exports[`Request should render with loaded props 1`] = `
       }
     }
   >
-    <EdgeAnim
+    <Memo(EdgeAnimInner)
       enter={
         {
-          "distance": 75,
+          "distance": 80,
           "type": "fadeInUp",
         }
       }
@@ -79,8 +79,8 @@ exports[`Request should render with loaded props 1`] = `
       >
         1 undefined
       </EdgeText>
-    </EdgeAnim>
-    <EdgeAnim
+    </Memo(EdgeAnimInner)>
+    <Memo(EdgeAnimInner)
       enter={
         {
           "distance": 50,
@@ -135,8 +135,8 @@ exports[`Request should render with loaded props 1`] = `
           }
         />
       </EdgeText>
-    </EdgeAnim>
-    <EdgeAnim
+    </Memo(EdgeAnimInner)>
+    <Memo(EdgeAnimInner)
       enter={
         {
           "distance": 25,
@@ -157,14 +157,14 @@ exports[`Request should render with loaded props 1`] = `
           tokenId={null}
         />
       </CardUi4>
-    </EdgeAnim>
+    </Memo(EdgeAnimInner)>
     <Carousel
       items={[]}
       keyExtractor={[Function]}
       onChangeItem={[Function]}
       renderItem={[Function]}
     />
-    <EdgeAnim
+    <Memo(EdgeAnimInner)
       enter={
         {
           "distance": 50,
@@ -205,9 +205,9 @@ exports[`Request should render with loaded props 1`] = `
           Loading…
         </EdgeText>
       </TouchableOpacity>
-    </EdgeAnim>
+    </Memo(EdgeAnimInner)>
   </View>
-  <EdgeAnim
+  <Memo(EdgeAnimInner)
     enter={
       {
         "distance": 75,
@@ -220,7 +220,7 @@ exports[`Request should render with loaded props 1`] = `
       openFioAddressModal={[Function]}
       openShareModal={[Function]}
     />
-  </EdgeAnim>
+  </Memo(EdgeAnimInner)>
 </Memo(SceneWrapperComponent)>
 `;
 

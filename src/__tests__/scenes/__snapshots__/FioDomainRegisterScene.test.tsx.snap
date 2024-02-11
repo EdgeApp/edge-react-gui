@@ -108,7 +108,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
         </View>
       </RowUi4>
     </CardUi4>
-    <EdgeAnim
+    <Memo(EdgeAnimInner)
       enter={
         {
           "type": "fadeIn",
@@ -125,7 +125,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
         title=""
         type="error"
       />
-    </EdgeAnim>
+    </Memo(EdgeAnimInner)>
   </View>
 </Memo(SceneWrapperComponent)>
 `;

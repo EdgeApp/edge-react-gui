@@ -16,7 +16,7 @@ import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../types/types'
 import { getTokenId, getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, zeroString } from '../../util/utils'
-import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeAnim, fadeInDown30, fadeInDown60, fadeInDown90, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
@@ -294,10 +294,10 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
 
     return (
       <View style={styles.sceneContainer}>
-        <EdgeAnim style={styles.header} enter={{ type: 'fadeInUp', distance: 90 }}>
+        <EdgeAnim style={styles.header} enter={fadeInUp90}>
           <SceneHeader title={lstrings.title_exchange} underline />
         </EdgeAnim>
-        <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
+        <EdgeAnim enter={fadeInUp60}>
           <CryptoExchangeFlipInputWrapper
             walletId={this.props.fromWalletId}
             buttonText={lstrings.select_src_wallet}
@@ -316,7 +316,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
         <EdgeAnim>
           <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
         </EdgeAnim>
-        <EdgeAnim enter={{ type: 'fadeInDown', distance: 30 }}>
+        <EdgeAnim enter={fadeInDown30}>
           <CryptoExchangeFlipInputWrapper
             walletId={this.props.toWalletId}
             buttonText={lstrings.select_recv_wallet}
@@ -330,8 +330,8 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             onNext={this.handleNext}
           />
         </EdgeAnim>
-        <EdgeAnim enter={{ type: 'fadeInDown', distance: 60 }}>{this.renderAlert()}</EdgeAnim>
-        <EdgeAnim enter={{ type: 'fadeInDown', distance: 90 }}>{this.renderButton()}</EdgeAnim>
+        <EdgeAnim enter={fadeInDown60}>{this.renderAlert()}</EdgeAnim>
+        <EdgeAnim enter={fadeInDown90}>{this.renderButton()}</EdgeAnim>
       </View>
     )
   }

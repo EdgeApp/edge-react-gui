@@ -164,7 +164,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         }
       />
     </View>
-    <EdgeAnim
+    <Memo(EdgeAnimInner)
       enter={
         {
           "type": "fadeIn",
@@ -181,7 +181,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         title=""
         type="error"
       />
-    </EdgeAnim>
+    </Memo(EdgeAnimInner)>
     <View
       style={
         {

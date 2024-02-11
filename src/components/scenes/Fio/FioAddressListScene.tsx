@@ -11,7 +11,7 @@ import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { FioAddress, FioDomain } from '../../../types/types'
-import { EdgeAnim } from '../../common/EdgeAnim'
+import { EdgeAnim, fadeIn, fadeOut } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioNameRow } from '../../FioAddress/FioName'
 import { FullScreenLoader } from '../../progress-indicators/FullScreenLoader'
@@ -145,7 +145,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
                 />
               ))}
             </View>
-            <EdgeAnim visible={loading && !initLoading} enter={{ type: 'fadeIn' }} exit={{ type: 'fadeOut' }}>
+            <EdgeAnim visible={loading && !initLoading} enter={fadeIn} exit={fadeOut}>
               <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="large" />
             </EdgeAnim>
           </ScrollView>

@@ -115,21 +115,17 @@ exports[`BalanceCard should render with loading props 1`] = `
               "color": "#00f1a2",
               "fontSize": 22,
             },
-            [
-              {
-                "alignSelf": "center",
-                "marginLeft": 6,
-                "marginRight": 0,
+            {
+              "alignSelf": "center",
+              "marginLeft": 6,
+              "marginRight": 0,
+              "textShadowColor": "rgba(0, 0, 0, 0.514)",
+              "textShadowOffset": {
+                "height": 0,
+                "width": 0,
               },
-              {
-                "textShadowColor": "rgba(0, 0, 0, 0.514)",
-                "textShadowOffset": {
-                  "height": 0,
-                  "width": 0,
-                },
-                "textShadowRadius": 3,
-              },
-            ],
+              "textShadowRadius": 3,
+            },
             {
               "fontFamily": "Ionicons",
               "fontStyle": "normal",
@@ -163,21 +159,17 @@ exports[`BalanceCard should render with loading props 1`] = `
               "fontSize": 22,
               "includeFontPadding": false,
             },
-            [
-              {
-                "height": 51,
-                "marginBottom": 11,
-                "marginTop": 6,
+            {
+              "height": 51,
+              "marginBottom": 11,
+              "marginTop": 6,
+              "textShadowColor": "rgba(0, 0, 0, 0.514)",
+              "textShadowOffset": {
+                "height": 0,
+                "width": 0,
               },
-              {
-                "textShadowColor": "rgba(0, 0, 0, 0.514)",
-                "textShadowOffset": {
-                  "height": 0,
-                  "width": 0,
-                },
-                "textShadowRadius": 3,
-              },
-            ],
+              "textShadowRadius": 3,
+            },
             null,
           ]
         }
