@@ -1476,6 +1476,7 @@
   "getting_started_button_sign_in": "Já tem uma conta? Entrar",
   "getting_started_slide_1_footnote": "Os usuários podem acessar frases seed dentro do aplicativo a seu critério.",
   "getting_started_slide_1_message": "Diga adeus à escrita de ‘backups’ inseguros em papel. Com a criptografia do lado do cliente, backup automático de contas e 2FA, Edge simplifica a auto-custódia para todos.",
+  "getting_started_slide_1_message_alt": "Easily recover your Edge wallet and benefit from the added protection of two-factor authentication. Edge simplifies self-custody for everyone.",
   "getting_started_slide_1_title": "Não se preocupe,\n*Estamos aqui*",
   "getting_started_slide_2_message": "O Edge não tem acesso aos fundos do usuário, o que significa que não há congelamento de conta ou confisco de ativos. Compre, venda e negocie com tranquilidade.",
   "getting_started_slide_2_title": "São os seus Ativos\nVocê está no *Controle*",
