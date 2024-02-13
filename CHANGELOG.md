@@ -25,14 +25,14 @@
 - fixed: Make FilledTextInputs take up constant vertical space
 - removed: swipeLastUsp experiment (always allow swipes on the last USP)
 
-## 4.0.1
+## 4.0.1 (2024-02-04)
 
 - fixed: Missing background blurred dots on most scenes
 - fixed: Missing promo cards when multiple are on info server
 - fixed: Hidden Next button on Change PIN scene
 - fixed: Disable auto-capitalization of username when creating account
 
-## 4.0.0
+## 4.0.0 (2024-02-02)
 
 - added: `minerTip` to `feeRateUsed` processing
 - added: Make the alert drop-down swipeable.
