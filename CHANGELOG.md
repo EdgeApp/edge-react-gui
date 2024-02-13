@@ -3,6 +3,8 @@
 ## Unreleased
 
 - added: ACH buy/sell through Kado
+- added: Arbitrum One network support
+- added: Base network support
 - changed: Animate buy/sell scenes
 - changed: Require Android 9 or above.
 - changed: Reword of the CrashScene to help users to force close (not uninstall) Edge

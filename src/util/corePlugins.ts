@@ -4,7 +4,9 @@ import { ENV } from '../env'
 
 export const currencyPlugins: EdgeCorePluginsInit = {
   // edge-currency-accountbased:
+  arbitrum: ENV.ARBITRUM_INIT,
   algorand: true,
+  base: ENV.BASE_INIT,
   binance: true,
   binancesmartchain: ENV.BINANCE_SMART_CHAIN_INIT,
   hedera: true,

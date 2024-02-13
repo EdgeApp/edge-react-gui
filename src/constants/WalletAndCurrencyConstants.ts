@@ -329,6 +329,32 @@ export const SPECIAL_CURRENCY_INFO: {
       reference: '1'
     }
   },
+  arbitrum: {
+    initWalletName: lstrings.string_first_arbitrum_wallet_name,
+    chainCode: 'ETH',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    isImportKeySupported: true,
+    isCustomTokensSupported: true,
+    isPaymentProtocolSupported: false,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '42161'
+    }
+  },
+  base: {
+    initWalletName: lstrings.string_first_base_wallet_name,
+    chainCode: 'ETH',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    isImportKeySupported: true,
+    isCustomTokensSupported: true,
+    isPaymentProtocolSupported: false,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '8453'
+    }
+  },
   filecoin: {
     initWalletName: lstrings.string_first_filecoin_wallet_name,
     chainCode: 'FIL',

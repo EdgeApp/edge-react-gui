@@ -108,7 +108,9 @@ export const asEnvConfig = asObject({
   STAKEKIT_API_KEY: asNullable(asString),
 
   // Core plugin options:
+  ARBITRUM_INIT: asCorePluginInit(asEvmApiKeys),
   AVALANCHE_INIT: asCorePluginInit(asEvmApiKeys),
+  BASE_INIT: asCorePluginInit(asEvmApiKeys),
   BINANCE_SMART_CHAIN_INIT: asCorePluginInit(asEvmApiKeys),
   CHANGE_NOW_INIT: asCorePluginInit(
     asObject({
