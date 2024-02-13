@@ -25,6 +25,7 @@
 - fixed: Resolved levitating search bar bug on Android
 - fixed: Show a useful, localized error message when device doesn't have an email account
 - fixed: Make FilledTextInputs take up constant vertical space
+- fixed: Send Recipient Address Modal styling when saved recipients are shown
 - removed: swipeLastUsp experiment (always allow swipes on the last USP)
 
 ## 4.0.2 (2024-02-13)
