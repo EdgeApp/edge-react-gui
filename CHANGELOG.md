@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Sell to debit card for UK and AU
 - added: ACH buy/sell through Kado
 - added: Arbitrum One network support
 - added: Base network support

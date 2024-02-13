@@ -28,7 +28,7 @@
     "paymentTypes": ["credit"],
     "title": "Bank Transfer via Debit Card",
     "description": "Fee: 4.0%\nSettlement: 5 min - 24 hours",
-    "forCountries": ["US"],
+    "forCountries": ["US", "UK", "AU"],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },
