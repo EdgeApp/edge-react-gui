@@ -7,6 +7,7 @@ import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { fioMakeSpend, fioSignAndBroadcast } from '../../../util/FioAddressUtils'
+import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
 import { ButtonsModal } from '../../modals/ButtonsModal'
@@ -23,7 +24,11 @@ interface StateProps {
 
 interface OwnProps extends EdgeSceneProps<'fioDomainConfirm' | 'fioNameConfirm'> {}
 
-type Props = StateProps & OwnProps & ThemeProps
+interface DispatchProps {
+  onLogEvent: (event: TrackingEventName, values: TrackingValues) => void
+}
+
+type Props = StateProps & OwnProps & ThemeProps & DispatchProps
 
 const ONE_FREE_ADDRESS_PER_DOMAIN_ERROR = 'ONE_FREE_ADDRESS_PER_DOMAIN_ERROR'
 
@@ -39,7 +44,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
   }
 
   saveFioName = async () => {
-    const { navigation, route } = this.props
+    const { navigation, route, onLogEvent } = this.props
     const { fioName, paymentWallet, ownerPublicKey, fee } = route.params
 
     const { isConnected, fioPlugin } = this.props
@@ -106,10 +111,18 @@ class FioNameConfirm extends React.PureComponent<Props> {
       }
     } else {
       try {
+        const { currencyCode, pluginId } = paymentWallet.currencyInfo
         if (this.isFioAddress()) {
           let edgeTx = await fioMakeSpend(paymentWallet, 'registerFioAddress', { fioAddress: fioName })
           edgeTx = await fioSignAndBroadcast(paymentWallet, edgeTx)
           await paymentWallet.saveTx(edgeTx)
+
+          onLogEvent('Fio_Handle_Register', {
+            nativeAmount: edgeTx.nativeAmount,
+            currencyCode,
+            pluginId
+          })
+
           // @ts-expect-error
           window.requestAnimationFrame(() =>
             navigation.navigate('fioAddressRegisterSuccess', {
@@ -121,6 +134,13 @@ class FioNameConfirm extends React.PureComponent<Props> {
           edgeTx = await fioSignAndBroadcast(paymentWallet, edgeTx)
           await paymentWallet.saveTx(edgeTx)
           const expiration = edgeTx.otherParams?.broadcastResult?.expiration
+
+          onLogEvent('Fio_Domain_Register', {
+            nativeAmount: edgeTx.nativeAmount,
+            currencyCode,
+            pluginId
+          })
+
           // @ts-expect-error
           window.requestAnimationFrame(() =>
             navigation.navigate('fioAddressRegisterSuccess', {
@@ -174,10 +194,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioNameConfirmScene = connect<StateProps, {}, OwnProps>(
+export const FioNameConfirmScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     fioPlugin: state.core.account.currencyConfig.fio,
     isConnected: state.network.isConnected
   }),
-  dispatch => ({})
+  dispatch => ({
+    onLogEvent(event: TrackingEventName, values: TrackingValues) {
+      dispatch(logEvent(event, values))
+    }
+  })
 )(withTheme(FioNameConfirm))

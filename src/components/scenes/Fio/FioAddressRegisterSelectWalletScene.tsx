@@ -15,6 +15,7 @@ import { EdgeAsset } from '../../../types/types'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getRegInfo } from '../../../util/FioAddressUtils'
+import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { Airship, showError } from '../../services/AirshipInstance'
@@ -39,6 +40,7 @@ interface OwnProps extends EdgeSceneProps<'fioAddressRegisterSelectWallet'> {}
 
 interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string) => void
+  onLogEvent: (event: TrackingEventName, values: TrackingValues) => void
 }
 
 interface LocalState {
@@ -131,7 +133,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
   }
 
   proceed = async (walletId: string, paymentCurrencyCode: string) => {
-    const { isConnected, state, navigation, route } = this.props
+    const { isConnected, state, navigation, route, onLogEvent } = this.props
     const { selectedWallet, fioAddress } = route.params
     const { feeValue, paymentInfo: allPaymentInfo } = this.state
     const { account } = state.core
@@ -152,7 +154,8 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
 
         const wallet = account.currencyWallets[walletId]
         const exchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, paymentCurrencyCode)
-        let nativeAmount = mul(allPaymentInfo[paymentCurrencyCode].amount, exchangeDenomination.multiplier)
+        const exchangeAmount = allPaymentInfo[paymentCurrencyCode].amount
+        let nativeAmount = mul(exchangeAmount, exchangeDenomination.multiplier)
         nativeAmount = toFixed(nativeAmount, 0, 0)
 
         const tokenId = getTokenIdForced(account, wallet.currencyInfo.pluginId, paymentCurrencyCode)
@@ -189,6 +192,9 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
                 sprintf(lstrings.fio_address_register_pending, lstrings.fio_address_register_form_field_label),
                 [{ text: lstrings.string_ok_cap }]
               )
+
+              const { currencyCode, pluginId } = wallet.currencyInfo
+              onLogEvent('Fio_Handle_Register', { nativeAmount, pluginId, currencyCode })
               navigation.navigate('homeTab', { screen: 'home' })
             }
           }
@@ -290,6 +296,9 @@ export const FioAddressRegisterSelectWalletScene = connect<StateProps, DispatchP
         type: 'UI/WALLETS/SELECT_WALLET',
         data: { currencyCode, walletId }
       })
+    },
+    onLogEvent(event: TrackingEventName, values: TrackingValues) {
+      dispatch(logEvent(event, values))
     }
   })
 )(withTheme(FioAddressRegisterSelectWallet))

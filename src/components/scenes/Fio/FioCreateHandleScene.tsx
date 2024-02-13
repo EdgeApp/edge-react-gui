@@ -16,6 +16,7 @@ import { lstrings } from '../../../locales/strings'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getFioCustomizeHandleImage } from '../../../util/CdnUris'
+import { logEvent } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { showError, showToast } from '../../services/AirshipInstance'
 import { Theme, useTheme } from '../../services/ThemeContext'
@@ -45,6 +46,9 @@ const asFreeFioDomain = asObject({
   free: asValue(true)
 })
 
+/**
+ * 'Personalize Your Wallet' Scene for creating a free FIO handles for new users (via FioCreateHandleModal)
+ */
 export const FioCreateHandleScene = (props: Props) => {
   const { navigation, route } = props
   const { freeRegApiToken, freeRegRefCode } = route.params
@@ -125,6 +129,9 @@ export const FioCreateHandleScene = (props: Props) => {
 
         await dispatch(refreshAllFioAddresses())
         showToast(lstrings.fio_free_handle_complete)
+
+        await dispatch(logEvent('Fio_Handle_Register', { dollarValue: 3 }))
+
         navigation.pop()
       } catch (e: any) {
         // Rejected somehow, see if error is readable

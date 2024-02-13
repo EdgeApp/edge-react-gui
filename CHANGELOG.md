@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: FIO conversion analytics events.
 - added: Referral information on all analytics events.
 - added: Sell to debit card for UK and AU
 - added: ACH buy/sell through Kado

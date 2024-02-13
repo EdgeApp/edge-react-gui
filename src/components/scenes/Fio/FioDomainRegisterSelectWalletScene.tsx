@@ -16,6 +16,7 @@ import { EdgeAsset } from '../../../types/types'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getDomainRegInfo } from '../../../util/FioAddressUtils'
+import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
@@ -42,6 +43,7 @@ interface OwnProps extends EdgeSceneProps<'fioDomainRegisterSelectWallet'> {}
 
 interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string) => void
+  onLogEvent: (event: TrackingEventName, values: TrackingValues) => void
 }
 
 interface LocalState {
@@ -121,7 +123,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   }
 
   onNextPress = (): void => {
-    const { isConnected, state, navigation, route } = this.props
+    const { isConnected, state, navigation, route, onLogEvent: logEvent } = this.props
     const { fioDomain, selectedWallet } = route.params
     const { feeValue, paymentInfo: allPaymentInfo, paymentWallet } = this.state
     const { account } = state.core
@@ -185,6 +187,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
                   buttons={{ ok: { label: lstrings.string_ok_cap } }}
                 />
               )).catch(err => showError(err))
+              logEvent('Fio_Domain_Register', { exchangeAmount: String(feeValue), currencyCode: paymentWallet.currencyCode })
               navigation.navigate('homeTab', { screen: 'home' })
             }
           }
@@ -286,6 +289,9 @@ export const FioDomainRegisterSelectWalletScene = connect<StateProps, DispatchPr
         type: 'UI/WALLETS/SELECT_WALLET',
         data: { currencyCode, walletId }
       })
+    },
+    onLogEvent(event: TrackingEventName, values: TrackingValues) {
+      dispatch(logEvent(event, values))
     }
   })
 )(withTheme(FioDomainRegisterSelectWallet))

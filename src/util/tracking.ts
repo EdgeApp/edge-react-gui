@@ -1,5 +1,6 @@
 import Bugsnag from '@bugsnag/react-native'
 import analytics from '@react-native-firebase/analytics'
+import { div } from 'biggystring'
 import { TrackingEventName as LoginTrackingEventName, TrackingValues as LoginTrackingValues } from 'edge-login-ui-rn/lib/util/analytics'
 import PostHog from 'posthog-react-native'
 import { getBuildNumber, getUniqueId, getVersion } from 'react-native-device-info'
@@ -7,12 +8,13 @@ import { getBuildNumber, getUniqueId, getVersion } from 'react-native-device-inf
 import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { ENV } from '../env'
 import { ExperimentConfig, getExperimentConfig } from '../experimentConfig'
+import { getExchangeDenomination } from '../selectors/DenominationSelectors'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
 import { asBiggystring } from './cleaners'
 import { fetchReferral } from './network'
 import { makeErrorLog } from './translateError'
-import { consify } from './utils'
+import { consify, mulToPrecision } from './utils'
 export type TrackingEventName =
   | 'Activate_Wallet_Cancel'
   | 'Activate_Wallet_Done'
@@ -30,6 +32,10 @@ export type TrackingEventName =
   | 'Exchange_Shift_Quote'
   | 'Exchange_Shift_Start'
   | 'Exchange_Shift_Success'
+  | 'Fio_Domain_Register'
+  | 'Fio_Domain_Renew'
+  | 'Fio_Handle_Register'
+  | 'Fio_Handle_Bundled_Tx'
   | 'Load_Install_Reason_Match'
   | 'Load_Install_Reason_Fail'
   | 'Sell_Quote'
@@ -47,8 +53,7 @@ export type TrackingEventName =
   | 'Start_App_With_Accounts'
   | 'purchase'
   | 'Visa_Card_Launch'
-  // No longer used:
-  | 'Earn_Spend_Launch'
+  | 'Earn_Spend_Launch' // No longer used
   | LoginTrackingEventName
 
 export type OnLogEvent = (event: TrackingEventName, values?: TrackingValues) => void
@@ -68,6 +73,7 @@ export interface TrackingValues extends LoginTrackingValues {
   sourcePluginId?: string // currency pluginId of dest asset
   numAccounts?: number // Number of full accounts saved on the device
   exchangeAmount?: string
+  nativeAmount?: string
 }
 
 // Set up the global Firebase analytics instance at boot:
@@ -134,7 +140,7 @@ export function trackError(
  */
 export function logEvent(event: TrackingEventName, values: TrackingValues = {}): ThunkAction<void> {
   return async (dispatch, getState) => {
-    const { currencyCode, dollarValue, pluginId, error, exchangeAmount, sourceExchangeAmount, destExchangeAmount } = values
+    const { currencyCode, dollarValue, pluginId, error, exchangeAmount, nativeAmount, sourceExchangeAmount, destExchangeAmount } = values
     getExperimentConfig()
       .then(async (experimentConfig: ExperimentConfig) => {
         // Persistent & Unchanged params:
@@ -161,25 +167,43 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
           params.currency = 'USD'
           params.value = Number(dollarValue.toFixed(2))
           params.items = [String(event)]
-        } else if (exchangeAmount != null && currencyCode != null) {
-          // Else, calculate the dollar value from exchangeAmount, if given
-          params.value = parseFloat(
-            convertCurrency(state, currencyCode, 'iso:USD', typeof destExchangeAmount === 'string' ? destExchangeAmount : String(destExchangeAmount))
-          )
-        } else if (sourceExchangeAmount != null) {
-          try {
-            asBiggystring(sourceExchangeAmount)
-          } catch (e) {
-            trackError('Error in tracking sourceExchangeAmount: ' + JSON.stringify({ event, values }))
+        } else if (currencyCode != null) {
+          // Else, calculate the dollar value from crypto amounts, if required props given
+          if (nativeAmount != null && pluginId != null) {
+            try {
+              asBiggystring(nativeAmount)
+            } catch (e) {
+              trackError('Error in tracking nativeAmount: ' + JSON.stringify({ event, values }))
+            }
+            const { multiplier } = getExchangeDenomination(state, pluginId, currencyCode)
+            params.value = div(nativeAmount, multiplier, mulToPrecision(multiplier))
+          } else if (exchangeAmount != null) {
+            params.value = parseFloat(
+              convertCurrency(state, currencyCode, 'iso:USD', typeof destExchangeAmount === 'string' ? destExchangeAmount : String(destExchangeAmount))
+            )
+          } else if (sourceExchangeAmount != null) {
+            try {
+              asBiggystring(sourceExchangeAmount)
+            } catch (e) {
+              trackError('Error in tracking sourceExchangeAmount: ' + JSON.stringify({ event, values }))
+            }
+            params.sourceExchangeAmount = sourceExchangeAmount
+          } else if (destExchangeAmount != null) {
+            try {
+              asBiggystring(destExchangeAmount)
+            } catch (e) {
+              trackError('Error in tracking destExchangeAmount: ' + JSON.stringify({ event, values }))
+            }
+            params.destExchangeAmount = destExchangeAmount
+            try {
+              asBiggystring(exchangeAmount)
+            } catch (e) {
+              trackError('Error in tracking exchangeAmount: ' + JSON.stringify({ event, values }))
+            }
+            params.value = convertCurrency(state, currencyCode, 'iso:USD', exchangeAmount)
+          } else {
+            console.warn('Unable to calculate dollar value for event:', event, values)
           }
-          params.sourceExchangeAmount = sourceExchangeAmount
-        } else if (destExchangeAmount != null) {
-          try {
-            asBiggystring(destExchangeAmount)
-          } catch (e) {
-            trackError('Error in tracking destExchangeAmount: ' + JSON.stringify({ event, values }))
-          }
-          params.destExchangeAmount = destExchangeAmount
         }
         if (pluginId != null) params.plugin = pluginId
         if (error != null) params.error = makeErrorLog(error)

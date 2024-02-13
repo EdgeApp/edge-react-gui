@@ -30,6 +30,7 @@ describe('FioAddressSettingsComponent', () => {
         isConnected
         refreshAllFioAddresses={async () => {}}
         theme={getTheme()}
+        onLogEvent={() => {}}
       />
     )
 
