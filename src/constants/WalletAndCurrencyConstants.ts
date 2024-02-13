@@ -483,6 +483,17 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX',
     isImportKeySupported: true
   },
+  axelar: {
+    initWalletName: lstrings.string_first_axelar_wallet_name,
+    chainCode: 'AXL',
+    dummyPublicAddress: 'axelar1hap5ld4fl82wjn67j96unpgee5yxh0njs0eswf',
+    isStakingSupported: false,
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'cosmos',
+      reference: 'axelar-dojo-1'
+    }
+  },
   coreum: {
     initWalletName: lstrings.string_first_coreum_wallet_name,
     chainCode: 'COREUM',
@@ -492,6 +503,17 @@ export const SPECIAL_CURRENCY_INFO: {
     walletConnectV2ChainId: {
       namespace: 'cosmos',
       reference: 'coreum-mainnet-1'
+    }
+  },
+  cosmoshub: {
+    initWalletName: lstrings.string_first_cosmoshub_wallet_name,
+    chainCode: 'ATOM',
+    dummyPublicAddress: 'cosmos1ucnamh638lpgqraetdmcaxk0gz79t4k2akytvf',
+    isStakingSupported: false,
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'cosmos',
+      reference: 'cosmoshub-4'
     }
   },
   osmosis: {

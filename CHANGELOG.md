@@ -6,6 +6,8 @@
 - added: ACH buy/sell through Kado
 - added: Arbitrum One network support
 - added: Base network support
+- added: Cosmos Hub (ATOM) support
+- added: Axelar (AXL) support
 - added: Add WalletConnect support for Cosmos-based chains
 - changed: Animate buy/sell scenes
 - changed: Require Android 9 or above.
