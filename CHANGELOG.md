@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.1.0
+
 - added: FIO conversion analytics events.
 - added: Referral information on all analytics events.
 - added: Sell to debit card for UK and AU
