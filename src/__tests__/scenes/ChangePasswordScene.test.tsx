@@ -2,18 +2,23 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
-import { ChangePasswordComponent } from '../../components/scenes/ChangePasswordScene'
+import { ChangePasswordScene } from '../../components/scenes/ChangePasswordScene'
+import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
+import { fakeRootState } from '../../util/fake/fakeRootState'
 import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
-describe('ChangePasswordComponent', () => {
+describe('ChangePasswordScene', () => {
   it('should render with loading props', () => {
     const renderer = createRenderer()
+    const rootState: FakeState = { ...fakeRootState, core: { account: {}, context: { appId: '' } } }
 
-    const fakeAccount: any = {}
-    const fakeContext: any = { apiKey: '', appId: '' }
-
-    const actual = renderer.render(<ChangePasswordComponent {...fakeSceneProps('changePassword', {})} account={fakeAccount} context={fakeContext} />)
+    const actual = renderer.render(
+      <FakeProviders initialState={rootState}>
+        <ChangePasswordScene {...fakeSceneProps('changePassword', {})} />
+      </FakeProviders>
+    )
 
     expect(actual).toMatchSnapshot()
+    renderer.unmount()
   })
 })

@@ -26,7 +26,7 @@ import { ExperimentConfig } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { ImageProp } from '../../types/Theme'
 import { parseMarkedText } from '../../util/parseMarkedText'
@@ -96,6 +96,7 @@ const sectionsVariantMap: { [key: string]: SectionData[] } = {
 
 export const GettingStartedScene = (props: Props) => {
   const { navigation, route } = props
+  const dispatch = useDispatch()
   const { experimentConfig } = route.params
   const { createAccountType, landingType } = experimentConfig
   const context = useSelector(state => state.core.context)
@@ -123,7 +124,7 @@ export const GettingStartedScene = (props: Props) => {
       swipeOffset.value = 0
     }, 500)
 
-    logEvent('Signup_Welcome')
+    dispatch(logEvent('Signup_Welcome'))
 
     // Either route to password login or account creation
     if (hasLocalUsers) {
@@ -138,12 +139,12 @@ export const GettingStartedScene = (props: Props) => {
   })
 
   const handlePressSignIn = useHandler(() => {
-    logEvent('Welcome_Signin')
+    dispatch(logEvent('Welcome_Signin'))
     navigation.navigate('login', { loginUiInitialRoute: passwordLoginRoute, experimentConfig })
   })
 
   const handlePressSignUp = useHandler(() => {
-    logEvent('Signup_Welcome')
+    dispatch(logEvent('Signup_Welcome'))
     navigation.navigate('login', { loginUiInitialRoute: newAccountRoute, experimentConfig })
   })
 

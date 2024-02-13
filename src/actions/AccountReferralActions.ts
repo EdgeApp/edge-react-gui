@@ -84,9 +84,10 @@ function createAccountReferral(): ThunkAction<Promise<void>> {
       accountPlugins: lockStartDates(plugins, creationDate)
     }
 
-    logEvent('Load_Install_Reason_Match', { installerId })
     dispatch({ type: 'ACCOUNT_REFERRAL_LOADED', data: { cache, referral } })
     await Promise.all([saveAccountReferral(getState()), saveReferralCache(getState())])
+
+    dispatch(logEvent('Load_Install_Reason_Match'))
 
     // Also try activating the same link as a promotion (with silent errors):
     if (installerId != null) {

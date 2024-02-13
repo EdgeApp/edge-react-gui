@@ -101,7 +101,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       return
     }
 
-    if (newAccountFlow != null) logEvent('Signup_Wallets_Selected_Next', { numSelectedWallets: numSelected })
+    if (newAccountFlow != null) dispatch(logEvent('Signup_Wallets_Selected_Next', { numSelectedWallets: numSelected }))
 
     const createItems = createWalletList.filter(item => selectedItems[item.key])
     const { newWalletItems, newTokenItems } = splitCreateWalletItems(createItems)
