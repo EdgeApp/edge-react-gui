@@ -190,7 +190,6 @@
   "wallet_list_referral_link_currency_invalid": "Currency to create is invalid",
   "wallet_list_referral_link_currency_loading": "Hang tight. Creating wallet necessary for this promotion",
   "wallet_list_referral_link_ask_wallet_creation": "You need %s wallet for this promotion, do you want to create one?",
-  "wallet_list_referral_link_cancelled_wallet_creation": "User did not approve creating wallet for the promotion",
   "wallet_list_wallet_search": "Search Wallets",
   "compromised_key_label": "Compromised Key",
   "create_wallet_choice_new_button": "Créer un nouveau portefeuille",
