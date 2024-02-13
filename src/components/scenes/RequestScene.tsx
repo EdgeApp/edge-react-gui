@@ -256,10 +256,12 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
   }
 
   handleOpenWalletListModal = () => {
+    const { navigation } = this.props
     Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={this.props.navigation} />)
       .then(async result => {
         if (result?.type === 'wallet') {
           const { walletId, tokenId } = result
+          navigation.setParams({ tokenId, walletId })
           await this.props.onSelectWallet(this.props.navigation, walletId, tokenId)
 
           if (this.flipInputRef.current != null) {
