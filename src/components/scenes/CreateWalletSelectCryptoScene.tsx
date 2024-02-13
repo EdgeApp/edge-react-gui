@@ -3,11 +3,18 @@ import { Keyboard, ListRenderItemInfo, Switch, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
-import { enableTokensAcrossWallets, MainWalletCreateItem, PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
+import { enableTokensAcrossWallets, PLACEHOLDER_WALLET_ID } from '../../actions/CreateWalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import {
+  filterWalletCreateItemListBySearchText,
+  getCreateWalletList,
+  MainWalletCreateItem,
+  splitCreateWalletItems,
+  WalletCreateItem
+} from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationProp } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
@@ -23,7 +30,6 @@ import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
-import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../themed/WalletList'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 
 export interface CreateWalletSelectCryptoParams {
@@ -72,38 +78,37 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   )
 
   const [selectedItems, setSelectedItems] = React.useState(() => {
-    return createWalletList.reduce((map: { [key: string]: boolean }, item) => {
-      const { key, pluginId, tokenId } = item
-      map[key] = defaultSelection.find(edgeTokenId => edgeTokenId.pluginId === pluginId && edgeTokenId.tokenId === tokenId) != null
-      if (item.walletType === 'wallet:bitcoin-bip44') map[key] = false // HACK: Make sure we don't select both bitcoin wallet choices
-      if (item.walletType === 'wallet:litecoin-bip44') map[key] = false // HACK: Make sure we don't select both litecoin wallet choices
-      return map
-    }, {})
+    const out = new Set<string>()
+    for (const asset of defaultSelection) {
+      const item = createWalletList.find(item => item.pluginId === asset.pluginId && item.tokenId === asset.tokenId)
+      if (item != null) out.add(item.key)
+    }
+    return out
   })
 
-  const [numSelected, setNumSelected] = React.useState(Object.values(selectedItems).filter(Boolean).length)
-
-  const createMainnetItem = useHandler(pluginId => {
+  const findMainnetItem = (pluginId: string): MainWalletCreateItem => {
     const newItem = createWalletList.find(item => item.pluginId === pluginId)
     return newItem as MainWalletCreateItem
-  })
+  }
 
   const handleCreateWalletToggle = useHandler((key: string) => {
-    setSelectedItems({ ...selectedItems, [key]: !selectedItems[key] })
-
-    // Update the count with the new value
-    setNumSelected(!selectedItems[key] ? numSelected + 1 : numSelected - 1)
+    setSelectedItems(state => {
+      const copy = new Set(state)
+      if (copy.has(key)) copy.delete(key)
+      else copy.add(key)
+      return copy
+    })
   })
 
   const handleNextPress = useHandler(async () => {
-    if (numSelected === 0) {
+    if (selectedItems.size === 0) {
       showError(lstrings.create_wallet_no_assets_selected)
       return
     }
 
-    if (newAccountFlow != null) dispatch(logEvent('Signup_Wallets_Selected_Next', { numSelectedWallets: numSelected }))
+    if (newAccountFlow != null) dispatch(logEvent('Signup_Wallets_Selected_Next', { numSelectedWallets: selectedItems.size }))
 
-    const createItems = createWalletList.filter(item => selectedItems[item.key])
+    const createItems = createWalletList.filter(item => selectedItems.has(item.key))
     const { newWalletItems, newTokenItems } = splitCreateWalletItems(createItems)
 
     // Filter duplicates
@@ -112,15 +117,15 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       const existingWalletIds = [...(pluginIdWalletIdsMap[pluginId] ?? [])]
 
       // Determine if the user selected a new wallet for this pluginId.
-      const newItem = createMainnetItem(pluginId)
-      if (selectedItems[newItem.key]) {
+      const newItem = findMainnetItem(pluginId)
+      if (selectedItems.has(newItem.key)) {
         existingWalletIds.push(PLACEHOLDER_WALLET_ID)
       }
 
       if (existingWalletIds.length === 0) {
         // If the user hasn't selected the parent wallet to create, add it for them
         if (!newWalletItems.some(item => item.pluginId === pluginId)) {
-          const newItem = createMainnetItem(pluginId)
+          const newItem = findMainnetItem(pluginId)
           newWalletItems.push(newItem)
         }
         newTokenItems.forEach(item => {
@@ -211,17 +216,18 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     const { key, displayName, pluginId, tokenId } = item.item
 
     const accessibilityHint = sprintf(lstrings.create_wallet_hint, displayName)
+    const selected = selectedItems.has(key)
     const toggle = (
       <Switch
         accessibilityRole="switch"
-        accessibilityState={{ selected: selectedItems[key] }}
+        accessibilityState={{ selected }}
         accessibilityHint={accessibilityHint}
         ios_backgroundColor={theme.toggleButtonOff}
         trackColor={{
           false: theme.toggleButtonOff,
           true: theme.toggleButton
         }}
-        value={selectedItems[key]}
+        value={selected}
         onValueChange={() => handleCreateWalletToggle(key)}
       />
     )
@@ -241,13 +247,13 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
   const renderNextButton = React.useMemo(
     () => (
-      <Fade noFadeIn={defaultSelection.length > 0} visible={numSelected > 0} duration={300}>
+      <Fade noFadeIn={defaultSelection.length > 0} visible={selectedItems.size > 0} duration={300}>
         <View style={styles.bottomButton}>
           <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, 0, 1]} onPress={handleNextPress} />
         </View>
       </Fade>
     ),
-    [defaultSelection, handleNextPress, numSelected, styles.bottomButton]
+    [defaultSelection, handleNextPress, selectedItems, styles.bottomButton]
   )
 
   return (

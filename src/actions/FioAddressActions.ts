@@ -4,13 +4,18 @@ import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
 import { refreshConnectedWalletsForFioAddress, refreshFioNames } from '../util/FioAddressUtils'
-import { createCurrencyWallet } from './CreateWalletActions'
+import { createWallet } from './CreateWalletActions'
 
 export function createFioWallet(): ThunkAction<Promise<EdgeCurrencyWallet>> {
   return async (dispatch, getState) => {
     const state = getState()
     const fiatCurrencyCode = state.ui.settings.defaultIsoFiat
-    return await dispatch(createCurrencyWallet(lstrings.fio_address_register_default_fio_wallet_name, FIO_WALLET_TYPE, fiatCurrencyCode))
+
+    return await createWallet(state.core.account, {
+      name: lstrings.fio_address_register_default_fio_wallet_name,
+      walletType: FIO_WALLET_TYPE,
+      fiatCurrencyCode
+    })
   }
 }
 

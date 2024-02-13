@@ -7,6 +7,7 @@ import Animated from 'react-native-reanimated'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
+import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
@@ -15,7 +16,6 @@ import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { InsetStyle } from '../common/SceneWrapper'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
-import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from './WalletList'
 import { WalletListCreateRow } from './WalletListCreateRow'
 import { WalletListSwipeableCurrencyRow } from './WalletListSwipeableCurrencyRow'
 import { WalletListSwipeableLoadingRow } from './WalletListSwipeableLoadingRow'
@@ -84,17 +84,12 @@ function WalletListSwipeableComponent(props: Props) {
     const { index } = item
     if (item.item.key.includes('create-')) {
       const createItem: WalletCreateItem = item.item
-      const { currencyCode, displayName, pluginId, walletType, createWalletIds } = createItem
       return (
         <WalletListCreateRow
-          currencyCode={currencyCode}
-          currencyName={displayName}
-          pluginId={pluginId}
-          walletType={walletType}
-          onPress={handleCreateWallet}
-          createWalletIds={createWalletIds}
+          createItem={createItem}
           trackingEventFailed="Create_Wallet_From_Search_Failed"
           trackingEventSuccess="Create_Wallet_From_Search_Success"
+          onPress={handleCreateWallet}
         />
       )
     }

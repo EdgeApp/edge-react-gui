@@ -1,15 +1,9 @@
 import { EdgeAccount, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 
 import { showError } from '../components/services/AirshipInstance'
-import { SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants'
+import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { ENV } from '../env'
-
-interface CreateWalletType {
-  currencyName: string
-  walletType: string
-  pluginId: string
-  currencyCode: string
-}
+import { EdgeAsset } from '../types/types'
 
 /**
  * Returns true if this currency supports existing wallets,
@@ -20,98 +14,12 @@ export function isKeysOnlyPlugin(pluginId: string): boolean {
   return keysOnlyMode || ENV.KEYS_ONLY_PLUGINS[pluginId]
 }
 
-function requiresActivation(pluginId: string) {
-  const { isAccountActivationRequired = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
-  return isAccountActivationRequired
-}
-
 /**
  * Grab all the EdgeCurrencyInfo objects in an account.
  */
 export function getCurrencyInfos(account: EdgeAccount): EdgeCurrencyInfo[] {
   const { currencyConfig = {} } = account
   return Object.keys(currencyConfig).map(pluginId => currencyConfig[pluginId].currencyInfo)
-}
-
-const walletOrderTable: { [walletType: string]: number } = {}
-for (let i = 0; i < WALLET_TYPE_ORDER.length; ++i) {
-  walletOrderTable[WALLET_TYPE_ORDER[i]] = i
-}
-
-/**
- * Sort an array of EdgeCurrencyInfo objects for display to the user.
- */
-export function sortCurrencyInfos(infos: EdgeCurrencyInfo[]): EdgeCurrencyInfo[] {
-  return infos.sort((a, b) => {
-    // Use the table first:
-    const aIndex = walletOrderTable[a.walletType]
-    const bIndex = walletOrderTable[b.walletType]
-    if (aIndex != null && bIndex != null) return aIndex - bIndex
-    if (aIndex != null) return -1
-    if (bIndex != null) return 1
-
-    // Otherwise, sort display names alphabetically:
-    return a.displayName.localeCompare(b.displayName)
-  })
-}
-
-/**
- * The wallet creation scenes use a truncated version of EdgeCurrencyInfo,
- * so make that.
- */
-function makeCreateWalletType(currencyInfo: EdgeCurrencyInfo): CreateWalletType {
-  const { currencyCode, walletType, displayName: currencyName, pluginId } = currencyInfo
-  return {
-    currencyName,
-    walletType,
-    pluginId,
-    currencyCode
-  }
-}
-
-/**
- * Grab a list of wallet types for the wallet creation scenes.
- */
-export function getCreateWalletTypes(account: EdgeAccount, filterActivation: boolean = false): CreateWalletType[] {
-  const infos = sortCurrencyInfos(getCurrencyInfos(account))
-
-  const out: CreateWalletType[] = []
-  for (const currencyInfo of infos) {
-    const { currencyCode, displayName, pluginId, walletType } = currencyInfo
-    // Prevent plugins that are "watch only" from being allowed to create new wallets
-    if (isKeysOnlyPlugin(pluginId)) continue
-    // Prevent currencies that needs activation from being created from a modal
-    if (filterActivation && requiresActivation(pluginId)) continue
-    // FIO disable changes
-    if (['bitcoin', 'litecoin', 'digibyte'].includes(pluginId)) {
-      out.push({
-        currencyName: `${displayName} (Segwit)`,
-        walletType: `${walletType}-bip49`,
-        pluginId,
-        currencyCode
-      })
-      out.push({
-        currencyName: `${displayName} (no Segwit)`,
-        walletType: `${walletType}-bip44`,
-        pluginId,
-        currencyCode
-      })
-    } else {
-      out.push(makeCreateWalletType(currencyInfo))
-    }
-  }
-
-  return out
-}
-
-/**
- * Get specific wallet for the wallet creation scenes. BTC will always result in segwit
- */
-export function getCreateWalletType(account: EdgeAccount, currencyCode: string): CreateWalletType | null {
-  const infos = getCurrencyInfos(account)
-  const currencyCodeFormatted = currencyCode.toUpperCase()
-  const currencyInfo = infos.find(info => info.currencyCode === currencyCodeFormatted)
-  return currencyInfo ? makeCreateWalletType(currencyInfo) : null
 }
 
 export const getTokenId = (account: EdgeAccount, pluginId: string, currencyCode: string): EdgeTokenId | undefined => {
@@ -170,4 +78,62 @@ export const getToken = (wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): Edge
     }
     return allTokens[tokenId]
   }
+}
+
+export function checkAssetFilter(details: EdgeAsset, allowedAssets?: EdgeAsset[], excludeAssets?: EdgeAsset[]): boolean {
+  if (allowedAssets != null && !hasAsset(allowedAssets, details)) {
+    return false
+  }
+  if (excludeAssets != null && hasAsset(excludeAssets, details)) {
+    return false
+  }
+  return true
+}
+
+/**
+ * Returns true if the asset array includes the given asset.
+ */
+export function hasAsset(assets: EdgeAsset[], target: EdgeAsset): boolean {
+  for (const asset of assets) {
+    if (asset.pluginId === target.pluginId && asset.tokenId === target.tokenId) {
+      return true
+    }
+  }
+  return false
+}
+
+/**
+ * The `currencyCodes` are in the format "ETH:DAI",
+ */
+export const currencyCodesToEdgeAssets = (account: EdgeAccount, currencyCodes: string[]): EdgeAsset[] => {
+  const chainCodePluginIdMap = Object.keys(account.currencyConfig).reduce(
+    (map: { [chainCode: string]: string }, pluginId) => {
+      const chainCode = account.currencyConfig[pluginId].currencyInfo.currencyCode
+      if (map[chainCode] == null) map[chainCode] = pluginId
+      return map
+    },
+    { BNB: 'binancesmartchain' } // HACK: Prefer BNB Smart Chain over Beacon Chain if provided a BNB currency code)
+  )
+
+  const edgeTokenIds: EdgeAsset[] = []
+
+  for (const code of currencyCodes) {
+    const [parent, child] = code.split(':')
+    const pluginId = chainCodePluginIdMap[parent]
+    const currencyConfig = account.currencyConfig[pluginId]
+    if (currencyConfig == null) continue
+
+    // Add the mainnet EdgeAsset if we haven't yet
+    if (edgeTokenIds.find(edgeTokenId => edgeTokenId.tokenId == null && edgeTokenId.pluginId === pluginId) == null) {
+      edgeTokenIds.push({ pluginId, tokenId: null })
+    }
+
+    // Add tokens
+    if (child != null) {
+      const tokenId = Object.keys(currencyConfig.builtinTokens).find(tokenId => currencyConfig.builtinTokens[tokenId].currencyCode === child)
+      if (tokenId != null) edgeTokenIds.push({ pluginId, tokenId })
+    }
+  }
+
+  return edgeTokenIds
 }

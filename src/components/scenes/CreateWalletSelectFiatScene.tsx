@@ -5,13 +5,14 @@ import { FlatList } from 'react-native-gesture-handler'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { createWallet, enableTokensAcrossWallets, getUniqueWalletName, splitCreateWalletItems } from '../../actions/CreateWalletActions'
+import { createWallet, enableTokensAcrossWallets, getUniqueWalletName } from '../../actions/CreateWalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { splitCreateWalletItems, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -30,7 +31,6 @@ import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
-import { WalletCreateItem } from '../themed/WalletList'
 
 export interface CreateWalletSelectFiatParams {
   createWalletList: WalletCreateItem[]
@@ -80,7 +80,11 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     if (newWalletItems.length === 1 && newTokenItems.length === 0) {
       const item = newWalletItems[0]
       try {
-        await createWallet(account, { walletType: item.walletType, walletName: walletNames[item.key], fiatCurrencyCode: `iso:${fiat.value}` })
+        await createWallet(account, {
+          fiatCurrencyCode: `iso:${fiat.value}`,
+          name: walletNames[item.key],
+          walletType: item.walletType
+        })
         dispatch(logEvent('Create_Wallet_Success'))
       } catch (error: any) {
         showError(error)

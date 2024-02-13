@@ -1,4 +1,4 @@
-import { EdgeAccount } from 'edge-core-js/types'
+import { EdgeAccount, EdgeCreateCurrencyWallet } from 'edge-core-js/types'
 import { hasSecurityAlerts } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Keyboard } from 'react-native'
@@ -9,15 +9,16 @@ import { readSyncedSettings } from '../actions/SettingsActions'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { FioCreateHandleModal } from '../components/modals/FioCreateHandleModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { WalletCreateItem } from '../components/themed/WalletList'
 import { ENV } from '../env'
 import { getExperimentConfig } from '../experimentConfig'
 import { lstrings } from '../locales/strings'
 import { AccountInitPayload, initialState } from '../reducers/scenes/SettingsReducer'
+import { WalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase, NavigationProp } from '../types/routerTypes'
-import { EdgeAsset, GuiTouchIdInfo } from '../types/types'
+import { GuiTouchIdInfo } from '../types/types'
+import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { logEvent } from '../util/tracking'
 import { runWithTimeout } from '../util/utils'
@@ -63,7 +64,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       }
       // Ensure the creation reason is available before creating wallets:
       const currencyCodes = getState().account.accountReferral.currencyCodes ?? config.defaultWallets
-      const defaultSelection = currencyCodesToEdgeTokenIds(account, currencyCodes)
+      const defaultSelection = currencyCodesToEdgeAssets(account, currencyCodes)
       const fiatCurrencyCode = 'iso:' + defaultFiat
 
       const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
@@ -73,12 +74,10 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
             screen: 'home'
           }
         })
-        const selectedEdgetokenIds = items.map(item => ({ pluginId: item.pluginId, tokenId: item.tokenId }))
+        const createWalletsPromise = createCustomWallets(account, fiatCurrencyCode, items, dispatch).catch(error => showError(error))
 
         // New user FIO handle registration flow (if env is properly configured)
         const { freeRegApiToken = '', freeRegRefCode = '' } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
-        const createWalletsPromise = createCustomWallets(account, fiatCurrencyCode, selectedEdgetokenIds, dispatch)
-
         if (freeRegApiToken !== '' && freeRegRefCode !== '') {
           const isCreateHandle = await Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} createWalletsPromise={createWalletsPromise} />)
           if (isCreateHandle) {
@@ -87,6 +86,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         }
 
         await createWalletsPromise
+        dispatch(logEvent('Signup_Complete'))
       }
 
       navigation.navigate('edgeApp', {
@@ -225,100 +225,47 @@ export function logoutRequest(navigation: NavigationBase, nextLoginId?: string):
 }
 
 /**
- * Creates a wallet, with timeout, and maybe also activates it.
- */
-async function safeCreateWallet(account: EdgeAccount, walletType: string, walletName: string, fiatCurrencyCode: string, dispatch: Dispatch) {
-  try {
-    const wallet = await runWithTimeout(
-      account.createCurrencyWallet(walletType, {
-        name: walletName,
-        fiatCurrencyCode
-      }),
-      20000,
-      new Error(lstrings.error_creating_wallets)
-    )
-    if (account.activeWalletIds.length <= 1) {
-      dispatch({
-        type: 'UI/WALLETS/SELECT_WALLET',
-        data: { currencyCode: wallet.currencyInfo.currencyCode, walletId: wallet.id }
-      })
-    }
-    dispatch(logEvent('Signup_Wallets_Created_Success'))
-    logActivity(`Create Wallet (login): ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${walletName}`)
-
-    return wallet
-  } catch (error) {
-    showError(error)
-    dispatch(logEvent('Signup_Wallets_Created_Failed', { error }))
-    throw error
-  }
-}
-
-// The `currencyCodes` are in the format "ETH:DAI",
-const currencyCodesToEdgeTokenIds = (account: EdgeAccount, currencyCodes: string[]): EdgeAsset[] => {
-  const chainCodePluginIdMap = Object.keys(account.currencyConfig).reduce(
-    (map: { [chainCode: string]: string }, pluginId) => {
-      const chainCode = account.currencyConfig[pluginId].currencyInfo.currencyCode
-      if (map[chainCode] == null) map[chainCode] = pluginId
-      return map
-    },
-    { BNB: 'binancesmartchain' } // HACK: Prefer BNB Smart Chain over Beacon Chain if provided a BNB currency code)
-  )
-
-  const edgeTokenIds: EdgeAsset[] = []
-
-  for (const code of currencyCodes) {
-    const [parent, child] = code.split(':')
-    const pluginId = chainCodePluginIdMap[parent]
-    const currencyConfig = account.currencyConfig[pluginId]
-    if (currencyConfig == null) continue
-
-    // Add the mainnet EdgeAsset if we haven't yet
-    if (edgeTokenIds.find(edgeTokenId => edgeTokenId.tokenId == null && edgeTokenId.pluginId === pluginId) == null) {
-      edgeTokenIds.push({ pluginId, tokenId: null })
-    }
-
-    // Add tokens
-    if (child != null) {
-      const tokenId = Object.keys(currencyConfig.builtinTokens).find(tokenId => currencyConfig.builtinTokens[tokenId].currencyCode === child)
-      if (tokenId != null) edgeTokenIds.push({ pluginId, tokenId })
-    }
-  }
-
-  return edgeTokenIds
-}
-
-/**
  * Creates wallets inside a new account.
  */
-async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: string, edgeTokenIds: EdgeAsset[], dispatch: Dispatch) {
-  if (edgeTokenIds.length === 0) return await createDefaultWallets(account, fiatCurrencyCode, dispatch)
+async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: string, items: WalletCreateItem[], dispatch: Dispatch): Promise<void> {
+  // Maps pluginId's to core options:
+  const optionsMap = new Map<string, EdgeCreateCurrencyWallet>()
+  for (const item of items) {
+    const { keyOptions, pluginId, tokenId } = item
 
-  const pluginIdTokenIdMap: { [pluginId: string]: string[] } = {}
+    // Ensure we create the wallet:
+    let row = optionsMap.get(pluginId)
+    if (row == null) {
+      const { walletType } = account.currencyConfig[pluginId].currencyInfo
+      row = {
+        fiatCurrencyCode,
+        keyOptions,
+        name: getUniqueWalletName(account, pluginId),
+        walletType
+      }
+      optionsMap.set(pluginId, row)
+    }
 
-  for (const edgeTokenId of edgeTokenIds) {
-    const { pluginId, tokenId } = edgeTokenId
-    if (pluginIdTokenIdMap[pluginId] == null) pluginIdTokenIdMap[pluginId] = []
-    if (tokenId != null) pluginIdTokenIdMap[pluginId].push(tokenId)
+    // If this is a token, add it:
+    if (tokenId != null) {
+      row.enabledTokenIds ??= []
+      row.enabledTokenIds.push(tokenId)
+    }
   }
 
-  for (const pluginId of Object.keys(pluginIdTokenIdMap)) {
-    const currencyConfig = account.currencyConfig[pluginId]
-    if (currencyConfig == null) continue
+  // Actually create the wallets:
+  const options = [...optionsMap.values()]
+  const results = await runWithTimeout(account.createCurrencyWallets(options), 20000, new Error(lstrings.error_creating_wallets)).catch(error => {
+    dispatch(logEvent('Signup_Wallets_Created_Failed', { error }))
+    throw error
+  })
 
-    const walletName = getUniqueWalletName(account, pluginId)
-    const wallet = await safeCreateWallet(account, currencyConfig.currencyInfo.walletType, walletName, fiatCurrencyCode, dispatch)
-    if (pluginIdTokenIdMap[pluginId].length > 0) await wallet.changeEnabledTokenIds(pluginIdTokenIdMap[pluginId])
+  for (let i = 0; i < results.length; ++i) {
+    const result = results[i]
+    if (!result.ok) continue
+    const { walletType, name } = options[i]
+    logActivity(`Create Wallet (login): ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${name}`)
   }
 
-  dispatch(logEvent('Signup_Complete'))
-}
-
-/**
- * Creates the default wallets inside a new account.
- */
-async function createDefaultWallets(account: EdgeAccount, fiatCurrencyCode: string, dispatch: Dispatch) {
-  const defaultEdgeTokenIds = currencyCodesToEdgeTokenIds(account, config.defaultWallets)
-  // TODO: Run these in parallel once the Core has safer locking:
-  await createCustomWallets(account, fiatCurrencyCode, defaultEdgeTokenIds, dispatch)
+  dispatch(logEvent('Signup_Wallets_Created_Success'))
 }

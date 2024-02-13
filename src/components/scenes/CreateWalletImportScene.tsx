@@ -4,12 +4,13 @@ import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
-import { PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
+import { PLACEHOLDER_WALLET_ID } from '../../actions/CreateWalletActions'
 import ImportKeySvg from '../../assets/images/import-key-icon.svg'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { splitCreateWalletItems, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -20,7 +21,6 @@ import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
-import { WalletCreateItem } from '../themed/WalletList'
 
 export interface CreateWalletImportParams {
   createWalletList: WalletCreateItem[]
