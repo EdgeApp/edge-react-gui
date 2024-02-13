@@ -1,15 +1,16 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCreateCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { createWallet, enableTokensAcrossWallets, PLACEHOLDER_WALLET_ID, splitCreateWalletItems } from '../../actions/CreateWalletActions'
+import { createWallets, enableTokensAcrossWallets, PLACEHOLDER_WALLET_ID } from '../../actions/CreateWalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { splitCreateWalletItems, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -20,7 +21,6 @@ import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoR
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
-import { WalletCreateItem } from '../themed/WalletList'
 
 export interface CreateWalletCompletionParams {
   createWalletList: WalletCreateItem[]
@@ -49,23 +49,6 @@ const CreateWalletCompletionComponent = (props: Props) => {
   // We only want to render a single token row so we'll take the first one, if present, and use it in the renderRow logic and itemStatus map
   const tokenKey: string | undefined = newTokenItems[0]?.key
 
-  const walletPromises = React.useMemo<Array<() => Promise<EdgeCurrencyWallet>>>(() => {
-    return newWalletItems.map(item => {
-      return async () =>
-        await createWallet(account, {
-          walletType: item.walletType,
-          walletName: walletNames[item.key],
-          fiatCurrencyCode: `iso:${fiatCode}`,
-          keyOptions: keyOptions.get(item.pluginId),
-          importText
-        })
-    })
-  }, [account, fiatCode, importText, keyOptions, newWalletItems, walletNames])
-
-  const tokenPromise = React.useMemo(() => {
-    return async () => await dispatch(enableTokensAcrossWallets(newTokenItems))
-  }, [dispatch, newTokenItems])
-
   // Mainnet wallets first followed by our single token item, if necessary
   const filteredCreateItemsForDisplay = React.useMemo(() => {
     const items: WalletCreateItem[] = [...newWalletItems]
@@ -88,28 +71,48 @@ const CreateWalletCompletionComponent = (props: Props) => {
   // Create the wallets and enable the tokens
   useAsyncEffect(
     async () => {
-      const promises: Array<(() => Promise<EdgeCurrencyWallet>) | (() => Promise<void>)> = [...walletPromises]
-      if (tokenKey != null) promises.push(tokenPromise)
+      let tokenPromise: Promise<void> | undefined
+      if (tokenKey != null) {
+        tokenPromise = dispatch(enableTokensAcrossWallets(newTokenItems)).then(
+          () => setItemStatus(currentState => ({ ...currentState, [newTokenItems[0].key]: 'complete' })),
+          error => {
+            showError(error)
+            setItemStatus(currentState => ({ ...currentState, [newTokenItems[0].key]: 'error' }))
+          }
+        )
+      }
+      const walletResults = await createWallets(
+        account,
+        newWalletItems.map(
+          (item): EdgeCreateCurrencyWallet => ({
+            fiatCurrencyCode: `iso:${fiatCode}`,
+            importText,
+            keyOptions: keyOptions.get(item.pluginId),
+            name: walletNames[item.key],
+            walletType: item.walletType
+          })
+        )
+      )
 
-      for (const [i, promise] of promises.entries()) {
-        try {
-          const wallet = await promise()
-          // We created a wallet so let's Update relevant pending tokens with the new walletId
+      for (let i = 0; i < walletResults.length; ++i) {
+        const result = walletResults[i]
+        if (!result.ok) {
+          showError(result.error)
+          setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'error' }))
+        } else {
+          const wallet = result.result
+          // We created a wallet so let's update relevant pending tokens with the new walletId
           if (wallet != null) {
             newTokenItems
               .filter(item => item.pluginId === wallet.currencyInfo.pluginId && item.createWalletIds[0] === PLACEHOLDER_WALLET_ID)
               .forEach(item => (item.createWalletIds = [wallet.id]))
           }
           setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'complete' }))
-        } catch (e) {
-          showError(e)
-          setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'error' }))
         }
-
-        flatListRef.current?.scrollToIndex({ animated: true, index: i, viewPosition: 0.5 })
       }
-      setDone(true)
 
+      if (tokenPromise != null) await tokenPromise
+      setDone(true)
       return () => {}
     },
     [],
@@ -156,9 +159,8 @@ const CreateWalletCompletionComponent = (props: Props) => {
           disabled={!done}
           label={!done ? undefined : lstrings.string_done_cap}
           type="secondary"
-          marginRem={[0, 0, 0.5]}
+          marginRem={[0, 0, 1]}
           onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
-          alignSelf="center"
         />
       </View>
     )
@@ -180,7 +182,6 @@ const CreateWalletCompletionComponent = (props: Props) => {
             extraData={itemStatus}
             ref={flatListRef}
             renderItem={renderRow}
-            scrollEnabled={done}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
           {renderNextButton}

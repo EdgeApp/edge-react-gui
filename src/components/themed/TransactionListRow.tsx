@@ -135,10 +135,12 @@ export function TransactionListRow(props: Props) {
     </ShadowedView>
   )
 
+  const iconSource = React.useMemo(() => ({ uri: thumbnailPath }), [thumbnailPath])
+
   const icon =
     thumbnailPath != null ? (
       <ShadowedView style={styles.contactContainer}>
-        <FastImage style={styles.contactImage} source={{ uri: thumbnailPath }} />
+        <FastImage style={styles.contactImage} source={iconSource} />
         {arrowIcon}
       </ShadowedView>
     ) : (

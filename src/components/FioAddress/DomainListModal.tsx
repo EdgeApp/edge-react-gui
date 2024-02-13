@@ -168,7 +168,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
         />
         <FlatList
           data={items}
-          // estimatedItemSize={theme.rem(3.5)}
+          keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="handled"
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}

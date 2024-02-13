@@ -24,6 +24,37 @@ export const DEFAULT_ANIMATION_DURATION_MS = 300
 export const LAYOUT_ANIMATION = LinearTransition.duration(DEFAULT_ANIMATION_DURATION_MS)
 export const MAX_LIST_ITEMS_ANIM = 10
 
+// Commonly used enter/exit animations. Use these to prevent
+// dynamically created objects as params that cause a re-render
+export const fadeIn: Anim = { type: 'fadeIn' }
+export const fadeInUp: Anim = { type: 'fadeInUp' }
+export const fadeInUp20: Anim = { type: 'fadeInUp', distance: 20 }
+export const fadeInUp25: Anim = { type: 'fadeInUp', distance: 25 }
+export const fadeInUp30: Anim = { type: 'fadeInUp', distance: 30 }
+export const fadeInUp40: Anim = { type: 'fadeInUp', distance: 40 }
+export const fadeInUp50: Anim = { type: 'fadeInUp', distance: 50 }
+export const fadeInUp60: Anim = { type: 'fadeInUp', distance: 60 }
+export const fadeInUp80: Anim = { type: 'fadeInUp', distance: 80 }
+export const fadeInUp90: Anim = { type: 'fadeInUp', distance: 90 }
+export const fadeInUp110: Anim = { type: 'fadeInUp', distance: 110 }
+export const fadeInUp120: Anim = { type: 'fadeInUp', distance: 120 }
+export const fadeInUp140: Anim = { type: 'fadeInUp', distance: 140 }
+export const fadeInDown: Anim = { type: 'fadeInDown' }
+export const fadeInDown10: Anim = { type: 'fadeInDown', distance: 10 }
+export const fadeInDown20: Anim = { type: 'fadeInDown', distance: 20 }
+export const fadeInDown30: Anim = { type: 'fadeInDown', distance: 30 }
+export const fadeInDown40: Anim = { type: 'fadeInDown', distance: 40 }
+export const fadeInDown50: Anim = { type: 'fadeInDown', distance: 50 }
+export const fadeInDown60: Anim = { type: 'fadeInDown', distance: 60 }
+export const fadeInDown75: Anim = { type: 'fadeInDown', distance: 75 }
+export const fadeInDown80: Anim = { type: 'fadeInDown', distance: 80 }
+export const fadeInDown90: Anim = { type: 'fadeInDown', distance: 90 }
+export const fadeInDown110: Anim = { type: 'fadeInDown', distance: 110 }
+export const fadeInDown120: Anim = { type: 'fadeInDown', distance: 120 }
+export const fadeInDown140: Anim = { type: 'fadeInDown', distance: 140 }
+export const fadeInLeft: Anim = { type: 'fadeInLeft' }
+export const fadeOut: Anim = { type: 'fadeOut' }
+
 type AnimBuilder = typeof ComplexAnimationBuilder
 type AnimTypeFadeIns = 'fadeIn' | 'fadeInDown' | 'fadeInUp' | 'fadeInLeft' | 'fadeInRight'
 type AnimTypeFadeOuts = 'fadeOut' | 'fadeOutDown' | 'fadeOutUp' | 'fadeOutLeft' | 'fadeOutRight'
@@ -87,7 +118,7 @@ const getAnimBuilder = (anim?: Anim) => {
   return builder
 }
 
-export const EdgeAnim = ({ children, disableAnimation, enter, exit, visible = true, ...rest }: Props): JSX.Element | null => {
+const EdgeAnimInner = ({ children, disableAnimation, enter, exit, visible = true, ...rest }: Props): JSX.Element | null => {
   if (!visible) return null
   const entering = getAnimBuilder(enter)
   const exiting = getAnimBuilder(exit)
@@ -103,3 +134,5 @@ export const EdgeAnim = ({ children, disableAnimation, enter, exit, visible = tr
     </Animated.View>
   )
 }
+
+export const EdgeAnim = React.memo(EdgeAnimInner)

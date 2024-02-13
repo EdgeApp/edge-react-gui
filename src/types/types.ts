@@ -75,13 +75,6 @@ export interface ExchangeData {
   secondaryCurrencyCode: string
 }
 
-export interface CreateWalletType {
-  currencyName: string
-  walletType: string
-  pluginId: string
-  currencyCode: string
-}
-
 export interface CustomNodeSetting {
   isEnabled: boolean
   nodesList: string[]
@@ -167,6 +160,7 @@ const asLocalAccountSettingsInner = asObject({
   spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({}))
 })
 const asDeviceSettingsInner = asObject({
+  developerPluginUri: asMaybe(asString),
   disableAnimations: asMaybe(asBoolean, false),
   hasInteractedWithBackupModal: asMaybe(asBoolean, false)
 })
@@ -276,7 +270,7 @@ export interface WcConnectionInfo {
   icon: string
 }
 export interface WalletConnectChainId {
-  namespace: 'algorand' | 'eip155'
+  namespace: 'algorand' | 'cosmos' | 'eip155'
   reference: string
 }
 export interface wcGetConnection {
@@ -302,6 +296,8 @@ export interface AppConfig {
   configName: string
   darkTheme: Theme
   defaultWallets: string[]
+  forceCloseUrlIos: string
+  forceCloseUrlAndroid: string
   knowledgeBase: string
   lightTheme: Theme
   notificationServers: string[]

@@ -109,7 +109,7 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
               )
             }
 
-            return <MainButton key={key} label={label} marginRem={0.25} type={type} onPress={handlePress} layout="column" />
+            return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} layout="column" />
           })}
         </View>
       </View>

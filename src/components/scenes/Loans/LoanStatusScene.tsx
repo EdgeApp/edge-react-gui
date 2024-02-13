@@ -31,6 +31,11 @@ import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
 import { SceneHeader } from '../../themed/SceneHeader'
 
+export interface LoanStatusParams {
+  actionQueueId: string
+  loanAccountId: string
+}
+
 interface Props extends EdgeSceneProps<'loanStatus'> {
   loanAccount: LoanAccount
 }

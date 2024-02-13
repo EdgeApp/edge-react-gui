@@ -84,7 +84,7 @@ exports[`FioAddressList should render with loading props 1`] = `
           onPress={[Function]}
         />
       </View>
-      <EdgeAnim
+      <Memo(EdgeAnimInner)
         enter={
           {
             "type": "fadeIn",
@@ -108,7 +108,7 @@ exports[`FioAddressList should render with loading props 1`] = `
             }
           }
         />
-      </EdgeAnim>
+      </Memo(EdgeAnimInner)>
     </ForwardRef>
     <View
       style={

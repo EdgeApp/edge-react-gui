@@ -23,6 +23,10 @@ import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
 
+export interface MigrateWalletCompletionParams {
+  migrateWalletList: MigrateWalletItem[]
+}
+
 interface Props extends EdgeSceneProps<'migrateWalletCompletion'> {}
 
 interface MigrateWalletTokenItem extends MigrateWalletItem {
@@ -234,9 +238,8 @@ const MigrateWalletCompletionComponent = (props: Props) => {
           disabled={!done}
           label={!done ? undefined : lstrings.string_done_cap}
           type="secondary"
-          marginRem={[0, 0, 0.5]}
+          marginRem={[0, 0, 1]}
           onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
-          alignSelf="center"
         />
       </View>
     )

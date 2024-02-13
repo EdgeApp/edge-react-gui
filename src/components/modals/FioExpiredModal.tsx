@@ -14,7 +14,7 @@ export function FioExpiredModal(props: { bridge: AirshipBridge<boolean>; fioName
     <ModalUi4 bridge={bridge} title={title} onCancel={() => bridge.resolve(false)}>
       <ModalMessage>{lstrings.fio_domain_details_expired_soon}</ModalMessage>
       <ModalMessage>{fioName}</ModalMessage>
-      <MainButton alignSelf="center" label={lstrings.title_fio_renew} marginRem={[1, 0.5, 0.5]} type="secondary" onPress={() => bridge.resolve(true)} />
+      <MainButton label={lstrings.title_fio_renew} marginRem={1} type="secondary" onPress={() => bridge.resolve(true)} />
     </ModalUi4>
   )
 }

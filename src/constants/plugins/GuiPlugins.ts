@@ -2,6 +2,15 @@ import { amountQuoteFiatPlugin } from '../../plugins/gui/amountQuotePlugin'
 import { GuiPlugin, GuiPluginRow } from '../../types/GuiPluginTypes'
 
 export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
+  ach: {
+    pluginId: 'amountquote',
+    storeId: '',
+    baseUri: '',
+    lockUriPath: true,
+    nativePlugin: amountQuoteFiatPlugin,
+    forceFiatCurrencyCode: 'iso:USD',
+    displayName: 'ACH Bank Transfer'
+  },
   libertyx: {
     pluginId: 'libertyx',
     storeId: 'com.libertyx',
@@ -108,7 +117,8 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     baseUri: '',
     lockUriPath: true,
     nativePlugin: amountQuoteFiatPlugin,
-    displayName: 'ACH Bank Transfer'
+    forceFiatCurrencyCode: 'iso:USD',
+    displayName: 'Instant ACH Bank Transfer'
   },
   ideal: {
     pluginId: 'amountquote',

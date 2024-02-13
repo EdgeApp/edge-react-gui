@@ -48,18 +48,21 @@ export function SwapDetailsCard(props: Props) {
   })
 
   const handleEmail = useHandler(() => {
-    const email = plugin.supportEmail
     const body = createExchangeDataString('<br />')
 
     Mailer.mail(
       {
         subject: sprintf(lstrings.transaction_details_exchange_support_request, plugin.displayName),
-        // @ts-expect-error
-        recipients: [email],
+        recipients: plugin.supportEmail != null ? [plugin.supportEmail] : undefined,
         body,
         isHTML: true
       },
       (error, event) => {
+        if (String(error) === 'not_available') {
+          showError(lstrings.error_no_email_account)
+          return
+        }
+
         if (error) showError(error)
       }
     )

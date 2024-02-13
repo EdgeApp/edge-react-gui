@@ -7,12 +7,19 @@ import { makeActionProgram } from '../controllers/action-queue/ActionProgram'
 import { ActionOp, ActionProgram, ParActionOp, SeqActionOp } from '../controllers/action-queue/types'
 import { lstrings } from '../locales/strings'
 import { BorrowCollateral, BorrowDebt, BorrowEngine } from '../plugins/borrow-plugins/types'
-import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { config } from '../theme/appConfig'
 import { GuiExchangeRates } from '../types/types'
 import { getToken } from './CurrencyInfoHelpers'
 import { enableToken } from './CurrencyWalletHelpers'
-import { convertNativeToExchange, DECIMAL_PRECISION, getDenomFromIsoCode, maxPrimaryCurrencyConversionDecimals, precisionAdjust, zeroString } from './utils'
+import {
+  convertCurrencyFromExchangeRates,
+  convertNativeToExchange,
+  DECIMAL_PRECISION,
+  getDenomFromIsoCode,
+  maxPrimaryCurrencyConversionDecimals,
+  precisionAdjust,
+  zeroString
+} from './utils'
 
 const MINIMUM_PARASWAP_AMOUNT = '100000' // Don't attempt paraswaps under 1 cent
 const LIQUIDATION_THRESHOLD = '0.74'

@@ -72,7 +72,8 @@ export const SectionView = (props: Props): JSX.Element | null => {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flexDirection: 'column',
-    flex: 1
+    flexGrow: 1,
+    flexShrink: 1
   },
   marginCard: {
     marginVertical: theme.rem(0)

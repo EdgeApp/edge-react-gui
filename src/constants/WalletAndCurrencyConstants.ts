@@ -108,9 +108,6 @@ export const WALLET_TYPE_ORDER = [
 // Put these in reverse order of preference
 export const PREFERRED_TOKENS = ['WINGS', 'HERC', 'REPV2', 'RIF']
 
-// Strip away 'wallet:' prefix and '-bip' suffix, if present
-export const getPluginId = (walletType: string): string => walletType.replace('wallet:', '').split('-')[0]
-
 export interface ImportKeyOption {
   optionName: string
   displayName: string
@@ -332,6 +329,32 @@ export const SPECIAL_CURRENCY_INFO: {
       reference: '1'
     }
   },
+  arbitrum: {
+    initWalletName: lstrings.string_first_arbitrum_wallet_name,
+    chainCode: 'ETH',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    isImportKeySupported: true,
+    isCustomTokensSupported: true,
+    isPaymentProtocolSupported: false,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '42161'
+    }
+  },
+  base: {
+    initWalletName: lstrings.string_first_base_wallet_name,
+    chainCode: 'ETH',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    isImportKeySupported: true,
+    isCustomTokensSupported: true,
+    isPaymentProtocolSupported: false,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '8453'
+    }
+  },
   filecoin: {
     initWalletName: lstrings.string_first_filecoin_wallet_name,
     chainCode: 'FIL',
@@ -460,19 +483,49 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX',
     isImportKeySupported: true
   },
+  axelar: {
+    initWalletName: lstrings.string_first_axelar_wallet_name,
+    chainCode: 'AXL',
+    dummyPublicAddress: 'axelar1hap5ld4fl82wjn67j96unpgee5yxh0njs0eswf',
+    isStakingSupported: false,
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'cosmos',
+      reference: 'axelar-dojo-1'
+    }
+  },
   coreum: {
     initWalletName: lstrings.string_first_coreum_wallet_name,
-    chainCode: 'CORE',
+    chainCode: 'COREUM',
     dummyPublicAddress: 'core18rv2a6cjkk3lnayy29hez6s2ftpe9llqnce2vu',
     isStakingSupported: true,
-    isImportKeySupported: true
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'cosmos',
+      reference: 'coreum-mainnet-1'
+    }
+  },
+  cosmoshub: {
+    initWalletName: lstrings.string_first_cosmoshub_wallet_name,
+    chainCode: 'ATOM',
+    dummyPublicAddress: 'cosmos1ucnamh638lpgqraetdmcaxk0gz79t4k2akytvf',
+    isStakingSupported: false,
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'cosmos',
+      reference: 'cosmoshub-4'
+    }
   },
   osmosis: {
     initWalletName: lstrings.string_first_osmosis_wallet_name,
     chainCode: 'OSMO',
     dummyPublicAddress: 'osmo156hdwk3gx4wkq0r5m0s3ag2yj5pawfeudml34a',
     isCustomTokensSupported: true,
-    isImportKeySupported: true
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'cosmos',
+      reference: 'osmosis-1'
+    }
   },
   thorchainrune: {
     initWalletName: lstrings.string_first_thorchainrune_wallet_name,

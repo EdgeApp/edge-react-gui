@@ -1,4 +1,3 @@
-import { useIsFocused } from '@react-navigation/native'
 import React, { useEffect } from 'react'
 import Animated, { interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -10,6 +9,9 @@ import { styled } from '../hoc/styled'
 import { BlurBackground } from '../ui4/BlurBackground'
 
 export interface SceneFooterProps {
+  // This component requires a key for the onLayoutHeight prop
+  key: string
+
   children: React.ReactNode
   sceneWrapperInfo?: SceneWrapperInfo
 
@@ -20,10 +22,9 @@ export interface SceneFooterProps {
 }
 
 export const SceneFooterWrapper = (props: SceneFooterProps) => {
-  const { children, noBackgroundBlur = false, sceneWrapperInfo, onLayoutHeight } = props
+  const { key, children, noBackgroundBlur = false, sceneWrapperInfo, onLayoutHeight } = props
   const { hasTabs = true, isKeyboardOpen = false } = sceneWrapperInfo ?? {}
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
-  const footerHeightShared = useSceneFooterState(state => state.footerHeight)
 
   const safeAreaInsets = useSafeAreaInsets()
   const maybeInsetBottom = !hasTabs ? safeAreaInsets.bottom : 0
@@ -45,24 +46,13 @@ export const SceneFooterWrapper = (props: SceneFooterProps) => {
     onLayoutHeight(footerHeight)
   }, [layout, maybeInsetBottom, onLayoutHeight])
 
-  // Set the global shared value for the footerHeight so that way the
-  // background in the MenuTabs can translate accordingly
-  const isFocused = useIsFocused()
-  useEffect(() => {
-    if (isFocused) {
-      footerHeightShared.value = layout?.height ?? 0
-      return () => {
-        footerHeightShared.value = 0
-      }
-    }
-  }, [footerHeightShared, isFocused, layout?.height])
-
   //
   // Render
   //
 
   return (
     <ContainerAnimatedView
+      key={`${key}-ContainerAnimatedView`}
       containerHeight={layout?.height}
       footerOpenRatio={footerOpenRatio}
       isKeyboardOpen={isKeyboardOpen}

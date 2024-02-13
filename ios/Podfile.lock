@@ -18,13 +18,13 @@ PODS:
   - disklet (0.5.2):
     - React
   - DoubleConversion (1.1.6)
-  - edge-core-js (2.1.1):
+  - edge-core-js (2.2.0):
     - React-Core
-  - edge-currency-accountbased (3.0.4):
+  - edge-currency-accountbased (3.1.0):
     - React-Core
-  - edge-exchange-plugins (2.0.2):
+  - edge-exchange-plugins (2.1.0):
     - React-Core
-  - edge-login-ui-rn (3.2.5):
+  - edge-login-ui-rn (3.3.1):
     - React-Core
   - EXApplication (5.1.1):
     - ExpoModulesCore
@@ -498,6 +498,9 @@ PODS:
     - React
   - react-native-camera/RN (1.13.1):
     - React
+  - react-native-compat (2.11.0):
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
   - react-native-contacts (7.0.4):
     - React-Core
   - react-native-flipper (0.143.0):
@@ -521,7 +524,7 @@ PODS:
     - React-Core
   - react-native-performance (5.1.0):
     - React-Core
-  - react-native-piratechain (0.4.3):
+  - react-native-piratechain (0.4.4):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -536,7 +539,7 @@ PODS:
     - ReactCommon/turbomodule/core
   - react-native-webview (13.2.2):
     - React-Core
-  - react-native-zcash (0.6.6):
+  - react-native-zcash (0.6.7):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -943,6 +946,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-camera (from `../node_modules/react-native-camera`)
+  - "react-native-compat (from `../node_modules/@walletconnect/react-native-compat`)"
   - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-flipper (from `../node_modules/react-native-flipper`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
@@ -1147,6 +1151,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+  react-native-compat:
+    :path: "../node_modules/@walletconnect/react-native-compat"
   react-native-contacts:
     :path: "../node_modules/react-native-contacts"
   react-native-flipper:
@@ -1276,10 +1282,10 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  edge-core-js: 53102fb1a760ad57dc526f38951bf8c3883e99fe
-  edge-currency-accountbased: 970abefcf3bffd3e16a1096d283b3d61e3a9635b
-  edge-exchange-plugins: 4871921ac514b98ccd24c5d49b4bf86b6bdba477
-  edge-login-ui-rn: 2ea88067150b9dfd7ec3d0389024ced1bb8cf15a
+  edge-core-js: 0768379a99a45f997df3fa906e14c6255747c529
+  edge-currency-accountbased: 2434527af0ad31c3c940270008cd5e2162801159
+  edge-exchange-plugins: bd2a24dfc0bb7630fa9d92aa6252d176281b15a2
+  edge-login-ui-rn: 356201a4aa5527e153ee253f6a97ecef15582140
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXConstants: f348da07e21b23d2b085e270d7b74f282df1a7d9
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
@@ -1342,6 +1348,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 4ade58a6a355d97a53f847543b14f4cb5033cb70
   React-logger: 56699550750c013096a11dce3bc996e7dd583835
   react-native-camera: b322bc25f47536219473c6d00c666d221f7f2695
+  react-native-compat: d411b454141009ceca781cd1ca44132cace77c45
   react-native-contacts: 1bff4c47816d611f26b06fa8b3eaf2db4d1b2c86
   react-native-flipper: df8e2a7e5dcc857033d925ad8c7e8c52760b8e06
   react-native-get-random-values: dee677497c6a740b71e5612e8dbd83e7539ed5bb
@@ -1353,11 +1360,11 @@ SPEC CHECKSUMS:
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408
   react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
   react-native-performance: cef2b618d47b277fb5c3280b81a3aad1e72f2886
-  react-native-piratechain: 7576ad2a4f0dd983da3d622f03db89d6a4b54bd7
+  react-native-piratechain: 2d1baa918b48f0acde635672504296340b039141
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: 68b07eabfb0d14547d36f6929c0e98d818064f02
   react-native-webview: b8ec89966713985111a14d6e4bf98d8b54bced0d
-  react-native-zcash: 42dfb76a142f4c50b368594f22339110a68918b8
+  react-native-zcash: 18d627d1b559638cfb9cac04207f5460a6010546
   React-perflogger: 0cc42978a483a47f3696171dac2e7033936fc82d
   React-RCTActionSheet: ea922b476d24f6d40b8e02ac3228412bd3637468
   React-RCTAnimation: 7be2c148398eaa5beac950b2b5ec7102389ec3ad

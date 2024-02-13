@@ -22,7 +22,7 @@ exports[`LineTextDivider should render with loading props 1`] = `
       }
     }
   />
-  <WithTheme(EdgeTextComponent)
+  <EdgeText
     style={
       [
         {
@@ -38,7 +38,7 @@ exports[`LineTextDivider should render with loading props 1`] = `
     }
   >
     string
-  </WithTheme(EdgeTextComponent)>
+  </EdgeText>
   hello
   <View
     style={

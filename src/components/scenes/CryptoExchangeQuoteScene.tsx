@@ -13,7 +13,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { logEvent } from '../../util/tracking'
 import { PoweredByCard } from '../cards/PoweredByCard'
-import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeAnim, fadeInDown30, fadeInDown60, fadeInDown90, fadeInDown120, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SwapProviderRow } from '../data/row/SwapProviderRow'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -95,7 +95,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   useEffect(() => {
     const swapConfig = account.swapConfig[pluginId]
 
-    logEvent('Exchange_Shift_Quote')
+    dispatch(logEvent('Exchange_Shift_Quote'))
     swapVerifyTerms(swapConfig)
       .then(async result => {
         if (!result) await dispatch(exchangeTimerExpired(navigation, selectedQuote, onApprove))
@@ -186,35 +186,35 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   return (
     <SceneWrapper hasTabs hasNotifications scroll>
       <View style={styles.container}>
-        <EdgeAnim style={styles.header} enter={{ type: 'fadeInUp', distance: 90 }}>
+        <EdgeAnim style={styles.header} enter={fadeInUp90}>
           <SceneHeader title={lstrings.title_exchange} underline withTopMargin />
         </EdgeAnim>
 
         {showFeeWarning ? (
-          <EdgeAnim enter={{ type: 'fadeInUp', distance: 60 }}>
+          <EdgeAnim enter={fadeInUp60}>
             <AlertCardUi4 title={lstrings.transaction_details_fee_warning} type="warning" />
           </EdgeAnim>
         ) : null}
 
-        <EdgeAnim enter={{ type: 'fadeInUp', distance: 30 }}>
+        <EdgeAnim enter={fadeInUp30}>
           <ExchangeQuote quote={selectedQuote} fromTo="from" showFeeWarning={showFeeWarning} />
         </EdgeAnim>
         <EdgeAnim>
           <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
         </EdgeAnim>
-        <EdgeAnim enter={{ type: 'fadeInDown', distance: 30 }}>
+        <EdgeAnim enter={fadeInDown30}>
           <ExchangeQuote quote={selectedQuote} fromTo="to" />
         </EdgeAnim>
-        <EdgeAnim enter={{ type: 'fadeInDown', distance: 60 }}>
+        <EdgeAnim enter={fadeInDown60}>
           <PoweredByCard iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)} poweredByText={exchangeName} onPress={handlePoweredByTap} />
         </EdgeAnim>
         {selectedQuote.isEstimate ? (
-          <EdgeAnim enter={{ type: 'fadeInDown', distance: 90 }}>
+          <EdgeAnim enter={fadeInDown90}>
             <AlertCardUi4 title={lstrings.estimated_quote} body={lstrings.estimated_exchange_message} type="warning" onPress={handleForEstimateExplanation} />
           </EdgeAnim>
         ) : null}
         {selectedQuote.canBePartial ? (
-          <EdgeAnim enter={{ type: 'fadeInDown', distance: 90 }}>
+          <EdgeAnim enter={fadeInDown90}>
             <AlertCardUi4
               title={lstrings.can_be_partial_quote_title}
               body={lstrings.can_be_partial_quote_message}
@@ -224,7 +224,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
           </EdgeAnim>
         ) : null}
 
-        <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
+        <EdgeAnim enter={fadeInDown120}>
           <Slider parentStyle={styles.slider} onSlidingComplete={doShift} disabled={pending} showSpinner={pending} />
         </EdgeAnim>
         {renderTimer()}

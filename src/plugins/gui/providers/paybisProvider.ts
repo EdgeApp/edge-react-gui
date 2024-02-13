@@ -21,6 +21,7 @@ import {
   FiatProviderQuote
 } from '../fiatProviderTypes'
 import { assert, isWalletTestnet } from '../pluginUtils'
+import { addTokenToArray } from '../util/providerUtils'
 import { NOT_SUCCESS_TOAST_HIDE_MS, RETURN_URL_FAIL, RETURN_URL_PAYMENT, RETURN_URL_SUCCESS } from './common'
 const providerId = 'paybis'
 const storeId = 'paybis'
@@ -284,8 +285,8 @@ const SELL_REVERSE_PAYMENT_METHOD_MAP: Partial<{ [Payment in FiatPaymentType]: P
 }
 
 const allowedCurrencyCodes: Record<FiatDirection, { [F in FiatPaymentType]?: FiatProviderAssetMap }> = {
-  buy: { credit: { fiat: {}, crypto: {} } },
-  sell: { credit: { fiat: {}, crypto: {} } }
+  buy: { credit: { providerId, fiat: {}, crypto: {} } },
+  sell: { credit: { providerId, fiat: {}, crypto: {} } }
 }
 export const paybisProvider: FiatProviderFactory = {
   providerId,
@@ -310,7 +311,7 @@ export const paybisProvider: FiatProviderFactory = {
       getSupportedAssets: async ({ direction, paymentTypes }): Promise<FiatProviderAssetMap> => {
         // Return nothing if paymentTypes are not supported by this provider
         const paymentType = paymentTypes.find(paymentType => allowedPaymentTypes[direction][paymentType] === true)
-        if (paymentType == null) return { crypto: {}, fiat: {} }
+        if (paymentType == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
         const fiats = allowedCurrencyCodes[direction][paymentType]?.fiat
         const cryptos = allowedCurrencyCodes[direction][paymentType]?.crypto
@@ -330,7 +331,8 @@ export const paybisProvider: FiatProviderFactory = {
           await initializeSellPairs({ url, apiKey })
         }
 
-        const out = allowedCurrencyCodes[direction][paymentType] ?? { fiat: {}, crypto: {} }
+        const out = allowedCurrencyCodes[direction][paymentType]
+        if (out == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         return out
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
@@ -460,7 +462,7 @@ export const paybisProvider: FiatProviderFactory = {
             const { coreWallet, showUi } = approveParams
             const success = await showUi.requestPermission(['camera'], pluginDisplayName, true)
             if (!success) {
-              await showUi.showError(new Error(lstrings.fiat_plugin_cannot_continue_camera_permission))
+              await showUi.showError(lstrings.fiat_plugin_cannot_continue_camera_permission)
             }
             const receiveAddress = await coreWallet.getReceiveAddress({ tokenId: null })
 
@@ -709,7 +711,7 @@ const initializeBuyPairs = async ({ url, apiKey }: InitializePairs): Promise<voi
         // Add the fiat
         let paymentMethodObj = allowedCurrencyCodes.buy[edgePaymentType]
         if (paymentMethodObj == null) {
-          paymentMethodObj = { crypto: {}, fiat: {} }
+          paymentMethodObj = { providerId, crypto: {}, fiat: {} }
           allowedCurrencyCodes.buy[edgePaymentType] = paymentMethodObj
         }
         paymentMethodObj.fiat[`iso:${from}`] = true
@@ -719,19 +721,12 @@ const initializeBuyPairs = async ({ url, apiKey }: InitializePairs): Promise<voi
           const edgeTokenId = PAYBIS_TO_EDGE_CURRENCY_MAP[code.currencyCode]
           if (edgeTokenId != null) {
             const { pluginId: currencyPluginId } = edgeTokenId
-            let { currencyCode: ccode } = edgeTokenId
-
-            if (ccode == null) {
-              ccode = code.currencyCode
+            let tokens = paymentMethodObj.crypto[currencyPluginId]
+            if (tokens == null) {
+              tokens = []
+              paymentMethodObj.crypto[currencyPluginId] = tokens
             }
-            // If the edgeTokenId has a tokenId, use it. If not use the currencyCode.
-            // If no currencyCode, use the key of PAYBIS_TO_EDGE_CURRENCY_MAP
-            let tokenMap = paymentMethodObj.crypto[currencyPluginId]
-            if (tokenMap == null) {
-              tokenMap = {}
-              paymentMethodObj.crypto[currencyPluginId] = tokenMap
-            }
-            tokenMap[ccode] = true
+            addTokenToArray({ tokenId: edgeTokenId.tokenId }, tokens)
           }
         }
       }
@@ -764,7 +759,7 @@ const initializeSellPairs = async ({ url, apiKey }: InitializePairs): Promise<vo
 
         let paymentMethodObj = allowedCurrencyCodes.sell[edgePaymentType]
         if (paymentMethodObj == null) {
-          paymentMethodObj = { crypto: {}, fiat: {} }
+          paymentMethodObj = { providerId, crypto: {}, fiat: {} }
           allowedCurrencyCodes.sell[edgePaymentType] = paymentMethodObj
         }
 
@@ -778,12 +773,12 @@ const initializeSellPairs = async ({ url, apiKey }: InitializePairs): Promise<vo
 
         // If the edgeTokenId has a tokenId, use it. If not use the currencyCode.
         // If no currencyCode, use the key of PAYBIS_TO_EDGE_CURRENCY_MAP
-        let tokenMap = paymentMethodObj.crypto[currencyPluginId]
-        if (tokenMap == null) {
-          tokenMap = {}
-          paymentMethodObj.crypto[currencyPluginId] = tokenMap
+        let tokens = paymentMethodObj.crypto[currencyPluginId]
+        if (tokens == null) {
+          tokens = []
+          paymentMethodObj.crypto[currencyPluginId] = tokens
         }
-        tokenMap[ccode] = true
+        addTokenToArray({ tokenId: edgeTokenId.tokenId }, tokens)
 
         for (const fiat of to) {
           paymentMethodObj.fiat[`iso:${fiat}`] = true

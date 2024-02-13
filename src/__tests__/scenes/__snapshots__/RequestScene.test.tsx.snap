@@ -44,10 +44,10 @@ exports[`Request should render with loaded props 1`] = `
       }
     }
   >
-    <EdgeAnim
+    <Memo(EdgeAnimInner)
       enter={
         {
-          "distance": 75,
+          "distance": 80,
           "type": "fadeInUp",
         }
       }
@@ -58,7 +58,7 @@ exports[`Request should render with loaded props 1`] = `
         }
       }
     >
-      <WithTheme(EdgeTextComponent)
+      <EdgeText
         style={
           {
             "fontFamily": "Quicksand-Medium",
@@ -67,8 +67,8 @@ exports[`Request should render with loaded props 1`] = `
         }
       >
         Receive
-      </WithTheme(EdgeTextComponent)>
-      <WithTheme(EdgeTextComponent)
+      </EdgeText>
+      <EdgeText
         style={
           {
             "alignSelf": "flex-end",
@@ -78,9 +78,9 @@ exports[`Request should render with loaded props 1`] = `
         }
       >
         1 undefined
-      </WithTheme(EdgeTextComponent)>
-    </EdgeAnim>
-    <EdgeAnim
+      </EdgeText>
+    </Memo(EdgeAnimInner)>
+    <Memo(EdgeAnimInner)
       enter={
         {
           "distance": 50,
@@ -105,11 +105,11 @@ exports[`Request should render with loaded props 1`] = `
           }
         }
       >
-        <WithTheme(EdgeTextComponent)>
+        <EdgeText>
           You have 0.000012 undefined
-        </WithTheme(EdgeTextComponent)>
+        </EdgeText>
       </TouchableOpacity>
-      <WithTheme(EdgeTextComponent)
+      <EdgeText
         style={
           {
             "alignSelf": "flex-end",
@@ -134,9 +134,9 @@ exports[`Request should render with loaded props 1`] = `
             }
           }
         />
-      </WithTheme(EdgeTextComponent)>
-    </EdgeAnim>
-    <EdgeAnim
+      </EdgeText>
+    </Memo(EdgeAnimInner)>
+    <Memo(EdgeAnimInner)
       enter={
         {
           "distance": 25,
@@ -157,14 +157,14 @@ exports[`Request should render with loaded props 1`] = `
           tokenId={null}
         />
       </CardUi4>
-    </EdgeAnim>
+    </Memo(EdgeAnimInner)>
     <Carousel
       items={[]}
       keyExtractor={[Function]}
       onChangeItem={[Function]}
       renderItem={[Function]}
     />
-    <EdgeAnim
+    <Memo(EdgeAnimInner)
       enter={
         {
           "distance": 50,
@@ -185,9 +185,9 @@ exports[`Request should render with loaded props 1`] = `
             }
           }
         >
-          <WithTheme(EdgeTextComponent)>
+          <EdgeText>
             Your Wallet Address
-          </WithTheme(EdgeTextComponent)>
+          </EdgeText>
           <Icon
             allowFontScaling={false}
             color="#00f1a2"
@@ -195,7 +195,7 @@ exports[`Request should render with loaded props 1`] = `
             size={34}
           />
         </View>
-        <WithTheme(EdgeTextComponent)
+        <EdgeText
           style={
             {
               "fontSize": 17,
@@ -203,11 +203,11 @@ exports[`Request should render with loaded props 1`] = `
           }
         >
           Loading…
-        </WithTheme(EdgeTextComponent)>
+        </EdgeText>
       </TouchableOpacity>
-    </EdgeAnim>
+    </Memo(EdgeAnimInner)>
   </View>
-  <EdgeAnim
+  <Memo(EdgeAnimInner)
     enter={
       {
         "distance": 75,
@@ -220,7 +220,7 @@ exports[`Request should render with loaded props 1`] = `
       openFioAddressModal={[Function]}
       openShareModal={[Function]}
     />
-  </EdgeAnim>
+  </Memo(EdgeAnimInner)>
 </Memo(SceneWrapperComponent)>
 `;
 

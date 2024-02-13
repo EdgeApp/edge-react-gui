@@ -132,7 +132,10 @@ export const LoanDashboardScene = (props: Props) => {
         return getCurrencyInfos(account).find(currencyInfo => pluginId === currencyInfo.pluginId)
       }, undefined)
       if (filteredCurrencyInfo == null) throw new Error(`Could not auto-create wallet of the supported types: ${SUPPORTED_WALLET_PLUGIN_IDS.join(', ')}`)
-      newLoanWallet = await createWallet(account, { walletName: `AAVE Loan Account`, walletType: filteredCurrencyInfo.walletType })
+      newLoanWallet = await createWallet(account, {
+        name: `AAVE Loan Account`,
+        walletType: filteredCurrencyInfo.walletType
+      })
     }
 
     if (newLoanWallet != null) {

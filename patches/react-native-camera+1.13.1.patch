@@ -37,3 +37,42 @@ index bb8f269..572d099 100644
    }
  
    @SuppressLint("all")
+diff --git a/node_modules/react-native-camera/src/Camera.js b/node_modules/react-native-camera/src/Camera.js
+index 9ef36a8..fc4393c 100644
+--- a/node_modules/react-native-camera/src/Camera.js
++++ b/node_modules/react-native-camera/src/Camera.js
+@@ -9,13 +9,13 @@ import {
+   StyleSheet,
+   findNodeHandle,
+   requireNativeComponent,
+-  ViewPropTypes,
+   ActivityIndicator,
+   View,
+   Text,
+   UIManager,
+   PermissionsAndroid,
+ } from 'react-native';
++import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+ 
+ const requestPermissions = async (
+   hasVideoAndAudio,
+diff --git a/node_modules/react-native-camera/src/RNCamera.js b/node_modules/react-native-camera/src/RNCamera.js
+index b1a7d97..740b033 100644
+--- a/node_modules/react-native-camera/src/RNCamera.js
++++ b/node_modules/react-native-camera/src/RNCamera.js
+@@ -5,7 +5,6 @@ import {
+   findNodeHandle,
+   Platform,
+   NativeModules,
+-  ViewPropTypes,
+   requireNativeComponent,
+   View,
+   ActivityIndicator,
+@@ -13,6 +12,7 @@ import {
+   StyleSheet,
+   PermissionsAndroid,
+ } from 'react-native';
++import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+ 
+ import type { FaceFeature } from './FaceDetector';
+ 

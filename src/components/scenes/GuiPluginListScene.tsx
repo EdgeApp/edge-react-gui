@@ -1,5 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { asObject, asString } from 'cleaners'
 import { Disklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
@@ -8,6 +6,7 @@ import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
 
 import { showBackupForTransferModal } from '../../actions/BackupModalActions'
+import { getDeviceSettings, writeDeveloperPluginUri } from '../../actions/DeviceSettingsActions'
 import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { readSyncedSettings, updateOneSetting, writeSyncedSettings } from '../../actions/SettingsActions'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
@@ -18,6 +17,7 @@ import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
 import sellPluginJsonRaw from '../../constants/plugins/sellPluginList.json'
 import sellPluginJsonOverrideRaw from '../../constants/plugins/sellPluginListOverride.json'
 import { ENV } from '../../env'
+import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { executePlugin } from '../../plugins/gui/fiatPlugin'
 import { SceneScrollHandler, useSceneScrollHandler } from '../../state/SceneScrollState'
@@ -31,7 +31,9 @@ import { getPartnerIconUri } from '../../util/CdnUris'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { fetchInfo } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
+import { logEvent, OnLogEvent } from '../../util/tracking'
 import { base58ToUuid } from '../../util/utils'
+import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
 import { CountryListModal } from '../modals/CountryListModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -43,6 +45,10 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { CardUi4 } from '../ui4/CardUi4'
 import { RowUi4 } from '../ui4/RowUi4'
 import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
+
+export interface GuiPluginListParams {
+  launchPluginId?: string
+}
 
 const buyRaw = buyPluginJsonOverrideRaw.length > 0 ? buyPluginJsonOverrideRaw : buyPluginJsonRaw
 const sellRaw = sellPluginJsonOverrideRaw.length > 0 ? sellPluginJsonOverrideRaw : sellPluginJsonRaw
@@ -91,6 +97,7 @@ interface StateProps {
   disablePlugins: NestedDisableMap
   insetStyle: InsetStyle
   handleScroll: SceneScrollHandler
+  onLogEvent: OnLogEvent
 }
 
 interface DispatchProps {
@@ -104,9 +111,7 @@ interface State {
 }
 
 const BUY_SELL_PLUGIN_REFRESH_INTERVAL = 60000
-const DEVELOPER_PLUGIN_KEY = 'developerPlugin'
 const PLUGIN_LIST_FILE = 'buySellPlugins.json'
-const asDeveloperUri = asObject({ uri: asString })
 
 class GuiPluginList extends React.PureComponent<Props, State> {
   componentMounted: boolean
@@ -124,10 +129,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   async componentDidMount() {
     this.updatePlugins().catch(err => showError(err))
     this.checkCountry()
-    const text = await AsyncStorage.getItem(DEVELOPER_PLUGIN_KEY)
-    if (text != null) {
-      const clean = asDeveloperUri(JSON.parse(text))
-      this.setState({ developerUri: clean.uri })
+    const { developerPluginUri } = getDeviceSettings()
+    if (developerPluginUri != null) {
+      this.setState({ developerUri: developerPluginUri })
     }
   }
 
@@ -234,7 +238,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow, longPress: boolean = false) {
-    const { accountReferral, coreDisklet, countryCode, deviceId, disablePlugins, navigation, account } = this.props
+    const { coreDisklet, countryCode, deviceId, disablePlugins, navigation, account, onLogEvent } = this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -266,7 +270,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         this.setState({ developerUri: deepPath })
 
         // Write to disk lazily:
-        AsyncStorage.setItem(DEVELOPER_PLUGIN_KEY, JSON.stringify({ uri: deepPath })).catch(showError)
+        writeDeveloperPluginUri(deepPath).catch(error => showError(error))
       }
     }
 
@@ -279,7 +283,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
       await executePlugin({
         account,
-        accountReferral,
         deviceId,
         direction,
         disablePlugins: disableProviders,
@@ -288,7 +291,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         longPress,
         navigation,
         paymentType,
-        regionCode: { countryCode }
+        regionCode: { countryCode },
+        onLogEvent
       })
     } else {
       // Launch!
@@ -323,7 +327,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     this.showCountrySelectionModal().catch(showError)
   }
 
-  renderPlugin = ({ item }: ListRenderItemInfo<GuiPluginRow>) => {
+  renderPlugin = ({ item, index }: ListRenderItemInfo<GuiPluginRow>) => {
     const { theme } = this.props
     const { pluginId } = item
     const plugin = guiPlugins[pluginId]
@@ -337,35 +341,37 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const poweredBy = plugin.poweredBy ?? plugin.displayName
 
     return (
-      <CardUi4
-        icon={
-          <Image
-            style={styles.logo}
-            // @ts-expect-error
-            source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]}
-          />
-        }
-        onPress={async () => await this.openPlugin(item).catch(showError)}
-        onLongPress={async () => await this.openPlugin(item, true).catch(showError)}
-        paddingRem={[1, 0.5, 1, 0.5]}
-      >
-        <View style={styles.cardContentContainer}>
-          <EdgeText style={styles.titleText} numberOfLines={1}>
-            {item.title}
-          </EdgeText>
-          {item.description === '' ? null : <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>}
-          {poweredBy != null && item.partnerIconPath != null ? (
-            <>
-              <DividerLine marginRem={[0.25, 1, 0.25, 0]} />
-              <View style={styles.pluginRowPoweredByRow}>
-                <EdgeText style={styles.footerText}>{lstrings.plugin_powered_by_space}</EdgeText>
-                <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
-                <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
-              </View>
-            </>
-          ) : null}
-        </View>
-      </CardUi4>
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
+        <CardUi4
+          icon={
+            <Image
+              style={styles.logo}
+              // @ts-expect-error
+              source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]}
+            />
+          }
+          onPress={async () => await this.openPlugin(item).catch(showError)}
+          onLongPress={async () => await this.openPlugin(item, true).catch(showError)}
+          paddingRem={[1, 0.5, 1, 0.5]}
+        >
+          <View style={styles.cardContentContainer}>
+            <EdgeText style={styles.titleText} numberOfLines={1}>
+              {item.title}
+            </EdgeText>
+            {item.description === '' ? null : <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>}
+            {poweredBy != null && item.partnerIconPath != null ? (
+              <>
+                <DividerLine marginRem={[0.25, 1, 0.25, 0]} />
+                <View style={styles.pluginRowPoweredByRow}>
+                  <EdgeText style={styles.footerText}>{lstrings.plugin_powered_by_space}</EdgeText>
+                  <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
+                  <EdgeText style={styles.footerText}>{' ' + poweredBy}</EdgeText>
+                </View>
+              </>
+            ) : null}
+          </View>
+        </CardUi4>
+      </EdgeAnim>
     )
   }
 
@@ -374,28 +380,27 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const styles = getStyles(theme)
     const direction = this.getSceneDirection()
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
+    const uri = `${FLAG_LOGO_URL}/${countryData?.filename || countryData?.name.toLowerCase().replace(' ', '-')}.png`
+    const imageSrc = React.useMemo(() => ({ uri }), [uri])
 
     return (
       <>
-        <View style={styles.header}>
+        <EdgeAnim style={styles.header} enter={fadeInUp90}>
           <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline withTopMargin />
-        </View>
-        <SectionHeaderUi4 leftTitle={lstrings.title_select_region} />
-        <CardUi4>
-          <RowUi4
-            onPress={this._handleCountryPress}
-            rightButtonType="none"
-            icon={
-              countryData == null ? undefined : (
-                <FastImage
-                  source={{ uri: `${FLAG_LOGO_URL}/${countryData.filename || countryData.name.toLowerCase().replace(' ', '-')}.png` }}
-                  style={styles.selectedCountryFlag}
-                />
-              )
-            }
-            body={countryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}
-          />
-        </CardUi4>
+        </EdgeAnim>
+        <EdgeAnim enter={fadeInUp60}>
+          <SectionHeaderUi4 leftTitle={lstrings.title_select_region} />
+        </EdgeAnim>
+        <EdgeAnim enter={fadeInUp30}>
+          <CardUi4>
+            <RowUi4
+              onPress={this._handleCountryPress}
+              rightButtonType="none"
+              icon={countryData == null ? undefined : <FastImage source={imageSrc} style={styles.selectedCountryFlag} />}
+              body={countryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}
+            />
+          </CardUi4>
+        </EdgeAnim>
         <SectionHeaderUi4 leftTitle={lstrings.title_select_payment_method} />
       </>
     )
@@ -446,8 +451,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
           ListEmptyComponent={this.renderEmptyList}
           renderItem={this.renderPlugin}
           keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
-          // XXX: Hack. paddingBottom from insetStyle is not sufficient.
-          contentContainerStyle={{ ...insetStyle, paddingBottom: theme.rem(6) }}
+          contentContainerStyle={insetStyle}
         />
       </View>
     )
@@ -542,6 +546,10 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
     dispatch(updateOneSetting({ countryCode }))
   }
 
+  const handleLogEvent = useHandler((event, values) => {
+    dispatch(logEvent(event, values))
+  })
+
   return (
     <SceneWrapper hasTabs hasNotifications padding={theme.rem(0.5)}>
       {({ insetStyle, undoInsetStyle }) => {
@@ -562,6 +570,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
               updateCountryCode={updateCountryCode}
               theme={theme}
               insetStyle={insetStyle}
+              onLogEvent={handleLogEvent}
             />
           </View>
         )

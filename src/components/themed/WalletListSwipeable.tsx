@@ -3,11 +3,11 @@ import * as React from 'react'
 import { useMemo } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { selectWalletToken } from '../../actions/WalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
+import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
@@ -16,7 +16,6 @@ import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { InsetStyle } from '../common/SceneWrapper'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
-import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from './WalletList'
 import { WalletListCreateRow } from './WalletListCreateRow'
 import { WalletListSwipeableCurrencyRow } from './WalletListSwipeableCurrencyRow'
 import { WalletListSwipeableLoadingRow } from './WalletListSwipeableLoadingRow'
@@ -85,17 +84,12 @@ function WalletListSwipeableComponent(props: Props) {
     const { index } = item
     if (item.item.key.includes('create-')) {
       const createItem: WalletCreateItem = item.item
-      const { currencyCode, displayName, pluginId, walletType, createWalletIds } = createItem
       return (
         <WalletListCreateRow
-          currencyCode={currencyCode}
-          currencyName={displayName}
-          pluginId={pluginId}
-          walletType={walletType}
-          onPress={handleCreateWallet}
-          createWalletIds={createWalletIds}
+          createItem={createItem}
           trackingEventFailed="Create_Wallet_From_Search_Failed"
           trackingEventSuccess="Create_Wallet_From_Search_Success"
+          onPress={handleCreateWallet}
         />
       )
     }
@@ -124,22 +118,20 @@ function WalletListSwipeableComponent(props: Props) {
 
   const handleScroll = useSceneScrollHandler()
 
-  // TODO: Include this fix in the SceneWrapper component
-  const safeAreaInsets = useSafeAreaInsets()
-
   const contentContainerStyle = useMemo(() => {
     return {
       paddingTop: insetStyle.paddingTop + theme.rem(0.5),
-      paddingBottom: insetStyle.paddingBottom + theme.rem(0.5) + safeAreaInsets.bottom,
+      paddingBottom: insetStyle.paddingBottom + theme.rem(0.5),
       paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
       paddingRight: insetStyle.paddingRight + theme.rem(0.5)
     }
-  }, [insetStyle.paddingBottom, insetStyle.paddingLeft, insetStyle.paddingRight, insetStyle.paddingTop, safeAreaInsets.bottom, theme])
+  }, [insetStyle.paddingBottom, insetStyle.paddingLeft, insetStyle.paddingRight, insetStyle.paddingTop, theme])
 
   return (
     <AnimatedFlatList
       contentContainerStyle={contentContainerStyle}
       data={data}
+      keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="handled"
       ListFooterComponent={footer}
       ListHeaderComponent={header}

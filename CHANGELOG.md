@@ -2,17 +2,39 @@
 
 ## Unreleased
 
-- changed: Reword of the CrashScene to help users to force close (not uninstall) Edge
-- changed: Upgrade to Android NDK version 26.1.10909125.
+## 4.1.0
 
-## 4.0.1
+- added: FIO conversion analytics events.
+- added: Referral information on all analytics events.
+- added: Sell to debit card for UK and AU
+- added: ACH buy/sell through Kado
+- added: Arbitrum One network support
+- added: Base network support
+- added: Cosmos Hub (ATOM) support
+- added: Axelar (AXL) support
+- added: Add WalletConnect support for Cosmos-based chains
+- changed: Replace A/B test 'legacyLanding' with A/B/C/D test 'landingType'
+- changed: Animate buy/sell scenes
+- changed: Require Android 9 or above.
+- changed: Reword of the CrashScene to help users to force close (not uninstall) Edge
+- changed: Updated swipe-able underlay elements for wallet list rows to match UI4
+- changed: Upgrade to Android NDK version 26.1.10909125.
+- changed: Re-enable fake signup captcha experiment at 50%
+- changed: Adjust Transaction List Scene spacings, remove "Transactions" header
+- changed: Add a referral ID to share links
+- fixed: Resolved levitating search bar bug on Android
+- fixed: Show a useful, localized error message when device doesn't have an email account
+- fixed: Make FilledTextInputs take up constant vertical space
+- removed: swipeLastUsp experiment (always allow swipes on the last USP)
+
+## 4.0.1 (2024-02-04)
 
 - fixed: Missing background blurred dots on most scenes
 - fixed: Missing promo cards when multiple are on info server
 - fixed: Hidden Next button on Change PIN scene
 - fixed: Disable auto-capitalization of username when creating account
 
-## 4.0.0
+## 4.0.0 (2024-02-02)
 
 - added: `minerTip` to `feeRateUsed` processing
 - added: Make the alert drop-down swipeable.

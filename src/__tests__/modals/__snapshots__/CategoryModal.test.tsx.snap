@@ -175,9 +175,13 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             "alignSelf": "flex-start",
             "flexGrow": 1,
             "justifyContent": "flex-start",
-            "marginRight": 6,
+            "marginBottom": -17,
+            "marginRight": -22,
+            "marginTop": -22,
             "opacity": 1,
-            "paddingTop": 3,
+            "paddingBottom": 17,
+            "paddingRight": 28,
+            "paddingTop": 26,
           }
         }
       >
@@ -657,6 +661,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 "value": 0,
               }
             }
+            editable={true}
             focusAnimation={
               {
                 "value": 0,
@@ -732,7 +737,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           onStartShouldSetResponder={[Function]}
           style={
             {
+              "marginHorizontal": -22,
+              "marginVertical": -28,
               "opacity": 1,
+              "paddingHorizontal": 22,
+              "paddingVertical": 28,
             }
           }
           testID="undefined.clearIcon"
@@ -1591,9 +1600,13 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             "alignSelf": "flex-start",
             "flexGrow": 1,
             "justifyContent": "flex-start",
-            "marginRight": 6,
+            "marginBottom": -17,
+            "marginRight": -22,
+            "marginTop": -22,
             "opacity": 1,
-            "paddingTop": 3,
+            "paddingBottom": 17,
+            "paddingRight": 28,
+            "paddingTop": 26,
           }
         }
       >
@@ -2073,6 +2086,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 "value": 0,
               }
             }
+            editable={true}
             focusAnimation={
               {
                 "value": 0,
@@ -2148,7 +2162,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           onStartShouldSetResponder={[Function]}
           style={
             {
+              "marginHorizontal": -22,
+              "marginVertical": -28,
               "opacity": 1,
+              "paddingHorizontal": 22,
+              "paddingVertical": 28,
             }
           }
           testID="undefined.clearIcon"

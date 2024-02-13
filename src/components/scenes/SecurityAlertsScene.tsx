@@ -1,46 +1,29 @@
-import { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { SecurityAlertsScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { StatusBar, StyleSheet, View } from 'react-native'
 
-import { THEME } from '../../theme/variables/airbitz'
-import { connect } from '../../types/reactRedux'
+import { useHandler } from '../../hooks/useHandler'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
+import { SceneWrapper } from '../common/SceneWrapper'
 
-interface OwnProps extends EdgeSceneProps<'securityAlerts'> {}
+interface Props extends EdgeSceneProps<'securityAlerts'> {}
 
-interface StateProps {
-  account: EdgeAccount
-  context: EdgeContext
+export const SecurityAlertsScene = (props: Props) => {
+  const { navigation } = props
+  const account = useSelector(state => state.core.account)
+  const context = useSelector(state => state.core.context)
+  const dispatch = useDispatch()
+
+  const handleComplete = useHandler(() => navigation.pop())
+
+  const handleLogEvent = useHandler((event, values) => {
+    dispatch(logEvent(event, values))
+  })
+
+  return (
+    <SceneWrapper>
+      <SecurityAlertsScreen account={account} context={context} onLogEvent={handleLogEvent} onComplete={handleComplete} />
+    </SceneWrapper>
+  )
 }
-type Props = StateProps & OwnProps
-
-class SecurityAlertsComponent extends React.Component<Props> {
-  render() {
-    const { context, account, navigation } = this.props
-    const handleComplete = () => navigation.pop()
-
-    return (
-      <View style={styles.container}>
-        <SecurityAlertsScreen account={account} context={context} onLogEvent={logEvent} onComplete={handleComplete} />
-      </View>
-    )
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight,
-    backgroundColor: THEME.COLORS.PRIMARY
-  }
-})
-
-export const SecurityAlertsScene = connect<StateProps, {}, OwnProps>(
-  state => ({
-    context: state.core.context,
-    account: state.core.account
-  }),
-  dispatch => ({})
-)(SecurityAlertsComponent)

@@ -228,6 +228,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
     style={
       {
         "height": 1334,
+        "maxHeight": 1334,
         "padding": 0,
         "width": 750,
       }
@@ -238,8 +239,9 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         style={
           [
             {
-              "flex": 1,
               "flexDirection": "column",
+              "flexGrow": 1,
+              "flexShrink": 1,
             },
             {
               "marginBottom": 11,
@@ -355,8 +357,9 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             style={
               [
                 {
-                  "flex": 1,
                   "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
                 },
                 {
                   "marginVertical": 0,
@@ -1203,8 +1206,9 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             style={
               [
                 {
-                  "flex": 1,
                   "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
                 },
                 {
                   "marginVertical": 0,
@@ -3327,9 +3331,13 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             {
               "alignItems": "center",
               "alignSelf": "stretch",
-              "borderRadius": 34,
+              "flexBasis": "auto",
+              "flexGrow": 0,
+              "flexShrink": 1,
               "justifyContent": "center",
+              "margin": -11,
               "opacity": 1,
+              "padding": 11,
             }
           }
         >
@@ -3357,36 +3365,22 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               [
                 {
                   "alignItems": "center",
+                  "borderRadius": 34,
                   "flexDirection": "row",
+                  "flexGrow": 0,
+                  "flexShrink": 1,
                   "justifyContent": "center",
                 },
                 {
-                  "alignSelf": "auto",
-                  "opacity": 1,
+                  "alignSelf": "stretch",
                 },
                 {
                   "height": 67,
-                  "paddingHorizontal": 45,
+                  "paddingHorizontal": 34,
                 },
                 {
-                  "alignItems": "center",
-                  "alignSelf": "stretch",
-                  "borderRadius": 34,
-                  "justifyContent": "center",
+                  "opacity": 1,
                 },
-                [
-                  {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "borderRadius": 34,
-                    "justifyContent": "center",
-                  },
-                  {
-                    "alignSelf": "stretch",
-                  },
-                ],
-                undefined,
-                undefined,
               ]
             }
           >
@@ -3467,9 +3461,13 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             {
               "alignItems": "center",
               "alignSelf": "stretch",
-              "borderRadius": 34,
+              "flexBasis": "auto",
+              "flexGrow": 0,
+              "flexShrink": 1,
               "justifyContent": "center",
+              "margin": -11,
               "opacity": 1,
+              "padding": 11,
             }
           }
         >
@@ -3497,36 +3495,22 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               [
                 {
                   "alignItems": "center",
+                  "borderRadius": 34,
                   "flexDirection": "row",
+                  "flexGrow": 0,
+                  "flexShrink": 1,
                   "justifyContent": "center",
                 },
                 {
-                  "alignSelf": "auto",
-                  "opacity": 1,
+                  "alignSelf": "stretch",
                 },
                 {
                   "height": 67,
-                  "paddingHorizontal": 45,
+                  "paddingHorizontal": 34,
                 },
                 {
-                  "alignItems": "center",
-                  "alignSelf": "stretch",
-                  "borderRadius": 34,
-                  "justifyContent": "center",
+                  "opacity": 1,
                 },
-                [
-                  {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "borderRadius": 34,
-                    "justifyContent": "center",
-                  },
-                  {
-                    "alignSelf": "stretch",
-                  },
-                ],
-                undefined,
-                undefined,
               ]
             }
           >
@@ -3792,6 +3776,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
     style={
       {
         "height": 1334,
+        "maxHeight": 1334,
         "padding": 0,
         "width": 750,
       }
@@ -3802,8 +3787,9 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         style={
           [
             {
-              "flex": 1,
               "flexDirection": "column",
+              "flexGrow": 1,
+              "flexShrink": 1,
             },
             {
               "marginBottom": 11,
@@ -3919,8 +3905,9 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             style={
               [
                 {
-                  "flex": 1,
                   "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
                 },
                 {
                   "marginVertical": 0,
@@ -4767,8 +4754,9 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             style={
               [
                 {
-                  "flex": 1,
                   "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
                 },
                 {
                   "marginVertical": 0,
@@ -6891,9 +6879,13 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             {
               "alignItems": "center",
               "alignSelf": "stretch",
-              "borderRadius": 34,
+              "flexBasis": "auto",
+              "flexGrow": 0,
+              "flexShrink": 1,
               "justifyContent": "center",
+              "margin": -11,
               "opacity": 1,
+              "padding": 11,
             }
           }
         >
@@ -6921,36 +6913,22 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               [
                 {
                   "alignItems": "center",
+                  "borderRadius": 34,
                   "flexDirection": "row",
+                  "flexGrow": 0,
+                  "flexShrink": 1,
                   "justifyContent": "center",
                 },
                 {
-                  "alignSelf": "auto",
-                  "opacity": 1,
+                  "alignSelf": "stretch",
                 },
                 {
                   "height": 67,
-                  "paddingHorizontal": 45,
+                  "paddingHorizontal": 34,
                 },
                 {
-                  "alignItems": "center",
-                  "alignSelf": "stretch",
-                  "borderRadius": 34,
-                  "justifyContent": "center",
+                  "opacity": 1,
                 },
-                [
-                  {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "borderRadius": 34,
-                    "justifyContent": "center",
-                  },
-                  {
-                    "alignSelf": "stretch",
-                  },
-                ],
-                undefined,
-                undefined,
               ]
             }
           >
@@ -7031,9 +7009,13 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             {
               "alignItems": "center",
               "alignSelf": "stretch",
-              "borderRadius": 34,
+              "flexBasis": "auto",
+              "flexGrow": 0,
+              "flexShrink": 1,
               "justifyContent": "center",
+              "margin": -11,
               "opacity": 1,
+              "padding": 11,
             }
           }
         >
@@ -7061,36 +7043,22 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               [
                 {
                   "alignItems": "center",
+                  "borderRadius": 34,
                   "flexDirection": "row",
+                  "flexGrow": 0,
+                  "flexShrink": 1,
                   "justifyContent": "center",
                 },
                 {
-                  "alignSelf": "auto",
-                  "opacity": 1,
+                  "alignSelf": "stretch",
                 },
                 {
                   "height": 67,
-                  "paddingHorizontal": 45,
+                  "paddingHorizontal": 34,
                 },
                 {
-                  "alignItems": "center",
-                  "alignSelf": "stretch",
-                  "borderRadius": 34,
-                  "justifyContent": "center",
+                  "opacity": 1,
                 },
-                [
-                  {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "borderRadius": 34,
-                    "justifyContent": "center",
-                  },
-                  {
-                    "alignSelf": "stretch",
-                  },
-                ],
-                undefined,
-                undefined,
               ]
             }
           >

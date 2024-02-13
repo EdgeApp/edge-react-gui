@@ -24,6 +24,10 @@ import { SafeSlider } from '../themed/SafeSlider'
 import { SceneHeader } from '../themed/SceneHeader'
 import { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
 
+export interface MigrateWalletCalculateFeeParams {
+  migrateWalletList: MigrateWalletItem[]
+}
+
 interface Props extends EdgeSceneProps<'migrateWalletCalculateFee'> {}
 
 type AssetRowState = string | Error

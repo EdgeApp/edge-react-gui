@@ -87,7 +87,7 @@ export const LogsModal = (props: Props) => {
       {isDangerous ? null : (
         <MainButton label={lstrings.settings_button_send_logs} marginRem={0.5} type="primary" onPress={handleSend} disabled={isDangerous} />
       )}
-      <MainButton label={lstrings.settings_button_export_logs} marginRem={0.5} type="secondary" onPress={handleShare} />
+      <MainButton label={lstrings.settings_button_export_logs} marginRem={[0.5, 0, 1]} type="secondary" onPress={handleShare} />
     </ModalUi4>
   )
 }

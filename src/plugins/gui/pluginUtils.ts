@@ -25,9 +25,15 @@ const ERROR_PRIORITIES: { [errorType in FiatProviderQuoteErrorTypes]: number } =
 }
 
 export const getRateFromQuote = (quote: FiatProviderQuote, fiatCode: string): string => {
+  const { isEstimate } = quote
   const bestRate = div(quote.fiatAmount, quote.cryptoAmount, 16)
   const localeRate = formatNumber(toFixed(bestRate, 0, 2))
-  const exchangeRateText = `1 ${quote.displayCurrencyCode} = ${localeRate} ${fiatCode}`
+  let exchangeRateText
+  if (isEstimate) {
+    exchangeRateText = `1 ${quote.displayCurrencyCode} ~= ${localeRate} ${fiatCode}\n${lstrings.estimated_quote}`
+  } else {
+    exchangeRateText = `1 ${quote.displayCurrencyCode} = ${localeRate} ${fiatCode}`
+  }
   return exchangeRateText
 }
 

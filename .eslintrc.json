@@ -46,7 +46,7 @@
     "react-native/no-raw-text": [
       "error",
       {
-        "skip": ["B", "EdgeText", "FormattedText"]
+        "skip": ["B", "EdgeText"]
       }
     ],
     "react-native/sort-styles": "off",

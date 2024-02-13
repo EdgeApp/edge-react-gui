@@ -19,6 +19,10 @@ import { TitleText } from '../text/TitleText'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 
+export interface EdgeLoginParams {
+  lobbyId: string
+}
+
 interface Props extends EdgeSceneProps<'edgeLogin'> {}
 
 export const EdgeLoginScene = (props: Props) => {

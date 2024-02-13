@@ -481,7 +481,9 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           {
+            "margin": -22,
             "opacity": 1,
+            "padding": 22,
           }
         }
         testID="undefined.clearIcon"
@@ -538,6 +540,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             "currencyCode": "ETH",
             "displayName": "Ethereum",
             "key": "create-undefined-ethereum",
+            "keyOptions": {},
             "pluginId": "ethereum",
             "tokenId": null,
             "walletType": undefined,
@@ -584,15 +587,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           },
         ]
       }
-      extraData={
-        {
-          "create-ethereum-1985365e9f78359a9b6ad760e32412f4a445e862": false,
-          "create-ethereum-221657776846890989a759ba2973e427dff5c9bb": false,
-          "create-ethereum-2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1": false,
-          "create-ethereum-6b175474e89094c44da98b954eedeac495271d0f": false,
-          "create-undefined-ethereum": false,
-        }
-      }
+      extraData={Set {}}
       getItem={[Function]}
       getItemCount={[Function]}
       handlerTag={1}
@@ -1829,13 +1824,15 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             {
               "alignItems": "center",
               "alignSelf": "center",
-              "borderRadius": 34,
+              "flexBasis": "auto",
+              "flexGrow": 0,
+              "flexShrink": 1,
               "justifyContent": "center",
-              "marginBottom": 11,
-              "marginLeft": -11,
-              "marginRight": -11,
-              "marginTop": 0,
               "opacity": 1,
+              "paddingBottom": 22,
+              "paddingLeft": 0,
+              "paddingRight": 0,
+              "paddingTop": 0,
             }
           }
         >
@@ -1863,41 +1860,22 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               [
                 {
                   "alignItems": "center",
+                  "borderRadius": 34,
                   "flexDirection": "row",
+                  "flexGrow": 0,
+                  "flexShrink": 1,
                   "justifyContent": "center",
                 },
                 {
                   "alignSelf": "center",
-                  "opacity": 1,
                 },
                 {
                   "height": 67,
-                  "paddingHorizontal": 45,
+                  "paddingHorizontal": 34,
                 },
                 {
-                  "alignItems": "center",
-                  "alignSelf": "stretch",
-                  "borderRadius": 34,
-                  "justifyContent": "center",
+                  "opacity": 1,
                 },
-                [
-                  {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "borderRadius": 34,
-                    "justifyContent": "center",
-                  },
-                  {
-                    "alignSelf": "center",
-                  },
-                ],
-                {
-                  "marginBottom": 11,
-                  "marginLeft": -11,
-                  "marginRight": -11,
-                  "marginTop": 0,
-                },
-                undefined,
               ]
             }
           >

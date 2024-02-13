@@ -100,6 +100,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
               automaticallyAdjustContentInsets={false}
               contentContainerStyle={{ ...insetStyle, paddingTop: 0 }}
               data={filteredArray}
+              keyboardDismissMode="on-drag"
               keyboardShouldPersistTaps="handled"
               keyExtractor={this.keyExtractor}
               renderItem={this.renderFiatTypeResult}

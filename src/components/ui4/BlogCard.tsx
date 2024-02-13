@@ -1,4 +1,4 @@
-import { BlogPost } from 'edge-info-server/types'
+import { BlogPost } from 'edge-info-server'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -33,22 +33,23 @@ export const BlogCard = (props: Props) => {
   const handlePress = useHandler(() => {
     if (url != null) openBrowserUri(url)
   })
+  const imageSrc = React.useMemo(() => ({ uri: image }), [image])
 
   return (
     <CardUi4
       onPress={handlePress}
       nodeBackground={
         <View style={styles.nodeBackground}>
-          <FastImage source={{ uri: image }} style={styles.bannerImage} />
+          <FastImage source={imageSrc} style={styles.bannerImage} />
         </View>
       }
     >
       <View style={styles.backgroundSpacing} />
       <View style={styles.textContainer}>
-        <EdgeText style={[styles.titleText, theme.cardTextShadow]} numberOfLines={1}>
+        <EdgeText style={styles.titleText} numberOfLines={1}>
           {title}
         </EdgeText>
-        <EdgeText style={[styles.bodyText, theme.cardTextShadow]} numberOfLines={2} disableFontScaling>
+        <EdgeText style={styles.bodyText} numberOfLines={2} disableFontScaling>
           {body}
         </EdgeText>
       </View>
@@ -65,10 +66,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   titleText: {
     fontFamily: theme.fontFaceMedium,
-    marginBottom: theme.rem(0.25)
+    marginBottom: theme.rem(0.25),
+    ...theme.cardTextShadow
   },
   bodyText: {
-    fontSize: theme.rem(0.65)
+    fontSize: theme.rem(0.65),
+    ...theme.cardTextShadow
   },
   nodeBackground: {
     height: IMAGE_HEIGHT_RATIO,

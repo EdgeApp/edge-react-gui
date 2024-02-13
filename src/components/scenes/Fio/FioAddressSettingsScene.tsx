@@ -7,6 +7,7 @@ import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { addBundledTxs, getAddBundledTxsFee, getTransferFee } from '../../../util/FioAddressUtils'
+import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
 import { ButtonsModal } from '../../modals/ButtonsModal'
@@ -30,12 +31,16 @@ interface StateProps {
 
 interface DispatchProps {
   refreshAllFioAddresses: () => Promise<void>
+  onLogEvent: (event: TrackingEventName, values: TrackingValues) => void
 }
 
 interface OwnProps extends EdgeSceneProps<'fioAddressSettings'> {}
 
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
+/**
+ * FIO "Reload and Transfer" scene.
+ */
 export class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   state: LocalState = {
     showAddBundledTxs: false,
@@ -90,14 +95,17 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
   getTransferFee = async (fioWallet: EdgeCurrencyWallet) => await getTransferFee(fioWallet)
 
   onAddBundledTxsSubmit = async (fioWallet: EdgeCurrencyWallet, fee: number) => {
-    const { isConnected, route } = this.props
+    const { isConnected, route, onLogEvent } = this.props
     const { fioAddressName } = route.params
 
     if (!isConnected) {
       showError(lstrings.fio_network_alert_text)
       return
     }
-    return await addBundledTxs(fioWallet, fioAddressName, fee)
+    await addBundledTxs(fioWallet, fioAddressName, fee)
+
+    const { currencyCode, pluginId } = fioWallet.currencyInfo
+    onLogEvent('Fio_Handle_Bundled_Tx', { nativeAmount: String(fee), pluginId, currencyCode })
   }
 
   goToTransfer = (params: { fee: number }) => {
@@ -205,6 +213,9 @@ export const FioAddressSettingsScene = connect<StateProps, DispatchProps, OwnPro
   dispatch => ({
     async refreshAllFioAddresses() {
       await dispatch(refreshAllFioAddresses())
+    },
+    onLogEvent(event: TrackingEventName, values: TrackingValues) {
+      dispatch(logEvent(event, values))
     }
   })
 )(withTheme(FioAddressSettingsComponent))

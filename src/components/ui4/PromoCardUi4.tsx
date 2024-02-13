@@ -1,4 +1,4 @@
-import { PromoCard2 } from 'edge-info-server/types'
+import { PromoCard2 } from 'edge-info-server'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -54,18 +54,14 @@ export function PromoCardUi4(props: Props) {
     dispatch(linkReferralWithCurrencies(navigation, url)).catch(err => showError(err))
   })
 
+  const imageSrc = React.useMemo(() => ({ uri: imageUri }), [imageUri])
+
   return (
     <CardUi4
       onClose={onClose}
       nodeBackground={
         <LinearGradient colors={backgroundGradientColors} start={backgroundGradientStart} end={backgroundGradientEnd} style={styles.backgroundContainer}>
-          <FastImage
-            source={{
-              uri: imageUri
-            }}
-            style={styles.backgroundImage}
-            resizeMode="stretch"
-          />
+          <FastImage source={imageSrc} style={styles.backgroundImage} resizeMode="stretch" />
         </LinearGradient>
       }
     >

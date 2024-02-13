@@ -13,7 +13,7 @@ exports[`CryptoExchangeSuccessComponent should render with loading props 1`] = `
       }
     }
   >
-    <WithTheme(EdgeTextComponent)
+    <EdgeText
       style={
         {
           "fontSize": 28,
@@ -25,8 +25,8 @@ exports[`CryptoExchangeSuccessComponent should render with loading props 1`] = `
       }
     >
       Congratulations!
-    </WithTheme(EdgeTextComponent)>
-    <WithTheme(EdgeTextComponent)
+    </EdgeText>
+    <EdgeText
       numberOfLines={2}
       style={
         {
@@ -39,8 +39,8 @@ exports[`CryptoExchangeSuccessComponent should render with loading props 1`] = `
       }
     >
       Your exchange has been successfully completed!
-    </WithTheme(EdgeTextComponent)>
-    <WithTheme(EdgeTextComponent)
+    </EdgeText>
+    <EdgeText
       numberOfLines={3}
       style={
         [
@@ -58,7 +58,7 @@ exports[`CryptoExchangeSuccessComponent should render with loading props 1`] = `
       }
     >
       Exchanges may take a few minutes and up to 24 hours to process.
-    </WithTheme(EdgeTextComponent)>
+    </EdgeText>
     <Fade
       visible={false}
     >

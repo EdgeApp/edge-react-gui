@@ -183,6 +183,7 @@ exports[`TransactionDetailsScene should render 1`] = `
     style={
       {
         "height": 1334,
+        "maxHeight": 1334,
         "padding": 11,
         "width": 750,
       }
@@ -451,8 +452,9 @@ exports[`TransactionDetailsScene should render 1`] = `
             style={
               [
                 {
-                  "flex": 1,
                   "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
                 },
                 {
                   "marginVertical": 0,
@@ -1069,8 +1071,9 @@ exports[`TransactionDetailsScene should render 1`] = `
             style={
               [
                 {
-                  "flex": 1,
                   "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
                 },
                 {
                   "marginVertical": 0,
@@ -1392,6 +1395,10 @@ exports[`TransactionDetailsScene should render 1`] = `
       <View
         entering={BaseAnimationMock {}}
         layout={BaseAnimationMock {}}
+      />
+      <View
+        entering={BaseAnimationMock {}}
+        layout={BaseAnimationMock {}}
       >
         <View
           style={
@@ -1434,8 +1441,9 @@ exports[`TransactionDetailsScene should render 1`] = `
             style={
               [
                 {
-                  "flex": 1,
                   "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
                 },
                 {
                   "marginVertical": 0,
@@ -1696,7 +1704,8 @@ exports[`TransactionDetailsScene should render 1`] = `
           style={
             {
               "alignItems": "center",
-              "flex": 1,
+              "flexGrow": 1,
+              "flexShrink": 1,
               "justifyContent": "center",
               "margin": 11,
               "marginBottom": 67,
@@ -1737,9 +1746,13 @@ exports[`TransactionDetailsScene should render 1`] = `
               {
                 "alignItems": "center",
                 "alignSelf": "center",
-                "borderRadius": 34,
+                "flexBasis": "auto",
+                "flexGrow": 0,
+                "flexShrink": 1,
                 "justifyContent": "center",
+                "margin": -11,
                 "opacity": 1,
+                "padding": 11,
               }
             }
           >
@@ -1767,36 +1780,22 @@ exports[`TransactionDetailsScene should render 1`] = `
                 [
                   {
                     "alignItems": "center",
+                    "borderRadius": 34,
                     "flexDirection": "row",
+                    "flexGrow": 0,
+                    "flexShrink": 1,
                     "justifyContent": "center",
                   },
                   {
-                    "alignSelf": "auto",
-                    "opacity": 1,
+                    "alignSelf": "center",
                   },
                   {
                     "height": 67,
-                    "paddingHorizontal": 45,
+                    "paddingHorizontal": 34,
                   },
                   {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "borderRadius": 34,
-                    "justifyContent": "center",
+                    "opacity": 1,
                   },
-                  [
-                    {
-                      "alignItems": "center",
-                      "alignSelf": "stretch",
-                      "borderRadius": 34,
-                      "justifyContent": "center",
-                    },
-                    {
-                      "alignSelf": "center",
-                    },
-                  ],
-                  undefined,
-                  undefined,
                 ]
               }
             >
@@ -2046,6 +2045,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
     style={
       {
         "height": 1334,
+        "maxHeight": 1334,
         "padding": 11,
         "width": 750,
       }
@@ -2314,8 +2314,9 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             style={
               [
                 {
-                  "flex": 1,
                   "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
                 },
                 {
                   "marginVertical": 0,
@@ -2932,8 +2933,9 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             style={
               [
                 {
-                  "flex": 1,
                   "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
                 },
                 {
                   "marginVertical": 0,
@@ -3255,6 +3257,10 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
       <View
         entering={BaseAnimationMock {}}
         layout={BaseAnimationMock {}}
+      />
+      <View
+        entering={BaseAnimationMock {}}
+        layout={BaseAnimationMock {}}
       >
         <View
           style={
@@ -3297,8 +3303,9 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             style={
               [
                 {
-                  "flex": 1,
                   "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
                 },
                 {
                   "marginVertical": 0,
@@ -3559,7 +3566,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           style={
             {
               "alignItems": "center",
-              "flex": 1,
+              "flexGrow": 1,
+              "flexShrink": 1,
               "justifyContent": "center",
               "margin": 11,
               "marginBottom": 67,
@@ -3600,9 +3608,13 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               {
                 "alignItems": "center",
                 "alignSelf": "center",
-                "borderRadius": 34,
+                "flexBasis": "auto",
+                "flexGrow": 0,
+                "flexShrink": 1,
                 "justifyContent": "center",
+                "margin": -11,
                 "opacity": 1,
+                "padding": 11,
               }
             }
           >
@@ -3630,36 +3642,22 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 [
                   {
                     "alignItems": "center",
+                    "borderRadius": 34,
                     "flexDirection": "row",
+                    "flexGrow": 0,
+                    "flexShrink": 1,
                     "justifyContent": "center",
                   },
                   {
-                    "alignSelf": "auto",
-                    "opacity": 1,
+                    "alignSelf": "center",
                   },
                   {
                     "height": 67,
-                    "paddingHorizontal": 45,
+                    "paddingHorizontal": 34,
                   },
                   {
-                    "alignItems": "center",
-                    "alignSelf": "stretch",
-                    "borderRadius": 34,
-                    "justifyContent": "center",
+                    "opacity": 1,
                   },
-                  [
-                    {
-                      "alignItems": "center",
-                      "alignSelf": "stretch",
-                      "borderRadius": 34,
-                      "justifyContent": "center",
-                    },
-                    {
-                      "alignSelf": "center",
-                    },
-                  ],
-                  undefined,
-                  undefined,
                 ]
               }
             >

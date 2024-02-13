@@ -19,7 +19,6 @@ import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 
 import { launchPaymentProto } from '../../actions/PaymentProtoActions'
-import { trackConversion } from '../../actions/TrackingActions'
 import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { Airship, showError, showToast } from '../../components/services/AirshipInstance'
@@ -32,6 +31,7 @@ import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { makeCurrencyCodeTable } from '../../util/tokenIdTools'
+import { logEvent } from '../../util/tracking'
 import { CurrencyConfigMap } from '../../util/utils'
 import { asExtendedCurrencyCode } from './types/edgeProviderCleaners'
 import {
@@ -196,6 +196,11 @@ export class EdgeProviderServer implements EdgeProviderMethods {
         isHTML: true
       },
       (error, event) => {
+        if (String(error) === 'not_available') {
+          showError(lstrings.error_no_email_account)
+          return
+        }
+
         if (error) showError(error)
       }
     )
@@ -404,11 +409,11 @@ export class EdgeProviderServer implements EdgeProviderMethods {
             .nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
             .then(exchangeAmount => {
               this._dispatch(
-                trackConversion('EdgeProvider_Conversion_Success', {
+                logEvent('EdgeProvider_Conversion_Success', {
                   pluginId: this._plugin.storeId,
                   orderId,
                   currencyCode: transaction.currencyCode,
-                  exchangeAmount: Number(abs(exchangeAmount))
+                  exchangeAmount: abs(exchangeAmount)
                 })
               )
             })

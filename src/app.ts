@@ -1,8 +1,14 @@
 /* global __DEV__ */
 
+/**
+ * Uncomment next line to get perfomance logging of component
+ * rerenders
+ */
+// import './wdyr'
+
 import Bugsnag from '@bugsnag/react-native'
 import { asObject, asString } from 'cleaners'
-import { Text, TextInput } from 'react-native'
+import { LogBox, Text, TextInput } from 'react-native'
 import RNFS from 'react-native-fs'
 
 import { initDeviceSettings } from './actions/DeviceSettingsActions'
@@ -10,6 +16,9 @@ import { changeTheme, getTheme } from './components/services/ThemeContext'
 import { ENV } from './env'
 import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
+import { initInfoServer } from './util/network'
+
+LogBox.ignoreLogs(['Require cycle:'])
 
 Bugsnag.start({
   onError: event => {
@@ -216,3 +225,4 @@ if (ENV.DEBUG_THEME) {
 }
 
 initDeviceSettings().catch(err => console.log(err))
+initInfoServer().catch(err => console.log(err))

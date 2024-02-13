@@ -307,13 +307,9 @@ async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[
 
 const shownWalletGetCryptoModals: string[] = []
 
-export function checkAndShowGetCryptoModal(navigation: NavigationBase, selectedWalletId?: string, tokenId?: EdgeTokenId): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
+export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): ThunkAction<Promise<void>> {
+  return async dispatch => {
     try {
-      const state = getState()
-      const { currencyWallets } = state.core.account
-      const wallet: EdgeCurrencyWallet = currencyWallets[selectedWalletId ?? state.ui.wallets.selectedWalletId]
-      tokenId = tokenId === undefined ? getWalletTokenId(wallet, state.ui.wallets.selectedCurrencyCode) : tokenId
       const currencyCode = getCurrencyCode(wallet, tokenId)
       // check if balance is zero
       const balance = wallet.balanceMap.get(tokenId)

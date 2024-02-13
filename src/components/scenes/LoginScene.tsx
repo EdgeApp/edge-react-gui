@@ -1,5 +1,5 @@
 import { EdgeAccount } from 'edge-core-js'
-import { LoginScreen } from 'edge-login-ui-rn'
+import { InitialRouteName, LoginScreen } from 'edge-login-ui-rn'
 import { NotificationPermissionsInfo } from 'edge-login-ui-rn/lib/types/ReduxTypes'
 import * as React from 'react'
 import { Keyboard, StatusBar, View } from 'react-native'
@@ -12,8 +12,7 @@ import { initializeAccount, logoutRequest } from '../../actions/LoginActions'
 import { updateNotificationSettings } from '../../actions/NotificationActions'
 import { cacheStyles, Theme, useTheme } from '../../components/services/ThemeContext'
 import { ENV } from '../../env'
-import { ExperimentConfig, getExperimentConfig } from '../../experimentConfig'
-import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { ExperimentConfig } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -29,6 +28,11 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { DotsBackground } from '../ui4/DotsBackground'
 import { LoadingScene } from './LoadingScene'
 
+export interface LoginParams {
+  experimentConfig: ExperimentConfig // TODO: Create a new provider instead to serve the experimentConfig globally
+  loginUiInitialRoute?: InitialRouteName
+}
+
 // Sneak the BlurView over to the login UI:
 // @ts-expect-error
 global.ReactNativeBlurView = BlurView
@@ -39,7 +43,7 @@ let firstRun = true
 
 export function LoginSceneComponent(props: Props) {
   const { navigation, route } = props
-  const { loginUiInitialRoute = 'login' } = route.params ?? {}
+  const { loginUiInitialRoute = 'login', experimentConfig } = route.params
   const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -58,7 +62,6 @@ export function LoginSceneComponent(props: Props) {
   const [counter, setCounter] = React.useState<number>(0)
   const [notificationPermissionsInfo, setNotificationPermissionsInfo] = React.useState<NotificationPermissionsInfo | undefined>()
   const [passwordRecoveryKey, setPasswordRecoveryKey] = React.useState<string | undefined>()
-  const [experimentConfig, setExperimentConfig] = React.useState<ExperimentConfig>()
 
   const fontDescription = React.useMemo(
     () => ({
@@ -158,9 +161,9 @@ export function LoginSceneComponent(props: Props) {
   )
 
   const maybeHandleComplete =
-    ENV.USE_WELCOME_SCREENS && experimentConfig != null && experimentConfig.legacyLanding === 'uspLanding'
+    ENV.USE_WELCOME_SCREENS && experimentConfig != null && experimentConfig.landingType !== 'A_legacy'
       ? () => {
-          navigation.navigate('gettingStarted', {})
+          navigation.navigate('gettingStarted', { experimentConfig })
         }
       : undefined
 
@@ -182,19 +185,13 @@ export function LoginSceneComponent(props: Props) {
     dispatch(showSendLogsModal()).catch(err => showError(err))
   })
 
-  // Wait for the experiment config to initialize before rendering anything
-  useAsyncEffect(
-    async () => {
-      const experimentConfig = await getExperimentConfig()
-      setExperimentConfig(experimentConfig)
-    },
-    [],
-    'LoginSceneComponent'
-  )
+  const handleLogEvent = useHandler((event, values) => {
+    dispatch(logEvent(event, values))
+  })
 
   const inMaestro = isMaestro()
 
-  return loggedIn || experimentConfig == null ? (
+  return loggedIn ? (
     <LoadingScene />
   ) : (
     <View style={styles.container} testID="edge: login-scene">
@@ -217,7 +214,7 @@ export function LoginSceneComponent(props: Props) {
         skipSecurityAlerts
         experimentConfig={experimentConfig}
         onComplete={maybeHandleComplete}
-        onLogEvent={logEvent}
+        onLogEvent={handleLogEvent}
         onLogin={handleLogin}
         onNotificationPermit={setNotificationPermissionsInfo}
       />

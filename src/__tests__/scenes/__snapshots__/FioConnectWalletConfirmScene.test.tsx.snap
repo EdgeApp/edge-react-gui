@@ -35,7 +35,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
       onPress={[Function]}
       value={false}
     >
-      <WithTheme(EdgeTextComponent)
+      <EdgeText
         numberOfLines={4}
         style={
           {
@@ -46,7 +46,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
         }
       >
         I acknowledge that one address from each wallet will become public. These addresses will remain public even after wallets are disconnected.
-      </WithTheme(EdgeTextComponent)>
+      </EdgeText>
     </Radio>
     <WithTheme(SliderComponent)
       disabled={true}

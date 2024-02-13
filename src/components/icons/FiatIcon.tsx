@@ -27,21 +27,34 @@ export const FiatIconComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   const fiatBackgroundIcon = getCurrencyIconUris('fiat', null)
-  const source = { uri: mono ? fiatBackgroundIcon.symbolImageDarkMono : fiatBackgroundIcon.symbolImage }
+  const source = React.useMemo(
+    () => ({ uri: mono ? fiatBackgroundIcon.symbolImageDarkMono : fiatBackgroundIcon.symbolImage }),
+    [fiatBackgroundIcon.symbolImage, fiatBackgroundIcon.symbolImageDarkMono, mono]
+  )
   const fiatSymbol = getSymbolFromCurrency(fixFiatCurrencyCode(fiatCurrencyCode))
-  const fiatSymbolSizing = { fontSize: theme.rem(sizeRem * 0.625) }
 
   // Main view styling
-  const iconSizing = {
-    ...sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem)),
-    height: theme.rem(sizeRem),
-    width: theme.rem(sizeRem)
-  }
+  const viewStyle = React.useMemo(() => {
+    return [
+      styles.fiatIcon,
+      {
+        ...sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem)),
+        height: theme.rem(sizeRem),
+        width: theme.rem(sizeRem)
+      }
+    ]
+  }, [marginRem, sizeRem, styles.fiatIcon, theme])
+
+  const textStyle = React.useMemo(() => {
+    const fiatSymbolSizing = { fontSize: theme.rem(sizeRem * 0.625) }
+
+    return [styles.fiatSymbol, fiatSymbolSizing]
+  }, [sizeRem, styles.fiatSymbol, theme])
 
   return (
-    <View style={[styles.fiatIcon, iconSizing]}>
+    <View style={viewStyle}>
       <FastImage style={StyleSheet.absoluteFill} source={source} />
-      <Text numberOfLines={1} adjustsFontSizeToFit style={[styles.fiatSymbol, fiatSymbolSizing]}>
+      <Text numberOfLines={1} adjustsFontSizeToFit style={textStyle}>
         {fiatSymbol}
       </Text>
     </View>
