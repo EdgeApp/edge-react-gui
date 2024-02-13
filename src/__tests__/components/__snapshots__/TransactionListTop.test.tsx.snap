@@ -705,50 +705,6 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
       }
     }
   >
-    <View
-      style={
-        [
-          {
-            "justifyContent": "center",
-            "marginHorizontal": 22,
-            "paddingBottom": 22,
-          },
-          null,
-          undefined,
-        ]
-      }
-    >
-      <View
-        style={
-          {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "justifyContent": "space-between",
-          }
-        }
-      />
-      <Text
-        adjustsFontSizeToFit={true}
-        minimumFontScale={0.65}
-        numberOfLines={1}
-        style={
-          [
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "includeFontPadding": false,
-            },
-            {
-              "fontFamily": "Quicksand-Medium",
-            },
-            null,
-          ]
-        }
-      >
-        Transactions
-      </Text>
-    </View>
     <BVLinearGradient
       colors={
         [
@@ -776,10 +732,10 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             "height": 1,
           },
           {
-            "marginBottom": 0,
-            "marginLeft": 22,
-            "marginRight": 0,
-            "marginTop": 0,
+            "marginBottom": 11,
+            "marginLeft": 11,
+            "marginRight": -22,
+            "marginTop": 11,
           },
         ]
       }
@@ -1364,50 +1320,6 @@ exports[`TransactionListTop should render 1`] = `
       }
     }
   >
-    <View
-      style={
-        [
-          {
-            "justifyContent": "center",
-            "marginHorizontal": 22,
-            "paddingBottom": 22,
-          },
-          null,
-          undefined,
-        ]
-      }
-    >
-      <View
-        style={
-          {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "justifyContent": "space-between",
-          }
-        }
-      />
-      <Text
-        adjustsFontSizeToFit={true}
-        minimumFontScale={0.65}
-        numberOfLines={1}
-        style={
-          [
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "includeFontPadding": false,
-            },
-            {
-              "fontFamily": "Quicksand-Medium",
-            },
-            null,
-          ]
-        }
-      >
-        Transactions
-      </Text>
-    </View>
     <BVLinearGradient
       colors={
         [
@@ -1435,10 +1347,10 @@ exports[`TransactionListTop should render 1`] = `
             "height": 1,
           },
           {
-            "marginBottom": 0,
-            "marginLeft": 22,
-            "marginRight": 0,
-            "marginTop": 0,
+            "marginBottom": 11,
+            "marginLeft": 11,
+            "marginRight": -22,
+            "marginTop": 11,
           },
         ]
       }

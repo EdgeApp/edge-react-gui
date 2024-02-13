@@ -58,7 +58,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   headerContainer: {
     paddingLeft: theme.rem(1),
-    paddingVertical: theme.rem(0.5)
+    paddingTop: theme.rem(0.5)
   },
   headerDate: {
     fontSize: theme.rem(0.75),
