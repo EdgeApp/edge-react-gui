@@ -129,6 +129,13 @@ export const WcSmartContractModal = (props: Props) => {
           await walletConnect.approveRequest(topic, requestId, signedTxs)
           break
         }
+        case 'cosmos_getAccounts':
+        case 'cosmos_signDirect':
+        case 'cosmos_signAmino': {
+          const cleanPayload = asEither(asCosmosGetAccountsPayload, asCosmosSignDirectPayload, asCosmosSignAminoPayload)(payload)
+          const result = await wallet.signMessage('', { otherParams: cleanPayload })
+          await walletConnect.approveRequest(topic, requestId, JSON.parse(result))
+        }
       }
     } catch (e: any) {
       await walletConnect.rejectRequest(topic, requestId)
@@ -247,7 +254,42 @@ const asAlgoWcRpcPayload = asObject({
   )
 })
 
-const asPayload = asObject({ method: asEither(asAlgoPayloadMethod, asEvmSignMethod, asEvmTransactionMethod) }).withRest
+const asCosmosPayloadMethod = asValue('cosmos_getAccounts', 'cosmos_signDirect', 'cosmos_signAmino')
+const asCosmosGetAccountsPayload = asObject({
+  method: asValue('cosmos_getAccounts'),
+  params: asObject({})
+})
+const asCosmosSignDirectPayload = asObject({
+  method: asValue('cosmos_signDirect'),
+  params: asObject({
+    signerAddress: asString,
+    signDoc: asObject({
+      chainId: asString,
+      accountNumber: asString,
+      authInfoBytes: asString,
+      bodyBytes: asString
+    })
+  })
+})
+const asCosmosSignAminoPayload = asObject({
+  method: asValue('cosmos_signAmino'),
+  params: asObject({
+    signerAddress: asString,
+    signDoc: asObject({
+      chain_id: asString,
+      account_number: asString,
+      sequence: asString,
+      memo: asString,
+      msgs: asArray(asUnknown),
+      fee: asObject({
+        amount: asArray(asObject({ denom: asString, amount: asString })),
+        gas: asString
+      })
+    })
+  })
+})
+
+const asPayload = asObject({ method: asEither(asCosmosPayloadMethod, asAlgoPayloadMethod, asEvmSignMethod, asEvmTransactionMethod) }).withRest
 
 export const asWcSmartContractModalProps = asObject({
   dApp: asObject({
