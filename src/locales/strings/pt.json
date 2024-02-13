@@ -190,7 +190,6 @@
   "wallet_list_referral_link_currency_invalid": "A moeda a ser criada é inválida",
   "wallet_list_referral_link_currency_loading": "Aguente firme. Criando a carteira necessária para esta promoção",
   "wallet_list_referral_link_ask_wallet_creation": "Você precisa da carteira %s para esta promoção, deseja criar uma?",
-  "wallet_list_referral_link_cancelled_wallet_creation": "O usuário não aprovou a criação da carteira para a promoção",
   "wallet_list_wallet_search": "Pesquisar Carteiras",
   "compromised_key_label": "Chave comprometida",
   "create_wallet_choice_new_button": "Criar uma nova carteira",
