@@ -258,7 +258,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               "borderRadius": 34,
               "flexDirection": "row",
               "flexGrow": 0,
-              "flexShrink": 1,
+              "flexShrink": 0,
               "justifyContent": "center",
             },
             {
@@ -386,7 +386,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               "borderRadius": 34,
               "flexDirection": "row",
               "flexGrow": 0,
-              "flexShrink": 1,
+              "flexShrink": 0,
               "justifyContent": "center",
             },
             {
