@@ -16,6 +16,7 @@
 - changed: Updated swipe-able underlay elements for wallet list rows to match UI4
 - changed: Upgrade to Android NDK version 26.1.10909125.
 - changed: Re-enable fake signup captcha experiment at 50%
+- changed: Add a referral ID to share links
 - fixed: Resolved levitating search bar bug on Android
 - fixed: Show a useful, localized error message when device doesn't have an email account
 - fixed: Make FilledTextInputs take up constant vertical space
