@@ -190,7 +190,6 @@
   "wallet_list_referral_link_currency_invalid": "La valuta da creare non è valida",
   "wallet_list_referral_link_currency_loading": "Tieni duro. Sto creando un portafoglio necessario per questa promozione",
   "wallet_list_referral_link_ask_wallet_creation": "Hai bisogno di un portafoglio %s per questa promozione, vuoi crearne uno?",
-  "wallet_list_referral_link_cancelled_wallet_creation": "L'utente non ha approvato la creazione del portafoglio per la promozione",
   "wallet_list_wallet_search": "Cerca portafogli",
   "compromised_key_label": "Chiave Compromessa",
   "create_wallet_choice_new_button": "Crea un nuovo portafoglio",
