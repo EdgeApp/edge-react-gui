@@ -1476,6 +1476,7 @@
   "getting_started_button_sign_in": "すでにアカウントをお持ちですか？サインイン",
   "getting_started_slide_1_footnote": "ユーザーはアプリ内で自由にシードフレーズにアクセスすることができます。",
   "getting_started_slide_1_message": "紙に安全でないバックアップを書き留めるのはもうさようならです。クライアント側の暗号化、自動アカウントのバックアップ、二段階認証により、Edgeは自己保管を誰もが簡単に行えるようにします。",
+  "getting_started_slide_1_message_alt": "Easily recover your Edge wallet and benefit from the added protection of two-factor authentication. Edge simplifies self-custody for everyone.",
   "getting_started_slide_1_title": "私たちはあなたを\n*カバー*しています",
   "getting_started_slide_2_message": "Edgeはユーザーの資金にアクセス権を持っていません、つまり口座の凍結や資産の没収の心配はありません。安心して購入、売却、取引が行えます。",
   "getting_started_slide_2_title": "これらはあなたの資産です。\nあなたが*コントロール*しています。",
