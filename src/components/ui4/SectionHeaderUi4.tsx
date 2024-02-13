@@ -48,7 +48,10 @@ export const SectionHeaderUi4 = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   rightTappableContainer: {
     flex: 1,
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    // Increase tappable area with padding, while net 0 with negative margin to visually appear as if 0 margins/padding
+    padding: theme.rem(0.75),
+    margin: -theme.rem(0.75)
   },
   tappableText: {
     color: theme.iconTappable,

@@ -481,7 +481,9 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           {
+            "margin": -22,
             "opacity": 1,
+            "padding": 22,
           }
         }
         testID="undefined.clearIcon"

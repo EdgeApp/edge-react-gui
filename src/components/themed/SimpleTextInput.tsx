@@ -213,11 +213,11 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
           />
         </InnerContainer>
 
-        <TouchableOpacity accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
+        <TouchContainer accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
           <SideContainer size={rightIconSize}>
             <CloseIconAnimated color={iconColor} size={rightIconSize} />
           </SideContainer>
-        </TouchableOpacity>
+        </TouchContainer>
       </Container>
     </TouchableWithoutFeedback>
   )
@@ -302,6 +302,12 @@ const InputField = styledWithRef(AnimatedTextInput)<{
     }))
   ]
 })
+
+const TouchContainer = styled(TouchableOpacity)(theme => ({
+  // Increase tappable area with padding, while net 0 with negative margin to visually appear as if 0 margins/padding
+  padding: theme.rem(1),
+  margin: -theme.rem(1)
+}))
 
 function useAnimatedColorInterpolateFn(fromColor: string, toColor: string, disabledColor: string) {
   const interpolateFn = useMemo(() => {

@@ -142,7 +142,7 @@ exports[`FilledTextInput should render with some props 1`] = `
           value="string"
         />
       </StyledComponent(View)>
-      <TouchableOpacity
+      <StyledComponent(TouchableOpacity)
         accessible={true}
         onPress={[Function]}
         testID="string.clearIcon"
@@ -167,7 +167,7 @@ exports[`FilledTextInput should render with some props 1`] = `
             }
           />
         </StyledComponent(View)>
-      </TouchableOpacity>
+      </StyledComponent(TouchableOpacity)>
     </StyledComponent(View)>
   </TouchableWithoutFeedback>
   <StyledComponent(View)
