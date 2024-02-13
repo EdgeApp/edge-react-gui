@@ -9,6 +9,7 @@
 - added: Cosmos Hub (ATOM) support
 - added: Axelar (AXL) support
 - added: Add WalletConnect support for Cosmos-based chains
+- changed: Replace A/B test 'legacyLanding' with A/B/C/D test 'landingType'
 - changed: Animate buy/sell scenes
 - changed: Require Android 9 or above.
 - changed: Reword of the CrashScene to help users to force close (not uninstall) Edge
@@ -18,6 +19,7 @@
 - fixed: Resolved levitating search bar bug on Android
 - fixed: Show a useful, localized error message when device doesn't have an email account
 - fixed: Make FilledTextInputs take up constant vertical space
+- removed: swipeLastUsp experiment (always allow swipes on the last USP)
 
 ## 4.0.1
 

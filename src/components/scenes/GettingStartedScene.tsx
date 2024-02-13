@@ -1,4 +1,4 @@
-import { CreateAccountType, InitialRouteName } from 'edge-login-ui-rn'
+import { InitialRouteName } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { useEffect } from 'react'
 import { Image, Pressable, Text, View } from 'react-native'
@@ -22,8 +22,7 @@ import uspImage1 from '../../assets/images/gettingStarted/usp1.png'
 import uspImage2 from '../../assets/images/gettingStarted/usp2.png'
 import uspImage3 from '../../assets/images/gettingStarted/usp3.png'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { getExperimentConfigValue } from '../../experimentConfig'
-import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { ExperimentConfig } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -42,6 +41,10 @@ import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 const ANIM_DURATION = 1000
 
+export interface GettingStartedParams {
+  experimentConfig: ExperimentConfig // TODO: Create a new provider instead to serve the experimentConfig globally
+}
+
 interface Props extends EdgeSceneProps<'gettingStarted'> {}
 
 interface SectionData {
@@ -51,75 +54,82 @@ interface SectionData {
   message: string
   title: string
 }
-const sections: SectionData[] = [
-  {
-    image: uspImage0,
-    key: 'slide1',
-    message: lstrings.getting_started_slide_1_message,
-    title: lstrings.getting_started_slide_1_title,
-    footnote: lstrings.getting_started_slide_1_footnote
-  },
-  {
-    image: uspImage1,
-    key: 'slide2',
-    message: lstrings.getting_started_slide_2_message,
-    title: lstrings.getting_started_slide_2_title
-  },
-  {
-    image: uspImage2,
-    key: 'slide3',
-    message: lstrings.getting_started_slide_3_message,
-    title: lstrings.getting_started_slide_3_title
-  },
-  {
-    image: uspImage3,
-    key: 'slide4',
-    message: lstrings.getting_started_slide_4_message,
-    title: lstrings.getting_started_slide_4_title
-  }
-]
+
+const slide1 = {
+  image: uspImage0,
+  key: 'slide1',
+  message: lstrings.getting_started_slide_1_message,
+  title: lstrings.getting_started_slide_1_title,
+  footnote: lstrings.getting_started_slide_1_footnote
+}
+const slide1Alt = {
+  image: uspImage0,
+  key: 'slide1Alt',
+  message: lstrings.getting_started_slide_1_message_alt,
+  title: lstrings.getting_started_slide_1_title,
+  footnote: lstrings.getting_started_slide_1_footnote
+}
+const slide2 = {
+  image: uspImage1,
+  key: 'slide2',
+  message: lstrings.getting_started_slide_2_message,
+  title: lstrings.getting_started_slide_2_title
+}
+const slide3 = {
+  image: uspImage2,
+  key: 'slide3',
+  message: lstrings.getting_started_slide_3_message,
+  title: lstrings.getting_started_slide_3_title
+}
+const slide4 = {
+  image: uspImage3,
+  key: 'slide4',
+  message: lstrings.getting_started_slide_4_message,
+  title: lstrings.getting_started_slide_4_title
+}
+
+const sectionsVariantMap: { [key: string]: SectionData[] } = {
+  default: [slide1, slide2, slide3, slide4],
+  C_UspsMinusWGYC: [slide2, slide3, slide4],
+  D_UspsAltWGYC: [slide1Alt, slide2, slide3, slide4]
+}
 
 export const GettingStartedScene = (props: Props) => {
-  const { navigation } = props
+  const { navigation, route } = props
+  const { experimentConfig } = route.params
+  const { createAccountType, landingType } = experimentConfig
   const context = useSelector(state => state.core.context)
   const isLoggedIn = useSelector(state => state.ui.settings.settingsLoaded ?? false)
   const localUsers = useWatch(context, 'localUsers')
   const hasLocalUsers = localUsers.length > 0
 
-  const [isFinalSwipeEnabled, setIsFinalSwipeEnabled] = React.useState(true)
-  const [createAccountType, setCreateAccountType] = React.useState<CreateAccountType>('full')
+  const sections: SectionData[] = sectionsVariantMap[landingType] ?? sectionsVariantMap.default
 
   // An extra index is added to account for the extra initial usp slide OR to
   // allow the SwipeOffsetDetector extra room for the user to swipe beyond to
   // trigger the final navigation.
-  // Feature is under A/B testing.
-  const paginationCount = sections.length + (isFinalSwipeEnabled ? 1 : 0)
+  const paginationCount = sections.length + 1
   const swipeOffset = useSharedValue(0)
 
   // Route helpers
-  const getNewAccountRoute = (createAccountType: CreateAccountType): InitialRouteName => {
-    return hasLocalUsers || createAccountType === 'full' ? 'new-account' : 'new-light-account'
-  }
-  const getPasswordLoginRoute = (createAccountType: CreateAccountType): InitialRouteName => {
-    return hasLocalUsers || createAccountType === 'full' ? 'login-password' : 'login-password-light'
-  }
+  const newAccountRoute: InitialRouteName = hasLocalUsers || createAccountType === 'full' ? 'new-account' : 'new-light-account'
+
+  const passwordLoginRoute: InitialRouteName = hasLocalUsers || createAccountType === 'full' ? 'login-password' : 'login-password-light'
 
   const handleFinalSwipe = useHandler(() => {
-    if (isFinalSwipeEnabled) {
-      // This delay is necessary to properly reset the scene since it remains on
-      // the stack.
-      setTimeout(() => {
-        swipeOffset.value = 0
-      }, 500)
+    // This delay is necessary to properly reset the scene since it remains on
+    // the stack.
+    setTimeout(() => {
+      swipeOffset.value = 0
+    }, 500)
 
-      logEvent('Signup_Welcome')
+    logEvent('Signup_Welcome')
 
-      // Either route to password login or account creation
-      if (hasLocalUsers) {
-        navigation.navigate('login', { loginUiInitialRoute: getPasswordLoginRoute(createAccountType) })
-      } else {
-        navigation.navigate('login', { loginUiInitialRoute: getNewAccountRoute(createAccountType) })
-      }
+    // Either route to password login or account creation
+    if (hasLocalUsers) {
+      navigation.navigate('login', { loginUiInitialRoute: passwordLoginRoute, experimentConfig })
+    } else {
+      navigation.navigate('login', { loginUiInitialRoute: newAccountRoute, experimentConfig })
     }
   })
 
@@ -129,16 +139,16 @@ export const GettingStartedScene = (props: Props) => {
 
   const handlePressSignIn = useHandler(() => {
     logEvent('Welcome_Signin')
-    navigation.navigate('login', { loginUiInitialRoute: getPasswordLoginRoute(createAccountType) })
+    navigation.navigate('login', { loginUiInitialRoute: passwordLoginRoute, experimentConfig })
   })
 
   const handlePressSignUp = useHandler(() => {
     logEvent('Signup_Welcome')
-    navigation.navigate('login', { loginUiInitialRoute: getNewAccountRoute(createAccountType) })
+    navigation.navigate('login', { loginUiInitialRoute: newAccountRoute, experimentConfig })
   })
 
   const handlePressSkip = useHandler(() => {
-    navigation.navigate('login', {})
+    navigation.navigate('login', { experimentConfig })
   })
 
   // Redirect to login or new account screen if the user swipes past the last
@@ -146,20 +156,10 @@ export const GettingStartedScene = (props: Props) => {
   useAnimatedReaction(
     () => swipeOffset.value,
     value => {
-      if (value === 5) {
+      if (value === paginationCount) {
         runOnJS(handleFinalSwipe)()
       }
     }
-  )
-
-  // Initialize variant config values
-  useAsyncEffect(
-    async () => {
-      setIsFinalSwipeEnabled((await getExperimentConfigValue('swipeLastUsp')) === 'true')
-      setCreateAccountType(await getExperimentConfigValue('createAccountType'))
-    },
-    [],
-    'GettingStartedScene'
   )
 
   // Redirect to login screen if device has memory of accounts
@@ -168,9 +168,9 @@ export const GettingStartedScene = (props: Props) => {
   // effect would cause an unwanted navigation while logged in.
   useEffect(() => {
     if (localUsers.length > 0 && !isLoggedIn) {
-      navigation.navigate('login', {})
+      navigation.navigate('login', { experimentConfig })
     }
-  }, [isLoggedIn, localUsers, navigation])
+  }, [experimentConfig, isLoggedIn, localUsers, navigation])
 
   return (
     <SceneWrapper hasHeader={false}>
@@ -213,7 +213,7 @@ export const GettingStartedScene = (props: Props) => {
             })}
           </HeroContainer>
           <Pagination>
-            {Array.from({ length: paginationCount + (isFinalSwipeEnabled ? 0 : 1) }).map((_, index) => (
+            {Array.from({ length: paginationCount }).map((_, index) => (
               <Pressable key={index} onPress={() => handlePressIndicator(index)}>
                 <PageIndicator swipeOffset={swipeOffset} itemIndex={index} />
               </Pressable>
