@@ -190,7 +190,6 @@
   "wallet_list_referral_link_currency_invalid": "Zu erstellende Währung ist ungültig",
   "wallet_list_referral_link_currency_loading": "Gleich geschafft. Erstelle die notwendige Wallet für diese Promotion",
   "wallet_list_referral_link_ask_wallet_creation": "Sie benötigen %s Wallet für diese Promotion, wollen Sie eine erstellen?",
-  "wallet_list_referral_link_cancelled_wallet_creation": "Benutzer hat das Erstellen der Wallet für die Werbung nicht genehmigt",
   "wallet_list_wallet_search": "Wallets durchsuchen",
   "compromised_key_label": "Compromised Key",
   "create_wallet_choice_new_button": "Neue Geldbörse erstellen",
