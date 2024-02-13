@@ -749,13 +749,15 @@ exports[`CreateWalletAccountSelect renders 1`] = `
           {
             "alignItems": "center",
             "alignSelf": "center",
-            "borderRadius": 34,
+            "flexBasis": "auto",
+            "flexGrow": 0,
+            "flexShrink": 1,
             "justifyContent": "center",
-            "marginBottom": 11,
-            "marginLeft": 11,
-            "marginRight": 11,
-            "marginTop": 11,
             "opacity": 1,
+            "paddingBottom": 22,
+            "paddingLeft": 22,
+            "paddingRight": 22,
+            "paddingTop": 22,
           }
         }
       >
@@ -783,41 +785,22 @@ exports[`CreateWalletAccountSelect renders 1`] = `
             [
               {
                 "alignItems": "center",
+                "borderRadius": 34,
                 "flexDirection": "row",
+                "flexGrow": 0,
+                "flexShrink": 1,
                 "justifyContent": "center",
               },
               {
                 "alignSelf": "center",
-                "opacity": 0.3,
               },
               {
                 "height": 67,
-                "paddingHorizontal": 45,
+                "paddingHorizontal": 34,
               },
               {
-                "alignItems": "center",
-                "alignSelf": "stretch",
-                "borderRadius": 34,
-                "justifyContent": "center",
+                "opacity": 0.3,
               },
-              [
-                {
-                  "alignItems": "center",
-                  "alignSelf": "stretch",
-                  "borderRadius": 34,
-                  "justifyContent": "center",
-                },
-                {
-                  "alignSelf": "center",
-                },
-              ],
-              {
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-              },
-              undefined,
             ]
           }
         >

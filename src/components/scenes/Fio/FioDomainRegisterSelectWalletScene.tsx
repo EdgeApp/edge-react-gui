@@ -236,7 +236,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
             />
           </CardUi4>
           {!loading && paymentWallet && paymentWallet.id && (
-            <MainButton label={lstrings.string_next_capitalized} marginRem={1} onPress={this.onNextPress} type="primary" />
+            <MainButton label={lstrings.string_next_capitalized} marginRem={[2, 0, 2]} onPress={this.onNextPress} type="primary" />
           )}
           {errorMessage != null && <AlertCardUi4 title={lstrings.error_unexpected_title} body={errorMessage} type="error" />}
         </View>

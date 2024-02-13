@@ -47,7 +47,7 @@ export function PermissionsSettingModal(props: {
   return (
     <ModalUi4 bridge={bridge} onCancel={handleClose}>
       <ModalMessage>{message}</ModalMessage>
-      <MainButton label={lstrings.string_ok_cap} marginRem={0.5} type="primary" onPress={handlePress} />
+      <MainButton label={lstrings.string_ok_cap} marginRem={1} type="primary" onPress={handlePress} />
     </ModalUi4>
   )
 }

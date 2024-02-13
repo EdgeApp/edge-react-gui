@@ -18,7 +18,7 @@ interface Props {
 
 /**
  * A view representing rows of data split on the left and right edges of the
- * line. Neither side will exceed 50% of the width of the view.
+ * line.
  *
  * If the right side is a string and onRightPress handler is provided, it will
  * be rendered as green tappable text, else it's up to the caller to decide.
@@ -47,7 +47,8 @@ export const SectionHeaderUi4 = (props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   rightTappableContainer: {
-    flex: 1,
+    flexGrow: 1,
+    flexShrink: 1,
     justifyContent: 'flex-end',
     // Increase tappable area with padding, while net 0 with negative margin to visually appear as if 0 margins/padding
     padding: theme.rem(0.75),

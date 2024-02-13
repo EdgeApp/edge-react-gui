@@ -149,7 +149,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
         <SettingsLabelRow label={lstrings.string_end} right={endDateString} onPress={this.handleEndDate} />
         <SettingsHeaderRow icon={<EntypoIcon name="export" color={theme.icon} size={iconSize} />} label={lstrings.export_transaction_export_type} />
         {Platform.OS === 'android' ? this.renderAndroidSwitches() : this.renderIosSwitches()}
-        {disabledExport ? null : <MainButton label={lstrings.string_export} marginRem={1.5} onPress={this.handleSubmit} type="secondary" />}
+        {disabledExport ? null : <MainButton label={lstrings.string_export} marginRem={[3, 0, 1]} onPress={this.handleSubmit} type="secondary" />}
       </SceneWrapper>
     )
   }

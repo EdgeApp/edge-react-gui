@@ -46,7 +46,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     ...theme.cardTextShadow
   },
   verticalSplitContainer: {
-    flex: 1, // Make sure the card fills the space
+    flex: 1, // Make sure the card fills the space evenly compared to the other HomeCards
     justifyContent: 'space-between', // Aligns title to the top, footer to the bottom
     margin: theme.rem(0.5)
   }

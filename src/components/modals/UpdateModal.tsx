@@ -43,7 +43,7 @@ export function UpdateModal(props: Props) {
     >
       <ModalMessage>{message}</ModalMessage>
       <MainButton label={lstrings.update_now} marginRem={0.5} type="primary" onPress={handleUpdate} />
-      <MainButton label={lstrings.update_later} marginRem={0.5} type="secondary" onPress={onSkip} />
+      <MainButton label={lstrings.update_later} marginRem={[0.5, 0, 1]} type="secondary" onPress={onSkip} />
     </ModalUi4>
   )
 }

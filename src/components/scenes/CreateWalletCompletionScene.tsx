@@ -156,9 +156,8 @@ const CreateWalletCompletionComponent = (props: Props) => {
           disabled={!done}
           label={!done ? undefined : lstrings.string_done_cap}
           type="secondary"
-          marginRem={[0, 0, 0.5]}
+          marginRem={[0, 0, 1]}
           onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
-          alignSelf="center"
         />
       </View>
     )

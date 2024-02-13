@@ -323,13 +323,7 @@ export const AddressFormScene = React.memo((props: Props) => {
                 onChangeText={handleChangePostalCode}
                 onBlur={handleHideAddressHints}
               />
-              <MainButton
-                label={lstrings.string_next_capitalized}
-                marginRem={[1, 0.5, 1, 0.5]}
-                type="secondary"
-                disabled={disableNextButton}
-                onPress={handleSubmit}
-              />
+              <MainButton label={lstrings.string_next_capitalized} marginRem={[2, 0, 1]} disabled={disableNextButton} onPress={handleSubmit} />
             </KeyboardAwareScrollView>
           </View>
         </>

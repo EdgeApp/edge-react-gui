@@ -128,7 +128,7 @@ export const InfoDisplayScene = React.memo((props: Props) => {
         <EdgeText numberOfLines={12}>{promptMessage}</EdgeText>
       </View>
       {renderGroups()}
-      <MainButton label={lstrings.string_done_cap} marginRem={[2, 1, 1.5, 1]} type="secondary" onPress={handleDone} />
+      <MainButton label={lstrings.string_done_cap} marginRem={[4, 0, 1]} type="secondary" onPress={handleDone} />
     </SceneWrapper>
   )
 })

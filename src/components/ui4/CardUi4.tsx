@@ -177,7 +177,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     pointerEvents: 'none'
   },
   iconRowContainer: {
-    flex: 1,
+    flexGrow: 1,
+    flexShrink: 1,
     flexDirection: 'row',
     alignItems: 'center'
   },

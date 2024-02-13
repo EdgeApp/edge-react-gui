@@ -46,7 +46,7 @@ export class FioAddressRegistered extends React.Component<Props> {
             <Text style={styles.title}>{fioName}</Text>
             {this.renderExpDate()}
           </View>
-          <MainButton marginRem={2} onPress={() => navigation.navigate('fioAddressList', {})} label={lstrings.title_fio_names} />
+          <MainButton marginRem={[4, 0, 2]} onPress={() => navigation.navigate('fioAddressList', {})} label={lstrings.title_fio_names} />
         </View>
       </SceneWrapper>
     )
