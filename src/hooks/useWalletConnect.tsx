@@ -204,6 +204,7 @@ const getSupportedNamespaces = (chainId: WalletConnectChainId, addr: string) => 
   const { namespace, reference } = chainId
 
   let methods: string[]
+  let events = ['chainChanged', 'accountsChanged']
   switch (namespace) {
     case 'eip155':
       methods = [
@@ -219,13 +220,17 @@ const getSupportedNamespaces = (chainId: WalletConnectChainId, addr: string) => 
 
     case 'algorand':
       methods = ['algo_signTxn']
+      break
+    case 'cosmos':
+      methods = ['cosmos_getAccounts', 'cosmos_signDirect', 'cosmos_signAmino']
+      events = []
   }
 
   return {
     [namespace]: {
       chains: [`${namespace}:${reference}`],
       methods,
-      events: ['chainChanged', 'accountsChanged'],
+      events,
       accounts: [`${namespace}:${reference}:${addr}`]
     }
   }

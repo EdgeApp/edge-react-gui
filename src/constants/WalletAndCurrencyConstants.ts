@@ -488,14 +488,22 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'COREUM',
     dummyPublicAddress: 'core18rv2a6cjkk3lnayy29hez6s2ftpe9llqnce2vu',
     isStakingSupported: true,
-    isImportKeySupported: true
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'cosmos',
+      reference: 'coreum-mainnet-1'
+    }
   },
   osmosis: {
     initWalletName: lstrings.string_first_osmosis_wallet_name,
     chainCode: 'OSMO',
     dummyPublicAddress: 'osmo156hdwk3gx4wkq0r5m0s3ag2yj5pawfeudml34a',
     isCustomTokensSupported: true,
-    isImportKeySupported: true
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'cosmos',
+      reference: 'osmosis-1'
+    }
   },
   thorchainrune: {
     initWalletName: lstrings.string_first_thorchainrune_wallet_name,
