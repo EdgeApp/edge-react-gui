@@ -183,19 +183,19 @@ const getStyles = cacheStyles((theme: Theme) => {
       alignSelf: 'stretch',
       flexBasis: 'auto',
       flexGrow: 0,
-      flexShrink: 1
+      flexShrink: 0
     },
     touchContainerSolo: {
       alignSelf: 'center',
       flexBasis: 'auto',
       flexGrow: 0,
-      flexShrink: 1
+      flexShrink: 0
     },
     // Visible Container Styles
     visibleContainerCommon: {
       borderRadius: theme.rem(theme.buttonBorderRadiusRem),
       flexGrow: 0,
-      flexShrink: 1,
+      flexShrink: 0,
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection: 'row'
