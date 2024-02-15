@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: Some text inputs not selectable for some Samsung devices
+
 ## 4.1.0
 
 - added: FIO conversion analytics events.

@@ -215,6 +215,11 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
 
   const InputComponent = numeric ? StyledNumericInput : StyledAnimatedTextInput
 
+  // HACK: Some Android devices/versions, mostly Samsung, have a bug where the
+  // text input always blurs immediately after focusing.
+  const { keyboardType } = props
+  const hackKeyboardType = isAndroid && (keyboardType == null || keyboardType === 'default') ? 'visible-password' : keyboardType
+
   return (
     <View style={spaceStyle}>
       <TouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
@@ -236,7 +241,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               animated
               editable={!disabled}
               ref={inputRef}
-              keyboardType={props.keyboardType}
+              keyboardType={hackKeyboardType}
               returnKeyType={props.returnKeyType}
               accessibilityState={{ disabled }}
               autoFocus={autoFocus}
