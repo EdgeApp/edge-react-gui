@@ -81,7 +81,7 @@ export const WcConnectionsScene = (props: Props) => {
       const result = await Airship.show<string | undefined>(bridge => (
         <ScanModal
           bridge={bridge}
-          title={lstrings.scan_qr_label}
+          scanModalTitle={lstrings.scan_qr_label}
           textModalHint={lstrings.wc_scan_modal_text_modal_hint}
           textModalTitle={lstrings.wc_scan_modal_text_modal_title}
         />

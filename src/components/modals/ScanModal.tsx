@@ -25,15 +25,20 @@ import { SceneHeader } from '../themed/SceneHeader'
 
 interface Props {
   bridge: AirshipBridge<string | undefined>
+
+  // The initial ScanModal title
+  scanModalTitle: string
+
+  // If the user opts to instead enter text in lieu of the scan, these are the
+  // props for that other modal
   textModalAutoFocus?: boolean
   textModalBody?: React.ReactNode | string
   textModalHint?: string
   textModalTitle?: string
-  title: string
 }
 
 export const ScanModal = (props: Props) => {
-  const { bridge, textModalAutoFocus, textModalBody, textModalHint, textModalTitle, title } = props
+  const { bridge, textModalAutoFocus, textModalBody, textModalHint, textModalTitle, scanModalTitle } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -164,7 +169,7 @@ export const ScanModal = (props: Props) => {
 
           <View style={styles.overlayContainer}>
             <View style={styles.headerContainer} onLayout={handleLayoutHeaderContainer}>
-              <SceneHeader title={title} underline withTopMargin />
+              <SceneHeader title={scanModalTitle} underline withTopMargin />
             </View>
             <View style={[styles.inner, { flexDirection: isLandscape ? 'row' : 'column' }]}>
               <View style={styles.peepholeSpace} onLayout={handleLayoutPeepholeSpace} />
