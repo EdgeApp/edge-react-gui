@@ -37,7 +37,6 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { TitleText } from '../text/TitleText'
 import { DividerLine } from './DividerLine'
-import { ModalMessage, ModalTitle } from './ModalParts'
 
 const xButtonGradientStart = { x: 0, y: 0 }
 const xButtonGradientEnd = { x: 0, y: 0.75 }
@@ -122,14 +121,10 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
     Airship.show<string | undefined>(bridge => (
       <ScanModal
         bridge={bridge}
-        title={lstrings.scan_qr_label}
+        scanModalTitle={lstrings.scan_qr_label}
         textModalAutoFocus={false}
-        textModalBody={
-          <ScrollView scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
-            <ModalTitle>{lstrings.enter_any_title}</ModalTitle>
-            <ModalMessage>{lstrings.enter_any_body}</ModalMessage>
-          </ScrollView>
-        }
+        textModalTitle={lstrings.enter_any_title}
+        textModalBody={lstrings.enter_any_body}
         textModalHint={lstrings.enter_any_input_hint}
       />
     ))
