@@ -180,7 +180,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
     Airship.show<string | undefined>(bridge => (
       <ScanModal
         bridge={bridge}
-        title={lstrings.scan_qr_label}
+        scanModalTitle={lstrings.scan_qr_label}
         textModalHint={lstrings.send_scan_modal_text_modal_hint}
         textModalBody={message}
         textModalTitle={title}
