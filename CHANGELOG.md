@@ -5,6 +5,10 @@
 - changed: Reword of the CrashScene to help users to force close (not uninstall) Edge
 - changed: Upgrade to Android NDK version 26.1.10909125.
 
+## 4.0.3 (2024-02-15)
+
+- changed: (FIO) Use a backup balance method for accounts affected by unstake chain data issue
+
 ## 4.0.2 (2024-02-13)
 
 - fixed: CAPTCHA image was not draggable on Android.
