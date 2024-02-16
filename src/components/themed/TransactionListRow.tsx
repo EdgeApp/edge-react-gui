@@ -276,6 +276,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   row: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
     marginHorizontal: theme.rem(0.5)
   },
@@ -303,6 +304,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   unconfirmedText: {
     flexShrink: 1,
     fontSize: theme.rem(0.75),
-    color: theme.warningText
+    color: theme.warningText,
+    marginRight: theme.rem(1)
   }
 }))
