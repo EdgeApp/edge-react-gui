@@ -15,7 +15,7 @@ import {
   StakePoolFullError,
   StakePosition
 } from '../../../plugins/stake-plugins/types'
-import { getDisplayDenomination, getExchangeDenominationFromAccount } from '../../../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
@@ -304,7 +304,7 @@ const StakeModifySceneComponent = (props: Props) => {
         : undefined
 
     const quoteCurrencyCode = currencyCode
-    const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, quoteCurrencyCode)
+    const quoteDenom = getExchangeDenomByCurrencyCode(account.currencyConfig[pluginId], quoteCurrencyCode)
 
     const isClaim = allocationType === 'claim'
 
@@ -350,7 +350,7 @@ const StakeModifySceneComponent = (props: Props) => {
         : undefined
     if (quoteAllocation == null) return null
 
-    const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, currencyCode)
+    const quoteDenom = getExchangeDenomByCurrencyCode(account.currencyConfig[pluginId], currencyCode)
     const title = modification === 'stake' ? lstrings.stake_estimated_staking_fee : lstrings.stake_estimated_unstaking_fee
     const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
@@ -378,7 +378,7 @@ const StakeModifySceneComponent = (props: Props) => {
         : undefined
     if (quoteAllocation == null) return null
 
-    const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, currencyCode)
+    const quoteDenom = getExchangeDenomByCurrencyCode(account.currencyConfig[pluginId], currencyCode)
     const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
     return (

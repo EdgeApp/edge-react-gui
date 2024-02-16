@@ -3,7 +3,7 @@ import csvStringify from 'csv-stringify/lib/browser/sync'
 import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import shajs from 'sha.js'
 
-import { getExchangeDenomination } from '../selectors/DenominationSelectors'
+import { getExchangeDenomByCurrencyCode } from '../selectors/DenominationSelectors'
 import { ThunkAction } from '../types/reduxTypes'
 import { getHistoricalRate } from '../util/exchangeRates'
 import { DECIMAL_PRECISION } from '../util/utils'
@@ -35,8 +35,7 @@ export async function exportTransactionsToCSV(
 
 export function updateTxsFiat(wallet: EdgeCurrencyWallet, currencyCode: string, txs: EdgeTransaction[]): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    const state = getState()
-    const exchangeDenom = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+    const exchangeDenom = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
     const { fiatCurrencyCode } = wallet
 
     let promises: Array<Promise<void>> = []

@@ -10,7 +10,7 @@ import { getTxActionDisplayInfo } from '../../actions/CategoriesActions'
 import { exportTransactionsToBitwave, exportTransactionsToCSV, exportTransactionsToQBO, updateTxsFiat } from '../../actions/TransactionExportActions'
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
@@ -395,8 +395,8 @@ export const TransactionsExportScene = connect<StateProps, DispatchProps, OwnPro
   (state, { route: { params } }) => ({
     account: state.core.account,
     multiplier: getDisplayDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.currencyCode).multiplier,
-    exchangeMultiplier: getExchangeDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.currencyCode).multiplier,
-    parentMultiplier: getExchangeDenomination(state, params.sourceWallet.currencyInfo.pluginId, params.sourceWallet.currencyInfo.currencyCode).multiplier,
+    exchangeMultiplier: getExchangeDenomByCurrencyCode(params.sourceWallet.currencyConfig, params.currencyCode).multiplier,
+    parentMultiplier: getExchangeDenomByCurrencyCode(params.sourceWallet.currencyConfig, params.sourceWallet.currencyInfo.currencyCode).multiplier,
     tokenId: getTokenIdForced(state.core.account, params.sourceWallet.currencyInfo.pluginId, params.currencyCode)
   }),
   dispatch => ({

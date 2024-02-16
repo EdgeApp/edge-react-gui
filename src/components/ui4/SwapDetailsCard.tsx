@@ -8,8 +8,9 @@ import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
+import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
@@ -36,7 +37,7 @@ export function SwapDetailsCard(props: Props) {
   const walletName = useWalletName(wallet)
   const walletDefaultDenom = useSelector(state =>
     currencyInfo.currencyCode === transaction.currencyCode
-      ? getExchangeDenomination(state, currencyInfo.pluginId, currencyCode)
+      ? getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
       : getDisplayDenomination(state, currencyInfo.pluginId, currencyCode)
   )
 
@@ -87,7 +88,9 @@ export function SwapDetailsCard(props: Props) {
   }
 
   // The wallet may have been deleted:
-  const destinationWallet = useSelector(state => state.core.account.currencyWallets[payoutWalletId])
+  const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
+  const destinationWallet = currencyWallets[payoutWalletId]
   const destinationWalletName = destinationWallet == null ? '' : getWalletName(destinationWallet)
   const destinationDenomination = useSelector(state =>
     destinationWallet == null ? undefined : getDisplayDenomination(state, destinationWallet.currencyInfo.pluginId, payoutCurrencyCode)

@@ -4,7 +4,7 @@ import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { convertNativeToDisplay, truncateDecimals } from '../../util/utils'
 import { RowUi4 } from './RowUi4'
@@ -33,7 +33,7 @@ export function TxCryptoAmountRow(props: Props) {
   // Find the denomination to use:
   const walletDefaultDenom: EdgeDenomination = useSelector(state =>
     currencyInfo.currencyCode === currencyCode
-      ? getExchangeDenomination(state, currencyInfo.pluginId, currencyCode)
+      ? getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
       : getDisplayDenomination(state, currencyInfo.pluginId, currencyCode)
   )
 

@@ -4,9 +4,9 @@ import React, { useMemo, useState } from 'react'
 import { ActivityIndicator, Platform, ReturnKeyType } from 'react-native'
 
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
-import { useExchangeDenom } from '../../hooks/useExchangeDenom'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
+import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, maxPrimaryCurrencyConversionDecimals, precisionAdjust } from '../../util/utils'
@@ -85,7 +85,7 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
 
   const pluginId = coreWallet?.currencyInfo.pluginId ?? ''
   const cryptoCurrencyCode = getCurrencyCode(coreWallet, tokenId)
-  const cryptoExchangeDenom = useExchangeDenom(pluginId, cryptoCurrencyCode)
+  const cryptoExchangeDenom = getExchangeDenomByCurrencyCode(coreWallet.currencyConfig, cryptoCurrencyCode)
   const cryptoDisplayDenom = useDisplayDenom(pluginId, cryptoCurrencyCode)
   const fiatDenom = getDenomFromIsoCode(fiatCurrencyCode)
 

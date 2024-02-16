@@ -11,7 +11,7 @@ import { SPECIAL_CURRENCY_INFO } from '../../../constants/WalletAndCurrencyConst
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { formatNumber, formatTimeDate, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
@@ -63,10 +63,10 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   const sliderDisabled = tx == null || exchangeAmount === '0' || error != null
 
   const dispatch = useDispatch()
-  const currencyPlugin = useSelector(state => state.core.account.currencyConfig[pluginId])
+  const { currencyConfig } = currencyWallet
   const currencyCode = getCurrencyCode(currencyWallet, tokenId)
   const currencyDenomination = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode))
-  const defaultDenomination = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
+  const defaultDenomination = getExchangeDenomByCurrencyCode(currencyConfig, currencyCode)
   const exchangeRates = useSelector(state => state.exchangeRates)
   const fioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
 
@@ -212,16 +212,16 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   )
 
   React.useEffect(() => {
-    if (currencyPlugin != null && currencyPlugin.otherMethods != null && currencyPlugin.otherMethods.getStakeEstReturn != null) {
-      currencyPlugin.otherMethods
+    if (currencyConfig?.otherMethods?.getStakeEstReturn != null) {
+      currencyConfig.otherMethods
         .getStakeEstReturn(exchangeAmount)
         // @ts-expect-error
         .then(apy => setApy(parseFloat(apy.toFixed(2))))
         .catch(() => {
-          //
+          // If something goes wrong, silently fail to report an APY!?
         })
     }
-  }, [exchangeAmount, currencyPlugin])
+  }, [exchangeAmount, currencyConfig])
 
   React.useEffect(() => {
     if (!selectedFioAddress && fioAddresses?.length > 0) {

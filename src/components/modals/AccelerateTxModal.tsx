@@ -5,7 +5,7 @@ import { Text, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors'
+import { getDisplayDenominationFromState, getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { GuiExchangeRates } from '../../types/types'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
@@ -27,7 +27,6 @@ interface StateProps {
 }
 interface DispatchProps {
   getDisplayDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
-  getExchangeDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
 }
 type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
@@ -87,10 +86,10 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
   }
 
   getTxFeeDisplay = (edgeTransaction: EdgeTransaction): string => {
-    const { exchangeRates, wallet, getDisplayDenomination, getExchangeDenomination } = this.props
+    const { exchangeRates, wallet, getDisplayDenomination } = this.props
 
     const feeDisplayDenomination = getDisplayDenomination(wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
-    const feeDefaultDenomination = getExchangeDenomination(wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
+    const feeDefaultDenomination = getExchangeDenomByCurrencyCode(wallet.currencyConfig, wallet.currencyInfo.currencyCode)
     const transactionFee = convertTransactionFeeToDisplayFee(wallet, exchangeRates, edgeTransaction, feeDisplayDenomination, feeDefaultDenomination)
 
     const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol ?? ''} ${transactionFee.fiatAmount})`
@@ -172,9 +171,6 @@ export const AccelerateTxModal = connect<StateProps, DispatchProps, OwnProps>(
   dispatch => ({
     getDisplayDenomination(pluginId: string, currencyCode: string) {
       return dispatch(getDisplayDenominationFromState(pluginId, currencyCode))
-    },
-    getExchangeDenomination(pluginId: string, currencyCode: string) {
-      return dispatch(getExchangeDenominationFromState(pluginId, currencyCode))
     }
   })
 )(withTheme(AccelerateTxModalComponent))

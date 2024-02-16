@@ -18,7 +18,7 @@ import { InsufficientFeesModal } from '../components/modals/InsufficientFeesModa
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { formatNumber } from '../locales/intl'
 import { lstrings } from '../locales/strings'
-import { getDisplayDenomination, getExchangeDenomination } from '../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../selectors/DenominationSelectors'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -175,7 +175,7 @@ export const getSwapInfo = async (state: RootState, quote: EdgeSwapQuote): Promi
   const fromDisplayAmount = toFixed(fromDisplayAmountTemp, 0, 8)
 
   // Format from fiat:
-  const fromExchangeDenomination = getExchangeDenomination(state, fromWallet.currencyInfo.pluginId, fromCurrencyCode)
+  const fromExchangeDenomination = getExchangeDenomByCurrencyCode(fromWallet.currencyConfig, fromCurrencyCode)
   const fromBalanceInCryptoDisplay = convertNativeToExchange(fromExchangeDenomination.multiplier)(quote.fromNativeAmount)
   const fromBalanceInFiatRaw = parseFloat(convertCurrency(state, fromCurrencyCode, fromWallet.fiatCurrencyCode, fromBalanceInCryptoDisplay))
   const fromFiat = formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
@@ -199,7 +199,7 @@ export const getSwapInfo = async (state: RootState, quote: EdgeSwapQuote): Promi
   const toDisplayAmount = toFixed(toDisplayAmountTemp, 0, 8)
 
   // Format to fiat:
-  const toExchangeDenomination = getExchangeDenomination(state, toWallet.currencyInfo.pluginId, toCurrencyCode)
+  const toExchangeDenomination = getExchangeDenomByCurrencyCode(toWallet.currencyConfig, toCurrencyCode)
   const toBalanceInCryptoDisplay = convertNativeToExchange(toExchangeDenomination.multiplier)(quote.toNativeAmount)
   const toBalanceInFiatRaw = parseFloat(convertCurrency(state, toCurrencyCode, toWallet.fiatCurrencyCode, toBalanceInCryptoDisplay))
   const toFiat = formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
@@ -365,7 +365,7 @@ export function selectWalletForExchange(walletId: string, currencyCode: string, 
     const cc = currencyCode || chainCc
     const balanceMessage = await getBalanceMessage(state, walletId, cc)
     const primaryDisplayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, cc)
-    const primaryExchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, cc)
+    const primaryExchangeDenomination = getExchangeDenomByCurrencyCode(wallet.currencyConfig, cc)
     const primaryInfo: GuiCurrencyInfo = {
       walletId,
       tokenId: getTokenIdForced(state.core.account, wallet.currencyInfo.pluginId, cc),
@@ -418,7 +418,7 @@ async function getBalanceMessage(state: RootState, walletId: string, currencyCod
 
   const balanceInCrypto = wallet.balanceMap.get(tokenId) ?? '0'
   const isoFiatCurrencyCode = wallet.fiatCurrencyCode
-  const exchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+  const exchangeDenomination = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
   const balanceInCryptoDisplay = convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
   const balanceInFiat = parseFloat(convertCurrency(state, currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay))
 

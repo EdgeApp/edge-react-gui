@@ -7,10 +7,9 @@ import { sprintf } from 'sprintf-js'
 
 import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { config } from '../../../theme/appConfig'
 import { connect } from '../../../types/reactRedux'
-import { RootState } from '../../../types/reduxTypes'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { EdgeAsset } from '../../../types/types'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
@@ -31,7 +30,6 @@ import { SendScene2Params } from '../SendScene2'
 
 interface StateProps {
   account: EdgeAccount
-  state: RootState
   fioPlugin?: EdgeCurrencyConfig
   fioWallets: EdgeCurrencyWallet[]
   fioDisplayDenomination: EdgeDenomination
@@ -123,10 +121,9 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   }
 
   onNextPress = (): void => {
-    const { isConnected, state, navigation, route, onLogEvent: logEvent } = this.props
+    const { account, isConnected, navigation, route, onLogEvent: logEvent } = this.props
     const { fioDomain, selectedWallet } = route.params
     const { feeValue, paymentInfo: allPaymentInfo, paymentWallet } = this.state
-    const { account } = state.core
 
     if (!paymentWallet || !paymentWallet.id) return
 
@@ -146,7 +143,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
         this.props.onSelectWallet(walletId, paymentCurrencyCode)
 
         const wallet = account.currencyWallets[walletId]
-        const exchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, paymentCurrencyCode)
+        const exchangeDenomination = getExchangeDenomByCurrencyCode(wallet.currencyConfig, paymentCurrencyCode)
         let nativeAmount = mul(allPaymentInfo[paymentCurrencyCode].amount, exchangeDenomination.multiplier)
         nativeAmount = toFixed(nativeAmount, 0, 0)
 
@@ -276,7 +273,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const FioDomainRegisterSelectWalletScene = connect<StateProps, DispatchProps, OwnProps>(
   (state, { route: { params } }) => ({
     account: state.core.account,
-    state,
     fioWallets: state.ui.wallets.fioWallets,
     fioPlugin: state.core.account.currencyConfig.fio,
     fioDisplayDenomination: getDisplayDenomination(state, params.selectedWallet.currencyInfo.pluginId, FIO_STR),

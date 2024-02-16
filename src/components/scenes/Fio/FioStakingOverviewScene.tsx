@@ -11,7 +11,7 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useWatch } from '../../../hooks/useWatch'
 import { formatNumber, formatTimeDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomination } from '../../../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
@@ -178,7 +178,8 @@ export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnPro
         params: { walletId, tokenId }
       }
     } = ownProps
-    const currencyWallet = state.core.account.currencyWallets[walletId]
+    const { account } = state.core
+    const currencyWallet = account.currencyWallets[walletId]
     const currencyCode = getCurrencyCode(currencyWallet, tokenId)
 
     const { staked } = getFioStakingBalances(currencyWallet.stakingStatus)
@@ -187,7 +188,7 @@ export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnPro
     const currencyDenomination = getDisplayDenomination(state, currencyWallet.currencyInfo.pluginId, currencyCode)
     const stakingCryptoAmountFormat = formatNumber(add(convertNativeToDenomination(currencyDenomination.multiplier)(stakedNativeAmount), '0'))
 
-    const defaultDenomination = getExchangeDenomination(state, currencyWallet.currencyInfo.pluginId, currencyCode)
+    const defaultDenomination = getExchangeDenomByCurrencyCode(currencyWallet.currencyConfig, currencyCode)
     const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(stakedNativeAmount ?? '0')
     const stakingFiatBalance = convertCurrency(state, currencyCode, currencyWallet.fiatCurrencyCode, stakingDefaultCryptoAmount)
     const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
