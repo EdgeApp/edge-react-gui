@@ -295,7 +295,7 @@ export interface AppConfig {
   backupAccountSite: string
   configName: string
   darkTheme: Theme
-  defaultWallets: string[]
+  defaultWallets: EdgeAsset[]
   forceCloseUrlIos: string
   forceCloseUrlAndroid: string
   knowledgeBase: string
