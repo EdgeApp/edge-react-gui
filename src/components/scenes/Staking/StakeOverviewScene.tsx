@@ -8,7 +8,7 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { lstrings } from '../../../locales/strings'
 import { ChangeQuoteRequest, PositionAllocation, StakePlugin, StakePolicy, StakePosition } from '../../../plugins/stake-plugins/types'
-import { getDisplayDenominationFromState } from '../../../selectors/DenominationSelectors'
+import { selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
@@ -51,7 +51,7 @@ const StakeOverviewSceneComponent = (props: Props) => {
   const account = useSelector(state => state.core.account)
 
   const displayDenomMap: DenomMap = [...stakePolicy.stakeAssets, ...stakePolicy.rewardAssets].reduce((denomMap: DenomMap, asset) => {
-    denomMap[asset.currencyCode] = dispatch(getDisplayDenominationFromState(wallet.currencyInfo.pluginId, asset.currencyCode))
+    denomMap[asset.currencyCode] = dispatch((_, getState) => selectDisplayDenomByCurrencyCode(getState(), wallet.currencyConfig, asset.currencyCode))
     return denomMap
   }, {})
   const policyIcons = getPolicyIconUris(wallet.currencyInfo, stakePolicy)

@@ -8,7 +8,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, formatTime } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
+import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { getSelectedCurrencyWallet } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
 import { FioRequest, FioRequestStatus } from '../../types/types'
@@ -221,7 +221,7 @@ export const FioRequestRow = connect<StateProps, {}, OwnProps>(
       if (pluginId == null) throw new Error(`No plugin match for this chain code - ${fioRequest.content.chain_code.toUpperCase()}`)
       const { tokenCode: edgeTokenCode } = convertFIOToEdgeCodes(pluginId, fioRequest.content.chain_code.toUpperCase(), tokenCode)
       tokenCode = edgeTokenCode
-      displayDenomination = getDisplayDenomination(state, pluginId, tokenCode)
+      displayDenomination = selectDisplayDenomByCurrencyCode(state, currencyConfig[pluginId], tokenCode)
       exchangeDenomination = getExchangeDenomByCurrencyCode(currencyConfig[pluginId], tokenCode)
     } catch (e: any) {
       console.log('No denomination for this Token Code -', tokenCode)

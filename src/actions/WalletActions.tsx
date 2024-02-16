@@ -10,7 +10,7 @@ import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance'
 import { FIO_WALLET_TYPE, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
-import { getDisplayDenomination } from '../selectors/DenominationSelectors'
+import { selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelectors'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { MapObject } from '../types/types'
@@ -230,7 +230,7 @@ const activateWalletTokens = async (
     const paymentCurrencyCode = getCurrencyCode(wallet, feeTokenId)
 
     const exchangeNetworkFee = await wallet.nativeToDenomination(nativeFee, paymentCurrencyCode)
-    const feeDenom = getDisplayDenomination(state, pluginId, paymentCurrencyCode)
+    const feeDenom = selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, paymentCurrencyCode)
     const displayFee = div(nativeFee, feeDenom.multiplier, log10(feeDenom.multiplier))
     let fiatFee = convertCurrencyFromExchangeRates(state.exchangeRates, paymentCurrencyCode, fiatCurrencyCode, exchangeNetworkFee)
     if (lt(fiatFee, '0.001')) fiatFee = '<0.001'

@@ -11,7 +11,7 @@ import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useWatch } from '../../../hooks/useWatch'
 import { formatNumber, formatTimeDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
+import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
@@ -185,7 +185,7 @@ export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnPro
     const { staked } = getFioStakingBalances(currencyWallet.stakingStatus)
     const stakedNativeAmount = staked
 
-    const currencyDenomination = getDisplayDenomination(state, currencyWallet.currencyInfo.pluginId, currencyCode)
+    const currencyDenomination = selectDisplayDenomByCurrencyCode(state, currencyWallet.currencyConfig, currencyCode)
     const stakingCryptoAmountFormat = formatNumber(add(convertNativeToDenomination(currencyDenomination.multiplier)(stakedNativeAmount), '0'))
 
     const defaultDenomination = getExchangeDenomByCurrencyCode(currencyWallet.currencyConfig, currencyCode)

@@ -1,6 +1,6 @@
 import { EdgeCurrencyConfig, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
 
-import { RootState, ThunkAction } from '../types/reduxTypes'
+import { RootState } from '../types/reduxTypes'
 
 export const emptyEdgeDenomination: EdgeDenomination = {
   name: '',
@@ -8,19 +8,13 @@ export const emptyEdgeDenomination: EdgeDenomination = {
   symbol: ''
 }
 
-export function getDisplayDenominationFromState(pluginId: string, currencyCode: string): ThunkAction<EdgeDenomination> {
-  return (dispatch, getState) => {
-    const state = getState()
-    return getDisplayDenomination(state, pluginId, currencyCode)
-  }
-}
-
-export const getDisplayDenomination = (state: RootState, pluginId: string, currencyCode: string): EdgeDenomination => {
+export const selectDisplayDenomByCurrencyCode = (state: RootState, currencyConfig: EdgeCurrencyConfig, currencyCode: string): EdgeDenomination => {
+  const { pluginId } = currencyConfig.currencyInfo
   const pluginSettings = state.ui.settings.denominationSettings[pluginId]
   if (pluginSettings != null && pluginSettings[currencyCode] != null) {
     return pluginSettings[currencyCode] ?? emptyEdgeDenomination
   }
-  return getExchangeDenomByCurrencyCode(state.core.account.currencyConfig[pluginId], currencyCode)
+  return getExchangeDenomByCurrencyCode(currencyConfig, currencyCode)
 }
 
 /**

@@ -6,7 +6,7 @@ import { View } from 'react-native'
 import { formatNumber } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { CcWalletMap } from '../../../reducers/FioReducer'
-import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
+import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { getExchangeRate, getSelectedCurrencyWallet } from '../../../selectors/WalletSelectors'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
@@ -360,7 +360,7 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
       }
     }
 
-    const primaryDisplayDenomination = getDisplayDenomination(state, selectedWallet.currencyInfo.pluginId, currencyCode)
+    const primaryDisplayDenomination = selectDisplayDenomByCurrencyCode(state, selectedWallet.currencyConfig, currencyCode)
     const primaryExchangeDenomination = getExchangeDenomByCurrencyCode(selectedWallet.currencyConfig, currencyCode)
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
 

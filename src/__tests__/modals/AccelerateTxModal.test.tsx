@@ -56,10 +56,10 @@ describe('AccelerateTxModalComponent', () => {
         }}
         wallet={fakeWallet}
         exchangeRates={{}}
-        getDisplayDenomination={(pluginId, currencyCode) => ({
+        feeDisplayDenomination={{
           multiplier: '1000000',
           name: 'BTC'
-        })}
+        }}
         theme={getTheme()}
       />
     )

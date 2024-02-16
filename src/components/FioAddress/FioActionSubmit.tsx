@@ -5,7 +5,7 @@ import { ActivityIndicator, View } from 'react-native'
 
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenomination } from '../../selectors/DenominationSelectors'
+import { selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -275,7 +275,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const FioActionSubmit = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => ({
-    denominationMultiplier: getDisplayDenomination(state, ownProps.fioWallet.currencyInfo.pluginId, FIO_STR).multiplier,
+    denominationMultiplier: selectDisplayDenomByCurrencyCode(state, ownProps.fioWallet.currencyConfig, FIO_STR).multiplier,
     currencyWallets: state.core.account.currencyWallets,
     fioWallets: state.ui.wallets.fioWallets
   }),

@@ -14,7 +14,7 @@ import { Fontello } from '../../assets/vector'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useIconColor } from '../../hooks/useIconColor'
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenomination, getExchangeDenom } from '../../selectors/DenominationSelectors'
+import { getExchangeDenom, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
@@ -596,7 +596,7 @@ const RequestSceneConnected = connect<StateProps, DispatchProps, OwnProps & Hook
     const { tokenId } = route.params
     const currencyCode = getCurrencyCode(wallet, tokenId)
 
-    const primaryDisplayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+    const primaryDisplayDenomination = selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, currencyCode)
     const primaryExchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
 

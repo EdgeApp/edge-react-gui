@@ -17,7 +17,7 @@ import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { PositionAllocation, StakePlugin, StakePolicy, StakePositionMap } from '../../plugins/stake-plugins/types'
-import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
+import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
@@ -517,8 +517,7 @@ export function TransactionListTop(props: OwnProps) {
 
   const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
 
-  const { pluginId } = wallet.currencyInfo
-  const displayDenomination = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode))
+  const displayDenomination = useSelector(state => selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, currencyCode))
   const exchangeDenomination = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
   const exchangeRate = useSelector(state => getExchangeRate(state, currencyCode, wallet.fiatCurrencyCode))
   const isAccountBalanceVisible = useSelector(state => state.ui.settings.isAccountBalanceVisible)

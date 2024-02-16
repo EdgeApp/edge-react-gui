@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { FlashNotification } from '../components/navigation/FlashNotification'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
-import { getDisplayDenomination, getExchangeDenom } from '../selectors/DenominationSelectors'
+import { getExchangeDenom, selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelectors'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { calculateSpamThreshold, convertNativeToDisplay, zeroString } from '../util/utils'
@@ -28,7 +28,7 @@ export function showReceiveDropdown(navigation: NavigationBase, transaction: Edg
     const wallet = account.currencyWallets[walletId]
     if (wallet == null) return
 
-    const { currencyInfo, fiatCurrencyCode } = wallet
+    const { fiatCurrencyCode } = wallet
 
     // Never stack dropdowns:
     if (receiveDropdownShowing) return
@@ -43,7 +43,7 @@ export function showReceiveDropdown(navigation: NavigationBase, transaction: Edg
     }
 
     // Format the message:
-    const displayDenomination = getDisplayDenomination(state, currencyInfo.pluginId, currencyCode)
+    const displayDenomination = selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, currencyCode)
     const { symbol, name, multiplier } = displayDenomination
     const displayAmount = convertNativeToDisplay(multiplier)(nativeAmount)
     const message = sprintf(lstrings.bitcoin_received, `${symbol ? symbol + ' ' : ''}${displayAmount} ${name}`)
