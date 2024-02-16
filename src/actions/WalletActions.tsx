@@ -147,10 +147,12 @@ export function updateWalletLoadingProgress(walletId: string, newWalletProgress:
   }
 }
 
-export function updateMostRecentWalletsSelected(walletId: string, currencyCode: string): ThunkAction<void> {
+export function updateMostRecentWalletsSelected(walletId: string, tokenId: EdgeTokenId): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
+    const wallet = account.currencyWallets[walletId]
+    const currencyCode = getCurrencyCode(wallet, tokenId)
     const { mostRecentWallets } = state.ui.settings
     const currentMostRecentWallets = mostRecentWallets.filter(wallet => {
       return wallet.id !== walletId || wallet.currencyCode !== currencyCode

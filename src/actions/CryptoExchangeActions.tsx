@@ -8,7 +8,8 @@ import {
   EdgeCurrencyWallet,
   EdgeSwapQuote,
   EdgeSwapRequest,
-  EdgeSwapResult
+  EdgeSwapResult,
+  EdgeTokenId
 } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
@@ -23,7 +24,7 @@ import { convertCurrency } from '../selectors/WalletSelectors'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { GuiCurrencyInfo, GuiSwapInfo } from '../types/types'
-import { getCurrencyCode, getTokenIdForced, getWalletTokenId } from '../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { bestOfPlugins } from '../util/ReferralHelpers'
 import { logEvent } from '../util/tracking'
@@ -199,7 +200,7 @@ export const getSwapInfo = async (state: RootState, quote: EdgeSwapQuote): Promi
   const toDisplayAmount = toFixed(toDisplayAmountTemp, 0, 8)
 
   // Format to fiat:
-  const toExchangeDenomination = getExchangeDenomByCurrencyCode(toWallet.currencyConfig, toCurrencyCode)
+  const toExchangeDenomination = getExchangeDenom(toWallet.currencyConfig, toTokenId)
   const toBalanceInCryptoDisplay = convertNativeToExchange(toExchangeDenomination.multiplier)(quote.toNativeAmount)
   const toBalanceInFiatRaw = parseFloat(convertCurrency(state, toCurrencyCode, toWallet.fiatCurrencyCode, toBalanceInCryptoDisplay))
   const toFiat = formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
@@ -357,18 +358,17 @@ export function shiftCryptoCurrency(navigation: NavigationBase, quote: EdgeSwapQ
   }
 }
 
-export function selectWalletForExchange(walletId: string, currencyCode: string, direction: 'from' | 'to'): ThunkAction<Promise<void>> {
+export function selectWalletForExchange(walletId: string, tokenId: EdgeTokenId, direction: 'from' | 'to'): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const wallet = state.core.account.currencyWallets[walletId]
-    const { currencyCode: chainCc } = wallet.currencyInfo
-    const cc = currencyCode || chainCc
-    const balanceMessage = await getBalanceMessage(state, walletId, cc)
-    const primaryDisplayDenomination = selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, cc)
-    const primaryExchangeDenomination = getExchangeDenomByCurrencyCode(wallet.currencyConfig, cc)
+    const cc = getCurrencyCode(wallet, tokenId)
+    const balanceMessage = await getBalanceMessage(state, walletId, tokenId)
+    const primaryDisplayDenomination = selectDisplayDenom(state, wallet.currencyConfig, tokenId)
+    const primaryExchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
     const primaryInfo: GuiCurrencyInfo = {
       walletId,
-      tokenId: getTokenIdForced(state.core.account, wallet.currencyInfo.pluginId, cc),
+      tokenId,
       displayCurrencyCode: cc,
       exchangeCurrencyCode: cc,
       displayDenomination: primaryDisplayDenomination,
@@ -410,11 +410,11 @@ export function checkEnabledExchanges(): ThunkAction<void> {
   }
 }
 
-async function getBalanceMessage(state: RootState, walletId: string, currencyCode: string) {
+async function getBalanceMessage(state: RootState, walletId: string, tokenId: EdgeTokenId) {
   const { account } = state.core
   const { currencyWallets } = account
   const wallet = currencyWallets[walletId]
-  const tokenId = getWalletTokenId(wallet, currencyCode)
+  const currencyCode = getCurrencyCode(wallet, tokenId)
 
   const balanceInCrypto = wallet.balanceMap.get(tokenId) ?? '0'
   const isoFiatCurrencyCode = wallet.fiatCurrencyCode
