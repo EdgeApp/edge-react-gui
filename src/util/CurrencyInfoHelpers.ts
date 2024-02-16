@@ -112,7 +112,7 @@ export const currencyCodesToEdgeAssets = (account: EdgeAccount, currencyCodes: s
       if (map[chainCode] == null) map[chainCode] = pluginId
       return map
     },
-    { BNB: 'binancesmartchain' } // HACK: Prefer BNB Smart Chain over Beacon Chain if provided a BNB currency code)
+    { BNB: 'binancesmartchain', ETH: 'ethereum' } // HACK: Prefer BNB Smart Chain over Beacon Chain if provided a BNB currency code) and Ethereum over L2s
   )
 
   const edgeTokenIds: EdgeAsset[] = []
