@@ -24,6 +24,7 @@
 - changed: Re-enable fake signup captcha experiment at 50%
 - changed: Adjust Transaction List Scene spacings, remove "Transactions" header
 - changed: Add a referral ID to share links
+- changed: Use `EdgeAsset` for defaultWallets in app config
 - fixed: Resolved levitating search bar bug on Android
 - fixed: Show a useful, localized error message when device doesn't have an email account
 - fixed: Make FilledTextInputs take up constant vertical space

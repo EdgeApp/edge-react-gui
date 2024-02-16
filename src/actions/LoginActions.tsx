@@ -63,8 +63,8 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         defaultFiat = phoneCurrency
       }
       // Ensure the creation reason is available before creating wallets:
-      const currencyCodes = getState().account.accountReferral.currencyCodes ?? config.defaultWallets
-      const defaultSelection = currencyCodesToEdgeAssets(account, currencyCodes)
+      const accountReferralCurrencyCodes = getState().account.accountReferral.currencyCodes
+      const defaultSelection = accountReferralCurrencyCodes != null ? currencyCodesToEdgeAssets(account, accountReferralCurrencyCodes) : config.defaultWallets
       const fiatCurrencyCode = 'iso:' + defaultFiat
 
       const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
