@@ -4,6 +4,7 @@ import { div } from 'biggystring'
 import { TrackingEventName as LoginTrackingEventName, TrackingValues as LoginTrackingValues } from 'edge-login-ui-rn/lib/util/analytics'
 import PostHog from 'posthog-react-native'
 import { getBuildNumber, getUniqueId, getVersion } from 'react-native-device-info'
+import { checkNotifications } from 'react-native-permissions'
 
 import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { ENV } from '../env'
@@ -210,6 +211,10 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
 
         // Add all 'sticky' remote config variant values:
         for (const key of Object.keys(experimentConfig)) params[`svar_${key}`] = experimentConfig[key as keyof ExperimentConfig]
+
+        // Notifications
+        const notificationPermission = await checkNotifications()
+        params.notificationStatus = notificationPermission.status
 
         consify({ logEvent: { event, params } })
 
