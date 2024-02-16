@@ -1,11 +1,12 @@
 import { eq } from 'biggystring'
+import { error } from 'console'
 import { InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
 import { ReturnKeyType, View } from 'react-native'
 
 import { Fontello } from '../../assets/vector'
-import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useState } from '../../types/reactHooks'
+import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { consify } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -35,7 +36,10 @@ export function DevTestScene(props: Props) {
   const { navigation } = props
   const theme = useTheme()
 
-  const selectedWallet = useSelectedWallet()
+  // Pick the first available wallet in the account
+  const currencyWallets = useSelector(state => state.core.account.currencyWallets)
+  const wallet = Object.values(currencyWallets)[0]
+
   const [value0, setValue0] = useState<string>('')
   const [value1, setValue1] = useState<string>('')
   const [filledTextInputValue, setFilledTextInputValue] = useState<string>('')
@@ -46,8 +50,8 @@ export function DevTestScene(props: Props) {
   const [filledTextInputValue6, setFilledTextInputValue6] = useState<string>('')
   const [filledTextInputValue7, setFilledTextInputValue7] = useState<string>('')
   const [filledTextInputValue8, setFilledTextInputValue8] = useState<string>('')
-  const walletId = selectedWallet?.wallet.id ?? ''
-  const tokenId = selectedWallet?.tokenId ?? null
+  const walletId = Object.keys(currencyWallets)[0] ?? ''
+  const tokenId = null
   const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
 
   const onAmountChanged = (amounts: ExchangedFlipInputAmounts): void => {
@@ -72,26 +76,25 @@ export function DevTestScene(props: Props) {
   }
 
   const handleFlipInputModal = () => {
-    if (selectedWallet == null) return
+    if (wallet == null) return
     Airship.show<FlipInputModalResult>(bridge => {
-      if (selectedWallet == null) return null
-      return <FlipInputModal2 bridge={bridge} wallet={selectedWallet.wallet} tokenId={tokenId} feeTokenId={null} onAmountsChanged={onAmountsChanged} />
+      if (wallet == null) return null
+      return <FlipInputModal2 bridge={bridge} wallet={wallet} tokenId={tokenId} feeTokenId={null} onAmountsChanged={onAmountsChanged} />
     }).catch(error => console.log(error))
   }
 
-  const coreWallet = selectedWallet?.wallet
-  let balance = coreWallet?.balanceMap.get(tokenId) ?? ''
+  let balance = wallet?.balanceMap?.get(null) ?? ''
   if (eq(balance, '0')) balance = ''
   const headerText = 'Select Wallet'
   const headerCallback = () => console.log('Header pressed')
 
   // Hack. If wallet name first char is lowercase, start with crypto focused, otherwise default to fiat
-  const defaultField = (coreWallet?.name?.charAt(0).toLowerCase() ?? '') === (coreWallet?.name?.charAt(0) ?? '')
+  const defaultField = (wallet?.name?.charAt(0).toLowerCase() ?? '') === (wallet?.name?.charAt(0) ?? '')
 
   // Hack. If wallet name 2nd char is lowercase, start with keyboard down
-  const keyboardVisible = (coreWallet?.name?.charAt(1).toLowerCase() ?? '') !== (coreWallet?.name?.charAt(1) ?? '')
+  const keyboardVisible = (wallet?.name?.charAt(1).toLowerCase() ?? '') !== (wallet?.name?.charAt(1) ?? '')
 
-  const editable = (coreWallet?.name?.charAt(2).toLowerCase() ?? '') === (coreWallet?.name?.charAt(2) ?? '')
+  const editable = (wallet?.name?.charAt(2).toLowerCase() ?? '') === (wallet?.name?.charAt(2) ?? '')
   const returnKeyType: ReturnKeyType = 'done'
 
   return (
@@ -187,7 +190,6 @@ export function DevTestScene(props: Props) {
             forceField={defaultField ? 'crypto' : 'fiat'}
             keyboardVisible={keyboardVisible}
             tokenId={tokenId}
-            startNativeAmount={balance}
             onAmountChanged={onAmountChanged}
           />
         </CardUi4>
@@ -271,9 +273,9 @@ export function DevTestScene(props: Props) {
             label="InsufficientFeesModal"
             marginRem={0.25}
             onPress={async () => {
-              if (coreWallet == null) return
+              if (wallet == null) return
               await Airship.show(bridge => (
-                <InsufficientFeesModal bridge={bridge} coreError={new InsufficientFundsError({ tokenId: null })} navigation={navigation} wallet={coreWallet} />
+                <InsufficientFeesModal bridge={bridge} coreError={new InsufficientFundsError({ tokenId: null })} navigation={navigation} wallet={wallet} />
               ))
             }}
           />
