@@ -10,7 +10,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
@@ -32,12 +32,12 @@ export function SwapDetailsCard(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { currencyCode, memos = [], spendTargets = [] } = transaction
+  const { currencyCode, memos = [], spendTargets = [], tokenId } = transaction
   const { currencyInfo } = wallet
   const walletName = useWalletName(wallet)
   const walletDefaultDenom = useSelector(state =>
     currencyInfo.currencyCode === transaction.currencyCode
-      ? getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
+      ? getExchangeDenom(wallet.currencyConfig, tokenId)
       : getDisplayDenomination(state, currencyInfo.pluginId, currencyCode)
   )
 

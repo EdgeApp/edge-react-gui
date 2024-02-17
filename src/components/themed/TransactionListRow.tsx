@@ -17,7 +17,7 @@ import { useHistoricalRate } from '../../hooks/useHistoricalRate'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import {
@@ -49,7 +49,7 @@ export function TransactionListRow(props: Props) {
   const { navigation, wallet, transaction } = props
   const { canReplaceByFee = false } = wallet.currencyInfo
 
-  const { metadata = {}, currencyCode } = transaction
+  const { metadata = {}, currencyCode, tokenId } = transaction
   const defaultAmountFiat = metadata.exchangeAmount?.[wallet.fiatCurrencyCode] ?? 0
 
   const fiatCurrencyCode = useWatch(wallet, 'fiatCurrencyCode')
@@ -58,7 +58,7 @@ export function TransactionListRow(props: Props) {
 
   const account = useSelector(state => state.core.account)
   const displayDenomination = useSelector(state => getDisplayDenomination(state, currencyInfo.pluginId, currencyCode))
-  const exchangeDenomination = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
+  const exchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
   const fiatDenomination = getDenomFromIsoCode(nonIsoFiatCurrencyCode)
   const denominationSymbol = displayDenomination.symbol
 

@@ -11,7 +11,7 @@ import { SPECIAL_CURRENCY_INFO } from '../../../constants/WalletAndCurrencyConst
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { formatNumber, formatTimeDate, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
@@ -66,7 +66,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   const { currencyConfig } = currencyWallet
   const currencyCode = getCurrencyCode(currencyWallet, tokenId)
   const currencyDenomination = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode))
-  const defaultDenomination = getExchangeDenomByCurrencyCode(currencyConfig, currencyCode)
+  const defaultDenomination = getExchangeDenom(currencyConfig, tokenId)
   const exchangeRates = useSelector(state => state.exchangeRates)
   const fioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
 

@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import { useFiatText } from '../../hooks/useFiatText'
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getCryptoText } from '../../util/cryptoTextUtils'
 import { getDenomFromIsoCode } from '../../util/utils'
@@ -26,9 +26,9 @@ export const NetworkFeeTile = (props: Props) => {
   const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
   const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`])
 
-  const exchangeDenominationMultiplier = getExchangeDenomByCurrencyCode(currencyConfig, currencyCode).multiplier
-  const exchangeDenominationName = getExchangeDenomByCurrencyCode(currencyConfig, currencyCode).name
-  const exchangeDenominationSymbol = getExchangeDenomByCurrencyCode(currencyConfig, currencyCode).symbol ?? ''
+  const exchangeDenominationMultiplier = getExchangeDenom(currencyConfig, null).multiplier
+  const exchangeDenominationName = getExchangeDenom(currencyConfig, null).name
+  const exchangeDenominationSymbol = getExchangeDenom(currencyConfig, null).symbol ?? ''
 
   const displayDenominationMultiplier = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode).multiplier)
   const displayDenominationName = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode).name)

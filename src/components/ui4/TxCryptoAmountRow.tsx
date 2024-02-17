@@ -4,7 +4,7 @@ import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { convertNativeToDisplay, truncateDecimals } from '../../util/utils'
 import { RowUi4 } from './RowUi4'
@@ -21,19 +21,18 @@ interface Props {
 export function TxCryptoAmountRow(props: Props) {
   const { transaction, wallet } = props
   const { currencyInfo } = wallet
-  const { currencyCode, nativeAmount, networkFee, swapData } = transaction
+  const { currencyCode, nativeAmount, networkFee, swapData, tokenId } = transaction
 
   // Find the currency display name:
   const { allTokens } = wallet.currencyConfig
   let currencyName = currencyCode
   if (currencyCode === currencyInfo.currencyCode) currencyName = currencyInfo.displayName
-  const tokenId = Object.keys(allTokens).find(tokenId => allTokens[tokenId].currencyCode === transaction.currencyCode)
   if (tokenId != null) currencyName = allTokens[tokenId].displayName
 
   // Find the denomination to use:
   const walletDefaultDenom: EdgeDenomination = useSelector(state =>
     currencyInfo.currencyCode === currencyCode
-      ? getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
+      ? getExchangeDenom(wallet.currencyConfig, tokenId)
       : getDisplayDenomination(state, currencyInfo.pluginId, currencyCode)
   )
 

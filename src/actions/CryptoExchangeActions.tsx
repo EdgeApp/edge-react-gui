@@ -18,7 +18,7 @@ import { InsufficientFeesModal } from '../components/modals/InsufficientFeesModa
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { formatNumber } from '../locales/intl'
 import { lstrings } from '../locales/strings'
-import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenom, getExchangeDenomByCurrencyCode } from '../selectors/DenominationSelectors'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -175,7 +175,7 @@ export const getSwapInfo = async (state: RootState, quote: EdgeSwapQuote): Promi
   const fromDisplayAmount = toFixed(fromDisplayAmountTemp, 0, 8)
 
   // Format from fiat:
-  const fromExchangeDenomination = getExchangeDenomByCurrencyCode(fromWallet.currencyConfig, fromCurrencyCode)
+  const fromExchangeDenomination = getExchangeDenom(fromWallet.currencyConfig, fromTokenId)
   const fromBalanceInCryptoDisplay = convertNativeToExchange(fromExchangeDenomination.multiplier)(quote.fromNativeAmount)
   const fromBalanceInFiatRaw = parseFloat(convertCurrency(state, fromCurrencyCode, fromWallet.fiatCurrencyCode, fromBalanceInCryptoDisplay))
   const fromFiat = formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })

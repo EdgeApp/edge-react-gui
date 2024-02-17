@@ -1,4 +1,4 @@
-import { EdgeCurrencyConfig, EdgeDenomination } from 'edge-core-js'
+import { EdgeCurrencyConfig, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
 
 import { RootState, ThunkAction } from '../types/reduxTypes'
 
@@ -37,6 +37,20 @@ export const getExchangeDenomByCurrencyCode = (currencyConfig: EdgeCurrencyConfi
     const token = allTokens[tokenId]
     if (token.currencyCode === currencyCode) return token.denominations[0]
   }
+
+  return { ...emptyEdgeDenomination }
+}
+
+/**
+ * Looks up the denomination for a tokenId.
+ * Pass either `account.currencyConfig[pluginId]` or `wallet.currencyConfig`,
+ * whichever you have.
+ */
+export function getExchangeDenom(currencyConfig: EdgeCurrencyConfig, tokenId: EdgeTokenId): EdgeDenomination {
+  if (tokenId == null) return currencyConfig.currencyInfo.denominations[0]
+
+  const token = currencyConfig.allTokens[tokenId]
+  if (token != null) return token.denominations[0]
 
   return { ...emptyEdgeDenomination }
 }

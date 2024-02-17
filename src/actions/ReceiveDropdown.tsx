@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { FlashNotification } from '../components/navigation/FlashNotification'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
-import { getDisplayDenomination, getExchangeDenomByCurrencyCode } from '../selectors/DenominationSelectors'
+import { getDisplayDenomination, getExchangeDenom } from '../selectors/DenominationSelectors'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { calculateSpamThreshold, convertNativeToDisplay, zeroString } from '../util/utils'
@@ -36,7 +36,7 @@ export function showReceiveDropdown(navigation: NavigationBase, transaction: Edg
     // Check the spam limits:
     const { spamFilterOn } = state.ui.settings
     const exchangeRate = state.exchangeRates[`${currencyCode}_${fiatCurrencyCode}`]
-    const exchangeDenom = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
+    const exchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
     const spamThreshold = calculateSpamThreshold(exchangeRate, exchangeDenom)
     if (spamFilterOn && (zeroString(exchangeRate) || lt(nativeAmount, spamThreshold))) {
       return

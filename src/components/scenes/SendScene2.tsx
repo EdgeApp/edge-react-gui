@@ -29,7 +29,7 @@ import { useMount } from '../../hooks/useMount'
 import { useUnmount } from '../../hooks/useUnmount'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -182,9 +182,9 @@ const SendComponent = (props: Props) => {
   const { pluginId, memoOptions = [] } = coreWallet.currencyInfo
   const currencyCode = getCurrencyCode(coreWallet, tokenId)
   const cryptoDisplayDenomination = useDisplayDenom(pluginId, currencyCode)
-  const cryptoExchangeDenomination = getExchangeDenomByCurrencyCode(coreWallet.currencyConfig, currencyCode)
+  const cryptoExchangeDenomination = getExchangeDenom(coreWallet.currencyConfig, tokenId)
   const parentDisplayDenom = useDisplayDenom(pluginId, currencyWallets[walletId].currencyInfo.currencyCode)
-  const parentExchangeDenom = getExchangeDenomByCurrencyCode(coreWallet.currencyConfig, coreWallet.currencyInfo.currencyCode)
+  const parentExchangeDenom = getExchangeDenom(coreWallet.currencyConfig, null)
   const iconColor = useIconColor({ pluginId, tokenId })
 
   spendInfo.tokenId = tokenId

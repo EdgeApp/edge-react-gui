@@ -5,7 +5,7 @@ import { Text, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenominationFromState, getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
+import { getDisplayDenominationFromState, getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { GuiExchangeRates } from '../../types/types'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
@@ -89,7 +89,7 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
     const { exchangeRates, wallet, getDisplayDenomination } = this.props
 
     const feeDisplayDenomination = getDisplayDenomination(wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
-    const feeDefaultDenomination = getExchangeDenomByCurrencyCode(wallet.currencyConfig, wallet.currencyInfo.currencyCode)
+    const feeDefaultDenomination = getExchangeDenom(wallet.currencyConfig, null)
     const transactionFee = convertTransactionFeeToDisplayFee(wallet, exchangeRates, edgeTransaction, feeDisplayDenomination, feeDefaultDenomination)
 
     const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol ?? ''} ${transactionFee.fiatAmount})`
