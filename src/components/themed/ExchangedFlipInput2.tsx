@@ -86,7 +86,7 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
   const pluginId = coreWallet?.currencyInfo.pluginId ?? ''
   const cryptoCurrencyCode = getCurrencyCode(coreWallet, tokenId)
   const cryptoExchangeDenom = getExchangeDenom(coreWallet.currencyConfig, tokenId)
-  const cryptoDisplayDenom = useDisplayDenom(pluginId, cryptoCurrencyCode)
+  const cryptoDisplayDenom = useDisplayDenom(coreWallet.currencyConfig, tokenId)
   const fiatDenom = getDenomFromIsoCode(fiatCurrencyCode)
 
   const precisionAdjustVal = precisionAdjust({

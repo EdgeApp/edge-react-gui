@@ -3,7 +3,6 @@ import * as React from 'react'
 import { memo } from 'react'
 
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
-import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { cacheStyles, getTheme, Theme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
@@ -15,10 +14,7 @@ interface Props {
 
 export const ExchangeRate2 = memo<Props>((props: Props) => {
   const { wallet, tokenId } = props
-  const { currencyInfo } = wallet
-  const { pluginId } = currencyInfo
-  const currencyCode = getCurrencyCode(wallet, tokenId)
-  const primaryDisplayDenom = useDisplayDenom(pluginId, currencyCode)
+  const primaryDisplayDenom = useDisplayDenom(wallet.currencyConfig, tokenId)
   const theme = getTheme()
   const style = getStyles(theme)
 

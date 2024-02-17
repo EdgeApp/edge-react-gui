@@ -181,9 +181,9 @@ const SendComponent = (props: Props) => {
   const coreWallet = currencyWallets[walletId]
   const { pluginId, memoOptions = [] } = coreWallet.currencyInfo
   const currencyCode = getCurrencyCode(coreWallet, tokenId)
-  const cryptoDisplayDenomination = useDisplayDenom(pluginId, currencyCode)
+  const cryptoDisplayDenomination = useDisplayDenom(coreWallet.currencyConfig, tokenId)
   const cryptoExchangeDenomination = getExchangeDenom(coreWallet.currencyConfig, tokenId)
-  const parentDisplayDenom = useDisplayDenom(pluginId, currencyWallets[walletId].currencyInfo.currencyCode)
+  const parentDisplayDenom = useDisplayDenom(coreWallet.currencyConfig, null)
   const parentExchangeDenom = getExchangeDenom(coreWallet.currencyConfig, null)
   const iconColor = useIconColor({ pluginId, tokenId })
 

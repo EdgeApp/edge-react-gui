@@ -14,7 +14,6 @@ import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { ExchangeRate2 } from '../common/ExchangeRate2'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -83,7 +82,6 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
   const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
 
   const balanceMap = useWatch(wallet, 'balanceMap')
-  const currencyCode = getCurrencyCode(wallet, tokenId)
   const [feeTokenId, setFeeTokenId] = useState<EdgeTokenId>(startingFeeTokenId)
   const [feeNativeAmount, setFeeNativeAmount] = useState<string>(startingFeeNativeAmount)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -94,9 +92,8 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
     fieldChanged: forceField ?? 'fiat'
   })
 
-  const feeCurrencyCode = getCurrencyCode(wallet, feeTokenId)
-  const displayDenom = useDisplayDenom(pluginId, currencyCode)
-  const feeDisplayDenom = useDisplayDenom(pluginId, feeCurrencyCode)
+  const displayDenom = useDisplayDenom(wallet.currencyConfig, tokenId)
+  const feeDisplayDenom = useDisplayDenom(wallet.currencyConfig, feeTokenId)
   const walletName = useWalletName(wallet)
 
   const flipInputHeaderText = headerText ?? sprintf(lstrings.send_from_wallet, walletName)
