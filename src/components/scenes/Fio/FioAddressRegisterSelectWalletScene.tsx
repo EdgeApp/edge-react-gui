@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../../locales/strings'
-import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
+import { getExchangeDenomByCurrencyCode, selectDisplayDenom } from '../../../selectors/DenominationSelectors'
 import { config } from '../../../theme/appConfig'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
@@ -281,7 +281,7 @@ export const FioAddressRegisterSelectWalletScene = connect<StateProps, DispatchP
     account: state.core.account,
     fioWallets: state.ui.wallets.fioWallets,
     fioPlugin: state.core.account.currencyConfig.fio,
-    fioDisplayDenomination: selectDisplayDenomByCurrencyCode(state, params.selectedWallet.currencyConfig, FIO_STR),
+    fioDisplayDenomination: selectDisplayDenom(state, params.selectedWallet.currencyConfig, null),
     defaultFiatCode: state.ui.settings.defaultIsoFiat,
     pluginId: params.selectedWallet.currencyInfo.pluginId,
     isConnected: state.network.isConnected

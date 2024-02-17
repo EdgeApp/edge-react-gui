@@ -17,7 +17,7 @@ import { useHistoricalRate } from '../../hooks/useHistoricalRate'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { getExchangeDenom, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
+import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import {
@@ -57,7 +57,7 @@ export function TransactionListRow(props: Props) {
   const currencyInfo = wallet.currencyInfo
 
   const account = useSelector(state => state.core.account)
-  const displayDenomination = useSelector(state => selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, currencyCode))
+  const displayDenomination = useSelector(state => selectDisplayDenom(state, wallet.currencyConfig, tokenId))
   const exchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
   const fiatDenomination = getDenomFromIsoCode(nonIsoFiatCurrencyCode)
   const denominationSymbol = displayDenomination.symbol

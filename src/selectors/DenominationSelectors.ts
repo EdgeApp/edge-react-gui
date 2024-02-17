@@ -17,6 +17,24 @@ export const selectDisplayDenomByCurrencyCode = (state: RootState, currencyConfi
   return getExchangeDenomByCurrencyCode(currencyConfig, currencyCode)
 }
 
+export const selectDisplayDenom = (state: RootState, currencyConfig: EdgeCurrencyConfig, tokenId: EdgeTokenId): EdgeDenomination => {
+  const exchangeDenomination = getExchangeDenom(currencyConfig, tokenId)
+
+  let { currencyCode } = currencyConfig.currencyInfo
+  if (tokenId != null) {
+    const token = currencyConfig.allTokens[tokenId]
+    if (token == null) return exchangeDenomination
+    currencyCode = token.currencyCode
+  }
+
+  const { pluginId } = currencyConfig.currencyInfo
+  const pluginSettings = state.ui.settings.denominationSettings[pluginId]
+  if (pluginSettings != null && pluginSettings[currencyCode] != null) {
+    return pluginSettings[currencyCode] ?? emptyEdgeDenomination
+  }
+  return exchangeDenomination
+}
+
 /**
  * Finds the primary denomination for the given currencyCode.
  * This would match "BTC" but not "sats".

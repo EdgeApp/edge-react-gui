@@ -5,7 +5,7 @@ import { Text, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
-import { getExchangeDenom, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
+import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { GuiExchangeRates } from '../../types/types'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
@@ -164,7 +164,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const AccelerateTxModal = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => ({
     exchangeRates: state.exchangeRates,
-    feeDisplayDenomination: selectDisplayDenomByCurrencyCode(state, ownProps.wallet.currencyConfig, ownProps.wallet.currencyInfo.currencyCode)
+    feeDisplayDenomination: selectDisplayDenom(state, ownProps.wallet.currencyConfig, null)
   }),
   dispatch => ({})
 )(withTheme(AccelerateTxModalComponent))

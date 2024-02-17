@@ -4,7 +4,7 @@ import { Text } from 'react-native'
 
 import { setDenominationKeyRequest } from '../../actions/SettingsActions'
 import { lstrings } from '../../locales/strings'
-import { selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
+import { selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -29,9 +29,7 @@ export function CurrencySettingsScene(props: Props) {
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
-  const selectedDenominationMultiplier = useSelector(
-    state => selectDisplayDenomByCurrencyCode(state, account.currencyConfig[pluginId], currencyCode).multiplier
-  )
+  const selectedDenominationMultiplier = useSelector(state => selectDisplayDenom(state, account.currencyConfig[pluginId], null).multiplier)
   const currencyConfig = account.currencyConfig[pluginId]
 
   function renderDenominations() {

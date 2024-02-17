@@ -18,7 +18,7 @@ import { InsufficientFeesModal } from '../components/modals/InsufficientFeesModa
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { formatNumber } from '../locales/intl'
 import { lstrings } from '../locales/strings'
-import { getExchangeDenom, getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelectors'
+import { getExchangeDenom, getExchangeDenomByCurrencyCode, selectDisplayDenom, selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelectors'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -181,7 +181,7 @@ export const getSwapInfo = async (state: RootState, quote: EdgeSwapQuote): Promi
   const fromFiat = formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
 
   // Format crypto fee:
-  const feeDenomination = selectDisplayDenomByCurrencyCode(state, fromWallet.currencyConfig, fromWallet.currencyInfo.currencyCode)
+  const feeDenomination = selectDisplayDenom(state, fromWallet.currencyConfig, null)
   const feeNativeAmount = quote.networkFee.nativeAmount
   const feeTempAmount = div(feeNativeAmount, feeDenomination.multiplier, DECIMAL_PRECISION)
   const feeDisplayAmount = toFixed(feeTempAmount, 0, 6)
@@ -422,7 +422,7 @@ async function getBalanceMessage(state: RootState, walletId: string, currencyCod
   const balanceInCryptoDisplay = convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
   const balanceInFiat = parseFloat(convertCurrency(state, currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay))
 
-  const displayDenomination = selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, currencyCode)
+  const displayDenomination = selectDisplayDenom(state, wallet.currencyConfig, tokenId)
 
   const cryptoBalanceAmount: string = convertNativeToDisplay(displayDenomination.multiplier)(balanceInCrypto) // convert to correct denomination
   const cryptoBalanceAmountString = cryptoBalanceAmount ? formatNumber(decimalOrZero(toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)

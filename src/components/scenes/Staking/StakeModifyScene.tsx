@@ -15,7 +15,7 @@ import {
   StakePoolFullError,
   StakePosition
 } from '../../../plugins/stake-plugins/types'
-import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
+import { getExchangeDenomByCurrencyCode, selectDisplayDenom } from '../../../selectors/DenominationSelectors'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
@@ -65,7 +65,7 @@ const StakeModifySceneComponent = (props: Props) => {
 
   // Hooks
   const guiExchangeRates = useSelector(state => state.exchangeRates)
-  const nativeAssetDenomination = useSelector(state => selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, wallet.currencyInfo.currencyCode))
+  const nativeAssetDenomination = useSelector(state => selectDisplayDenom(state, wallet.currencyConfig, null))
 
   // ChangeQuote that gets rendered in the rows
   const [changeQuote, setChangeQuote] = React.useState<ChangeQuote | null>(null)
