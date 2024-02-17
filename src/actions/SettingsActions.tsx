@@ -322,6 +322,7 @@ export const asSyncedAccountSettings = asObject({
   preferredSwapPluginId: asMaybe(asString),
   preferredSwapPluginType: asMaybe(asSwapPluginType),
   countryCode: asMaybe(asString, ''),
+  stateProvinceCode: asMaybe(asString),
   mostRecentWallets: asMaybe(asArray(asMostRecentWallet), () => []),
   passwordRecoveryRemindersShown: asMaybe(asPasswordReminderLevels, () => asPasswordReminderLevels({})),
   walletsSort: asMaybe(asSortOption, 'manual'),

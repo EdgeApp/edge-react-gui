@@ -4,11 +4,12 @@ import * as React from 'react'
 import { Image, ListRenderItemInfo, Platform, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
+import { sprintf } from 'sprintf-js'
 
 import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { getDeviceSettings, writeDeveloperPluginUri } from '../../actions/DeviceSettingsActions'
 import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
-import { readSyncedSettings, updateOneSetting, writeSyncedSettings } from '../../actions/SettingsActions'
+import { readSyncedSettings, SyncedAccountSettings, updateOneSetting, writeSyncedSettings } from '../../actions/SettingsActions'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
 import buyPluginJsonRaw from '../../constants/plugins/buyPluginList.json'
@@ -36,12 +37,14 @@ import { base58ToUuid } from '../../util/utils'
 import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
 import { CountryListModal } from '../modals/CountryListModal'
+import { StateProvinceListModal } from '../modals/StateProvinceListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
+import { SelectableRow } from '../themed/SelectableRow'
 import { CardUi4 } from '../ui4/CardUi4'
 import { RowUi4 } from '../ui4/RowUi4'
 import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
@@ -92,6 +95,7 @@ interface StateProps {
   accountReferral: AccountReferral
   coreDisklet: Disklet
   countryCode: string
+  stateProvinceCode?: string
   developerModeOn: boolean
   deviceId: string
   disablePlugins: NestedDisableMap
@@ -101,7 +105,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  updateCountryCode: (countryCode: string) => void
+  updateCountryCode: (params: { countryCode: string; stateProvinceCode?: string }) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -222,8 +226,15 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Verify that we have a country selected
    */
   checkCountry() {
-    const { countryCode } = this.props
+    const { countryCode, stateProvinceCode } = this.props
     if (!countryCode) this.showCountrySelectionModal().catch(showError)
+    else {
+      const countryData = COUNTRY_CODES.find(cc => cc['alpha-2'] === countryCode)
+      if (countryData != null && stateProvinceCode == null) {
+        // This country needs a state/provice but doesn't have one picked
+        this.showCountrySelectionModal(true).catch(e => showError(e))
+      }
+    }
   }
 
   /**
@@ -304,18 +315,36 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
   }
 
-  async showCountrySelectionModal() {
-    const { account, updateCountryCode, countryCode } = this.props
+  async showCountrySelectionModal(skipCountry?: boolean) {
+    const { account, updateCountryCode, countryCode, stateProvinceCode } = this.props
 
-    const selectedCountryCode: string = await Airship.show<string>(bridge => <CountryListModal bridge={bridge} countryCode={countryCode} />)
+    let selectedCountryCode: string = countryCode
+    if (skipCountry !== true) {
+      selectedCountryCode = await Airship.show<string>(bridge => <CountryListModal bridge={bridge} countryCode={countryCode} />)
+    }
     if (selectedCountryCode) {
       try {
-        const syncedSettings = await readSyncedSettings(account)
-        const updatedSettings = {
-          ...syncedSettings,
-          countryCode: selectedCountryCode
+        const country = COUNTRY_CODES.find(country => country['alpha-2'] === selectedCountryCode)
+        if (country == null) throw new Error('Invalid country code')
+        const { stateProvinces, name } = country
+        let selectedStateProvince: string | undefined
+        if (stateProvinces != null) {
+          // This country has states/provinces. Show picker for that
+          const previousStateProvince = stateProvinces.some(sp => sp['alpha-2'] === stateProvinceCode) ? stateProvinceCode : undefined
+          selectedStateProvince = await Airship.show<string>(bridge => (
+            <StateProvinceListModal countryCode={selectedCountryCode} bridge={bridge} stateProvince={previousStateProvince} stateProvinces={stateProvinces} />
+          ))
+          if (selectedStateProvince == null) {
+            throw new Error(sprintf(lstrings.error_must_select_state_province_s, name))
+          }
         }
-        updateCountryCode(selectedCountryCode)
+        const syncedSettings = await readSyncedSettings(account)
+        const updatedSettings: SyncedAccountSettings = {
+          ...syncedSettings,
+          countryCode: selectedCountryCode,
+          stateProvinceCode: selectedStateProvince
+        }
+        updateCountryCode({ countryCode: selectedCountryCode, stateProvinceCode: selectedStateProvince })
         await writeSyncedSettings(account, updatedSettings)
       } catch (error: any) {
         showError(error)
@@ -376,35 +405,40 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   renderTop = () => {
-    const { countryCode, theme } = this.props
+    const { countryCode, stateProvinceCode, theme } = this.props
     const styles = getStyles(theme)
     const direction = this.getSceneDirection()
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
+    const stateProvinceData = countryData?.stateProvinces?.find(sp => sp['alpha-2'] === stateProvinceCode)
     const uri = `${FLAG_LOGO_URL}/${countryData?.filename || countryData?.name.toLowerCase().replace(' ', '-')}.png`
     const imageSrc = React.useMemo(() => ({ uri }), [uri])
-
     const hasCountryData = countryData != null
+
+    const countryName = hasCountryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button
+    const iconStyle = stateProvinceData == null ? styles.selectedCountryFlag : styles.selectedCountryFlagSelectableRow
+    const icon = !hasCountryData ? undefined : <FastImage source={imageSrc} style={iconStyle} />
+
+    const countryCard =
+      stateProvinceData == null ? (
+        <CardUi4>
+          <RowUi4 onPress={this._handleCountryPress} rightButtonType="none" icon={icon} body={countryName} />
+        </CardUi4>
+      ) : (
+        <SelectableRow onPress={this._handleCountryPress} subTitle={stateProvinceData.name} title={countryData?.name} icon={icon} />
+      )
 
     return (
       <>
         <EdgeAnim style={styles.header} enter={fadeInUp90}>
           <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline withTopMargin />
         </EdgeAnim>
+
         {hasCountryData ? (
           <EdgeAnim enter={fadeInUp60}>
             <SectionHeaderUi4 leftTitle={lstrings.title_select_region} />
           </EdgeAnim>
         ) : null}
-        <EdgeAnim enter={fadeInUp30}>
-          <CardUi4>
-            <RowUi4
-              onPress={this._handleCountryPress}
-              rightButtonType="none"
-              icon={hasCountryData ? <FastImage source={imageSrc} style={styles.selectedCountryFlag} /> : undefined}
-              body={hasCountryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}
-            />
-          </CardUi4>
-        </EdgeAnim>
+        <EdgeAnim enter={fadeInUp30}>{countryCard}</EdgeAnim>
         {hasCountryData ? <SectionHeaderUi4 leftTitle={lstrings.title_select_payment_method} /> : null}
       </>
     )
@@ -490,6 +524,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: theme.rem(0.25),
     marginRight: theme.rem(1)
   },
+  selectedCountryFlagSelectableRow: {
+    height: theme.rem(2),
+    width: theme.rem(2),
+    borderRadius: theme.rem(1)
+  },
   emptyPluginContainer: {
     flex: 1,
     padding: theme.rem(2),
@@ -542,12 +581,14 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const deviceId = useSelector(state => base58ToUuid(state.core.context.clientId))
   const coreDisklet = useSelector(state => state.core.disklet)
   const countryCode = useSelector(state => state.ui.settings.countryCode)
+  const stateProvinceCode = useSelector(state => state.ui.settings.stateProvinceCode)
   const developerModeOn = useSelector(state => state.ui.settings.developerModeOn)
   const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
   const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
 
-  const updateCountryCode = (countryCode: string) => {
-    dispatch(updateOneSetting({ countryCode }))
+  const updateCountryCode = (params: { countryCode: string; stateProvinceCode?: string }): void => {
+    const { countryCode, stateProvinceCode } = params
+    dispatch(updateOneSetting({ countryCode, stateProvinceCode }))
   }
 
   const handleLogEvent = useHandler((event, values) => {
@@ -569,6 +610,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
               accountReferral={accountReferral}
               coreDisklet={coreDisklet}
               countryCode={countryCode}
+              stateProvinceCode={stateProvinceCode}
               developerModeOn={developerModeOn}
               disablePlugins={disablePlugins}
               updateCountryCode={updateCountryCode}

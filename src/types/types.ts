@@ -179,11 +179,17 @@ export interface GuiExchangeRates {
   [pair: string]: string
 }
 
+export interface StateProvinceData {
+  name: string
+  'alpha-2': string
+}
+
 export interface CountryData {
   name: string
   'alpha-2': string
   'alpha-3': string
   filename?: string
+  stateProvinces?: StateProvinceData[]
 }
 
 export const asMostRecentWallet = asObject({
