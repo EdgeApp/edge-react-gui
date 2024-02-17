@@ -376,7 +376,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
                 ref={this.flipInputRef}
                 returnKeyType={this.state.isFioMode ? 'next' : 'done'}
                 tokenId={primaryCurrencyInfo.tokenId}
-                walletId={wallet.id}
+                wallet={wallet}
               />
             </CardUi4>
           </EdgeAnim>

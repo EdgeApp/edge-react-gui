@@ -46,7 +46,6 @@ export function DevTestScene(props: Props) {
   const [filledTextInputValue6, setFilledTextInputValue6] = useState<string>('')
   const [filledTextInputValue7, setFilledTextInputValue7] = useState<string>('')
   const [filledTextInputValue8, setFilledTextInputValue8] = useState<string>('')
-  const walletId = selectedWallet?.wallet.id ?? ''
   const tokenId = selectedWallet?.tokenId ?? null
   const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
 
@@ -176,21 +175,23 @@ export function DevTestScene(props: Props) {
           />
           <EdgeText>Ensure errors above don't push me down</EdgeText>
         </>
-        <CardUi4>
-          <ExchangedFlipInput2
-            ref={exchangedFlipInputRef}
-            walletId={walletId}
-            headerText={headerText}
-            editable={editable}
-            headerCallback={headerCallback}
-            returnKeyType={returnKeyType}
-            forceField={defaultField ? 'crypto' : 'fiat'}
-            keyboardVisible={keyboardVisible}
-            tokenId={tokenId}
-            startNativeAmount={balance}
-            onAmountChanged={onAmountChanged}
-          />
-        </CardUi4>
+        {selectedWallet == null ? null : (
+          <CardUi4>
+            <ExchangedFlipInput2
+              ref={exchangedFlipInputRef}
+              wallet={selectedWallet.wallet}
+              headerText={headerText}
+              editable={editable}
+              headerCallback={headerCallback}
+              returnKeyType={returnKeyType}
+              forceField={defaultField ? 'crypto' : 'fiat'}
+              keyboardVisible={keyboardVisible}
+              tokenId={tokenId}
+              startNativeAmount={balance}
+              onAmountChanged={onAmountChanged}
+            />
+          </CardUi4>
+        )}
 
         <>
           <SimpleTextInput vertical={1} value={value0} onChangeText={onChangeText0} autoFocus={false} placeholder="Crypto Amount" />

@@ -1,7 +1,7 @@
 import { div, log10, mul, round } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import React, { useMemo, useState } from 'react'
-import { ActivityIndicator, Platform, ReturnKeyType } from 'react-native'
+import { Platform, ReturnKeyType } from 'react-native'
 
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useHandler } from '../../hooks/useHandler'
@@ -29,7 +29,7 @@ export interface ExchangedFlipInputAmounts {
 }
 
 export interface Props {
-  walletId: string
+  wallet: EdgeCurrencyWallet
   tokenId: EdgeTokenId
   startNativeAmount?: string
   keyboardVisible?: boolean
@@ -57,7 +57,7 @@ const forceFieldMap: { crypto: FieldNum; fiat: FieldNum } = {
 
 const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Props>((props: Props, ref) => {
   const {
-    walletId,
+    wallet,
     tokenId,
     onBlur,
     onFocus,
@@ -76,17 +76,14 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const account = useSelector(state => state.core.account)
   const exchangeRates = useSelector(state => state.exchangeRates)
-  const currencyWallets = useWatch(account, 'currencyWallets')
-  const coreWallet: EdgeCurrencyWallet | undefined = currencyWallets[walletId]
-  const fiatCurrencyCode = useWatch(coreWallet, 'fiatCurrencyCode')
+  const fiatCurrencyCode = useWatch(wallet, 'fiatCurrencyCode')
   const flipInputRef = React.useRef<FlipInputRef>(null)
 
-  const pluginId = coreWallet?.currencyInfo.pluginId ?? ''
-  const cryptoCurrencyCode = getCurrencyCode(coreWallet, tokenId)
-  const cryptoExchangeDenom = getExchangeDenom(coreWallet.currencyConfig, tokenId)
-  const cryptoDisplayDenom = useDisplayDenom(coreWallet.currencyConfig, tokenId)
+  const pluginId = wallet.currencyInfo.pluginId
+  const cryptoCurrencyCode = getCurrencyCode(wallet, tokenId)
+  const cryptoExchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
+  const cryptoDisplayDenom = useDisplayDenom(wallet.currencyConfig, tokenId)
   const fiatDenom = getDenomFromIsoCode(fiatCurrencyCode)
 
   const precisionAdjustVal = precisionAdjust({
@@ -205,7 +202,7 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
     [convertCurrency, cryptoCurrencyCode, fiatCurrencyCode, forceField]
   )
 
-  return coreWallet != null ? (
+  return (
     <>
       <RowUi4 onPress={headerCallback} icon={<CryptoIconUi4 marginRem={[0, 0.5, 0, 0]} pluginId={pluginId} sizeRem={1.5} tokenId={tokenId} />}>
         <EdgeText style={styles.headerText}>{headerText}</EdgeText>
@@ -226,8 +223,6 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
         startAmounts={[renderDisplayAmount ?? '', renderFiatAmount]}
       />
     </>
-  ) : (
-    <ActivityIndicator />
   )
 })
 

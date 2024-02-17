@@ -190,7 +190,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
       <CardUi4 marginRem={[0, 0.5, 0.5]}>
         <ExchangedFlipInput2
           ref={exchangedFlipInputRef}
-          walletId={wallet.id}
+          wallet={wallet}
           tokenId={tokenId}
           startNativeAmount={startNativeAmount}
           forceField={amounts.fieldChanged}
