@@ -5,6 +5,7 @@ import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import { ENV } from '../env'
 import { asFiatDirection, asFiatPaymentType } from '../plugins/gui/fiatPluginTypes'
 import { DeepLink, PromotionLink } from '../types/DeepLinkTypes'
+import { RouteParamList } from '../types/routerTypes'
 import { parseQuery, stringifyQuery } from './WebUtils'
 
 /**
@@ -25,7 +26,7 @@ export function parseDeepLink(uri: string, opts: { aztecoApiKey?: string } = {})
 
   if (url.protocol === 'dev:') {
     // @ts-expect-error
-    return { type: 'dev', sceneName: url.pathname }
+    return { type: 'scene', sceneName: url.pathname.replace('/', ''), query: parseQuery(url.query) }
   }
 
   // Handle dl.edge.app links:
@@ -149,6 +150,11 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
       const { token } = parseQuery(url.query)
       if (token == null) throw new SyntaxError('No recovery token')
       return { type: 'passwordRecovery', passwordRecoveryKey: token }
+    }
+
+    case 'scene': {
+      const sceneName = url.pathname.replace('/', '')
+      return { type: 'scene', sceneName: sceneName as keyof RouteParamList, query: parseQuery(url.query) }
     }
 
     case 'swap': {

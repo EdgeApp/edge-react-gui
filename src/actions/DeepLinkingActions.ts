@@ -240,12 +240,14 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       return true
     }
 
-    case 'dev': {
-      // @ts-expect-error
-      if (!global.__DEV__) return false
-
-      // @ts-expect-error
-      navigation.navigate(link.sceneName, {})
+    case 'scene': {
+      const { sceneName, query } = link
+      try {
+        // @ts-expect-error
+        navigation.navigate(sceneName, query)
+      } catch (e) {
+        showError(`Deeplink failed. Unable to navigate to: '${sceneName}' with query '${query}'`)
+      }
       return true
     }
   }

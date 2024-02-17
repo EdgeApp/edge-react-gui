@@ -94,14 +94,15 @@ export interface WalletConnectLink {
   uri: string
 }
 
-export interface DevLink {
-  type: 'dev'
+export interface SceneLink {
+  type: 'scene'
   sceneName: keyof AppParamList
+  query: AppParamList[keyof AppParamList]
 }
 
 export type DeepLink =
   | AztecoLink
-  | DevLink
+  | SceneLink
   | EdgeLoginLink
   | FiatPluginLink
   | PasswordRecoveryLink
