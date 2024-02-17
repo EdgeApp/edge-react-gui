@@ -22,7 +22,6 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { executePlugin } from '../../plugins/gui/fiatPlugin'
 import { SceneScrollHandler, useSceneScrollHandler } from '../../state/SceneScrollState'
-import { config } from '../../theme/appConfig'
 import { asBuySellPlugins, asGuiPluginJson, BuySellPlugins, GuiPluginRow } from '../../types/GuiPluginTypes'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
@@ -30,7 +29,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools'
-import { fetchInfo } from '../../util/network'
+import { infoServerData } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { logEvent, OnLogEvent } from '../../util/tracking'
 import { base58ToUuid } from '../../util/utils'
@@ -115,7 +114,6 @@ interface State {
 }
 
 const BUY_SELL_PLUGIN_REFRESH_INTERVAL = 60000
-const PLUGIN_LIST_FILE = 'buySellPlugins.json'
 
 class GuiPluginList extends React.PureComponent<Props, State> {
   componentMounted: boolean
@@ -131,7 +129,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   async componentDidMount() {
-    this.updatePlugins().catch(err => showError(err))
+    this.updatePlugins()
     this.checkCountry()
     const { developerPluginUri } = getDeviceSettings()
     if (developerPluginUri != null) {
@@ -155,38 +153,20 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
   }
 
-  async updatePlugins() {
-    const { coreDisklet } = this.props
-    let diskPlugins
-    try {
-      const fileText = await coreDisklet.getText(PLUGIN_LIST_FILE)
-      diskPlugins = asBuySellPlugins(JSON.parse(fileText))
-      this.setPluginState(diskPlugins)
-    } catch (e: any) {
-      console.log(e.message, `Error opening ${PLUGIN_LIST_FILE}. Trying network instead`)
+  updatePlugins() {
+    // Create new array objects so we aren't patching the original JSON
+    const currentPlugins: BuySellPlugins = {
+      buy: [...(buySellPlugins.buy ?? [])],
+      sell: [...(buySellPlugins.sell ?? [])]
     }
-    await this.updatePluginsNetwork(diskPlugins)
-  }
-
-  async updatePluginsNetwork(diskPlugins: BuySellPlugins | undefined) {
-    const { coreDisklet } = this.props
-    const diskPluginsJson = JSON.stringify(diskPlugins)
-
-    // Convert to and from JSON so we don't overwrite the default object
-    let currentPluginsJson = diskPlugins != null ? diskPluginsJson : buySellPluginsJson
-    const currentPlugins = asBuySellPlugins(JSON.parse(currentPluginsJson))
 
     // Grab plugin settings that patch the json
     try {
-      const response = await fetchInfo(`v1/buySellPluginsPatch/${config.appId ?? 'edge'}`)
-      const reply = await response.json()
-      const networkPluginsPatch = asBuySellPlugins(reply) ?? {}
+      const networkPluginsPatch = asBuySellPlugins(infoServerData.rollup?.buySellPluginsPatch ?? {})
       const directions: Array<'buy' | 'sell'> = ['buy', 'sell']
       for (const direction of directions) {
         const patches = networkPluginsPatch[direction]
         if (patches == null) {
-          // Assign the defaults
-          currentPlugins[direction] = buySellPlugins[direction]
           continue
         }
         const currentDirection = currentPlugins[direction] ?? []
@@ -211,15 +191,11 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       // This is ok. We just use default values
     }
 
-    currentPluginsJson = JSON.stringify(currentPlugins)
-    if (currentPlugins != null && currentPluginsJson !== diskPluginsJson) {
-      await coreDisklet
-        .setText(PLUGIN_LIST_FILE, currentPluginsJson)
-        .then(() => (diskPlugins = currentPlugins))
-        .catch(e => console.error(e.message))
+    const currentPluginsJson = JSON.stringify(currentPlugins)
+    if (currentPluginsJson !== buySellPluginsJson) {
       this.setPluginState(currentPlugins)
     }
-    this.timeoutId = setTimeout(async () => await this.updatePluginsNetwork(currentPlugins), BUY_SELL_PLUGIN_REFRESH_INTERVAL)
+    this.timeoutId = setTimeout(() => this.updatePlugins(), BUY_SELL_PLUGIN_REFRESH_INTERVAL)
   }
 
   /**
