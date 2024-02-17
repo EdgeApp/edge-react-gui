@@ -1,4 +1,5 @@
 import { asDate } from 'cleaners'
+import { EdgeAccount } from 'edge-core-js'
 import { PromoCard2 } from 'edge-info-server'
 import * as React from 'react'
 import { ListRenderItem, Platform } from 'react-native'
@@ -27,6 +28,8 @@ export const PromoCardsUi4 = (props: Props) => {
   const theme = useTheme()
   const dispatch = useDispatch()
 
+  const account = useSelector(state => state.core.account)
+
   const [cards, setCards] = React.useState<FilteredPromoCard[]>([])
 
   // Check for PromoCard2 from info server:
@@ -34,7 +37,7 @@ export const PromoCardsUi4 = (props: Props) => {
     async () => {
       const cards = infoServerData.rollup?.promoCards2 ?? []
       const countryCode = await getCountryCodeByIp().catch(() => '')
-      const filteredCards = filterPromoCards(cards, countryCode)
+      const filteredCards = filterPromoCards(cards, countryCode, account)
       setCards(filteredCards)
     },
     [],
@@ -66,7 +69,7 @@ export const PromoCardsUi4 = (props: Props) => {
  * Finds the promo cards that are relevant to our application version &
  * other factors.
  */
-function filterPromoCards(cards: PromoCard2[], countryCode: string): FilteredPromoCard[] {
+function filterPromoCards(cards: PromoCard2[], countryCode: string, account: EdgeAccount): FilteredPromoCard[] {
   const buildNumber = getBuildNumber()
   const currentDate = new Date()
   const osType = Platform.OS.toLowerCase()
@@ -88,6 +91,7 @@ function filterPromoCards(cards: PromoCard2[], countryCode: string): FilteredPro
       localeMessages,
       maxBuildNum,
       minBuildNum,
+      newAccount,
       osTypes = [],
       osVersions = [],
       startIsoDate
@@ -105,6 +109,9 @@ function filterPromoCards(cards: PromoCard2[], countryCode: string): FilteredPro
     // Look at min/max only if exact build or app version is not specified.
     if (minBuildNum != null && minBuildNum > buildNumber) continue
     if (maxBuildNum != null && maxBuildNum < buildNumber) continue
+
+    // Validate new account status
+    if (newAccount && !account.newAccount) continue
 
     // Validate country
     const isCountryInclude = countryCodes.length === 0 || countryCodes.map(countryCode => countryCode.toLowerCase()).includes(countryCode)
