@@ -435,13 +435,13 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { accountPlugins, accountReferral, countryCode, developerModeOn, disablePlugins, theme, insetStyle } = this.props
+    const { accountPlugins, accountReferral, countryCode, stateProvinceCode, developerModeOn, disablePlugins, theme, insetStyle } = this.props
     const direction = this.getSceneDirection()
     const { buy = [], sell = [] } = this.state.buySellPlugins
     const styles = getStyles(theme)
 
     // Pick a filter based on our direction:
-    let plugins = filterGuiPluginJson(direction === 'buy' ? buy : sell, Platform.OS, countryCode, disablePlugins)
+    let plugins = filterGuiPluginJson(direction === 'buy' ? buy : sell, Platform.OS, countryCode, disablePlugins, stateProvinceCode)
 
     // Filter disabled plugins:
     const activePlugins = bestOfPlugins(accountPlugins, accountReferral, undefined)

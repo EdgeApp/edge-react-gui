@@ -7,6 +7,7 @@
     "title": "ACH Bank Transfer",
     "description": "Fee: 1.5%\nSettlement: 2 - 3 days",
     "forCountries": ["US"],
+    "notStateProvinces": {"US": ["NY", "TX"]},
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },
@@ -29,6 +30,7 @@
     "title": "Bank Transfer via Debit Card",
     "description": "Fee: 4.0%\nSettlement: 5 min - 24 hours",
     "forCountries": ["US", "GB", "AU"],
+    "notStateProvinces": {"US": ["NY", "HI"]},
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },
