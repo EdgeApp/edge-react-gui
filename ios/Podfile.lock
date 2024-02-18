@@ -511,9 +511,6 @@ PODS:
     - React-Core
   - react-native-in-app-review (4.3.3):
     - React-Core
-  - react-native-is-maestro (2.1.0):
-    - RCT-Folly (= 2021.07.22.00)
-    - React-Core
   - react-native-keyboard-controller (1.10.2):
     - React-Core
   - react-native-mail (6.1.1):
@@ -952,7 +949,6 @@ DEPENDENCIES:
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-in-app-review (from `../node_modules/react-native-in-app-review`)
-  - react-native-is-maestro (from `../node_modules/react-native-is-maestro`)
   - react-native-keyboard-controller (from `../node_modules/react-native-keyboard-controller`)
   - react-native-mail (from `../node_modules/react-native-mail`)
   - react-native-mymonero-core (from `../node_modules/react-native-mymonero-core`)
@@ -1163,8 +1159,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-in-app-review:
     :path: "../node_modules/react-native-in-app-review"
-  react-native-is-maestro:
-    :path: "../node_modules/react-native-is-maestro"
   react-native-keyboard-controller:
     :path: "../node_modules/react-native-keyboard-controller"
   react-native-mail:
@@ -1354,7 +1348,6 @@ SPEC CHECKSUMS:
   react-native-get-random-values: dee677497c6a740b71e5612e8dbd83e7539ed5bb
   react-native-image-picker: db60857e03d63721f19b6f4027de20429ddd9cba
   react-native-in-app-review: db8bb167a5f238e7ceca5c242d6b36ce8c4404a4
-  react-native-is-maestro: b1e44ada6a8dbaf6b2e0b112bd381d5dd9d35d67
   react-native-keyboard-controller: 9c708acff806450ce2a0f3c2aceace1fdc87070f
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408

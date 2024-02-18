@@ -1,10 +1,10 @@
 import { asMaybe, asObject, asValue, Cleaner } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
 import { CreateAccountType } from 'edge-login-ui-rn'
-import { isMaestro } from 'react-native-is-maestro'
 
 import { LOCAL_EXPERIMENT_CONFIG } from './constants/constantSettings'
 import { ENV } from './env'
+import { isMaestro } from './util/maestro'
 
 export type LandingType = 'A_legacy' | 'B_Usps' | 'C_UspsMinusWGYC' | 'D_UspsAltWGYC'
 
