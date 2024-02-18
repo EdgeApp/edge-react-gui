@@ -13,9 +13,11 @@ import {
   FiatProviderFactory,
   FiatProviderFactoryParams,
   FiatProviderGetQuoteParams,
-  FiatProviderQuote
+  FiatProviderQuote,
+  FiatProviderSupportedRegions
 } from '../fiatProviderTypes'
 import { addTokenToArray } from '../util/providerUtils'
+import { validateRegion } from './common'
 const providerId = 'simplex'
 const storeId = 'co.edgesecure.simplex'
 const partnerIcon = 'simplex-logo-sm-square.png'
@@ -124,6 +126,12 @@ const SIMPLEX_ID_MAP: { [pluginId: string]: { [currencyCode: string]: string } }
   wax: { WAX: 'WAXP' }
 }
 
+const SUPPORTED_REGIONS: FiatProviderSupportedRegions = {
+  US: {
+    notStateProvinces: ['HI', 'NY', 'LA']
+  }
+}
+
 const allowedCurrencyCodes: FiatProviderAssetMap = { providerId, crypto: {}, fiat: {} }
 const allowedCountryCodes: { [code: string]: boolean } = {}
 const allowedPaymentTypes: { [Payment in FiatPaymentType]?: boolean } = { applepay: true, credit: true, googlepay: true }
@@ -197,7 +205,8 @@ export const simplexProvider: FiatProviderFactory = {
       providerId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async ({ direction, paymentTypes }): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async ({ direction, regionCode, paymentTypes }): Promise<FiatProviderAssetMap> => {
+        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
         if (direction !== 'buy') {
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         }
@@ -231,6 +240,7 @@ export const simplexProvider: FiatProviderFactory = {
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const { direction, regionCode, exchangeAmount, amountType, paymentTypes, displayCurrencyCode } = params
+        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
         if (direction !== 'buy') {
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         }

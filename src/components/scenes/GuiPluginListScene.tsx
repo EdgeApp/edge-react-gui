@@ -225,7 +225,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow, longPress: boolean = false) {
-    const { coreDisklet, countryCode, deviceId, disablePlugins, navigation, account, onLogEvent } = this.props
+    const { coreDisklet, countryCode, stateProvinceCode, deviceId, disablePlugins, navigation, account, onLogEvent } = this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -278,7 +278,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         longPress,
         navigation,
         paymentType,
-        regionCode: { countryCode },
+        regionCode: { countryCode, stateProvinceCode },
         onLogEvent
       })
     } else {
