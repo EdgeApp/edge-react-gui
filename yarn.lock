@@ -1252,6 +1252,11 @@
     "@noble/hashes" "^1.1.5"
     "@noble/secp256k1" "^1.7.1"
 
+"@bugsnag/core-performance@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/core-performance/-/core-performance-2.2.0.tgz#7a27c1dffbdbf05d267e68c6e644b291477081ec"
+  integrity sha512-Yb8n2oOzSQw/SqoWdDjpJB92ik6BlfNeRSl5lNEVGLJvwV7go2FIr1VvnQJEGiQWQzHtvkuCR4xRub+75a4HUg==
+
 "@bugsnag/core@^7.19.0":
   version "7.19.0"
   resolved "https://registry.yarnpkg.com/@bugsnag/core/-/core-7.19.0.tgz#7663a4addb1322e8315a4012dc9db2aad3fea53b"
@@ -1267,6 +1272,18 @@
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@bugsnag/cuid/-/cuid-3.0.0.tgz#2ee7642a30aee6dc86f5e7f824653741e42e5c35"
   integrity sha512-LOt8aaBI+KvOQGneBtpuCz3YqzyEAehd1f3nC5yr9TIYW1+IzYKa2xWS4EiMz5pPOnRPHkyyS5t/wmSmN51Gjg==
+
+"@bugsnag/cuid@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@bugsnag/cuid/-/cuid-3.0.2.tgz#544f8e6e7e3768c8cb618ca5c5fb1eea6aacbb7e"
+  integrity sha512-cIwzC93r3PQ/INeuwtZwkZIG2K8WWN0rRLZQhu+mr48Ay+i6sEki4GYfTsflse7hZ1BeDWrNb/Q9vgY3B31xHQ==
+
+"@bugsnag/delivery-fetch-performance@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/delivery-fetch-performance/-/delivery-fetch-performance-2.2.0.tgz#779c9cbfaecb838796f0572339620abdc984f3e0"
+  integrity sha512-0cDe0LedVS1c9PoMe69CGljv6LSnlHn0jUZzA8+QCf3YyM6MwHNYLpSqO8DpknOtBGan4LxAwqW7arux4fEzRw==
+  dependencies:
+    "@bugsnag/core-performance" "^2.2.0"
 
 "@bugsnag/delivery-react-native@^7.22.3":
   version "7.22.3"
@@ -1318,6 +1335,16 @@
   resolved "https://registry.yarnpkg.com/@bugsnag/plugin-react/-/plugin-react-7.19.0.tgz#3f86c6ed2745cd60a4099d0e14ca46f2b9cf501f"
   integrity sha512-owC4QXYJWGllMoOPcH5P7sbDIDuFLMCbjGAU6FwH5mBMObSQo+1ViSKImlTJQUFXATM8ySISTBVt7w3C6FFHng==
 
+"@bugsnag/react-native-performance@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/react-native-performance/-/react-native-performance-2.2.0.tgz#1f6c02ed281dcbc16160a65e40c8000efb8b1acf"
+  integrity sha512-iIBGHeenAc6/TBOIPKMETsygfrXTN2l0oMh3tYq4+UuhjvdX3pm9mSorcYky1+fmhOFSrgOmTJPkZ+GpCC9oOg==
+  dependencies:
+    "@bugsnag/core-performance" "^2.2.0"
+    "@bugsnag/cuid" "^3.0.2"
+    "@bugsnag/delivery-fetch-performance" "^2.2.0"
+    "@bugsnag/request-tracker-performance" "^2.2.0"
+
 "@bugsnag/react-native@^7.22.3":
   version "7.22.3"
   resolved "https://registry.yarnpkg.com/@bugsnag/react-native/-/react-native-7.22.3.tgz#d37cb17a23cb2adad61fe2d40f8accded3cb2b96"
@@ -1335,6 +1362,13 @@
     "@bugsnag/plugin-react-native-session" "^7.22.3"
     "@bugsnag/plugin-react-native-unhandled-rejection" "^7.19.0"
     iserror "^0.0.2"
+
+"@bugsnag/request-tracker-performance@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@bugsnag/request-tracker-performance/-/request-tracker-performance-2.2.0.tgz#81e25f5d45d84dc04b5984e3ba76ca9f6235cb63"
+  integrity sha512-OVjjx64AUnzUmM1dkvb4lrP1hzxNPgnCUEZfYd3jMRiXtHh038Stf0igNCdy4zsCr2D5HvJEfF1cZ3BbkPff+w==
+  dependencies:
+    "@bugsnag/core-performance" "^2.2.0"
 
 "@bugsnag/safe-json-stringify@^6.0.0":
   version "6.0.0"
@@ -3704,10 +3738,10 @@
   dependencies:
     invariant "^2.2.4"
 
-"@react-native-community/netinfo@^8.3.0":
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-8.3.0.tgz#e3d19381c7d9f885b44ea1785ed892bc39c4b0f1"
-  integrity sha512-VlmjD7Vg1BacbNhwuJCel1eeD8N2Ps6BEcZe9qoSoeIptpCbC86o4ZqD0meSjJzioKSvgalrkmPgMaVYsVipKw==
+"@react-native-community/netinfo@9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-9.0.0.tgz#d5f64158af5c0772b11bdf0aaba569f944b99589"
+  integrity sha512-oodeVNdL0IT/Fv0cpL7CdxnnESNKiiAzf29yhvGSJBvuFmyHxvmYOtBIX27HWG9tQU8Yzeh+MyQcKBCNmkva+Q==
 
 "@react-native-firebase/analytics@14.9.2":
   version "14.9.2"
@@ -15563,6 +15597,11 @@ react-native-fast-shadow@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/react-native-fast-shadow/-/react-native-fast-shadow-0.1.0.tgz#6d0317a1596988913c161bb27f1a4619f1497561"
   integrity sha512-Hh4BVHleioNMppnHNiwyZplEJLfOtEr7PcbUAla9x9gjaIsX26PkDRRBjQ4S8mdpRMmrHeGmmseL9wj+obA5uw==
+
+react-native-file-access@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-file-access/-/react-native-file-access-3.0.5.tgz#c63af958451e12bf2e3f89ca9aabde9e3fc3cd9b"
+  integrity sha512-r9AFT4islJTZnh/kLTapBBwWzJM/JcVmKelP5rOQY1u5XTCrIL7JkTh6KQNJc8oA6jDqB3DioZ01LSqpiCxeOw==
 
 react-native-flipper@^0.143.0:
   version "0.143.0"
