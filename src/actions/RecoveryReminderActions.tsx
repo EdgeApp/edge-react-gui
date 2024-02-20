@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { isMaestro } from 'react-native-is-maestro'
 
 import { writePasswordRecoveryReminders } from '../actions/SettingsActions'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
@@ -7,6 +6,7 @@ import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
+import { isMaestro } from '../util/maestro'
 import { getTotalFiatAmountFromExchangeRates } from '../util/utils'
 
 const levels = ['20', '200', '2000', '20000', '200000'] as const
