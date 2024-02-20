@@ -4,6 +4,7 @@ import * as React from 'react'
 import { Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { useDisplayDenom } from '../../../hooks/useDisplayDenom'
 import { lstrings } from '../../../locales/strings'
 import {
   ChangeQuote,
@@ -15,7 +16,7 @@ import {
   StakePoolFullError,
   StakePosition
 } from '../../../plugins/stake-plugins/types'
-import { getExchangeDenomByCurrencyCode, selectDisplayDenom } from '../../../selectors/DenominationSelectors'
+import { getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
@@ -65,7 +66,7 @@ const StakeModifySceneComponent = (props: Props) => {
 
   // Hooks
   const guiExchangeRates = useSelector(state => state.exchangeRates)
-  const nativeAssetDenomination = useSelector(state => selectDisplayDenom(state, wallet.currencyConfig, null))
+  const nativeAssetDenomination = useDisplayDenom(wallet.currencyConfig, null)
 
   // ChangeQuote that gets rendered in the rows
   const [changeQuote, setChangeQuote] = React.useState<ChangeQuote | null>(null)

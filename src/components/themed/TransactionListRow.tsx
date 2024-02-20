@@ -11,13 +11,14 @@ import { sprintf } from 'sprintf-js'
 import { formatCategory, getTxActionDisplayInfo, pluginIdIcons, splitCategory } from '../../actions/CategoriesActions'
 import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
+import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { useHistoricalRate } from '../../hooks/useHistoricalRate'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import {
@@ -57,7 +58,7 @@ export function TransactionListRow(props: Props) {
   const currencyInfo = wallet.currencyInfo
 
   const account = useSelector(state => state.core.account)
-  const displayDenomination = useSelector(state => selectDisplayDenom(state, wallet.currencyConfig, tokenId))
+  const displayDenomination = useDisplayDenom(wallet.currencyConfig, tokenId)
   const exchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
   const fiatDenomination = getDenomFromIsoCode(nonIsoFiatCurrencyCode)
   const denominationSymbol = displayDenomination.symbol

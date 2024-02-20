@@ -1,8 +1,7 @@
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
-import { selectDisplayDenom } from '../selectors/DenominationSelectors'
-import { useSelector } from '../types/reactRedux'
 import { getCryptoText } from '../util/cryptoTextUtils'
+import { useDisplayDenom } from './useDisplayDenom'
 import { useTokenDisplayData } from './useTokenDisplayData'
 
 interface Props {
@@ -22,7 +21,7 @@ export const useCryptoText = ({ wallet, tokenId, nativeAmount, withSymbol, hideB
     tokenId,
     wallet
   })
-  const displayDenomination = useSelector(state => selectDisplayDenom(state, wallet.currencyConfig, tokenId))
+  const displayDenomination = useDisplayDenom(wallet.currencyConfig, tokenId)
 
   const cryptoText = getCryptoText({
     displayDenomination,
