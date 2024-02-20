@@ -2,11 +2,11 @@ import { EdgeCurrencyConfig, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
 
 import { RootState } from '../types/reduxTypes'
 
-export const emptyEdgeDenomination: EdgeDenomination = {
+export const emptyEdgeDenomination: EdgeDenomination = Object.freeze({
   name: '',
   multiplier: '1',
   symbol: ''
-}
+})
 
 export const selectDisplayDenomByCurrencyCode = (state: RootState, currencyConfig: EdgeCurrencyConfig, currencyCode: string): EdgeDenomination => {
   const { pluginId } = currencyConfig.currencyInfo
@@ -50,7 +50,7 @@ export const getExchangeDenomByCurrencyCode = (currencyConfig: EdgeCurrencyConfi
     if (token.currencyCode === currencyCode) return token.denominations[0]
   }
 
-  return { ...emptyEdgeDenomination }
+  return emptyEdgeDenomination
 }
 
 /**
@@ -64,5 +64,5 @@ export function getExchangeDenom(currencyConfig: EdgeCurrencyConfig, tokenId: Ed
   const token = currencyConfig.allTokens[tokenId]
   if (token != null) return token.denominations[0]
 
-  return { ...emptyEdgeDenomination }
+  return emptyEdgeDenomination
 }
