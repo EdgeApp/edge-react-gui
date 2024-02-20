@@ -46,7 +46,7 @@ const CreateWalletImportComponent = (props: Props) => {
 
   const handleNext = useHandler(async () => {
     textInputRef.current?.blur()
-    const cleanImportText = importText.trim()
+    const cleanImportText = cleanupImportText(importText)
 
     // Test imports
     const { newWalletItems } = splitCreateWalletItems(createWalletList)
@@ -194,3 +194,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const CreateWalletImportScene = React.memo(CreateWalletImportComponent)
+
+export const cleanupImportText = (importText: string) => {
+  let cleanImportText = importText.trim()
+
+  // Clean up mnemonic seeds
+  const cleanImportTextArray = cleanImportText.split(' ')
+  if (cleanImportTextArray.length > 1) {
+    cleanImportText = cleanImportTextArray
+      .filter(part => part !== '') // remove extra spaces
+      .map(word => word.toLowerCase()) // normalize capitalization
+      .join(' ')
+  }
+  return cleanImportText
+}
