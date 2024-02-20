@@ -15,7 +15,7 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
@@ -57,6 +57,7 @@ const CreateWalletImportComponent = (props: Props) => {
     const promises = pluginIds.map(
       async pluginId =>
         await currencyConfig[pluginId].importKey(cleanImportText).catch(e => {
+          showError(e)
           console.warn('importKey failed', e)
         })
     )
