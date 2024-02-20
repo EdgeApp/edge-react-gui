@@ -158,6 +158,7 @@ const CreateWalletImportComponent = (props: Props) => {
           bottom={1.25}
           value={importText}
           returnKeyType="next"
+          multiline
           placeholder={lstrings.create_wallet_import_input_key_or_seed_prompt}
           autoCapitalize="none"
           autoCorrect={false}
