@@ -5,7 +5,7 @@ import { Text, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenominationFromState, getExchangeDenominationFromState } from '../../selectors/DenominationSelectors'
+import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { connect } from '../../types/reactRedux'
 import { GuiExchangeRates } from '../../types/types'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
@@ -24,12 +24,9 @@ interface OwnProps {
 }
 interface StateProps {
   exchangeRates: GuiExchangeRates
+  feeDisplayDenomination: EdgeDenomination
 }
-interface DispatchProps {
-  getDisplayDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
-  getExchangeDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
-}
-type Props = OwnProps & StateProps & ThemeProps & DispatchProps
+type Props = OwnProps & StateProps & ThemeProps
 
 interface State {
   error?: Error
@@ -87,10 +84,9 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
   }
 
   getTxFeeDisplay = (edgeTransaction: EdgeTransaction): string => {
-    const { exchangeRates, wallet, getDisplayDenomination, getExchangeDenomination } = this.props
+    const { exchangeRates, feeDisplayDenomination, wallet } = this.props
 
-    const feeDisplayDenomination = getDisplayDenomination(wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
-    const feeDefaultDenomination = getExchangeDenomination(wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
+    const feeDefaultDenomination = getExchangeDenom(wallet.currencyConfig, null)
     const transactionFee = convertTransactionFeeToDisplayFee(wallet, exchangeRates, edgeTransaction, feeDisplayDenomination, feeDefaultDenomination)
 
     const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol ?? ''} ${transactionFee.fiatAmount})`
@@ -165,18 +161,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const AccelerateTxModal = connect<StateProps, DispatchProps, OwnProps>(
+export const AccelerateTxModal = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => ({
-    exchangeRates: state.exchangeRates
+    exchangeRates: state.exchangeRates,
+    feeDisplayDenomination: selectDisplayDenom(state, ownProps.wallet.currencyConfig, null)
   }),
-  dispatch => ({
-    getDisplayDenomination(pluginId: string, currencyCode: string) {
-      return dispatch(getDisplayDenominationFromState(pluginId, currencyCode))
-    },
-    getExchangeDenomination(pluginId: string, currencyCode: string) {
-      return dispatch(getExchangeDenominationFromState(pluginId, currencyCode))
-    }
-  })
+  dispatch => ({})
 )(withTheme(AccelerateTxModalComponent))
 
 function getTxSendAmount(edgeTransaction: EdgeTransaction): string {

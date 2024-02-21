@@ -50,8 +50,8 @@ export const WcSmartContractModal = (props: Props) => {
   const feeCurrencyStr = `${feeDisplayName} (${feeCurrencyCode})`
   const feeCurrencyBalance = wallet.balanceMap.get(null) ?? '0'
 
-  const amountDenom = useDisplayDenom(pluginId, amountCurrencyCode)
-  const feeDenom = useDisplayDenom(pluginId, feeCurrencyCode)
+  const amountDenom = useDisplayDenom(wallet.currencyConfig, tokenId)
+  const feeDenom = useDisplayDenom(wallet.currencyConfig, null)
 
   // For total amount, convert 'amount' currency to 'fee' currency so it be totaled as a single crypto amount to pass to FiatAmountTile component
   const amountCurrencyToFeeCurrencyExchangeRate = div(amountDenom.multiplier, feeDenom.multiplier)

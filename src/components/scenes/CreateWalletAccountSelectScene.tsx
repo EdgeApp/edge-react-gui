@@ -8,7 +8,7 @@ import { createAccountTransaction, fetchAccountActivationInfo, fetchWalletAccoun
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -55,9 +55,9 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
   const activationCost = useSelector(state => state.ui.createWallet.handleActivationInfo.activationCost)
   const paymentCurrencyCode = useSelector(state => state.ui.createWallet.walletAccountActivationPaymentInfo.currencyCode)
   const amount = useSelector(state => state.ui.createWallet.walletAccountActivationPaymentInfo.amount)
-  const paymentDenominationSymbol = useSelector(state =>
-    paymentCurrencyCode != null ? getExchangeDenomination(state, existingPluginId, paymentCurrencyCode).symbol ?? '' : ''
-  )
+  const paymentDenominationSymbol =
+    paymentCurrencyCode == null ? '' : getExchangeDenomByCurrencyCode(existingWallet.currencyConfig, paymentCurrencyCode).symbol ?? ''
+
   const walletAccountActivationQuoteError = useSelector(state => state.ui.createWallet.walletAccountActivationQuoteError)
 
   const instructionSyntax = sprintf(

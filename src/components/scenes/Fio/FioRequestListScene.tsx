@@ -1,5 +1,5 @@
 import { mul, toFixed } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyWallet, EdgeDenomination, EdgeMemo } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeMemo } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, SectionList, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -8,7 +8,7 @@ import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import { SPECIAL_CURRENCY_INFO } from '../../../constants/WalletAndCurrencyConstants'
 import { formatDate, SHORT_DATE_FMT } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
-import { getExchangeDenominationFromState } from '../../../selectors/DenominationSelectors'
+import { getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { FioAddress, FioRequest } from '../../../types/types'
@@ -61,7 +61,6 @@ interface StateProps {
 interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string) => void
   refreshAllFioAddresses: () => Promise<void>
-  getExchangeDenomination: (pluginId: string, currencyCode: string) => EdgeDenomination
 }
 
 interface OwnProps extends EdgeSceneProps<'fioRequestList'> {}
@@ -387,11 +386,11 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   sendCrypto = async (pendingRequest: FioRequest, walletId: string, selectedCurrencyCode: string) => {
-    const { account, fioWallets = [], currencyWallets, navigation, getExchangeDenomination } = this.props
+    const { account, fioWallets = [], currencyWallets, navigation } = this.props
     const fioWalletByAddress = fioWallets.find(wallet => wallet.id === pendingRequest.fioWalletId) || null
     if (!fioWalletByAddress) return showError(lstrings.fio_wallet_missing_for_fio_address)
     const currencyWallet = currencyWallets[walletId]
-    const exchangeDenomination = getExchangeDenomination(currencyWallet.currencyInfo.pluginId, pendingRequest.content.token_code.toUpperCase())
+    const exchangeDenomination = getExchangeDenomByCurrencyCode(currencyWallet.currencyConfig, pendingRequest.content.token_code.toUpperCase())
     let nativeAmount = mul(pendingRequest.content.amount, exchangeDenomination.multiplier)
     nativeAmount = toFixed(nativeAmount, 0, 0)
     const currencyCode = pendingRequest.content.token_code.toUpperCase()
@@ -624,9 +623,6 @@ export const FioRequestListScene = connect<StateProps, DispatchProps, OwnProps>(
     },
     async refreshAllFioAddresses() {
       await dispatch(refreshAllFioAddresses())
-    },
-    getExchangeDenomination(pluginId: string, currencyCode: string) {
-      return dispatch(getExchangeDenominationFromState(pluginId, currencyCode))
     }
   })
 )(withTheme(FioRequestList))

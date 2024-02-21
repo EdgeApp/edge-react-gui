@@ -17,7 +17,7 @@ import { useIconColor } from '../../hooks/useIconColor'
 import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
@@ -91,7 +91,7 @@ const TransactionDetailsComponent = (props: Props) => {
   const absoluteAmount = abs(nativeAmount)
 
   // Look up the current price:
-  const exchangeDenom = useSelector(state => getExchangeDenomination(state, currencyInfo.pluginId, currencyCode))
+  const exchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
   const absExchangeAmount = convertNativeToExchange(exchangeDenom.multiplier)(absoluteAmount)
   const currentFiat = useSelector(state =>
     parseFloat(convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, absExchangeAmount))

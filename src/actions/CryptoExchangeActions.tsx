@@ -8,7 +8,8 @@ import {
   EdgeCurrencyWallet,
   EdgeSwapQuote,
   EdgeSwapRequest,
-  EdgeSwapResult
+  EdgeSwapResult,
+  EdgeTokenId
 } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
@@ -18,12 +19,12 @@ import { InsufficientFeesModal } from '../components/modals/InsufficientFeesModa
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { formatNumber } from '../locales/intl'
 import { lstrings } from '../locales/strings'
-import { getDisplayDenomination, getExchangeDenomination } from '../selectors/DenominationSelectors'
+import { getExchangeDenom, getExchangeDenomByCurrencyCode, selectDisplayDenom, selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelectors'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { GuiCurrencyInfo, GuiSwapInfo } from '../types/types'
-import { getCurrencyCode, getTokenIdForced, getWalletTokenId } from '../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { bestOfPlugins } from '../util/ReferralHelpers'
 import { logEvent } from '../util/tracking'
@@ -175,13 +176,13 @@ export const getSwapInfo = async (state: RootState, quote: EdgeSwapQuote): Promi
   const fromDisplayAmount = toFixed(fromDisplayAmountTemp, 0, 8)
 
   // Format from fiat:
-  const fromExchangeDenomination = getExchangeDenomination(state, fromWallet.currencyInfo.pluginId, fromCurrencyCode)
+  const fromExchangeDenomination = getExchangeDenom(fromWallet.currencyConfig, fromTokenId)
   const fromBalanceInCryptoDisplay = convertNativeToExchange(fromExchangeDenomination.multiplier)(quote.fromNativeAmount)
   const fromBalanceInFiatRaw = parseFloat(convertCurrency(state, fromCurrencyCode, fromWallet.fiatCurrencyCode, fromBalanceInCryptoDisplay))
   const fromFiat = formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
 
   // Format crypto fee:
-  const feeDenomination = getDisplayDenomination(state, fromWallet.currencyInfo.pluginId, fromWallet.currencyInfo.currencyCode)
+  const feeDenomination = selectDisplayDenom(state, fromWallet.currencyConfig, null)
   const feeNativeAmount = quote.networkFee.nativeAmount
   const feeTempAmount = div(feeNativeAmount, feeDenomination.multiplier, DECIMAL_PRECISION)
   const feeDisplayAmount = toFixed(feeTempAmount, 0, 6)
@@ -199,7 +200,7 @@ export const getSwapInfo = async (state: RootState, quote: EdgeSwapQuote): Promi
   const toDisplayAmount = toFixed(toDisplayAmountTemp, 0, 8)
 
   // Format to fiat:
-  const toExchangeDenomination = getExchangeDenomination(state, toWallet.currencyInfo.pluginId, toCurrencyCode)
+  const toExchangeDenomination = getExchangeDenom(toWallet.currencyConfig, toTokenId)
   const toBalanceInCryptoDisplay = convertNativeToExchange(toExchangeDenomination.multiplier)(quote.toNativeAmount)
   const toBalanceInFiatRaw = parseFloat(convertCurrency(state, toCurrencyCode, toWallet.fiatCurrencyCode, toBalanceInCryptoDisplay))
   const toFiat = formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
@@ -237,7 +238,7 @@ function processSwapQuoteError(error: unknown): ThunkAction<void> {
     if (aboveLimit != null) {
       const wallet = aboveLimit.direction === 'to' ? toWallet : fromWallet
       const currencyCode = aboveLimit.direction === 'to' ? toCurrencyCode : fromCurrencyCode
-      const currentCurrencyDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+      const currentCurrencyDenomination = selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, currencyCode)
 
       const { nativeMax } = aboveLimit
       const nativeToDisplayRatio = currentCurrencyDenomination.multiplier
@@ -253,7 +254,7 @@ function processSwapQuoteError(error: unknown): ThunkAction<void> {
     if (belowLimit) {
       const wallet = belowLimit.direction === 'to' ? toWallet : fromWallet
       const currencyCode = belowLimit.direction === 'to' ? toCurrencyCode : fromCurrencyCode
-      const currentCurrencyDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+      const currentCurrencyDenomination = selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, currencyCode)
 
       const { nativeMin } = belowLimit
       const nativeToDisplayRatio = currentCurrencyDenomination.multiplier
@@ -357,18 +358,17 @@ export function shiftCryptoCurrency(navigation: NavigationBase, quote: EdgeSwapQ
   }
 }
 
-export function selectWalletForExchange(walletId: string, currencyCode: string, direction: 'from' | 'to'): ThunkAction<Promise<void>> {
+export function selectWalletForExchange(walletId: string, tokenId: EdgeTokenId, direction: 'from' | 'to'): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const wallet = state.core.account.currencyWallets[walletId]
-    const { currencyCode: chainCc } = wallet.currencyInfo
-    const cc = currencyCode || chainCc
-    const balanceMessage = await getBalanceMessage(state, walletId, cc)
-    const primaryDisplayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, cc)
-    const primaryExchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, cc)
+    const cc = getCurrencyCode(wallet, tokenId)
+    const balanceMessage = await getBalanceMessage(state, walletId, tokenId)
+    const primaryDisplayDenomination = selectDisplayDenom(state, wallet.currencyConfig, tokenId)
+    const primaryExchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
     const primaryInfo: GuiCurrencyInfo = {
       walletId,
-      tokenId: getTokenIdForced(state.core.account, wallet.currencyInfo.pluginId, cc),
+      tokenId,
       displayCurrencyCode: cc,
       exchangeCurrencyCode: cc,
       displayDenomination: primaryDisplayDenomination,
@@ -410,19 +410,19 @@ export function checkEnabledExchanges(): ThunkAction<void> {
   }
 }
 
-async function getBalanceMessage(state: RootState, walletId: string, currencyCode: string) {
+async function getBalanceMessage(state: RootState, walletId: string, tokenId: EdgeTokenId) {
   const { account } = state.core
   const { currencyWallets } = account
   const wallet = currencyWallets[walletId]
-  const tokenId = getWalletTokenId(wallet, currencyCode)
+  const currencyCode = getCurrencyCode(wallet, tokenId)
 
   const balanceInCrypto = wallet.balanceMap.get(tokenId) ?? '0'
   const isoFiatCurrencyCode = wallet.fiatCurrencyCode
-  const exchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+  const exchangeDenomination = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
   const balanceInCryptoDisplay = convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
   const balanceInFiat = parseFloat(convertCurrency(state, currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay))
 
-  const displayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+  const displayDenomination = selectDisplayDenom(state, wallet.currencyConfig, tokenId)
 
   const cryptoBalanceAmount: string = convertNativeToDisplay(displayDenomination.multiplier)(balanceInCrypto) // convert to correct denomination
   const cryptoBalanceAmountString = cryptoBalanceAmount ? formatNumber(decimalOrZero(toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)

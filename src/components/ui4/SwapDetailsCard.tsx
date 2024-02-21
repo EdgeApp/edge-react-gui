@@ -8,8 +8,9 @@ import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
+import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { getExchangeDenom, selectDisplayDenom, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
@@ -31,13 +32,13 @@ export function SwapDetailsCard(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { currencyCode, memos = [], spendTargets = [] } = transaction
+  const { memos = [], spendTargets = [], tokenId } = transaction
   const { currencyInfo } = wallet
   const walletName = useWalletName(wallet)
   const walletDefaultDenom = useSelector(state =>
     currencyInfo.currencyCode === transaction.currencyCode
-      ? getExchangeDenomination(state, currencyInfo.pluginId, currencyCode)
-      : getDisplayDenomination(state, currencyInfo.pluginId, currencyCode)
+      ? getExchangeDenom(wallet.currencyConfig, tokenId)
+      : selectDisplayDenom(state, wallet.currencyConfig, tokenId)
   )
 
   const { isEstimate, orderId, orderUri, payoutAddress, payoutWalletId, plugin, refundAddress } = swapData
@@ -87,10 +88,12 @@ export function SwapDetailsCard(props: Props) {
   }
 
   // The wallet may have been deleted:
-  const destinationWallet = useSelector(state => state.core.account.currencyWallets[payoutWalletId])
+  const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
+  const destinationWallet = currencyWallets[payoutWalletId]
   const destinationWalletName = destinationWallet == null ? '' : getWalletName(destinationWallet)
   const destinationDenomination = useSelector(state =>
-    destinationWallet == null ? undefined : getDisplayDenomination(state, destinationWallet.currencyInfo.pluginId, payoutCurrencyCode)
+    destinationWallet == null ? undefined : selectDisplayDenomByCurrencyCode(state, destinationWallet.currencyConfig, payoutCurrencyCode)
   )
   if (destinationDenomination == null) return null
 
