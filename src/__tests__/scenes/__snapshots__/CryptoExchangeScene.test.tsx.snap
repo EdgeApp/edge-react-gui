@@ -48,6 +48,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       walletId=""
     >
       <MiniButton
+        alignSelf="center"
         label="MAX"
         marginRem={
           [
