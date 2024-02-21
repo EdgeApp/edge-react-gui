@@ -310,7 +310,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             focusMe={this.focusFromWallet}
             onNext={this.handleNext}
           >
-            {this.props.hasMaxSpend ? <MiniButton label={lstrings.string_max_cap} marginRem={[0.5, 0, 1]} onPress={this.handleMax} /> : null}
+            {this.props.hasMaxSpend ? <MiniButton label={lstrings.string_max_cap} marginRem={[0.5, 0, 1]} onPress={this.handleMax} alignSelf="center" /> : null}
           </CryptoExchangeFlipInputWrapper>
         </EdgeAnim>
         <EdgeAnim>
