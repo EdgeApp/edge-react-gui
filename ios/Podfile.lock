@@ -3,6 +3,9 @@ PODS:
   - boost (1.76.0)
   - BugsnagReactNative (7.22.3):
     - React-Core
+  - BugsnagReactNativePerformance (2.2.0):
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
   - BVLinearGradient (2.8.3):
     - React-Core
   - CGRPCZlib (1.8.0)
@@ -517,7 +520,7 @@ PODS:
     - React-Core
   - react-native-mymonero-core (0.3.1):
     - React-Core
-  - react-native-netinfo (8.3.0):
+  - react-native-netinfo (9.0.0):
     - React-Core
   - react-native-performance (5.1.0):
     - React-Core
@@ -625,6 +628,9 @@ PODS:
     - React-jsi (= 0.71.15)
     - React-logger (= 0.71.15)
     - React-perflogger (= 0.71.15)
+  - ReactNativeFileAccess (3.0.5):
+    - React-Core
+    - ZIPFoundation (= 0.9.11)
   - rn-id-blurview (1.2.1):
     - React
   - RNBootSplash (4.7.4):
@@ -863,6 +869,7 @@ PODS:
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
+  - ZIPFoundation (0.9.11)
   - ZXingObjC (3.6.5):
     - ZXingObjC/All (= 3.6.5)
   - ZXingObjC/All (3.6.5)
@@ -870,6 +877,7 @@ PODS:
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - "BugsnagReactNative (from `../node_modules/@bugsnag/react-native`)"
+  - "BugsnagReactNativePerformance (from `../node_modules/@bugsnag/react-native-performance`)"
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - CGRPCZlib
   - CNIOAtomics
@@ -972,6 +980,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - ReactNativeFileAccess (from `../node_modules/react-native-file-access`)
   - rn-id-blurview (from `../node_modules/rn-id-blurview`)
   - RNBootSplash (from `../node_modules/react-native-bootsplash`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
@@ -1060,6 +1069,7 @@ SPEC REPOS:
     - SwiftNIOTransportServices
     - SwiftProtobuf
     - YogaKit
+    - ZIPFoundation
     - ZXingObjC
 
 EXTERNAL SOURCES:
@@ -1067,6 +1077,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   BugsnagReactNative:
     :path: "../node_modules/@bugsnag/react-native"
+  BugsnagReactNativePerformance:
+    :path: "../node_modules/@bugsnag/react-native-performance"
   BVLinearGradient:
     :path: "../node_modules/react-native-linear-gradient"
   disklet:
@@ -1205,6 +1217,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReactNativeFileAccess:
+    :path: "../node_modules/react-native-file-access"
   rn-id-blurview:
     :path: "../node_modules/rn-id-blurview"
   RNBootSplash:
@@ -1264,6 +1278,7 @@ SPEC CHECKSUMS:
   _NIODataStructures: 3d45d8e70a1d17a15b1dc59d102c63dbc0525ffd
   boost: 7dcd2de282d72e344012f7d6564d024930a6a440
   BugsnagReactNative: d9fa0824cea1beb5ab1f12828d79a2bd1b383e60
+  BugsnagReactNativePerformance: c432af1d946e4a66ffc16a5a9828ba07ae0cbbfb
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   CGRPCZlib: 298dd3237ba4bd7b3eed109e7080ff3324b7d9c9
   CNIOAtomics: 8edf08644e5e6fa0f021c239be9e8beb1cd9ef18
@@ -1351,7 +1366,7 @@ SPEC CHECKSUMS:
   react-native-keyboard-controller: 9c708acff806450ce2a0f3c2aceace1fdc87070f
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408
-  react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
+  react-native-netinfo: 5b664b2945a8f02102b296f0f812bddd6827ed9c
   react-native-performance: cef2b618d47b277fb5c3280b81a3aad1e72f2886
   react-native-piratechain: 2d1baa918b48f0acde635672504296340b039141
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
@@ -1371,6 +1386,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: a97783e3645ddf852e34da2e015656e309f3a083
   React-runtimeexecutor: 8f2ddd9db7874ec7de84f5c55d73aeaaf82908e2
   ReactCommon: 309d965cb51f058d07dea65bc04dcf462911f0a4
+  ReactNativeFileAccess: ad2a22183f172817526bbff7c303e2418792f18c
   rn-id-blurview: 42b72b8741b1624ef5052928ec7c04fcb345e198
   RNBootSplash: 0a92fb6bd3d265e23cded61faf3e9fda441d0a6b
   RNCAsyncStorage: 3a8f7145d17cdd9f88e7b77666c94a09e4f759c8
@@ -1417,8 +1433,9 @@ SPEC CHECKSUMS:
   SwiftProtobuf: b70d65f419fbfe61a2d58003456ca5da58e337d6
   Yoga: 68c9c592c3e80ec37ff28db20eedb13d84aae5df
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
+  ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
 PODFILE CHECKSUM: a84a2c04da9e8c38a3ce0d31af51c1be7866ec59
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.2

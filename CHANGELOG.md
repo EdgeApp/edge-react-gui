@@ -3,6 +3,7 @@
 ## Unreleased
 
 - added: Notification status analytics param
+- added: @bugsnag/react-native-performance
 - fixed: Some text inputs not selectable for some Samsung devices
 
 ## 4.1.0

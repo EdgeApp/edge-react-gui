@@ -5,10 +5,11 @@
  * rerenders
  */
 // import './wdyr'
-
 import Bugsnag from '@bugsnag/react-native'
+import BugsnagPerformance from '@bugsnag/react-native-performance'
 import { asObject, asString } from 'cleaners'
 import { LogBox, Text, TextInput } from 'react-native'
+import { getVersion } from 'react-native-device-info'
 import RNFS from 'react-native-fs'
 
 import { initDeviceSettings } from './actions/DeviceSettingsActions'
@@ -18,6 +19,8 @@ import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
 import { initInfoServer } from './util/network'
 
+// Uncomment the next line to remove popup warning/error boxes.
+// LogBox.ignoreAllLogs()
 LogBox.ignoreLogs(['Require cycle:'])
 
 Bugsnag.start({
@@ -62,16 +65,34 @@ if (!TextInput.defaultProps) {
 TextInput.defaultProps.allowFontScaling = false
 
 if (!__DEV__) {
-  // TODO: Fix logger to append data vs read/modify/write
-
   console.log = log
-
   console.info = log
-
   console.warn = log
-
   console.error = log
 }
+
+const appVersion = getVersion()
+const releaseStage = __DEV__ || appVersion === '99.99.99' ? 'development' : appVersion.includes('-') ? 'testing' : 'production'
+
+BugsnagPerformance.start({
+  apiKey: ENV.BUGSNAG_API_KEY,
+  appVersion,
+  releaseStage,
+  logger: {
+    debug(message: string) {
+      console.log(message)
+    },
+    info(message: string) {
+      console.log(message)
+    },
+    warn(message: string) {
+      console.warn(message)
+    },
+    error(message: string) {
+      console.error(message)
+    }
+  }
+})
 
 if (ENV.LOG_SERVER) {
   console.log = function () {
