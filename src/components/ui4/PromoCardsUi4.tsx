@@ -1,5 +1,4 @@
 import { asDate } from 'cleaners'
-import { EdgeAccount } from 'edge-core-js'
 import { PromoCard2 } from 'edge-info-server'
 import * as React from 'react'
 import { ListRenderItem, Platform } from 'react-native'
@@ -9,10 +8,11 @@ import shajs from 'sha.js'
 import { getCountryCodeByIp, hideMessageTweak } from '../../actions/AccountReferralActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { infoServerData } from '../../util/network'
-import { getOsVersion } from '../../util/utils'
+import { getOsVersion, zeroString } from '../../util/utils'
 import { EdgeAnim, fadeInUp110 } from '../common/EdgeAnim'
 import { useTheme } from '../services/ThemeContext'
 import { CarouselUi4 } from './CarouselUi4'
@@ -29,23 +29,49 @@ export const PromoCardsUi4 = (props: Props) => {
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
 
-  const [cards, setCards] = React.useState<FilteredPromoCard[]>([])
+  const [filteredCards, setFilteredCards] = React.useState<FilteredPromoCard[]>([])
+  const [accountFunded, setAccountFunded] = React.useState<boolean>()
+  const [countryCode, setCountryCode] = React.useState<string | undefined>()
 
-  // Check for PromoCard2 from info server:
+  const walletsSynced = useSelector(state => {
+    const { currencyWallets } = state.core.account
+    const { userPausedWalletsSet } = state.ui.settings
+    const unPausedWallets = Object.values(currencyWallets).filter(wallet => !userPausedWalletsSet?.has(wallet.id))
+    const unSyncedWallets = unPausedWallets.filter(wallet => wallet.syncRatio < 1)
+
+    return unSyncedWallets.length === 0
+  })
+
+  // Set account funded status
+  React.useEffect(() => {
+    if (!walletsSynced) return
+    setAccountFunded(Object.values(currencyWallets).some(wallet => [...wallet.balanceMap.values()].some(balanceVal => !zeroString(balanceVal))))
+  }, [currencyWallets, walletsSynced])
+
+  // Set countryCode once
   useAsyncEffect(
     async () => {
-      const cards = infoServerData.rollup?.promoCards2 ?? []
       const countryCode = await getCountryCodeByIp().catch(() => '')
-      const filteredCards = filterPromoCards(cards, countryCode, account)
-      setCards(filteredCards)
+      setCountryCode(countryCode)
     },
     [],
-    'PromoCardsUi4'
+    'countryCode'
   )
 
+  // Check for PromoCard2 from info server:
+  React.useEffect(() => {
+    if (countryCode == null) return
+    const cards = infoServerData.rollup?.promoCards2 ?? []
+
+    // We want to show cards even if balances aren't ready yet. We'll just
+    // skip over balance-dependent cards until balances are ready
+    setFilteredCards(filterPromoCards(cards, countryCode, accountFunded))
+  }, [accountFunded, countryCode])
+
   const hiddenAccountMessages = useSelector(state => state.account.accountReferral.hiddenAccountMessages)
-  const activeCards = React.useMemo(() => cards.filter(card => !hiddenAccountMessages[card.messageId]), [cards, hiddenAccountMessages])
+  const activeCards = React.useMemo(() => filteredCards.filter(card => !hiddenAccountMessages[card.messageId]), [filteredCards, hiddenAccountMessages])
 
   // List rendering methods:
   const keyExtractor = useHandler((item: FilteredPromoCard) => item.messageId)
@@ -69,7 +95,7 @@ export const PromoCardsUi4 = (props: Props) => {
  * Finds the promo cards that are relevant to our application version &
  * other factors.
  */
-function filterPromoCards(cards: PromoCard2[], countryCode: string, account: EdgeAccount): FilteredPromoCard[] {
+function filterPromoCards(cards: PromoCard2[], countryCode: string, accountFunded?: boolean): FilteredPromoCard[] {
   const buildNumber = getBuildNumber()
   const currentDate = new Date()
   const osType = Platform.OS.toLowerCase()
@@ -92,13 +118,20 @@ function filterPromoCards(cards: PromoCard2[], countryCode: string, account: Edg
       localeMessages,
       maxBuildNum,
       minBuildNum,
-      newAccount,
+      noBalance = false,
       osTypes = [],
       osVersions = [],
       startIsoDate
     } = card
     const startDate = asDate(startIsoDate)
     const endDate = asDate(endIsoDate)
+
+    // Validate balance status. If the card specifies 'noBalance' and
+    // accountFunded balances are not ready yet (undefined), omit until balances
+    // are ready and we re-run.
+    if (noBalance) {
+      if (accountFunded == null || accountFunded) continue
+    }
 
     // Validate app version
     // Ignore everything else if build version is specified and mismatched.
@@ -110,9 +143,6 @@ function filterPromoCards(cards: PromoCard2[], countryCode: string, account: Edg
     // Look at min/max only if exact build or app version is not specified.
     if (minBuildNum != null && minBuildNum > buildNumber) continue
     if (maxBuildNum != null && maxBuildNum < buildNumber) continue
-
-    // Validate new account status
-    if (newAccount && !account.newAccount) continue
 
     // Validate country
     const isCountryInclude = countryCodes.length === 0 || countryCodes.map(countryCode => countryCode.toLowerCase()).includes(countryCode)
@@ -135,8 +165,8 @@ function filterPromoCards(cards: PromoCard2[], countryCode: string, account: Edg
 
     filteredCards.push({
       background,
-      dismissable,
       ctaButton,
+      dismissable,
       localeMessages,
       messageId
     })
