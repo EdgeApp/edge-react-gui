@@ -46,7 +46,7 @@ export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivat
 
     // XXX Still need a darn currencyCode. Hope to deprecate later
     const currencyCode = getCurrencyCode(wallet, tokenId)
-    dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
+    dispatch(updateMostRecentWalletsSelected(walletId, tokenId))
 
     const currentWalletId = state.ui.wallets.selectedWalletId
     const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
