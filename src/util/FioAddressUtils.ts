@@ -226,7 +226,7 @@ export const refreshConnectedWalletsForFioAddress = async (
   })
   for (const wallet of wallets) {
     const { currencyConfig, enabledTokenIds } = wallet
-    const enabledCodes = enabledTokenIds.map(tokenId => currencyConfig.allTokens[tokenId].currencyCode)
+    const enabledCodes = enabledTokenIds.map(tokenId => currencyConfig.allTokens[tokenId]?.currencyCode).filter(t => t != null)
     enabledCodes.push(wallet.currencyInfo.currencyCode)
     for (const currencyCode of enabledCodes) {
       const fullCurrencyCode = `${wallet.currencyInfo.currencyCode}:${currencyCode}`
