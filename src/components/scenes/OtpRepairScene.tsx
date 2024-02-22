@@ -29,7 +29,7 @@ export const OtpRepairScene = (props: Props) => {
   })
 
   return (
-    <SceneWrapper>
+    <SceneWrapper hasHeader={false}>
       <OtpRepairScreen
         account={account}
         branding={{ appName: config.appName }}
