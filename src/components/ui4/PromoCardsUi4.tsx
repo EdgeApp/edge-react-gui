@@ -85,6 +85,7 @@ function filterPromoCards(cards: PromoCard2[], countryCode: string, account: Edg
       background,
       countryCodes = [],
       ctaButton,
+      dismissable = false,
       endIsoDate,
       exactBuildNum,
       excludeCountryCodes = [],
@@ -134,6 +135,7 @@ function filterPromoCards(cards: PromoCard2[], countryCode: string, account: Edg
 
     filteredCards.push({
       background,
+      dismissable,
       ctaButton,
       localeMessages,
       messageId
