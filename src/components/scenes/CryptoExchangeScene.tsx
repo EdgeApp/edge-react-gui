@@ -24,7 +24,6 @@ import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeConte
 import { CryptoExchangeFlipInputWrapper } from '../themed/CryptoExchangeFlipInputWrapperComponent'
 import { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput2'
 import { LineTextDivider } from '../themed/LineTextDivider'
-import { MiniButton } from '../themed/MiniButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { AlertCardUi4 } from '../ui4/AlertCardUi4'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
@@ -310,7 +309,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             focusMe={this.focusFromWallet}
             onNext={this.handleNext}
           >
-            {this.props.hasMaxSpend ? <MiniButton label={lstrings.string_max_cap} marginRem={[0.5, 0, 1]} onPress={this.handleMax} alignSelf="center" /> : null}
+            {this.props.hasMaxSpend ? <ButtonsViewUi4 secondary={{ label: lstrings.string_max_cap, mini: true, onPress: this.handleMax }} /> : null}
           </CryptoExchangeFlipInputWrapper>
         </EdgeAnim>
         <EdgeAnim>

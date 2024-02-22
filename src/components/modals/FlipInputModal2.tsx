@@ -20,7 +20,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
-import { MiniButton } from '../themed/MiniButton'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { CardUi4 } from '../ui4/CardUi4'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
@@ -200,7 +200,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
           onNext={handleCloseModal}
         />
         {getSpecialCurrencyInfo(pluginId).noMaxSpend !== true && hideMaxButton !== true ? (
-          <MiniButton label={lstrings.string_max_cap} marginRem={[1.2, 0, 0]} onPress={handleSendMaxAmount} />
+          <ButtonsViewUi4 secondary={{ onPress: handleSendMaxAmount, label: lstrings.string_max_cap, mini: true }} />
         ) : null}
       </CardUi4>
     )
