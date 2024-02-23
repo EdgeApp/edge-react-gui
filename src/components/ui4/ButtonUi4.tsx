@@ -206,8 +206,8 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     visibleSizeMini: {
       alignSelf: 'center',
-      paddingHorizontal: theme.rem(1.25),
-      height: theme.rem(2)
+      paddingHorizontal: theme.rem(1.5),
+      height: theme.rem(2.25)
     },
     visibleSizeTertiary: {
       // Reduce the bounds of a tertiary button so it doesn't appear to be too

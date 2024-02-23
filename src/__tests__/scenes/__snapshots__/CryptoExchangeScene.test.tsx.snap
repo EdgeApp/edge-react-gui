@@ -47,17 +47,14 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       }
       walletId=""
     >
-      <MiniButton
-        alignSelf="center"
-        label="MAX"
-        marginRem={
-          [
-            0.5,
-            0,
-            1,
-          ]
+      <Memo
+        secondary={
+          {
+            "label": "MAX",
+            "mini": true,
+            "onPress": [Function],
+          }
         }
-        onPress={[Function]}
       />
     </Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))>
   </Memo(EdgeAnimInner)>
