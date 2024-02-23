@@ -389,7 +389,7 @@
     "paymentTypeLogoKey": "bank"
   },
   {
-    "id": "bits of gold",
+    "id": "bitsofgold",
     "pluginId": "bitsofgold",
     "paymentTypes": ["bank"],
     "description": "Fee: 3%\nSettlement: 1 - 48 hours",
@@ -485,7 +485,7 @@
     "sortIndex": 5
   },
   {
-    "id": "bits of gold",
+    "id": "bitsofgold",
     "sortIndex": 1
   },
   {
@@ -999,7 +999,7 @@
     "sortIndex": 2
   },
   {
-    "id": "bits of gold",
+    "id": "bitsofgold",
     "forCountries": ["IL"],
     "sortIndex": 2,
     "title": "Israeli Bank Transfer",

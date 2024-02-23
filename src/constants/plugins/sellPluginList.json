@@ -80,7 +80,7 @@
   },
 
   {
-    "id": "bits of gold",
+    "id": "bitsofgold",
     "pluginId": "bitsofgold",
     "paymentTypes": ["bank"],
     "description": "Fee: 3% / Settlement: 1 - 48 hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
@@ -477,7 +477,7 @@
     "sortIndex": 3
   },
   {
-    "id": "bits of gold",
+    "id": "bitsofgold",
     "sortIndex": 1
   },
   {
@@ -487,7 +487,7 @@
   "----- iOS specifics -----",
   "----- Country Specifics -----",
   {
-    "id": "bits of gold",
+    "id": "bitsofgold",
     "forCountries": ["IL"],
     "sortIndex": 2,
     "title": "Israeli Bank Transfer",
