@@ -247,6 +247,7 @@ exports[`HelpModal should render with loading props 1`] = `
       collapsable={false}
       handlerTag={2}
       handlerType="NativeViewGestureHandler"
+      keyboardDismissMode="on-drag"
       onGestureHandlerEvent={[Function]}
       onGestureHandlerStateChange={[Function]}
       scrollIndicatorInsets={
