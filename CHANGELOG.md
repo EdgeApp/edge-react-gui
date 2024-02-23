@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.1.0 (2024-02-23)
+
 - changed: Reword of the CrashScene to help users to force close (not uninstall) Edge
 - changed: Upgrade to Android NDK version 26.1.10909125.
 
