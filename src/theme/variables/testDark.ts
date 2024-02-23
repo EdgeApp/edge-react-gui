@@ -205,6 +205,7 @@ export const testDark: Theme = {
   warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
   negativeText: palette.gray,
+  negativeDeltaText: palette.accentRed,
   dangerText: palette.accentRed,
   textLink: palette.edgeMint,
   deactivatedText: palette.gray,

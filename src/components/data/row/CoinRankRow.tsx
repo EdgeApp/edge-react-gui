@@ -201,7 +201,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1
   },
   negativeText: {
-    color: theme.negativeText
+    color: theme.negativeDeltaText
   },
   positiveText: {
     color: theme.positiveText
