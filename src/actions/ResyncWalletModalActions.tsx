@@ -16,7 +16,7 @@ export function showResyncWalletModal(walletId: string): ThunkAction<Promise<voi
       <ButtonsModal
         bridge={bridge}
         title={lstrings.fragment_wallets_resync_wallet}
-        message={`${lstrings.fragment_wallets_resync_wallet_first_confirm_message_mobile} ${getWalletName(currencyWallets[walletId])}?`}
+        message={`${lstrings.fragment_wallets_resync_wallet_first_confirm_message_mobile}${getWalletName(currencyWallets[walletId])}?`}
         buttons={{
           confirm: { label: lstrings.string_resync },
           cancel: { label: lstrings.string_cancel_cap }
