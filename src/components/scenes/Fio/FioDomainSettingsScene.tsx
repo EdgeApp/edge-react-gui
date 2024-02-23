@@ -138,7 +138,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
       tokenId: null,
       spendInfo: {
         tokenId: null,
-        spendTargets: [{ nativeAmount: '', publicAddress: '' }],
+        spendTargets: [{ nativeAmount: '' }],
         otherParams: {
           action: {
             name: 'transferFioDomain',
