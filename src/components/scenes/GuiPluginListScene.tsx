@@ -383,25 +383,29 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const uri = `${FLAG_LOGO_URL}/${countryData?.filename || countryData?.name.toLowerCase().replace(' ', '-')}.png`
     const imageSrc = React.useMemo(() => ({ uri }), [uri])
 
+    const hasCountryData = countryData != null
+
     return (
       <>
         <EdgeAnim style={styles.header} enter={fadeInUp90}>
           <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline withTopMargin />
         </EdgeAnim>
-        <EdgeAnim enter={fadeInUp60}>
-          <SectionHeaderUi4 leftTitle={lstrings.title_select_region} />
-        </EdgeAnim>
+        {hasCountryData ? (
+          <EdgeAnim enter={fadeInUp60}>
+            <SectionHeaderUi4 leftTitle={lstrings.title_select_region} />
+          </EdgeAnim>
+        ) : null}
         <EdgeAnim enter={fadeInUp30}>
           <CardUi4>
             <RowUi4
               onPress={this._handleCountryPress}
               rightButtonType="none"
-              icon={countryData == null ? undefined : <FastImage source={imageSrc} style={styles.selectedCountryFlag} />}
-              body={countryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}
+              icon={hasCountryData ? <FastImage source={imageSrc} style={styles.selectedCountryFlag} /> : undefined}
+              body={hasCountryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button}
             />
           </CardUi4>
         </EdgeAnim>
-        <SectionHeaderUi4 leftTitle={lstrings.title_select_payment_method} />
+        {hasCountryData ? <SectionHeaderUi4 leftTitle={lstrings.title_select_payment_method} /> : null}
       </>
     )
   }
