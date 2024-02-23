@@ -71,20 +71,26 @@ const CreateWalletCompletionComponent = (props: Props) => {
   // Create the wallets and enable the tokens
   useAsyncEffect(
     async () => {
+      // Create tokens on existing wallets:
       let tokenPromise: Promise<void> | undefined
       if (tokenKey != null) {
         tokenPromise = dispatch(enableTokensAcrossWallets(newTokenItems)).then(
-          () => setItemStatus(currentState => ({ ...currentState, [newTokenItems[0].key]: 'complete' })),
+          () => setItemStatus(currentState => ({ ...currentState, [tokenKey]: 'complete' })),
           error => {
             showError(error)
-            setItemStatus(currentState => ({ ...currentState, [newTokenItems[0].key]: 'error' }))
+            setItemStatus(currentState => ({ ...currentState, [tokenKey]: 'error' }))
           }
         )
       }
+
+      // Create new wallets in parallel:
       const walletResults = await createWallets(
         account,
         newWalletItems.map(
           (item): EdgeCreateCurrencyWallet => ({
+            enabledTokenIds: newTokenItems
+              .filter(tokenItem => tokenItem.createWalletIds[0] === PLACEHOLDER_WALLET_ID && tokenItem.pluginId === item.pluginId)
+              .map(tokenItem => tokenItem.tokenId),
             fiatCurrencyCode: `iso:${fiatCode}`,
             importText,
             keyOptions: keyOptions.get(item.pluginId),
@@ -94,19 +100,13 @@ const CreateWalletCompletionComponent = (props: Props) => {
         )
       )
 
+      // Check the wallet results:
       for (let i = 0; i < walletResults.length; ++i) {
         const result = walletResults[i]
         if (!result.ok) {
           showError(result.error)
           setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'error' }))
         } else {
-          const wallet = result.result
-          // We created a wallet so let's update relevant pending tokens with the new walletId
-          if (wallet != null) {
-            newTokenItems
-              .filter(item => item.pluginId === wallet.currencyInfo.pluginId && item.createWalletIds[0] === PLACEHOLDER_WALLET_ID)
-              .forEach(item => (item.createWalletIds = [wallet.id]))
-          }
           setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'complete' }))
         }
       }
