@@ -1301,6 +1301,14 @@ const strings = {
   gateway_agreement_modal_body:
     'This address is only valid for 24 hours and can only be used once.\n\nDo not send funds after the address has expired and/or send multiple transactions to this address.',
 
+  // Fund Account Modal
+  fund_account_modal_title: 'Fund Your Account',
+  fund_account_modal_buy_body: 'Purchase crypto using your bank account, credit card, Apple Pay, and more.',
+  fund_account_modal_receive_title: 'Receive Crypto',
+  fund_account_modal_receive_body_1s: 'Transfer crypto from another wallet into %1$s',
+  fund_account_modal_receive_message:
+    'Scan QR code with an external wallet or copy the address by tapping the word "Copy" and paste the address into an external wallet.',
+
   // Util
   util_s_and_s: '%1$s and %2$s',
   util_truncate_delimeter: '...',
