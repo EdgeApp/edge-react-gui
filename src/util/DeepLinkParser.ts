@@ -4,7 +4,7 @@ import URL from 'url-parse'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import { ENV } from '../env'
 import { asFiatDirection, asFiatPaymentType } from '../plugins/gui/fiatPluginTypes'
-import { DeepLink, PromotionLink } from '../types/DeepLinkTypes'
+import { asModalNames, DeepLink, PromotionLink } from '../types/DeepLinkTypes'
 import { RouteParamList } from '../types/routerTypes'
 import { parseQuery, stringifyQuery } from './WebUtils'
 
@@ -169,6 +169,15 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
 
     case 'reqaddr': {
       return parseRequestAddress(url)
+    }
+
+    case 'modal': {
+      const rawModalName = url.pathname.replace('/', '')
+      try {
+        return { type: 'modal', modalName: asModalNames(rawModalName) }
+      } catch (e) {
+        throw new SyntaxError(`Unknown modal name: ${rawModalName}`)
+      }
     }
 
     case 'https': {

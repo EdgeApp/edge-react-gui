@@ -4,6 +4,8 @@
 
 - added: Notification status analytics param
 - added: @bugsnag/react-native-performance
+- added: New deeplink types: 'scene' and 'modal'
+- added: 'Fund Your Account' modal
 - changed: Remove extra spaces and normal capitalization of mnemonic seed input
 - fixed: Some text inputs not selectable for some Samsung devices
 - fixed: Various small visual fixes
