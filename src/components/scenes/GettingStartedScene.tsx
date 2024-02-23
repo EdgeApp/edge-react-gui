@@ -66,8 +66,7 @@ const slide1Alt = {
   image: uspImage0,
   key: 'slide1Alt',
   message: lstrings.getting_started_slide_1_message_alt,
-  title: lstrings.getting_started_slide_1_title,
-  footnote: lstrings.getting_started_slide_1_footnote
+  title: lstrings.getting_started_slide_1_title
 }
 const slide2 = {
   image: uspImage1,
