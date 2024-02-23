@@ -196,7 +196,7 @@ function EditTokenSceneComponent(props: Props) {
           primary={{ label: lstrings.string_save, onPress: handleSave }}
           secondary={tokenId == null ? undefined : { label: lstrings.edittoken_delete_token, onPress: handleDelete }}
           layout="column"
-          sceneMargin
+          parentType="scene"
         />
       </ScrollView>
     </SceneWrapper>

@@ -1700,7 +1700,7 @@ exports[`TransactionDetailsScene should render 1`] = `
         <View
           absolute={false}
           layout="solo"
-          sceneMargin={true}
+          parentType="scene"
           style={
             {
               "alignItems": "center",
@@ -3562,7 +3562,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         <View
           absolute={false}
           layout="solo"
-          sceneMargin={true}
+          parentType="scene"
           style={
             {
               "alignItems": "center",

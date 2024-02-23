@@ -408,7 +408,7 @@ const TransactionDetailsComponent = (props: Props) => {
             onPress: navigation.pop,
             label: lstrings.string_done_cap
           }}
-          sceneMargin
+          parentType="scene"
         />
       </EdgeAnim>
     </SceneWrapper>
