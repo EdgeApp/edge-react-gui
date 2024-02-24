@@ -34,6 +34,7 @@
 - fixed: Make FilledTextInputs take up constant vertical space
 - fixed: Send Recipient Address Modal styling when saved recipients are shown
 - fixed: Minor Transaction List spacing adjustments
+- fixed: Insufficient Funds error in Thorchain unstaking
 - removed: swipeLastUsp experiment (always allow swipes on the last USP)
 
 ## 4.0.2 (2024-02-13)
