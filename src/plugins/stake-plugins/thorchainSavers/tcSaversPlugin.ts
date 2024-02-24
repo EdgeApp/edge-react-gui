@@ -1,6 +1,6 @@
 import { add, div, eq, gt, lt, max, mul, sub, toFixed } from 'biggystring'
 import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString } from 'cleaners'
-import { EdgeAccount, EdgeCurrencyWallet, EdgeMemo, EdgeSpendInfo, EdgeTransaction, InsufficientFundsError } from 'edge-core-js'
+import { asMaybeInsufficientFundsError, EdgeAccount, EdgeCurrencyWallet, EdgeMemo, EdgeSpendInfo, EdgeTransaction, InsufficientFundsError } from 'edge-core-js'
 
 import { asMaybeContractLocation } from '../../../components/scenes/EditTokenScene'
 import { StringMap } from '../../../types/types'
@@ -589,7 +589,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
       const estimateTx = await wallet.makeSpend(spendInfo)
       networkFee = estimateTx.parentNetworkFee ?? estimateTx.networkFee
     } catch (e: unknown) {
-      if (e instanceof InsufficientFundsError && !isToken) {
+      if (asMaybeInsufficientFundsError(e) != null && !isToken) {
         needsFundingPrimary = true
       } else {
         throw e
@@ -919,8 +919,10 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
       const estimateTx = await wallet.makeSpend(spendInfo)
       networkFee = estimateTx.networkFee
     } catch (e: unknown) {
-      if (e instanceof InsufficientFundsError) {
+      if (asMaybeInsufficientFundsError(e) != null) {
         needsFundingPrimary = true
+      } else {
+        throw e
       }
     }
   }
