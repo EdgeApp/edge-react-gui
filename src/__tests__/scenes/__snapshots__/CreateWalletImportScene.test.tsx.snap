@@ -358,7 +358,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
         }
       }
       focusable={true}
-      multiline={false}
+      multiline={true}
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -374,10 +374,10 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       style={
         [
           {
-            "alignItems": "center",
+            "alignItems": "stretch",
             "borderRadius": 11,
             "borderWidth": 1,
-            "flex": undefined,
+            "flex": 1,
             "flexDirection": "row",
             "paddingHorizontal": 17,
           },
@@ -524,7 +524,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               "value": 0,
             }
           }
-          multiline={false}
+          multiline={true}
           onBlur={[Function]}
           onChangeText={[Function]}
           onFocus={[Function]}

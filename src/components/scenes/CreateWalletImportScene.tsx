@@ -15,7 +15,7 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
@@ -46,7 +46,7 @@ const CreateWalletImportComponent = (props: Props) => {
 
   const handleNext = useHandler(async () => {
     textInputRef.current?.blur()
-    const cleanImportText = importText.trim()
+    const cleanImportText = cleanupImportText(importText)
 
     // Test imports
     const { newWalletItems } = splitCreateWalletItems(createWalletList)
@@ -57,6 +57,7 @@ const CreateWalletImportComponent = (props: Props) => {
     const promises = pluginIds.map(
       async pluginId =>
         await currencyConfig[pluginId].importKey(cleanImportText).catch(e => {
+          showError(e)
           console.warn('importKey failed', e)
         })
     )
@@ -158,6 +159,7 @@ const CreateWalletImportComponent = (props: Props) => {
           bottom={1.25}
           value={importText}
           returnKeyType="next"
+          multiline
           placeholder={lstrings.create_wallet_import_input_key_or_seed_prompt}
           autoCapitalize="none"
           autoCorrect={false}
@@ -192,3 +194,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const CreateWalletImportScene = React.memo(CreateWalletImportComponent)
+
+export const cleanupImportText = (importText: string) => {
+  let cleanImportText = importText.trim()
+
+  // Clean up mnemonic seeds
+  const cleanImportTextArray = cleanImportText.split(' ')
+  if (cleanImportTextArray.length > 1) {
+    cleanImportText = cleanImportTextArray
+      .filter(part => part !== '') // remove extra spaces
+      .map(word => word.toLowerCase()) // normalize capitalization
+      .join(' ')
+  }
+  return cleanImportText
+}
