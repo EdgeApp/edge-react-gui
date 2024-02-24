@@ -6,6 +6,7 @@
 - added: @bugsnag/react-native-performance
 - changed: Remove extra spaces and normal capitalization of mnemonic seed input
 - fixed: Some text inputs not selectable for some Samsung devices
+- fixed: Various small visual fixes
 
 ## 4.1.0
 

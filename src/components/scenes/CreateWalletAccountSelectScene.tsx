@@ -151,7 +151,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
           <ButtonsViewUi4
             primary={{ disabled: !activationCost || activationCost === '', onPress: handleSelect, label: lstrings.create_wallet_account_select_wallet }}
             layout="column"
-            sceneMargin
+            parentType="scene"
           />
         ) : (
           <>
@@ -162,7 +162,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
               primary={{ disabled: isCreatingWallet, onPress: handleSubmit, label: lstrings.legacy_address_modal_continue }}
               secondary={{ disabled: isCreatingWallet, onPress: handleCancel, label: lstrings.string_cancel_cap }}
               layout="column"
-              sceneMargin
+              parentType="scene"
             />
           </>
         )}

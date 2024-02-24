@@ -319,7 +319,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
         {!userFioAddressesLoading ? (
           <FlatList
             style={styles.listContainer}
-            data={[...filteredFioAddresses, ...filteredFioAddresses]}
+            data={filteredFioAddresses}
             keyboardShouldPersistTaps="handled"
             keyExtractor={this.keyExtractor}
             renderItem={this.renderFioAddressRow}
@@ -330,7 +330,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
           </View>
         )}
         {/* TODO: Sync between LoginUi <-> Gui
-          <ButtonsViewUi4 sceneMargin primary={{ label: lstrings.string_next_capitalized, onPress: this.handleSubmit }} /> 
+          <ButtonsViewUi4 sceneMargin primary={{ label: lstrings.string_next_capitalized, onPress: this.handleSubmit }} />
         */}
         <ButtonUi4 marginRem={[1, 0, 2]} label={lstrings.string_next_capitalized} onPress={this.handleSubmit} />
       </ModalUi4>

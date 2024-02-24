@@ -178,6 +178,7 @@ export const testLight: Theme = {
   warningText: palette.accentOrange,
   positiveText: palette.gray,
   negativeText: palette.accentRed,
+  negativeDeltaText: palette.accentRed,
   dangerText: palette.accentRed,
   textLink: palette.edgeBlue,
   deactivatedText: palette.gray,
