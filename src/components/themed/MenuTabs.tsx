@@ -11,7 +11,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
-import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { Fontello } from '../../assets/vector/index'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
@@ -19,7 +18,6 @@ import { LocaleStringKey } from '../../locales/en_US'
 import { lstrings } from '../../locales/strings'
 import { useSceneFooterRenderState, useSceneFooterState } from '../../state/SceneFooterState'
 import { config } from '../../theme/appConfig'
-import { useSelector } from '../../types/reactRedux'
 import { scale } from '../../util/scaling'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
@@ -182,9 +180,6 @@ const Tab = ({
   const insets = useSafeAreaInsets()
   const color = isActive ? theme.tabBarIconHighlighted : theme.tabBarIcon
 
-  const activeUsername = useSelector(state => state.core.account.username)
-  const isLightAccount = activeUsername == null
-
   const icon: { readonly [key: string]: JSX.Element } = {
     homeTab: <SimpleLineIcons name="home" size={theme.rem(1.25)} color={color} />,
     walletsTab: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
@@ -202,12 +197,7 @@ const Tab = ({
       case 'walletsTab':
         return navigation.navigate('walletsTab', currentName === 'walletsTab' ? { screen: 'walletList' } : {})
       case 'buyTab':
-        if (isLightAccount) {
-          showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
-        } else {
-          return navigation.navigate('buyTab', currentName === 'buyTab' ? { screen: 'pluginListBuy' } : {})
-        }
-        break
+        return navigation.navigate('buyTab', currentName === 'buyTab' ? { screen: 'pluginListBuy' } : {})
       case 'sellTab':
         return navigation.navigate('sellTab', currentName === 'sellTab' ? { screen: 'pluginListSell' } : {})
       case 'exchangeTab':

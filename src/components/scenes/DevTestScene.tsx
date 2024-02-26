@@ -3,10 +3,13 @@ import { InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
 import { ReturnKeyType, View } from 'react-native'
 
+import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { Fontello } from '../../assets/vector'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useState } from '../../types/reactHooks'
+import { useDispatch } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { parseDeepLink } from '../../util/DeepLinkParser'
 import { consify } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
@@ -17,7 +20,7 @@ import { CountryListModal } from '../modals/CountryListModal'
 import { FlipInputModal2, FlipInputModalResult } from '../modals/FlipInputModal2'
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
@@ -34,8 +37,13 @@ interface Props extends EdgeSceneProps<'devTab'> {}
 export function DevTestScene(props: Props) {
   const { navigation } = props
   const theme = useTheme()
+  const dispatch = useDispatch()
 
+  // TODO: Make this scene work without useSelectedWallet() for unit testing compatibility
   const selectedWallet = useSelectedWallet()
+  const walletId = selectedWallet?.wallet.id ?? ''
+  const tokenId = selectedWallet?.tokenId ?? null
+
   const [value0, setValue0] = useState<string>('')
   const [value1, setValue1] = useState<string>('')
   const [filledTextInputValue, setFilledTextInputValue] = useState<string>('')
@@ -46,7 +54,8 @@ export function DevTestScene(props: Props) {
   const [filledTextInputValue6, setFilledTextInputValue6] = useState<string>('')
   const [filledTextInputValue7, setFilledTextInputValue7] = useState<string>('')
   const [filledTextInputValue8, setFilledTextInputValue8] = useState<string>('')
-  const tokenId = selectedWallet?.tokenId ?? null
+  const [deepLinkInputValue, setDeepLinkInputValue] = useState<string>(`edge://scene/manageTokens?walletId=${walletId}`)
+
   const exchangedFlipInputRef = React.useRef<ExchangedFlipInputRef>(null)
 
   const onAmountChanged = (amounts: ExchangedFlipInputAmounts): void => {
@@ -323,6 +332,27 @@ export function DevTestScene(props: Props) {
             <ButtonUi4 marginRem={0.5} onPress={() => {}} label="Secondary" type="secondary" />
             <ButtonUi4 marginRem={0.5} onPress={() => {}} label="Tertiary" type="tertiary" />
           </OutlinedView>
+        </>
+        <>
+          <SectionHeaderUi4 leftTitle="DeepLinking" />
+          <FilledTextInput
+            vertical={0.5}
+            value={deepLinkInputValue}
+            onChangeText={setDeepLinkInputValue}
+            autoFocus={false}
+            placeholder="DeepLink"
+            error={filledTextInputValue8 === '' ? undefined : filledTextInputValue8}
+          />
+          <ButtonUi4
+            marginRem={0.5}
+            onPress={() => {
+              const parsed = parseDeepLink(deepLinkInputValue)
+              console.debug('parsed deeplink: ', parsed)
+              dispatch(launchDeepLink(navigation, parsed)).catch(e => showError(e))
+            }}
+            label="Activate DeepLink"
+            type="primary"
+          />
         </>
       </SectionView>
     </SceneWrapper>
