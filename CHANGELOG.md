@@ -9,6 +9,7 @@
 - changed: Remove extra spaces and normal capitalization of mnemonic seed input
 - fixed: Some text inputs not selectable for some Samsung devices
 - fixed: Various small visual fixes
+- fixed: Improve login performance by only loading account referral info for new accounts
 
 ## 4.1.0
 
