@@ -403,7 +403,7 @@
   "settings_currency_notifications_percent_change_hour": "%1$s%% cambio en 1 hora",
   "settings_currency_notifications_percent_change_hours": "%1$s%% cambio en %2$s horas",
   "skip": "Omitir",
-  "staking_change_add_header": "Stake %s",
+  "staking_change_add_header": "Invertir",
   "staking_change_add_amount_title": "Amount to stake",
   "staking_change_explaner1": "Stake your coins to earn passive income on your funds",
   "staking_change_explaner2": "Staked coins are unusable for the duration of the stake",
