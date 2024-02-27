@@ -2,7 +2,7 @@
   "action_queue_display_unknown_title": "Acción desconocida",
   "action_queue_display_unknown_message": "Edge no puede identificar el tipo de acción que se está completando.",
   "aciton_queue_display_close_title": "Cerrando préstamo",
-  "action_queue_display_close_message": "Edge is paying principal in full and withdrawing the remaining collateral.",
+  "action_queue_display_close_message": "Edge paga el capital en su totalidad y retira la garantía restante.",
   "action_queue_display_seq_title": "Pasos de acción",
   "action_queue_display_seq_message": "Hacer una secuencia de acciones.",
   "action_queue_display_par_title": "Grupo de acción",
