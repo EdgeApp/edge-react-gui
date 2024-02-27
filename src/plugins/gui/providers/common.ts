@@ -1,3 +1,5 @@
+import { asObject, asString } from 'cleaners'
+
 import { FiatPluginRegionCode } from '../fiatPluginTypes'
 import { FiatProviderError, FiatProviderSupportedRegions } from '../fiatProviderTypes'
 
@@ -30,3 +32,7 @@ export const validateRegion = (providerId: string, regionCode: FiatPluginRegionC
     }
   }
 }
+
+export const asStandardApiKeys = asObject({
+  apiKey: asString
+})
