@@ -865,6 +865,7 @@ const strings = {
   choose_your_wallet: 'Choose Your Wallet',
   error_creating_wallets:
     'Network timeout occurred trying to create and backup wallets. Please check your network connection and restart app to retry wallet creation.',
+  error_must_select_state_province_s: 'Must select state/province for %1$s',
   edge_login_failed: 'Failed to Login',
   edge_login_fail_stale_qr: 'The scanned QR code was invalid. \n\nPlease generate a new QR code on the device you intend to log in to and try again.',
   edge_login_fail_message: 'Could not connect to network. Please check your network connection and try again.',
@@ -893,6 +894,8 @@ const strings = {
   estimated_exchange_message: 'The amount above is an estimate. This exchange may result in less funds received than quoted.',
   buy_sell_crypto_select_country_button: 'Select your region',
   search_region: 'Search region',
+  buy_sell_crypto_select_state_button: 'Select your state',
+  search_states: 'Search states',
   buy_sell_crypto_no_provider_region: "We're sorry but there are no available providers for your region.",
   user_closed_modal_no_wallet: 'User closed modal. No wallet was selected',
   plugin_powered_by_space: 'Powered by ',

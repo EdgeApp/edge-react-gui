@@ -38,7 +38,7 @@ export type FiatProviderQuoteErrorTypes = FiatProviderQuoteErrorTypesLimit | Fia
 export type FiatProviderQuoteError =
   | { providerId: string; errorType: FiatProviderQuoteErrorTypesOther }
   | { providerId: string; errorType: FiatProviderQuoteErrorTypesLimit; errorAmount?: number; displayCurrencyCode?: string }
-  | { providerId: string; errorType: FiatProviderQuoteErrorTypesRegion; displayCurrencyCode: string }
+  | { providerId: string; errorType: FiatProviderQuoteErrorTypesRegion; displayCurrencyCode?: string }
 
 export class FiatProviderError extends Error {
   readonly quoteError: FiatProviderQuoteError
@@ -52,6 +52,19 @@ export class FiatProviderError extends Error {
 export interface ProviderToken {
   tokenId: EdgeTokenId
   otherInfo?: unknown
+}
+
+/**
+ * Map of countryCodes that need to filter by stateProvince
+ * Lack of a countryCode means that it does not need filtering
+ * by stateProvince and is therefore supported by default or will
+ * be filtered by some other means in the provider.
+ */
+export interface FiatProviderSupportedRegions {
+  [countryCode: string]: {
+    forStateProvinces?: string[]
+    notStateProvinces?: string[]
+  }
 }
 
 // Supported fiats and cryptos per provider

@@ -7,6 +7,7 @@
 - added: New deeplink types: 'scene' and 'modal'
 - added: 'Fund Your Account' modal
 - changed: Remove extra spaces and normal capitalization of mnemonic seed input
+- added: Have users select US state and filter fiat providers by state/province
 - fixed: Some text inputs not selectable for some Samsung devices
 - fixed: Various small visual fixes
 - fixed: Improve login performance by only loading account referral info for new accounts
