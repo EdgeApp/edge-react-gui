@@ -1,7 +1,6 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, FlatList, Image, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
@@ -14,11 +13,10 @@ import { connect } from '../../types/reactRedux'
 import { ResolutionError } from '../../types/ResolutionError'
 import { FioAddress, FlatListItem } from '../../types/types'
 import { checkPubAddress, FioAddresses, getFioAddressCache } from '../../util/FioAddressUtils'
-import { FormattedText as Text } from '../legacy/FormattedText/FormattedText.ui'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { ButtonUi4 } from '../ui4/ButtonUi4'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface OwnProps {
@@ -319,9 +317,9 @@ export class AddressModalComponent extends React.Component<Props, State> {
           showSpinner={showSpinner}
         />
         {!userFioAddressesLoading ? (
-          <FlashList
-            data={filteredFioAddresses}
-            estimatedItemSize={theme.rem(4.25)}
+          <FlatList
+            style={styles.listContainer}
+            data={[...filteredFioAddresses, ...filteredFioAddresses]}
             keyboardShouldPersistTaps="handled"
             keyExtractor={this.keyExtractor}
             renderItem={this.renderFioAddressRow}
@@ -331,7 +329,10 @@ export class AddressModalComponent extends React.Component<Props, State> {
             <ActivityIndicator color={this.props.theme.iconTappable} />
           </View>
         )}
-        <ButtonsViewUi4 sceneMargin primary={{ label: lstrings.string_next_capitalized, onPress: this.handleSubmit }} />
+        {/* TODO: Sync between LoginUi <-> Gui
+          <ButtonsViewUi4 sceneMargin primary={{ label: lstrings.string_next_capitalized, onPress: this.handleSubmit }} /> 
+        */}
+        <ButtonUi4 marginRem={[1, 0, 2]} label={lstrings.string_next_capitalized} onPress={this.handleSubmit} />
       </ModalUi4>
     )
   }
@@ -350,14 +351,20 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   fioAddressText: {
+    color: theme.primaryText,
+    fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
-    paddingLeft: theme.rem(0.75),
-    color: theme.primaryText
+    paddingLeft: theme.rem(0.75)
   },
   loaderContainer: {
-    flex: 1,
+    flexGrow: 1,
+    flexShrink: 1,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  listContainer: {
+    flexGrow: 0,
+    flexShrink: 1
   }
 }))
 

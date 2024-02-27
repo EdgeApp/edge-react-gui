@@ -9,6 +9,9 @@ import { SceneFooterWrapper } from './SceneFooterWrapper'
 import { SimpleTextInput, SimpleTextInputRef } from './SimpleTextInput'
 
 interface SearchFooterProps {
+  // This component requires a key for the onLayoutHeight prop
+  key: string
+
   placeholder: string
 
   isSearching: boolean
@@ -24,7 +27,7 @@ interface SearchFooterProps {
 }
 
 export const SearchFooter = (props: SearchFooterProps) => {
-  const { placeholder, isSearching, searchText, noBackground, sceneWrapperInfo, onChangeText, onDoneSearching, onLayoutHeight, onStartSearching } = props
+  const { key, placeholder, isSearching, searchText, noBackground, sceneWrapperInfo, onChangeText, onDoneSearching, onLayoutHeight, onStartSearching } = props
 
   const textInputRef = React.useRef<SimpleTextInputRef>(null)
 
@@ -80,7 +83,12 @@ export const SearchFooter = (props: SearchFooterProps) => {
   //
 
   return (
-    <SceneFooterWrapper noBackgroundBlur={noBackground} sceneWrapperInfo={sceneWrapperInfo} onLayoutHeight={handleFooterLayoutHeight}>
+    <SceneFooterWrapper
+      key={`${key}-SceneFooterWrapper`}
+      noBackgroundBlur={noBackground}
+      sceneWrapperInfo={sceneWrapperInfo}
+      onLayoutHeight={handleFooterLayoutHeight}
+    >
       <Space expand horizontal={1} vertical={0.5}>
         <SimpleTextInput
           returnKeyType="search"

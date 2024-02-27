@@ -7,6 +7,7 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ImportKeyOption, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
@@ -18,7 +19,6 @@ import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { ModalMessage } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
-import { WalletCreateItem } from '../themed/WalletList'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { RowUi4 } from '../ui4/RowUi4'
 
@@ -224,14 +224,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
           renderItem={renderOptions}
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
-        <MainButton
-          disabled={disableNextButton}
-          label={lstrings.string_next_capitalized}
-          type="secondary"
-          marginRem={[1, 1]}
-          onPress={handleNext}
-          alignSelf="center"
-        />
+        <MainButton disabled={disableNextButton} label={lstrings.string_next_capitalized} marginRem={[2, 0, 1]} onPress={handleNext} />
       </View>
     </SceneWrapper>
   )

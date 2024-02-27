@@ -4,7 +4,7 @@ import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination } from 'edge-cor
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers'
-import { convertNativeToExchange, zeroString } from '../util/utils'
+import { convertCurrencyFromExchangeRates, convertNativeToExchange, zeroString } from '../util/utils'
 
 export function getSelectedCurrencyWallet(state: RootState): EdgeCurrencyWallet {
   return state.core.account.currencyWallets[state.ui.wallets.selectedWalletId]
@@ -42,18 +42,6 @@ export function convertCurrencyFromState(fromCurrencyCode: string, toCurrencyCod
     const convertedAmount = mul(amount, exchangeRate)
     return convertedAmount
   }
-}
-
-export const convertCurrencyFromExchangeRates = (
-  exchangeRates: { [pair: string]: string },
-  fromCurrencyCode: string,
-  toCurrencyCode: string,
-  amount: string
-): string => {
-  const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
-  const rate = exchangeRates[rateKey] ?? '0'
-  const convertedAmount = mul(amount, rate)
-  return convertedAmount
 }
 
 export const calculateFiatBalance = (wallet: EdgeCurrencyWallet, exchangeDenomination: EdgeDenomination, exchangeRates: { [pair: string]: string }): string => {

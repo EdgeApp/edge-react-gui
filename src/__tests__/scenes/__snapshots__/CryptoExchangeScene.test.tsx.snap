@@ -1,15 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CryptoExchangeComponent should render with loading props 1`] = `
-<View
-  style={
-    {
-      "flex": 1,
-      "marginHorizontal": 11,
-    }
-  }
->
-  <EdgeAnim
+<React.Fragment>
+  <Memo(EdgeAnimInner)
     enter={
       {
         "distance": 90,
@@ -28,8 +21,8 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       title="Exchange"
       underline={true}
     />
-  </EdgeAnim>
-  <EdgeAnim
+  </Memo(EdgeAnimInner)>
+  <Memo(EdgeAnimInner)
     enter={
       {
         "distance": 60,
@@ -61,20 +54,20 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
           [
             0.5,
             0,
-            1,
+            0.75,
           ]
         }
         onPress={[Function]}
       />
     </Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))>
-  </EdgeAnim>
-  <EdgeAnim>
+  </Memo(EdgeAnimInner)>
+  <Memo(EdgeAnimInner)>
     <Memo(LineTextDividerComponent)
       lowerCased={true}
       title="To"
     />
-  </EdgeAnim>
-  <EdgeAnim
+  </Memo(EdgeAnimInner)>
+  <Memo(EdgeAnimInner)
     enter={
       {
         "distance": 30,
@@ -107,8 +100,8 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       }
       walletId=""
     />
-  </EdgeAnim>
-  <EdgeAnim
+  </Memo(EdgeAnimInner)>
+  <Memo(EdgeAnimInner)
     enter={
       {
         "distance": 60,
@@ -116,7 +109,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       }
     }
   />
-  <EdgeAnim
+  <Memo(EdgeAnimInner)
     enter={
       {
         "distance": 90,
@@ -124,5 +117,5 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       }
     }
   />
-</View>
+</React.Fragment>
 `;

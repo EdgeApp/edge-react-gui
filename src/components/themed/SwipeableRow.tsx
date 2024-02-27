@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { I18nManager, Insets, LayoutChangeEvent, StyleSheet, View } from 'react-native'
+import { I18nManager, Insets, LayoutChangeEvent, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   AnimationCallback,
@@ -12,7 +12,7 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated'
 
-import { useTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
   // The content to render in the row.
@@ -99,6 +99,7 @@ export const SwipeableRow = React.forwardRef<SwipableRowRef, Props>((props: Prop
   } = props
 
   const theme = useTheme()
+  const styles = getStyles(theme)
   const rtl = I18nManager.isRTL ? -1 : 1
 
   // Values driven by the pan gesture:
@@ -198,7 +199,7 @@ export const SwipeableRow = React.forwardRef<SwipableRowRef, Props>((props: Prop
   )
 })
 
-const styles = StyleSheet.create({
+const getStyles = cacheStyles((theme: Theme) => ({
   childContainer: {
     // Dummy style needed to avoid breakage.
   },
@@ -206,11 +207,12 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   underlay: {
+    borderRadius: theme.cardBorderRadius,
     overflow: 'hidden',
     flexDirection: 'row',
     position: 'absolute',
-    top: 0,
-    bottom: 0
+    top: theme.rem(0.5),
+    bottom: theme.rem(0.5)
   },
   underlayLeft: {
     justifyContent: 'flex-start',
@@ -220,4 +222,4 @@ const styles = StyleSheet.create({
     right: 0,
     justifyContent: 'flex-end'
   }
-})
+}))

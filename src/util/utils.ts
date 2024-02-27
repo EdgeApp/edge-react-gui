@@ -10,6 +10,7 @@ import {
   EdgeTransaction
 } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
+import DeviceInfo from 'react-native-device-info'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 import { v4 } from 'uuid'
@@ -24,7 +25,6 @@ import {
 } from '../constants/WalletAndCurrencyConstants'
 import { toLocaleDate, toLocaleDateTime, toLocaleTime, truncateDecimalsPeriod } from '../locales/intl'
 import { lstrings } from '../locales/strings'
-import { convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors'
 import { RootState } from '../types/reduxTypes'
 import { GuiExchangeRates, GuiFiatType } from '../types/types'
 import { getWalletFiat } from '../util/CurrencyWalletHelpers'
@@ -146,6 +146,18 @@ export const roundedFee = (nativeAmount: string, decimalPlacesBeyondLeadingZeros
   const truncatedAmount = truncateDecimals(displayAmount, precision)
   if (gt(displayAmount, truncatedAmount)) return `${roundUpToLeastSignificant(truncatedAmount)} `
   return `${truncatedAmount} `
+}
+
+export const convertCurrencyFromExchangeRates = (
+  exchangeRates: { [pair: string]: string },
+  fromCurrencyCode: string,
+  toCurrencyCode: string,
+  amount: string
+): string => {
+  const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
+  const rate = exchangeRates[rateKey] ?? '0'
+  const convertedAmount = mul(amount, rate)
+  return convertedAmount
 }
 
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)
@@ -631,4 +643,12 @@ export const darkenHexColor = (hexColor: string, scaleFactor: number): string =>
   const scaledHexColor = `#${scaledR.toString(16).padStart(2, '0')}${scaledG.toString(16).padStart(2, '0')}${scaledB.toString(16).padStart(2, '0')}`
 
   return scaledHexColor
+}
+
+/**
+ * Reads and normalizes the OS version.
+ */
+export function getOsVersion(): string {
+  const osVersionRaw = DeviceInfo.getSystemVersion()
+  return Array.from({ length: 3 }, (_, i) => osVersionRaw.split('.')[i] || '0').join('.')
 }

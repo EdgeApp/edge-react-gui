@@ -39,17 +39,18 @@ exports[`FioAddressRegistered should render with loading props 1`] = `
           }
         />
       </View>
-      <FormattedText
+      <Text
         style={
           {
             "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
             "fontSize": 22,
           }
         }
       >
         Registered
-      </FormattedText>
-      <FormattedText
+      </Text>
+      <Text
         style={
           {
             "color": "#FFFFFF",
@@ -60,11 +61,17 @@ exports[`FioAddressRegistered should render with loading props 1`] = `
         }
       >
         MyFio@edge
-      </FormattedText>
+      </Text>
     </View>
     <MainButton
       label="FIO Names"
-      marginRem={2}
+      marginRem={
+        [
+          4,
+          0,
+          2,
+        ]
+      }
       onPress={[Function]}
     />
   </View>

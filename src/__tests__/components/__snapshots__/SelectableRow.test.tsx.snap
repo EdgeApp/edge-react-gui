@@ -31,11 +31,11 @@ exports[`SelectableRow should render with loading props 1`] = `
         }
       }
     >
-      <WithTheme(EdgeTextComponent)
+      <EdgeText
         numberOfLines={1}
       >
         title
-      </WithTheme(EdgeTextComponent)>
+      </EdgeText>
     </View>
   </View>
 </CardUi4>

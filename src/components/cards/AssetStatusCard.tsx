@@ -1,4 +1,4 @@
-import { AssetStatus } from 'edge-info-server/types'
+import { AssetStatus } from 'edge-info-server'
 import * as React from 'react'
 import { Platform } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'

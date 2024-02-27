@@ -196,7 +196,7 @@ export const ScanModal = (props: Props) => {
     return (
       <View style={styles.cameraPermissionContainer}>
         <ModalMessage>{lstrings.scan_camera_permission_denied}</ModalMessage>
-        <MainButton onPress={handleSettings} label={lstrings.open_settings} marginRem={0.5} />
+        <MainButton onPress={handleSettings} label={lstrings.open_settings} marginRem={1} />
       </View>
     )
   }

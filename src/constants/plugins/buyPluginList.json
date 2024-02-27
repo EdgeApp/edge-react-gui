@@ -244,6 +244,18 @@
     "paymentTypeLogoKey": "credit"
   },
   {
+    "id": "iach",
+    "pluginId": "iach",
+    "paymentType": "iach",
+    "paymentTypes": ["iach"],
+    "title": "Instant ACH Bank Transfer",
+    "description": "Fee: ~2%\nSettlement: ~5 minutes",
+    "forCountries": ["US"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
+  },
+
+  {
     "id": "sepa",
     "pluginId": "sepa",
     "forCountries": [

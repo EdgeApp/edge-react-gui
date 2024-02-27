@@ -11,7 +11,7 @@ import { lstrings } from '../../locales/strings'
 import { useSceneFooterState } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeAnim, fadeIn, fadeOut } from '../common/EdgeAnim'
 import { styled } from '../hoc/styled'
 import { showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
@@ -26,9 +26,6 @@ interface Props {
 }
 
 let hasInteractedWithBackupModalLocal = false
-
-const fadeIn = { type: 'fadeIn' } as const
-const fadeOut = { type: 'fadeOut' } as const
 
 const NotificationViewComponent = (props: Props) => {
   const { navigation, hasTabs, footerHeight } = props

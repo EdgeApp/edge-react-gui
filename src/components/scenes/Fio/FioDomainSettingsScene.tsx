@@ -9,6 +9,7 @@ import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioDomain, setDomainVisibility } from '../../../util/FioAddressUtils'
+import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
 import { ButtonsModal } from '../../modals/ButtonsModal'
@@ -33,6 +34,7 @@ interface StateProps {
 
 interface DispatchProps {
   refreshAllFioAddresses: () => Promise<void>
+  onLogEvent: (event: TrackingEventName, values: TrackingValues) => void
 }
 interface OwnProps extends EdgeSceneProps<'fioDomainSettings'> {}
 
@@ -107,7 +109,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   }
 
   renewDomain = async (fioWallet: EdgeCurrencyWallet, renewalFee: number) => {
-    const { isConnected, route } = this.props
+    const { isConnected, route, onLogEvent } = this.props
     const { fioDomainName } = route.params
 
     if (!isConnected) {
@@ -115,6 +117,13 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     }
 
     await renewFioDomain(fioWallet, fioDomainName, renewalFee)
+
+    const { currencyCode, pluginId } = fioWallet.currencyInfo
+    onLogEvent('Fio_Domain_Renew', {
+      nativeAmount: String(renewalFee),
+      currencyCode,
+      pluginId
+    })
   }
 
   goToTransfer = (params: { fee: number }) => {
@@ -242,6 +251,9 @@ export const FioDomainSettingsScene = connect<StateProps, DispatchProps, OwnProp
   dispatch => ({
     async refreshAllFioAddresses() {
       await dispatch(refreshAllFioAddresses())
+    },
+    onLogEvent(event: TrackingEventName, values: TrackingValues) {
+      dispatch(logEvent(event, values))
     }
   })
 )(withTheme(FioDomainSettingsComponent))

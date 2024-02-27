@@ -1,16 +1,16 @@
-import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-import { createWallet, CreateWalletOptions, getUniqueWalletName } from '../../actions/CreateWalletActions'
+import { createWallet, getUniqueWalletName } from '../../actions/CreateWalletActions'
 import { approveTokenTerms } from '../../actions/TokenTermsActions'
 import { showFullScreenSpinner } from '../../components/modals/AirshipFullScreenSpinner'
 import { Airship, showError } from '../../components/services/AirshipInstance'
-import { getPluginId } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { ThunkAction } from '../../types/reduxTypes'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
@@ -22,31 +22,27 @@ import { EdgeText } from './EdgeText'
 import { WalletListCurrencyRow } from './WalletListCurrencyRow'
 
 export interface WalletListCreateRowProps {
-  currencyCode: string
-  currencyName: string
+  createItem: WalletCreateItem
+  createWalletId?: string
+
   trackingEventFailed?: TrackingEventName
   trackingEventSuccess?: TrackingEventName
-  createWalletIds?: string[]
-  pluginId: string
-  walletType?: string
-
   onPress?: (walletId: string, tokenId: EdgeTokenId) => void
 }
 
 export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) => {
   const {
-    currencyCode,
-    currencyName = '',
+    createItem,
+    createWalletId,
     trackingEventFailed,
     trackingEventSuccess,
-
-    createWalletIds = [],
-    walletType,
-    pluginId,
 
     // Callbacks:
     onPress
   } = props
+  const { currencyCode, displayName: currencyName = '', keyOptions = {}, pluginId, walletType } = createItem
+  const createWalletIds = createWalletId != null ? [createWalletId] : createItem.createWalletIds ?? []
+
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
 
@@ -66,9 +62,9 @@ export const WalletListCreateRowComponent = (props: WalletListCreateRowProps) =>
     }
     pressMutexRef.current = true
 
-    const handleRes = (walletId: string) => (onPress != null ? onPress(walletId, tokenId) : null)
+    const handleRes = (wallet?: EdgeCurrencyWallet) => (onPress != null && wallet != null ? onPress(wallet.id, tokenId) : null)
     if (walletType != null) {
-      await dispatch(createAndSelectWallet({ walletType }))
+      await dispatch(createAndSelectWallet(pluginId, keyOptions))
         .then(handleRes)
         .catch(err => showError(err))
         .finally(() => (pressMutexRef.current = false))
@@ -156,7 +152,7 @@ function createAndSelectToken({
   trackingEventFailed?: TrackingEventName
   trackingEventSuccess?: TrackingEventName
   createWalletId?: string
-}): ThunkAction<Promise<string>> {
+}): ThunkAction<Promise<EdgeCurrencyWallet | undefined>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
@@ -175,9 +171,9 @@ function createAndSelectToken({
               lstrings.wallet_list_modal_enabling_token,
               (async (): Promise<EdgeCurrencyWallet> => {
                 return await createWallet(account, {
-                  walletType,
-                  walletName: getUniqueWalletName(account, pluginId),
-                  fiatCurrencyCode: defaultIsoFiat
+                  fiatCurrencyCode: defaultIsoFiat,
+                  name: getUniqueWalletName(account, pluginId),
+                  walletType
                 })
               })()
             )
@@ -187,30 +183,35 @@ function createAndSelectToken({
 
       await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, tokenId])
       if (trackingEventSuccess != null) logEvent(trackingEventSuccess)
-      return wallet.id
+      return wallet
     } catch (error: any) {
       showError(error)
       if (trackingEventFailed != null) logEvent(trackingEventFailed, { error: String(error) })
     }
-    return ''
   }
 }
 
-function createAndSelectWallet({ walletType, fiatCurrencyCode }: CreateWalletOptions): ThunkAction<Promise<string>> {
+function createAndSelectWallet(pluginId: string, keyOptions: JsonObject): ThunkAction<Promise<EdgeCurrencyWallet | undefined>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    const walletName = getUniqueWalletName(account, getPluginId(walletType))
+    const { defaultIsoFiat } = state.ui.settings
+    const { walletType } = account.currencyConfig[pluginId].currencyInfo
+
     try {
       const wallet = await showFullScreenSpinner(
         lstrings.wallet_list_modal_creating_wallet,
-        createWallet(account, { walletName, walletType, fiatCurrencyCode })
+        createWallet(account, {
+          fiatCurrencyCode: defaultIsoFiat,
+          keyOptions,
+          name: getUniqueWalletName(account, pluginId),
+          walletType
+        })
       )
-      return wallet.id
+      return wallet
     } catch (error: any) {
       showError(error)
     }
-    return ''
   }
 }
 

@@ -1,4 +1,5 @@
 import { ENV } from '../../../env'
+import { getTokenId } from '../../../util/CurrencyInfoHelpers'
 import { FiatPluginFactoryArgs } from '../fiatPluginTypes'
 import { FiatProvider, FiatProviderFactory } from '../fiatProviderTypes'
 import { createStore } from '../pluginUtils'
@@ -11,6 +12,8 @@ export async function initializeProviders<T>(providerFactories: Array<FiatProvid
   const { account, deviceId, disablePlugins } = params
   const providerPromises: Array<Promise<FiatProvider<T>>> = []
 
+  const getTokenIdProvider = (pluginId: string, currencyCode: string) => getTokenId(account, pluginId, currencyCode)
+
   for (const providerFactory of providerFactories) {
     if (disablePlugins[providerFactory.providerId]) continue
 
@@ -18,7 +21,7 @@ export async function initializeProviders<T>(providerFactories: Array<FiatProvid
     if (apiKeys == null) continue
 
     const store = createStore(providerFactory.storeId, account.dataStore)
-    providerPromises.push(providerFactory.makeProvider({ deviceId, apiKeys, io: { store } }))
+    providerPromises.push(providerFactory.makeProvider({ deviceId, apiKeys, getTokenId: getTokenIdProvider, io: { store } }))
   }
 
   return await Promise.all(providerPromises)

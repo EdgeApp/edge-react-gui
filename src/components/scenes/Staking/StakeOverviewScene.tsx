@@ -174,21 +174,9 @@ const StakeOverviewSceneComponent = (props: Props) => {
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       />
       <StyledButtonContainer layout="column">
-        <MainButton
-          label={lstrings.stake_stake_more_funds}
-          disabled={!canStake}
-          type="primary"
-          onPress={handleModifyPress('stake')}
-          marginRem={[0.5, 0.5, 0.25, 0.5]}
-        />
+        <MainButton label={lstrings.stake_stake_more_funds} disabled={!canStake} type="primary" onPress={handleModifyPress('stake')} marginRem={0.5} />
         {stakePolicy.hideClaimAction ? null : (
-          <MainButton
-            label={lstrings.stake_claim_rewards}
-            disabled={!canClaim}
-            type="secondary"
-            onPress={handleModifyPress('claim')}
-            marginRem={[0.25, 0.5, 0.25, 0.5]}
-          />
+          <MainButton label={lstrings.stake_claim_rewards} disabled={!canClaim} type="secondary" onPress={handleModifyPress('claim')} marginRem={0.5} />
         )}
         {stakePolicy.hideUnstakeAndClaimAction ? null : (
           <MainButton
@@ -196,17 +184,11 @@ const StakeOverviewSceneComponent = (props: Props) => {
             disabled={!canUnstakeAndClaim}
             type="escape"
             onPress={handleModifyPress('unstakeAndClaim')}
-            marginRem={[0.25, 0.5, 0.25, 0.5]}
+            marginRem={0.5}
           />
         )}
         {stakePolicy.hideUnstakeAction ? null : (
-          <MainButton
-            label={lstrings.stake_unstake}
-            disabled={!canUnstake}
-            type="escape"
-            onPress={handleModifyPress('unstake')}
-            marginRem={[0.25, 0.5, 0.25, 0.5]}
-          />
+          <MainButton label={lstrings.stake_unstake} disabled={!canUnstake} type="escape" onPress={handleModifyPress('unstake')} marginRem={0.5} />
         )}
       </StyledButtonContainer>
     </SceneWrapper>

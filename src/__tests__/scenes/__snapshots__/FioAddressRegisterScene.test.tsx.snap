@@ -53,7 +53,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         ]
       }
     >
-      <WithTheme(EdgeTextComponent)
+      <EdgeText
         numberOfLines={2}
         style={
           {
@@ -63,7 +63,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         }
       >
         Send and Receive with an easy to remember FIO Crypto Handle!
-      </WithTheme(EdgeTextComponent)>
+      </EdgeText>
     </View>
     <View
       style={
@@ -73,7 +73,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         }
       }
     >
-      <WithTheme(EdgeTextComponent)
+      <EdgeText
         numberOfLines={3}
         style={
           {
@@ -86,7 +86,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         • Works across all tokens and coins
 • Secured from your wallet
 • Completely decentralized
-      </WithTheme(EdgeTextComponent)>
+      </EdgeText>
     </View>
     <View
       style={
@@ -96,7 +96,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         }
       }
     >
-      <WithTheme(EdgeTextComponent)
+      <EdgeText
         numberOfLines={5}
         style={
           {
@@ -107,7 +107,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         }
       >
         Similar to website names, your FIO Crypto Handle can be used to send you tokens/coins without ever having to see or send your public key.
-      </WithTheme(EdgeTextComponent)>
+      </EdgeText>
     </View>
     <View
       onLayout={[Function]}
@@ -127,7 +127,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
               }
             }
           >
-            <WithTheme(EdgeTextComponent)
+            <EdgeText
               style={
                 {
                   "color": "#888888",
@@ -135,7 +135,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
               }
             >
               Your Crypto Handle name here
-            </WithTheme(EdgeTextComponent)>
+            </EdgeText>
           </View>
         </RowUi4>
         <RowUi4
@@ -164,7 +164,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         }
       />
     </View>
-    <EdgeAnim
+    <Memo(EdgeAnimInner)
       enter={
         {
           "type": "fadeIn",
@@ -181,7 +181,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         title=""
         type="error"
       />
-    </EdgeAnim>
+    </Memo(EdgeAnimInner)>
     <View
       style={
         {

@@ -18,12 +18,11 @@ import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
-import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { matchJson } from '../../util/matchJson'
-import { convertNativeToExchange, darkenHexColor } from '../../util/utils'
+import { convertCurrencyFromExchangeRates, convertNativeToExchange, darkenHexColor } from '../../util/utils'
 import { getMemoTitle } from '../../util/validateMemos'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -39,6 +38,7 @@ import { AdvancedDetailsCard } from '../ui4/AdvancedDetailsCard'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { CardUi4 } from '../ui4/CardUi4'
 import { AccentColors } from '../ui4/DotsBackground'
+import { FiatExchangeDetailsCard } from '../ui4/FiatExchangeDetailsCard'
 import { RowUi4 } from '../ui4/RowUi4'
 import { SwapDetailsCard } from '../ui4/SwapDetailsCard'
 import { TxCryptoAmountRow } from '../ui4/TxCryptoAmountRow'
@@ -64,11 +64,12 @@ const TransactionDetailsComponent = (props: Props) => {
   const iconColor = useIconColor({ pluginId: currencyInfo.pluginId, tokenId })
 
   // Choose a default category based on metadata or the txAction
-  const { direction, iconPluginId, mergedData, savedData } = getTxActionDisplayInfo(transaction, account, wallet)
+  const { action, assetAction, direction, iconPluginId, mergedData, savedData } = getTxActionDisplayInfo(transaction, account, wallet)
 
   const swapData = convertActionToSwapData(account, transaction) ?? transaction.swapData
 
   const thumbnailPath = useContactThumbnail(mergedData.name) ?? pluginIdIcons[iconPluginId ?? '']
+  const iconSource = React.useMemo(() => ({ uri: thumbnailPath }), [thumbnailPath])
 
   const [localMetadata, setLocalMetadata] = React.useState<EdgeMetadata>({
     exchangeAmount: metadata?.exchangeAmount,
@@ -309,6 +310,8 @@ const TransactionDetailsComponent = (props: Props) => {
     backgroundColors[0] = scaledColor
   }
 
+  const fiatAction = action?.actionType === 'fiat' ? action : undefined
+
   return (
     <SceneWrapper
       accentColors={accentColors}
@@ -327,7 +330,7 @@ const TransactionDetailsComponent = (props: Props) => {
             rightButtonType="editable"
             icon={
               thumbnailPath ? (
-                <FastImage style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
+                <FastImage style={styles.tileThumbnail} source={iconSource} />
               ) : (
                 <IonIcon style={styles.tileAvatarIcon} name="person" size={theme.rem(2)} />
               )
@@ -389,6 +392,11 @@ const TransactionDetailsComponent = (props: Props) => {
 
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
         {swapData == null ? null : <SwapDetailsCard swapData={swapData} transaction={transaction} wallet={wallet} />}
+      </EdgeAnim>
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+        {fiatAction == null || assetAction == null ? null : (
+          <FiatExchangeDetailsCard action={fiatAction} assetAction={assetAction} transaction={transaction} wallet={wallet} />
+        )}
       </EdgeAnim>
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 100 }}>
         <AdvancedDetailsCard transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />
@@ -454,6 +462,7 @@ const convertActionToSwapData = (account: EdgeAccount, transaction: EdgeTransact
   const { swapInfo, orderId, orderUri, isEstimate, toAsset, payoutAddress, payoutWalletId, refundAddress } = action
 
   const payoutCurrencyCode = getCurrencyCodeWithAccount(account, toAsset.pluginId, toAsset.tokenId)
+  if (payoutCurrencyCode == null) return
 
   const out: EdgeTxSwap = {
     orderId,

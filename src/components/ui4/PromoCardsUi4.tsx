@@ -1,17 +1,18 @@
-import { asArray, asDate } from 'cleaners'
-import { asInfoRollup, asPromoCard2, PromoCard2 } from 'edge-info-server/types'
+import { asDate } from 'cleaners'
+import { PromoCard2 } from 'edge-info-server'
 import * as React from 'react'
 import { ListRenderItem, Platform } from 'react-native'
-import DeviceInfo, { getBuildNumber, getVersion } from 'react-native-device-info'
+import { getBuildNumber, getVersion } from 'react-native-device-info'
 import shajs from 'sha.js'
 
 import { getCountryCodeByIp, hideMessageTweak } from '../../actions/AccountReferralActions'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
-import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { fetchInfo } from '../../util/network'
-import { EdgeAnim } from '../common/EdgeAnim'
+import { infoServerData } from '../../util/network'
+import { getOsVersion } from '../../util/utils'
+import { EdgeAnim, fadeInUp110 } from '../common/EdgeAnim'
 import { useTheme } from '../services/ThemeContext'
 import { CarouselUi4 } from './CarouselUi4'
 import { FilteredPromoCard, PromoCardUi4 } from './PromoCardUi4'
@@ -29,15 +30,16 @@ export const PromoCardsUi4 = (props: Props) => {
   const [cards, setCards] = React.useState<FilteredPromoCard[]>([])
 
   // Check for PromoCard2 from info server:
-  React.useEffect(() => {
-    fetchPromoCards()
-      .then(async cards => {
-        const countryCode = await getCountryCodeByIp()
-        const filteredCards = filterPromoCards(cards, countryCode)
-        setCards(filteredCards)
-      })
-      .catch(e => console.log(e))
-  }, [])
+  useAsyncEffect(
+    async () => {
+      const cards = infoServerData.rollup?.promoCards2 ?? []
+      const countryCode = await getCountryCodeByIp().catch(() => '')
+      const filteredCards = filterPromoCards(cards, countryCode)
+      setCards(filteredCards)
+    },
+    [],
+    'PromoCardsUi4'
+  )
 
   const hiddenAccountMessages = useSelector(state => state.account.accountReferral.hiddenAccountMessages)
   const activeCards = React.useMemo(() => cards.filter(card => !hiddenAccountMessages[card.messageId]), [cards, hiddenAccountMessages])
@@ -50,39 +52,14 @@ export const PromoCardsUi4 = (props: Props) => {
     }
     return <PromoCardUi4 navigation={navigation} promoInfo={item} onClose={handleClose} />
   })
+  const style = React.useMemo(() => ({ height: theme.rem(11.5) }), [theme])
 
   if (activeCards == null || activeCards.length === 0) return null
-
   return (
-    <EdgeAnim style={{ height: theme.rem(11.5) }} enter={{ type: 'fadeInUp', distance: 110 }}>
+    <EdgeAnim style={style} enter={fadeInUp110}>
       <CarouselUi4 data={activeCards} keyExtractor={keyExtractor} renderItem={renderItem} height={theme.rem(9.75)} width={screenWidth} />
     </EdgeAnim>
   )
-}
-
-/**
- * Reads and normalizes the OS version.
- */
-function getOsVersion(): string {
-  const osVersionRaw = DeviceInfo.getSystemVersion()
-  return Array.from({ length: 3 }, (_, i) => osVersionRaw.split('.')[i] || '0').join('.')
-}
-
-/**
- * Visits the info server to obtain relevant promotion cards.
- */
-async function fetchPromoCards(): Promise<PromoCard2[]> {
-  const osType = Platform.OS.toLowerCase()
-  const osVersion = getOsVersion()
-  const version = getVersion()
-
-  // Visit the server:
-  const res = await fetchInfo(`v1/inforollup/${config.appId ?? 'edge'}?os=${osType}&osVersion=${osVersion}&appVersion=${version}`)
-  if (!res.ok) {
-    throw new Error(`Info server error ${res.status}: ${await res.text()}`)
-  }
-  const infoData = await res.json()
-  return asArray(asPromoCard2)(asInfoRollup(infoData).promoCards2)
 }
 
 /**

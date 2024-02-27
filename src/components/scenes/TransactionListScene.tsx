@@ -1,12 +1,11 @@
 import { abs, lt } from 'biggystring'
 import { asArray } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
-import { asAssetStatus, AssetStatus } from 'edge-info-server/types'
+import { asAssetStatus, AssetStatus } from 'edge-info-server'
 import * as React from 'react'
 import { ListRenderItemInfo, RefreshControl, View } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 import Animated from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
@@ -24,7 +23,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { fetchInfo } from '../../util/network'
 import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { AssetStatusCard } from '../cards/AssetStatusCard'
-import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
+import { EdgeAnim, fadeInDown10, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
@@ -209,7 +208,7 @@ function TransactionListComponent(props: Props) {
         />
         {assetStatuses.length > 0 && !isSearching
           ? assetStatuses.map(assetStatus => (
-              <EdgeAnim enter={{ type: 'fadeInDown', distance: 10 }} key={`${String(assetStatus.localeStatusTitle)}-${String(assetStatus.localeStatusBody)}`}>
+              <EdgeAnim enter={fadeInDown10} key={`${String(assetStatus.localeStatusTitle)}-${String(assetStatus.localeStatusBody)}`}>
                 <AssetStatusCard assetStatus={assetStatus} key={`${String(assetStatus.localeStatusTitle)}-${String(assetStatus.localeStatusBody)}`} />
               </EdgeAnim>
             ))
@@ -258,6 +257,7 @@ function TransactionListComponent(props: Props) {
     sceneWrapperInfo => {
       return (
         <SearchFooter
+          key="TransactionListScene-SearchFooter"
           placeholder={lstrings.transaction_list_search}
           isSearching={isSearching}
           searchText={searchText}
@@ -284,9 +284,6 @@ function TransactionListComponent(props: Props) {
     backgroundColors[0] = scaledColor
   }
 
-  // TODO: Include this fix in the SceneWrapper component
-  const safeAreaInsets = useSafeAreaInsets()
-
   return (
     <SceneWrapper
       accentColors={accentColors}
@@ -308,11 +305,12 @@ function TransactionListComponent(props: Props) {
             ref={flashListRef}
             contentContainerStyle={{
               paddingTop: insetStyle.paddingTop + theme.rem(0.5),
-              paddingBottom: insetStyle.paddingBottom + theme.rem(0.5) + safeAreaInsets.bottom,
+              paddingBottom: insetStyle.paddingBottom + theme.rem(0.5),
               paddingLeft: insetStyle.paddingLeft + theme.rem(0.5),
               paddingRight: insetStyle.paddingRight + theme.rem(0.5)
             }}
             data={listItems}
+            keyboardDismissMode="on-drag"
             keyboardShouldPersistTaps="handled"
             keyExtractor={keyExtractor}
             ListEmptyComponent={emptyComponent}

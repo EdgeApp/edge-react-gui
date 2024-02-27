@@ -11,7 +11,7 @@ import { getExchangeRate, getSelectedCurrencyWallet } from '../../../selectors/W
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../../types/types'
-import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
+import { getTokenIdForced, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import {
   addToFioAddressCache,
   checkPubAddress,
@@ -113,7 +113,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   onConfirm = async () => {
-    const { fioPlugin, primaryCurrencyInfo, isConnected, edgeWallet, chainCode, account, navigation, route } = this.props
+    const { account, chainCode, currencyCode, edgeWallet, fioPlugin, isConnected, navigation, primaryCurrencyInfo, route } = this.props
     const { amounts } = route.params
     const { walletAddresses, fioAddressFrom } = this.state
     const walletAddress = walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)
@@ -197,7 +197,8 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         this.setState({ loading: false })
         showToast(lstrings.fio_request_ok_body)
         await addToFioAddressCache(account, [this.state.fioAddressTo])
-        navigation.navigate('request', {})
+        const tokenId = getWalletTokenId(edgeWallet, currencyCode)
+        navigation.navigate('request', { tokenId, walletId: edgeWallet.id })
       } catch (error: any) {
         this.setState({ loading: false })
         this.resetSlider()

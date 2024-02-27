@@ -29,6 +29,8 @@ import { makeUuid } from '../../../util/utils'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderFactory, FiatProviderGetQuoteParams, FiatProviderQuote } from '../fiatProviderTypes'
 import { RewardsCardItem, UserRewardsCards } from '../RewardsCardPlugin'
 
+const providerId = 'ionia'
+
 // JWT 24 hour access token for Edge
 let ACCESS_TOKEN: string
 
@@ -398,12 +400,13 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
 
       async getSupportedAssets() {
         const fiatProviderAssetMap: FiatProviderAssetMap = {
+          providerId,
           crypto: {
-            bitcoin: { BTC: true },
-            bitcoincash: { BCH: true },
-            dash: { DASH: true },
-            dogecoin: { DOGE: true },
-            litecoin: { LTC: true }
+            bitcoin: [{ tokenId: null }],
+            bitcoincash: [{ tokenId: null }],
+            dash: [{ tokenId: null }],
+            dogecoin: [{ tokenId: null }],
+            litecoin: [{ tokenId: null }]
           },
           fiat: {
             'iso:USD': true

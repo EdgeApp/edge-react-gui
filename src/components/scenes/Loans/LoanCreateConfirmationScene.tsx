@@ -1,6 +1,8 @@
 import { add, div, gt, max, mul, sub } from 'biggystring'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
+import { PaymentMethod } from '../../../controllers/action-queue/PaymentMethod'
 import { dryrunActionProgram } from '../../../controllers/action-queue/runtime/dryrunActionProgram'
 import { ActionOp, SwapActionOp } from '../../../controllers/action-queue/types'
 import { makeInitialProgramState } from '../../../controllers/action-queue/util/makeInitialProgramState'
@@ -12,6 +14,7 @@ import { useExecutionContext } from '../../../hooks/useExecutionContext'
 import { useTokenDisplayData } from '../../../hooks/useTokenDisplayData'
 import { useWalletBalance } from '../../../hooks/useWalletBalance'
 import { lstrings } from '../../../locales/strings'
+import { BorrowEngine, BorrowPlugin } from '../../../plugins/borrow-plugins/types'
 import { convertCurrency } from '../../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
@@ -32,6 +35,18 @@ import { ErrorTile } from '../../tiles/ErrorTile'
 import { NetworkFeeTile } from '../../tiles/NetworkFeeTile'
 import { RowUi4 } from '../../ui4/RowUi4'
 import { FormScene } from '../FormScene'
+
+export interface LoanCreateConfirmationParams {
+  borrowEngine: BorrowEngine
+  borrowPlugin: BorrowPlugin
+  destTokenId: EdgeTokenId
+  destWallet: EdgeCurrencyWallet
+  nativeDestAmount: string
+  nativeSrcAmount: string
+  paymentMethod?: PaymentMethod
+  srcTokenId: EdgeTokenId
+  srcWallet: EdgeCurrencyWallet
+}
 
 const FEE_VOLATILITY_MULTIPLIER: { [network: string]: string } = {
   ethereum: '2',

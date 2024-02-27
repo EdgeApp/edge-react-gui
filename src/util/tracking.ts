@@ -1,15 +1,20 @@
 import Bugsnag from '@bugsnag/react-native'
 import analytics from '@react-native-firebase/analytics'
+import { div } from 'biggystring'
 import { TrackingEventName as LoginTrackingEventName, TrackingValues as LoginTrackingValues } from 'edge-login-ui-rn/lib/util/analytics'
 import PostHog from 'posthog-react-native'
-import { getUniqueId, getVersion } from 'react-native-device-info'
+import { getBuildNumber, getUniqueId, getVersion } from 'react-native-device-info'
 
 import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { ENV } from '../env'
 import { ExperimentConfig, getExperimentConfig } from '../experimentConfig'
+import { getExchangeDenomination } from '../selectors/DenominationSelectors'
+import { convertCurrency } from '../selectors/WalletSelectors'
+import { ThunkAction } from '../types/reduxTypes'
+import { asBiggystring } from './cleaners'
 import { fetchReferral } from './network'
 import { makeErrorLog } from './translateError'
-import { consify } from './utils'
+import { consify, mulToPrecision } from './utils'
 export type TrackingEventName =
   | 'Activate_Wallet_Cancel'
   | 'Activate_Wallet_Done'
@@ -27,6 +32,10 @@ export type TrackingEventName =
   | 'Exchange_Shift_Quote'
   | 'Exchange_Shift_Start'
   | 'Exchange_Shift_Success'
+  | 'Fio_Domain_Register'
+  | 'Fio_Domain_Renew'
+  | 'Fio_Handle_Register'
+  | 'Fio_Handle_Bundled_Tx'
   | 'Load_Install_Reason_Match'
   | 'Load_Install_Reason_Fail'
   | 'Sell_Quote'
@@ -44,16 +53,15 @@ export type TrackingEventName =
   | 'Start_App_With_Accounts'
   | 'purchase'
   | 'Visa_Card_Launch'
-  // No longer used:
-  | 'Earn_Spend_Launch'
+  | 'Earn_Spend_Launch' // No longer used
   | LoginTrackingEventName
 
+export type OnLogEvent = (event: TrackingEventName, values?: TrackingValues) => void
+
 export interface TrackingValues extends LoginTrackingValues {
-  accountDate?: string // Account creation date
   currencyCode?: string // Wallet currency code
   dollarValue?: number // Conversion amount, in USD
   error?: unknown | string // Any error
-  installerId?: string // Account installerId, i.e. referralId
   orderId?: string // Unique order identifier provided by plugin
   pluginId?: string // Plugin that provided the conversion
   numSelectedWallets?: number // Number of wallets to be created
@@ -64,6 +72,8 @@ export interface TrackingValues extends LoginTrackingValues {
   sourceExchangeAmount?: string
   sourcePluginId?: string // currency pluginId of dest asset
   numAccounts?: number // Number of full accounts saved on the device
+  exchangeAmount?: string
+  nativeAmount?: string
 }
 
 // Set up the global Firebase analytics instance at boot:
@@ -128,37 +138,85 @@ export function trackError(
 /**
  * Send a raw event to all backends.
  */
-export function logEvent(event: TrackingEventName, values: TrackingValues = {}) {
-  const { accountDate, currencyCode, dollarValue, installerId, pluginId, error } = values
-  getExperimentConfig()
-    .then(async (experimentConfig: ExperimentConfig) => {
-      // Persistent & Unchanged params:
-      const { isFirstOpen, deviceId, firstOpenEpoch } = await getFirstOpenInfo()
-      const params: any = { edgeVersion: getVersion(), isFirstOpen, deviceId, firstOpenEpoch, ...values }
+export function logEvent(event: TrackingEventName, values: TrackingValues = {}): ThunkAction<void> {
+  return async (dispatch, getState) => {
+    const { currencyCode, dollarValue, pluginId, error, exchangeAmount, nativeAmount, sourceExchangeAmount, destExchangeAmount } = values
+    getExperimentConfig()
+      .then(async (experimentConfig: ExperimentConfig) => {
+        // Persistent & Unchanged params:
+        const { isFirstOpen, deviceId, firstOpenEpoch } = await getFirstOpenInfo()
 
-      // Adjust params:
-      if (accountDate != null) params.adate = accountDate
-      if (currencyCode != null) params.currency = currencyCode
-      if (dollarValue != null) {
-        params.currency = 'USD'
-        params.value = Number(dollarValue.toFixed(2))
-        params.items = [String(event)]
-      }
-      if (installerId != null) params.aid = installerId
-      if (pluginId != null) params.plugin = pluginId
-      if (error != null) params.error = makeErrorLog(error)
+        const params: any = { edgeVersion: getVersion(), buildNumber: getBuildNumber(), isFirstOpen, deviceId, firstOpenEpoch, ...values }
 
-      // Add all 'sticky' remote config variant values:
-      for (const key of Object.keys(experimentConfig)) params[`svar_${key}`] = experimentConfig[key as keyof ExperimentConfig]
+        // Populate referral params:
+        const state = getState()
+        const { deviceReferral, account } = state
+        const { accountReferral } = account
+        params.refDeviceInstallerId = deviceReferral.installerId
+        params.refDeviceCurrencyCodes = deviceReferral.currencyCodes
 
-      // TEMP HACK: Add renamed var for legacyLanding
-      params.svar_newLegacyLanding = experimentConfig.legacyLanding
+        const { creationDate, installerId } = accountReferral
+        params.refAccountDate = installerId == null || creationDate == null ? undefined : creationDate.toISOString().replace(/-\d\dT.*/, '')
+        params.refAccountInstallerId = accountReferral.installerId
+        params.refAccountCurrencyCodes = accountReferral.currencyCodes
 
-      consify({ logEvent: { event, params } })
+        // Adjust params:
+        if (currencyCode != null) params.currency = currencyCode
+        if (dollarValue != null) {
+          // If an explicit dollarValue was given, prioritize it
+          params.currency = 'USD'
+          params.value = Number(dollarValue.toFixed(2))
+          params.items = [String(event)]
+        } else if (currencyCode != null) {
+          // Else, calculate the dollar value from crypto amounts, if required props given
+          if (nativeAmount != null && pluginId != null) {
+            try {
+              asBiggystring(nativeAmount)
+            } catch (e) {
+              trackError('Error in tracking nativeAmount: ' + JSON.stringify({ event, values }))
+            }
+            const { multiplier } = getExchangeDenomination(state, pluginId, currencyCode)
+            params.value = div(nativeAmount, multiplier, mulToPrecision(multiplier))
+          } else if (exchangeAmount != null) {
+            params.value = parseFloat(
+              convertCurrency(state, currencyCode, 'iso:USD', typeof destExchangeAmount === 'string' ? destExchangeAmount : String(destExchangeAmount))
+            )
+          } else if (sourceExchangeAmount != null) {
+            try {
+              asBiggystring(sourceExchangeAmount)
+            } catch (e) {
+              trackError('Error in tracking sourceExchangeAmount: ' + JSON.stringify({ event, values }))
+            }
+            params.sourceExchangeAmount = sourceExchangeAmount
+          } else if (destExchangeAmount != null) {
+            try {
+              asBiggystring(destExchangeAmount)
+            } catch (e) {
+              trackError('Error in tracking destExchangeAmount: ' + JSON.stringify({ event, values }))
+            }
+            params.destExchangeAmount = destExchangeAmount
+            try {
+              asBiggystring(exchangeAmount)
+            } catch (e) {
+              trackError('Error in tracking exchangeAmount: ' + JSON.stringify({ event, values }))
+            }
+            params.value = convertCurrency(state, currencyCode, 'iso:USD', exchangeAmount)
+          } else {
+            console.warn('Unable to calculate dollar value for event:', event, values)
+          }
+        }
+        if (pluginId != null) params.plugin = pluginId
+        if (error != null) params.error = makeErrorLog(error)
 
-      Promise.all([logToPosthog(event, params), logToFirebase(event, params), logToUtilServer(event, params)]).catch(error => console.warn(error))
-    })
-    .catch(console.error)
+        // Add all 'sticky' remote config variant values:
+        for (const key of Object.keys(experimentConfig)) params[`svar_${key}`] = experimentConfig[key as keyof ExperimentConfig]
+
+        consify({ logEvent: { event, params } })
+
+        Promise.all([logToPosthog(event, params), logToFirebase(event, params), logToUtilServer(event, params)]).catch(error => console.warn(error))
+      })
+      .catch(console.error)
+  }
 }
 
 /**

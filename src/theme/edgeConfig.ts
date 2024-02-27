@@ -10,7 +10,15 @@ export const edgeConfig: AppConfig = {
   backupAccountSite: 'https://edge.app/light-account-creation/',
   configName: 'edge',
   darkTheme: edgeDark,
-  defaultWallets: ['BTC', 'ETH', 'LTC', 'BCH', 'DASH'],
+  defaultWallets: [
+    { pluginId: 'bitcoin', tokenId: null },
+    { pluginId: 'ethereum', tokenId: null },
+    { pluginId: 'litecoin', tokenId: null },
+    { pluginId: 'bitcoincash', tokenId: null },
+    { pluginId: 'dash', tokenId: null }
+  ],
+  forceCloseUrlIos: 'https://support.apple.com/en-us/HT201330 ',
+  forceCloseUrlAndroid: 'https://support.google.com/android/answer/9079646?hl=en',
   knowledgeBase: 'https://help.edge.app/support/home',
   lightTheme: edgeLight,
   notificationServers: ['https://notif1.edge.app'],

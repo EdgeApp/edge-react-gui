@@ -1,5 +1,5 @@
 import { eq } from 'biggystring'
-import { EdgeAccount, EdgeAssetAmount, EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeAssetAction, EdgeAssetAmount, EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction, EdgeTxAction } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { showError } from '../components/services/AirshipInstance'
@@ -273,6 +273,8 @@ export interface ActionDisplayInfo {
   userData: EdgeMetadata
   savedData: EdgeMetadata
   mergedData: EdgeMetadata
+  action?: EdgeTxAction
+  assetAction?: EdgeAssetAction
 }
 
 export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount, wallet: EdgeCurrencyWallet): ActionDisplayInfo => {
@@ -498,6 +500,8 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
   }
 
   return {
+    action,
+    assetAction,
     direction,
     iconPluginId,
     savedData,

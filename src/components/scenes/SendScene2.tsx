@@ -312,7 +312,8 @@ const SendComponent = (props: Props) => {
     navigation.navigate('changeMiningFee2', {
       spendInfo,
       maxSpendSet: maxSpendSetter >= 0,
-      wallet: coreWallet,
+      tokenId,
+      walletId: coreWallet.id,
       onSubmit: (networkFeeOption, customNetworkFee) => {
         setSpendInfo({ ...spendInfo, networkFeeOption, customNetworkFee })
         setPinValue(undefined)
@@ -892,7 +893,7 @@ const SendComponent = (props: Props) => {
   // Mount/Unmount life-cycle events:
   useMount(() => {
     if (doCheckAndShowGetCryptoModal) {
-      dispatch(checkAndShowGetCryptoModal(navigation, route.params.walletId, route.params.spendInfo?.tokenId)).catch(err => showError(err))
+      dispatch(checkAndShowGetCryptoModal(navigation, coreWallet, tokenId)).catch(err => showError(err))
     }
   })
   useUnmount(() => {

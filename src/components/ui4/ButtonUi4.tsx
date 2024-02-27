@@ -22,10 +22,6 @@ interface Props {
   // and show a spinner until the promise resolves.
   onPress?: () => void | Promise<void>
 
-  // Whether to center the button or stretch to fill the screen.
-  // Defaults to 'auto', letting the parent component be in charge:
-  alignSelf?: 'auto' | 'stretch' | 'center' // TODO: Maybe also remove this once column layout is restyled for UI4
-
   // True to dim the button & prevent interactions:
   disabled?: boolean
 
@@ -59,20 +55,7 @@ interface Props {
  * - NOT meant to be used on its own outside of ButtonsViewUi4 unless layout='solo'
  */
 export function ButtonUi4(props: Props) {
-  const {
-    layout = 'solo',
-    alignSelf = 'auto',
-    children,
-    disabled = false,
-    label,
-    onPress,
-    type = 'primary',
-    spinner = false,
-    mini = false,
-    marginRem,
-    paddingRem,
-    testID
-  } = props
+  const { layout = 'solo', children, disabled = false, label, onPress, type = 'primary', spinner = false, mini = false, marginRem, paddingRem, testID } = props
 
   // `onPress` promise logic:
   const [pending, handlePress] = usePendingPress(onPress)
@@ -117,14 +100,6 @@ export function ButtonUi4(props: Props) {
   // manually enabled.
   const hideContent = pending || spinner
 
-  const dynamicGradientStyles = React.useMemo(
-    () => ({
-      alignSelf,
-      opacity: disabled ? 0.3 : hideContent ? 0.7 : 1
-    }),
-    [alignSelf, disabled, hideContent]
-  )
-
   const maybeText =
     label == null ? null : (
       <EdgeText numberOfLines={1} style={[textStyle, children == null ? null : styles.leftMarginedText]}>
@@ -132,32 +107,56 @@ export function ButtonUi4(props: Props) {
       </EdgeText>
     )
 
-  const containerStyle = React.useMemo(() => {
-    const retStyle: ViewStyle[] = [styles.containerCommon]
-    if (layout === 'column') retStyle.push(styles.containerColumn)
-    if (layout === 'row') retStyle.push(styles.containerRow)
-    if (layout === 'solo') retStyle.push(styles.containerSolo)
+  const touchContainerStyle = React.useMemo(() => {
+    const retStyle: ViewStyle[] = [styles.touchContainerCommon]
 
-    if (type === 'tertiary') retStyle.push(styles.containerTertiary)
+    if (layout === 'column') retStyle.push(styles.touchContainerColumn)
+    if (layout === 'row') retStyle.push(styles.touchContainerRow)
+    if (layout === 'solo') retStyle.push(styles.touchContainerSolo)
+
+    const customMargin = marginRem == null ? undefined : sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
+    retStyle.push(
+      customMargin != null
+        ? {
+            // Use margin as padding to increase tappable area
+            paddingLeft: customMargin.marginLeft,
+            paddingRight: customMargin.marginRight,
+            paddingTop: customMargin.marginTop,
+            paddingBottom: customMargin.marginBottom
+          }
+        : styles.touchContainerSpacing
+    )
+
     return retStyle
-  }, [layout, styles.containerColumn, styles.containerCommon, styles.containerRow, styles.containerSolo, styles.containerTertiary, type])
+  }, [layout, marginRem, styles, theme])
 
-  const customMargin = marginRem == null ? undefined : sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
-  const customPadding = paddingRem == null ? undefined : sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
-  const finalContainerCommon = React.useMemo(
-    () => [styles.containerCommon, containerStyle, customMargin, customPadding],
-    [containerStyle, customMargin, customPadding, styles.containerCommon]
-  )
+  const visibleContainerStyle = React.useMemo(() => {
+    const retStyle: ViewStyle[] = [styles.visibleContainerCommon]
+
+    if (layout === 'column') retStyle.push(styles.visibleContainerColumn)
+    if (layout === 'row') retStyle.push(styles.visibleContainerRow)
+    if (layout === 'solo') retStyle.push(styles.visibleContainerSolo)
+    if (type === 'tertiary') retStyle.push(styles.visibleContainerTertiary)
+
+    retStyle.push(mini ? styles.visibleSizeMini : type === 'tertiary' ? styles.visibleSizeTertiary : styles.visibleSizeDefault)
+
+    if (paddingRem != null) {
+      retStyle.push(sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem)))
+    }
+
+    retStyle.push({
+      opacity: disabled ? 0.3 : hideContent ? 0.7 : 1
+    })
+
+    return retStyle
+  }, [disabled, hideContent, layout, mini, paddingRem, styles, theme, type])
 
   return (
-    <TouchableOpacity disabled={disabled || pending || spinner} style={finalContainerCommon} onPress={handlePress} testID={testID}>
-      <LinearGradient
-        {...gradientProps}
-        style={[styles.contentCommon, dynamicGradientStyles, mini ? styles.contentSizeMini : styles.contentSizeDefault, ...finalContainerCommon]}
-      >
+    <TouchableOpacity disabled={disabled || pending || spinner} style={touchContainerStyle} onPress={handlePress} testID={testID}>
+      <LinearGradient {...gradientProps} style={visibleContainerStyle}>
         {hideContent ? null : children}
         {hideContent ? null : maybeText}
-        {!hideContent ? null : <ActivityIndicator color={spinnerColor} style={styles.spinnerCommon} />}
+        {!hideContent ? null : <ActivityIndicator color={spinnerColor} style={styles.spinner} />}
       </LinearGradient>
     </TouchableOpacity>
   )
@@ -165,48 +164,71 @@ export function ButtonUi4(props: Props) {
 
 const getStyles = cacheStyles((theme: Theme) => {
   return {
-    // Common styles:
-    spinnerCommon: {
-      height: theme.rem(2)
+    // Invisible Touchable Container Styles:
+    touchContainerCommon: {
+      alignItems: 'center',
+      justifyContent: 'center'
     },
-    containerCommon: {
-      borderRadius: theme.rem(theme.buttonBorderRadiusRem),
+    touchContainerSpacing: {
+      // Combination of negative margin and positive padding to increase
+      // invisible tappable area outside of the bounds of the visible button
+      margin: -theme.rem(0.5),
+      padding: theme.rem(0.5)
+    },
+    touchContainerRow: {
       alignSelf: 'stretch',
-      alignItems: 'center',
-      justifyContent: 'center'
+      flex: 1 // Size equally against other buttons in the row
     },
-    contentCommon: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      justifyContent: 'center'
+    touchContainerColumn: {
+      alignSelf: 'stretch',
+      flexBasis: 'auto',
+      flexGrow: 0,
+      flexShrink: 0
     },
-
-    // Other styles:
-    contentSizeDefault: {
-      paddingHorizontal: theme.rem(2),
+    touchContainerSolo: {
+      alignSelf: 'center',
+      flexBasis: 'auto',
+      flexGrow: 0,
+      flexShrink: 0
+    },
+    // Visible Container Styles
+    visibleContainerCommon: {
+      borderRadius: theme.rem(theme.buttonBorderRadiusRem),
+      flexGrow: 0,
+      flexShrink: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'row'
+    },
+    visibleSizeDefault: {
+      paddingHorizontal: theme.rem(1.5),
       height: theme.rem(3)
     },
-    contentSizeMini: {
-      paddingHorizontal: theme.rem(1.5),
+    visibleSizeMini: {
+      alignSelf: 'center',
+      paddingHorizontal: theme.rem(1.25),
       height: theme.rem(2)
     },
-    containerColumn: {
-      alignSelf: 'stretch'
-    },
-    containerSolo: {
-      alignSelf: 'center'
-    },
-    containerRow: {
-      flex: 1
-    },
-    containerTertiary: {
+    visibleSizeTertiary: {
       // Reduce the bounds of a tertiary button so it doesn't appear to be too
       // far from other buttons
-      alignSelf: 'center',
-      paddingHorizontal: 0,
-      paddingVertical: 0,
+      padding: 0,
       height: undefined
     },
+    visibleContainerColumn: {
+      alignSelf: 'stretch'
+    },
+    visibleContainerRow: {
+      alignSelf: 'stretch'
+    },
+    visibleContainerSolo: {
+      alignSelf: 'center'
+    },
+    visibleContainerTertiary: {
+      alignSelf: 'center'
+    },
+
+    // Content
     primaryText: {
       fontFamily: theme.primaryButtonFont,
       fontSize: theme.rem(theme.primaryButtonFontSizeRem),
@@ -224,6 +246,9 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     leftMarginedText: {
       marginLeft: theme.rem(0.5)
+    },
+    spinner: {
+      height: theme.rem(2)
     }
   }
 })

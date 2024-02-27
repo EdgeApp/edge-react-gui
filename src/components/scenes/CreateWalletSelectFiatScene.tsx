@@ -5,13 +5,14 @@ import { FlatList } from 'react-native-gesture-handler'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { createWallet, enableTokensAcrossWallets, getUniqueWalletName, splitCreateWalletItems } from '../../actions/CreateWalletActions'
+import { createWallet, enableTokensAcrossWallets, getUniqueWalletName } from '../../actions/CreateWalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { splitCreateWalletItems, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -30,7 +31,6 @@ import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
-import { WalletCreateItem } from '../themed/WalletList'
 
 export interface CreateWalletSelectFiatParams {
   createWalletList: WalletCreateItem[]
@@ -80,11 +80,15 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     if (newWalletItems.length === 1 && newTokenItems.length === 0) {
       const item = newWalletItems[0]
       try {
-        await createWallet(account, { walletType: item.walletType, walletName: walletNames[item.key], fiatCurrencyCode: `iso:${fiat.value}` })
-        logEvent('Create_Wallet_Success')
+        await createWallet(account, {
+          fiatCurrencyCode: `iso:${fiat.value}`,
+          name: walletNames[item.key],
+          walletType: item.walletType
+        })
+        dispatch(logEvent('Create_Wallet_Success'))
       } catch (error: any) {
         showError(error)
-        logEvent('Create_Wallet_Failed', { error: String(error) })
+        dispatch(logEvent('Create_Wallet_Failed', { error: String(error) }))
       }
       navigation.navigate('walletsTab', { screen: 'walletList' })
       return
@@ -224,8 +228,8 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
           renderItem={renderCurrencyRow}
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
-        <MainButton label={lstrings.title_create_wallets} type="secondary" marginRem={[0.5, 0.5, 0]} onPress={handleCreate} alignSelf="center" />
-        <MainButton label={lstrings.create_wallet_imports_title} type="escape" marginRem={[0.5, 0.5, 1]} onPress={handleImport} alignSelf="center" />
+        <MainButton label={lstrings.title_create_wallets} type="secondary" marginRem={[1, 0, 0.5]} onPress={handleCreate} />
+        <MainButton label={lstrings.create_wallet_imports_title} type="escape" marginRem={[0.5, 0, 1]} onPress={handleImport} />
       </View>
     </SceneWrapper>
   )
@@ -234,6 +238,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   content: {
     flex: 1,
+    margin: theme.rem(0.5),
     paddingTop: theme.rem(0.5)
   },
   cryptoTypeLogo: {

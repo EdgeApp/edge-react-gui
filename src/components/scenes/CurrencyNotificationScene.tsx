@@ -1,3 +1,4 @@
+import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
@@ -10,6 +11,10 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
+
+export interface CurrencyNotificationParams {
+  currencyInfo: EdgeCurrencyInfo
+}
 
 interface Props extends EdgeSceneProps<'currencyNotificationSettings'> {}
 

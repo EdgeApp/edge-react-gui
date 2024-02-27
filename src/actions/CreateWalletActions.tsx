@@ -1,16 +1,16 @@
 import { mul, toFixed } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction, JsonObject } from 'edge-core-js'
+import { EdgeAccount, EdgeCreateCurrencyWallet, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeMetadata, EdgeResult, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
-import { AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene'
+import { ActivationPaymentInfo } from '../components/scenes/CreateWalletAccountSelectScene'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { WalletCreateItem } from '../components/themed/WalletList'
-import { getPluginId, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
+import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors'
+import { TokenWalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -18,52 +18,36 @@ import { EdgeAsset } from '../types/types'
 import { getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { filterNull } from '../util/safeFilters'
-import { logEvent, TrackingEventName } from '../util/tracking'
+import { logEvent } from '../util/tracking'
 
-export interface CreateWalletOptions {
-  walletType: string
-  fiatCurrencyCode?: string
-  importText?: string // for creating wallet from private seed / key
-  trackingEventFailed?: TrackingEventName
-  trackingEventSuccess?: TrackingEventName
-  walletName?: string
-  keyOptions?: JsonObject
-}
+export const createWallets = async (account: EdgeAccount, items: EdgeCreateCurrencyWallet[]): Promise<Array<EdgeResult<EdgeCurrencyWallet>>> => {
+  const out = await account.createCurrencyWallets(items)
 
-export const createWallet = async (account: EdgeAccount, { walletType, walletName, fiatCurrencyCode, importText, keyOptions = {} }: CreateWalletOptions) => {
-  // Try and get the new format param from the legacy walletType if it's mentioned
-  const [type, format] = walletType.split('-')
-  const opts = {
-    name: walletName,
-    fiatCurrencyCode,
-    keyOptions: format != null ? { ...keyOptions, format } : { ...keyOptions },
-    importText
+  // Log the results:
+  for (let i = 0; i < items.length; ++i) {
+    if (!out[i].ok) continue
+    const { fiatCurrencyCode, name = '', walletType } = items[i]
+    logActivity(`Create Wallet: ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${name}`)
   }
-  const out = await account.createCurrencyWallet(type, opts)
-  logActivity(`Create Wallet: ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${opts.name ?? ''}`)
+
   return out
 }
 
-export function createCurrencyWallet(
-  walletName: string,
-  walletType: string,
-  fiatCurrencyCode?: string,
-  importText?: string
-): ThunkAction<Promise<EdgeCurrencyWallet>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    fiatCurrencyCode = fiatCurrencyCode ?? state.ui.settings.defaultIsoFiat
-    return await createWallet(state.core.account, { walletName, walletType, fiatCurrencyCode, importText })
-  }
+export const createWallet = async (account: EdgeAccount, opts: EdgeCreateCurrencyWallet): Promise<EdgeCurrencyWallet> => {
+  const { walletType, name, fiatCurrencyCode } = opts
+  const out = await account.createCurrencyWallet(walletType, opts)
+
+  logActivity(`Create Wallet: ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${name ?? ''}`)
+
+  return out
 }
 
 // can move to component in the future, just account and currencyConfig, etc to component through connector
-export function fetchAccountActivationInfo(walletType: string): ThunkAction<Promise<void>> {
+export function fetchAccountActivationInfo(pluginId: string): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    const currencyPluginName = getPluginId(walletType)
-    const currencyPlugin: EdgeCurrencyConfig = account.currencyConfig[currencyPluginName]
+    const currencyPlugin: EdgeCurrencyConfig = account.currencyConfig[pluginId]
     try {
       const [supportedCurrencies, activationCost] = await Promise.all([
         currencyPlugin.otherMethods.getActivationSupportedCurrencies(),
@@ -109,7 +93,7 @@ export function fetchAccountActivationInfo(walletType: string): ThunkAction<Prom
   }
 }
 
-export function fetchWalletAccountActivationPaymentInfo(paymentParams: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet): ThunkAction<void> {
+export function fetchWalletAccountActivationPaymentInfo(paymentParams: ActivationPaymentInfo, createdCoreWallet: EdgeCurrencyWallet): ThunkAction<void> {
   return (dispatch, getState) => {
     try {
       const networkTimeout = setTimeout(() => {
@@ -181,9 +165,11 @@ export function createAccountTransaction(
         walletId: paymentWalletId,
         onBack: () => {
           // Hack. Keyboard pops up for some reason. Close it
-          logEvent('Activate_Wallet_Cancel', {
-            currencyCode: createdWalletCurrencyCode
-          })
+          dispatch(
+            logEvent('Activate_Wallet_Cancel', {
+              currencyCode: createdWalletCurrencyCode
+            })
+          )
         },
         onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
           if (error) {
@@ -192,9 +178,11 @@ export function createAccountTransaction(
               Alert.alert(lstrings.create_wallet_account_error_sending_transaction)
             }, 750)
           } else if (edgeTransaction) {
-            logEvent('Activate_Wallet_Done', {
-              currencyCode: createdWalletCurrencyCode
-            })
+            dispatch(
+              logEvent('Activate_Wallet_Done', {
+                currencyCode: createdWalletCurrencyCode
+              })
+            )
             const edgeMetadata: EdgeMetadata = {
               name: sprintf(lstrings.create_wallet_account_metadata_name, createdWalletCurrencyCode),
               category: 'Expense:' + sprintf(lstrings.create_wallet_account_metadata_category, createdWalletCurrencyCode),
@@ -239,27 +227,6 @@ export function createHandleUnavailableModal(navigation: NavigationBase, newWall
 }
 
 export const PLACEHOLDER_WALLET_ID = 'NEW_WALLET_UNIQUE_STRING'
-export interface MainWalletCreateItem extends WalletCreateItem {
-  walletType: string
-}
-interface TokenWalletCreateItem extends WalletCreateItem {
-  tokenId: string
-  createWalletIds: string[]
-}
-
-export const splitCreateWalletItems = (createItems: WalletCreateItem[]): { newWalletItems: MainWalletCreateItem[]; newTokenItems: TokenWalletCreateItem[] } => {
-  const newWalletItems: MainWalletCreateItem[] = []
-  const newTokenItems: TokenWalletCreateItem[] = []
-  createItems.forEach(item => {
-    if (item.walletType != null) {
-      newWalletItems.push(item as MainWalletCreateItem)
-    } else if (item.tokenId != null) {
-      if (item.createWalletIds == null) item.createWalletIds = []
-      newTokenItems.push(item as TokenWalletCreateItem)
-    }
-  })
-  return { newWalletItems, newTokenItems }
-}
 
 export function enableTokensAcrossWallets(newTokenItems: TokenWalletCreateItem[]): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {

@@ -11,7 +11,7 @@ import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { formatLargeNumberString as formatLargeNumber } from '../../util/utils'
 import { SwipeChart } from '../charts/SwipeChart'
-import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeAnim, fadeInLeft } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -167,7 +167,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   return (
     <SceneWrapper hasTabs hasNotifications scroll>
       <View style={styles.container}>
-        <EdgeAnim style={styles.titleContainer} enter={{ type: 'fadeInLeft' }}>
+        <EdgeAnim style={styles.titleContainer} enter={fadeInLeft}>
           <FastImage style={styles.icon} source={imageUrlObject} />
           <EdgeText style={styles.title}>{`${currencyName} (${currencyCodeUppercase})`}</EdgeText>
         </EdgeAnim>

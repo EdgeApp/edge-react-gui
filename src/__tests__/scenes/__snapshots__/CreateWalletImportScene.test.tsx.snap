@@ -518,6 +518,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               "value": 0,
             }
           }
+          editable={true}
           focusAnimation={
             {
               "value": 0,
@@ -593,7 +594,11 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           {
+            "marginHorizontal": -22,
+            "marginVertical": -28,
             "opacity": 1,
+            "paddingHorizontal": 22,
+            "paddingVertical": 28,
           }
         }
         testID="undefined.clearIcon"
@@ -666,13 +671,15 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       {
         "alignItems": "center",
         "alignSelf": "center",
-        "borderRadius": 34,
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
         "justifyContent": "center",
-        "marginBottom": 11,
-        "marginLeft": 11,
-        "marginRight": 11,
-        "marginTop": 11,
         "opacity": 1,
+        "paddingBottom": 22,
+        "paddingLeft": 22,
+        "paddingRight": 22,
+        "paddingTop": 22,
       }
     }
   >
@@ -700,41 +707,22 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
         [
           {
             "alignItems": "center",
+            "borderRadius": 34,
             "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
             "justifyContent": "center",
           },
           {
             "alignSelf": "center",
-            "opacity": 1,
           },
           {
             "height": 67,
-            "paddingHorizontal": 45,
+            "paddingHorizontal": 34,
           },
           {
-            "alignItems": "center",
-            "alignSelf": "stretch",
-            "borderRadius": 34,
-            "justifyContent": "center",
+            "opacity": 1,
           },
-          [
-            {
-              "alignItems": "center",
-              "alignSelf": "stretch",
-              "borderRadius": 34,
-              "justifyContent": "center",
-            },
-            {
-              "alignSelf": "center",
-            },
-          ],
-          {
-            "marginBottom": 11,
-            "marginLeft": 11,
-            "marginRight": 11,
-            "marginTop": 11,
-          },
-          undefined,
         ]
       }
     >

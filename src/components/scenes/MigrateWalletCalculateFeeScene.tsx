@@ -1,5 +1,5 @@
 import { add, lt } from 'biggystring'
-import { EdgeDenomination, EdgeSpendInfo, EdgeTransaction, InsufficientFundsError } from 'edge-core-js'
+import { asMaybeInsufficientFundsError, EdgeDenomination, EdgeSpendInfo, EdgeTransaction, InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -23,6 +23,10 @@ import { EdgeText } from '../themed/EdgeText'
 import { SafeSlider } from '../themed/SafeSlider'
 import { SceneHeader } from '../themed/SceneHeader'
 import { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
+
+export interface MigrateWalletCalculateFeeParams {
+  migrateWalletList: MigrateWalletItem[]
+}
 
 interface Props extends EdgeSceneProps<'migrateWalletCalculateFee'> {}
 
@@ -179,7 +183,8 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
               }
             } catch (e: any) {
               for (const key of bundlesFeeTotals.keys()) {
-                if (e instanceof InsufficientFundsError) {
+                const insufficientFundsError = asMaybeInsufficientFundsError(e)
+                if (insufficientFundsError != null) {
                   bundlesFeeTotals.set(key, e)
                 } else {
                   bundlesFeeTotals.set(key, Error(lstrings.migrate_unknown_error_fragment))

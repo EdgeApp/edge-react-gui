@@ -170,6 +170,20 @@ exports[`Production plugin data Buy plugins match snapshot on iOS + US 1`] = `
     "cryptoCodes": [],
     "deepPath": "",
     "deepQuery": {},
+    "description": "Fee: ~2%
+Settlement: ~5 minutes",
+    "paymentType": "iach",
+    "paymentTypeLogoKey": "bank",
+    "paymentTypes": [
+      "iach",
+    ],
+    "pluginId": "iach",
+    "title": "Instant ACH Bank Transfer",
+  },
+  {
+    "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
     "description": "Fee: 5-7%
 Settlement: 10 - 30 minutes",
     "paymentType": "applepay",
@@ -220,7 +234,21 @@ exports[`Production plugin data Sell plugins match snapshot on iOS + US 1`] = `
     "cryptoCodes": [],
     "deepPath": "",
     "deepQuery": {},
-    "description": "Fee: 2.5%
+    "description": "Fee: 1.5%
+Settlement: 2 - 3 days",
+    "paymentType": "ach",
+    "paymentTypeLogoKey": "bank",
+    "paymentTypes": [
+      "ach",
+    ],
+    "pluginId": "ach",
+    "title": "ACH Bank Transfer",
+  },
+  {
+    "cryptoCodes": [],
+    "deepPath": "",
+    "deepQuery": {},
+    "description": "Fee: 4.0%
 Settlement: 5 min - 24 hours",
     "paymentType": "credit",
     "paymentTypeLogoKey": "bank",

@@ -1,3 +1,8 @@
+/**
+ * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and
+ * edge-login-ui-rn!
+ */
+
 import * as React from 'react'
 import { useMemo } from 'react'
 import { ActivityIndicator, Platform, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
@@ -234,6 +239,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
             <InputComponent
               accessible
               animated
+              editable={!disabled}
               ref={inputRef}
               keyboardType={hackKeyboardType}
               returnKeyType={props.returnKeyType}
@@ -268,22 +274,22 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
 
           {showSpinner ? <ActivityIndicator /> : null}
           {secureTextEntry ? (
-            <TouchableWithoutFeedback testID={`${testID}.eyeIcon`} onPress={handleHidePassword}>
+            <TouchContainer testID={`${testID}.eyeIcon`} onPress={handleHidePassword}>
               <IconContainer>
                 <EyeIconAnimated accessible color={iconColor} off={!hidePassword} />
               </IconContainer>
-            </TouchableWithoutFeedback>
+            </TouchContainer>
           ) : null}
 
-          <TouchableOpacity accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
+          <TouchContainer accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
             <SideContainer scale={rightIconSize}>
               <CloseIconAnimated color={iconColor} size={rightIconSize} />
             </SideContainer>
-          </TouchableOpacity>
+          </TouchContainer>
         </Container>
       </TouchableWithoutFeedback>
       {valid != null || error != null || charactersLeft !== '' ? (
-        <MessagesContainer>
+        <MessagesContainer noLayoutFlow={charactersLeft === ''}>
           <Message danger={error != null}>{valid ?? error ?? null}</Message>
           <Message>{charactersLeft}</Message>
         </MessagesContainer>
@@ -328,6 +334,14 @@ const Container = styled(Animated.View)<{
     }))
   ]
 })
+
+const TouchContainer = styled(TouchableOpacity)(theme => ({
+  // Increase tappable area with padding, while net 0 with negative margin to visually appear as if 0 margins/padding
+  paddingHorizontal: theme.rem(1),
+  paddingVertical: theme.rem(1.25),
+  marginHorizontal: -theme.rem(1),
+  marginVertical: -theme.rem(1.25)
+}))
 
 const IconContainer = styled(View)(theme => ({
   paddingHorizontal: theme.rem(0.25)
@@ -521,11 +535,24 @@ const StyledNumericInput = styledWithRef(NumericInput)<{
   ]
 })
 
-const MessagesContainer = styled(Animated.View)(theme => ({
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  paddingHorizontal: theme.rem(0.5)
-}))
+const MessagesContainer = styled(Animated.View)<{ noLayoutFlow?: boolean }>(theme => props => [
+  {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: theme.rem(0.5),
+    height: theme.rem(1)
+  },
+  props.noLayoutFlow
+    ? {
+        // HACK: If this field has a potential error message, counter-act the
+        // layout flow to avoid the effect of the error message's appearance
+        // pushing components below the this text field down.
+        // If there's a counter, this field is already taking up the maximum
+        // amount of vertical space, so the above is not an issue.
+        marginBottom: -theme.rem(1)
+      }
+    : {}
+])
 
 const Message = styled(Text)<{ danger?: boolean }>(theme => props => [
   {

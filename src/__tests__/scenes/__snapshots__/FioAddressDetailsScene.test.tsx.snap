@@ -15,7 +15,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
       }
     }
   >
-    <WithTheme(EdgeTextComponent)
+    <EdgeText
       style={
         {
           "color": "#FFFFFF",
@@ -25,7 +25,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
       }
     >
       Remaining bundled transactions: 100
-    </WithTheme(EdgeTextComponent)>
+    </EdgeText>
     <CardUi4
       paddingRem={0.25}
     >

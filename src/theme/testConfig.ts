@@ -10,7 +10,13 @@ export const testConfig: AppConfig = {
   backupAccountSite: 'https://support.testy.com/accountbackupinfo',
   configName: 'test',
   darkTheme: testDark,
-  defaultWallets: ['BTC', 'FTM:TOMB', 'ETH:USDC'],
+  defaultWallets: [
+    { pluginId: 'bitcoin', tokenId: null },
+    { pluginId: 'fantom', tokenId: '6c021ae822bea943b2e66552bde1d2696a53fbb7' },
+    { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' }
+  ],
+  forceCloseUrlIos: 'https://support.apple.com/en-us/HT201330 ',
+  forceCloseUrlAndroid: 'https://support.google.com/android/answer/9079646?hl=en',
   knowledgeBase: 'https://support.testy.com/knowledge',
   lightTheme: testLight,
   notificationServers: ['https://notif1.edge.app'],

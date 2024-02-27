@@ -1,5 +1,5 @@
 import { FlashList } from '@shopify/flash-list'
-import { EdgeAccount, EdgeTokenId } from 'edge-core-js'
+import { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { SectionList, ViewStyle } from 'react-native'
 
@@ -7,12 +7,11 @@ import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import { lstrings } from '../../locales/strings'
+import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset, FlatListItem, WalletListItem } from '../../types/types'
-import { getCreateWalletTypes, getTokenIdForced } from '../../util/CurrencyInfoHelpers'
-import { assetOverrides } from '../../util/serverState'
-import { normalizeForSearch } from '../../util/utils'
+import { checkAssetFilter } from '../../util/CurrencyInfoHelpers'
 import { showError } from '../services/AirshipInstance'
 import { searchWalletList } from '../services/SortedWalletList'
 import { useTheme } from '../services/ThemeContext'
@@ -40,16 +39,6 @@ interface Props {
 
   // Callbacks:
   onPress?: (walletId: string, tokenId: EdgeTokenId) => void
-}
-
-export interface WalletCreateItem {
-  key: string
-  currencyCode: string
-  displayName: string
-  pluginId: string
-  tokenId: EdgeTokenId // Used for creating tokens
-  walletType?: string // Used for creating wallets
-  createWalletIds?: string[]
 }
 
 interface Section {
@@ -120,7 +109,7 @@ export function WalletList(props: Props) {
 
       // Apply the currency filters:
       const { pluginId } = wallet.currencyInfo
-      return checkFilterWallet({ pluginId, tokenId }, allowedAssets, excludeAssets)
+      return checkAssetFilter({ pluginId, tokenId }, allowedAssets, excludeAssets)
     })
   }, [allowedAssets, allowedWalletIds, excludeAssets, excludeWalletIds, sortedWalletList])
 
@@ -197,17 +186,7 @@ export function WalletList(props: Props) {
   const renderRow = useHandler((item: FlatListItem<any>) => {
     if (item.item.walletId == null) {
       const createItem: WalletCreateItem = item.item
-      const { currencyCode, displayName, pluginId, walletType, createWalletIds } = createItem
-      return (
-        <WalletListCreateRow
-          currencyCode={currencyCode}
-          currencyName={displayName}
-          pluginId={pluginId}
-          walletType={walletType}
-          onPress={handlePress}
-          createWalletIds={createWalletId != null ? [createWalletId] : createWalletIds}
-        />
-      )
+      return <WalletListCreateRow createItem={createItem} createWalletId={createWalletId} onPress={handlePress} />
     }
 
     const walletItem: WalletListItem = item.item
@@ -247,107 +226,4 @@ export function WalletList(props: Props) {
       sections={sectionList}
     />
   )
-}
-
-interface CreateWalletListOpts {
-  filteredWalletList?: WalletListItem[]
-  filterActivation?: boolean
-  allowedAssets?: EdgeAsset[]
-  excludeAssets?: EdgeAsset[]
-}
-
-export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletListOpts = {}): WalletCreateItem[] => {
-  const { filteredWalletList = [], filterActivation, allowedAssets, excludeAssets } = opts
-  const walletList: WalletCreateItem[] = []
-
-  // Add top-level wallet types:
-  const createWalletCurrencies = getCreateWalletTypes(account, filterActivation)
-  for (const createWalletCurrency of createWalletCurrencies) {
-    const { currencyCode, currencyName, pluginId, walletType } = createWalletCurrency
-    const tokenId = getTokenIdForced(account, pluginId, currencyCode)
-    walletList.push({
-      key: `create-${walletType}-${pluginId}`,
-      currencyCode,
-      displayName: currencyName,
-      pluginId,
-      tokenId,
-      walletType
-    })
-  }
-
-  // Add token types:
-  for (const pluginId of Object.keys(account.currencyConfig)) {
-    const currencyConfig = account.currencyConfig[pluginId]
-    const { builtinTokens, currencyInfo } = currencyConfig
-
-    // Identify which wallets could add the token
-    const createWalletIds = Object.keys(account.currencyWallets).filter(walletId => account.currencyWallets[walletId].currencyInfo.pluginId === pluginId)
-
-    for (const tokenId of Object.keys(builtinTokens)) {
-      const { currencyCode, displayName } = builtinTokens[tokenId]
-
-      // Fix for when the token code and chain code are the same (like EOS/TLOS)
-      if (currencyCode === currencyInfo.currencyCode) continue
-
-      walletList.push({
-        key: `create-${currencyInfo.pluginId}-${tokenId}`,
-        currencyCode,
-        displayName,
-        pluginId,
-        tokenId,
-        createWalletIds
-      })
-    }
-  }
-
-  // Filter this list:
-  const existingWallets: EdgeAsset[] = []
-  for (const { wallet, tokenId } of filteredWalletList) {
-    if (wallet == null) continue
-    existingWallets.push({
-      pluginId: wallet.currencyInfo.pluginId,
-      tokenId
-    })
-  }
-  const out = walletList.filter(item => !hasAsset(existingWallets, item) && checkFilterWallet(item, allowedAssets, excludeAssets))
-  return out.filter(item => !assetOverrides.disable[item.pluginId])
-}
-
-export const filterWalletCreateItemListBySearchText = (createWalletList: WalletCreateItem[], searchText: string): WalletCreateItem[] => {
-  const out: WalletCreateItem[] = []
-  const searchTarget = normalizeForSearch(searchText)
-  for (const item of createWalletList) {
-    const { currencyCode, displayName, pluginId, walletType } = item
-    if (normalizeForSearch(currencyCode).includes(searchTarget) || normalizeForSearch(displayName).includes(searchTarget)) {
-      out.push(item)
-      continue
-    }
-    // Do an additional search for pluginId for mainnet create items
-    if (walletType != null && normalizeForSearch(pluginId).includes(searchTarget)) {
-      out.push(item)
-    }
-  }
-  return out
-}
-
-function checkFilterWallet(details: EdgeAsset, allowedAssets?: EdgeAsset[], excludeAssets?: EdgeAsset[]): boolean {
-  if (allowedAssets != null && !hasAsset(allowedAssets, details)) {
-    return false
-  }
-  if (excludeAssets != null && hasAsset(excludeAssets, details)) {
-    return false
-  }
-  return true
-}
-
-/**
- * Returns true if the asset array includes the given asset.
- */
-function hasAsset(assets: EdgeAsset[], target: EdgeAsset): boolean {
-  for (const asset of assets) {
-    if (asset.pluginId === target.pluginId && asset.tokenId === target.tokenId) {
-      return true
-    }
-  }
-  return false
 }

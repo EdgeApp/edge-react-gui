@@ -428,13 +428,15 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
         {
           "alignItems": "center",
           "alignSelf": "center",
-          "borderRadius": 34,
+          "flexBasis": "auto",
+          "flexGrow": 0,
+          "flexShrink": 0,
           "justifyContent": "center",
-          "marginBottom": 22,
-          "marginLeft": 22,
-          "marginRight": 22,
-          "marginTop": 22,
           "opacity": 1,
+          "paddingBottom": 22,
+          "paddingLeft": 22,
+          "paddingRight": 22,
+          "paddingTop": 22,
         }
       }
     >
@@ -462,41 +464,22 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
           [
             {
               "alignItems": "center",
+              "borderRadius": 34,
               "flexDirection": "row",
+              "flexGrow": 0,
+              "flexShrink": 0,
               "justifyContent": "center",
             },
             {
-              "alignSelf": "auto",
-              "opacity": 1,
+              "alignSelf": "center",
             },
             {
               "height": 67,
-              "paddingHorizontal": 45,
+              "paddingHorizontal": 34,
             },
             {
-              "alignItems": "center",
-              "alignSelf": "stretch",
-              "borderRadius": 34,
-              "justifyContent": "center",
+              "opacity": 1,
             },
-            [
-              {
-                "alignItems": "center",
-                "alignSelf": "stretch",
-                "borderRadius": 34,
-                "justifyContent": "center",
-              },
-              {
-                "alignSelf": "center",
-              },
-            ],
-            {
-              "marginBottom": 22,
-              "marginLeft": 22,
-              "marginRight": 22,
-              "marginTop": 22,
-            },
-            undefined,
           ]
         }
       >
@@ -561,16 +544,15 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
       {
         "alignItems": "center",
         "alignSelf": "center",
-        "borderRadius": 34,
-        "height": undefined,
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
         "justifyContent": "center",
-        "marginBottom": 22,
-        "marginLeft": 22,
-        "marginRight": 22,
-        "marginTop": 0,
         "opacity": 1,
-        "paddingHorizontal": 0,
-        "paddingVertical": 0,
+        "paddingBottom": 22,
+        "paddingLeft": 22,
+        "paddingRight": 22,
+        "paddingTop": 0,
       }
     }
   >
@@ -598,47 +580,25 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
         [
           {
             "alignItems": "center",
+            "borderRadius": 34,
             "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
             "justifyContent": "center",
           },
           {
-            "alignSelf": "auto",
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "height": undefined,
+            "padding": 0,
+          },
+          {
             "opacity": 1,
           },
-          {
-            "height": 67,
-            "paddingHorizontal": 45,
-          },
-          {
-            "alignItems": "center",
-            "alignSelf": "stretch",
-            "borderRadius": 34,
-            "justifyContent": "center",
-          },
-          [
-            {
-              "alignItems": "center",
-              "alignSelf": "stretch",
-              "borderRadius": 34,
-              "justifyContent": "center",
-            },
-            {
-              "alignSelf": "center",
-            },
-            {
-              "alignSelf": "center",
-              "height": undefined,
-              "paddingHorizontal": 0,
-              "paddingVertical": 0,
-            },
-          ],
-          {
-            "marginBottom": 22,
-            "marginLeft": 22,
-            "marginRight": 22,
-            "marginTop": 0,
-          },
-          undefined,
         ]
       }
     >
