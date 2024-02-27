@@ -8883,10 +8883,10 @@ edge-currency-plugins@^2.5.4:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.1.0.tgz#be9ada4399e7fc7ef04dc7504c7270f6fbe74802"
-  integrity sha512-O/Ys31LrO5qPV9k0j0LfKVQQxTRqAhTP0q9TlCMlOk4YmG3is8+qsEmqVcFqu0RiRCL1dNyqcPjV1Ec48ORL8A==
+edge-exchange-plugins@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.1.1.tgz#cf22e66d241672bc2751ba1c18e66929ce3ecef7"
+  integrity sha512-axEDj/J3qkw2WAzPmR9wTY/o1khdtR8pCkz4cMKYpXAV1+BVBUKiDYXZCOBnLXNbN2QzZ/8IHTG027Gxjg4JnA==
   dependencies:
     biggystring "^4.1.3"
     cleaners "^0.3.13"
