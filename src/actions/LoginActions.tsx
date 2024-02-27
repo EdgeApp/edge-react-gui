@@ -53,10 +53,11 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
     const syncedSettings = await readSyncedSettings(account)
     const { walletsSort } = syncedSettings
     dispatch({ type: 'LOGIN', data: { account, walletSort: walletsSort } })
-    await dispatch(loadAccountReferral(account))
-    const newAccount = account.newAccount
+    const { newAccount } = account
+    const referralPromise = dispatch(loadAccountReferral(account))
 
     if (newAccount) {
+      await referralPromise
       let { defaultFiat } = syncedSettings
       const [phoneCurrency] = getCurrencies()
       if (typeof phoneCurrency === 'string' && phoneCurrency.length >= 3) {
@@ -98,6 +99,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       })
     } else {
       navigation.push('edgeApp', {})
+      referralPromise.catch(() => console.log(`Failed to load account referral info`))
     }
 
     // Show a notice for deprecated electrum server settings
