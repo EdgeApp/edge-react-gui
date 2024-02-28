@@ -8899,11 +8899,12 @@ edge-currency-plugins@^2.5.4:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.2.0.tgz#c6352bf444c53e7be714d0b18f7ee44055944dfb"
-  integrity sha512-XcKO7ERiLu5LmMiZDCVkGjU96Qi5wVl48UPyUAAXpXOf8BHESCTmTUuX8qgRlmMkeQZjg418Z1SR4HkJzlVa3Q==
+edge-exchange-plugins@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.2.1.tgz#14c7b086e865abb9bbec859df02fb0dfd0318932"
+  integrity sha512-jhz+8ek7JaaDk9NFERW448Q0ZNbcn8Dw7HVqLeGJiM4tsGlqZiv7CuhFSIQoIbmGnvS1tUNw7bhrWTNDC0g/kA==
   dependencies:
+    "@cosmjs/encoding" "^0.32.2"
     biggystring "^4.1.3"
     cleaners "^0.3.13"
     ethers "^5.7.0"
