@@ -37,15 +37,17 @@ const NotificationViewComponent = (props: Props) => {
   const detectedTokensRedux = useSelector(state => state.core.enabledDetectedTokens)
   const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
 
-  const wallets = useWatch(account, 'currencyWallets')
   const fioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
-  const [hasInteractedWithBackupModal, setHasInteractedWithBackupModal] = React.useState<boolean>(getDeviceSettings().hasInteractedWithBackupModal)
-  if (hasInteractedWithBackupModal) hasInteractedWithBackupModalLocal = true
-  const isBackupWarningShown = account.id != null && account.username == null && fioAddresses.length > 0 && !hasInteractedWithBackupModalLocal
+
+  const wallets = useWatch(account, 'currencyWallets')
   const { bottom: insetBottom } = useSafeAreaInsets()
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
 
   const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
+  const [hasInteractedWithBackupModal, setHasInteractedWithBackupModal] = React.useState<boolean>(getDeviceSettings().hasInteractedWithBackupModal)
+
+  if (hasInteractedWithBackupModal) hasInteractedWithBackupModalLocal = true
+  const isBackupWarningShown = account.id != null && account.username == null && fioAddresses.length > 0 && !hasInteractedWithBackupModalLocal
 
   const handleBackupPress = useHandler(async () => {
     writeHasInteractedWithBackupModal(true)
@@ -108,6 +110,9 @@ const NotificationViewComponent = (props: Props) => {
       <EdgeAnim visible={isBackupWarningShown} enter={fadeIn} exit={fadeOut}>
         <NotificationCard type="warning" title={lstrings.backup_title} message={lstrings.backup_web3_handle_warning_message} onPress={handleBackupPress} />
       </EdgeAnim>
+      <EdgeAnim visible={autoDetectTokenCards.length > 0} enter={fadeIn} exit={fadeOut}>
+        {autoDetectTokenCards}
+      </EdgeAnim>
       <EdgeAnim visible={needsPasswordCheck} enter={fadeIn} exit={fadeOut}>
         <NotificationCard
           type="warning"
@@ -116,7 +121,6 @@ const NotificationViewComponent = (props: Props) => {
           onPress={handlePasswordReminderPress}
         />
       </EdgeAnim>
-      {autoDetectTokenCards.length > 0 ? autoDetectTokenCards : null}
     </NotificationCardsContainer>
   )
 }
