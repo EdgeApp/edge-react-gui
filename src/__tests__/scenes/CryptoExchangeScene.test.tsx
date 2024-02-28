@@ -49,7 +49,6 @@ describe('CryptoExchangeComponent', () => {
         pluginId="ChangeNow"
         fromCurrencyCode="BTC"
         toCurrencyCode="ETH"
-        hasMaxSpend
         insufficient={false}
         genericError={null}
         onSelectWallet={async (walletId, currencyCode, direction) => undefined}

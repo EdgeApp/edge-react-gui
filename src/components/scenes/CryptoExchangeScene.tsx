@@ -52,9 +52,6 @@ interface StateProps {
   fromCurrencyCode: string
   toCurrencyCode: string
 
-  // Determines if a coin can have Exchange Max option
-  hasMaxSpend: boolean
-
   // Errors
   insufficient: boolean
   genericError: string | null
@@ -83,8 +80,7 @@ const defaultFromWalletInfo = {
   fromWalletPrimaryInfo: emptyCurrencyInfo,
   fromExchangeAmount: '',
   fromWalletId: '',
-  pluginId: '',
-  hasMaxSpend: false
+  pluginId: ''
 }
 
 const defaultToWalletInfo = {
@@ -289,6 +285,8 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     const isToFocused = this.state.whichWalletFocus === 'to'
     const fromHeaderText = sprintf(lstrings.exchange_from_wallet, fromWalletName)
     const toHeaderText = sprintf(lstrings.exchange_to_wallet, toWalletName)
+    // Determines if a coin can have Exchange Max option
+    const hasMaxSpend = getSpecialCurrencyInfo(this.props.pluginId).noMaxSpend !== true
 
     return (
       <>
@@ -308,9 +306,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             focusMe={this.focusFromWallet}
             onNext={this.handleNext}
           >
-            {this.props.hasMaxSpend ? (
-              <MiniButton label={lstrings.string_max_cap} marginRem={[0.5, 0, 0.75]} onPress={this.handleMax} alignSelf="center" />
-            ) : null}
+            {hasMaxSpend ? <MiniButton label={lstrings.string_max_cap} marginRem={[0.5, 0, 0.75]} onPress={this.handleMax} alignSelf="center" /> : null}
           </CryptoExchangeFlipInputWrapper>
         </EdgeAnim>
         <EdgeAnim>
@@ -394,8 +390,7 @@ export const CryptoExchangeScene = (props: OwnProps) => {
       fromCurrencyCode: exchangeCurrencyCode,
       fromWalletPrimaryInfo,
       fromExchangeAmount: div(fromNativeAmount, multiplier, DECIMAL_PRECISION),
-      pluginId,
-      hasMaxSpend: getSpecialCurrencyInfo(pluginId).noMaxSpend !== true
+      pluginId
     })
   }
 
