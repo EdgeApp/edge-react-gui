@@ -1406,6 +1406,13 @@
   dependencies:
     "@babel/runtime" "^7.21.0"
 
+"@chain-registry/types@^0.18.1":
+  version "0.18.1"
+  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-0.18.1.tgz#bd926ddf204f2ae986a79b42f0cfe85764e2977a"
+  integrity sha512-H/UnOyd7WdcWHa2FGKxy4MclDDFrbE2rFwaUh9oubNJOey7UBI4dNF10oZIWM/1by15LUgDz45fVbh6uA6W5Tg==
+  dependencies:
+    "@babel/runtime" "^7.21.0"
+
 "@chain-registry/utils@^1.14.0":
   version "1.14.0"
   resolved "https://registry.yarnpkg.com/@chain-registry/utils/-/utils-1.14.0.tgz#e6043009d80bfb702067c3a92970fae9350f8689"
@@ -7174,6 +7181,14 @@ chai-as-promised@^7.1.1:
   dependencies:
     check-error "^1.0.2"
 
+chain-registry@^1.28.1:
+  version "1.28.6"
+  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-1.28.6.tgz#823bded9c70c64b3f4d0d32139cfd19b8fcb004e"
+  integrity sha512-RO5Ua/8KyuRBzrsGE82lyt04DI1vF20XnWTcVUw56aQEk/BiscoC5/nnqIsdqQkPZTi4gIMoJXrYCYeckc4vlQ==
+  dependencies:
+    "@babel/runtime" "^7.21.0"
+    "@chain-registry/types" "^0.18.1"
+
 chainsaw@~0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/chainsaw/-/chainsaw-0.1.0.tgz#5eab50b28afe58074d0d58291388828b5e5fbc98"
@@ -8801,10 +8816,10 @@ edge-core-js@^2.2.1:
     yaob "^0.3.12"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^3.1.2-3:
-  version "3.1.2-3"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-3.1.2-3.tgz#cfc57f680a32c8589b605ff0b1654a0c05228033"
-  integrity sha512-n8j0WqJZGEE6DQt8rkcGT8RXD6Dvt3zSTVqitIeWRyG+VoLLPPjA8zQogu4MuBcgFx8H2vFD92F78PhjdcGbIg==
+edge-currency-accountbased@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-3.2.0.tgz#6abc50f918744caba0fc9ab358b300a615d0fd9a"
+  integrity sha512-26hzypBUJhP7cUyPw18tRbDGo+Oc0QhLE13GrP+40bOWlWRFEDbC34xupj6MUIrutMmZCf3i20iJ66MYyRHCrQ==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@chain-registry/client" "^1.15.0"
@@ -8822,6 +8837,7 @@ edge-currency-accountbased@^3.1.2-3:
     algosdk "^2.1.0"
     biggystring "^4.1.3"
     bip39 "^3.0.2"
+    chain-registry "^1.28.1"
     cleaners "^0.3.14"
     ed25519-hd-key "^1.3.0"
     eth-sig-util "^3.0.1"
