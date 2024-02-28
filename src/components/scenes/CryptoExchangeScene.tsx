@@ -36,6 +36,7 @@ interface StateProps {
   exchangeInfo: ExchangeInfo
 
   // The following props are used to populate the CryptoExchangeFlipInputs
+  fromPluginId: string
   fromTokenId: EdgeTokenId
   fromWalletId: string
   fromWalletBalanceMap: Map<EdgeTokenId, string>
@@ -46,7 +47,6 @@ interface StateProps {
   toWalletName: string
   toExchangeAmount: string
   toWalletPrimaryInfo: GuiCurrencyInfo
-  pluginId: string
 
   // The following props are used to populate the confirmation modal
   fromCurrencyCode: string
@@ -73,14 +73,14 @@ interface State {
 }
 
 const defaultFromWalletInfo = {
+  fromPluginId: '',
   fromTokenId: null,
   fromCurrencyCode: '',
   fromWalletBalanceMap: new Map<EdgeTokenId, string>(),
   fromWalletName: '',
   fromWalletPrimaryInfo: emptyCurrencyInfo,
   fromExchangeAmount: '',
-  fromWalletId: '',
-  pluginId: ''
+  fromWalletId: ''
 }
 
 const defaultToWalletInfo = {
@@ -234,9 +234,9 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   renderAlert = () => {
-    const { fromWalletBalanceMap, fromTokenId, insufficient, genericError, pluginId } = this.props
+    const { fromPluginId, fromWalletBalanceMap, fromTokenId, insufficient, genericError } = this.props
 
-    const { minimumPopupModals } = getSpecialCurrencyInfo(pluginId)
+    const { minimumPopupModals } = getSpecialCurrencyInfo(fromPluginId)
     const primaryNativeBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
 
     if (minimumPopupModals != null && primaryNativeBalance < minimumPopupModals.minimumNativeBalance) {
@@ -286,7 +286,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     const fromHeaderText = sprintf(lstrings.exchange_from_wallet, fromWalletName)
     const toHeaderText = sprintf(lstrings.exchange_to_wallet, toWalletName)
     // Determines if a coin can have Exchange Max option
-    const hasMaxSpend = getSpecialCurrencyInfo(this.props.pluginId).noMaxSpend !== true
+    const hasMaxSpend = getSpecialCurrencyInfo(this.props.fromPluginId).noMaxSpend !== true
 
     return (
       <>
@@ -377,10 +377,7 @@ export const CryptoExchangeScene = (props: OwnProps) => {
     const fromTokenId = getWalletTokenId(fromWallet, exchangeCurrencyCode)
 
     const fromWalletName = getWalletName(fromWallet)
-    const {
-      currencyInfo: { pluginId },
-      balanceMap: fromWalletBalanceMap
-    } = fromWallet
+    const { balanceMap: fromWalletBalanceMap } = fromWallet
 
     Object.assign(result, {
       fromTokenId,
@@ -390,7 +387,7 @@ export const CryptoExchangeScene = (props: OwnProps) => {
       fromCurrencyCode: exchangeCurrencyCode,
       fromWalletPrimaryInfo,
       fromExchangeAmount: div(fromNativeAmount, multiplier, DECIMAL_PRECISION),
-      pluginId
+      fromPluginId: fromWallet.currencyInfo.pluginId
     })
   }
 

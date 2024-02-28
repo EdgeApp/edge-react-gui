@@ -46,7 +46,7 @@ describe('CryptoExchangeComponent', () => {
             }
           } as any
         }
-        pluginId="ChangeNow"
+        fromPluginId="ChangeNow"
         fromCurrencyCode="BTC"
         toCurrencyCode="ETH"
         insufficient={false}
