@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.2.0
+
 - added: Notification status analytics param
 - added: @bugsnag/react-native-performance
 - added: New deeplink types: 'scene' and 'modal'
