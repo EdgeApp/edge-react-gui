@@ -33,6 +33,8 @@
  * Besides the edge:// protocol, there are also various coin-specific URI
  * protocols like `bitcoin:`, which we just pass through as "other".
  */
+import { asValue } from 'cleaners'
+
 import { PriceChangePayload } from '../controllers/action-queue/types/pushPayloadTypes'
 import { FiatDirection, FiatPaymentType } from '../plugins/gui/fiatPluginTypes'
 import { AppParamList } from './routerTypes'
@@ -94,16 +96,26 @@ export interface WalletConnectLink {
   uri: string
 }
 
-export interface DevLink {
-  type: 'dev'
+export interface SceneLink {
+  type: 'scene'
   sceneName: keyof AppParamList
+  query: AppParamList[keyof AppParamList]
+}
+
+export const asModalNames = asValue('fundAccount', 'test')
+export type ModalNames = ReturnType<typeof asModalNames>
+
+export interface ModalLink {
+  type: 'modal'
+  modalName: ModalNames
 }
 
 export type DeepLink =
   | AztecoLink
-  | DevLink
+  | SceneLink
   | EdgeLoginLink
   | FiatPluginLink
+  | ModalLink
   | PasswordRecoveryLink
   | PaymentProtoLink
   | PluginLink

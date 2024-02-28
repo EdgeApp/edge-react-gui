@@ -90,7 +90,7 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
                 }
               }}
               layout="column"
-              sceneMargin
+              parentType="scene"
             />
           </EdgeAnim>
         )}

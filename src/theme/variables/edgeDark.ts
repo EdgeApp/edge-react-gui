@@ -205,6 +205,7 @@ export const edgeDark: Theme = {
   warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
   negativeText: palette.lightGray,
+  negativeDeltaText: palette.accentRed,
   dangerText: palette.accentRed,
   textLink: palette.edgeMint,
   deactivatedText: palette.gray,

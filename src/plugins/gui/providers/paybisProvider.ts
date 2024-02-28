@@ -18,11 +18,12 @@ import {
   FiatProviderFactory,
   FiatProviderFactoryParams,
   FiatProviderGetQuoteParams,
-  FiatProviderQuote
+  FiatProviderQuote,
+  FiatProviderSupportedRegions
 } from '../fiatProviderTypes'
 import { assert, isWalletTestnet } from '../pluginUtils'
 import { addTokenToArray } from '../util/providerUtils'
-import { NOT_SUCCESS_TOAST_HIDE_MS, RETURN_URL_FAIL, RETURN_URL_PAYMENT, RETURN_URL_SUCCESS } from './common'
+import { NOT_SUCCESS_TOAST_HIDE_MS, RETURN_URL_FAIL, RETURN_URL_PAYMENT, RETURN_URL_SUCCESS, validateRegion } from './common'
 const providerId = 'paybis'
 const storeId = 'paybis'
 const partnerIcon = 'paybis.png'
@@ -284,6 +285,12 @@ const SELL_REVERSE_PAYMENT_METHOD_MAP: Partial<{ [Payment in FiatPaymentType]: P
   pix: 'method-id_bridgerpay_directa24_pix_payout'
 }
 
+const SUPPORTED_REGIONS: FiatProviderSupportedRegions = {
+  US: {
+    notStateProvinces: ['HI', 'NY']
+  }
+}
+
 const allowedCurrencyCodes: Record<FiatDirection, { [F in FiatPaymentType]?: FiatProviderAssetMap }> = {
   buy: { credit: { providerId, fiat: {}, crypto: {} } },
   sell: { credit: { providerId, fiat: {}, crypto: {} } }
@@ -308,7 +315,8 @@ export const paybisProvider: FiatProviderFactory = {
       providerId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async ({ direction, paymentTypes }): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
+        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
         // Return nothing if paymentTypes are not supported by this provider
         const paymentType = paymentTypes.find(paymentType => allowedPaymentTypes[direction][paymentType] === true)
         if (paymentType == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
@@ -347,6 +355,7 @@ export const paybisProvider: FiatProviderFactory = {
           direction,
           tokenId
         } = params
+        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
         const paymentType = paymentTypes.find(paymentType => allowedPaymentTypes[direction][paymentType] === true)
         if (paymentType == null) throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 

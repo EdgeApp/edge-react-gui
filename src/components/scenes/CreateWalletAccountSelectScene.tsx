@@ -8,7 +8,7 @@ import { createAccountTransaction, fetchAccountActivationInfo, fetchWalletAccoun
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -55,9 +55,9 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
   const activationCost = useSelector(state => state.ui.createWallet.handleActivationInfo.activationCost)
   const paymentCurrencyCode = useSelector(state => state.ui.createWallet.walletAccountActivationPaymentInfo.currencyCode)
   const amount = useSelector(state => state.ui.createWallet.walletAccountActivationPaymentInfo.amount)
-  const paymentDenominationSymbol = useSelector(state =>
-    paymentCurrencyCode != null ? getExchangeDenomination(state, existingPluginId, paymentCurrencyCode).symbol ?? '' : ''
-  )
+  const paymentDenominationSymbol =
+    paymentCurrencyCode == null ? '' : getExchangeDenomByCurrencyCode(existingWallet.currencyConfig, paymentCurrencyCode).symbol ?? ''
+
   const walletAccountActivationQuoteError = useSelector(state => state.ui.createWallet.walletAccountActivationQuoteError)
 
   const instructionSyntax = sprintf(
@@ -151,7 +151,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
           <ButtonsViewUi4
             primary={{ disabled: !activationCost || activationCost === '', onPress: handleSelect, label: lstrings.create_wallet_account_select_wallet }}
             layout="column"
-            sceneMargin
+            parentType="scene"
           />
         ) : (
           <>
@@ -162,7 +162,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
               primary={{ disabled: isCreatingWallet, onPress: handleSubmit, label: lstrings.legacy_address_modal_continue }}
               secondary={{ disabled: isCreatingWallet, onPress: handleCancel, label: lstrings.string_cancel_cap }}
               layout="column"
-              sceneMargin
+              parentType="scene"
             />
           </>
         )}

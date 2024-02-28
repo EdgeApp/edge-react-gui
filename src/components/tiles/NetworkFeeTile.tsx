@@ -1,34 +1,39 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
+import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useFiatText } from '../../hooks/useFiatText'
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getCryptoText } from '../../util/cryptoTextUtils'
 import { getDenomFromIsoCode } from '../../util/utils'
 import { RowUi4 } from '../ui4/RowUi4'
 
+interface Props {
+  wallet: EdgeCurrencyWallet
+  nativeAmount: string
+}
+
 // TODO: Integrate into SendScene, FlipInputModal, and AdvancedDetailsModal
-export const NetworkFeeTile = (props: { wallet: EdgeCurrencyWallet; nativeAmount: string }) => {
+export const NetworkFeeTile = (props: Props) => {
+  const { wallet, nativeAmount } = props
   const {
-    wallet: {
-      currencyInfo: { pluginId, currencyCode },
-      fiatCurrencyCode: isoFiatCurrencyCode
-    },
-    nativeAmount
-  } = props
+    currencyConfig,
+    currencyInfo: { currencyCode },
+    fiatCurrencyCode: isoFiatCurrencyCode
+  } = wallet
 
   const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
   const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`])
 
-  const exchangeDenominationMultiplier = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode).multiplier)
-  const exchangeDenominationName = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode).name)
-  const exchangeDenominationSymbol = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode).symbol ?? '')
+  const exchangeDenominationMultiplier = getExchangeDenom(currencyConfig, null).multiplier
+  const exchangeDenominationName = getExchangeDenom(currencyConfig, null).name
+  const exchangeDenominationSymbol = getExchangeDenom(currencyConfig, null).symbol ?? ''
 
-  const displayDenominationMultiplier = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode).multiplier)
-  const displayDenominationName = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode).name)
-  const displayDenominationSymbol = useSelector(state => getDisplayDenomination(state, pluginId, currencyCode).symbol ?? '')
+  const displayDenominationMultiplier = useDisplayDenom(currencyConfig, null).multiplier
+  const displayDenominationName = useDisplayDenom(currencyConfig, null).name
+  const displayDenominationSymbol = useDisplayDenom(currencyConfig, null).symbol ?? ''
 
   const feeCryptoAmount = getCryptoText({
     displayDenomination: {

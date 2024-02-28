@@ -20,10 +20,11 @@ import {
   FiatProviderFactoryParams,
   FiatProviderGetQuoteParams,
   FiatProviderGetTokenId,
-  FiatProviderQuote
+  FiatProviderQuote,
+  FiatProviderSupportedRegions
 } from '../fiatProviderTypes'
 import { addTokenToArray } from '../util/providerUtils'
-import { NOT_SUCCESS_TOAST_HIDE_MS, RETURN_URL_CANCEL, RETURN_URL_FAIL, RETURN_URL_SUCCESS } from './common'
+import { NOT_SUCCESS_TOAST_HIDE_MS, RETURN_URL_CANCEL, RETURN_URL_FAIL, RETURN_URL_SUCCESS, validateRegion } from './common'
 const providerId = 'banxa'
 const storeId = 'banxa'
 const partnerIcon = 'banxa.png'
@@ -283,6 +284,62 @@ const CURRENCY_PLUGINID_MAP = {
 
 const COIN_TO_CURRENCY_CODE_MAP: StringMap = { BTC: 'BTC' }
 
+const SUPPORTED_REGIONS: FiatProviderSupportedRegions = {
+  US: {
+    forStateProvinces: [
+      'AL', // Alabama
+      'AK', // Alaska
+      'AZ', // Arizona
+      'AR', // Arkansas
+      'CA', // California
+      'CO', // Colorado
+      'CT', // Connecticut
+      'DE', // Delaware
+      'DC', // District of Columbia
+      'FL', // Florida
+      'GA', // Georgia
+      'ID', // Idaho
+      'IL', // Illinois
+      'IN', // Indiana
+      'IA', // Iowa
+      'KS', // Kansas
+      'KY', // Kentucky
+      'MD', // Maryland
+      'MA', // Massachusetts
+      'MI', // Michigan
+      'MN', // Minnesota
+      'MS', // Mississippi
+      'MO', // Missouri
+      'MT', // Montana
+      'NE', // Nebraska
+      'NH', // New Hampshire
+      'NJ', // New Jersey
+      'NM', // New Mexico
+      'NC', // North Carolina
+      'ND', // North Dakota
+      'OH', // Ohio
+      'OK', // Oklahoma
+      'OR', // Oregon
+      'PA', // Pennsylvania
+      'PR', // Puerto Rico
+      'RI', // Rhode Island
+      'SC', // South Carolina
+      'SD', // South Dakota
+      'TN', // Tennessee
+      'TX', // Texas
+      'UT', // Utah
+      'VT', // Vermont
+      'VA', // Virginia
+      'WA', // Washington
+      'WV', // West Virginia
+      'WI', // Wisconsin
+      'WY', // Wyoming
+      'NV', // Nevada
+      'ME' // Maine
+    ]
+  }
+}
+
 const asInfoCreateHmacResponse = asObject({ signature: asString })
 
 const allowedCurrencyCodes: Record<FiatDirection, FiatProviderAssetMap> = {
@@ -317,7 +374,9 @@ export const banxaProvider: FiatProviderFactory = {
       providerId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async ({ direction, paymentTypes }): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
+        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
+
         // Return nothing if paymentTypes are not supported by this provider
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
@@ -371,6 +430,8 @@ export const banxaProvider: FiatProviderFactory = {
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const { pluginId, regionCode, exchangeAmount, amountType, paymentTypes, fiatCurrencyCode, displayCurrencyCode, direction, tokenId } = params
+        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
+
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 

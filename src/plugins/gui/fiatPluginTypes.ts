@@ -175,7 +175,7 @@ export interface FiatPluginFactoryArgs {
 
 export interface FiatPluginRegionCode {
   countryCode: string
-  stateCode?: string
+  stateProvinceCode?: string
 }
 export interface FiatPluginStartParams {
   direction: 'buy' | 'sell'

@@ -3,7 +3,7 @@ import { asArray, asBoolean, asEither, asNull, asNumber, asObject, asOptional, a
 import URL from 'url-parse'
 
 import { StringMap } from '../../../types/types'
-import { asFiatPaymentType, FiatPaymentType } from '../fiatPluginTypes'
+import { asFiatPaymentType, FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
@@ -13,9 +13,11 @@ import {
   FiatProviderFactoryParams,
   FiatProviderGetQuoteParams,
   FiatProviderGetTokenId,
-  FiatProviderQuote
+  FiatProviderQuote,
+  FiatProviderSupportedRegions
 } from '../fiatProviderTypes'
 import { addTokenToArray } from '../util/providerUtils'
+import { validateRegion } from './common'
 const providerId = 'moonpay'
 const storeId = 'com.moonpay'
 const partnerIcon = 'moonpay_symbol_prp.png'
@@ -111,6 +113,19 @@ const TOKEN_MAP: StringMap = {
   zrx: 'ethereum'
 }
 
+const SUPPORTED_REGIONS: Record<FiatDirection, FiatProviderSupportedRegions> = {
+  buy: {
+    US: {
+      notStateProvinces: ['LA', 'TX']
+    }
+  },
+  sell: {
+    US: {
+      notStateProvinces: ['LA', 'NY', 'TX']
+    }
+  }
+}
+
 export const moonpayProvider: FiatProviderFactory = {
   providerId,
   storeId,
@@ -123,6 +138,7 @@ export const moonpayProvider: FiatProviderFactory = {
       partnerIcon,
       pluginDisplayName,
       getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
+        validateRegion(providerId, regionCode, SUPPORTED_REGIONS[direction])
         if (direction !== 'buy') {
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         }
@@ -181,6 +197,7 @@ export const moonpayProvider: FiatProviderFactory = {
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const { direction, regionCode, paymentTypes, displayCurrencyCode } = params
+        validateRegion(providerId, regionCode, SUPPORTED_REGIONS[direction])
         if (direction !== 'buy') {
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
         }

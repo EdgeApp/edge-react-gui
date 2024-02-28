@@ -13,6 +13,7 @@ import { EdgeAsset } from '../types/types'
 import { logEvent } from '../util/tracking'
 import { base58ToUuid } from '../util/utils'
 import { activatePromotion } from './AccountReferralActions'
+import { DEEPLINK_MODAL_FNS } from './DeepLinkingModalActions'
 import { launchPaymentProto } from './PaymentProtoActions'
 import { doRequestAddress, handleWalletUris } from './ScanActions'
 
@@ -240,12 +241,24 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       return true
     }
 
-    case 'dev': {
-      // @ts-expect-error
-      if (!global.__DEV__) return false
+    case 'scene': {
+      const { sceneName, query } = link
+      try {
+        // @ts-expect-error
+        navigation.navigate(sceneName, query)
+      } catch (e) {
+        showError(`Deeplink failed. Unable to navigate to: '${sceneName}' with query '${query}'`)
+      }
+      return true
+    }
 
-      // @ts-expect-error
-      navigation.navigate(link.sceneName, {})
+    case 'modal': {
+      const { modalName } = link
+      try {
+        await DEEPLINK_MODAL_FNS[modalName](navigation)
+      } catch (e) {
+        showError(`Deeplink failed. Unable to open modal: '${modalName}'`)
+      }
       return true
     }
   }

@@ -23,13 +23,13 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { FIO_STR, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
-import { useExchangeDenom } from '../../hooks/useExchangeDenom'
 import { useHandler } from '../../hooks/useHandler'
 import { useIconColor } from '../../hooks/useIconColor'
 import { useMount } from '../../hooks/useMount'
 import { useUnmount } from '../../hooks/useUnmount'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -181,10 +181,10 @@ const SendComponent = (props: Props) => {
   const coreWallet = currencyWallets[walletId]
   const { pluginId, memoOptions = [] } = coreWallet.currencyInfo
   const currencyCode = getCurrencyCode(coreWallet, tokenId)
-  const cryptoDisplayDenomination = useDisplayDenom(pluginId, currencyCode)
-  const cryptoExchangeDenomination = useExchangeDenom(pluginId, currencyCode)
-  const parentDisplayDenom = useDisplayDenom(pluginId, currencyWallets[walletId].currencyInfo.currencyCode)
-  const parentExchangeDenom = useExchangeDenom(pluginId, currencyWallets[walletId].currencyInfo.currencyCode)
+  const cryptoDisplayDenomination = useDisplayDenom(coreWallet.currencyConfig, tokenId)
+  const cryptoExchangeDenomination = getExchangeDenom(coreWallet.currencyConfig, tokenId)
+  const parentDisplayDenom = useDisplayDenom(coreWallet.currencyConfig, null)
+  const parentExchangeDenom = getExchangeDenom(coreWallet.currencyConfig, null)
   const iconColor = useIconColor({ pluginId, tokenId })
 
   spendInfo.tokenId = tokenId

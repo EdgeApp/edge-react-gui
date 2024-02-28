@@ -113,6 +113,8 @@ const asGuiPluginJsonRow = asObject({
 
   // Filtering & sorting:
   forCountries: asOptional(asArray(asString)),
+  forStateProvinces: asOptional(asObject(asArray(asString))),
+  notStateProvinces: asOptional(asObject(asArray(asString))),
   forPlatform: asOptional(asString),
   sortIndex: asOptional(asNumber)
 })

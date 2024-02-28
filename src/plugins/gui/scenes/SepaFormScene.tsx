@@ -73,7 +73,7 @@ export const SepaFormScene = React.memo((props: Props) => {
             disabled: !name.trim() || !iban.trim() || !swift.trim(),
             onPress: handleSubmit
           }}
-          sceneMargin
+          parentType="scene"
         />
       </View>
     </SceneWrapper>

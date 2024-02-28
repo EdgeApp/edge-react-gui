@@ -78,6 +78,18 @@ const merchantPartners = [
     recordID: ''
   },
   {
+    givenName: 'IBC Transfer',
+    hasThumbnail: true,
+    thumbnailPath: 'cosmosibc.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
+  },
+  {
     givenName: 'EOS Network',
     hasThumbnail: true,
     thumbnailPath: 'eos-logo-solo-64.png',

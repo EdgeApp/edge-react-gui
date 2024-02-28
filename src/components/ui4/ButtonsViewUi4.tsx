@@ -43,9 +43,8 @@ interface Props {
     | 'column' // Buttons stacked on top of each other vertically, taking up as much space as the widest button.
     | 'solo' // A single centered button whose size is determined by label length (default for single-button props)
 
-  // Extra bottom margins for scenes to allow scrolling up further into an
-  // easier tap area of the screen
-  sceneMargin?: boolean // TODO: Synchronize "parentType" change from loginUi
+  // What kind of component this ButtonsView lives on. Affects margins.
+  parentType?: 'scene' | 'modal'
 
   // 'distance' prop of the first button
   animDistanceStart?: number
@@ -55,7 +54,7 @@ interface Props {
  * A consistently styled view for displaying button layouts.
  */
 export const ButtonsViewUi4 = React.memo(
-  ({ absolute = false, primary, secondary, secondary2, tertiary, layout = 'column', sceneMargin, animDistanceStart }: Props) => {
+  ({ absolute = false, primary, secondary, secondary2, tertiary, layout = 'column', parentType, animDistanceStart }: Props) => {
     const buttonInfos = [primary, secondary, secondary2, tertiary].filter(key => key != null)
     if (buttonInfos.length === 1) layout = 'solo'
 
@@ -66,6 +65,7 @@ export const ButtonsViewUi4 = React.memo(
       const { label, onPress, disabled, spinner, testID } = buttonProps
 
       const distance = animDistanceStart != null ? animDistanceStart + index * ANIM_DISTANCE_INCREMENT : undefined
+      // TODO: Sync EdgeAnim w/ LoginUi
       const disableAnimation = Platform.OS === 'android'
 
       return (
@@ -81,7 +81,7 @@ export const ButtonsViewUi4 = React.memo(
     const hasTertiary = tertiary != null
 
     return (
-      <StyledButtonContainer absolute={absolute} layout={layout} sceneMargin={sceneMargin}>
+      <StyledButtonContainer absolute={absolute} layout={layout} parentType={parentType}>
         {hasPrimary && (
           <>
             {renderButton('primary', primary, 0)}
@@ -107,8 +107,12 @@ export const ButtonsViewUi4 = React.memo(
 )
 
 /** @deprecated - Shouldn't use this post-UI4 transition once all our layouts have been codified into this component. */
-export const StyledButtonContainer = styled(View)<{ absolute?: boolean; layout: 'row' | 'column' | 'solo'; sceneMargin?: boolean }>(theme => props => {
-  const { absolute, layout, sceneMargin } = props
+export const StyledButtonContainer = styled(View)<{
+  absolute?: boolean
+  layout: 'row' | 'column' | 'solo'
+  parentType?: 'scene' | 'modal'
+}>(theme => props => {
+  const { absolute, layout, parentType } = props
 
   const marginSize = theme.rem(0.5)
 
@@ -131,6 +135,8 @@ export const StyledButtonContainer = styled(View)<{ absolute?: boolean; layout: 
           justifyContent: 'center',
           marginHorizontal: theme.rem(0.5),
           alignItems: 'center',
+          // TODO: This causes too much space in AddressModal.
+          // Move flex to sceneMarginStyle, use in AddressModal, sync w/ LoginUi
           flexGrow: 1,
           flexShrink: 1
         }
@@ -156,12 +162,21 @@ export const StyledButtonContainer = styled(View)<{ absolute?: boolean; layout: 
         }
       : {}
 
-  const sceneMarginStyle: ViewStyle = sceneMargin
-    ? {
-        marginBottom: theme.rem(3),
-        marginTop: theme.rem(1)
-      }
-    : {}
+  const sceneMarginStyle: ViewStyle =
+    parentType === 'scene'
+      ? {
+          marginBottom: theme.rem(3),
+          marginTop: theme.rem(1)
+        }
+      : {}
+
+  const modalMarginStyle: ViewStyle =
+    parentType === 'modal'
+      ? {
+          marginBottom: theme.rem(1),
+          marginTop: theme.rem(2)
+        }
+      : {}
 
   return {
     ...baseStyle,
@@ -169,7 +184,8 @@ export const StyledButtonContainer = styled(View)<{ absolute?: boolean; layout: 
     ...soloStyle,
     ...rowStyle,
     ...columnStyle,
-    ...sceneMarginStyle
+    ...sceneMarginStyle,
+    ...modalMarginStyle
   }
 })
 

@@ -14,7 +14,7 @@ import { Fontello } from '../../assets/vector'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useIconColor } from '../../hooks/useIconColor'
 import { lstrings } from '../../locales/strings'
-import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { config } from '../../theme/appConfig'
 import { connect } from '../../types/reactRedux'
@@ -376,7 +376,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
                 ref={this.flipInputRef}
                 returnKeyType={this.state.isFioMode ? 'next' : 'done'}
                 tokenId={primaryCurrencyInfo.tokenId}
-                walletId={wallet.id}
+                wallet={wallet}
               />
             </CardUi4>
           </EdgeAnim>
@@ -596,8 +596,8 @@ const RequestSceneConnected = connect<StateProps, DispatchProps, OwnProps & Hook
     const { tokenId } = route.params
     const currencyCode = getCurrencyCode(wallet, tokenId)
 
-    const primaryDisplayDenomination = getDisplayDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
-    const primaryExchangeDenomination = getExchangeDenomination(state, wallet.currencyInfo.pluginId, currencyCode)
+    const primaryDisplayDenomination = selectDisplayDenom(state, wallet.currencyConfig, tokenId)
+    const primaryExchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
 
     const primaryCurrencyInfo: GuiCurrencyInfo = {

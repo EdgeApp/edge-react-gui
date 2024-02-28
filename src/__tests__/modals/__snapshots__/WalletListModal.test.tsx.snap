@@ -458,6 +458,7 @@ exports[`WalletListModal should render with loading props 1`] = `
       collapsable={false}
       handlerTag={2}
       handlerType="NativeViewGestureHandler"
+      keyboardDismissMode="on-drag"
       onGestureHandlerEvent={[Function]}
       onGestureHandlerStateChange={[Function]}
       scrollIndicatorInsets={
@@ -524,6 +525,7 @@ exports[`WalletListModal should render with loading props 1`] = `
             initialOffset={0}
             initialRenderIndex={0}
             isHorizontal={false}
+            keyboardDismissMode="on-drag"
             keyboardShouldPersistTaps="handled"
             layoutProvider={
               GridLayoutProviderWithProps {
@@ -557,6 +559,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                   },
                   "data": [],
                   "estimatedItemSize": 96,
+                  "keyboardDismissMode": "on-drag",
                   "keyboardShouldPersistTaps": "handled",
                   "numColumns": 1,
                   "renderItem": [Function],

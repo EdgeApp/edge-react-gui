@@ -242,6 +242,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
         <SafeSlider
           parentStyle={{ marginTop: theme.rem(0.5), marginBottom: theme.rem(1) }}
           disabled={sliderDisabled}
+          disabledText={lstrings.send_confirmation_slide_to_confirm}
           onSlidingComplete={handleSlidingComplete}
         />
       </View>

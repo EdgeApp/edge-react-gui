@@ -153,7 +153,7 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
           )}
 
           {scroll ? (
-            <ScrollView style={styles.scroll} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
+            <ScrollView style={styles.scroll} keyboardDismissMode="on-drag" scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
               {children}
             </ScrollView>
           ) : (

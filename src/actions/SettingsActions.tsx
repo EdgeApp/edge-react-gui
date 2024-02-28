@@ -7,6 +7,7 @@ import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { asSortOption, SortOption } from '../components/modals/WalletListSortModal'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
+import { SettingsState } from '../reducers/scenes/SettingsReducer'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -18,11 +19,11 @@ import { updateExchangeRates } from './ExchangeRateActions'
 import { writeSpendingLimits } from './LocalSettingsActions'
 import { registerNotificationsV2 } from './NotificationActions'
 
-export function updateOneSetting(setting: object): ThunkAction<void> {
+export function updateOneSetting(setting: Partial<SettingsState>): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()
     const settings = state.ui.settings
-    const updatedSettings = {
+    const updatedSettings: SettingsState = {
       ...settings,
       ...setting
     }
@@ -321,6 +322,7 @@ export const asSyncedAccountSettings = asObject({
   preferredSwapPluginId: asMaybe(asString),
   preferredSwapPluginType: asMaybe(asSwapPluginType),
   countryCode: asMaybe(asString, ''),
+  stateProvinceCode: asMaybe(asString),
   mostRecentWallets: asMaybe(asArray(asMostRecentWallet), () => []),
   passwordRecoveryRemindersShown: asMaybe(asPasswordReminderLevels, () => asPasswordReminderLevels({})),
   walletsSort: asMaybe(asSortOption, 'manual'),

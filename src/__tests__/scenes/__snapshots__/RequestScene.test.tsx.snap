@@ -155,6 +155,17 @@ exports[`Request should render with loaded props 1`] = `
           onAmountChanged={[Function]}
           returnKeyType="done"
           tokenId={null}
+          wallet={
+            {
+              "balanceMap": Map {
+                null => "1234",
+              },
+              "currencyInfo": {
+                "displayName": "Bitcoin",
+                "pluginId": "bitcoin",
+              },
+            }
+          }
         />
       </CardUi4>
     </Memo(EdgeAnimInner)>

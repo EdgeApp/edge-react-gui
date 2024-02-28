@@ -9,7 +9,7 @@ import { ActivationPaymentInfo } from '../components/scenes/CreateWalletAccountS
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
-import { getExchangeDenomination } from '../selectors/DenominationSelectors'
+import { getExchangeDenomByCurrencyCode } from '../selectors/DenominationSelectors'
 import { TokenWalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
@@ -140,7 +140,7 @@ export function createAccountTransaction(
     const currencyPlugin = account.currencyConfig[createdCurrencyWallet.currencyInfo.pluginId]
     const { paymentAddress, amount, currencyCode } = state.ui.createWallet.walletAccountActivationPaymentInfo
     const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
-    const paymentDenom = getExchangeDenomination(state, paymentWallet.currencyInfo.pluginId, currencyCode)
+    const paymentDenom = getExchangeDenomByCurrencyCode(paymentWallet.currencyConfig, currencyCode)
     let nativeAmount = mul(amount, paymentDenom.multiplier)
     nativeAmount = toFixed(nativeAmount, 0, 0)
     const tokenId = getWalletTokenId(paymentWallet, currencyCode)

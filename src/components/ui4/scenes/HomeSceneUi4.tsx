@@ -5,13 +5,11 @@ import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
-import { showBackupForTransferModal } from '../../../actions/BackupModalActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { useSceneScrollHandler } from '../../../state/SceneScrollState'
 import { config } from '../../../theme/appConfig'
-import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getUi4ImageUri } from '../../../util/CdnUris'
 import { fetchInfo } from '../../../util/network'
@@ -43,19 +41,12 @@ export const HomeSceneUi4 = (props: Props) => {
   // Evenly distribute the home cards into 4 quadrants:
   const cardSize = screenWidth / 2 - theme.rem(TEMP_PADDING_REM)
 
-  const account = useSelector(state => state.core.account)
-  const isLightAccount = account.username == null
-
   //
   // Handlers
   //
 
   const handleBuyPress = useHandler(() => {
-    if (isLightAccount) {
-      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
-    } else {
-      navigation.navigate('buyTab', {})
-    }
+    navigation.navigate('buyTab', {})
   })
   const handleSellPress = useHandler(() => {
     navigation.navigate('sellTab', {})

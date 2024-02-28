@@ -865,6 +865,7 @@ const strings = {
   choose_your_wallet: 'Choose Your Wallet',
   error_creating_wallets:
     'Network timeout occurred trying to create and backup wallets. Please check your network connection and restart app to retry wallet creation.',
+  error_must_select_state_province_s: 'Must select state/province for %1$s',
   edge_login_failed: 'Failed to Login',
   edge_login_fail_stale_qr: 'The scanned QR code was invalid. \n\nPlease generate a new QR code on the device you intend to log in to and try again.',
   edge_login_fail_message: 'Could not connect to network. Please check your network connection and try again.',
@@ -893,6 +894,8 @@ const strings = {
   estimated_exchange_message: 'The amount above is an estimate. This exchange may result in less funds received than quoted.',
   buy_sell_crypto_select_country_button: 'Select your region',
   search_region: 'Search region',
+  buy_sell_crypto_select_state_button: 'Select your state',
+  search_states: 'Search states',
   buy_sell_crypto_no_provider_region: "We're sorry but there are no available providers for your region.",
   user_closed_modal_no_wallet: 'User closed modal. No wallet was selected',
   plugin_powered_by_space: 'Powered by ',
@@ -1300,6 +1303,14 @@ const strings = {
   gateway_agreement_modal_title: '%s Gateway Address Detected',
   gateway_agreement_modal_body:
     'This address is only valid for 24 hours and can only be used once.\n\nDo not send funds after the address has expired and/or send multiple transactions to this address.',
+
+  // Fund Account Modal
+  fund_account_modal_title: 'Fund Your Account',
+  fund_account_modal_buy_body: 'Purchase crypto using your bank account, credit card, Apple Pay, and more.',
+  fund_account_modal_receive_title: 'Receive Crypto',
+  fund_account_modal_receive_body_1s: 'Transfer crypto from another wallet into %1$s',
+  fund_account_modal_receive_message:
+    'Scan QR code with an external wallet or copy the address by tapping the word "Copy" and paste the address into an external wallet.',
 
   // Util
   util_s_and_s: '%1$s and %2$s',

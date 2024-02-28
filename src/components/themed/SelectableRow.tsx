@@ -11,6 +11,7 @@ interface Props {
 
   subTitle?: string
   icon?: React.ReactNode
+  minimumFontScale?: number
 
   /** @deprecated Only to be used during the UI4 transition */
   marginRem?: number[] | number
@@ -22,7 +23,7 @@ interface Props {
  * of the second row with primary colors.
  */
 export const SelectableRow = (props: Props) => {
-  const { icon, title, subTitle, marginRem, onPress } = props
+  const { icon, title, subTitle, minimumFontScale = 0.65, marginRem, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -34,7 +35,7 @@ export const SelectableRow = (props: Props) => {
         <View style={styles.textContainer}>
           <EdgeText numberOfLines={1}>{title}</EdgeText>
           {subTitle ? (
-            <EdgeText style={styles.subTitle} numberOfLines={2}>
+            <EdgeText style={styles.subTitle} numberOfLines={2} minimumFontScale={minimumFontScale}>
               {subTitle}
             </EdgeText>
           ) : null}

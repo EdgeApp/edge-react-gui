@@ -81,6 +81,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         preferredSwapPluginType,
         securityCheckedWallets,
         spamFilterOn,
+        stateProvinceCode,
         touchIdInfo,
         walletsSort
       } = action.data
@@ -105,6 +106,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         preferredSwapPluginType,
         securityCheckedWallets,
         settingsLoaded: true,
+        stateProvinceCode,
         spamFilterOn,
         walletsSort
       }
