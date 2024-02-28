@@ -515,6 +515,7 @@ export const pluginIdIcons: Record<string, string> = {
   bitsofgold: EDGE_CONTENT_SERVER_URI + '/bits-of-gold-logo.png',
   changenow: EDGE_CONTENT_SERVER_URI + '/changenow.png',
   changehero: EDGE_CONTENT_SERVER_URI + '/changehero.png',
+  cosmosibc: EDGE_CONTENT_SERVER_URI + '/cosmosibc.png',
   exolix: EDGE_CONTENT_SERVER_URI + '/exolix-logo.png',
   godex: EDGE_CONTENT_SERVER_URI + '/godex.png',
   letsexchange: EDGE_CONTENT_SERVER_URI + '/letsexchange-logo.png',
