@@ -136,6 +136,7 @@
 - fixed: Do not count paused wallets for progress ratio
 - fixed: ENS name resolution intermittently failing
 - fixed: Error on exchange details from RUNE swaps
+- fixed: Remove `minWidth` style from stake option card
 - removed: Staking on Fantom
 
 ## 3.22.0 (2023-11-26)
@@ -156,6 +157,10 @@
 - fixed: isFirstOpen analytics param reporting the previously saved value
   instead of forcing to false after first open
 - fixed: Support for stablecoins in Paybis sell to debit card
+
+## 3.21.1 (2023-11-15)
+
+- fixed: Use allowsInlineMediaPlayback for webview to fix KYC widgets
 
 ## 3.21.0 (2023-11-07)
 
