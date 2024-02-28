@@ -380,11 +380,11 @@ export const CryptoExchangeScene = (props: OwnProps) => {
     } = fromWalletPrimaryInfo
     const fromTokenId = getWalletTokenId(fromWallet, exchangeCurrencyCode)
 
-    const fromWalletName = getWalletName(currencyWallets[fromWalletId])
+    const fromWalletName = getWalletName(fromWallet)
     const {
       currencyInfo: { pluginId },
       balanceMap: fromWalletBalanceMap
-    } = currencyWallets[fromWalletId]
+    } = fromWallet
 
     Object.assign(result, {
       fromTokenId,
