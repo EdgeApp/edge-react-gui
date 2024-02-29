@@ -5,12 +5,14 @@ import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
 import { getDeviceSettings, writeHasInteractedWithBackupModal } from '../../actions/DeviceSettingsActions'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSceneFooterState } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { getOtpReminderModal } from '../../util/otpReminder'
 import { EdgeAnim, fadeIn, fadeOut } from '../common/EdgeAnim'
 import { styled } from '../hoc/styled'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
@@ -44,6 +46,7 @@ const NotificationViewComponent = (props: Props) => {
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
 
   const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
+  const [otpReminderCard, setOtpReminderCard] = React.useState<React.JSX.Element>()
   const [hasInteractedWithBackupModal, setHasInteractedWithBackupModal] = React.useState<boolean>(getDeviceSettings().hasInteractedWithBackupModal)
 
   if (hasInteractedWithBackupModal) hasInteractedWithBackupModalLocal = true
@@ -105,6 +108,21 @@ const NotificationViewComponent = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [detectedTokensRedux, handleBackupPress, theme])
 
+  // Check for 2fa/otp notifications
+  useAsyncEffect(
+    async () => {
+      const otpReminderModal = await getOtpReminderModal(account)
+
+      if (otpReminderModal != null) {
+        setOtpReminderCard(
+          <NotificationCard type="warning" title={lstrings.otp_reset_modal_header} message={lstrings.notif_otp_message} onPress={otpReminderModal} />
+        )
+      }
+    },
+    [account],
+    'otpNotificationCard'
+  )
+
   return (
     <NotificationCardsContainer hasTabs={hasTabs} insetBottom={insetBottom} footerHeight={footerHeight} footerOpenRatio={footerOpenRatio}>
       <EdgeAnim visible={isBackupWarningShown} enter={fadeIn} exit={fadeOut}>
@@ -112,6 +130,9 @@ const NotificationViewComponent = (props: Props) => {
       </EdgeAnim>
       <EdgeAnim visible={autoDetectTokenCards.length > 0} enter={fadeIn} exit={fadeOut}>
         {autoDetectTokenCards}
+      </EdgeAnim>
+      <EdgeAnim visible={otpReminderCard != null} enter={fadeIn} exit={fadeOut}>
+        {otpReminderCard}
       </EdgeAnim>
       <EdgeAnim visible={needsPasswordCheck} enter={fadeIn} exit={fadeOut}>
         <NotificationCard

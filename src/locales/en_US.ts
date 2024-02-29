@@ -1490,6 +1490,7 @@ const strings = {
   notif_tokens_detected_title: 'Tokens Detected',
   notif_tokens_detected_on_wallet_name_1s: `New tokens were detected and enabled on %1$s. Tap to review.`,
   notif_tokens_detected_on_address_1s: 'New tokens were detected and enabled on a %1$s address. Tap to review.',
+  notif_otp_message: 'Enable Two-Factor Authentication (2FA) to prevent unauthorized access.',
 
   // #endregion Notifications
 

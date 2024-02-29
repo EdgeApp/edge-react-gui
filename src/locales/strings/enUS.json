@@ -1294,6 +1294,7 @@
   "notif_tokens_detected_title": "Tokens Detected",
   "notif_tokens_detected_on_wallet_name_1s": "New tokens were detected and enabled on %1$s. Tap to review.",
   "notif_tokens_detected_on_address_1s": "New tokens were detected and enabled on a %1$s address. Tap to review.",
+  "notif_otp_message": "Enable Two-Factor Authentication (2FA) to prevent unauthorized access.",
   "transfer_from_bank_title": "From Bank/Cash",
   "transfer_from_wallet_title": "From Another Wallet/Exchange",
   "transfer_to_bank_title": "To Bank/Cash",
