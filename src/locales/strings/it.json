@@ -1536,5 +1536,10 @@
   "unknown_error_occurred_fragment": "Si è verificato un errore sconosciuto",
   "no_scan_results_message": "Nessun risultato di scansione",
   "auto_log_off_failed_message_s": "Auto-logoff non riuscito: %s",
-  "contacts_load_failed_message_s": "Caricamento dei contatti non riuscito: %s"
+  "contacts_load_failed_message_s": "Caricamento dei contatti non riuscito: %s",
+  "otp_authentication_header": "2FA è stata attivato",
+  "otp_authentication_message": "Il 2FA è stata attivato. È stato generato un codice di autenticazione univoco. Se perdi il telefono o disinstalli l'app, ci vorranno 7 giorni per disabilitare il 2FA e accedere al tuo account da un altro dispositivo senza il seguente codice di autenticazione.\n\n%s",
+  "otp_reset_modal_dont_ask": "Non chiedermelo più",
+  "otp_reset_modal_header": "Proteggi il tuo account",
+  "otp_reset_modal_message": "L'autenticazione a due fattori (2FA) perviene accessi non autorizzati provenienti da altri dispositivi, anche se il tuo nome utente e la tua password sono stati compromessi. \nPuoi scansionare il QR Code o inserire manualmente il codice di autenticazione per autorizzare altri dispositivi. Vuoi abilitare il 2FA?"
 }

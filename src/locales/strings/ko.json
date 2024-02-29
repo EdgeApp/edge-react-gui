@@ -1536,5 +1536,10 @@
   "unknown_error_occurred_fragment": "Unknown error occurred",
   "no_scan_results_message": "No scan results",
   "auto_log_off_failed_message_s": "Failed to auto-logoff: %s",
-  "contacts_load_failed_message_s": "Failed to load contacts: %s"
+  "contacts_load_failed_message_s": "Failed to load contacts: %s",
+  "otp_authentication_header": "2단계 인증이 활성화되었습니다.",
+  "otp_authentication_message": "2단계 인증이 활성화되었습니다. 고유의 인증 코드가 생성됩니다. 휴대전화를 분실하거나 어플을 삭제할 경우, 2단계 인증을 비활성화 하거나 다른 기기에서 해당 인증 코드를 사용하지 않고 본인 계정에 접속하려면 7일이 소요가 됩니다.\n\n%s",
+  "otp_reset_modal_dont_ask": "다시 묻지 않기",
+  "otp_reset_modal_header": "계정 보호",
+  "otp_reset_modal_message": "2단계 인증 (2FA) 를 사용하면 사용자명과 암호가 유출되더라도, 다른 기기로부터의 액세스로부터 자신의 계정을 보호할 수 있습니다. QR 코드를 스캔하거나 인증 코드를 직접 입력하여 다른 기기들을 원활하게 인증 할 수 있습니다. 2단계 인증을 활성화하시겠습니까?"
 }

@@ -1536,5 +1536,10 @@
   "unknown_error_occurred_fragment": "Unknown error occurred",
   "no_scan_results_message": "No scan results",
   "auto_log_off_failed_message_s": "Failed to auto-logoff: %s",
-  "contacts_load_failed_message_s": "Failed to load contacts: %s"
+  "contacts_load_failed_message_s": "Failed to load contacts: %s",
+  "otp_authentication_header": "La autenticación de doble factor ha sido activada",
+  "otp_authentication_message": "La autenticación de doble factor ha sido activada. Se ha generado un código de autenticación único. Si pierdes tu teléfono o desinstalas la aplicación, será necesario que transcurran 7 días para desactivar 2FA y acceder a tu cuenta desde otro dispositivo sin el siguiente código de autenticación.\n\n%s",
+  "otp_reset_modal_dont_ask": "No volver a preguntar",
+  "otp_reset_modal_header": "Securiza tu cuenta",
+  "otp_reset_modal_message": "La autenticación de doble factor (2FA) evita el acceso no autorizado desde otros dispositivos, incluso si tu nombre de usuario y contraseña se han visto comprometidos. Puedes escanear un código QR o introducir un código de autenticación para autorizar fácilmente otros dispositivos. ¿Quieres activar la autenticación de doble factor?"
 }
