@@ -93,7 +93,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
               .map(tokenItem => tokenItem.tokenId),
             fiatCurrencyCode: `iso:${fiatCode}`,
             importText,
-            keyOptions: keyOptions.get(item.pluginId),
+            keyOptions: { ...item.keyOptions, ...keyOptions.get(item.pluginId) },
             name: walletNames[item.key],
             walletType: item.walletType
           })
