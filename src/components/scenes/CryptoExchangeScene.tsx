@@ -95,7 +95,7 @@ const defaultToWalletInfo = {
   toWalletId: ''
 }
 
-const defaultState = {
+const defaultState: State = {
   whichWalletFocus: 'from',
   fromExchangeAmount: '',
   toExchangeAmount: '',
@@ -107,7 +107,6 @@ const defaultState = {
 export class CryptoExchangeComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    // @ts-expect-error
     const newState: State = defaultState
     this.state = newState
   }
@@ -187,7 +186,6 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   resetState = () => {
-    // @ts-expect-error
     this.setState(defaultState)
   }
 
