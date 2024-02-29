@@ -13,7 +13,8 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { EdgeAnim, fadeIn, fadeOut } from '../common/EdgeAnim'
 import { styled } from '../hoc/styled'
-import { showError } from '../services/AirshipInstance'
+import { PasswordReminderModal } from '../modals/PasswordReminderModal'
+import { Airship, showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { MAX_TAB_BAR_HEIGHT, MIN_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
 import { NotificationCard } from './NotificationCard'
@@ -34,6 +35,8 @@ const NotificationViewComponent = (props: Props) => {
 
   const account = useSelector(state => state.core.account)
   const detectedTokensRedux = useSelector(state => state.core.enabledDetectedTokens)
+  const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
+
   const wallets = useWatch(account, 'currencyWallets')
   const fioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
   const [hasInteractedWithBackupModal, setHasInteractedWithBackupModal] = React.useState<boolean>(getDeviceSettings().hasInteractedWithBackupModal)
@@ -44,12 +47,16 @@ const NotificationViewComponent = (props: Props) => {
 
   const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
 
-  const handlePress = useHandler(async () => {
+  const handleBackupPress = useHandler(async () => {
     writeHasInteractedWithBackupModal(true)
       .then(() => setHasInteractedWithBackupModal(true))
       .catch(err => showError(err))
     await showBackupModal({ navigation })
     hasInteractedWithBackupModalLocal = true
+  })
+
+  const handlePasswordReminderPress = useHandler(async () => {
+    await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation} />)
   })
 
   // Show a tokens detected notification per walletId found in newTokens
@@ -94,12 +101,20 @@ const NotificationViewComponent = (props: Props) => {
       setAutoDetectTokenCards(newNotifs)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [detectedTokensRedux, handlePress, theme])
+  }, [detectedTokensRedux, handleBackupPress, theme])
 
   return (
     <NotificationCardsContainer hasTabs={hasTabs} insetBottom={insetBottom} footerHeight={footerHeight} footerOpenRatio={footerOpenRatio}>
       <EdgeAnim visible={isBackupWarningShown} enter={fadeIn} exit={fadeOut}>
-        <NotificationCard type="warning" title={lstrings.backup_title} message={lstrings.backup_web3_handle_warning_message} onPress={handlePress} />
+        <NotificationCard type="warning" title={lstrings.backup_title} message={lstrings.backup_web3_handle_warning_message} onPress={handleBackupPress} />
+      </EdgeAnim>
+      <EdgeAnim visible={needsPasswordCheck} enter={fadeIn} exit={fadeOut}>
+        <NotificationCard
+          type="warning"
+          title={lstrings.password_reminder_remember_your_password}
+          message={lstrings.password_reminder_you_will_need_your_password}
+          onPress={handlePasswordReminderPress}
+        />
       </EdgeAnim>
       {autoDetectTokenCards.length > 0 ? autoDetectTokenCards : null}
     </NotificationCardsContainer>
