@@ -73,18 +73,15 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
 
   const handleReceive = useHandler(async () => {
     Airship.clear()
-    if (isLightAccount) {
-      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
-    } else {
-      const result = await Airship.show<WalletListResult>(bridge => (
-        <WalletListModal bridge={bridge} headerTitle={lstrings.select_receive_asset} navigation={navigation} showCreateWallet />
-      ))
 
-      if (result?.type === 'wallet') {
-        const { walletId, tokenId } = result
-        await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
-        navigation.navigate('request', { tokenId, walletId })
-      }
+    const result = await Airship.show<WalletListResult>(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={lstrings.select_receive_asset} navigation={navigation} showCreateWallet />
+    ))
+
+    if (result?.type === 'wallet') {
+      const { walletId, tokenId } = result
+      await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
+      navigation.navigate('request', { tokenId, walletId })
     }
   })
 
