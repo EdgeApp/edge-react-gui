@@ -42,6 +42,7 @@ import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef }
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ShareButtons } from '../themed/ShareButtons'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { CardUi4 } from '../ui4/CardUi4'
 import { AccentColors } from '../ui4/DotsBackground'
 
@@ -60,6 +61,7 @@ interface StateProps {
   exchangeSecondaryToPrimaryRatio?: string
   fioAddressesExist?: boolean
   isConnected: boolean
+  isLightAccount: boolean
   showBalance: boolean
   primaryCurrencyInfo?: GuiCurrencyInfo
 }
@@ -288,6 +290,22 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
     )
   }
 
+  handleBackupPress = () => this.props.navigation.navigate('upgradeUsername', {})
+  renderLightAccountMode = () => {
+    const styles = getStyles(this.props.theme)
+    return (
+      <SceneWrapper>
+        <SceneHeader title={lstrings.fragment_request_subtitle} underline withTopMargin />
+        <View style={styles.container}>
+          <EdgeText numberOfLines={0} style={styles.backupText}>
+            {lstrings.backup_for_transfer_message}
+          </EdgeText>
+          <ButtonsViewUi4 parentType="scene" primary={{ label: lstrings.backup_account, onPress: this.handleBackupPress }} />
+        </View>
+      </SceneWrapper>
+    )
+  }
+
   handleChangeAddressItem = (item: AddressInfo) => {
     this.setState({ selectedAddress: item })
   }
@@ -302,7 +320,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
   }
 
   render() {
-    const { currencyCode, exchangeSecondaryToPrimaryRatio, iconColor, wallet, primaryCurrencyInfo, theme } = this.props
+    const { currencyCode, exchangeSecondaryToPrimaryRatio, iconColor, isLightAccount, wallet, primaryCurrencyInfo, theme } = this.props
     const styles = getStyles(theme)
 
     if (currencyCode == null || primaryCurrencyInfo == null || exchangeSecondaryToPrimaryRatio == null || wallet == null) {
@@ -334,7 +352,9 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
       backgroundColors[0] = scaledColor
     }
 
-    return keysOnlyMode ? (
+    return isLightAccount ? (
+      this.renderLightAccountMode()
+    ) : keysOnlyMode ? (
       this.renderKeysOnlyMode()
     ) : (
       <SceneWrapper
@@ -545,6 +565,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     flexDirection: 'row'
   },
+  backupText: {
+    marginTop: theme.rem(1),
+    flexGrow: 1,
+    flexShrink: 0
+  },
   balanceContainer: {
     justifyContent: 'space-between',
     flexDirection: 'row',
@@ -611,6 +636,7 @@ const RequestSceneConnected = connect<StateProps, DispatchProps, OwnProps & Hook
     const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
     const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
     const fioAddressesExist = !!state.ui.fioAddress.fioAddresses.length
+    const isLightAccount = state.core.account.username == null
 
     return {
       currencyCode,
@@ -619,7 +645,8 @@ const RequestSceneConnected = connect<StateProps, DispatchProps, OwnProps & Hook
       primaryCurrencyInfo,
       fioAddressesExist,
       isConnected: state.network.isConnected,
-      showBalance: state.ui.settings.isAccountBalanceVisible
+      showBalance: state.ui.settings.isAccountBalanceVisible,
+      isLightAccount
     }
   },
   dispatch => ({

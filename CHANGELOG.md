@@ -12,6 +12,8 @@
 - added: Have users select US state and filter fiat providers by state/province
 - changed: Password reminder modal only shows after tapping new persistent notification
 - changed: Remove extra spaces and normal capitalization of mnemonic seed input
+- changed: Allow routing to Receive Scene without visible addresses for light
+  accounts
 - fixed: Some text inputs not selectable for some Samsung devices
 - fixed: Various small visual fixes
 - fixed: Improve login performance by only loading account referral info for new accounts

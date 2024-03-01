@@ -1,5 +1,48 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Request should render a blank scene with loaded props 1`] = `
+<Memo(SceneWrapperComponent)>
+  <Memo(SceneHeaderComponent)
+    title="Receive"
+    underline={true}
+    withTopMargin={true}
+  />
+  <View
+    style={
+      {
+        "flex": 1,
+        "justifyContent": "flex-start",
+        "paddingHorizontal": 22,
+      }
+    }
+  >
+    <EdgeText
+      numberOfLines={0}
+      style={
+        {
+          "flexGrow": 1,
+          "flexShrink": 0,
+          "marginTop": 22,
+        }
+      }
+    >
+      To buy, sell, and receive funds, please back up your account. Edge encrypted backups use a familiar username and password method that will safeguard your assets and help prevent loss of funds.
+
+Never share your username and password, and store your credentials securely!
+    </EdgeText>
+    <Memo
+      parentType="scene"
+      primary={
+        {
+          "label": "Back Up Account",
+          "onPress": [Function],
+        }
+      }
+    />
+  </View>
+</Memo(SceneWrapperComponent)>
+`;
+
 exports[`Request should render with loaded props 1`] = `
 <Memo(SceneWrapperComponent)
   accentColors={
