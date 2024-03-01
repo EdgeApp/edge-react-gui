@@ -538,7 +538,7 @@
   "title_fio_sent_request_details": "Detalles de la solicitud enviados",
   "title_fio_address_settings": "Recargar y transferir",
   "title_fio_domain_settings": "Ajustes de dominio",
-  "title_fio_add_bundled_txs": "Reload Bundled Transactions",
+  "title_fio_add_bundled_txs": "Recargar transacciones incluidas",
   "title_fio_renew_domain": "Renovar dominio FIO",
   "title_fio_renew": "Renovar",
   "title_fio_make_public_domain": "Hacer público el dominio",
