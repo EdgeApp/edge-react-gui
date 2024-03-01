@@ -190,7 +190,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     }
 
     case 'other': {
-      const matchingWalletIdsAndUris: Array<{ walletId: string; parsedUri: EdgeParsedUri; currencyCode?: string; tokenId: EdgeTokenId }> = []
+      const matchingWalletIdsAndUris: Array<{ walletId: string; parsedUri: EdgeParsedUri; tokenId: EdgeTokenId }> = []
 
       const parseWallets = async (): Promise<void> => {
         // Try to parse with all wallets
@@ -198,13 +198,12 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
           const parsedUri = await wallet.parseUri(link.uri).catch(e => undefined)
           if (parsedUri != null) {
             const { tokenId = null } = parsedUri
-            matchingWalletIdsAndUris.push({ currencyCode: parsedUri.currencyCode, walletId: wallet.id, parsedUri, tokenId })
+            matchingWalletIdsAndUris.push({ walletId: wallet.id, parsedUri, tokenId })
           }
         }
       }
       const promise = parseWallets()
       await showToastSpinner(lstrings.scan_parsing_link, promise)
-
 
       if (matchingWalletIdsAndUris.length === 0) {
         if (!allWalletsLoaded) return false
@@ -220,7 +219,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       }
 
       const allowedWalletIds = matchingWalletIdsAndUris.map(wid => wid.walletId)
-      const assets: EdgeAsset[] = matchingWalletIdsAndUris.map(({ currencyCode: cc, tokenId, walletId }) => {
+      const assets: EdgeAsset[] = matchingWalletIdsAndUris.map(({ tokenId, walletId }) => {
         const wallet = currencyWallets[walletId]
         const { pluginId } = wallet.currencyInfo
 
