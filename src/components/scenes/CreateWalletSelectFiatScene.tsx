@@ -82,6 +82,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
       try {
         await createWallet(account, {
           fiatCurrencyCode: `iso:${fiat.value}`,
+          keyOptions: item.keyOptions,
           name: walletNames[item.key],
           walletType: item.walletType
         })
