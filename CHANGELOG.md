@@ -15,6 +15,10 @@
 - fixed: Various small visual fixes
 - fixed: Improve login performance by only loading account referral info for new accounts
 
+## 4.1.1 (2024-02-29)
+
+- fixed: Correctly create and import non-segwit wallets in bip-44 mode.
+
 ## 4.1.0
 
 - added: FIO conversion analytics events.
