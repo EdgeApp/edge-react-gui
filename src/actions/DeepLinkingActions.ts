@@ -191,14 +191,17 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
 
     case 'other': {
       const matchingWalletIdsAndUris: Array<{ walletId: string; parsedUri: EdgeParsedUri; tokenId: EdgeTokenId }> = []
+      const assets: EdgeAsset[] = []
 
       const parseWallets = async (): Promise<void> => {
         // Try to parse with all wallets
         for (const wallet of Object.values(currencyWallets)) {
+          const { pluginId } = wallet.currencyInfo
           const parsedUri = await wallet.parseUri(link.uri).catch(e => undefined)
           if (parsedUri != null) {
             const { tokenId = null } = parsedUri
             matchingWalletIdsAndUris.push({ walletId: wallet.id, parsedUri, tokenId })
+            assets.push({ pluginId, tokenId })
           }
         }
       }
@@ -218,14 +221,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
         return true
       }
 
-      const allowedWalletIds = matchingWalletIdsAndUris.map(wid => wid.walletId)
-      const assets: EdgeAsset[] = matchingWalletIdsAndUris.map(({ tokenId, walletId }) => {
-        const wallet = currencyWallets[walletId]
-        const { pluginId } = wallet.currencyInfo
-
-        return { pluginId, tokenId }
-      })
-      const walletListResult = await pickWallet({ account, allowedWalletIds, assets, navigation })
+      const walletListResult = await pickWallet({ account, assets, navigation, showCreateWallet: true })
       if (walletListResult == null) {
         showError(lstrings.scan_camera_no_matching_wallet)
         return true
@@ -233,15 +229,14 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
 
       // User backed out of choosing a wallet
       if (walletListResult.type !== 'wallet') return true
-      const widUri = matchingWalletIdsAndUris.find(({ walletId }) => walletId === walletListResult.walletId)
 
-      if (widUri == null) {
-        // This should never happen. The picked wallet should come from the list of matching wallet IDs
-        showError('Internal Error: Missing wallet ID for chosen wallet')
-        return true
-      }
-      const { parsedUri, walletId } = widUri
-      await dispatch(handleWalletUris(navigation, currencyWallets[walletId], parsedUri))
+      const pickedWallet = account.currencyWallets[walletListResult.walletId]
+      if (pickedWallet == null) return true
+
+      // Reparse the uri with the final chosen wallet just in case this was a URI for a wallet
+      // we didn't have
+      const finalParsedUri = await pickedWallet.parseUri(link.uri)
+      await dispatch(handleWalletUris(navigation, pickedWallet, finalParsedUri))
       return true
     }
 
