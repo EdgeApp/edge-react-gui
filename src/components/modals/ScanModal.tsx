@@ -75,7 +75,14 @@ export const ScanModal = (props: Props) => {
   const handleTextInput = async () => {
     triggerHaptic('impactLight')
     const uri = await Airship.show<string | undefined>(bridge => (
-      <TextInputModal autoFocus={textModalAutoFocus} bridge={bridge} inputLabel={textModalHint} message={textModalBody} title={textModalTitle} />
+      <TextInputModal
+        autoFocus={textModalAutoFocus}
+        bridge={bridge}
+        inputLabel={textModalHint}
+        message={textModalBody}
+        title={textModalTitle}
+        autoCapitalize="none"
+      />
     ))
 
     if (uri != null) {
