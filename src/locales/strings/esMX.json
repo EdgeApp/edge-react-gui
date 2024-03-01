@@ -425,7 +425,7 @@
   "staking_estimated_return": "Rendimiento estimado: %1$s APY",
   "staking_estimated_return_up_to": "Rendimiento estimado: hasta %1$s APY",
   "staking_no_fio_address_error": "No se puede hacer el bloqueo sin una direccion FIO",
-  "staking_no_bundled_txs_error": "Not enough bundled transactions for FIO address %1$s",
+  "staking_no_bundled_txs_error": "No hay suficientes transacciones incluidas para la dirección FIO %1$s",
   "string_i_agree": "I Agree",
   "string_expires": "Expires",
   "string_decline": "Decline",
