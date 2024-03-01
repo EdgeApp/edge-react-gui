@@ -223,7 +223,6 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
 
       const walletListResult = await pickWallet({ account, assets, navigation, showCreateWallet: true })
       if (walletListResult == null) {
-        showError(lstrings.scan_camera_no_matching_wallet)
         return true
       }
 

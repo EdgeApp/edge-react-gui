@@ -2,7 +2,7 @@ import { asArray, asBoolean, asDate, asMaybe, asNumber, asObject, asOptional, as
 import { EdgeAccount, EdgeCurrencyWallet, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
-import { pickWallet } from '../components/modals/WalletListModal'
+import { ErrorNoMatchingWallets, pickWallet } from '../components/modals/WalletListModal'
 import { SendScene2Params } from '../components/scenes/SendScene2'
 import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
@@ -158,7 +158,9 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
     selectedWallet = wallet
     selectedCurrencyCode = currencyCode
   } else {
-    const result = await pickWallet({ account, assets: paymentAssets, navigation })
+    const result = await pickWallet({ account, assets: paymentAssets, navigation }).catch(e => {
+      if (e.message !== ErrorNoMatchingWallets) throw e
+    })
     if (result?.type !== 'wallet') {
       throw new PaymentProtoError('NoPaymentOption', { text: paymentCurrencies.join(', ') })
     }
