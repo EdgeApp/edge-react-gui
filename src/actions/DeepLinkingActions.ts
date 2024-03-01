@@ -17,6 +17,17 @@ import { DEEPLINK_MODAL_FNS } from './DeepLinkingModalActions'
 import { launchPaymentProto } from './PaymentProtoActions'
 import { doRequestAddress, handleWalletUris } from './ScanActions'
 
+// These are the asset types that we'll manually check for when deep linking with a
+// URI for the format edge://pay/bitcoin/[privateKey]
+// Such assets will allow the user to auto create a wallet if they don't have one
+const CREATE_WALLET_ASSETS: Record<string, EdgeAsset> = {
+  bitcoin: { pluginId: 'bitcoin', tokenId: null },
+  bitcoincash: { pluginId: 'bitcoincash', tokenId: null },
+  litecoin: { pluginId: 'litecoin', tokenId: null },
+  dogecoin: { pluginId: 'dogecoin', tokenId: null },
+  dash: { pluginId: 'dash', tokenId: null }
+}
+
 /**
  * The app has just received some of link,
  * so try to follow it if possible, or save it for later if not.
@@ -208,7 +219,12 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       const promise = parseWallets()
       await showToastSpinner(lstrings.scan_parsing_link, promise)
 
-      if (matchingWalletIdsAndUris.length === 0) {
+      // Check if the uri matches one of the wallet types that we could create. In such a case, link.uri
+      // would be of the format 'dogecoin:QUE1U9n3kMYR...'
+      const [linkCurrency] = link.uri.split(':')
+      const createWalletAsset = CREATE_WALLET_ASSETS[linkCurrency]
+
+      if (matchingWalletIdsAndUris.length === 0 && createWalletAsset == null) {
         if (!allWalletsLoaded) return false
 
         showError(lstrings.alert_deep_link_no_wallet_for_uri)
@@ -219,6 +235,10 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
         const { walletId, parsedUri } = matchingWalletIdsAndUris[0]
         await dispatch(handleWalletUris(navigation, currencyWallets[walletId], parsedUri))
         return true
+      }
+
+      if (createWalletAsset != null) {
+        assets.push(createWalletAsset)
       }
 
       const walletListResult = await pickWallet({ account, assets, navigation, showCreateWallet: true })
