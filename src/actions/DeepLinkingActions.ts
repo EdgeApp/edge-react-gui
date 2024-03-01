@@ -2,7 +2,7 @@ import { EdgeCurrencyWallet, EdgeParsedUri, EdgeTokenId } from 'edge-core-js'
 
 import { launchPriceChangeBuySellSwapModal } from '../components/modals/PriceChangeBuySellSwapModal'
 import { pickWallet } from '../components/modals/WalletListModal'
-import { showError, showToast } from '../components/services/AirshipInstance'
+import { showError, showToast, showToastSpinner } from '../components/services/AirshipInstance'
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import { lstrings } from '../locales/strings'
 import { executePlugin } from '../plugins/gui/fiatPlugin'
@@ -192,14 +192,19 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     case 'other': {
       const matchingWalletIdsAndUris: Array<{ walletId: string; parsedUri: EdgeParsedUri; currencyCode?: string; tokenId: EdgeTokenId }> = []
 
-      // Try to parse with all wallets
-      for (const wallet of Object.values(currencyWallets)) {
-        const parsedUri = await wallet.parseUri(link.uri).catch(e => undefined)
-        if (parsedUri != null) {
-          const { tokenId = null } = parsedUri
-          matchingWalletIdsAndUris.push({ currencyCode: parsedUri.currencyCode, walletId: wallet.id, parsedUri, tokenId })
+      const parseWallets = async (): Promise<void> => {
+        // Try to parse with all wallets
+        for (const wallet of Object.values(currencyWallets)) {
+          const parsedUri = await wallet.parseUri(link.uri).catch(e => undefined)
+          if (parsedUri != null) {
+            const { tokenId = null } = parsedUri
+            matchingWalletIdsAndUris.push({ currencyCode: parsedUri.currencyCode, walletId: wallet.id, parsedUri, tokenId })
+          }
         }
       }
+      const promise = parseWallets()
+      await showToastSpinner(lstrings.scan_parsing_link, promise)
+
 
       if (matchingWalletIdsAndUris.length === 0) {
         if (!allWalletsLoaded) return false

@@ -1755,6 +1755,7 @@ const strings = {
 
   unknown_error_occurred_fragment: 'Unknown error occurred',
   no_scan_results_message: 'No scan results',
+  scan_parsing_link: 'Parsing link...',
 
   auto_log_off_failed_message_s: 'Failed to auto-logoff: %s',
   contacts_load_failed_message_s: 'Failed to load contacts: %s'
