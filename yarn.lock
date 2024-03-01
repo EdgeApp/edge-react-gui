@@ -1268,12 +1268,7 @@
     iserror "0.0.2"
     stack-generator "^2.0.3"
 
-"@bugsnag/cuid@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@bugsnag/cuid/-/cuid-3.0.0.tgz#2ee7642a30aee6dc86f5e7f824653741e42e5c35"
-  integrity sha512-LOt8aaBI+KvOQGneBtpuCz3YqzyEAehd1f3nC5yr9TIYW1+IzYKa2xWS4EiMz5pPOnRPHkyyS5t/wmSmN51Gjg==
-
-"@bugsnag/cuid@^3.0.2":
+"@bugsnag/cuid@^3.0.0", "@bugsnag/cuid@^3.0.2":
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/@bugsnag/cuid/-/cuid-3.0.2.tgz#544f8e6e7e3768c8cb618ca5c5fb1eea6aacbb7e"
   integrity sha512-cIwzC93r3PQ/INeuwtZwkZIG2K8WWN0rRLZQhu+mr48Ay+i6sEki4GYfTsflse7hZ1BeDWrNb/Q9vgY3B31xHQ==
@@ -8918,10 +8913,10 @@ edge-info-server@^2.1.0:
   dependencies:
     cleaners "^0.3.16"
 
-edge-login-ui-rn@^3.4.1:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.4.1.tgz#2218a2c0c8a22f51602c49f82362a38f39e8dd51"
-  integrity sha512-2EeqxPShnKksuyOJwkAQ3jw4eBfLB1KU6YTBpx5EgXt6qzXcitIOF9vZj2PNgbCcHubmXHGM9Epxa7LmzRJZUw==
+edge-login-ui-rn@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.5.0.tgz#625683ab8ee4dc450f727a79937af1a0091d15c0"
+  integrity sha512-rTD74ftLkyvIdjLGNENTQiQ5r7OPEUq857+yDuGMObdnRSAXELXdpURTnFme0GyX479Tf9eMfqMiVvANN8wVZQ==
   dependencies:
     base-x "^4.0.0"
     cleaners "^0.3.12"

@@ -1,6 +1,6 @@
 import { EdgeAccount } from 'edge-core-js'
 import { InitialRouteName, LoginScreen } from 'edge-login-ui-rn'
-import { NotificationPermissionsInfo } from 'edge-login-ui-rn/lib/types/ReduxTypes'
+import { NotificationPermissionsInfo } from 'edge-login-ui-rn/lib/components/publicApi/publicTypes'
 import * as React from 'react'
 import { Keyboard, StatusBar, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
