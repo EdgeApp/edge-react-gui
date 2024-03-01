@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- changed: Remove extra spaces and normal capitalization of mnemonic seed input
+- changed: 2FA/otp modals moved behind a notification card instead of showing instantly on login
+- changed: Password reminder modal only shows after tapping new persistent notification
+
 ## 4.2.0
 
 - added: Notification status analytics param
@@ -10,7 +14,6 @@
 - added: 'Fund Your Account' modal
 - added: Cosmos IBC transfer plugin
 - added: Have users select US state and filter fiat providers by state/province
-- changed: Password reminder modal only shows after tapping new persistent notification
 - changed: Remove extra spaces and normal capitalization of mnemonic seed input
 - changed: Allow routing to Receive Scene without visible addresses for light
   accounts

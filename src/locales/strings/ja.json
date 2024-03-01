@@ -1536,5 +1536,10 @@
   "unknown_error_occurred_fragment": "不明なエラーが発生しました",
   "no_scan_results_message": "スキャン結果がありません",
   "auto_log_off_failed_message_s": "自動ログオフに失敗しました: %s",
-  "contacts_load_failed_message_s": "連絡先の読み込みに失敗しました: %s"
+  "contacts_load_failed_message_s": "連絡先の読み込みに失敗しました: %s",
+  "otp_authentication_header": "二段階認証が有効になりました",
+  "otp_authentication_message": "二段階認証が有効になりました。固有の認証コードが生成されました。 携帯電話を紛失またはアプリをアンインストールした場合は、2FAを無効にし、次の認証コードを使用せずに別のデバイスからアカウントにアクセスするには7日かかります。\n\n%s",
+  "otp_reset_modal_dont_ask": "再び質問しない",
+  "otp_reset_modal_header": "アカウントの保護",
+  "otp_reset_modal_message": "二段階認証（2FA）は、ユーザー名とパスワードが侵害されても、他のデバイスからの不正なアクセスを防ぎます。QRコードをスキャンするか、認証コードを入力して他のデバイスをシームレスに認証することができます。二段階認証を有効にしますか？"
 }

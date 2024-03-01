@@ -1536,5 +1536,10 @@
   "unknown_error_occurred_fragment": "Unknown error occurred",
   "no_scan_results_message": "No scan results",
   "auto_log_off_failed_message_s": "Failed to auto-logoff: %s",
-  "contacts_load_failed_message_s": "Failed to load contacts: %s"
+  "contacts_load_failed_message_s": "Failed to load contacts: %s",
+  "otp_authentication_header": "двух факторная аутентификация была включена",
+  "otp_authentication_message": "2FA был включен. Создан уникальный код аутентификации. Если вы потеряете телефон или удалите приложение, то потребуется 7 дней, чтобы отключить 2FA и получить доступ к вашей учетной записи с другого устройства без следующего кода аутентификации.\n\n%s",
+  "otp_reset_modal_dont_ask": "Больше не спрашивать",
+  "otp_reset_modal_header": "Защитить свой аккаунт",
+  "otp_reset_modal_message": "Двухфакторная аутентификация (2FA) предотвращает несанкционированный доступ с других устройств, даже если ваше имя пользователя и пароль поставлены под угрозу. Вы можете сканировать QR-код или ввести код аутентификации, чтобы безопасно авторизовать другие устройства. Хотите включить 2FA?"
 }

@@ -1536,5 +1536,10 @@
   "unknown_error_occurred_fragment": "Unknown error occurred",
   "no_scan_results_message": "No scan results",
   "auto_log_off_failed_message_s": "Failed to auto-logoff: %s",
-  "contacts_load_failed_message_s": "Failed to load contacts: %s"
+  "contacts_load_failed_message_s": "Failed to load contacts: %s",
+  "otp_authentication_header": "2FA wurde aktiviert",
+  "otp_authentication_message": "2FA wurde aktiviert. Ein einzigartiger Authentifizierungscode wurde generiert. Wenn du dein Telefon verlierst oder die App deinstalliert, dauert es 7 Tage, um 2FA zu deaktivieren und auf dein Konto von einem anderen Gerät zuzugreifen, ohne folgenden Authentifizierungscode.\n\n%s",
+  "otp_reset_modal_dont_ask": "Nicht nochmal fragen",
+  "otp_reset_modal_header": "Machen Sie Ihr Konto sicher",
+  "otp_reset_modal_message": "Zwei-Faktor-Authentifizierung (2FA) verhindert unberechtigten Zugriff von anderen Geräten, auch wenn Ihr Benutzername und Passwort kompromittiert sind. Sie können einen QR-Code scannen oder einen Authentifizierungscode eingeben, um andere Geräte nahtlos zu autorisieren. Möchten Sie 2FA aktivieren?"
 }

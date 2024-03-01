@@ -1536,5 +1536,10 @@
   "unknown_error_occurred_fragment": "Ocorreu um erro desconhecido",
   "no_scan_results_message": "Nenhum resultado de varredura",
   "auto_log_off_failed_message_s": "Falha ao efetuar o auto-logoff: %s",
-  "contacts_load_failed_message_s": "Falha ao carregar contatos: %s"
+  "contacts_load_failed_message_s": "Falha ao carregar contatos: %s",
+  "otp_authentication_header": "A autenticação de dois fatores (2FA) foi ativada",
+  "otp_authentication_message": "A autenticação de dois fatores (2FA) foi ativada. Um código de autenticação exclusivo foi gerado. Se você perder o seu telefone ou desinstalar o aplicativo, levará 7 dias para desativar o 2FA e acessar a sua conta de outro dispositivo sem o seguinte código de autenticação.\n\n%s",
+  "otp_reset_modal_dont_ask": "Não pergunte novamente",
+  "otp_reset_modal_header": "Proteja a Sua Conta",
+  "otp_reset_modal_message": "A autenticação de dois fatores (A2F) impede o acesso não autorizado de outros dispositivos, mesmo que o seu nome de utilizador e senha sejam comprometidos. Você pode escanear um QR code ou digitar um código de autenticação para autorizar outros dispositivos de forma contínua. Você gostaria de ativar o 2FA?"
 }
