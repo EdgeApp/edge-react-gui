@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 4.1.1 (2024-02-29)
+
+- fixed: Correctly create and import non-segwit wallets in bip-44 mode.
+
 ## 4.1.0
 
 - added: FIO conversion analytics events.
