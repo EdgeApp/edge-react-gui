@@ -281,14 +281,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
 // If only one wallet exists for that asset, auto pick that wallet
 export const pickWallet = async ({
   account,
-  allowedWalletIds,
   assets,
   headerTitle = lstrings.select_wallet,
   navigation,
   showCreateWallet
 }: {
   account: EdgeAccount
-  allowedWalletIds?: string[]
   assets?: EdgeAsset[]
   headerTitle?: string
   navigation: NavigationBase
@@ -332,14 +330,7 @@ export const pickWallet = async ({
     return { type: 'wallet', walletId, currencyCode, tokenId }
   } else {
     const walletListResult = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        navigation={navigation}
-        headerTitle={headerTitle}
-        allowedWalletIds={allowedWalletIds}
-        allowedAssets={assets}
-        showCreateWallet={showCreateWallet}
-      />
+      <WalletListModal bridge={bridge} navigation={navigation} headerTitle={headerTitle} allowedAssets={assets} showCreateWallet={showCreateWallet} />
     ))
     return walletListResult
   }
