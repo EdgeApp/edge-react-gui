@@ -17,25 +17,7 @@ export interface AccountActivationPaymentInfo {
 }
 
 export interface CreateWalletState {
-  walletAccountActivationPaymentInfo: AccountActivationPaymentInfo
   walletAccountActivationQuoteError: string
-}
-
-const initialActivationPaymentState = {
-  paymentAddress: '',
-  amount: '',
-  currencyCode: '',
-  exchangeAmount: '',
-  expireTime: 0
-}
-
-const walletAccountActivationPaymentInfo = (state = initialActivationPaymentState, action: Action): AccountActivationPaymentInfo => {
-  switch (action.type) {
-    case 'ACCOUNT_ACTIVATION_PAYMENT_INFO':
-      return action.data
-    default:
-      return state
-  }
 }
 
 const walletAccountActivationQuoteError = (state: string = '', action: Action): string => {
@@ -48,6 +30,5 @@ const walletAccountActivationQuoteError = (state: string = '', action: Action): 
 }
 
 export const createWallet = combineReducers<CreateWalletState, Action>({
-  walletAccountActivationPaymentInfo,
   walletAccountActivationQuoteError
 })

@@ -4,12 +4,12 @@ import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
-import { createAccountTransaction, fetchAccountActivationInfo, fetchWalletAccountActivationPaymentInfo } from '../../actions/CreateWalletActions'
+import { createAccountTransaction, fetchAccountActivationInfo } from '../../actions/CreateWalletActions'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { HandleActivationInfo } from '../../reducers/scenes/CreateWalletReducer'
+import { AccountActivationPaymentInfo, HandleActivationInfo } from '../../reducers/scenes/CreateWalletReducer'
 import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -53,8 +53,15 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
   const { currencyCode: existingCurrencyCode, pluginId: existingPluginId } = existingWallet.currencyInfo
 
   const account = useSelector(state => state.core.account)
-  const paymentCurrencyCode = useSelector(state => state.ui.createWallet.walletAccountActivationPaymentInfo.currencyCode)
-  const amount = useSelector(state => state.ui.createWallet.walletAccountActivationPaymentInfo.amount)
+  const [activationPaymentInfo, setActivationPaymentInfo] = React.useState<AccountActivationPaymentInfo>({
+    paymentAddress: '',
+    amount: '',
+    currencyCode: '',
+    exchangeAmount: '',
+    expireTime: 0
+  })
+  const paymentCurrencyCode = activationPaymentInfo.currencyCode
+  const amount = activationPaymentInfo.amount
   const paymentDenominationSymbol =
     paymentCurrencyCode == null ? '' : getExchangeDenomByCurrencyCode(existingWallet.currencyConfig, paymentCurrencyCode).symbol ?? ''
 
@@ -103,7 +110,17 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
             activePublicKey: createdWalletInstance.publicWalletInfo.keys.publicKey,
             requestedAccountCurrencyCode: existingCurrencyCode
           }
-          dispatch(fetchWalletAccountActivationPaymentInfo(paymentInfo, createdWalletInstance))
+
+          const networkTimeout = setTimeout(() => {
+            showError('Network Timeout')
+            dispatch({
+              type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR',
+              data: 'Network Timeout'
+            })
+          }, 26000)
+          const activationInfo = await createdWalletInstance.otherMethods.getAccountActivationQuote(paymentInfo)
+          clearTimeout(networkTimeout)
+          setActivationPaymentInfo(activationInfo)
         }
       })
       .catch(err => showError(err))
@@ -111,7 +128,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
 
   const handleSubmit = useHandler(async () => {
     const createdWalletInstance = await handleRenameAndReturnWallet()
-    dispatch(createAccountTransaction(props.navigation, createdWalletInstance.id, accountName, walletId)).catch(err => showError(err))
+    dispatch(createAccountTransaction(props.navigation, createdWalletInstance.id, accountName, walletId, activationPaymentInfo)).catch(err => showError(err))
   })
 
   const handleCancel = useHandler(() => setWalletId(''))
