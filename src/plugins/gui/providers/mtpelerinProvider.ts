@@ -6,6 +6,7 @@ import { toUtf8Bytes } from 'ethers/lib/utils'
 import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { showError } from '../../../components/services/AirshipInstance'
 import { ENV } from '../../../env'
+import { CryptoAmount } from '../../../util/CryptoAmount'
 import { hexToDecimal } from '../../../util/utils'
 import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
 import {
@@ -557,13 +558,18 @@ export const mtpelerinProvider: FiatProviderFactory = {
                       }
                       const tx = await showUi.send(sendParams)
                       await showUi.trackConversion('Sell_Success', {
-                        destCurrencyCode: fiatCurrencyCode,
-                        destExchangeAmount: fiatAmount,
-                        sourceCurrencyCode: displayCurrencyCode,
-                        sourceExchangeAmount: exchangeAmount,
-                        sourcePluginId: pluginId,
-                        pluginId: providerId,
-                        orderId
+                        conversionValues: {
+                          conversionType: 'sell',
+                          destFiatCurrencyCode: fiatCurrencyCode,
+                          destFiatAmount: fiatAmount,
+                          sourceAmount: new CryptoAmount({
+                            currencyConfig: coreWallet.currencyConfig,
+                            currencyCode: displayCurrencyCode,
+                            exchangeAmount: exchangeAmount
+                          }),
+                          fiatProviderId: providerId,
+                          orderId
+                        }
                       })
 
                       // Save separate metadata/action for token transaction fee

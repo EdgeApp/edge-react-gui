@@ -6,6 +6,7 @@ import URL from 'url-parse'
 import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { ENV } from '../../../env'
 import { lstrings } from '../../../locales/strings'
+import { CryptoAmount } from '../../../util/CryptoAmount'
 import { isHex } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
@@ -763,13 +764,18 @@ export const kadoProvider: FiatProviderFactory = {
                       }
                       const tx = await showUi.send(sendParams)
                       await showUi.trackConversion('Sell_Success', {
-                        destCurrencyCode: 'USD',
-                        destExchangeAmount: fiatAmount,
-                        sourceCurrencyCode: displayCurrencyCode,
-                        sourceExchangeAmount: paymentExchangeAmount,
-                        sourcePluginId: coreWallet.currencyInfo.pluginId,
-                        pluginId: providerId,
-                        orderId
+                        conversionValues: {
+                          conversionType: 'sell',
+                          destFiatCurrencyCode: 'USD',
+                          destFiatAmount: fiatAmount,
+                          sourceAmount: new CryptoAmount({
+                            currencyConfig: coreWallet.currencyConfig,
+                            currencyCode: displayCurrencyCode,
+                            exchangeAmount: paymentExchangeAmount
+                          }),
+                          fiatProviderId: providerId,
+                          orderId
+                        }
                       })
 
                       // Save separate metadata/action for token transaction fee

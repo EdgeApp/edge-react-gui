@@ -6,6 +6,7 @@ import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
+import { CryptoAmount } from '../../../util/CryptoAmount'
 import { addBundledTxs, getAddBundledTxsFee, getTransferFee } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -104,8 +105,12 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
     }
     await addBundledTxs(fioWallet, fioAddressName, fee)
 
-    const { currencyCode, pluginId } = fioWallet.currencyInfo
-    onLogEvent('Fio_Handle_Bundled_Tx', { nativeAmount: String(fee), pluginId, currencyCode })
+    onLogEvent('Fio_Handle_Bundled_Tx', {
+      conversionValues: {
+        conversionType: 'crypto',
+        cryptoAmount: new CryptoAmount({ nativeAmount: String(fee), currencyConfig: fioWallet.currencyConfig, tokenId: null })
+      }
+    })
   }
 
   goToTransfer = (params: { fee: number }) => {
