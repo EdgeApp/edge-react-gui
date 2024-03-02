@@ -17,23 +17,8 @@ export interface AccountActivationPaymentInfo {
 }
 
 export interface CreateWalletState {
-  handleActivationInfo: HandleActivationInfo
   walletAccountActivationPaymentInfo: AccountActivationPaymentInfo
   walletAccountActivationQuoteError: string
-}
-
-const initialHandleActivationInfo: HandleActivationInfo = {
-  supportedAssets: [],
-  activationCost: ''
-}
-
-const handleActivationInfo = (state = initialHandleActivationInfo, action: Action): HandleActivationInfo => {
-  switch (action.type) {
-    case 'ACCOUNT_ACTIVATION_INFO':
-      return action.data
-    default:
-      return state
-  }
 }
 
 const initialActivationPaymentState = {
@@ -63,7 +48,6 @@ const walletAccountActivationQuoteError = (state: string = '', action: Action): 
 }
 
 export const createWallet = combineReducers<CreateWalletState, Action>({
-  handleActivationInfo,
   walletAccountActivationPaymentInfo,
   walletAccountActivationQuoteError
 })

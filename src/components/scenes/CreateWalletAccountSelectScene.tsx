@@ -6,8 +6,10 @@ import { sprintf } from 'sprintf-js'
 
 import { createAccountTransaction, fetchAccountActivationInfo, fetchWalletAccountActivationPaymentInfo } from '../../actions/CreateWalletActions'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { HandleActivationInfo } from '../../reducers/scenes/CreateWalletReducer'
 import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -51,14 +53,16 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
   const { currencyCode: existingCurrencyCode, pluginId: existingPluginId } = existingWallet.currencyInfo
 
   const account = useSelector(state => state.core.account)
-  const supportedAssets = useSelector(state => state.ui.createWallet.handleActivationInfo.supportedAssets)
-  const activationCost = useSelector(state => state.ui.createWallet.handleActivationInfo.activationCost)
   const paymentCurrencyCode = useSelector(state => state.ui.createWallet.walletAccountActivationPaymentInfo.currencyCode)
   const amount = useSelector(state => state.ui.createWallet.walletAccountActivationPaymentInfo.amount)
   const paymentDenominationSymbol =
     paymentCurrencyCode == null ? '' : getExchangeDenomByCurrencyCode(existingWallet.currencyConfig, paymentCurrencyCode).symbol ?? ''
 
   const walletAccountActivationQuoteError = useSelector(state => state.ui.createWallet.walletAccountActivationQuoteError)
+  const [{ supportedAssets, activationCost }, setAccountActivationInfo] = React.useState<HandleActivationInfo>({
+    supportedAssets: [],
+    activationCost: ''
+  })
 
   const instructionSyntax = sprintf(
     lstrings.create_wallet_account_select_instructions_with_cost_4s,
@@ -112,10 +116,15 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
 
   const handleCancel = useHandler(() => setWalletId(''))
 
-  React.useEffect(() => {
-    dispatch(logEvent('Activate_Wallet_Select'))
-    dispatch(fetchAccountActivationInfo(existingPluginId)).catch(err => showError(err))
-  }, [existingPluginId, dispatch])
+  useAsyncEffect(
+    async () => {
+      dispatch(logEvent('Activate_Wallet_Select'))
+      const activationInfo = await fetchAccountActivationInfo(account, existingPluginId)
+      setAccountActivationInfo(activationInfo)
+    },
+    [existingPluginId, dispatch],
+    'createWalletAccountSelect'
+  )
 
   return (
     <SceneWrapper>

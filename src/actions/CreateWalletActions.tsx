@@ -9,6 +9,7 @@ import { ActivationPaymentInfo } from '../components/scenes/CreateWalletAccountS
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
+import { HandleActivationInfo } from '../reducers/scenes/CreateWalletReducer'
 import { getExchangeDenomByCurrencyCode } from '../selectors/DenominationSelectors'
 import { TokenWalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
@@ -43,53 +44,43 @@ export const createWallet = async (account: EdgeAccount, opts: EdgeCreateCurrenc
 }
 
 // can move to component in the future, just account and currencyConfig, etc to component through connector
-export function fetchAccountActivationInfo(pluginId: string): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-    const currencyPlugin: EdgeCurrencyConfig = account.currencyConfig[pluginId]
-    try {
-      const [supportedCurrencies, activationCost] = await Promise.all([
-        currencyPlugin.otherMethods.getActivationSupportedCurrencies(),
-        currencyPlugin.otherMethods.getActivationCost(currencyPlugin.currencyInfo.currencyCode)
-      ])
+export async function fetchAccountActivationInfo(account: EdgeAccount, pluginId: string): Promise<HandleActivationInfo> {
+  const currencyPlugin: EdgeCurrencyConfig = account.currencyConfig[pluginId]
 
-      // Translate ambiguous currency codes:
-      const supportedAssets: EdgeAsset[] = []
-      for (const currency of Object.keys(supportedCurrencies.result)) {
-        // Handle special cases:
-        if (currency === 'FTC') continue
-        if (currency === 'ETH') {
-          supportedAssets.push({ pluginId: 'ethereum', tokenId: null })
-          continue
-        }
+  const [supportedCurrencies, activationCost] = await Promise.all([
+    currencyPlugin.otherMethods.getActivationSupportedCurrencies(),
+    currencyPlugin.otherMethods.getActivationCost(currencyPlugin.currencyInfo.currencyCode)
+  ])
 
-        // Find a top-level currency:
-        const pluginId = Object.keys(account.currencyConfig).find(pluginId => account.currencyConfig[pluginId].currencyInfo.currencyCode === currency)
-        if (pluginId != null) {
-          supportedAssets.push({ pluginId, tokenId: null })
-          continue
-        }
-
-        // Find an Ethereum mainnet token:
-        const { ethereum } = account.currencyConfig
-        if (ethereum == null) continue
-        const tokenId = Object.keys(ethereum.allTokens).find(tokenId => ethereum.allTokens[tokenId].currencyCode === currency)
-        if (tokenId != null) {
-          supportedAssets.push({ pluginId: 'ethereum', tokenId })
-        }
-      }
-
-      dispatch({
-        type: 'ACCOUNT_ACTIVATION_INFO',
-        data: {
-          supportedAssets,
-          activationCost
-        }
-      })
-    } catch (error: any) {
-      showError(error)
+  // Translate ambiguous currency codes:
+  const supportedAssets: EdgeAsset[] = []
+  for (const currency of Object.keys(supportedCurrencies.result)) {
+    // Handle special cases:
+    if (currency === 'FTC') continue
+    if (currency === 'ETH') {
+      supportedAssets.push({ pluginId: 'ethereum', tokenId: null })
+      continue
     }
+
+    // Find a top-level currency:
+    const pluginId = Object.keys(account.currencyConfig).find(pluginId => account.currencyConfig[pluginId].currencyInfo.currencyCode === currency)
+    if (pluginId != null) {
+      supportedAssets.push({ pluginId, tokenId: null })
+      continue
+    }
+
+    // Find an Ethereum mainnet token:
+    const { ethereum } = account.currencyConfig
+    if (ethereum == null) continue
+    const tokenId = Object.keys(ethereum.allTokens).find(tokenId => ethereum.allTokens[tokenId].currencyCode === currency)
+    if (tokenId != null) {
+      supportedAssets.push({ pluginId: 'ethereum', tokenId })
+    }
+  }
+
+  return {
+    supportedAssets,
+    activationCost
   }
 }
 

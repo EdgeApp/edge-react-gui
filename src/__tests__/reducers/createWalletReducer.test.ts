@@ -11,10 +11,6 @@ test('initialState', () => {
       exchangeAmount: '',
       expireTime: 0
     },
-    handleActivationInfo: {
-      supportedAssets: [],
-      activationCost: ''
-    },
     walletAccountActivationQuoteError: ''
   }
   const actual = createWalletReducer(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })

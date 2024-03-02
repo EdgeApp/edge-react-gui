@@ -103,10 +103,6 @@ exports[`initialState 1`] = `
   "sortedWalletList": [],
   "ui": {
     "createWallet": {
-      "handleActivationInfo": {
-        "activationCost": "",
-        "supportedAssets": [],
-      },
       "walletAccountActivationPaymentInfo": {
         "amount": "",
         "currencyCode": "",
