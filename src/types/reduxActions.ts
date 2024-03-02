@@ -112,7 +112,6 @@ export type Action =
   | { type: 'UPDATE_SWAP_QUOTE'; data: {} }
   | { type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'; data: PasswordReminderTime }
   | { type: 'UPDATE_WALLET_LOADING_PROGRESS'; data: { walletId: string; addressLoadingProgress: number } }
-  | { type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR'; data: string }
   | { type: 'NETWORK/NETWORK_STATUS'; data: { isConnected: boolean } }
   | { type: 'FIO/SET_FIO_ADDRESSES'; data: { fioAddresses: FioAddress[] } }
   | { type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS'; data: { fioAddress: string; ccWalletMap: CcWalletMap } }

@@ -11,6 +11,7 @@
 - added: Cosmos IBC transfer plugin
 - added: Have users select US state and filter fiat providers by state/province
 - changed: Remove extra spaces and normal capitalization of mnemonic seed input
+- changed: Move wallet activation redux values to scenes
 - fixed: Some text inputs not selectable for some Samsung devices
 - fixed: Various small visual fixes
 - fixed: Improve login performance by only loading account referral info for new accounts

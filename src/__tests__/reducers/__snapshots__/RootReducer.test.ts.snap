@@ -102,9 +102,6 @@ exports[`initialState 1`] = `
   },
   "sortedWalletList": [],
   "ui": {
-    "createWallet": {
-      "walletAccountActivationQuoteError": "",
-    },
     "exchangeInfo": {
       "buy": {
         "disablePlugins": {},

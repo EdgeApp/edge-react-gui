@@ -9,11 +9,11 @@ import { WalletListModal, WalletListResult } from '../../components/modals/Walle
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { AccountActivationPaymentInfo, HandleActivationInfo } from '../../reducers/scenes/CreateWalletReducer'
 import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAsset } from '../../types/types'
 import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
@@ -38,6 +38,19 @@ export interface ActivationPaymentInfo {
   ownerPublicKey: string
   activePublicKey: string
   requestedAccountCurrencyCode: string
+}
+
+export interface HandleActivationInfo {
+  supportedAssets: EdgeAsset[]
+  activationCost: string
+}
+
+export interface AccountActivationPaymentInfo {
+  paymentAddress: string
+  amount: string
+  currencyCode: string
+  exchangeAmount: string
+  expireTime: number
 }
 
 interface Props extends EdgeSceneProps<'createWalletAccountSelect'> {
@@ -65,7 +78,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
   const paymentDenominationSymbol =
     paymentCurrencyCode == null ? '' : getExchangeDenomByCurrencyCode(existingWallet.currencyConfig, paymentCurrencyCode).symbol ?? ''
 
-  const walletAccountActivationQuoteError = useSelector(state => state.ui.createWallet.walletAccountActivationQuoteError)
+  const [walletAccountActivationQuoteError, setWalletAccountActivationQuoteError] = React.useState('')
   const [{ supportedAssets, activationCost }, setAccountActivationInfo] = React.useState<HandleActivationInfo>({
     supportedAssets: [],
     activationCost: ''
@@ -100,7 +113,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
       .then(async result => {
         if (result?.type === 'wallet') {
           const { walletId, currencyCode } = result
-          dispatch({ type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: '' })
+          setWalletAccountActivationQuoteError('')
           setWalletId(walletId)
           const createdWalletInstance = await handleRenameAndReturnWallet()
           const paymentInfo: ActivationPaymentInfo = {
@@ -113,10 +126,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
 
           const networkTimeout = setTimeout(() => {
             showError('Network Timeout')
-            dispatch({
-              type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR',
-              data: 'Network Timeout'
-            })
+            setWalletAccountActivationQuoteError('Network Timeout')
           }, 26000)
           const activationInfo = await createdWalletInstance.otherMethods.getAccountActivationQuote(paymentInfo)
           clearTimeout(networkTimeout)
