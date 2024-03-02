@@ -5,11 +5,10 @@ import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
-import { ActivationPaymentInfo } from '../components/scenes/CreateWalletAccountSelectScene'
-import { Airship, showError } from '../components/services/AirshipInstance'
+import { Airship } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
-import { HandleActivationInfo } from '../reducers/scenes/CreateWalletReducer'
+import { AccountActivationPaymentInfo, HandleActivationInfo } from '../reducers/scenes/CreateWalletReducer'
 import { getExchangeDenomByCurrencyCode } from '../selectors/DenominationSelectors'
 import { TokenWalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
@@ -84,41 +83,12 @@ export async function fetchAccountActivationInfo(account: EdgeAccount, pluginId:
   }
 }
 
-export function fetchWalletAccountActivationPaymentInfo(paymentParams: ActivationPaymentInfo, createdCoreWallet: EdgeCurrencyWallet): ThunkAction<void> {
-  return (dispatch, getState) => {
-    try {
-      const networkTimeout = setTimeout(() => {
-        showError('Network Timeout')
-        dispatch({
-          type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR',
-          data: 'Network Timeout'
-        })
-      }, 26000)
-      createdCoreWallet.otherMethods
-        .getAccountActivationQuote(paymentParams)
-        // @ts-expect-error
-        .then(activationQuote => {
-          dispatch({
-            type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO',
-            data: {
-              ...activationQuote,
-              currencyCode: paymentParams.currencyCode
-            }
-          })
-          clearTimeout(networkTimeout)
-        })
-        .catch(showError)
-    } catch (error: any) {
-      showError(error)
-    }
-  }
-}
-
 export function createAccountTransaction(
   navigation: NavigationBase,
   createdWalletId: string,
   accountName: string,
-  paymentWalletId: string
+  paymentWalletId: string,
+  activationPaymentInfo: AccountActivationPaymentInfo
 ): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     // check available funds
@@ -129,7 +99,7 @@ export function createAccountTransaction(
     const paymentWallet: EdgeCurrencyWallet = currencyWallets[paymentWalletId]
     const createdWalletCurrencyCode = createdCurrencyWallet.currencyInfo.currencyCode
     const currencyPlugin = account.currencyConfig[createdCurrencyWallet.currencyInfo.pluginId]
-    const { paymentAddress, amount, currencyCode } = state.ui.createWallet.walletAccountActivationPaymentInfo
+    const { paymentAddress, amount, currencyCode } = activationPaymentInfo
     const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
     const paymentDenom = getExchangeDenomByCurrencyCode(paymentWallet.currencyConfig, currencyCode)
     let nativeAmount = mul(amount, paymentDenom.multiplier)

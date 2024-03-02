@@ -4,13 +4,6 @@ import { createWallet as createWalletReducer } from '../../reducers/scenes/Creat
 
 test('initialState', () => {
   const expected = {
-    walletAccountActivationPaymentInfo: {
-      paymentAddress: '',
-      amount: '',
-      currencyCode: '',
-      exchangeAmount: '',
-      expireTime: 0
-    },
     walletAccountActivationQuoteError: ''
   }
   const actual = createWalletReducer(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })

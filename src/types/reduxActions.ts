@@ -9,7 +9,6 @@ import { ActionQueueAction } from '../controllers/action-queue/redux/actions'
 import { LoanManagerActions } from '../controllers/loan-manager/redux/actions'
 import { CcWalletMap } from '../reducers/FioReducer'
 import { PermissionsState } from '../reducers/PermissionsReducer'
-import { AccountActivationPaymentInfo } from '../reducers/scenes/CreateWalletReducer'
 import { AccountInitPayload, SettingsState } from '../reducers/scenes/SettingsReducer'
 import { TweakSource } from '../util/ReferralHelpers'
 import { DeepLink } from './DeepLinkTypes'
@@ -39,7 +38,6 @@ type NoDataActionName =
 export type Action =
   | { type: NoDataActionName }
   // Actions with known payloads:
-  | { type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO'; data: AccountActivationPaymentInfo }
   | { type: 'ACCOUNT_INIT_COMPLETE'; data: AccountInitPayload }
   | { type: 'ACCOUNT_REFERRAL_LOADED'; data: { referral: AccountReferral; cache: ReferralCache } }
   | { type: 'ACCOUNT_SWAP_IGNORED'; data: boolean }
