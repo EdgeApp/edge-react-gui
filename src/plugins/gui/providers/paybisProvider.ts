@@ -7,6 +7,7 @@ import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { locale } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { EdgeAsset, StringMap } from '../../../types/types'
+import { CryptoAmount } from '../../../util/CryptoAmount'
 import { makeUuid } from '../../../util/utils'
 import { SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
@@ -609,13 +610,19 @@ export const paybisProvider: FiatProviderFactory = {
                       }
                       const tx = await showUi.send(sendParams)
                       await showUi.trackConversion('Sell_Success', {
-                        destCurrencyCode: fiatCurrencyCode,
-                        destExchangeAmount: fiatAmount,
-                        sourceCurrencyCode: displayCurrencyCode,
-                        sourceExchangeAmount: amount,
-                        sourcePluginId: coreWallet.currencyInfo.pluginId,
-                        pluginId: providerId,
-                        orderId: invoice
+                        conversionValues: {
+                          conversionType: 'sell',
+                          destFiatCurrencyCode: fiatCurrencyCode,
+                          destFiatAmount: fiatAmount,
+                          sourceAmount: CryptoAmount({
+                            pluginId: coreWallet.currencyInfo.pluginId,
+                            currencyConfig: coreWallet.currencyConfig,
+                            currencyCode: displayCurrencyCode,
+                            exchangeAmount: amount
+                          }),
+                          fiatProviderId: providerId,
+                          orderId: invoice
+                        }
                       })
 
                       // Save separate metadata/action for token transaction fee

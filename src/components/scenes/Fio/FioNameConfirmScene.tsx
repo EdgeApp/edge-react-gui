@@ -6,6 +6,7 @@ import { FIO_ADDRESS_DELIMITER } from '../../../constants/WalletAndCurrencyConst
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
+import { CryptoAmount } from '../../../util/CryptoAmount'
 import { fioMakeSpend, fioSignAndBroadcast } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -111,16 +112,19 @@ class FioNameConfirm extends React.PureComponent<Props> {
       }
     } else {
       try {
-        const { currencyCode, pluginId } = paymentWallet.currencyInfo
         if (this.isFioAddress()) {
           let edgeTx = await fioMakeSpend(paymentWallet, 'registerFioAddress', { fioAddress: fioName })
           edgeTx = await fioSignAndBroadcast(paymentWallet, edgeTx)
           await paymentWallet.saveTx(edgeTx)
 
           onLogEvent('Fio_Handle_Register', {
-            nativeAmount: edgeTx.nativeAmount,
-            currencyCode,
-            pluginId
+            conversionValues: {
+              conversionType: 'crypto',
+              cryptoAmount: new CryptoAmount({
+                nativeAmount: edgeTx.nativeAmount,
+                currencyConfig: paymentWallet.currencyConfig
+              })
+            }
           })
 
           // @ts-expect-error
@@ -136,9 +140,13 @@ class FioNameConfirm extends React.PureComponent<Props> {
           const expiration = edgeTx.otherParams?.broadcastResult?.expiration
 
           onLogEvent('Fio_Domain_Register', {
-            nativeAmount: edgeTx.nativeAmount,
-            currencyCode,
-            pluginId
+            conversionValues: {
+              conversionType: 'crypto',
+              cryptoAmount: new CryptoAmount({
+                nativeAmount: edgeTx.nativeAmount,
+                currencyConfig: paymentWallet.currencyConfig
+              })
+            }
           })
 
           // @ts-expect-error

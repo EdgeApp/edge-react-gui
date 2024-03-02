@@ -8,6 +8,7 @@ import { formatDate } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
+import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioDomain, setDomainVisibility } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -118,11 +119,11 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
 
     await renewFioDomain(fioWallet, fioDomainName, renewalFee)
 
-    const { currencyCode, pluginId } = fioWallet.currencyInfo
     onLogEvent('Fio_Domain_Renew', {
-      nativeAmount: String(renewalFee),
-      currencyCode,
-      pluginId
+      conversionValues: {
+        conversionType: 'crypto',
+        cryptoAmount: new CryptoAmount({ nativeAmount: String(renewalFee), currencyConfig: fioWallet.currencyConfig })
+      }
     })
   }
 
