@@ -19,7 +19,7 @@ export interface ExperimentConfig {
 // Defined default "unchanged" values before experimentation.
 export const DEFAULT_EXPERIMENT_CONFIG: ExperimentConfig = {
   createAccountType: 'full',
-  landingType: 'B_Usps',
+  landingType: 'A_legacy',
   signupCaptcha: 'withoutCaptcha'
 }
 
@@ -28,7 +28,7 @@ const experimentConfigDisklet = makeReactNativeDisklet()
 // The probability of an experiment config feature being set for a given key
 const experimentDistribution = {
   createAccountType: [50, 50],
-  landingType: [25, 25, 25, 25],
+  landingType: [100],
   signupCaptcha: [50, 50]
 }
 
@@ -70,10 +70,7 @@ const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution
 
 const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
   createAccountType: asMaybe(asValue('full', 'light'), generateExperimentConfigVal('createAccountType', ['full', 'light'])),
-  landingType: asMaybe(
-    asValue('A_legacy', 'B_Usps', 'C_UspsMinusWGYC', 'D_UspsAltWGYC'),
-    generateExperimentConfigVal('landingType', ['A_legacy', 'B_Usps', 'C_UspsMinusWGYC', 'D_UspsAltWGYC'])
-  ),
+  landingType: asMaybe(asValue('A_legacy'), 'A_legacy'),
   signupCaptcha: asMaybe(asValue('withoutCaptcha', 'withCaptcha'), generateExperimentConfigVal('signupCaptcha', ['withoutCaptcha', 'withCaptcha']))
 })
 

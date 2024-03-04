@@ -5,6 +5,7 @@
 - changed: Remove extra spaces and normal capitalization of mnemonic seed input
 - changed: 2FA/otp modals moved behind a notification card instead of showing instantly on login
 - changed: Password reminder modal only shows after tapping new persistent notification
+- changed: 'landingType' experiment set to 100% legacy landing (simple landing, no USPs)
 
 ## 4.2.0
 
