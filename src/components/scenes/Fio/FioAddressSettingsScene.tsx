@@ -125,7 +125,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
       tokenId: null,
       spendInfo: {
         tokenId: null,
-        spendTargets: [{ nativeAmount: '', publicAddress: '' }],
+        spendTargets: [{ nativeAmount: '' }],
         otherParams: {
           action: {
             name: 'transferFioAddress',

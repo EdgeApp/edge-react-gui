@@ -15,6 +15,7 @@
 - fixed: Some text inputs not selectable for some Samsung devices
 - fixed: Various small visual fixes
 - fixed: Improve login performance by only loading account referral info for new accounts
+- fixed: FIO name transfer error when sending with no address
 
 ## 4.1.1 (2024-02-29)
 
