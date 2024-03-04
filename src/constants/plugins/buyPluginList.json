@@ -418,36 +418,60 @@
   },
   "----- Sorting -----",
   {
+    "id": "iach",
+    "sortIndex": 10
+  },
+  {
+    "id": "ideal",
+    "sortIndex": 10
+  },
+  {
+    "id": "interac",
+    "sortIndex": 10
+  },
+  {
+    "id": "payid",
+    "sortIndex": 10
+  },
+  {
+    "id": "pix",
+    "sortIndex": 10
+  },
+  {
+    "id": "pse",
+    "sortIndex": 10
+  },
+  {
+    "id": "turkishbank",
+    "sortIndex": 10
+  },
+  {
+    "id": "spei",
+    "sortIndex": 10
+  },
+  {
     "id": "applepay",
-    "sortIndex": 1
+    "sortIndex": 20
   },
   {
     "id": "googlepay",
-    "sortIndex": 1
+    "sortIndex": 20
   },
   {
     "id": "creditcard",
-    "sortIndex": 2
-  },
-  {
-    "id": "simplex",
-    "sortIndex": 5
+    "sortIndex": 30
   },
   {
     "id": "bitsofgold",
-    "sortIndex": 1
+    "sortIndex": 10
   },
   {
     "id": "sepa",
-    "sortIndex": 6
+    "sortIndex": 10
   },
   {
     "id": "libertyx",
-    "sortIndex": 7
-  },
-  {
-    "id": "moonpay",
-    "sortIndex": 4
+    "sortIndex": 50
   },
   "----- iOS specifics -----",
   {
@@ -945,6 +969,6 @@
   {
     "id": "sepa",
     "forCountries": ["GB"],
-    "sortIndex": 2
+    "sortIndex": 50
   }
 ]

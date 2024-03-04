@@ -418,20 +418,40 @@
   },
   "----- Sorting -----",
   {
-    "id": "wyre",
-    "sortIndex": 1
+    "id": "sepa",
+    "sortIndex": 10
   },
   {
-    "id": "sepa",
-    "sortIndex": 3
+    "id": "directtobank",
+    "sortIndex": 10
+  },
+  {
+    "id": "colombiabank",
+    "sortIndex": 10
+  },
+  {
+    "id": "interac",
+    "sortIndex": 10
+  },
+  {
+    "id": "mexicobank",
+    "sortIndex": 10
+  },
+  {
+    "id": "pix",
+    "sortIndex": 10
   },
   {
     "id": "bitsofgold",
-    "sortIndex": 1
+    "sortIndex": 10
+  },
+  {
+    "id": "debit",
+    "sortIndex": 20
   },
   {
     "id": "bitrefill",
-    "sortIndex": 5
+    "sortIndex": 70
   },
   "----- iOS specifics -----",
   "----- Country Specifics -----"
