@@ -1,6 +1,6 @@
 import { EdgeTokenId } from 'edge-core-js'
 import React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { getCurrencyCode, getCurrencyInfos, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { ModalTitle } from '../themed/ModalParts'
@@ -229,7 +230,7 @@ export function WalletListMenuModal(props: Props) {
       scroll
     >
       {options.map((option: Option) => (
-        <TouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
+        <EdgeTouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
           <AntDesignIcon
             // @ts-expect-error
             name={icons[option.value] ?? 'arrowsalt'} // for split keys like splitBCH, splitETH, etc.
@@ -237,7 +238,7 @@ export function WalletListMenuModal(props: Props) {
             style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
           />
           <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
-        </TouchableOpacity>
+        </EdgeTouchableOpacity>
       ))}
     </ModalUi4>
   )

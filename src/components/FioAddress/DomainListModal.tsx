@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { FlatList } from 'react-native-gesture-handler'
 
@@ -9,6 +9,7 @@ import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { FioDomain, FlatListItem } from '../../types/types'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -134,12 +135,12 @@ class DomainListModalComponent extends React.Component<Props, State> {
     }
     if (value) {
       return (
-        <TouchableOpacity onPress={() => this.selectItem(value)}>
+        <EdgeTouchableOpacity onPress={() => this.selectItem(value)}>
           <View style={styles.rowContainerTop}>
             <EdgeText style={styles.domainListRowName}>{label}</EdgeText>
             <EdgeText style={styles.domainListRowFree}>{value.isFree ? lstrings.fio_domain_free : ''}</EdgeText>
           </View>
-        </TouchableOpacity>
+        </EdgeTouchableOpacity>
       )
     }
     return null

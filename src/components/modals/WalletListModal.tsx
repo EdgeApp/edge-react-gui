@@ -1,7 +1,7 @@
 import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import { EdgeAccount, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
@@ -15,6 +15,7 @@ import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CustomAsset } from '../data/row/CustomAssetRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
@@ -174,9 +175,9 @@ export function WalletListModal(props: Props) {
 
   const renderPaymentMethod: ListRenderItem<PaymentMethod> = useHandler(item => {
     return (
-      <TouchableOpacity onPress={handlePaymentMethodPress(item.item.id)}>
+      <EdgeTouchableOpacity onPress={handlePaymentMethodPress(item.item.id)}>
         <PaymentMethodRow paymentMethod={item.item} pluginId="wyre" key={item.item.id} />
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     )
   })
 

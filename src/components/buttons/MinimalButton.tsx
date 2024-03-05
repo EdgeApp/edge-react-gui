@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { ActivityIndicator, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native'
+import { ActivityIndicator, Text, TextStyle, ViewStyle } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -49,14 +50,14 @@ const MinimalButtonComponent = (props: Props) => {
   )
 
   return (
-    <TouchableOpacity disabled={disabled || pending} style={memoizedStyle} onPress={handlePress}>
+    <EdgeTouchableOpacity disabled={disabled || pending} style={memoizedStyle} onPress={handlePress}>
       {pending ? null : (
         <Text adjustsFontSizeToFit minimumFontScale={0.25} numberOfLines={1} style={highlighted ? styles.labelSelected : styles.label}>
           {label}
         </Text>
       )}
       {!pending ? null : <ActivityIndicator color={theme.secondaryButtonText} style={styles.spinner} />}
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   )
 }
 
