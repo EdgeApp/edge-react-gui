@@ -13,8 +13,8 @@ import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { BooleanMap, EdgeAsset } from '../../types/types'
-import { getCurrencyCode, getTokenIdForced, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
+import { EdgeAsset } from '../../types/types'
+import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { CustomAsset } from '../data/row/CustomAssetRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
@@ -29,6 +29,7 @@ import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
 import { ModalUi4 } from '../ui4/ModalUi4'
 import { ButtonsModal } from './ButtonsModal'
 
+export const ErrorNoMatchingWallets = 'ErrorNoMatchingWallets'
 export type WalletListResult =
   | {
       type: 'wallet'
@@ -281,14 +282,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
 // If only one wallet exists for that asset, auto pick that wallet
 export const pickWallet = async ({
   account,
-  allowedWalletIds,
-  assets,
+  assets = [],
   headerTitle = lstrings.select_wallet,
   navigation,
   showCreateWallet
 }: {
   account: EdgeAccount
-  allowedWalletIds?: string[]
   assets?: EdgeAsset[]
   headerTitle?: string
   navigation: NavigationBase
@@ -296,50 +295,48 @@ export const pickWallet = async ({
 }): Promise<WalletListResult> => {
   const { currencyWallets } = account
 
-  const walletIdMap: BooleanMap = {}
+  const matchingWallets: Array<{ walletId: string; tokenId: EdgeTokenId }> = []
+  const matchingAssets: EdgeAsset[] = []
 
-  // Check if user owns any wallets that
-  const matchingAssets = (assets ?? []).filter(asset => {
-    const matchingWalletIds: string[] = Object.keys(currencyWallets).filter(key => {
-      const { pluginId, tokenId } = asset
-      const currencyWallet = currencyWallets[key]
-      const pluginIdMatch = currencyWallet.currencyInfo.pluginId === pluginId
+  for (const asset of assets) {
+    const { pluginId, tokenId } = asset
+    for (const walletId of Object.keys(currencyWallets)) {
+      const wallet = currencyWallets[walletId]
+      const pluginIdMatch = wallet.currencyInfo.pluginId === pluginId
 
       // No wallet with matching pluginId, fail this asset
-      if (!pluginIdMatch) return false
+      if (!pluginIdMatch) continue
       if (tokenId == null) {
-        walletIdMap[key] = true
-        return true
+        matchingWallets.push({ walletId, tokenId })
+        matchingAssets.push(asset)
+        continue
       }
       // See if this wallet has a matching token enabled
-      const tokenIdMatch = currencyWallet.enabledTokenIds.find(tid => tokenId)
+      const tokenIdMatch = wallet.enabledTokenIds.find(tid => tokenId)
+
       if (tokenIdMatch != null) {
-        const cc = getCurrencyCode(currencyWallet, tokenIdMatch)
-        walletIdMap[`${key}:${cc}`] = true
-        return true
+        matchingWallets.push({ walletId, tokenId })
+        matchingAssets.push(asset)
+        continue
       }
-      return false
-    })
-    return matchingWalletIds.length !== 0
-  })
+    }
+  }
 
-  if (assets != null && matchingAssets.length === 0) return
+  // If there are not matching wallets and we can't create any wallets then error
+  if (showCreateWallet !== true && matchingWallets.length === 0) {
+    throw new Error(ErrorNoMatchingWallets)
+  }
 
-  if (assets != null && matchingAssets.length === 1 && Object.keys(walletIdMap).length === 1) {
-    // Only one matching wallet and asset. Auto pick the wallet
-    const [walletId, currencyCode] = Object.keys(walletIdMap)[0].split(':')
-    const tokenId = getTokenIdForced(account, currencyWallets[walletId].currencyInfo.pluginId, currencyCode)
+  if (matchingWallets.length === 1) {
+    // Only one matching wallet and asset. Auto pick the wallet and token
+    const { walletId, tokenId } = matchingWallets[0]
+    const wallet = currencyWallets[walletId]
+    const currencyCode = getCurrencyCode(wallet, tokenId)
     return { type: 'wallet', walletId, currencyCode, tokenId }
   } else {
+    // There is more than one match or we don't have a wallet for this asset. Launch the picker
     const walletListResult = await Airship.show<WalletListResult>(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        navigation={navigation}
-        headerTitle={headerTitle}
-        allowedWalletIds={allowedWalletIds}
-        allowedAssets={assets}
-        showCreateWallet={showCreateWallet}
-      />
+      <WalletListModal bridge={bridge} navigation={navigation} headerTitle={headerTitle} allowedAssets={assets} showCreateWallet={showCreateWallet} />
     ))
     return walletListResult
   }
