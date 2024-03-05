@@ -1,6 +1,7 @@
 import { add } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
+import { useMemo } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
 import { formatNumber } from '../../locales/intl'
@@ -191,18 +192,26 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const CryptoExchangeFlipInputWrapper = (props: OwnProps) => {
   const theme = useTheme()
   const account = useSelector(state => state.core.account)
-  const { currencyWallets } = account
-  const wallet = currencyWallets[props.walletId]
-  if (wallet == null) return <CryptoExchangeFlipInputWrapperComponent {...props} theme={theme} tokenId={null} wallet={undefined} />
+  const wallet = account.currencyWallets[props.walletId]
 
   const { displayCurrencyCode, displayDenomination } = props.primaryCurrencyInfo
 
-  const tokenId = getTokenIdForced(account, wallet.currencyInfo.pluginId, displayCurrencyCode)
+  const tokenId = useMemo(() => {
+    // This will error if wallet is undefined
+    return getTokenIdForced(account, wallet.currencyInfo.pluginId, displayCurrencyCode)
+  }, [account, displayCurrencyCode, wallet])
 
-  const balance = wallet.balanceMap.get(tokenId) ?? '0'
-  const cryptoAmountRaw: string = convertNativeToDenomination(displayDenomination.multiplier)(balance)
-  const cryptoAmount = formatNumber(add(cryptoAmountRaw, '0'))
-  const name = getWalletName(wallet)
+  const cryptoAmount = useMemo(() => {
+    if (wallet == null || tokenId == null) return
+    const balance = wallet.balanceMap.get(tokenId) ?? '0'
+    const cryptoAmountRaw: string = convertNativeToDenomination(displayDenomination.multiplier)(balance)
+    return formatNumber(add(cryptoAmountRaw, '0'))
+  }, [displayDenomination.multiplier, tokenId, wallet])
+
+  const name = useMemo(() => {
+    if (wallet == null) return
+    return getWalletName(wallet)
+  }, [wallet])
 
   return <CryptoExchangeFlipInputWrapperComponent {...props} theme={theme} name={name} cryptoAmount={cryptoAmount} tokenId={tokenId} wallet={wallet} />
 }
