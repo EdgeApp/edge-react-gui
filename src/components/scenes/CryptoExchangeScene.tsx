@@ -1,6 +1,7 @@
 import { div, gt, gte } from 'biggystring'
 import { EdgeAccount, EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
+import { useState } from 'react'
 import { Keyboard } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
@@ -20,7 +21,7 @@ import { EdgeAnim, fadeInDown30, fadeInDown60, fadeInDown90, fadeInUp60, fadeInU
 import { SceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
-import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CryptoExchangeFlipInput } from '../themed/CryptoExchangeFlipInput'
 import { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput2'
 import { LineTextDivider } from '../themed/LineTextDivider'
@@ -72,7 +73,7 @@ interface DispatchProps {
   getQuoteForTransaction: (navigation: NavigationBase, fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void) => void
 }
 
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps
 
 interface State {
   whichWalletFocus: 'from' | 'to' // Which wallet FlipInput2 was last focused and edited
@@ -111,25 +112,20 @@ const defaultState: State = {
   paddingBottom: 0
 }
 
-export class CryptoExchangeComponent extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    const newState: State = defaultState
-    this.state = newState
-  }
+export const CryptoExchangeComponent = (props: Props) => {
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
-  static getDerivedStateFromProps(props: Props, state: State) {
-    if (state.whichWalletFocus === 'from') {
-      return { toExchangeAmount: props.toWalletInfo.toExchangeAmount }
-    } else {
-      return { fromExchangeAmount: props.fromWalletInfo.fromExchangeAmount }
-    }
-  }
+  const [state, setState] = useState({
+    ...defaultState,
+    toExchangeAmount: props.toWalletInfo.toExchangeAmount,
+    fromExchangeAmount: props.fromWalletInfo.fromExchangeAmount
+  })
 
-  checkDisableAsset = (disableAssets: DisableAsset[], walletId: string, guiCurrencyInfo: GuiCurrencyInfo): boolean => {
-    const wallet = this.props.account.currencyWallets[walletId] ?? { currencyInfo: {} }
+  const checkDisableAsset = (disableAssets: DisableAsset[], walletId: string, guiCurrencyInfo: GuiCurrencyInfo): boolean => {
+    const wallet = props.account.currencyWallets[walletId] ?? { currencyInfo: {} }
     const walletPluginId = wallet.currencyInfo.pluginId
-    const walletTokenId = guiCurrencyInfo.tokenId ?? getTokenId(this.props.account, walletPluginId, guiCurrencyInfo.exchangeCurrencyCode)
+    const walletTokenId = guiCurrencyInfo.tokenId ?? getTokenId(props.account, walletPluginId, guiCurrencyInfo.exchangeCurrencyCode)
     for (const disableAsset of disableAssets) {
       const { pluginId, tokenId } = disableAsset
       if (pluginId !== walletPluginId) continue
@@ -140,25 +136,25 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     return false
   }
 
-  handleMax = () => {
+  const handleMax = () => {
     const data: SetNativeAmountInfo = {
       whichWallet: 'max',
       primaryNativeAmount: '0'
     }
 
-    if (this.props.toWalletInfo.toCurrencyCode === '') {
+    if (props.toWalletInfo.toCurrencyCode === '') {
       showWarning(`${lstrings.loan_select_receiving_wallet}`)
       Keyboard.dismiss()
       return
     }
 
-    this.getQuote(data)
+    getQuote(data)
   }
 
-  handleNext = () => {
+  const handleNext = () => {
     const data: SetNativeAmountInfo = {
-      whichWallet: this.state.whichWalletFocus,
-      primaryNativeAmount: this.state.whichWalletFocus === 'from' ? this.state.fromAmountNative : this.state.toAmountNative
+      whichWallet: state.whichWalletFocus,
+      primaryNativeAmount: state.whichWalletFocus === 'from' ? state.fromAmountNative : state.toAmountNative
     }
 
     if (zeroString(data.primaryNativeAmount)) {
@@ -166,95 +162,93 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
       return
     }
 
-    if (this.checkExceedsAmount()) return
+    if (checkExceedsAmount()) return
 
-    this.getQuote(data)
+    getQuote(data)
   }
 
-  handleSceneWrapperLayout = () => {}
-
-  getQuote = (data: SetNativeAmountInfo) => {
-    const { exchangeInfo, navigation } = this.props
+  const getQuote = (data: SetNativeAmountInfo) => {
+    const { exchangeInfo, navigation } = props
     if (exchangeInfo != null) {
-      const disableSrc = this.checkDisableAsset(
+      const disableSrc = checkDisableAsset(
         exchangeInfo.swap.disableAssets.source,
-        this.props.fromWalletInfo.fromWalletId,
-        this.props.fromWalletInfo.fromWalletPrimaryInfo
+        props.fromWalletInfo.fromWalletId,
+        props.fromWalletInfo.fromWalletPrimaryInfo
       )
       if (disableSrc) {
-        showError(sprintf(lstrings.exchange_asset_unsupported, this.props.fromWalletInfo.fromWalletPrimaryInfo.exchangeCurrencyCode))
+        showError(sprintf(lstrings.exchange_asset_unsupported, props.fromWalletInfo.fromWalletPrimaryInfo.exchangeCurrencyCode))
         return
       }
 
-      const disableDest = this.checkDisableAsset(
-        exchangeInfo.swap.disableAssets.destination,
-        this.props.toWalletInfo.toWalletId,
-        this.props.toWalletInfo.toWalletPrimaryInfo
-      )
+      const disableDest = checkDisableAsset(exchangeInfo.swap.disableAssets.destination, props.toWalletInfo.toWalletId, props.toWalletInfo.toWalletPrimaryInfo)
       if (disableDest) {
-        showError(sprintf(lstrings.exchange_asset_unsupported, this.props.toWalletInfo.toWalletPrimaryInfo.exchangeCurrencyCode))
+        showError(sprintf(lstrings.exchange_asset_unsupported, props.toWalletInfo.toWalletPrimaryInfo.exchangeCurrencyCode))
         return
       }
     }
-    this.props.getQuoteForTransaction(navigation, data, this.resetState)
+    props.getQuoteForTransaction(navigation, data, resetState)
     Keyboard.dismiss()
   }
 
-  resetState = () => {
-    this.setState(defaultState)
+  const resetState = () => {
+    setState(defaultState)
   }
 
-  checkExceedsAmount(): boolean {
-    const { fromTokenId, fromWalletBalanceMap } = this.props.fromWalletInfo
-    const { fromAmountNative, whichWalletFocus } = this.state
+  const checkExceedsAmount = (): boolean => {
+    const { fromTokenId, fromWalletBalanceMap } = props.fromWalletInfo
+    const { fromAmountNative, whichWalletFocus } = state
     const fromNativeBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
 
     return whichWalletFocus === 'from' && gte(fromNativeBalance, '0') && gt(fromAmountNative, fromNativeBalance)
   }
 
-  launchFromWalletSelector = () => {
-    this.renderDropUp('from')
+  const launchFromWalletSelector = () => {
+    renderDropUp('from')
   }
 
-  launchToWalletSelector = () => {
-    this.renderDropUp('to')
+  const launchToWalletSelector = () => {
+    renderDropUp('to')
   }
 
-  focusFromWallet = () => {
-    this.setState({
+  const focusFromWallet = () => {
+    setState({
+      ...state,
       whichWalletFocus: 'from'
     })
   }
 
-  focusToWallet = () => {
-    this.setState({
+  const focusToWallet = () => {
+    setState({
+      ...state,
       whichWalletFocus: 'to'
     })
   }
 
-  fromAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
-    this.setState({
+  const fromAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
+    setState({
+      ...state,
       fromAmountNative: amounts.nativeAmount
     })
   }
 
-  toAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
-    this.setState({
+  const toAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
+    setState({
+      ...state,
       toAmountNative: amounts.nativeAmount
     })
   }
 
-  renderButton = () => {
-    const primaryNativeAmount = this.state.whichWalletFocus === 'from' ? this.state.fromAmountNative : this.state.toAmountNative
-    const showNext = this.props.fromWalletInfo.fromCurrencyCode !== '' && this.props.toWalletInfo.toCurrencyCode !== '' && !!parseFloat(primaryNativeAmount)
+  const renderButton = () => {
+    const primaryNativeAmount = state.whichWalletFocus === 'from' ? state.fromAmountNative : state.toAmountNative
+    const showNext = props.fromWalletInfo.fromCurrencyCode !== '' && props.toWalletInfo.toCurrencyCode !== '' && !!parseFloat(primaryNativeAmount)
     if (!showNext) return null
-    if (this.checkExceedsAmount()) return null
-    return <ButtonsViewUi4 primary={{ label: lstrings.string_next_capitalized, onPress: this.handleNext }} parentType="scene" />
+    if (checkExceedsAmount()) return null
+    return <ButtonsViewUi4 primary={{ label: lstrings.string_next_capitalized, onPress: handleNext }} parentType="scene" />
   }
 
-  renderAlert = () => {
-    const { insufficient, genericError } = this.props
-    const { fromPluginId, fromWalletBalanceMap, fromTokenId } = this.props.fromWalletInfo
+  const renderAlert = () => {
+    const { insufficient, genericError } = props
+    const { fromPluginId, fromWalletBalanceMap, fromTokenId } = props.fromWalletInfo
 
     const { minimumPopupModals } = getSpecialCurrencyInfo(fromPluginId)
     const primaryNativeBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
@@ -269,18 +263,18 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
       return <AlertCardUi4 title={title} body={message} type="error" />
     }
 
-    if (this.checkExceedsAmount()) {
+    if (checkExceedsAmount()) {
       return <AlertCardUi4 title={lstrings.exchange_insufficient_funds_title} body={lstrings.exchange_insufficient_funds_below_balance} type="error" />
     }
 
     return null
   }
 
-  renderDropUp = (whichWallet: 'from' | 'to') => {
+  const renderDropUp = (whichWallet: 'from' | 'to') => {
     Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
-        navigation={this.props.navigation}
+        navigation={props.navigation}
         headerTitle={whichWallet === 'to' ? lstrings.select_recv_wallet : lstrings.select_src_wallet}
         showCreateWallet={whichWallet === 'to'}
         allowKeysOnlyMode={whichWallet === 'from'}
@@ -290,69 +284,64 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
       .then(async result => {
         if (result?.type === 'wallet') {
           const { walletId, tokenId } = result
-          await this.props.onSelectWallet(walletId, tokenId, whichWallet)
+          await props.onSelectWallet(walletId, tokenId, whichWallet)
         }
       })
       .catch(error => showError(error))
   }
 
-  render() {
-    const { theme } = this.props
-    const { fromWalletName } = this.props.fromWalletInfo
-    const { toWalletName } = this.props.toWalletInfo
+  const { fromWalletName } = props.fromWalletInfo
+  const { toWalletName } = props.toWalletInfo
 
-    const styles = getStyles(theme)
+  const isFromFocused = state.whichWalletFocus === 'from'
+  const isToFocused = state.whichWalletFocus === 'to'
+  const fromHeaderText = sprintf(lstrings.exchange_from_wallet, fromWalletName)
+  const toHeaderText = sprintf(lstrings.exchange_to_wallet, toWalletName)
+  // Determines if a coin can have Exchange Max option
+  const hasMaxSpend = getSpecialCurrencyInfo(props.fromWalletInfo.fromPluginId).noMaxSpend !== true
 
-    const isFromFocused = this.state.whichWalletFocus === 'from'
-    const isToFocused = this.state.whichWalletFocus === 'to'
-    const fromHeaderText = sprintf(lstrings.exchange_from_wallet, fromWalletName)
-    const toHeaderText = sprintf(lstrings.exchange_to_wallet, toWalletName)
-    // Determines if a coin can have Exchange Max option
-    const hasMaxSpend = getSpecialCurrencyInfo(this.props.fromWalletInfo.fromPluginId).noMaxSpend !== true
-
-    return (
-      <>
-        <EdgeAnim style={styles.header} enter={fadeInUp90}>
-          <SceneHeader title={lstrings.title_exchange} underline />
-        </EdgeAnim>
-        <EdgeAnim enter={fadeInUp60}>
-          <CryptoExchangeFlipInput
-            wallet={this.props.fromWalletInfo.fromWallet}
-            buttonText={lstrings.select_src_wallet}
-            headerText={fromHeaderText}
-            primaryCurrencyInfo={this.props.fromWalletInfo.fromWalletPrimaryInfo}
-            overridePrimaryNativeAmount={this.state.fromAmountNative}
-            launchWalletSelector={this.launchFromWalletSelector}
-            onCryptoExchangeAmountChanged={this.fromAmountChanged}
-            isFocused={isFromFocused}
-            focusMe={this.focusFromWallet}
-            onNext={this.handleNext}
-          >
-            {hasMaxSpend ? <MiniButton label={lstrings.string_max_cap} marginRem={[0.5, 0, 0.75]} onPress={this.handleMax} alignSelf="center" /> : null}
-          </CryptoExchangeFlipInput>
-        </EdgeAnim>
-        <EdgeAnim>
-          <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
-        </EdgeAnim>
-        <EdgeAnim enter={fadeInDown30}>
-          <CryptoExchangeFlipInput
-            wallet={this.props.toWalletInfo.toWallet}
-            buttonText={lstrings.select_recv_wallet}
-            headerText={toHeaderText}
-            primaryCurrencyInfo={this.props.toWalletInfo.toWalletPrimaryInfo}
-            overridePrimaryNativeAmount={this.state.toAmountNative}
-            launchWalletSelector={this.launchToWalletSelector}
-            onCryptoExchangeAmountChanged={this.toAmountChanged}
-            isFocused={isToFocused}
-            focusMe={this.focusToWallet}
-            onNext={this.handleNext}
-          />
-        </EdgeAnim>
-        <EdgeAnim enter={fadeInDown60}>{this.renderAlert()}</EdgeAnim>
-        <EdgeAnim enter={fadeInDown90}>{this.renderButton()}</EdgeAnim>
-      </>
-    )
-  }
+  return (
+    <SceneWrapper hasTabs hasNotifications scroll keyboardShouldPersistTaps="handled" padding={theme.rem(0.5)}>
+      <EdgeAnim style={styles.header} enter={fadeInUp90}>
+        <SceneHeader title={lstrings.title_exchange} underline />
+      </EdgeAnim>
+      <EdgeAnim enter={fadeInUp60}>
+        <CryptoExchangeFlipInput
+          wallet={props.fromWalletInfo.fromWallet}
+          buttonText={lstrings.select_src_wallet}
+          headerText={fromHeaderText}
+          primaryCurrencyInfo={props.fromWalletInfo.fromWalletPrimaryInfo}
+          overridePrimaryNativeAmount={state.fromAmountNative}
+          launchWalletSelector={launchFromWalletSelector}
+          onCryptoExchangeAmountChanged={fromAmountChanged}
+          isFocused={isFromFocused}
+          focusMe={focusFromWallet}
+          onNext={handleNext}
+        >
+          {hasMaxSpend ? <MiniButton label={lstrings.string_max_cap} marginRem={[0.5, 0, 0.75]} onPress={handleMax} alignSelf="center" /> : null}
+        </CryptoExchangeFlipInput>
+      </EdgeAnim>
+      <EdgeAnim>
+        <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
+      </EdgeAnim>
+      <EdgeAnim enter={fadeInDown30}>
+        <CryptoExchangeFlipInput
+          wallet={props.toWalletInfo.toWallet}
+          buttonText={lstrings.select_recv_wallet}
+          headerText={toHeaderText}
+          primaryCurrencyInfo={props.toWalletInfo.toWalletPrimaryInfo}
+          overridePrimaryNativeAmount={state.toAmountNative}
+          launchWalletSelector={launchToWalletSelector}
+          onCryptoExchangeAmountChanged={toAmountChanged}
+          isFocused={isToFocused}
+          focusMe={focusToWallet}
+          onNext={handleNext}
+        />
+      </EdgeAnim>
+      <EdgeAnim enter={fadeInDown60}>{renderAlert()}</EdgeAnim>
+      <EdgeAnim enter={fadeInDown90}>{renderButton()}</EdgeAnim>
+    </SceneWrapper>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -373,7 +362,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const CryptoExchangeScene = (props: OwnProps) => {
   const dispatch = useDispatch()
   const { navigation, route } = props
-  const theme = useTheme()
 
   const account = useSelector(state => state.core.account)
   const currencyWallets = useSelector(state => state.core.account.currencyWallets)
@@ -442,20 +430,17 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   })
 
   return (
-    <SceneWrapper hasTabs hasNotifications scroll keyboardShouldPersistTaps="handled" padding={theme.rem(0.5)}>
-      <CryptoExchangeComponent
-        route={route}
-        onSelectWallet={handleSelectWallet}
-        getQuoteForTransaction={handleGetQuoteForTransaction}
-        theme={theme}
-        navigation={navigation}
-        account={account}
-        exchangeInfo={exchangeInfo}
-        insufficient={insufficient}
-        genericError={genericError}
-        fromWalletInfo={fromWalletInfo}
-        toWalletInfo={toWalletInfo}
-      />
-    </SceneWrapper>
+    <CryptoExchangeComponent
+      route={route}
+      onSelectWallet={handleSelectWallet}
+      getQuoteForTransaction={handleGetQuoteForTransaction}
+      navigation={navigation}
+      account={account}
+      exchangeInfo={exchangeInfo}
+      insufficient={insufficient}
+      genericError={genericError}
+      fromWalletInfo={fromWalletInfo}
+      toWalletInfo={toWalletInfo}
+    />
   )
 }

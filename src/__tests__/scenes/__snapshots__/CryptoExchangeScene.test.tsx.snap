@@ -1,7 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CryptoExchangeComponent should render with loading props 1`] = `
-<React.Fragment>
+<Memo(SceneWrapperComponent)
+  hasNotifications={true}
+  hasTabs={true}
+  padding={11}
+  scroll={true}
+>
   <Memo(EdgeAnimInner)
     enter={
       {
@@ -115,5 +120,5 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       }
     }
   />
-</React.Fragment>
+</Memo(SceneWrapperComponent)>
 `;

@@ -3,7 +3,6 @@ import * as React from 'react'
 import { createRenderer } from 'react-test-renderer/shallow'
 
 import { CryptoExchangeComponent } from '../../components/scenes/CryptoExchangeScene'
-import { getTheme } from '../../components/services/ThemeContext'
 import { initialState } from '../../reducers/ExchangeInfoReducer'
 import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
@@ -57,7 +56,6 @@ describe('CryptoExchangeComponent', () => {
         genericError={null}
         onSelectWallet={async (walletId, currencyCode, direction) => undefined}
         getQuoteForTransaction={(fromWalletNativeAmount, onApprove) => undefined}
-        theme={getTheme()}
       />
     )
 
