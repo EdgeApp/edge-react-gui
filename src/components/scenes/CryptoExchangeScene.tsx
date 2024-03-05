@@ -1,5 +1,5 @@
 import { div, gt, gte } from 'biggystring'
-import { EdgeAccount, EdgeTokenId } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Keyboard } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -21,7 +21,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
-import { CryptoExchangeFlipInputWrapper } from '../themed/CryptoExchangeFlipInputWrapperComponent'
+import { CryptoExchangeFlipInput } from '../themed/CryptoExchangeFlipInput'
 import { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput2'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { MiniButton } from '../themed/MiniButton'
@@ -45,6 +45,7 @@ interface StateProps {
 }
 
 interface FromWalletInfo {
+  fromWallet?: EdgeCurrencyWallet
   fromPluginId: string
   fromTokenId: EdgeTokenId
   fromWalletId: string
@@ -57,6 +58,7 @@ interface FromWalletInfo {
 }
 
 interface ToWalletInfo {
+  toWallet?: EdgeCurrencyWallet
   toWalletId: string
   toWalletName: string
   toExchangeAmount: string
@@ -314,8 +316,8 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
           <SceneHeader title={lstrings.title_exchange} underline />
         </EdgeAnim>
         <EdgeAnim enter={fadeInUp60}>
-          <CryptoExchangeFlipInputWrapper
-            walletId={this.props.fromWalletInfo.fromWalletId}
+          <CryptoExchangeFlipInput
+            wallet={this.props.fromWalletInfo.fromWallet}
             buttonText={lstrings.select_src_wallet}
             headerText={fromHeaderText}
             primaryCurrencyInfo={this.props.fromWalletInfo.fromWalletPrimaryInfo}
@@ -327,14 +329,14 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
             onNext={this.handleNext}
           >
             {hasMaxSpend ? <MiniButton label={lstrings.string_max_cap} marginRem={[0.5, 0, 0.75]} onPress={this.handleMax} alignSelf="center" /> : null}
-          </CryptoExchangeFlipInputWrapper>
+          </CryptoExchangeFlipInput>
         </EdgeAnim>
         <EdgeAnim>
           <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
         </EdgeAnim>
         <EdgeAnim enter={fadeInDown30}>
-          <CryptoExchangeFlipInputWrapper
-            walletId={this.props.toWalletInfo.toWalletId}
+          <CryptoExchangeFlipInput
+            wallet={this.props.toWalletInfo.toWallet}
             buttonText={lstrings.select_recv_wallet}
             headerText={toHeaderText}
             primaryCurrencyInfo={this.props.toWalletInfo.toWalletPrimaryInfo}
@@ -398,6 +400,7 @@ export const CryptoExchangeScene = (props: OwnProps) => {
     const { balanceMap: fromWalletBalanceMap } = fromWallet
 
     fromWalletInfo = {
+      fromWallet,
       fromTokenId,
       fromWalletId,
       fromWalletName,
@@ -411,14 +414,16 @@ export const CryptoExchangeScene = (props: OwnProps) => {
 
   // Get the values of the 'To' Wallet
   if (toWalletId != null && currencyWallets[toWalletId] != null) {
+    const toWallet = currencyWallets[toWalletId]
     const { toNativeAmount, toWalletPrimaryInfo } = cryptoExchange
     const {
       exchangeDenomination: { multiplier },
       exchangeCurrencyCode
     } = toWalletPrimaryInfo
-    const toWalletName = getWalletName(currencyWallets[toWalletId])
+    const toWalletName = getWalletName(toWallet)
 
     toWalletInfo = {
+      toWallet,
       toWalletId,
       toWalletName,
       toCurrencyCode: exchangeCurrencyCode,

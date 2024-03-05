@@ -30,7 +30,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       }
     }
   >
-    <CryptoExchangeFlipInputWrapper
+    <CryptoExchangeFlipInput
       buttonText="Select Source Wallet"
       focusMe={[Function]}
       headerText="Exchange from BTC Wallet"
@@ -45,7 +45,6 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
           "exchangeCurrencyCode": "BTC",
         }
       }
-      walletId=""
     >
       <MiniButton
         alignSelf="center"
@@ -59,7 +58,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
         }
         onPress={[Function]}
       />
-    </CryptoExchangeFlipInputWrapper>
+    </CryptoExchangeFlipInput>
   </Memo(EdgeAnimInner)>
   <Memo(EdgeAnimInner)>
     <Memo(LineTextDividerComponent)
@@ -75,7 +74,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       }
     }
   >
-    <CryptoExchangeFlipInputWrapper
+    <CryptoExchangeFlipInput
       buttonText="Select Receiving Wallet"
       focusMe={[Function]}
       headerText="Exchange to ETH Wallet"
@@ -98,7 +97,6 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
           },
         }
       }
-      walletId=""
     />
   </Memo(EdgeAnimInner)>
   <Memo(EdgeAnimInner)
