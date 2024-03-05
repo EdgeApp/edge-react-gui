@@ -1541,6 +1541,7 @@
   "select_wallet_to_purchase_card_title": "Selecione a carteira a ser usada para comprar o cartão",
   "unknown_error_occurred_fragment": "Ocorreu um erro desconhecido",
   "no_scan_results_message": "Nenhum resultado de varredura",
+  "scan_parsing_link": "Parsing link...",
   "auto_log_off_failed_message_s": "Falha ao efetuar o auto-logoff: %s",
   "contacts_load_failed_message_s": "Falha ao carregar contatos: %s"
 }
