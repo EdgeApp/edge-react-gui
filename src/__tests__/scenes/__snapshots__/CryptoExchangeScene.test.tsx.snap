@@ -4,6 +4,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
 <Memo(SceneWrapperComponent)
   hasNotifications={true}
   hasTabs={true}
+  keyboardShouldPersistTaps="handled"
   padding={11}
   scroll={true}
 >

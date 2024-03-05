@@ -28,6 +28,7 @@ describe('CryptoExchangeComponent', () => {
 
     const toWalletInfo = {
       toWalletId: '',
+      toTokenId: null,
       toWalletName: 'ETH Wallet',
       toExchangeAmount: '1000',
       toWalletPrimaryInfo: {
@@ -54,8 +55,8 @@ describe('CryptoExchangeComponent', () => {
         toWalletInfo={toWalletInfo}
         insufficient={false}
         genericError={null}
-        onSelectWallet={async (walletId, currencyCode, direction) => undefined}
-        getQuoteForTransaction={(fromWalletNativeAmount, onApprove) => undefined}
+        onSelectWallet={async () => undefined}
+        getQuoteForTransaction={() => undefined}
       />
     )
 

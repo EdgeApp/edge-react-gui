@@ -1,11 +1,11 @@
 import { div, gt, gte } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet, EdgeSwapRequest, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
 import { Keyboard } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { getQuoteForTransaction, selectWalletForExchange, SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
+import { getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions'
 import { DisableAsset, ExchangeInfo } from '../../actions/ExchangeInfoActions'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
@@ -60,6 +60,7 @@ interface FromWalletInfo {
 
 interface ToWalletInfo {
   toWallet?: EdgeCurrencyWallet
+  toTokenId: EdgeTokenId
   toWalletId: string
   toWalletName: string
   toExchangeAmount: string
@@ -70,7 +71,7 @@ interface ToWalletInfo {
 
 interface DispatchProps {
   onSelectWallet: (walletId: string, tokenId: EdgeTokenId, direction: 'from' | 'to') => Promise<void>
-  getQuoteForTransaction: (navigation: NavigationBase, fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void) => void
+  getQuoteForTransaction: (navigation: NavigationBase, request: EdgeSwapRequest, onApprove: () => void) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps
@@ -96,6 +97,7 @@ const defaultFromWalletInfo: FromWalletInfo = {
 }
 
 const defaultToWalletInfo: ToWalletInfo = {
+  toTokenId: null,
   toCurrencyCode: '',
   toWalletName: '',
   toWalletPrimaryInfo: emptyCurrencyInfo,
@@ -137,37 +139,55 @@ export const CryptoExchangeComponent = (props: Props) => {
   }
 
   const handleMax = () => {
-    const data: SetNativeAmountInfo = {
-      whichWallet: 'max',
-      primaryNativeAmount: '0'
-    }
-
-    if (props.toWalletInfo.toCurrencyCode === '') {
+    if (props.toWalletInfo.toWallet == null) {
       showWarning(`${lstrings.loan_select_receiving_wallet}`)
       Keyboard.dismiss()
       return
     }
 
-    getQuote(data)
+    if (props.fromWalletInfo.fromWallet == null) {
+      // Should never happen because max button UI is hidden unless a source wallet is selected
+      throw new Error('No wallet selected')
+    }
+
+    const request: EdgeSwapRequest = {
+      fromTokenId: props.fromWalletInfo.fromTokenId,
+      fromWallet: props.fromWalletInfo.fromWallet,
+      nativeAmount: '0',
+      quoteFor: 'max',
+      toTokenId: props.toWalletInfo.toTokenId,
+      toWallet: props.toWalletInfo.toWallet
+    }
+
+    getQuote(request)
   }
 
   const handleNext = () => {
-    const data: SetNativeAmountInfo = {
-      whichWallet: state.whichWalletFocus,
-      primaryNativeAmount: state.whichWalletFocus === 'from' ? state.fromAmountNative : state.toAmountNative
+    if (props.fromWalletInfo.fromWallet == null || props.toWalletInfo.toWallet == null) {
+      // Should never happen because next UI is hidden unless both source/destination wallets are selected
+      throw new Error('No wallet selected')
     }
 
-    if (zeroString(data.primaryNativeAmount)) {
+    const request: EdgeSwapRequest = {
+      fromTokenId: props.fromWalletInfo.fromTokenId,
+      fromWallet: props.fromWalletInfo.fromWallet,
+      nativeAmount: state.whichWalletFocus === 'from' ? state.fromAmountNative : state.toAmountNative,
+      quoteFor: state.whichWalletFocus,
+      toTokenId: props.toWalletInfo.toTokenId,
+      toWallet: props.toWalletInfo.toWallet
+    }
+
+    if (zeroString(request.nativeAmount)) {
       showError(`${lstrings.no_exchange_amount}. ${lstrings.select_exchange_amount}.`)
       return
     }
 
     if (checkExceedsAmount()) return
 
-    getQuote(data)
+    getQuote(request)
   }
 
-  const getQuote = (data: SetNativeAmountInfo) => {
+  const getQuote = (request: EdgeSwapRequest) => {
     const { exchangeInfo, navigation } = props
     if (exchangeInfo != null) {
       const disableSrc = checkDisableAsset(
@@ -186,7 +206,7 @@ export const CryptoExchangeComponent = (props: Props) => {
         return
       }
     }
-    props.getQuoteForTransaction(navigation, data, resetState)
+    props.getQuoteForTransaction(navigation, request, resetState)
     Keyboard.dismiss()
   }
 
@@ -408,10 +428,13 @@ export const CryptoExchangeScene = (props: OwnProps) => {
       exchangeDenomination: { multiplier },
       exchangeCurrencyCode
     } = toWalletPrimaryInfo
+    const toTokenId = getWalletTokenId(toWallet, exchangeCurrencyCode)
+
     const toWalletName = getWalletName(toWallet)
 
     toWalletInfo = {
       toWallet,
+      toTokenId,
       toWalletId,
       toWalletName,
       toCurrencyCode: exchangeCurrencyCode,
@@ -425,8 +448,8 @@ export const CryptoExchangeScene = (props: OwnProps) => {
     dispatch(updateMostRecentWalletsSelected(walletId, tokenId))
   })
 
-  const handleGetQuoteForTransaction = useHandler((navigation: NavigationBase, fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void) => {
-    dispatch(getQuoteForTransaction(navigation, fromWalletNativeAmount, onApprove)).catch(err => showError(err))
+  const handleGetQuoteForTransaction = useHandler((navigation: NavigationBase, request: EdgeSwapRequest, onApprove: () => void) => {
+    dispatch(getQuoteForTransaction(navigation, request, onApprove)).catch(err => showError(err))
   })
 
   return (

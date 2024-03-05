@@ -5,7 +5,6 @@ import {
   asMaybeSwapBelowLimitError,
   asMaybeSwapCurrencyError,
   asMaybeSwapPermissionError,
-  EdgeCurrencyWallet,
   EdgeSwapQuote,
   EdgeSwapRequest,
   EdgeSwapResult,
@@ -25,45 +24,16 @@ import { RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { GuiCurrencyInfo, GuiSwapInfo } from '../types/types'
 import { CryptoAmount } from '../util/CryptoAmount'
-import { getCurrencyCode, getWalletTokenId } from '../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { bestOfPlugins } from '../util/ReferralHelpers'
 import { logEvent } from '../util/tracking'
 import { convertNativeToDisplay, convertNativeToExchange, DECIMAL_PRECISION, decimalOrZero, getDenomFromIsoCode } from '../util/utils'
 import { updateSwapCount } from './RequestReviewActions'
 
-export interface SetNativeAmountInfo {
-  whichWallet: 'from' | 'to' | 'max'
-  primaryNativeAmount: string
-}
-
-export function getQuoteForTransaction(navigation: NavigationBase, info: SetNativeAmountInfo, onApprove: () => void): ThunkAction<Promise<void>> {
+export function getQuoteForTransaction(navigation: NavigationBase, request: EdgeSwapRequest, onApprove: () => void): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
-    const { fromWalletId, toWalletId, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
-
-    if (fromWalletId == null || toWalletId == null) {
-      throw new Error('No wallet selected') // Should never happen
-    }
-    if (fromCurrencyCode == null || toCurrencyCode == null) {
-      throw new Error('No currency selected') // Should never happen
-    }
-
-    const { currencyWallets } = state.core.account
-    const fromCoreWallet: EdgeCurrencyWallet = currencyWallets[fromWalletId]
-    const toCoreWallet: EdgeCurrencyWallet = currencyWallets[toWalletId]
-
-    const fromTokenId = getWalletTokenId(fromCoreWallet, fromCurrencyCode)
-    const toTokenId = getWalletTokenId(toCoreWallet, toCurrencyCode)
-
-    const request: EdgeSwapRequest = {
-      fromTokenId,
-      fromWallet: fromCoreWallet,
-      nativeAmount: info.primaryNativeAmount,
-      quoteFor: info.whichWallet,
-      toTokenId,
-      toWallet: toCoreWallet
-    }
 
     navigation.navigate('exchangeQuoteProcessing', {
       fetchSwapQuotesPromise: fetchSwapQuotes(state, request),
@@ -82,26 +52,24 @@ export function getQuoteForTransaction(navigation: NavigationBase, info: SetNati
         navigation.navigate('exchangeTab', { screen: 'exchange' })
 
         const insufficientFunds = asMaybeInsufficientFundsError(error)
-        if (insufficientFunds != null && fromWalletId != null && fromTokenId !== insufficientFunds.tokenId) {
+        if (insufficientFunds != null && request.fromTokenId !== insufficientFunds.tokenId) {
           const { tokenId } = insufficientFunds
-          const { currencyWallets } = state.core.account
-          const fromWallet = currencyWallets[fromWalletId]
-          const currencyCode = getCurrencyCode(fromWallet, tokenId)
+          const currencyCode = getCurrencyCode(request.fromWallet, tokenId)
 
           await Airship.show(bridge => (
             <InsufficientFeesModal
               bridge={bridge}
               coreError={insufficientFunds}
               navigation={navigation}
-              wallet={fromWallet}
+              wallet={request.fromWallet}
               onSwap={() => {
                 dispatch({ type: 'SHIFT_COMPLETE' })
-                dispatch(selectWalletForExchange(fromWalletId, currencyCode, 'to')).catch(err => showError(err))
+                dispatch(selectWalletForExchange(request.fromWallet.id, currencyCode, 'to')).catch(err => showError(err))
               }}
             />
           ))
         }
-        dispatch(processSwapQuoteError(error))
+        dispatch(processSwapQuoteError(error, request))
       }
     })
   }
@@ -124,7 +92,7 @@ export function exchangeTimerExpired(navigation: NavigationBase, quote: EdgeSwap
       },
       onError: async (error: any) => {
         navigation.navigate('exchangeTab', { screen: 'exchange' })
-        dispatch(processSwapQuoteError(error))
+        dispatch(processSwapQuoteError(error, quote.request))
       }
     })
   }
@@ -217,17 +185,19 @@ export const getSwapInfo = async (state: RootState, quote: EdgeSwapQuote): Promi
   return swapInfo
 }
 
-function processSwapQuoteError(error: unknown): ThunkAction<void> {
+function processSwapQuoteError(error: unknown, request: EdgeSwapRequest): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()
-    const { fromWalletId, fromCurrencyCode, toWalletId, toCurrencyCode } = state.cryptoExchange
 
     // Basic sanity checks (should never fail):
     if (error == null) return
-    if (fromWalletId == null || fromCurrencyCode == null || toWalletId == null || toCurrencyCode == null) return
 
-    const fromWallet = state.core.account.currencyWallets[fromWalletId]
-    const toWallet = state.core.account.currencyWallets[toWalletId]
+    const { fromWallet, fromTokenId, toWallet, toTokenId } = request
+
+    const fromCurrencyCode = getCurrencyCode(fromWallet, fromTokenId)
+    const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
+
+    if (fromCurrencyCode == null || toCurrencyCode == null) return
 
     // Check for known error types:
     const insufficientFunds = asMaybeInsufficientFundsError(error)
