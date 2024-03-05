@@ -1541,6 +1541,7 @@
   "select_wallet_to_purchase_card_title": "Seleziona il portafoglio da usare per acquistare la carta",
   "unknown_error_occurred_fragment": "Si è verificato un errore sconosciuto",
   "no_scan_results_message": "Nessun risultato di scansione",
+  "scan_parsing_link": "Parsing link...",
   "auto_log_off_failed_message_s": "Auto-logoff non riuscito: %s",
   "contacts_load_failed_message_s": "Caricamento dei contatti non riuscito: %s"
 }
