@@ -1,7 +1,7 @@
 import { add, gt, mul, round } from 'biggystring'
 import { EdgeAccount, EdgeBalanceMap, EdgeCurrencyWallet, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -26,6 +26,7 @@ import { triggerHaptic } from '../../util/haptic'
 import { getFioStakingBalances, getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
 import { convertNativeToDenomination, datelog } from '../../util/utils'
 import { VisaCardCard } from '../cards/VisaCardCard'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupForTransferModal'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
@@ -199,18 +200,18 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     return (
       <>
         <View style={styles.balanceBoxWalletNameCurrencyContainer}>
-          <TouchableOpacity accessible={false} style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
+          <EdgeTouchableOpacity accessible={false} style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
             <CryptoIconUi4 sizeRem={1.5} tokenId={tokenId} walletId={wallet.id} />
             <EdgeText accessible style={styles.balanceBoxWalletName}>
               {walletName}
             </EdgeText>
             <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
-          </TouchableOpacity>
-          <TouchableOpacity testID="gearIcon" onPress={this.handleMenu} style={styles.settingsIcon}>
+          </EdgeTouchableOpacity>
+          <EdgeTouchableOpacity testID="gearIcon" onPress={this.handleMenu} style={styles.settingsIcon}>
             <Fontello accessibilityHint={lstrings.wallet_settings_label} color={theme.iconTappable} name="control-panel-settings" size={theme.rem(1.5)} />
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         </View>
-        <TouchableOpacity accessible={false} onPress={this.props.toggleBalanceVisibility}>
+        <EdgeTouchableOpacity accessible={false} onPress={this.props.toggleBalanceVisibility}>
           {isAccountBalanceVisible ? (
             <>
               <EdgeText accessible style={styles.balanceBoxCurrency} minimumFontScale={0.3}>
@@ -225,7 +226,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
               {lstrings.string_show_balance}
             </EdgeText>
           )}
-        </TouchableOpacity>
+        </EdgeTouchableOpacity>
       </>
     )
   }
@@ -378,24 +379,24 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             {this.renderBalanceBox()}
             {isStakingAvailable && this.renderStakedBalance()}
             <View style={styles.buttonsContainer}>
-              <TouchableOpacity accessible={false} onPress={this.handleRequest} style={styles.buttons}>
+              <EdgeTouchableOpacity accessible={false} onPress={this.handleRequest} style={styles.buttons}>
                 <EdgeText accessible style={styles.buttonsText}>
                   {lstrings.fragment_request_subtitle}
                 </EdgeText>
-              </TouchableOpacity>
-              <TouchableOpacity accessible={false} onPress={this.handleSend} style={styles.buttons}>
+              </EdgeTouchableOpacity>
+              <EdgeTouchableOpacity accessible={false} onPress={this.handleSend} style={styles.buttons}>
                 <EdgeText accessible style={styles.buttonsText}>
                   {lstrings.fragment_send_subtitle}
                 </EdgeText>
-              </TouchableOpacity>
+              </EdgeTouchableOpacity>
               {!isStakePoliciesLoaded ? (
                 <ActivityIndicator color={theme.textLink} style={styles.stakingButton} />
               ) : (
                 isStakingAvailable && (
-                  <TouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
+                  <EdgeTouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
                     <EdgeText style={styles.buttonsText}>{lstrings.stake_earn_button_label}</EdgeText>
                     {bestApy != null ? <EdgeText style={styles.apyText}>{bestApy}</EdgeText> : null}
-                  </TouchableOpacity>
+                  </EdgeTouchableOpacity>
                 )
               )}
             </View>

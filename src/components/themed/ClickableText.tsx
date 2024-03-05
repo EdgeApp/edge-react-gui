@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { ActivityIndicator, Text, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, Text } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 
@@ -68,12 +69,12 @@ export function ClickableText(props: Props) {
   }
 
   return (
-    <TouchableOpacity disabled={disabled || pending} style={[styles.buttonContainer, dynamicStyles]} onPress={handlePress}>
+    <EdgeTouchableOpacity disabled={disabled || pending} style={[styles.buttonContainer, dynamicStyles]} onPress={handlePress}>
       {icon != null ? icon : null}
       {label != null && !pending ? <Text style={styles.buttonText}>{label}</Text> : null}
       {!pending ? children : null}
       {spinner || pending ? <ActivityIndicator color={theme.secondaryButtonText} style={styles.spinner} /> : null}
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   )
 }
 
