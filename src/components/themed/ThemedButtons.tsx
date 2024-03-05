@@ -1,10 +1,11 @@
 import * as React from 'react'
-import { TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useHandler } from '../../hooks/useHandler'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
+import { EdgeTouchableHighlight } from '../common/EdgeTouchableHighlight'
 import { showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -57,7 +58,7 @@ export function Radio(props: RadioButtonProps) {
 
   return (
     <View style={[margin, padding]}>
-      <TouchableHighlight
+      <EdgeTouchableHighlight
         activeOpacity={theme.underlayOpacity}
         // @ts-expect-error
         underlayColor={theme.secondaryButton}
@@ -67,7 +68,7 @@ export function Radio(props: RadioButtonProps) {
           <RadioIcon value={value} />
           {children}
         </View>
-      </TouchableHighlight>
+      </EdgeTouchableHighlight>
     </View>
   )
 }

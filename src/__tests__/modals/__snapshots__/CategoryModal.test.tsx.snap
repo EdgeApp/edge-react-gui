@@ -868,6 +868,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             style={null}
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -1007,6 +1012,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             style={null}
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -1146,6 +1156,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             style={null}
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -1285,6 +1300,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
             style={null}
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -2293,6 +2313,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             style={null}
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -2403,6 +2428,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             style={null}
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -2513,6 +2543,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             style={null}
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -2623,6 +2658,11 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
             style={null}
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
