@@ -1541,6 +1541,7 @@
   "select_wallet_to_purchase_card_title": "カードを購入するために使用するウォレットを選択してください",
   "unknown_error_occurred_fragment": "不明なエラーが発生しました",
   "no_scan_results_message": "スキャン結果がありません",
+  "scan_parsing_link": "Parsing link...",
   "auto_log_off_failed_message_s": "自動ログオフに失敗しました: %s",
   "contacts_load_failed_message_s": "連絡先の読み込みに失敗しました: %s"
 }
