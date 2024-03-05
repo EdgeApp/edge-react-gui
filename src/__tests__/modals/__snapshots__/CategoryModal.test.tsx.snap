@@ -7,7 +7,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
       {
         "busy": undefined,
         "checked": undefined,
-        "disabled": undefined,
+        "disabled": false,
         "expanded": undefined,
         "selected": undefined,
       }
@@ -485,7 +485,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           {
             "busy": undefined,
             "checked": undefined,
-            "disabled": undefined,
+            "disabled": false,
             "expanded": undefined,
             "selected": undefined,
           }
@@ -1452,7 +1452,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
       {
         "busy": undefined,
         "checked": undefined,
-        "disabled": undefined,
+        "disabled": false,
         "expanded": undefined,
         "selected": undefined,
       }
@@ -1930,7 +1930,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           {
             "busy": undefined,
             "checked": undefined,
-            "disabled": undefined,
+            "disabled": false,
             "expanded": undefined,
             "selected": undefined,
           }
