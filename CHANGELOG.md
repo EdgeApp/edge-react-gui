@@ -5,6 +5,7 @@
 - changed: Remove extra spaces and normal capitalization of mnemonic seed input
 - changed: 2FA/otp modals moved behind a notification card instead of showing instantly on login
 - changed: Password reminder modal only shows after tapping new persistent notification
+- fixed: FIO name transfer error when sending with no address
 
 ## 4.2.0
 
