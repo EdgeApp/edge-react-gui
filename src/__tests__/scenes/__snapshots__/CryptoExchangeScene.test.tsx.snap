@@ -30,7 +30,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       }
     }
   >
-    <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
+    <CryptoExchangeFlipInputWrapper
       buttonText="Select Source Wallet"
       focusMe={[Function]}
       headerText="Exchange from BTC Wallet"
@@ -59,7 +59,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
         }
         onPress={[Function]}
       />
-    </Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))>
+    </CryptoExchangeFlipInputWrapper>
   </Memo(EdgeAnimInner)>
   <Memo(EdgeAnimInner)>
     <Memo(LineTextDividerComponent)
@@ -75,7 +75,7 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       }
     }
   >
-    <Memo(Connect(WithTheme(CryptoExchangeFlipInputWrapperComponent)))
+    <CryptoExchangeFlipInputWrapper
       buttonText="Select Receiving Wallet"
       focusMe={[Function]}
       headerText="Exchange to ETH Wallet"

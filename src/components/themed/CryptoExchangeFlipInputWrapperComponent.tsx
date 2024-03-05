@@ -5,12 +5,12 @@ import { ActivityIndicator, View } from 'react-native'
 
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { connect } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { GuiCurrencyInfo } from '../../types/types'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertNativeToDenomination } from '../../util/utils'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { CardUi4 } from '../ui4/CardUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { RowUi4 } from '../ui4/RowUi4'
@@ -188,21 +188,21 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CryptoExchangeFlipInputWrapper = connect<StateProps, {}, OwnProps>(
-  (state, ownProps) => {
-    const { currencyWallets } = state.core.account
-    const wallet = currencyWallets[ownProps.walletId]
-    if (wallet == null) return { tokenId: null, wallet: undefined }
+export const CryptoExchangeFlipInputWrapper = (props: OwnProps) => {
+  const theme = useTheme()
+  const account = useSelector(state => state.core.account)
+  const { currencyWallets } = account
+  const wallet = currencyWallets[props.walletId]
+  if (wallet == null) return <CryptoExchangeFlipInputWrapperComponent {...props} theme={theme} tokenId={null} wallet={undefined} />
 
-    const { displayCurrencyCode, displayDenomination } = ownProps.primaryCurrencyInfo
+  const { displayCurrencyCode, displayDenomination } = props.primaryCurrencyInfo
 
-    const tokenId = getTokenIdForced(state.core.account, wallet.currencyInfo.pluginId, displayCurrencyCode)
+  const tokenId = getTokenIdForced(account, wallet.currencyInfo.pluginId, displayCurrencyCode)
 
-    const balance = wallet.balanceMap.get(tokenId) ?? '0'
-    const cryptoAmountRaw: string = convertNativeToDenomination(displayDenomination.multiplier)(balance)
-    const cryptoAmount = formatNumber(add(cryptoAmountRaw, '0'))
+  const balance = wallet.balanceMap.get(tokenId) ?? '0'
+  const cryptoAmountRaw: string = convertNativeToDenomination(displayDenomination.multiplier)(balance)
+  const cryptoAmount = formatNumber(add(cryptoAmountRaw, '0'))
+  const name = getWalletName(wallet)
 
-    return { name: getWalletName(wallet), cryptoAmount, tokenId, wallet }
-  },
-  dispatch => ({})
-)(withTheme(CryptoExchangeFlipInputWrapperComponent))
+  return <CryptoExchangeFlipInputWrapperComponent {...props} theme={theme} name={name} cryptoAmount={cryptoAmount} tokenId={tokenId} wallet={wallet} />
+}
