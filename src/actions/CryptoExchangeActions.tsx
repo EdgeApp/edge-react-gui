@@ -7,6 +7,7 @@ import {
   asMaybeSwapPermissionError,
   EdgeSwapQuote,
   EdgeSwapRequest,
+  EdgeSwapRequestOptions,
   EdgeSwapResult,
   EdgeTokenId
 } from 'edge-core-js'
@@ -26,17 +27,22 @@ import { GuiCurrencyInfo, GuiSwapInfo } from '../types/types'
 import { CryptoAmount } from '../util/CryptoAmount'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
-import { bestOfPlugins } from '../util/ReferralHelpers'
 import { logEvent } from '../util/tracking'
 import { convertNativeToDisplay, convertNativeToExchange, DECIMAL_PRECISION, decimalOrZero, getDenomFromIsoCode } from '../util/utils'
 import { updateSwapCount } from './RequestReviewActions'
 
-export function getQuoteForTransaction(navigation: NavigationBase, request: EdgeSwapRequest, onApprove: () => void): ThunkAction<Promise<void>> {
+export function getQuoteForTransaction(
+  navigation: NavigationBase,
+  request: EdgeSwapRequest,
+  swapRequestOptions: EdgeSwapRequestOptions,
+  onApprove: () => void
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
+    const account = state.core.account
 
     navigation.navigate('exchangeQuoteProcessing', {
-      fetchSwapQuotesPromise: fetchSwapQuotes(state, request),
+      fetchSwapQuotesPromise: account.fetchSwapQuotes(request, swapRequestOptions),
       onCancel: () => {
         navigation.goBack()
       },
@@ -75,10 +81,18 @@ export function getQuoteForTransaction(navigation: NavigationBase, request: Edge
   }
 }
 
-export function exchangeTimerExpired(navigation: NavigationBase, quote: EdgeSwapQuote, onApprove: () => void): ThunkAction<Promise<void>> {
+export function exchangeTimerExpired(
+  navigation: NavigationBase,
+  quote: EdgeSwapQuote,
+  swapRequestOptions: EdgeSwapRequestOptions,
+  onApprove: () => void
+): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    const state = getState()
+    const account = state.core.account
+
     navigation.replace('exchangeQuoteProcessing', {
-      fetchSwapQuotesPromise: fetchSwapQuotes(getState(), quote.request),
+      fetchSwapQuotesPromise: account.fetchSwapQuotes(quote.request, swapRequestOptions),
       onCancel: () => {
         navigation.navigate('exchangeTab', { screen: 'exchange' })
       },
@@ -96,38 +110,6 @@ export function exchangeTimerExpired(navigation: NavigationBase, quote: EdgeSwap
       }
     })
   }
-}
-
-async function fetchSwapQuotes(state: RootState, request: EdgeSwapRequest): Promise<EdgeSwapQuote[]> {
-  const { account } = state.core
-  const {
-    exchangeInfo: {
-      swap: { disablePlugins }
-    },
-    settings
-  } = state.ui
-  const { preferredSwapPluginType } = settings
-
-  // Find preferred swap provider:
-  const activePlugins = bestOfPlugins(state.account.referralCache.accountPlugins, state.account.accountReferral, state.ui.settings.preferredSwapPluginId)
-  const preferPluginId = activePlugins.preferredSwapPluginId
-  if (preferPluginId != null) {
-    const { swapSource } = activePlugins
-    const reason = swapSource.type === 'promotion' ? 'promo ' + swapSource.installerId : swapSource.type
-    console.log(`Preferring ${preferPluginId} from ${reason}`)
-  }
-
-  // Get the quote:
-  const quotes: EdgeSwapQuote[] = await account.fetchSwapQuotes(request, {
-    disabled: { ...activePlugins.disabled, ...disablePlugins },
-    noResponseMs: 60 * 1000,
-    preferPluginId,
-    preferType: preferredSwapPluginType,
-    promoCodes: activePlugins.promoCodes,
-    slowResponseMs: 10 * 1000
-  })
-
-  return quotes
 }
 
 // TODO: Use new hooks and utility methods for all conversions here

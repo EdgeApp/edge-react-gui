@@ -5,6 +5,7 @@ import { SectionList, View, ViewStyle } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
+import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import { lstrings } from '../../locales/strings'
@@ -55,6 +56,8 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const pending = useSelector(state => state.cryptoExchange.shiftPendingTransaction)
 
+  const swapRequestOptions = useSwapRequestOptions()
+
   const [selectedQuote, setSelectedQuote] = useState(initialSelectedQuote)
   const [calledApprove, setCalledApprove] = useState(false)
 
@@ -99,7 +102,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
     dispatch(logEvent('Exchange_Shift_Quote'))
     swapVerifyTerms(swapConfig)
       .then(async result => {
-        if (!result) await dispatch(exchangeTimerExpired(navigation, selectedQuote, onApprove))
+        if (!result) await dispatch(exchangeTimerExpired(navigation, selectedQuote, swapRequestOptions, onApprove))
       })
       .catch(err => showError(err))
 
@@ -117,7 +120,12 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   const renderTimer = () => {
     const { expirationDate } = selectedQuote
     if (!expirationDate) return null
-    return <CircleTimer timeExpired={async () => await dispatch(exchangeTimerExpired(navigation, selectedQuote, onApprove))} expiration={expirationDate} />
+    return (
+      <CircleTimer
+        timeExpired={async () => await dispatch(exchangeTimerExpired(navigation, selectedQuote, swapRequestOptions, onApprove))}
+        expiration={expirationDate}
+      />
+    )
   }
 
   const renderRow = useHandler((item: { item: EdgeSwapQuote; section: Section; index: number }) => {

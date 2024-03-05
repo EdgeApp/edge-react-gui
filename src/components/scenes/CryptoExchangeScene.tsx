@@ -9,6 +9,7 @@ import { getQuoteForTransaction, selectWalletForExchange } from '../../actions/C
 import { DisableAsset, ExchangeInfo } from '../../actions/ExchangeInfoActions'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
+import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -390,6 +391,8 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   const insufficient = useSelector(state => state.cryptoExchange.insufficientError)
   const genericError = useSelector(state => state.cryptoExchange.genericShapeShiftError)
 
+  const swapRequestOptions = useSwapRequestOptions()
+
   const { fromWalletId, toWalletId } = cryptoExchange
 
   let fromWalletInfo = defaultFromWalletInfo
@@ -449,7 +452,7 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   })
 
   const handleGetQuoteForTransaction = useHandler((navigation: NavigationBase, request: EdgeSwapRequest, onApprove: () => void) => {
-    dispatch(getQuoteForTransaction(navigation, request, onApprove)).catch(err => showError(err))
+    dispatch(getQuoteForTransaction(navigation, request, swapRequestOptions, onApprove)).catch(err => showError(err))
   })
 
   return (
