@@ -1,7 +1,7 @@
 import { div, lt, max, mul } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity } from 'react-native'
+import { ActivityIndicator } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -33,6 +33,7 @@ import { enableToken } from '../../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../../util/utils'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
 import { TappableAccountCard } from '../../cards/TappableAccountCard'
+import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { Space } from '../../layout/Space'
@@ -349,9 +350,9 @@ export const LoanCreateScene = (props: Props) => {
     <SceneWrapper>
       <SceneHeader
         tertiary={
-          <TouchableOpacity onPress={handleInfoIconPress}>
+          <EdgeTouchableOpacity onPress={handleInfoIconPress}>
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         }
         title={lstrings.loan_create_title}
         underline

@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -24,6 +23,7 @@ import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { filterNull } from '../../../util/safeFilters'
 import { translateError } from '../../../util/translateError'
 import { zeroString } from '../../../util/utils'
+import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { CryptoFiatAmountRow } from '../../data/row/CryptoFiatAmountRow'
 import { withLoanAccount } from '../../hoc/withLoanAccount'
@@ -131,9 +131,9 @@ export const LoanCloseSceneComponent = (props: Props) => {
     <SceneWrapper>
       <SceneHeader
         tertiary={
-          <TouchableOpacity onPress={handleInfoIconPress}>
+          <EdgeTouchableOpacity onPress={handleInfoIconPress}>
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         }
         title={lstrings.loan_close_loan_title}
         underline

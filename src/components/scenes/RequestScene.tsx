@@ -2,7 +2,7 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { lt } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeEncodeUri, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Linking, Platform, Text, View } from 'react-native'
 import Share, { ShareOptions } from 'react-native-share'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -25,6 +25,7 @@ import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHel
 import { triggerHaptic } from '../../util/haptic'
 import { convertNativeToDenomination, darkenHexColor, truncateDecimals, zeroString } from '../../util/utils'
 import { EdgeAnim, fadeInDown50, fadeInDown75, fadeInUp25, fadeInUp50, fadeInUp80 } from '../common/EdgeAnim'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { AddressModal } from '../modals/AddressModal'
@@ -370,9 +371,9 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
             <EdgeText style={styles.exchangeRate}>{denomString}</EdgeText>
           </EdgeAnim>
           <EdgeAnim style={styles.balanceContainer} enter={fadeInUp50}>
-            <TouchableOpacity onPress={this.toggleBalanceVisibility} style={styles.balanceAmountContainer}>
+            <EdgeTouchableOpacity onPress={this.toggleBalanceVisibility} style={styles.balanceAmountContainer}>
               {this.props.showBalance ? <EdgeText>{displayBalanceString}</EdgeText> : <EdgeText>{lstrings.string_show_balance}</EdgeText>}
-            </TouchableOpacity>
+            </EdgeTouchableOpacity>
             <EdgeText style={styles.exchangeRate}>
               <FiatText
                 appendFiatCurrencyCode
@@ -429,13 +430,13 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
           )}
 
           <EdgeAnim enter={fadeInDown50}>
-            <TouchableOpacity accessible={false} disabled={addressExplorerDisabled} onPress={this.handleAddressBlockExplorer}>
+            <EdgeTouchableOpacity accessible={false} disabled={addressExplorerDisabled} onPress={this.handleAddressBlockExplorer}>
               <View style={styles.rightChevronContainer}>
                 <EdgeText>{selectedAddress?.label ?? lstrings.request_qr_your_wallet_address}</EdgeText>
                 {addressExplorerDisabled ? null : <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />}
               </View>
               <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
-            </TouchableOpacity>
+            </EdgeTouchableOpacity>
           </EdgeAnim>
         </View>
 
