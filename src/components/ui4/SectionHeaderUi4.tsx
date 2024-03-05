@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { SplitRowsView } from './SplitRowsView'
@@ -34,9 +34,9 @@ export const SectionHeaderUi4 = (props: Props) => {
         left: <EdgeText>{leftTitle}</EdgeText>,
         right:
           typeof rightNode === 'string' && onRightPress != null ? (
-            <TouchableOpacity onPress={onRightPress} style={styles.rightTappableContainer}>
+            <EdgeTouchableOpacity onPress={onRightPress} style={styles.rightTappableContainer}>
               <EdgeText style={styles.tappableText}>{rightNode}</EdgeText>
-            </TouchableOpacity>
+            </EdgeTouchableOpacity>
           ) : (
             rightNode
           )

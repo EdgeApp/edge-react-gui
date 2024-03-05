@@ -3,12 +3,13 @@
  */
 
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity, View, ViewStyle } from 'react-native'
+import { ActivityIndicator, View, ViewStyle } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -152,7 +153,7 @@ export function ButtonUi4(props: Props) {
   }, [disabled, hideContent, layout, mini, paddingRem, styles, theme, type])
 
   return (
-    <TouchableOpacity disabled={disabled || pending || spinner} style={touchContainerStyle} onPress={handlePress} testID={testID}>
+    <EdgeTouchableOpacity disabled={disabled || pending || spinner} style={touchContainerStyle} onPress={handlePress} testID={testID}>
       <LinearGradient {...gradientProps} style={visibleContainerStyle}>
         {hideContent ? (
           <View style={styles.invisibleContent}>
@@ -167,7 +168,7 @@ export function ButtonUi4(props: Props) {
         )}
       </LinearGradient>
       {!hideContent ? null : <ActivityIndicator color={spinnerColor} style={styles.spinner} />}
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   )
 }
 

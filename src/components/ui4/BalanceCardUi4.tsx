@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { getTotalFiatAmountFromExchangeRates } from '../../util/utils'
 import { AnimatedNumber } from '../common/AnimatedNumber'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { TransferModal } from '../modals/TransferModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -65,7 +66,7 @@ export const BalanceCardUi4 = (props: Props) => {
 
   return (
     <CardUi4>
-      <TouchableOpacity style={styles.balanceContainer} onPress={handleToggleAccountBalanceVisibility}>
+      <EdgeTouchableOpacity style={styles.balanceContainer} onPress={handleToggleAccountBalanceVisibility}>
         <View style={styles.titleContainer}>
           <EdgeText style={theme.cardTextShadow}>{lstrings.fragment_wallets_balance_text}</EdgeText>
           <IonIcon name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'} style={styles.eyeIcon} color={theme.iconTappable} size={theme.rem(1)} />
@@ -83,11 +84,11 @@ export const BalanceCardUi4 = (props: Props) => {
             <EdgeText style={styles.balanceTextNoAnim}>{balanceString}</EdgeText>
           </View>
         )}
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
       {onViewAssetsPress == null ? null : (
-        <TouchableOpacity style={styles.rightButtonContainer} onPress={onViewAssetsPress}>
+        <EdgeTouchableOpacity style={styles.rightButtonContainer} onPress={onViewAssetsPress}>
           <EdgeText style={styles.tappableText}>{lstrings.view_assets}</EdgeText>
-        </TouchableOpacity>
+        </EdgeTouchableOpacity>
       )}
 
       <ButtonsViewUi4
