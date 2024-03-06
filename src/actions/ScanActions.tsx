@@ -179,6 +179,8 @@ export function handleWalletUris(
   fioAddress?: string
 ): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    const state = getState()
+    const { account } = state.core
     const { legacyAddress, metadata, minNativeAmount, nativeAmount, publicAddress, uniqueIdentifier, tokenId = null } = parsedUri
     const currencyCode: string = parsedUri.currencyCode ?? wallet.currencyInfo.currencyCode
 
@@ -202,7 +204,7 @@ export function handleWalletUris(
 
       if (parsedUri.privateKeys != null && parsedUri.privateKeys.length > 0) {
         // PRIVATE KEY URI
-        return await privateKeyModalActivated(wallet, parsedUri.privateKeys)
+        return await privateKeyModalActivated(account, navigation, wallet, parsedUri.privateKeys)
       }
 
       // PUBLIC ADDRESS URI
@@ -238,7 +240,7 @@ export function handleWalletUris(
   }
 }
 
-async function privateKeyModalActivated(wallet: EdgeCurrencyWallet, privateKeys: string[]): Promise<void> {
+async function privateKeyModalActivated(account: EdgeAccount, navigation: NavigationBase, wallet: EdgeCurrencyWallet, privateKeys: string[]): Promise<void> {
   const message = sprintf(lstrings.private_key_modal_sweep_from_private_key_message, config.appName)
 
   await Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
@@ -251,7 +253,7 @@ async function privateKeyModalActivated(wallet: EdgeCurrencyWallet, privateKeys:
           confirm: {
             label: lstrings.private_key_modal_import,
             async onPress() {
-              await sweepPrivateKeys(wallet, privateKeys)
+              await sweepPrivateKeys(account, navigation, wallet, privateKeys)
               return true
             }
           },
@@ -262,7 +264,9 @@ async function privateKeyModalActivated(wallet: EdgeCurrencyWallet, privateKeys:
   ))
 }
 
-async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[]) {
+async function sweepPrivateKeys(account: EdgeAccount, navigation: NavigationBase, wallet: EdgeCurrencyWallet, privateKeys: string[]) {
+  if (checkAndShowLightBackupModal(account, navigation)) return
+
   try {
     const unsignedTx = await wallet.sweepPrivateKeys({
       tokenId: null,
