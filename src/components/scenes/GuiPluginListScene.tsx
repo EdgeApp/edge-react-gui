@@ -6,7 +6,7 @@ import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
 import { sprintf } from 'sprintf-js'
 
-import { showBackupForTransferModal } from '../../actions/BackupModalActions'
+import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { getDeviceSettings, writeDeveloperPluginUri } from '../../actions/DeviceSettingsActions'
 import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { readSyncedSettings, SyncedAccountSettings, updateOneSetting, writeSyncedSettings } from '../../actions/SettingsActions'
@@ -230,10 +230,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const plugin = guiPlugins[pluginId]
 
     // Don't allow light accounts to enter plugins
-    if (account.username == null) {
-      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
-      return
-    }
+    if (checkAndShowLightBackupModal(account, navigation)) return
 
     // Grab a custom URI if necessary:
     let { deepPath = undefined } = listRow

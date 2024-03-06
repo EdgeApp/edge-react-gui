@@ -3,7 +3,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { showBackupForTransferModal } from '../../actions/BackupModalActions'
+import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { DONE_THRESHOLD, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -32,16 +32,12 @@ export const BuyCrypto = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
-  const isLightAccount = account.username == null
 
   const syncRatio = useWatch(wallet, 'syncRatio')
 
   const handlePress = useHandler(() => {
-    if (isLightAccount) {
-      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
-    } else {
-      navigation.navigate('buyTab', { screen: 'pluginListBuy' })
-    }
+    if (checkAndShowLightBackupModal(account, navigation)) return
+    navigation.navigate('buyTab', { screen: 'pluginListBuy' })
   })
 
   const { displayName, pluginId } = wallet.currencyInfo

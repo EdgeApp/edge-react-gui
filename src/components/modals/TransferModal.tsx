@@ -7,12 +7,12 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
-import { showBackupForTransferModal } from '../../actions/BackupModalActions'
+import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
-import { useDispatch, useSelector } from '../../types/reactRedux'
+import { useDispatch } from '../../types/reactRedux'
 import { Airship } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
@@ -41,20 +41,17 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
   const style = styles(theme)
   const dispatch = useDispatch()
 
-  const activeUsername = useSelector(state => state.core.account.username)
-  const isLightAccount = activeUsername == null
-
   const handleSell = useHandler(() => {
-    if (isLightAccount) {
-      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+    if (checkAndShowLightBackupModal(account, navigation)) {
+      return
     } else {
       navigation.navigate('sellTab', { screen: 'pluginListSell' })
     }
     Airship.clear()
   })
   const handleBuy = useHandler(() => {
-    if (isLightAccount) {
-      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+    if (checkAndShowLightBackupModal(account, navigation)) {
+      return
     } else {
       navigation.navigate('buyTab', { screen: 'pluginListBuy' })
     }

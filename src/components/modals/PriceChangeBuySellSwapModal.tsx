@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
-import { showBackupForTransferModal } from '../../actions/BackupModalActions'
 import { PriceChangePayload } from '../../controllers/action-queue/types/pushPayloadTypes'
 import { lstrings } from '../../locales/strings'
 import { ThunkAction } from '../../types/reduxTypes'
@@ -13,7 +12,8 @@ export function launchPriceChangeBuySellSwapModal(navigation: NavigationBase, da
   return async (dispatch, getState) => {
     const state = getState()
     const { pluginId, body } = data
-    const currencyCode = state.core.account.currencyConfig[pluginId].currencyInfo.currencyCode
+    const { account } = state.core
+    const currencyCode = account.currencyConfig[pluginId].currencyInfo.currencyCode
 
     const threeButtonModal = await Airship.show<'buy' | 'sell' | 'exchange' | undefined>(bridge => (
       <ButtonsModal
@@ -29,11 +29,7 @@ export function launchPriceChangeBuySellSwapModal(navigation: NavigationBase, da
     ))
 
     if (threeButtonModal === 'buy') {
-      if (state.core.account.username == null) {
-        showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
-      } else {
-        navigation.navigate('buyTab', { screen: 'pluginListBuy' })
-      }
+      navigation.navigate('buyTab', { screen: 'pluginListBuy' })
     } else if (threeButtonModal === 'sell') {
       navigation.navigate('sellTab', { screen: 'pluginListSell' })
     } else if (threeButtonModal === 'exchange') {

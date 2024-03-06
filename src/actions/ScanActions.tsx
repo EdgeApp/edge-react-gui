@@ -20,6 +20,7 @@ import { logActivity } from '../util/logger'
 import { makeCurrencyCodeTable, upgradeCurrencyCodes } from '../util/tokenIdTools'
 import { getPluginIdFromChainCode, toListString, zeroString } from '../util/utils'
 import { cleanQueryFlags, openBrowserUri } from '../util/WebUtils'
+import { checkAndShowLightBackupModal } from './BackupModalActions'
 
 /**
  * Handle Request for Address Links (WIP - pending refinement).
@@ -43,6 +44,9 @@ import { cleanQueryFlags, openBrowserUri } from '../util/WebUtils'
  *    infinite redirect loops).
  */
 export const doRequestAddress = async (navigation: NavigationBase, account: EdgeAccount, dispatch: Dispatch, link: RequestAddressLink) => {
+  // Block light accounts:
+  if (checkAndShowLightBackupModal(account, navigation)) return
+
   const { assets, post, redir, payer } = link
   try {
     // Check if all required fields are provided in the request

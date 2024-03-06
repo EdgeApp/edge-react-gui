@@ -7,7 +7,7 @@ import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
-import { showBackupForTransferModal } from '../../actions/BackupModalActions'
+import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -40,9 +40,7 @@ export const WcConnectionsScene = (props: Props) => {
   const [connecting, setConnecting] = React.useState(false)
 
   const account = useSelector(state => state.core.account)
-  const activeUsername = useSelector(state => state.core.account.username)
   const walletConnect = useWalletConnect()
-  const isLightAccount = activeUsername == null
 
   useMount(() => {
     if (uri != null) onScanSuccess(uri).catch(err => showError(err))
@@ -75,8 +73,8 @@ export const WcConnectionsScene = (props: Props) => {
   }
 
   const handleNewConnectionPress = async () => {
-    if (isLightAccount) {
-      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+    if (checkAndShowLightBackupModal(account, navigation)) {
+      return await Promise.resolve()
     } else {
       const result = await Airship.show<string | undefined>(bridge => (
         <ScanModal
