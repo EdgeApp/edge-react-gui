@@ -400,6 +400,7 @@ interface WidgetParams {
   mode: 'minimal'
   network: string
   networkList: string
+  fiatMethodList: string
 }
 
 interface WidgetParamsBuy extends WidgetParams {
@@ -580,6 +581,7 @@ export const kadoProvider: FiatProviderFactory = {
             if (direction === 'buy') {
               const urlParams: WidgetParamsBuy = {
                 apiKey: apiKey,
+                fiatMethodList: 'ach,wire',
                 network: blockchain,
                 networkList: blockchain,
                 onPayAmount: fiatAmount,
@@ -594,6 +596,7 @@ export const kadoProvider: FiatProviderFactory = {
             } else {
               const urlParams: WidgetParamsSell = {
                 apiKey: apiKey,
+                fiatMethodList: 'ach,wire',
                 network: blockchain,
                 networkList: blockchain,
                 offPayAmount: cryptoAmount,
