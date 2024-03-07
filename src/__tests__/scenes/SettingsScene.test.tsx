@@ -34,6 +34,7 @@ describe('MyComponent', () => {
           autoLogoutTimeInSeconds={600}
           contactsPermissionOn
           defaultFiat="iso:USD"
+          defaultScreen="home"
           developerModeOn
           spamFilterOn
           isLocked={false}
@@ -48,6 +49,7 @@ describe('MyComponent', () => {
           onTogglePinLoginEnabled={async () => undefined}
           onToggleContactsPermissionOn={async () => undefined}
           setAutoLogoutTimeInSeconds={async () => {}}
+          setDefaultScreen={async () => {}}
           showRestoreWalletsModal={async () => {}}
           showUnlockSettingsModal={async () => {}}
           toggleDeveloperMode={() => undefined}
@@ -76,6 +78,7 @@ describe('MyComponent', () => {
           autoLogoutTimeInSeconds={600}
           contactsPermissionOn
           defaultFiat="iso:USD"
+          defaultScreen="home"
           developerModeOn
           spamFilterOn
           isLocked
@@ -90,6 +93,7 @@ describe('MyComponent', () => {
           onTogglePinLoginEnabled={async () => undefined}
           onToggleContactsPermissionOn={async () => undefined}
           setAutoLogoutTimeInSeconds={async () => {}}
+          setDefaultScreen={async () => {}}
           showRestoreWalletsModal={async () => {}}
           showUnlockSettingsModal={async () => {}}
           toggleDeveloperMode={() => undefined}
