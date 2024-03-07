@@ -16,6 +16,7 @@
 - fixed: Various small visual fixes
 - fixed: Improve login performance by only loading account referral info for new accounts
 - fixed: FIO name transfer error when sending with no address
+- fixed: Android text fields not hiding text for certain secure fields
 
 ## 4.1.1 (2024-02-29)
 

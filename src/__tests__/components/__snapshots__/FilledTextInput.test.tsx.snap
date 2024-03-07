@@ -144,6 +144,7 @@ exports[`FilledTextInput should render with some props 1`] = `
       </StyledComponent(View)>
       <StyledComponent(TouchableOpacity)
         accessible={true}
+        extendTappable="full"
         onPress={[Function]}
         testID="string.clearIcon"
       >

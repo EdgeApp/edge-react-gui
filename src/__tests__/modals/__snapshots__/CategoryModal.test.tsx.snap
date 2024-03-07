@@ -740,7 +740,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               "marginHorizontal": -22,
               "marginVertical": -28,
               "opacity": 1,
-              "paddingHorizontal": 22,
               "paddingVertical": 28,
             }
           }
@@ -2165,7 +2164,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               "marginHorizontal": -22,
               "marginVertical": -28,
               "opacity": 1,
-              "paddingHorizontal": 22,
               "paddingVertical": 28,
             }
           }
