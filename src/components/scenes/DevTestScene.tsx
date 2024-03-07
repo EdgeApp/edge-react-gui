@@ -219,7 +219,7 @@ export function DevTestScene(props: Props) {
               const test = await Airship.show<'test1' | 'test2' | 'test3' | undefined>(bridge => (
                 <ButtonsModal
                   bridge={bridge}
-                  title="ButtonsModal"
+                  title="ButtonsModal ButtonsModal ButtonsModal"
                   message="message message message message message message message"
                   buttons={{
                     test1: { label: 'Long Text Long Text' },

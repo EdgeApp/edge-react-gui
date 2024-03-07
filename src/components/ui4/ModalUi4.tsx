@@ -145,7 +145,7 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
                 title ?? undefined
               )}
               {onCancel == null ? null : (
-                <TouchableOpacity style={isCustomTitle ? styles.closeIconContainerAbsolute : styles.closeIconContainer} onPress={onCancel}>
+                <TouchableOpacity style={styles.closeIconContainerAbsolute} onPress={onCancel}>
                   <AntDesignIcon name="close" color={theme.deactivatedText} size={theme.rem(1.25)} />
                 </TouchableOpacity>
               )}
@@ -196,6 +196,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     left: 0,
     right: 0,
     top: 0
+
+    // borderColor: '#ffffff30',
+    // borderWidth: 0.5
   },
   dragBar: {
     backgroundColor: theme.modalDragbarColor,
@@ -206,17 +209,22 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   closeIconContainer: {
     // Used when this component is managing the title
-    flexGrow: 1, // Push the title to the left
+    // flexGrow: 1, // Push the title to the left
+    position: 'absolute',
+    right: 0,
+    top: 0,
     alignSelf: 'flex-start',
     alignItems: 'flex-end',
     justifyContent: 'flex-start',
     // Increase tappable area with padding, while net X with negative margin to visually appear as if X padding
-    paddingTop: theme.rem(1.15), // Bake in margins to align with 1 line of text, no matter the number of lines
-    paddingRight: theme.rem(1.25), // Less margins because the icon itself comes with whitespace
+    paddingTop: theme.rem(1),
+    paddingHorizontal: theme.rem(1), // Less margins because the icon itself comes with whitespace
     paddingBottom: theme.rem(0.75),
     marginTop: -theme.rem(1),
     marginRight: -theme.rem(1),
     marginBottom: -theme.rem(0.75)
+    // borderColor: '#ffffff30',
+    // borderWidth: 0.5
   },
   closeIconContainerAbsolute: {
     // Used when the caller passes a special title that may span the entire
@@ -224,24 +232,29 @@ const getStyles = cacheStyles((theme: Theme) => ({
     position: 'absolute',
     top: 0,
     right: 0,
-    paddingTop: theme.rem(1), // Bake in margins to align with 1 line of text, no matter the number of lines
-    paddingRight: theme.rem(1.25), // Less margins because the icon itself comes with whitespace
-    paddingBottom: theme.rem(0.75),
+    paddingTop: theme.rem(1),
+    paddingRight: theme.rem(1),
+    paddingBottom: theme.rem(1),
     paddingLeft: theme.rem(1),
-    marginTop: -theme.rem(1),
-    marginRight: -theme.rem(1),
+    marginRight: -theme.rem(0.5),
     marginBottom: -theme.rem(0.75)
+    // borderColor: '#ffffff30',
+    // borderWidth: 0.5
   },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginTop: theme.rem(1.25), // Ensure the top drag bar is not overlapped
-    marginBottom: theme.rem(0.5)
+    paddingTop: theme.rem(1.6), // Ensure the top drag bar is not overlapped
+    marginBottom: theme.rem(0.5),
+    paddingRight: theme.rem(3)
+    // borderColor: '#ffffff30',
+    // borderWidth: 0.5
   },
   titleText: {
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1.2),
     marginHorizontal: theme.rem(0.5),
     flexShrink: 1
+    // backgroundColor: '#00ffd923'
   }
 }))
