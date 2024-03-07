@@ -126,7 +126,9 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     blurOnSubmit,
     disabled = false,
     inputAccessoryViewID,
+    keyboardType,
     maxLength,
+    returnKeyType,
     secureTextEntry,
     testID,
     textsizeRem,
@@ -217,8 +219,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
 
   // HACK: Some Android devices/versions, mostly Samsung, have a bug where the
   // text input always blurs immediately after focusing.
-  const { keyboardType } = props
-  const hackKeyboardType = isAndroid && (keyboardType == null || keyboardType === 'default') ? 'visible-password' : keyboardType
+  const hackKeyboardType = isAndroid && !hidePassword && (keyboardType == null || keyboardType === 'default') ? 'visible-password' : keyboardType
 
   return (
     <View style={spaceStyle}>
@@ -242,7 +243,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               editable={!disabled}
               ref={inputRef}
               keyboardType={hackKeyboardType}
-              returnKeyType={props.returnKeyType}
+              returnKeyType={returnKeyType}
               accessibilityState={{ disabled }}
               autoFocus={autoFocus}
               disableAnimation={disableAnimation}
