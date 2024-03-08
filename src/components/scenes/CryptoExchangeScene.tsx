@@ -137,7 +137,7 @@ export const CryptoExchangeScene = (props: Props) => {
     dispatch(updateMostRecentWalletsSelected(walletId, tokenId))
   })
 
-  const handleMax = () => {
+  const handleMax = useHandler(() => {
     if (toWallet == null) {
       showWarning(`${lstrings.loan_select_receiving_wallet}`)
       Keyboard.dismiss()
@@ -159,9 +159,9 @@ export const CryptoExchangeScene = (props: Props) => {
     }
 
     getQuote(request)
-  }
+  })
 
-  const handleNext = () => {
+  const handleNext = useHandler(() => {
     if (fromWallet == null || toWallet == null) {
       // Should never happen because next UI is hidden unless both source/destination wallets are selected
       throw new Error('No wallet selected')
@@ -184,7 +184,7 @@ export const CryptoExchangeScene = (props: Props) => {
     if (checkExceedsAmount()) return
 
     getQuote(request)
-  }
+  })
 
   const getQuote = (swapRequest: EdgeSwapRequest) => {
     if (fromWallet == null || toWallet == null) {
@@ -233,41 +233,41 @@ export const CryptoExchangeScene = (props: Props) => {
     return whichWalletFocus === 'from' && gte(fromNativeBalance, '0') && gt(fromAmountNative, fromNativeBalance)
   }
 
-  const launchFromWalletSelector = () => {
-    renderDropUp('from')
-  }
+  const handleFromSelectWallet = useHandler(() => {
+    showWalletListModal('from')
+  })
 
-  const launchToWalletSelector = () => {
-    renderDropUp('to')
-  }
+  const handleToSelectWallet = useHandler(() => {
+    showWalletListModal('to')
+  })
 
-  const focusFromWallet = () => {
+  const handleFromFocusWallet = useHandler(() => {
     setState({
       ...state,
       whichWalletFocus: 'from'
     })
-  }
+  })
 
-  const focusToWallet = () => {
+  const handleToFocusWallet = useHandler(() => {
     setState({
       ...state,
       whichWalletFocus: 'to'
     })
-  }
+  })
 
-  const fromAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
+  const handleFromAmountChange = useHandler((amounts: ExchangedFlipInputAmounts) => {
     setState({
       ...state,
       fromAmountNative: amounts.nativeAmount
     })
-  }
+  })
 
-  const toAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
+  const handleToAmountChange = useHandler((amounts: ExchangedFlipInputAmounts) => {
     setState({
       ...state,
       toAmountNative: amounts.nativeAmount
     })
-  }
+  })
 
   //
   // Render
@@ -300,7 +300,7 @@ export const CryptoExchangeScene = (props: Props) => {
     return null
   }
 
-  const renderDropUp = (whichWallet: 'from' | 'to') => {
+  const showWalletListModal = (whichWallet: 'from' | 'to') => {
     Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
@@ -340,10 +340,10 @@ export const CryptoExchangeScene = (props: Props) => {
           currencyCode={fromCurrencyCode}
           displayDenomination={fromWalletDisplayDenomination}
           overridePrimaryNativeAmount={state.fromAmountNative}
-          launchWalletSelector={launchFromWalletSelector}
-          onCryptoExchangeAmountChanged={fromAmountChanged}
+          onSelectWallet={handleFromSelectWallet}
+          onAmountChanged={handleFromAmountChange}
           isFocused={isFromFocused}
-          focusMe={focusFromWallet}
+          onFocuseWallet={handleFromFocusWallet}
           onNext={handleNext}
         >
           {hasMaxSpend ? <MiniButton label={lstrings.string_max_cap} marginRem={[0.5, 0, 0.75]} onPress={handleMax} alignSelf="center" /> : null}
@@ -360,10 +360,10 @@ export const CryptoExchangeScene = (props: Props) => {
           currencyCode={toCurrencyCode}
           displayDenomination={toWalletDisplayDenomination}
           overridePrimaryNativeAmount={state.toAmountNative}
-          launchWalletSelector={launchToWalletSelector}
-          onCryptoExchangeAmountChanged={toAmountChanged}
+          onSelectWallet={handleToSelectWallet}
+          onAmountChanged={handleToAmountChange}
           isFocused={isToFocused}
-          focusMe={focusToWallet}
+          onFocuseWallet={handleToFocusWallet}
           onNext={handleNext}
         />
       </EdgeAnim>

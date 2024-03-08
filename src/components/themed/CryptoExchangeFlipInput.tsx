@@ -27,9 +27,9 @@ interface Props {
   overridePrimaryNativeAmount: string
   isFocused: boolean
   isThinking?: boolean
-  focusMe: () => void
-  launchWalletSelector: () => void
-  onCryptoExchangeAmountChanged: (amounts: ExchangedFlipInputAmounts) => void
+  onFocuseWallet: () => void
+  onSelectWallet: () => void
+  onAmountChanged: (amounts: ExchangedFlipInputAmounts) => void
   onNext: () => void
   onFocus?: () => void
   onBlur?: () => void
@@ -74,17 +74,17 @@ export const CryptoExchangeFlipInput = (props: Props) => {
   //
 
   const handleAmountsChanged = (amounts: ExchangedFlipInputAmounts) => {
-    props.onCryptoExchangeAmountChanged(amounts)
+    props.onAmountChanged(amounts)
   }
 
   const launchSelector = () => {
     setErrorMessage('')
-    props.launchWalletSelector()
+    props.onSelectWallet()
   }
 
   const focusMe = () => {
     setErrorMessage('')
-    props.focusMe()
+    props.onFocuseWallet()
   }
 
   //
