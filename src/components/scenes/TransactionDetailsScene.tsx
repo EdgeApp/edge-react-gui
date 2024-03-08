@@ -126,6 +126,7 @@ const TransactionDetailsComponent = (props: Props) => {
         returnKeyType="done"
         keyboardType="numeric"
         submitLabel={lstrings.string_save}
+        textSizeRem={1.5}
         title={sprintf(lstrings.transaction_details_amount_in_fiat, fiatCurrencyCode)}
       />
     ))
