@@ -16,7 +16,7 @@ import { sprintf } from 'sprintf-js'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
-import { useDispatch, useSelector } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { convertNativeToDisplay } from '../../util/utils'
@@ -46,7 +46,6 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
   const { route, navigation } = props
   const { swapRequest, swapRequestOptions, onCancel, onDone } = route.params
 
-  const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
 
   const fromDenomination = useDisplayDenom(swapRequest.fromWallet.currencyConfig, swapRequest.fromTokenId)
@@ -92,15 +91,7 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
         const insufficientFunds = asMaybeInsufficientFundsError(error)
         if (insufficientFunds != null && swapRequest.fromTokenId !== insufficientFunds.tokenId) {
           await Airship.show(bridge => (
-            <InsufficientFeesModal
-              bridge={bridge}
-              coreError={insufficientFunds}
-              navigation={navigation}
-              wallet={swapRequest.fromWallet}
-              onSwap={() => {
-                dispatch({ type: 'SHIFT_COMPLETE' })
-              }}
-            />
+            <InsufficientFeesModal bridge={bridge} coreError={insufficientFunds} navigation={navigation} wallet={swapRequest.fromWallet} />
           ))
         }
       }

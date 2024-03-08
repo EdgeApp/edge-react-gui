@@ -1,5 +1,5 @@
 import { Disklet } from 'disklet'
-import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeSwapPluginType, EdgeTokenId } from 'edge-core-js'
+import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeSwapPluginType } from 'edge-core-js'
 
 import { ExchangeInfo } from '../actions/ExchangeInfoActions'
 import { NotificationSettings } from '../actions/NotificationActions'
@@ -27,7 +27,6 @@ type NoDataActionName =
   | 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD'
   | 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED'
   | 'PASSWORD_USED'
-  | 'SHIFT_COMPLETE'
   | 'SPAM_FILTER_ON'
   | 'SPAM_FILTER_OFF'
   | 'FIO/EXPIRED_REMINDER_SHOWN'
@@ -66,13 +65,6 @@ export type Action =
   | { type: 'NOTIFICATION_SETTINGS_UPDATE'; data: NotificationSettings }
   | { type: 'PROMOTION_ADDED'; data: Promotion }
   | { type: 'PROMOTION_REMOVED'; data: string /* installerId */ }
-  | {
-      type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE' | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE'
-      data: {
-        walletId: string
-        tokenId: EdgeTokenId
-      }
-    }
   | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS'; data: { contacts: GuiContact[] } }
   | { type: 'RESET_WALLET_LOADING_PROGRESS'; data: { walletId: string } }
   | { type: 'SET_TRANSACTION_SUBCATEGORIES'; data: { subcategories: string[] } }

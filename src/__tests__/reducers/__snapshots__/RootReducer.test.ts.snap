@@ -31,14 +31,6 @@ exports[`initialState 1`] = `
     "enabledDetectedTokens": {},
     "otpErrorShown": false,
   },
-  "cryptoExchange": {
-    "fromNativeAmount": "0",
-    "fromTokenId": null,
-    "fromWalletId": null,
-    "toNativeAmount": "0",
-    "toTokenId": null,
-    "toWalletId": null,
-  },
   "deviceReferral": {
     "messages": [],
     "plugins": [],

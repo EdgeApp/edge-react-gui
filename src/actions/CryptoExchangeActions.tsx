@@ -1,20 +1,20 @@
 import { add, div, toFixed } from 'biggystring'
-import { EdgeSwapQuote, EdgeSwapResult, EdgeTokenId } from 'edge-core-js'
+import { EdgeSwapQuote, EdgeSwapResult } from 'edge-core-js'
 import { Alert } from 'react-native'
 
 import { showError } from '../components/services/AirshipInstance'
 import { formatNumber } from '../locales/intl'
 import { lstrings } from '../locales/strings'
-import { getExchangeDenom, getExchangeDenomByCurrencyCode, selectDisplayDenom } from '../selectors/DenominationSelectors'
+import { getExchangeDenom, selectDisplayDenom } from '../selectors/DenominationSelectors'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
-import { GuiCurrencyInfo, GuiSwapInfo } from '../types/types'
+import { GuiSwapInfo } from '../types/types'
 import { CryptoAmount } from '../util/CryptoAmount'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { logEvent } from '../util/tracking'
-import { convertNativeToDisplay, convertNativeToExchange, DECIMAL_PRECISION, decimalOrZero, getDenomFromIsoCode } from '../util/utils'
+import { convertNativeToExchange, DECIMAL_PRECISION } from '../util/utils'
 import { updateSwapCount } from './RequestReviewActions'
 
 // TODO: Use new hooks and utility methods for all conversions here
@@ -108,7 +108,6 @@ export function shiftCryptoCurrency(navigation: NavigationBase, quote: EdgeSwapQ
       navigation.push('exchangeSuccess', {})
 
       // Dispatch the success action and callback
-      dispatch({ type: 'SHIFT_COMPLETE' })
       onApprove()
 
       await updateSwapCount(state)
@@ -137,39 +136,6 @@ export function shiftCryptoCurrency(navigation: NavigationBase, quote: EdgeSwapQ
   }
 }
 
-export function selectWalletForExchange(walletId: string, tokenId: EdgeTokenId, direction: 'from' | 'to'): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const wallet = state.core.account.currencyWallets[walletId]
-    const currencyCode = getCurrencyCode(wallet, tokenId)
-    const balanceMessage = await getBalanceMessage(state, walletId, tokenId)
-    const primaryDisplayDenomination = selectDisplayDenom(state, wallet.currencyConfig, tokenId)
-    const primaryExchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
-    const primaryInfo: GuiCurrencyInfo = {
-      walletId,
-      tokenId,
-      displayCurrencyCode: currencyCode,
-      exchangeCurrencyCode: currencyCode,
-      displayDenomination: primaryDisplayDenomination,
-      exchangeDenomination: primaryExchangeDenomination
-    }
-
-    const data = {
-      walletId,
-      tokenId,
-      balanceMessage,
-      currencyCode: currencyCode,
-      primaryInfo
-    }
-
-    if (direction === 'from') {
-      dispatch({ type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE', data })
-    } else {
-      dispatch({ type: 'SELECT_TO_WALLET_CRYPTO_EXCHANGE', data })
-    }
-  }
-}
-
 export function checkEnabledExchanges(): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()
@@ -188,30 +154,4 @@ export function checkEnabledExchanges(): ThunkAction<void> {
       Alert.alert(lstrings.no_exchanges_available, lstrings.check_exchange_settings)
     }
   }
-}
-
-async function getBalanceMessage(state: RootState, walletId: string, tokenId: EdgeTokenId) {
-  const { account } = state.core
-  const { currencyWallets } = account
-  const wallet = currencyWallets[walletId]
-  const currencyCode = getCurrencyCode(wallet, tokenId)
-
-  const balanceInCrypto = wallet.balanceMap.get(tokenId) ?? '0'
-  const isoFiatCurrencyCode = wallet.fiatCurrencyCode
-  const exchangeDenomination = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
-  const balanceInCryptoDisplay = convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
-  const balanceInFiat = parseFloat(convertCurrency(state, currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay))
-
-  const displayDenomination = selectDisplayDenom(state, wallet.currencyConfig, tokenId)
-
-  const cryptoBalanceAmount: string = convertNativeToDisplay(displayDenomination.multiplier)(balanceInCrypto) // convert to correct denomination
-  const cryptoBalanceAmountString = cryptoBalanceAmount ? formatNumber(decimalOrZero(toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
-  const balanceInFiatString = formatNumber(balanceInFiat || 0, { toFixed: 2 })
-
-  const fiatCurrencyCode = getDenomFromIsoCode(isoFiatCurrencyCode)
-  const fiatDisplayCode = fiatCurrencyCode.symbol
-
-  if (fiatDisplayCode == null) return ''
-
-  return 'Balance: ' + cryptoBalanceAmountString + ' ' + displayDenomination.name + ' (' + fiatDisplayCode + ' ' + balanceInFiatString + ')'
 }
