@@ -6,6 +6,7 @@
 - changed: 2FA/otp modals moved behind a notification card instead of showing instantly on login
 - changed: Password reminder modal only shows after tapping new persistent notification
 - changed: Move wallet activation redux values to scenes
+- changed: Button width remains constant regardless of content visibility
 - fixed: FIO name transfer error when sending with no address
 
 ## 4.2.0
