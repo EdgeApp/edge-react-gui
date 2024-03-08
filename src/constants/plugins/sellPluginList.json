@@ -46,6 +46,17 @@
     "paymentTypeLogoKey": "bank"
   },
   {
+    "id": "fasterpayments",
+    "pluginId": "fasterpayments",
+    "paymentType": "fasterpayments",
+    "paymentTypes": ["fasterpayments"],
+    "description": "Fee: ~1.5%\nSettlement: 1 hour - 24 hours",
+    "title": "Faster Payments",
+    "forCountries": ["GB"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
     "id": "interac",
     "pluginId": "interac",
     "paymentType": "interac",
@@ -427,6 +438,10 @@
   },
   {
     "id": "colombiabank",
+    "sortIndex": 10
+  },
+  {
+    "id": "fasterpayments",
     "sortIndex": 10
   },
   {

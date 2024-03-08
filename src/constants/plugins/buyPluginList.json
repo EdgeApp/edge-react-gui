@@ -244,6 +244,17 @@
     "paymentTypeLogoKey": "credit"
   },
   {
+    "id": "fasterpayments",
+    "pluginId": "fasterpayments",
+    "paymentType": "fasterpayments",
+    "paymentTypes": ["fasterpayments"],
+    "description": "Fee: ~1.5%\nSettlement: 1 hour - 24 hours",
+    "title": "Faster Payments",
+    "forCountries": ["GB"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
     "id": "iach",
     "pluginId": "iach",
     "paymentType": "iach",
@@ -417,6 +428,10 @@
     }
   },
   "----- Sorting -----",
+  {
+    "id": "fasterpayments",
+    "sortIndex": 10
+  },
   {
     "id": "iach",
     "sortIndex": 10

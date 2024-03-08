@@ -88,9 +88,11 @@ type AllowedPaymentTypes = Record<FiatDirection, { [Payment in FiatPaymentType]?
 
 const allowedPaymentTypes: AllowedPaymentTypes = {
   buy: {
+    fasterpayments: true,
     sepa: true
   },
   sell: {
+    fasterpayments: true,
     sepa: true
   }
 }
