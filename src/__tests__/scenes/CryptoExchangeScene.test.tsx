@@ -10,28 +10,13 @@ import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
 describe('CryptoExchangeComponent', () => {
   it('should render with loading props', () => {
-    const fakeAccount: any = {}
-
-    const fromWalletInfo = {
-      fromWalletId: '',
-      fromTokenId: null
-    }
-
-    const toWalletInfo = {
-      toWalletId: '',
-      toTokenId: null
-    }
-
     const rootState: FakeState = { ...fakeRootState }
 
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
         <CryptoExchangeComponent
           {...fakeSceneProps('exchange', {})}
-          account={fakeAccount}
           exchangeInfo={initialState}
-          fromWalletInfo={fromWalletInfo}
-          toWalletInfo={toWalletInfo}
           onSelectWallet={async () => undefined}
           getQuoteForTransaction={() => undefined}
         />

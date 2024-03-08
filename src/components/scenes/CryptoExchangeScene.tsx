@@ -1,5 +1,5 @@
 import { gt, gte } from 'biggystring'
-import { EdgeAccount, EdgeCurrencyWallet, EdgeSwapRequest, EdgeTokenId } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeSwapRequest, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
 import { Keyboard } from 'react-native'
@@ -11,6 +11,7 @@ import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -39,24 +40,13 @@ export interface SwapErrorDisplayInfo {
 interface OwnProps extends EdgeSceneProps<'exchange'> {}
 
 interface StateProps {
-  account: EdgeAccount
   exchangeInfo: ExchangeInfo
 
   // The following props are used to populate the CryptoExchangeFlipInputs
-  fromWalletInfo: FromWalletInfo
-  toWalletInfo: ToWalletInfo
-}
-
-interface FromWalletInfo {
-  fromWallet?: EdgeCurrencyWallet
-  fromTokenId: EdgeTokenId
-  fromWalletId: string
-}
-
-interface ToWalletInfo {
-  toWallet?: EdgeCurrencyWallet
-  toTokenId: EdgeTokenId
-  toWalletId: string
+  fromWalletId?: string | undefined
+  fromTokenId?: EdgeTokenId
+  toWalletId?: string | undefined
+  toTokenId?: EdgeTokenId
 }
 
 interface DispatchProps {
@@ -73,16 +63,6 @@ interface State {
   paddingBottom: number
 }
 
-const defaultFromWalletInfo: FromWalletInfo = {
-  fromTokenId: null,
-  fromWalletId: ''
-}
-
-const defaultToWalletInfo: ToWalletInfo = {
-  toTokenId: null,
-  toWalletId: ''
-}
-
 const defaultState: State = {
   whichWalletFocus: 'from',
   fromAmountNative: '',
@@ -96,7 +76,7 @@ const emptyDenomnination = {
 }
 
 export const CryptoExchangeComponent = (props: Props) => {
-  const { route } = props
+  const { route, fromWalletId, fromTokenId = null, toWalletId, toTokenId = null } = props
   const { errorDisplayInfo } = route.params ?? {}
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -105,26 +85,28 @@ export const CryptoExchangeComponent = (props: Props) => {
     ...defaultState
   })
 
-  const toWalletName = props.toWalletInfo.toWallet == null ? '' : getWalletName(props.toWalletInfo.toWallet)
-  const fromWalletName = props.fromWalletInfo.fromWallet == null ? '' : getWalletName(props.fromWalletInfo.fromWallet)
-  const fromCurrencyCode = props.fromWalletInfo.fromWallet == null ? '' : getCurrencyCode(props.fromWalletInfo.fromWallet, props.fromWalletInfo.fromTokenId)
-  const toCurrencyCode = props.toWalletInfo.toWallet == null ? '' : getCurrencyCode(props.toWalletInfo.toWallet, props.toWalletInfo.toTokenId)
+  const account = useSelector(state => state.core.account)
+  const currencyWallets = useWatch(account, 'currencyWallets')
+
+  const toWallet: EdgeCurrencyWallet | undefined = toWalletId == null ? undefined : currencyWallets[toWalletId]
+  const fromWallet: EdgeCurrencyWallet | undefined = fromWalletId == null ? undefined : currencyWallets[fromWalletId]
+
+  const toWalletName = toWallet == null ? '' : getWalletName(toWallet)
+  const fromWalletName = fromWallet == null ? '' : getWalletName(fromWallet)
+  const fromCurrencyCode = fromWallet == null ? '' : getCurrencyCode(fromWallet, fromTokenId)
+  const toCurrencyCode = toWallet == null ? '' : getCurrencyCode(toWallet, toTokenId)
 
   const toWalletDisplayDenomination = useSelector(state =>
-    props.toWalletInfo.toWallet == null
-      ? emptyDenomnination
-      : selectDisplayDenom(state, props.toWalletInfo.toWallet.currencyConfig, props.toWalletInfo.toTokenId)
+    toWallet == null ? emptyDenomnination : selectDisplayDenom(state, toWallet.currencyConfig, toTokenId)
   )
   const fromWalletDisplayDenomination = useSelector(state =>
-    props.fromWalletInfo.fromWallet == null
-      ? emptyDenomnination
-      : selectDisplayDenom(state, props.fromWalletInfo.fromWallet.currencyConfig, props.toWalletInfo.toTokenId)
+    fromWallet == null ? emptyDenomnination : selectDisplayDenom(state, fromWallet.currencyConfig, toTokenId)
   )
-  const fromWalletSpecialCurrencyInfo = getSpecialCurrencyInfo(props.fromWalletInfo.fromWallet?.currencyInfo.pluginId ?? '')
-  const fromWalletBalanceMap = props.fromWalletInfo.fromWallet?.balanceMap ?? new Map<string, string>()
+  const fromWalletSpecialCurrencyInfo = getSpecialCurrencyInfo(fromWallet?.currencyInfo.pluginId ?? '')
+  const fromWalletBalanceMap = fromWallet?.balanceMap ?? new Map<string, string>()
 
   const checkDisableAsset = (disableAssets: DisableAsset[], walletId: string, tokenId: EdgeTokenId): boolean => {
-    const wallet = props.account.currencyWallets[walletId] ?? { currencyInfo: {} }
+    const wallet = currencyWallets[walletId] ?? { currencyInfo: {} }
     const walletPluginId = wallet.currencyInfo.pluginId
     const walletTokenId = tokenId
     for (const disableAsset of disableAssets) {
@@ -138,42 +120,42 @@ export const CryptoExchangeComponent = (props: Props) => {
   }
 
   const handleMax = () => {
-    if (props.toWalletInfo.toWallet == null) {
+    if (toWallet == null) {
       showWarning(`${lstrings.loan_select_receiving_wallet}`)
       Keyboard.dismiss()
       return
     }
 
-    if (props.fromWalletInfo.fromWallet == null) {
+    if (fromWallet == null) {
       // Should never happen because max button UI is hidden unless a source wallet is selected
       throw new Error('No wallet selected')
     }
 
     const request: EdgeSwapRequest = {
-      fromTokenId: props.fromWalletInfo.fromTokenId,
-      fromWallet: props.fromWalletInfo.fromWallet,
+      fromTokenId: fromTokenId,
+      fromWallet: fromWallet,
       nativeAmount: '0',
       quoteFor: 'max',
-      toTokenId: props.toWalletInfo.toTokenId,
-      toWallet: props.toWalletInfo.toWallet
+      toTokenId: toTokenId,
+      toWallet: toWallet
     }
 
     getQuote(request)
   }
 
   const handleNext = () => {
-    if (props.fromWalletInfo.fromWallet == null || props.toWalletInfo.toWallet == null) {
+    if (fromWallet == null || toWallet == null) {
       // Should never happen because next UI is hidden unless both source/destination wallets are selected
       throw new Error('No wallet selected')
     }
 
     const request: EdgeSwapRequest = {
-      fromTokenId: props.fromWalletInfo.fromTokenId,
-      fromWallet: props.fromWalletInfo.fromWallet,
+      fromTokenId: fromTokenId,
+      fromWallet: fromWallet,
       nativeAmount: state.whichWalletFocus === 'from' ? state.fromAmountNative : state.toAmountNative,
       quoteFor: state.whichWalletFocus,
-      toTokenId: props.toWalletInfo.toTokenId,
-      toWallet: props.toWalletInfo.toWallet
+      toTokenId: toTokenId,
+      toWallet: toWallet
     }
 
     if (zeroString(request.nativeAmount)) {
@@ -187,15 +169,20 @@ export const CryptoExchangeComponent = (props: Props) => {
   }
 
   const getQuote = (request: EdgeSwapRequest) => {
+    if (fromWallet == null || toWallet == null) {
+      // Should never happen because next UI is hidden unless both source/destination wallets are selected
+      throw new Error('No wallet selected')
+    }
+
     const { exchangeInfo, navigation } = props
     if (exchangeInfo != null) {
-      const disableSrc = checkDisableAsset(exchangeInfo.swap.disableAssets.source, props.fromWalletInfo.fromWalletId, props.fromWalletInfo.fromTokenId)
+      const disableSrc = checkDisableAsset(exchangeInfo.swap.disableAssets.source, fromWallet.id, fromTokenId)
       if (disableSrc) {
         showError(sprintf(lstrings.exchange_asset_unsupported, fromCurrencyCode))
         return
       }
 
-      const disableDest = checkDisableAsset(exchangeInfo.swap.disableAssets.destination, props.toWalletInfo.toWalletId, props.toWalletInfo.toTokenId)
+      const disableDest = checkDisableAsset(exchangeInfo.swap.disableAssets.destination, toWallet.id, toTokenId)
       if (disableDest) {
         showError(sprintf(lstrings.exchange_asset_unsupported, toCurrencyCode))
         return
@@ -210,7 +197,6 @@ export const CryptoExchangeComponent = (props: Props) => {
   }
 
   const checkExceedsAmount = (): boolean => {
-    const { fromTokenId } = props.fromWalletInfo
     const { fromAmountNative, whichWalletFocus } = state
     const fromNativeBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
 
@@ -262,8 +248,6 @@ export const CryptoExchangeComponent = (props: Props) => {
   }
 
   const renderAlert = () => {
-    const { fromTokenId } = props.fromWalletInfo
-
     const { minimumPopupModals } = fromWalletSpecialCurrencyInfo
     const primaryNativeBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
 
@@ -316,7 +300,7 @@ export const CryptoExchangeComponent = (props: Props) => {
       </EdgeAnim>
       <EdgeAnim enter={fadeInUp60}>
         <CryptoExchangeFlipInput
-          wallet={props.fromWalletInfo.fromWallet}
+          wallet={fromWallet}
           buttonText={lstrings.select_src_wallet}
           headerText={fromHeaderText}
           currencyCode={fromCurrencyCode}
@@ -336,7 +320,7 @@ export const CryptoExchangeComponent = (props: Props) => {
       </EdgeAnim>
       <EdgeAnim enter={fadeInDown30}>
         <CryptoExchangeFlipInput
-          wallet={props.toWalletInfo.toWallet}
+          wallet={toWallet}
           buttonText={lstrings.select_recv_wallet}
           headerText={toHeaderText}
           currencyCode={toCurrencyCode}
@@ -374,38 +358,12 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   const dispatch = useDispatch()
   const { navigation, route } = props
 
-  const account = useSelector(state => state.core.account)
-  const currencyWallets = useSelector(state => state.core.account.currencyWallets)
   const cryptoExchange = useSelector(state => state.cryptoExchange)
   const exchangeInfo = useSelector(state => state.ui.exchangeInfo)
 
   const swapRequestOptions = useSwapRequestOptions()
 
   const { fromWalletId, fromTokenId, toWalletId, toTokenId } = cryptoExchange
-
-  let fromWalletInfo = defaultFromWalletInfo
-  let toWalletInfo = defaultToWalletInfo
-
-  if (fromWalletId != null && currencyWallets[fromWalletId] != null) {
-    const fromWallet = currencyWallets[fromWalletId]
-
-    fromWalletInfo = {
-      fromWallet,
-      fromTokenId,
-      fromWalletId
-    }
-  }
-
-  // Get the values of the 'To' Wallet
-  if (toWalletId != null && currencyWallets[toWalletId] != null) {
-    const toWallet = currencyWallets[toWalletId]
-
-    toWalletInfo = {
-      toWallet,
-      toTokenId,
-      toWalletId
-    }
-  }
 
   const handleSelectWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId, direction: 'from' | 'to') => {
     await dispatch(selectWalletForExchange(walletId, tokenId, direction))
@@ -435,10 +393,11 @@ export const CryptoExchangeScene = (props: OwnProps) => {
       onSelectWallet={handleSelectWallet}
       getQuoteForTransaction={handleGetQuoteForTransaction}
       navigation={navigation}
-      account={account}
       exchangeInfo={exchangeInfo}
-      fromWalletInfo={fromWalletInfo}
-      toWalletInfo={toWalletInfo}
+      fromWalletId={fromWalletId == null ? undefined : fromWalletId}
+      fromTokenId={fromTokenId}
+      toWalletId={toWalletId == null ? undefined : toWalletId}
+      toTokenId={toTokenId}
     />
   )
 }
