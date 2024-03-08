@@ -33,37 +33,11 @@ exports[`initialState 1`] = `
   },
   "cryptoExchange": {
     "fromNativeAmount": "0",
+    "fromTokenId": null,
     "fromWalletId": null,
-    "fromWalletPrimaryInfo": {
-      "displayCurrencyCode": "",
-      "displayDenomination": {
-        "multiplier": "1",
-        "name": "",
-      },
-      "exchangeCurrencyCode": "",
-      "exchangeDenomination": {
-        "multiplier": "1",
-        "name": "",
-      },
-      "tokenId": null,
-      "walletId": "",
-    },
     "toNativeAmount": "0",
+    "toTokenId": null,
     "toWalletId": null,
-    "toWalletPrimaryInfo": {
-      "displayCurrencyCode": "",
-      "displayDenomination": {
-        "multiplier": "1",
-        "name": "",
-      },
-      "exchangeCurrencyCode": "",
-      "exchangeDenomination": {
-        "multiplier": "1",
-        "name": "",
-      },
-      "tokenId": null,
-      "walletId": "",
-    },
   },
   "deviceReferral": {
     "messages": [],

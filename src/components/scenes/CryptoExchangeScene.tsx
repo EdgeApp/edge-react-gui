@@ -12,10 +12,10 @@ import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstan
 import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
-import { emptyCurrencyInfo, GuiCurrencyInfo } from '../../types/types'
-import { getTokenId, getWalletTokenId } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
 import { EdgeAnim, fadeInDown30, fadeInDown60, fadeInDown90, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
@@ -54,7 +54,6 @@ interface FromWalletInfo {
   fromWalletId: string
   fromWalletBalanceMap: Map<EdgeTokenId, string>
   fromWalletName: string
-  fromWalletPrimaryInfo: GuiCurrencyInfo
   // Used to populate the confirmation modal
   fromCurrencyCode: string
 }
@@ -64,7 +63,6 @@ interface ToWalletInfo {
   toTokenId: EdgeTokenId
   toWalletId: string
   toWalletName: string
-  toWalletPrimaryInfo: GuiCurrencyInfo
   // Used to populate the confirmation modal
   toCurrencyCode: string
 }
@@ -89,7 +87,6 @@ const defaultFromWalletInfo: FromWalletInfo = {
   fromCurrencyCode: '',
   fromWalletBalanceMap: new Map<EdgeTokenId, string>(),
   fromWalletName: '',
-  fromWalletPrimaryInfo: emptyCurrencyInfo,
   fromWalletId: ''
 }
 
@@ -97,7 +94,6 @@ const defaultToWalletInfo: ToWalletInfo = {
   toTokenId: null,
   toCurrencyCode: '',
   toWalletName: '',
-  toWalletPrimaryInfo: emptyCurrencyInfo,
   toWalletId: ''
 }
 
@@ -106,6 +102,11 @@ const defaultState: State = {
   fromAmountNative: '',
   toAmountNative: '',
   paddingBottom: 0
+}
+
+const emptyDenomnination = {
+  name: '',
+  multiplier: '1'
 }
 
 export const CryptoExchangeComponent = (props: Props) => {
@@ -118,10 +119,21 @@ export const CryptoExchangeComponent = (props: Props) => {
     ...defaultState
   })
 
-  const checkDisableAsset = (disableAssets: DisableAsset[], walletId: string, guiCurrencyInfo: GuiCurrencyInfo): boolean => {
+  const toWalletDisplayDenomination = useSelector(state =>
+    props.toWalletInfo.toWallet == null
+      ? emptyDenomnination
+      : selectDisplayDenom(state, props.toWalletInfo.toWallet.currencyConfig, props.toWalletInfo.toTokenId)
+  )
+  const fromWalletDisplayDenomination = useSelector(state =>
+    props.fromWalletInfo.fromWallet == null
+      ? emptyDenomnination
+      : selectDisplayDenom(state, props.fromWalletInfo.fromWallet.currencyConfig, props.toWalletInfo.toTokenId)
+  )
+
+  const checkDisableAsset = (disableAssets: DisableAsset[], walletId: string, tokenId: EdgeTokenId): boolean => {
     const wallet = props.account.currencyWallets[walletId] ?? { currencyInfo: {} }
     const walletPluginId = wallet.currencyInfo.pluginId
-    const walletTokenId = guiCurrencyInfo.tokenId ?? getTokenId(props.account, walletPluginId, guiCurrencyInfo.exchangeCurrencyCode)
+    const walletTokenId = tokenId
     for (const disableAsset of disableAssets) {
       const { pluginId, tokenId } = disableAsset
       if (pluginId !== walletPluginId) continue
@@ -184,19 +196,15 @@ export const CryptoExchangeComponent = (props: Props) => {
   const getQuote = (request: EdgeSwapRequest) => {
     const { exchangeInfo, navigation } = props
     if (exchangeInfo != null) {
-      const disableSrc = checkDisableAsset(
-        exchangeInfo.swap.disableAssets.source,
-        props.fromWalletInfo.fromWalletId,
-        props.fromWalletInfo.fromWalletPrimaryInfo
-      )
+      const disableSrc = checkDisableAsset(exchangeInfo.swap.disableAssets.source, props.fromWalletInfo.fromWalletId, props.fromWalletInfo.fromTokenId)
       if (disableSrc) {
-        showError(sprintf(lstrings.exchange_asset_unsupported, props.fromWalletInfo.fromWalletPrimaryInfo.exchangeCurrencyCode))
+        showError(sprintf(lstrings.exchange_asset_unsupported, props.fromWalletInfo.fromCurrencyCode))
         return
       }
 
-      const disableDest = checkDisableAsset(exchangeInfo.swap.disableAssets.destination, props.toWalletInfo.toWalletId, props.toWalletInfo.toWalletPrimaryInfo)
+      const disableDest = checkDisableAsset(exchangeInfo.swap.disableAssets.destination, props.toWalletInfo.toWalletId, props.toWalletInfo.toTokenId)
       if (disableDest) {
-        showError(sprintf(lstrings.exchange_asset_unsupported, props.toWalletInfo.toWalletPrimaryInfo.exchangeCurrencyCode))
+        showError(sprintf(lstrings.exchange_asset_unsupported, props.toWalletInfo.toCurrencyCode))
         return
       }
     }
@@ -321,7 +329,8 @@ export const CryptoExchangeComponent = (props: Props) => {
           wallet={props.fromWalletInfo.fromWallet}
           buttonText={lstrings.select_src_wallet}
           headerText={fromHeaderText}
-          primaryCurrencyInfo={props.fromWalletInfo.fromWalletPrimaryInfo}
+          currencyCode={props.fromWalletInfo.fromCurrencyCode}
+          displayDenomination={fromWalletDisplayDenomination}
           overridePrimaryNativeAmount={state.fromAmountNative}
           launchWalletSelector={launchFromWalletSelector}
           onCryptoExchangeAmountChanged={fromAmountChanged}
@@ -340,7 +349,8 @@ export const CryptoExchangeComponent = (props: Props) => {
           wallet={props.toWalletInfo.toWallet}
           buttonText={lstrings.select_recv_wallet}
           headerText={toHeaderText}
-          primaryCurrencyInfo={props.toWalletInfo.toWalletPrimaryInfo}
+          currencyCode={props.toWalletInfo.toCurrencyCode}
+          displayDenomination={toWalletDisplayDenomination}
           overridePrimaryNativeAmount={state.toAmountNative}
           launchWalletSelector={launchToWalletSelector}
           onCryptoExchangeAmountChanged={toAmountChanged}
@@ -381,16 +391,14 @@ export const CryptoExchangeScene = (props: OwnProps) => {
 
   const swapRequestOptions = useSwapRequestOptions()
 
-  const { fromWalletId, toWalletId } = cryptoExchange
+  const { fromWalletId, fromTokenId, toWalletId, toTokenId } = cryptoExchange
 
   let fromWalletInfo = defaultFromWalletInfo
   let toWalletInfo = defaultToWalletInfo
 
   if (fromWalletId != null && currencyWallets[fromWalletId] != null) {
     const fromWallet = currencyWallets[fromWalletId]
-    const { fromWalletPrimaryInfo } = cryptoExchange
-    const { exchangeCurrencyCode } = fromWalletPrimaryInfo
-    const fromTokenId = getWalletTokenId(fromWallet, exchangeCurrencyCode)
+    const fromCurrencyCode = getCurrencyCode(fromWallet, fromTokenId)
 
     const fromWalletName = getWalletName(fromWallet)
     const { balanceMap: fromWalletBalanceMap } = fromWallet
@@ -401,8 +409,7 @@ export const CryptoExchangeScene = (props: OwnProps) => {
       fromWalletId,
       fromWalletName,
       fromWalletBalanceMap,
-      fromCurrencyCode: exchangeCurrencyCode,
-      fromWalletPrimaryInfo,
+      fromCurrencyCode,
       fromPluginId: fromWallet.currencyInfo.pluginId
     }
   }
@@ -410,9 +417,7 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   // Get the values of the 'To' Wallet
   if (toWalletId != null && currencyWallets[toWalletId] != null) {
     const toWallet = currencyWallets[toWalletId]
-    const { toWalletPrimaryInfo } = cryptoExchange
-    const { exchangeCurrencyCode } = toWalletPrimaryInfo
-    const toTokenId = getWalletTokenId(toWallet, exchangeCurrencyCode)
+    const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
 
     const toWalletName = getWalletName(toWallet)
 
@@ -421,8 +426,7 @@ export const CryptoExchangeScene = (props: OwnProps) => {
       toTokenId,
       toWalletId,
       toWalletName,
-      toCurrencyCode: exchangeCurrencyCode,
-      toWalletPrimaryInfo
+      toCurrencyCode
     }
   }
 

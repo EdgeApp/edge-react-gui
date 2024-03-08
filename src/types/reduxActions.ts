@@ -1,5 +1,5 @@
 import { Disklet } from 'disklet'
-import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeSwapPluginType } from 'edge-core-js'
+import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeSwapPluginType, EdgeTokenId } from 'edge-core-js'
 
 import { ExchangeInfo } from '../actions/ExchangeInfoActions'
 import { NotificationSettings } from '../actions/NotificationActions'
@@ -13,7 +13,7 @@ import { AccountInitPayload, SettingsState } from '../reducers/scenes/SettingsRe
 import { TweakSource } from '../util/ReferralHelpers'
 import { DeepLink } from './DeepLinkTypes'
 import { AccountReferral, DeviceReferral, Promotion, ReferralCache } from './ReferralTypes'
-import { FioAddress, FioDomain, GuiContact, GuiCurrencyInfo, GuiExchangeRates, MostRecentWallet, SpendingLimits, WalletListItem } from './types'
+import { FioAddress, FioDomain, GuiContact, GuiExchangeRates, MostRecentWallet, SpendingLimits, WalletListItem } from './types'
 
 // Actions with no payload:
 type NoDataActionName =
@@ -69,8 +69,8 @@ export type Action =
   | {
       type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE' | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE'
       data: {
-        primaryInfo: GuiCurrencyInfo
         walletId: string
+        tokenId: EdgeTokenId
       }
     }
   | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS'; data: { contacts: GuiContact[] } }

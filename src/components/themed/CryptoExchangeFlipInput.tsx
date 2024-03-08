@@ -1,5 +1,5 @@
 import { add } from 'biggystring'
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { useMemo, useState } from 'react'
 import { ActivityIndicator, View } from 'react-native'
@@ -7,7 +7,6 @@ import { ActivityIndicator, View } from 'react-native'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
-import { GuiCurrencyInfo } from '../../types/types'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertNativeToDenomination } from '../../util/utils'
@@ -23,7 +22,8 @@ interface Props {
   wallet?: EdgeCurrencyWallet
   buttonText: string
   headerText: string
-  primaryCurrencyInfo: GuiCurrencyInfo
+  currencyCode: string
+  displayDenomination: EdgeDenomination
   overridePrimaryNativeAmount: string
   isFocused: boolean
   isThinking?: boolean
@@ -37,8 +37,7 @@ interface Props {
 }
 
 export const CryptoExchangeFlipInput = (props: Props) => {
-  const { children, onNext, primaryCurrencyInfo, overridePrimaryNativeAmount, wallet } = props
-  const { displayCurrencyCode, displayDenomination } = primaryCurrencyInfo
+  const { children, currencyCode, displayDenomination, onNext, overridePrimaryNativeAmount, wallet } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -58,8 +57,8 @@ export const CryptoExchangeFlipInput = (props: Props) => {
   const tokenId = useMemo(() => {
     if (wallet == null) return null
     // This will error if wallet is undefined
-    return getTokenIdForced(account, wallet.currencyInfo.pluginId, displayCurrencyCode)
-  }, [account, displayCurrencyCode, wallet])
+    return getTokenIdForced(account, wallet.currencyInfo.pluginId, currencyCode)
+  }, [account, currencyCode, wallet])
 
   const cryptoAmount = useMemo(() => {
     if (wallet == null || tokenId == null) return
@@ -97,11 +96,7 @@ export const CryptoExchangeFlipInput = (props: Props) => {
       return null
     }
 
-    return (
-      <EdgeText style={styles.balanceText}>
-        {lstrings.string_wallet_balance + ': ' + cryptoAmount + ' ' + primaryCurrencyInfo.displayDenomination.name}
-      </EdgeText>
-    )
+    return <EdgeText style={styles.balanceText}>{lstrings.string_wallet_balance + ': ' + cryptoAmount + ' ' + displayDenomination.name}</EdgeText>
   }
 
   if (props.isThinking) {
@@ -114,7 +109,7 @@ export const CryptoExchangeFlipInput = (props: Props) => {
     )
   }
 
-  if (wallet == null || primaryCurrencyInfo == null) {
+  if (wallet == null) {
     return <MainButton label={props.buttonText} type="secondary" onPress={launchSelector} />
   }
 
@@ -122,7 +117,7 @@ export const CryptoExchangeFlipInput = (props: Props) => {
     return (
       <CardUi4>
         <RowUi4 icon={<CryptoIconUi4 sizeRem={1.75} walletId={wallet.id} tokenId={tokenId} />} onPress={focusMe}>
-          <EdgeText style={styles.text}>{guiWalletName + ': ' + displayCurrencyCode}</EdgeText>
+          <EdgeText style={styles.text}>{guiWalletName + ': ' + currencyCode}</EdgeText>
         </RowUi4>
       </CardUi4>
     )

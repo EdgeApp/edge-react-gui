@@ -1,26 +1,26 @@
+import { EdgeTokenId } from 'edge-core-js'
 import { Reducer } from 'redux'
 
 import { Action } from '../types/reduxTypes'
-import { emptyCurrencyInfo, GuiCurrencyInfo } from '../types/types'
 
 export interface CryptoExchangeState {
   fromWalletId: string | null
+  fromTokenId: EdgeTokenId
   fromNativeAmount: string
-  fromWalletPrimaryInfo: GuiCurrencyInfo // EdgeCurrencyInfo | null,
 
   toWalletId: string | null
+  toTokenId: EdgeTokenId
   toNativeAmount: string
-  toWalletPrimaryInfo: GuiCurrencyInfo // EdgeCurrencyInfo | null,
 }
 
 const initialState: CryptoExchangeState = {
   fromWalletId: null,
+  fromTokenId: null,
   fromNativeAmount: '0',
-  fromWalletPrimaryInfo: emptyCurrencyInfo,
 
   toWalletId: null,
-  toNativeAmount: '0',
-  toWalletPrimaryInfo: emptyCurrencyInfo
+  toTokenId: null,
+  toNativeAmount: '0'
 }
 
 function cryptoExchangeInner(state = initialState, action: Action): CryptoExchangeState {
@@ -29,7 +29,7 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
       return {
         ...state,
         fromWalletId: action.data.walletId,
-        fromWalletPrimaryInfo: action.data.primaryInfo,
+        fromTokenId: action.data.tokenId,
         fromNativeAmount: '0',
         toNativeAmount: '0'
       }
@@ -39,7 +39,7 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
       return {
         ...state,
         toWalletId: action.data.walletId,
-        toWalletPrimaryInfo: action.data.primaryInfo,
+        toTokenId: action.data.tokenId,
         fromNativeAmount: '0',
         toNativeAmount: '0'
       }

@@ -27,8 +27,8 @@ export const getSwapInfo = async (state: RootState, quote: EdgeSwapQuote): Promi
   const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
 
   // Format from amount:
-  const fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
-  const fromDisplayAmountTemp = div(quote.fromNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DECIMAL_PRECISION)
+  const fromDisplayDenomination = selectDisplayDenom(state, fromWallet.currencyConfig, fromTokenId)
+  const fromDisplayAmountTemp = div(quote.fromNativeAmount, fromDisplayDenomination.multiplier, DECIMAL_PRECISION)
   const fromDisplayAmount = toFixed(fromDisplayAmountTemp, 0, 8)
 
   // Format from fiat:
@@ -51,8 +51,8 @@ export const getSwapInfo = async (state: RootState, quote: EdgeSwapQuote): Promi
   const fromTotalFiat = formatNumber(add(fromBalanceInFiatRaw.toFixed(DECIMAL_PRECISION), feeFiatAmountRaw.toFixed(DECIMAL_PRECISION)), { toFixed: 2 })
 
   // Format to amount:
-  const toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
-  const toDisplayAmountTemp = div(quote.toNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DECIMAL_PRECISION)
+  const toDisplayDenomination = selectDisplayDenom(state, toWallet.currencyConfig, toTokenId)
+  const toDisplayAmountTemp = div(quote.toNativeAmount, toDisplayDenomination.multiplier, DECIMAL_PRECISION)
   const toDisplayAmount = toFixed(toDisplayAmountTemp, 0, 8)
 
   // Format to fiat:
@@ -141,23 +141,24 @@ export function selectWalletForExchange(walletId: string, tokenId: EdgeTokenId, 
   return async (dispatch, getState) => {
     const state = getState()
     const wallet = state.core.account.currencyWallets[walletId]
-    const cc = getCurrencyCode(wallet, tokenId)
+    const currencyCode = getCurrencyCode(wallet, tokenId)
     const balanceMessage = await getBalanceMessage(state, walletId, tokenId)
     const primaryDisplayDenomination = selectDisplayDenom(state, wallet.currencyConfig, tokenId)
     const primaryExchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
     const primaryInfo: GuiCurrencyInfo = {
       walletId,
       tokenId,
-      displayCurrencyCode: cc,
-      exchangeCurrencyCode: cc,
+      displayCurrencyCode: currencyCode,
+      exchangeCurrencyCode: currencyCode,
       displayDenomination: primaryDisplayDenomination,
       exchangeDenomination: primaryExchangeDenomination
     }
 
     const data = {
       walletId,
+      tokenId,
       balanceMessage,
-      currencyCode: cc,
+      currencyCode: currencyCode,
       primaryInfo
     }
 
