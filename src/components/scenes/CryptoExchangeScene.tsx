@@ -31,6 +31,11 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { AlertCardUi4 } from '../ui4/AlertCardUi4'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
+export interface SwapErrorDisplayInfo {
+  message: string
+  title: string
+}
+
 interface OwnProps extends EdgeSceneProps<'exchange'> {}
 
 interface StateProps {
@@ -40,10 +45,6 @@ interface StateProps {
   // The following props are used to populate the CryptoExchangeFlipInputs
   fromWalletInfo: FromWalletInfo
   toWalletInfo: ToWalletInfo
-
-  // Errors
-  insufficient: boolean
-  genericError: string | null
 }
 
 interface FromWalletInfo {
@@ -116,6 +117,8 @@ const defaultState: State = {
 }
 
 export const CryptoExchangeComponent = (props: Props) => {
+  const { route } = props
+  const { errorDisplayInfo } = route.params ?? {}
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -268,7 +271,6 @@ export const CryptoExchangeComponent = (props: Props) => {
   }
 
   const renderAlert = () => {
-    const { insufficient, genericError } = props
     const { fromPluginId, fromWalletBalanceMap, fromTokenId } = props.fromWalletInfo
 
     const { minimumPopupModals } = getSpecialCurrencyInfo(fromPluginId)
@@ -278,10 +280,8 @@ export const CryptoExchangeComponent = (props: Props) => {
       return <AlertCardUi4 title={lstrings.request_minimum_notification_title} body={minimumPopupModals.alertMessage} type="warning" />
     }
 
-    if (insufficient || genericError != null) {
-      const title = genericError != null ? lstrings.exchange_generic_error_title : insufficient ? lstrings.exchange_insufficient_funds_title : ''
-      const message = genericError != null ? genericError : insufficient ? lstrings.exchange_insufficient_funds_message : ''
-      return <AlertCardUi4 title={title} body={message} type="error" />
+    if (errorDisplayInfo != null) {
+      return <AlertCardUi4 title={errorDisplayInfo.title} body={errorDisplayInfo.message} type="error" />
     }
 
     if (checkExceedsAmount()) {
@@ -388,8 +388,6 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   const currencyWallets = useSelector(state => state.core.account.currencyWallets)
   const cryptoExchange = useSelector(state => state.cryptoExchange)
   const exchangeInfo = useSelector(state => state.ui.exchangeInfo)
-  const insufficient = useSelector(state => state.cryptoExchange.insufficientError)
-  const genericError = useSelector(state => state.cryptoExchange.genericShapeShiftError)
 
   const swapRequestOptions = useSwapRequestOptions()
 
@@ -463,8 +461,6 @@ export const CryptoExchangeScene = (props: OwnProps) => {
       navigation={navigation}
       account={account}
       exchangeInfo={exchangeInfo}
-      insufficient={insufficient}
-      genericError={genericError}
       fromWalletInfo={fromWalletInfo}
       toWalletInfo={toWalletInfo}
     />

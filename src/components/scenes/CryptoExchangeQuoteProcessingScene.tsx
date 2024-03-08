@@ -59,7 +59,14 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
         const quotes = await account.fetchSwapQuotes(swapRequest, swapRequestOptions)
         if (mounted.current) onDone(quotes)
       } catch (error: unknown) {
-        navigation.navigate('exchangeTab', { screen: 'exchange' })
+        const errorDisplayInfo = dispatch(processSwapQuoteError(error, swapRequest))
+
+        navigation.navigate('exchangeTab', {
+          screen: 'exchange',
+          params: {
+            errorDisplayInfo
+          }
+        })
 
         const insufficientFunds = asMaybeInsufficientFundsError(error)
         if (insufficientFunds != null && swapRequest.fromTokenId !== insufficientFunds.tokenId) {
@@ -79,8 +86,6 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
             />
           ))
         }
-
-        dispatch(processSwapQuoteError(error, swapRequest))
       }
 
       return () => {

@@ -53,8 +53,6 @@ describe('CryptoExchangeComponent', () => {
         exchangeInfo={initialState}
         fromWalletInfo={fromWalletInfo}
         toWalletInfo={toWalletInfo}
-        insufficient={false}
-        genericError={null}
         onSelectWallet={async () => undefined}
         getQuoteForTransaction={() => undefined}
       />

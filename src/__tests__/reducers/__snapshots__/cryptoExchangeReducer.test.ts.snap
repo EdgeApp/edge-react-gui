@@ -18,8 +18,6 @@ exports[`initialState 1`] = `
     "tokenId": null,
     "walletId": "",
   },
-  "genericShapeShiftError": null,
-  "insufficientError": false,
   "shiftPendingTransaction": false,
   "toNativeAmount": "0",
   "toWalletId": null,

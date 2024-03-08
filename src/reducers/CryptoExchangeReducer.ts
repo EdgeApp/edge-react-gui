@@ -12,10 +12,6 @@ export interface CryptoExchangeState {
   toNativeAmount: string
   toWalletPrimaryInfo: GuiCurrencyInfo // EdgeCurrencyInfo | null,
 
-  // Errors:
-  insufficientError: boolean
-  genericShapeShiftError: string | null
-
   // Activity flags:
   shiftPendingTransaction: boolean
 }
@@ -28,9 +24,6 @@ const initialState: CryptoExchangeState = {
   toWalletId: null,
   toNativeAmount: '0',
   toWalletPrimaryInfo: emptyCurrencyInfo,
-
-  insufficientError: false,
-  genericShapeShiftError: null,
   shiftPendingTransaction: false
 }
 
@@ -42,9 +35,7 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
         fromWalletId: action.data.walletId,
         fromWalletPrimaryInfo: action.data.primaryInfo,
         fromNativeAmount: '0',
-        toNativeAmount: '0',
-        genericShapeShiftError: null,
-        insufficientError: false
+        toNativeAmount: '0'
       }
     }
 
@@ -54,31 +45,7 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
         toWalletId: action.data.walletId,
         toWalletPrimaryInfo: action.data.primaryInfo,
         fromNativeAmount: '0',
-        toNativeAmount: '0',
-        genericShapeShiftError: null
-      }
-    }
-
-    case 'UPDATE_SWAP_QUOTE': {
-      return {
-        ...state,
-        insufficientError: false,
-        genericShapeShiftError: null
-      }
-    }
-
-    case 'RECEIVED_INSUFFICIENT_FUNDS_ERROR': {
-      return {
-        ...state,
-        insufficientError: true,
-        genericShapeShiftError: null
-      }
-    }
-
-    case 'GENERIC_SHAPE_SHIFT_ERROR': {
-      return {
-        ...state,
-        genericShapeShiftError: action.data
+        toNativeAmount: '0'
       }
     }
 

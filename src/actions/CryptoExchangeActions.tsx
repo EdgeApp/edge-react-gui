@@ -14,6 +14,7 @@ import {
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { SwapErrorDisplayInfo } from '../components/scenes/CryptoExchangeScene'
 import { showError } from '../components/services/AirshipInstance'
 import { formatNumber } from '../locales/intl'
 import { lstrings } from '../locales/strings'
@@ -48,7 +49,6 @@ export function getQuoteForTransaction(
           quotes,
           onApprove
         })
-        dispatch({ type: 'UPDATE_SWAP_QUOTE', data: {} })
       }
     })
   }
@@ -73,7 +73,6 @@ export function exchangeTimerExpired(
           quotes,
           onApprove
         })
-        dispatch({ type: 'UPDATE_SWAP_QUOTE', data: {} })
       }
     })
   }
@@ -134,8 +133,8 @@ export const getSwapInfo = async (state: RootState, quote: EdgeSwapQuote): Promi
   return swapInfo
 }
 
-export function processSwapQuoteError(error: unknown, request: EdgeSwapRequest): ThunkAction<void> {
-  return (dispatch, getState) => {
+export function processSwapQuoteError(error: unknown, request: EdgeSwapRequest): ThunkAction<SwapErrorDisplayInfo | undefined> {
+  return (_dispatch, getState) => {
     const state = getState()
 
     // Basic sanity checks (should never fail):
@@ -148,10 +147,16 @@ export function processSwapQuoteError(error: unknown, request: EdgeSwapRequest):
 
     if (fromCurrencyCode == null || toCurrencyCode == null) return
 
+    // Some plugins get the insufficient funds error wrong:
+    const errorMessage = error instanceof Error ? error.message : String(error)
+
     // Check for known error types:
     const insufficientFunds = asMaybeInsufficientFundsError(error)
-    if (insufficientFunds != null) {
-      return dispatch({ type: 'RECEIVED_INSUFFICIENT_FUNDS_ERROR' })
+    if (insufficientFunds != null || errorMessage === 'InsufficientFundsError') {
+      return {
+        title: lstrings.exchange_insufficient_funds_title,
+        message: lstrings.exchange_insufficient_funds_message
+      }
     }
 
     const aboveLimit = asMaybeSwapAboveLimitError(error)
@@ -164,10 +169,10 @@ export function processSwapQuoteError(error: unknown, request: EdgeSwapRequest):
       const nativeToDisplayRatio = currentCurrencyDenomination.multiplier
       const displayMax = convertNativeToDisplay(nativeToDisplayRatio)(nativeMax)
 
-      return dispatch({
-        type: 'GENERIC_SHAPE_SHIFT_ERROR',
-        data: sprintf(lstrings.amount_above_limit, displayMax, currentCurrencyDenomination.name)
-      })
+      return {
+        title: lstrings.exchange_generic_error_title,
+        message: sprintf(lstrings.amount_above_limit, displayMax, currentCurrencyDenomination.name)
+      }
     }
 
     const belowLimit = asMaybeSwapBelowLimitError(error)
@@ -180,39 +185,33 @@ export function processSwapQuoteError(error: unknown, request: EdgeSwapRequest):
       const nativeToDisplayRatio = currentCurrencyDenomination.multiplier
       const displayMin = convertNativeToDisplay(nativeToDisplayRatio)(nativeMin)
 
-      return dispatch({
-        type: 'GENERIC_SHAPE_SHIFT_ERROR',
-        data: sprintf(lstrings.amount_below_limit, displayMin, currentCurrencyDenomination.name)
-      })
+      return {
+        title: lstrings.exchange_generic_error_title,
+        message: sprintf(lstrings.amount_below_limit, displayMin, currentCurrencyDenomination.name)
+      }
     }
 
     const currencyError = asMaybeSwapCurrencyError(error)
     if (currencyError != null) {
-      return dispatch({
-        type: 'GENERIC_SHAPE_SHIFT_ERROR',
-        data: sprintf(lstrings.ss_unable, fromCurrencyCode, toCurrencyCode)
-      })
+      return {
+        title: lstrings.exchange_generic_error_title,
+        message: sprintf(lstrings.ss_unable, fromCurrencyCode, toCurrencyCode)
+      }
     }
 
     const permissionError = asMaybeSwapPermissionError(error)
     if (permissionError?.reason === 'geoRestriction') {
-      return dispatch({
-        type: 'GENERIC_SHAPE_SHIFT_ERROR',
-        data: lstrings.ss_geolock
-      })
-    }
-
-    // Some plugins get this error wrong:
-    const message = error instanceof Error ? error.message : String(error)
-    if (message === 'InsufficientFundsError') {
-      return dispatch({ type: 'RECEIVED_INSUFFICIENT_FUNDS_ERROR' })
+      return {
+        title: lstrings.exchange_generic_error_title,
+        message: lstrings.ss_geolock
+      }
     }
 
     // Anything else:
-    return dispatch({
-      type: 'GENERIC_SHAPE_SHIFT_ERROR',
-      data: message
-    })
+    return {
+      title: lstrings.exchange_generic_error_title,
+      message: errorMessage
+    }
   }
 }
 
