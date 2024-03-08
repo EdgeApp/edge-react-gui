@@ -32,9 +32,6 @@ exports[`initialState 1`] = `
     "otpErrorShown": false,
   },
   "cryptoExchange": {
-    "fromBalanceMessage": "",
-    "fromCurrencyCode": null,
-    "fromDisplayAmount": "0",
     "fromNativeAmount": "0",
     "fromWalletId": null,
     "fromWalletPrimaryInfo": {
@@ -54,9 +51,6 @@ exports[`initialState 1`] = `
     "genericShapeShiftError": null,
     "insufficientError": false,
     "shiftPendingTransaction": false,
-    "toBalanceMessage": "",
-    "toCurrencyCode": null,
-    "toDisplayAmount": "0",
     "toNativeAmount": "0",
     "toWalletId": null,
     "toWalletPrimaryInfo": {

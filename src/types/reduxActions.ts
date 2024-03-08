@@ -72,8 +72,6 @@ export type Action =
   | {
       type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE' | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE'
       data: {
-        balanceMessage: string
-        currencyCode: string
         primaryInfo: GuiCurrencyInfo
         walletId: string
       }

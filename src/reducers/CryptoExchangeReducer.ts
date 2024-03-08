@@ -5,18 +5,12 @@ import { emptyCurrencyInfo, GuiCurrencyInfo } from '../types/types'
 
 export interface CryptoExchangeState {
   fromWalletId: string | null
-  fromCurrencyCode: string | null
   fromNativeAmount: string
-  fromDisplayAmount: string
   fromWalletPrimaryInfo: GuiCurrencyInfo // EdgeCurrencyInfo | null,
-  fromBalanceMessage: string
 
   toWalletId: string | null
-  toCurrencyCode: string | null
   toNativeAmount: string
-  toDisplayAmount: string
   toWalletPrimaryInfo: GuiCurrencyInfo // EdgeCurrencyInfo | null,
-  toBalanceMessage: string
 
   // Errors:
   insufficientError: boolean
@@ -28,18 +22,12 @@ export interface CryptoExchangeState {
 
 const initialState: CryptoExchangeState = {
   fromWalletId: null,
-  fromCurrencyCode: null,
   fromNativeAmount: '0',
-  fromDisplayAmount: '0',
   fromWalletPrimaryInfo: emptyCurrencyInfo,
-  fromBalanceMessage: '',
 
   toWalletId: null,
-  toCurrencyCode: null,
   toNativeAmount: '0',
-  toDisplayAmount: '0',
   toWalletPrimaryInfo: emptyCurrencyInfo,
-  toBalanceMessage: '',
 
   insufficientError: false,
   genericShapeShiftError: null,
@@ -53,14 +41,8 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
         ...state,
         fromWalletId: action.data.walletId,
         fromWalletPrimaryInfo: action.data.primaryInfo,
-        fromCurrencyCode: action.data.currencyCode,
-        fromBalanceMessage: action.data.balanceMessage,
         fromNativeAmount: '0',
         toNativeAmount: '0',
-        fromDisplayAmount: '0',
-        toDisplayAmount: '0',
-        // @ts-expect-error
-        minerFee: '0',
         genericShapeShiftError: null,
         insufficientError: false
       }
@@ -70,15 +52,9 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
       return {
         ...state,
         toWalletId: action.data.walletId,
-        toCurrencyCode: action.data.currencyCode,
         toWalletPrimaryInfo: action.data.primaryInfo,
-        toBalanceMessage: action.data.balanceMessage,
         fromNativeAmount: '0',
         toNativeAmount: '0',
-        fromDisplayAmount: '0',
-        toDisplayAmount: '0',
-        // @ts-expect-error
-        minerFee: '0',
         genericShapeShiftError: null
       }
     }
