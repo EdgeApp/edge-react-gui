@@ -1,13 +1,17 @@
-import { EdgeSwapQuote, EdgeSwapRequest, EdgeSwapRequestOptions } from 'edge-core-js'
+import { asMaybeInsufficientFundsError, EdgeSwapQuote, EdgeSwapRequest, EdgeSwapRequestOptions } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
+import { processSwapQuoteError, selectWalletForExchange } from '../../actions/CryptoExchangeActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { lstrings } from '../../locales/strings'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
@@ -16,7 +20,6 @@ export interface ExchangeQuoteProcessingParams {
   swapRequest: EdgeSwapRequest
   swapRequestOptions: EdgeSwapRequestOptions
   onCancel: () => void
-  onError: (error: any) => Promise<void>
   onDone: (quotes: EdgeSwapQuote[]) => void
 }
 
@@ -27,9 +30,10 @@ const ANIM_DURATION = 5000
 export function CryptoExchangeQuoteProcessingScene(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { route } = props
-  const { swapRequest, swapRequestOptions, onCancel, onDone, onError } = route.params
+  const { route, navigation } = props
+  const { swapRequest, swapRequestOptions, onCancel, onDone } = route.params
 
+  const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
 
   const [isLongWait, setIsLongWait] = React.useState(false)
@@ -54,15 +58,36 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
       try {
         const quotes = await account.fetchSwapQuotes(swapRequest, swapRequestOptions)
         if (mounted.current) onDone(quotes)
-      } catch (e: any) {
-        await onError(e)
+      } catch (error: unknown) {
+        navigation.navigate('exchangeTab', { screen: 'exchange' })
+
+        const insufficientFunds = asMaybeInsufficientFundsError(error)
+        if (insufficientFunds != null && swapRequest.fromTokenId !== insufficientFunds.tokenId) {
+          const { tokenId } = insufficientFunds
+          const currencyCode = getCurrencyCode(swapRequest.fromWallet, tokenId)
+
+          await Airship.show(bridge => (
+            <InsufficientFeesModal
+              bridge={bridge}
+              coreError={insufficientFunds}
+              navigation={navigation}
+              wallet={swapRequest.fromWallet}
+              onSwap={() => {
+                dispatch({ type: 'SHIFT_COMPLETE' })
+                dispatch(selectWalletForExchange(swapRequest.fromWallet.id, currencyCode, 'to')).catch(err => showError(err))
+              }}
+            />
+          ))
+        }
+
+        dispatch(processSwapQuoteError(error, swapRequest))
       }
 
       return () => {
         mounted.current = false
       }
     },
-    [onDone, onError],
+    [swapRequest, swapRequestOptions, onDone],
     'CryptoExchangeQuoteProcessingScene'
   )
 

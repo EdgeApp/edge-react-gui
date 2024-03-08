@@ -11,12 +11,10 @@ import {
   EdgeSwapResult,
   EdgeTokenId
 } from 'edge-core-js'
-import * as React from 'react'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { InsufficientFeesModal } from '../components/modals/InsufficientFeesModal'
-import { Airship, showError } from '../components/services/AirshipInstance'
+import { showError } from '../components/services/AirshipInstance'
 import { formatNumber } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { getExchangeDenom, getExchangeDenomByCurrencyCode, selectDisplayDenom, selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelectors'
@@ -51,29 +49,6 @@ export function getQuoteForTransaction(
           onApprove
         })
         dispatch({ type: 'UPDATE_SWAP_QUOTE', data: {} })
-      },
-      onError: async (error: any) => {
-        navigation.navigate('exchangeTab', { screen: 'exchange' })
-
-        const insufficientFunds = asMaybeInsufficientFundsError(error)
-        if (insufficientFunds != null && swapRequest.fromTokenId !== insufficientFunds.tokenId) {
-          const { tokenId } = insufficientFunds
-          const currencyCode = getCurrencyCode(swapRequest.fromWallet, tokenId)
-
-          await Airship.show(bridge => (
-            <InsufficientFeesModal
-              bridge={bridge}
-              coreError={insufficientFunds}
-              navigation={navigation}
-              wallet={swapRequest.fromWallet}
-              onSwap={() => {
-                dispatch({ type: 'SHIFT_COMPLETE' })
-                dispatch(selectWalletForExchange(swapRequest.fromWallet.id, currencyCode, 'to')).catch(err => showError(err))
-              }}
-            />
-          ))
-        }
-        dispatch(processSwapQuoteError(error, swapRequest))
       }
     })
   }
@@ -99,10 +74,6 @@ export function exchangeTimerExpired(
           onApprove
         })
         dispatch({ type: 'UPDATE_SWAP_QUOTE', data: {} })
-      },
-      onError: async (error: any) => {
-        navigation.navigate('exchangeTab', { screen: 'exchange' })
-        dispatch(processSwapQuoteError(error, quote.request))
       }
     })
   }
@@ -163,7 +134,7 @@ export const getSwapInfo = async (state: RootState, quote: EdgeSwapQuote): Promi
   return swapInfo
 }
 
-function processSwapQuoteError(error: unknown, request: EdgeSwapRequest): ThunkAction<void> {
+export function processSwapQuoteError(error: unknown, request: EdgeSwapRequest): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()
 
