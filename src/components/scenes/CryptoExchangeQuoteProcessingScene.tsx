@@ -1,9 +1,10 @@
-import { EdgeSwapQuote } from 'edge-core-js'
+import { EdgeSwapQuote, EdgeSwapRequest, EdgeSwapRequestOptions } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { lstrings } from '../../locales/strings'
+import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -12,7 +13,8 @@ import { EdgeText } from '../themed/EdgeText'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 export interface ExchangeQuoteProcessingParams {
-  fetchSwapQuotesPromise: Promise<EdgeSwapQuote[]>
+  swapRequest: EdgeSwapRequest
+  swapRequestOptions: EdgeSwapRequestOptions
   onCancel: () => void
   onError: (error: any) => Promise<void>
   onDone: (quotes: EdgeSwapQuote[]) => void
@@ -26,7 +28,9 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { route } = props
-  const { fetchSwapQuotesPromise, onCancel, onDone, onError } = route.params
+  const { swapRequest, swapRequestOptions, onCancel, onDone, onError } = route.params
+
+  const account = useSelector(state => state.core.account)
 
   const [isLongWait, setIsLongWait] = React.useState(false)
 
@@ -48,7 +52,7 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
   useAsyncEffect(
     async () => {
       try {
-        const quotes = await fetchSwapQuotesPromise
+        const quotes = await account.fetchSwapQuotes(swapRequest, swapRequestOptions)
         if (mounted.current) onDone(quotes)
       } catch (e: any) {
         await onError(e)

@@ -33,16 +33,14 @@ import { updateSwapCount } from './RequestReviewActions'
 
 export function getQuoteForTransaction(
   navigation: NavigationBase,
-  request: EdgeSwapRequest,
+  swapRequest: EdgeSwapRequest,
   swapRequestOptions: EdgeSwapRequestOptions,
   onApprove: () => void
 ): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const account = state.core.account
-
+  return async dispatch => {
     navigation.navigate('exchangeQuoteProcessing', {
-      fetchSwapQuotesPromise: account.fetchSwapQuotes(request, swapRequestOptions),
+      swapRequest,
+      swapRequestOptions,
       onCancel: () => {
         navigation.goBack()
       },
@@ -58,24 +56,24 @@ export function getQuoteForTransaction(
         navigation.navigate('exchangeTab', { screen: 'exchange' })
 
         const insufficientFunds = asMaybeInsufficientFundsError(error)
-        if (insufficientFunds != null && request.fromTokenId !== insufficientFunds.tokenId) {
+        if (insufficientFunds != null && swapRequest.fromTokenId !== insufficientFunds.tokenId) {
           const { tokenId } = insufficientFunds
-          const currencyCode = getCurrencyCode(request.fromWallet, tokenId)
+          const currencyCode = getCurrencyCode(swapRequest.fromWallet, tokenId)
 
           await Airship.show(bridge => (
             <InsufficientFeesModal
               bridge={bridge}
               coreError={insufficientFunds}
               navigation={navigation}
-              wallet={request.fromWallet}
+              wallet={swapRequest.fromWallet}
               onSwap={() => {
                 dispatch({ type: 'SHIFT_COMPLETE' })
-                dispatch(selectWalletForExchange(request.fromWallet.id, currencyCode, 'to')).catch(err => showError(err))
+                dispatch(selectWalletForExchange(swapRequest.fromWallet.id, currencyCode, 'to')).catch(err => showError(err))
               }}
             />
           ))
         }
-        dispatch(processSwapQuoteError(error, request))
+        dispatch(processSwapQuoteError(error, swapRequest))
       }
     })
   }
@@ -87,12 +85,10 @@ export function exchangeTimerExpired(
   swapRequestOptions: EdgeSwapRequestOptions,
   onApprove: () => void
 ): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const account = state.core.account
-
+  return async dispatch => {
     navigation.replace('exchangeQuoteProcessing', {
-      fetchSwapQuotesPromise: account.fetchSwapQuotes(quote.request, swapRequestOptions),
+      swapRequest: quote.request,
+      swapRequestOptions,
       onCancel: () => {
         navigation.navigate('exchangeTab', { screen: 'exchange' })
       },
