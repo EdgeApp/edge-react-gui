@@ -13,37 +13,13 @@ describe('CryptoExchangeComponent', () => {
     const fakeAccount: any = {}
 
     const fromWalletInfo = {
-      fromPluginId: 'ChangeNow',
       fromWalletId: '',
-      fromTokenId: null,
-      fromWalletBalanceMap: new Map(),
-      fromWalletName: 'BTC Wallet',
-      fromExchangeAmount: '1000',
-      fromWalletPrimaryInfo: {
-        displayCurrencyCode: 'BTC',
-        exchangeCurrencyCode: 'BTC'
-      } as any,
-      fromCurrencyCode: 'BTC'
+      fromTokenId: null
     }
 
     const toWalletInfo = {
       toWalletId: '',
-      toTokenId: null,
-      toWalletName: 'ETH Wallet',
-      toExchangeAmount: '1000',
-      toWalletPrimaryInfo: {
-        displayCurrencyCode: 'ETH',
-        exchangeCurrencyCode: 'ETH',
-        displayDenomination: {
-          multiplier: '100000000',
-          name: 'Ethereum'
-        },
-        exchangeDenomination: {
-          multiplier: '10000000',
-          name: 'Gwei'
-        }
-      } as any,
-      toCurrencyCode: 'ETH'
+      toTokenId: null
     }
 
     const rootState: FakeState = { ...fakeRootState }
