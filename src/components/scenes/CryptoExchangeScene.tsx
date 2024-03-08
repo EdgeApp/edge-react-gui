@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { Keyboard } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions'
+import { selectWalletForExchange } from '../../actions/CryptoExchangeActions'
 import { DisableAsset, ExchangeInfo } from '../../actions/ExchangeInfoActions'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
@@ -449,8 +449,21 @@ export const CryptoExchangeScene = (props: OwnProps) => {
     dispatch(updateMostRecentWalletsSelected(walletId, tokenId))
   })
 
-  const handleGetQuoteForTransaction = useHandler((navigation: NavigationBase, request: EdgeSwapRequest, onApprove: () => void) => {
-    dispatch(getQuoteForTransaction(navigation, request, swapRequestOptions, onApprove)).catch(err => showError(err))
+  const handleGetQuoteForTransaction = useHandler((navigation: NavigationBase, swapRequest: EdgeSwapRequest, onApprove: () => void) => {
+    navigation.navigate('exchangeQuoteProcessing', {
+      swapRequest,
+      swapRequestOptions,
+      onCancel: () => {
+        navigation.goBack()
+      },
+      onDone: quotes => {
+        navigation.replace('exchangeQuote', {
+          selectedQuote: quotes[0],
+          quotes,
+          onApprove
+        })
+      }
+    })
   })
 
   return (
