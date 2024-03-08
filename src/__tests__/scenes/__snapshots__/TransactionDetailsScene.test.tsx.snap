@@ -1709,7 +1709,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       "flexShrink": 1,
                     },
                     {
-                      "flexGrow": 1,
+                      "marginRight": 34,
                     },
                   ]
                 }
@@ -1760,6 +1760,71 @@ exports[`TransactionDetailsScene should render 1`] = `
                   }
                 >
                   this is an address
+                </Text>
+              </View>
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={false}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "alignItems": "flex-end",
+                    "height": "100%",
+                    "justifyContent": "center",
+                    "opacity": 1,
+                    "position": "absolute",
+                    "right": 0,
+                    "width": "100%",
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 22,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
+                      },
+                      {
+                        "fontFamily": "FontAwesome",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
                 </Text>
               </View>
             </View>
@@ -3803,7 +3868,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       "flexShrink": 1,
                     },
                     {
-                      "flexGrow": 1,
+                      "marginRight": 34,
                     },
                   ]
                 }
@@ -3854,6 +3919,71 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   }
                 >
                   this is an address
+                </Text>
+              </View>
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={false}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "alignItems": "flex-end",
+                    "height": "100%",
+                    "justifyContent": "center",
+                    "opacity": 1,
+                    "position": "absolute",
+                    "right": 0,
+                    "width": "100%",
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    [
+                      {
+                        "color": undefined,
+                        "fontSize": 22,
+                      },
+                      {
+                        "color": "#00f1a2",
+                        "marginLeft": 11,
+                        "textAlign": "center",
+                      },
+                      {
+                        "fontFamily": "FontAwesome",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
                 </Text>
               </View>
             </View>
