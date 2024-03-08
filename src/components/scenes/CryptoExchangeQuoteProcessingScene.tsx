@@ -13,7 +13,6 @@ import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { selectWalletForExchange } from '../../actions/CryptoExchangeActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
@@ -24,7 +23,7 @@ import { convertNativeToDisplay } from '../../util/utils'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
@@ -92,8 +91,6 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
 
         const insufficientFunds = asMaybeInsufficientFundsError(error)
         if (insufficientFunds != null && swapRequest.fromTokenId !== insufficientFunds.tokenId) {
-          const { tokenId } = insufficientFunds
-
           await Airship.show(bridge => (
             <InsufficientFeesModal
               bridge={bridge}
@@ -102,7 +99,6 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
               wallet={swapRequest.fromWallet}
               onSwap={() => {
                 dispatch({ type: 'SHIFT_COMPLETE' })
-                dispatch(selectWalletForExchange(swapRequest.fromWallet.id, tokenId, 'to')).catch(err => showError(err))
               }}
             />
           ))
