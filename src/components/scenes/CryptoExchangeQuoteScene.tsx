@@ -54,7 +54,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
-  const pending = useSelector(state => state.cryptoExchange.shiftPendingTransaction)
+  const [pending, setPending] = useState(false)
 
   const swapRequestOptions = useSwapRequestOptions()
 
@@ -112,9 +112,11 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const doShift = async () => {
+  const handleSlideComplete = async () => {
     setCalledApprove(true)
+    setPending(true)
     await dispatch(shiftCryptoCurrency(navigation, selectedQuote, onApprove))
+    setPending(false)
   }
 
   const renderTimer = () => {
@@ -234,7 +236,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
         ) : null}
 
         <EdgeAnim enter={fadeInDown120}>
-          <Slider parentStyle={styles.slider} onSlidingComplete={doShift} disabled={pending} showSpinner={pending} />
+          <Slider parentStyle={styles.slider} onSlidingComplete={handleSlideComplete} disabled={pending} showSpinner={pending} />
         </EdgeAnim>
         {renderTimer()}
       </View>

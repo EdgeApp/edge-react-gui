@@ -11,9 +11,6 @@ export interface CryptoExchangeState {
   toWalletId: string | null
   toNativeAmount: string
   toWalletPrimaryInfo: GuiCurrencyInfo // EdgeCurrencyInfo | null,
-
-  // Activity flags:
-  shiftPendingTransaction: boolean
 }
 
 const initialState: CryptoExchangeState = {
@@ -23,8 +20,7 @@ const initialState: CryptoExchangeState = {
 
   toWalletId: null,
   toNativeAmount: '0',
-  toWalletPrimaryInfo: emptyCurrencyInfo,
-  shiftPendingTransaction: false
+  toWalletPrimaryInfo: emptyCurrencyInfo
 }
 
 function cryptoExchangeInner(state = initialState, action: Action): CryptoExchangeState {
@@ -46,20 +42,6 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
         toWalletPrimaryInfo: action.data.primaryInfo,
         fromNativeAmount: '0',
         toNativeAmount: '0'
-      }
-    }
-
-    case 'START_SHIFT_TRANSACTION': {
-      return {
-        ...state,
-        shiftPendingTransaction: true
-      }
-    }
-
-    case 'DONE_SHIFT_TRANSACTION': {
-      return {
-        ...state,
-        shiftPendingTransaction: false
       }
     }
 

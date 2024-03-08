@@ -124,7 +124,6 @@ export function shiftCryptoCurrency(navigation: NavigationBase, quote: EdgeSwapQ
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    dispatch({ type: 'START_SHIFT_TRANSACTION' })
 
     const { fromDisplayAmount, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = await getSwapInfo(state, quote)
     const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate, request } = quote
@@ -179,7 +178,6 @@ export function shiftCryptoCurrency(navigation: NavigationBase, quote: EdgeSwapQ
     } catch (error: any) {
       console.log(error)
       dispatch(logEvent('Exchange_Shift_Failed', { error: String(error) })) // TODO: Do we need to parse/clean all cases?
-      dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
       setTimeout(() => {
         showError(`${lstrings.exchange_failed}. ${error.message}`)
       }, 1)
