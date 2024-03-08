@@ -93,7 +93,6 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
         const insufficientFunds = asMaybeInsufficientFundsError(error)
         if (insufficientFunds != null && swapRequest.fromTokenId !== insufficientFunds.tokenId) {
           const { tokenId } = insufficientFunds
-          const currencyCode = getCurrencyCode(swapRequest.fromWallet, tokenId)
 
           await Airship.show(bridge => (
             <InsufficientFeesModal
@@ -103,7 +102,7 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
               wallet={swapRequest.fromWallet}
               onSwap={() => {
                 dispatch({ type: 'SHIFT_COMPLETE' })
-                dispatch(selectWalletForExchange(swapRequest.fromWallet.id, currencyCode, 'to')).catch(err => showError(err))
+                dispatch(selectWalletForExchange(swapRequest.fromWallet.id, tokenId, 'to')).catch(err => showError(err))
               }}
             />
           ))
