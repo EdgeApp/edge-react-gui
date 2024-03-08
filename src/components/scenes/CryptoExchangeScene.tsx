@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { Keyboard } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { selectWalletForExchange } from '../../actions/CryptoExchangeActions'
 import { DisableAsset, ExchangeInfo } from '../../actions/ExchangeInfoActions'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
@@ -32,6 +31,17 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { AlertCardUi4 } from '../ui4/AlertCardUi4'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
+export interface ExchangeParams {
+  // The following props are used to populate the CryptoExchangeFlipInputs
+  fromWalletId?: string | undefined
+  fromTokenId?: EdgeTokenId
+  toWalletId?: string | undefined
+  toTokenId?: EdgeTokenId
+
+  // Display error message in an alert card
+  errorDisplayInfo?: SwapErrorDisplayInfo
+}
+
 export interface SwapErrorDisplayInfo {
   message: string
   title: string
@@ -41,12 +51,6 @@ interface OwnProps extends EdgeSceneProps<'exchange'> {}
 
 interface StateProps {
   exchangeInfo: ExchangeInfo
-
-  // The following props are used to populate the CryptoExchangeFlipInputs
-  fromWalletId?: string | undefined
-  fromTokenId?: EdgeTokenId
-  toWalletId?: string | undefined
-  toTokenId?: EdgeTokenId
 }
 
 interface DispatchProps {
@@ -76,8 +80,8 @@ const emptyDenomnination = {
 }
 
 export const CryptoExchangeComponent = (props: Props) => {
-  const { route, fromWalletId, fromTokenId = null, toWalletId, toTokenId = null } = props
-  const { errorDisplayInfo } = route.params ?? {}
+  const { route } = props
+  const { fromWalletId, fromTokenId = null, toWalletId, toTokenId = null, errorDisplayInfo } = route.params ?? {}
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -358,15 +362,24 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   const dispatch = useDispatch()
   const { navigation, route } = props
 
-  const cryptoExchange = useSelector(state => state.cryptoExchange)
   const exchangeInfo = useSelector(state => state.ui.exchangeInfo)
 
   const swapRequestOptions = useSwapRequestOptions()
 
-  const { fromWalletId, fromTokenId, toWalletId, toTokenId } = cryptoExchange
-
   const handleSelectWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId, direction: 'from' | 'to') => {
-    await dispatch(selectWalletForExchange(walletId, tokenId, direction))
+    const params = {
+      ...route.params,
+      ...(direction === 'to'
+        ? {
+            toWalletId: walletId,
+            toTokenId: tokenId
+          }
+        : {
+            fromWalletId: walletId,
+            fromTokenId: tokenId
+          })
+    }
+    navigation.navigate('exchangeTab', { screen: 'exchange', params })
     dispatch(updateMostRecentWalletsSelected(walletId, tokenId))
   })
 
@@ -394,10 +407,6 @@ export const CryptoExchangeScene = (props: OwnProps) => {
       getQuoteForTransaction={handleGetQuoteForTransaction}
       navigation={navigation}
       exchangeInfo={exchangeInfo}
-      fromWalletId={fromWalletId == null ? undefined : fromWalletId}
-      fromTokenId={fromTokenId}
-      toWalletId={toWalletId == null ? undefined : toWalletId}
-      toTokenId={toTokenId}
     />
   )
 }

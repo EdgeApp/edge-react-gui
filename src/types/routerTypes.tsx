@@ -14,7 +14,7 @@ import type { CreateWalletSelectCryptoParams } from '../components/scenes/Create
 import type { CreateWalletSelectFiatParams } from '../components/scenes/CreateWalletSelectFiatScene'
 import type { ExchangeQuoteProcessingParams } from '../components/scenes/CryptoExchangeQuoteProcessingScene'
 import type { CryptoExchangeQuoteParams } from '../components/scenes/CryptoExchangeQuoteScene'
-import { SwapErrorDisplayInfo } from '../components/scenes/CryptoExchangeScene'
+import { ExchangeParams } from '../components/scenes/CryptoExchangeScene'
 import type { CurrencyNotificationParams } from '../components/scenes/CurrencyNotificationScene'
 import type { CurrencySettingsParams } from '../components/scenes/CurrencySettingsScene'
 import type { EdgeLoginParams } from '../components/scenes/EdgeLoginScene'
@@ -105,9 +105,7 @@ export interface RouteParamList {
   defaultFiatSetting: {}
   edgeLogin: EdgeLoginParams
   editToken: EditTokenParams
-  exchange: {
-    errorDisplayInfo?: SwapErrorDisplayInfo
-  }
+  exchange: ExchangeParams
   exchangeQuote: CryptoExchangeQuoteParams
   exchangeQuoteProcessing: ExchangeQuoteProcessingParams
   exchangeSettings: {}
