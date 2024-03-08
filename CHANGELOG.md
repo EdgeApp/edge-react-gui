@@ -22,6 +22,7 @@
 - fixed: Some text inputs not selectable for some Samsung devices
 - fixed: Various small visual fixes
 - fixed: Improve login performance by only loading account referral info for new accounts
+- fixed: Android text fields not hiding text for certain secure fields
 
 ## 4.1.1 (2024-02-29)
 
