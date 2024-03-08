@@ -1,10 +1,11 @@
 import { div, gte } from 'biggystring'
-import { EdgeSwapQuote } from 'edge-core-js'
+import { EdgeSwapQuote, EdgeSwapResult } from 'edge-core-js'
 import React, { useState } from 'react'
 import { SectionList, View, ViewStyle } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
+import { getSwapInfo } from '../../actions/CryptoExchangeActions'
+import { updateSwapCount } from '../../actions/RequestReviewActions'
 import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
 import { useHandler } from '../../hooks/useHandler'
 import { useMount } from '../../hooks/useMount'
@@ -14,6 +15,9 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
+import { CryptoAmount } from '../../util/CryptoAmount'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { logActivity } from '../../util/logger'
 import { logEvent } from '../../util/tracking'
 import { PoweredByCard } from '../cards/PoweredByCard'
 import { EdgeAnim, fadeInDown30, fadeInDown60, fadeInDown90, fadeInDown120, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
@@ -134,7 +138,63 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   const handleSlideComplete = async () => {
     setCalledApprove(true)
     setPending(true)
-    await dispatch(shiftCryptoCurrency(navigation, selectedQuote, onApprove))
+
+    const { fromDisplayAmount, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = await dispatch(getSwapInfo(selectedQuote))
+    const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate, request } = selectedQuote
+    // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
+    const { toWallet, toTokenId } = request
+    const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
+    try {
+      dispatch(logEvent('Exchange_Shift_Start'))
+      const result: EdgeSwapResult = await selectedQuote.approve()
+
+      logActivity(`Swap Exchange Executed: ${account.username}`)
+      logActivity(`
+    fromDisplayAmount: ${fromDisplayAmount}
+    fee: ${fee}
+    fromFiat: ${fromFiat}
+    fromTotalFiat: ${fromTotalFiat}
+    toDisplayAmount: ${toDisplayAmount}
+    toFiat: ${toFiat}
+    quote:
+      pluginId: ${pluginId}
+      isEstimate: ${isEstimate.toString()}
+      fromNativeAmount: ${fromNativeAmount}
+      toNativeAmount: ${toNativeAmount}
+      expirationDate: ${expirationDate ? expirationDate.toISOString() : 'no expiration'}
+      networkFee:
+        currencyCode ${networkFee.currencyCode}
+        nativeAmount ${networkFee.nativeAmount}
+`)
+
+      navigation.push('exchangeSuccess', {})
+
+      // Dispatch the success action and callback
+      onApprove()
+
+      await dispatch(updateSwapCount())
+
+      dispatch(
+        logEvent('Exchange_Shift_Success', {
+          conversionValues: {
+            conversionType: 'crypto',
+            cryptoAmount: new CryptoAmount({
+              nativeAmount: toNativeAmount,
+              currencyCode: toCurrencyCode,
+              currencyConfig: toWallet.currencyConfig
+            }),
+            orderId: result.orderId,
+            swapProviderId: pluginId
+          }
+        })
+      )
+    } catch (error: any) {
+      console.log(error)
+      dispatch(logEvent('Exchange_Shift_Failed', { error: String(error) })) // TODO: Do we need to parse/clean all cases?
+      setTimeout(() => {
+        showError(`${lstrings.exchange_failed}. ${error.message}`)
+      }, 1)
+    }
     setPending(false)
   }
 
