@@ -102,6 +102,17 @@ export const CryptoExchangeScene = (props: Props) => {
   const fromWalletSpecialCurrencyInfo = getSpecialCurrencyInfo(fromWallet?.currencyInfo.pluginId ?? '')
   const fromWalletBalanceMap = fromWallet?.balanceMap ?? new Map<string, string>()
 
+  const isFromFocused = state.whichWalletFocus === 'from'
+  const isToFocused = state.whichWalletFocus === 'to'
+  const fromHeaderText = sprintf(lstrings.exchange_from_wallet, fromWalletName)
+  const toHeaderText = sprintf(lstrings.exchange_to_wallet, toWalletName)
+  // Determines if a coin can have Exchange Max option
+  const hasMaxSpend = fromWalletSpecialCurrencyInfo.noMaxSpend !== true
+
+  //
+  // Callbacks
+  //
+
   const checkDisableAsset = (disableAssets: DisableAsset[], walletId: string, tokenId: EdgeTokenId): boolean => {
     const wallet = currencyWallets[walletId] ?? { currencyInfo: {} }
     const walletPluginId = wallet.currencyInfo.pluginId
@@ -114,6 +125,73 @@ export const CryptoExchangeScene = (props: Props) => {
       if (tokenId === 'allTokens' && walletTokenId != null) return true
     }
     return false
+  }
+
+  const checkExceedsAmount = (): boolean => {
+    const { fromAmountNative, whichWalletFocus } = state
+    const fromNativeBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
+
+    return whichWalletFocus === 'from' && gte(fromNativeBalance, '0') && gt(fromAmountNative, fromNativeBalance)
+  }
+
+  const getQuote = (swapRequest: EdgeSwapRequest) => {
+    if (fromWallet == null || toWallet == null) {
+      // Should never happen because next UI is hidden unless both source/destination wallets are selected
+      throw new Error('No wallet selected')
+    }
+
+    if (exchangeInfo != null) {
+      const disableSrc = checkDisableAsset(exchangeInfo.swap.disableAssets.source, fromWallet.id, fromTokenId)
+      if (disableSrc) {
+        showError(sprintf(lstrings.exchange_asset_unsupported, fromCurrencyCode))
+        return
+      }
+
+      const disableDest = checkDisableAsset(exchangeInfo.swap.disableAssets.destination, toWallet.id, toTokenId)
+      if (disableDest) {
+        showError(sprintf(lstrings.exchange_asset_unsupported, toCurrencyCode))
+        return
+      }
+    }
+    navigation.navigate('exchangeQuoteProcessing', {
+      swapRequest,
+      swapRequestOptions,
+      onCancel: () => {
+        navigation.goBack()
+      },
+      onDone: quotes => {
+        navigation.replace('exchangeQuote', {
+          selectedQuote: quotes[0],
+          quotes,
+          onApprove: resetState
+        })
+      }
+    })
+    Keyboard.dismiss()
+  }
+
+  const resetState = () => {
+    setState(defaultState)
+  }
+
+  const showWalletListModal = (whichWallet: 'from' | 'to') => {
+    Airship.show<WalletListResult>(bridge => (
+      <WalletListModal
+        bridge={bridge}
+        navigation={props.navigation}
+        headerTitle={whichWallet === 'to' ? lstrings.select_recv_wallet : lstrings.select_src_wallet}
+        showCreateWallet={whichWallet === 'to'}
+        allowKeysOnlyMode={whichWallet === 'from'}
+        filterActivation
+      />
+    ))
+      .then(async result => {
+        if (result?.type === 'wallet') {
+          const { walletId, tokenId } = result
+          await handleSelectWallet(walletId, tokenId, whichWallet)
+        }
+      })
+      .catch(error => showError(error))
   }
 
   //
@@ -186,53 +264,6 @@ export const CryptoExchangeScene = (props: Props) => {
     getQuote(request)
   })
 
-  const getQuote = (swapRequest: EdgeSwapRequest) => {
-    if (fromWallet == null || toWallet == null) {
-      // Should never happen because next UI is hidden unless both source/destination wallets are selected
-      throw new Error('No wallet selected')
-    }
-
-    if (exchangeInfo != null) {
-      const disableSrc = checkDisableAsset(exchangeInfo.swap.disableAssets.source, fromWallet.id, fromTokenId)
-      if (disableSrc) {
-        showError(sprintf(lstrings.exchange_asset_unsupported, fromCurrencyCode))
-        return
-      }
-
-      const disableDest = checkDisableAsset(exchangeInfo.swap.disableAssets.destination, toWallet.id, toTokenId)
-      if (disableDest) {
-        showError(sprintf(lstrings.exchange_asset_unsupported, toCurrencyCode))
-        return
-      }
-    }
-    navigation.navigate('exchangeQuoteProcessing', {
-      swapRequest,
-      swapRequestOptions,
-      onCancel: () => {
-        navigation.goBack()
-      },
-      onDone: quotes => {
-        navigation.replace('exchangeQuote', {
-          selectedQuote: quotes[0],
-          quotes,
-          onApprove: resetState
-        })
-      }
-    })
-    Keyboard.dismiss()
-  }
-
-  const resetState = () => {
-    setState(defaultState)
-  }
-
-  const checkExceedsAmount = (): boolean => {
-    const { fromAmountNative, whichWalletFocus } = state
-    const fromNativeBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
-
-    return whichWalletFocus === 'from' && gte(fromNativeBalance, '0') && gt(fromAmountNative, fromNativeBalance)
-  }
-
   const handleFromSelectWallet = useHandler(() => {
     showWalletListModal('from')
   })
@@ -299,33 +330,6 @@ export const CryptoExchangeScene = (props: Props) => {
 
     return null
   }
-
-  const showWalletListModal = (whichWallet: 'from' | 'to') => {
-    Airship.show<WalletListResult>(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        navigation={props.navigation}
-        headerTitle={whichWallet === 'to' ? lstrings.select_recv_wallet : lstrings.select_src_wallet}
-        showCreateWallet={whichWallet === 'to'}
-        allowKeysOnlyMode={whichWallet === 'from'}
-        filterActivation
-      />
-    ))
-      .then(async result => {
-        if (result?.type === 'wallet') {
-          const { walletId, tokenId } = result
-          await handleSelectWallet(walletId, tokenId, whichWallet)
-        }
-      })
-      .catch(error => showError(error))
-  }
-
-  const isFromFocused = state.whichWalletFocus === 'from'
-  const isToFocused = state.whichWalletFocus === 'to'
-  const fromHeaderText = sprintf(lstrings.exchange_from_wallet, fromWalletName)
-  const toHeaderText = sprintf(lstrings.exchange_to_wallet, toWalletName)
-  // Determines if a coin can have Exchange Max option
-  const hasMaxSpend = fromWalletSpecialCurrencyInfo.noMaxSpend !== true
 
   return (
     <SceneWrapper hasTabs hasNotifications scroll keyboardShouldPersistTaps="handled" padding={theme.rem(0.5)}>
