@@ -1,5 +1,5 @@
 import { add, div, toFixed } from 'biggystring'
-import { EdgeSwapQuote, EdgeSwapRequestOptions, EdgeSwapResult, EdgeTokenId } from 'edge-core-js'
+import { EdgeSwapQuote, EdgeSwapResult, EdgeTokenId } from 'edge-core-js'
 import { Alert } from 'react-native'
 
 import { showError } from '../components/services/AirshipInstance'
@@ -17,29 +17,6 @@ import { logEvent } from '../util/tracking'
 import { convertNativeToDisplay, convertNativeToExchange, DECIMAL_PRECISION, decimalOrZero, getDenomFromIsoCode } from '../util/utils'
 import { updateSwapCount } from './RequestReviewActions'
 
-export function exchangeTimerExpired(
-  navigation: NavigationBase,
-  quote: EdgeSwapQuote,
-  swapRequestOptions: EdgeSwapRequestOptions,
-  onApprove: () => void
-): ThunkAction<Promise<void>> {
-  return async dispatch => {
-    navigation.replace('exchangeQuoteProcessing', {
-      swapRequest: quote.request,
-      swapRequestOptions,
-      onCancel: () => {
-        navigation.navigate('exchangeTab', { screen: 'exchange' })
-      },
-      onDone: quotes => {
-        navigation.replace('exchangeQuote', {
-          selectedQuote: quotes[0],
-          quotes,
-          onApprove
-        })
-      }
-    })
-  }
-}
 // TODO: Use new hooks and utility methods for all conversions here
 export const getSwapInfo = async (state: RootState, quote: EdgeSwapQuote): Promise<GuiSwapInfo> => {
   // Currency conversion tools:

@@ -1,13 +1,15 @@
 import { div, gte } from 'biggystring'
 import { EdgeSwapQuote } from 'edge-core-js'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { SectionList, View, ViewStyle } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
+import { shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
 import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
 import { useHandler } from '../../hooks/useHandler'
+import { useMount } from '../../hooks/useMount'
 import { useRowLayout } from '../../hooks/useRowLayout'
+import { useUnmount } from '../../hooks/useUnmount'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -96,21 +98,38 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   const feePercent = div(selectedQuote.networkFee.nativeAmount, selectedQuote.fromNativeAmount, 2)
   const showFeeWarning = gte(feePercent, '0.05')
 
-  useEffect(() => {
+  const handleExchangeTimerExpired = useHandler(() => {
+    navigation.replace('exchangeQuoteProcessing', {
+      swapRequest: selectedQuote.request,
+      swapRequestOptions,
+      onCancel: () => {
+        navigation.navigate('exchangeTab', { screen: 'exchange' })
+      },
+      onDone: quotes => {
+        navigation.replace('exchangeQuote', {
+          selectedQuote: quotes[0],
+          quotes,
+          onApprove
+        })
+      }
+    })
+  })
+
+  useMount(() => {
     const swapConfig = account.swapConfig[pluginId]
 
     dispatch(logEvent('Exchange_Shift_Quote'))
     swapVerifyTerms(swapConfig)
       .then(async result => {
-        if (!result) await dispatch(exchangeTimerExpired(navigation, selectedQuote, swapRequestOptions, onApprove))
+        if (!result) handleExchangeTimerExpired()
       })
       .catch(err => showError(err))
+  })
 
-    return () => {
-      if (!calledApprove) selectedQuote.close().catch(err => showError(err))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  // Close the quote if the component unmounts
+  useUnmount(() => {
+    if (!calledApprove) selectedQuote.close().catch(err => showError(err))
+  })
 
   const handleSlideComplete = async () => {
     setCalledApprove(true)
@@ -122,12 +141,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   const renderTimer = () => {
     const { expirationDate } = selectedQuote
     if (!expirationDate) return null
-    return (
-      <CircleTimer
-        timeExpired={async () => await dispatch(exchangeTimerExpired(navigation, selectedQuote, swapRequestOptions, onApprove))}
-        expiration={expirationDate}
-      />
-    )
+    return <CircleTimer timeExpired={handleExchangeTimerExpired} expiration={expirationDate} />
   }
 
   const renderRow = useHandler((item: { item: EdgeSwapQuote; section: Section; index: number }) => {
