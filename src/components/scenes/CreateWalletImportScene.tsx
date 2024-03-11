@@ -1,6 +1,6 @@
 import { JsonObject } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
+import { Platform, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
@@ -136,6 +136,11 @@ const CreateWalletImportComponent = (props: Props) => {
   const svgHeight = React.useMemo(() => 36 * theme.rem(0.0625), [theme])
   const svgWidth = React.useMemo(() => 83 * theme.rem(0.0625), [theme])
 
+  // Hack to disable autocomplete since RN sometimes enables it even when not specified
+  // https://www.reddit.com/r/reactnative/comments/rt1who/cant_turn_off_autocomplete_in_textinput_android/
+
+  const keyboardType = Platform.OS === 'ios' ? 'email-address' : 'visible-password'
+
   return (
     <SceneWrapper>
       <SceneHeader title={lstrings.create_wallet_import_title} withTopMargin />
@@ -157,6 +162,7 @@ const CreateWalletImportComponent = (props: Props) => {
           top={1}
           horizontal={0.75}
           bottom={1.25}
+          keyboardType={keyboardType}
           value={importText}
           returnKeyType="next"
           multiline
