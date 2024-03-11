@@ -7,7 +7,6 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
-import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -42,21 +41,15 @@ export const TransferModal = ({ account, bridge, depositOrSend, navigation }: Pr
   const dispatch = useDispatch()
 
   const handleSell = useHandler(() => {
-    if (checkAndShowLightBackupModal(account, navigation)) {
-      return
-    } else {
-      navigation.navigate('sellTab', { screen: 'pluginListSell' })
-    }
+    navigation.navigate('sellTab', { screen: 'pluginListSell' })
     Airship.clear()
   })
+
   const handleBuy = useHandler(() => {
-    if (checkAndShowLightBackupModal(account, navigation)) {
-      return
-    } else {
-      navigation.navigate('buyTab', { screen: 'pluginListBuy' })
-    }
+    navigation.navigate('buyTab', { screen: 'pluginListBuy' })
     Airship.clear()
   })
+
   const handleSend = useHandler(async () => {
     const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet_to_send_from} navigation={navigation} />

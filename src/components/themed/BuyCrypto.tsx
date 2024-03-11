@@ -3,13 +3,11 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { DONE_THRESHOLD, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
@@ -31,12 +29,9 @@ export const BuyCrypto = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const account = useSelector(state => state.core.account)
-
   const syncRatio = useWatch(wallet, 'syncRatio')
 
   const handlePress = useHandler(() => {
-    if (checkAndShowLightBackupModal(account, navigation)) return
     navigation.navigate('buyTab', { screen: 'pluginListBuy' })
   })
 

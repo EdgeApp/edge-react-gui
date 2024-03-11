@@ -229,8 +229,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
-    // Don't allow light accounts to enter plugins
-    if (checkAndShowLightBackupModal(account, navigation)) return
+    // Don't allow light accounts to enter sell plugins
+    const direction = this.getSceneDirection()
+    if (direction === 'buy' && checkAndShowLightBackupModal(account, navigation)) return
 
     // Grab a custom URI if necessary:
     let { deepPath = undefined } = listRow
@@ -257,8 +258,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         writeDeveloperPluginUri(deepPath).catch(error => showError(error))
       }
     }
-
-    const direction = this.getSceneDirection()
     if (plugin.nativePlugin != null) {
       const disableProviders = disablePlugins[pluginId]
 
