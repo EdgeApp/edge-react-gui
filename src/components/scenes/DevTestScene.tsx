@@ -5,6 +5,7 @@ import { ReturnKeyType, View } from 'react-native'
 
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { Fontello } from '../../assets/vector'
+import { ENV } from '../../env'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
 import { useState } from '../../types/reactHooks'
 import { useDispatch } from '../../types/reactRedux'
@@ -17,6 +18,7 @@ import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { CountryListModal } from '../modals/CountryListModal'
+import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
 import { FlipInputModal2, FlipInputModalResult } from '../modals/FlipInputModal2'
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
@@ -285,6 +287,17 @@ export function DevTestScene(props: Props) {
               await Airship.show(bridge => (
                 <InsufficientFeesModal bridge={bridge} coreError={new InsufficientFundsError({ tokenId: null })} navigation={navigation} wallet={coreWallet} />
               ))
+            }}
+          />
+          <ButtonUi4
+            label="FioCreateHandleModal"
+            marginRem={0.25}
+            onPress={async () => {
+              const isCreateHandle = await Airship.show<boolean>(bridge => <FioCreateHandleModal bridge={bridge} />)
+              if (isCreateHandle) {
+                const { freeRegApiToken = '', freeRegRefCode = '' } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
+                navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })
+              }
             }}
           />
         </>
