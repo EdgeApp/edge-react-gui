@@ -598,6 +598,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             "marginHorizontal": -22,
             "marginVertical": -28,
             "opacity": 1,
+            "paddingHorizontal": 22,
             "paddingVertical": 28,
           }
         }
