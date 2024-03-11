@@ -356,7 +356,8 @@ const TouchContainer = styled(TouchableOpacity)<{ extendTappable: 'leftOnly' | '
         }
       : // extendTappable === 'full'
         {
-          marginHorizontal: -theme.rem(1)
+          marginHorizontal: -theme.rem(1),
+          paddingHorizontal: theme.rem(1)
         }
 
   return {
