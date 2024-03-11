@@ -61,7 +61,7 @@ export interface FilledTextInputProps extends SpaceProps {
   autoCorrect?: boolean // Defaults to 'true'
   blurOnSubmit?: boolean // Defaults to 'true'
   inputAccessoryViewID?: string
-  keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad' // Defaults to 'default'
+  keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad' | 'visible-password' // Defaults to 'default'
   maxLength?: number
   onSubmitEditing?: () => void
   returnKeyType?: FilledTextInputReturnKeyType // Defaults to 'done'

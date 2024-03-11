@@ -524,6 +524,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               "value": 0,
             }
           }
+          keyboardType="email-address"
           multiline={true}
           onBlur={[Function]}
           onChangeText={[Function]}
