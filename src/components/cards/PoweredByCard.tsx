@@ -54,6 +54,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'column'
   },
   poweredByContainer: {
+    marginHorizontal: theme.rem(0.25),
     flexDirection: 'row',
     alignItems: 'center'
   },

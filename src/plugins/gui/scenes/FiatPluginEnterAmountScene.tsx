@@ -277,7 +277,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     textFields: {
       flexDirection: 'column',
-      width: theme.rem(15)
+      width: theme.rem(14)
     },
     text: {
       ...textCommon,

@@ -26,6 +26,7 @@ interface Props {
   inputLabel?: string
   submitLabel?: string
   warningMessage?: string
+  textSizeRem?: number
 
   // Adds a border:
   warning?: boolean
@@ -56,6 +57,7 @@ export function TextInputModal(props: Props) {
     secureTextEntry,
     multiline = false,
     submitLabel = lstrings.submit,
+    textSizeRem,
     title,
     maxLength,
     warning,
@@ -116,6 +118,7 @@ export function TextInputModal(props: Props) {
         error={errorMessage}
         onChangeText={handleChangeText}
         onSubmitEditing={handleSubmit}
+        textsizeRem={textSizeRem}
         value={text}
         maxLength={maxLength}
       />

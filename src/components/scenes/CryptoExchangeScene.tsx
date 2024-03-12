@@ -429,7 +429,7 @@ export const CryptoExchangeScene = (props: OwnProps) => {
   })
 
   return (
-    <SceneWrapper hasTabs hasNotifications scroll padding={theme.rem(0.5)}>
+    <SceneWrapper hasTabs hasNotifications scroll keyboardShouldPersistTaps="handled" padding={theme.rem(0.5)}>
       <CryptoExchangeComponent
         route={route}
         onSelectWallet={handleSelectWallet}

@@ -1350,6 +1350,7 @@ exports[`CryptoExchangeQuoteScreenComponent should render with loading props 1`]
                   {
                     "alignItems": "center",
                     "flexDirection": "row",
+                    "marginHorizontal": 6,
                   }
                 }
               >
