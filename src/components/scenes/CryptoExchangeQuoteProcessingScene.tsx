@@ -1,13 +1,26 @@
-import { asMaybeInsufficientFundsError, EdgeSwapQuote, EdgeSwapRequest, EdgeSwapRequestOptions } from 'edge-core-js'
+import {
+  asMaybeInsufficientFundsError,
+  asMaybeSwapAboveLimitError,
+  asMaybeSwapBelowLimitError,
+  asMaybeSwapCurrencyError,
+  asMaybeSwapPermissionError,
+  EdgeDenomination,
+  EdgeSwapQuote,
+  EdgeSwapRequest,
+  EdgeSwapRequestOptions
+} from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
+import { sprintf } from 'sprintf-js'
 
-import { processSwapQuoteError, selectWalletForExchange } from '../../actions/CryptoExchangeActions'
+import { selectWalletForExchange } from '../../actions/CryptoExchangeActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { convertNativeToDisplay } from '../../util/utils'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
@@ -15,6 +28,7 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { SwapErrorDisplayInfo } from './CryptoExchangeScene'
 
 export interface ExchangeQuoteProcessingParams {
   swapRequest: EdgeSwapRequest
@@ -35,6 +49,9 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
 
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
+
+  const fromDenomination = useDisplayDenom(swapRequest.fromWallet.currencyConfig, swapRequest.fromTokenId)
+  const toDenomination = useDisplayDenom(swapRequest.toWallet.currencyConfig, swapRequest.toTokenId)
 
   const [isLongWait, setIsLongWait] = React.useState(false)
 
@@ -59,7 +76,12 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
         const quotes = await account.fetchSwapQuotes(swapRequest, swapRequestOptions)
         if (mounted.current) onDone(quotes)
       } catch (error: unknown) {
-        const errorDisplayInfo = dispatch(processSwapQuoteError(error, swapRequest))
+        const errorDisplayInfo = processSwapQuoteError({
+          error,
+          swapRequest,
+          fromDenomination,
+          toDenomination
+        })
 
         navigation.navigate('exchangeTab', {
           screen: 'exchange',
@@ -159,3 +181,83 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginVertical: theme.rem(1)
   }
 }))
+
+function processSwapQuoteError({
+  error,
+  swapRequest,
+  fromDenomination,
+  toDenomination
+}: {
+  error: unknown
+  swapRequest: EdgeSwapRequest
+  fromDenomination: EdgeDenomination
+  toDenomination: EdgeDenomination
+}): SwapErrorDisplayInfo | undefined {
+  // Basic sanity checks (should never fail):
+  if (error == null) return
+
+  // Some plugins get the insufficient funds error wrong:
+  const errorMessage = error instanceof Error ? error.message : String(error)
+
+  // Check for known error types:
+  const insufficientFunds = asMaybeInsufficientFundsError(error)
+  if (insufficientFunds != null || errorMessage === 'InsufficientFundsError') {
+    return {
+      title: lstrings.exchange_insufficient_funds_title,
+      message: lstrings.exchange_insufficient_funds_message
+    }
+  }
+
+  const aboveLimit = asMaybeSwapAboveLimitError(error)
+  if (aboveLimit != null) {
+    const currentCurrencyDenomination = aboveLimit.direction === 'to' ? toDenomination : fromDenomination
+
+    const { nativeMax } = aboveLimit
+    const nativeToDisplayRatio = currentCurrencyDenomination.multiplier
+    const displayMax = convertNativeToDisplay(nativeToDisplayRatio)(nativeMax)
+
+    return {
+      title: lstrings.exchange_generic_error_title,
+      message: sprintf(lstrings.amount_above_limit, displayMax, currentCurrencyDenomination.name)
+    }
+  }
+
+  const belowLimit = asMaybeSwapBelowLimitError(error)
+  if (belowLimit) {
+    const currentCurrencyDenomination = belowLimit.direction === 'to' ? toDenomination : fromDenomination
+
+    const { nativeMin } = belowLimit
+    const nativeToDisplayRatio = currentCurrencyDenomination.multiplier
+    const displayMin = convertNativeToDisplay(nativeToDisplayRatio)(nativeMin)
+
+    return {
+      title: lstrings.exchange_generic_error_title,
+      message: sprintf(lstrings.amount_below_limit, displayMin, currentCurrencyDenomination.name)
+    }
+  }
+
+  const currencyError = asMaybeSwapCurrencyError(error)
+  if (currencyError != null) {
+    const fromCurrencyCode = getCurrencyCode(swapRequest.fromWallet, swapRequest.fromTokenId)
+    const toCurrencyCode = getCurrencyCode(swapRequest.toWallet, swapRequest.toTokenId)
+
+    return {
+      title: lstrings.exchange_generic_error_title,
+      message: sprintf(lstrings.ss_unable, fromCurrencyCode, toCurrencyCode)
+    }
+  }
+
+  const permissionError = asMaybeSwapPermissionError(error)
+  if (permissionError?.reason === 'geoRestriction') {
+    return {
+      title: lstrings.exchange_generic_error_title,
+      message: lstrings.ss_geolock
+    }
+  }
+
+  // Anything else:
+  return {
+    title: lstrings.exchange_generic_error_title,
+    message: errorMessage
+  }
+}

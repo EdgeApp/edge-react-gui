@@ -1,24 +1,11 @@
 import { add, div, toFixed } from 'biggystring'
-import {
-  asMaybeInsufficientFundsError,
-  asMaybeSwapAboveLimitError,
-  asMaybeSwapBelowLimitError,
-  asMaybeSwapCurrencyError,
-  asMaybeSwapPermissionError,
-  EdgeSwapQuote,
-  EdgeSwapRequest,
-  EdgeSwapRequestOptions,
-  EdgeSwapResult,
-  EdgeTokenId
-} from 'edge-core-js'
+import { EdgeSwapQuote, EdgeSwapRequest, EdgeSwapRequestOptions, EdgeSwapResult, EdgeTokenId } from 'edge-core-js'
 import { Alert } from 'react-native'
-import { sprintf } from 'sprintf-js'
 
-import { SwapErrorDisplayInfo } from '../components/scenes/CryptoExchangeScene'
 import { showError } from '../components/services/AirshipInstance'
 import { formatNumber } from '../locales/intl'
 import { lstrings } from '../locales/strings'
-import { getExchangeDenom, getExchangeDenomByCurrencyCode, selectDisplayDenom, selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelectors'
+import { getExchangeDenom, getExchangeDenomByCurrencyCode, selectDisplayDenom } from '../selectors/DenominationSelectors'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -131,88 +118,6 @@ export const getSwapInfo = async (state: RootState, quote: EdgeSwapQuote): Promi
     toFiat
   }
   return swapInfo
-}
-
-export function processSwapQuoteError(error: unknown, request: EdgeSwapRequest): ThunkAction<SwapErrorDisplayInfo | undefined> {
-  return (_dispatch, getState) => {
-    const state = getState()
-
-    // Basic sanity checks (should never fail):
-    if (error == null) return
-
-    const { fromWallet, fromTokenId, toWallet, toTokenId } = request
-
-    const fromCurrencyCode = getCurrencyCode(fromWallet, fromTokenId)
-    const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
-
-    if (fromCurrencyCode == null || toCurrencyCode == null) return
-
-    // Some plugins get the insufficient funds error wrong:
-    const errorMessage = error instanceof Error ? error.message : String(error)
-
-    // Check for known error types:
-    const insufficientFunds = asMaybeInsufficientFundsError(error)
-    if (insufficientFunds != null || errorMessage === 'InsufficientFundsError') {
-      return {
-        title: lstrings.exchange_insufficient_funds_title,
-        message: lstrings.exchange_insufficient_funds_message
-      }
-    }
-
-    const aboveLimit = asMaybeSwapAboveLimitError(error)
-    if (aboveLimit != null) {
-      const wallet = aboveLimit.direction === 'to' ? toWallet : fromWallet
-      const currencyCode = aboveLimit.direction === 'to' ? toCurrencyCode : fromCurrencyCode
-      const currentCurrencyDenomination = selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, currencyCode)
-
-      const { nativeMax } = aboveLimit
-      const nativeToDisplayRatio = currentCurrencyDenomination.multiplier
-      const displayMax = convertNativeToDisplay(nativeToDisplayRatio)(nativeMax)
-
-      return {
-        title: lstrings.exchange_generic_error_title,
-        message: sprintf(lstrings.amount_above_limit, displayMax, currentCurrencyDenomination.name)
-      }
-    }
-
-    const belowLimit = asMaybeSwapBelowLimitError(error)
-    if (belowLimit) {
-      const wallet = belowLimit.direction === 'to' ? toWallet : fromWallet
-      const currencyCode = belowLimit.direction === 'to' ? toCurrencyCode : fromCurrencyCode
-      const currentCurrencyDenomination = selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, currencyCode)
-
-      const { nativeMin } = belowLimit
-      const nativeToDisplayRatio = currentCurrencyDenomination.multiplier
-      const displayMin = convertNativeToDisplay(nativeToDisplayRatio)(nativeMin)
-
-      return {
-        title: lstrings.exchange_generic_error_title,
-        message: sprintf(lstrings.amount_below_limit, displayMin, currentCurrencyDenomination.name)
-      }
-    }
-
-    const currencyError = asMaybeSwapCurrencyError(error)
-    if (currencyError != null) {
-      return {
-        title: lstrings.exchange_generic_error_title,
-        message: sprintf(lstrings.ss_unable, fromCurrencyCode, toCurrencyCode)
-      }
-    }
-
-    const permissionError = asMaybeSwapPermissionError(error)
-    if (permissionError?.reason === 'geoRestriction') {
-      return {
-        title: lstrings.exchange_generic_error_title,
-        message: lstrings.ss_geolock
-      }
-    }
-
-    // Anything else:
-    return {
-      title: lstrings.exchange_generic_error_title,
-      message: errorMessage
-    }
-  }
 }
 
 export function shiftCryptoCurrency(navigation: NavigationBase, quote: EdgeSwapQuote, onApprove: () => void): ThunkAction<Promise<void>> {
