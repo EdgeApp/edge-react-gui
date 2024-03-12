@@ -39,7 +39,6 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
   buy: {
     applepay: true,
     credit: true,
-    fasterpayments: true,
     googlepay: true,
     ideal: true,
     interac: true,
@@ -50,7 +49,6 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
   },
   sell: {
     directtobank: true,
-    fasterpayments: true,
     interac: true,
     iobank: true,
     payid: true,
