@@ -7,6 +7,8 @@
 - changed: Password reminder modal only shows after tapping new persistent notification
 - changed: Move wallet activation redux values to scenes
 - changed: Button width remains constant regardless of content visibility
+- changed: Certain deeplinks blocked for light accounts
+- chagned: 'Sweep Private Key' usage blocked for light accounts
 - fixed: FIO name transfer error when sending with no address
 
 ## 4.2.0
