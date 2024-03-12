@@ -4,6 +4,7 @@
 
 - added: Wrapped Touchable* components to consolidate tap debounce logic
 - added: Mt Pelerin for SEPA and Faster Payments
+- added: Setting to change default screen on login
 - changed: Remove extra spaces and normal capitalization of mnemonic seed input
 - changed: 2FA/otp modals moved behind a notification card instead of showing instantly on login
 - changed: Password reminder modal only shows after tapping new persistent notification

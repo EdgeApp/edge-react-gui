@@ -7,6 +7,7 @@ import { Platform } from 'react-native'
 import { AirshipToast } from 'react-native-airship'
 
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions'
+import { getDeviceSettings } from '../actions/DeviceSettingsActions'
 import { logoutRequest } from '../actions/LoginActions'
 import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { CryptoExchangeScene as CryptoExchangeSceneComponent } from '../components/scenes/CryptoExchangeScene'
@@ -705,9 +706,12 @@ const EdgeAppStack = () => {
 }
 
 const EdgeTabs = () => {
+  const { defaultScreen } = getDeviceSettings()
+  const initialRouteName = defaultScreen === 'assets' ? 'walletsTab' : 'homeTab'
+
   return (
     <Tab.Navigator
-      initialRouteName="homeTab"
+      initialRouteName={initialRouteName}
       tabBar={props => <MenuTabs {...props} />}
       screenOptions={{
         headerShown: false

@@ -1,4 +1,4 @@
-import { asBoolean, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString } from 'cleaners'
+import { asBoolean, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeToken, EdgeTokenId } from 'edge-core-js/types'
 
 import { LocaleStringKey } from '../locales/en_US'
@@ -159,7 +159,11 @@ const asLocalAccountSettingsInner = asObject({
   spamFilterOn: asMaybe(asBoolean, true),
   spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({}))
 })
+
+export const asDefaultScreen = asValue('home', 'assets')
+
 const asDeviceSettingsInner = asObject({
+  defaultScreen: asMaybe(asDefaultScreen, 'home'),
   developerPluginUri: asMaybe(asString),
   disableAnimations: asMaybe(asBoolean, false),
   hasInteractedWithBackupModal: asMaybe(asBoolean, false)
@@ -168,6 +172,7 @@ const asDeviceSettingsInner = asObject({
 export const asLocalAccountSettings = asMaybe(asLocalAccountSettingsInner, () => asLocalAccountSettingsInner({}))
 export const asDeviceSettings = asMaybe(asDeviceSettingsInner, () => asDeviceSettingsInner({}))
 
+export type DefaultScreen = ReturnType<typeof asDefaultScreen>
 export type PasswordReminder = ReturnType<typeof asPasswordReminder>
 export type LocalAccountSettings = ReturnType<typeof asLocalAccountSettings>
 export type DeviceSettings = ReturnType<typeof asDeviceSettings>
