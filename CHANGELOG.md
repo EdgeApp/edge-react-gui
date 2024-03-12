@@ -52,6 +52,11 @@
 - fixed: Insufficient Funds error in Thorchain unstaking
 - removed: swipeLastUsp experiment (always allow swipes on the last USP)
 
+## 4.0.3 (2024-02-15)
+
+- changed: (FIO) Use a backup balance method for accounts affected by unstake chain data issue
+- fixed: Some text inputs not selectable for some Samsung devices
+
 ## 4.0.2 (2024-02-13)
 
 - fixed: CAPTCHA image was not draggable on Android.
