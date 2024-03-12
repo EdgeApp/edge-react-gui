@@ -293,7 +293,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
         {
           "busy": undefined,
           "checked": undefined,
-          "disabled": undefined,
+          "disabled": false,
           "expanded": undefined,
           "selected": undefined,
         }

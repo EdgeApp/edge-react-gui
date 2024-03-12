@@ -1,6 +1,6 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
@@ -9,6 +9,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -99,13 +100,13 @@ export const RowUi4 = (props: Props) => {
       {
         // If right action icon button is visible, only the icon dims on row tap
         rightButtonVisible ? (
-          <TouchableOpacity style={styles.tappableIconContainer} accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={loading}>
+          <EdgeTouchableOpacity style={styles.tappableIconContainer} accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={loading}>
             {rightButtonType === 'touchable' ? <FontAwesome5 name="chevron-right" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
             {rightButtonType === 'editable' ? <FontAwesomeIcon name="edit" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
             {rightButtonType === 'copy' ? <FontAwesomeIcon name="copy" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
             {rightButtonType === 'delete' ? <FontAwesomeIcon name="times" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
             {rightButtonType === 'questionable' ? <SimpleLineIcons name="question" style={styles.tappableIcon} size={theme.rem(1)} /> : null}
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         ) : null
       }
     </>
@@ -115,9 +116,9 @@ export const RowUi4 = (props: Props) => {
   // TODO: If a right button is specified, onPress/onLogPress is ignored! Refine
   // API and possibly restructure JSX.
   return isTappable && !rightButtonVisible ? (
-    <TouchableOpacity style={[styles.container, margin]} accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={loading}>
+    <EdgeTouchableOpacity style={[styles.container, margin]} accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={loading}>
       {content}
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   ) : (
     <View style={[styles.container, margin]}>{content}</View>
   )

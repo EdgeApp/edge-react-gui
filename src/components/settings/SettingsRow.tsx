@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { ActivityIndicator, Text, TextStyle, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, Text, TextStyle, View } from 'react-native'
 import Animated, { useAnimatedStyle, withDelay, withTiming } from 'react-native-reanimated'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
+import { EdgeTouchableHighlight } from '../common/EdgeTouchableHighlight'
 import { styled } from '../hoc/styled'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
@@ -42,7 +43,7 @@ const SettingsRowComponent = (props: Props) => {
   const [pending, handlePress] = usePendingPress(onPress)
 
   return (
-    <TouchableHighlight accessible={false} underlayColor={theme.settingsRowPressed} style={styles.row} onPress={handlePress}>
+    <EdgeTouchableHighlight accessible={false} underlayColor={theme.settingsRowPressed} style={styles.row} onPress={handlePress}>
       <>
         {children}
         <Text style={disabled ? styles.disabledText : dangerous ? styles.dangerText : styles.text}>{label}</Text>
@@ -53,7 +54,7 @@ const SettingsRowComponent = (props: Props) => {
           <RightContainer pending={pending}>{right}</RightContainer>
         </View>
       </>
-    </TouchableHighlight>
+    </EdgeTouchableHighlight>
   )
 }
 

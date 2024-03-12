@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { asArray, asObject, asOptional, asString } from 'cleaners'
 import * as React from 'react'
-import { Platform, ScrollView, TouchableOpacity, View, ViewStyle } from 'react-native'
+import { Platform, ScrollView, View, ViewStyle } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Animated, { Easing, interpolateColor, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated'
 
+import { EdgeTouchableOpacity } from '../../../components/common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
@@ -283,13 +284,13 @@ export const AddressFormScene = React.memo((props: Props) => {
                   {searchResults.map(searchResult => {
                     const displaySearchResult = `${searchResult.address}\n${searchResult.city}, ${searchResult.state}, ${countryCode}`
                     return (
-                      <TouchableOpacity key={searchResults.indexOf(searchResult)} onPress={addressHintPress(searchResult)}>
+                      <EdgeTouchableOpacity key={searchResults.indexOf(searchResult)} onPress={addressHintPress(searchResult)}>
                         <View style={styles.rowContainer} onLayout={handleHintLayout}>
                           <EdgeText style={styles.addressHintText} numberOfLines={2}>
                             {displaySearchResult}
                           </EdgeText>
                         </View>
-                      </TouchableOpacity>
+                      </EdgeTouchableOpacity>
                     )
                   })}
                 </ScrollView>

@@ -1,8 +1,9 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 
 import { Fontello } from '../../../assets/vector/index'
+import { EdgeTouchableOpacity } from '../../../components/common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
@@ -97,9 +98,9 @@ export const InfoDisplayScene = React.memo((props: Props) => {
 
   const renderCopyButton = (value: string) => {
     return (
-      <TouchableOpacity onPress={() => handleCopyPress(value)}>
+      <EdgeTouchableOpacity onPress={() => handleCopyPress(value)}>
         <Fontello name="Copy-icon" size={theme.rem(1)} color={theme.iconTappable} />
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     )
   }
 

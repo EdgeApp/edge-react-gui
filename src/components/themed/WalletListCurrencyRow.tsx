@@ -1,6 +1,5 @@
 import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useIconColor } from '../../hooks/useIconColor'
@@ -8,6 +7,7 @@ import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CustomAsset, CustomAssetRow } from '../data/row/CustomAssetRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CardUi4 } from '../ui4/CardUi4'
@@ -63,9 +63,9 @@ const WalletListCurrencyRowComponent = (props: Props) => {
 
   return customAsset != null ? (
     // TODO: Update to UI4
-    <TouchableOpacity accessible={false} style={styles.row} onLongPress={handleLongPress} onPress={handlePress}>
+    <EdgeTouchableOpacity accessible={false} style={styles.row} onLongPress={handleLongPress} onPress={handlePress}>
       <CustomAssetRow customAsset={customAsset} />
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   ) : (
     <CardUi4
       overlay={isPaused ? <EdgeText style={styles.overlayLabel}>{lstrings.fragment_wallets_wallet_paused}</EdgeText> : null}

@@ -5,7 +5,7 @@
 
 import * as React from 'react'
 import { useMemo } from 'react'
-import { ActivityIndicator, Platform, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Animated, {
   interpolate,
   interpolateColor,
@@ -20,6 +20,7 @@ import Animated, {
 
 import { useHandler } from '../../hooks/useHandler'
 import { SpaceProps, useSpaceStyle } from '../../hooks/useSpaceStyle'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
 import { AnimatedIconComponent, CloseIconAnimated, EyeIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
@@ -223,7 +224,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
 
   return (
     <View style={spaceStyle}>
-      <TouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
+      <EdgeTouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
         <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} multiline={multiline} scale={scale}>
           <SideContainer scale={leftIconSize}>{LeftIcon == null ? null : <LeftIcon color={iconColor} size={leftIconSize} />}</SideContainer>
 
@@ -288,7 +289,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
             </SideContainer>
           </TouchContainer>
         </Container>
-      </TouchableWithoutFeedback>
+      </EdgeTouchableWithoutFeedback>
       {valid != null || error != null || charactersLeft !== '' ? (
         <MessagesContainer noLayoutFlow={charactersLeft === ''}>
           <Message danger={error != null}>{valid ?? error ?? null}</Message>

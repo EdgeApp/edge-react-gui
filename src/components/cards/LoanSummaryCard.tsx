@@ -21,7 +21,7 @@ import { Alert } from '../themed/Alert'
 import { EdgeText } from '../themed/EdgeText'
 import { TappableCard } from './TappableCard'
 
-const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEngine: BorrowEngine; iconUri: string; onPress: (() => void) | undefined }) => {
+const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEngine: BorrowEngine; iconUri: string; onPress: () => void }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 

@@ -236,6 +236,11 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
   >
     <View>
       <View
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
         accessibilityValue={
           {
             "max": undefined,
@@ -349,6 +354,11 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
         </View>
       </View>
       <View
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
         accessibilityValue={
           {
             "max": undefined,

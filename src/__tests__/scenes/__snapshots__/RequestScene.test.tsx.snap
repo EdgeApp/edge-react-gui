@@ -138,7 +138,7 @@ exports[`Request should render with loaded props 1`] = `
         }
       }
     >
-      <TouchableOpacity
+      <ExtendedTouchable
         onPress={[Function]}
         style={
           {
@@ -151,7 +151,7 @@ exports[`Request should render with loaded props 1`] = `
         <EdgeText>
           You have 0.000012 undefined
         </EdgeText>
-      </TouchableOpacity>
+      </ExtendedTouchable>
       <EdgeText
         style={
           {
@@ -226,7 +226,7 @@ exports[`Request should render with loaded props 1`] = `
         }
       }
     >
-      <TouchableOpacity
+      <ExtendedTouchable
         accessible={false}
         disabled={false}
         onPress={[Function]}
@@ -258,7 +258,7 @@ exports[`Request should render with loaded props 1`] = `
         >
           Loading…
         </EdgeText>
-      </TouchableOpacity>
+      </ExtendedTouchable>
     </Memo(EdgeAnimInner)>
   </View>
   <Memo(EdgeAnimInner)

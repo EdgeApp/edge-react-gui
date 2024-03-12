@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ListRenderItem, TouchableHighlight, View } from 'react-native'
+import { ListRenderItem, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { FlatList } from 'react-native-gesture-handler'
 
@@ -11,6 +11,7 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { scale } from '../../util/scaling'
 import { MinimalButton } from '../buttons/MinimalButton'
+import { EdgeTouchableHighlight } from '../common/EdgeTouchableHighlight'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
@@ -116,7 +117,7 @@ export function CategoryModal(props: Props) {
   const keyExtractor = useHandler((row: CategoryRow) => row.raw)
 
   const renderRow: ListRenderItem<CategoryRow> = useHandler(({ item }) => (
-    <TouchableHighlight delayPressIn={60} style={styles.rowContainer} onPress={async () => await handleCategoryUpdate(item.raw)}>
+    <EdgeTouchableHighlight delayPressIn={60} style={styles.rowContainer} onPress={async () => await handleCategoryUpdate(item.raw)}>
       <>
         <View style={styles.rowContent}>
           <View style={styles.rowCategoryTextWrap}>
@@ -130,7 +131,7 @@ export function CategoryModal(props: Props) {
         </View>
         <DividerLine marginRem={[0, 0]} />
       </>
-    </TouchableHighlight>
+    </EdgeTouchableHighlight>
   ))
 
   return (

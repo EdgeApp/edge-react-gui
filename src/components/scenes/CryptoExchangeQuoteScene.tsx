@@ -1,7 +1,7 @@
 import { div, gte } from 'biggystring'
 import { EdgeSwapQuote } from 'edge-core-js'
 import React, { useEffect, useState } from 'react'
-import { SectionList, TouchableOpacity, View, ViewStyle } from 'react-native'
+import { SectionList, View, ViewStyle } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
@@ -14,6 +14,7 @@ import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { logEvent } from '../../util/tracking'
 import { PoweredByCard } from '../cards/PoweredByCard'
 import { EdgeAnim, fadeInDown30, fadeInDown60, fadeInDown90, fadeInDown120, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SwapProviderRow } from '../data/row/SwapProviderRow'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -122,14 +123,14 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   const renderRow = useHandler((item: { item: EdgeSwapQuote; section: Section; index: number }) => {
     const quote = item.item
     return (
-      <TouchableOpacity
+      <EdgeTouchableOpacity
         onPress={() => {
           setSelectedQuote(quote)
           Airship.clear()
         }}
       >
         <SwapProviderRow quote={quote} />
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     )
   })
 

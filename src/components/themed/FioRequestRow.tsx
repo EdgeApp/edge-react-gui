@@ -1,7 +1,7 @@
 import { mul, toFixed } from 'biggystring'
 import { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
@@ -14,6 +14,7 @@ import { connect } from '../../types/reactRedux'
 import { FioRequest, FioRequestStatus } from '../../types/types'
 import { getCryptoText } from '../../util/cryptoTextUtils'
 import { convertEdgeToFIOCodes, convertFIOToEdgeCodes } from '../../util/FioAddressUtils'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
@@ -104,11 +105,11 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
           fioRequest.status === 'sent_to_blockchain' || fioRequest.status === 'rejected'
             ? undefined
             : (isActive: SharedValue<boolean>) => (
-                <TouchableOpacity style={styles.underlay} onPress={this.onSwipe}>
+                <EdgeTouchableOpacity style={styles.underlay} onPress={this.onSwipe}>
                   <SwipeableRowIcon isActive={isActive} minWidth={theme.rem(7)}>
                     <EdgeText>{isSent ? lstrings.string_cancel_cap : lstrings.swap_terms_reject_button}</EdgeText>
                   </SwipeableRowIcon>
-                </TouchableOpacity>
+                </EdgeTouchableOpacity>
               )
         }
         rightDetent={theme.rem(7)}

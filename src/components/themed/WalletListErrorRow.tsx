@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
@@ -16,10 +16,10 @@ function WalletListErrorRowComponent(props: Props) {
   const styles = getStyles(theme)
 
   return (
-    <TouchableOpacity style={styles.container} onLongPress={onLongPress}>
+    <EdgeTouchableOpacity style={styles.container} onLongPress={onLongPress}>
       <EntypoIcon name="warning" size={theme.rem(1)} style={styles.icon} />
       <EdgeText>{error.message}</EdgeText>
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   )
 }
 
