@@ -19,7 +19,7 @@ import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList, NavigationBase } from '../../types/routerTypes'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
-import { OnLogEvent, TrackingEventName } from '../../util/tracking'
+import { OnLogEvent, SellConversionValues, TrackingEventName } from '../../util/tracking'
 import {
   FiatPaymentType,
   FiatPluginAddressFormParams,
@@ -222,19 +222,7 @@ export const executePlugin = async (params: {
     showToast: async (message: string, autoHideMs?: number) => {
       showToast(message, autoHideMs)
     },
-    trackConversion: async (
-      event: TrackingEventName,
-      opts: {
-        destCurrencyCode: string
-        destExchangeAmount: string
-        destPluginId?: string
-        sourceCurrencyCode: string
-        sourceExchangeAmount: string
-        sourcePluginId?: string
-        pluginId: string
-        orderId?: string
-      }
-    ) => {
+    trackConversion: async (event: TrackingEventName, opts: { conversionValues: SellConversionValues }) => {
       onLogEvent(event, opts)
     },
     exitScene: async () => {

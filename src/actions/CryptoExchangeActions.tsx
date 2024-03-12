@@ -24,6 +24,7 @@ import { convertCurrency } from '../selectors/WalletSelectors'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { GuiCurrencyInfo, GuiSwapInfo } from '../types/types'
+import { CryptoAmount } from '../util/CryptoAmount'
 import { getCurrencyCode, getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { bestOfPlugins } from '../util/ReferralHelpers'
@@ -338,13 +339,18 @@ export function shiftCryptoCurrency(navigation: NavigationBase, quote: EdgeSwapQ
 
       await updateSwapCount(state)
 
-      const exchangeAmount = await toWallet.nativeToDenomination(toNativeAmount, toCurrencyCode)
       dispatch(
         logEvent('Exchange_Shift_Success', {
-          pluginId,
-          currencyCode: toCurrencyCode,
-          exchangeAmount,
-          orderId: result.orderId
+          conversionValues: {
+            conversionType: 'crypto',
+            cryptoAmount: new CryptoAmount({
+              nativeAmount: toNativeAmount,
+              currencyCode: toCurrencyCode,
+              currencyConfig: toWallet.currencyConfig
+            }),
+            orderId: result.orderId,
+            swapProviderId: pluginId
+          }
         })
       )
     } catch (error: any) {
