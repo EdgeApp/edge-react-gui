@@ -2,6 +2,7 @@
 import { DrawerContentComponentProps, useDrawerStatus } from '@react-navigation/drawer'
 import { DrawerActions } from '@react-navigation/native'
 import { EdgeAccount, EdgeUserInfo } from 'edge-core-js'
+import hashjs from 'hash.js'
 import * as React from 'react'
 import { Image, Platform, Pressable, ScrollView, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -28,7 +29,6 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
-import { base58ToUuid } from '../../util/utils'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -144,7 +144,12 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
 
   const handleShareApp = () => {
     const message = `${sprintf(lstrings.share_subject, config.appName)}\n\n${lstrings.share_message}\n\n`
-    const website = `${config.website}?af=appreferred-${base58ToUuid(context.clientId)}`
+
+    // Generate anonymized referral ID
+    const data = Uint8Array.from(Buffer.from(account.rootLoginId, 'hex'))
+    const refId = hashjs.sha256().update(data).digest('hex').replace('0x', '').substring(0, 10)
+
+    const website = `${config.website}?af=appreferred_${refId}`
 
     const shareOptions = {
       message: Platform.OS === 'ios' ? message : message + website,
