@@ -1,0 +1,6264 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 View 1`] = `
+<View
+  style={
+    {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    absolute={false}
+    layout="column"
+    style={
+      {
+        "alignItems": "stretch",
+        "alignSelf": "center",
+        "flexDirection": "column",
+        "justifyContent": "space-between",
+        "margin": 11,
+      }
+    }
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "flexBasis": "auto",
+          "flexGrow": 0,
+          "flexShrink": 0,
+          "justifyContent": "center",
+          "margin": -11,
+          "opacity": 1,
+          "padding": 11,
+        }
+      }
+    >
+      <BVLinearGradient
+        colors={
+          [
+            4280299823,
+            4278214733,
+          ]
+        }
+        endPoint={
+          {
+            "x": 1,
+            "y": 0,
+          }
+        }
+        locations={null}
+        startPoint={
+          {
+            "x": 0,
+            "y": 0,
+          }
+        }
+        style={
+          [
+            {
+              "alignItems": "center",
+              "borderRadius": 34,
+              "flexDirection": "row",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "justifyContent": "center",
+            },
+            {
+              "alignSelf": "stretch",
+            },
+            {
+              "height": 67,
+              "paddingHorizontal": 34,
+            },
+            {
+              "opacity": 1,
+            },
+          ]
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
+            ]
+          }
+        >
+          Primary
+        </Text>
+      </BVLinearGradient>
+    </View>
+    <View
+      style={
+        [
+          {
+            "alignItems": undefined,
+            "flex": undefined,
+            "flexDirection": "column",
+            "justifyContent": undefined,
+            "marginBottom": 11,
+            "marginLeft": 11,
+            "marginRight": 11,
+            "marginTop": 11,
+          },
+          undefined,
+        ]
+      }
+    />
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "flexBasis": "auto",
+          "flexGrow": 0,
+          "flexShrink": 0,
+          "justifyContent": "center",
+          "margin": -11,
+          "opacity": 1,
+          "padding": 11,
+        }
+      }
+    >
+      <BVLinearGradient
+        colors={
+          [
+            872415231,
+            872415231,
+          ]
+        }
+        endPoint={
+          {
+            "x": 1,
+            "y": 1,
+          }
+        }
+        locations={null}
+        startPoint={
+          {
+            "x": 0,
+            "y": 0,
+          }
+        }
+        style={
+          [
+            {
+              "alignItems": "center",
+              "borderRadius": 34,
+              "flexDirection": "row",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "justifyContent": "center",
+            },
+            {
+              "alignSelf": "stretch",
+            },
+            {
+              "height": 67,
+              "paddingHorizontal": 34,
+            },
+            {
+              "opacity": 1,
+            },
+          ]
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
+            ]
+          }
+        >
+          Secondary
+        </Text>
+      </BVLinearGradient>
+    </View>
+    <View
+      style={
+        [
+          {
+            "alignItems": undefined,
+            "flex": undefined,
+            "flexDirection": "column",
+            "justifyContent": undefined,
+            "marginBottom": 11,
+            "marginLeft": 11,
+            "marginRight": 11,
+            "marginTop": 11,
+          },
+          undefined,
+        ]
+      }
+    />
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "flexBasis": "auto",
+          "flexGrow": 0,
+          "flexShrink": 0,
+          "justifyContent": "center",
+          "margin": -11,
+          "opacity": 1,
+          "padding": 11,
+        }
+      }
+    >
+      <BVLinearGradient
+        colors={
+          [
+            16777215,
+            16777215,
+          ]
+        }
+        endPoint={
+          {
+            "x": 1,
+            "y": 1,
+          }
+        }
+        locations={null}
+        startPoint={
+          {
+            "x": 0,
+            "y": 0,
+          }
+        }
+        style={
+          [
+            {
+              "alignItems": "center",
+              "borderRadius": 34,
+              "flexDirection": "row",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "justifyContent": "center",
+            },
+            {
+              "alignSelf": "stretch",
+            },
+            {
+              "alignSelf": "center",
+            },
+            {
+              "height": undefined,
+              "padding": 0,
+            },
+            {
+              "opacity": 1,
+            },
+          ]
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#00f1a2",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
+            ]
+          }
+        >
+          Tertiary
+        </Text>
+      </BVLinearGradient>
+    </View>
+  </View>
+  <View
+    absolute={false}
+    layout="solo"
+    style={
+      {
+        "alignItems": "center",
+        "flexGrow": 1,
+        "flexShrink": 1,
+        "justifyContent": "center",
+        "margin": 11,
+        "marginHorizontal": 11,
+      }
+    }
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "alignSelf": "center",
+          "flexBasis": "auto",
+          "flexGrow": 0,
+          "flexShrink": 0,
+          "justifyContent": "center",
+          "margin": -11,
+          "opacity": 1,
+          "padding": 11,
+        }
+      }
+    >
+      <BVLinearGradient
+        colors={
+          [
+            4280299823,
+            4278214733,
+          ]
+        }
+        endPoint={
+          {
+            "x": 1,
+            "y": 0,
+          }
+        }
+        locations={null}
+        startPoint={
+          {
+            "x": 0,
+            "y": 0,
+          }
+        }
+        style={
+          [
+            {
+              "alignItems": "center",
+              "borderRadius": 34,
+              "flexDirection": "row",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "justifyContent": "center",
+            },
+            {
+              "alignSelf": "center",
+            },
+            {
+              "height": 67,
+              "paddingHorizontal": 34,
+            },
+            {
+              "opacity": 1,
+            },
+          ]
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
+            ]
+          }
+        >
+          Primary
+        </Text>
+      </BVLinearGradient>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Buttons should render in a ButtonsView in a column layout with 1 buttons 1`] = `
+<View
+  absolute={false}
+  layout="column"
+  style={
+    {
+      "alignItems": "stretch",
+      "alignSelf": "center",
+      "flexDirection": "column",
+      "justifyContent": "space-between",
+      "margin": 11,
+    }
+  }
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          4280299823,
+          4278214733,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "stretch",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Primary
+      </Text>
+    </BVLinearGradient>
+  </View>
+  <View
+    style={
+      [
+        {
+          "alignItems": undefined,
+          "flex": undefined,
+          "flexDirection": "column",
+          "justifyContent": undefined,
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          872415231,
+          872415231,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "stretch",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Secondary
+      </Text>
+    </BVLinearGradient>
+  </View>
+</View>
+`;
+
+exports[`Buttons should render in a ButtonsView in a column layout with 2 buttons 1`] = `
+<View
+  absolute={false}
+  layout="column"
+  style={
+    {
+      "alignItems": "stretch",
+      "alignSelf": "center",
+      "flexDirection": "column",
+      "justifyContent": "space-between",
+      "margin": 11,
+    }
+  }
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          4280299823,
+          4278214733,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "stretch",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Primary
+      </Text>
+    </BVLinearGradient>
+  </View>
+  <View
+    style={
+      [
+        {
+          "alignItems": undefined,
+          "flex": undefined,
+          "flexDirection": "column",
+          "justifyContent": undefined,
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          872415231,
+          872415231,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "stretch",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Secondary
+      </Text>
+    </BVLinearGradient>
+  </View>
+</View>
+`;
+
+exports[`Buttons should render in a ButtonsView in a column layout with 3 buttons 1`] = `
+<View
+  absolute={false}
+  layout="column"
+  style={
+    {
+      "alignItems": "stretch",
+      "alignSelf": "center",
+      "flexDirection": "column",
+      "justifyContent": "space-between",
+      "margin": 11,
+    }
+  }
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          4280299823,
+          4278214733,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "stretch",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Primary
+      </Text>
+    </BVLinearGradient>
+  </View>
+  <View
+    style={
+      [
+        {
+          "alignItems": undefined,
+          "flex": undefined,
+          "flexDirection": "column",
+          "justifyContent": undefined,
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          872415231,
+          872415231,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "stretch",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Secondary
+      </Text>
+    </BVLinearGradient>
+  </View>
+  <View
+    style={
+      [
+        {
+          "alignItems": undefined,
+          "flex": undefined,
+          "flexDirection": "column",
+          "justifyContent": undefined,
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          16777215,
+          16777215,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "stretch",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "height": undefined,
+            "padding": 0,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#00f1a2",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Tertiary
+      </Text>
+    </BVLinearGradient>
+  </View>
+</View>
+`;
+
+exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View 1`] = `
+<View
+  style={
+    {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    absolute={false}
+    layout="row"
+    style={
+      {
+        "flexDirection": "row-reverse",
+        "flexGrow": 1,
+        "flexShrink": 1,
+        "justifyContent": "center",
+        "margin": 11,
+      }
+    }
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "flex": 1,
+          "justifyContent": "center",
+          "margin": -11,
+          "opacity": 1,
+          "padding": 11,
+        }
+      }
+    >
+      <BVLinearGradient
+        colors={
+          [
+            4280299823,
+            4278214733,
+          ]
+        }
+        endPoint={
+          {
+            "x": 1,
+            "y": 0,
+          }
+        }
+        locations={null}
+        startPoint={
+          {
+            "x": 0,
+            "y": 0,
+          }
+        }
+        style={
+          [
+            {
+              "alignItems": "center",
+              "borderRadius": 34,
+              "flexDirection": "row",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "justifyContent": "center",
+            },
+            {
+              "alignSelf": "stretch",
+            },
+            {
+              "height": 67,
+              "paddingHorizontal": 34,
+            },
+            {
+              "opacity": 1,
+            },
+          ]
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
+            ]
+          }
+        >
+          Primary
+        </Text>
+      </BVLinearGradient>
+    </View>
+    <View
+      style={
+        [
+          {
+            "alignItems": undefined,
+            "flex": undefined,
+            "flexDirection": "column",
+            "justifyContent": undefined,
+            "marginBottom": 11,
+            "marginLeft": 11,
+            "marginRight": 11,
+            "marginTop": 11,
+          },
+          undefined,
+        ]
+      }
+    />
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "flex": 1,
+          "justifyContent": "center",
+          "margin": -11,
+          "opacity": 1,
+          "padding": 11,
+        }
+      }
+    >
+      <BVLinearGradient
+        colors={
+          [
+            872415231,
+            872415231,
+          ]
+        }
+        endPoint={
+          {
+            "x": 1,
+            "y": 1,
+          }
+        }
+        locations={null}
+        startPoint={
+          {
+            "x": 0,
+            "y": 0,
+          }
+        }
+        style={
+          [
+            {
+              "alignItems": "center",
+              "borderRadius": 34,
+              "flexDirection": "row",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "justifyContent": "center",
+            },
+            {
+              "alignSelf": "stretch",
+            },
+            {
+              "height": 67,
+              "paddingHorizontal": 34,
+            },
+            {
+              "opacity": 1,
+            },
+          ]
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
+            ]
+          }
+        >
+          Secondary
+        </Text>
+      </BVLinearGradient>
+    </View>
+    <View
+      style={
+        [
+          {
+            "alignItems": undefined,
+            "flex": undefined,
+            "flexDirection": "column",
+            "justifyContent": undefined,
+            "marginBottom": 11,
+            "marginLeft": 11,
+            "marginRight": 11,
+            "marginTop": 11,
+          },
+          undefined,
+        ]
+      }
+    />
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "flex": 1,
+          "justifyContent": "center",
+          "margin": -11,
+          "opacity": 1,
+          "padding": 11,
+        }
+      }
+    >
+      <BVLinearGradient
+        colors={
+          [
+            16777215,
+            16777215,
+          ]
+        }
+        endPoint={
+          {
+            "x": 1,
+            "y": 1,
+          }
+        }
+        locations={null}
+        startPoint={
+          {
+            "x": 0,
+            "y": 0,
+          }
+        }
+        style={
+          [
+            {
+              "alignItems": "center",
+              "borderRadius": 34,
+              "flexDirection": "row",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "justifyContent": "center",
+            },
+            {
+              "alignSelf": "stretch",
+            },
+            {
+              "alignSelf": "center",
+            },
+            {
+              "height": undefined,
+              "padding": 0,
+            },
+            {
+              "opacity": 1,
+            },
+          ]
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#00f1a2",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
+            ]
+          }
+        >
+          Tertiary
+        </Text>
+      </BVLinearGradient>
+    </View>
+  </View>
+  <View
+    absolute={false}
+    layout="solo"
+    style={
+      {
+        "alignItems": "center",
+        "flexGrow": 1,
+        "flexShrink": 1,
+        "justifyContent": "center",
+        "margin": 11,
+        "marginHorizontal": 11,
+      }
+    }
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "alignSelf": "center",
+          "flexBasis": "auto",
+          "flexGrow": 0,
+          "flexShrink": 0,
+          "justifyContent": "center",
+          "margin": -11,
+          "opacity": 1,
+          "padding": 11,
+        }
+      }
+    >
+      <BVLinearGradient
+        colors={
+          [
+            4280299823,
+            4278214733,
+          ]
+        }
+        endPoint={
+          {
+            "x": 1,
+            "y": 0,
+          }
+        }
+        locations={null}
+        startPoint={
+          {
+            "x": 0,
+            "y": 0,
+          }
+        }
+        style={
+          [
+            {
+              "alignItems": "center",
+              "borderRadius": 34,
+              "flexDirection": "row",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "justifyContent": "center",
+            },
+            {
+              "alignSelf": "center",
+            },
+            {
+              "height": 67,
+              "paddingHorizontal": 34,
+            },
+            {
+              "opacity": 1,
+            },
+          ]
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
+            ]
+          }
+        >
+          Primary
+        </Text>
+      </BVLinearGradient>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1`] = `
+<View
+  absolute={false}
+  layout="row"
+  style={
+    {
+      "flexDirection": "row-reverse",
+      "flexGrow": 1,
+      "flexShrink": 1,
+      "justifyContent": "center",
+      "margin": 11,
+    }
+  }
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "flex": 1,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          4280299823,
+          4278214733,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "stretch",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Primary
+      </Text>
+    </BVLinearGradient>
+  </View>
+  <View
+    style={
+      [
+        {
+          "alignItems": undefined,
+          "flex": undefined,
+          "flexDirection": "column",
+          "justifyContent": undefined,
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "flex": 1,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          872415231,
+          872415231,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "stretch",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Secondary
+      </Text>
+    </BVLinearGradient>
+  </View>
+</View>
+`;
+
+exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1`] = `
+<View
+  absolute={false}
+  layout="row"
+  style={
+    {
+      "flexDirection": "row-reverse",
+      "flexGrow": 1,
+      "flexShrink": 1,
+      "justifyContent": "center",
+      "margin": 11,
+    }
+  }
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "flex": 1,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          4280299823,
+          4278214733,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "stretch",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Primary
+      </Text>
+    </BVLinearGradient>
+  </View>
+  <View
+    style={
+      [
+        {
+          "alignItems": undefined,
+          "flex": undefined,
+          "flexDirection": "column",
+          "justifyContent": undefined,
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "flex": 1,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          872415231,
+          872415231,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "stretch",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Secondary
+      </Text>
+    </BVLinearGradient>
+  </View>
+</View>
+`;
+
+exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1`] = `
+<View
+  absolute={false}
+  layout="row"
+  style={
+    {
+      "flexDirection": "row-reverse",
+      "flexGrow": 1,
+      "flexShrink": 1,
+      "justifyContent": "center",
+      "margin": 11,
+    }
+  }
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "flex": 1,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          4280299823,
+          4278214733,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "stretch",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Primary
+      </Text>
+    </BVLinearGradient>
+  </View>
+  <View
+    style={
+      [
+        {
+          "alignItems": undefined,
+          "flex": undefined,
+          "flexDirection": "column",
+          "justifyContent": undefined,
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "flex": 1,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          872415231,
+          872415231,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "stretch",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Secondary
+      </Text>
+    </BVLinearGradient>
+  </View>
+  <View
+    style={
+      [
+        {
+          "alignItems": undefined,
+          "flex": undefined,
+          "flexDirection": "column",
+          "justifyContent": undefined,
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+        undefined,
+      ]
+    }
+  />
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "flex": 1,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          16777215,
+          16777215,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "stretch",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "height": undefined,
+            "padding": 0,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#00f1a2",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Tertiary
+      </Text>
+    </BVLinearGradient>
+  </View>
+</View>
+`;
+
+exports[`Buttons should render simple loose buttons 1`] = `
+[
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          4280299823,
+          4278214733,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Primary
+      </Text>
+    </BVLinearGradient>
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          872415231,
+          872415231,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Secondary
+      </Text>
+    </BVLinearGradient>
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          16777215,
+          16777215,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "height": undefined,
+            "padding": 0,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#00f1a2",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Tertiary
+      </Text>
+    </BVLinearGradient>
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          4280299823,
+          4278214733,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+            "height": 45,
+            "paddingHorizontal": 28,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Primary (mini)
+      </Text>
+    </BVLinearGradient>
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          872415231,
+          872415231,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+            "height": 45,
+            "paddingHorizontal": 28,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Secondary (mini)
+      </Text>
+    </BVLinearGradient>
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          16777215,
+          16777215,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+            "height": 45,
+            "paddingHorizontal": 28,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#00f1a2",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              null,
+            ],
+            null,
+          ]
+        }
+      >
+        Tertiary (mini)
+      </Text>
+    </BVLinearGradient>
+  </View>,
+]
+`;
+
+exports[`Buttons should render spinning buttons 1`] = `
+[
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": true,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          4280299823,
+          4278214733,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 0.7,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+            "opacity": 0,
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
+            ]
+          }
+        >
+          Primary
+        </Text>
+      </View>
+    </BVLinearGradient>
+    <ActivityIndicator
+      color="#FFFFFF"
+      style={
+        {
+          "height": 45,
+          "position": "absolute",
+        }
+      }
+    />
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": true,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          872415231,
+          872415231,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 0.7,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+            "opacity": 0,
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
+            ]
+          }
+        >
+          Secondary
+        </Text>
+      </View>
+    </BVLinearGradient>
+    <ActivityIndicator
+      color="#FFFFFF"
+      style={
+        {
+          "height": 45,
+          "position": "absolute",
+        }
+      }
+    />
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": true,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          16777215,
+          16777215,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "height": undefined,
+            "padding": 0,
+          },
+          {
+            "opacity": 0.7,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+            "opacity": 0,
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#00f1a2",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
+            ]
+          }
+        >
+          Tertiary
+        </Text>
+      </View>
+    </BVLinearGradient>
+    <ActivityIndicator
+      color="#00f1a2"
+      style={
+        {
+          "height": 45,
+          "position": "absolute",
+        }
+      }
+    />
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": true,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          4280299823,
+          4278214733,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+            "height": 45,
+            "paddingHorizontal": 28,
+          },
+          {
+            "opacity": 0.7,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+            "opacity": 0,
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
+            ]
+          }
+        >
+          Primary (mini)
+        </Text>
+      </View>
+    </BVLinearGradient>
+    <ActivityIndicator
+      color="#FFFFFF"
+      style={
+        {
+          "height": 45,
+          "position": "absolute",
+        }
+      }
+    />
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": true,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          872415231,
+          872415231,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+            "height": 45,
+            "paddingHorizontal": 28,
+          },
+          {
+            "opacity": 0.7,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+            "opacity": 0,
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
+            ]
+          }
+        >
+          Secondary (mini)
+        </Text>
+      </View>
+    </BVLinearGradient>
+    <ActivityIndicator
+      color="#FFFFFF"
+      style={
+        {
+          "height": 45,
+          "position": "absolute",
+        }
+      }
+    />
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": true,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          16777215,
+          16777215,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+            "height": 45,
+            "paddingHorizontal": 28,
+          },
+          {
+            "opacity": 0.7,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+            "opacity": 0,
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#00f1a2",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                null,
+              ],
+              null,
+            ]
+          }
+        >
+          Tertiary (mini)
+        </Text>
+      </View>
+    </BVLinearGradient>
+    <ActivityIndicator
+      color="#00f1a2"
+      style={
+        {
+          "height": 45,
+          "position": "absolute",
+        }
+      }
+    />
+  </View>,
+]
+`;
+
+exports[`Buttons should render with child icons 1`] = `
+[
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          4280299823,
+          4278214733,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "overflow": "hidden",
+            },
+            undefined,
+          ]
+        }
+      >
+        <FastImageView
+          resizeMode="cover"
+          source={
+            {
+              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+            }
+          }
+          style={
+            {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+      </View>
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+              },
+              {
+                "marginLeft": 11,
+              },
+            ],
+            null,
+          ]
+        }
+      >
+        Primary
+      </Text>
+    </BVLinearGradient>
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          872415231,
+          872415231,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "overflow": "hidden",
+            },
+            undefined,
+          ]
+        }
+      >
+        <FastImageView
+          resizeMode="cover"
+          source={
+            {
+              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+            }
+          }
+          style={
+            {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+      </View>
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              {
+                "marginLeft": 11,
+              },
+            ],
+            null,
+          ]
+        }
+      >
+        Secondary
+      </Text>
+    </BVLinearGradient>
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          16777215,
+          16777215,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "height": undefined,
+            "padding": 0,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "overflow": "hidden",
+            },
+            undefined,
+          ]
+        }
+      >
+        <FastImageView
+          resizeMode="cover"
+          source={
+            {
+              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+            }
+          }
+          style={
+            {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+      </View>
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#00f1a2",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              {
+                "marginLeft": 11,
+              },
+            ],
+            null,
+          ]
+        }
+      >
+        Tertiary
+      </Text>
+    </BVLinearGradient>
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          4280299823,
+          4278214733,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+            "height": 45,
+            "paddingHorizontal": 28,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "overflow": "hidden",
+            },
+            undefined,
+          ]
+        }
+      >
+        <FastImageView
+          resizeMode="cover"
+          source={
+            {
+              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+            }
+          }
+          style={
+            {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+      </View>
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+              },
+              {
+                "marginLeft": 11,
+              },
+            ],
+            null,
+          ]
+        }
+      >
+        Primary (mini)
+      </Text>
+    </BVLinearGradient>
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          872415231,
+          872415231,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+            "height": 45,
+            "paddingHorizontal": 28,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "overflow": "hidden",
+            },
+            undefined,
+          ]
+        }
+      >
+        <FastImageView
+          resizeMode="cover"
+          source={
+            {
+              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+            }
+          }
+          style={
+            {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+      </View>
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              {
+                "marginLeft": 11,
+              },
+            ],
+            null,
+          ]
+        }
+      >
+        Secondary (mini)
+      </Text>
+    </BVLinearGradient>
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          16777215,
+          16777215,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+            "height": 45,
+            "paddingHorizontal": 28,
+          },
+          {
+            "opacity": 1,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "overflow": "hidden",
+            },
+            undefined,
+          ]
+        }
+      >
+        <FastImageView
+          resizeMode="cover"
+          source={
+            {
+              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+            }
+          }
+          style={
+            {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+      </View>
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            [
+              {
+                "color": "#00f1a2",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+              },
+              {
+                "marginLeft": 11,
+              },
+            ],
+            null,
+          ]
+        }
+      >
+        Tertiary (mini)
+      </Text>
+    </BVLinearGradient>
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": true,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          4280299823,
+          4278214733,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 0.7,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+            "opacity": 0,
+          }
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "overflow": "hidden",
+              },
+              undefined,
+            ]
+          }
+        >
+          <FastImageView
+            resizeMode="cover"
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
+            }
+            style={
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
+        </View>
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 22,
+                },
+                {
+                  "marginLeft": 11,
+                },
+              ],
+              null,
+            ]
+          }
+        >
+          Primary
+        </Text>
+      </View>
+    </BVLinearGradient>
+    <ActivityIndicator
+      color="#FFFFFF"
+      style={
+        {
+          "height": 45,
+          "position": "absolute",
+        }
+      }
+    />
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": true,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          872415231,
+          872415231,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "height": 67,
+            "paddingHorizontal": 34,
+          },
+          {
+            "opacity": 0.7,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+            "opacity": 0,
+          }
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "overflow": "hidden",
+              },
+              undefined,
+            ]
+          }
+        >
+          <FastImageView
+            resizeMode="cover"
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
+            }
+            style={
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
+        </View>
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                {
+                  "marginLeft": 11,
+                },
+              ],
+              null,
+            ]
+          }
+        >
+          Secondary
+        </Text>
+      </View>
+    </BVLinearGradient>
+    <ActivityIndicator
+      color="#FFFFFF"
+      style={
+        {
+          "height": 45,
+          "position": "absolute",
+        }
+      }
+    />
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": true,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          16777215,
+          16777215,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "height": undefined,
+            "padding": 0,
+          },
+          {
+            "opacity": 0.7,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+            "opacity": 0,
+          }
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "overflow": "hidden",
+              },
+              undefined,
+            ]
+          }
+        >
+          <FastImageView
+            resizeMode="cover"
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
+            }
+            style={
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
+        </View>
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#00f1a2",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                {
+                  "marginLeft": 11,
+                },
+              ],
+              null,
+            ]
+          }
+        >
+          Tertiary
+        </Text>
+      </View>
+    </BVLinearGradient>
+    <ActivityIndicator
+      color="#00f1a2"
+      style={
+        {
+          "height": 45,
+          "position": "absolute",
+        }
+      }
+    />
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": true,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          4280299823,
+          4278214733,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+            "height": 45,
+            "paddingHorizontal": 28,
+          },
+          {
+            "opacity": 0.7,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+            "opacity": 0,
+          }
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "overflow": "hidden",
+              },
+              undefined,
+            ]
+          }
+        >
+          <FastImageView
+            resizeMode="cover"
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
+            }
+            style={
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
+        </View>
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 22,
+                },
+                {
+                  "marginLeft": 11,
+                },
+              ],
+              null,
+            ]
+          }
+        >
+          Primary (mini)
+        </Text>
+      </View>
+    </BVLinearGradient>
+    <ActivityIndicator
+      color="#FFFFFF"
+      style={
+        {
+          "height": 45,
+          "position": "absolute",
+        }
+      }
+    />
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": true,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          872415231,
+          872415231,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+            "height": 45,
+            "paddingHorizontal": 28,
+          },
+          {
+            "opacity": 0.7,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+            "opacity": 0,
+          }
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "overflow": "hidden",
+              },
+              undefined,
+            ]
+          }
+        >
+          <FastImageView
+            resizeMode="cover"
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
+            }
+            style={
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
+        </View>
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                {
+                  "marginLeft": 11,
+                },
+              ],
+              null,
+            ]
+          }
+        >
+          Secondary (mini)
+        </Text>
+      </View>
+    </BVLinearGradient>
+    <ActivityIndicator
+      color="#FFFFFF"
+      style={
+        {
+          "height": 45,
+          "position": "absolute",
+        }
+      }
+    />
+  </View>,
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": true,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexBasis": "auto",
+        "flexGrow": 0,
+        "flexShrink": 0,
+        "justifyContent": "center",
+        "margin": -11,
+        "opacity": 1,
+        "padding": 11,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          16777215,
+          16777215,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 1,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+          },
+          {
+            "alignSelf": "center",
+            "height": 45,
+            "paddingHorizontal": 28,
+          },
+          {
+            "opacity": 0.7,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "borderRadius": 34,
+            "flexDirection": "row",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "justifyContent": "center",
+            "opacity": 0,
+          }
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "overflow": "hidden",
+              },
+              undefined,
+            ]
+          }
+        >
+          <FastImageView
+            resizeMode="cover"
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
+            }
+            style={
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
+        </View>
+        <Text
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              [
+                {
+                  "color": "#00f1a2",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                {
+                  "marginLeft": 11,
+                },
+              ],
+              null,
+            ]
+          }
+        >
+          Tertiary (mini)
+        </Text>
+      </View>
+    </BVLinearGradient>
+    <ActivityIndicator
+      color="#00f1a2"
+      style={
+        {
+          "height": 45,
+          "position": "absolute",
+        }
+      }
+    />
+  </View>,
+]
+`;
