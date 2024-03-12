@@ -4,14 +4,16 @@ import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import { sprintf } from 'sprintf-js'
 
-import { createAccountTransaction, fetchAccountActivationInfo, fetchWalletAccountActivationPaymentInfo } from '../../actions/CreateWalletActions'
+import { createAccountTransaction, fetchAccountActivationInfo } from '../../actions/CreateWalletActions'
 import { WalletListModal, WalletListResult } from '../../components/modals/WalletListModal'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { EdgeAsset } from '../../types/types'
 import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
@@ -38,6 +40,19 @@ export interface ActivationPaymentInfo {
   requestedAccountCurrencyCode: string
 }
 
+export interface HandleActivationInfo {
+  supportedAssets: EdgeAsset[]
+  activationCost: string
+}
+
+export interface AccountActivationPaymentInfo {
+  paymentAddress: string
+  amount: string
+  currencyCode: string
+  exchangeAmount: string
+  expireTime: number
+}
+
 interface Props extends EdgeSceneProps<'createWalletAccountSelect'> {
   wallet: EdgeCurrencyWallet
 }
@@ -51,14 +66,23 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
   const { currencyCode: existingCurrencyCode, pluginId: existingPluginId } = existingWallet.currencyInfo
 
   const account = useSelector(state => state.core.account)
-  const supportedAssets = useSelector(state => state.ui.createWallet.handleActivationInfo.supportedAssets)
-  const activationCost = useSelector(state => state.ui.createWallet.handleActivationInfo.activationCost)
-  const paymentCurrencyCode = useSelector(state => state.ui.createWallet.walletAccountActivationPaymentInfo.currencyCode)
-  const amount = useSelector(state => state.ui.createWallet.walletAccountActivationPaymentInfo.amount)
-  const paymentDenominationSymbol = useSelector(state =>
-    paymentCurrencyCode != null ? getExchangeDenomination(state, existingPluginId, paymentCurrencyCode).symbol ?? '' : ''
-  )
-  const walletAccountActivationQuoteError = useSelector(state => state.ui.createWallet.walletAccountActivationQuoteError)
+  const [activationPaymentInfo, setActivationPaymentInfo] = React.useState<AccountActivationPaymentInfo>({
+    paymentAddress: '',
+    amount: '',
+    currencyCode: '',
+    exchangeAmount: '',
+    expireTime: 0
+  })
+  const paymentCurrencyCode = activationPaymentInfo.currencyCode
+  const amount = activationPaymentInfo.amount
+  const paymentDenominationSymbol =
+    paymentCurrencyCode == null ? '' : getExchangeDenomByCurrencyCode(existingWallet.currencyConfig, paymentCurrencyCode).symbol ?? ''
+
+  const [walletAccountActivationQuoteError, setWalletAccountActivationQuoteError] = React.useState('')
+  const [{ supportedAssets, activationCost }, setAccountActivationInfo] = React.useState<HandleActivationInfo>({
+    supportedAssets: [],
+    activationCost: ''
+  })
 
   const instructionSyntax = sprintf(
     lstrings.create_wallet_account_select_instructions_with_cost_4s,
@@ -89,7 +113,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
       .then(async result => {
         if (result?.type === 'wallet') {
           const { walletId, currencyCode } = result
-          dispatch({ type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: '' })
+          setWalletAccountActivationQuoteError('')
           setWalletId(walletId)
           const createdWalletInstance = await handleRenameAndReturnWallet()
           const paymentInfo: ActivationPaymentInfo = {
@@ -99,7 +123,14 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
             activePublicKey: createdWalletInstance.publicWalletInfo.keys.publicKey,
             requestedAccountCurrencyCode: existingCurrencyCode
           }
-          dispatch(fetchWalletAccountActivationPaymentInfo(paymentInfo, createdWalletInstance))
+
+          const networkTimeout = setTimeout(() => {
+            showError('Network Timeout')
+            setWalletAccountActivationQuoteError('Network Timeout')
+          }, 26000)
+          const activationInfo = await createdWalletInstance.otherMethods.getAccountActivationQuote(paymentInfo)
+          clearTimeout(networkTimeout)
+          setActivationPaymentInfo(activationInfo)
         }
       })
       .catch(err => showError(err))
@@ -107,15 +138,20 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
 
   const handleSubmit = useHandler(async () => {
     const createdWalletInstance = await handleRenameAndReturnWallet()
-    dispatch(createAccountTransaction(props.navigation, createdWalletInstance.id, accountName, walletId)).catch(err => showError(err))
+    dispatch(createAccountTransaction(props.navigation, createdWalletInstance.id, accountName, walletId, activationPaymentInfo)).catch(err => showError(err))
   })
 
   const handleCancel = useHandler(() => setWalletId(''))
 
-  React.useEffect(() => {
-    dispatch(logEvent('Activate_Wallet_Select'))
-    dispatch(fetchAccountActivationInfo(existingPluginId)).catch(err => showError(err))
-  }, [existingPluginId, dispatch])
+  useAsyncEffect(
+    async () => {
+      dispatch(logEvent('Activate_Wallet_Select'))
+      const activationInfo = await fetchAccountActivationInfo(account, existingPluginId)
+      setAccountActivationInfo(activationInfo)
+    },
+    [existingPluginId, dispatch],
+    'createWalletAccountSelect'
+  )
 
   return (
     <SceneWrapper>
@@ -151,7 +187,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
           <ButtonsViewUi4
             primary={{ disabled: !activationCost || activationCost === '', onPress: handleSelect, label: lstrings.create_wallet_account_select_wallet }}
             layout="column"
-            sceneMargin
+            parentType="scene"
           />
         ) : (
           <>
@@ -162,7 +198,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
               primary={{ disabled: isCreatingWallet, onPress: handleSubmit, label: lstrings.legacy_address_modal_continue }}
               secondary={{ disabled: isCreatingWallet, onPress: handleCancel, label: lstrings.string_cancel_cap }}
               layout="column"
-              sceneMargin
+              parentType="scene"
             />
           </>
         )}

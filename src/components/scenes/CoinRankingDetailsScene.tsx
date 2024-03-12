@@ -120,12 +120,14 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       case 'marketCapChange24h':
         extendedString = coinRankingData.marketCapChangePercent24h != null ? ` (${toPercentString(coinRankingData.marketCapChangePercent24h / 100)})` : ''
         break
-      case 'allTimeHigh':
-        extendedString = coinRankingData.allTimeHighDate != null ? `- ${toLocaleDate(new Date(coinRankingData.allTimeHighDate))}` : ''
-        break
-      case 'allTimeLow':
-        extendedString = coinRankingData.allTimeLowDate != null ? `- ${toLocaleDate(new Date(coinRankingData.allTimeLowDate))}` : ''
-        break
+      case 'allTimeHigh': {
+        const fiatString = `${formatFiatString({ fiatAmount: baseString })} ${defaultFiat}`
+        return coinRankingData.allTimeHighDate != null ? `${fiatString} - ${toLocaleDate(new Date(coinRankingData.allTimeHighDate))}` : fiatString
+      }
+      case 'allTimeLow': {
+        const fiatString = `${formatFiatString({ fiatAmount: baseString })} ${defaultFiat}`
+        return coinRankingData.allTimeLowDate != null ? `${fiatString} - ${toLocaleDate(new Date(coinRankingData.allTimeLowDate))}` : fiatString
+      }
       default:
         // If no special modifications, just return simple data formatting
         return baseString

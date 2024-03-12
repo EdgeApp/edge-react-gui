@@ -63,6 +63,7 @@ export const asEnvConfig = asObject({
         })
       ),
       moonpay: asOptional(asString),
+      mtpelerin: asOptional(asString),
       paybis: asOptional(
         asObject({
           partnerUrl: asString,
@@ -91,6 +92,7 @@ export const asEnvConfig = asObject({
       Bitrefill: undefined,
       kado: undefined,
       moonpay: undefined,
+      mtpelerin: undefined,
       paybis: undefined,
       simplex: undefined,
       ionia: undefined

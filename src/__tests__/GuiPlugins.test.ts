@@ -70,6 +70,31 @@ describe('GuiPlugins tools', () => {
     expect(titles(list)).toEqual([])
   })
 
+  it('filter US for CA', () => {
+    const list = filterGuiPluginJson(testJson2, 'ios', 'US', {}, 'CA')
+    expect(titles(list)).toEqual(['Blackhole', 'Fahrenheit', 'No Mo Money'])
+  })
+
+  it('filter US for NY', () => {
+    const list = filterGuiPluginJson(testJson2, 'ios', 'US', {}, 'NY')
+    expect(titles(list)).toEqual(['No Mo Money'])
+  })
+
+  it('filter US for TX', () => {
+    const list = filterGuiPluginJson(testJson2, 'ios', 'US', {}, 'TX')
+    expect(titles(list)).toEqual(['Blackhole', 'Fahrenheit', 'No Mo Money'])
+  })
+
+  it('filter US for HI', () => {
+    const list = filterGuiPluginJson(testJson2, 'ios', 'US', {}, 'HI')
+    expect(titles(list)).toEqual(['No Mo Money'])
+  })
+
+  it('filter US for NH', () => {
+    const list = filterGuiPluginJson(testJson2, 'ios', 'US', {}, 'NH')
+    expect(titles(list)).toEqual(['Blackhole', 'No Mo Money'])
+  })
+
   it("produce correct URI's", () => {
     const testPlugin: GuiPlugin = {
       pluginId: 'local',
@@ -149,5 +174,31 @@ const testJson = asGuiPluginJson([
     title: 'Nice lawsuit', // Special title in Japan
     forCountries: ['JP', 'GB'], // Note that GB isn't supported above
     sortIndex: 1
+  }
+])
+
+const testJson2 = asGuiPluginJson([
+  {
+    id: 'ftx',
+    pluginId: 'ftx',
+    title: 'Blackhole',
+    paymentTypes: ['no', 'more', 'money'],
+    forCountries: ['US', 'JP'],
+    notStateProvinces: { US: ['NY', 'HI'] }
+  },
+  {
+    id: 'celsius',
+    pluginId: 'celsius',
+    title: 'Fahrenheit',
+    paymentTypes: ['iown', 'voip'],
+    forCountries: ['US', 'JP'],
+    forStateProvinces: { US: ['CA', 'TX'] }
+  },
+  {
+    id: 'blockfi',
+    pluginId: 'blockfi',
+    title: 'No Mo Money',
+    paymentTypes: ['iown', 'voip'],
+    forCountries: ['US', 'JP']
   }
 ])

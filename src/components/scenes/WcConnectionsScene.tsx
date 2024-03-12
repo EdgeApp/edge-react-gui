@@ -88,8 +88,6 @@ export const WcConnectionsScene = (props: Props) => {
       ))
       if (result != null) {
         await onScanSuccess(result)
-      } else {
-        showError(lstrings.no_scan_results_message)
       }
     }
   }

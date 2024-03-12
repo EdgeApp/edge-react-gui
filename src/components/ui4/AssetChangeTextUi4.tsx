@@ -61,7 +61,7 @@ const getPercentDeltaString = (assetToFiatRate: string, assetToYestFiatRate: str
   if (gt(yesterdayDeltaPct, '0')) {
     return { percentString: `+${percentString}`, deltaColorStyle: theme.positiveText }
   } else if (lt(yesterdayDeltaPct, '0')) {
-    return { percentString: `${percentString}`, deltaColorStyle: theme.negativeText }
+    return { percentString: `${percentString}`, deltaColorStyle: theme.negativeDeltaText }
   } else {
     return { percentString, deltaColorStyle: theme.negativeText }
   }

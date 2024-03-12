@@ -213,6 +213,7 @@ export function WalletList(props: Props) {
       contentContainerStyle={scrollPadding}
       data={walletList}
       estimatedItemSize={theme.rem(4.25)}
+      keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="handled"
       renderItem={renderRow}
     />
@@ -220,6 +221,7 @@ export function WalletList(props: Props) {
     <SectionList
       contentContainerStyle={scrollPadding}
       getItemLayout={handleItemLayout}
+      keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="handled"
       renderItem={renderRow}
       renderSectionHeader={renderSectionHeader}

@@ -7,7 +7,13 @@ import { stringifyQuery } from './WebUtils'
  * Helper function to turn a GuiPluginJson into a cooked list.
  * Call `asGuiPluginJson` to clean & validate the input file first.
  */
-export function filterGuiPluginJson(cleanJson: GuiPluginJson, platform: string, countryCode: string, disablePlugins: NestedDisableMap): GuiPluginRow[] {
+export function filterGuiPluginJson(
+  cleanJson: GuiPluginJson,
+  platform: string,
+  countryCode: string,
+  disablePlugins: NestedDisableMap,
+  stateProvinceCode?: string
+): GuiPluginRow[] {
   // Filter and merge related rows:
   const mergedRows: { [id: string]: GuiPluginRow } = {}
   const sortIndexes: { [id: string]: number } = {}
@@ -15,10 +21,24 @@ export function filterGuiPluginJson(cleanJson: GuiPluginJson, platform: string, 
     if (typeof row === 'string') continue
 
     // Filtering:
-    const { id, forCountries, forPlatform, sortIndex } = row
+    const { id, forCountries, forPlatform, forStateProvinces, notStateProvinces, sortIndex } = row
     if (disablePlugins[id] === true) continue
     if (forCountries != null && !forCountries.includes(countryCode)) continue
     if (forPlatform != null && forPlatform !== platform) continue
+
+    if (stateProvinceCode != null) {
+      const enableStateProvinces = forStateProvinces != null ? forStateProvinces[countryCode] : undefined
+      const disableStateProvinces = notStateProvinces != null ? notStateProvinces[countryCode] : undefined
+      // If this plugin has no stateProvinces, assume it accepts them all
+      if (enableStateProvinces?.some(sp => sp === stateProvinceCode) === false) {
+        continue
+      }
+
+      if (disableStateProvinces?.some(sp => sp === stateProvinceCode) === true) {
+        continue
+      }
+    }
+
     if (sortIndex != null) sortIndexes[id] = sortIndex
 
     // Defaults:

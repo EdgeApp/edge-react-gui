@@ -61,7 +61,7 @@ export interface FilledTextInputProps extends SpaceProps {
   autoCorrect?: boolean // Defaults to 'true'
   blurOnSubmit?: boolean // Defaults to 'true'
   inputAccessoryViewID?: string
-  keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad' // Defaults to 'default'
+  keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad' | 'visible-password' // Defaults to 'default'
   maxLength?: number
   onSubmitEditing?: () => void
   returnKeyType?: FilledTextInputReturnKeyType // Defaults to 'done'
@@ -126,7 +126,9 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     blurOnSubmit,
     disabled = false,
     inputAccessoryViewID,
+    keyboardType,
     maxLength,
+    returnKeyType,
     secureTextEntry,
     testID,
     textsizeRem,
@@ -217,8 +219,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
 
   // HACK: Some Android devices/versions, mostly Samsung, have a bug where the
   // text input always blurs immediately after focusing.
-  const { keyboardType } = props
-  const hackKeyboardType = isAndroid && (keyboardType == null || keyboardType === 'default') ? 'visible-password' : keyboardType
+  const hackKeyboardType = isAndroid && !hidePassword && (keyboardType == null || keyboardType === 'default') ? 'visible-password' : keyboardType
 
   return (
     <View style={spaceStyle}>
@@ -242,7 +243,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               editable={!disabled}
               ref={inputRef}
               keyboardType={hackKeyboardType}
-              returnKeyType={props.returnKeyType}
+              returnKeyType={returnKeyType}
               accessibilityState={{ disabled }}
               autoFocus={autoFocus}
               disableAnimation={disableAnimation}
@@ -274,14 +275,14 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
 
           {showSpinner ? <ActivityIndicator /> : null}
           {secureTextEntry ? (
-            <TouchContainer testID={`${testID}.eyeIcon`} onPress={handleHidePassword}>
+            <TouchContainer extendTappable="leftOnly" testID={`${testID}.eyeIcon`} onPress={handleHidePassword}>
               <IconContainer>
                 <EyeIconAnimated accessible color={iconColor} off={!hidePassword} />
               </IconContainer>
             </TouchContainer>
           ) : null}
 
-          <TouchContainer accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
+          <TouchContainer extendTappable={secureTextEntry ? 'rightOnly' : 'full'} accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
             <SideContainer scale={rightIconSize}>
               <CloseIconAnimated color={iconColor} size={rightIconSize} />
             </SideContainer>
@@ -335,13 +336,36 @@ const Container = styled(Animated.View)<{
   ]
 })
 
-const TouchContainer = styled(TouchableOpacity)(theme => ({
-  // Increase tappable area with padding, while net 0 with negative margin to visually appear as if 0 margins/padding
-  paddingHorizontal: theme.rem(1),
-  paddingVertical: theme.rem(1.25),
-  marginHorizontal: -theme.rem(1),
-  marginVertical: -theme.rem(1.25)
-}))
+/**
+ * extendTappable: Which horizontal side of the icon do we want to increase
+ * tappable area? 'full' means both left and right sides.
+ */
+const TouchContainer = styled(TouchableOpacity)<{ extendTappable: 'leftOnly' | 'rightOnly' | 'full' }>(theme => ({ extendTappable }) => {
+  // Increase tappable area with padding, while net 0 with negative margin to
+  // visually appear as if 0 margins/padding
+  const tapArea =
+    extendTappable === 'leftOnly'
+      ? {
+          paddingLeft: theme.rem(1),
+          marginLeft: -theme.rem(1)
+        }
+      : extendTappable === 'rightOnly'
+      ? {
+          paddingRight: theme.rem(1),
+          marginRight: -theme.rem(1)
+        }
+      : // extendTappable === 'full'
+        {
+          marginHorizontal: -theme.rem(1),
+          paddingHorizontal: theme.rem(1)
+        }
+
+  return {
+    paddingVertical: theme.rem(1.25),
+    marginVertical: -theme.rem(1.25),
+    ...tapArea
+  }
+})
 
 const IconContainer = styled(View)(theme => ({
   paddingHorizontal: theme.rem(0.25)

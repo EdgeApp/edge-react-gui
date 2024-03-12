@@ -4,6 +4,7 @@ import * as React from 'react'
 import { Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { useDisplayDenom } from '../../../hooks/useDisplayDenom'
 import { lstrings } from '../../../locales/strings'
 import {
   ChangeQuote,
@@ -15,7 +16,7 @@ import {
   StakePoolFullError,
   StakePosition
 } from '../../../plugins/stake-plugins/types'
-import { getDisplayDenomination, getExchangeDenominationFromAccount } from '../../../selectors/DenominationSelectors'
+import { getExchangeDenomByCurrencyCode } from '../../../selectors/DenominationSelectors'
 import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
@@ -65,7 +66,7 @@ const StakeModifySceneComponent = (props: Props) => {
 
   // Hooks
   const guiExchangeRates = useSelector(state => state.exchangeRates)
-  const nativeAssetDenomination = useSelector(state => getDisplayDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode))
+  const nativeAssetDenomination = useDisplayDenom(wallet.currencyConfig, null)
 
   // ChangeQuote that gets rendered in the rows
   const [changeQuote, setChangeQuote] = React.useState<ChangeQuote | null>(null)
@@ -304,7 +305,7 @@ const StakeModifySceneComponent = (props: Props) => {
         : undefined
 
     const quoteCurrencyCode = currencyCode
-    const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, quoteCurrencyCode)
+    const quoteDenom = getExchangeDenomByCurrencyCode(account.currencyConfig[pluginId], quoteCurrencyCode)
 
     const isClaim = allocationType === 'claim'
 
@@ -350,7 +351,7 @@ const StakeModifySceneComponent = (props: Props) => {
         : undefined
     if (quoteAllocation == null) return null
 
-    const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, currencyCode)
+    const quoteDenom = getExchangeDenomByCurrencyCode(account.currencyConfig[pluginId], currencyCode)
     const title = modification === 'stake' ? lstrings.stake_estimated_staking_fee : lstrings.stake_estimated_unstaking_fee
     const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
@@ -378,7 +379,7 @@ const StakeModifySceneComponent = (props: Props) => {
         : undefined
     if (quoteAllocation == null) return null
 
-    const quoteDenom = getExchangeDenominationFromAccount(account, pluginId, currencyCode)
+    const quoteDenom = getExchangeDenomByCurrencyCode(account.currencyConfig[pluginId], currencyCode)
     const tokenId = getTokenIdForced(account, pluginId, currencyCode)
 
     return (

@@ -16,8 +16,10 @@ import {
   FiatProviderFactory,
   FiatProviderFactoryParams,
   FiatProviderGetQuoteParams,
-  FiatProviderQuote
+  FiatProviderQuote,
+  FiatProviderSupportedRegions
 } from '../fiatProviderTypes'
+import { validateRegion } from './common'
 const providerId = 'kado'
 const storeId = 'money.kado'
 const partnerIcon = 'kado.png'
@@ -62,6 +64,12 @@ const CHAIN_ID_TO_PLUGIN_MAP: { [chainId: string]: string } = Object.entries(PLU
   },
   {}
 )
+
+const SUPPORTED_REGIONS: FiatProviderSupportedRegions = {
+  US: {
+    notStateProvinces: ['NY', 'TX']
+  }
+}
 
 type AllowedPaymentTypes = Record<FiatDirection, { [Payment in FiatPaymentType]?: boolean }>
 
@@ -392,6 +400,7 @@ interface WidgetParams {
   mode: 'minimal'
   network: string
   networkList: string
+  fiatMethodList: string
 }
 
 interface WidgetParamsBuy extends WidgetParams {
@@ -422,7 +431,8 @@ export const kadoProvider: FiatProviderFactory = {
       providerId,
       partnerIcon,
       pluginDisplayName,
-      getSupportedAssets: async ({ direction, paymentTypes }): Promise<FiatProviderAssetMap> => {
+      getSupportedAssets: async ({ direction, paymentTypes, regionCode }): Promise<FiatProviderAssetMap> => {
+        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
         // Return nothing if paymentTypes are not supported by this provider
         if (!paymentTypes.some(paymentType => allowedPaymentTypes[direction][paymentType] === true))
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
@@ -484,6 +494,7 @@ export const kadoProvider: FiatProviderFactory = {
       },
       getQuote: async (params: FiatProviderGetQuoteParams): Promise<FiatProviderQuote> => {
         const { direction, regionCode, exchangeAmount, amountType, paymentTypes, pluginId, displayCurrencyCode, tokenId } = params
+        validateRegion(providerId, regionCode, SUPPORTED_REGIONS)
 
         const allowedCurrencyCodes = direction === 'buy' ? allowedBuyCurrencyCodes : allowedSellCurrencyCodes
 
@@ -570,6 +581,7 @@ export const kadoProvider: FiatProviderFactory = {
             if (direction === 'buy') {
               const urlParams: WidgetParamsBuy = {
                 apiKey: apiKey,
+                fiatMethodList: 'ach,wire',
                 network: blockchain,
                 networkList: blockchain,
                 onPayAmount: fiatAmount,
@@ -584,6 +596,7 @@ export const kadoProvider: FiatProviderFactory = {
             } else {
               const urlParams: WidgetParamsSell = {
                 apiKey: apiKey,
+                fiatMethodList: 'ach,wire',
                 network: blockchain,
                 networkList: blockchain,
                 offPayAmount: cryptoAmount,

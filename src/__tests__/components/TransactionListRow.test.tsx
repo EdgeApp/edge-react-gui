@@ -24,6 +24,10 @@ describe('TransactionListRow', () => {
       id: 'lmnop',
       pluginId: 'bitcoin',
       watch: () => {},
+      currencyConfig: {
+        allTokens: {},
+        currencyInfo
+      },
       currencyInfo,
       fiatCurrencyCode: 'iso:USD'
     }

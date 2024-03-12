@@ -14,7 +14,7 @@ import { useIconColor } from '../../hooks/useIconColor'
 import { useTransactionList } from '../../hooks/useTransactionList'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
@@ -63,7 +63,7 @@ function TransactionListComponent(props: Props) {
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
 
   // Selectors:
-  const exchangeDenom = useSelector(state => getExchangeDenomination(state, pluginId, currencyCode))
+  const exchangeDenom = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
   const exchangeRate = useSelector(state => state.exchangeRates[`${currencyCode}_${wallet.fiatCurrencyCode}`])
   const spamFilterOn = useSelector(state => state.ui.settings.spamFilterOn)
   const activeUsername = useSelector(state => state.core.account.username)

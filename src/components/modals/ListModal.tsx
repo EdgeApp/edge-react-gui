@@ -95,6 +95,7 @@ export function ListModal<T>({
         contentContainerStyle={scrollPadding}
         data={filteredRows}
         // estimatedItemSize={theme.rem(5)}
+        keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
         keyExtractor={(_, i) => `${i}`}
         renderItem={renderItem}

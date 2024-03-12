@@ -159,6 +159,7 @@ exports[`TransactionListRow should render with loading props 1`] = `
       <View
         style={
           {
+            "alignItems": "center",
             "flexDirection": "row",
             "justifyContent": "space-between",
             "marginHorizontal": 11,
@@ -217,6 +218,7 @@ exports[`TransactionListRow should render with loading props 1`] = `
       <View
         style={
           {
+            "alignItems": "center",
             "flexDirection": "row",
             "justifyContent": "space-between",
             "marginHorizontal": 11,
@@ -240,6 +242,7 @@ exports[`TransactionListRow should render with loading props 1`] = `
                 "color": "#F1AA19",
                 "flexShrink": 1,
                 "fontSize": 17,
+                "marginRight": 22,
               },
               null,
             ]

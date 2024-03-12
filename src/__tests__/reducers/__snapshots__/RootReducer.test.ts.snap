@@ -102,20 +102,6 @@ exports[`initialState 1`] = `
   },
   "sortedWalletList": [],
   "ui": {
-    "createWallet": {
-      "handleActivationInfo": {
-        "activationCost": "",
-        "supportedAssets": [],
-      },
-      "walletAccountActivationPaymentInfo": {
-        "amount": "",
-        "currencyCode": "",
-        "exchangeAmount": "",
-        "expireTime": 0,
-        "paymentAddress": "",
-      },
-      "walletAccountActivationQuoteError": "",
-    },
     "exchangeInfo": {
       "buy": {
         "disablePlugins": {},
@@ -193,6 +179,7 @@ exports[`initialState 1`] = `
           "isEnabled": false,
         },
       },
+      "stateProvinceCode": undefined,
       "userPausedWallets": [],
       "userPausedWalletsSet": null,
       "walletsSort": "manual",

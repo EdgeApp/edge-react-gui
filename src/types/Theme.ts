@@ -167,6 +167,7 @@ export interface Theme {
   warningText: string
   positiveText: string
   negativeText: string
+  negativeDeltaText: string
   dangerText: string
   textLink: string
   deactivatedText: string

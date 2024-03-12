@@ -60,7 +60,7 @@ interface StateProps {
   genericError: string | null
 }
 interface DispatchProps {
-  onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => Promise<void>
+  onSelectWallet: (walletId: string, tokenId: EdgeTokenId, direction: 'from' | 'to') => Promise<void>
   getQuoteForTransaction: (navigation: NavigationBase, fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void) => void
 }
 
@@ -236,7 +236,7 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     const showNext = this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '' && !!parseFloat(primaryNativeAmount)
     if (!showNext) return null
     if (this.checkExceedsAmount()) return null
-    return <ButtonsViewUi4 primary={{ label: lstrings.string_next_capitalized, onPress: this.handleNext }} sceneMargin />
+    return <ButtonsViewUi4 primary={{ label: lstrings.string_next_capitalized, onPress: this.handleNext }} parentType="scene" />
   }
 
   renderAlert = () => {
@@ -275,8 +275,8 @@ export class CryptoExchangeComponent extends React.Component<Props, State> {
     ))
       .then(async result => {
         if (result?.type === 'wallet') {
-          const { walletId, currencyCode } = result
-          await this.props.onSelectWallet(walletId, currencyCode, whichWallet)
+          const { walletId, tokenId } = result
+          await this.props.onSelectWallet(walletId, tokenId, whichWallet)
         }
       })
       .catch(error => showError(error))
@@ -419,9 +419,9 @@ export const CryptoExchangeScene = (props: OwnProps) => {
     })
   }
 
-  const handleSelectWallet = useHandler(async (walletId: string, currencyCode: string, direction: 'from' | 'to') => {
-    await dispatch(selectWalletForExchange(walletId, currencyCode, direction))
-    dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
+  const handleSelectWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId, direction: 'from' | 'to') => {
+    await dispatch(selectWalletForExchange(walletId, tokenId, direction))
+    dispatch(updateMostRecentWalletsSelected(walletId, tokenId))
   })
 
   const handleGetQuoteForTransaction = useHandler((navigation: NavigationBase, fromWalletNativeAmount: SetNativeAmountInfo, onApprove: () => void) => {

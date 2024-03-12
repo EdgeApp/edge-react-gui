@@ -3,6 +3,9 @@ PODS:
   - boost (1.76.0)
   - BugsnagReactNative (7.22.3):
     - React-Core
+  - BugsnagReactNativePerformance (2.2.0):
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
   - BVLinearGradient (2.8.3):
     - React-Core
   - CGRPCZlib (1.8.0)
@@ -20,11 +23,11 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (2.2.1):
     - React-Core
-  - edge-currency-accountbased (3.1.2-3):
+  - edge-currency-accountbased (3.2.5):
     - React-Core
-  - edge-exchange-plugins (2.1.1):
+  - edge-exchange-plugins (2.2.2):
     - React-Core
-  - edge-login-ui-rn (3.3.4):
+  - edge-login-ui-rn (3.4.1):
     - React-Core
   - EXApplication (5.1.1):
     - ExpoModulesCore
@@ -511,20 +514,17 @@ PODS:
     - React-Core
   - react-native-in-app-review (4.3.3):
     - React-Core
-  - react-native-is-maestro (2.1.0):
-    - RCT-Folly (= 2021.07.22.00)
-    - React-Core
   - react-native-keyboard-controller (1.10.2):
     - React-Core
   - react-native-mail (6.1.1):
     - React-Core
   - react-native-mymonero-core (0.3.1):
     - React-Core
-  - react-native-netinfo (8.3.0):
+  - react-native-netinfo (9.0.0):
     - React-Core
   - react-native-performance (5.1.0):
     - React-Core
-  - react-native-piratechain (0.4.4):
+  - react-native-piratechain (0.4.5):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -539,7 +539,7 @@ PODS:
     - ReactCommon/turbomodule/core
   - react-native-webview (13.2.2):
     - React-Core
-  - react-native-zcash (0.6.7):
+  - react-native-zcash (0.6.8):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -628,6 +628,9 @@ PODS:
     - React-jsi (= 0.71.15)
     - React-logger (= 0.71.15)
     - React-perflogger (= 0.71.15)
+  - ReactNativeFileAccess (3.0.5):
+    - React-Core
+    - ZIPFoundation (= 0.9.11)
   - rn-id-blurview (1.2.1):
     - React
   - RNBootSplash (4.7.4):
@@ -866,6 +869,7 @@ PODS:
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
+  - ZIPFoundation (0.9.11)
   - ZXingObjC (3.6.5):
     - ZXingObjC/All (= 3.6.5)
   - ZXingObjC/All (3.6.5)
@@ -873,6 +877,7 @@ PODS:
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - "BugsnagReactNative (from `../node_modules/@bugsnag/react-native`)"
+  - "BugsnagReactNativePerformance (from `../node_modules/@bugsnag/react-native-performance`)"
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - CGRPCZlib
   - CNIOAtomics
@@ -952,7 +957,6 @@ DEPENDENCIES:
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-in-app-review (from `../node_modules/react-native-in-app-review`)
-  - react-native-is-maestro (from `../node_modules/react-native-is-maestro`)
   - react-native-keyboard-controller (from `../node_modules/react-native-keyboard-controller`)
   - react-native-mail (from `../node_modules/react-native-mail`)
   - react-native-mymonero-core (from `../node_modules/react-native-mymonero-core`)
@@ -976,6 +980,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - ReactNativeFileAccess (from `../node_modules/react-native-file-access`)
   - rn-id-blurview (from `../node_modules/rn-id-blurview`)
   - RNBootSplash (from `../node_modules/react-native-bootsplash`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
@@ -1064,6 +1069,7 @@ SPEC REPOS:
     - SwiftNIOTransportServices
     - SwiftProtobuf
     - YogaKit
+    - ZIPFoundation
     - ZXingObjC
 
 EXTERNAL SOURCES:
@@ -1071,6 +1077,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   BugsnagReactNative:
     :path: "../node_modules/@bugsnag/react-native"
+  BugsnagReactNativePerformance:
+    :path: "../node_modules/@bugsnag/react-native-performance"
   BVLinearGradient:
     :path: "../node_modules/react-native-linear-gradient"
   disklet:
@@ -1163,8 +1171,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-in-app-review:
     :path: "../node_modules/react-native-in-app-review"
-  react-native-is-maestro:
-    :path: "../node_modules/react-native-is-maestro"
   react-native-keyboard-controller:
     :path: "../node_modules/react-native-keyboard-controller"
   react-native-mail:
@@ -1211,6 +1217,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReactNativeFileAccess:
+    :path: "../node_modules/react-native-file-access"
   rn-id-blurview:
     :path: "../node_modules/rn-id-blurview"
   RNBootSplash:
@@ -1270,6 +1278,7 @@ SPEC CHECKSUMS:
   _NIODataStructures: 3d45d8e70a1d17a15b1dc59d102c63dbc0525ffd
   boost: 7dcd2de282d72e344012f7d6564d024930a6a440
   BugsnagReactNative: d9fa0824cea1beb5ab1f12828d79a2bd1b383e60
+  BugsnagReactNativePerformance: c432af1d946e4a66ffc16a5a9828ba07ae0cbbfb
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   CGRPCZlib: 298dd3237ba4bd7b3eed109e7080ff3324b7d9c9
   CNIOAtomics: 8edf08644e5e6fa0f021c239be9e8beb1cd9ef18
@@ -1283,9 +1292,9 @@ SPEC CHECKSUMS:
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   edge-core-js: 07ef6631aa971d99679098d10171c793e6b94a4a
-  edge-currency-accountbased: 4b2e848fd3a80276b8d54a867ce525d315c3edb8
-  edge-exchange-plugins: a457232f9ac76ba4e6508dc670d37e2d48907dd2
-  edge-login-ui-rn: 45158491c219e2820a6518f2343033390f86d409
+  edge-currency-accountbased: cf96f7b633feb75c5cefcbbdb583122556eff397
+  edge-exchange-plugins: 7114a976c68a6635155a2d0a43b397722746a406
+  edge-login-ui-rn: 22dfd744b849bcd9e1fa6a166907981348f8762d
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXConstants: f348da07e21b23d2b085e270d7b74f282df1a7d9
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
@@ -1354,17 +1363,16 @@ SPEC CHECKSUMS:
   react-native-get-random-values: dee677497c6a740b71e5612e8dbd83e7539ed5bb
   react-native-image-picker: db60857e03d63721f19b6f4027de20429ddd9cba
   react-native-in-app-review: db8bb167a5f238e7ceca5c242d6b36ce8c4404a4
-  react-native-is-maestro: b1e44ada6a8dbaf6b2e0b112bd381d5dd9d35d67
   react-native-keyboard-controller: 9c708acff806450ce2a0f3c2aceace1fdc87070f
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408
-  react-native-netinfo: 3671b091c4843fda5e153612866ef4024b8f5d62
+  react-native-netinfo: 5b664b2945a8f02102b296f0f812bddd6827ed9c
   react-native-performance: cef2b618d47b277fb5c3280b81a3aad1e72f2886
-  react-native-piratechain: 2d1baa918b48f0acde635672504296340b039141
+  react-native-piratechain: 0eba3a0978b7a7f01e8b4d2739fc48312b34b033
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: 68b07eabfb0d14547d36f6929c0e98d818064f02
   react-native-webview: b8ec89966713985111a14d6e4bf98d8b54bced0d
-  react-native-zcash: 18d627d1b559638cfb9cac04207f5460a6010546
+  react-native-zcash: 7aa2c15f752ad0bc9345cbd55e4b21a67ba55e61
   React-perflogger: 0cc42978a483a47f3696171dac2e7033936fc82d
   React-RCTActionSheet: ea922b476d24f6d40b8e02ac3228412bd3637468
   React-RCTAnimation: 7be2c148398eaa5beac950b2b5ec7102389ec3ad
@@ -1378,6 +1386,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: a97783e3645ddf852e34da2e015656e309f3a083
   React-runtimeexecutor: 8f2ddd9db7874ec7de84f5c55d73aeaaf82908e2
   ReactCommon: 309d965cb51f058d07dea65bc04dcf462911f0a4
+  ReactNativeFileAccess: ad2a22183f172817526bbff7c303e2418792f18c
   rn-id-blurview: 42b72b8741b1624ef5052928ec7c04fcb345e198
   RNBootSplash: 0a92fb6bd3d265e23cded61faf3e9fda441d0a6b
   RNCAsyncStorage: 3a8f7145d17cdd9f88e7b77666c94a09e4f759c8
@@ -1424,6 +1433,7 @@ SPEC CHECKSUMS:
   SwiftProtobuf: b70d65f419fbfe61a2d58003456ca5da58e337d6
   Yoga: 68c9c592c3e80ec37ff28db20eedb13d84aae5df
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
+  ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
 PODFILE CHECKSUM: a84a2c04da9e8c38a3ce0d31af51c1be7866ec59

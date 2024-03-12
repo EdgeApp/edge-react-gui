@@ -35,10 +35,9 @@ export function InsufficientFeesModal(props: Props) {
   const dispatch = useDispatch()
 
   // Get the display amount:
-  const { currencyInfo } = wallet
   const { tokenId, networkFee = '' } = coreError
   const currencyCode = getCurrencyCode(wallet, tokenId)
-  const { multiplier, name } = useDisplayDenom(currencyInfo.pluginId, currencyCode)
+  const { multiplier, name } = useDisplayDenom(wallet.currencyConfig, tokenId)
   const amountString = roundedFee(networkFee, 2, multiplier)
 
   const handleCancel = useHandler(() => bridge.resolve())
@@ -48,7 +47,7 @@ export function InsufficientFeesModal(props: Props) {
   })
   const handleSwap = useHandler(async () => {
     if (onSwap) return onSwap()
-    await dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
+    await dispatch(selectWalletForExchange(wallet.id, tokenId, 'to'))
     navigation.navigate('exchangeTab', { screen: 'exchange' })
     bridge.resolve()
   })

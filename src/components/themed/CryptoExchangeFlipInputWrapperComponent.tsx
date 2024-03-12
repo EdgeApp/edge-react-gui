@@ -1,5 +1,5 @@
 import { add } from 'biggystring'
-import { EdgeTokenId } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
@@ -8,6 +8,7 @@ import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { GuiCurrencyInfo } from '../../types/types'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
+import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertNativeToDenomination } from '../../util/utils'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { CardUi4 } from '../ui4/CardUi4'
@@ -38,6 +39,7 @@ interface StateProps {
   name?: string
   cryptoAmount?: string
   tokenId: EdgeTokenId
+  wallet: EdgeCurrencyWallet | undefined
 }
 
 interface State {
@@ -90,7 +92,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
   }
 
   render() {
-    const { onNext, primaryCurrencyInfo, name, overridePrimaryNativeAmount, children, theme } = this.props
+    const { onNext, primaryCurrencyInfo, name, overridePrimaryNativeAmount, children, theme, wallet } = this.props
     const styles = getStyles(theme)
 
     if (this.props.isThinking) {
@@ -103,7 +105,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
       )
     }
 
-    if (this.props.walletId === '' || primaryCurrencyInfo == null) {
+    if (wallet == null || primaryCurrencyInfo == null) {
       return <MainButton label={this.props.buttonText} type="secondary" onPress={this.launchSelector} />
     }
     const guiWalletName = name ?? ''
@@ -135,7 +137,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
             keyboardVisible={false}
             forceField="fiat"
             tokenId={this.props.tokenId}
-            walletId={this.props.walletId}
+            wallet={wallet}
           />
           {children}
         </CardUi4>
@@ -190,18 +192,17 @@ export const CryptoExchangeFlipInputWrapper = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => {
     const { currencyWallets } = state.core.account
     const wallet = currencyWallets[ownProps.walletId]
-    if (wallet == null) return { tokenId: null }
+    if (wallet == null) return { tokenId: null, wallet: undefined }
 
-    const { balanceMap, name } = wallet
     const { displayCurrencyCode, displayDenomination } = ownProps.primaryCurrencyInfo
 
     const tokenId = getTokenIdForced(state.core.account, wallet.currencyInfo.pluginId, displayCurrencyCode)
 
-    const balance = balanceMap.get(tokenId) ?? '0'
+    const balance = wallet.balanceMap.get(tokenId) ?? '0'
     const cryptoAmountRaw: string = convertNativeToDenomination(displayDenomination.multiplier)(balance)
     const cryptoAmount = formatNumber(add(cryptoAmountRaw, '0'))
 
-    return { name: name ?? '', cryptoAmount, tokenId }
+    return { name: getWalletName(wallet), cryptoAmount, tokenId, wallet }
   },
   dispatch => ({})
 )(withTheme(CryptoExchangeFlipInputWrapperComponent))

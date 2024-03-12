@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+## 4.2.0
+
+- added: Notification status analytics param
+- added: @bugsnag/react-native-performance
+- added: New deeplink types: 'scene' and 'modal'
+- added: 'Fund Your Account' modal
+- added: Cosmos IBC transfer plugin
+- added: Have users select US state and filter fiat providers by state/province
+- changed: Remove extra spaces and normal capitalization of mnemonic seed input
+- changed: Move wallet activation redux values to scenes
+- fixed: Some text inputs not selectable for some Samsung devices
+- fixed: Various small visual fixes
+- fixed: Improve login performance by only loading account referral info for new accounts
+- fixed: FIO name transfer error when sending with no address
+- fixed: Android text fields not hiding text for certain secure fields
+
 ## 4.1.1 (2024-02-29)
 
 - fixed: Correctly create and import non-segwit wallets in bip-44 mode.

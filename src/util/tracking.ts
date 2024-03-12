@@ -4,11 +4,12 @@ import { div } from 'biggystring'
 import { TrackingEventName as LoginTrackingEventName, TrackingValues as LoginTrackingValues } from 'edge-login-ui-rn/lib/util/analytics'
 import PostHog from 'posthog-react-native'
 import { getBuildNumber, getUniqueId, getVersion } from 'react-native-device-info'
+import { checkNotifications } from 'react-native-permissions'
 
 import { getFirstOpenInfo } from '../actions/FirstOpenActions'
 import { ENV } from '../env'
 import { ExperimentConfig, getExperimentConfig } from '../experimentConfig'
-import { getExchangeDenomination } from '../selectors/DenominationSelectors'
+import { getExchangeDenomByCurrencyCode } from '../selectors/DenominationSelectors'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
 import { asBiggystring } from './cleaners'
@@ -150,10 +151,10 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
 
         // Populate referral params:
         const state = getState()
-        const { deviceReferral, account } = state
-        const { accountReferral } = account
-        params.refDeviceInstallerId = deviceReferral.installerId
-        params.refDeviceCurrencyCodes = deviceReferral.currencyCodes
+        const { account } = state.core
+        const { accountReferral } = state.account
+        params.refDeviceInstallerId = state.deviceReferral.installerId
+        params.refDeviceCurrencyCodes = state.deviceReferral.currencyCodes
 
         const { creationDate, installerId } = accountReferral
         params.refAccountDate = installerId == null || creationDate == null ? undefined : creationDate.toISOString().replace(/-\d\dT.*/, '')
@@ -175,7 +176,7 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
             } catch (e) {
               trackError('Error in tracking nativeAmount: ' + JSON.stringify({ event, values }))
             }
-            const { multiplier } = getExchangeDenomination(state, pluginId, currencyCode)
+            const { multiplier } = getExchangeDenomByCurrencyCode(account.currencyConfig[pluginId], currencyCode)
             params.value = div(nativeAmount, multiplier, mulToPrecision(multiplier))
           } else if (exchangeAmount != null) {
             params.value = parseFloat(
@@ -210,6 +211,10 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
 
         // Add all 'sticky' remote config variant values:
         for (const key of Object.keys(experimentConfig)) params[`svar_${key}`] = experimentConfig[key as keyof ExperimentConfig]
+
+        // Notifications
+        const notificationPermission = await checkNotifications()
+        params.notificationStatus = notificationPermission.status
 
         consify({ logEvent: { event, params } })
 

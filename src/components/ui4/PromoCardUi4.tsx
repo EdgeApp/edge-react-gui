@@ -18,6 +18,7 @@ import { CardUi4 } from './CardUi4'
 export interface FilteredPromoCard {
   background: PromoCard2['background']
   ctaButton: PromoCard2['ctaButton']
+  dismissable: PromoCard2['dismissable']
   localeMessages: PromoCard2['localeMessages']
   messageId: string
 }
@@ -34,7 +35,7 @@ export function PromoCardUi4(props: Props) {
   const dispatch = useDispatch()
 
   const { navigation, promoInfo, onClose } = props
-  const { localeMessages, ctaButton, background } = promoInfo
+  const { localeMessages, ctaButton, background, dismissable } = promoInfo
 
   const backgroundInfo = theme.isDark ? background.darkMode : background.lightMode
   const { backgroundGradientColors, backgroundGradientEnd, backgroundGradientStart, imageUri } = backgroundInfo
@@ -58,7 +59,7 @@ export function PromoCardUi4(props: Props) {
 
   return (
     <CardUi4
-      onClose={onClose}
+      onClose={dismissable ? onClose : undefined}
       nodeBackground={
         <LinearGradient colors={backgroundGradientColors} start={backgroundGradientStart} end={backgroundGradientEnd} style={styles.backgroundContainer}>
           <FastImage source={imageSrc} style={styles.backgroundImage} resizeMode="stretch" />

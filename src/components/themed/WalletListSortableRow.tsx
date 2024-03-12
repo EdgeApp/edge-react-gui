@@ -6,7 +6,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { FIAT_PRECISION, getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, formatNumberInput } from '../../locales/intl'
-import { getDisplayDenominationFromState, getExchangeDenomination } from '../../selectors/DenominationSelectors'
+import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { calculateFiatBalance } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
@@ -30,9 +30,7 @@ function WalletListSortableRowComponent(props: Props) {
 
   const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
   const exchangeRates = useSelector(state => state.exchangeRates)
-  const exchangeDenomination = useSelector(state =>
-    wallet == null ? null : getExchangeDenomination(state, wallet.currencyInfo.pluginId, wallet.currencyInfo.currencyCode)
-  )
+  const exchangeDenomination = wallet == null ? null : getExchangeDenom(wallet.currencyConfig, null)
 
   if (wallet == null || exchangeDenomination == null) {
     return (
@@ -44,9 +42,9 @@ function WalletListSortableRowComponent(props: Props) {
     )
   }
 
-  const { currencyCode, pluginId } = wallet.currencyInfo
+  const { currencyCode } = wallet.currencyInfo
   const walletFiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode)
-  const displayDenomination = dispatch(getDisplayDenominationFromState(pluginId, currencyCode))
+  const displayDenomination = dispatch((_, getState) => selectDisplayDenom(getState(), wallet.currencyConfig, null))
   const multiplier = displayDenomination.multiplier
   const name = getWalletName(wallet)
   const symbol = displayDenomination.symbol

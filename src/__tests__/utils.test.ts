@@ -1,7 +1,8 @@
 import { describe, expect, test } from '@jest/globals'
 import { log10 } from 'biggystring'
 
-import { getDisplayDenomination } from '../selectors/DenominationSelectors'
+import { selectDisplayDenomByCurrencyCode } from '../selectors/DenominationSelectors'
+import { btcCurrencyInfo } from '../util/fake/fakeBtcInfo'
 import {
   convertNativeToDenomination,
   convertNativeToDisplay,
@@ -323,41 +324,6 @@ describe('precisionAdjust', function () {
 })
 
 describe('getDisplayDenomination', function () {
-  const tests = {
-    title: 'Display Denomination of',
-    input: [
-      {
-        pluginId: 'bitcoin',
-        currencyCode: 'BTC'
-      },
-      {
-        pluginId: 'ethereum',
-        currencyCode: 'ETH'
-      },
-      {
-        pluginId: 'ethereum',
-        currencyCode: 'TKN'
-      }
-    ],
-    output: [
-      {
-        multiplier: '1',
-        name: 'sats',
-        symbol: 's'
-      },
-      {
-        multiplier: '1000000000000000',
-        name: 'mETH',
-        symbol: 'mΞ'
-      },
-      {
-        multiplier: '10000000000000000000000000000000000000000000000000',
-        name: 'TKN'
-      }
-    ]
-  }
-  const { title, input, output } = tests
-
   const state = {
     ui: {
       settings: {
@@ -383,6 +349,10 @@ describe('getDisplayDenomination', function () {
     core: {
       account: {
         currencyConfig: {
+          bitcoin: {
+            allTokens: {},
+            currencyInfo: btcCurrencyInfo
+          },
           ethereum: {
             allTokens: {
               '1985365e9f78359a9B6AD760e32412f4a445E862': {
@@ -432,10 +402,40 @@ describe('getDisplayDenomination', function () {
     }
   }
 
+  const input = [
+    {
+      pluginId: 'bitcoin',
+      currencyCode: 'BTC'
+    },
+    {
+      pluginId: 'ethereum',
+      currencyCode: 'ETH'
+    },
+    {
+      pluginId: 'ethereum',
+      currencyCode: 'TKN'
+    }
+  ] as const
+  const output = [
+    {
+      multiplier: '1',
+      name: 'sats',
+      symbol: 's'
+    },
+    {
+      multiplier: '1000000000000000',
+      name: 'mETH',
+      symbol: 'mΞ'
+    },
+    {
+      multiplier: '10000000000000000000000000000000000000000000000000',
+      name: 'TKN'
+    }
+  ]
   input.forEach((currency, index) => {
-    test(`${title} ${currency.currencyCode}`, function () {
-      // @ts-expect-error
-      expect(getDisplayDenomination(state, currency.pluginId, currency.currencyCode)).toMatchObject(output[index])
+    test(`Display Denomination of ${currency.currencyCode}`, function () {
+      const currencyConfig = state.core.account.currencyConfig[currency.pluginId]
+      expect(selectDisplayDenomByCurrencyCode(state as any, currencyConfig as any, currency.currencyCode)).toMatchObject(output[index])
     })
   })
 })

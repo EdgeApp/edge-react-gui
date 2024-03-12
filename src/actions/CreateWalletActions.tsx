@@ -5,11 +5,11 @@ import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
-import { ActivationPaymentInfo } from '../components/scenes/CreateWalletAccountSelectScene'
-import { Airship, showError } from '../components/services/AirshipInstance'
+import { AccountActivationPaymentInfo, HandleActivationInfo } from '../components/scenes/CreateWalletAccountSelectScene'
+import { Airship } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
-import { getExchangeDenomination } from '../selectors/DenominationSelectors'
+import { getExchangeDenomByCurrencyCode } from '../selectors/DenominationSelectors'
 import { TokenWalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
 import { ThunkAction } from '../types/reduxTypes'
@@ -43,83 +43,43 @@ export const createWallet = async (account: EdgeAccount, opts: EdgeCreateCurrenc
 }
 
 // can move to component in the future, just account and currencyConfig, etc to component through connector
-export function fetchAccountActivationInfo(pluginId: string): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-    const currencyPlugin: EdgeCurrencyConfig = account.currencyConfig[pluginId]
-    try {
-      const [supportedCurrencies, activationCost] = await Promise.all([
-        currencyPlugin.otherMethods.getActivationSupportedCurrencies(),
-        currencyPlugin.otherMethods.getActivationCost(currencyPlugin.currencyInfo.currencyCode)
-      ])
+export async function fetchAccountActivationInfo(account: EdgeAccount, pluginId: string): Promise<HandleActivationInfo> {
+  const currencyPlugin: EdgeCurrencyConfig = account.currencyConfig[pluginId]
 
-      // Translate ambiguous currency codes:
-      const supportedAssets: EdgeAsset[] = []
-      for (const currency of Object.keys(supportedCurrencies.result)) {
-        // Handle special cases:
-        if (currency === 'FTC') continue
-        if (currency === 'ETH') {
-          supportedAssets.push({ pluginId: 'ethereum', tokenId: null })
-          continue
-        }
+  const [supportedCurrencies, activationCost] = await Promise.all([
+    currencyPlugin.otherMethods.getActivationSupportedCurrencies(),
+    currencyPlugin.otherMethods.getActivationCost(currencyPlugin.currencyInfo.currencyCode)
+  ])
 
-        // Find a top-level currency:
-        const pluginId = Object.keys(account.currencyConfig).find(pluginId => account.currencyConfig[pluginId].currencyInfo.currencyCode === currency)
-        if (pluginId != null) {
-          supportedAssets.push({ pluginId, tokenId: null })
-          continue
-        }
+  // Translate ambiguous currency codes:
+  const supportedAssets: EdgeAsset[] = []
+  for (const currency of Object.keys(supportedCurrencies.result)) {
+    // Handle special cases:
+    if (currency === 'FTC') continue
+    if (currency === 'ETH') {
+      supportedAssets.push({ pluginId: 'ethereum', tokenId: null })
+      continue
+    }
 
-        // Find an Ethereum mainnet token:
-        const { ethereum } = account.currencyConfig
-        if (ethereum == null) continue
-        const tokenId = Object.keys(ethereum.allTokens).find(tokenId => ethereum.allTokens[tokenId].currencyCode === currency)
-        if (tokenId != null) {
-          supportedAssets.push({ pluginId: 'ethereum', tokenId })
-        }
-      }
+    // Find a top-level currency:
+    const pluginId = Object.keys(account.currencyConfig).find(pluginId => account.currencyConfig[pluginId].currencyInfo.currencyCode === currency)
+    if (pluginId != null) {
+      supportedAssets.push({ pluginId, tokenId: null })
+      continue
+    }
 
-      dispatch({
-        type: 'ACCOUNT_ACTIVATION_INFO',
-        data: {
-          supportedAssets,
-          activationCost
-        }
-      })
-    } catch (error: any) {
-      showError(error)
+    // Find an Ethereum mainnet token:
+    const { ethereum } = account.currencyConfig
+    if (ethereum == null) continue
+    const tokenId = Object.keys(ethereum.allTokens).find(tokenId => ethereum.allTokens[tokenId].currencyCode === currency)
+    if (tokenId != null) {
+      supportedAssets.push({ pluginId: 'ethereum', tokenId })
     }
   }
-}
 
-export function fetchWalletAccountActivationPaymentInfo(paymentParams: ActivationPaymentInfo, createdCoreWallet: EdgeCurrencyWallet): ThunkAction<void> {
-  return (dispatch, getState) => {
-    try {
-      const networkTimeout = setTimeout(() => {
-        showError('Network Timeout')
-        dispatch({
-          type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR',
-          data: 'Network Timeout'
-        })
-      }, 26000)
-      createdCoreWallet.otherMethods
-        .getAccountActivationQuote(paymentParams)
-        // @ts-expect-error
-        .then(activationQuote => {
-          dispatch({
-            type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO',
-            data: {
-              ...activationQuote,
-              currencyCode: paymentParams.currencyCode
-            }
-          })
-          clearTimeout(networkTimeout)
-        })
-        .catch(showError)
-    } catch (error: any) {
-      showError(error)
-    }
+  return {
+    supportedAssets,
+    activationCost
   }
 }
 
@@ -127,7 +87,8 @@ export function createAccountTransaction(
   navigation: NavigationBase,
   createdWalletId: string,
   accountName: string,
-  paymentWalletId: string
+  paymentWalletId: string,
+  activationPaymentInfo: AccountActivationPaymentInfo
 ): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     // check available funds
@@ -138,9 +99,9 @@ export function createAccountTransaction(
     const paymentWallet: EdgeCurrencyWallet = currencyWallets[paymentWalletId]
     const createdWalletCurrencyCode = createdCurrencyWallet.currencyInfo.currencyCode
     const currencyPlugin = account.currencyConfig[createdCurrencyWallet.currencyInfo.pluginId]
-    const { paymentAddress, amount, currencyCode } = state.ui.createWallet.walletAccountActivationPaymentInfo
+    const { paymentAddress, amount, currencyCode } = activationPaymentInfo
     const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
-    const paymentDenom = getExchangeDenomination(state, paymentWallet.currencyInfo.pluginId, currencyCode)
+    const paymentDenom = getExchangeDenomByCurrencyCode(paymentWallet.currencyConfig, currencyCode)
     let nativeAmount = mul(amount, paymentDenom.multiplier)
     nativeAmount = toFixed(nativeAmount, 0, 0)
     const tokenId = getWalletTokenId(paymentWallet, currencyCode)

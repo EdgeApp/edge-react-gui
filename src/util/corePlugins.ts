@@ -89,6 +89,7 @@ export const swapPlugins = {
   velodrome: true,
   xrpdex: ENV.XRPDEX_INIT,
 
+  cosmosibc: true,
   transfer: true
 }
 
