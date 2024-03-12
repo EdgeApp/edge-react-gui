@@ -5,6 +5,7 @@ import { toUtf8Bytes } from 'ethers/lib/utils'
 
 import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { showError } from '../../../components/services/AirshipInstance'
+import { ENV } from '../../../env'
 import { hexToDecimal } from '../../../util/utils'
 import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
 import {
@@ -37,7 +38,7 @@ const urls = {
   }
 }
 
-const MODE = Math.random() < 10 ? 'prod' : 'test'
+const MODE = ENV.ENABLE_FIAT_SANDBOX ? 'test' : 'prod'
 
 const PLUGIN_TO_CHAIN_ID_MAP: { [pluginId: string]: string } = {
   arbitrum: 'arbitrum_mainnet',

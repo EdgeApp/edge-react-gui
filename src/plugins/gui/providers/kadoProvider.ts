@@ -4,6 +4,7 @@ import { EdgeAssetAction, EdgeSpendInfo, EdgeTokenId, EdgeTxActionFiat } from 'e
 import URL from 'url-parse'
 
 import { SendScene2Params } from '../../../components/scenes/SendScene2'
+import { ENV } from '../../../env'
 import { lstrings } from '../../../locales/strings'
 import { isHex } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
@@ -38,7 +39,7 @@ const urls = {
   }
 }
 
-const MODE = 'prod'
+const MODE = ENV.ENABLE_FIAT_SANDBOX ? 'test' : 'prod'
 
 // https://api.kado.money/v1/ramp/blockchains
 
