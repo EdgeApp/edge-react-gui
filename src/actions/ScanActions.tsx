@@ -3,7 +3,6 @@ import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
-import { selectWalletForExchange } from '../actions/CryptoExchangeActions'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { WalletListModal, WalletListResult } from '../components/modals/WalletListModal'
@@ -357,8 +356,7 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: E
       if (threeButtonModal === 'buy') {
         navigation.navigate('buyTab', { screen: 'pluginListBuy' })
       } else if (threeButtonModal === 'exchange') {
-        await dispatch(selectWalletForExchange(wallet.id, tokenId, 'to'))
-        navigation.navigate('exchangeTab', { screen: 'exchange' })
+        navigation.navigate('exchangeTab', { screen: 'exchange', params: { toWalletId: wallet.id, toTokenId: tokenId } })
       }
     } catch (e: any) {
       // Don't bother the user with this error, but log it quietly:

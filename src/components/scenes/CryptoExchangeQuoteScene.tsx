@@ -1,17 +1,29 @@
-import { div, gte } from 'biggystring'
-import { EdgeSwapQuote } from 'edge-core-js'
-import React, { useEffect, useState } from 'react'
+import { add, div, gte, toFixed } from 'biggystring'
+import { EdgeSwapQuote, EdgeSwapResult } from 'edge-core-js'
+import React, { useState } from 'react'
 import { SectionList, View, ViewStyle } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
+import { updateSwapCount } from '../../actions/RequestReviewActions'
+import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
 import { useHandler } from '../../hooks/useHandler'
+import { useMount } from '../../hooks/useMount'
 import { useRowLayout } from '../../hooks/useRowLayout'
+import { useUnmount } from '../../hooks/useUnmount'
+import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
+import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
+import { ThunkAction } from '../../types/reduxTypes'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
+import { CryptoAmount } from '../../util/CryptoAmount'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { logActivity } from '../../util/logger'
 import { logEvent } from '../../util/tracking'
+import { convertNativeToExchange, DECIMAL_PRECISION } from '../../util/utils'
 import { PoweredByCard } from '../cards/PoweredByCard'
 import { EdgeAnim, fadeInDown30, fadeInDown60, fadeInDown90, fadeInDown120, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -53,7 +65,9 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
-  const pending = useSelector(state => state.cryptoExchange.shiftPendingTransaction)
+  const [pending, setPending] = useState(false)
+
+  const swapRequestOptions = useSwapRequestOptions()
 
   const [selectedQuote, setSelectedQuote] = useState(initialSelectedQuote)
   const [calledApprove, setCalledApprove] = useState(false)
@@ -93,31 +107,106 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   const feePercent = div(selectedQuote.networkFee.nativeAmount, selectedQuote.fromNativeAmount, 2)
   const showFeeWarning = gte(feePercent, '0.05')
 
-  useEffect(() => {
+  const handleExchangeTimerExpired = useHandler(() => {
+    navigation.replace('exchangeQuoteProcessing', {
+      swapRequest: selectedQuote.request,
+      swapRequestOptions,
+      onCancel: () => {
+        navigation.navigate('exchangeTab', { screen: 'exchange' })
+      },
+      onDone: quotes => {
+        navigation.replace('exchangeQuote', {
+          selectedQuote: quotes[0],
+          quotes,
+          onApprove
+        })
+      }
+    })
+  })
+
+  useMount(() => {
     const swapConfig = account.swapConfig[pluginId]
 
     dispatch(logEvent('Exchange_Shift_Quote'))
     swapVerifyTerms(swapConfig)
       .then(async result => {
-        if (!result) await dispatch(exchangeTimerExpired(navigation, selectedQuote, onApprove))
+        if (!result) handleExchangeTimerExpired()
       })
       .catch(err => showError(err))
+  })
 
-    return () => {
-      if (!calledApprove) selectedQuote.close().catch(err => showError(err))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  // Close the quote if the component unmounts
+  useUnmount(() => {
+    if (!calledApprove) selectedQuote.close().catch(err => showError(err))
+  })
 
-  const doShift = async () => {
+  const handleSlideComplete = async () => {
     setCalledApprove(true)
-    await dispatch(shiftCryptoCurrency(navigation, selectedQuote, onApprove))
+    setPending(true)
+
+    const { fromDisplayAmount, fee, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = await dispatch(getSwapInfo(selectedQuote))
+    const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate, request } = selectedQuote
+    // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
+    const { toWallet, toTokenId } = request
+    const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
+    try {
+      dispatch(logEvent('Exchange_Shift_Start'))
+      const result: EdgeSwapResult = await selectedQuote.approve()
+
+      logActivity(`Swap Exchange Executed: ${account.username}`)
+      logActivity(`
+    fromDisplayAmount: ${fromDisplayAmount}
+    fee: ${fee}
+    fromFiat: ${fromFiat}
+    fromTotalFiat: ${fromTotalFiat}
+    toDisplayAmount: ${toDisplayAmount}
+    toFiat: ${toFiat}
+    quote:
+      pluginId: ${pluginId}
+      isEstimate: ${isEstimate.toString()}
+      fromNativeAmount: ${fromNativeAmount}
+      toNativeAmount: ${toNativeAmount}
+      expirationDate: ${expirationDate ? expirationDate.toISOString() : 'no expiration'}
+      networkFee:
+        currencyCode ${networkFee.currencyCode}
+        nativeAmount ${networkFee.nativeAmount}
+`)
+
+      navigation.push('exchangeSuccess', {})
+
+      // Dispatch the success action and callback
+      onApprove()
+
+      await dispatch(updateSwapCount())
+
+      dispatch(
+        logEvent('Exchange_Shift_Success', {
+          conversionValues: {
+            conversionType: 'crypto',
+            cryptoAmount: new CryptoAmount({
+              nativeAmount: toNativeAmount,
+              currencyCode: toCurrencyCode,
+              currencyConfig: toWallet.currencyConfig
+            }),
+            orderId: result.orderId,
+            swapProviderId: pluginId
+          }
+        })
+      )
+    } catch (error: any) {
+      console.log(error)
+      dispatch(logEvent('Exchange_Shift_Failed', { error: String(error) })) // TODO: Do we need to parse/clean all cases?
+      setTimeout(() => {
+        showError(`${lstrings.exchange_failed}. ${error.message}`)
+      }, 1)
+    }
+    setPending(false)
   }
 
   const renderTimer = () => {
     const { expirationDate } = selectedQuote
     if (!expirationDate) return null
-    return <CircleTimer timeExpired={async () => await dispatch(exchangeTimerExpired(navigation, selectedQuote, onApprove))} expiration={expirationDate} />
+    return <CircleTimer timeExpired={handleExchangeTimerExpired} expiration={expirationDate} />
   }
 
   const renderRow = useHandler((item: { item: EdgeSwapQuote; section: Section; index: number }) => {
@@ -226,7 +315,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
         ) : null}
 
         <EdgeAnim enter={fadeInDown120}>
-          <Slider parentStyle={styles.slider} onSlidingComplete={doShift} disabled={pending} showSpinner={pending} />
+          <Slider parentStyle={styles.slider} onSlidingComplete={handleSlideComplete} disabled={pending} showSpinner={pending} />
         </EdgeAnim>
         {renderTimer()}
       </View>
@@ -249,3 +338,62 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginBottom: theme.rem(3)
   }
 }))
+
+// TODO: Use new hooks and utility methods for all conversions here
+const getSwapInfo = (quote: EdgeSwapQuote): ThunkAction<Promise<GuiSwapInfo>> => {
+  return async (_dispatch, getState) => {
+    const state = getState()
+
+    // Currency conversion tools:
+    // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
+    const { request } = quote
+    const { fromWallet, toWallet, fromTokenId, toTokenId } = request
+    const fromCurrencyCode = getCurrencyCode(fromWallet, fromTokenId)
+    const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
+
+    // Format from amount:
+    const fromDisplayDenomination = selectDisplayDenom(state, fromWallet.currencyConfig, fromTokenId)
+    const fromDisplayAmountTemp = div(quote.fromNativeAmount, fromDisplayDenomination.multiplier, DECIMAL_PRECISION)
+    const fromDisplayAmount = toFixed(fromDisplayAmountTemp, 0, 8)
+
+    // Format from fiat:
+    const fromExchangeDenomination = getExchangeDenom(fromWallet.currencyConfig, fromTokenId)
+    const fromBalanceInCryptoDisplay = convertNativeToExchange(fromExchangeDenomination.multiplier)(quote.fromNativeAmount)
+    const fromBalanceInFiatRaw = parseFloat(convertCurrency(state, fromCurrencyCode, fromWallet.fiatCurrencyCode, fromBalanceInCryptoDisplay))
+    const fromFiat = formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
+
+    // Format crypto fee:
+    const feeDenomination = selectDisplayDenom(state, fromWallet.currencyConfig, null)
+    const feeNativeAmount = quote.networkFee.nativeAmount
+    const feeTempAmount = div(feeNativeAmount, feeDenomination.multiplier, DECIMAL_PRECISION)
+    const feeDisplayAmount = toFixed(feeTempAmount, 0, 6)
+
+    // Format fiat fee:
+    const feeDenominatedAmount = await fromWallet.nativeToDenomination(feeNativeAmount, request.fromWallet.currencyInfo.currencyCode)
+    const feeFiatAmountRaw = parseFloat(convertCurrency(state, request.fromWallet.currencyInfo.currencyCode, fromWallet.fiatCurrencyCode, feeDenominatedAmount))
+    const feeFiatAmount = formatNumber(feeFiatAmountRaw || 0, { toFixed: 2 })
+    const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${fromWallet.fiatCurrencyCode.replace('iso:', '')})`
+    const fromTotalFiat = formatNumber(add(fromBalanceInFiatRaw.toFixed(DECIMAL_PRECISION), feeFiatAmountRaw.toFixed(DECIMAL_PRECISION)), { toFixed: 2 })
+
+    // Format to amount:
+    const toDisplayDenomination = selectDisplayDenom(state, toWallet.currencyConfig, toTokenId)
+    const toDisplayAmountTemp = div(quote.toNativeAmount, toDisplayDenomination.multiplier, DECIMAL_PRECISION)
+    const toDisplayAmount = toFixed(toDisplayAmountTemp, 0, 8)
+
+    // Format to fiat:
+    const toExchangeDenomination = getExchangeDenom(toWallet.currencyConfig, toTokenId)
+    const toBalanceInCryptoDisplay = convertNativeToExchange(toExchangeDenomination.multiplier)(quote.toNativeAmount)
+    const toBalanceInFiatRaw = parseFloat(convertCurrency(state, toCurrencyCode, toWallet.fiatCurrencyCode, toBalanceInCryptoDisplay))
+    const toFiat = formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
+
+    const swapInfo: GuiSwapInfo = {
+      fee,
+      fromDisplayAmount,
+      fromFiat,
+      fromTotalFiat,
+      toDisplayAmount,
+      toFiat
+    }
+    return swapInfo
+  }
+}
