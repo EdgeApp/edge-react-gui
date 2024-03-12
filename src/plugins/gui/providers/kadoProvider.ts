@@ -768,8 +768,7 @@ export const kadoProvider: FiatProviderFactory = {
                           conversionType: 'sell',
                           destFiatCurrencyCode: 'USD',
                           destFiatAmount: fiatAmount,
-                          sourceAmount: CryptoAmount({
-                            pluginId: coreWallet.currencyInfo.pluginId,
+                          sourceAmount: new CryptoAmount({
                             currencyConfig: coreWallet.currencyConfig,
                             currencyCode: displayCurrencyCode,
                             exchangeAmount: paymentExchangeAmount

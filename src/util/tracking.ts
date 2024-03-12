@@ -56,13 +56,18 @@ export type TrackingEventName =
 
 export type OnLogEvent = (event: TrackingEventName, values?: TrackingValues) => void
 
-// Known dollar amount revenue
+/**
+ * Analytics: Known dollar amount revenue
+ */
 export interface DollarConversionValues {
   conversionType: 'dollar'
   dollarConversionValue: number
 }
 
-// Some unknown revenue based on a send (e.g. FIO handle/domain fees) or swap
+/**
+ * Analytics: Some unknown revenue based on a send (e.g. FIO handle/domain fees)
+ * or swap
+ */
 export interface CryptoConversionValues {
   conversionType: 'crypto'
   cryptoAmount: CryptoAmount
@@ -71,7 +76,9 @@ export interface CryptoConversionValues {
   orderId?: string
 }
 
-// Sell to fiat
+/**
+ * Analytics: Sell to fiat
+ */
 export interface SellConversionValues {
   conversionType: 'sell'
 
@@ -85,6 +92,10 @@ export interface SellConversionValues {
   orderId?: string // Unique order identifier provided by fiat provider
 }
 
+/**
+ * Culmination of defined tracking value types, including those defined in
+ * LoginUi.
+ */
 export interface TrackingValues extends LoginTrackingValues {
   error?: unknown | string // Any error
 

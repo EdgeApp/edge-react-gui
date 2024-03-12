@@ -121,8 +121,9 @@ class FioNameConfirm extends React.PureComponent<Props> {
             conversionValues: {
               conversionType: 'crypto',
               cryptoAmount: new CryptoAmount({
+                currencyConfig: paymentWallet.currencyConfig,
                 nativeAmount: edgeTx.nativeAmount,
-                currencyConfig: paymentWallet.currencyConfig
+                tokenId: null
               })
             }
           })
@@ -143,8 +144,9 @@ class FioNameConfirm extends React.PureComponent<Props> {
             conversionValues: {
               conversionType: 'crypto',
               cryptoAmount: new CryptoAmount({
+                currencyConfig: paymentWallet.currencyConfig,
                 nativeAmount: edgeTx.nativeAmount,
-                currencyConfig: paymentWallet.currencyConfig
+                tokenId: null
               })
             }
           })

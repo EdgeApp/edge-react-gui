@@ -122,7 +122,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     onLogEvent('Fio_Domain_Renew', {
       conversionValues: {
         conversionType: 'crypto',
-        cryptoAmount: new CryptoAmount({ nativeAmount: String(renewalFee), currencyConfig: fioWallet.currencyConfig })
+        cryptoAmount: new CryptoAmount({ nativeAmount: String(renewalFee), currencyConfig: fioWallet.currencyConfig, tokenId: null })
       }
     })
   }

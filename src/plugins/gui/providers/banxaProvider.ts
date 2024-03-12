@@ -650,8 +650,7 @@ export const banxaProvider: FiatProviderFactory = {
                                 conversionType: 'sell',
                                 destFiatCurrencyCode: fiatCurrencyCode,
                                 destFiatAmount: priceQuote.fiat_amount,
-                                sourceAmount: CryptoAmount({
-                                  pluginId: coreWallet.currencyInfo.pluginId,
+                                sourceAmount: new CryptoAmount({
                                   currencyConfig: coreWallet.currencyConfig,
                                   currencyCode: displayCurrencyCode,
                                   exchangeAmount: coinAmount

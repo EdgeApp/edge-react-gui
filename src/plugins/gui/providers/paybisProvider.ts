@@ -614,8 +614,7 @@ export const paybisProvider: FiatProviderFactory = {
                           conversionType: 'sell',
                           destFiatCurrencyCode: fiatCurrencyCode,
                           destFiatAmount: fiatAmount,
-                          sourceAmount: CryptoAmount({
-                            pluginId: coreWallet.currencyInfo.pluginId,
+                          sourceAmount: new CryptoAmount({
                             currencyConfig: coreWallet.currencyConfig,
                             currencyCode: displayCurrencyCode,
                             exchangeAmount: amount
