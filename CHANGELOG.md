@@ -14,7 +14,7 @@
 - chagned: 'Sweep Private Key' usage blocked for light accounts
 - fixed: FIO name transfer error when sending with no address
 
-## 4.2.0
+## 4.2.0 (2024-03-12)
 
 - added: Notification status analytics param
 - added: @bugsnag/react-native-performance
@@ -34,7 +34,7 @@
 
 - fixed: Correctly create and import non-segwit wallets in bip-44 mode.
 
-## 4.1.0
+## 4.1.0 (2024-02-27)
 
 - added: FIO conversion analytics events.
 - added: Referral information on all analytics events.
