@@ -55,7 +55,7 @@ export const HomeSceneUi4 = (props: Props) => {
     navigation.navigate('fioAddressList', {})
   })
   const handleSwapPress = useHandler(() => {
-    navigation.navigate('exchangeTab', {})
+    navigation.navigate('swapTab', {})
   })
   const handleViewAssetsPress = useHandler(() => {
     navigation.navigate('walletsTab', { screen: 'walletList' })

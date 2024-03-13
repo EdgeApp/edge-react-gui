@@ -12,7 +12,7 @@ describe('SwapSuccessSceneComponent', () => {
 
     const fakeDisklet: any = {}
 
-    const actual = renderer.render(<SwapSuccessSceneComponent {...fakeSceneProps('exchangeSuccess', {})} userId="" disklet={fakeDisklet} theme={getTheme()} />)
+    const actual = renderer.render(<SwapSuccessSceneComponent {...fakeSceneProps('swapSuccess', {})} userId="" disklet={fakeDisklet} theme={getTheme()} />)
 
     expect(actual).toMatchSnapshot()
   })

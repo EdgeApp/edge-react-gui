@@ -71,7 +71,7 @@ export interface RouteParamList {
   walletsTab: {}
   buyTab: {}
   sellTab: {}
-  exchangeTab: {}
+  swapTab: {}
   extraTab: undefined
   devTab: undefined
 
@@ -105,11 +105,6 @@ export interface RouteParamList {
   defaultFiatSetting: {}
   edgeLogin: EdgeLoginParams
   editToken: EditTokenParams
-  exchange: SwapCreateParams
-  exchangeQuote: SwapConfirmationParams
-  exchangeQuoteProcessing: SwapProcessingParams
-  exchangeSettings: {}
-  exchangeSuccess: {}
   fioCreateHandle: FioCreateHandleParams
   fioAddressDetails: {
     fioAddressName: string
@@ -213,6 +208,11 @@ export interface RouteParamList {
   stakeModify: StakeModifyParams
   stakeOptions: StakeOptionsParams
   stakeOverview: StakeOverviewParams
+  swapCreate: SwapCreateParams
+  swapConfirmation: SwapConfirmationParams
+  swapProcessing: SwapProcessingParams
+  swapSettings: {}
+  swapSuccess: {}
   testScene: {}
   transactionDetails: TransactionDetailsParams
   transactionList: TransactionListParams

@@ -14,7 +14,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 
-interface OwnProps extends EdgeSceneProps<'exchangeSuccess'> {}
+interface OwnProps extends EdgeSceneProps<'swapSuccess'> {}
 
 interface StateProps {
   userId: string
@@ -48,7 +48,7 @@ export class SwapSuccessSceneComponent extends React.PureComponent<Props, LocalS
   done = () => {
     const { navigation } = this.props
     this.setState({ showButton: false })
-    navigation.navigate('exchangeTab', { screen: 'exchange' })
+    navigation.navigate('swapTab', { screen: 'swapCreate' })
   }
 
   showConfetti = async () => {

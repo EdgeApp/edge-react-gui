@@ -134,7 +134,7 @@ describe('SwapConfirmationScene', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
         <SwapConfirmationScene
-          {...fakeSceneProps('exchangeQuote', {
+          {...fakeSceneProps('swapConfirmation', {
             quotes: [quote],
             selectedQuote: quote,
             onApprove: () => undefined

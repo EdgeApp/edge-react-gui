@@ -33,7 +33,7 @@ export function launchPriceChangeBuySellSwapModal(navigation: NavigationBase, da
     } else if (threeButtonModal === 'sell') {
       navigation.navigate('sellTab', { screen: 'pluginListSell' })
     } else if (threeButtonModal === 'exchange') {
-      navigation.navigate('exchangeTab', { screen: 'exchange' })
+      navigation.navigate('swapTab', { screen: 'swapCreate' })
     }
   }
 }

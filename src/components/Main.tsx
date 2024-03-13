@@ -471,7 +471,7 @@ const EdgeAppStack = () => {
         }}
       />
       <Stack.Screen
-        name="exchangeSettings"
+        name="swapSettings"
         component={SwapSettingsScene}
         options={{
           title: lstrings.settings_exchange_settings,
@@ -479,7 +479,7 @@ const EdgeAppStack = () => {
         }}
       />
       <Stack.Screen
-        name="exchangeSuccess"
+        name="swapSuccess"
         component={SwapSuccessScene}
         options={{
           headerLeft: () => null
@@ -720,7 +720,7 @@ const EdgeTabs = () => {
       <Tab.Screen name="walletsTab" component={EdgeWalletsTabScreen} />
       <Tab.Screen name="buyTab" component={EdgeBuyTabScreen} />
       <Tab.Screen name="sellTab" component={EdgeSellTabScreen} />
-      <Tab.Screen name="exchangeTab" component={EdgeExchangeTabScreen} />
+      <Tab.Screen name="swapTab" component={EdgeSwapTabScreen} />
       <Tab.Screen name="extraTab" component={ExtraTabScene} />
       <Tab.Screen name="devTab" component={DevTestScene} />
     </Tab.Navigator>
@@ -797,21 +797,21 @@ const EdgeSellTabScreen = () => {
   )
 }
 
-const EdgeExchangeTabScreen = () => {
+const EdgeSwapTabScreen = () => {
   const dispatch = useDispatch()
   return (
-    <Stack.Navigator initialRouteName="exchange" screenOptions={defaultScreenOptions}>
+    <Stack.Navigator initialRouteName="swapCreate" screenOptions={defaultScreenOptions}>
       <Stack.Screen
-        name="exchange"
+        name="swapCreate"
         component={SwapCreateScene}
         options={firstSceneScreenOptions}
         listeners={{
           focus: () => dispatch(checkEnabledExchanges())
         }}
       />
-      <Stack.Screen name="exchangeQuote" component={SwapConfirmationScene} />
+      <Stack.Screen name="swapConfirmation" component={SwapConfirmationScene} />
       <Stack.Screen
-        name="exchangeQuoteProcessing"
+        name="swapProcessing"
         component={SwapProcessingScene}
         options={{
           headerLeft: () => null,

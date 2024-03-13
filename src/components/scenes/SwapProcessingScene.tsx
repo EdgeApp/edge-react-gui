@@ -36,7 +36,7 @@ export interface SwapProcessingParams {
   onDone: (quotes: EdgeSwapQuote[]) => void
 }
 
-interface Props extends EdgeSceneProps<'exchangeQuoteProcessing'> {}
+interface Props extends EdgeSceneProps<'swapProcessing'> {}
 
 const ANIM_DURATION = 5000
 
@@ -81,8 +81,8 @@ export function SwapProcessingScene(props: Props) {
           toDenomination
         })
 
-        navigation.navigate('exchangeTab', {
-          screen: 'exchange',
+        navigation.navigate('swapTab', {
+          screen: 'swapCreate',
           params: {
             fromWalletId: swapRequest.fromWallet.id,
             fromTokenId: swapRequest.fromTokenId,

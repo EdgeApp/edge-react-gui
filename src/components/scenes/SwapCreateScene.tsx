@@ -47,7 +47,7 @@ export interface SwapErrorDisplayInfo {
   title: string
 }
 
-interface Props extends EdgeSceneProps<'exchange'> {}
+interface Props extends EdgeSceneProps<'swapCreate'> {}
 
 interface State {
   whichWalletFocus: 'from' | 'to' // Which wallet FlipInput2 was last focused and edited
@@ -155,14 +155,14 @@ export const SwapCreateScene = (props: Props) => {
     })
 
     // Start request for quote:
-    navigation.navigate('exchangeQuoteProcessing', {
+    navigation.navigate('swapProcessing', {
       swapRequest,
       swapRequestOptions,
       onCancel: () => {
         navigation.goBack()
       },
       onDone: quotes => {
-        navigation.replace('exchangeQuote', {
+        navigation.replace('swapConfirmation', {
           selectedQuote: quotes[0],
           quotes,
           onApprove: resetState

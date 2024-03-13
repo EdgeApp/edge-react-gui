@@ -44,7 +44,7 @@ export function InsufficientFeesModal(props: Props) {
   })
   const handleSwap = useHandler(async () => {
     if (onSwap) onSwap()
-    navigation.navigate('exchangeTab', { screen: 'exchange', params: { toWalletId: wallet.id, toTokenId: tokenId } })
+    navigation.navigate('swapTab', { screen: 'swapCreate', params: { toWalletId: wallet.id, toTokenId: tokenId } })
     bridge.resolve()
   })
 

@@ -41,7 +41,7 @@ const title: { readonly [key: string]: string } = {
   walletsTab: lstrings.title_assets,
   buyTab: lstrings.title_buy,
   sellTab: lstrings.title_sell,
-  exchangeTab: lstrings.title_exchange,
+  swapTab: lstrings.title_exchange,
   extraTab: lstrings[extraTabString],
   devTab: lstrings.title_dev_tab
 }
@@ -59,7 +59,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
         if (!ENV.DEV_TAB && route.name === 'devTab') {
           return false
         }
-        if (config.disableSwaps === true && route.name === 'exchangeTab') {
+        if (config.disableSwaps === true && route.name === 'swapTab') {
           return false
         }
         return true
@@ -185,7 +185,7 @@ const Tab = ({
     walletsTab: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
     buyTab: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
     sellTab: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
-    exchangeTab: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />,
+    swapTab: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />,
     extraTab: <VectorIcon font="Feather" name="map-pin" size={theme.rem(1.25)} color={color} />,
     devTab: <SimpleLineIcons name="wrench" size={theme.rem(1.25)} color={color} />
   }
@@ -200,8 +200,8 @@ const Tab = ({
         return navigation.navigate('buyTab', currentName === 'buyTab' ? { screen: 'pluginListBuy' } : {})
       case 'sellTab':
         return navigation.navigate('sellTab', currentName === 'sellTab' ? { screen: 'pluginListSell' } : {})
-      case 'exchangeTab':
-        return navigation.navigate('exchangeTab', currentName === 'exchangeTab' ? { screen: 'exchange' } : {})
+      case 'swapTab':
+        return navigation.navigate('swapTab', currentName === 'swapTab' ? { screen: 'swapCreate' } : {})
       case 'extraTab':
         return navigation.navigate('extraTab')
       case 'devTab':

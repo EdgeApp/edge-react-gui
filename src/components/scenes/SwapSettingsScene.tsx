@@ -26,7 +26,7 @@ import { SettingsSubHeader } from '../settings/SettingsSubHeader'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
-interface OwnProps extends EdgeSceneProps<'exchangeSettings'> {}
+interface OwnProps extends EdgeSceneProps<'swapSettings'> {}
 
 interface DispatchProps {
   changePreferredSwapPlugin: (pluginId: string | undefined) => void

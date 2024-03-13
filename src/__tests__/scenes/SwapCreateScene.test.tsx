@@ -13,7 +13,7 @@ describe('SwapCreateScene', () => {
 
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <SwapCreateScene {...fakeSceneProps('exchange', {})} />
+        <SwapCreateScene {...fakeSceneProps('swapCreate', {})} />
       </FakeProviders>
     )
 
