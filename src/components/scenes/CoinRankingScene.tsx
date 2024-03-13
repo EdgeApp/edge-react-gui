@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ListRenderItemInfo, TouchableOpacity, View } from 'react-native'
+import { ListRenderItemInfo, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -16,6 +16,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
 import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CoinRankRow } from '../data/row/CoinRankRow'
 import { showError } from '../services/AirshipInstance'
@@ -235,12 +236,12 @@ const CoinRankingComponent = (props: Props) => {
             <View style={styles.rankView}>
               <EdgeText style={styles.rankText}>{lstrings.coin_rank_rank}</EdgeText>
             </View>
-            <TouchableOpacity style={styles.assetView} onPress={handlePriceSubText}>
+            <EdgeTouchableOpacity style={styles.assetView} onPress={handlePriceSubText}>
               <EdgeText style={styles.assetText}>{assetSubTextString}</EdgeText>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.percentChangeView} onPress={handlePercentChange}>
+            </EdgeTouchableOpacity>
+            <EdgeTouchableOpacity style={styles.percentChangeView} onPress={handlePercentChange}>
               <EdgeText style={styles.percentChangeText}>{timeFrameString}</EdgeText>
-            </TouchableOpacity>
+            </EdgeTouchableOpacity>
             <View style={styles.priceView}>
               <EdgeText style={styles.priceText}>{lstrings.coin_rank_price}</EdgeText>
             </View>

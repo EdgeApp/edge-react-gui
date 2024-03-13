@@ -272,6 +272,11 @@ exports[`CurrencySettings should render 1`] = `
         </Text>
       </View>
       <View
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
         accessibilityValue={
           {
             "max": undefined,
@@ -401,6 +406,11 @@ exports[`CurrencySettings should render 1`] = `
         </View>
       </View>
       <View
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
         accessibilityValue={
           {
             "max": undefined,
@@ -530,6 +540,11 @@ exports[`CurrencySettings should render 1`] = `
         </View>
       </View>
       <View
+        accessibilityState={
+          {
+            "disabled": false,
+          }
+        }
         accessibilityValue={
           {
             "max": undefined,

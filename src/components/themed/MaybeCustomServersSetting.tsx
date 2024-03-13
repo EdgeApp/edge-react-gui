@@ -1,11 +1,12 @@
 import { asArray, asBoolean, asCodec, asObject, asOptional, asString, Cleaner, uncleaner } from 'cleaners'
 import * as React from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { Text } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { logActivity } from '../../util/logger'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CurrencySettingProps, maybeCurrencySetting } from '../hoc/MaybeCurrencySetting'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -76,9 +77,9 @@ function CustomServersSettingComponent(props: Props) {
         <>
           {Array.from(customServerSet).map(server => (
             <SettingsTappableRow key={server} action="delete" onPress={async () => await handleDeleteNode(server)}>
-              <TouchableOpacity onPress={() => handleEditNode(server)} style={styles.labelContainer}>
+              <EdgeTouchableOpacity onPress={() => handleEditNode(server)} style={styles.labelContainer}>
                 <Text style={styles.labelText}>{server}</Text>
-              </TouchableOpacity>
+              </EdgeTouchableOpacity>
             </SettingsTappableRow>
           ))}
           <SettingsTappableRow action="add" label={lstrings.settings_add_custom_node} onPress={handleEditNode} />

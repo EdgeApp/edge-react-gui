@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity } from 'react-native'
+import { ActivityIndicator } from 'react-native'
 
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -14,9 +15,9 @@ function WalletListLoadingRowComponent(props: Props) {
   const styles = getStyles(theme)
 
   return (
-    <TouchableOpacity style={styles.container} onLongPress={onLongPress} onPress={onPress}>
+    <EdgeTouchableOpacity style={styles.container} onLongPress={onLongPress} onPress={onPress}>
       <ActivityIndicator color={theme.primaryText} size="large" />
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   )
 }
 

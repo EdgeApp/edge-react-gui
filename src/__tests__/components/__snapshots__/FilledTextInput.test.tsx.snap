@@ -15,7 +15,7 @@ exports[`FilledTextInput should render with some props 1`] = `
     }
   }
 >
-  <TouchableWithoutFeedback
+  <ExtendedTouchable
     accessible={false}
     onPress={[Function]}
     testID="string"
@@ -170,7 +170,7 @@ exports[`FilledTextInput should render with some props 1`] = `
         </StyledComponent(View)>
       </StyledComponent(TouchableOpacity)>
     </StyledComponent(View)>
-  </TouchableWithoutFeedback>
+  </ExtendedTouchable>
   <StyledComponent(View)
     noLayoutFlow={false}
   >

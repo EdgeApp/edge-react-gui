@@ -306,7 +306,7 @@ export function DevTestScene(props: Props) {
           <ButtonUi4 onPress={() => {}} label="Button With Child" marginRem={0.5} type="secondary">
             <Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />
           </ButtonUi4>
-          <EdgeText>Button with spinner and child (child shouldn't show)</EdgeText>
+          <EdgeText>Button with spinner and child (same width as above)</EdgeText>
           <ButtonUi4 onPress={() => {}} label="Button With Child" marginRem={0.5} type="secondary" spinner>
             <Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />
           </ButtonUi4>

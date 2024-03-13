@@ -1,6 +1,5 @@
 import { EdgeAccount } from 'edge-core-js'
 import { InitialRouteName, LoginScreen } from 'edge-login-ui-rn'
-import { NotificationPermissionsInfo } from 'edge-login-ui-rn/lib/types/ReduxTypes'
 import * as React from 'react'
 import { Keyboard, StatusBar, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
@@ -8,7 +7,6 @@ import { BlurView } from 'rn-id-blurview'
 
 import { showSendLogsModal } from '../../actions/LogActions'
 import { initializeAccount, logoutRequest } from '../../actions/LoginActions'
-import { updateNotificationSettings } from '../../actions/NotificationActions'
 import { cacheStyles, Theme, useTheme } from '../../components/services/ThemeContext'
 import { ENV } from '../../env'
 import { ExperimentConfig } from '../../experimentConfig'
@@ -18,9 +16,8 @@ import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { GuiTouchIdInfo } from '../../types/types'
 import { isMaestro } from '../../util/maestro'
-import { logEvent, trackError } from '../../util/tracking'
+import { logEvent } from '../../util/tracking'
 import { withServices } from '../hoc/withServices'
 import { showHelpModal } from '../modals/HelpModal'
 import { UpdateModal } from '../modals/UpdateModal'
@@ -60,16 +57,7 @@ export function LoginSceneComponent(props: Props) {
   const loggedIn = useWatch(account, 'loggedIn')
 
   const [counter, setCounter] = React.useState<number>(0)
-  const [notificationPermissionsInfo, setNotificationPermissionsInfo] = React.useState<NotificationPermissionsInfo | undefined>()
   const [passwordRecoveryKey, setPasswordRecoveryKey] = React.useState<string | undefined>()
-
-  const fontDescription = React.useMemo(
-    () => ({
-      headingFontFamily: theme.fontFaceMedium,
-      regularFontFamily: theme.fontFaceDefault
-    }),
-    [theme]
-  )
 
   // ---------------------------------------------------------------------
   // Effects
@@ -84,7 +72,7 @@ export function LoginSceneComponent(props: Props) {
         context
           .loginWithPIN(YOLO_USERNAME, YOLO_PIN)
           .then(async account => {
-            await dispatch(initializeAccount(navigation, account, dummyTouchIdInfo))
+            await dispatch(initializeAccount(navigation, account))
           })
           .catch(showError)
       }
@@ -92,7 +80,7 @@ export function LoginSceneComponent(props: Props) {
         context
           .loginWithPassword(YOLO_USERNAME, YOLO_PASSWORD)
           .then(async account => {
-            await dispatch(initializeAccount(navigation, account, dummyTouchIdInfo))
+            await dispatch(initializeAccount(navigation, account))
           })
           .catch(showError)
       }
@@ -102,7 +90,7 @@ export function LoginSceneComponent(props: Props) {
       context
         .loginWithPIN(context.localUsers[0].loginId, YOLO_PIN, { useLoginId: true })
         .then(async account => {
-          await dispatch(initializeAccount(navigation, account, dummyTouchIdInfo))
+          await dispatch(initializeAccount(navigation, account))
         })
         .catch(showError)
     }
@@ -167,18 +155,9 @@ export function LoginSceneComponent(props: Props) {
         }
       : undefined
 
-  const handleLogin = useHandler(async (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo | undefined) => {
+  const handleLogin = useHandler(async (account: EdgeAccount) => {
     setPasswordRecoveryKey(undefined)
-    await dispatch(initializeAccount(navigation, account, touchIdInfo ?? dummyTouchIdInfo))
-
-    if (notificationPermissionsInfo) {
-      try {
-        await dispatch(updateNotificationSettings(notificationPermissionsInfo.notificationOptIns))
-      } catch (e) {
-        trackError(e, 'LoginScene:onLogin:setDeviceSettings')
-        console.error(e)
-      }
-    }
+    await dispatch(initializeAccount(navigation, account))
   })
 
   const handleSendLogs = useHandler(() => {
@@ -188,8 +167,6 @@ export function LoginSceneComponent(props: Props) {
   const handleLogEvent = useHandler((event, values) => {
     dispatch(logEvent(event, values))
   })
-
-  const inMaestro = isMaestro()
 
   return loggedIn ? (
     <LoadingScene />
@@ -203,20 +180,17 @@ export function LoginSceneComponent(props: Props) {
         appId={config.appId}
         appName={config.appNameShort}
         context={context}
-        fontDescription={fontDescription}
+        experimentConfig={experimentConfig}
+        fastLogin
         initialLoginId={nextLoginId ?? undefined}
         initialRoute={loginUiInitialRoute}
         parentButton={parentButton}
         primaryLogo={theme.primaryLogo}
         primaryLogoCallback={handleSendLogs}
         recoveryLogin={passwordRecoveryKey}
-        skipOtpReminder={inMaestro}
-        skipSecurityAlerts
-        experimentConfig={experimentConfig}
         onComplete={maybeHandleComplete}
         onLogEvent={handleLogEvent}
         onLogin={handleLogin}
-        onNotificationPermit={setNotificationPermissionsInfo}
       />
     </View>
   )
@@ -224,11 +198,6 @@ export function LoginSceneComponent(props: Props) {
 
 const accountOptions = {
   pauseWallets: true
-}
-
-const dummyTouchIdInfo: GuiTouchIdInfo = {
-  isTouchEnabled: true,
-  isTouchSupported: true
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

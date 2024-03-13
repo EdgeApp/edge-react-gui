@@ -5,15 +5,18 @@ import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
 import { getDeviceSettings, writeHasInteractedWithBackupModal } from '../../actions/DeviceSettingsActions'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSceneFooterState } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { getOtpReminderModal } from '../../util/otpReminder'
 import { EdgeAnim, fadeIn, fadeOut } from '../common/EdgeAnim'
 import { styled } from '../hoc/styled'
-import { showError } from '../services/AirshipInstance'
+import { PasswordReminderModal } from '../modals/PasswordReminderModal'
+import { Airship, showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { MAX_TAB_BAR_HEIGHT, MIN_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
 import { NotificationCard } from './NotificationCard'
@@ -34,22 +37,31 @@ const NotificationViewComponent = (props: Props) => {
 
   const account = useSelector(state => state.core.account)
   const detectedTokensRedux = useSelector(state => state.core.enabledDetectedTokens)
-  const wallets = useWatch(account, 'currencyWallets')
+  const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
+
   const fioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
-  const [hasInteractedWithBackupModal, setHasInteractedWithBackupModal] = React.useState<boolean>(getDeviceSettings().hasInteractedWithBackupModal)
-  if (hasInteractedWithBackupModal) hasInteractedWithBackupModalLocal = true
-  const isBackupWarningShown = account.id != null && account.username == null && fioAddresses.length > 0 && !hasInteractedWithBackupModalLocal
+
+  const wallets = useWatch(account, 'currencyWallets')
   const { bottom: insetBottom } = useSafeAreaInsets()
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
 
   const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
+  const [otpReminderCard, setOtpReminderCard] = React.useState<React.JSX.Element>()
+  const [hasInteractedWithBackupModal, setHasInteractedWithBackupModal] = React.useState<boolean>(getDeviceSettings().hasInteractedWithBackupModal)
 
-  const handlePress = useHandler(async () => {
+  if (hasInteractedWithBackupModal) hasInteractedWithBackupModalLocal = true
+  const isBackupWarningShown = account.id != null && account.username == null && fioAddresses.length > 0 && !hasInteractedWithBackupModalLocal
+
+  const handleBackupPress = useHandler(async () => {
     writeHasInteractedWithBackupModal(true)
       .then(() => setHasInteractedWithBackupModal(true))
       .catch(err => showError(err))
     await showBackupModal({ navigation })
     hasInteractedWithBackupModalLocal = true
+  })
+
+  const handlePasswordReminderPress = useHandler(async () => {
+    await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation} />)
   })
 
   // Show a tokens detected notification per walletId found in newTokens
@@ -94,14 +106,42 @@ const NotificationViewComponent = (props: Props) => {
       setAutoDetectTokenCards(newNotifs)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [detectedTokensRedux, handlePress, theme])
+  }, [detectedTokensRedux, handleBackupPress, theme])
+
+  // Check for 2fa/otp notifications
+  useAsyncEffect(
+    async () => {
+      const otpReminderModal = await getOtpReminderModal(account)
+
+      if (otpReminderModal != null) {
+        setOtpReminderCard(
+          <NotificationCard type="warning" title={lstrings.otp_reset_modal_header} message={lstrings.notif_otp_message} onPress={otpReminderModal} />
+        )
+      }
+    },
+    [account],
+    'otpNotificationCard'
+  )
 
   return (
     <NotificationCardsContainer hasTabs={hasTabs} insetBottom={insetBottom} footerHeight={footerHeight} footerOpenRatio={footerOpenRatio}>
       <EdgeAnim visible={isBackupWarningShown} enter={fadeIn} exit={fadeOut}>
-        <NotificationCard type="warning" title={lstrings.backup_title} message={lstrings.backup_web3_handle_warning_message} onPress={handlePress} />
+        <NotificationCard type="warning" title={lstrings.backup_title} message={lstrings.backup_web3_handle_warning_message} onPress={handleBackupPress} />
       </EdgeAnim>
-      {autoDetectTokenCards.length > 0 ? autoDetectTokenCards : null}
+      <EdgeAnim visible={autoDetectTokenCards.length > 0} enter={fadeIn} exit={fadeOut}>
+        {autoDetectTokenCards}
+      </EdgeAnim>
+      <EdgeAnim visible={otpReminderCard != null} enter={fadeIn} exit={fadeOut}>
+        {otpReminderCard}
+      </EdgeAnim>
+      <EdgeAnim visible={needsPasswordCheck} enter={fadeIn} exit={fadeOut}>
+        <NotificationCard
+          type="warning"
+          title={lstrings.password_reminder_remember_your_password}
+          message={lstrings.password_reminder_you_will_need_your_password}
+          onPress={handlePasswordReminderPress}
+        />
+      </EdgeAnim>
     </NotificationCardsContainer>
   )
 }

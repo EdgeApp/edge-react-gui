@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Linking, TouchableOpacity, View } from 'react-native'
+import { Linking, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
@@ -11,6 +11,7 @@ import { WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -112,9 +113,9 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
         description = (
           <ModalMessage>
             {message}
-            <TouchableOpacity onPress={onPress}>
+            <EdgeTouchableOpacity onPress={onPress}>
               <Ionicon name="help-circle-outline" size={theme.rem(1)} color={theme.iconTappable} />
-            </TouchableOpacity>
+            </EdgeTouchableOpacity>
           </ModalMessage>
         )
       } else {

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useMemo } from 'react'
-import { TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { TextInput, TouchableOpacity, View } from 'react-native'
 import Animated, {
   interpolate,
   interpolateColor,
@@ -15,6 +15,7 @@ import Animated, {
 
 import { useHandler } from '../../hooks/useHandler'
 import { SpaceProps, useSpaceStyle } from '../../hooks/useSpaceStyle'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
 import { AnimatedIconComponent, CloseIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
@@ -178,7 +179,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   }, [disabled, isFocused, theme.textInputPlaceholderColor, theme.textInputPlaceholderColorDisabled, theme.textInputPlaceholderColorFocused])
 
   return (
-    <TouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
+    <EdgeTouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
       <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale} spaceProps={spaceProps}>
         <SideContainer size={leftIconSize}>{Icon == null ? null : <Icon color={iconColor} size={leftIconSize} />}</SideContainer>
 
@@ -219,7 +220,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
           </SideContainer>
         </TouchContainer>
       </Container>
-    </TouchableWithoutFeedback>
+    </EdgeTouchableWithoutFeedback>
   )
 })
 

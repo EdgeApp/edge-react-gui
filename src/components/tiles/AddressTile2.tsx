@@ -2,7 +2,6 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import { ethers } from 'ethers'
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -20,6 +19,7 @@ import { getTokenId, getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
 import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { AddressModal } from '../modals/AddressModal'
 import { ScanModal } from '../modals/ScanModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
@@ -265,24 +265,24 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
     <RowUi4 rightButtonType={tileType} loading={loading} title={title} onPress={handleTilePress}>
       {!recipientAddress && (
         <EdgeAnim style={styles.buttonsContainer} enter={{ type: 'stretchInY' }} exit={{ type: 'stretchOutY' }}>
-          <TouchableOpacity style={styles.buttonContainer} onPress={handleChangeAddress}>
+          <EdgeTouchableOpacity style={styles.buttonContainer} onPress={handleChangeAddress}>
             <FontAwesome name="edit" size={theme.rem(2)} color={theme.iconTappable} />
             <EdgeText style={styles.buttonText}>{lstrings.enter_as_in_enter_address_with_keyboard}</EdgeText>
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
           {canSelfTransfer ? (
-            <TouchableOpacity style={styles.buttonContainer} onPress={handleSelfTransfer}>
+            <EdgeTouchableOpacity style={styles.buttonContainer} onPress={handleSelfTransfer}>
               <AntDesign name="wallet" size={theme.rem(2)} color={theme.iconTappable} />
               <EdgeText style={styles.buttonText}>{lstrings.fragment_send_myself}</EdgeText>
-            </TouchableOpacity>
+            </EdgeTouchableOpacity>
           ) : null}
-          <TouchableOpacity style={styles.buttonContainer} onPress={handleScan}>
+          <EdgeTouchableOpacity style={styles.buttonContainer} onPress={handleScan}>
             <FontAwesome5 name="expand" size={theme.rem(2)} color={theme.iconTappable} />
             <EdgeText style={styles.buttonText}>{lstrings.scan_as_in_scan_barcode}</EdgeText>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonContainer} onPress={handlePasteFromClipboard}>
+          </EdgeTouchableOpacity>
+          <EdgeTouchableOpacity style={styles.buttonContainer} onPress={handlePasteFromClipboard}>
             <FontAwesome5 name="clipboard" size={theme.rem(2)} color={theme.iconTappable} />
             <EdgeText style={styles.buttonText}>{lstrings.string_paste}</EdgeText>
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         </EdgeAnim>
       )}
       {recipientAddress == null || recipientAddress === '' ? null : (

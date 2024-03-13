@@ -14,6 +14,7 @@ describe('Request', () => {
       <RequestSceneComponent
         {...fakeSceneProps('request', { tokenId: null, walletId: '' })}
         isConnected={false}
+        isLightAccount={false}
         currencyCode={null as any}
         wallet={null as any}
         exchangeSecondaryToPrimaryRatio={null as any}
@@ -41,6 +42,35 @@ describe('Request', () => {
       <RequestSceneComponent
         {...fakeSceneProps('request', { tokenId: null, walletId: '' })}
         isConnected={false}
+        isLightAccount={false}
+        currencyCode="BTC"
+        wallet={fakeWallet}
+        exchangeSecondaryToPrimaryRatio={{} as any}
+        primaryCurrencyInfo={{ tokenId: null, displayDenomination: { multiplier: '100000000' }, exchangeDenomination: { multiplier: '100000000' } } as any}
+        theme={getTheme()}
+        refreshAllFioAddresses={async () => {}}
+        onSelectWallet={async (walletId, currencyCode) => {}}
+        toggleAccountBalanceVisibility={() => {}}
+        showBalance
+      />
+    )
+
+    expect(actual).toMatchSnapshot()
+  })
+
+  it('should render a blank scene with loaded props', () => {
+    const renderer = createRenderer()
+
+    const fakeWallet: any = {
+      currencyInfo: { pluginId: 'bitcoin', displayName: 'Bitcoin' },
+      balanceMap: new Map([[null, '1234']])
+    }
+
+    const actual = renderer.render(
+      <RequestSceneComponent
+        {...fakeSceneProps('request', { tokenId: null, walletId: '' })}
+        isConnected={false}
+        isLightAccount
         currencyCode="BTC"
         wallet={fakeWallet}
         exchangeSecondaryToPrimaryRatio={{} as any}

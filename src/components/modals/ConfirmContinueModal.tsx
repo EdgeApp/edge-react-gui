@@ -1,10 +1,11 @@
 import * as React from 'react'
-import { TouchableWithoutFeedback, View } from 'react-native'
+import { View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import { lstrings } from '../../locales/strings'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
@@ -63,14 +64,14 @@ export function ConfirmContinueModal(props: Props) {
       {children}
       {body != null ? <ModalMessage>{body}</ModalMessage> : null}
       <ModalMessage>{lstrings.confirm_continue_modal_body}</ModalMessage>
-      <TouchableWithoutFeedback onPress={handleTogggle}>
+      <EdgeTouchableWithoutFeedback onPress={handleTogggle}>
         <View style={styles.checkBoxContainer}>
           <EdgeText style={styles.checkboxText}>{lstrings.confirm_continue_modal_button_text}</EdgeText>
           <View style={[styles.checkCircleContainer, isAgreed ? styles.checkCircleContainerAgreed : undefined]}>
             {isAgreed && <Feather name="check" color={theme.iconTappable} size={theme.rem(0.75)} accessibilityHint={lstrings.check_icon_hint} />}
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      </EdgeTouchableWithoutFeedback>
       <Fade visible={isAgreed}>
         <MainButton label={lstrings.confirm_finish} marginRem={1} type="primary" onPress={handleAgreed} />
       </Fade>

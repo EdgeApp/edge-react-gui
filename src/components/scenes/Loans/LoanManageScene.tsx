@@ -1,6 +1,5 @@
 import { add, gt, max, mul } from 'biggystring'
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { cacheStyles } from 'react-native-patina'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -35,6 +34,7 @@ import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
 import { zeroString } from '../../../util/utils'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
 import { SelectableAsset, TappableAccountCard } from '../../cards/TappableAccountCard'
+import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { withLoanAccount } from '../../hoc/withLoanAccount'
 import { Peek } from '../../layout/Peek'
 import { Space } from '../../layout/Space'
@@ -420,9 +420,9 @@ export const LoanManageSceneComponent = (props: Props) => {
       onSliderComplete={handleSliderComplete}
       sliderDisabled={actionProgram == null}
       headerTertiary={
-        <TouchableOpacity onPress={handleInfoIconPress}>
+        <EdgeTouchableOpacity onPress={handleInfoIconPress}>
           <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
-        </TouchableOpacity>
+        </EdgeTouchableOpacity>
       }
     >
       <Space vertical={1} around={0.5}>

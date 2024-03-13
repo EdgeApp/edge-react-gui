@@ -2,12 +2,12 @@ import { ProposalTypes } from '@walletconnect/types'
 import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, TouchableOpacity, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
-import { showBackupForTransferModal } from '../../actions/BackupModalActions'
+import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -17,6 +17,7 @@ import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { EdgeAsset, WcConnectionInfo } from '../../types/types'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ScanModal } from '../modals/ScanModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -40,9 +41,7 @@ export const WcConnectionsScene = (props: Props) => {
   const [connecting, setConnecting] = React.useState(false)
 
   const account = useSelector(state => state.core.account)
-  const activeUsername = useSelector(state => state.core.account.username)
   const walletConnect = useWalletConnect()
-  const isLightAccount = activeUsername == null
 
   useMount(() => {
     if (uri != null) onScanSuccess(uri).catch(err => showError(err))
@@ -75,8 +74,8 @@ export const WcConnectionsScene = (props: Props) => {
   }
 
   const handleNewConnectionPress = async () => {
-    if (isLightAccount) {
-      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+    if (checkAndShowLightBackupModal(account, navigation)) {
+      return await Promise.resolve()
     } else {
       const result = await Airship.show<string | undefined>(bridge => (
         <ScanModal
@@ -112,7 +111,7 @@ export const WcConnectionsScene = (props: Props) => {
         )}
         <View style={styles.list}>
           {connections.map((dAppConnection: WcConnectionInfo, index) => (
-            <TouchableOpacity key={index} style={styles.listRow} onPress={() => handleActiveConnectionPress(dAppConnection)}>
+            <EdgeTouchableOpacity key={index} style={styles.listRow} onPress={() => handleActiveConnectionPress(dAppConnection)}>
               <FastImage resizeMode="contain" style={styles.currencyLogo} source={{ uri: dAppConnection.icon }} />
               <View style={styles.info}>
                 <EdgeText style={styles.infoTitle}>{dAppConnection.dAppName}</EdgeText>
@@ -122,7 +121,7 @@ export const WcConnectionsScene = (props: Props) => {
               <View style={styles.arrow}>
                 <AntDesignIcon name="right" size={theme.rem(1)} color={theme.icon} />
               </View>
-            </TouchableOpacity>
+            </EdgeTouchableOpacity>
           ))}
         </View>
       </ScrollView>

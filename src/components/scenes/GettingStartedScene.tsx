@@ -2,7 +2,7 @@ import { InitialRouteName } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { useEffect } from 'react'
 import { Image, Pressable, Text, View } from 'react-native'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import { ScrollView } from 'react-native-gesture-handler'
 import Animated, {
   Extrapolation,
   interpolate,
@@ -32,6 +32,7 @@ import { ImageProp } from '../../types/Theme'
 import { parseMarkedText } from '../../util/parseMarkedText'
 import { logEvent } from '../../util/tracking'
 import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwipeOffsetDetector } from '../interactions/SwipeOffsetDetector'
@@ -176,9 +177,9 @@ export const GettingStartedScene = (props: Props) => {
     <SceneWrapper hasHeader={false}>
       <SkipButton swipeOffset={swipeOffset}>
         <Space left horizontal={1} vertical={0.5}>
-          <TouchableOpacity onPress={handlePressSkip}>
+          <EdgeTouchableOpacity onPress={handlePressSkip}>
             <EdgeText>{lstrings.skip}</EdgeText>
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         </Space>
       </SkipButton>
       <SwipeOffsetDetector swipeOffset={swipeOffset} minOffset={0} maxOffset={paginationCount}>

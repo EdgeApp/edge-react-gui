@@ -1,6 +1,6 @@
 import { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Pressable, Switch, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Pressable, Switch, View } from 'react-native'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
@@ -11,6 +11,7 @@ import { lstrings } from '../../locales/strings'
 import { NavigationProp } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
@@ -84,9 +85,9 @@ export const ManageTokensRowComponent = (props: Props) => {
         <EdgeText style={styles.displayName}>{token.displayName}</EdgeText>
       </View>
       {!isCustom ? null : (
-        <TouchableOpacity style={styles.editIcon} onPress={handleEdit}>
+        <EdgeTouchableOpacity style={styles.editIcon} onPress={handleEdit}>
           <FontAwesomeIcon color={theme.iconTappable} name="edit" size={theme.rem(1)} accessibilityHint={lstrings.edit_icon_hint} accessibilityRole="button" />
-        </TouchableOpacity>
+        </EdgeTouchableOpacity>
       )}
       <View pointerEvents="none" style={styles.switchBox}>
         <AnimatedSpinner color={theme.iconTappable} style={[styles.spinner, spinnerStyle]} accessibilityHint={lstrings.spinner_hint} />

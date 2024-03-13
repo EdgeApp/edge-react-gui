@@ -244,6 +244,17 @@
     "paymentTypeLogoKey": "credit"
   },
   {
+    "id": "fasterpayments",
+    "pluginId": "fasterpayments",
+    "paymentType": "fasterpayments",
+    "paymentTypes": ["fasterpayments"],
+    "description": "Fee: ~1.5%\nSettlement: 1 hour - 24 hours",
+    "title": "Faster Payments",
+    "forCountries": ["GB"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
     "id": "iach",
     "pluginId": "iach",
     "paymentType": "iach",
@@ -290,12 +301,10 @@
       "SM",
       "GB"
     ],
-    "cryptoCodes": ["BTC"],
     "paymentType": "sepa",
     "paymentTypes": ["sepa"],
     "description": "Fee: 1.55%\nSettlement: 1 - 2 days",
     "title": "SEPA Bank Transfer",
-    "partnerIconPath": "logoBity.png",
     "paymentTypeLogoKey": "bank"
   },
   {
@@ -389,62 +398,13 @@
     "paymentTypeLogoKey": "bank"
   },
   {
-    "id": "bits of gold",
+    "id": "bitsofgold",
     "pluginId": "bitsofgold",
     "paymentTypes": ["bank"],
-    "description": "Fee: 3%\nSettlement: 1 - 48 hours",
-    "title": "SEPA Bank Transfer",
+    "title": "Israeli Bank Transfer",
+    "description": "Fee: 5.95%\nSettlement: 1 - 48 hours",
     "partnerIconPath": "bits-of-gold-logo-sm.png",
-    "forCountries": [
-      "AD",
-      "AT",
-      "BE",
-      "BG",
-      "BL",
-      "CH",
-      "CY",
-      "CZ",
-      "DE",
-      "DK",
-      "EE",
-      "ES",
-      "FI",
-      "FR",
-      "GF",
-      "GG",
-      "GI",
-      "GP",
-      "GR",
-      "HR",
-      "HU",
-      "IE",
-      "IL",
-      "IM",
-      "IS",
-      "IT",
-      "JE",
-      "LI",
-      "LT",
-      "LU",
-      "LV",
-      "MC",
-      "MF",
-      "MQ",
-      "MT",
-      "NL",
-      "NO",
-      "PL",
-      "PM",
-      "PT",
-      "RE",
-      "RO",
-      "SE",
-      "SI",
-      "SK",
-      "SM",
-      "VA",
-      "YT"
-    ],
+    "forCountries": ["IL"],
     "cryptoCodes": ["BTC", "ETH"],
     "paymentTypeLogoKey": "bank",
     "deepPath": "/order/buy",
@@ -469,36 +429,64 @@
   },
   "----- Sorting -----",
   {
+    "id": "fasterpayments",
+    "sortIndex": 10
+  },
+  {
+    "id": "iach",
+    "sortIndex": 10
+  },
+  {
+    "id": "ideal",
+    "sortIndex": 10
+  },
+  {
+    "id": "interac",
+    "sortIndex": 10
+  },
+  {
+    "id": "payid",
+    "sortIndex": 10
+  },
+  {
+    "id": "pix",
+    "sortIndex": 10
+  },
+  {
+    "id": "pse",
+    "sortIndex": 10
+  },
+  {
+    "id": "turkishbank",
+    "sortIndex": 10
+  },
+  {
+    "id": "spei",
+    "sortIndex": 10
+  },
+  {
     "id": "applepay",
-    "sortIndex": 1
+    "sortIndex": 20
   },
   {
     "id": "googlepay",
-    "sortIndex": 1
+    "sortIndex": 20
   },
   {
     "id": "creditcard",
-    "sortIndex": 2
+    "sortIndex": 30
   },
   {
-    "id": "simplex",
-    "sortIndex": 5
-  },
-  {
-    "id": "bits of gold",
-    "sortIndex": 1
+    "id": "bitsofgold",
+    "sortIndex": 10
   },
   {
     "id": "sepa",
-    "sortIndex": 6
+    "sortIndex": 10
   },
   {
     "id": "libertyx",
-    "sortIndex": 7
-  },
-  {
-    "id": "moonpay",
-    "sortIndex": 4
+    "sortIndex": 50
   },
   "----- iOS specifics -----",
   {
@@ -996,13 +984,6 @@
   {
     "id": "sepa",
     "forCountries": ["GB"],
-    "sortIndex": 2
-  },
-  {
-    "id": "bits of gold",
-    "forCountries": ["IL"],
-    "sortIndex": 2,
-    "title": "Israeli Bank Transfer",
-    "description": "Fee: 5.95%\nSettlement: 1 - 48 hours"
+    "sortIndex": 50
   }
 ]

@@ -2,7 +2,21 @@
 
 ## Unreleased
 
-## 4.2.0
+## 4.3.0
+
+- added: Wrapped Touchable* components to consolidate tap debounce logic
+- added: Mt Pelerin for SEPA and Faster Payments
+- added: Setting to change default screen on login
+- changed: Remove extra spaces and normal capitalization of mnemonic seed input
+- changed: 2FA/otp modals moved behind a notification card instead of showing instantly on login
+- changed: Password reminder modal only shows after tapping new persistent notification
+- changed: Move wallet activation redux values to scenes
+- changed: Button width remains constant regardless of content visibility
+- changed: Certain deeplinks blocked for light accounts
+- chagned: 'Sweep Private Key' usage blocked for light accounts
+- fixed: FIO name transfer error when sending with no address
+
+## 4.2.0 (2024-03-12)
 
 - added: Notification status analytics param
 - added: @bugsnag/react-native-performance
@@ -11,18 +25,18 @@
 - added: Cosmos IBC transfer plugin
 - added: Have users select US state and filter fiat providers by state/province
 - changed: Remove extra spaces and normal capitalization of mnemonic seed input
-- changed: Move wallet activation redux values to scenes
+- changed: Allow routing to Receive Scene without visible addresses for light
+  accounts
 - fixed: Some text inputs not selectable for some Samsung devices
 - fixed: Various small visual fixes
 - fixed: Improve login performance by only loading account referral info for new accounts
-- fixed: FIO name transfer error when sending with no address
 - fixed: Android text fields not hiding text for certain secure fields
 
 ## 4.1.1 (2024-02-29)
 
 - fixed: Correctly create and import non-segwit wallets in bip-44 mode.
 
-## 4.1.0
+## 4.1.0 (2024-02-27)
 
 - added: FIO conversion analytics events.
 - added: Referral information on all analytics events.

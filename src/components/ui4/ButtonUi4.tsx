@@ -3,12 +3,13 @@
  */
 
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity, ViewStyle } from 'react-native'
+import { ActivityIndicator, View, ViewStyle } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -152,17 +153,35 @@ export function ButtonUi4(props: Props) {
   }, [disabled, hideContent, layout, mini, paddingRem, styles, theme, type])
 
   return (
-    <TouchableOpacity disabled={disabled || pending || spinner} style={touchContainerStyle} onPress={handlePress} testID={testID}>
+    <EdgeTouchableOpacity disabled={disabled || pending || spinner} style={touchContainerStyle} onPress={handlePress} testID={testID}>
       <LinearGradient {...gradientProps} style={visibleContainerStyle}>
-        {hideContent ? null : children}
-        {hideContent ? null : maybeText}
-        {!hideContent ? null : <ActivityIndicator color={spinnerColor} style={styles.spinner} />}
+        {hideContent ? (
+          <View style={styles.invisibleContent}>
+            {children}
+            {maybeText}
+          </View>
+        ) : (
+          <>
+            {children}
+            {maybeText}
+          </>
+        )}
       </LinearGradient>
-    </TouchableOpacity>
+      {!hideContent ? null : <ActivityIndicator color={spinnerColor} style={styles.spinner} />}
+    </EdgeTouchableOpacity>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => {
+  const visibleContainerCommon: ViewStyle = {
+    borderRadius: theme.rem(theme.buttonBorderRadiusRem),
+    flexGrow: 0,
+    flexShrink: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row'
+  }
+
   return {
     // Invisible Touchable Container Styles:
     touchContainerCommon: {
@@ -191,15 +210,12 @@ const getStyles = cacheStyles((theme: Theme) => {
       flexGrow: 0,
       flexShrink: 0
     },
-    // Visible Container Styles
-    visibleContainerCommon: {
-      borderRadius: theme.rem(theme.buttonBorderRadiusRem),
-      flexGrow: 0,
-      flexShrink: 0,
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexDirection: 'row'
+    invisibleContent: {
+      ...visibleContainerCommon,
+      opacity: 0
     },
+    // Visible Container Styles
+    visibleContainerCommon,
     visibleSizeDefault: {
       paddingHorizontal: theme.rem(1.5),
       height: theme.rem(3)
@@ -248,6 +264,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       marginLeft: theme.rem(0.5)
     },
     spinner: {
+      position: 'absolute',
       height: theme.rem(2)
     }
   }

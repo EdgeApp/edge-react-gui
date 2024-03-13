@@ -85,7 +85,7 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
             onPress={this.openUrl}
           />
         )}
-        {receiveAddressesString != null && <RowUi4 title={lstrings.my_receive_addresses_title} body={receiveAddressesString} />}
+        {receiveAddressesString != null && <RowUi4 rightButtonType="copy" title={lstrings.my_receive_addresses_title} body={receiveAddressesString} />}
         {networkFeeOption != null && <RowUi4 title={lstrings.transaction_details_advance_details_fee_setting} body={this.renderFeeOptions()} />}
         {feeRateUsed != null && <RowUi4 title={lstrings.transaction_details_advance_details_fee_used} body={this.renderFees(feeRateUsed)} />}
         {txSecret != null && <RowUi4 rightButtonType="copy" title={lstrings.transaction_details_advance_details_txSecret} body={txSecret} />}

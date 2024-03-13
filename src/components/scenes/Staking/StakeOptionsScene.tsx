@@ -1,7 +1,7 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
+import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
@@ -14,6 +14,7 @@ import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getPluginFromPolicy, getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
 import { darkenHexColor } from '../../../util/utils'
 import { StakingOptionCard } from '../../cards/StakingOptionCard'
+import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
@@ -68,14 +69,14 @@ const StakeOptionsSceneComponent = (props: Props) => {
     const policyIcons = getPolicyIconUris(wallet.currencyInfo, item)
     return (
       <View key={key} style={styles.optionContainer}>
-        <TouchableOpacity onPress={() => handleStakeOptionPress(item)}>
+        <EdgeTouchableOpacity onPress={() => handleStakeOptionPress(item)}>
           <StakingOptionCard
             currencyLogos={policyIcons.stakeAssetUris}
             primaryText={primaryText}
             secondaryText={secondaryText}
             stakeProviderInfo={item.stakeProviderInfo}
           />
-        </TouchableOpacity>
+        </EdgeTouchableOpacity>
       </View>
     )
   }

@@ -1,9 +1,10 @@
 import { getDefaultHeaderHeight } from '@react-navigation/elements'
 import * as React from 'react'
-import { TouchableOpacity, ViewStyle } from 'react-native'
+import { ViewStyle } from 'react-native'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { useTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -33,8 +34,8 @@ export const NavigationButton = (props: Props) => {
   )
 
   return (
-    <TouchableOpacity accessible={false} style={touchableStyle} onPress={onPress}>
+    <EdgeTouchableOpacity accessible={false} style={touchableStyle} onPress={onPress}>
       {children}
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   )
 }

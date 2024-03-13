@@ -27,7 +27,7 @@ PODS:
     - React-Core
   - edge-exchange-plugins (2.2.2):
     - React-Core
-  - edge-login-ui-rn (3.4.1):
+  - edge-login-ui-rn (3.6.0):
     - React-Core
   - EXApplication (5.1.1):
     - ExpoModulesCore
@@ -524,7 +524,7 @@ PODS:
     - React-Core
   - react-native-performance (5.1.0):
     - React-Core
-  - react-native-piratechain (0.4.5):
+  - react-native-piratechain (0.4.6):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -539,7 +539,7 @@ PODS:
     - ReactCommon/turbomodule/core
   - react-native-webview (13.2.2):
     - React-Core
-  - react-native-zcash (0.6.8):
+  - react-native-zcash (0.6.9):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -1294,7 +1294,7 @@ SPEC CHECKSUMS:
   edge-core-js: 07ef6631aa971d99679098d10171c793e6b94a4a
   edge-currency-accountbased: cf96f7b633feb75c5cefcbbdb583122556eff397
   edge-exchange-plugins: 7114a976c68a6635155a2d0a43b397722746a406
-  edge-login-ui-rn: 22dfd744b849bcd9e1fa6a166907981348f8762d
+  edge-login-ui-rn: 39556dd4afd8d8873e7afafbdee69c319e2fea45
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXConstants: f348da07e21b23d2b085e270d7b74f282df1a7d9
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
@@ -1368,11 +1368,11 @@ SPEC CHECKSUMS:
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408
   react-native-netinfo: 5b664b2945a8f02102b296f0f812bddd6827ed9c
   react-native-performance: cef2b618d47b277fb5c3280b81a3aad1e72f2886
-  react-native-piratechain: 0eba3a0978b7a7f01e8b4d2739fc48312b34b033
+  react-native-piratechain: 237d9b34fae16b325e954a2fb6fedf703f97fe6e
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: 68b07eabfb0d14547d36f6929c0e98d818064f02
   react-native-webview: b8ec89966713985111a14d6e4bf98d8b54bced0d
-  react-native-zcash: 7aa2c15f752ad0bc9345cbd55e4b21a67ba55e61
+  react-native-zcash: 481b63392e755ec8c81c78f5bde34e2172196eac
   React-perflogger: 0cc42978a483a47f3696171dac2e7033936fc82d
   React-RCTActionSheet: ea922b476d24f6d40b8e02ac3228412bd3637468
   React-RCTAnimation: 7be2c148398eaa5beac950b2b5ec7102389ec3ad

@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 
 import { Fontello } from '../../assets/vector/index'
-import { usePendingPress } from '../../hooks/usePendingPress'
 import { lstrings } from '../../locales/strings'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -31,13 +31,12 @@ function ShareButton(props: { text: string; onPress: () => Promise<void>; icon: 
   const { icon, text, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
-  const [pending, handlePress] = usePendingPress(onPress)
 
   return (
-    <TouchableOpacity accessible={false} style={styles.button} onPress={handlePress} disabled={pending}>
+    <EdgeTouchableOpacity accessible={false} style={styles.button} onPress={onPress}>
       <Fontello name={icon} size={theme.rem(1.5)} style={styles.image} color={theme.iconTappable} />
       <EdgeText style={styles.text}>{text}</EdgeText>
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   )
 }
 

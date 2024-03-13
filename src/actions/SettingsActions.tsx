@@ -2,6 +2,7 @@ import { asArray, asBoolean, asMaybe, asNumber, asObject, asOptional, asString, 
 import { EdgeAccount, EdgeDenomination, EdgeSwapPluginType } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
+import { Alert } from 'react-native'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { asSortOption, SortOption } from '../components/modals/WalletListSortModal'
@@ -18,6 +19,26 @@ import { validatePassword } from './AccountActions'
 import { updateExchangeRates } from './ExchangeRateActions'
 import { writeSpendingLimits } from './LocalSettingsActions'
 import { registerNotificationsV2 } from './NotificationActions'
+
+export function checkEnabledExchanges(): ThunkAction<void> {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { account } = state.core
+    // make sure exchanges are enabled
+    let isAnyExchangeEnabled = false
+    const exchanges = account.swapConfig
+    if (exchanges == null) return
+    for (const exchange of Object.keys(exchanges)) {
+      if (exchanges[exchange].enabled) {
+        isAnyExchangeEnabled = true
+      }
+    }
+
+    if (!isAnyExchangeEnabled) {
+      Alert.alert(lstrings.no_exchanges_available, lstrings.check_exchange_settings)
+    }
+  }
+}
 
 export function updateOneSetting(setting: Partial<SettingsState>): ThunkAction<void> {
   return (dispatch, getState) => {

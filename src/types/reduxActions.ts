@@ -13,14 +13,13 @@ import { AccountInitPayload, SettingsState } from '../reducers/scenes/SettingsRe
 import { TweakSource } from '../util/ReferralHelpers'
 import { DeepLink } from './DeepLinkTypes'
 import { AccountReferral, DeviceReferral, Promotion, ReferralCache } from './ReferralTypes'
-import { FioAddress, FioDomain, GuiContact, GuiCurrencyInfo, GuiExchangeRates, MostRecentWallet, SpendingLimits, WalletListItem } from './types'
+import { FioAddress, FioDomain, GuiContact, GuiExchangeRates, MostRecentWallet, SpendingLimits, WalletListItem } from './types'
 
 // Actions with no payload:
 type NoDataActionName =
   | 'DEEP_LINK_HANDLED'
   | 'DEVELOPER_MODE_OFF'
   | 'DEVELOPER_MODE_ON'
-  | 'DONE_SHIFT_TRANSACTION'
   | 'DUMMY_ACTION_PLEASE_IGNORE'
   | 'FIO/SET_FIO_ADDRESSES_PROGRESS'
   | 'OTP_ERROR_SHOWN'
@@ -28,11 +27,8 @@ type NoDataActionName =
   | 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD'
   | 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED'
   | 'PASSWORD_USED'
-  | 'RECEIVED_INSUFFICIENT_FUNDS_ERROR'
-  | 'SHIFT_COMPLETE'
   | 'SPAM_FILTER_ON'
   | 'SPAM_FILTER_OFF'
-  | 'START_SHIFT_TRANSACTION'
   | 'FIO/EXPIRED_REMINDER_SHOWN'
 
 export type Action =
@@ -69,17 +65,7 @@ export type Action =
   | { type: 'NOTIFICATION_SETTINGS_UPDATE'; data: NotificationSettings }
   | { type: 'PROMOTION_ADDED'; data: Promotion }
   | { type: 'PROMOTION_REMOVED'; data: string /* installerId */ }
-  | {
-      type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE' | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE'
-      data: {
-        balanceMessage: string
-        currencyCode: string
-        primaryInfo: GuiCurrencyInfo
-        walletId: string
-      }
-    }
   | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS'; data: { contacts: GuiContact[] } }
-  | { type: 'GENERIC_SHAPE_SHIFT_ERROR'; data: string }
   | { type: 'RESET_WALLET_LOADING_PROGRESS'; data: { walletId: string } }
   | { type: 'SET_TRANSACTION_SUBCATEGORIES'; data: { subcategories: string[] } }
   | { type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'; data: { spendingLimits: SpendingLimits } }
@@ -109,7 +95,6 @@ export type Action =
   | { type: 'UI/WALLETS/UPSERT_WALLETS'; data: { wallets: EdgeCurrencyWallet[] } }
   | { type: 'UPDATE_EXCHANGE_INFO'; data: ExchangeInfo }
   | { type: 'UPDATE_SORTED_WALLET_LIST'; data: WalletListItem[] }
-  | { type: 'UPDATE_SWAP_QUOTE'; data: {} }
   | { type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'; data: PasswordReminderTime }
   | { type: 'UPDATE_WALLET_LOADING_PROGRESS'; data: { walletId: string; addressLoadingProgress: number } }
   | { type: 'NETWORK/NETWORK_STATUS'; data: { isConnected: boolean } }

@@ -2,7 +2,7 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { lt } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeEncodeUri, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Linking, Platform, Text, View } from 'react-native'
 import Share, { ShareOptions } from 'react-native-share'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -25,6 +25,7 @@ import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHel
 import { triggerHaptic } from '../../util/haptic'
 import { convertNativeToDenomination, darkenHexColor, truncateDecimals, zeroString } from '../../util/utils'
 import { EdgeAnim, fadeInDown50, fadeInDown75, fadeInUp25, fadeInUp50, fadeInUp80 } from '../common/EdgeAnim'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { AddressModal } from '../modals/AddressModal'
@@ -42,6 +43,7 @@ import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef }
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ShareButtons } from '../themed/ShareButtons'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { CardUi4 } from '../ui4/CardUi4'
 import { AccentColors } from '../ui4/DotsBackground'
 
@@ -60,6 +62,7 @@ interface StateProps {
   exchangeSecondaryToPrimaryRatio?: string
   fioAddressesExist?: boolean
   isConnected: boolean
+  isLightAccount: boolean
   showBalance: boolean
   primaryCurrencyInfo?: GuiCurrencyInfo
 }
@@ -288,6 +291,22 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
     )
   }
 
+  handleBackupPress = () => this.props.navigation.navigate('upgradeUsername', {})
+  renderLightAccountMode = () => {
+    const styles = getStyles(this.props.theme)
+    return (
+      <SceneWrapper>
+        <SceneHeader title={lstrings.fragment_request_subtitle} underline withTopMargin />
+        <View style={styles.container}>
+          <EdgeText numberOfLines={0} style={styles.backupText}>
+            {lstrings.backup_for_transfer_message}
+          </EdgeText>
+          <ButtonsViewUi4 parentType="scene" primary={{ label: lstrings.backup_account, onPress: this.handleBackupPress }} />
+        </View>
+      </SceneWrapper>
+    )
+  }
+
   handleChangeAddressItem = (item: AddressInfo) => {
     this.setState({ selectedAddress: item })
   }
@@ -302,7 +321,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
   }
 
   render() {
-    const { currencyCode, exchangeSecondaryToPrimaryRatio, iconColor, wallet, primaryCurrencyInfo, theme } = this.props
+    const { currencyCode, exchangeSecondaryToPrimaryRatio, iconColor, isLightAccount, wallet, primaryCurrencyInfo, theme } = this.props
     const styles = getStyles(theme)
 
     if (currencyCode == null || primaryCurrencyInfo == null || exchangeSecondaryToPrimaryRatio == null || wallet == null) {
@@ -334,7 +353,9 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
       backgroundColors[0] = scaledColor
     }
 
-    return keysOnlyMode ? (
+    return isLightAccount ? (
+      this.renderLightAccountMode()
+    ) : keysOnlyMode ? (
       this.renderKeysOnlyMode()
     ) : (
       <SceneWrapper
@@ -350,9 +371,9 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
             <EdgeText style={styles.exchangeRate}>{denomString}</EdgeText>
           </EdgeAnim>
           <EdgeAnim style={styles.balanceContainer} enter={fadeInUp50}>
-            <TouchableOpacity onPress={this.toggleBalanceVisibility} style={styles.balanceAmountContainer}>
+            <EdgeTouchableOpacity onPress={this.toggleBalanceVisibility} style={styles.balanceAmountContainer}>
               {this.props.showBalance ? <EdgeText>{displayBalanceString}</EdgeText> : <EdgeText>{lstrings.string_show_balance}</EdgeText>}
-            </TouchableOpacity>
+            </EdgeTouchableOpacity>
             <EdgeText style={styles.exchangeRate}>
               <FiatText
                 appendFiatCurrencyCode
@@ -409,13 +430,13 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
           )}
 
           <EdgeAnim enter={fadeInDown50}>
-            <TouchableOpacity accessible={false} disabled={addressExplorerDisabled} onPress={this.handleAddressBlockExplorer}>
+            <EdgeTouchableOpacity accessible={false} disabled={addressExplorerDisabled} onPress={this.handleAddressBlockExplorer}>
               <View style={styles.rightChevronContainer}>
                 <EdgeText>{selectedAddress?.label ?? lstrings.request_qr_your_wallet_address}</EdgeText>
                 {addressExplorerDisabled ? null : <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />}
               </View>
               <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
-            </TouchableOpacity>
+            </EdgeTouchableOpacity>
           </EdgeAnim>
         </View>
 
@@ -545,6 +566,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     flexDirection: 'row'
   },
+  backupText: {
+    marginTop: theme.rem(1),
+    flexGrow: 1,
+    flexShrink: 0
+  },
   balanceContainer: {
     justifyContent: 'space-between',
     flexDirection: 'row',
@@ -611,6 +637,7 @@ const RequestSceneConnected = connect<StateProps, DispatchProps, OwnProps & Hook
     const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
     const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
     const fioAddressesExist = !!state.ui.fioAddress.fioAddresses.length
+    const isLightAccount = state.core.account.username == null
 
     return {
       currencyCode,
@@ -619,7 +646,8 @@ const RequestSceneConnected = connect<StateProps, DispatchProps, OwnProps & Hook
       primaryCurrencyInfo,
       fioAddressesExist,
       isConnected: state.network.isConnected,
-      showBalance: state.ui.settings.isAccountBalanceVisible
+      showBalance: state.ui.settings.isAccountBalanceVisible,
+      isLightAccount
     }
   },
   dispatch => ({

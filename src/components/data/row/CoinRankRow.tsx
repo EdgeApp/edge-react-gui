@@ -1,6 +1,6 @@
 import { div, lt, round } from 'biggystring'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
 
@@ -16,6 +16,7 @@ import { NavigationProp } from '../../../types/routerTypes'
 import { triggerHaptic } from '../../../util/haptic'
 import { debugLog, LOG_COINRANK } from '../../../util/logger'
 import { DECIMAL_PRECISION } from '../../../util/utils'
+import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 
@@ -144,7 +145,7 @@ const CoinRankRowComponent = (props: Props) => {
   const percentString = `${plusMinus}${percentChangeString}`
 
   return (
-    <TouchableOpacity accessible={false} style={styles.container} onPress={handlePress}>
+    <EdgeTouchableOpacity accessible={false} style={styles.container} onPress={handlePress}>
       <View style={styles.rank}>
         <EdgeText accessible numberOfLines={1} disableFontScaling>
           {rank}
@@ -163,7 +164,7 @@ const CoinRankRowComponent = (props: Props) => {
           <EdgeText style={priceStyle}>{priceString}</EdgeText>
         </View>
       </View>
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   )
 }
 

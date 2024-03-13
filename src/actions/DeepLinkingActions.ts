@@ -13,6 +13,7 @@ import { EdgeAsset } from '../types/types'
 import { logEvent } from '../util/tracking'
 import { base58ToUuid } from '../util/utils'
 import { activatePromotion } from './AccountReferralActions'
+import { checkAndShowLightBackupModal } from './BackupModalActions'
 import { DEEPLINK_MODAL_FNS } from './DeepLinkingModalActions'
 import { launchPaymentProto } from './PaymentProtoActions'
 import { doRequestAddress, handleWalletUris } from './ScanActions'
@@ -280,17 +281,19 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       return true
     }
   }
-}
 
-async function launchAzteco(navigation: NavigationBase, edgeWallet: EdgeCurrencyWallet, uri: string): Promise<void> {
-  const address = await edgeWallet.getReceiveAddress({ tokenId: null })
-  const response = await fetch(`${uri}${address.publicAddress}`)
-  if (response.ok) {
-    showToast(lstrings.azteco_success)
-  } else if (response.status === 400) {
-    showError(lstrings.azteco_invalid_code)
-  } else {
-    showError(lstrings.azteco_service_unavailable)
+  async function launchAzteco(navigation: NavigationBase, edgeWallet: EdgeCurrencyWallet, uri: string): Promise<void> {
+    if (checkAndShowLightBackupModal(account, navigation)) return
+
+    const address = await edgeWallet.getReceiveAddress({ tokenId: null })
+    const response = await fetch(`${uri}${address.publicAddress}`)
+    if (response.ok) {
+      showToast(lstrings.azteco_success)
+    } else if (response.status === 400) {
+      showError(lstrings.azteco_invalid_code)
+    } else {
+      showError(lstrings.azteco_service_unavailable)
+    }
+    navigation.navigate('homeTab', { screen: 'home' })
   }
-  navigation.navigate('homeTab', { screen: 'home' })
 }

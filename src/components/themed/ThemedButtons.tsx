@@ -1,10 +1,12 @@
 import * as React from 'react'
-import { TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useHandler } from '../../hooks/useHandler'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
+import { EdgeTouchableHighlight } from '../common/EdgeTouchableHighlight'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -42,9 +44,9 @@ export function ButtonBox(props: Props) {
   })
 
   return (
-    <TouchableOpacity accessible={false} onPress={handlePress} style={[margin, padding]}>
+    <EdgeTouchableOpacity accessible={false} onPress={handlePress} style={[margin, padding]}>
       {children}
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   )
 }
 
@@ -57,7 +59,7 @@ export function Radio(props: RadioButtonProps) {
 
   return (
     <View style={[margin, padding]}>
-      <TouchableHighlight
+      <EdgeTouchableHighlight
         activeOpacity={theme.underlayOpacity}
         // @ts-expect-error
         underlayColor={theme.secondaryButton}
@@ -67,7 +69,7 @@ export function Radio(props: RadioButtonProps) {
           <RadioIcon value={value} />
           {children}
         </View>
-      </TouchableHighlight>
+      </EdgeTouchableHighlight>
     </View>
   )
 }
@@ -92,12 +94,12 @@ export function RightChevronButton(props: { text: string; onPress: () => void; p
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
 
   return (
-    <TouchableOpacity accessible={false} onPress={onPress}>
+    <EdgeTouchableOpacity accessible={false} onPress={onPress}>
       <View style={[padding, styles.rightChevronContainer]}>
         <EdgeText style={styles.rightChevronText}>{text}</EdgeText>
         <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
       </View>
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   )
 }
 

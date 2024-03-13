@@ -2,7 +2,7 @@ import { div, log10, toFixed } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { memo, useState } from 'react'
-import { TouchableWithoutFeedback, View } from 'react-native'
+import { View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
@@ -15,6 +15,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { DECIMAL_PRECISION } from '../../util/utils'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { ExchangeRate2 } from '../common/ExchangeRate2'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { FiatText } from '../text/FiatText'
@@ -218,14 +219,14 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
   return (
     <ModalUi4 bridge={bridge} onCancel={handleCloseModal}>
       <View style={styles.flipInput}>{renderFlipInput()}</View>
-      <TouchableWithoutFeedback onPress={handleFeesChange}>
+      <EdgeTouchableWithoutFeedback onPress={handleFeesChange}>
         <View style={styles.fees}>
           {renderFees()}
           {renderExchangeRates()}
           {renderBalance()}
           {renderErrorMessage()}
         </View>
-      </TouchableWithoutFeedback>
+      </EdgeTouchableWithoutFeedback>
     </ModalUi4>
   )
 })

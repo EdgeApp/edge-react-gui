@@ -15,7 +15,7 @@ exports[`DateModalIos should render with loading props 1`] = `
   }
   onCancel={[Function]}
 >
-  <TouchableOpacity
+  <ExtendedTouchable
     onPress={[Function]}
   >
     <Text
@@ -31,7 +31,7 @@ exports[`DateModalIos should render with loading props 1`] = `
     >
       Done
     </Text>
-  </TouchableOpacity>
+  </ExtendedTouchable>
   <Picker
     display="spinner"
     mode="date"
