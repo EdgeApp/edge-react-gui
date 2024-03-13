@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.3.0
+
 - added: Wrapped Touchable* components to consolidate tap debounce logic
 - added: Mt Pelerin for SEPA and Faster Payments
 - added: Setting to change default screen on login
