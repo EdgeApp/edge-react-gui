@@ -1,9 +1,9 @@
-import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTokenId, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
+import { FIO_PLUGIN_ID, FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../../locales/strings'
 import { selectDisplayDenom } from '../../../selectors/DenominationSelectors'
 import { config } from '../../../theme/appConfig'
@@ -11,8 +11,9 @@ import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { EdgeAsset } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
+import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
-import { getRegInfo } from '../../../util/FioAddressUtils'
+import { getRegInfo, PaymentInfo } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
@@ -42,13 +43,12 @@ interface DispatchProps {
 interface LocalState {
   loading: boolean
   supportedAssets: EdgeAsset[]
-  supportedCurrencies: { [currencyCode: string]: boolean }
-  paymentInfo: { [currencyCode: string]: { amount: string; address: string } }
+  paymentInfo: PaymentInfo
   activationCost: number
   feeValue: number
   paymentWallet?: {
     id: string
-    currencyCode: string
+    tokenId: EdgeTokenId
   }
   errorMessage?: string
 }
@@ -61,7 +61,6 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     activationCost: 40,
     feeValue: 0,
     supportedAssets: [],
-    supportedCurrencies: {},
     paymentInfo: {}
   }
 
@@ -75,7 +74,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     const { fioAddress, selectedWallet, selectedDomain, isFallback } = route.params
     if (this.props.fioPlugin) {
       try {
-        const { activationCost, feeValue, supportedAssets, supportedCurrencies, paymentInfo } = await getRegInfo(
+        const { activationCost, feeValue, supportedAssets, paymentInfo } = await getRegInfo(
           this.props.fioPlugin,
           fioAddress,
           selectedWallet,
@@ -83,7 +82,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
           fioDisplayDenomination,
           isFallback
         )
-        this.setState({ activationCost, feeValue, supportedAssets: [...supportedAssets, { pluginId: 'fio', tokenId: null }], supportedCurrencies, paymentInfo })
+        this.setState({ activationCost, feeValue, supportedAssets: [...supportedAssets, { pluginId: 'fio', tokenId: null }], paymentInfo })
       } catch (e: any) {
         showError(e)
         this.setState({ errorMessage: e.message })
@@ -101,11 +100,11 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     if (!activationCost || activationCost === 0) return
 
     if (selectedDomain.walletId) {
-      await this.proceed(selectedDomain.walletId, FIO_STR)
+      await this.proceed(selectedDomain.walletId, null)
     } else {
       const { paymentWallet } = this.state
       if (!paymentWallet || !paymentWallet.id) return
-      await this.proceed(paymentWallet.id, paymentWallet.currencyCode)
+      await this.proceed(paymentWallet.id, paymentWallet.tokenId)
     }
   }
 
@@ -123,18 +122,20 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
       <WalletListModal bridge={bridge} navigation={this.props.navigation} headerTitle={lstrings.select_wallet} allowedAssets={supportedAssets} />
     ))
     if (result?.type === 'wallet') {
-      const { walletId, currencyCode } = result
-      this.setState({ paymentWallet: { id: walletId, currencyCode } })
+      const { walletId, tokenId } = result
+      this.setState({ paymentWallet: { id: walletId, tokenId } })
     }
   }
 
-  proceed = async (walletId: string, paymentCurrencyCode: string) => {
+  proceed = async (walletId: string, tokenId: EdgeTokenId) => {
     const { account, isConnected, navigation, route, onLogEvent } = this.props
     const { selectedWallet, fioAddress } = route.params
     const { feeValue, paymentInfo: allPaymentInfo } = this.state
+    const wallet = account.currencyWallets[walletId]
+    const { pluginId } = wallet.currencyInfo
 
     if (isConnected) {
-      if (paymentCurrencyCode === FIO_STR) {
+      if (pluginId === FIO_PLUGIN_ID) {
         const { fioWallets } = this.props
         const paymentWallet = fioWallets.find(fioWallet => fioWallet.id === walletId)
         if (paymentWallet == null) return
@@ -145,18 +146,18 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
           ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey
         })
       } else {
+        const paymentCurrencyCode = getCurrencyCode(wallet, tokenId)
         this.props.onSelectWallet(walletId, paymentCurrencyCode)
 
-        const wallet = account.currencyWallets[walletId]
-        const { amount: exchangeAmount, address: paymentAddress } = allPaymentInfo[paymentCurrencyCode]
+        const { amount: exchangeAmount, address: paymentAddress } = allPaymentInfo[pluginId][tokenId ?? '']
 
         const cryptoAmount = new CryptoAmount({
           exchangeAmount,
-          currencyCode: paymentCurrencyCode,
+          tokenId,
           currencyConfig: wallet.currencyConfig
         })
 
-        const { tokenId, nativeAmount } = cryptoAmount
+        const { nativeAmount } = cryptoAmount
 
         const sendParams: SendScene2Params = {
           walletId,
