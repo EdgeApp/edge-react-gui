@@ -97,7 +97,7 @@ export const CryptoExchangeScene = (props: Props) => {
     toWallet == null ? emptyDenomnination : selectDisplayDenom(state, toWallet.currencyConfig, toTokenId)
   )
   const fromWalletDisplayDenomination = useSelector(state =>
-    fromWallet == null ? emptyDenomnination : selectDisplayDenom(state, fromWallet.currencyConfig, toTokenId)
+    fromWallet == null ? emptyDenomnination : selectDisplayDenom(state, fromWallet.currencyConfig, fromTokenId)
   )
   const fromWalletSpecialCurrencyInfo = getSpecialCurrencyInfo(fromWallet?.currencyInfo.pluginId ?? '')
   const fromWalletBalanceMap = fromWallet?.balanceMap ?? new Map<string, string>()
