@@ -107,7 +107,6 @@ export function WalletListModal(props: Props) {
 
   // #region State
 
-  const [searching, setSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
 
   const [bankAccountsMap] = useAsyncValue(async (): Promise<PaymentMethodsMap | null> => {
@@ -149,10 +148,7 @@ export function WalletListModal(props: Props) {
   })
   const handleSearchClear = useHandler(() => {
     setSearchText('')
-    setSearching(false)
   })
-  const handleSearchUnfocus = useHandler(() => setSearching(searchText.length > 0))
-  const handleSearchFocus = useHandler(() => setSearching(true))
 
   // Pull up the signup workflow on the calling scene if the user does not yet have a linked bank account
   const handleShowBankPlugin = useHandler(async () => {
@@ -234,8 +230,6 @@ export function WalletListModal(props: Props) {
             returnKeyType="search"
             placeholder={lstrings.search_wallets}
             onChangeText={setSearchText}
-            onFocus={handleSearchFocus}
-            onBlur={handleSearchUnfocus}
             onClear={handleSearchClear}
             value={searchText}
             iconComponent={SearchIconAnimated}
@@ -253,7 +247,6 @@ export function WalletListModal(props: Props) {
         excludeAssets={walletListExcludeAssets}
         excludeWalletIds={excludeWalletIds}
         filterActivation={filterActivation}
-        searching={searching}
         searchText={searchText}
         showCreateWallet={showCreateWallet}
         createWalletId={createWalletId}
