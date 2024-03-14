@@ -212,7 +212,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
-      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -1163,7 +1162,8 @@ exports[`SendScene2 1 spendTarget 1`] = `
       </View>
     </RCTScrollView>
     <View
-      notificationHeight={0}
+      hasNotifications={false}
+      insetBottom={0}
       style={
         {
           "alignItems": "center",
@@ -1324,13 +1324,14 @@ exports[`SendScene2 1 spendTarget 1`] = `
     }
     hasTabs={false}
     insetBottom={0}
+    onLayout={[Function]}
     style={
       [
         {
           "alignSelf": "center",
           "bottom": 0,
           "justifyContent": "flex-end",
-          "padding": 11,
+          "paddingHorizontal": 11,
           "position": "absolute",
         },
         {
@@ -1558,7 +1559,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
-      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -2697,7 +2697,8 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       </View>
     </RCTScrollView>
     <View
-      notificationHeight={0}
+      hasNotifications={false}
+      insetBottom={0}
       style={
         {
           "alignItems": "center",
@@ -2858,13 +2859,14 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
     }
     hasTabs={false}
     insetBottom={0}
+    onLayout={[Function]}
     style={
       [
         {
           "alignSelf": "center",
           "bottom": 0,
           "justifyContent": "flex-end",
-          "padding": 11,
+          "paddingHorizontal": 11,
           "position": "absolute",
         },
         {
@@ -3092,7 +3094,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
-      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -4208,7 +4209,8 @@ exports[`SendScene2 2 spendTargets 1`] = `
       </View>
     </RCTScrollView>
     <View
-      notificationHeight={0}
+      hasNotifications={false}
+      insetBottom={0}
       style={
         {
           "alignItems": "center",
@@ -4369,13 +4371,14 @@ exports[`SendScene2 2 spendTargets 1`] = `
     }
     hasTabs={false}
     insetBottom={0}
+    onLayout={[Function]}
     style={
       [
         {
           "alignSelf": "center",
           "bottom": 0,
           "justifyContent": "flex-end",
-          "padding": 11,
+          "paddingHorizontal": 11,
           "position": "absolute",
         },
         {
@@ -4603,7 +4606,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
-      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -5420,7 +5422,8 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       </View>
     </RCTScrollView>
     <View
-      notificationHeight={0}
+      hasNotifications={false}
+      insetBottom={0}
       style={
         {
           "alignItems": "center",
@@ -5581,13 +5584,14 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
     }
     hasTabs={false}
     insetBottom={0}
+    onLayout={[Function]}
     style={
       [
         {
           "alignSelf": "center",
           "bottom": 0,
           "justifyContent": "flex-end",
-          "padding": 11,
+          "paddingHorizontal": 11,
           "position": "absolute",
         },
         {
@@ -5815,7 +5819,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
-      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -6608,7 +6611,8 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       </View>
     </RCTScrollView>
     <View
-      notificationHeight={0}
+      hasNotifications={false}
+      insetBottom={0}
       style={
         {
           "alignItems": "center",
@@ -6769,13 +6773,14 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
     }
     hasTabs={false}
     insetBottom={0}
+    onLayout={[Function]}
     style={
       [
         {
           "alignSelf": "center",
           "bottom": 0,
           "justifyContent": "flex-end",
-          "padding": 11,
+          "paddingHorizontal": 11,
           "position": "absolute",
         },
         {
@@ -7003,7 +7008,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
-      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -7635,7 +7639,8 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       </View>
     </RCTScrollView>
     <View
-      notificationHeight={0}
+      hasNotifications={false}
+      insetBottom={0}
       style={
         {
           "alignItems": "center",
@@ -7796,13 +7801,14 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
     }
     hasTabs={false}
     insetBottom={0}
+    onLayout={[Function]}
     style={
       [
         {
           "alignSelf": "center",
           "bottom": 0,
           "justifyContent": "flex-end",
-          "padding": 11,
+          "paddingHorizontal": 11,
           "position": "absolute",
         },
         {
@@ -8030,7 +8036,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
-      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -8967,7 +8972,8 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       </View>
     </RCTScrollView>
     <View
-      notificationHeight={0}
+      hasNotifications={false}
+      insetBottom={0}
       style={
         {
           "alignItems": "center",
@@ -9128,13 +9134,14 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
     }
     hasTabs={false}
     insetBottom={0}
+    onLayout={[Function]}
     style={
       [
         {
           "alignSelf": "center",
           "bottom": 0,
           "justifyContent": "flex-end",
-          "padding": 11,
+          "paddingHorizontal": 11,
           "position": "absolute",
         },
         {
@@ -9362,7 +9369,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
-      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -10234,7 +10240,8 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       </View>
     </RCTScrollView>
     <View
-      notificationHeight={0}
+      hasNotifications={false}
+      insetBottom={0}
       style={
         {
           "alignItems": "center",
@@ -10395,13 +10402,14 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
     }
     hasTabs={false}
     insetBottom={0}
+    onLayout={[Function]}
     style={
       [
         {
           "alignSelf": "center",
           "bottom": 0,
           "justifyContent": "flex-end",
-          "padding": 11,
+          "paddingHorizontal": 11,
           "position": "absolute",
         },
         {
@@ -10629,7 +10637,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
-      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -11460,7 +11467,8 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       </View>
     </RCTScrollView>
     <View
-      notificationHeight={0}
+      hasNotifications={false}
+      insetBottom={0}
       style={
         {
           "alignItems": "center",
@@ -11621,13 +11629,14 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
     }
     hasTabs={false}
     insetBottom={0}
+    onLayout={[Function]}
     style={
       [
         {
           "alignSelf": "center",
           "bottom": 0,
           "justifyContent": "flex-end",
-          "padding": 11,
+          "paddingHorizontal": 11,
           "position": "absolute",
         },
         {
@@ -11855,7 +11864,6 @@ exports[`SendScene2 Render SendScene 1`] = `
       keyboardDismissMode="interactive"
       keyboardOpeningTime={250}
       keyboardSpace={0}
-      notificationHeight={0}
       onScroll={[Function]}
       resetKeyboardSpace={[Function]}
       scrollEventThrottle={1}
@@ -12810,7 +12818,8 @@ exports[`SendScene2 Render SendScene 1`] = `
       </View>
     </RCTScrollView>
     <View
-      notificationHeight={0}
+      hasNotifications={false}
+      insetBottom={0}
       style={
         {
           "alignItems": "center",
@@ -12831,13 +12840,14 @@ exports[`SendScene2 Render SendScene 1`] = `
     }
     hasTabs={false}
     insetBottom={0}
+    onLayout={[Function]}
     style={
       [
         {
           "alignSelf": "center",
           "bottom": 0,
           "justifyContent": "flex-end",
-          "padding": 11,
+          "paddingHorizontal": 11,
           "position": "absolute",
         },
         {
