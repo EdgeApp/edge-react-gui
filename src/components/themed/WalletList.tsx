@@ -161,7 +161,7 @@ export function WalletList(props: Props) {
     }
 
     // Show a flat list if we are searching, or have no recent wallets:
-    if (searching || searchText.length > 0 || recentWalletList.length === 0) {
+    if (searchText.length > 0 || recentWalletList.length === 0) {
       return { walletList }
     }
 
