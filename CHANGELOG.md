@@ -15,8 +15,9 @@
 - changed: Move wallet activation redux values to scenes
 - changed: Button width remains constant regardless of content visibility
 - changed: Certain deeplinks blocked for light accounts
-- chagned: 'Sweep Private Key' usage blocked for light accounts
+- changed: 'Sweep Private Key' usage blocked for light accounts
 - fixed: FIO name transfer error when sending with no address
+- fixed: Bottom notification cards sometimes covering parts of the scene
 
 ## 4.2.0 (2024-03-12)
 
