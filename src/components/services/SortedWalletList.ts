@@ -251,8 +251,8 @@ function matchWalletList(a: WalletListItem[], b: WalletListItem[]): boolean {
 /**
  * Filters a wallet list using a search string.
  */
-export function searchWalletList(list: WalletListItem[], isSearching: boolean, searchText: string): WalletListItem[] {
-  if (!isSearching) return list
+export function searchWalletList(list: WalletListItem[], searchText: string): WalletListItem[] {
+  if (searchText === '') return list
 
   const target = normalizeForSearch(searchText)
   return list.filter(item => {
