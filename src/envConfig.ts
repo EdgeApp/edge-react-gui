@@ -114,6 +114,20 @@ export const asEnvConfig = asObject({
   AVALANCHE_INIT: asCorePluginInit(asEvmApiKeys),
   BASE_INIT: asCorePluginInit(asEvmApiKeys),
   BINANCE_SMART_CHAIN_INIT: asCorePluginInit(asEvmApiKeys),
+  CARDANO_INIT: asCorePluginInit(
+    asObject({
+      blockfrostProjectId: asOptional(asString),
+      koiosApiKey: asOptional(asString),
+      maestroApiKey: asOptional(asString)
+    })
+  ),
+  CARDANO_TESTNET_INIT: asCorePluginInit(
+    asObject({
+      blockfrostProjectId: asOptional(asString),
+      koiosApiKey: asOptional(asString),
+      maestroApiKey: asOptional(asString)
+    })
+  ),
   CHANGE_NOW_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Add Cardano (ADA)
 - added: Add auto-detected tokens section in ManageTokensScene
 - changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
 - fixed: Filecoin sync issue caused by missing and necessary GLIF API key

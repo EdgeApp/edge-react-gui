@@ -220,7 +220,7 @@ const FIAT_DECIMALS = -2
 const CRYPTO_DECIMALS = -8
 
 const PAYBIS_TO_EDGE_CURRENCY_MAP: Record<string, ExtendedTokenId> = {
-  // ADA: { pluginId: 'cardano' },
+  ADA: { pluginId: 'cardano', tokenId: null },
   BNB: { pluginId: 'binancechain', tokenId: null },
   BCH: { pluginId: 'bitcoincash', tokenId: null },
   BTC: { pluginId: 'bitcoin', tokenId: null },
