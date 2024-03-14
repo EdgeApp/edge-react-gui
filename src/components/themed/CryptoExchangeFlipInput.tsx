@@ -61,7 +61,7 @@ export const CryptoExchangeFlipInput = (props: Props) => {
   }, [account, currencyCode, wallet])
 
   const cryptoAmount = useMemo(() => {
-    if (wallet == null || tokenId == null) return
+    if (wallet == null || tokenId === undefined) return
     const balance = wallet.balanceMap.get(tokenId) ?? '0'
     const cryptoAmountRaw: string = convertNativeToDenomination(displayDenomination.multiplier)(balance)
     return formatNumber(add(cryptoAmountRaw, '0'))
