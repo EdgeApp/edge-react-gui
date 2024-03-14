@@ -2137,13 +2137,14 @@ exports[`TransactionDetailsScene should render 1`] = `
     }
     hasTabs={true}
     insetBottom={0}
+    onLayout={[Function]}
     style={
       [
         {
           "alignSelf": "center",
           "bottom": 0,
           "justifyContent": "flex-end",
-          "padding": 11,
+          "paddingHorizontal": 11,
           "position": "absolute",
         },
         {
@@ -4296,13 +4297,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
     }
     hasTabs={true}
     insetBottom={0}
+    onLayout={[Function]}
     style={
       [
         {
           "alignSelf": "center",
           "bottom": 0,
           "justifyContent": "flex-end",
-          "padding": 11,
+          "paddingHorizontal": 11,
           "position": "absolute",
         },
         {

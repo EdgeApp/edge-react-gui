@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { LayoutChangeEvent } from 'react-native'
 import Animated, { interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { sprintf } from 'sprintf-js'
@@ -64,6 +65,11 @@ const NotificationViewComponent = (props: Props) => {
     await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation} />)
   })
 
+  const handleLayout = useHandler((event: LayoutChangeEvent) => {
+    const { height } = event.nativeEvent.layout
+    dispatch({ type: 'UI/SET_NOTIFICATION_HEIGHT', data: { height } })
+  })
+
   // Show a tokens detected notification per walletId found in newTokens
   React.useEffect(() => {
     const newNotifs: React.JSX.Element[] = []
@@ -124,7 +130,13 @@ const NotificationViewComponent = (props: Props) => {
   )
 
   return (
-    <NotificationCardsContainer hasTabs={hasTabs} insetBottom={insetBottom} footerHeight={footerHeight} footerOpenRatio={footerOpenRatio}>
+    <NotificationCardsContainer
+      hasTabs={hasTabs}
+      insetBottom={insetBottom}
+      footerHeight={footerHeight}
+      footerOpenRatio={footerOpenRatio}
+      onLayout={handleLayout}
+    >
       <EdgeAnim visible={isBackupWarningShown} enter={fadeIn} exit={fadeOut}>
         <NotificationCard type="warning" title={lstrings.backup_title} message={lstrings.backup_web3_handle_warning_message} onPress={handleBackupPress} />
       </EdgeAnim>
@@ -152,7 +164,7 @@ const NotificationCardsContainer = styled(Animated.View)<{ hasTabs: boolean; ins
       return [
         {
           position: 'absolute',
-          padding: theme.rem(0.5),
+          paddingHorizontal: theme.rem(0.5),
           alignSelf: 'center',
           justifyContent: 'flex-end',
           bottom: 0
