@@ -92,6 +92,10 @@ export type Action =
       type: 'UI/WALLETS/SELECT_WALLET'
       data: { currencyCode: string; walletId: string }
     }
+  | {
+      type: 'UI/SET_NOTIFICATION_HEIGHT'
+      data: { height: number }
+    }
   | { type: 'UI/WALLETS/UPSERT_WALLETS'; data: { wallets: EdgeCurrencyWallet[] } }
   | { type: 'UPDATE_EXCHANGE_INFO'; data: ExchangeInfo }
   | { type: 'UPDATE_SORTED_WALLET_LIST'; data: WalletListItem[] }
