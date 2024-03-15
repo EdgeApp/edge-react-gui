@@ -32,7 +32,6 @@ interface Props {
   filterActivation?: boolean
 
   // Visuals:
-  searching: boolean
   searchText: string
   showCreateWallet?: boolean
   createWalletId?: string
@@ -63,7 +62,6 @@ export function WalletList(props: Props) {
     filterActivation,
 
     // Visuals:
-    searching,
     searchText,
     showCreateWallet,
     createWalletId,
@@ -152,7 +150,7 @@ export function WalletList(props: Props) {
   const { walletList, sectionList } = React.useMemo<{ walletList: Array<WalletListItem | WalletCreateItem>; sectionList?: Section[] }>(() => {
     const walletList: Array<WalletListItem | WalletCreateItem> = [
       // Search the wallet list:
-      ...searchWalletList(filteredWalletList, searching, searchText)
+      ...searchWalletList(filteredWalletList, searchText)
     ]
 
     // Show the create-wallet list, filtered by the search term:
@@ -161,7 +159,7 @@ export function WalletList(props: Props) {
     }
 
     // Show a flat list if we are searching, or have no recent wallets:
-    if (searching || searchText.length > 0 || recentWalletList.length === 0) {
+    if (searchText.length > 0 || recentWalletList.length === 0) {
       return { walletList }
     }
 
@@ -179,7 +177,7 @@ export function WalletList(props: Props) {
       ],
       walletList
     }
-  }, [createWalletList, filteredWalletList, recentWalletList, searchText, searching, showCreateWallet])
+  }, [createWalletList, filteredWalletList, recentWalletList, searchText, showCreateWallet])
 
   // rendering -------------------------------------------------------------
 
