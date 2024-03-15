@@ -153,6 +153,13 @@ export const CryptoExchangeScene = (props: Props) => {
         return
       }
     }
+    // Clear the error state:
+    navigation.setParams({
+      ...route.params,
+      errorDisplayInfo: undefined
+    })
+
+    // Start request for quote:
     navigation.navigate('exchangeQuoteProcessing', {
       swapRequest,
       swapRequestOptions,
