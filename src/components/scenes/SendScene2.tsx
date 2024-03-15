@@ -322,6 +322,7 @@ const SendComponent = (props: Props) => {
   })
 
   const handleFlipInputModal = (index: number, spendTarget: EdgeSpendTarget) => () => {
+    const { noChangeMiningFee } = getSpecialCurrencyInfo(pluginId)
     Airship.show<FlipInputModalResult>(bridge => (
       <FlipInputModal2
         ref={flipInputModalRef}
@@ -331,7 +332,7 @@ const SendComponent = (props: Props) => {
         forceField={fieldChanged}
         onAmountsChanged={handleAmountsChanged(spendTarget)}
         onMaxSet={handleSetMax(index)}
-        onFeesChange={handleFeesChange}
+        onFeesChange={noChangeMiningFee ? undefined : handleFeesChange}
         wallet={coreWallet}
         tokenId={tokenId}
         feeNativeAmount={feeNativeAmount}
@@ -480,7 +481,11 @@ const SendComponent = (props: Props) => {
       const feeSyntaxStyle = transactionFee.fiatStyle
 
       return (
-        <RowUi4 rightButtonType={noChangeMiningFee || lockTilesMap.fee ? 'none' : 'touchable'} title={`${lstrings.string_fee}:`} onPress={handleFeesChange}>
+        <RowUi4
+          rightButtonType={noChangeMiningFee || lockTilesMap.fee ? 'none' : 'touchable'}
+          title={`${lstrings.string_fee}:`}
+          onPress={noChangeMiningFee ? undefined : handleFeesChange}
+        >
           {processingAmountChanged ? (
             <View style={styles.calcFeeView}>
               <EdgeText
