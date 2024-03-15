@@ -1016,6 +1016,7 @@ export const FIAT_CODES_SYMBOLS: { [code: string]: string } = {
 
 export const FIO_WALLET_TYPE = 'wallet:fio'
 export const FIO_STR = 'FIO'
+export const FIO_PLUGIN_ID = 'fio'
 export const FIO_DOMAIN_DEFAULT = {
   name: 'edge',
   expiration: new Date().toDateString(),

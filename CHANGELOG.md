@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fixed: FIO handle/domain registration error with MATIC payment
+
 ## 4.3.0
 
 - added: Wrapped Touchable* components to consolidate tap debounce logic
