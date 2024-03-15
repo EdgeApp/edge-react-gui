@@ -84,6 +84,10 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
         navigation.navigate('exchangeTab', {
           screen: 'exchange',
           params: {
+            fromWalletId: swapRequest.fromWallet.id,
+            fromTokenId: swapRequest.fromTokenId,
+            toWalletId: swapRequest.toWallet.id,
+            toTokenId: swapRequest.toTokenId,
             errorDisplayInfo
           }
         })
