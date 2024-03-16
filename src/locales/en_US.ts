@@ -1274,6 +1274,8 @@ const strings = {
   exchange_insufficient_funds_title: 'Insufficient Funds',
   exchange_insufficient_funds_message: 'Entered amount plus fees exceeds wallet balance.',
   exchange_insufficient_funds_below_balance: 'Wallet balance is below the amount entered.',
+  exchange_select_sending_wallet: 'Please select a wallet from which to swap',
+  exchange_select_receiving_wallet: 'Please select a wallet to which to swap',
 
   // WalletConnect Scenes/Modals
   wc_walletconnect_title: 'WalletConnect',

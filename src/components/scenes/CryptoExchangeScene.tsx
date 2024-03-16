@@ -135,19 +135,14 @@ export const CryptoExchangeScene = (props: Props) => {
   }
 
   const getQuote = (swapRequest: EdgeSwapRequest) => {
-    if (fromWallet == null || toWallet == null) {
-      // Should never happen because next UI is hidden unless both source/destination wallets are selected
-      throw new Error('No wallet selected')
-    }
-
     if (exchangeInfo != null) {
-      const disableSrc = checkDisableAsset(exchangeInfo.swap.disableAssets.source, fromWallet.id, fromTokenId)
+      const disableSrc = checkDisableAsset(exchangeInfo.swap.disableAssets.source, swapRequest.fromWallet.id, fromTokenId)
       if (disableSrc) {
         showError(sprintf(lstrings.exchange_asset_unsupported, fromCurrencyCode))
         return
       }
 
-      const disableDest = checkDisableAsset(exchangeInfo.swap.disableAssets.destination, toWallet.id, toTokenId)
+      const disableDest = checkDisableAsset(exchangeInfo.swap.disableAssets.destination, swapRequest.toWallet.id, toTokenId)
       if (disableDest) {
         showError(sprintf(lstrings.exchange_asset_unsupported, toCurrencyCode))
         return
@@ -224,14 +219,16 @@ export const CryptoExchangeScene = (props: Props) => {
 
   const handleMax = useHandler(() => {
     if (toWallet == null) {
-      showWarning(`${lstrings.loan_select_receiving_wallet}`)
+      showWarning(`${lstrings.exchange_select_receiving_wallet}`)
       Keyboard.dismiss()
       return
     }
 
     if (fromWallet == null) {
-      // Should never happen because max button UI is hidden unless a source wallet is selected
-      throw new Error('No wallet selected')
+      // Shouldn't ever happen because max button UI is disabled when no
+      // fromWallet is selected
+      showWarning(`${lstrings.exchange_select_sending_wallet}`)
+      return
     }
 
     const request: EdgeSwapRequest = {
@@ -247,10 +244,8 @@ export const CryptoExchangeScene = (props: Props) => {
   })
 
   const handleNext = useHandler(() => {
-    if (fromWallet == null || toWallet == null) {
-      // Should never happen because next UI is hidden unless both source/destination wallets are selected
-      throw new Error('No wallet selected')
-    }
+    // Should only happen if the user initiated the swap from the keyboard
+    if (fromWallet == null || toWallet == null) return
 
     const request: EdgeSwapRequest = {
       fromTokenId: fromTokenId,
