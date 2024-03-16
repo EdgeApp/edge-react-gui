@@ -137,7 +137,7 @@ function ManageTokensSceneComponent(props: Props) {
           onChangeText={setSearchValue}
         />
       </SceneHeader>
-      <FlatList data={filteredTokenIds} extraData={extraData} keyExtractor={keyExtractor} renderItem={renderRow} />
+        <FlatList data={filteredTokenIds} extraData={extraData} keyExtractor={keyExtractor} renderItem={renderRow} style={styles.list} />
       {!isCustomTokensSupported ? null : (
         <>
           <DividerLine marginRem={[0, 1]} />
@@ -159,6 +159,9 @@ const keyExtractor = (tokenId: string) => tokenId
 
 const getStyles = cacheStyles((theme: Theme) => ({
   buttonsContainer: { marginTop: theme.rem(1), marginBottom: theme.rem(1) },
+  list: {
+    marginHorizontal: theme.rem(0.5)
+  },
   rightIcon: {
     color: theme.iconTappable,
     marginRight: theme.rem(1)
