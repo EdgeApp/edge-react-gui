@@ -74,7 +74,7 @@ const NotificationViewComponent = (props: Props) => {
   React.useEffect(() => {
     const newNotifs: React.JSX.Element[] = []
     Object.keys(wallets).forEach(walletId => {
-      const newTokens = detectedTokensRedux[walletId]
+      const newTokenIds = detectedTokensRedux[walletId]
 
       const dismissNewTokens = (walletId: string) => {
         dispatch({
@@ -83,7 +83,7 @@ const NotificationViewComponent = (props: Props) => {
         })
       }
 
-      if (newTokens != null && newTokens.length > 0) {
+      if (newTokenIds != null && newTokenIds.length > 0) {
         const { name, currencyInfo } = wallets[walletId]
 
         newNotifs.push(
@@ -98,10 +98,9 @@ const NotificationViewComponent = (props: Props) => {
             }
             onPress={() => {
               dismissNewTokens(walletId)
-              // TODO: Would be helpful to highlight to the user which tokens
-              // were just enabled on the next scene. Flashing rows?
               navigation.navigate('manageTokens', {
-                walletId
+                walletId,
+                newTokenIds
               })
             }}
             onClose={() => dismissNewTokens(walletId)}

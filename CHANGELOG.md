@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Add auto-detected tokens section in ManageTokensScene
 - fixed: FIO handle/domain registration error with MATIC payment
 
 ## 4.3.0
