@@ -1,6 +1,7 @@
 import './node_modules/react-native-gesture-handler/jestSetup.js'
 
 import { jest } from '@jest/globals'
+import mockClipboard from '@react-native-clipboard/clipboard/jest/clipboard-mock.js'
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock'
 
 require('react-native-reanimated/src/reanimated2/jestUtils').setUpTests()
@@ -23,6 +24,8 @@ jest.mock('@bugsnag/react-native', () => {
     }
   }
 })
+
+jest.mock('@react-native-clipboard/clipboard', () => mockClipboard)
 
 jest.mock('disklet', () => {
   const originalModule = jest.requireActual('disklet')
