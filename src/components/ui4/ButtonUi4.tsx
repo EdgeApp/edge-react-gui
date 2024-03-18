@@ -1,5 +1,6 @@
 /**
- * IMPORTANT: Changes in this file MUST be synced with edge-react-gui!
+ * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and
+ * edge-login-ui-rn!
  */
 
 import * as React from 'react'
@@ -8,7 +9,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
-import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
+import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -44,9 +45,6 @@ interface Props {
   /** @deprecated - Shouldn't use this post-UI4 transition */
   marginRem?: number[] | number
 
-  /** @deprecated - Shouldn't use this post-UI4 transition */
-  paddingRem?: number[] | number
-
   testID?: string
 }
 
@@ -56,7 +54,7 @@ interface Props {
  * - NOT meant to be used on its own outside of ButtonsViewUi4 unless layout='solo'
  */
 export function ButtonUi4(props: Props) {
-  const { layout = 'solo', children, disabled = false, label, onPress, type = 'primary', spinner = false, mini = false, marginRem, paddingRem, testID } = props
+  const { layout = 'solo', children, disabled = false, label, onPress, type = 'primary', spinner = false, mini = false, marginRem, testID } = props
 
   // `onPress` promise logic:
   const [pending, handlePress] = usePendingPress(onPress)
@@ -140,17 +138,12 @@ export function ButtonUi4(props: Props) {
     if (type === 'tertiary') retStyle.push(styles.visibleContainerTertiary)
 
     retStyle.push(mini ? styles.visibleSizeMini : type === 'tertiary' ? styles.visibleSizeTertiary : styles.visibleSizeDefault)
-
-    if (paddingRem != null) {
-      retStyle.push(sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem)))
-    }
-
     retStyle.push({
       opacity: disabled ? 0.3 : hideContent ? 0.7 : 1
     })
 
     return retStyle
-  }, [disabled, hideContent, layout, mini, paddingRem, styles, theme, type])
+  }, [disabled, hideContent, layout, mini, styles, type])
 
   return (
     <EdgeTouchableOpacity disabled={disabled || pending || spinner} style={touchContainerStyle} onPress={handlePress} testID={testID}>
