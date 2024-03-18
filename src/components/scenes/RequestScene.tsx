@@ -451,9 +451,9 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
     this.setState({ amounts })
   }
 
-  copyToClipboard = async (uri?: string): Promise<void> => {
+  copyToClipboard = async (): Promise<void> => {
     try {
-      const encodedUri = uri ?? (await this.getEncodedUri())
+      const encodedUri = await this.getEncodedUri()
       if (encodedUri != null) {
         Clipboard.setString(encodedUri)
         showToast(lstrings.fragment_request_address_uri_copied)
