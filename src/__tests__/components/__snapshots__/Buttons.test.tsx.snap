@@ -3687,10 +3687,12 @@ exports[`Buttons should render spinning buttons 1`] = `
     <ActivityIndicator
       color="#FFFFFF"
       style={
-        {
-          "height": 45,
-          "position": "absolute",
-        }
+        [
+          undefined,
+          {
+            "position": "absolute",
+          },
+        ]
       }
     />
   </View>,
@@ -3823,10 +3825,12 @@ exports[`Buttons should render spinning buttons 1`] = `
     <ActivityIndicator
       color="#FFFFFF"
       style={
-        {
-          "height": 45,
-          "position": "absolute",
-        }
+        [
+          undefined,
+          {
+            "position": "absolute",
+          },
+        ]
       }
     />
   </View>,
@@ -3962,10 +3966,12 @@ exports[`Buttons should render spinning buttons 1`] = `
     <ActivityIndicator
       color="#00f1a2"
       style={
-        {
-          "height": 45,
-          "position": "absolute",
-        }
+        [
+          undefined,
+          {
+            "position": "absolute",
+          },
+        ]
       }
     />
   </View>,
@@ -4099,10 +4105,12 @@ exports[`Buttons should render spinning buttons 1`] = `
     <ActivityIndicator
       color="#FFFFFF"
       style={
-        {
-          "height": 45,
-          "position": "absolute",
-        }
+        [
+          undefined,
+          {
+            "position": "absolute",
+          },
+        ]
       }
     />
   </View>,
@@ -4236,10 +4244,12 @@ exports[`Buttons should render spinning buttons 1`] = `
     <ActivityIndicator
       color="#FFFFFF"
       style={
-        {
-          "height": 45,
-          "position": "absolute",
-        }
+        [
+          undefined,
+          {
+            "position": "absolute",
+          },
+        ]
       }
     />
   </View>,
@@ -4376,10 +4386,12 @@ exports[`Buttons should render spinning buttons 1`] = `
     <ActivityIndicator
       color="#00f1a2"
       style={
-        {
-          "height": 45,
-          "position": "absolute",
-        }
+        [
+          undefined,
+          {
+            "position": "absolute",
+          },
+        ]
       }
     />
   </View>,
@@ -5414,10 +5426,12 @@ exports[`Buttons should render with child icons 1`] = `
     <ActivityIndicator
       color="#FFFFFF"
       style={
-        {
-          "height": 45,
-          "position": "absolute",
-        }
+        [
+          undefined,
+          {
+            "position": "absolute",
+          },
+        ]
       }
     />
   </View>,
@@ -5580,10 +5594,12 @@ exports[`Buttons should render with child icons 1`] = `
     <ActivityIndicator
       color="#FFFFFF"
       style={
-        {
-          "height": 45,
-          "position": "absolute",
-        }
+        [
+          undefined,
+          {
+            "position": "absolute",
+          },
+        ]
       }
     />
   </View>,
@@ -5749,10 +5765,12 @@ exports[`Buttons should render with child icons 1`] = `
     <ActivityIndicator
       color="#00f1a2"
       style={
-        {
-          "height": 45,
-          "position": "absolute",
-        }
+        [
+          undefined,
+          {
+            "position": "absolute",
+          },
+        ]
       }
     />
   </View>,
@@ -5916,10 +5934,12 @@ exports[`Buttons should render with child icons 1`] = `
     <ActivityIndicator
       color="#FFFFFF"
       style={
-        {
-          "height": 45,
-          "position": "absolute",
-        }
+        [
+          undefined,
+          {
+            "position": "absolute",
+          },
+        ]
       }
     />
   </View>,
@@ -6083,10 +6103,12 @@ exports[`Buttons should render with child icons 1`] = `
     <ActivityIndicator
       color="#FFFFFF"
       style={
-        {
-          "height": 45,
-          "position": "absolute",
-        }
+        [
+          undefined,
+          {
+            "position": "absolute",
+          },
+        ]
       }
     />
   </View>,
@@ -6253,10 +6275,12 @@ exports[`Buttons should render with child icons 1`] = `
     <ActivityIndicator
       color="#00f1a2"
       style={
-        {
-          "height": 45,
-          "position": "absolute",
-        }
+        [
+          undefined,
+          {
+            "position": "absolute",
+          },
+        ]
       }
     />
   </View>,
