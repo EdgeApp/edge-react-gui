@@ -15,7 +15,6 @@ import { NavigationBase } from '../../types/routerTypes'
 import { OverrideDots } from '../../types/Theme'
 import { styled } from '../hoc/styled'
 import { NotificationView } from '../notification/NotificationView'
-import { useTheme } from '../services/ThemeContext'
 import { MAX_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
 import { AccentColors, DotsBackground } from '../ui4/DotsBackground'
 
@@ -124,12 +123,9 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
     scroll = false
   } = props
 
-  const accountId = useSelector(state => state.core.account.id)
-  const activeUsername = useSelector(state => state.core.account.username)
-  const isLightAccount = accountId != null && activeUsername == null
+  const notificationHeight = useSelector(state => state.ui.notificationHeight)
 
   const navigation = useNavigation<NavigationBase>()
-  const theme = useTheme()
 
   // We need to track this state in the JS thread because insets are not shared values
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
@@ -161,13 +157,11 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
     [frameHeight, frameWidth]
   )
 
-  const notificationHeight = theme.rem(4)
   const headerBarHeight = getDefaultHeaderHeight({ height: frameHeight, width: frameWidth }, false, 0)
 
   // Calculate app insets considering the app's header, tab-bar,
   // notification area, etc:
   const maybeHeaderHeight = hasHeader ? headerBarHeight : 0
-  const maybeNotificationHeight = isLightAccount ? notificationHeight : 0
   // Ignore tab bar height when keyboard is open because it is rendered behind it
   const maybeTabBarHeight = hasTabs && !isKeyboardOpen ? MAX_TAB_BAR_HEIGHT : 0
   // Ignore inset bottom when keyboard is open because it is rendered behind it
@@ -176,19 +170,10 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
     () => ({
       top: safeAreaInsets.top + maybeHeaderHeight,
       right: safeAreaInsets.right,
-      bottom: maybeInsetBottom + maybeNotificationHeight + maybeTabBarHeight + footerHeight,
+      bottom: maybeInsetBottom + notificationHeight + maybeTabBarHeight + footerHeight,
       left: safeAreaInsets.left
     }),
-    [
-      footerHeight,
-      maybeHeaderHeight,
-      maybeInsetBottom,
-      maybeNotificationHeight,
-      maybeTabBarHeight,
-      safeAreaInsets.left,
-      safeAreaInsets.right,
-      safeAreaInsets.top
-    ]
+    [footerHeight, maybeHeaderHeight, maybeInsetBottom, notificationHeight, maybeTabBarHeight, safeAreaInsets.left, safeAreaInsets.right, safeAreaInsets.top]
   )
 
   // This is a convenient styles object which may be applied as

@@ -15,6 +15,7 @@ export interface UiState {
   readonly fioAddress: FioAddressSceneState
   readonly passwordReminder: PasswordReminderState
   readonly settings: SettingsState
+  readonly notificationHeight: number
   readonly subcategories: string[]
   readonly wallets: WalletsState
 }
@@ -25,6 +26,12 @@ const uiInner = combineReducers<UiState, Action>({
   fioAddress,
   passwordReminder,
   settings,
+  notificationHeight(state = 0, action) {
+    if (action.type === 'UI/SET_NOTIFICATION_HEIGHT') {
+      return action.data.height
+    }
+    return state
+  },
 
   subcategories(state = [], action) {
     switch (action.type) {

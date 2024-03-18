@@ -86,6 +86,7 @@ exports[`initialState 1`] = `
       "fioAddressesLoading": false,
       "fioDomains": [],
     },
+    "notificationHeight": 0,
     "passwordReminder": {
       "lastLoginDate": -Infinity,
       "lastPasswordUseDate": -Infinity,

@@ -176,6 +176,8 @@ const SendComponent = (props: Props) => {
   const pinSpendingLimitsEnabled = useSelector<boolean>(state => state.ui.settings.spendingLimits.transaction.isEnabled)
   const pinSpendingLimitsAmount = useSelector<number>(state => state.ui.settings.spendingLimits.transaction.amount ?? 0)
   const defaultIsoFiat = useSelector<string>(state => state.ui.settings.defaultIsoFiat)
+  const hasNotifications = useSelector(state => state.ui.notificationHeight > 0)
+
   const currencyWallets = useWatch(account, 'currencyWallets')
   const [tokenId, setTokenId] = useState<EdgeTokenId>(spendInfo.tokenId ?? tokenIdProp)
   const coreWallet = currencyWallets[walletId]
@@ -1030,8 +1032,7 @@ const SendComponent = (props: Props) => {
       {({ insetStyle }) => (
         <>
           <StyledKeyboardAwareScrollView
-            notificationHeight={insetStyle.paddingBottom}
-            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: theme.rem(5) + insetStyle.paddingBottom }}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: theme.rem(5) }}
             extraScrollHeight={theme.rem(2.75)}
             enableOnAndroid
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
@@ -1059,7 +1060,7 @@ const SendComponent = (props: Props) => {
             </EdgeAnim>
             <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>{renderScamWarning()}</EdgeAnim>
           </StyledKeyboardAwareScrollView>
-          <StyledSliderView notificationHeight={insetStyle.paddingBottom}>
+          <StyledSliderView hasNotifications={hasNotifications} insetBottom={insetStyle.paddingBottom}>
             {showSlider && (
               <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
                 <SafeSlider disabledText={disabledText} onSlidingComplete={handleSliderComplete} disabled={disableSlider} />
@@ -1072,18 +1073,27 @@ const SendComponent = (props: Props) => {
   )
 }
 
-const StyledKeyboardAwareScrollView = styled(KeyboardAwareScrollView)<{ notificationHeight: number }>(theme => props => ({
-  marginBottom: props.notificationHeight,
-  margin: theme.rem(0.5)
+const StyledKeyboardAwareScrollView = styled(KeyboardAwareScrollView)(theme => ({
+  margin: theme.rem(0.5),
+  marginBottom: 0
 }))
 
-const StyledSliderView = styled(View)<{ notificationHeight: number }>(theme => props => {
+const StyledSliderView = styled(View)<{ insetBottom: number; hasNotifications: boolean }>(theme => props => {
+  const { insetBottom, hasNotifications } = props
+
+  // We only need a bit more room under the slider when it's against the bottom
+  // edge of the screen to improve usability - things close to the edges of the
+  // screen are hard to access.
+  // We don't need this extra space when notifications push the slider up away
+  // from the bottom edge, so reduce the bottom margins in this case.
+  const bottom = insetBottom + (hasNotifications ? theme.rem(1) : theme.rem(2))
+
   return {
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    bottom: theme.rem(2) + props.notificationHeight
+    bottom
   }
 })
 
