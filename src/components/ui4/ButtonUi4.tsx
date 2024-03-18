@@ -9,7 +9,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
-import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import { fixSides, mapSides, sidesToPadding } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -106,6 +106,15 @@ export function ButtonUi4(props: Props) {
       </EdgeText>
     )
 
+  // Use margin props as padding for the invisible container to increase
+  // tappable area while visually looking like margins
+  const customMarginPadding = React.useMemo(() => {
+    if (marginRem == null) return undefined
+
+    // Use margin as padding to increase tappable area
+    return sidesToPadding(mapSides(fixSides(marginRem, 0), theme.rem))
+  }, [marginRem, theme])
+
   const touchContainerStyle = React.useMemo(() => {
     const retStyle: ViewStyle[] = [styles.touchContainerCommon]
 
@@ -113,21 +122,10 @@ export function ButtonUi4(props: Props) {
     if (layout === 'row') retStyle.push(styles.touchContainerRow)
     if (layout === 'solo') retStyle.push(styles.touchContainerSolo)
 
-    const customMargin = marginRem == null ? undefined : sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
-    retStyle.push(
-      customMargin != null
-        ? {
-            // Use margin as padding to increase tappable area
-            paddingLeft: customMargin.marginLeft,
-            paddingRight: customMargin.marginRight,
-            paddingTop: customMargin.marginTop,
-            paddingBottom: customMargin.marginBottom
-          }
-        : styles.touchContainerSpacing
-    )
+    retStyle.push(customMarginPadding != null ? customMarginPadding : styles.touchContainerSpacing)
 
     return retStyle
-  }, [layout, marginRem, styles, theme])
+  }, [layout, customMarginPadding, styles])
 
   const visibleContainerStyle = React.useMemo(() => {
     const retStyle: ViewStyle[] = [styles.visibleContainerCommon]
@@ -160,7 +158,7 @@ export function ButtonUi4(props: Props) {
           </>
         )}
       </LinearGradient>
-      {!hideContent ? null : <ActivityIndicator color={spinnerColor} style={styles.spinner} />}
+      {!hideContent ? null : <ActivityIndicator color={spinnerColor} style={[customMarginPadding, styles.spinner]} />}
     </EdgeTouchableOpacity>
   )
 }
@@ -257,8 +255,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       marginLeft: theme.rem(0.5)
     },
     spinner: {
-      position: 'absolute',
-      height: theme.rem(2)
+      position: 'absolute'
     }
   }
 })
