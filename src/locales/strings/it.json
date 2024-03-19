@@ -102,6 +102,8 @@
   "select_exchange_amount": "Inserisci un importo da scambiare",
   "select_exchange_amount_short": "Inserisci un importo",
   "fragment_wallets_addwallet_fiat_hint": "Scegli una valuta fiat",
+  "managetokens_detected_tokens_header": "Newly Enabled Tokens",
+  "managetokens_all_tokens_header": "All Tokens",
   "managetokens_top_instructions": "Seleziona i token da visualizzare nel portafoglio:",
   "accept_button_text": "Accetta",
   "addtoken_contract_address_input_text": "Indirizzo del contratto",
