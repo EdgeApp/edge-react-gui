@@ -6,6 +6,7 @@ import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
+import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { DisablePluginMap, NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { launchPaymentProto, LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
 import { addressWarnings } from '../../actions/ScanActions'
@@ -67,9 +68,11 @@ export const executePlugin = async (params: {
     onLogEvent
   } = params
   const { defaultFiatAmount, forceFiatCurrencyCode, pluginId } = guiPlugin
+  const isBuy = direction === 'buy'
+  if (isBuy && checkAndShowLightBackupModal(account, navigation)) return
 
-  const tabSceneKey = direction === 'buy' ? 'buyTab' : 'sellTab'
-  const listSceneKey = direction === 'buy' ? 'pluginListBuy' : 'pluginListSell'
+  const tabSceneKey = isBuy ? 'buyTab' : 'sellTab'
+  const listSceneKey = isBuy ? 'pluginListBuy' : 'pluginListSell'
 
   function maybeNavigateToCorrectTabScene() {
     const navPath = getNavigationAbsolutePath(navigation)
