@@ -199,7 +199,7 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
           const { conversionType } = conversionValues
           if (conversionType === 'dollar') {
             params.currency = 'USD'
-            params.dollarConverisonValue = Number(conversionValues.dollarConversionValue.toFixed(2))
+            params.dollarConversionValue = Number(conversionValues.dollarConversionValue.toFixed(2))
           } else if (conversionType === 'sell') {
             const { sourceAmount, destFiatAmount, destFiatCurrencyCode, orderId, fiatProviderId } = conversionValues
 
