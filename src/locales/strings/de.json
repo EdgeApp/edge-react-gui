@@ -102,6 +102,8 @@
   "select_exchange_amount": "Bitte geben Sie einen Betrag an, der gewechselt werden soll",
   "select_exchange_amount_short": "Betrag eingeben",
   "fragment_wallets_addwallet_fiat_hint": "Wählen Sie eine Fiat-Währung",
+  "managetokens_detected_tokens_header": "Newly Enabled Tokens",
+  "managetokens_all_tokens_header": "All Tokens",
   "managetokens_top_instructions": "Wählen Sie Token aus, die in der Wallet angezeigt werden:",
   "accept_button_text": "Akzeptieren",
   "addtoken_contract_address_input_text": "Kontrakt-Adresse",
