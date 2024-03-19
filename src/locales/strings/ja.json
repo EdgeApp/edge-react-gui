@@ -102,6 +102,8 @@
   "select_exchange_amount": "交換する金額を入力してください",
   "select_exchange_amount_short": "金額を入力",
   "fragment_wallets_addwallet_fiat_hint": "法定通貨を選択",
+  "managetokens_detected_tokens_header": "Newly Enabled Tokens",
+  "managetokens_all_tokens_header": "All Tokens",
   "managetokens_top_instructions": "ウォレットに表示するトークンを選択:",
   "accept_button_text": "受け取る",
   "addtoken_contract_address_input_text": "コントラクトアドレス",
