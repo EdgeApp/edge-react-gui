@@ -27,10 +27,10 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
-import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
+import { ButtonUi4 } from '../ui4/ButtonUi4'
 
 export interface CreateWalletSelectCryptoParams {
   newAccountFlow?: (navigation: NavigationProp<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'>, items: WalletCreateItem[]) => Promise<void>
@@ -249,7 +249,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     () => (
       <Fade noFadeIn={defaultSelection.length > 0} visible={selectedItems.size > 0} duration={300}>
         <View style={styles.bottomButton}>
-          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, 0, 1]} onPress={handleNextPress} />
+          <ButtonUi4 label={lstrings.string_next_capitalized} onPress={handleNextPress} />
         </View>
       </Fade>
     ),
@@ -295,7 +295,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 const getStyles = cacheStyles((theme: Theme) => ({
   bottomButton: {
     alignSelf: 'center',
-    bottom: theme.rem(1),
+    bottom: theme.rem(2),
     position: 'absolute'
   }
 }))
