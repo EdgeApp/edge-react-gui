@@ -16,6 +16,7 @@
 - changed: 'Sweep Private Key' usage blocked for light accounts
 - fixed: FIO name transfer error when sending with no address
 - fixed: Bottom notification cards sometimes covering parts of the scene
+- fixed: Wallet picker modal requiring multiple taps to select if keyboard was open
 
 ## 4.2.0 (2024-03-12)
 
