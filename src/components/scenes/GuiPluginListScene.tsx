@@ -229,7 +229,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
-    // Don't allow light accounts to enter sell plugins
+    // Don't allow light accounts to enter buy plugins
     const direction = this.getSceneDirection()
     if (direction === 'buy' && checkAndShowLightBackupModal(account, navigation)) return
 
