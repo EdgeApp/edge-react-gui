@@ -102,6 +102,8 @@
   "select_exchange_amount": "Vui lòng nhập một số tiền để trao đổi",
   "select_exchange_amount_short": "Nhập một số tiền",
   "fragment_wallets_addwallet_fiat_hint": "Chọn một loại tiền tệ fiat",
+  "managetokens_detected_tokens_header": "Newly Enabled Tokens",
+  "managetokens_all_tokens_header": "All Tokens",
   "managetokens_top_instructions": "Select tokens to display in wallet:",
   "accept_button_text": "Đồng ý",
   "addtoken_contract_address_input_text": "Địa chỉ đã liên kết",
