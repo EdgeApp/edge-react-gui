@@ -168,7 +168,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           const { currencyCode, walletId } = result
           const wallet = account.currencyWallets[walletId]
           if (wallet == null) return
-          const tokenId = getTokenId(account, wallet.currencyInfo.pluginId, currencyCode)
+          const tokenId = getTokenId(wallet.currencyConfig, currencyCode)
           navigation.setParams({ tokenId, walletId })
         }
       })

@@ -74,7 +74,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   const account = useSelector(state => state.core.account)
   const fioPlugin = account.currencyConfig.fio
 
-  const tokenId = getTokenId(account, coreWallet.currencyInfo.pluginId, currencyCode)
+  const tokenId = getTokenId(coreWallet.currencyConfig, currencyCode)
 
   const { currencyWallets } = account
   const canSelfTransfer: boolean = Object.keys(currencyWallets).some(walletId => {
