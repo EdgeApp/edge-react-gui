@@ -102,6 +102,8 @@
   "select_exchange_amount": "Por favor, digite uma quantia para trocar",
   "select_exchange_amount_short": "Informe um Valor",
   "fragment_wallets_addwallet_fiat_hint": "Escolha uma moeda fiduciária",
+  "managetokens_detected_tokens_header": "Newly Enabled Tokens",
+  "managetokens_all_tokens_header": "All Tokens",
   "managetokens_top_instructions": "Selecione tokens para exibir na carteira:",
   "accept_button_text": "Aceitar",
   "addtoken_contract_address_input_text": "Endereço do Contrato",
