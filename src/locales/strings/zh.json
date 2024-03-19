@@ -102,6 +102,8 @@
   "select_exchange_amount": "请输入要兑换的金额",
   "select_exchange_amount_short": "输入数量",
   "fragment_wallets_addwallet_fiat_hint": "选择法定货币",
+  "managetokens_detected_tokens_header": "Newly Enabled Tokens",
+  "managetokens_all_tokens_header": "All Tokens",
   "managetokens_top_instructions": "Select tokens to display in wallet:",
   "accept_button_text": "接受",
   "addtoken_contract_address_input_text": "智能合约地址",
