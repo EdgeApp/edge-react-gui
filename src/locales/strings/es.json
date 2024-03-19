@@ -102,6 +102,8 @@
   "select_exchange_amount": "Ingresa una cantidad para intercambiar",
   "select_exchange_amount_short": "Ingresa Monto",
   "fragment_wallets_addwallet_fiat_hint": "Elije una moneda fiat",
+  "managetokens_detected_tokens_header": "Newly Enabled Tokens",
+  "managetokens_all_tokens_header": "All Tokens",
   "managetokens_top_instructions": "Seleccionar tokens para mostrar en la cartera:",
   "accept_button_text": "Aceptar",
   "addtoken_contract_address_input_text": "Dirección del contrato",
