@@ -4,6 +4,7 @@ import { EdgeCurrencyConfig, EdgeDenomination } from 'edge-core-js'
 import { RootState } from '../reducers/RootReducer'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { asBiggystring } from './cleaners'
+import { getTokenId } from './CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, mulToPrecision } from './utils'
 
 /**
@@ -76,7 +77,7 @@ export class CryptoAmount {
     // Populate tokenId, derived from currencyCode
     if (currencyCode != null) {
       // Ensure currencyCode is recognized, if given as a constructor argument.
-      const foundTokenId = Object.keys(currencyConfig.allTokens).find(edgeToken => currencyConfig.allTokens[edgeToken].currencyCode === currencyCode)
+      const foundTokenId = getTokenId(currencyConfig, currencyCode)
       if (foundTokenId == null) {
         throw new Error(`CryptoAmount: Could not find tokenId for currencyCode: ${currencyCode}, pluginId: ${currencyConfig.currencyInfo.pluginId}.`)
       } else {
