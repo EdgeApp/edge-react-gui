@@ -148,7 +148,6 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
     const { isEstimate, fromNativeAmount, toNativeAmount, networkFee, pluginId, expirationDate, request } = selectedQuote
     // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
     const { toWallet, toTokenId } = request
-    const toCurrencyCode = getCurrencyCode(toWallet, toTokenId)
     try {
       dispatch(logEvent('Exchange_Shift_Start'))
       const result: EdgeSwapResult = await selectedQuote.approve()
@@ -185,7 +184,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
             conversionType: 'crypto',
             cryptoAmount: new CryptoAmount({
               nativeAmount: toNativeAmount,
-              currencyCode: toCurrencyCode,
+              tokenId: toTokenId,
               currencyConfig: toWallet.currencyConfig
             }),
             orderId: result.orderId,
