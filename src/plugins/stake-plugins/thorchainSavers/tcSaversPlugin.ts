@@ -788,7 +788,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
   const { action, wallet, nativeAmount: requestNativeAmount, currencyCode, account } = request
   const { pluginId } = wallet.currencyInfo
 
-  const tokenId = getTokenId(account, pluginId, currencyCode) ?? null
+  const tokenId = getTokenId(wallet.currencyConfig, currencyCode) ?? null
   const isToken = tokenId != null
   const isEvm = EVM_PLUGINIDS[pluginId]
 
@@ -1196,7 +1196,7 @@ const edgeToTcAsset = (account: EdgeAccount, wallet: EdgeCurrencyWallet, currenc
         `Currency type ${type} does not support token savers and currencyCode ${currencyCode} mismatches wallet currency code ${wallet.currencyInfo.currencyCode}`
       )
     }
-    const tokenId = getTokenId(account, pluginId, currencyCode)
+    const tokenId = getTokenId(wallet.currencyConfig, currencyCode)
     if (tokenId == null) {
       throw new Error(`getStakePositionInner: Cannot find tokenId for ${pluginId}:${currencyCode}`)
     }
