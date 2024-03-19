@@ -102,6 +102,8 @@
   "select_exchange_amount": "거래할 금액을 선택하십시오.",
   "select_exchange_amount_short": "금액을 입력",
   "fragment_wallets_addwallet_fiat_hint": "피아트 통화를 선택",
+  "managetokens_detected_tokens_header": "Newly Enabled Tokens",
+  "managetokens_all_tokens_header": "All Tokens",
   "managetokens_top_instructions": "Select tokens to display in wallet:",
   "accept_button_text": "수락",
   "addtoken_contract_address_input_text": "계약 주소",
