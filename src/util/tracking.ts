@@ -171,13 +171,13 @@ export function trackError(
  */
 export function logEvent(event: TrackingEventName, values: TrackingValues = {}): ThunkAction<void> {
   return async (dispatch, getState) => {
-    const { error, conversionValues, createdWalletCurrencyCode } = values
     getExperimentConfig()
       .then(async (experimentConfig: ExperimentConfig) => {
         // Persistent & Unchanged params:
         const { isFirstOpen, deviceId, firstOpenEpoch } = await getFirstOpenInfo()
 
-        const params: any = { edgeVersion: getVersion(), buildNumber: getBuildNumber(), isFirstOpen, deviceId, firstOpenEpoch, ...values }
+        const { error, createdWalletCurrencyCode, conversionValues, ...restValue } = values
+        const params: any = { edgeVersion: getVersion(), buildNumber: getBuildNumber(), isFirstOpen, deviceId, firstOpenEpoch, ...restValue }
 
         // Populate referral params:
         const state = getState()
