@@ -154,6 +154,8 @@ const strings = {
   select_exchange_amount: 'Please enter an amount to exchange',
   select_exchange_amount_short: 'Enter an Amount',
   fragment_wallets_addwallet_fiat_hint: 'Choose a fiat currency',
+  managetokens_detected_tokens_header: 'Auto Detected Tokens',
+  managetokens_all_tokens_header: 'All Tokens',
   managetokens_top_instructions: 'Select tokens to display in wallet:',
   accept_button_text: 'Accept',
   addtoken_contract_address_input_text: 'Contract Address',

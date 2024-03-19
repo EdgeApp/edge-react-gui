@@ -74,7 +74,7 @@ export const ManageTokensRowComponent = (props: Props) => {
   return (
     <Pressable style={styles.row} onPress={handleToggle}>
       <CryptoIconUi4
-        marginRem={0.5}
+        marginRem={[0, 0.5, 0, 0]} // We don't need left margins because there's no border. This component effectively is the left "border"
         sizeRem={2}
         // Use the pluginId to avoid showing the wallet loading spinner:
         pluginId={wallet.currencyInfo.pluginId}
@@ -145,8 +145,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   switchBox: {
     alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: theme.rem(0.5)
+    justifyContent: 'center'
   }
 }))
 
