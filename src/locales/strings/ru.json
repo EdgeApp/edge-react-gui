@@ -102,6 +102,8 @@
   "select_exchange_amount": "Пожалуйста, введите сумму для обмена",
   "select_exchange_amount_short": "Введите сумму",
   "fragment_wallets_addwallet_fiat_hint": "Выберите официальную валюту",
+  "managetokens_detected_tokens_header": "Newly Enabled Tokens",
+  "managetokens_all_tokens_header": "All Tokens",
   "managetokens_top_instructions": "Select tokens to display in wallet:",
   "accept_button_text": "Принять",
   "addtoken_contract_address_input_text": "Адрес контракта",
