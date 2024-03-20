@@ -11,7 +11,8 @@ import { logEvent } from '../../util/tracking'
 import { fuzzyTimeout } from '../../util/utils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginStartParams } from './fiatPluginTypes'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
-import { getBestError, getRateFromQuote } from './pluginUtils'
+import { StateManager } from './hooks/useStateManager'
+import { BestError, getBestError, getRateFromQuote } from './pluginUtils'
 import { banxaProvider } from './providers/banxaProvider'
 import { bityProvider } from './providers/bityProvider'
 import { kadoProvider } from './providers/kadoProvider'
@@ -19,6 +20,7 @@ import { moonpayProvider } from './providers/moonpayProvider'
 import { mtpelerinProvider } from './providers/mtpelerinProvider'
 import { paybisProvider } from './providers/paybisProvider'
 import { simplexProvider } from './providers/simplexProvider'
+import { EnterAmountState, FiatPluginEnterAmountParams } from './scenes/FiatPluginEnterAmountScene'
 import { initializeProviders } from './util/initializeProviders'
 
 // A map keyed by provider pluginIds, and values representing preferred priority
@@ -33,6 +35,15 @@ const asPaymentTypeProviderPriorityMap = asObject(asProviderPriorityMap)
 type PaymentTypeProviderPriorityMap = ReturnType<typeof asPaymentTypeProviderPriorityMap>
 
 type PriorityArray = Array<{ [pluginId: string]: boolean }>
+
+interface ConvertValueInternalResult {
+  stateManagerUpdate?: Partial<EnterAmountState>
+  bestError?: BestError
+  value?: string
+}
+type InternalFiatPluginEnterAmountParams = FiatPluginEnterAmountParams & {
+  convertValueInternal: (sourceFieldNum: number, value: string, stateManager: StateManager<EnterAmountState>) => Promise<ConvertValueInternalResult>
+}
 
 const providerFactories = [banxaProvider, bityProvider, kadoProvider, moonpayProvider, mtpelerinProvider, paybisProvider, simplexProvider]
 
@@ -207,7 +218,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
       // Navigate to scene to have user enter amount
       const initialValue1 = requireCrypto ? undefined : defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
-      showUi.enterAmount({
+      const enterAmount: InternalFiatPluginEnterAmountParams = {
         disableInput,
         headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),
         initState: {
@@ -219,20 +230,27 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         swapInputLocations: requireCrypto,
         async onChangeText() {},
         async convertValue(sourceFieldNum, value, stateManager) {
+          const out = await enterAmount.convertValueInternal(sourceFieldNum, value, stateManager)
+          if (out.stateManagerUpdate != null) stateManager.update(out.stateManagerUpdate)
+          return out.value
+        },
+
+        async convertValueInternal(sourceFieldNum, value, stateManager) {
           if (!isValidInput(value)) {
-            stateManager.update({ statusText: { content: lstrings.create_wallet_invalid_input, textType: 'error' } })
-            return
+            return { stateManagerUpdate: { statusText: { content: lstrings.create_wallet_invalid_input, textType: 'error' } } }
           }
           bestQuote = undefined
           goodQuotes = []
           lastSourceFieldNum = sourceFieldNum
 
           if (eq(value, '0')) {
-            stateManager.update({
-              statusText: { content: lstrings.enter_amount_label },
-              poweredBy: undefined
-            })
-            return ''
+            return {
+              stateManagerUpdate: {
+                statusText: { content: lstrings.enter_amount_label },
+                poweredBy: undefined
+              },
+              value: ''
+            }
           }
 
           const myCounter = ++counter
@@ -285,7 +303,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           })
 
           // Only update with the latest call to convertValue
-          if (myCounter !== counter) return
+          if (myCounter !== counter) return {}
 
           for (const quote of quotes) {
             if (quote.direction !== direction) continue
@@ -296,28 +314,29 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           const noQuoteText = direction === 'buy' ? lstrings.fiat_plugin_buy_no_quote : lstrings.fiat_plugin_sell_no_quote
           if (goodQuotes.length === 0) {
             // Find the best error to surface
-            const bestErrorText = getBestError(errors as any, sourceFieldCurrencyCode, direction) ?? noQuoteText
-            stateManager.update({ statusText: { content: bestErrorText, textType: 'error' } })
-            return
+            const bestError = getBestError(errors as any, sourceFieldCurrencyCode, direction)
+            return { bestError, stateManagerUpdate: { statusText: { content: bestError.errorText ?? noQuoteText, textType: 'error' } } }
           }
 
           // Find best quote factoring in pluginPriorities
           bestQuote = getBestQuote(goodQuotes, priorityArray ?? [{}])
           if (bestQuote == null) {
-            stateManager.update({ statusText: { content: noQuoteText, textType: 'error' } })
-            return
+            return { stateManagerUpdate: { statusText: { content: noQuoteText, textType: 'error' } } }
           }
 
           const exchangeRateText = getRateFromQuote(bestQuote, displayFiatCurrencyCode)
-          stateManager.update({
-            statusText: { content: exchangeRateText, textType: bestQuote.isEstimate ? 'warning' : undefined },
-            poweredBy: { poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon }
-          })
+
+          const out: ConvertValueInternalResult = {
+            stateManagerUpdate: {
+              statusText: { content: exchangeRateText, textType: bestQuote.isEstimate ? 'warning' : undefined },
+              poweredBy: { poweredByText: bestQuote.pluginDisplayName, poweredByIcon: bestQuote.partnerIcon }
+            }
+          }
 
           if (sourceFieldNum === 1) {
-            return toFixed(bestQuote.cryptoAmount, 0, 6)
+            return { ...out, value: toFixed(bestQuote.cryptoAmount, 0, 6) }
           } else {
-            return toFixed(bestQuote.fiatAmount, 0, 2)
+            return { ...out, value: toFixed(bestQuote.fiatAmount, 0, 2) }
           }
         },
         async onPoweredByClick(stateManager) {
@@ -376,7 +395,8 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           }
           await bestQuote.approveQuote({ showUi, coreWallet })
         }
-      })
+      }
+      showUi.enterAmount(enterAmount)
     }
   }
   return fiatPlugin
