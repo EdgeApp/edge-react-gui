@@ -1,9 +1,10 @@
 import { div, mul } from 'biggystring'
-import { EdgeCurrencyConfig, EdgeDenomination } from 'edge-core-js'
+import { EdgeCurrencyConfig, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
 
 import { RootState } from '../reducers/RootReducer'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { asBiggystring } from './cleaners'
+import { getTokenId } from './CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, mulToPrecision } from './utils'
 
 /**
@@ -20,7 +21,7 @@ interface AssetBaseArgs {
  */
 type TokenOrCurrencyCodeArgs =
   | {
-      tokenId: string | null
+      tokenId: EdgeTokenId
       currencyCode?: never
     }
   | {
@@ -64,7 +65,7 @@ type CryptoAmountConstructorArgs = AssetBaseArgs & TokenOrCurrencyCodeArgs & Exc
 export class CryptoAmount {
   public readonly currencyConfig: EdgeCurrencyConfig
   public readonly nativeAmount: string
-  public readonly tokenId: string | null
+  public readonly tokenId: EdgeTokenId
 
   /**
    * Must construct CryptoAmount with currencyConfig and one of either: tokenId or currencyCode
@@ -76,8 +77,8 @@ export class CryptoAmount {
     // Populate tokenId, derived from currencyCode
     if (currencyCode != null) {
       // Ensure currencyCode is recognized, if given as a constructor argument.
-      const foundTokenId = Object.keys(currencyConfig.allTokens).find(edgeToken => currencyConfig.allTokens[edgeToken].currencyCode === currencyCode)
-      if (foundTokenId == null) {
+      const foundTokenId = getTokenId(currencyConfig, currencyCode)
+      if (foundTokenId === undefined) {
         throw new Error(`CryptoAmount: Could not find tokenId for currencyCode: ${currencyCode}, pluginId: ${currencyConfig.currencyInfo.pluginId}.`)
       } else {
         this.tokenId = foundTokenId

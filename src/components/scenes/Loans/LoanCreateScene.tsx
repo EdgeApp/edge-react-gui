@@ -117,7 +117,7 @@ export const LoanCreateScene = (props: Props) => {
 
   const borrowEngineWalletPluginId = borrowEngineWallet.currencyInfo.pluginId
 
-  const collateralTokenId = getTokenId(account, borrowEngineWalletPluginId, hardCollateralCurrencyCode)
+  const collateralTokenId = getTokenId(borrowEngineWallet.currencyConfig, hardCollateralCurrencyCode)
   const collateralToken = collateralTokenId != null ? allTokens[borrowEngineWalletPluginId][collateralTokenId] : null
   const collateralDenoms = collateralToken != null ? collateralToken.denominations : borrowEngineWallet.currencyInfo.denominations
   const collateralExchangeMultiplier = collateralDenoms[0].multiplier

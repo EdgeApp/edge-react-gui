@@ -298,7 +298,7 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
       // Find the currency or token info:
       let info: EdgeCurrencyInfo | EdgeToken = wallet.currencyInfo
       if (currencyCode !== wallet.currencyInfo.currencyCode) {
-        const tokenId = getTokenId(state.core.account, wallet.currencyInfo.pluginId, currencyCode)
+        const tokenId = getTokenId(wallet.currencyConfig, currencyCode)
         if (tokenId == null) {
           log.push(`LogTot: No tokenId for ${currencyCode}`)
           continue
