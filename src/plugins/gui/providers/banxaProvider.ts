@@ -771,6 +771,7 @@ const addToAllowedCurrencies = (
 
 const typeMap: { [Payment in BanxaPaymentType]: FiatPaymentType } = {
   CHECKOUTCREDIT: 'credit',
+  PRIMERCC: 'credit',
   CLEARJCNSELLFP: 'fasterpayments',
   CLEARJCNSELLSEPA: 'sepa',
   CLEARJUNCTION: 'sepa',
