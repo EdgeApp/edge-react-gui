@@ -373,7 +373,6 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: false,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isTransactionListUnsupported: true,
     isCustomTokensSupported: false,
     isPaymentProtocolSupported: false
   },
@@ -384,7 +383,6 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: false,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isTransactionListUnsupported: true,
     isCustomTokensSupported: false,
     isPaymentProtocolSupported: false
   },

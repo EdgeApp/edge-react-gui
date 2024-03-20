@@ -4,10 +4,11 @@
 
 - added: Add auto-detected tokens section in ManageTokensScene
 - fixed: FIO handle/domain registration error with MATIC payment
+- fixed: Fix duplicate transactions bug and re-enable transaction support in Filecoin FEVM
 
 ## 4.3.0
 
-- added: Wrapped Touchable* components to consolidate tap debounce logic
+- added: Wrapped Touchable\* components to consolidate tap debounce logic
 - added: Mt Pelerin for SEPA and Faster Payments
 - added: Setting to change default screen on login
 - changed: Remove extra spaces and normal capitalization of mnemonic seed input
