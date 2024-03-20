@@ -102,7 +102,7 @@
   "select_exchange_amount": "Veuillez saisir un montant à échanger",
   "select_exchange_amount_short": "Saisissez un montant",
   "fragment_wallets_addwallet_fiat_hint": "Sélectionnez la monnaie fidcuiaire ",
-  "managetokens_detected_tokens_header": "Newly Enabled Tokens",
+  "managetokens_detected_tokens_header": "Auto Detected Tokens",
   "managetokens_all_tokens_header": "All Tokens",
   "managetokens_top_instructions": "Select tokens to display in wallet:",
   "accept_button_text": "J'accepte",
