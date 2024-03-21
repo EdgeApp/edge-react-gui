@@ -165,9 +165,13 @@ export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
         const { enabledTokenIds } = wallet
         const tokenIds = [null, ...enabledTokenIds]
         for (const tokenId of tokenIds) {
-          const txs = await wallet.getNumTransactions({ tokenId })
-          const currencyCode = getCurrencyCode(wallet, tokenId)
-          logOutput.data += `${currencyCode}: ${txs} txs\n`
+          try {
+            const txs = await wallet.getNumTransactions({ tokenId })
+            const currencyCode = getCurrencyCode(wallet, tokenId)
+            logOutput.data += `${currencyCode}: ${txs} txs\n`
+          } catch (e) {
+            logOutput.data += `Error checking tokenId ${tokenId} in wallet ${wallet.id}: ${String(e)}`
+          }
         }
         const { imported, syncKey } = await account.getRawPrivateKey(wallet.id)
 
@@ -178,7 +182,11 @@ export function getLogOutput(): ThunkAction<Promise<MultiLogOutput>> {
             currencyCode,
             imported,
             repoId: getRepoId(syncKey),
-            pluginDump: await wallet.dumpData()
+            pluginDump: await wallet.dumpData().catch(error => ({
+              walletId: wallet.id,
+              walletType: wallet.type,
+              data: { dumpError: { message: String(error) } }
+            }))
           })
         }
       }
