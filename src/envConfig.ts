@@ -142,6 +142,11 @@ export const asEnvConfig = asObject({
       freeRegRefCode: asOptional(asString, '')
     }).withRest
   ),
+  FILECOIN_INIT: asCorePluginInit(
+    asObject({
+      glifApiKey: asOptional(asString, '')
+    })
+  ),
   GODEX_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')

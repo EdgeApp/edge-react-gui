@@ -19,7 +19,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   ethereumclassic: true,
   ethereumpow: ENV.ETHEREUM_POW_INIT,
   fantom: ENV.FANTOM_INIT,
-  filecoin: true,
+  filecoin: ENV.FILECOIN_INIT,
   filecoinfevm: true,
   filecoinfevmcalibration: true,
   fio: ENV.FIO_INIT,

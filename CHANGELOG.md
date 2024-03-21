@@ -14,6 +14,7 @@
 - changed: Button width remains constant regardless of content visibility
 - changed: Certain deeplinks blocked for light accounts
 - changed: 'Sweep Private Key' usage blocked for light accounts
+- fixed: Filecoin sync issue caused by missing and necessary GLIF API key
 - fixed: FIO name transfer error when sending with no address
 - fixed: Bottom notification cards sometimes covering parts of the scene
 - fixed: Successfully upload logs, even if a wallet has errors.
