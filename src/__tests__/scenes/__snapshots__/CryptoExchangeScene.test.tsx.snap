@@ -455,10 +455,10 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
             {
               "alignItems": "center",
               "flexDirection": "row",
+              "flexGrow": 1,
               "justifyContent": "space-between",
               "marginVertical": 11,
               "paddingHorizontal": 11,
-              "width": "100%",
             }
           }
         >
