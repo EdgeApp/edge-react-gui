@@ -3,6 +3,7 @@
 ## Unreleased
 
 - added: Add auto-detected tokens section in ManageTokensScene
+- fixed: Filecoin sync issue caused by missing and necessary GLIF API key
 - fixed: FIO handle/domain registration error with MATIC payment
 - fixed: Fix duplicate transactions bug and re-enable transaction support in Filecoin FEVM
 
