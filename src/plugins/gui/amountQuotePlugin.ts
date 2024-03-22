@@ -49,6 +49,13 @@ const providerFactories = [banxaProvider, bityProvider, kadoProvider, moonpayPro
 
 const DEFAULT_FIAT_AMOUNT = '500'
 
+/**
+ * Amount that we will attempt to get a quote for if the user presses the MAX button
+ * This is an arbitrary large number that should be larger than any reasonable quote
+ * in either fiat or crypto
+ */
+const MAX_QUOTE_VALUE = '10000000000'
+
 export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const { account, guiPlugin, longPress = false, showUi } = params
   const { pluginId } = guiPlugin
@@ -229,6 +236,84 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
         label2: sprintf(lstrings.fiat_plugin_amount_currencycode, currencyCode),
         swapInputLocations: requireCrypto,
         async onChangeText() {},
+        async onMax(sourceFieldNum, stateManager) {
+          /** Helper function to get a quote or error for the value specified */
+          const getMaxQuoteOrError = async (
+            fieldNum: number,
+            quoteValue: string
+          ): Promise<{ value1: string; value2: string } | ConvertValueInternalResult | undefined> => {
+            // First try getting a quote using the requested value
+            const result = await enterAmount.convertValueInternal(fieldNum, quoteValue, stateManager)
+            if (result.bestError?.quoteError != null) {
+              const { quoteError } = result.bestError
+              // We're only interested in overLimit errors to help find the max value
+              if (quoteError.errorType === 'overLimit' && quoteError.errorAmount != null) {
+                const { errorAmount, displayCurrencyCode } = quoteError
+
+                // We can only get a new quote if the displayCurrencyCode is specified since
+                // we have to know what type of quote to query
+                if (displayCurrencyCode != null) {
+                  if (displayCurrencyCode === displayFiatCurrencyCode) {
+                    // Re-query for a quote using the error amount as a fiat value which is fieldNum=1.
+                    // This 'should' succeed since the API told us this is the max value.
+                    const value1 = String(errorAmount)
+                    const value2 = await enterAmount.convertValue(1, value1, stateManager)
+                    if (value2 == null) return
+                    return { value1, value2 }
+                  } else if (displayCurrencyCode === currencyCode) {
+                    // Re-query for a quote using the error amount as a crypto value which is fieldNum=2.
+                    // This 'should' succeed since the API told us this is the max value.
+                    const value2 = String(errorAmount)
+                    const value1 = await enterAmount.convertValue(2, value2, stateManager)
+                    if (value1 == null) return
+                    return { value1, value2 }
+                  }
+                }
+              }
+              // We could not get a quote for the max value so return undefined. This happens as some APIs
+              // do not return a max value in their error, or they return a value without telling us which
+              // asset the amount is denominated in.
+            } else {
+              // If there was no error, then return the result which includes the opposite value needed
+              return result
+            }
+          }
+
+          if (direction === 'buy') {
+            // Try to get an error by requesting a massive quote
+            const result = await getMaxQuoteOrError(1, MAX_QUOTE_VALUE)
+            if (result == null) {
+              stateManager.update({ statusText: { content: 'Provider cannot create max buy quote', textType: 'error' } })
+            } else if ('value1' in result) {
+              // We got a max quote for both fiat and crypto fields, update the UI to show it
+              stateManager.update(result)
+            } else {
+              // Wow. Can we really buy this much?
+              stateManager.update({ value1: MAX_QUOTE_VALUE, value2: result.value })
+            }
+          } else {
+            // Get the max amount of the wallet's currency
+            const publicAddress = dummyAddressMap[currencyPluginId]
+            if (publicAddress == null) {
+              stateManager.update({ statusText: { content: sprintf('Cannot create max sell quote for %s', currencyCode), textType: 'error' } })
+            }
+            const maxAmount = await coreWallet.getMaxSpendable({ tokenId, spendTargets: [{ publicAddress }] })
+            const exchangeAmount = await coreWallet.nativeToDenomination(maxAmount, currencyCode)
+
+            const result = await getMaxQuoteOrError(2, exchangeAmount)
+            if (result == null) {
+              stateManager.update({ statusText: { content: 'Provider cannot create max sell quote', textType: 'error' } })
+            } else if ('value1' in result) {
+              // We got a max quote for both fiat and crypto fields, update the UI to show it
+              stateManager.update(result)
+            } else {
+              // The amount in the user's wallet is within the range of what the provider can
+              // support.
+              stateManager.update({ value1: result.value, value2: exchangeAmount })
+            }
+          }
+        },
+
         async convertValue(sourceFieldNum, value, stateManager) {
           const out = await enterAmount.convertValueInternal(sourceFieldNum, value, stateManager)
           if (out.stateManagerUpdate != null) stateManager.update(out.stateManagerUpdate)
@@ -443,4 +528,38 @@ export const getBestQuote = (quotes: FiatProviderQuote[], priorityArray: Priorit
     }
     if (bestQuote != null) return bestQuote
   }
+}
+
+const evm = '0x0d73358506663d484945BA85D0cd435ad610B0A0'
+
+/**
+ * Dummy addresses from Edge internal account used for creating a dummy
+ * EdgeSpendInfo only for calculating the max spendable amount
+ */
+const dummyAddressMap: { [pluginId: string]: string } = {
+  arbitrum: evm,
+  avalanche: evm,
+  binancesmartchain: evm,
+  celo: evm,
+  fantom: evm,
+  filecoinfevm: evm,
+  ethereum: evm,
+  polygon: evm,
+  pulsechain: evm,
+  optimism: evm,
+  zksync: evm,
+  rsk: evm,
+
+  bitcoin: 'bc1qk4crv4cuahw3k5c07pjnt5ld6wqd3mfdarxegk',
+  bitcoincash: 'qpqhtl4prfwtzr3nh6u6tc9pmspdnwx7c5g8zuy9l6',
+  ripple: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
+  dogecoin: 'D9NYBLA3pviqwZxEtK9CAmWNMgKN9CxFak',
+  litecoin: 'ltc1q6myyx2h0zm6784ycnads54l2zqx6f9m84w0v4f',
+  dash: 'XeLLbGLQWQfvpqMrhozfYkFhZsQP65nvJY',
+  hedera: '0.0.498055',
+  polkadot: '1oUs7ZvTs1mVrtsz25D4c8kQBzvUAtptcEKAnFwWkUrMXzE',
+  tron: 'TVNi7wRX7zPVxKmKzTJFEfVxEb3aNRdGbY',
+  tezos: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX',
+  cosmos: 'cosmos17vjuuz0qjh5ga3ckk272lna63g9r47hgduvgrz',
+  coreum: 'core13vct004glmk7empapqqw0vlh2n88el2apkq35l'
 }
