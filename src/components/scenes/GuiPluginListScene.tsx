@@ -1,9 +1,10 @@
 import { Disklet } from 'disklet'
-import { EdgeAccount } from 'edge-core-js/types'
+import { EdgeAccount, EdgeTokenId } from 'edge-core-js/types'
 import * as React from 'react'
 import { Image, ListRenderItemInfo, Platform, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
+import { sprintf } from 'sprintf-js'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { checkAndSetRegion, showCountrySelectionModal } from '../../actions/CountryListActions'
@@ -26,7 +27,9 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
+import { EdgeAsset } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
+import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { infoServerData } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
@@ -47,6 +50,7 @@ import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
 
 export interface GuiPluginListParams {
   launchPluginId?: string
+  filterAsset?: EdgeAsset
 }
 
 const buyRaw = buyPluginJsonOverrideRaw.length > 0 ? buyPluginJsonOverrideRaw : buyPluginJsonRaw
@@ -96,9 +100,11 @@ interface StateProps {
   deviceId: string
   disablePlugins: NestedDisableMap
   insetStyle: InsetStyle
+  filterAsset?: { pluginId: string; tokenId: EdgeTokenId }
   onCountryPress: () => void
-  handleScroll: SceneScrollHandler
+  onPluginOpened: () => void
   onLogEvent: OnLogEvent
+  onScroll: SceneScrollHandler
 }
 
 type Props = OwnProps & StateProps & ThemeProps
@@ -203,7 +209,18 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow, longPress: boolean = false) {
-    const { coreDisklet, countryCode, stateProvinceCode, deviceId, disablePlugins, navigation, account, onLogEvent } = this.props
+    const {
+      coreDisklet,
+      countryCode,
+      filterAsset,
+      stateProvinceCode,
+      deviceId,
+      disablePlugins,
+      navigation,
+      account,
+      onLogEvent,
+      onPluginOpened: onPluginClosed
+    } = this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -248,6 +265,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         direction,
         disablePlugins: disableProviders,
         disklet: coreDisklet,
+        filterAsset,
         guiPlugin: plugin,
         longPress,
         navigation,
@@ -263,6 +281,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         deepQuery
       })
     }
+
+    // Reset potential filterAsset after the user launched a plugin.
+    onPluginClosed()
   }
 
   renderPlugin = ({ item, index }: ListRenderItemInfo<GuiPluginRow>) => {
@@ -314,7 +335,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   renderTop = () => {
-    const { countryCode, stateProvinceCode, onCountryPress, theme } = this.props
+    const { account, countryCode, stateProvinceCode, onCountryPress, theme, filterAsset } = this.props
     const styles = getStyles(theme)
     const direction = this.getSceneDirection()
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
@@ -326,6 +347,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const countryName = hasCountryData ? countryData.name : lstrings.buy_sell_crypto_select_country_button
     const iconStyle = stateProvinceData == null ? styles.selectedCountryFlag : styles.selectedCountryFlagSelectableRow
     const icon = !hasCountryData ? undefined : <FastImage source={imageSrc} style={iconStyle} />
+
+    const titleAsset = filterAsset == null ? lstrings.cryptocurrency : getCurrencyCodeWithAccount(account, filterAsset.pluginId, filterAsset.tokenId)
 
     const countryCard =
       stateProvinceData == null ? (
@@ -339,7 +362,11 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     return (
       <>
         <EdgeAnim style={styles.header} enter={fadeInUp90}>
-          <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline withTopMargin />
+          <SceneHeader
+            title={direction === 'buy' ? sprintf(lstrings.title_plugin_buy_s, titleAsset) : sprintf(lstrings.title_plugin_sell_s, titleAsset)}
+            underline
+            withTopMargin
+          />
         </EdgeAnim>
 
         {hasCountryData ? (
@@ -393,7 +420,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       <View style={styles.sceneContainer}>
         <Animated.FlatList
           data={plugins}
-          onScroll={this.props.handleScroll}
+          onScroll={this.props.onScroll}
           ListHeaderComponent={this.renderTop}
           ListEmptyComponent={this.renderEmptyList}
           renderItem={this.renderPlugin}
@@ -480,6 +507,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const { navigation, route } = props
+  const { params = { filterAsset: undefined } } = route
   const dispatch = useDispatch()
   const theme = useTheme()
 
@@ -495,6 +523,8 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
   const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
 
+  const [filterAssetLocal, setFilterAssetLocal] = React.useState<EdgeAsset | undefined>(params.filterAsset)
+
   const handleLogEvent = useHandler((event, values) => {
     dispatch(logEvent(event, values))
   })
@@ -508,11 +538,22 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
       })
     )
   })
+  const handlePluginOpened = useHandler(() => {
+    // Reset the temporary 1-time asset filter after opening a plugin.
+    // Known issue: We can't resolve the case where the user navigates to this
+    // scene with a 'filterAsset,' but does not select a payment method before
+    // navigating away.
+    setFilterAssetLocal(undefined)
+  })
 
   React.useEffect(() => {
     dispatch(checkAndSetRegion({ account, countryCode, stateProvinceCode }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  React.useEffect(() => {
+    setFilterAssetLocal(params.filterAsset)
+  }, [params])
 
   return (
     <SceneWrapper hasTabs hasNotifications padding={theme.rem(0.5)}>
@@ -520,22 +561,24 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
         return (
           <View style={undoInsetStyle}>
             <GuiPluginList
-              handleScroll={handleScroll}
-              navigation={navigation}
-              route={route}
-              deviceId={deviceId}
               account={account}
               accountPlugins={accountPlugins}
               accountReferral={accountReferral}
               coreDisklet={coreDisklet}
               countryCode={countryCode}
-              onCountryPress={handleCountryPress}
-              stateProvinceCode={stateProvinceCode}
               developerModeOn={developerModeOn}
+              deviceId={deviceId}
               disablePlugins={disablePlugins}
-              theme={theme}
+              filterAsset={filterAssetLocal}
+              onScroll={handleScroll}
               insetStyle={insetStyle}
+              navigation={navigation}
+              route={route}
+              stateProvinceCode={stateProvinceCode}
+              theme={theme}
+              onCountryPress={handleCountryPress}
               onLogEvent={handleLogEvent}
+              onPluginOpened={handlePluginOpened}
             />
           </View>
         )
