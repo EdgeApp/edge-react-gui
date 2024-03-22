@@ -1128,6 +1128,8 @@
   "exchange_insufficient_funds_title": "Fundos Insuficientes",
   "exchange_insufficient_funds_message": "O valor inserido mais taxas excede o saldo da carteira.",
   "exchange_insufficient_funds_below_balance": "O saldo da carteira está abaixo do valor inserido.",
+  "exchange_select_sending_wallet": "Please select a wallet to swap from",
+  "exchange_select_receiving_wallet": "Please select a wallet to swap to",
   "wc_walletconnect_title": "WalletConnect",
   "wc_walletconnect_subtitle": "Conecte a sua carteira para fazer transações.",
   "wc_walletconnect_new_connection_button": "Nova conexão",
