@@ -1128,6 +1128,8 @@
   "exchange_insufficient_funds_title": "Fondi insufficienti",
   "exchange_insufficient_funds_message": "L'importo inserito più le commissioni supera il saldo del portafoglio.",
   "exchange_insufficient_funds_below_balance": "Il saldo del portafoglio è inferiore all'importo inserito.",
+  "exchange_select_sending_wallet": "Please select a wallet to swap from",
+  "exchange_select_receiving_wallet": "Please select a wallet to swap to",
   "wc_walletconnect_title": "WalletConnect",
   "wc_walletconnect_subtitle": "Collega il tuo portafoglio per effettuare transazioni.",
   "wc_walletconnect_new_connection_button": "Nuova connessione",
