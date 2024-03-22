@@ -1128,6 +1128,8 @@
   "exchange_insufficient_funds_title": "残高不足",
   "exchange_insufficient_funds_message": "入力された金額と手数料がウォレット残高を超えています。",
   "exchange_insufficient_funds_below_balance": "ウォレット残高が入力された金額を下回っています。",
+  "exchange_select_sending_wallet": "Please select a wallet to swap from",
+  "exchange_select_receiving_wallet": "Please select a wallet to swap to",
   "wc_walletconnect_title": "ウォレット接続",
   "wc_walletconnect_subtitle": "ウォレットを接続してトランザクションを行います。",
   "wc_walletconnect_new_connection_button": "新しい接続",
