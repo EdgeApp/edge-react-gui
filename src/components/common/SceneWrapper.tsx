@@ -161,6 +161,8 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
 
   // Calculate app insets considering the app's header, tab-bar,
   // notification area, etc:
+  const maybeNotificationHeight = hasNotifications ? notificationHeight : 0
+
   const maybeHeaderHeight = hasHeader ? headerBarHeight : 0
   // Ignore tab bar height when keyboard is open because it is rendered behind it
   const maybeTabBarHeight = hasTabs && !isKeyboardOpen ? MAX_TAB_BAR_HEIGHT : 0
@@ -170,10 +172,19 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
     () => ({
       top: safeAreaInsets.top + maybeHeaderHeight,
       right: safeAreaInsets.right,
-      bottom: maybeInsetBottom + notificationHeight + maybeTabBarHeight + footerHeight,
+      bottom: maybeInsetBottom + maybeNotificationHeight + maybeTabBarHeight + footerHeight,
       left: safeAreaInsets.left
     }),
-    [footerHeight, maybeHeaderHeight, maybeInsetBottom, notificationHeight, maybeTabBarHeight, safeAreaInsets.left, safeAreaInsets.right, safeAreaInsets.top]
+    [
+      footerHeight,
+      maybeHeaderHeight,
+      maybeInsetBottom,
+      maybeNotificationHeight,
+      maybeTabBarHeight,
+      safeAreaInsets.left,
+      safeAreaInsets.right,
+      safeAreaInsets.top
+    ]
   )
 
   // This is a convenient styles object which may be applied as
