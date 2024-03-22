@@ -147,9 +147,9 @@ const NotificationViewComponent = (props: Props) => {
       </EdgeAnim>
       <EdgeAnim visible={needsPasswordCheck} enter={fadeIn} exit={fadeOut}>
         <NotificationCard
-          type="warning"
-          title={lstrings.password_reminder_remember_your_password}
-          message={lstrings.password_reminder_you_will_need_your_password}
+          type="info"
+          title={lstrings.password_reminder_card_title}
+          message={lstrings.password_reminder_card_body}
           onPress={handlePasswordReminderPress}
         />
       </EdgeAnim>
