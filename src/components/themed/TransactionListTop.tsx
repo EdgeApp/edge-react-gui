@@ -3,6 +3,7 @@ import { EdgeAccount, EdgeBalanceMap, EdgeCurrencyWallet, EdgeDenomination, Edge
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
+import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -17,25 +18,46 @@ import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { PositionAllocation, StakePlugin, StakePolicy, StakePositionMap } from '../../plugins/stake-plugins/types'
+import { RootState } from '../../reducers/RootReducer'
 import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
+import { CryptoAmount } from '../../util/CryptoAmount'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { getFioStakingBalances, getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
-import { convertNativeToDenomination, datelog } from '../../util/utils'
+import { convertNativeToDenomination, datelog, zeroString } from '../../util/utils'
 import { VisaCardCard } from '../cards/VisaCardCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { showFullScreenSpinner } from '../modals/AirshipFullScreenSpinner'
 import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupForTransferModal'
+import { ButtonsModal } from '../modals/ButtonsModal'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { CardUi4 } from '../ui4/CardUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
+import { IconButton } from '../ui4/IconButton'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
+
+const SWAP_ASSET_PRIORITY: Array<{ pluginId: string; tokenId: EdgeTokenId }> = [
+  { pluginId: 'bitcoin', tokenId: null },
+  { pluginId: 'ethereum', tokenId: null },
+  { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' }, // USDC
+  { pluginId: 'polygon', tokenId: '3c499c542cef5e3811e1192ce70d8cc03d5c3359' }, // USDC
+  { pluginId: 'ethereum', tokenId: 'dac17f958d2ee523a2206206994597c13d831ec7' }, // USDT
+  { pluginId: 'polygon', tokenId: 'c2132d05d31c914a87c6611c10748aeb04b58e8f' }, // USDT
+  { pluginId: 'binancesmartchain', tokenId: null },
+  { pluginId: 'solana', tokenId: null },
+  { pluginId: 'xrp', tokenId: null },
+  { pluginId: 'dogecoin', tokenId: null },
+  { pluginId: 'avalanche', tokenId: null },
+  { pluginId: 'polygon', tokenId: null }
+]
+
 interface OwnProps {
   navigation: NavigationProp<'transactionList'>
 
@@ -60,6 +82,7 @@ interface StateProps {
   exchangeDenomination: EdgeDenomination
   exchangeRate: string
   isAccountBalanceVisible: boolean
+  rootState: RootState
   walletName: string
 }
 
@@ -181,6 +204,162 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     Airship.show(bridge => <WalletListMenuModal bridge={bridge} tokenId={tokenId} navigation={navigation} walletId={wallet.id} />).catch(err => showError(err))
   }
 
+  handleTrade = async () => {
+    const { account, navigation, wallet, tokenId } = this.props
+    const { pluginId } = wallet.currencyInfo
+
+    // <ModalUi4 bridge={bridge} title={lstrings.trade_crypto}>
+    //   {options.map((option, index) => {
+    //     const { title, icon, onPress } = option
+    //     return <SelectableRow marginRem={0.5} key={title} title={title} onPress={onPress} icon={<View style={style.iconContainer}>{icon}</View>} />
+    //   })}
+    // </ModalUi4>
+
+    const response = await Airship.show<'trade' | 'buy' | 'sell' | undefined>(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={lstrings.restore_wallets_modal_title}
+        message={lstrings.restore_wallets_modal_description}
+        buttons={{
+          trade: { label: 'swap' },
+          buy: { label: 'buy' },
+          sell: { label: 'sell' }
+        }}
+      />
+    ))
+    switch (response) {
+      case 'trade':
+        {
+          const sceneWallet = wallet
+          const sceneTokenId = tokenId
+          const { currencyWallets } = account
+          const { rootState } = this.props
+
+          // Check balances for the displayed asset on this scene
+          const sceneAssetBalance = wallet.balanceMap.get(tokenId)
+
+          // Find the highest USD balance out of the defined priority assets.
+
+          // Filter the SWAP_ASSET_PRIORITY list to only include assets that have a balance
+          const priorityAssets: Array<{ pluginId: string; tokenId: EdgeTokenId }> = SWAP_ASSET_PRIORITY.filter(
+            priorityAsset =>
+              priorityAsset.pluginId !== sceneWallet.currencyInfo.pluginId &&
+              Object.values(currencyWallets).some(accountWallet => {
+                return accountWallet.currencyInfo.pluginId === priorityAsset.pluginId && accountWallet.balanceMap.get(tokenId) != null
+              })
+          )
+
+          let highestUsdBalanceAccountWalletId
+          let highestUsdBalance = '-1'
+          let highestUsdBalancePriorityTokenId: EdgeTokenId = null
+
+          priorityAssets.forEach(priorityAsset => {
+            const { tokenId: priorityAssetTokenId } = priorityAsset
+
+            const accountWallet = Object.values(currencyWallets).find(wallet => wallet.currencyInfo.pluginId === priorityAsset.pluginId)
+
+            if (accountWallet != null) {
+              const { currencyConfig: accountWalletCurrencyConfig } = accountWallet
+
+              const accountAmount = new CryptoAmount({
+                currencyConfig: accountWalletCurrencyConfig,
+                tokenId: priorityAssetTokenId,
+                nativeAmount: accountWallet.balanceMap.get(priorityAssetTokenId) ?? '0'
+              })
+              const accountUsdValue = accountAmount.displayDollarValue(rootState)
+
+              if (gt(accountUsdValue, highestUsdBalance)) {
+                // If the user has wallets corresponding to some of the priority
+                // assets, but no balance on all of them, the highest in the
+                // priority asset list gets selected here
+                highestUsdBalance = accountUsdValue
+                highestUsdBalanceAccountWalletId = accountWallet.id
+                highestUsdBalancePriorityTokenId = priorityAssetTokenId
+              }
+            }
+          })
+
+          // Use the highest USD balance priority asset as the to or from asset,
+          // depending on if there is a balance for the asset from the scene
+          let fromWalletId, fromTokenId, toWalletId, toTokenId
+          if (zeroString(sceneAssetBalance)) {
+            // No balance for the asset shown on this scene.
+            // Use the scene asset as the "TO" asset
+            toWalletId = sceneWallet.id
+            toTokenId = sceneTokenId
+
+            // Priority wallet as the "FROM" asset
+            // If the user owns no wallets corresponding to the priority asset
+            // list, this gets left blank.
+            if (highestUsdBalanceAccountWalletId != null) {
+              const fromWallet = currencyWallets[highestUsdBalanceAccountWalletId]
+              fromWalletId = fromWallet.id
+
+              // Check if we need to enable the token first
+              const fromEnabledTokenIds = fromWallet.enabledTokenIds
+              if (
+                highestUsdBalancePriorityTokenId != null &&
+                fromEnabledTokenIds.find(enabledTokenId => enabledTokenId === highestUsdBalancePriorityTokenId) == null
+              ) {
+                await showFullScreenSpinner(
+                  lstrings.wallet_list_modal_enabling_token,
+                  fromWallet.changeEnabledTokenIds([...fromEnabledTokenIds, highestUsdBalancePriorityTokenId])
+                )
+              }
+
+              fromTokenId = highestUsdBalancePriorityTokenId
+            }
+          } else {
+            // We have balance for the asset shown on this scene
+            // Use the scene asset as the "FROM" asset
+            fromWalletId = sceneWallet.id
+            fromTokenId = sceneTokenId
+
+            // Priority wallet as the "TO" asset
+            if (highestUsdBalanceAccountWalletId != null) {
+              const toWallet = currencyWallets[highestUsdBalanceAccountWalletId]
+              toWalletId = toWallet.id
+
+              // Check if we need to enable the token first
+              const toEnabledTokenIds = toWallet.enabledTokenIds
+              if (
+                highestUsdBalancePriorityTokenId != null &&
+                toEnabledTokenIds.find(enabledTokenId => enabledTokenId === highestUsdBalancePriorityTokenId) == null
+              ) {
+                await showFullScreenSpinner(
+                  lstrings.wallet_list_modal_enabling_token,
+                  sceneWallet.changeEnabledTokenIds([...toEnabledTokenIds, highestUsdBalancePriorityTokenId])
+                )
+              }
+
+              toTokenId = highestUsdBalancePriorityTokenId
+            }
+          }
+
+          // Finally, navigate to the scene with these props
+          navigation.navigate('exchangeTab', {
+            screen: 'exchange',
+            params: {
+              fromWalletId,
+              fromTokenId,
+              toWalletId,
+              toTokenId
+            }
+          })
+        }
+        break
+      case 'buy':
+        navigation.navigate('buyTab', { screen: 'pluginListBuy', params: { filterAsset: { pluginId, tokenId } } })
+        // navigation.push('pluginListBuy', { filterAsset: { pluginId, tokenId } })
+        break
+      case 'sell':
+        navigation.push('pluginListSell', { filterAsset: { pluginId, tokenId } })
+        break
+      default:
+        break
+    }
+  }
+
   renderBalanceBox = () => {
     const { balanceMap, displayDenomination, exchangeDenomination, exchangeRate, isAccountBalanceVisible, theme, tokenId, wallet, walletName } = this.props
     const styles = getStyles(theme)
@@ -267,6 +446,38 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             fiatSymbol + stakingFiatBalanceFormat + ' ' + fiatCurrencyCode
           )}
         </EdgeText>
+      </View>
+    )
+  }
+
+  renderButtons() {
+    const { theme } = this.props
+    const styles = getStyles(theme)
+    const { stakePolicies } = this.state
+    const isStakingAvailable = this.isStakingAvailable()
+    const isStakePoliciesLoaded = stakePolicies !== null
+    const bestApy = this.getBestApy()
+
+    return (
+      <View style={styles.buttonsContainer}>
+        <IconButton label={lstrings.fragment_request_subtitle} onPress={this.handleRequest}>
+          <Ionicons name="arrow-down" size={theme.rem(2)} color={theme.iconTappable} />
+        </IconButton>
+        <IconButton label={lstrings.fragment_send_subtitle} onPress={this.handleRequest}>
+          <Ionicons name="arrow-up" size={theme.rem(2)} color={theme.iconTappable} />
+        </IconButton>
+        {!isStakePoliciesLoaded ? (
+          <ActivityIndicator color={theme.textLink} style={styles.stakingButton} />
+        ) : (
+          isStakingAvailable && (
+            <IconButton label={lstrings.stake_earn_button_label} onPress={this.handleStakePress} superscriptLabel={bestApy}>
+              <Feather name="percent" size={theme.rem(1.75)} color={theme.iconTappable} />
+            </IconButton>
+          )
+        )}
+        <IconButton label={lstrings.trade_crypto} onPress={this.handleTrade}>
+          <Ionicons name="swap-horizontal" size={theme.rem(2)} color={theme.iconTappable} />
+        </IconButton>
       </View>
     )
   }
@@ -366,41 +577,19 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   render() {
     const { wallet, isEmpty, searching, theme, tokenId } = this.props
-    const { stakePolicies } = this.state
-    const isStakePoliciesLoaded = stakePolicies !== null
     const isStakingAvailable = this.isStakingAvailable()
-    const bestApy = this.getBestApy()
     const styles = getStyles(theme)
 
     return (
       <>
         {searching ? null : (
-          <CardUi4 paddingRem={1}>
-            {this.renderBalanceBox()}
-            {isStakingAvailable && this.renderStakedBalance()}
-            <View style={styles.buttonsContainer}>
-              <EdgeTouchableOpacity accessible={false} onPress={this.handleRequest} style={styles.buttons}>
-                <EdgeText accessible style={styles.buttonsText}>
-                  {lstrings.fragment_request_subtitle}
-                </EdgeText>
-              </EdgeTouchableOpacity>
-              <EdgeTouchableOpacity accessible={false} onPress={this.handleSend} style={styles.buttons}>
-                <EdgeText accessible style={styles.buttonsText}>
-                  {lstrings.fragment_send_subtitle}
-                </EdgeText>
-              </EdgeTouchableOpacity>
-              {!isStakePoliciesLoaded ? (
-                <ActivityIndicator color={theme.textLink} style={styles.stakingButton} />
-              ) : (
-                isStakingAvailable && (
-                  <EdgeTouchableOpacity onPress={this.handleStakePress} style={styles.buttons}>
-                    <EdgeText style={styles.buttonsText}>{lstrings.stake_earn_button_label}</EdgeText>
-                    {bestApy != null ? <EdgeText style={styles.apyText}>{bestApy}</EdgeText> : null}
-                  </EdgeTouchableOpacity>
-                )
-              )}
-            </View>
-          </CardUi4>
+          <>
+            <CardUi4 paddingRem={1}>
+              {this.renderBalanceBox()}
+              {isStakingAvailable && this.renderStakedBalance()}
+            </CardUi4>
+            {this.renderButtons()}
+          </>
         )}
         {isEmpty || searching ? null : <VisaCardCard wallet={wallet} tokenId={tokenId} navigation={this.props.navigation} />}
         {isEmpty || searching ? null : (
@@ -450,9 +639,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   // Send/Receive Buttons
   buttonsContainer: {
-    flex: 1,
-    marginTop: theme.rem(1),
-    marginHorizontal: -theme.rem(1),
+    flexShrink: 1,
     flexDirection: 'row',
     justifyContent: 'space-evenly'
   },
@@ -514,6 +701,7 @@ export function TransactionListTop(props: OwnProps) {
   const { tokenId, wallet } = props
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
+  const rootState = useSelector(state => state)
   const theme = useTheme()
 
   const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
@@ -540,11 +728,12 @@ export function TransactionListTop(props: OwnProps) {
       displayDenomination={displayDenomination}
       exchangeDenomination={exchangeDenomination}
       exchangeRate={exchangeRate}
-      walletName={walletName}
       isAccountBalanceVisible={isAccountBalanceVisible}
+      isLightAccount={activeUsername == null}
+      rootState={rootState}
       toggleBalanceVisibility={handleBalanceVisibility}
       theme={theme}
-      isLightAccount={activeUsername == null}
+      walletName={walletName}
     />
   )
 }
