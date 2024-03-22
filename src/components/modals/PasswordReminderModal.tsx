@@ -78,9 +78,8 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
     const { errorMessage, password, checkingPassword } = this.state
 
     return (
-      <ModalUi4 bridge={bridge} title={lstrings.password_reminder_remember_your_password} onCancel={this.handleCancel}>
-        <ModalMessage>{lstrings.password_reminder_you_will_need_your_password}</ModalMessage>
-        <ModalMessage>{lstrings.password_reminder_enter_password_below}</ModalMessage>
+      <ModalUi4 bridge={bridge} title={lstrings.password_reminder_modal_title} onCancel={this.handleCancel}>
+        <ModalMessage>{lstrings.password_reminder_modal_body}</ModalMessage>
         <FilledTextInput
           top={0.5}
           bottom={2}
