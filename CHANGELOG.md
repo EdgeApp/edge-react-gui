@@ -9,6 +9,7 @@
 - fixed: Filecoin sync issue caused by missing and necessary GLIF API key
 - fixed: FIO handle/domain registration error with MATIC payment
 - fixed: Fix duplicate transactions bug and re-enable transaction support in Filecoin FEVM
+- fixed: 'tokenId' related crash on Send scene under certain conditions
 
 ## 4.3.0
 
