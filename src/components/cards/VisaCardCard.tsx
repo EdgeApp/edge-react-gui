@@ -1,6 +1,5 @@
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
 import { executePluginAction } from '../../actions/PluginActions'
@@ -13,6 +12,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { logEvent } from '../../util/tracking'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -53,12 +53,12 @@ export const VisaCardCard = (props: Props) => {
     <>
       {ioniaPluginIds.includes(pluginId) && tokenId == null && (
         <CardUi4 paddingRem={0}>
-          <TouchableOpacity onPress={handlePress} style={styles.container}>
+          <EdgeTouchableOpacity onPress={handlePress} style={styles.container}>
             <FastImage resizeMode="contain" source={{ uri: icon.symbolImage }} style={styles.icon} />
             <EdgeText numberOfLines={0} style={styles.text}>
               {lstrings.rewards_card_call_to_action}
             </EdgeText>
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         </CardUi4>
       )}
     </>

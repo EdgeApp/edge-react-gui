@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { Platform, TouchableOpacity, View } from 'react-native'
+import { Platform, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useHandler } from '../../hooks/useHandler'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -57,7 +58,7 @@ export function Alert(props: Props) {
     </View>
   )
 
-  return onPress ? <TouchableOpacity onPress={handlePress}>{result}</TouchableOpacity> : result
+  return onPress ? <EdgeTouchableOpacity onPress={handlePress}>{result}</EdgeTouchableOpacity> : result
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

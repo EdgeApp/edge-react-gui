@@ -1,7 +1,7 @@
 import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import { EdgeAccount, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
@@ -15,6 +15,7 @@ import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CustomAsset } from '../data/row/CustomAssetRow'
 import { PaymentMethodRow } from '../data/row/PaymentMethodRow'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
@@ -106,7 +107,6 @@ export function WalletListModal(props: Props) {
 
   // #region State
 
-  const [searching, setSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
 
   const [bankAccountsMap] = useAsyncValue(async (): Promise<PaymentMethodsMap | null> => {
@@ -148,10 +148,7 @@ export function WalletListModal(props: Props) {
   })
   const handleSearchClear = useHandler(() => {
     setSearchText('')
-    setSearching(false)
   })
-  const handleSearchUnfocus = useHandler(() => setSearching(searchText.length > 0))
-  const handleSearchFocus = useHandler(() => setSearching(true))
 
   // Pull up the signup workflow on the calling scene if the user does not yet have a linked bank account
   const handleShowBankPlugin = useHandler(async () => {
@@ -174,9 +171,9 @@ export function WalletListModal(props: Props) {
 
   const renderPaymentMethod: ListRenderItem<PaymentMethod> = useHandler(item => {
     return (
-      <TouchableOpacity onPress={handlePaymentMethodPress(item.item.id)}>
+      <EdgeTouchableOpacity onPress={handlePaymentMethodPress(item.item.id)}>
         <PaymentMethodRow paymentMethod={item.item} pluginId="wyre" key={item.item.id} />
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     )
   })
 
@@ -223,17 +220,15 @@ export function WalletListModal(props: Props) {
   return (
     <ModalUi4
       bridge={bridge}
-      scroll
       title={
         <View style={styles.header}>
           <ModalTitle>{headerTitle}</ModalTitle>
           <SimpleTextInput
             around={0.5}
+            autoFocus
             returnKeyType="search"
             placeholder={lstrings.search_wallets}
             onChangeText={setSearchText}
-            onFocus={handleSearchFocus}
-            onBlur={handleSearchUnfocus}
             onClear={handleSearchClear}
             value={searchText}
             iconComponent={SearchIconAnimated}
@@ -251,7 +246,6 @@ export function WalletListModal(props: Props) {
         excludeAssets={walletListExcludeAssets}
         excludeWalletIds={excludeWalletIds}
         filterActivation={filterActivation}
-        searching={searching}
         searchText={searchText}
         showCreateWallet={showCreateWallet}
         createWalletId={createWalletId}

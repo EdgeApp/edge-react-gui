@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import LinearGradient, { LinearGradientProps } from 'react-native-linear-gradient'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
@@ -7,6 +7,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { useHandler } from '../../hooks/useHandler'
 import { triggerHaptic } from '../../util/haptic'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SectionView } from './SectionView'
@@ -114,9 +115,9 @@ export const CardUi4 = (props: Props) => {
 
   const maybeCloseButton =
     onClose == null ? null : (
-      <TouchableOpacity style={styles.cornerContainer} onPress={handleClose}>
+      <EdgeTouchableOpacity style={styles.cornerContainer} onPress={handleClose}>
         <AntDesignIcon color={theme.primaryText} name="close" size={theme.rem(1.25)} />
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     )
 
   const maybeOverlay = overlay == null ? null : <View style={styles.overlayContainer}>{overlay}</View>
@@ -142,9 +143,9 @@ export const CardUi4 = (props: Props) => {
     )
 
   return isPressable ? (
-    <TouchableOpacity accessible={false} onPress={handlePress} onLongPress={handleLongPress} style={viewStyle}>
+    <EdgeTouchableOpacity accessible={false} onPress={handlePress} onLongPress={handleLongPress} style={viewStyle}>
       {allContent}
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   ) : (
     <View style={viewStyle}>{allContent}</View>
   )

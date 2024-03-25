@@ -130,7 +130,14 @@ export const FioCreateHandleScene = (props: Props) => {
         await dispatch(refreshAllFioAddresses())
         showToast(lstrings.fio_free_handle_complete)
 
-        await dispatch(logEvent('Fio_Handle_Register', { dollarValue: 3 }))
+        await dispatch(
+          logEvent('Fio_Handle_Register', {
+            conversionValues: {
+              conversionType: 'dollar',
+              dollarConversionValue: 3
+            }
+          })
+        )
 
         navigation.pop()
       } catch (e: any) {

@@ -84,6 +84,7 @@ const TransactionDetailsComponent = (props: Props) => {
 
   // Look up wallet stuff:
   const isoFiatCurrencyCode = useWatch(wallet, 'fiatCurrencyCode')
+  const walletName = useWatch(wallet, 'name')
   const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
   const fiatSymbol = getSymbolFromCurrency(fiatCurrencyCode)
 
@@ -98,7 +99,9 @@ const TransactionDetailsComponent = (props: Props) => {
   )
 
   // Look up the historical price:
-  const isoDate = new Date(date * 1000).toISOString()
+  const dateObj = new Date(date * 1000)
+  const dateString = dateObj.toLocaleString()
+  const isoDate = dateObj.toISOString()
   const historicRate = useHistoricalRate(`${currencyCode}_${isoFiatCurrencyCode}`, isoDate)
   const historicFiat = historicRate * Number(absExchangeAmount)
 
@@ -123,6 +126,7 @@ const TransactionDetailsComponent = (props: Props) => {
         returnKeyType="done"
         keyboardType="numeric"
         submitLabel={lstrings.string_save}
+        textSizeRem={1.5}
         title={sprintf(lstrings.transaction_details_amount_in_fiat, fiatCurrencyCode)}
       />
     ))
@@ -361,7 +365,9 @@ const TransactionDetailsComponent = (props: Props) => {
               )}
             </View>
           </RowUi4>
-          <RowUi4 rightButtonType="copy" title={lstrings.transaction_details_tx_id_modal_title} body={txid} />
+          <RowUi4 title={lstrings.fio_date_label} body={dateString} />
+          {walletName != null ? <RowUi4 title={lstrings.wc_smartcontract_wallet} body={walletName} /> : null}
+
           {acceleratedTx == null ? null : (
             <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_advance_details_accelerate} onPress={openAccelerateModel} />
           )}
@@ -382,26 +388,30 @@ const TransactionDetailsComponent = (props: Props) => {
           )}
         </CardUi4>
       </EdgeAnim>
-      {recipientsAddresses === '' ? null : (
-        <EdgeAnim enter={{ type: 'fadeInDown', distance: 60 }}>
-          <CardUi4>
-            <RowUi4 maximumHeight="large" rightButtonType="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />
-          </CardUi4>
-        </EdgeAnim>
-      )}
 
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
         {swapData == null ? null : <SwapDetailsCard swapData={swapData} transaction={transaction} wallet={wallet} />}
       </EdgeAnim>
+
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
         {fiatAction == null || assetAction == null ? null : (
           <FiatExchangeDetailsCard action={fiatAction} assetAction={assetAction} transaction={transaction} wallet={wallet} />
         )}
       </EdgeAnim>
+
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 100 }}>
+        <CardUi4 sections>
+          <RowUi4 rightButtonType="copy" title={lstrings.transaction_details_tx_id_modal_title} body={txid} />
+          {recipientsAddresses === '' ? null : (
+            <RowUi4 maximumHeight="large" rightButtonType="copy" title={lstrings.transaction_details_recipient_addresses} body={recipientsAddresses} />
+          )}
+        </CardUi4>
+      </EdgeAnim>
+
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
         <AdvancedDetailsCard transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />
       </EdgeAnim>
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 140 }}>
         <ButtonsViewUi4
           layout="column"
           primary={{

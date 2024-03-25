@@ -7,7 +7,7 @@ exports[`WalletListModal should render with loading props 1`] = `
       {
         "busy": undefined,
         "checked": undefined,
-        "disabled": undefined,
+        "disabled": false,
         "expanded": undefined,
         "selected": undefined,
       }
@@ -63,7 +63,7 @@ exports[`WalletListModal should render with loading props 1`] = `
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
           "marginBottom": -86,
-          "paddingBottom": 86,
+          "paddingBottom": 97,
           "paddingTop": 0,
         },
       ]
@@ -160,7 +160,7 @@ exports[`WalletListModal should render with loading props 1`] = `
             {
               "busy": undefined,
               "checked": undefined,
-              "disabled": undefined,
+              "disabled": false,
               "expanded": undefined,
               "selected": undefined,
             }
@@ -275,7 +275,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                 }
               }
               accessible={true}
-              autoFocus={false}
+              autoFocus={true}
               disableAnimation={
                 {
                   "value": 0,
@@ -393,7 +393,7 @@ exports[`WalletListModal should render with loading props 1`] = `
           {
             "busy": undefined,
             "checked": undefined,
-            "disabled": undefined,
+            "disabled": false,
             "expanded": undefined,
             "selected": undefined,
           }
@@ -456,239 +456,46 @@ exports[`WalletListModal should render with loading props 1`] = `
     </View>
     <RCTScrollView
       collapsable={false}
+      contentContainerStyle={
+        {
+          "paddingBottom": 67,
+        }
+      }
+      data={[]}
+      getItem={[Function]}
+      getItemCount={[Function]}
       handlerTag={2}
       handlerType="NativeViewGestureHandler"
+      keyExtractor={[Function]}
       keyboardDismissMode="on-drag"
+      keyboardShouldPersistTaps="handled"
+      onContentSizeChange={[Function]}
       onGestureHandlerEvent={[Function]}
       onGestureHandlerStateChange={[Function]}
-      scrollIndicatorInsets={
-        {
-          "right": 1,
-        }
-      }
-      style={
-        {
-          "flexGrow": 0,
-          "flexShrink": 1,
-        }
-      }
+      onLayout={[Function]}
+      onMomentumScrollBegin={[Function]}
+      onMomentumScrollEnd={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onScrollEndDrag={[Function]}
+      removeClippedSubviews={false}
+      renderItem={[Function]}
+      renderScrollComponent={[Function]}
+      scrollEventThrottle={50}
+      stickyHeaderIndices={[]}
+      viewabilityConfigCallbackPairs={[]}
       waitFor={
         [
+          {
+            "current": null,
+          },
           {
             "current": null,
           },
         ]
       }
     >
-      <View>
-        <View
-          style={
-            {
-              "flex": 1,
-              "overflow": "hidden",
-            }
-          }
-        >
-          <RCTScrollView
-            applyWindowCorrection={[Function]}
-            canChangeSize={true}
-            contentContainerStyle={
-              {
-                "backgroundColor": undefined,
-                "minHeight": 1,
-                "minWidth": 1,
-                "paddingLeft": 0,
-                "paddingRight": 0,
-              }
-            }
-            contentHeight={0}
-            contentWidth={0}
-            data={[]}
-            dataProvider={
-              DataProvider {
-                "_data": [],
-                "_firstIndexToProcess": 0,
-                "_hasStableIds": false,
-                "_requiresDataChangeHandling": false,
-                "_size": 0,
-                "getStableId": [Function],
-                "rowHasChanged": [Function],
-              }
-            }
-            disableRecycling={false}
-            estimatedItemSize={96}
-            extendedState={{}}
-            externalScrollView={[Function]}
-            finalRenderAheadOffset={250}
-            forceNonDeterministicRendering={true}
-            horizontal={false}
-            initialOffset={0}
-            initialRenderIndex={0}
-            isHorizontal={false}
-            keyboardDismissMode="on-drag"
-            keyboardShouldPersistTaps="handled"
-            layoutProvider={
-              GridLayoutProviderWithProps {
-                "_acceptableRelayoutDelta": 1,
-                "_getHeightOrWidth": [Function],
-                "_getLayoutTypeForIndex": [Function],
-                "_getSpan": [Function],
-                "_hasExpired": false,
-                "_maxSpan": 1,
-                "_setLayoutForType": [Function],
-                "_tempDim": {
-                  "height": 0,
-                  "width": 0,
-                },
-                "averageWindow": AverageWindow {
-                  "currentAverage": 96,
-                  "currentCount": 1,
-                  "inputValues": [
-                    96,
-                  ],
-                  "nextIndex": 1,
-                },
-                "defaultEstimatedItemSize": 100,
-                "layoutObject": {
-                  "size": undefined,
-                  "span": undefined,
-                },
-                "props": {
-                  "contentContainerStyle": {
-                    "paddingBottom": 67,
-                  },
-                  "data": [],
-                  "estimatedItemSize": 96,
-                  "keyboardDismissMode": "on-drag",
-                  "keyboardShouldPersistTaps": "handled",
-                  "numColumns": 1,
-                  "renderItem": [Function],
-                },
-                "renderWindowInsets": {
-                  "height": 0,
-                  "width": 0,
-                },
-                "shouldRefreshWithAnchoring": true,
-              }
-            }
-            maxRenderAhead={750}
-            numColumns={1}
-            onEndReached={[Function]}
-            onEndReachedThreshold={0}
-            onEndReachedThresholdRelative={0}
-            onItemLayout={[Function]}
-            onLayout={[Function]}
-            onScroll={[Function]}
-            onScrollBeginDrag={[Function]}
-            onSizeChanged={[Function]}
-            onVisibleIndicesChanged={[Function]}
-            removeClippedSubviews={false}
-            renderAheadOffset={0}
-            renderAheadStep={250}
-            renderContentContainer={[Function]}
-            renderItem={[Function]}
-            renderItemContainer={[Function]}
-            rowRenderer={[Function]}
-            scrollEventThrottle={16}
-            scrollThrottle={16}
-            scrollViewProps={
-              {
-                "contentContainerStyle": {
-                  "backgroundColor": undefined,
-                  "minHeight": 1,
-                  "minWidth": 1,
-                  "paddingLeft": 0,
-                  "paddingRight": 0,
-                },
-                "onLayout": [Function],
-                "onScrollBeginDrag": [Function],
-                "refreshControl": undefined,
-                "style": {
-                  "minHeight": 1,
-                  "minWidth": 1,
-                },
-              }
-            }
-            style={
-              {
-                "minHeight": 1,
-                "minWidth": 1,
-              }
-            }
-            suppressBoundedSizeException={true}
-            windowCorrectionConfig={
-              {
-                "applyToInitialOffset": true,
-                "applyToItemScroll": true,
-                "value": {
-                  "endCorrection": 0,
-                  "startCorrection": 0,
-                  "windowShift": -0,
-                },
-              }
-            }
-          >
-            <View>
-              <View
-                style={
-                  {
-                    "flexDirection": "column",
-                  }
-                }
-              >
-                <View
-                  style={
-                    {
-                      "paddingLeft": 0,
-                      "paddingTop": 0,
-                    }
-                  }
-                />
-                <View
-                  style={
-                    [
-                      undefined,
-                      undefined,
-                    ]
-                  }
-                />
-                <AutoLayoutView
-                  enableInstrumentation={false}
-                  horizontal={false}
-                  onBlankAreaEvent={[Function]}
-                  onLayout={[Function]}
-                  renderAheadOffset={0}
-                  scrollOffset={0}
-                  style={
-                    {
-                      "height": 0,
-                      "width": 0,
-                    }
-                  }
-                  windowSize={0}
-                />
-                <CellContainer
-                  index={-1}
-                  style={
-                    [
-                      undefined,
-                      undefined,
-                    ]
-                  }
-                />
-                <View
-                  style={
-                    {
-                      "paddingBottom": 67,
-                      "paddingRight": 0,
-                    }
-                  }
-                />
-              </View>
-            </View>
-          </RCTScrollView>
-        </View>
-      </View>
+      <View />
     </RCTScrollView>
   </View>,
 ]

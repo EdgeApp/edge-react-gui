@@ -1,6 +1,6 @@
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, FlatList, Image, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
@@ -13,6 +13,7 @@ import { connect } from '../../types/reactRedux'
 import { ResolutionError } from '../../types/ResolutionError'
 import { FioAddress, FlatListItem } from '../../types/types'
 import { checkPubAddress, FioAddresses, getFioAddressCache } from '../../util/FioAddressUtils'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { FilledTextInput } from '../themed/FilledTextInput'
@@ -276,12 +277,12 @@ export class AddressModalComponent extends React.Component<Props, State> {
       return null
     }
     return (
-      <TouchableWithoutFeedback onPress={() => this.onPressFioAddress(item)}>
+      <EdgeTouchableWithoutFeedback onPress={() => this.onPressFioAddress(item)}>
         <View style={styles.rowContainer}>
           <Image source={addressType} style={styles.fioAddressAvatarContainer} resizeMode="cover" />
           <Text style={styles.fioAddressText}>{item}</Text>
         </View>
-      </TouchableWithoutFeedback>
+      </EdgeTouchableWithoutFeedback>
     )
   }
 

@@ -9,7 +9,6 @@ import { DeviceReferral } from '../types/ReferralTypes'
 import { GuiContact, GuiExchangeRates, WalletListItem } from '../types/types'
 import { account, AccountState } from './AccountReducer'
 import { core, CoreState } from './CoreReducer'
-import { cryptoExchange, CryptoExchangeState } from './CryptoExchangeReducer'
 import { network, NetworkState } from './NetworkReducer'
 import { permissions, PermissionsState } from './PermissionsReducer'
 import { ui, UiState } from './uiReducer'
@@ -41,7 +40,6 @@ export interface RootState {
   readonly account: AccountState
   readonly actionQueue: ActionQueueState
   readonly core: CoreState
-  readonly cryptoExchange: CryptoExchangeState
   readonly loanManager: LoanManagerState
   readonly permissions: PermissionsState
   readonly ui: UiState
@@ -122,7 +120,6 @@ export const rootReducer = combineReducers<RootState, Action>({
   account,
   actionQueue,
   core,
-  cryptoExchange,
   loanManager,
   permissions,
   ui,

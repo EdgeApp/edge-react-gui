@@ -128,7 +128,7 @@ export function createAccountTransaction(
           // Hack. Keyboard pops up for some reason. Close it
           dispatch(
             logEvent('Activate_Wallet_Cancel', {
-              currencyCode: createdWalletCurrencyCode
+              createdWalletCurrencyCode
             })
           )
         },
@@ -141,7 +141,7 @@ export function createAccountTransaction(
           } else if (edgeTransaction) {
             dispatch(
               logEvent('Activate_Wallet_Done', {
-                currencyCode: createdWalletCurrencyCode
+                createdWalletCurrencyCode
               })
             )
             const edgeMetadata: EdgeMetadata = {

@@ -1,11 +1,12 @@
 import * as React from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { Text } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -47,11 +48,11 @@ function WalletListSwipeableLoadingRowComponent(props: Props) {
 
   const renderMenuUnderlay = (isActive: SharedValue<boolean>) => {
     return (
-      <TouchableOpacity style={styles.menuUnderlay} onPress={handleMenu}>
+      <EdgeTouchableOpacity style={styles.menuUnderlay} onPress={handleMenu}>
         <SwipeableRowIcon isActive={isActive} minWidth={iconWidth}>
           <Text style={styles.menuIcon}>…</Text>
         </SwipeableRowIcon>
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     )
   }
 

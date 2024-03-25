@@ -12,7 +12,7 @@ export async function initializeProviders<T>(providerFactories: Array<FiatProvid
   const { account, deviceId, disablePlugins } = params
   const providerPromises: Array<Promise<FiatProvider<T>>> = []
 
-  const getTokenIdProvider = (pluginId: string, currencyCode: string) => getTokenId(account, pluginId, currencyCode)
+  const getTokenIdProvider = (pluginId: string, currencyCode: string) => getTokenId(account.currencyConfig[pluginId], currencyCode)
 
   for (const providerFactory of providerFactories) {
     if (disablePlugins[providerFactory.providerId]) continue

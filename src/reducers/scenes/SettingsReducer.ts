@@ -3,7 +3,7 @@ import { EdgeAccount } from 'edge-core-js'
 import { asSyncedAccountSettings, SyncedAccountSettings } from '../../actions/SettingsActions'
 import { SortOption } from '../../components/modals/WalletListSortModal'
 import { Action } from '../../types/reduxTypes'
-import { asLocalAccountSettings, GuiTouchIdInfo, LocalAccountSettings } from '../../types/types'
+import { asLocalAccountSettings, LocalAccountSettings } from '../../types/types'
 import { spendingLimits } from '../SpendingLimitsReducer'
 
 export const initialState: SettingsState = {
@@ -33,7 +33,8 @@ export interface AccountInitPayload extends SettingsState {
   account: EdgeAccount
   currencyCode: string
   pinLoginEnabled: boolean
-  touchIdInfo: GuiTouchIdInfo
+  isTouchEnabled: boolean
+  isTouchSupported: boolean
   walletId: string
   walletsSort: SortOption
 }
@@ -73,6 +74,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         denominationSettings,
         developerModeOn,
         isAccountBalanceVisible,
+        isTouchEnabled,
+        isTouchSupported,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
         userPausedWallets,
@@ -82,7 +85,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         securityCheckedWallets,
         spamFilterOn,
         stateProvinceCode,
-        touchIdInfo,
         walletsSort
       } = action.data
       const newState: SettingsState = {
@@ -95,8 +97,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         denominationSettings,
         developerModeOn,
         isAccountBalanceVisible,
-        isTouchEnabled: touchIdInfo ? touchIdInfo.isTouchEnabled : false,
-        isTouchSupported: touchIdInfo ? touchIdInfo.isTouchSupported : false,
+        isTouchEnabled,
+        isTouchSupported,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
         userPausedWallets,

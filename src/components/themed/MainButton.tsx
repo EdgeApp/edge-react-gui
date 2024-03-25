@@ -22,10 +22,6 @@ interface Props {
   // using the same logic as the web `margin` property. Defaults to 0.
   marginRem?: number[] | number
 
-  // The gap inside the button. Takes 0-4 numbers (top, right, bottom, left),
-  // using the same logic as the web `padding` property. Defaults to 0.5.
-  paddingRem?: number[] | number
-
   // True to show a spinner after the contents:
   spinner?: boolean
 
@@ -37,10 +33,12 @@ interface Props {
 }
 
 /**
- * A stand-alone button to perform the primary action in a modal or scene.
+ * @deprecated
+ * Use ButtonUi4 instead, and consider whether there is a genuine need for
+ * special margins in MainButton use cases from a UI4 design perspective.
  */
 export function MainButton(props: Props) {
-  const { children, disabled = false, label, marginRem, onPress, type = 'primary', paddingRem, layout, spinner = false } = props
+  const { children, disabled = false, label, marginRem, onPress, type = 'primary', layout, spinner = false } = props
 
   return (
     <ButtonUi4
@@ -48,7 +46,6 @@ export function MainButton(props: Props) {
       label={label}
       marginRem={marginRem}
       onPress={onPress}
-      paddingRem={paddingRem}
       spinner={spinner}
       type={type === 'escape' ? 'tertiary' : type}
       layout={layout}

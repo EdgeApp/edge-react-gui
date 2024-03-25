@@ -7,6 +7,7 @@ import URL from 'url-parse'
 import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { lstrings } from '../../../locales/strings'
 import { StringMap } from '../../../types/types'
+import { CryptoAmount } from '../../../util/CryptoAmount'
 import { fetchInfo } from '../../../util/network'
 import { consify, makeUuid } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
@@ -39,7 +40,6 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
   buy: {
     applepay: true,
     credit: true,
-    fasterpayments: true,
     googlepay: true,
     ideal: true,
     interac: true,
@@ -50,7 +50,6 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
   },
   sell: {
     directtobank: true,
-    fasterpayments: true,
     interac: true,
     iobank: true,
     payid: true,
@@ -647,13 +646,18 @@ export const banxaProvider: FiatProviderFactory = {
                             interval = undefined
 
                             await showUi.trackConversion('Sell_Success', {
-                              destCurrencyCode: fiatCurrencyCode,
-                              destExchangeAmount: priceQuote.fiat_amount,
-                              sourceCurrencyCode: displayCurrencyCode,
-                              sourceExchangeAmount: coinAmount.toString(),
-                              sourcePluginId: coreWallet.currencyInfo.pluginId,
-                              pluginId: providerId,
-                              orderId: id
+                              conversionValues: {
+                                conversionType: 'sell',
+                                destFiatCurrencyCode: fiatCurrencyCode,
+                                destFiatAmount: priceQuote.fiat_amount,
+                                sourceAmount: new CryptoAmount({
+                                  currencyConfig: coreWallet.currencyConfig,
+                                  currencyCode: displayCurrencyCode,
+                                  exchangeAmount: coinAmount
+                                }),
+                                fiatProviderId: providerId,
+                                orderId: id
+                              }
                             })
 
                             // Below is an optional step

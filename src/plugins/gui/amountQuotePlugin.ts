@@ -16,6 +16,7 @@ import { banxaProvider } from './providers/banxaProvider'
 import { bityProvider } from './providers/bityProvider'
 import { kadoProvider } from './providers/kadoProvider'
 import { moonpayProvider } from './providers/moonpayProvider'
+import { mtpelerinProvider } from './providers/mtpelerinProvider'
 import { paybisProvider } from './providers/paybisProvider'
 import { simplexProvider } from './providers/simplexProvider'
 import { initializeProviders } from './util/initializeProviders'
@@ -33,7 +34,7 @@ type PaymentTypeProviderPriorityMap = ReturnType<typeof asPaymentTypeProviderPri
 
 type PriorityArray = Array<{ [pluginId: string]: boolean }>
 
-const providerFactories = [banxaProvider, bityProvider, kadoProvider, moonpayProvider, paybisProvider, simplexProvider]
+const providerFactories = [banxaProvider, bityProvider, kadoProvider, moonpayProvider, mtpelerinProvider, paybisProvider, simplexProvider]
 
 const DEFAULT_FIAT_AMOUNT = '500'
 

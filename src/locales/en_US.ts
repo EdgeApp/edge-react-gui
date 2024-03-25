@@ -411,6 +411,9 @@ const strings = {
   settings_marketing_notifications_switch: 'Enable Marketing Alerts',
   settings_price_notifications_switch: 'Enable Price Alerts',
   settings_hide_spam_transactions: 'Hide spam transactions',
+  settings_default_screen_title: 'Show Screen on Login',
+  settings_default_screen_home: 'Home',
+  settings_default_screen_assets: 'Assets',
   swap_preferred_header: 'Preferred Exchange',
   swap_preferred_cheapest: 'Pick best price',
   swap_preferred_dex: 'Prefer Decentralized',
@@ -755,6 +758,15 @@ const strings = {
   otp_modal_headline: 'Are you sure you want to disable 2FA?',
   otp_modal_body: '2FA is recommended to keep your device secure from unauthorized access from other devices.',
 
+  // OTP Modals
+  otp_authentication_header: '2FA has been enabled',
+  otp_authentication_message:
+    '2FA has been enabled. A unique authentication code has been generated. If you lose your phone or uninstall the app, it will take 7 days to disable 2FA and access your account from another device without the following authentication code.\n\n%s',
+  otp_reset_modal_dont_ask: "Don't ask again",
+  otp_reset_modal_header: 'Secure Your Account',
+  otp_reset_modal_message:
+    'Two factor authentication (2FA) prevents unauthorized access from other devices, even if your username and password is compromised. You can scan a QR code or type in an authentication code to seamlessly authorize other devices. Would you like to enable 2FA?',
+
   // 2fa reset warning modal:
   title_otp_keep_modal: 'Two-Factor Authentication (2FA)',
   otp_modal_reset_description:
@@ -768,9 +780,11 @@ const strings = {
     'You have scanned a legacy format address that may not be for the intended currency as it is indistinguishable from other currency addresses.\n\nSending to this address MAY result in a LOSS of funds!\n\nDo you want to continue?',
   legacy_address_modal_continue: 'Continue',
 
-  password_reminder_remember_your_password: 'Remember Your Password?',
-  password_reminder_you_will_need_your_password: 'You will need your password if your device gets lost or stolen, or if you uninstall the app.',
-  password_reminder_enter_password_below: 'Enter it below to make sure:',
+  password_reminder_card_title: 'Security Check: Tap to verify password.',
+  password_reminder_card_body: 'Your password is required in case of device theft, loss, or app uninstallation.',
+  password_reminder_modal_title: 'Verify your password',
+  password_reminder_modal_body:
+    'To ensure the security of your account.\n\nPlease enter your password below. A successful verification will prevent this warning from appearing for a few logins.',
   password_reminder_check_password: 'Check Password',
   password_reminder_forgot_password: 'I Forgot. Change Password',
   password_reminder_great_job: 'Great job remembering your password.',
@@ -1262,6 +1276,8 @@ const strings = {
   exchange_insufficient_funds_title: 'Insufficient Funds',
   exchange_insufficient_funds_message: 'Entered amount plus fees exceeds wallet balance.',
   exchange_insufficient_funds_below_balance: 'Wallet balance is below the amount entered.',
+  exchange_select_sending_wallet: 'Please select a wallet to swap from',
+  exchange_select_receiving_wallet: 'Please select a wallet to swap to',
 
   // WalletConnect Scenes/Modals
   wc_walletconnect_title: 'WalletConnect',
@@ -1481,6 +1497,7 @@ const strings = {
   notif_tokens_detected_title: 'Tokens Detected',
   notif_tokens_detected_on_wallet_name_1s: `New tokens were detected and enabled on %1$s. Tap to review.`,
   notif_tokens_detected_on_address_1s: 'New tokens were detected and enabled on a %1$s address. Tap to review.',
+  notif_otp_message: 'Enable Two-Factor Authentication (2FA) to prevent unauthorized access.',
 
   // #endregion Notifications
 

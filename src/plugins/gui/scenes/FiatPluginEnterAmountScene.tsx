@@ -149,7 +149,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   const poweredByIconPath = poweredBy != null ? getPartnerIconUri(poweredBy.poweredByIcon) : undefined
 
   return (
-    <SceneWrapper scroll keyboardShouldPersistTaps="handled" hasNotifications>
+    <SceneWrapper scroll keyboardShouldPersistTaps="handled" hasNotifications hasTabs>
       <EdgeAnim enter={fadeInUp90}>
         <SceneHeader style={styles.sceneHeader} title={headerTitle} underline withTopMargin>
           {headerIcon}
@@ -277,7 +277,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     textFields: {
       flexDirection: 'column',
-      width: theme.rem(15)
+      width: theme.rem(14)
     },
     text: {
       ...textCommon,

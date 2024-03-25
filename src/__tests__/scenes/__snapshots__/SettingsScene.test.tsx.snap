@@ -368,6 +368,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             }
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -488,6 +493,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -610,6 +620,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -732,6 +747,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -854,6 +874,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -976,6 +1001,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -1217,6 +1247,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             }
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -1339,6 +1374,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -1461,6 +1501,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -1569,6 +1614,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -1677,6 +1727,124 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "marginBottom": 1,
+                  "minHeight": 67,
+                  "padding": 11,
+                }
+              }
+            >
+              <Text
+                style={
+                  {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "paddingHorizontal": 11,
+                    "textAlign": "left",
+                  }
+                }
+              >
+                Show Screen on Login
+              </Text>
+              <View>
+                <View
+                  pending={false}
+                  style={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
+                  }
+                >
+                  <ActivityIndicator
+                    color="#00f1a2"
+                    style={
+                      {
+                        "height": 34,
+                        "marginHorizontal": 11,
+                      }
+                    }
+                  />
+                </View>
+                <View
+                  pending={false}
+                  style={
+                    {
+                      "opacity": 1,
+                    }
+                  }
+                >
+                  <Text
+                    style={
+                      {
+                        "color": "#00f1a2",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "marginHorizontal": 11,
+                      }
+                    }
+                  >
+                    Home
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                [
+                  {
+                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomWidth": 1,
+                    "height": 1,
+                  },
+                  {
+                    "margin": 11,
+                  },
+                ]
+              }
+            />
+            <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -1804,6 +1972,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -1931,6 +2104,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -2058,6 +2236,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -2180,6 +2363,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -2302,6 +2490,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -2424,6 +2617,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -2551,6 +2749,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -2678,6 +2881,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -2805,6 +3013,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -2927,6 +3140,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -3049,6 +3267,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -3171,6 +3394,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -3916,6 +4144,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             }
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -4036,6 +4269,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -4158,6 +4396,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -4280,6 +4523,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -4402,6 +4650,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -4524,6 +4777,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -4765,6 +5023,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             }
           >
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -4887,6 +5150,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -5009,6 +5277,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -5117,6 +5390,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -5225,6 +5503,124 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "marginBottom": 1,
+                  "minHeight": 67,
+                  "padding": 11,
+                }
+              }
+            >
+              <Text
+                style={
+                  {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "paddingHorizontal": 11,
+                    "textAlign": "left",
+                  }
+                }
+              >
+                Show Screen on Login
+              </Text>
+              <View>
+                <View
+                  pending={false}
+                  style={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
+                  }
+                >
+                  <ActivityIndicator
+                    color="#00f1a2"
+                    style={
+                      {
+                        "height": 34,
+                        "marginHorizontal": 11,
+                      }
+                    }
+                  />
+                </View>
+                <View
+                  pending={false}
+                  style={
+                    {
+                      "opacity": 1,
+                    }
+                  }
+                >
+                  <Text
+                    style={
+                      {
+                        "color": "#00f1a2",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "marginHorizontal": 11,
+                      }
+                    }
+                  >
+                    Home
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                [
+                  {
+                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomWidth": 1,
+                    "height": 1,
+                  },
+                  {
+                    "margin": 11,
+                  },
+                ]
+              }
+            />
+            <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -5352,6 +5748,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -5479,6 +5880,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -5606,6 +6012,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -5728,6 +6139,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -5850,6 +6266,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -5972,6 +6393,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -6099,6 +6525,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -6226,6 +6657,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -6353,6 +6789,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -6475,6 +6916,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -6597,6 +7043,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,
@@ -6719,6 +7170,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             />
             <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
               accessibilityValue={
                 {
                   "max": undefined,

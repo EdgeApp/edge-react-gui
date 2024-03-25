@@ -114,6 +114,26 @@ exports[`GuiPlugins tools filter ios + US as expected 1`] = `
 exports[`Production plugin data Buy plugins match snapshot on android + IL 1`] = `
 [
   {
+    "cryptoCodes": [
+      "BTC",
+      "ETH",
+    ],
+    "deepPath": "/order/buy",
+    "deepQuery": {
+      "order_id": "null",
+      "page": "0",
+    },
+    "description": "Fee: 5.95%
+Settlement: 1 - 48 hours",
+    "partnerIconPath": "bits-of-gold-logo-sm.png",
+    "paymentTypeLogoKey": "bank",
+    "paymentTypes": [
+      "bank",
+    ],
+    "pluginId": "bitsofgold",
+    "title": "Israeli Bank Transfer",
+  },
+  {
     "cryptoCodes": [],
     "deepPath": "",
     "deepQuery": {},
@@ -140,26 +160,6 @@ Settlement: 10 - 30 minutes",
     ],
     "pluginId": "creditcard",
     "title": "Credit and Debit Card",
-  },
-  {
-    "cryptoCodes": [
-      "BTC",
-      "ETH",
-    ],
-    "deepPath": "/order/buy",
-    "deepQuery": {
-      "order_id": "null",
-      "page": "0",
-    },
-    "description": "Fee: 5.95%
-Settlement: 1 - 48 hours",
-    "partnerIconPath": "bits-of-gold-logo-sm.png",
-    "paymentTypeLogoKey": "bank",
-    "paymentTypes": [
-      "bank",
-    ],
-    "pluginId": "bitsofgold",
-    "title": "Israeli Bank Transfer",
   },
 ]
 `;

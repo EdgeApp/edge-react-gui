@@ -1,3 +1,4 @@
+import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'
 
@@ -37,7 +38,7 @@ export const showBackupModal = (props: { navigation: NavigationBase; forgetLogin
  * available for light accounts, prompting them to back up their account to
  * access those features.
  */
-export const showBackupForTransferModal = (onConfirm: () => void) => {
+const showBackupForTransferModal = (onConfirm: () => void) => {
   Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
     return <BackupForTransferModal bridge={bridge} />
   })
@@ -47,4 +48,16 @@ export const showBackupForTransferModal = (onConfirm: () => void) => {
       }
     })
     .catch(error => showError(error))
+}
+
+/**
+ * Checks an account for light status and shows a backup modal if the account is
+ * a light account. Returns true if the modal was shown.
+ */
+export const checkAndShowLightBackupModal = (account: EdgeAccount, navigation: NavigationBase): boolean => {
+  if (account.username == null) {
+    showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+    return true
+  }
+  return false
 }

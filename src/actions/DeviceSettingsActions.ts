@@ -1,6 +1,6 @@
 import { makeReactNativeDisklet } from 'disklet'
 
-import { asDeviceSettings, DeviceSettings } from '../types/types'
+import { asDeviceSettings, DefaultScreen, DeviceSettings } from '../types/types'
 
 const disklet = makeReactNativeDisklet()
 const DEVICE_SETTINGS_FILENAME = 'DeviceSettings.json'
@@ -32,6 +32,18 @@ export const writeDisableAnimations = async (disableAnimations: boolean) => {
     console.log(e)
   }
   const updatedSettings: DeviceSettings = { ...deviceSettings, disableAnimations }
+  return await writeDeviceSettings(updatedSettings)
+}
+
+export const writeDefaultScreen = async (defaultScreen: DefaultScreen) => {
+  try {
+    const raw = await disklet.getText(DEVICE_SETTINGS_FILENAME)
+    const json = JSON.parse(raw)
+    deviceSettings = asDeviceSettings(json)
+  } catch (e) {
+    console.log(e)
+  }
+  const updatedSettings: DeviceSettings = { ...deviceSettings, defaultScreen }
   return await writeDeviceSettings(updatedSettings)
 }
 

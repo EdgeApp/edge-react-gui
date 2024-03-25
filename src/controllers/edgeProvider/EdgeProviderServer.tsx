@@ -28,6 +28,7 @@ import { Dispatch } from '../../types/reduxTypes'
 import { NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset, MapObject } from '../../types/types'
 import { getCurrencyIconUris } from '../../util/CdnUris'
+import { CryptoAmount } from '../../util/CryptoAmount'
 import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { makeCurrencyCodeTable } from '../../util/tokenIdTools'
@@ -410,10 +411,16 @@ export class EdgeProviderServer implements EdgeProviderMethods {
             .then(exchangeAmount => {
               this._dispatch(
                 logEvent('EdgeProvider_Conversion_Success', {
-                  pluginId: this._plugin.storeId,
-                  orderId,
-                  currencyCode: transaction.currencyCode,
-                  exchangeAmount: abs(exchangeAmount)
+                  conversionValues: {
+                    conversionType: 'crypto',
+                    cryptoAmount: new CryptoAmount({
+                      currencyConfig: wallet.currencyConfig,
+                      currencyCode: transaction.currencyCode,
+                      exchangeAmount: abs(exchangeAmount)
+                    }),
+                    swapProviderId: this._plugin.storeId,
+                    orderId
+                  }
                 })
               )
             })

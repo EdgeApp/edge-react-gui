@@ -3,11 +3,9 @@ import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
-import { selectWalletForExchange } from '../../actions/CryptoExchangeActions'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { useDispatch } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { roundedFee } from '../../util/utils'
@@ -32,7 +30,6 @@ interface Props {
  */
 export function InsufficientFeesModal(props: Props) {
   const { bridge, coreError, navigation, wallet, onSwap } = props
-  const dispatch = useDispatch()
 
   // Get the display amount:
   const { tokenId, networkFee = '' } = coreError
@@ -46,9 +43,8 @@ export function InsufficientFeesModal(props: Props) {
     bridge.resolve()
   })
   const handleSwap = useHandler(async () => {
-    if (onSwap) return onSwap()
-    await dispatch(selectWalletForExchange(wallet.id, tokenId, 'to'))
-    navigation.navigate('exchangeTab', { screen: 'exchange' })
+    if (onSwap) onSwap()
+    navigation.navigate('exchangeTab', { screen: 'exchange', params: { toWalletId: wallet.id, toTokenId: tokenId } })
     bridge.resolve()
   })
 

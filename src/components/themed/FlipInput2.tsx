@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useMemo } from 'react'
-import { Platform, ReturnKeyType, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { Platform, ReturnKeyType, Text, TextInput, View } from 'react-native'
 import Animated, {
   AnimationCallback,
   Easing,
@@ -19,6 +19,7 @@ import { formatNumberInput, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { useState } from '../../types/reactHooks'
 import { zeroString } from '../../util/utils'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
 import { FlipIcon } from '../icons/ThemedIcons'
 import { showError } from '../services/AirshipInstance'
@@ -171,11 +172,11 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
     const fieldInfo = fieldInfos[fieldNum]
     topText = `${topText} ${fieldInfo.currencyName}`
     return (
-      <TouchableWithoutFeedback onPress={onToggleFlipInput} key="top">
+      <EdgeTouchableWithoutFeedback onPress={onToggleFlipInput} key="top">
         <TopAmountText numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.65}>
           {topText}
         </TopAmountText>
-      </TouchableWithoutFeedback>
+      </EdgeTouchableWithoutFeedback>
     )
   }
 
@@ -331,7 +332,7 @@ const CurrencySymbolAnimatedText = styled(Animated.Text)<{ focusAnimation: Share
   ]
 })
 
-const AmountFieldContainerTouchable = styled(TouchableWithoutFeedback)(theme => {
+const AmountFieldContainerTouchable = styled(EdgeTouchableWithoutFeedback)(theme => {
   return {
     marginRight: theme.rem(1.5),
     minHeight: theme.rem(2)

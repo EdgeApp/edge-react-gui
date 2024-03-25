@@ -71,7 +71,7 @@ function WalletListSwipeableComponent(props: Props) {
   })
 
   // Filter based on the search text:
-  const searchedWalletList = React.useMemo(() => searchWalletList(sortedWalletList, searching, searchText), [sortedWalletList, searching, searchText])
+  const searchedWalletList = React.useMemo(() => searchWalletList(sortedWalletList, searchText), [sortedWalletList, searchText])
 
   // Render the refresh control:
   const refreshControl = React.useMemo(() => {

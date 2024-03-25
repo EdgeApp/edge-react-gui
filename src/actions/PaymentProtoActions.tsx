@@ -134,7 +134,7 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
       paymentCurrencies.push(chain)
     } else {
       const edgeCurrencyCode = CURRENCY_MAP[currency] ?? currency
-      const tokenId = getTokenId(account, pluginId, edgeCurrencyCode)
+      const tokenId = getTokenId(account.currencyConfig[pluginId], edgeCurrencyCode)
       if (tokenId == null) continue
       paymentAssets.push({ pluginId, tokenId })
       paymentCurrencies.push(`${chain}-${currency}`)

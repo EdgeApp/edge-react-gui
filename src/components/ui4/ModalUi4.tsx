@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { BackHandler, Dimensions, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { BackHandler, Dimensions, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { Gesture, GestureDetector, ScrollView } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
@@ -8,6 +8,8 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { BlurBackground } from './BlurBackground'
@@ -124,9 +126,9 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
 
   return (
     <>
-      <TouchableWithoutFeedback onPress={handleCancel}>
+      <EdgeTouchableWithoutFeedback onPress={handleCancel}>
         <Animated.View style={[styles.underlay, underlayStyle]} />
-      </TouchableWithoutFeedback>
+      </EdgeTouchableWithoutFeedback>
       <GestureDetector gesture={gesture}>
         <Animated.View style={[styles.modal, modalStyle, modalLayout]}>
           <BlurBackground />
@@ -145,9 +147,9 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
                 title ?? undefined
               )}
               {onCancel == null ? null : (
-                <TouchableOpacity style={isCustomTitle ? styles.closeIconContainerAbsolute : styles.closeIconContainer} onPress={onCancel}>
+                <EdgeTouchableOpacity style={isCustomTitle ? styles.closeIconContainerAbsolute : styles.closeIconContainer} onPress={onCancel}>
                   <AntDesignIcon name="close" color={theme.deactivatedText} size={theme.rem(1.25)} />
-                </TouchableOpacity>
+                </EdgeTouchableOpacity>
               )}
             </View>
           )}

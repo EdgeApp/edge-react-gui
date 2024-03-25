@@ -193,7 +193,7 @@ const Tab = ({
   const handleOnPress = useHandler(() => {
     switch (route.name) {
       case 'homeTab':
-        return navigation.navigate('home', currentName === 'homeTab' ? { screen: 'home' } : {})
+        return navigation.navigate('homeTab', currentName === 'homeTab' ? { screen: 'home' } : {})
       case 'walletsTab':
         return navigation.navigate('walletsTab', currentName === 'walletsTab' ? { screen: 'walletList' } : {})
       case 'buyTab':

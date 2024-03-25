@@ -142,6 +142,11 @@ export const asEnvConfig = asObject({
       freeRegRefCode: asOptional(asString, '')
     }).withRest
   ),
+  FILECOIN_INIT: asCorePluginInit(
+    asObject({
+      glifApiKey: asOptional(asString, '')
+    })
+  ),
   GODEX_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
@@ -247,6 +252,7 @@ export const asEnvConfig = asObject({
   DEBUG_EXCHANGES: asOptional(asBoolean, false),
   DEBUG_VERBOSE_ERRORS: asOptional(asBoolean, false),
   DEBUG_THEME: asOptional(asBoolean, false),
+  ENABLE_FIAT_SANDBOX: asOptional(asBoolean, false),
   ENABLE_TEST_SERVERS: asOptional(asBoolean),
   ENABLE_REDUX_PERF_LOGGING: asOptional(asBoolean, false),
   LOG_SERVER: asNullable(

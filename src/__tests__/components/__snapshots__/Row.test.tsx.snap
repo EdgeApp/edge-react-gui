@@ -1,0 +1,2669 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RowUi4 renders correctly with an icon 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "backgroundColor": "rgba(255, 255, 255, 0)",
+        "flexDirection": "row",
+      },
+      {
+        "marginBottom": 11,
+        "marginLeft": 11,
+        "marginRight": 11,
+        "marginTop": 11,
+      },
+    ]
+  }
+>
+  https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png
+  <View
+    style={
+      [
+        {
+          "flexDirection": "column",
+          "flexShrink": 1,
+        },
+        {
+          "flexGrow": 1,
+        },
+      ]
+    }
+  >
+    <Text
+      adjustsFontSizeToFit={true}
+      ellipsizeMode="tail"
+      minimumFontScale={0.65}
+      numberOfLines={1}
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          {
+            "color": "#3dd9f4",
+            "fontSize": 17,
+            "paddingRight": 22,
+          },
+          null,
+        ]
+      }
+    >
+      Row with Icon
+    </Text>
+    <Text
+      adjustsFontSizeToFit={true}
+      ellipsizeMode="tail"
+      minimumFontScale={0.65}
+      numberOfLines={3}
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          {
+            "color": "#FFFFFF",
+            "fontSize": 22,
+          },
+          null,
+        ]
+      }
+    >
+      This row has an icon
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`RowUi4 renders correctly with an icon in a flex view 1`] = `
+<View
+  style={
+    {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "flexGrow": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Row with Icon
+      </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={3}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#FFFFFF",
+              "fontSize": 22,
+            },
+            null,
+          ]
+        }
+      >
+        This row has an icon
+      </Text>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
+[
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "flexGrow": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Flex Children
+      </Text>
+      <View
+        style={
+          {
+            "backgroundColor": "#FF0000",
+            "flex": 1,
+          }
+        }
+      />
+    </View>
+  </View>,
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "flexGrow": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Icon w/ Flex Children
+      </Text>
+      <View
+        style={
+          {
+            "backgroundColor": "#FF0000",
+            "flex": 1,
+          }
+        }
+      />
+    </View>
+  </View>,
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "marginRight": 34,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Copy w/ Flex Children
+      </Text>
+      <View
+        style={
+          {
+            "backgroundColor": "#FF0000",
+            "flex": 1,
+          }
+        }
+      />
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "flex-end",
+          "height": "100%",
+          "justifyContent": "center",
+          "opacity": 1,
+          "position": "absolute",
+          "right": 0,
+          "width": "100%",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          [
+            {
+              "color": undefined,
+              "fontSize": 22,
+            },
+            {
+              "color": "#00f1a2",
+              "marginLeft": 11,
+              "textAlign": "center",
+            },
+            {
+              "fontFamily": "FontAwesome",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>,
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "marginRight": 34,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Delete w/ Flex Children
+      </Text>
+      <View
+        style={
+          {
+            "backgroundColor": "#FF0000",
+            "flex": 1,
+          }
+        }
+      />
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "flex-end",
+          "height": "100%",
+          "justifyContent": "center",
+          "opacity": 1,
+          "position": "absolute",
+          "right": 0,
+          "width": "100%",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          [
+            {
+              "color": undefined,
+              "fontSize": 22,
+            },
+            {
+              "color": "#00f1a2",
+              "marginLeft": 11,
+              "textAlign": "center",
+            },
+            {
+              "fontFamily": "FontAwesome",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>,
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "marginRight": 34,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Questionable w/ Flex Children
+      </Text>
+      <View
+        style={
+          {
+            "backgroundColor": "#FF0000",
+            "flex": 1,
+          }
+        }
+      />
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "flex-end",
+          "height": "100%",
+          "justifyContent": "center",
+          "opacity": 1,
+          "position": "absolute",
+          "right": 0,
+          "width": "100%",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          [
+            {
+              "color": undefined,
+              "fontSize": 22,
+            },
+            {
+              "color": "#00f1a2",
+              "marginLeft": 11,
+              "textAlign": "center",
+            },
+            {
+              "fontFamily": "simple-line-icons",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>,
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "marginRight": 34,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Editable w/ Flex Children
+      </Text>
+      <View
+        style={
+          {
+            "backgroundColor": "#FF0000",
+            "flex": 1,
+          }
+        }
+      />
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "flex-end",
+          "height": "100%",
+          "justifyContent": "center",
+          "opacity": 1,
+          "position": "absolute",
+          "right": 0,
+          "width": "100%",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          [
+            {
+              "color": undefined,
+              "fontSize": 22,
+            },
+            {
+              "color": "#00f1a2",
+              "marginLeft": 11,
+              "textAlign": "center",
+            },
+            {
+              "fontFamily": "FontAwesome",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>,
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "marginRight": 34,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Touchable w/ Flex Children
+      </Text>
+      <View
+        style={
+          {
+            "backgroundColor": "#FF0000",
+            "flex": 1,
+          }
+        }
+      />
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "flex-end",
+          "height": "100%",
+          "justifyContent": "center",
+          "opacity": 1,
+          "position": "absolute",
+          "right": 0,
+          "width": "100%",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          [
+            {
+              "color": undefined,
+              "fontSize": 22,
+            },
+            {
+              "color": "#00f1a2",
+              "marginLeft": 11,
+              "textAlign": "center",
+            },
+            {
+              "fontFamily": "FontAwesome5Free-Solid",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {
+              "fontWeight": "900",
+            },
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>,
+]
+`;
+
+exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
+<View
+  style={
+    {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "flexGrow": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        title
+      </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={3}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#FFFFFF",
+              "fontSize": 22,
+            },
+            null,
+          ]
+        }
+      >
+        body
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "flexGrow": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Row with Icon
+      </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={3}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#FFFFFF",
+              "fontSize": 22,
+            },
+            null,
+          ]
+        }
+      >
+        This row has an icon
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "marginRight": 34,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Row with Icon (editable)
+      </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={3}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#FFFFFF",
+              "fontSize": 22,
+            },
+            null,
+          ]
+        }
+      >
+        This row has an icon
+      </Text>
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "flex-end",
+          "height": "100%",
+          "justifyContent": "center",
+          "opacity": 1,
+          "position": "absolute",
+          "right": 0,
+          "width": "100%",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          [
+            {
+              "color": undefined,
+              "fontSize": 22,
+            },
+            {
+              "color": "#00f1a2",
+              "marginLeft": 11,
+              "textAlign": "center",
+            },
+            {
+              "fontFamily": "FontAwesome",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "marginRight": 34,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Row with Icon (questionable)
+      </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={3}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#FFFFFF",
+              "fontSize": 22,
+            },
+            null,
+          ]
+        }
+      >
+        This row has an icon
+      </Text>
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "flex-end",
+          "height": "100%",
+          "justifyContent": "center",
+          "opacity": 1,
+          "position": "absolute",
+          "right": 0,
+          "width": "100%",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          [
+            {
+              "color": undefined,
+              "fontSize": 22,
+            },
+            {
+              "color": "#00f1a2",
+              "marginLeft": 11,
+              "textAlign": "center",
+            },
+            {
+              "fontFamily": "simple-line-icons",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "marginRight": 34,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Row with Icon (touchable)
+      </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={3}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#FFFFFF",
+              "fontSize": 22,
+            },
+            null,
+          ]
+        }
+      >
+        This row has an icon
+      </Text>
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "flex-end",
+          "height": "100%",
+          "justifyContent": "center",
+          "opacity": 1,
+          "position": "absolute",
+          "right": 0,
+          "width": "100%",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          [
+            {
+              "color": undefined,
+              "fontSize": 22,
+            },
+            {
+              "color": "#00f1a2",
+              "marginLeft": 11,
+              "textAlign": "center",
+            },
+            {
+              "fontFamily": "FontAwesome5Free-Solid",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {
+              "fontWeight": "900",
+            },
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "marginRight": 34,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Row with Icon (delete)
+      </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={3}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#FFFFFF",
+              "fontSize": 22,
+            },
+            null,
+          ]
+        }
+      >
+        This row has an icon
+      </Text>
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "flex-end",
+          "height": "100%",
+          "justifyContent": "center",
+          "opacity": 1,
+          "position": "absolute",
+          "right": 0,
+          "width": "100%",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          [
+            {
+              "color": undefined,
+              "fontSize": 22,
+            },
+            {
+              "color": "#00f1a2",
+              "marginLeft": 11,
+              "textAlign": "center",
+            },
+            {
+              "fontFamily": "FontAwesome",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`RowUi4 should render a basic row 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "backgroundColor": "rgba(255, 255, 255, 0)",
+        "flexDirection": "row",
+      },
+      {
+        "marginBottom": 11,
+        "marginLeft": 11,
+        "marginRight": 11,
+        "marginTop": 11,
+      },
+    ]
+  }
+>
+  <View
+    style={
+      [
+        {
+          "flexDirection": "column",
+          "flexShrink": 1,
+        },
+        {
+          "flexGrow": 1,
+        },
+      ]
+    }
+  >
+    <Text
+      adjustsFontSizeToFit={true}
+      ellipsizeMode="tail"
+      minimumFontScale={0.65}
+      numberOfLines={1}
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          {
+            "color": "#3dd9f4",
+            "fontSize": 17,
+            "paddingRight": 22,
+          },
+          null,
+        ]
+      }
+    >
+      title
+    </Text>
+    <Text
+      adjustsFontSizeToFit={true}
+      ellipsizeMode="tail"
+      minimumFontScale={0.65}
+      numberOfLines={3}
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          {
+            "color": "#FFFFFF",
+            "fontSize": 22,
+          },
+          null,
+        ]
+      }
+    >
+      body
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`RowUi4 should render a row in a card 1`] = `
+<View
+  style={
+    [
+      {
+        "alignSelf": "stretch",
+        "borderRadius": 16,
+      },
+      {
+        "marginBottom": 11,
+        "marginLeft": 11,
+        "marginRight": 11,
+        "marginTop": 11,
+      },
+      {
+        "paddingBottom": 11,
+        "paddingLeft": 11,
+        "paddingRight": 11,
+        "paddingTop": 11,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    style={
+      {
+        "backgroundColor": "rgba(255, 255, 255, .1)",
+        "borderRadius": 16,
+        "bottom": 0,
+        "left": 0,
+        "overflow": "hidden",
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "flexGrow": 1,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        title
+      </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={3}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#FFFFFF",
+              "fontSize": 22,
+            },
+            null,
+          ]
+        }
+      >
+        body
+      </Text>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`RowUi4 should render a row with a right button 1`] = `
+[
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "marginRight": 34,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Row (editable)
+      </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={3}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#FFFFFF",
+              "fontSize": 22,
+            },
+            null,
+          ]
+        }
+      >
+        body
+      </Text>
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "flex-end",
+          "height": "100%",
+          "justifyContent": "center",
+          "opacity": 1,
+          "position": "absolute",
+          "right": 0,
+          "width": "100%",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          [
+            {
+              "color": undefined,
+              "fontSize": 22,
+            },
+            {
+              "color": "#00f1a2",
+              "marginLeft": 11,
+              "textAlign": "center",
+            },
+            {
+              "fontFamily": "FontAwesome",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>,
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "marginRight": 34,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Row (questionable)
+      </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={3}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#FFFFFF",
+              "fontSize": 22,
+            },
+            null,
+          ]
+        }
+      >
+        body
+      </Text>
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "flex-end",
+          "height": "100%",
+          "justifyContent": "center",
+          "opacity": 1,
+          "position": "absolute",
+          "right": 0,
+          "width": "100%",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          [
+            {
+              "color": undefined,
+              "fontSize": 22,
+            },
+            {
+              "color": "#00f1a2",
+              "marginLeft": 11,
+              "textAlign": "center",
+            },
+            {
+              "fontFamily": "simple-line-icons",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>,
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "marginRight": 34,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Row (touchable)
+      </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={3}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#FFFFFF",
+              "fontSize": 22,
+            },
+            null,
+          ]
+        }
+      >
+        body
+      </Text>
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "flex-end",
+          "height": "100%",
+          "justifyContent": "center",
+          "opacity": 1,
+          "position": "absolute",
+          "right": 0,
+          "width": "100%",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          [
+            {
+              "color": undefined,
+              "fontSize": 22,
+            },
+            {
+              "color": "#00f1a2",
+              "marginLeft": 11,
+              "textAlign": "center",
+            },
+            {
+              "fontFamily": "FontAwesome5Free-Solid",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {
+              "fontWeight": "900",
+            },
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>,
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "alignSelf": "stretch",
+          "backgroundColor": "rgba(255, 255, 255, 0)",
+          "flexDirection": "row",
+        },
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          },
+          {
+            "marginRight": 34,
+          },
+        ]
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#3dd9f4",
+              "fontSize": 17,
+              "paddingRight": 22,
+            },
+            null,
+          ]
+        }
+      >
+        Row (delete)
+      </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        ellipsizeMode="tail"
+        minimumFontScale={0.65}
+        numberOfLines={3}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#FFFFFF",
+              "fontSize": 22,
+            },
+            null,
+          ]
+        }
+      >
+        body
+      </Text>
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "flex-end",
+          "height": "100%",
+          "justifyContent": "center",
+          "opacity": 1,
+          "position": "absolute",
+          "right": 0,
+          "width": "100%",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        style={
+          [
+            {
+              "color": undefined,
+              "fontSize": 22,
+            },
+            {
+              "color": "#00f1a2",
+              "marginLeft": 11,
+              "textAlign": "center",
+            },
+            {
+              "fontFamily": "FontAwesome",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>,
+]
+`;
+
+exports[`RowUi4 triggers onPress/onLongPress event when clicked 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "backgroundColor": "rgba(255, 255, 255, 0)",
+        "flexDirection": "row",
+      },
+      {
+        "marginBottom": 11,
+        "marginLeft": 11,
+        "marginRight": 11,
+        "marginTop": 11,
+      },
+    ]
+  }
+>
+  <View
+    style={
+      [
+        {
+          "flexDirection": "column",
+          "flexShrink": 1,
+        },
+        {
+          "marginRight": 34,
+        },
+      ]
+    }
+  >
+    <Text
+      adjustsFontSizeToFit={true}
+      ellipsizeMode="tail"
+      minimumFontScale={0.65}
+      numberOfLines={1}
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          {
+            "color": "#3dd9f4",
+            "fontSize": 17,
+            "paddingRight": 22,
+          },
+          null,
+        ]
+      }
+    >
+      Clickable Row
+    </Text>
+    <Text
+      adjustsFontSizeToFit={true}
+      ellipsizeMode="tail"
+      minimumFontScale={0.65}
+      numberOfLines={3}
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          {
+            "color": "#FFFFFF",
+            "fontSize": 22,
+          },
+          null,
+        ]
+      }
+    >
+      This row is clickable
+    </Text>
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={false}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "flex-end",
+        "height": "100%",
+        "justifyContent": "center",
+        "opacity": 1,
+        "position": "absolute",
+        "right": 0,
+        "width": "100%",
+      }
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      style={
+        [
+          {
+            "color": undefined,
+            "fontSize": 22,
+          },
+          {
+            "color": "#00f1a2",
+            "marginLeft": 11,
+            "textAlign": "center",
+          },
+          {
+            "fontFamily": "FontAwesome5Free-Solid",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          {
+            "fontWeight": "900",
+          },
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+</View>
+`;

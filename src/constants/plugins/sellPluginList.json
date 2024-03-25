@@ -46,6 +46,17 @@
     "paymentTypeLogoKey": "bank"
   },
   {
+    "id": "fasterpayments",
+    "pluginId": "fasterpayments",
+    "paymentType": "fasterpayments",
+    "paymentTypes": ["fasterpayments"],
+    "description": "Fee: ~1.5%\nSettlement: 1 hour - 24 hours",
+    "title": "Faster Payments",
+    "forCountries": ["GB"],
+    "cryptoCodes": [],
+    "paymentTypeLogoKey": "bank"
+  },
+  {
     "id": "interac",
     "pluginId": "interac",
     "paymentType": "interac",
@@ -78,64 +89,14 @@
     "cryptoCodes": [],
     "paymentTypeLogoKey": "pix"
   },
-
   {
-    "id": "bits of gold",
+    "id": "bitsofgold",
     "pluginId": "bitsofgold",
     "paymentTypes": ["bank"],
-    "description": "Fee: 3% / Settlement: 1 - 48 hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
-    "title": "SEPA Bank Transfer",
+    "title": "Israeli Bank Transfer",
+    "description": "Fee: 6.95% / Settlement: 1 - 48 hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
     "partnerIconPath": "bits-of-gold-logo-sm.png",
-    "forCountries": [
-      "AD",
-      "AT",
-      "BE",
-      "BG",
-      "BL",
-      "CH",
-      "CY",
-      "CZ",
-      "DE",
-      "DK",
-      "EE",
-      "ES",
-      "FI",
-      "FR",
-      "GF",
-      "GG",
-      "GI",
-      "GP",
-      "GR",
-      "HR",
-      "HU",
-      "IE",
-      "IL",
-      "IM",
-      "IS",
-      "IT",
-      "JE",
-      "LI",
-      "LT",
-      "LU",
-      "LV",
-      "MC",
-      "MF",
-      "MQ",
-      "MT",
-      "NL",
-      "NO",
-      "PL",
-      "PM",
-      "PT",
-      "RE",
-      "RO",
-      "SE",
-      "SI",
-      "SK",
-      "SM",
-      "VA",
-      "YT"
-    ],
+    "forCountries": ["IL"],
     "cryptoCodes": ["BTC", "ETH"],
     "paymentTypeLogoKey": "bank",
     "deepPath": "/order/sell",
@@ -445,9 +406,8 @@
     "cryptoCodes": ["BTC"],
     "paymentType": "sepa",
     "paymentTypes": ["sepa"],
-    "description": "Fee: 1.55% / Settlement: 1 - 2 days\nLimit: €900/day with no KYC",
+    "description": "Fee: 1.5% / Settlement: 1 - 2 days\nLimit: €900/day with no KYC",
     "title": "SEPA Bank Transfer",
-    "partnerIconPath": "logoBity.png",
     "paymentTypeLogoKey": "bank",
     "deepQuery": {
       "type": "sell"
@@ -469,28 +429,45 @@
   },
   "----- Sorting -----",
   {
-    "id": "wyre",
-    "sortIndex": 1
-  },
-  {
     "id": "sepa",
-    "sortIndex": 3
+    "sortIndex": 10
   },
   {
-    "id": "bits of gold",
-    "sortIndex": 1
+    "id": "directtobank",
+    "sortIndex": 10
+  },
+  {
+    "id": "colombiabank",
+    "sortIndex": 10
+  },
+  {
+    "id": "fasterpayments",
+    "sortIndex": 10
+  },
+  {
+    "id": "interac",
+    "sortIndex": 10
+  },
+  {
+    "id": "mexicobank",
+    "sortIndex": 10
+  },
+  {
+    "id": "pix",
+    "sortIndex": 10
+  },
+  {
+    "id": "bitsofgold",
+    "sortIndex": 10
+  },
+  {
+    "id": "debit",
+    "sortIndex": 20
   },
   {
     "id": "bitrefill",
-    "sortIndex": 5
+    "sortIndex": 70
   },
   "----- iOS specifics -----",
-  "----- Country Specifics -----",
-  {
-    "id": "bits of gold",
-    "forCountries": ["IL"],
-    "sortIndex": 2,
-    "title": "Israeli Bank Transfer",
-    "description": "Fee: 6.95% / Settlement: 1 - 48 hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited"
-  }
+  "----- Country Specifics -----"
 ]

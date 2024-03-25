@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 
 import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
@@ -22,8 +22,7 @@ export function getCurrencyInfos(account: EdgeAccount): EdgeCurrencyInfo[] {
   return Object.keys(currencyConfig).map(pluginId => currencyConfig[pluginId].currencyInfo)
 }
 
-export const getTokenId = (account: EdgeAccount, pluginId: string, currencyCode: string): EdgeTokenId | undefined => {
-  const currencyConfig = account.currencyConfig[pluginId]
+export const getTokenId = (currencyConfig: EdgeCurrencyConfig, currencyCode: string): EdgeTokenId | undefined => {
   if (currencyConfig == null) return
   if (currencyConfig.currencyInfo.currencyCode === currencyCode) return null
   const { allTokens } = currencyConfig
@@ -32,7 +31,7 @@ export const getTokenId = (account: EdgeAccount, pluginId: string, currencyCode:
 }
 
 export const getTokenIdForced = (account: EdgeAccount, pluginId: string, currencyCode: string): EdgeTokenId => {
-  const tokenId = getTokenId(account, pluginId, currencyCode)
+  const tokenId = getTokenId(account.currencyConfig[pluginId], currencyCode)
   if (tokenId === undefined) throw new Error('getTokenIdForced: tokenId not found')
   return tokenId
 }

@@ -7,7 +7,9 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 
 export interface FiatPluginOpenWebViewParams {
   url: string
+  injectedJs?: string
   onClose?: () => void
+  onMessage?: (message: string, injectJs: (js: string) => void) => void
   onUrlChange?: (url: string) => void
 }
 
@@ -15,11 +17,22 @@ interface Props extends EdgeSceneProps<'guiPluginWebView'> {}
 
 export function FiatPluginWebViewComponent(props: Props): JSX.Element {
   const { route } = props
-  const { onClose, onUrlChange, url } = route.params
+  const { injectedJs, onClose, onMessage, onUrlChange, url } = route.params
+
+  const webViewRef = React.useRef<WebView>(null)
 
   const handleNavigationStateChange = useHandler((event: WebViewNavigation) => {
     console.log('FiatPluginWebView navigation: ', event)
     if (onUrlChange != null) onUrlChange(event.url)
+  })
+
+  const injectJs = (js: string) => {
+    if (webViewRef.current != null) webViewRef.current.injectJavaScript(js)
+  }
+
+  const handleMessage = useHandler(event => {
+    const { data } = event.nativeEvent
+    if (onMessage != null) onMessage(data, injectJs)
   })
 
   React.useEffect(() => () => {
@@ -35,8 +48,12 @@ export function FiatPluginWebViewComponent(props: Props): JSX.Element {
         javaScriptEnabled
         allowsInlineMediaPlayback
         mediaPlaybackRequiresUserAction={false}
+        ref={webViewRef}
+        scalesPageToFit
         source={{ uri: url }}
+        onMessage={handleMessage}
         onNavigationStateChange={handleNavigationStateChange}
+        injectedJavaScriptBeforeContentLoaded={injectedJs}
       />
     </SceneWrapper>
   )

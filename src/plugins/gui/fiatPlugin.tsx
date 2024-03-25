@@ -6,6 +6,7 @@ import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
+import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { DisablePluginMap, NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { launchPaymentProto, LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
 import { addressWarnings } from '../../actions/ScanActions'
@@ -19,7 +20,7 @@ import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList, NavigationBase } from '../../types/routerTypes'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
-import { OnLogEvent, TrackingEventName } from '../../util/tracking'
+import { OnLogEvent, SellConversionValues, TrackingEventName } from '../../util/tracking'
 import {
   FiatPaymentType,
   FiatPluginAddressFormParams,
@@ -67,9 +68,11 @@ export const executePlugin = async (params: {
     onLogEvent
   } = params
   const { defaultFiatAmount, forceFiatCurrencyCode, pluginId } = guiPlugin
+  const isBuy = direction === 'buy'
+  if (isBuy && checkAndShowLightBackupModal(account, navigation)) return
 
-  const tabSceneKey = direction === 'buy' ? 'buyTab' : 'sellTab'
-  const listSceneKey = direction === 'buy' ? 'pluginListBuy' : 'pluginListSell'
+  const tabSceneKey = isBuy ? 'buyTab' : 'sellTab'
+  const listSceneKey = isBuy ? 'pluginListBuy' : 'pluginListSell'
 
   function maybeNavigateToCorrectTabScene() {
     const navPath = getNavigationAbsolutePath(navigation)
@@ -222,19 +225,7 @@ export const executePlugin = async (params: {
     showToast: async (message: string, autoHideMs?: number) => {
       showToast(message, autoHideMs)
     },
-    trackConversion: async (
-      event: TrackingEventName,
-      opts: {
-        destCurrencyCode: string
-        destExchangeAmount: string
-        destPluginId?: string
-        sourceCurrencyCode: string
-        sourceExchangeAmount: string
-        sourcePluginId?: string
-        pluginId: string
-        orderId?: string
-      }
-    ) => {
+    trackConversion: async (event: TrackingEventName, opts: { conversionValues: SellConversionValues }) => {
       onLogEvent(event, opts)
     },
     exitScene: async () => {

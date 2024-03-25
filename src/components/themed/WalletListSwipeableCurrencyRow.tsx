@@ -1,6 +1,6 @@
 import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { Text } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import { SharedValue } from 'react-native-reanimated'
 
@@ -9,6 +9,7 @@ import { Fontello } from '../../assets/vector/index'
 import { useHandler } from '../../hooks/useHandler'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
 import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupForTransferModal'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
@@ -111,27 +112,27 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const renderRequestUnderlay = (isActive: SharedValue<boolean>) => (
     <>
-      <TouchableOpacity style={styles.menuButton} onPress={handleMenu}>
+      <EdgeTouchableOpacity style={styles.menuButton} onPress={handleMenu}>
         <Text style={styles.menuIcon}>…</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.requestUnderlay} onPress={handleRequest}>
+      </EdgeTouchableOpacity>
+      <EdgeTouchableOpacity style={styles.requestUnderlay} onPress={handleRequest}>
         <SwipeableRowIcon isActive={isActive} minWidth={iconWidth}>
           <Fontello name="request" color={theme.icon} size={theme.rem(1)} />
         </SwipeableRowIcon>
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     </>
   )
 
   const renderSendUnderlay = (isActive: SharedValue<boolean>) => (
     <>
-      <TouchableOpacity style={styles.sendUnderlay} onPress={handleSend}>
+      <EdgeTouchableOpacity style={styles.sendUnderlay} onPress={handleSend}>
         <SwipeableRowIcon isActive={isActive} minWidth={iconWidth}>
           <Fontello name="send" color={theme.icon} size={theme.rem(1)} />
         </SwipeableRowIcon>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.menuButton} onPress={handleMenu}>
+      </EdgeTouchableOpacity>
+      <EdgeTouchableOpacity style={styles.menuButton} onPress={handleMenu}>
         <Text style={styles.menuIcon}>…</Text>
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     </>
   )
 

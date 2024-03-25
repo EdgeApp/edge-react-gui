@@ -1,4 +1,3 @@
-import { mul, toFixed } from 'biggystring'
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, Image, View } from 'react-native'
@@ -6,12 +5,12 @@ import { sprintf } from 'sprintf-js'
 
 import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../../locales/strings'
-import { getExchangeDenomByCurrencyCode, selectDisplayDenom } from '../../../selectors/DenominationSelectors'
+import { selectDisplayDenom } from '../../../selectors/DenominationSelectors'
 import { config } from '../../../theme/appConfig'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { EdgeAsset } from '../../../types/types'
-import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
+import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getRegInfo } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
@@ -30,7 +29,6 @@ interface StateProps {
   fioPlugin?: EdgeCurrencyConfig
   fioWallets: EdgeCurrencyWallet[]
   fioDisplayDenomination: EdgeDenomination
-  pluginId: string
   isConnected: boolean
 }
 
@@ -150,12 +148,16 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
         this.props.onSelectWallet(walletId, paymentCurrencyCode)
 
         const wallet = account.currencyWallets[walletId]
-        const exchangeDenomination = getExchangeDenomByCurrencyCode(wallet.currencyConfig, paymentCurrencyCode)
-        const exchangeAmount = allPaymentInfo[paymentCurrencyCode].amount
-        let nativeAmount = mul(exchangeAmount, exchangeDenomination.multiplier)
-        nativeAmount = toFixed(nativeAmount, 0, 0)
+        const { amount: exchangeAmount, address: paymentAddress } = allPaymentInfo[paymentCurrencyCode]
 
-        const tokenId = getTokenIdForced(account, wallet.currencyInfo.pluginId, paymentCurrencyCode)
+        const cryptoAmount = new CryptoAmount({
+          exchangeAmount,
+          currencyCode: paymentCurrencyCode,
+          currencyConfig: wallet.currencyConfig
+        })
+
+        const { tokenId, nativeAmount } = cryptoAmount
+
         const sendParams: SendScene2Params = {
           walletId,
           tokenId,
@@ -170,7 +172,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
             spendTargets: [
               {
                 nativeAmount,
-                publicAddress: allPaymentInfo[paymentCurrencyCode].address
+                publicAddress: paymentAddress
               }
             ],
             metadata: {
@@ -190,8 +192,12 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
                 [{ text: lstrings.string_ok_cap }]
               )
 
-              const { currencyCode, pluginId } = wallet.currencyInfo
-              onLogEvent('Fio_Handle_Register', { nativeAmount, pluginId, currencyCode })
+              onLogEvent('Fio_Handle_Register', {
+                conversionValues: {
+                  conversionType: 'crypto',
+                  cryptoAmount
+                }
+              })
               navigation.navigate('homeTab', { screen: 'home' })
             }
           }
@@ -283,7 +289,6 @@ export const FioAddressRegisterSelectWalletScene = connect<StateProps, DispatchP
     fioPlugin: state.core.account.currencyConfig.fio,
     fioDisplayDenomination: selectDisplayDenom(state, params.selectedWallet.currencyConfig, null),
     defaultFiatCode: state.ui.settings.defaultIsoFiat,
-    pluginId: params.selectedWallet.currencyInfo.pluginId,
     isConnected: state.network.isConnected
   }),
   dispatch => ({

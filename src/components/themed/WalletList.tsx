@@ -1,11 +1,10 @@
-import { FlashList } from '@shopify/flash-list'
 import { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { SectionList, ViewStyle } from 'react-native'
+import { ViewStyle } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 
 import { selectWalletToken } from '../../actions/WalletActions'
 import { useHandler } from '../../hooks/useHandler'
-import { useRowLayout } from '../../hooks/useRowLayout'
 import { lstrings } from '../../locales/strings'
 import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -32,18 +31,12 @@ interface Props {
   filterActivation?: boolean
 
   // Visuals:
-  searching: boolean
   searchText: string
   showCreateWallet?: boolean
   createWalletId?: string
 
   // Callbacks:
   onPress?: (walletId: string, tokenId: EdgeTokenId) => void
-}
-
-interface Section {
-  title: string
-  data: Array<WalletListItem | WalletCreateItem>
 }
 
 /**
@@ -63,7 +56,6 @@ export function WalletList(props: Props) {
     filterActivation,
 
     // Visuals:
-    searching,
     searchText,
     showCreateWallet,
     createWalletId,
@@ -149,10 +141,10 @@ export function WalletList(props: Props) {
   )
 
   // Merge the lists, filtering based on the search term:
-  const { walletList, sectionList } = React.useMemo<{ walletList: Array<WalletListItem | WalletCreateItem>; sectionList?: Section[] }>(() => {
+  const walletList = React.useMemo<Array<WalletListItem | WalletCreateItem | string>>(() => {
     const walletList: Array<WalletListItem | WalletCreateItem> = [
       // Search the wallet list:
-      ...searchWalletList(filteredWalletList, searching, searchText)
+      ...searchWalletList(filteredWalletList, searchText)
     ]
 
     // Show the create-wallet list, filtered by the search term:
@@ -161,29 +153,24 @@ export function WalletList(props: Props) {
     }
 
     // Show a flat list if we are searching, or have no recent wallets:
-    if (searching || searchText.length > 0 || recentWalletList.length === 0) {
-      return { walletList }
+    if (searchText.length > 0 || recentWalletList.length === 0) {
+      return walletList
     }
 
-    // Add the recent wallets section:
-    return {
-      sectionList: [
-        {
-          title: lstrings.wallet_list_modal_header_mru,
-          data: [...recentWalletList]
-        },
-        {
-          title: lstrings.wallet_list_modal_header_all,
-          data: walletList
-        }
-      ],
-      walletList
-    }
-  }, [createWalletList, filteredWalletList, recentWalletList, searchText, searching, showCreateWallet])
+    return [
+      // Show a sectioned list with sectioned recent/all wallets:
+      lstrings.wallet_list_modal_header_mru,
+      ...recentWalletList,
+      lstrings.wallet_list_modal_header_all,
+      ...walletList
+    ]
+  }, [createWalletList, filteredWalletList, recentWalletList, searchText, showCreateWallet])
 
   // rendering -------------------------------------------------------------
 
   const renderRow = useHandler((item: FlatListItem<any>) => {
+    if (typeof item.item === 'string') return <WalletListSectionHeader title={item.item} />
+
     if (item.item.walletId == null) {
       const createItem: WalletCreateItem = item.item
       return <WalletListCreateRow createItem={createItem} createWalletId={createWalletId} onPress={handlePress} />
@@ -198,34 +185,17 @@ export function WalletList(props: Props) {
     return <WalletListCurrencyRow token={token} tokenId={tokenId} wallet={wallet} onPress={handlePress} />
   })
 
-  const renderSectionHeader = useHandler((section: { section: Section }) => {
-    return <WalletListSectionHeader title={section.section.title} />
-  })
-
-  const handleItemLayout = useRowLayout()
-
   const scrollPadding = React.useMemo<ViewStyle>(() => {
     return { paddingBottom: theme.rem(ModalFooter.bottomRem) }
   }, [theme])
 
-  return sectionList == null ? (
-    <FlashList
+  return (
+    <FlatList
       contentContainerStyle={scrollPadding}
       data={walletList}
-      estimatedItemSize={theme.rem(4.25)}
       keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="handled"
       renderItem={renderRow}
-    />
-  ) : (
-    <SectionList
-      contentContainerStyle={scrollPadding}
-      getItemLayout={handleItemLayout}
-      keyboardDismissMode="on-drag"
-      keyboardShouldPersistTaps="handled"
-      renderItem={renderRow}
-      renderSectionHeader={renderSectionHeader}
-      sections={sectionList}
     />
   )
 }

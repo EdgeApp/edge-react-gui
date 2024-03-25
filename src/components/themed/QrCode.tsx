@@ -1,10 +1,11 @@
 import qrcodeGenerator from 'qrcode-generator'
 import * as React from 'react'
-import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import Animated, { useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated'
 import Svg, { Path } from 'react-native-svg'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {
@@ -46,7 +47,7 @@ export function QrCode(props: Props) {
   const viewBox = `0 0 ${sizeInCells} ${sizeInCells}`
 
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
+    <EdgeTouchableWithoutFeedback onPress={onPress}>
       <View style={[styles.container, margin]} onLayout={handleLayout}>
         <ActivityIndicator color={theme.iconTappable} />
         <Animated.View style={[styles.whiteBox, fadeStyle]}>
@@ -57,7 +58,7 @@ export function QrCode(props: Props) {
           )}
         </Animated.View>
       </View>
-    </TouchableWithoutFeedback>
+    </EdgeTouchableWithoutFeedback>
   )
 }
 

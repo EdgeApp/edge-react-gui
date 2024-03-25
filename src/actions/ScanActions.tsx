@@ -3,7 +3,6 @@ import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
-import { selectWalletForExchange } from '../actions/CryptoExchangeActions'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { WalletListModal, WalletListResult } from '../components/modals/WalletListModal'
@@ -20,6 +19,7 @@ import { logActivity } from '../util/logger'
 import { makeCurrencyCodeTable, upgradeCurrencyCodes } from '../util/tokenIdTools'
 import { getPluginIdFromChainCode, toListString, zeroString } from '../util/utils'
 import { cleanQueryFlags, openBrowserUri } from '../util/WebUtils'
+import { checkAndShowLightBackupModal } from './BackupModalActions'
 
 /**
  * Handle Request for Address Links (WIP - pending refinement).
@@ -43,6 +43,9 @@ import { cleanQueryFlags, openBrowserUri } from '../util/WebUtils'
  *    infinite redirect loops).
  */
 export const doRequestAddress = async (navigation: NavigationBase, account: EdgeAccount, dispatch: Dispatch, link: RequestAddressLink) => {
+  // Block light accounts:
+  if (checkAndShowLightBackupModal(account, navigation)) return
+
   const { assets, post, redir, payer } = link
   try {
     // Check if all required fields are provided in the request
@@ -175,6 +178,8 @@ export function handleWalletUris(
   fioAddress?: string
 ): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    const state = getState()
+    const { account } = state.core
     const { legacyAddress, metadata, minNativeAmount, nativeAmount, publicAddress, uniqueIdentifier, tokenId = null } = parsedUri
     const currencyCode: string = parsedUri.currencyCode ?? wallet.currencyInfo.currencyCode
 
@@ -198,7 +203,7 @@ export function handleWalletUris(
 
       if (parsedUri.privateKeys != null && parsedUri.privateKeys.length > 0) {
         // PRIVATE KEY URI
-        return await privateKeyModalActivated(wallet, parsedUri.privateKeys)
+        return await privateKeyModalActivated(account, navigation, wallet, parsedUri.privateKeys)
       }
 
       // PUBLIC ADDRESS URI
@@ -234,7 +239,7 @@ export function handleWalletUris(
   }
 }
 
-async function privateKeyModalActivated(wallet: EdgeCurrencyWallet, privateKeys: string[]): Promise<void> {
+async function privateKeyModalActivated(account: EdgeAccount, navigation: NavigationBase, wallet: EdgeCurrencyWallet, privateKeys: string[]): Promise<void> {
   const message = sprintf(lstrings.private_key_modal_sweep_from_private_key_message, config.appName)
 
   await Airship.show<'confirm' | 'cancel' | undefined>(bridge => (
@@ -247,7 +252,7 @@ async function privateKeyModalActivated(wallet: EdgeCurrencyWallet, privateKeys:
           confirm: {
             label: lstrings.private_key_modal_import,
             async onPress() {
-              await sweepPrivateKeys(wallet, privateKeys)
+              await sweepPrivateKeys(account, navigation, wallet, privateKeys)
               return true
             }
           },
@@ -258,7 +263,9 @@ async function privateKeyModalActivated(wallet: EdgeCurrencyWallet, privateKeys:
   ))
 }
 
-async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[]) {
+async function sweepPrivateKeys(account: EdgeAccount, navigation: NavigationBase, wallet: EdgeCurrencyWallet, privateKeys: string[]) {
+  if (checkAndShowLightBackupModal(account, navigation)) return
+
   try {
     const unsignedTx = await wallet.sweepPrivateKeys({
       tokenId: null,
@@ -349,8 +356,7 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: E
       if (threeButtonModal === 'buy') {
         navigation.navigate('buyTab', { screen: 'pluginListBuy' })
       } else if (threeButtonModal === 'exchange') {
-        await dispatch(selectWalletForExchange(wallet.id, tokenId, 'to'))
-        navigation.navigate('exchangeTab', { screen: 'exchange' })
+        navigation.navigate('exchangeTab', { screen: 'exchange', params: { toWalletId: wallet.id, toTokenId: tokenId } })
       }
     } catch (e: any) {
       // Don't bother the user with this error, but log it quietly:

@@ -28,9 +28,9 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { EdgeText } from '../themed/EdgeText'
-import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 export interface CreateWalletSelectFiatParams {
   createWalletList: WalletCreateItem[]
@@ -229,8 +229,16 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
           renderItem={renderCurrencyRow}
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
-        <MainButton label={lstrings.title_create_wallets} type="secondary" marginRem={[1, 0, 0.5]} onPress={handleCreate} />
-        <MainButton label={lstrings.create_wallet_imports_title} type="escape" marginRem={[0.5, 0, 1]} onPress={handleImport} />
+        <ButtonsViewUi4
+          primary={{
+            label: lstrings.title_create_wallets,
+            onPress: handleCreate
+          }}
+          secondary={{
+            label: lstrings.create_wallet_imports_title,
+            onPress: handleImport
+          }}
+        />
       </View>
     </SceneWrapper>
   )

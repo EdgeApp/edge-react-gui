@@ -1,6 +1,6 @@
 import { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { ListRenderItemInfo, TouchableOpacity, View } from 'react-native'
+import { ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -23,6 +23,7 @@ import { Theme } from '../../../types/Theme'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getCurrencyInfos } from '../../../util/CurrencyInfoHelpers'
 import { LoanSummaryCard } from '../../cards/LoanSummaryCard'
+import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { Space } from '../../layout/Space'
 import { LoanWelcomeModal } from '../../modals/LoanWelcomeModal'
@@ -185,10 +186,10 @@ export const LoanDashboardScene = (props: Props) => {
             <FillLoader />
           </Space>
         ) : (
-          <TouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
+          <EdgeTouchableOpacity onPress={handleAddLoan} style={styles.addButtonsContainer}>
             <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
             <EdgeText style={[styles.addItem, styles.addItemText]}>{lstrings.loan_new_loan}</EdgeText>
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         )}
       </>
     )
@@ -207,9 +208,9 @@ export const LoanDashboardScene = (props: Props) => {
     <SceneWrapper>
       <SceneHeader
         tertiary={
-          <TouchableOpacity onPress={handleInfoIconPress}>
+          <EdgeTouchableOpacity onPress={handleInfoIconPress}>
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         }
         title={lstrings.loan_dashboard_title}
         underline

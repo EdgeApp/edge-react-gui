@@ -1,7 +1,7 @@
 import { add, div, gt, max, mul, sub } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity } from 'react-native'
+import { ActivityIndicator } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -28,6 +28,7 @@ import { getToken } from '../../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, zeroString } from '../../../util/utils'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
 import { TappableCard } from '../../cards/TappableCard'
+import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withLoanAccount } from '../../hoc/withLoanAccount'
 import { FiatIcon } from '../../icons/FiatIcon'
@@ -116,7 +117,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
   const renderProgramStatusCard = () => {
     if (runningProgramMessage != null && runningProgramEdge != null) {
       return (
-        <TouchableOpacity onPress={() => handleProgramStatusCardPress(runningProgramEdge)}>
+        <EdgeTouchableOpacity onPress={() => handleProgramStatusCardPress(runningProgramEdge)}>
           <CardUi4 marginRem={[0, 0, 1]}>
             <Space sideways>
               <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
@@ -125,7 +126,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
               </EdgeText>
             </Space>
           </CardUi4>
-        </TouchableOpacity>
+        </EdgeTouchableOpacity>
       )
     } else return null
   }
@@ -221,9 +222,9 @@ export const LoanDetailsSceneComponent = (props: Props) => {
     <SceneWrapper>
       <SceneHeader
         tertiary={
-          <TouchableOpacity onPress={handleInfoIconPress}>
+          <EdgeTouchableOpacity onPress={handleInfoIconPress}>
             <Ionicon name="information-circle-outline" size={theme.rem(1.25)} color={theme.iconTappable} />
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         }
         title={`${lstrings.loan_details_title}${isDevMode ? ` (${wallet.name})` : ''}`}
         underline

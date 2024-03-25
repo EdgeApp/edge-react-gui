@@ -1,7 +1,7 @@
 import { div, gt } from 'biggystring'
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { FIAT_PRECISION, getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, decimalOrZero, truncateDecimals } from '../../util/utils'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
@@ -34,11 +35,11 @@ function WalletListSortableRowComponent(props: Props) {
 
   if (wallet == null || exchangeDenomination == null) {
     return (
-      <TouchableOpacity style={styles.container} activeOpacity={0.95} onLongPress={onDrag}>
+      <EdgeTouchableOpacity style={styles.container} activeOpacity={0.95} onLongPress={onDrag}>
         <View style={[styles.rowContainer, styles.loaderContainer]}>
           <ActivityIndicator color={theme.primaryText} size="small" />
         </View>
-      </TouchableOpacity>
+      </EdgeTouchableOpacity>
     )
   }
 
@@ -60,7 +61,7 @@ function WalletListSortableRowComponent(props: Props) {
   const fiatBalanceString = showBalance ? formatNumber(fiatBalanceFormat, { toFixed: FIAT_PRECISION }) : ''
 
   return (
-    <TouchableOpacity style={styles.container} onLongPress={onDrag}>
+    <EdgeTouchableOpacity style={styles.container} onLongPress={onDrag}>
       <View style={styles.rowContainer}>
         <View style={styles.iconContainer}>
           <Ionicon name="ios-menu" size={theme.rem(1.25)} color={theme.icon} />
@@ -79,7 +80,7 @@ function WalletListSortableRowComponent(props: Props) {
           </View>
         </View>
       </View>
-    </TouchableOpacity>
+    </EdgeTouchableOpacity>
   )
 }
 

@@ -4,10 +4,11 @@ import * as React from 'react'
 import { Platform } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
-import { getDeviceSettings, writeDisableAnimations } from '../../actions/DeviceSettingsActions'
+import { getDeviceSettings, writeDefaultScreen, writeDisableAnimations } from '../../actions/DeviceSettingsActions'
 import { setContactsPermissionOn, setDeveloperModeOn, setSpamFilterOn } from '../../actions/LocalSettingsActions'
 import { showClearLogsModal, showSendLogsModal } from '../../actions/LogActions'
 import { logoutRequest } from '../../actions/LoginActions'
@@ -18,6 +19,7 @@ import {
   togglePinLoginEnabled,
   updateTouchIdEnabled
 } from '../../actions/SettingsActions'
+import { Fontello } from '../../assets/vector/index'
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
@@ -28,11 +30,13 @@ import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationBase } from '../../types/routerTypes'
+import { DefaultScreen } from '../../types/types'
 import { secondsToDisplay } from '../../util/displayTime'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { TextDropdown } from '../common/TextDropdown'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
+import { RadioListModal } from '../modals/RadioListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { changeTheme, ThemeProps, useTheme } from '../services/ThemeContext'
@@ -52,6 +56,7 @@ interface StateProps {
   contactsPermissionOn: boolean
   context: EdgeContext
   defaultFiat: string
+  defaultScreen: DefaultScreen
   developerModeOn: boolean
   disableAnim: boolean
   isLocked: boolean
@@ -69,6 +74,7 @@ interface DispatchProps {
   onTogglePinLoginEnabled: (enableLogin: boolean) => Promise<void>
   onToggleContactsPermissionOn: (contactsPermissionOn: boolean) => Promise<void>
   setAutoLogoutTimeInSeconds: (autoLogoutTimeInSeconds: number) => Promise<void>
+  setDefaultScreen: (defaultScreen: DefaultScreen) => Promise<void>
   showRestoreWalletsModal: (navigation: NavigationBase) => Promise<void>
   showUnlockSettingsModal: () => Promise<void>
   toggleDeveloperMode: (developerModeOn: boolean) => void
@@ -222,6 +228,35 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     navigation.navigate('defaultFiatSetting', {})
   }
 
+  handleDefaultScreen = (): void => {
+    const { defaultScreen, theme } = this.props
+
+    const homeIcon = <SimpleLineIcons name="home" size={theme.rem(1.25)} color={theme.iconTappable} />
+    const assetsIcon = <Fontello name="wallet-1" size={theme.rem(1.25)} color={theme.iconTappable} />
+
+    const defaultScreenHome = { icon: homeIcon, name: lstrings.settings_default_screen_home }
+    const defaultScreenAssets = { icon: assetsIcon, name: lstrings.settings_default_screen_assets }
+
+    const selectedScreen = defaultScreen === 'home' ? defaultScreenHome : defaultScreenAssets
+    Airship.show<string | undefined>(bridge => (
+      <RadioListModal
+        bridge={bridge}
+        title={lstrings.settings_default_screen_title}
+        items={[defaultScreenHome, defaultScreenAssets]}
+        selected={selectedScreen.name}
+      />
+    ))
+      .then(async result => {
+        if (result == null) return
+
+        const newScreen = result === defaultScreenHome.name ? 'home' : 'assets'
+
+        // Apply the user's choice:
+        this.props.setDefaultScreen(newScreen).catch(e => showError(e))
+      })
+      .catch(err => showError(err))
+  }
+
   handlePromotionSettings = (): void => {
     const { navigation } = this.props
     navigation.navigate('promotionSettings', {})
@@ -284,7 +319,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { contactsPermissionOn, isLocked, navigation, theme, username, handleClearLogs, handleSendLogs } = this.props
+    const { contactsPermissionOn, defaultScreen, isLocked, navigation, theme, username, handleClearLogs, handleSendLogs } = this.props
     const iconSize = theme.rem(1.25)
 
     const autoLogout = secondsToDisplay(this.props.autoLogoutTimeInSeconds)
@@ -295,6 +330,8 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
       days: lstrings.settings_days
     }
     const autoLogoutRightText = autoLogout.value === 0 ? lstrings.string_disable : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
+    const defaultScreenRightText = defaultScreen === 'home' ? lstrings.settings_default_screen_home : lstrings.settings_default_screen_assets
+
     const isLightAccount = username == null
 
     return (
@@ -331,6 +368,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
               <SettingsTappableRow label={lstrings.spending_limits} onPress={this.handleSpendingLimits} />
               <SettingsLabelRow right={autoLogoutRightText} label={lstrings.settings_title_auto_logoff} onPress={this.handleAutoLogout} />
               <SettingsLabelRow right={this.props.defaultFiat.replace('iso:', '')} label={lstrings.settings_title_currency} onPress={this.handleDefaultFiat} />
+              <SettingsLabelRow right={defaultScreenRightText} label={lstrings.settings_default_screen_title} onPress={this.handleDefaultScreen} />
 
               {isLightAccount ? null : (
                 <SettingsSwitchRow
@@ -423,6 +461,7 @@ export const SettingsScene = (props: OwnProps) => {
   const supportsTouchId = useSelector(state => state.ui.settings.isTouchSupported)
   const touchIdEnabled = useSelector(state => state.ui.settings.isTouchEnabled)
   const [disableAnim, setDisableAnim] = useState<boolean>(getDeviceSettings().disableAnimations)
+  const [defaultScreen, setDefaultScreen] = useState<DefaultScreen>(getDeviceSettings().defaultScreen)
 
   const username = useWatch(account, 'username')
 
@@ -446,6 +485,11 @@ export const SettingsScene = (props: OwnProps) => {
   })
   const handleSetAutoLogoutTimeInSeconds = useHandler(async (autoLogoutTimeInSeconds: number) => {
     await dispatch(setAutoLogoutTimeInSecondsRequest(autoLogoutTimeInSeconds))
+  })
+  const handleSetDefaultScreen = useHandler(async (newDefaultScreen: DefaultScreen) => {
+    writeDefaultScreen(newDefaultScreen)
+      .then(() => setDefaultScreen(newDefaultScreen))
+      .catch(err => showError(err))
   })
   const handleShowRestoreWalletsModal = useHandler(async (navigation: NavigationBase) => {
     await dispatch(showRestoreWalletsModal(navigation))
@@ -481,6 +525,7 @@ export const SettingsScene = (props: OwnProps) => {
       contactsPermissionOn={contactsPermissionOn}
       context={context}
       defaultFiat={defaultFiat}
+      defaultScreen={defaultScreen}
       developerModeOn={developerModeOn}
       disableAnim={disableAnim}
       isLocked={isLocked}
@@ -496,6 +541,7 @@ export const SettingsScene = (props: OwnProps) => {
       onTogglePinLoginEnabled={handleTogglePinLoginEnabled}
       onToggleContactsPermissionOn={handleToggleContactsPermission}
       setAutoLogoutTimeInSeconds={handleSetAutoLogoutTimeInSeconds}
+      setDefaultScreen={handleSetDefaultScreen}
       showRestoreWalletsModal={handleShowRestoreWalletsModal}
       showUnlockSettingsModal={handleShowUnlockSettingsModal}
       toggleDeveloperMode={handleToggleDeveloperMode}

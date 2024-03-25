@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Switch, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
-import { showBackupForTransferModal } from '../../actions/BackupModalActions'
+import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { showError } from '../../components/services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../components/services/ThemeContext'
 import { EdgeText } from '../../components/themed/EdgeText'
@@ -35,7 +35,6 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
-  const isLightAccount = account.username == null
   const edgeWallets = useWatch(account, 'currencyWallets')
   const ccWalletMap = useSelector(state => state.ui.fio.connectedWalletsByFioAddress[fioAddressName] ?? {})
   const walletItems = React.useMemo(() => makeConnectWallets(edgeWallets, ccWalletMap), [edgeWallets, ccWalletMap])
@@ -57,10 +56,8 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
   }, [prevItemsConnected, walletItems])
 
   const handleContinuePress = useHandler(() => {
-    if (isLightAccount) {
-      showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
-      return
-    }
+    if (checkAndShowLightBackupModal(account, navigation)) return
+
     const walletsToDisconnect: FioConnectionWalletItem[] = []
     for (const walletKey of Object.keys(disconnectWalletsMap)) {
       if (

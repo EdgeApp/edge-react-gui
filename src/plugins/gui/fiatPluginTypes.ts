@@ -11,7 +11,7 @@ import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { AppParamList } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
-import { TrackingEventName } from '../../util/tracking'
+import { SellConversionValues, TrackingEventName } from '../../util/tracking'
 import { FiatPluginOpenWebViewParams } from './scenes/FiatPluginWebView'
 import { RewardsCardDashboardParams } from './scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from './scenes/RewardsCardWelcomeScene'
@@ -146,14 +146,7 @@ export interface FiatPluginUi {
   trackConversion: (
     event: TrackingEventName,
     opts: {
-      destCurrencyCode: string
-      destExchangeAmount: string
-      destPluginId?: string
-      sourceCurrencyCode: string
-      sourceExchangeAmount: string
-      sourcePluginId?: string
-      pluginId: string
-      orderId?: string
+      conversionValues: SellConversionValues
     }
   ) => Promise<void>
 

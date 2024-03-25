@@ -1,5 +1,5 @@
 import { EdgeAccount, EdgeCreateCurrencyWallet } from 'edge-core-js/types'
-import { hasSecurityAlerts } from 'edge-login-ui-rn'
+import { getSupportedBiometryType, hasSecurityAlerts, isTouchEnabled, refreshTouchId, showNotificationPermissionReminder } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Keyboard } from 'react-native'
 import { getCurrencies } from 'react-native-localize'
@@ -17,16 +17,15 @@ import { WalletCreateItem } from '../selectors/getCreateWalletList'
 import { config } from '../theme/appConfig'
 import { Dispatch, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase, NavigationProp } from '../types/routerTypes'
-import { GuiTouchIdInfo } from '../types/types'
 import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
-import { logEvent } from '../util/tracking'
+import { logEvent, trackError } from '../util/tracking'
 import { runWithTimeout } from '../util/utils'
 import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions'
 import { getUniqueWalletName } from './CreateWalletActions'
 import { expiredFioNamesCheckDates } from './FioActions'
 import { readLocalSettings } from './LocalSettingsActions'
-import { registerNotificationsV2 } from './NotificationActions'
+import { registerNotificationsV2, updateNotificationSettings } from './NotificationActions'
 
 function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; currencyCode: string } {
   // Find the first wallet:
@@ -47,7 +46,7 @@ function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; cur
   return { walletId: '', currencyCode: '' }
 }
 
-export function initializeAccount(navigation: NavigationBase, account: EdgeAccount, touchIdInfo: GuiTouchIdInfo): ThunkAction<Promise<void>> {
+export function initializeAccount(navigation: NavigationBase, account: EdgeAccount): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     // Log in as quickly as possible, but we do need the sort order:
     const syncedSettings = await readSyncedSettings(account)
@@ -154,7 +153,8 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       account,
       currencyCode: '',
       pinLoginEnabled: false,
-      touchIdInfo,
+      isTouchEnabled: await isTouchEnabled(account),
+      isTouchSupported: (await getSupportedBiometryType()) !== false,
       walletId: '',
       walletsSort: 'manual'
     }
@@ -208,6 +208,22 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
       await dispatch(refreshAccountReferral())
       await dispatch(expiredFioNamesCheckDates(navigation))
+
+      refreshTouchId(account).catch(() => {
+        // We have always failed silently here
+      })
+      await showNotificationPermissionReminder({
+        appName: config.appName,
+        onLogEvent(event, values) {
+          dispatch(logEvent(event, values))
+        },
+        onNotificationPermit(info) {
+          dispatch(updateNotificationSettings(info.notificationOptIns)).catch(error => {
+            trackError(error, 'LoginScene:onLogin:setDeviceSettings')
+            console.error(error)
+          })
+        }
+      })
     } catch (error: any) {
       showError(error)
     }

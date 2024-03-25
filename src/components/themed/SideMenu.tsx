@@ -2,8 +2,9 @@
 import { DrawerContentComponentProps, useDrawerStatus } from '@react-navigation/drawer'
 import { DrawerActions } from '@react-navigation/native'
 import { EdgeAccount, EdgeUserInfo } from 'edge-core-js'
+import hashjs from 'hash.js'
 import * as React from 'react'
-import { Image, Platform, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
+import { Image, Platform, Pressable, ScrollView, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -28,8 +29,8 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
-import { base58ToUuid } from '../../util/utils'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
 import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
@@ -143,7 +144,12 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
 
   const handleShareApp = () => {
     const message = `${sprintf(lstrings.share_subject, config.appName)}\n\n${lstrings.share_message}\n\n`
-    const website = `${config.website}?af=appreferred-${base58ToUuid(context.clientId)}`
+
+    // Generate anonymized referral ID
+    const data = Uint8Array.from(Buffer.from(account.rootLoginId, 'hex'))
+    const refId = hashjs.sha256().update(data).digest('hex').replace('0x', '').substring(0, 10)
+
+    const website = `${config.website}?af=appreferred_${refId}`
 
     const shareOptions = {
       message: Platform.OS === 'ios' ? message : message + website,
@@ -310,12 +316,12 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
               <View key={userInfo.loginId} style={styles.rowContainer}>
                 {/* This empty container is required to align the row contents properly */}
                 <View style={styles.rowIconContainer} />
-                <TouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(userInfo)}>
+                <EdgeTouchableOpacity style={styles.rowBodyContainer} onPress={handleSwitchAccount(userInfo)}>
                   <TitleText style={styles.text}>{userInfo.username ?? lstrings.missing_username}</TitleText>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.rowIconContainer} onPress={handleDeleteAccount(userInfo)}>
+                </EdgeTouchableOpacity>
+                <EdgeTouchableOpacity style={styles.rowIconContainer} onPress={handleDeleteAccount(userInfo)}>
                   <MaterialIcon accessibilityHint={lstrings.close_control_panel_hint} color={theme.iconTappable} name="close" size={theme.rem(1.5)} />
-                </TouchableOpacity>
+                </EdgeTouchableOpacity>
               </View>
             ))}
           </ScrollView>
@@ -327,7 +333,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
         <View style={styles.rowsContainer}>
           <ScrollView overScrollMode="always" scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
             {rowDatas.map(rowData => (
-              <TouchableOpacity accessible={false} onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
+              <EdgeTouchableOpacity accessible={false} onPress={rowData.pressHandler} key={rowData.title} style={styles.rowContainer}>
                 <View style={styles.rowIconContainer}>
                   {rowData.iconName != null ? <Fontello name={rowData.iconName} style={styles.icon} size={theme.rem(1.5)} color={theme.iconTappable} /> : null}
                   {rowData.iconNameFontAwesome != null ? (
@@ -337,14 +343,14 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
                 <View style={styles.rowBodyContainer}>
                   <TitleText style={styles.text}>{rowData.title}</TitleText>
                 </View>
-              </TouchableOpacity>
+              </EdgeTouchableOpacity>
             ))}
           </ScrollView>
           {/* === Navigation Rows End === */}
         </View>
         {/* === Translucent X Close Button Start === */}
         <LinearGradient colors={[xButtonTopColor, xButtonBottomColor]} style={closeButtonContainerStyle} start={xButtonGradientStart} end={xButtonGradientEnd}>
-          <TouchableOpacity onPress={handlePressClose}>
+          <EdgeTouchableOpacity onPress={handlePressClose}>
             <AntDesignIcon
               testID="closeX"
               name="close"
@@ -352,7 +358,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
               color={theme.iconTappable}
               accessibilityHint={lstrings.close_control_panel_hint}
             />
-          </TouchableOpacity>
+          </EdgeTouchableOpacity>
         </LinearGradient>
         {/* === Translucent X Close Button End === */}
       </View>
