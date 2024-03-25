@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CryptoExchangeComponent should render with loading props 1`] = `
+exports[`SwapCreateScene should render with loading props 1`] = `
 [
   <BVLinearGradient
     colors={

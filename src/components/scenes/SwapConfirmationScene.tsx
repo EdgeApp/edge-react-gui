@@ -43,7 +43,7 @@ import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
 import { AlertCardUi4 } from '../ui4/AlertCardUi4'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
-export interface CryptoExchangeQuoteParams {
+export interface SwapConfirmationParams {
   selectedQuote: EdgeSwapQuote
   quotes: EdgeSwapQuote[]
   onApprove: () => void
@@ -56,7 +56,7 @@ interface Section {
   data: EdgeSwapQuote[]
 }
 
-export const CryptoExchangeQuoteScene = (props: Props) => {
+export const SwapConfirmationScene = (props: Props) => {
   const { route, navigation } = props
   const { selectedQuote: initialSelectedQuote, quotes, onApprove } = route.params
 

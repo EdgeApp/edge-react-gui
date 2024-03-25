@@ -27,9 +27,9 @@ import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
-import { SwapErrorDisplayInfo } from './CryptoExchangeScene'
+import { SwapErrorDisplayInfo } from './SwapCreateScene'
 
-export interface ExchangeQuoteProcessingParams {
+export interface SwapProcessingParams {
   swapRequest: EdgeSwapRequest
   swapRequestOptions: EdgeSwapRequestOptions
   onCancel: () => void
@@ -40,7 +40,7 @@ interface Props extends EdgeSceneProps<'exchangeQuoteProcessing'> {}
 
 const ANIM_DURATION = 5000
 
-export function CryptoExchangeQuoteProcessingScene(props: Props) {
+export function SwapProcessingScene(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { route, navigation } = props
@@ -105,7 +105,7 @@ export function CryptoExchangeQuoteProcessingScene(props: Props) {
       }
     },
     [swapRequest, swapRequestOptions, onDone],
-    'CryptoExchangeQuoteProcessingScene'
+    'SwapProcessingScene'
   )
 
   return (

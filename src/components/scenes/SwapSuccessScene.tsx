@@ -34,7 +34,7 @@ const confettiProps = {
   fallSpeed: 4000
 }
 
-export class CryptoExchangeSuccessComponent extends React.PureComponent<Props, LocalState> {
+export class SwapSuccessSceneComponent extends React.PureComponent<Props, LocalState> {
   constructor() {
     // @ts-expect-error
     super()
@@ -119,10 +119,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CryptoExchangeSuccessScene = connect<StateProps, {}, OwnProps>(
+export const SwapSuccessScene = connect<StateProps, {}, OwnProps>(
   state => ({
     userId: state.core.account.id,
     disklet: state.core.disklet
   }),
   dispatch => ({})
-)(withTheme(CryptoExchangeSuccessComponent))
+)(withTheme(SwapSuccessSceneComponent))

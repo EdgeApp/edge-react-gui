@@ -14,7 +14,7 @@ import process from 'process'
 import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
-import { CryptoExchangeQuoteScene } from '../../components/scenes/CryptoExchangeQuoteScene'
+import { SwapConfirmationScene } from '../../components/scenes/SwapConfirmationScene'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
 import { makeFakePlugin } from '../../util/fake/fakeCurrencyPlugin'
 import { ethCurrencyInfo } from '../../util/fake/fakeEthInfo'
@@ -81,7 +81,7 @@ beforeAll(async () => {
   ethWallet = await account.waitForCurrencyWallet(ethInfo.id)
 })
 
-describe('CryptoExchangeQuoteScreenComponent', () => {
+describe('SwapConfirmationScene', () => {
   it('should render with loading props', () => {
     if (btcWallet == null || ethWallet == null) return
     const rootState: FakeState = { ...fakeRootState, core: { account } }
@@ -133,7 +133,7 @@ describe('CryptoExchangeQuoteScreenComponent', () => {
 
     const renderer = TestRenderer.create(
       <FakeProviders initialState={rootState}>
-        <CryptoExchangeQuoteScene
+        <SwapConfirmationScene
           {...fakeSceneProps('exchangeQuote', {
             quotes: [quote],
             selectedQuote: quote,

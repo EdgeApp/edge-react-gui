@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CryptoExchangeSuccessComponent should render with loading props 1`] = `
+exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
 <Memo(SceneWrapperComponent)
   hasNotifications={true}
 >

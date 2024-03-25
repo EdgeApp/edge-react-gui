@@ -36,7 +36,7 @@ interface Props {
   children?: React.ReactNode
 }
 
-export const CryptoExchangeFlipInput = (props: Props) => {
+export const SwapInput = (props: Props) => {
   const { children, currencyCode, displayDenomination, onNext, overridePrimaryNativeAmount, wallet } = props
 
   const theme = useTheme()

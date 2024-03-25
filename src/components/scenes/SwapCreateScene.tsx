@@ -23,16 +23,16 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CryptoExchangeFlipInput } from '../themed/CryptoExchangeFlipInput'
 import { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput2'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { MiniButton } from '../themed/MiniButton'
 import { SceneHeader } from '../themed/SceneHeader'
+import { SwapInput } from '../themed/SwapInput'
 import { AlertCardUi4 } from '../ui4/AlertCardUi4'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
-export interface ExchangeParams {
-  // The following props are used to populate the CryptoExchangeFlipInputs
+export interface SwapCreateParams {
+  // The following props are used to populate the flip inputs
   fromWalletId?: string | undefined
   fromTokenId?: EdgeTokenId
   toWalletId?: string | undefined
@@ -68,7 +68,7 @@ const emptyDenomnination = {
   multiplier: '1'
 }
 
-export const CryptoExchangeScene = (props: Props) => {
+export const SwapCreateScene = (props: Props) => {
   const { navigation, route } = props
   const { fromWalletId, fromTokenId = null, toWalletId, toTokenId = null, errorDisplayInfo } = route.params ?? {}
   const theme = useTheme()
@@ -339,7 +339,7 @@ export const CryptoExchangeScene = (props: Props) => {
         <SceneHeader title={lstrings.title_exchange} underline />
       </EdgeAnim>
       <EdgeAnim enter={fadeInUp60}>
-        <CryptoExchangeFlipInput
+        <SwapInput
           wallet={fromWallet}
           buttonText={lstrings.select_src_wallet}
           headerText={fromHeaderText}
@@ -353,13 +353,13 @@ export const CryptoExchangeScene = (props: Props) => {
           onNext={handleNext}
         >
           {hasMaxSpend ? <MiniButton label={lstrings.string_max_cap} marginRem={[0.5, 0, 0.75]} onPress={handleMax} alignSelf="center" /> : null}
-        </CryptoExchangeFlipInput>
+        </SwapInput>
       </EdgeAnim>
       <EdgeAnim>
         <LineTextDivider title={lstrings.string_to_capitalize} lowerCased />
       </EdgeAnim>
       <EdgeAnim enter={fadeInDown30}>
-        <CryptoExchangeFlipInput
+        <SwapInput
           wallet={toWallet}
           buttonText={lstrings.select_recv_wallet}
           headerText={toHeaderText}
