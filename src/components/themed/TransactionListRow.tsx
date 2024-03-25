@@ -1,5 +1,5 @@
-import { abs, div, gt, log10 } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
+import { abs, div, eq, gt, log10 } from 'biggystring'
+import { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { StyleProp, View, ViewStyle } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -48,7 +48,6 @@ export function TransactionListRow(props: Props) {
   const styles = getStyles(theme)
 
   const { navigation, wallet, transaction } = props
-  const { canReplaceByFee = false } = wallet.currencyInfo
 
   const { metadata = {}, currencyCode, tokenId } = transaction
   const defaultAmountFiat = metadata.exchangeAmount?.[wallet.fiatCurrencyCode] ?? 0
@@ -62,8 +61,6 @@ export function TransactionListRow(props: Props) {
   const exchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
   const fiatDenomination = getDenomFromIsoCode(nonIsoFiatCurrencyCode)
   const denominationSymbol = displayDenomination.symbol
-
-  const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
 
   // CryptoAmount
   const rateKey = `${currencyCode}_${fiatCurrencyCode}`
@@ -149,24 +146,10 @@ export function TransactionListRow(props: Props) {
     )
 
   // Pending Text and Style
-  const currentConfirmations = transaction.confirmations
+  const unconfirmedOrTimeText = getConfirmationText(currencyInfo, transaction)
 
-  const unconfirmedOrTimeText =
-    currentConfirmations === 'confirmed'
-      ? unixToLocaleDateTime(transaction.date).time
-      : !isSentTransaction && canReplaceByFee && currentConfirmations === 'unconfirmed'
-      ? lstrings.fragment_transaction_list_unconfirmed_rbf
-      : currentConfirmations === 'unconfirmed'
-      ? lstrings.fragment_wallet_unconfirmed
-      : currentConfirmations === 'dropped'
-      ? lstrings.fragment_transaction_list_tx_dropped
-      : currentConfirmations === 'failed'
-      ? lstrings.fragment_transaction_list_tx_failed
-      : typeof currentConfirmations === 'number'
-      ? sprintf(lstrings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
-      : lstrings.fragment_transaction_list_tx_synchronizing
-
-  const confirmationStyle = currentConfirmations === 'confirmed' ? null : currentConfirmations === 'failed' ? styles.failedText : styles.unconfirmedText
+  const confirmationStyle =
+    transaction.confirmations === 'confirmed' ? null : transaction.confirmations === 'failed' ? styles.failedText : styles.unconfirmedText
 
   // Transaction Category
   let categoryText
@@ -312,3 +295,32 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.dangerText
   }
 }))
+
+function getConfirmationText(currencyInfo: EdgeCurrencyInfo, transaction: EdgeTransaction): string {
+  // Default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
+  // Default canReplaceByFee to false, so we don't show the RBF message unless the currencyInfo has it set.
+  const { canReplaceByFee = false, requiredConfirmations = 1 } = currencyInfo
+
+  const isSentTransaction = transaction.nativeAmount.startsWith('-') || (eq(transaction.nativeAmount, '0') && transaction.isSend)
+
+  if (transaction.confirmations === 'confirmed') {
+    return unixToLocaleDateTime(transaction.date).time
+  }
+  if (!isSentTransaction && canReplaceByFee && transaction.confirmations === 'unconfirmed') {
+    return lstrings.fragment_transaction_list_unconfirmed_rbf
+  }
+  if (transaction.confirmations === 'unconfirmed') {
+    return lstrings.fragment_wallet_unconfirmed
+  }
+  if (transaction.confirmations === 'dropped') {
+    return lstrings.fragment_transaction_list_tx_dropped
+  }
+  if (transaction.confirmations === 'failed') {
+    return lstrings.fragment_transaction_list_tx_failed
+  }
+  if (typeof transaction.confirmations === 'number') {
+    return sprintf(lstrings.fragment_transaction_list_confirmation_progress, transaction.confirmations, requiredConfirmations)
+  }
+
+  return lstrings.fragment_transaction_list_tx_synchronizing
+}
