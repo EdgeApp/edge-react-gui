@@ -4,7 +4,7 @@
 
 ## A multi-currency mobile wallet for Bitcoin, Ethereum, Monero, Dash, Litecoin, Bitcoin Cash, Ripple/XRP, Polkadot, Tron, Solana, Stellar, Fantom, Algorand, Optimism, Zcash, Pirate Chain, and many others
 
-![Edge Screenshots](https://edge.app/wp-content/uploads/2023/04/Edge-Mock-ups.png)
+![Edge Screenshots](./docs/images/readme-cover-photo.png)
 
 Edge is:
 
@@ -115,7 +115,6 @@ Update the project files based on the version in `release-version.json`
 
     yarn updateVersion
 
-
 ### Build, sign, and deploy
 
 The included `deploy.ts` is a script to automate building, signing, and deploying release builds of Edge. It provides the following:
@@ -158,6 +157,7 @@ Profiles. To use Fastlane, set the following environment variables and run
     MATCH_KEYCHAIN_PASSWORD // Password to unlock the current users keychain
     MATCH_PASSWORD          // Password used to encrypt profile information
                             // before being saved to the BUILD_REPO_URL
+
 ---
 
 ## Debugging
