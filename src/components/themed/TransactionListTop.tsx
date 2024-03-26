@@ -284,21 +284,33 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     // Check balances for the displayed asset on this scene:
     const sceneAssetCryptoBalance = wallet.balanceMap.get(tokenId)
 
-    // Filter owned assets (mainnet and token) by those defined by the
-    // SWAP_ASSET_PRIORITY:
+    // Constructs an array to store information about owned assets. This array
+    // will be filled with assets that satisfy the following:
+    // 1. Are defined in the SWAP_ASSET_PRIORITY array
+    // 2. Match wallets owned by the user
+    // 3. Match the wallets' enabled tokens
     const ownedAssets: Array<{ pluginId: string; tokenId: EdgeTokenId; walletId: string; dollarValue: number }> = []
     SWAP_ASSET_PRIORITY.forEach(priorityAsset => {
-      // Filter the currencyWallets for nonzero crypto balances that are
-      // NOT the asset shown on the scene
       Object.values(currencyWallets).forEach(currencyWallet => {
+        // Check if this wallet is the same asset as the one shown on the scene.
+        // This is used later to prevent selecting the same asset as both source
+        // and destination in a swap.
         const isSceneAssetMatch =
           currencyWallet.currencyInfo.pluginId === sceneWallet.currencyInfo.pluginId &&
           (sceneTokenId == null || currencyWallet.enabledTokenIds.includes(sceneTokenId))
 
+        // Checks if the current wallet or enabled token matches one of the
+        // priority assets for swapping.
         const isPriorityAssetMatch =
-          currencyWallet.currencyInfo.pluginId === priorityAsset.pluginId && currencyWallet.balanceMap.get(priorityAsset.tokenId) != null
+          currencyWallet.currencyInfo.pluginId === priorityAsset.pluginId &&
+          currencyWallet.enabledTokenIds.some(enabledTokenId => enabledTokenId === priorityAsset.tokenId)
 
+        // If the wallet or enabled tokens has a priority swap asset match,
+        // calculate its USD value and add it to the ownedAssets array along
+        // with the corresponding wallet information.
         if (!isSceneAssetMatch && isPriorityAssetMatch) {
+          // Store the balance in USD along with the corresponding wallet info
+          // in ownedAssets
           const cryptoAmount = new CryptoAmount({
             currencyConfig: currencyWallet.currencyConfig,
             tokenId: priorityAsset.tokenId,
@@ -324,45 +336,54 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       ownedAssets.sort((a, b) => b.dollarValue - a.dollarValue)
 
       // Use the highest in the priority asset list as the other side of
-      // the swap. If we don't have exchange rates for one or more assets,
-      // we would still retain the ordering set forth by
-      // SWAP_ASSET_PRIORITY to use for this pick.
+      // the swap.
+      // NOTE: If we don't have exchange rates for one or more assets, or the
+      // balances for owned wallets/enabled tokens are zero, we would *still*
+      // retain the ordering set forth by SWAP_ASSET_PRIORITY to use for this
+      // pick.
       highestUsdBalanceAccountWalletId = ownedAssets[0].walletId
       highestUsdBalancePriorityTokenId = ownedAssets[0].tokenId
     } else {
-      // If no balances for the priority assets, we leave the opposing
-      // swap field blank. Allow the user to choose in this case.
+      // If no owned assets match those defined in the SWAP_ASSET_PRIORITY list,
+      // we leave the opposing swap field blank. Allow the user to choose in
+      // this case.
     }
 
     // Determine the "FROM" and "TO" assets:
     // Use the highest USD balance priority asset as the to or from asset,
-    // depending on if there is a balance for the asset from the scene
+    // depending on if there is a crypto balance for the scene asset
     let fromWalletId, fromTokenId, toWalletId, toTokenId
     if (zeroString(sceneAssetCryptoBalance)) {
-      // No balance for the asset shown on this scene.
-      // Use the scene asset as the "TO" asset
+      // No crypto balance for the asset shown on this scene.
+      // Use the scene asset as the "TO" swap side
       toWalletId = sceneWallet.id
       toTokenId = sceneTokenId
 
-      // Priority wallet as the "FROM" asset.
-      // If the user owns no wallets corresponding to the priority asset
-      // list, "FROM" gets left blank.
+      // Priority asset as the "FROM" swap side.
       if (highestUsdBalanceAccountWalletId != null) {
         const fromWallet = currencyWallets[highestUsdBalanceAccountWalletId]
         fromWalletId = fromWallet.id
         fromTokenId = highestUsdBalancePriorityTokenId
+      } else {
+        // Null highest USD balance implies the user no owns no wallets or
+        // enabled tokenIds that match those defined in the SWAP_ASSET_PRIORITY
+        // list. Allow the user to choose in this case.
       }
     } else {
       // We have balance for the asset shown on this scene
-      // Use the scene asset as the "FROM" asset
+      // Use the scene asset as the "FROM" swap side
       fromWalletId = sceneWallet.id
       fromTokenId = sceneTokenId
 
-      // Priority wallet as the "TO" asset
+      // Priority asset as the "TO" swap side
       if (highestUsdBalanceAccountWalletId != null) {
         const toWallet = currencyWallets[highestUsdBalanceAccountWalletId]
         toWalletId = toWallet.id
         toTokenId = highestUsdBalancePriorityTokenId
+      } else {
+        // Null highest USD balance implies the user no owns no wallets or
+        // enabled tokenIds that match those defined in the SWAP_ASSET_PRIORITY
+        // list. Allow the user to choose in this case.
       }
     }
 
@@ -522,7 +543,6 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     if (stakePolicies == null || stakePolicies.length === 0) return
     const bestApy = stakePolicies.reduce((prev, curr) => Math.max(prev, curr.apy ?? 0), 0)
     if (bestApy === 0) return
-    if (bestApy > 99) return '>99%'
 
     const precision = Math.log10(bestApy) > 1 ? 0 : -1
     return round(bestApy.toString(), precision) + '%'
