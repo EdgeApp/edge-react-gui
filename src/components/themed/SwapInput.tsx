@@ -240,11 +240,11 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props
         onNext={onNext}
       />
       {onMaxPress == null ? null : (
-        <Space left sideways>
+        <MaxButtonContainerView>
           <ButtonBox disabled={disabled} onPress={onMaxPress} paddingRem={[0, 1]}>
             <MaxButtonText>{lstrings.string_max_cap}</MaxButtonText>
           </ButtonBox>
-        </Space>
+        </MaxButtonContainerView>
       )}
     </>
   )
@@ -278,9 +278,17 @@ const WalletPlaceHolderText = styled(EdgeText)(theme => ({
   lineHeight: theme.rem(1.5)
 }))
 
+const MaxButtonContainerView = styled(View)<{ danger?: boolean }>(theme => ({
+  flexDirection: 'row',
+  height: 0,
+  justifyContent: 'flex-end',
+  overflow: 'visible'
+}))
+
 const MaxButtonText = styled(Text)<{ danger?: boolean }>(theme => ({
   color: theme.escapeButtonText,
   fontFamily: theme.fontFaceDefault,
   fontSize: theme.rem(0.75),
+  height: theme.rem(1),
   includeFontPadding: false
 }))
