@@ -4,13 +4,13 @@ import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import Entypo from 'react-native-vector-icons/Entypo'
 import Feather from 'react-native-vector-icons/Feather'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
-import { Fontello } from '../../assets/vector'
 import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
@@ -38,7 +38,6 @@ import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { CardUi4 } from '../ui4/CardUi4'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { IconButton } from '../ui4/IconButton'
 import { ModalUi4 } from '../ui4/ModalUi4'
 import { DividerLine } from './DividerLine'
@@ -421,31 +420,32 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       <>
         <View style={styles.balanceBoxWalletNameCurrencyContainer}>
           <EdgeTouchableOpacity accessible={false} style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
-            <CryptoIconUi4 sizeRem={1.5} tokenId={tokenId} walletId={wallet.id} />
             <EdgeText accessible style={styles.balanceBoxWalletName}>
               {walletName}
             </EdgeText>
-            <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
+            <View style={styles.balanceBoxChevronAdjust}>
+              <Ionicons name="chevron-down" size={theme.rem(1.5)} color={theme.iconTappable} />
+            </View>
           </EdgeTouchableOpacity>
-          <EdgeTouchableOpacity testID="gearIcon" onPress={this.handleMenu} style={styles.settingsIcon}>
-            <Fontello accessibilityHint={lstrings.wallet_settings_label} color={theme.iconTappable} name="control-panel-settings" size={theme.rem(1.5)} />
+          <EdgeTouchableOpacity testID="gearIcon" onPress={this.handleMenu} style={styles.settingsTouchContainer}>
+            <Entypo accessibilityHint={lstrings.wallet_settings_label} color={theme.icon} name="dots-three-vertical" size={theme.rem(1.25)} />
           </EdgeTouchableOpacity>
         </View>
         <EdgeTouchableOpacity accessible={false} onPress={this.props.toggleBalanceVisibility}>
-          {isAccountBalanceVisible ? (
-            <>
-              <EdgeText accessible style={styles.balanceBoxCurrency} minimumFontScale={0.3}>
-                {cryptoAmountFormat + ' ' + displayDenomination.name}
-              </EdgeText>
-              <EdgeText accessible style={styles.balanceFiatBalance}>
-                {fiatSymbol + fiatBalanceFormat + ' ' + fiatCurrencyCode}
-              </EdgeText>
-            </>
-          ) : (
-            <EdgeText accessible style={styles.balanceFiatShow}>
-              {lstrings.string_show_balance}
+          <View style={styles.balanceBoxCryptoBalanceContainer}>
+            <EdgeText accessible style={styles.balanceBoxCurrency} minimumFontScale={0.3}>
+              {(isAccountBalanceVisible ? cryptoAmountFormat : lstrings.redacted_placeholder) + ' ' + displayDenomination.name}
             </EdgeText>
-          )}
+            <Ionicons
+              name={isAccountBalanceVisible ? 'eye-off-outline' : 'eye-outline'}
+              style={styles.eyeIcon}
+              color={theme.iconTappable}
+              size={theme.rem(2)}
+            />
+          </View>
+          <EdgeText accessible style={styles.balanceFiatBalance}>
+            {fiatSymbol + (isAccountBalanceVisible ? fiatBalanceFormat : ' ' + lstrings.redacted_placeholder) + ' ' + fiatCurrencyCode}
+          </EdgeText>
         </EdgeTouchableOpacity>
       </>
     )
@@ -662,7 +662,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexShrink: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: theme.cardBaseColor,
+    height: theme.rem(2.5),
+    borderRadius: theme.rem(1.25),
+    paddingHorizontal: theme.rem(0.75),
     marginRight: theme.rem(0.5)
+  },
+  balanceBoxCryptoBalanceContainer: {
+    flexDirection: 'row'
+  },
+  balanceBoxChevronAdjust: {
+    paddingTop: theme.rem(0.25)
   },
   balanceBoxWalletName: {
     flexShrink: 1,
@@ -677,11 +687,24 @@ const getStyles = cacheStyles((theme: Theme) => ({
   balanceFiatBalance: {
     fontSize: theme.rem(1.25)
   },
-  balanceFiatShow: {
-    fontSize: theme.rem(2)
+  eyeIcon: {
+    alignSelf: 'center',
+    marginLeft: theme.rem(0.5),
+    marginRight: theme.rem(0),
+    ...theme.cardTextShadow
   },
-  settingsIcon: {
-    alignSelf: 'flex-end'
+  settingsTouchContainer: {
+    alignSelf: 'center',
+
+    // Extra tappability:
+    margin: -theme.rem(0.75),
+    padding: theme.rem(0.75),
+
+    // Asymmetric adjustments to above margin/paddings:
+    paddingRight: theme.rem(0.5),
+
+    // Whitespace adjustments:
+    marginRight: -theme.rem(0.75)
   },
   // Send/Receive/Earn/Trade Buttons
   buttonsContainer: {

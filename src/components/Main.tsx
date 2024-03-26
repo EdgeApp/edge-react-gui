@@ -36,7 +36,7 @@ import { EdgeHeader } from './navigation/EdgeHeader'
 import { PluginBackButton } from './navigation/GuiPluginBackButton'
 import { HeaderBackground } from './navigation/HeaderBackground'
 import { HeaderTextButton } from './navigation/HeaderTextButton'
-import { ParamHeaderTitle } from './navigation/ParamHeaderTitle'
+import { ParamHeaderCryptoIconTitle, ParamHeaderTitle } from './navigation/ParamHeaderTitle'
 import { SideMenuButton } from './navigation/SideMenuButton'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle'
 import { LoadingSplashScreen } from './progress-indicators/LoadingSplashScreen'
@@ -746,7 +746,15 @@ const EdgeWalletsTabScreen = () => {
         }}
       />
       <Stack.Screen name="walletList" component={WalletListScene} options={firstSceneScreenOptions} />
-      <Stack.Screen name="transactionList" component={TransactionList} />
+      <Stack.Screen
+        name="transactionList"
+        component={TransactionList}
+        options={{
+          headerTitle: () => (
+            <ParamHeaderCryptoIconTitle<'transactionList'> fromCryptoIconParams={params => ({ walletId: params.walletId, tokenId: params.tokenId })} />
+          )
+        }}
+      />
     </Stack.Navigator>
   )
 }
