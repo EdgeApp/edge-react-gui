@@ -55,6 +55,7 @@ export interface Props {
   startAmounts: [string, string]
 
   // Renders:
+  renderFooter?: () => React.ReactNode
   renderHeader?: () => React.ReactNode
   renderIcon?: () => React.ReactNode
 
@@ -86,6 +87,7 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
     startAmounts,
 
     // Renders:
+    renderFooter,
     renderHeader,
     renderIcon,
 
@@ -261,6 +263,8 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
           </EdgeTouchableOpacity>
         </SideContainer>
       </InputContainerView>
+
+      {renderFooter != null ? renderFooter() : null}
     </ContainerView>
   )
 })

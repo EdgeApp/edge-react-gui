@@ -215,6 +215,10 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props
     )
   }
 
+  const renderFooter = () => {
+    return <FooterSpace />
+  }
+
   const renderIcon = () => {
     return <CryptoIconUi4 marginRem={0} pluginId={wallet.currencyInfo.pluginId} sizeRem={1.75} tokenId={tokenId} />
   }
@@ -230,6 +234,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props
         keyboardVisible={keyboardVisible}
         placeholders={[lstrings.string_tap_to_edit, lstrings.string_tap_next_for_quote]}
         ref={flipInputRef}
+        renderFooter={renderFooter}
         renderHeader={renderHeader}
         renderIcon={renderIcon}
         returnKeyType={returnKeyType}
@@ -256,8 +261,8 @@ const Header = styled(View)(theme => ({
   alignItems: 'center',
   flexDirection: 'row',
   justifyContent: 'space-between',
-  padding: theme.rem(1),
-  paddingBottom: theme.rem(0.25)
+  margin: theme.rem(1),
+  marginBottom: theme.rem(0.25)
 }))
 
 const CardHeading = styled(EdgeText)(theme => ({
@@ -291,4 +296,10 @@ const MaxButtonText = styled(Text)<{ danger?: boolean }>(theme => ({
   fontSize: theme.rem(0.75),
   height: theme.rem(1),
   includeFontPadding: false
+}))
+
+// This space is used to give the FlipInput2 roughly 1 rem bottom padding to
+// match the top padding from the header.
+const FooterSpace = styled(View)(theme => ({
+  height: theme.rem(0.5)
 }))
