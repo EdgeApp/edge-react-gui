@@ -469,6 +469,8 @@
   "string_first_fio_wallet_name": "My FIO",
   "string_first_groestlcoin_wallet_name": "我的Groestlcoin(GRS)",
   "string_first_litecoin_wallet_name": "我的莱特币",
+  "string_first_cardano_wallet_name": "My Cardano",
+  "string_first_cardano_preprod_wallet_name": "My Cardano Testnet",
   "string_first_monero_wallet_name": "我的门罗币",
   "string_first_qtum_wallet_name": "我的 Qtum 量子链",
   "string_first_ripple_wallet_name": "My XRP",
