@@ -149,6 +149,7 @@
   "fragment_transaction_transfer": "송금",
   "fragment_wallet_unconfirmed": "보류 중",
   "fragment_transaction_list_tx_dropped": "삭제됨",
+  "fragment_transaction_list_tx_failed": "Failed",
   "fragment_transaction_list_tx_synchronizing": "Syncing...",
   "fragment_transaction_list_confirmation_progress": "%s / %s 확인",
   "fragment_transaction_list_unconfirmed_rbf": "Awaiting confirmation, may be cancelled",
