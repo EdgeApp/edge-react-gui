@@ -1,190 +1,286 @@
-import { add } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
-import * as React from 'react'
-import { useMemo, useState } from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { div, log10, mul, round } from 'biggystring'
+import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import React, { useMemo } from 'react'
+import { ReturnKeyType, Text, TouchableOpacity, View } from 'react-native'
 
-import { formatNumber } from '../../locales/intl'
+import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
-import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { convertNativeToDenomination } from '../../util/utils'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CardUi4 } from '../ui4/CardUi4'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { DECIMAL_PRECISION, getDenomFromIsoCode, maxPrimaryCurrencyConversionDecimals, precisionAdjust } from '../../util/utils'
+import { styled } from '../hoc/styled'
+import { Space } from '../layout/Space'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
-import { RowUi4 } from '../ui4/RowUi4'
 import { EdgeText } from './EdgeText'
-import { ExchangedFlipInput2, ExchangedFlipInputAmounts } from './ExchangedFlipInput2'
-import { MainButton } from './MainButton'
+import { FieldNum, FlipInput2, FlipInputFieldInfos, FlipInputRef } from './FlipInput2'
+import { ButtonBox } from './ThemedButtons'
 
-interface Props {
-  wallet?: EdgeCurrencyWallet
-  buttonText: string
-  headerText: string
-  currencyCode: string
-  displayDenomination: EdgeDenomination
-  overridePrimaryNativeAmount: string
-  isFocused: boolean
-  isThinking?: boolean
-  onFocuseWallet: () => void
-  onSelectWallet: () => void
-  onAmountChanged: (amounts: ExchangedFlipInputAmounts) => void
-  onNext: () => void
-  onFocus?: () => void
-  onBlur?: () => void
-  children?: React.ReactNode
+export type ExchangeFlipInputFields = 'fiat' | 'crypto'
+
+export interface SwapInputCardInputRef {
+  setAmount: (field: ExchangeFlipInputFields, value: string) => void
 }
 
-export const SwapInput = (props: Props) => {
-  const { children, currencyCode, displayDenomination, onNext, overridePrimaryNativeAmount, wallet } = props
+export interface SwapInputCardAmounts {
+  exchangeAmount: string
+  nativeAmount: string
+  fiatAmount: string
+  fieldChanged: 'fiat' | 'crypto'
+}
 
-  const theme = useTheme()
-  const styles = getStyles(theme)
+export interface Props {
+  disabled?: boolean
+  heading: string
+  forceField?: 'fiat' | 'crypto'
+  inputAccessoryViewID?: string
+  keyboardVisible?: boolean
+  returnKeyType?: ReturnKeyType
+  startNativeAmount?: string
+  tokenId: EdgeTokenId
+  wallet: EdgeCurrencyWallet
+  walletPlaceholderText: string
+  // Events:
+  onAmountChanged: (amounts: SwapInputCardAmounts) => unknown
+  onBlur?: () => void
+  onFocus?: () => void
+  onMaxPress?: () => void
+  onNext?: () => void
+  onSelectWallet: () => void
+}
 
-  //
-  // State
-  //
+const forceFieldMap: { crypto: FieldNum; fiat: FieldNum } = {
+  crypto: 0,
+  fiat: 1
+}
 
-  const [errorMessage, setErrorMessage] = useState('')
+const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props: Props, ref) => {
+  const {
+    disabled,
+    forceField = 'crypto',
+    heading,
+    inputAccessoryViewID,
+    keyboardVisible = true,
+    startNativeAmount,
+    returnKeyType,
+    tokenId,
+    wallet,
+    walletPlaceholderText,
+    // Events:
+    onAmountChanged,
+    onBlur,
+    onFocus,
+    onMaxPress,
+    onNext
+  } = props
 
-  //
-  // Derived State
-  //
+  const exchangeRates = useSelector(state => state.exchangeRates)
+  const fiatCurrencyCode = useWatch(wallet, 'fiatCurrencyCode')
+  const flipInputRef = React.useRef<FlipInputRef>(null)
 
-  const account = useSelector(state => state.core.account)
+  const cryptoDisplayDenom = useSelector(state => selectDisplayDenom(state, wallet.currencyConfig, tokenId))
+  const fiatDenom = getDenomFromIsoCode(fiatCurrencyCode)
 
-  const tokenId = useMemo(() => {
-    if (wallet == null) return null
-    // This will error if wallet is undefined
-    return getTokenIdForced(account, wallet.currencyInfo.pluginId, currencyCode)
-  }, [account, currencyCode, wallet])
+  const fieldInfos: FlipInputFieldInfos = [
+    { currencyName: cryptoDisplayDenom.name, maxEntryDecimals: log10(cryptoDisplayDenom.multiplier) },
+    { currencyName: fiatDenom.name.replace('iso:', ''), maxEntryDecimals: log10(fiatDenom.multiplier) }
+  ]
 
-  const cryptoAmount = useMemo(() => {
-    if (wallet == null || tokenId === undefined) return
-    const balance = wallet.balanceMap.get(tokenId) ?? '0'
-    const cryptoAmountRaw: string = convertNativeToDenomination(displayDenomination.multiplier)(balance)
-    return formatNumber(add(cryptoAmountRaw, '0'))
-  }, [displayDenomination.multiplier, tokenId, wallet])
+  const convertCurrency = useHandler((amount: string, fromCurrencyCode: string, toCurrencyCode: string): string => {
+    const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
+    const rate = exchangeRates[rateKey] ?? '0'
+    return mul(amount, rate)
+  })
 
-  const guiWalletName = wallet == null ? undefined : getWalletName(wallet)
+  const convertFromCryptoNative = useHandler((nativeAmount: string) => {
+    if (nativeAmount === '') return { fiatAmount: '', exchangeAmount: '', displayAmount: '' }
 
-  //
-  // Handlers
-  //
+    const cryptoCurrencyCode = getCurrencyCode(wallet, tokenId)
+    const cryptoExchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
+    const exchangeAmount = div(nativeAmount, cryptoExchangeDenom.multiplier, DECIMAL_PRECISION)
+    const displayAmount = div(nativeAmount, cryptoDisplayDenom.multiplier, DECIMAL_PRECISION)
+    const fiatAmountLong = convertCurrency(exchangeAmount, cryptoCurrencyCode, wallet.fiatCurrencyCode)
+    const fiatAmount = round(fiatAmountLong, -2)
+    return { fiatAmount, exchangeAmount, displayAmount }
+  })
 
-  const handleAmountsChanged = (amounts: ExchangedFlipInputAmounts) => {
-    props.onAmountChanged(amounts)
-  }
+  const convertFromFiat = useHandler((fiatAmount: string) => {
+    if (fiatAmount === '') return { nativeAmount: '', exchangeAmount: '', displayAmount: '' }
 
-  const launchSelector = () => {
-    setErrorMessage('')
+    const cryptoCurrencyCode = getCurrencyCode(wallet, tokenId)
+    const cryptoExchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
+    const exchangeAmountLong = convertCurrency(fiatAmount, wallet.fiatCurrencyCode, cryptoCurrencyCode)
+    const nativeAmountLong = mul(exchangeAmountLong, cryptoExchangeDenom.multiplier)
+    const displayAmountLong = div(nativeAmountLong, cryptoDisplayDenom.multiplier, DECIMAL_PRECISION)
+
+    const precisionAdjustVal = precisionAdjust({
+      primaryExchangeMultiplier: cryptoExchangeDenom.multiplier,
+      secondaryExchangeMultiplier: fiatDenom.multiplier,
+      exchangeSecondaryToPrimaryRatio: exchangeRates[`${cryptoCurrencyCode}_${fiatCurrencyCode}`]
+    })
+    const cryptoMaxPrecision = maxPrimaryCurrencyConversionDecimals(log10(cryptoDisplayDenom.multiplier), precisionAdjustVal)
+
+    // Apply cryptoMaxPrecision to remove extraneous sub-penny precision
+    const displayAmount = round(displayAmountLong, -cryptoMaxPrecision)
+
+    // Convert back to native and exchange amounts after cryptoMaxPrecision has been applied
+    const nativeAmount = mul(displayAmount, cryptoDisplayDenom.multiplier)
+    const exchangeAmount = div(nativeAmount, cryptoExchangeDenom.multiplier, DECIMAL_PRECISION)
+    return { displayAmount, nativeAmount, exchangeAmount }
+  })
+
+  const convertValue = useHandler(async (fieldNum: number, amount: string): Promise<string | undefined> => {
+    if (amount === '') {
+      onAmountChanged({
+        exchangeAmount: '',
+        nativeAmount: '',
+        fiatAmount: '',
+        fieldChanged: fieldNum ? 'fiat' : 'crypto'
+      })
+      return ''
+    }
+    if (fieldNum === 0) {
+      const nativeAmount = mul(amount, cryptoDisplayDenom.multiplier)
+      const { fiatAmount, exchangeAmount } = convertFromCryptoNative(nativeAmount)
+      onAmountChanged({
+        exchangeAmount,
+        nativeAmount,
+        fiatAmount,
+        fieldChanged: 'crypto'
+      })
+
+      return fiatAmount
+    } else {
+      const { nativeAmount, exchangeAmount, displayAmount } = convertFromFiat(amount)
+      onAmountChanged({
+        exchangeAmount,
+        nativeAmount,
+        fiatAmount: amount,
+        fieldChanged: 'fiat'
+      })
+      return displayAmount
+    }
+  })
+
+  const handleWalletPlaceholderPress = () => {
     props.onSelectWallet()
   }
 
-  const focusMe = () => {
-    setErrorMessage('')
-    props.onFocuseWallet()
-  }
+  const { initialExchangeAmount, initialDisplayAmount } = React.useMemo(() => {
+    const { exchangeAmount, displayAmount } = convertFromCryptoNative(startNativeAmount ?? '')
+    return { initialExchangeAmount: exchangeAmount, initialDisplayAmount: displayAmount }
+  }, [convertFromCryptoNative, startNativeAmount])
 
-  //
-  // Render
-  //
+  const initialFiatAmount = React.useMemo(() => {
+    const cryptoCurrencyCode = getCurrencyCode(wallet, tokenId)
+    const fiatAmount = convertCurrency(initialExchangeAmount, cryptoCurrencyCode, wallet.fiatCurrencyCode)
+    return fiatAmount
+  }, [convertCurrency, initialExchangeAmount, tokenId, wallet])
 
-  const renderBalance = () => {
-    if (cryptoAmount == null) {
-      return null
+  React.useImperativeHandle(ref, () => ({
+    setAmount: (field, value) => {
+      if (field === 'crypto') {
+        const { displayAmount, fiatAmount } = convertFromCryptoNative(value)
+        flipInputRef.current?.setAmounts([displayAmount, fiatAmount])
+      } else if (field === 'fiat') {
+        const { displayAmount } = convertFromFiat(value)
+        flipInputRef.current?.setAmounts([displayAmount, value])
+      }
     }
+  }))
 
-    return <EdgeText style={styles.balanceText}>{lstrings.string_wallet_balance + ': ' + cryptoAmount + ' ' + displayDenomination.name}</EdgeText>
-  }
+  /**
+   * Override the 'forceField' prop in some cases.
+   * If we set 'forceField' to fiat and we don't yet have exchange rates, ensure
+   * that we force the user to input a crypto amount, even if the caller wanted
+   * to initialize the focused flip input field with fiat.
+   */
+  const overrideForceField = useMemo(() => {
+    const cryptoCurrencyCode = getCurrencyCode(wallet, tokenId)
+    const fiatValue = convertCurrency('100', cryptoCurrencyCode, wallet.fiatCurrencyCode)
+    return fiatValue === '0' ? 'crypto' : forceField
+  }, [convertCurrency, forceField, tokenId, wallet])
 
-  if (props.isThinking) {
+  const renderHeader = () => {
     return (
-      <View style={[styles.container, styles.containerNoFee, styles.containerNoWalletSelected]}>
-        <View style={styles.topRow}>
-          <ActivityIndicator color={theme.iconTappable} />
-        </View>
-      </View>
+      <Header>
+        <CardHeading>{heading}</CardHeading>
+        <Space sideways>
+          <WalletPlaceHolder onPress={handleWalletPlaceholderPress}>
+            <WalletPlaceHolderText>{walletPlaceholderText}</WalletPlaceHolderText>
+          </WalletPlaceHolder>
+        </Space>
+      </Header>
     )
   }
 
-  if (wallet == null) {
-    return <MainButton label={props.buttonText} type="secondary" onPress={launchSelector} />
-  }
-
-  if (!props.isFocused) {
-    return (
-      <CardUi4>
-        <RowUi4 icon={<CryptoIconUi4 sizeRem={1.75} walletId={wallet.id} tokenId={tokenId} />} onPress={focusMe}>
-          <EdgeText style={styles.text}>{guiWalletName + ': ' + currencyCode}</EdgeText>
-        </RowUi4>
-      </CardUi4>
-    )
+  const renderIcon = () => {
+    return <CryptoIconUi4 marginRem={0} pluginId={wallet.currencyInfo.pluginId} sizeRem={1.75} tokenId={tokenId} />
   }
 
   return (
     <>
-      <EdgeText style={styles.errorText}>{errorMessage}</EdgeText>
-      {renderBalance()}
-      <CardUi4>
-        <ExchangedFlipInput2
-          onNext={onNext}
-          onFocus={props.onFocus}
-          onBlur={props.onBlur}
-          headerText={props.headerText}
-          headerCallback={launchSelector}
-          onAmountChanged={handleAmountsChanged}
-          startNativeAmount={overridePrimaryNativeAmount}
-          keyboardVisible={false}
-          forceField="fiat"
-          tokenId={tokenId}
-          wallet={wallet}
-        />
-        {children}
-      </CardUi4>
+      <FlipInput2
+        convertValue={convertValue}
+        disabled={disabled}
+        fieldInfos={fieldInfos}
+        forceFieldNum={forceFieldMap[overrideForceField]}
+        inputAccessoryViewID={inputAccessoryViewID}
+        keyboardVisible={keyboardVisible}
+        placeholders={[lstrings.string_tap_to_edit, lstrings.string_tap_next_for_quote]}
+        ref={flipInputRef}
+        renderHeader={renderHeader}
+        renderIcon={renderIcon}
+        returnKeyType={returnKeyType}
+        startAmounts={[initialDisplayAmount, initialFiatAmount]}
+        // Events:
+        onBlur={onBlur}
+        onFocus={onFocus}
+        onNext={onNext}
+      />
+      {onMaxPress == null ? null : (
+        <Space left sideways>
+          <ButtonBox disabled={disabled} onPress={onMaxPress} paddingRem={[0, 1]}>
+            <MaxButtonText>{lstrings.string_max_cap}</MaxButtonText>
+          </ButtonBox>
+        </Space>
+      )}
     </>
   )
-}
+})
 
-const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    width: '100%'
-  },
-  containerNoFee: {
-    backgroundColor: theme.tileBackground,
-    borderRadius: 3
-  },
-  containerNoWalletSelected: {
-    paddingVertical: theme.rem(0.75),
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  text: {
-    fontFamily: theme.fontFaceMedium,
-    fontSize: theme.rem(1),
-    marginLeft: theme.rem(0.5)
-  },
-  topRow: {
-    height: theme.rem(2),
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    alignItems: 'center'
-  },
-  iconContainer: {
-    top: theme.rem(0.125),
-    borderRadius: theme.rem(1)
-  },
-  balanceText: {
-    alignSelf: 'flex-start',
-    marginLeft: theme.rem(1),
-    color: theme.secondaryText
-  },
-  errorText: {
-    alignSelf: 'flex-start',
-    marginLeft: theme.rem(0.5),
-    marginBottom: theme.rem(0.75),
-    color: theme.dangerText
-  }
+export const SwapInput = React.memo(SwapInputComponent)
+
+const Header = styled(View)(theme => ({
+  alignItems: 'center',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  padding: theme.rem(1),
+  paddingBottom: theme.rem(0.25)
+}))
+
+const CardHeading = styled(EdgeText)(theme => ({
+  color: theme.secondaryText
+}))
+
+const WalletPlaceHolder = styled(TouchableOpacity)(theme => ({
+  alignItems: 'center',
+  backgroundColor: theme.cardBaseColor,
+  borderRadius: 100,
+  flexDirection: 'row',
+  paddingHorizontal: theme.rem(0.75),
+  paddingVertical: theme.rem(0.25)
+}))
+
+const WalletPlaceHolderText = styled(EdgeText)(theme => ({
+  fontSize: theme.rem(0.75),
+  lineHeight: theme.rem(1.5)
+}))
+
+const MaxButtonText = styled(Text)<{ danger?: boolean }>(theme => ({
+  color: theme.escapeButtonText,
+  fontFamily: theme.fontFaceDefault,
+  fontSize: theme.rem(0.75),
+  includeFontPadding: false
 }))
