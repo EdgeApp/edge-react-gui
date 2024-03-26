@@ -136,7 +136,7 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
     return fiatAmount
   })
 
-  const convertValueSync = useHandler((fieldNum: number, amount: string): string | undefined => {
+  const convertValue = useHandler(async (fieldNum: number, amount: string): Promise<string | undefined> => {
     if (amount === '') {
       onAmountChanged({
         exchangeAmount: '',
@@ -168,8 +168,6 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
       return displayAmount
     }
   })
-
-  const convertValue = async (fieldNum: number, amount: string): Promise<string | undefined> => convertValueSync(fieldNum, amount)
 
   React.useEffect(() => {
     const { exchangeAmount, displayAmount } = convertFromCryptoNative(startNativeAmount ?? '')
@@ -214,7 +212,7 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
         onNext={onNext}
         ref={flipInputRef}
         convertValue={convertValue}
-        editable={editable}
+        disabled={editable}
         fieldInfos={fieldInfos}
         returnKeyType={returnKeyType}
         forceFieldNum={forceFieldMap[overrideForceField]}

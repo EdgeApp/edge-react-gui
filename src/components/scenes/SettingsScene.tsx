@@ -205,7 +205,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   handleExchangeSettings = (): void => {
     const { navigation } = this.props
-    navigation.navigate('exchangeSettings', {})
+    navigation.navigate('swapSettings', {})
   }
 
   handleSpendingLimits = (): void => {

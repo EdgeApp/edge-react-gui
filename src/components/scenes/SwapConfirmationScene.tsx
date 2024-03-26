@@ -43,20 +43,20 @@ import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
 import { AlertCardUi4 } from '../ui4/AlertCardUi4'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
-export interface CryptoExchangeQuoteParams {
+export interface SwapConfirmationParams {
   selectedQuote: EdgeSwapQuote
   quotes: EdgeSwapQuote[]
   onApprove: () => void
 }
 
-interface Props extends EdgeSceneProps<'exchangeQuote'> {}
+interface Props extends EdgeSceneProps<'swapConfirmation'> {}
 
 interface Section {
   title: { title: string; rightTitle: string }
   data: EdgeSwapQuote[]
 }
 
-export const CryptoExchangeQuoteScene = (props: Props) => {
+export const SwapConfirmationScene = (props: Props) => {
   const { route, navigation } = props
   const { selectedQuote: initialSelectedQuote, quotes, onApprove } = route.params
 
@@ -108,14 +108,14 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
   const showFeeWarning = gte(feePercent, '0.05')
 
   const handleExchangeTimerExpired = useHandler(() => {
-    navigation.replace('exchangeQuoteProcessing', {
+    navigation.replace('swapProcessing', {
       swapRequest: selectedQuote.request,
       swapRequestOptions,
       onCancel: () => {
-        navigation.navigate('exchangeTab', { screen: 'exchange' })
+        navigation.navigate('swapTab', { screen: 'swapCreate' })
       },
       onDone: quotes => {
-        navigation.replace('exchangeQuote', {
+        navigation.replace('swapConfirmation', {
           selectedQuote: quotes[0],
           quotes,
           onApprove
@@ -171,7 +171,7 @@ export const CryptoExchangeQuoteScene = (props: Props) => {
         nativeAmount ${networkFee.nativeAmount}
 `)
 
-      navigation.push('exchangeSuccess', {})
+      navigation.push('swapSuccess', {})
 
       // Dispatch the success action and callback
       onApprove()

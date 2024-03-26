@@ -14,7 +14,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
 
-interface OwnProps extends EdgeSceneProps<'exchangeSuccess'> {}
+interface OwnProps extends EdgeSceneProps<'swapSuccess'> {}
 
 interface StateProps {
   userId: string
@@ -34,7 +34,7 @@ const confettiProps = {
   fallSpeed: 4000
 }
 
-export class CryptoExchangeSuccessComponent extends React.PureComponent<Props, LocalState> {
+export class SwapSuccessSceneComponent extends React.PureComponent<Props, LocalState> {
   constructor() {
     // @ts-expect-error
     super()
@@ -48,7 +48,7 @@ export class CryptoExchangeSuccessComponent extends React.PureComponent<Props, L
   done = () => {
     const { navigation } = this.props
     this.setState({ showButton: false })
-    navigation.navigate('exchangeTab', { screen: 'exchange' })
+    navigation.navigate('swapTab', { screen: 'swapCreate' })
   }
 
   showConfetti = async () => {
@@ -119,10 +119,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CryptoExchangeSuccessScene = connect<StateProps, {}, OwnProps>(
+export const SwapSuccessScene = connect<StateProps, {}, OwnProps>(
   state => ({
     userId: state.core.account.id,
     disklet: state.core.disklet
   }),
   dispatch => ({})
-)(withTheme(CryptoExchangeSuccessComponent))
+)(withTheme(SwapSuccessSceneComponent))

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CryptoExchangeComponent should render with loading props 1`] = `
+exports[`SwapCreateScene should render with loading props 1`] = `
 [
   <BVLinearGradient
     colors={
@@ -239,99 +239,6 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
       <View
         entering={BaseAnimationMock {}}
         layout={BaseAnimationMock {}}
-        style={
-          {
-            "marginLeft": -11,
-            "marginVertical": 22,
-            "width": "100%",
-          }
-        }
-      >
-        <View
-          style={
-            [
-              {
-                "justifyContent": "center",
-                "marginHorizontal": 22,
-                "paddingBottom": 22,
-              },
-              null,
-              undefined,
-            ]
-          }
-        >
-          <View
-            style={
-              {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "justifyContent": "space-between",
-              }
-            }
-          >
-            <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.65}
-              numberOfLines={1}
-              style={
-                [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
-                  {
-                    "fontFamily": "Quicksand-Medium",
-                    "fontSize": 27,
-                  },
-                  null,
-                ]
-              }
-            >
-              Exchange
-            </Text>
-          </View>
-        </View>
-        <BVLinearGradient
-          colors={
-            [
-              452984831,
-              452984831,
-            ]
-          }
-          endPoint={
-            {
-              "x": 1,
-              "y": 0.5,
-            }
-          }
-          locations={null}
-          startPoint={
-            {
-              "x": 0,
-              "y": 0.5,
-            }
-          }
-          style={
-            [
-              {
-                "alignSelf": "stretch",
-                "height": 1,
-              },
-              {
-                "marginBottom": 0,
-                "marginLeft": 22,
-                "marginRight": 0,
-                "marginTop": 0,
-              },
-            ]
-          }
-        />
-      </View>
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
       >
         <View
           accessibilityState={
@@ -369,191 +276,11 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
               "flexGrow": 0,
               "flexShrink": 0,
               "justifyContent": "center",
-              "margin": -11,
               "opacity": 1,
-              "padding": 11,
-            }
-          }
-        >
-          <BVLinearGradient
-            colors={
-              [
-                872415231,
-                872415231,
-              ]
-            }
-            endPoint={
-              {
-                "x": 1,
-                "y": 1,
-              }
-            }
-            locations={null}
-            startPoint={
-              {
-                "x": 0,
-                "y": 0,
-              }
-            }
-            style={
-              [
-                {
-                  "alignItems": "center",
-                  "borderRadius": 34,
-                  "flexDirection": "row",
-                  "flexGrow": 0,
-                  "flexShrink": 0,
-                  "justifyContent": "center",
-                },
-                {
-                  "alignSelf": "center",
-                },
-                {
-                  "height": 67,
-                  "paddingHorizontal": 34,
-                },
-                {
-                  "opacity": 1,
-                },
-              ]
-            }
-          >
-            <Text
-              adjustsFontSizeToFit={true}
-              minimumFontScale={0.65}
-              numberOfLines={1}
-              style={
-                [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                    },
-                    null,
-                  ],
-                  null,
-                ]
-              }
-            >
-              Select Source Wallet
-            </Text>
-          </BVLinearGradient>
-        </View>
-      </View>
-      <View
-        layout={BaseAnimationMock {}}
-      >
-        <View
-          style={
-            {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "justifyContent": "space-between",
-              "marginVertical": 11,
-              "paddingHorizontal": 11,
-              "width": "100%",
-            }
-          }
-        >
-          <View
-            style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "flex": 1,
-              }
-            }
-          />
-          <Text
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
-            style={
-              [
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                [
-                  {
-                    "color": "#3dd9f4",
-                    "fontFamily": "Quicksand-Medium",
-                    "fontSize": 22,
-                    "paddingHorizontal": 17,
-                  },
-                  {
-                    "textTransform": "lowercase",
-                  },
-                ],
-                null,
-              ]
-            }
-          >
-            To
-          </Text>
-          <View
-            style={
-              {
-                "borderBottomColor": "rgba(255, 255, 255, .1)",
-                "borderBottomWidth": 1,
-                "flex": 1,
-              }
-            }
-          />
-        </View>
-      </View>
-      <View
-        entering={BaseAnimationMock {}}
-        layout={BaseAnimationMock {}}
-      >
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          style={
-            {
-              "alignItems": "center",
-              "alignSelf": "center",
-              "flexBasis": "auto",
-              "flexGrow": 0,
-              "flexShrink": 0,
-              "justifyContent": "center",
-              "margin": -11,
-              "opacity": 1,
-              "padding": 11,
+              "paddingBottom": 22,
+              "paddingLeft": 0,
+              "paddingRight": 0,
+              "paddingTop": 22,
             }
           }
         >
@@ -625,6 +352,228 @@ exports[`CryptoExchangeComponent should render with loading props 1`] = `
               }
             >
               Select Receiving Wallet
+            </Text>
+          </BVLinearGradient>
+        </View>
+      </View>
+      <View
+        layout={BaseAnimationMock {}}
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "flexGrow": 1,
+              "justifyContent": "space-between",
+              "marginVertical": 11,
+              "paddingHorizontal": 11,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "flex": 1,
+              }
+            }
+          />
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "marginBottom": 0,
+                "marginLeft": 0,
+                "marginRight": 0,
+                "marginTop": 0,
+                "opacity": 1,
+                "paddingBottom": 0,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 0,
+              }
+            }
+          >
+            <Text
+              adjustsFontSizeToFit={true}
+              allowFontScaling={false}
+              style={
+                [
+                  {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  {
+                    "color": "#00f1a2",
+                    "fontSize": 45,
+                  },
+                  {
+                    "fontFamily": "Ionicons",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  {},
+                ]
+              }
+            >
+              
+            </Text>
+          </View>
+          <View
+            style={
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "flex": 1,
+              }
+            }
+          />
+        </View>
+      </View>
+      <View
+        entering={BaseAnimationMock {}}
+        layout={BaseAnimationMock {}}
+      >
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": false,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "alignItems": "center",
+              "alignSelf": "center",
+              "flexBasis": "auto",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "justifyContent": "center",
+              "opacity": 1,
+              "paddingBottom": 22,
+              "paddingLeft": 0,
+              "paddingRight": 0,
+              "paddingTop": 22,
+            }
+          }
+        >
+          <BVLinearGradient
+            colors={
+              [
+                872415231,
+                872415231,
+              ]
+            }
+            endPoint={
+              {
+                "x": 1,
+                "y": 1,
+              }
+            }
+            locations={null}
+            startPoint={
+              {
+                "x": 0,
+                "y": 0,
+              }
+            }
+            style={
+              [
+                {
+                  "alignItems": "center",
+                  "borderRadius": 34,
+                  "flexDirection": "row",
+                  "flexGrow": 0,
+                  "flexShrink": 0,
+                  "justifyContent": "center",
+                },
+                {
+                  "alignSelf": "center",
+                },
+                {
+                  "height": 67,
+                  "paddingHorizontal": 34,
+                },
+                {
+                  "opacity": 1,
+                },
+              ]
+            }
+          >
+            <Text
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.65}
+              numberOfLines={1}
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                    },
+                    null,
+                  ],
+                  null,
+                ]
+              }
+            >
+              Select Source Wallet
             </Text>
           </BVLinearGradient>
         </View>
