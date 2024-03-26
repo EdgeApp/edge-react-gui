@@ -282,6 +282,22 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
     isImportKeySupported: false
   },
+  cardano: {
+    initWalletName: lstrings.string_first_cardano_wallet_name,
+    chainCode: 'ADA',
+    noChangeMiningFee: true,
+    noMaxSpend: true,
+    dummyPublicAddress: 'addr1qyh498v7479sljadw8mdlmshnlt3n30ewzpqnmvrsz2v8rpqt56tgy6jhzgcc7v8mlh7lhw9a9j2hdlmek4arx2238us9e5fq0',
+    isImportKeySupported: true
+  },
+  cardanotestnet: {
+    initWalletName: lstrings.string_first_cardano_preprod_wallet_name,
+    chainCode: 'ADA',
+    noChangeMiningFee: true,
+    noMaxSpend: true,
+    dummyPublicAddress: 'addr_test1qqke2p8jjn322vrm4pns3w0geks83yk965n2myqt4z5dvrcx5reaxqm5g2yhcn76d67lca5hcgfzun7zssej3ashtnxqkghlfn',
+    isImportKeySupported: true
+  },
   eos: {
     chainCode: 'EOS',
     dummyPublicAddress: 'edgecreator2',
