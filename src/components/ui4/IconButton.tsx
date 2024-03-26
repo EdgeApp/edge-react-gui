@@ -49,20 +49,17 @@ export const IconButton = (props: Props) => {
     <EdgeTouchableOpacity accessible={false} style={styles.tappableArea} onPress={onPress} testID={testID}>
       <View style={styles.topContainer}>
         <View style={iconContainerStyle}>{children}</View>
-
         {superscriptLabel == null ? null : (
-          <View style={styles.superScriptCenterOrigin}>
-            <LinearGradient
-              colors={theme.primaryButton}
-              start={theme.primaryButtonColorStart}
-              end={theme.primaryButtonColorEnd}
-              style={styles.superScriptContainer}
-            >
-              <EdgeText style={[styles.superscriptLabel, Platform.OS === 'android' ? styles.androidAdjust : null]} disableFontScaling>
-                {superscriptLabel}
-              </EdgeText>
-            </LinearGradient>
-          </View>
+          <LinearGradient
+            colors={theme.primaryButton}
+            start={theme.primaryButtonColorStart}
+            end={theme.primaryButtonColorEnd}
+            style={styles.superScriptContainer}
+          >
+            <EdgeText style={[styles.superscriptLabel, Platform.OS === 'android' ? styles.androidAdjust : null]} disableFontScaling>
+              {superscriptLabel}
+            </EdgeText>
+          </LinearGradient>
         )}
       </View>
       <EdgeText style={styles.label}>{label}</EdgeText>
@@ -91,23 +88,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center',
     backgroundColor: theme.cardBaseColor
   },
-  /** To make the sueprscript grow evenly along the horizontal axis: */
-  superScriptCenterOrigin: {
+  superScriptContainer: {
     position: 'absolute',
     top: 0,
-    left: 0,
-    right: -theme.rem(2.5),
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  superScriptContainer: {
     height: theme.rem(1.25),
     borderRadius: theme.rem(1.25 / 2),
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 0,
-    paddingLeft: theme.rem(0.4),
-    paddingRight: theme.rem(0.35)
+    transform: [{ translateX: theme.rem(1) }],
+    paddingLeft: theme.rem(0.5),
+    paddingRight: theme.rem(0.5) - 2
   },
   label: {
     textAlign: 'center',
