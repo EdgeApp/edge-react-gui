@@ -469,6 +469,8 @@
   "string_first_fio_wallet_name": "Meu FIO",
   "string_first_groestlcoin_wallet_name": "Meu Groestlcoin",
   "string_first_litecoin_wallet_name": "Meu Litecoin",
+  "string_first_cardano_wallet_name": "My Cardano",
+  "string_first_cardano_preprod_wallet_name": "My Cardano Testnet",
   "string_first_monero_wallet_name": "Minha Monero",
   "string_first_qtum_wallet_name": "Meu Qtum",
   "string_first_ripple_wallet_name": "Minha XRP",
