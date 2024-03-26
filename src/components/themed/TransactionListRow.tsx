@@ -150,21 +150,23 @@ export function TransactionListRow(props: Props) {
 
   // Pending Text and Style
   const currentConfirmations = transaction.confirmations
-  const isConfirmed = currentConfirmations === 'confirmed'
 
-  const unconfirmedOrTimeText = isConfirmed
-    ? unixToLocaleDateTime(transaction.date).time
-    : !isSentTransaction && canReplaceByFee && currentConfirmations === 'unconfirmed'
-    ? lstrings.fragment_transaction_list_unconfirmed_rbf
-    : currentConfirmations === 'unconfirmed'
-    ? lstrings.fragment_wallet_unconfirmed
-    : currentConfirmations === 'dropped'
-    ? lstrings.fragment_transaction_list_tx_dropped
-    : typeof currentConfirmations === 'number'
-    ? sprintf(lstrings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
-    : lstrings.fragment_transaction_list_tx_synchronizing
+  const unconfirmedOrTimeText =
+    currentConfirmations === 'confirmed'
+      ? unixToLocaleDateTime(transaction.date).time
+      : !isSentTransaction && canReplaceByFee && currentConfirmations === 'unconfirmed'
+      ? lstrings.fragment_transaction_list_unconfirmed_rbf
+      : currentConfirmations === 'unconfirmed'
+      ? lstrings.fragment_wallet_unconfirmed
+      : currentConfirmations === 'dropped'
+      ? lstrings.fragment_transaction_list_tx_dropped
+      : currentConfirmations === 'failed'
+      ? lstrings.fragment_transaction_list_tx_failed
+      : typeof currentConfirmations === 'number'
+      ? sprintf(lstrings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
+      : lstrings.fragment_transaction_list_tx_synchronizing
 
-  const unconfirmedOrTimeStyle = isConfirmed ? styles.secondaryText : styles.unconfirmedText
+  const confirmationStyle = currentConfirmations === 'confirmed' ? null : currentConfirmations === 'failed' ? styles.failedText : styles.unconfirmedText
 
   // Transaction Category
   let categoryText
@@ -203,7 +205,7 @@ export function TransactionListRow(props: Props) {
             <EdgeText style={styles.cryptoText}>{cryptoAmountString}</EdgeText>
           </View>
           <View style={styles.row}>
-            <EdgeText ellipsizeMode="tail" style={unconfirmedOrTimeStyle}>
+            <EdgeText ellipsizeMode="tail" style={[styles.secondaryText, confirmationStyle]}>
               {unconfirmedOrTimeText}
             </EdgeText>
             <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
@@ -300,12 +302,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   secondaryText: {
     flexShrink: 1,
     fontSize: theme.rem(0.75),
-    color: theme.secondaryText
+    color: theme.secondaryText,
+    marginRight: theme.rem(1)
   },
   unconfirmedText: {
-    flexShrink: 1,
-    fontSize: theme.rem(0.75),
-    color: theme.warningText,
-    marginRight: theme.rem(1)
+    color: theme.warningText
+  },
+  failedText: {
+    color: theme.dangerText
   }
 }))
