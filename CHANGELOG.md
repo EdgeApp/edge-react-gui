@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.4.0
+
 - added: Add Cardano (ADA)
 - added: Add auto-detected tokens section in ManageTokensScene
 - added: Display "failed" status for confirmed, but failed, transactions
