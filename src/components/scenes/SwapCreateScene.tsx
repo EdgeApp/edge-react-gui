@@ -53,11 +53,13 @@ interface Props extends EdgeSceneProps<'swapCreate'> {}
 
 interface State {
   nativeAmount: string
+  fiatAmount: string
   nativeAmountFor: 'from' | 'to'
 }
 
 const defaultState: State = {
   nativeAmount: '0',
+  fiatAmount: '0',
   nativeAmountFor: 'from'
 }
 
@@ -202,14 +204,17 @@ export const SwapCreateScene = (props: Props) => {
       toTokenId: fromTokenId,
       errorDisplayInfo
     })
+    const newNativeAmountFor = state.nativeAmountFor === 'from' ? 'to' : 'from'
     // Clear amount input state:
     setState({
       ...state,
-      nativeAmount: '0'
+      nativeAmountFor: newNativeAmountFor
     })
-    // Clear all input amounts:
-    toInputRef.current?.setAmount('crypto', '0')
-    fromInputRef.current?.setAmount('crypto', '0')
+    // Swap the amounts:
+    const toAmount = newNativeAmountFor === 'to' ? state.fiatAmount : '0'
+    const fromAmount = newNativeAmountFor === 'from' ? state.fiatAmount : '0'
+    toInputRef.current?.setAmount('fiat', toAmount)
+    fromInputRef.current?.setAmount('fiat', fromAmount)
   })
 
   const handleSelectWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId, direction: 'from' | 'to') => {
@@ -290,6 +295,7 @@ export const SwapCreateScene = (props: Props) => {
     setState({
       ...state,
       nativeAmount: amounts.nativeAmount,
+      fiatAmount: amounts.fiatAmount,
       nativeAmountFor: 'from'
     })
     // Clear other input's amount:
@@ -300,6 +306,7 @@ export const SwapCreateScene = (props: Props) => {
     setState({
       ...state,
       nativeAmount: amounts.nativeAmount,
+      fiatAmount: amounts.fiatAmount,
       nativeAmountFor: 'to'
     })
     // Clear other input's amount:
