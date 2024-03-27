@@ -496,7 +496,7 @@ export const banxaProvider: FiatProviderFactory = {
           queryParams.target = banxaCoin
           if (amountType === 'fiat') {
             queryParams.source_amount = exchangeAmount
-            checkMinMax(exchangeAmount, paymentObj)
+            checkMinMax(exchangeAmount, paymentObj, fiat)
           } else {
             queryParams.target_amount = exchangeAmount
           }
@@ -505,7 +505,7 @@ export const banxaProvider: FiatProviderFactory = {
           queryParams.target = fiat
           if (amountType === 'fiat') {
             queryParams.target_amount = exchangeAmount
-            checkMinMax(exchangeAmount, paymentObj)
+            checkMinMax(exchangeAmount, paymentObj, fiat)
           } else {
             queryParams.source_amount = exchangeAmount
           }
