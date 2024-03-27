@@ -1,7 +1,7 @@
 import { div, log10, mul, round } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import React, { useMemo } from 'react'
-import { ReturnKeyType, Text, TouchableOpacity, View } from 'react-native'
+import { ReturnKeyType, TouchableOpacity, View } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -15,7 +15,6 @@ import { Space } from '../layout/Space'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 import { FieldNum, FlipInput2, FlipInputFieldInfos, FlipInputRef } from './FlipInput2'
-import { ButtonBox } from './ThemedButtons'
 
 export type ExchangeFlipInputFields = 'fiat' | 'crypto'
 
@@ -45,7 +44,6 @@ export interface Props {
   onAmountChanged: (amounts: SwapInputCardAmounts) => unknown
   onBlur?: () => void
   onFocus?: () => void
-  onMaxPress?: () => void
   onNext?: () => void
   onSelectWallet: () => void
 }
@@ -71,7 +69,6 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props
     onAmountChanged,
     onBlur,
     onFocus,
-    onMaxPress,
     onNext
   } = props
 
@@ -244,13 +241,6 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props
         onFocus={onFocus}
         onNext={onNext}
       />
-      {onMaxPress == null ? null : (
-        <MaxButtonContainerView>
-          <ButtonBox disabled={disabled} onPress={onMaxPress} paddingRem={[0, 1]}>
-            <MaxButtonText>{lstrings.string_max_cap}</MaxButtonText>
-          </ButtonBox>
-        </MaxButtonContainerView>
-      )}
     </>
   )
 })
@@ -281,21 +271,6 @@ const WalletPlaceHolder = styled(TouchableOpacity)(theme => ({
 const WalletPlaceHolderText = styled(EdgeText)(theme => ({
   fontSize: theme.rem(0.75),
   lineHeight: theme.rem(1.5)
-}))
-
-const MaxButtonContainerView = styled(View)<{ danger?: boolean }>(theme => ({
-  flexDirection: 'row',
-  height: 0,
-  justifyContent: 'flex-end',
-  overflow: 'visible'
-}))
-
-const MaxButtonText = styled(Text)<{ danger?: boolean }>(theme => ({
-  color: theme.escapeButtonText,
-  fontFamily: theme.fontFaceDefault,
-  fontSize: theme.rem(0.75),
-  height: theme.rem(1),
-  includeFontPadding: false
 }))
 
 // This space is used to give the FlipInput2 roughly 1 rem bottom padding to

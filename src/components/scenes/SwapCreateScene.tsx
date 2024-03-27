@@ -2,7 +2,7 @@ import { gt, gte } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeSwapRequest, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
-import { Keyboard } from 'react-native'
+import { Keyboard, Text, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { DisableAsset } from '../../actions/ExchangeInfoActions'
@@ -18,7 +18,9 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
 import { EdgeAnim, fadeInDown30, fadeInDown60, fadeInDown90, fadeInUp60 } from '../common/EdgeAnim'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { styled } from '../hoc/styled'
 import { SwapVerticalIcon } from '../icons/ThemedIcons'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
@@ -92,7 +94,7 @@ export const SwapCreateScene = (props: Props) => {
   const fromHeaderText = fromWallet == null ? lstrings.select_src_wallet : fromWalletName
   const toHeaderText = toWallet == null ? lstrings.select_recv_wallet : toWalletName
   // Determines if a coin can have Exchange Max option
-  const hasMaxSpend = fromWalletSpecialCurrencyInfo.noMaxSpend !== true
+  const hasMaxSpend = fromWallet != null && fromWalletSpecialCurrencyInfo.noMaxSpend !== true
 
   //
   // Callbacks
@@ -344,7 +346,6 @@ export const SwapCreateScene = (props: Props) => {
             onSelectWallet={handleFromSelectWallet}
             tokenId={fromTokenId}
             wallet={fromWallet}
-            onMaxPress={hasMaxSpend ? handleMaxPress : undefined}
           />
         )}
       </EdgeAnim>
@@ -353,6 +354,13 @@ export const SwapCreateScene = (props: Props) => {
           <ButtonBox onPress={handleFlipWalletPress} paddingRem={[0, 0.5]}>
             <SwapVerticalIcon color={theme.iconTappable} size={theme.rem(2)} />
           </ButtonBox>
+          {hasMaxSpend ? (
+            <MaxButtonContainerView>
+              <EdgeTouchableOpacity onPress={handleMaxPress}>
+                <MaxButtonText>{lstrings.string_max_cap}</MaxButtonText>
+              </EdgeTouchableOpacity>
+            </MaxButtonContainerView>
+          ) : null}
         </LineTextDivider>
       </EdgeAnim>
       <EdgeAnim enter={fadeInDown30}>
@@ -378,3 +386,16 @@ export const SwapCreateScene = (props: Props) => {
     </SceneWrapper>
   )
 }
+
+const MaxButtonContainerView = styled(View)(theme => ({
+  position: 'absolute',
+  right: theme.rem(1),
+  top: -theme.rem(0.5)
+}))
+
+const MaxButtonText = styled(Text)(theme => ({
+  color: theme.escapeButtonText,
+  fontFamily: theme.fontFaceDefault,
+  fontSize: theme.rem(0.75),
+  includeFontPadding: false
+}))
