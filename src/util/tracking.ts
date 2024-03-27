@@ -61,7 +61,7 @@ export type OnLogEvent = (event: TrackingEventName, values?: TrackingValues) => 
  */
 export interface DollarConversionValues {
   conversionType: 'dollar'
-  dollarConversionValue: number
+  dollarRevenue: number
 }
 
 /**
@@ -199,7 +199,7 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
           const { conversionType } = conversionValues
           if (conversionType === 'dollar') {
             params.currency = 'USD'
-            params.dollarConversionValue = Number(conversionValues.dollarConversionValue.toFixed(2))
+            params.dollarRevenue = Number(conversionValues.dollarRevenue.toFixed(2))
           } else if (conversionType === 'sell') {
             const { sourceAmount, destFiatAmount, destFiatCurrencyCode, orderId, fiatProviderId } = conversionValues
 
