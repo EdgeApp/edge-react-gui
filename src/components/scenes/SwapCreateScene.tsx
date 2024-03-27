@@ -53,11 +53,13 @@ interface Props extends EdgeSceneProps<'swapCreate'> {}
 
 interface State {
   nativeAmount: string
+  fiatAmount: string
   nativeAmountFor: 'from' | 'to'
 }
 
 const defaultState: State = {
   nativeAmount: '0',
+  fiatAmount: '0',
   nativeAmountFor: 'from'
 }
 
@@ -114,10 +116,17 @@ export const SwapCreateScene = (props: Props) => {
     return false
   }
 
-  const checkExceedsAmount = (): boolean => {
-    const fromNativeBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
-
-    return state.nativeAmountFor === 'from' && gte(fromNativeBalance, '0') && gt(state.nativeAmount, fromNativeBalance)
+  const checkAmountExceedsBalance = (): boolean => {
+    // If no from wallet, return false:
+    if (fromWallet == null) return false
+    // We do not know what the from amount is if we are quoting "to" a
+    // specific amount. Therefore we always return false in this case.
+    if (state.nativeAmountFor === 'to') return false
+    // Get the balance:
+    const fromWalletBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
+    // If there is a balance and the amount is greater than the balance,
+    // return true (which means amount exceeded balance).
+    return gte(fromWalletBalance, '0') && gt(state.nativeAmount, fromWalletBalance)
   }
 
   const getQuote = (swapRequest: EdgeSwapRequest) => {
@@ -195,14 +204,17 @@ export const SwapCreateScene = (props: Props) => {
       toTokenId: fromTokenId,
       errorDisplayInfo
     })
+    const newNativeAmountFor = state.nativeAmountFor === 'from' ? 'to' : 'from'
     // Clear amount input state:
     setState({
       ...state,
-      nativeAmount: '0'
+      nativeAmountFor: newNativeAmountFor
     })
-    // Clear all input amounts:
-    toInputRef.current?.setAmount('crypto', '0')
-    fromInputRef.current?.setAmount('crypto', '0')
+    // Swap the amounts:
+    const toAmount = newNativeAmountFor === 'to' ? state.fiatAmount : '0'
+    const fromAmount = newNativeAmountFor === 'from' ? state.fiatAmount : '0'
+    toInputRef.current?.setAmount('fiat', toAmount)
+    fromInputRef.current?.setAmount('fiat', fromAmount)
   })
 
   const handleSelectWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId, direction: 'from' | 'to') => {
@@ -266,7 +278,7 @@ export const SwapCreateScene = (props: Props) => {
       toWallet: toWallet
     }
 
-    if (checkExceedsAmount()) return
+    if (checkAmountExceedsBalance()) return
 
     getQuote(request)
   })
@@ -283,6 +295,7 @@ export const SwapCreateScene = (props: Props) => {
     setState({
       ...state,
       nativeAmount: amounts.nativeAmount,
+      fiatAmount: amounts.fiatAmount,
       nativeAmountFor: 'from'
     })
     // Clear other input's amount:
@@ -293,6 +306,7 @@ export const SwapCreateScene = (props: Props) => {
     setState({
       ...state,
       nativeAmount: amounts.nativeAmount,
+      fiatAmount: amounts.fiatAmount,
       nativeAmountFor: 'to'
     })
     // Clear other input's amount:
@@ -304,9 +318,13 @@ export const SwapCreateScene = (props: Props) => {
   //
 
   const renderButton = () => {
-    const showNext = fromCurrencyCode !== '' && toCurrencyCode !== '' && parseFloat(state.nativeAmount) > 0
-    if (!showNext) return null
-    if (checkExceedsAmount()) return null
+    // Don't show next button if the wallets haven't been selected:
+    if (fromWallet == null || toWallet == null) return null
+    // Don't show next button if the amount is zero:
+    if (zeroString(state.nativeAmount)) return null
+    // Don't show next button if the amount exceeds the balance:
+    if (checkAmountExceedsBalance()) return null
+    // Otherwise, show the next button:
     return <ButtonsViewUi4 primary={{ label: lstrings.string_next_capitalized, onPress: handleNext }} parentType="scene" />
   }
 
@@ -322,7 +340,7 @@ export const SwapCreateScene = (props: Props) => {
       return <AlertCardUi4 title={errorDisplayInfo.title} body={errorDisplayInfo.message} type="error" />
     }
 
-    if (checkExceedsAmount()) {
+    if (checkAmountExceedsBalance()) {
       return <AlertCardUi4 title={lstrings.exchange_insufficient_funds_title} body={lstrings.exchange_insufficient_funds_below_balance} type="error" />
     }
 
