@@ -9,6 +9,8 @@
 - added: Display "failed" status for confirmed, but failed, transactions
 - changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
 - changed: Buttons for receive/send/earn/trade in Transaction List Scene
+- changed: Renamed analytics parameter "dollarConversionValue" to "dollarRevenue"
+- fixed: Reporting negative conversion values
 - fixed: Filecoin sync issue caused by missing and necessary GLIF API key
 - fixed: FIO handle/domain registration error with MATIC payment
 - fixed: Fix duplicate transactions bug and re-enable transaction support in Filecoin FEVM
