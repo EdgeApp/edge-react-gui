@@ -311,9 +311,13 @@ export const SwapCreateScene = (props: Props) => {
   //
 
   const renderButton = () => {
-    const showNext = fromCurrencyCode !== '' && toCurrencyCode !== '' && parseFloat(state.nativeAmount) > 0
-    if (!showNext) return null
+    // Don't show next button if the wallets haven't been selected:
+    if (fromWallet == null || toWallet == null) return null
+    // Don't show next button if the amount is zero:
+    if (zeroString(state.nativeAmount)) return null
+    // Don't show next button if the amount exceeds the balance:
     if (checkAmountExceedsBalance()) return null
+    // Otherwise, show the next button:
     return <ButtonsViewUi4 primary={{ label: lstrings.string_next_capitalized, onPress: handleNext }} parentType="scene" />
   }
 
