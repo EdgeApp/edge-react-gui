@@ -12,7 +12,7 @@
 - fixed: Fix duplicate transactions bug and re-enable transaction support in Filecoin FEVM
 - fixed: 'tokenId' related crash on Send scene under certain conditions
 
-## 4.3.0
+## 4.3.0 (2024-03-25)
 
 - added: Wrapped Touchable\* components to consolidate tap debounce logic
 - added: Mt Pelerin for SEPA and Faster Payments
@@ -142,7 +142,7 @@
 
 - fixed: Spend regression for non-EIP-1559 transactions
 
-## 3.23.1
+## 3.23.1 (2023-12-22)
 
 - fixed: Paybis sell from Tron USDT
 - fixed: Fix accelerate for EIP-1559 transactions
