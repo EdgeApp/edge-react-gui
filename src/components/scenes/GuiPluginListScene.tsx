@@ -1,5 +1,5 @@
 import { Disklet } from 'disklet'
-import { EdgeAccount } from 'edge-core-js/types'
+import { EdgeAccount, EdgeTokenId } from 'edge-core-js/types'
 import * as React from 'react'
 import { Image, ListRenderItemInfo, Platform, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -7,9 +7,9 @@ import Animated from 'react-native-reanimated'
 import { sprintf } from 'sprintf-js'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
+import { checkAndSetRegion, showCountrySelectionModal } from '../../actions/CountryListActions'
 import { getDeviceSettings, writeDeveloperPluginUri } from '../../actions/DeviceSettingsActions'
 import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
-import { readSyncedSettings, SyncedAccountSettings, updateOneSetting, writeSyncedSettings } from '../../actions/SettingsActions'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
 import buyPluginJsonRaw from '../../constants/plugins/buyPluginList.json'
@@ -27,7 +27,9 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
+import { EdgeAsset } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
+import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { infoServerData } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
@@ -35,8 +37,6 @@ import { logEvent, OnLogEvent } from '../../util/tracking'
 import { base58ToUuid } from '../../util/utils'
 import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
-import { CountryListModal } from '../modals/CountryListModal'
-import { StateProvinceListModal } from '../modals/StateProvinceListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
@@ -50,6 +50,7 @@ import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
 
 export interface GuiPluginListParams {
   launchPluginId?: string
+  filterAsset?: EdgeAsset
 }
 
 const buyRaw = buyPluginJsonOverrideRaw.length > 0 ? buyPluginJsonOverrideRaw : buyPluginJsonRaw
@@ -99,15 +100,14 @@ interface StateProps {
   deviceId: string
   disablePlugins: NestedDisableMap
   insetStyle: InsetStyle
-  handleScroll: SceneScrollHandler
+  filterAsset?: { pluginId: string; tokenId: EdgeTokenId }
+  onCountryPress: () => void
+  onPluginOpened: () => void
   onLogEvent: OnLogEvent
+  onScroll: SceneScrollHandler
 }
 
-interface DispatchProps {
-  updateCountryCode: (params: { countryCode: string; stateProvinceCode?: string }) => void
-}
-
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & ThemeProps
 interface State {
   developerUri: string
   buySellPlugins: BuySellPlugins
@@ -130,7 +130,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
   async componentDidMount() {
     this.updatePlugins()
-    this.checkCountry()
     const { developerPluginUri } = getDeviceSettings()
     if (developerPluginUri != null) {
       this.setState({ developerUri: developerPluginUri })
@@ -199,21 +198,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   /**
-   * Verify that we have a country selected
-   */
-  checkCountry() {
-    const { countryCode, stateProvinceCode } = this.props
-    if (!countryCode) this.showCountrySelectionModal().catch(showError)
-    else {
-      const countryData = COUNTRY_CODES.find(cc => cc['alpha-2'] === countryCode)
-      if (countryData != null && stateProvinceCode == null) {
-        // This country needs a state/provice but doesn't have one picked
-        this.showCountrySelectionModal(true).catch(e => showError(e))
-      }
-    }
-  }
-
-  /**
    * Get the scene's direction from the route information. This determines
    * which plugin list to show.
    */
@@ -225,7 +209,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow, longPress: boolean = false) {
-    const { coreDisklet, countryCode, stateProvinceCode, deviceId, disablePlugins, navigation, account, onLogEvent } = this.props
+    const { coreDisklet, countryCode, filterAsset, stateProvinceCode, deviceId, disablePlugins, navigation, account, onLogEvent, onPluginOpened } = this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -270,6 +254,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         direction,
         disablePlugins: disableProviders,
         disklet: coreDisklet,
+        filterAsset,
         guiPlugin: plugin,
         longPress,
         navigation,
@@ -285,47 +270,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         deepQuery
       })
     }
-  }
 
-  async showCountrySelectionModal(skipCountry?: boolean) {
-    const { account, updateCountryCode, countryCode, stateProvinceCode } = this.props
-
-    let selectedCountryCode: string = countryCode
-    if (skipCountry !== true) {
-      selectedCountryCode = await Airship.show<string>(bridge => <CountryListModal bridge={bridge} countryCode={countryCode} />)
-    }
-    if (selectedCountryCode) {
-      try {
-        const country = COUNTRY_CODES.find(country => country['alpha-2'] === selectedCountryCode)
-        if (country == null) throw new Error('Invalid country code')
-        const { stateProvinces, name } = country
-        let selectedStateProvince: string | undefined
-        if (stateProvinces != null) {
-          // This country has states/provinces. Show picker for that
-          const previousStateProvince = stateProvinces.some(sp => sp['alpha-2'] === stateProvinceCode) ? stateProvinceCode : undefined
-          selectedStateProvince = await Airship.show<string>(bridge => (
-            <StateProvinceListModal countryCode={selectedCountryCode} bridge={bridge} stateProvince={previousStateProvince} stateProvinces={stateProvinces} />
-          ))
-          if (selectedStateProvince == null) {
-            throw new Error(sprintf(lstrings.error_must_select_state_province_s, name))
-          }
-        }
-        const syncedSettings = await readSyncedSettings(account)
-        const updatedSettings: SyncedAccountSettings = {
-          ...syncedSettings,
-          countryCode: selectedCountryCode,
-          stateProvinceCode: selectedStateProvince
-        }
-        updateCountryCode({ countryCode: selectedCountryCode, stateProvinceCode: selectedStateProvince })
-        await writeSyncedSettings(account, updatedSettings)
-      } catch (error: any) {
-        showError(error)
-      }
-    }
-  }
-
-  _handleCountryPress = () => {
-    this.showCountrySelectionModal().catch(showError)
+    // Reset potential filterAsset after the user launched a plugin.
+    onPluginOpened()
   }
 
   renderPlugin = ({ item, index }: ListRenderItemInfo<GuiPluginRow>) => {
@@ -377,7 +324,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   renderTop = () => {
-    const { countryCode, stateProvinceCode, theme } = this.props
+    const { account, countryCode, stateProvinceCode, onCountryPress, theme, filterAsset } = this.props
     const styles = getStyles(theme)
     const direction = this.getSceneDirection()
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
@@ -390,19 +337,25 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const iconStyle = stateProvinceData == null ? styles.selectedCountryFlag : styles.selectedCountryFlagSelectableRow
     const icon = !hasCountryData ? undefined : <FastImage source={imageSrc} style={iconStyle} />
 
+    const titleAsset = filterAsset == null ? lstrings.cryptocurrency : getCurrencyCodeWithAccount(account, filterAsset.pluginId, filterAsset.tokenId)
+
     const countryCard =
       stateProvinceData == null ? (
         <CardUi4>
-          <RowUi4 onPress={this._handleCountryPress} rightButtonType="none" icon={icon} body={countryName} />
+          <RowUi4 onPress={onCountryPress} rightButtonType="none" icon={icon} body={countryName} />
         </CardUi4>
       ) : (
-        <SelectableRow onPress={this._handleCountryPress} subTitle={stateProvinceData.name} title={countryData?.name} icon={icon} />
+        <SelectableRow onPress={onCountryPress} subTitle={stateProvinceData.name} title={countryData?.name} icon={icon} />
       )
 
     return (
       <>
         <EdgeAnim style={styles.header} enter={fadeInUp90}>
-          <SceneHeader title={direction === 'buy' ? lstrings.title_plugin_buy : lstrings.title_plugin_sell} underline withTopMargin />
+          <SceneHeader
+            title={direction === 'buy' ? sprintf(lstrings.title_plugin_buy_s, titleAsset) : sprintf(lstrings.title_plugin_sell_s, titleAsset)}
+            underline
+            withTopMargin
+          />
         </EdgeAnim>
 
         {hasCountryData ? (
@@ -456,7 +409,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       <View style={styles.sceneContainer}>
         <Animated.FlatList
           data={plugins}
-          onScroll={this.props.handleScroll}
+          onScroll={this.props.onScroll}
           ListHeaderComponent={this.renderTop}
           ListEmptyComponent={this.renderEmptyList}
           renderItem={this.renderPlugin}
@@ -543,6 +496,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const { navigation, route } = props
+  const { params = { filterAsset: undefined } } = route
   const dispatch = useDispatch()
   const theme = useTheme()
 
@@ -558,14 +512,37 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
   const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
 
-  const updateCountryCode = (params: { countryCode: string; stateProvinceCode?: string }): void => {
-    const { countryCode, stateProvinceCode } = params
-    dispatch(updateOneSetting({ countryCode, stateProvinceCode }))
-  }
+  const [filterAssetLocal, setFilterAssetLocal] = React.useState<EdgeAsset | undefined>(params.filterAsset)
 
   const handleLogEvent = useHandler((event, values) => {
     dispatch(logEvent(event, values))
   })
+
+  const handleCountryPress = useHandler(() => {
+    dispatch(
+      showCountrySelectionModal({
+        account,
+        countryCode,
+        stateProvinceCode
+      })
+    )
+  })
+  const handlePluginOpened = useHandler(() => {
+    // Reset the temporary 1-time asset filter after opening a plugin.
+    // Known issue: We can't resolve the case where the user navigates to this
+    // scene with a 'filterAsset,' but does not select a payment method before
+    // navigating away.
+    setFilterAssetLocal(undefined)
+  })
+
+  React.useEffect(() => {
+    dispatch(checkAndSetRegion({ account, countryCode, stateProvinceCode }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  React.useEffect(() => {
+    setFilterAssetLocal(params.filterAsset)
+  }, [params])
 
   return (
     <SceneWrapper hasTabs hasNotifications padding={theme.rem(0.5)}>
@@ -573,22 +550,24 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
         return (
           <View style={undoInsetStyle}>
             <GuiPluginList
-              handleScroll={handleScroll}
-              navigation={navigation}
-              route={route}
-              deviceId={deviceId}
               account={account}
               accountPlugins={accountPlugins}
               accountReferral={accountReferral}
               coreDisklet={coreDisklet}
               countryCode={countryCode}
-              stateProvinceCode={stateProvinceCode}
               developerModeOn={developerModeOn}
+              deviceId={deviceId}
               disablePlugins={disablePlugins}
-              updateCountryCode={updateCountryCode}
-              theme={theme}
+              filterAsset={filterAssetLocal}
+              onScroll={handleScroll}
               insetStyle={insetStyle}
+              navigation={navigation}
+              route={route}
+              stateProvinceCode={stateProvinceCode}
+              theme={theme}
+              onCountryPress={handleCountryPress}
               onLogEvent={handleLogEvent}
+              onPluginOpened={handlePluginOpened}
             />
           </View>
         )

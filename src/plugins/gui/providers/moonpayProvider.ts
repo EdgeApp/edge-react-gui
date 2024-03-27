@@ -230,14 +230,17 @@ export const moonpayProvider: FiatProviderFactory = {
         const maxCrypto = Math.max(cryptoCurrencyObj.maxAmount ?? 0, cryptoCurrencyObj.maxBuyAmount ?? 0)
         const minCrypto = Math.min(cryptoCurrencyObj.minAmount ?? Infinity, cryptoCurrencyObj.minBuyAmount ?? Infinity)
         const exchangeAmount = parseFloat(params.exchangeAmount)
+        const displayFiatCurrencyCode = params.fiatCurrencyCode.replace('iso:', '')
         if (params.amountType === 'fiat') {
-          if (exchangeAmount > maxFiat) throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: maxFiat })
-          if (exchangeAmount < minFiat) throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: minFiat })
+          if (exchangeAmount > maxFiat)
+            throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: maxFiat, displayCurrencyCode: displayFiatCurrencyCode })
+          if (exchangeAmount < minFiat)
+            throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: minFiat, displayCurrencyCode: displayFiatCurrencyCode })
           // User typed a fiat amount. Need a crypto value
           amountParam = `baseCurrencyAmount=${params.exchangeAmount}`
         } else {
-          if (exchangeAmount > maxCrypto) throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: maxCrypto })
-          if (exchangeAmount < minCrypto) throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: minCrypto })
+          if (exchangeAmount > maxCrypto) throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: maxCrypto, displayCurrencyCode })
+          if (exchangeAmount < minCrypto) throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: minCrypto, displayCurrencyCode })
           amountParam = `quoteCurrencyAmount=${params.exchangeAmount}`
         }
 

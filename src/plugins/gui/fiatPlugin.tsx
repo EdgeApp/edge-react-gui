@@ -16,9 +16,11 @@ import { WalletListModal, WalletListResult } from '../../components/modals/Walle
 import { SendScene2Params } from '../../components/scenes/SendScene2'
 import { Airship, showError, showToast, showToastSpinner } from '../../components/services/AirshipInstance'
 import { requestPermissionOnSettings } from '../../components/services/PermissionsManager'
+import { FiatPluginEnterAmountParams } from '../../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
-import { AppParamList, NavigationBase } from '../../types/routerTypes'
+import { NavigationBase } from '../../types/routerTypes'
+import { EdgeAsset } from '../../types/types'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
 import { OnLogEvent, SellConversionValues, TrackingEventName } from '../../util/tracking'
 import {
@@ -45,6 +47,7 @@ export const executePlugin = async (params: {
   deviceId: string
   direction: 'buy' | 'sell'
   disablePlugins?: NestedDisableMap
+  filterAsset?: EdgeAsset
   guiPlugin: GuiPlugin
   longPress?: boolean
   navigation: NavigationBase
@@ -59,6 +62,7 @@ export const executePlugin = async (params: {
     deviceId,
     direction,
     disklet,
+    filterAsset,
     guiPlugin,
     longPress = false,
     navigation,
@@ -99,8 +103,25 @@ export const executePlugin = async (params: {
     },
     walletPicker: async (params): Promise<FiatPluginWalletPickerResult | undefined> => {
       const { headerTitle, allowedAssets, showCreateWallet } = params
+
       const result = await Airship.show<WalletListResult>(bridge => (
-        <WalletListModal bridge={bridge} navigation={navigation} headerTitle={headerTitle} allowedAssets={allowedAssets} showCreateWallet={showCreateWallet} />
+        <WalletListModal
+          bridge={bridge}
+          navigation={navigation}
+          headerTitle={headerTitle}
+          allowedAssets={
+            filterAsset != null
+              ? // Include only the filterAsset, if allowed by the provider
+                allowedAssets == null
+                ? [filterAsset]
+                : allowedAssets.filter(
+                    asset => asset.pluginId === filterAsset.pluginId && (filterAsset.tokenId == null || asset.tokenId === filterAsset.tokenId)
+                  )
+              : // Else, allow everything the provider tells us
+                allowedAssets
+          }
+          showCreateWallet={showCreateWallet}
+        />
       ))
       if (result?.type === 'wallet') return result
     },
@@ -111,7 +132,7 @@ export const executePlugin = async (params: {
       ))
       return result
     },
-    enterAmount(params: AppParamList['guiPluginEnterAmount']) {
+    enterAmount(params: FiatPluginEnterAmountParams) {
       maybeNavigateToCorrectTabScene()
       navigation.navigate('guiPluginEnterAmount', params)
     },

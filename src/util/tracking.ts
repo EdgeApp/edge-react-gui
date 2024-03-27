@@ -1,6 +1,6 @@
 import Bugsnag from '@bugsnag/react-native'
 import analytics from '@react-native-firebase/analytics'
-import { TrackingEventName as LoginTrackingEventName, TrackingValues as LoginTrackingValues } from 'edge-login-ui-rn/lib/components/publicApi/publicTypes'
+import { TrackingEventName as LoginTrackingEventName, TrackingValues as LoginTrackingValues } from 'edge-login-ui-rn'
 import PostHog from 'posthog-react-native'
 import { getBuildNumber, getUniqueId, getVersion } from 'react-native-device-info'
 import { checkNotifications } from 'react-native-permissions'

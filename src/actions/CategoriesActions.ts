@@ -281,7 +281,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
   const { assetAction, chainAction, chainAssetAction, metadata, savedAction, swapData, tokenId } = tx
   const { currencyConfig, currencyInfo } = wallet
 
-  const currencyName = tokenId == null ? currencyInfo.displayName : currencyConfig.allTokens[tokenId].displayName
+  const { displayName } = tokenId == null ? currencyInfo : currencyConfig.allTokens[tokenId] ?? { displayName: '' }
 
   const action = savedAction ?? chainAction
   const assetAct = assetAction ?? chainAssetAction
@@ -298,14 +298,14 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
 
   // Default text for send or receive
   if (isSentTransaction) {
-    payeeText = sprintf(lstrings.transaction_sent_1s, currencyName)
+    payeeText = sprintf(lstrings.transaction_sent_1s, displayName)
     direction = 'send'
     edgeCategory = {
       category: 'expense',
       subcategory: ''
     }
   } else {
-    payeeText = sprintf(lstrings.transaction_received_1s, currencyName)
+    payeeText = sprintf(lstrings.transaction_received_1s, displayName)
     direction = 'receive'
     edgeCategory = {
       category: 'income',
@@ -331,7 +331,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
           case 'transfer': {
             const txSrc = action.payoutWalletId !== wallet.id
             const toFromStr = txSrc ? lstrings.transaction_details_swap_to_subcat_1s : lstrings.transaction_details_swap_from_subcat_1s
-            const walletName = account.currencyWallets[action.payoutWalletId]?.name ?? currencyName
+            const walletName = account.currencyWallets[action.payoutWalletId]?.name ?? displayName
             edgeCategory = {
               category: 'transfer',
               subcategory: sprintf(toFromStr, walletName)
@@ -458,7 +458,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
         iconPluginId = action.fiatPlugin.providerId
         switch (assetActionType) {
           case 'buy': {
-            payeeText = sprintf(payeeText, currencyName)
+            payeeText = sprintf(payeeText, displayName)
             const { fiatAsset } = action
             const { fiatCurrencyCode } = cleanFiatCurrencyCode(fiatAsset.fiatCurrencyCode)
             edgeCategory = { category: 'exchange', subcategory: sprintf(lstrings.transaction_details_swap_from_subcat_1s, fiatCurrencyCode) }
@@ -466,7 +466,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
             break
           }
           case 'sell': {
-            payeeText = sprintf(payeeText, currencyName)
+            payeeText = sprintf(payeeText, displayName)
             const { fiatAsset } = action
             const { fiatCurrencyCode } = cleanFiatCurrencyCode(fiatAsset.fiatCurrencyCode)
             edgeCategory = { category: 'exchange', subcategory: sprintf(lstrings.transaction_details_swap_to_subcat_1s, fiatCurrencyCode) }

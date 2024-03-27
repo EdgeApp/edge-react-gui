@@ -356,7 +356,7 @@ export function checkAndShowGetCryptoModal(navigation: NavigationBase, wallet: E
       if (threeButtonModal === 'buy') {
         navigation.navigate('buyTab', { screen: 'pluginListBuy' })
       } else if (threeButtonModal === 'exchange') {
-        navigation.navigate('exchangeTab', { screen: 'exchange', params: { toWalletId: wallet.id, toTokenId: tokenId } })
+        navigation.navigate('swapTab', { screen: 'swapCreate', params: { toWalletId: wallet.id, toTokenId: tokenId } })
       }
     } catch (e: any) {
       // Don't bother the user with this error, but log it quietly:

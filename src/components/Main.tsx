@@ -9,7 +9,7 @@ import { AirshipToast } from 'react-native-airship'
 import { getDeviceSettings } from '../actions/DeviceSettingsActions'
 import { logoutRequest } from '../actions/LoginActions'
 import { checkEnabledExchanges, showReEnableOtpModal } from '../actions/SettingsActions'
-import { CryptoExchangeScene as CryptoExchangeSceneComponent } from '../components/scenes/CryptoExchangeScene'
+import { SwapCreateScene as SwapCreateSceneComponent } from '../components/scenes/SwapCreateScene'
 import { HomeSceneUi4 as HomeSceneUi4Component } from '../components/ui4/scenes/HomeSceneUi4'
 import { ENV } from '../env'
 import { DEFAULT_EXPERIMENT_CONFIG, ExperimentConfig, getExperimentConfig } from '../experimentConfig'
@@ -36,7 +36,7 @@ import { EdgeHeader } from './navigation/EdgeHeader'
 import { PluginBackButton } from './navigation/GuiPluginBackButton'
 import { HeaderBackground } from './navigation/HeaderBackground'
 import { HeaderTextButton } from './navigation/HeaderTextButton'
-import { ParamHeaderTitle } from './navigation/ParamHeaderTitle'
+import { ParamHeaderCryptoIconTitle, ParamHeaderTitle } from './navigation/ParamHeaderTitle'
 import { SideMenuButton } from './navigation/SideMenuButton'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle'
 import { LoadingSplashScreen } from './progress-indicators/LoadingSplashScreen'
@@ -54,9 +54,6 @@ import { CreateWalletImportOptionsScene as CreateWalletImportOptionsSceneCompone
 import { CreateWalletImportScene as CreateWalletImportSceneComponent } from './scenes/CreateWalletImportScene'
 import { CreateWalletSelectCryptoScene as CreateWalletSelectCryptoSceneComponent } from './scenes/CreateWalletSelectCryptoScene'
 import { CreateWalletSelectFiatScene as CreateWalletSelectFiatSceneComponent } from './scenes/CreateWalletSelectFiatScene'
-import { CryptoExchangeQuoteProcessingScene as CryptoExchangeQuoteProcessingSceneComponent } from './scenes/CryptoExchangeQuoteProcessingScene'
-import { CryptoExchangeQuoteScene as CryptoExchangeQuoteComponent } from './scenes/CryptoExchangeQuoteScene'
-import { CryptoExchangeSuccessScene as CryptoExchangeSuccessSceneComponent } from './scenes/CryptoExchangeSuccessScene'
 import { CurrencyNotificationScene as CurrencyNotificationSceneComponent } from './scenes/CurrencyNotificationScene'
 import { CurrencySettingsScene as CurrencySettingsSceneComponent } from './scenes/CurrencySettingsScene'
 import { DefaultFiatSettingScene as DefaultFiatSettingSceneComponent } from './scenes/DefaultFiatSettingScene'
@@ -109,7 +106,10 @@ import { SpendingLimitsScene as SpendingLimitsSceneComponent } from './scenes/Sp
 import { StakeModifyScene as StakeModifySceneComponent } from './scenes/Staking/StakeModifyScene'
 import { StakeOptionsScene as StakeOptionsSceneComponent } from './scenes/Staking/StakeOptionsScene'
 import { StakeOverviewScene as StakeOverviewSceneComponent } from './scenes/Staking/StakeOverviewScene'
+import { SwapConfirmationScene as SwapConfirmationSceneComponent } from './scenes/SwapConfirmationScene'
+import { SwapProcessingScene as SwapProcessingSceneComponent } from './scenes/SwapProcessingScene'
 import { SwapSettingsScene as SwapSettingsSceneComponent } from './scenes/SwapSettingsScene'
+import { SwapSuccessScene as SwapSuccessSceneComponent } from './scenes/SwapSuccessScene'
 import { TransactionDetailsScene as TransactionDetailsSceneComponent } from './scenes/TransactionDetailsScene'
 import { TransactionList as TransactionListComponent } from './scenes/TransactionListScene'
 import { TransactionsExportScene as TransactionsExportSceneComponent } from './scenes/TransactionsExportScene'
@@ -139,10 +139,6 @@ const CreateWalletImportScene = ifLoggedIn(CreateWalletImportSceneComponent)
 const CreateWalletImportOptionsScene = ifLoggedIn(CreateWalletImportOptionsSceneComponent)
 const CreateWalletSelectCryptoScene = ifLoggedIn(CreateWalletSelectCryptoSceneComponent)
 const CreateWalletSelectFiatScene = ifLoggedIn(CreateWalletSelectFiatSceneComponent)
-const CryptoExchangeQuote = ifLoggedIn(CryptoExchangeQuoteComponent)
-const CryptoExchangeQuoteProcessingScene = ifLoggedIn(CryptoExchangeQuoteProcessingSceneComponent)
-const CryptoExchangeScene = ifLoggedIn(CryptoExchangeSceneComponent)
-const CryptoExchangeSuccessScene = ifLoggedIn(CryptoExchangeSuccessSceneComponent)
 const CurrencyNotificationScene = ifLoggedIn(CurrencyNotificationSceneComponent)
 const AssetSettingsScene = ifLoggedIn(AssetSettingsSceneComponent)
 const CurrencySettingsScene = ifLoggedIn(CurrencySettingsSceneComponent)
@@ -195,7 +191,11 @@ const RewardsCardWelcomeScene = ifLoggedIn(RewardsCardWelcomeSceneComponent)
 const StakeModifyScene = ifLoggedIn(StakeModifySceneComponent)
 const StakeOptionsScene = ifLoggedIn(StakeOptionsSceneComponent)
 const StakeOverviewScene = ifLoggedIn(StakeOverviewSceneComponent)
+const SwapProcessingScene = ifLoggedIn(SwapProcessingSceneComponent)
+const SwapConfirmationScene = ifLoggedIn(SwapConfirmationSceneComponent)
+const SwapCreateScene = ifLoggedIn(SwapCreateSceneComponent)
 const SwapSettingsScene = ifLoggedIn(SwapSettingsSceneComponent)
+const SwapSuccessScene = ifLoggedIn(SwapSuccessSceneComponent)
 const TransactionDetailsScene = ifLoggedIn(TransactionDetailsSceneComponent)
 const TransactionList = ifLoggedIn(TransactionListComponent)
 const TransactionsExportScene = ifLoggedIn(TransactionsExportSceneComponent)
@@ -471,7 +471,7 @@ const EdgeAppStack = () => {
         }}
       />
       <Stack.Screen
-        name="exchangeSettings"
+        name="swapSettings"
         component={SwapSettingsScene}
         options={{
           title: lstrings.settings_exchange_settings,
@@ -479,8 +479,8 @@ const EdgeAppStack = () => {
         }}
       />
       <Stack.Screen
-        name="exchangeSuccess"
-        component={CryptoExchangeSuccessScene}
+        name="swapSuccess"
+        component={SwapSuccessScene}
         options={{
           headerLeft: () => null
         }}
@@ -720,7 +720,7 @@ const EdgeTabs = () => {
       <Tab.Screen name="walletsTab" component={EdgeWalletsTabScreen} />
       <Tab.Screen name="buyTab" component={EdgeBuyTabScreen} />
       <Tab.Screen name="sellTab" component={EdgeSellTabScreen} />
-      <Tab.Screen name="exchangeTab" component={EdgeExchangeTabScreen} />
+      <Tab.Screen name="swapTab" component={EdgeSwapTabScreen} />
       <Tab.Screen name="extraTab" component={ExtraTabScene} />
       <Tab.Screen name="devTab" component={DevTestScene} />
     </Tab.Navigator>
@@ -746,7 +746,15 @@ const EdgeWalletsTabScreen = () => {
         }}
       />
       <Stack.Screen name="walletList" component={WalletListScene} options={firstSceneScreenOptions} />
-      <Stack.Screen name="transactionList" component={TransactionList} />
+      <Stack.Screen
+        name="transactionList"
+        component={TransactionList}
+        options={{
+          headerTitle: () => (
+            <ParamHeaderCryptoIconTitle<'transactionList'> fromCryptoIconParams={params => ({ walletId: params.walletId, tokenId: params.tokenId })} />
+          )
+        }}
+      />
     </Stack.Navigator>
   )
 }
@@ -797,22 +805,25 @@ const EdgeSellTabScreen = () => {
   )
 }
 
-const EdgeExchangeTabScreen = () => {
+const EdgeSwapTabScreen = () => {
   const dispatch = useDispatch()
   return (
-    <Stack.Navigator initialRouteName="exchange" screenOptions={defaultScreenOptions}>
+    <Stack.Navigator initialRouteName="swapCreate" screenOptions={defaultScreenOptions}>
       <Stack.Screen
-        name="exchange"
-        component={CryptoExchangeScene}
-        options={firstSceneScreenOptions}
+        name="swapCreate"
+        component={SwapCreateScene}
+        options={{
+          ...firstSceneScreenOptions,
+          title: lstrings.title_exchange
+        }}
         listeners={{
           focus: () => dispatch(checkEnabledExchanges())
         }}
       />
-      <Stack.Screen name="exchangeQuote" component={CryptoExchangeQuote} />
+      <Stack.Screen name="swapConfirmation" component={SwapConfirmationScene} />
       <Stack.Screen
-        name="exchangeQuoteProcessing"
-        component={CryptoExchangeQuoteProcessingScene}
+        name="swapProcessing"
+        component={SwapProcessingScene}
         options={{
           headerLeft: () => null,
           headerRight: () => null

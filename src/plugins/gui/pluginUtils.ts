@@ -37,7 +37,12 @@ export const getRateFromQuote = (quote: FiatProviderQuote, fiatCode: string): st
   return exchangeRateText
 }
 
-export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: string, direction: FiatDirection): string | undefined => {
+export interface BestError {
+  errorText?: string
+  quoteError?: FiatProviderQuoteError
+}
+
+export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: string, direction: FiatDirection): BestError => {
   let bestError: FiatProviderQuoteError | undefined
   for (const eq of errorQuotes) {
     const errorQuote = eq.quoteError
@@ -62,8 +67,8 @@ export const getBestError = (errorQuotes: FiatProviderError[], currencyCode: str
       }
     }
   }
-  if (bestError == null) return
-  return getErrorText(bestError, currencyCode, direction)
+  if (bestError == null) return {}
+  return { errorText: getErrorText(bestError, currencyCode, direction), quoteError: bestError }
 }
 
 const getErrorText = (error: FiatProviderQuoteError, currencyCode: string, direction: FiatDirection): string => {

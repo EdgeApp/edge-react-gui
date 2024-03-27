@@ -161,7 +161,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
     }
 
     case 'swap': {
-      navigation.navigate('exchangeTab', { screen: 'exchange' })
+      navigation.navigate('swapTab', { screen: 'swapCreate' })
       return true
     }
 
