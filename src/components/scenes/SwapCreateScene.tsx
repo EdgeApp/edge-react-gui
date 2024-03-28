@@ -351,7 +351,7 @@ export const SwapCreateScene = (props: Props) => {
     <SceneWrapper hasTabs hasNotifications scroll keyboardShouldPersistTaps="handled" padding={theme.rem(0.5)}>
       <EdgeAnim enter={fadeInUp60}>
         {fromWallet == null ? (
-          <ButtonUi4 type="secondary" onPress={handleFromSelectWallet} marginRem={[1, 0]} label={lstrings.select_recv_wallet} />
+          <ButtonUi4 type="secondary" onPress={handleFromSelectWallet} marginRem={[1, 0]} label={lstrings.select_src_wallet} />
         ) : (
           <SwapInput
             ref={fromInputRef}
@@ -383,7 +383,7 @@ export const SwapCreateScene = (props: Props) => {
       </EdgeAnim>
       <EdgeAnim enter={fadeInDown30}>
         {toWallet == null ? (
-          <ButtonUi4 type="secondary" onPress={handleToSelectWallet} marginRem={[1, 0]} label={lstrings.select_src_wallet} />
+          <ButtonUi4 type="secondary" onPress={handleToSelectWallet} marginRem={[1, 0]} label={lstrings.select_recv_wallet} />
         ) : (
           <SwapInput
             ref={toInputRef}
