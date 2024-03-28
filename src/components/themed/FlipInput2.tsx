@@ -168,8 +168,7 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
   })
 
   const handleClearPress = useHandler(() => {
-    const newAmounts: [string, string] = ['', '']
-    setAmounts(newAmounts)
+    onNumericInputChange('')
   })
 
   const renderBottomRow = (fieldNum: FieldNum) => {
