@@ -50,7 +50,7 @@
     "start.plugins": "webpack serve",
     "start": "react-native start",
     "test": "TZ=America/Los_Angeles jest",
-    "typechain": "rm -rf './src/plugins/contracts/' && typechain --target ethers-v5 --out-dir ./src/plugins/contracts/ './src/plugins/abis/*.json'",
+    "typechain": "typechain --target ethers-v5 --out-dir ./src/plugins/.contracts/ './src/plugins/abis/*.json' && rm -rf './src/plugins/contracts/' && mv './src/plugins/.contracts/' './src/plugins/contracts/'",
     "typechain:precommit": "npm run typechain && git add ./src/plugins/contracts",
     "theme": "node -r sucrase/register ./scripts/themeServer.ts",
     "updateVersion": "node -r sucrase/register scripts/updateVersion.ts",
