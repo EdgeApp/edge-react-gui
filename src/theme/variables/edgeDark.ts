@@ -36,7 +36,7 @@ const palette = {
   darkMint: '#089e73',
   edgeMint: '#00f1a2',
   gray: '#888888',
-  darkGrey: '#494949',
+  darkGray: '#494949',
   lightGray: '#D9E3ED',
   accentGreen: '#77C513',
   accentRed: '#E85466',
@@ -49,7 +49,7 @@ const palette = {
   blackOp50: 'rgba(0, 0, 0, .5)',
   blackOp70: 'rgba(0, 0, 0, .7)',
 
-  darkGreyOp30: 'hsla(0, 0%, 53%, 0.3)',
+  darkGrayOp30: 'hsla(0, 0%, 53%, 0.3)',
 
   whiteOp05: 'rgba(255, 255, 255, .05)',
   whiteOp10: 'rgba(255, 255, 255, .1)',
@@ -180,7 +180,7 @@ export const edgeDark: Theme = {
   modalBorderRadiusRem: 1,
   modalBackground: palette.whiteOp37,
   modalSceneOverlayColor: palette.black,
-  modalDragbarColor: palette.darkGreyOp30,
+  modalDragbarColor: palette.darkGrayOp30,
 
   modalLikeBackground: '#333232',
 
@@ -330,7 +330,7 @@ export const edgeDark: Theme = {
   toggleButtonOff: palette.gray,
 
   // Confirmation slider
-  confirmationSlider: palette.darkGrey,
+  confirmationSlider: palette.darkGray,
   confirmationSliderCompleted: palette.darkGreen,
   confirmationSliderText: palette.white,
   confirmationSliderArrow: palette.backgroundBlack,
