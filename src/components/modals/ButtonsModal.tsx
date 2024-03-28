@@ -4,9 +4,9 @@ import { AirshipBridge } from 'react-native-airship'
 
 import { useHandler } from '../../hooks/useHandler'
 import { showError } from '../services/AirshipInstance'
-import { useTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage } from '../themed/ModalParts'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 export interface ButtonInfo {
@@ -23,14 +23,19 @@ export interface ButtonInfo {
 
 export interface ButtonModalProps<Buttons> {
   bridge: AirshipBridge<keyof Buttons | undefined>
-  title?: string
-  message?: string
-  children?: React.ReactNode
   buttons: Buttons
+  /** Ideally mutually exclusive with message/subtext since children are
+   * rendered in the body of the modal along with message/subtext */
+  children?: React.ReactNode
+  /** No corner close button */
   disableCancel?: boolean
+  /** Full height (flex: 1) */
   fullScreen?: boolean
-
-  // Adds a border:
+  /** Main body message */
+  message?: string
+  /** Modal title */
+  title?: string
+  /** Adds a border around the modal */
   warning?: boolean
 
   /** @deprecated. Does nothing. */
@@ -52,41 +57,22 @@ export interface ButtonModalProps<Buttons> {
 export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(props: ButtonModalProps<Buttons>) {
   const { bridge, title, message, children, buttons, disableCancel = false, fullScreen = false, warning } = props
   const theme = useTheme()
+  const styles = getStyles(theme)
 
   const handleCancel = useHandler(() => bridge.resolve(undefined))
 
   const containerStyle: ViewStyle = {
     flex: fullScreen ? 1 : 0
   }
-  const textStyle: ViewStyle = {
-    justifyContent: 'flex-start'
-  }
-  const buttonsStyle: ViewStyle = {
-    justifyContent: 'flex-end',
-    marginTop: theme.rem(0.5)
-  }
-
-  // TODO:
-  // Since we don't have clear definitions yet for primary/secondary/tertiary
-  // button assignments, we can't use ButtonsViewUi4. For now, just style
-  // the buttons with a shared width
-  const innerButtonStyle: ViewStyle = {
-    justifyContent: 'space-between',
-    alignSelf: 'center', // Shrink view around buttons
-    alignItems: 'stretch', // Stretch our children out
-    flexDirection: 'column'
-  }
 
   return (
     <ModalUi4 warning={warning} bridge={bridge} title={title} onCancel={disableCancel ? undefined : handleCancel}>
-      <View style={containerStyle}>
-        <View style={textStyle}>
-          {message != null ? <ModalMessage>{message}</ModalMessage> : null}
-          {children}
-        </View>
+      <View style={[styles.textStyle, containerStyle]}>
+        {message != null ? <Paragraph>{message}</Paragraph> : null}
+        {children}
       </View>
-      <View style={buttonsStyle}>
-        <View style={innerButtonStyle}>
+      <View style={styles.buttonsStyle}>
+        <View style={styles.innerButtonStyle}>
           {Object.keys(buttons).map((key, i, arr) => {
             let defaultType: 'primary' | 'secondary'
             if (theme.preferPrimaryButton) {
@@ -116,3 +102,23 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
     </ModalUi4>
   )
 }
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  buttonsStyle: {
+    justifyContent: 'flex-end',
+    marginTop: theme.rem(0.5)
+  },
+  // TODO:
+  // Since we don't have clear definitions yet for primary/secondary/tertiary
+  // button assignments, we can't use ButtonsViewUi4. For now, just style
+  // the buttons with a shared width
+  innerButtonStyle: {
+    justifyContent: 'space-between',
+    alignSelf: 'center', // Shrink view around buttons
+    alignItems: 'stretch', // Stretch our children out
+    flexDirection: 'column'
+  },
+  textStyle: {
+    justifyContent: 'flex-start'
+  }
+}))

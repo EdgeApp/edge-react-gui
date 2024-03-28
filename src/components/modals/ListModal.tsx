@@ -6,8 +6,9 @@ import { FlatList } from 'react-native-gesture-handler'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useFilter } from '../../hooks/useFilter'
 import { useTheme } from '../services/ThemeContext'
+import { Paragraph } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
-import { ModalFooter, ModalMessage } from '../themed/ModalParts'
+import { ModalFooter } from '../themed/ModalParts'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props<T> {
@@ -71,7 +72,7 @@ export function ListModal<T>({
 
   return (
     <ModalUi4 title={title} bridge={bridge} onCancel={handleCancel}>
-      {message == null ? null : <ModalMessage>{message}</ModalMessage>}
+      {message == null ? null : <Paragraph>{message}</Paragraph>}
       {!textInput ? null : (
         <FilledTextInput
           vertical={1}

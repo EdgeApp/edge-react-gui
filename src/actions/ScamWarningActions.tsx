@@ -4,7 +4,7 @@ import { sprintf } from 'sprintf-js'
 
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { Airship } from '../components/services/AirshipInstance'
-import { ModalMessage } from '../components/themed/ModalParts'
+import { Paragraph, WarningText } from '../components/themed/EdgeText'
 import { SCAM_WARNING } from '../constants/constantSettings'
 import { lstrings } from '../locales/strings'
 import { config } from '../theme/appConfig'
@@ -23,7 +23,9 @@ export const triggerScamWarningModal = async (disklet: Disklet) => {
 
       return (
         <ConfirmContinueModal bridge={bridge} title={lstrings.warning_scam_title}>
-          <ModalMessage isWarning>{warningMessage}</ModalMessage>
+          <Paragraph>
+            <WarningText>{warningMessage}</WarningText>
+          </Paragraph>
         </ConfirmContinueModal>
       )
     })

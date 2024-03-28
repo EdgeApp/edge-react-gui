@@ -2,7 +2,7 @@ import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
-import { ModalMessage } from '../themed/ModalParts'
+import { Paragraph } from '../themed/EdgeText'
 import { ButtonsModal } from './ButtonsModal'
 
 export type BackupForTransferModalResult = 'upgrade'
@@ -23,7 +23,7 @@ export function BackupForTransferModal(props: Props) {
       title={lstrings.backup_title}
       closeArrow
     >
-      <ModalMessage paddingRem={[0, 0, 1.5, 0]}>{lstrings.backup_for_transfer_message}</ModalMessage>
+      <Paragraph marginRem={[0, 0, 1.5, 0]}>{lstrings.backup_for_transfer_message}</Paragraph>
     </ButtonsModal>
   )
 }

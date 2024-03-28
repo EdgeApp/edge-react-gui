@@ -23,9 +23,9 @@ import { withWallet } from '../../hoc/withWallet'
 import { FlipInputModal2, FlipInputModalResult } from '../../modals/FlipInputModal2'
 import { Airship, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
-import { EdgeText } from '../../themed/EdgeText'
+import { EdgeText, Paragraph } from '../../themed/EdgeText'
 import { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
-import { ModalMessage, ModalTitle } from '../../themed/ModalParts'
+import { ModalTitle } from '../../themed/ModalParts'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
 import { AlertCardUi4 } from '../../ui4/AlertCardUi4'
@@ -197,8 +197,8 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
             </ModalTitle>
           }
         >
-          <ModalMessage>{lstrings.staking_change_unlock_explainer1}</ModalMessage>
-          <ModalMessage>{lstrings.staking_change_unlock_explainer2}</ModalMessage>
+          <Paragraph>{lstrings.staking_change_unlock_explainer1}</Paragraph>
+          <Paragraph>{lstrings.staking_change_unlock_explainer2}</Paragraph>
         </ModalUi4>
       )
     })
@@ -294,8 +294,8 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
           <Image style={styles.currencyLogo} source={fioLogo} />
         </SceneHeader>
         <View style={styles.explainer}>
-          <ModalMessage>{lstrings.staking_change_explaner1}</ModalMessage>
-          <ModalMessage>{lstrings.staking_change_explaner2}</ModalMessage>
+          <Paragraph>{lstrings.staking_change_explaner1}</Paragraph>
+          <Paragraph>{lstrings.staking_change_explaner2}</Paragraph>
         </View>
         <CardUi4 marginRem={1}>
           <RowUi4 rightButtonType="editable" title={lstrings.staking_change_add_amount_title} onPress={handleAmount}>

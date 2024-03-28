@@ -7,8 +7,9 @@ import { sprintf } from 'sprintf-js'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalTitle } from '../themed/ModalParts'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
@@ -41,7 +42,7 @@ export function UpdateModal(props: Props) {
       }
       onCancel={handleClose}
     >
-      <ModalMessage>{message}</ModalMessage>
+      <Paragraph>{message}</Paragraph>
       <MainButton label={lstrings.update_now} marginRem={0.5} type="primary" onPress={handleUpdate} />
       <MainButton label={lstrings.update_later} marginRem={[0.5, 0, 1]} type="secondary" onPress={onSkip} />
     </ModalUi4>
