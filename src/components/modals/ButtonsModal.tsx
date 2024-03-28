@@ -6,12 +6,12 @@ import { useHandler } from '../../hooks/useHandler'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
-import { MainButton } from '../themed/MainButton'
+import { ButtonTypeUi4, ButtonUi4 } from '../ui4/ButtonUi4'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 export interface ButtonInfo {
   label: string
-  type?: 'primary' | 'secondary' | 'escape'
+  type?: ButtonTypeUi4
 
   // The modal will show a spinner as long as this promise is pending.
   // Returning true will dismiss the modal,
@@ -24,8 +24,8 @@ export interface ButtonInfo {
 export interface ButtonModalProps<Buttons> {
   bridge: AirshipBridge<keyof Buttons | undefined>
   buttons: Buttons
-  /** Ideally mutually exclusive with message/subtext since children are
-   * rendered in the body of the modal along with message/subtext */
+  /** Used to pass non-text children, to be rendered after the title and message
+   * but before the buttons themselves. */
   children?: React.ReactNode
   /** No corner close button */
   disableCancel?: boolean
@@ -95,7 +95,7 @@ export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(prop
               )
             }
 
-            return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} layout="column" />
+            return <ButtonUi4 key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} layout="column" />
           })}
         </View>
       </View>

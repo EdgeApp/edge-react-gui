@@ -91,7 +91,7 @@ export function showClearLogsModal(): ThunkAction<Promise<void>> {
           },
           no: {
             label: 'Cancel',
-            type: 'escape'
+            type: 'tertiary'
           }
         }}
       />
