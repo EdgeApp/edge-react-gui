@@ -61,7 +61,7 @@ export type OnLogEvent = (event: TrackingEventName, values?: TrackingValues) => 
  */
 export interface DollarConversionValues {
   conversionType: 'dollar'
-  dollarConversionValue: number
+  dollarRevenue: number
 }
 
 /**
@@ -199,15 +199,15 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
           const { conversionType } = conversionValues
           if (conversionType === 'dollar') {
             params.currency = 'USD'
-            params.dollarConversionValue = Number(conversionValues.dollarConversionValue.toFixed(2))
+            params.dollarRevenue = Math.abs(Number(conversionValues.dollarRevenue.toFixed(2)))
           } else if (conversionType === 'sell') {
             const { sourceAmount, destFiatAmount, destFiatCurrencyCode, orderId, fiatProviderId } = conversionValues
 
-            params.sourceDollarValue = Number(sourceAmount.displayDollarValue(state))
-            params.sourceCryptoAmount = Number(sourceAmount.exchangeAmount)
+            params.sourceDollarValue = Math.abs(Number(sourceAmount.displayDollarValue(state)))
+            params.sourceCryptoAmount = Math.abs(Number(sourceAmount.exchangeAmount))
             params.sourceCurrencyCode = sourceAmount.currencyCode
 
-            params.destFiatValue = Number(destFiatAmount).toFixed(2)
+            params.destFiatValue = Math.abs(Number(destFiatAmount)).toFixed(2)
             params.destFiatCurrencyCode = destFiatCurrencyCode
 
             if (orderId != null) params.orderId = orderId
@@ -215,10 +215,10 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
           } else if (conversionType === 'crypto') {
             const { cryptoAmount, swapProviderId, orderId } = conversionValues
 
-            params.cryptoAmount = Number(cryptoAmount.exchangeAmount)
+            params.cryptoAmount = Math.abs(Number(cryptoAmount.exchangeAmount))
             params.currency = cryptoAmount.currencyCode
 
-            params.dollarValue = Number(cryptoAmount.displayDollarValue(state))
+            params.dollarValue = Math.abs(Number(cryptoAmount.displayDollarValue(state)))
 
             if (orderId != null) params.orderId = orderId
             if (swapProviderId != null) params.swapProviderId = swapProviderId
