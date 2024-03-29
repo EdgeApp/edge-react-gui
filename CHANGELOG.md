@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Allow light accounts to buy up to $50 worth of crypto at a time
+
 ## 4.4.0
 
 - added: Add Cardano (ADA)
