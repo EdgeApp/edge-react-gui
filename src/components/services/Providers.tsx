@@ -38,12 +38,6 @@ export function Providers(props: Props) {
     const middleware = [loginStatusChecker, thunk]
     if (ENV.ENABLE_REDUX_PERF_LOGGING) middleware.push(perfLogger)
 
-    if (__DEV__) {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const createDebugger = require('redux-flipper').default
-      middleware.push(createDebugger())
-    }
-
     const enhancer = applyMiddleware<Dispatch, RootState>(...middleware)
     const store = createStore(rootReducer, undefined, enhancer)
 
