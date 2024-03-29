@@ -16,6 +16,8 @@
 - fixed: Fix duplicate transactions bug and re-enable transaction support in Filecoin FEVM
 - fixed: 'tokenId' related crash on Send scene under certain conditions
 - fixed: Properly show the Thorchain Savers unstake amount including earned amt
+- fixed: Disable RBF for Thorchain Savers transactions
+- fixed: Xcode 15 builds. Remove Flipper as it is deprecated anyway
 
 ## 4.3.0 (2024-03-25)
 
