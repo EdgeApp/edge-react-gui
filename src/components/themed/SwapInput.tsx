@@ -5,7 +5,6 @@ import { ReturnKeyType, TouchableOpacity, View } from 'react-native'
 
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
-import { lstrings } from '../../locales/strings'
 import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
@@ -35,6 +34,7 @@ export interface Props {
   forceField?: 'fiat' | 'crypto'
   inputAccessoryViewID?: string
   keyboardVisible?: boolean
+  placeholders?: [string, string]
   returnKeyType?: ReturnKeyType
   startNativeAmount?: string
   tokenId: EdgeTokenId
@@ -60,6 +60,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props
     heading,
     inputAccessoryViewID,
     keyboardVisible = true,
+    placeholders,
     startNativeAmount,
     returnKeyType,
     tokenId,
@@ -229,7 +230,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props
         forceFieldNum={forceFieldMap[overrideForceField]}
         inputAccessoryViewID={inputAccessoryViewID}
         keyboardVisible={keyboardVisible}
-        placeholders={[lstrings.string_tap_to_edit, lstrings.string_tap_next_for_quote]}
+        placeholders={placeholders}
         ref={flipInputRef}
         renderFooter={renderFooter}
         renderHeader={renderHeader}
