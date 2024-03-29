@@ -1,4 +1,4 @@
-import { lt, toFixed } from 'biggystring'
+import { gt, lt, toFixed } from 'biggystring'
 import { asArray, asEither, asMaybe, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeSpendInfo, EdgeTokenId } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
@@ -430,10 +430,59 @@ export const bityProvider: FiatProviderFactory = {
           })
         }
 
-        // Check for a max amount limit
+        // Because Bity only supports <=1k transactions w/o KYC and we have no
+        // way to KYC a user, add a 1k limit
+        if (amountType === 'fiat') {
+          if (gt(exchangeAmount, '1000')) {
+            throw new FiatProviderError({
+              providerId,
+              errorType: 'overLimit',
+              errorAmount: 1000,
+              displayCurrencyCode: fiatCurrencyCode.replace('iso:', '')
+            })
+          }
+        } else {
+          // User entered a crypto amount. Get the crypto amount for 1k fiat
+          // so we can compare crypto amounts.
+          const kRequest: BityQuoteRequest = {
+            input: {
+              amount: isBuy ? '1000' : undefined,
+              currency: isBuy ? fiatCode : cryptoCode
+            },
+            output: {
+              amount: isBuy ? undefined : '1000',
+              currency: isBuy ? cryptoCode : fiatCode
+            }
+          }
+
+          const kRaw = await fetchBityQuote(kRequest)
+          const kBityQuote = asBityQuote(kRaw)
+          if (isBuy) {
+            if (lt(kBityQuote.output.amount, exchangeAmount)) {
+              throw new FiatProviderError({
+                providerId,
+                errorType: 'overLimit',
+                errorAmount: parseFloat(kBityQuote.output.amount),
+                displayCurrencyCode: kBityQuote.output.currency
+              })
+            }
+          } else {
+            if (lt(kBityQuote.input.amount, exchangeAmount)) {
+              throw new FiatProviderError({
+                providerId,
+                errorType: 'overLimit',
+                errorAmount: parseFloat(kBityQuote.input.amount),
+                displayCurrencyCode: kBityQuote.input.currency
+              })
+            }
+          }
+        }
+
+        // Check for a max amount limit from the API. This is mostly useless due to the
+        // 1k limit above but do it anyway in case the API somehow returns a lower limit.
+        //
         // When a quote is requested that is larger than the maximum amount,
         // Bity returns a quote at the maximum value
-
         const quoteCurrencyCode = (amountType === 'fiat' ? fiatCurrencyCode : cryptoCode).replace('iso:', '')
         let quoteAmount
         if (isBuy) {
@@ -449,6 +498,7 @@ export const bityProvider: FiatProviderFactory = {
             displayCurrencyCode: quoteCurrencyCode
           })
         }
+
         const paymentQuote: FiatProviderQuote = {
           providerId,
           partnerIcon,
