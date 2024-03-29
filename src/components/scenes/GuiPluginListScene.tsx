@@ -213,9 +213,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
-    // Don't allow light accounts to enter buy plugins
+    // Don't allow light accounts to enter buy webview plugins
     const direction = this.getSceneDirection()
-    if (direction === 'buy' && checkAndShowLightBackupModal(account, navigation)) return
+    if (direction === 'buy' && plugin.nativePlugin == null && checkAndShowLightBackupModal(account, navigation)) return
 
     // Grab a custom URI if necessary:
     let { deepPath = undefined } = listRow
