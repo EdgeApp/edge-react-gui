@@ -430,6 +430,25 @@ export const bityProvider: FiatProviderFactory = {
           })
         }
 
+        // Check for a max amount limit
+        // When a quote is requested that is larger than the maximum amount,
+        // Bity returns a quote at the maximum value
+
+        const quoteCurrencyCode = (amountType === 'fiat' ? fiatCurrencyCode : cryptoCode).replace('iso:', '')
+        let quoteAmount
+        if (isBuy) {
+          quoteAmount = amountType === 'fiat' ? bityQuote.input.amount : bityQuote.output.amount
+        } else {
+          quoteAmount = amountType === 'fiat' ? bityQuote.output.amount : bityQuote.input.amount
+        }
+        if (lt(quoteAmount, amount)) {
+          throw new FiatProviderError({
+            providerId,
+            errorType: 'overLimit',
+            errorAmount: parseFloat(quoteAmount),
+            displayCurrencyCode: quoteCurrencyCode
+          })
+        }
         const paymentQuote: FiatProviderQuote = {
           providerId,
           partnerIcon,
