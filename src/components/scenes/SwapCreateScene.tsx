@@ -98,6 +98,15 @@ export const SwapCreateScene = (props: Props) => {
   // Determines if a coin can have Exchange Max option
   const hasMaxSpend = fromWallet != null && fromWalletSpecialCurrencyInfo.noMaxSpend !== true
 
+  const isNextHidden =
+    // Don't show next button if the wallets haven't been selected:
+    fromWallet == null ||
+    toWallet == null ||
+    // Don't show next button if the amount is zero:
+    zeroString(state.nativeAmount) ||
+    // Don't show next button if the amount exceeds the balance:
+    checkAmountExceedsBalance()
+
   //
   // Callbacks
   //
@@ -116,7 +125,7 @@ export const SwapCreateScene = (props: Props) => {
     return false
   }
 
-  const checkAmountExceedsBalance = (): boolean => {
+  function checkAmountExceedsBalance(): boolean {
     // If no from wallet, return false:
     if (fromWallet == null) return false
     // We do not know what the from amount is if we are quoting "to" a
@@ -317,17 +326,6 @@ export const SwapCreateScene = (props: Props) => {
   // Render
   //
 
-  const renderButton = () => {
-    // Don't show next button if the wallets haven't been selected:
-    if (fromWallet == null || toWallet == null) return null
-    // Don't show next button if the amount is zero:
-    if (zeroString(state.nativeAmount)) return null
-    // Don't show next button if the amount exceeds the balance:
-    if (checkAmountExceedsBalance()) return null
-    // Otherwise, show the next button:
-    return <ButtonsViewUi4 primary={{ label: lstrings.string_next_capitalized, onPress: handleNext }} parentType="scene" />
-  }
-
   const renderAlert = () => {
     const { minimumPopupModals } = fromWalletSpecialCurrencyInfo
     const primaryNativeBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
@@ -362,6 +360,7 @@ export const SwapCreateScene = (props: Props) => {
             onAmountChanged={handleFromAmountChange}
             onNext={handleNext}
             onSelectWallet={handleFromSelectWallet}
+            placeholders={[lstrings.string_tap_to_edit, isNextHidden ? '' : lstrings.string_tap_next_for_quote]}
             tokenId={fromTokenId}
             wallet={fromWallet}
           />
@@ -393,6 +392,7 @@ export const SwapCreateScene = (props: Props) => {
             onAmountChanged={handleToAmountChange}
             onNext={handleNext}
             onSelectWallet={handleToSelectWallet}
+            placeholders={[lstrings.string_tap_to_edit, isNextHidden ? '' : lstrings.string_tap_next_for_quote]}
             tokenId={toTokenId}
             wallet={toWallet}
             heading={lstrings.exchange_title_receiving}
@@ -400,7 +400,9 @@ export const SwapCreateScene = (props: Props) => {
         )}
       </EdgeAnim>
       <EdgeAnim enter={fadeInDown60}>{renderAlert()}</EdgeAnim>
-      <EdgeAnim enter={fadeInDown90}>{renderButton()}</EdgeAnim>
+      <EdgeAnim enter={fadeInDown90}>
+        {isNextHidden ? null : <ButtonsViewUi4 primary={{ label: lstrings.string_next_capitalized, onPress: handleNext }} parentType="scene" />}
+      </EdgeAnim>
     </SceneWrapper>
   )
 }
