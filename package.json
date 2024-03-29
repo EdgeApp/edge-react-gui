@@ -201,7 +201,6 @@
     "react-native-zcash": "^0.6.10",
     "react-redux": "^8.1.1",
     "redux": "^4.2.1",
-    "redux-flipper": "^2.0.1",
     "redux-thunk": "^2.3.0",
     "rn-id-blurview": "^1.2.1",
     "rn-qr-generator": "^1.3.1",
