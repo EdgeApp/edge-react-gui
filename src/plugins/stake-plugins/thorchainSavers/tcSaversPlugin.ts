@@ -888,7 +888,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
         {
           pluginId,
           tokenId,
-          nativeAmount
+          nativeAmount: totalUnstakeNativeAmount
         }
       ]
     },
@@ -949,7 +949,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
           {
             pluginId,
             tokenId,
-            nativeAmount
+            nativeAmount: totalUnstakeNativeAmount
           }
         ]
       }
@@ -969,7 +969,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
         allocationType: 'unstake',
         pluginId,
         currencyCode,
-        nativeAmount
+        nativeAmount: totalUnstakeNativeAmount
       },
       {
         allocationType: 'networkFee',
