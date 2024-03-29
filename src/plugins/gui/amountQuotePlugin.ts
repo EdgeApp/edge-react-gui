@@ -283,7 +283,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             // Try to get an error by requesting a massive quote
             const result = await getMaxQuoteOrError(1, MAX_QUOTE_VALUE)
             if (result == null) {
-              stateManager.update({ statusText: { content: 'Provider cannot create max buy quote', textType: 'error' } })
+              stateManager.update({ statusText: { content: lstrings.fiat_plugin_max_buy_quote_error, textType: 'error' } })
             } else if ('value1' in result) {
               // We got a max quote for both fiat and crypto fields, update the UI to show it
               stateManager.update(result)
@@ -295,14 +295,14 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             // Get the max amount of the wallet's currency
             const publicAddress = dummyAddressMap[currencyPluginId]
             if (publicAddress == null) {
-              stateManager.update({ statusText: { content: sprintf('Cannot create max sell quote for %s', currencyCode), textType: 'error' } })
+              stateManager.update({ statusText: { content: sprintf(lstrings.fiat_plugin_max_sell_quote_error_1s, currencyCode), textType: 'error' } })
             }
             const maxAmount = await coreWallet.getMaxSpendable({ tokenId, spendTargets: [{ publicAddress }] })
             const exchangeAmount = await coreWallet.nativeToDenomination(maxAmount, currencyCode)
 
             const result = await getMaxQuoteOrError(2, exchangeAmount)
             if (result == null) {
-              stateManager.update({ statusText: { content: 'Provider cannot create max sell quote', textType: 'error' } })
+              stateManager.update({ statusText: { content: lstrings.fiat_plugin_max_sell_quote_error, textType: 'error' } })
             } else if ('value1' in result) {
               // We got a max quote for both fiat and crypto fields, update the UI to show it
               stateManager.update(result)
