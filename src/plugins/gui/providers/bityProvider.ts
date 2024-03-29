@@ -1,5 +1,5 @@
 import { lt, toFixed } from 'biggystring'
-import { asArray, asEither, asMaybe, asNumber, asObject, asString, asValue } from 'cleaners'
+import { asArray, asEither, asMaybe, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeSpendInfo, EdgeTokenId } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
@@ -83,6 +83,41 @@ const asBityCurrency = asObject({
 const asBityCurrencyResponse = asObject({ currencies: asArray(asBityCurrency) })
 
 const asBityErrorResponse = asObject({ errors: asArray(asObject({ code: asString, message: asString })) })
+
+// const asCurrencyAmount = asObject({
+//   amount: asString,
+//   currency: asString
+// })
+
+// const asPriceBreakdown = asObject({
+//   customer_trading_fee: asCurrencyAmount,
+//   output_transaction_cost: asCurrencyAmount,
+//   'non-verified_fee': asCurrencyAmount
+// })
+
+// Main cleaner for the input object
+const asInputObject = asObject({
+  // object_information_optional: asOptional(asBoolean), // optional field
+  // type: asString,
+  amount: asString,
+  currency: asString,
+  minimum_amount: asOptional(asString)
+})
+
+// Main cleaner for the output object
+const asOutputObject = asObject({
+  // type: asString,
+  amount: asString,
+  currency: asString,
+  minimum_amount: asOptional(asString)
+})
+
+// Complete data cleaner
+const asBityQuote = asObject({
+  input: asInputObject,
+  output: asOutputObject
+  // price_breakdown: asPriceBreakdown
+})
 
 export type BityCurrency = ReturnType<typeof asBityCurrency>
 export type BityCurrencyTag = ReturnType<typeof asBityCurrencyTag>
@@ -381,11 +416,12 @@ export const bityProvider: FiatProviderFactory = {
             currency: outputCurrencyCode
           }
         }
-        const bityQuote = await fetchBityQuote(quoteRequest)
+        const raw = await fetchBityQuote(quoteRequest)
+        const bityQuote = asBityQuote(raw)
         console.log('Got Bity quote:\n', JSON.stringify(bityQuote, null, 2))
 
         const minimumAmount = isReverseQuote ? bityQuote.output.minimum_amount : bityQuote.input.minimum_amount
-        if (lt(amount, minimumAmount)) {
+        if (minimumAmount != null && lt(amount, minimumAmount)) {
           throw new FiatProviderError({
             // TODO: direction,
             providerId,
