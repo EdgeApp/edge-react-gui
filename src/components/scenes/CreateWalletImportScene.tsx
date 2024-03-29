@@ -170,6 +170,7 @@ const CreateWalletImportComponent = (props: Props) => {
           placeholder={lstrings.create_wallet_import_input_key_or_seed_prompt}
           autoCapitalize="none"
           autoCorrect={false}
+          autoComplete="off"
           onChangeText={setImportText}
           onSubmitEditing={handleNext}
           secureTextEntry={secureTextEntry}
