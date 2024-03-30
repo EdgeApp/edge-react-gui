@@ -360,7 +360,7 @@ export const SwapCreateScene = (props: Props) => {
             onAmountChanged={handleFromAmountChange}
             onNext={handleNext}
             onSelectWallet={handleFromSelectWallet}
-            placeholders={[lstrings.string_tap_to_edit, isNextHidden ? '' : lstrings.string_tap_next_for_quote]}
+            placeholders={[isNextHidden ? lstrings.string_tap_to_edit : fromCurrencyCode, isNextHidden ? '' : lstrings.string_tap_next_for_quote]}
             tokenId={fromTokenId}
             wallet={fromWallet}
           />
@@ -392,7 +392,7 @@ export const SwapCreateScene = (props: Props) => {
             onAmountChanged={handleToAmountChange}
             onNext={handleNext}
             onSelectWallet={handleToSelectWallet}
-            placeholders={[lstrings.string_tap_to_edit, isNextHidden ? '' : lstrings.string_tap_next_for_quote]}
+            placeholders={[isNextHidden ? lstrings.string_tap_to_edit : toCurrencyCode, isNextHidden ? '' : lstrings.string_tap_next_for_quote]}
             tokenId={toTokenId}
             wallet={toWallet}
             heading={lstrings.exchange_title_receiving}
