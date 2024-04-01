@@ -235,7 +235,7 @@
     "@types/lodash": "^4.14.149",
     "@types/node-fetch": "^2.6.2",
     "@types/prompts": "^2.0.14",
-    "@types/react": "^18.0.24",
+    "@types/react": "^18.2.6",
     "@types/react-native": "^0.71.1",
     "@types/react-native-custom-tabs": "^0.1.2",
     "@types/react-native-safari-view": "^2.0.5",
