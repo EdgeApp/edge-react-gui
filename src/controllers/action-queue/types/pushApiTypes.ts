@@ -106,7 +106,7 @@ export const wasLoginUpdatePayload = uncleaner(asLoginUpdatePayload)
 // ---------------------------------------------------------------------------
 
 const asPushServerResponse =
-  <T>(asT: Cleaner<T>): Cleaner<T> =>
+  <T extends object>(asT: Cleaner<T>): Cleaner<T> =>
   raw => {
     try {
       const res = asJSON(asEither(asT, asPushError))(raw)
