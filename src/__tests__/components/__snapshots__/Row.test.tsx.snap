@@ -416,6 +416,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
     >
       <Text
         allowFontScaling={false}
+        selectable={false}
         style={
           [
             {
@@ -547,6 +548,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
     >
       <Text
         allowFontScaling={false}
+        selectable={false}
         style={
           [
             {
@@ -678,6 +680,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
     >
       <Text
         allowFontScaling={false}
+        selectable={false}
         style={
           [
             {
@@ -809,6 +812,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
     >
       <Text
         allowFontScaling={false}
+        selectable={false}
         style={
           [
             {
@@ -940,6 +944,7 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
     >
       <Text
         allowFontScaling={false}
+        selectable={false}
         style={
           [
             {
@@ -1260,6 +1265,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
     >
       <Text
         allowFontScaling={false}
+        selectable={false}
         style={
           [
             {
@@ -1406,6 +1412,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
     >
       <Text
         allowFontScaling={false}
+        selectable={false}
         style={
           [
             {
@@ -1552,6 +1559,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
     >
       <Text
         allowFontScaling={false}
+        selectable={false}
         style={
           [
             {
@@ -1700,6 +1708,7 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
     >
       <Text
         allowFontScaling={false}
+        selectable={false}
         style={
           [
             {
@@ -2054,6 +2063,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
     >
       <Text
         allowFontScaling={false}
+        selectable={false}
         style={
           [
             {
@@ -2199,6 +2209,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
     >
       <Text
         allowFontScaling={false}
+        selectable={false}
         style={
           [
             {
@@ -2344,6 +2355,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
     >
       <Text
         allowFontScaling={false}
+        selectable={false}
         style={
           [
             {
@@ -2491,6 +2503,7 @@ exports[`RowUi4 should render a row with a right button 1`] = `
     >
       <Text
         allowFontScaling={false}
+        selectable={false}
         style={
           [
             {
@@ -2640,6 +2653,7 @@ exports[`RowUi4 triggers onPress/onLongPress event when clicked 1`] = `
   >
     <Text
       allowFontScaling={false}
+      selectable={false}
       style={
         [
           {

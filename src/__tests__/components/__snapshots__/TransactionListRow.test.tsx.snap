@@ -105,6 +105,7 @@ exports[`TransactionListRow should render with loading props 1`] = `
       >
         <Text
           allowFontScaling={false}
+          selectable={false}
           style={
             [
               {

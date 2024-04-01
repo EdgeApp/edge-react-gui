@@ -728,6 +728,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -923,6 +924,7 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {

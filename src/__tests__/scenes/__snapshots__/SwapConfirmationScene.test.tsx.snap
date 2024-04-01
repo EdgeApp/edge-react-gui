@@ -1441,6 +1441,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 </View>
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -1578,6 +1579,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -1729,6 +1731,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
