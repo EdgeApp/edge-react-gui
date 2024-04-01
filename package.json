@@ -60,22 +60,6 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint"
   },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "jsx",
-      "ts",
-      "tsx"
-    ],
-    "preset": "react-native",
-    "setupFiles": [
-      "./jestSetup.js"
-    ],
-    "transformIgnorePatterns": [
-      "<rootDir>/node_modules/(?!(@react-native|react-native|react-navigation))"
-    ]
-  },
   "dependencies": {
     "@bugsnag/react-native": "^7.22.3",
     "@bugsnag/react-native-performance": "^2.2.0",
