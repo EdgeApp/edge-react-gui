@@ -15026,13 +15026,6 @@ pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
-pkg-dir@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/pkg-dir/-/pkg-dir-5.0.0.tgz#a02d6aebe6ba133a928f74aec20bafdfe6b8e760"
-  integrity sha512-NPE8TDbzl/3YQYY7CSS228s3g2ollTFnc+Qi3tqmqJp9Vg2ovUpixcJEo2HJScN2Ez+kEaal6y70c0ehqJBJeA==
-  dependencies:
-    find-up "^5.0.0"
-
 pkg-types@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/pkg-types/-/pkg-types-1.0.3.tgz#988b42ab19254c01614d13f4f65a2cfc7880f868"
@@ -15714,13 +15707,10 @@ react-native-performance@^5.1.0:
   resolved "https://registry.yarnpkg.com/react-native-performance/-/react-native-performance-5.1.0.tgz#a78d0aea7ad22035f468fb4a3c934e5169a24a43"
   integrity sha512-rq/YBf0/GptSOM/Lj64/1yRq8uN2YE0psFB16wFbYBbTcIEp/0rrgN2HyS5lhvfBOFgKoDRWQ53jHSCb+QJ5eA==
 
-react-native-permissions@^3.8.3:
-  version "3.8.3"
-  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.8.3.tgz#4d75db347c834ce10927f5f0631ad6026d3eb4ad"
-  integrity sha512-KJtCM6JP2IBvcWpapBO0WEMzlwej7rT5N3fvcZI7eCGs7VOuiCRqmq77mfY+R3RAvbcXQZZorTyOqRESDuff5A==
-  dependencies:
-    picocolors "^1.0.0"
-    pkg-dir "^5.0.0"
+react-native-permissions@^4.1.5:
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-4.1.5.tgz#db4d1ddbf076570043f4fd4168f54bb6020aec92"
+  integrity sha512-r6VMRacASmtRHS+GZ+5HQCp9p9kiE+UU9magHOZCXZLTJitdTuVHWZRrb4v4oqZGU+zAp3mZhTQftuMMv+WLUg==
 
 react-native-piratechain@^0.4.7:
   version "0.4.7"
