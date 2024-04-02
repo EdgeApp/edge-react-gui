@@ -166,18 +166,6 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
-  - Permission-Camera (3.8.3):
-    - RNPermissions
-  - Permission-Contacts (3.8.3):
-    - RNPermissions
-  - Permission-LocationAccuracy (3.8.3):
-    - RNPermissions
-  - Permission-LocationAlways (3.8.3):
-    - RNPermissions
-  - Permission-LocationWhenInUse (3.8.3):
-    - RNPermissions
-  - Permission-Notifications (3.8.3):
-    - RNPermissions
   - PromisesObjC (2.1.0)
   - RCT-Folly (2021.07.22.00):
     - boost
@@ -600,7 +588,7 @@ PODS:
     - React-Core
   - RNLocalize (3.0.2):
     - React-Core
-  - RNPermissions (3.8.3):
+  - RNPermissions (4.1.5):
     - React-Core
   - RNQrGenerator (1.3.1):
     - React
@@ -834,12 +822,6 @@ DEPENDENCIES:
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - ImageColors (from `../node_modules/react-native-image-colors/ios`)
   - libevent (~> 2.1.12)
-  - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera`)
-  - Permission-Contacts (from `../node_modules/react-native-permissions/ios/Contacts`)
-  - Permission-LocationAccuracy (from `../node_modules/react-native-permissions/ios/LocationAccuracy`)
-  - Permission-LocationAlways (from `../node_modules/react-native-permissions/ios/LocationAlways`)
-  - Permission-LocationWhenInUse (from `../node_modules/react-native-permissions/ios/LocationWhenInUse`)
-  - Permission-Notifications (from `../node_modules/react-native-permissions/ios/Notifications`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -1008,18 +990,6 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
   ImageColors:
     :path: "../node_modules/react-native-image-colors/ios"
-  Permission-Camera:
-    :path: "../node_modules/react-native-permissions/ios/Camera"
-  Permission-Contacts:
-    :path: "../node_modules/react-native-permissions/ios/Contacts"
-  Permission-LocationAccuracy:
-    :path: "../node_modules/react-native-permissions/ios/LocationAccuracy"
-  Permission-LocationAlways:
-    :path: "../node_modules/react-native-permissions/ios/LocationAlways"
-  Permission-LocationWhenInUse:
-    :path: "../node_modules/react-native-permissions/ios/LocationWhenInUse"
-  Permission-Notifications:
-    :path: "../node_modules/react-native-permissions/ios/Notifications"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -1213,12 +1183,6 @@ SPEC CHECKSUMS:
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
   MnemonicSwift: 40ba76b951b75b32e2719df989b4d6da5798fe26
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
-  Permission-Camera: 9c8b1a826770a6feea747cc8a4a89d2b39df4273
-  Permission-Contacts: 974dc1ee648bbf36590b5079e749fd3939fa5f55
-  Permission-LocationAccuracy: 618c22002e96dd8d3759d6c2380fa950951292e1
-  Permission-LocationAlways: 6b001084436e802fb1a3ec725ad81e935ee3a6aa
-  Permission-LocationWhenInUse: a7243a69be958b5422bc0deea8bae0c937ca79f6
-  Permission-Notifications: 05a9c72e2ae989d28eb1eecf3d6a12daba73d375
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: 4ce9da4fa2f8a134f62c70e4ab9d971b9d640f41
@@ -1279,7 +1243,7 @@ SPEC CHECKSUMS:
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 6e46dde1f87e5f018a54fe5d40cd0e0b942b49ee
   RNLocalize: dbea38dcb344bf80ff18a1757b1becf11f70cae4
-  RNPermissions: d9db16f082ce2e09908e58c925189e2637d2786b
+  RNPermissions: 5829ce9a821b8bcab921dae16a7d1a3dc4c95a03
   RNQrGenerator: 90461ba3ca88c1d38ef73da50fade35d9648215d
   RNReactNativeHapticFeedback: 1e3efeca9628ff9876ee7cdd9edec1b336913f8c
   RNReanimated: be07c7ae209074d0e8a84cf38b7909457ac59a32
@@ -1311,6 +1275,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 3ab6c56b67ce824c521c91447dc54aa6bda28115
+PODFILE CHECKSUM: 647c2b9a848dbb3c54631cd239950868e2ee9d84
 
 COCOAPODS: 1.15.2
