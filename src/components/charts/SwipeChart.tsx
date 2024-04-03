@@ -248,7 +248,8 @@ const SwipeChartComponent = (params: Props) => {
 
   React.useEffect(() => {
     if (chartData.length > 0) {
-      rCachedWidths.current = {}
+      rPriceCursorWidth.current = 0
+      rXTooltipWidth.current = 0
       sMinPriceString.value = `${fiatSymbol}${formatFiatString({ fiatAmount: minPrice.toString(), autoPrecision: true })}`
       sMaxPriceString.value = `${fiatSymbol}${formatFiatString({ fiatAmount: maxPrice.toString(), autoPrecision: true })}`
     }
@@ -263,8 +264,9 @@ const SwipeChartComponent = (params: Props) => {
 
   const rIsShowCursor = React.useRef<boolean>(false)
   const rXTooltipView = React.useRef<View>(null)
+  const rXTooltipWidth = React.useRef<number>(0)
   const rPriceCursorView = React.useRef<View>(null)
-  const rCachedWidths = React.useRef<{ [target: number]: number }>({})
+  const rPriceCursorWidth = React.useRef<number>(0)
 
   const rMinPriceView = React.useRef<Animated.View>(null)
   const rMaxPriceView = React.useRef<Animated.View>(null)
@@ -400,24 +402,6 @@ const SwipeChartComponent = (params: Props) => {
   })
 
   /**
-   * Natively center align a component across the Y axis origin
-   */
-  const nativeCenterAlignLayout = (ref: React.RefObject<View | Animated.View | undefined>, offset?: number) => (layoutChangeEvent: LayoutChangeEvent) => {
-    if (layoutChangeEvent != null && layoutChangeEvent.nativeEvent != null) {
-      const target = layoutChangeEvent.target
-
-      // Store measurements and avoid over-updating if the size of the component
-      // doesn't change significantly
-      const currentWidth = rCachedWidths.current[target]
-      const newWidth = layoutChangeEvent.nativeEvent.layout.width
-      if (currentWidth == null || Math.abs(currentWidth - newWidth) > 1) {
-        rCachedWidths.current[target] = newWidth
-        if (ref.current != null) ref.current.setNativeProps({ left: -newWidth / 2 + (offset ?? 0) })
-      }
-    }
-  }
-
-  /**
    * Set the X axis position of the min/max labels. Left or right justify the
    * label according to its horizontal position on the chart
    */
@@ -432,8 +416,8 @@ const SwipeChartComponent = (params: Props) => {
     }
   }
 
-  const handleAlignCursorLayout = useHandler(nativeCenterAlignLayout(rPriceCursorView, PULSE_CURSOR_RADIUS * 2))
-  const handleAlignXTooltipLayout = useHandler(nativeCenterAlignLayout(rXTooltipView))
+  const handleAlignCursorLayout = useHandler(nativeCenterAlignLayout(rPriceCursorWidth, rPriceCursorView, PULSE_CURSOR_RADIUS * 2))
+  const handleAlignXTooltipLayout = useHandler(nativeCenterAlignLayout(rXTooltipWidth, rXTooltipView))
 
   const handleAlignMinPriceLabelLayout = useHandler(setMinMaxLabelsX(sMinPriceLabelX, minPriceDataPoint))
   const handleAlignMaxPriceLabelLayout = useHandler(setMinMaxLabelsX(sMaxPriceLabelX, maxPriceDataPoint))
@@ -668,5 +652,22 @@ const getStyles = cacheStyles((theme: Theme) => {
     }
   }
 })
+
+/**
+ * Natively center align a component across the Y axis origin
+ */
+const nativeCenterAlignLayout =
+  (widthRef: React.MutableRefObject<number>, ref: React.RefObject<View | Animated.View | undefined>, offset?: number) =>
+  (layoutChangeEvent: LayoutChangeEvent) => {
+    if (layoutChangeEvent != null && layoutChangeEvent.nativeEvent != null) {
+      // Store measurements and avoid over-updating if the size of the component
+      // doesn't change significantly
+      const newWidth = layoutChangeEvent.nativeEvent.layout.width
+      if (Math.abs(widthRef.current - newWidth) > 1) {
+        widthRef.current = newWidth
+        if (ref.current != null) ref.current.setNativeProps({ left: -newWidth / 2 + (offset ?? 0) })
+      }
+    }
+  }
 
 export const SwipeChart = React.memo(SwipeChartComponent)
