@@ -152,7 +152,7 @@
     "react-native-store-review": "^0.4.1",
     "react-native-svg": "^13.9.0",
     "react-native-vector-icons": "^9.2.0",
-    "react-native-webview": "^13.2.2",
+    "react-native-webview": "^13.8.4",
     "react-native-zcash": "^0.6.10",
     "react-redux": "^8.1.1",
     "redux": "^4.2.1",
