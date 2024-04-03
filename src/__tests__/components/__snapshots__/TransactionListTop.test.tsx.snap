@@ -124,6 +124,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         >
           <Text
             allowFontScaling={false}
+            selectable={false}
             style={
               [
                 {
@@ -187,6 +188,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         <Text
           accessibilityHint="Wallet settings"
           allowFontScaling={false}
+          selectable={false}
           style={
             [
               {
@@ -276,6 +278,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         </Text>
         <Text
           allowFontScaling={false}
+          selectable={false}
           style={
             [
               {
@@ -404,6 +407,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         >
           <Text
             allowFontScaling={false}
+            selectable={false}
             style={
               [
                 {
@@ -512,6 +516,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         >
           <Text
             allowFontScaling={false}
+            selectable={false}
             style={
               [
                 {
@@ -631,6 +636,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         >
           <Text
             allowFontScaling={false}
+            selectable={false}
             style={
               [
                 {
@@ -975,6 +981,7 @@ exports[`TransactionListTop should render 1`] = `
         >
           <Text
             allowFontScaling={false}
+            selectable={false}
             style={
               [
                 {
@@ -1038,6 +1045,7 @@ exports[`TransactionListTop should render 1`] = `
         <Text
           accessibilityHint="Wallet settings"
           allowFontScaling={false}
+          selectable={false}
           style={
             [
               {
@@ -1127,6 +1135,7 @@ exports[`TransactionListTop should render 1`] = `
         </Text>
         <Text
           allowFontScaling={false}
+          selectable={false}
           style={
             [
               {
@@ -1255,6 +1264,7 @@ exports[`TransactionListTop should render 1`] = `
         >
           <Text
             allowFontScaling={false}
+            selectable={false}
             style={
               [
                 {
@@ -1363,6 +1373,7 @@ exports[`TransactionListTop should render 1`] = `
         >
           <Text
             allowFontScaling={false}
+            selectable={false}
             style={
               [
                 {
@@ -1482,6 +1493,7 @@ exports[`TransactionListTop should render 1`] = `
         >
           <Text
             allowFontScaling={false}
+            selectable={false}
             style={
               [
                 {

@@ -425,6 +425,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
             <Text
               adjustsFontSizeToFit={true}
               allowFontScaling={false}
+              selectable={false}
               style={
                 [
                   {
