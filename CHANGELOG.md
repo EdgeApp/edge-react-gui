@@ -4,6 +4,7 @@
 
 - added: More descriptive 504 transaction failure error message
 - added: New `Text`-based components
+- added: Light account backup modal text experiments
 - changed: Replace `ModalMessage` with `Paragraph`
 - changed: Allow light accounts to buy up to $50 worth of crypto at a time
 
