@@ -6,42 +6,7 @@ import { Action } from '../../types/reduxTypes'
 export interface WalletsState {
   selectedWalletId: string
   selectedCurrencyCode: string
-  walletLoadingProgress: { [walletId: string]: number }
   fioWallets: EdgeCurrencyWallet[]
-}
-
-const walletLoadingProgress = (state = {}, action: Action): WalletsState['walletLoadingProgress'] => {
-  switch (action.type) {
-    case 'INSERT_WALLET_IDS_FOR_PROGRESS': {
-      const activeWalletIdList = action.data.activeWalletIds
-      const activeWalletIdProgress = {}
-      activeWalletIdList.forEach(item => {
-        // @ts-expect-error
-        activeWalletIdProgress[item] = 0
-      })
-      return activeWalletIdProgress
-    }
-
-    case 'UPDATE_WALLET_LOADING_PROGRESS': {
-      // prevent backwards progress
-      // @ts-expect-error
-      if (action.data.addressLoadingProgress < state[action.data.walletId]) return state
-      return {
-        ...state,
-        [action.data.walletId]: action.data.addressLoadingProgress
-      }
-    }
-
-    case 'RESET_WALLET_LOADING_PROGRESS': {
-      return {
-        ...state,
-        [action.data.walletId]: 0.05
-      }
-    }
-
-    default:
-      return state
-  }
 }
 
 const selectedWalletId = (state = '', action: Action): string => {
@@ -93,6 +58,5 @@ const fioWallets: Reducer<WalletsState['fioWallets'], Action> = (state = [], act
 export const wallets = combineReducers<WalletsState, Action>({
   selectedWalletId,
   selectedCurrencyCode,
-  walletLoadingProgress,
   fioWallets
 })

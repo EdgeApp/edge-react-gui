@@ -7,6 +7,7 @@
 - added: Light account backup modal text experiments
 - added: "Parent Wallet" section when changing wallet from Transaction List while viewing a token
 - changed: Replace `ModalMessage` with `Paragraph`
+- changed: Improved wallet sync indicator bar on top of screen
 - changed: Allow light accounts to buy up to $50 worth of crypto at a time
 - removed: USPs a/b/c/d test experiment - always uses default USPs
 
