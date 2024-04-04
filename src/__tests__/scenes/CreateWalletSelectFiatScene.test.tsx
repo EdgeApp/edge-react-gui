@@ -57,6 +57,7 @@ describe('CreateWalletSelectFiatComponent', () => {
           {...fakeSceneProps('createWalletSelectFiat', {
             createWalletList: [
               {
+                type: 'create',
                 key: 'create-wallet:bitcoin-bip44-bitcoin',
                 currencyCode: 'BTC',
                 displayName: 'Bitcoin (no Segwit)',
@@ -65,6 +66,7 @@ describe('CreateWalletSelectFiatComponent', () => {
                 walletType: 'wallet:bitcoin-bip44'
               },
               {
+                type: 'create',
                 key: 'create-wallet:ethereum-ethereum',
                 currencyCode: 'ETH',
                 displayName: 'Ethereum',
@@ -73,6 +75,7 @@ describe('CreateWalletSelectFiatComponent', () => {
                 walletType: 'wallet:ethereum'
               },
               {
+                type: 'create',
                 key: 'create-ethereum-9992ec3cf6a55b00978cddf2b27bc6882d88d1ec',
                 currencyCode: 'POLY',
                 displayName: 'Polymath Network',

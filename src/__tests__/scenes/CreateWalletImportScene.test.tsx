@@ -36,6 +36,7 @@ describe('CreateWalletImportScene', () => {
           {...fakeSceneProps('createWalletImport', {
             createWalletList: [
               {
+                type: 'create',
                 key: `create-wallet:bitcoin-bip49-bitcoin`,
                 currencyCode: 'BTC',
                 displayName: 'Bitcoin',

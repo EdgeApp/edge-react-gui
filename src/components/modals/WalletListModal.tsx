@@ -274,19 +274,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 // Given a list of assets, shows a modal for a user to pick a wallet for that asset.
 // If only one wallet exists for that asset, auto pick that wallet
-export const pickWallet = async ({
-  account,
-  assets = [],
-  headerTitle = lstrings.select_wallet,
-  navigation,
-  showCreateWallet
-}: {
+export const pickWallet = async (args: {
   account: EdgeAccount
   assets?: EdgeAsset[]
   headerTitle?: string
   navigation: NavigationBase
   showCreateWallet?: boolean
 }): Promise<WalletListResult> => {
+  const { account, assets = [], headerTitle = lstrings.select_wallet, navigation, showCreateWallet } = args
   const { currencyWallets } = account
 
   const matchingWallets: Array<{ walletId: string; tokenId: EdgeTokenId }> = []
