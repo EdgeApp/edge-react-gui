@@ -1,89 +1,19 @@
-import * as React from 'react'
+import React from 'react'
 import { Animated, Easing, View } from 'react-native'
 
-import { connect } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-
-interface StateProps {
-  progress: number
-}
-
-interface State {
-  isWalletProgressVisible: boolean
-}
-
-type Props = StateProps & ThemeProps
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 const SHOW_UNSYNCED = false
 const SHOW_UNSYNCED_RATIO = 0.9
 
-export class ProgressBarComponent extends React.PureComponent<Props, State> {
-  animation: Animated.Value
-
-  constructor(props: Props) {
-    super(props)
-    this.animation = new Animated.Value(props.progress)
-    this.state = {
-      isWalletProgressVisible: props.progress !== 100
-    }
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.progress !== this.props.progress) {
-      Animated.timing(this.animation, {
-        duration: 1500,
-        easing: Easing.ease,
-        toValue: this.props.progress,
-        useNativeDriver: false
-      }).start()
-    }
-  }
-
-  render() {
-    const style = getStyles(this.props.theme)
-    const widthInterpolated = this.animation.interpolate({
-      inputRange: [0, 100],
-      outputRange: ['10%', '100%'],
-      extrapolate: 'clamp'
-    })
-    if (this.props.progress === 100) {
-      setTimeout(() => {
-        this.setState({
-          isWalletProgressVisible: false
-        })
-      }, 2000)
-    }
-    if (!this.state.isWalletProgressVisible) return null
-    return (
-      <View style={style.container}>
-        <Animated.View style={[style.bar, { width: widthInterpolated }]} />
-      </View>
-    )
-  }
-}
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    zIndex: 100,
-    flexDirection: 'row'
-  },
-  bar: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    right: 0,
-    height: 3,
-    backgroundColor: theme.walletProgressIconFill
-  }
-}))
-
-export const WiredProgressBar = connect<StateProps, {}, {}>(
-  state => {
+export const WiredProgressBar = () => {
+  const progress = useSelector(state => {
     const { userPausedWalletsSet } = state.ui.settings
     const walletsForProgress = state.ui.wallets.walletLoadingProgress
     const walletIds = Object.keys(walletsForProgress)
-    if (walletIds.length === 0) return { progress: 0 }
+    if (walletIds.length === 0) return 0
 
     let sum = 0
     let numPausedWallets = 0
@@ -94,7 +24,7 @@ export const WiredProgressBar = connect<StateProps, {}, {}>(
     }> = []
     for (const walletId of walletIds) {
       const wallet = state.core.account.currencyWallets[walletId]
-      if (wallet == null) return { progress: 0 }
+      if (wallet == null) return 0
 
       const paused = userPausedWalletsSet?.has(walletId)
       const keysOnly = isKeysOnlyPlugin(wallet.currencyInfo.pluginId)
@@ -125,7 +55,56 @@ export const WiredProgressBar = connect<StateProps, {}, {}>(
         console.log(`UNSYNCED: ${plugin} ${name} ${id.slice(0, 5)}`)
       }
     }
-    return { progress: ratio * 100 }
+    return ratio * 100
+  })
+
+  const [isWalletProgressVisible, setIsWalletProgressVisible] = React.useState(progress !== 100)
+  const animation = React.useRef(new Animated.Value(progress)).current
+
+  const theme = useTheme()
+  const style = getStyles(theme)
+
+  const widthInterpolated = animation.interpolate({
+    inputRange: [0, 100],
+    outputRange: ['10%', '100%'],
+    extrapolate: 'clamp'
+  })
+
+  React.useEffect(() => {
+    if (progress === 100) {
+      setTimeout(() => {
+        setIsWalletProgressVisible(false)
+      }, 2000)
+    } else {
+      Animated.timing(animation, {
+        duration: 1500,
+        easing: Easing.ease,
+        toValue: progress,
+        useNativeDriver: false
+      }).start()
+    }
+  }, [animation, progress])
+
+  if (!isWalletProgressVisible) return null
+
+  return (
+    <View style={style.container}>
+      <Animated.View style={[style.bar, { width: widthInterpolated }]} />
+    </View>
+  )
+}
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    zIndex: 100,
+    flexDirection: 'row'
   },
-  dispatch => ({})
-)(withTheme(ProgressBarComponent))
+  bar: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    right: 0,
+    height: 3,
+    backgroundColor: theme.walletProgressIconFill
+  }
+}))
