@@ -7,16 +7,8 @@ import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
 describe('ProgressBar', () => {
   const mockState: FakeState = {
-    ui: {
-      wallets: {
-        walletLoadingProgress: {
-          x: 0.5
-        }
-      }
-    },
     core: {
       account: {
-        activeWalletIds: ['x', 'y'],
         currencyWallets: {
           x: {
             watch: () => () => {},
