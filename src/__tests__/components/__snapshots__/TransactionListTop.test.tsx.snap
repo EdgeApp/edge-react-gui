@@ -80,13 +80,12 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           {
             "alignItems": "center",
             "backgroundColor": "rgba(255, 255, 255, .1)",
-            "borderRadius": 28,
-            "flexDirection": "row",
+            "borderRadius": 100,
             "flexShrink": 1,
-            "height": 56,
             "marginRight": 11,
             "opacity": 1,
             "paddingHorizontal": 17,
+            "paddingVertical": 6,
           }
         }
       >
@@ -105,9 +104,8 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               },
               {
                 "flexShrink": 1,
-                "fontSize": 28,
-                "marginLeft": 11,
-                "marginRight": 6,
+                "fontSize": 17,
+                "lineHeight": 34,
               },
               null,
             ]
@@ -115,35 +113,6 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         >
           wallet name
         </Text>
-        <View
-          style={
-            {
-              "paddingTop": 6,
-            }
-          }
-        >
-          <Text
-            allowFontScaling={false}
-            selectable={false}
-            style={
-              [
-                {
-                  "color": "#00f1a2",
-                  "fontSize": 34,
-                },
-                undefined,
-                {
-                  "fontFamily": "Ionicons",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                {},
-              ]
-            }
-          >
-            
-          </Text>
-        </View>
       </View>
       <View
         accessibilityState={
@@ -193,7 +162,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontSize": 28,
+                "fontSize": 22,
               },
               undefined,
               {
@@ -937,13 +906,12 @@ exports[`TransactionListTop should render 1`] = `
           {
             "alignItems": "center",
             "backgroundColor": "rgba(255, 255, 255, .1)",
-            "borderRadius": 28,
-            "flexDirection": "row",
+            "borderRadius": 100,
             "flexShrink": 1,
-            "height": 56,
             "marginRight": 11,
             "opacity": 1,
             "paddingHorizontal": 17,
+            "paddingVertical": 6,
           }
         }
       >
@@ -962,9 +930,8 @@ exports[`TransactionListTop should render 1`] = `
               },
               {
                 "flexShrink": 1,
-                "fontSize": 28,
-                "marginLeft": 11,
-                "marginRight": 6,
+                "fontSize": 17,
+                "lineHeight": 34,
               },
               null,
             ]
@@ -972,35 +939,6 @@ exports[`TransactionListTop should render 1`] = `
         >
           wallet name
         </Text>
-        <View
-          style={
-            {
-              "paddingTop": 6,
-            }
-          }
-        >
-          <Text
-            allowFontScaling={false}
-            selectable={false}
-            style={
-              [
-                {
-                  "color": "#00f1a2",
-                  "fontSize": 34,
-                },
-                undefined,
-                {
-                  "fontFamily": "Ionicons",
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                },
-                {},
-              ]
-            }
-          >
-            
-          </Text>
-        </View>
       </View>
       <View
         accessibilityState={
@@ -1050,7 +988,7 @@ exports[`TransactionListTop should render 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontSize": 28,
+                "fontSize": 22,
               },
               undefined,
               {
