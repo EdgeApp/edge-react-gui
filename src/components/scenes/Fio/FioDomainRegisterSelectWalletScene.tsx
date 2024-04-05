@@ -257,8 +257,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.secondaryText
   },
   container: {
-    marginHorizontal: theme.rem(0.5),
-    paddingBottom: theme.rem(30)
+    marginHorizontal: theme.rem(0.5)
   },
   iconIon: {
     alignSelf: 'center',
