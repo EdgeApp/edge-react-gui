@@ -4,7 +4,6 @@ import { ViewStyle } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
 import { selectWalletToken } from '../../actions/WalletActions'
-import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { filterWalletCreateItemListBySearchText, getCreateWalletList, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -126,7 +125,7 @@ export function WalletList(props: Props) {
         return currencyCode.toLowerCase() === item.currencyCode.toLowerCase()
       })
 
-      if (row != null) out.push(row)
+      if (row != null) out.push({ ...row, key: `recent-${row.key}` })
       if (out.length >= maxLength) break
     }
 
@@ -168,22 +167,25 @@ export function WalletList(props: Props) {
 
   // rendering -------------------------------------------------------------
 
-  const renderRow = useHandler((item: FlatListItem<any>) => {
-    if (typeof item.item === 'string') return <WalletListSectionHeader title={item.item} />
+  const renderRow = React.useCallback(
+    (item: FlatListItem<any>) => {
+      if (typeof item.item === 'string') return <WalletListSectionHeader title={item.item} />
 
-    if (item.item.walletId == null) {
-      const createItem: WalletCreateItem = item.item
-      return <WalletListCreateRow createItem={createItem} createWalletId={createWalletId} onPress={handlePress} />
-    }
+      if (item.item.walletId == null) {
+        const createItem: WalletCreateItem = item.item
+        return <WalletListCreateRow createItem={createItem} createWalletId={createWalletId} onPress={handlePress} />
+      }
 
-    const walletItem: WalletListItem = item.item
-    const { token, tokenId, wallet } = walletItem
+      const walletItem: WalletListItem = item.item
+      const { token, tokenId, wallet } = walletItem
 
-    if (wallet == null) {
-      return <WalletListLoadingRow />
-    }
-    return <WalletListCurrencyRow token={token} tokenId={tokenId} wallet={wallet} onPress={handlePress} />
-  })
+      if (wallet == null) {
+        return <WalletListLoadingRow />
+      }
+      return <WalletListCurrencyRow token={token} tokenId={tokenId} wallet={wallet} onPress={handlePress} />
+    },
+    [createWalletId, handlePress]
+  )
 
   const scrollPadding = React.useMemo<ViewStyle>(() => {
     return { paddingBottom: theme.rem(ModalFooter.bottomRem) }
@@ -195,7 +197,13 @@ export function WalletList(props: Props) {
       data={walletList}
       keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="handled"
+      keyExtractor={keyExtractor}
       renderItem={renderRow}
     />
   )
+}
+
+const keyExtractor = (item: WalletListItem | WalletCreateItem | string): string => {
+  if (typeof item === 'string') return item
+  return item.key
 }
