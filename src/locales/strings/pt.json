@@ -326,6 +326,7 @@
   "sent": "Sent",
   "transaction_failure": "Falha na Transação",
   "transaction_failure_message": "%s.",
+  "transaction_failure_504_message": "504 Server Timeout - Retry Transaction",
   "transaction_success": "Transação bem sucedida",
   "transaction_success_message": "A sua transação foi enviada com sucesso.",
   "incorrect_pin": "PIN Incorreto",
