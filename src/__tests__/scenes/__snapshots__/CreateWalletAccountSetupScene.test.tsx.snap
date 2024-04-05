@@ -310,22 +310,22 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         </View>
       </View>
       <Text
+        adjustsFontSizeToFit={false}
+        numberOfLines={0}
         style={
           [
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
               "fontSize": 22,
-              "margin": 11,
-              "textAlign": "left",
+              "includeFontPadding": false,
             },
             {
-              "paddingBottom": 0,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 0,
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
             },
-            null,
             null,
           ]
         }
@@ -333,22 +333,22 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         Create a unique account handle, this will also be the name of your BTC wallet:
       </Text>
       <Text
+        adjustsFontSizeToFit={false}
+        numberOfLines={0}
         style={
           [
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Regular",
               "fontSize": 22,
-              "margin": 11,
-              "textAlign": "left",
+              "includeFontPadding": false,
             },
             {
-              "paddingBottom": 0,
-              "paddingLeft": 0,
-              "paddingRight": 0,
-              "paddingTop": 0,
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
             },
-            null,
             null,
           ]
         }

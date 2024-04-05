@@ -35,9 +35,16 @@ const palette = {
 
   darkMint: '#089e73',
   edgeMint: '#00f1a2',
+
   gray: '#888888',
-  darkGrey: '#494949',
-  lightGray: '#D9E3ED',
+  darkGray: '#494949',
+  darkGrayOp30: 'hsla(0, 0%, 53%, 0.3)',
+  lightGray: '#e2e2e2',
+
+  blueGray: '#D9E3ED',
+  blueGrayOp75: 'rgba(217, 227, 237, .75)',
+  blueGrayOp80: 'rgba(135, 147, 158, .8)',
+
   accentGreen: '#77C513',
   accentRed: '#E85466',
   accentBlue: '#0073D9',
@@ -49,17 +56,13 @@ const palette = {
   blackOp50: 'rgba(0, 0, 0, .5)',
   blackOp70: 'rgba(0, 0, 0, .7)',
 
-  darkGreyOp30: 'hsla(0, 0%, 53%, 0.3)',
-
   whiteOp05: 'rgba(255, 255, 255, .05)',
   whiteOp10: 'rgba(255, 255, 255, .1)',
   whiteOp37: 'rgba(255, 255, 255, .37)',
   whiteOp50: 'rgba(255, 255, 255, .5)',
   whiteOp75: 'rgba(255, 255, 255, .75)',
 
-  grayOp80: 'rgba(135, 147, 158, .8)',
   accentOrangeOp30: 'rgba(241, 170, 25, .3)',
-  lightGrayOp75: 'rgba(217, 227, 237, .75)',
   transparent: 'rgba(255, 255, 255, 0)',
 
   // Fonts
@@ -74,7 +77,7 @@ const palette = {
   skyBlue: '#3dd9f4',
   blackOp65: 'rgba(0, 0, 0, .65)',
   redOp60: 'rgba(232, 84, 102, .6)',
-  grayOp70: 'rgba(135, 147, 158, .7)',
+  blueGrayOp70: 'rgba(135, 147, 158, .7)',
   greenOp60: 'rgba(119, 197, 19, .6)',
   lightGreen: '#75C649',
   lightRed: '#E84D65',
@@ -180,7 +183,7 @@ export const edgeDark: Theme = {
   modalBorderRadiusRem: 1,
   modalBackground: palette.whiteOp37,
   modalSceneOverlayColor: palette.black,
-  modalDragbarColor: palette.darkGreyOp30,
+  modalDragbarColor: palette.darkGrayOp30,
 
   modalLikeBackground: '#333232',
 
@@ -204,7 +207,7 @@ export const edgeDark: Theme = {
   secondaryText: palette.skyBlue,
   warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
-  negativeText: palette.lightGray,
+  negativeText: palette.blueGray,
   negativeDeltaText: palette.accentRed,
   dangerText: palette.accentRed,
   textLink: palette.edgeMint,
@@ -330,7 +333,7 @@ export const edgeDark: Theme = {
   toggleButtonOff: palette.gray,
 
   // Confirmation slider
-  confirmationSlider: palette.darkGrey,
+  confirmationSlider: palette.darkGray,
   confirmationSliderCompleted: palette.darkGreen,
   confirmationSliderText: palette.white,
   confirmationSliderArrow: palette.backgroundBlack,
@@ -511,8 +514,8 @@ export const edgeDark: Theme = {
 
   txDirBgReceive: palette.greenOp60,
   txDirBgSend: palette.redOp60,
-  txDirBgSwap: palette.grayOp70,
+  txDirBgSwap: palette.blueGrayOp70,
   txDirFgReceive: palette.lightGreen,
   txDirFgSend: palette.lightRed,
-  txDirFgSwap: palette.lightGray
+  txDirFgSwap: palette.blueGray
 }

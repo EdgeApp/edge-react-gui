@@ -37,17 +37,6 @@ export function ModalTitle(props: ModalTitleProps) {
   )
 }
 
-export function ModalMessage(props: { children: React.ReactNode; paddingRem?: number[] | number; isWarning?: boolean }) {
-  const { children, isWarning, paddingRem } = props
-  const theme = useTheme()
-  const styles = getStyles(theme)
-  const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
-  const warningStyle = isWarning ? styles.warningText : null
-  const androidAdjust = Platform.OS === 'android' ? styles.androidAdjust : null
-
-  return <Text style={[styles.messageText, padding, warningStyle, androidAdjust]}>{children}</Text>
-}
-
 /**
  * Renders a close button
  */
@@ -129,16 +118,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   titleCenter: {
     textAlign: 'center',
     flexGrow: 1
-  },
-  warningText: {
-    color: theme.warningText
-  },
-  messageText: {
-    color: theme.primaryText,
-    fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(1),
-    margin: theme.rem(0.5),
-    textAlign: 'left'
   },
   footerFadeContainer: {
     position: 'absolute',

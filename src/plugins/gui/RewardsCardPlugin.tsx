@@ -114,7 +114,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
     const answer = await showUi.buttonModal({
       buttons: {
         delete: { label: lstrings.string_delete, type: 'secondary' },
-        keep: { label: lstrings.string_keep, type: 'escape' }
+        keep: { label: lstrings.string_keep, type: 'tertiary' }
       },
       title: lstrings.delete_card_confirmation_title,
       message: lstrings.rewards_card_delete_modal_message,
@@ -260,7 +260,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
                 },
                 no: {
                   label: lstrings.string_decline,
-                  type: 'escape'
+                  type: 'tertiary'
                 }
               }
             })

@@ -9,8 +9,8 @@ import { lstrings } from '../../locales/strings'
 import { Permission, permissionNames } from '../../reducers/PermissionsReducer'
 import { showError } from '../services/AirshipInstance'
 import { checkIfDenied } from '../services/PermissionsManager'
+import { Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage } from '../themed/ModalParts'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 export function PermissionsSettingModal(props: {
@@ -46,7 +46,7 @@ export function PermissionsSettingModal(props: {
 
   return (
     <ModalUi4 bridge={bridge} onCancel={handleClose}>
-      <ModalMessage>{message}</ModalMessage>
+      <Paragraph>{message}</Paragraph>
       <MainButton label={lstrings.string_ok_cap} marginRem={1} type="primary" onPress={handlePress} />
     </ModalUi4>
   )
