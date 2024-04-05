@@ -33,6 +33,7 @@ interface Props {
   searchText: string
   showCreateWallet?: boolean
   createWalletId?: string
+  parentWalletId?: string
 
   // Callbacks:
   onPress?: (walletId: string, tokenId: EdgeTokenId) => void
@@ -58,6 +59,7 @@ export function WalletList(props: Props) {
     searchText,
     showCreateWallet,
     createWalletId,
+    parentWalletId,
 
     // Callbacks:
     onPress
@@ -103,6 +105,21 @@ export function WalletList(props: Props) {
       return checkAssetFilter({ pluginId, tokenId }, allowedAssets, excludeAssets)
     })
   }, [allowedAssets, allowedWalletIds, excludeAssets, excludeWalletIds, sortedWalletList])
+
+  const parentWalletSection: Array<WalletListItem | string> = React.useMemo(() => {
+    const out: Array<WalletListItem | string> = []
+    if (parentWalletId != null) {
+      // Always show a "Parent Wallet" header:
+      out.push(lstrings.wallet_list_modal_header_parent)
+
+      // The parent wallet should always be available from sortedWalletList:
+      const parentWalletListItem = sortedWalletList.find(
+        walletListItem => walletListItem.type === 'asset' && walletListItem.wallet?.id === parentWalletId && walletListItem.tokenId == null
+      )
+      if (parentWalletListItem != null) out.push(parentWalletListItem)
+    }
+    return out
+  }, [parentWalletId, sortedWalletList])
 
   // Extract recent wallets:
   const recentWalletList = React.useMemo(() => {
@@ -157,13 +174,15 @@ export function WalletList(props: Props) {
     }
 
     return [
+      // Parent section and wallet, if defined
+      ...parentWalletSection,
       // Show a sectioned list with sectioned recent/all wallets:
       lstrings.wallet_list_modal_header_mru,
       ...recentWalletList,
       lstrings.wallet_list_modal_header_all,
       ...walletList
     ]
-  }, [createWalletList, filteredWalletList, recentWalletList, searchText, showCreateWallet])
+  }, [createWalletList, filteredWalletList, parentWalletSection, recentWalletList, searchText, showCreateWallet])
 
   // rendering -------------------------------------------------------------
 
