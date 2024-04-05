@@ -43,6 +43,7 @@ const allowedCountryCodes: { readonly [code: string]: boolean } = {
   DE: true,
   GR: true,
   HU: true,
+  IE: true, // Ireland
   IT: true,
   LV: true,
   LT: true,
