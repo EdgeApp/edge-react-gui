@@ -392,6 +392,7 @@ const strings = {
   sent: 'Sent',
   transaction_failure: 'Transaction Failure',
   transaction_failure_message: '%s.',
+  transaction_failure_504_message: '504 Server Timeout - Retry Transaction',
   transaction_success: 'Transaction Success',
   transaction_success_message: 'Your transaction has been successfully sent.',
   incorrect_pin: 'Incorrect PIN',
