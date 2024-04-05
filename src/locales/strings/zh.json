@@ -326,6 +326,7 @@
   "sent": "Sent",
   "transaction_failure": "交易失败",
   "transaction_failure_message": "%s。",
+  "transaction_failure_504_message": "504 Server Timeout - Retry Transaction",
   "transaction_success": "交易成功",
   "transaction_success_message": "您的交易已成功发送。",
   "incorrect_pin": "PIN码错误",
