@@ -326,6 +326,7 @@
   "sent": "Sent",
   "transaction_failure": "Ошибка транзакции",
   "transaction_failure_message": "%s.",
+  "transaction_failure_504_message": "504 Server Timeout - Retry Transaction",
   "transaction_success": "Успешная транзакция",
   "transaction_success_message": "Ваша транзакция успешно отправлена.",
   "incorrect_pin": "Неверный PIN-код",
