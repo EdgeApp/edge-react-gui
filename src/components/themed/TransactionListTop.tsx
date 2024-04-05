@@ -402,7 +402,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   renderBalanceBox = () => {
     // TODO: Use CryptoText/FiatText and/or CryptoAmount after they are extended
-    // to gracefully handle edge cases.
+    // to gracefully handle edge cases such as explicit no rounding and scaling.
     const { balanceMap, displayDenomination, exchangeDenomination, exchangeRate, isAccountBalanceVisible, theme, tokenId, wallet, walletName } = this.props
     const styles = getStyles(theme)
 
@@ -435,14 +435,14 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
         </View>
         <EdgeTouchableOpacity accessible={false} onPress={this.props.toggleBalanceVisibility}>
           <View style={styles.balanceBoxCryptoBalanceContainer}>
-            <EdgeText accessible style={styles.balanceBoxCurrency} minimumFontScale={0.5} numberOfLines={2}>
+            <EdgeText accessible style={styles.balanceBoxCurrency} minimumFontScale={0.25} numberOfLines={1}>
               {(isAccountBalanceVisible ? cryptoAmountFormat : lstrings.redacted_placeholder) + ' ' + displayDenomination.name}
             </EdgeText>
             <Ionicons
               name={isAccountBalanceVisible ? 'eye-off-outline' : 'eye-outline'}
               style={styles.eyeIcon}
               color={theme.iconTappable}
-              size={theme.rem(1.5)}
+              size={theme.rem(1.15)}
             />
           </View>
           <EdgeText accessible style={styles.balanceFiatBalance}>
@@ -675,7 +675,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1.25)
   },
   balanceBoxCurrency: {
-    fontSize: theme.rem(2),
+    fontSize: theme.rem(1.75),
     fontFamily: theme.fontFaceMedium,
     flexShrink: 1
   },
