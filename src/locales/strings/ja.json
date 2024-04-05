@@ -326,6 +326,7 @@
   "sent": "Sent",
   "transaction_failure": "トランザクションが失敗しました",
   "transaction_failure_message": "%s",
+  "transaction_failure_504_message": "504 Server Timeout - Retry Transaction",
   "transaction_success": "トランザクションが成功しました",
   "transaction_success_message": "トランザクションは正常に送信されました。",
   "incorrect_pin": "PINが正しくありません",
