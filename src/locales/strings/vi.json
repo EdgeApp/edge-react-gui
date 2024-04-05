@@ -326,6 +326,7 @@
   "sent": "Sent",
   "transaction_failure": "Giao dịch thất bại",
   "transaction_failure_message": "%s.",
+  "transaction_failure_504_message": "504 Server Timeout - Retry Transaction",
   "transaction_success": "Giao dịch hoàn tất",
   "transaction_success_message": "Giao dịch của bạn đã được gửi thành công.",
   "incorrect_pin": "PIN không chính xác",
