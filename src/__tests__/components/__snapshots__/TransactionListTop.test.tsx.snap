@@ -253,8 +253,8 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         <Text
           accessible={true}
           adjustsFontSizeToFit={true}
-          minimumFontScale={0.5}
-          numberOfLines={2}
+          minimumFontScale={0.25}
+          numberOfLines={1}
           style={
             [
               {
@@ -266,7 +266,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               {
                 "flexShrink": 1,
                 "fontFamily": "Quicksand-Medium",
-                "fontSize": 45,
+                "fontSize": 39,
               },
               null,
             ]
@@ -280,7 +280,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             [
               {
                 "color": "#00f1a2",
-                "fontSize": 34,
+                "fontSize": 26,
               },
               {
                 "alignSelf": "center",
@@ -1104,8 +1104,8 @@ exports[`TransactionListTop should render 1`] = `
         <Text
           accessible={true}
           adjustsFontSizeToFit={true}
-          minimumFontScale={0.5}
-          numberOfLines={2}
+          minimumFontScale={0.25}
+          numberOfLines={1}
           style={
             [
               {
@@ -1117,7 +1117,7 @@ exports[`TransactionListTop should render 1`] = `
               {
                 "flexShrink": 1,
                 "fontFamily": "Quicksand-Medium",
-                "fontSize": 45,
+                "fontSize": 39,
               },
               null,
             ]
@@ -1131,7 +1131,7 @@ exports[`TransactionListTop should render 1`] = `
             [
               {
                 "color": "#00f1a2",
-                "fontSize": 34,
+                "fontSize": 26,
               },
               {
                 "alignSelf": "center",
