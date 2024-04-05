@@ -93,13 +93,13 @@ const getStyles = (theme: Theme) =>
       margin: theme.rem(0.5)
     },
     titleContainer: {
-      display: 'flex',
       flexDirection: 'row',
       alignItems: 'center'
     },
     titleText: {
       marginLeft: theme.rem(0.2),
-      fontFamily: theme.fontFaceMedium
+      fontFamily: theme.fontFaceMedium,
+      flexShrink: 1
     },
     icon: {
       marginRight: theme.rem(0.2)
