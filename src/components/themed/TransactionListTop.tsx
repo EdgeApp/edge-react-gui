@@ -425,12 +425,9 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             <EdgeText accessible style={styles.balanceBoxWalletName}>
               {walletName}
             </EdgeText>
-            <View style={styles.balanceBoxChevronAdjust}>
-              <Ionicons name="chevron-down" size={theme.rem(1.5)} color={theme.iconTappable} />
-            </View>
           </EdgeTouchableOpacity>
           <EdgeTouchableOpacity testID="gearIcon" onPress={this.handleMenu} style={styles.settingsTouchContainer}>
-            <Entypo accessibilityHint={lstrings.wallet_settings_label} color={theme.icon} name="dots-three-vertical" size={theme.rem(1.25)} />
+            <Entypo accessibilityHint={lstrings.wallet_settings_label} color={theme.icon} name="dots-three-vertical" size={theme.rem(1)} />
           </EdgeTouchableOpacity>
         </View>
         <EdgeTouchableOpacity accessible={false} onPress={this.props.toggleBalanceVisibility}>
@@ -662,12 +659,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   balanceBoxWalletNameContainer: {
     flexShrink: 1,
-    flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.cardBaseColor,
-    height: theme.rem(2.5),
-    borderRadius: theme.rem(1.25),
+    borderRadius: 100,
     paddingHorizontal: theme.rem(0.75),
+    paddingVertical: theme.rem(0.25),
     marginRight: theme.rem(0.5)
   },
   balanceBoxCryptoBalanceContainer: {
@@ -675,14 +671,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     flexShrink: 1
   },
-  balanceBoxChevronAdjust: {
-    paddingTop: theme.rem(0.25)
-  },
   balanceBoxWalletName: {
     flexShrink: 1,
-    marginLeft: theme.rem(0.5),
-    marginRight: theme.rem(0.25),
-    fontSize: theme.rem(1.25)
+    fontSize: theme.rem(0.75),
+    lineHeight: theme.rem(1.5)
   },
   balanceBoxCurrency: {
     fontSize: theme.rem(1.75),
