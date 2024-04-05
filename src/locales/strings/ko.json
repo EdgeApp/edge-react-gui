@@ -326,6 +326,7 @@
   "sent": "Sent",
   "transaction_failure": "거래 실패",
   "transaction_failure_message": "%s",
+  "transaction_failure_504_message": "504 Server Timeout - Retry Transaction",
   "transaction_success": "거래 성공",
   "transaction_success_message": "거래가 정상적으로 전송되었습니다.",
   "incorrect_pin": "잘못된 PIN",
