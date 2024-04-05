@@ -183,10 +183,17 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleOpenWalletListModal = () => {
-    const { account, navigation } = this.props
+    const { account, navigation, wallet: parentWallet, tokenId } = this.props
 
     triggerHaptic('impactLight')
-    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={navigation} />)
+    Airship.show<WalletListResult>(bridge => (
+      <WalletListModal
+        bridge={bridge}
+        parentWalletId={tokenId == null ? undefined : parentWallet.id}
+        headerTitle={lstrings.select_wallet}
+        navigation={navigation}
+      />
+    ))
       .then(result => {
         if (result?.type === 'wallet') {
           const { currencyCode, walletId } = result
