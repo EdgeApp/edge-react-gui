@@ -2,7 +2,9 @@ import { eq } from 'biggystring'
 import { InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
 import { ReturnKeyType, View } from 'react-native'
+import { AirshipBridge } from 'react-native-airship'
 
+import { showBackupModal } from '../../actions/BackupModalActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { Fontello } from '../../assets/vector'
 import { ENV } from '../../env'
@@ -15,6 +17,7 @@ import { consify } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
+import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupForTransferModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { CountryListModal } from '../modals/CountryListModal'
@@ -298,6 +301,49 @@ export function DevTestScene(props: Props) {
                 const { freeRegApiToken = '', freeRegRefCode = '' } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
                 navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })
               }
+            }}
+          />
+          <ButtonUi4
+            label="BackupModal (Long, Original with image)"
+            marginRem={0.25}
+            onPress={async () => {
+              showBackupModal({ navigation, forgetLoginId: 'test' })
+            }}
+          />
+          <ButtonUi4
+            label="BackupModal - Short A (control)"
+            marginRem={0.25}
+            onPress={async () => {
+              await Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
+                return <BackupForTransferModal bridge={bridge} variantKey="original" />
+              })
+            }}
+          />
+          <ButtonUi4
+            label="BackupModal - Short B"
+            marginRem={0.25}
+            onPress={async () => {
+              await Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
+                return <BackupForTransferModal bridge={bridge} variantKey="backup" />
+              })
+            }}
+          />
+          <ButtonUi4
+            label="BackupModal - Short C"
+            marginRem={0.25}
+            onPress={async () => {
+              await Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
+                return <BackupForTransferModal bridge={bridge} variantKey="secure" />
+              })
+            }}
+          />
+          <ButtonUi4
+            label="BackupModal - Short D"
+            marginRem={0.25}
+            onPress={async () => {
+              await Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
+                return <BackupForTransferModal bridge={bridge} variantKey="create" />
+              })
             }}
           />
         </>

@@ -1498,12 +1498,29 @@ const strings = {
     'Are you sure you want to delete this account without backing up first? You will NOT be able to recover wallets and transactions for this account!',
   backup_info_message: 'Create a username and password to securely encrypt and back up your account',
   backup_dismiss_button: 'Continue Without a Backup',
-  backup_title: 'Back Up Your Account',
   backup_warning_message: 'Without a backup, you risk losing your funds!',
   backup_web3_handle_warning_message: 'Without a backup, you risk losing your web3 handle!',
   tap_to_learn_more: 'Tap to learn more.',
   backup_for_transfer_message:
     'To buy, sell, and receive funds, please back up your account. Edge encrypted backups use a familiar username and password method that will safeguard your assets and help prevent loss of funds.\n\nNever share your username and password, and store your credentials securely!',
+
+  backup_title_b: 'Secure your Account',
+
+  // Backup Message Variants
+  backup_title: 'Back Up Your Account',
+  backup_message: 'Create a username and password to continue.',
+  backup_message_subtext: 'Backing up your account ensures you can safely recover your funds in the event that you lose access to your device.',
+
+  secure_account_title: 'Secure Your Account',
+  secure_account_message_subtext: 'Securing your account ensures that you can safely recover your funds in the event that you lose access to your device.',
+
+  create_user_title: 'Create Account', // Duplicate string in case the translations don't match
+  create_user_message_subtext: 'Creating your account ensures that you can safely recover your funds in the event that you lose access to your device.',
+
+  no_access_disclaimer_1s: '%1$s has zero access to user funds and does not see or store any private keys or personal information.',
+
+  // Buttons
+  learn_more: 'Learn More',
 
   // #endregion Light Account
 

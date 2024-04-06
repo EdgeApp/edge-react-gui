@@ -5,7 +5,11 @@ import { AirshipBridge } from 'react-native-airship'
 import { BackupForTransferModal, BackupForTransferModalResult } from '../components/modals/BackupForTransferModal'
 import { BackupModal, BackupModalResult } from '../components/modals/BackupModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
+import { getExperimentConfigValue } from '../experimentConfig'
 import { NavigationBase } from '../types/routerTypes'
+
+// TODO: Merge our various backup modal flavors with a common design that
+// satisfies all requirements (design TBD).
 
 let isBackupModalShowing = false
 
@@ -34,29 +38,27 @@ export const showBackupModal = (props: { navigation: NavigationBase; forgetLogin
 }
 
 /**
- * Shows a modal notifying the user that certain certain actions are not
- * available for light accounts, prompting them to back up their account to
- * access those features.
- */
-const showBackupForTransferModal = (onConfirm: () => void) => {
-  Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
-    return <BackupForTransferModal bridge={bridge} />
-  })
-    .then((userSel?: BackupForTransferModalResult) => {
-      if (userSel === 'upgrade') {
-        onConfirm()
-      }
-    })
-    .catch(error => showError(error))
-}
-
-/**
  * Checks an account for light status and shows a backup modal if the account is
  * a light account. Returns true if the modal was shown.
  */
 export const checkAndShowLightBackupModal = (account: EdgeAccount, navigation: NavigationBase): boolean => {
   if (account.username == null) {
-    showBackupForTransferModal(() => navigation.navigate('upgradeUsername', {}))
+    getExperimentConfigValue('backupText')
+      .then(variantKey => {
+        Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
+          return <BackupForTransferModal bridge={bridge} variantKey={variantKey} />
+        })
+          .then((userSel?: BackupForTransferModalResult) => {
+            if (userSel === 'upgrade') {
+              navigation.navigate('upgradeUsername', {})
+            }
+          })
+          .finally(() => {
+            isBackupModalShowing = false
+          })
+          .catch(error => showError(error))
+      })
+      .catch(error => showError(error))
     return true
   }
   return false

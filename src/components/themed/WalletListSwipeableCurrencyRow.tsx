@@ -1,9 +1,9 @@
 import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Text } from 'react-native'
-import { AirshipBridge } from 'react-native-airship'
 import { SharedValue } from 'react-native-reanimated'
 
+import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { selectWalletToken } from '../../actions/WalletActions'
 import { Fontello } from '../../assets/vector/index'
 import { useHandler } from '../../hooks/useHandler'
@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SwipeableRowIcon } from '../icons/SwipeableRowIcon'
-import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupForTransferModal'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -38,8 +37,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const activeUsername = useSelector(state => state.core.account.username)
-  const isLightAccount = activeUsername == null
+  const account = useSelector(state => state.core.account)
 
   // callbacks -----------------------------------------------------------
 
@@ -56,17 +54,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
 
   const handleRequest = useHandler(() => {
     closeRow()
-    if (isLightAccount) {
-      Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
-        return <BackupForTransferModal bridge={bridge} />
-      })
-        .then((userSel?: BackupForTransferModalResult) => {
-          if (userSel === 'upgrade') {
-            navigation.navigate('upgradeUsername', {})
-          }
-        })
-        .catch(error => showError(error))
-    } else {
+    if (!checkAndShowLightBackupModal(account, navigation)) {
       dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true }))
         .then(activated => {
           if (activated) {
