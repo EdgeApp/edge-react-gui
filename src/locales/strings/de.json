@@ -826,6 +826,7 @@
   "send_from_wallet": "Senden von %s",
   "send_to_wallet": "Erhalten an %s",
   "exchange_slow": "Locating a swap is taking longer than usual.\nPlease wait...",
+  "wallet_list_modal_header_parent": "Parent Wallet",
   "wallet_list_modal_header_mru": "Neueste Wallets",
   "wallet_list_modal_header_all": "Alle Wallets",
   "wallet_list_modal_creating_wallet": "Wallet wird erstellt. Bitte warten",
