@@ -331,20 +331,29 @@ export interface AppConfig {
 }
 
 /**
+ * A wallet or token to show in the wallet list.
+ *
  * We maintain a sorted wallet list in redux,
  * since it's quite expensive to calculate.
  */
-export interface WalletListItem {
+export interface WalletListAssetItem {
+  type: 'asset'
   key: string
-  tokenId: EdgeTokenId
-  walletId: string
-
-  // `token` will be set for token rows:
   token?: EdgeToken
-
-  // The wallet will be present once it loads:
-  wallet?: EdgeCurrencyWallet
+  tokenId: EdgeTokenId
+  wallet: EdgeCurrencyWallet
 }
+
+/**
+ * A wallet that hasn't booted yet, to show as a placeholder.
+ */
+export interface WalletListLoadingItem {
+  type: 'loading'
+  key: string
+  walletId: string
+}
+
+export type WalletListItem = WalletListAssetItem | WalletListLoadingItem
 
 export interface EdgeAsset {
   pluginId: string

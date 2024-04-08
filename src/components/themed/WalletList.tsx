@@ -85,10 +85,10 @@ export function WalletList(props: Props) {
     const allowedWalletSet = new Set<string>(allowedWalletIds ?? [])
 
     return sortedWalletList.filter(item => {
-      const { tokenId, wallet } = item
-
       // Exclude loading wallets:
-      if (wallet == null) return false
+      if (item.type !== 'asset') return false
+
+      const { tokenId, wallet } = item
 
       // Remove excluded walletIds:
       if (excludeWalletSet.has(wallet.id)) return false
@@ -118,10 +118,10 @@ export function WalletList(props: Props) {
     for (const item of mostRecentWallets) {
       // Find the mentioned wallet, if it still exists:
       const row = filteredWalletList.find(row => {
+        if (row.type !== 'asset') return false
         const { wallet, token } = row
-        if (wallet == null) return false
         if (wallet.id !== item.id) return false
-        const { currencyCode } = token == null ? wallet.currencyInfo : token
+        const { currencyCode } = token ?? wallet.currencyInfo
         return currencyCode.toLowerCase() === item.currencyCode.toLowerCase()
       })
 
@@ -168,21 +168,19 @@ export function WalletList(props: Props) {
   // rendering -------------------------------------------------------------
 
   const renderRow = React.useCallback(
-    (item: FlatListItem<any>) => {
+    (item: FlatListItem<WalletListItem | WalletCreateItem | string>) => {
       if (typeof item.item === 'string') return <WalletListSectionHeader title={item.item} />
 
-      if (item.item.walletId == null) {
-        const createItem: WalletCreateItem = item.item
-        return <WalletListCreateRow createItem={createItem} createWalletId={createWalletId} onPress={handlePress} />
+      switch (item.item.type) {
+        case 'asset': {
+          const { token, tokenId, wallet } = item.item
+          return <WalletListCurrencyRow token={token} tokenId={tokenId} wallet={wallet} onPress={handlePress} />
+        }
+        case 'create':
+          return <WalletListCreateRow createItem={item.item} createWalletId={createWalletId} onPress={handlePress} />
+        case 'loading':
+          return <WalletListLoadingRow />
       }
-
-      const walletItem: WalletListItem = item.item
-      const { token, tokenId, wallet } = walletItem
-
-      if (wallet == null) {
-        return <WalletListLoadingRow />
-      }
-      return <WalletListCurrencyRow token={token} tokenId={tokenId} wallet={wallet} onPress={handlePress} />
     },
     [createWalletId, handlePress]
   )
