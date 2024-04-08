@@ -64,6 +64,7 @@ interface Props {
   headerTitle: string
   showBankOptions?: boolean
   showCreateWallet?: boolean
+  parentWalletId?: string
 }
 
 const keysOnlyModeAssets: EdgeAsset[] = Object.keys(SPECIAL_CURRENCY_INFO)
@@ -91,7 +92,8 @@ export function WalletListModal(props: Props) {
     createWalletId,
     headerTitle,
     showBankOptions = false,
-    showCreateWallet
+    showCreateWallet,
+    parentWalletId
   } = props
 
   // #region Constants
@@ -249,6 +251,7 @@ export function WalletListModal(props: Props) {
         searchText={searchText}
         showCreateWallet={showCreateWallet}
         createWalletId={createWalletId}
+        parentWalletId={parentWalletId}
         onPress={handleWalletListPress}
         navigation={navigation}
       />

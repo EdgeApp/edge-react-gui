@@ -928,6 +928,7 @@ const strings = {
   send_from_wallet: 'Send from %s',
   send_to_wallet: 'Receive to %s',
   exchange_slow: 'Locating a swap is taking longer than usual.\nPlease wait...',
+  wallet_list_modal_header_parent: 'Parent Wallet',
   wallet_list_modal_header_mru: 'Most Recent Wallets',
   wallet_list_modal_header_all: 'All Wallets',
   wallet_list_modal_creating_wallet: 'Creating Wallet. Please Wait',
