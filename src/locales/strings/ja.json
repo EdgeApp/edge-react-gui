@@ -826,6 +826,7 @@
   "send_from_wallet": "%sから送信",
   "send_to_wallet": "%sに受信",
   "exchange_slow": "スワップを見つけるには通常よりも時間がかかります。\nしばらくお待ちください。",
+  "wallet_list_modal_header_parent": "Parent Wallet",
   "wallet_list_modal_header_mru": "最新のウォレット",
   "wallet_list_modal_header_all": "すべてのウォレット",
   "wallet_list_modal_creating_wallet": "ウォレットを作成しています。しばらくお待ちください。",
