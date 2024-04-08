@@ -8,6 +8,7 @@
 - added: "Parent Wallet" section when changing wallet from Transaction List while viewing a token
 - changed: Replace `ModalMessage` with `Paragraph`
 - changed: Allow light accounts to buy up to $50 worth of crypto at a time
+- removed: USPs a/b/c/d test experiment - always uses default USPs
 
 ## 4.4.0
 
