@@ -826,6 +826,7 @@
   "send_from_wallet": "Invia da %s",
   "send_to_wallet": "Ricevi su %s",
   "exchange_slow": "Individuare uno swap sta impiegando più tempo del solito.\nAttendere prego...",
+  "wallet_list_modal_header_parent": "Parent Wallet",
   "wallet_list_modal_header_mru": "Portafogli più recenti",
   "wallet_list_modal_header_all": "Tutti i portafogli",
   "wallet_list_modal_creating_wallet": "Creazione Portafoglio. Attendere prego",
