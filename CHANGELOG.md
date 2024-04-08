@@ -13,7 +13,6 @@
 - added: Add Cardano (ADA)
 - added: Add auto-detected tokens section in ManageTokensScene
 - added: Display "failed" status for confirmed, but failed, transactions
-- changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
 - changed: Buttons for receive/send/earn/trade in Transaction List Scene
 - changed: Renamed analytics parameter "dollarConversionValue" to "dollarRevenue"
 - fixed: Reporting negative conversion values
