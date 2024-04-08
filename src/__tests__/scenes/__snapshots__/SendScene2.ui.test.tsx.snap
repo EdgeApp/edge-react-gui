@@ -12624,7 +12624,6 @@ exports[`SendScene2 Render SendScene 1`] = `
                 style={
                   {
                     "alignItems": "center",
-                    "display": "flex",
                     "flexDirection": "row",
                   }
                 }
@@ -12665,6 +12664,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                         "includeFontPadding": false,
                       },
                       {
+                        "flexShrink": 1,
                         "fontFamily": "Quicksand-Medium",
                         "marginLeft": 4,
                       },

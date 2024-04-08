@@ -9,6 +9,7 @@ import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { Fontello } from '../../assets/vector'
 import { ENV } from '../../env'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
+import { lstrings } from '../../locales/strings'
 import { useState } from '../../types/reactHooks'
 import { useDispatch } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -31,6 +32,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
+import { AlertCardUi4 } from '../ui4/AlertCardUi4'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { ButtonUi4 } from '../ui4/ButtonUi4'
 import { CardUi4 } from '../ui4/CardUi4'
@@ -110,6 +112,7 @@ export function DevTestScene(props: Props) {
   return (
     <SceneWrapper scroll hasTabs hasHeader={false}>
       <SectionView marginRem={1}>
+        <AlertCardUi4 title={lstrings.warning_alphanumeric} type="error" />
         <FilledTextInput
           iconComponent={SearchIconAnimated}
           vertical={1}

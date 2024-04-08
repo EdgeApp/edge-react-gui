@@ -1572,7 +1572,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 style={
                   {
                     "alignItems": "center",
-                    "display": "flex",
                     "flexDirection": "row",
                   }
                 }
@@ -1613,6 +1612,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         "includeFontPadding": false,
                       },
                       {
+                        "flexShrink": 1,
                         "fontFamily": "Quicksand-Medium",
                         "marginLeft": 4,
                       },
