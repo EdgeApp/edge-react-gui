@@ -1,3 +1,7 @@
+branches:
+  only:
+  - develop
+  - staging
 dist: jammy
 language: node_js
 node_js:
