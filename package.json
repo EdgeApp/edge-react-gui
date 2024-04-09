@@ -60,51 +60,6 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint"
   },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "jsx",
-      "ts",
-      "tsx"
-    ],
-    "preset": "react-native",
-    "setupFiles": [
-      "./jestSetup.js"
-    ],
-    "transformIgnorePatterns": [
-      "<rootDir>/node_modules/(?!(@react-native|react-native|react-navigation))"
-    ]
-  },
-  "resolutions": {
-    "@ledgerhq/hw-transport-node-hid": "file:./patches/fake-hw-transport-node-hid",
-    "axios": "0.21.1",
-    "babel-runtime": "6.26.0",
-    "bip39": "3.0.2",
-    "bn.js": "4.11.8",
-    "bs58": "4.0.1",
-    "bs58check": "2.1.2",
-    "clipboardy": "3.0.0",
-    "core-js": "2.5.3",
-    "create-hash": "1.2.0",
-    "elliptic": "6.5.4",
-    "eosjs-api": "https://github.com/EdgeApp/eosjs-api.git#prepare-script",
-    "hash-base": "3.0.4",
-    "hdkey": "1.1.1",
-    "inherits": "2.0.4",
-    "long": "4.0.0",
-    "msw": "1.3.2",
-    "process-nextick-args": "2.0.0",
-    "randombytes": "2.1.0",
-    "regenerator-runtime": "0.13.2",
-    "ripemd160": "2.0.2",
-    "ripple-binary-codec": "0.2.3",
-    "safe-buffer": "5.1.2",
-    "scrypt.js": "0.3.0",
-    "sha.js": "2.4.11",
-    "tweetnacl": "^1.0.3",
-    "uuid": "3.3.2"
-  },
   "dependencies": {
     "@bugsnag/react-native": "^7.22.3",
     "@bugsnag/react-native-performance": "^2.2.0",
@@ -211,7 +166,7 @@
     "url-parse": "^1.5.2",
     "use-context-selector": "^1.4.1",
     "yaob": "^0.3.12",
-    "yavent": "^0.1.3"
+    "yavent": "^0.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -220,10 +175,11 @@
     "@babel/preset-typescript": "^7.18.6",
     "@babel/runtime": "^7.20.0",
     "@bugsnag/source-maps": "^2.3.1",
+    "@react-native/babel-preset": "0.73.21",
+    "@react-native/typescript-config": "0.73.1",
     "@rollup/plugin-babel": "^6.0.3",
     "@stakekit/api-hooks": "^0.0.52",
     "@sucrase/webpack-loader": "^2.0.0",
-    "@tsconfig/react-native": "^2.0.2",
     "@typechain/ethers-v5": "^11.1.2",
     "@types/async-lock": "^1.1.5",
     "@types/csv-stringify": "^3.1.0",
@@ -251,7 +207,7 @@
     "@welldone-software/why-did-you-render": "^8.0.1",
     "appcenter-cli": "^2.12.0",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^29.2.1",
+    "babel-jest": "^29.6.3",
     "body-parser": "^1.18.2",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
@@ -270,10 +226,9 @@
     "fs-extra": "^10.1.0",
     "https-browserify": "^1.0.0",
     "husky": "^7.0.0",
-    "jest": "^29.2.1",
+    "jest": "^29.6.3",
     "jetifier": "^1.6.5",
     "lint-staged": "^10.5.3",
-    "metro-react-native-babel-preset": "0.73.10",
     "node-fetch": "2.x",
     "os-browserify": "^0.3.0",
     "patch-package": "^6.2.2",
@@ -290,7 +245,6 @@
     "stream-http": "^3.2.0",
     "string_decoder": "^1.3.0",
     "sucrase": "^3.20.0",
-    "tweetnacl": "^1.0.3",
     "typechain": "^8.3.2",
     "typescript": "5.0.4",
     "updot": "^1.1.7",
@@ -299,5 +253,8 @@
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^4.6.0",
     "yarn-deduplicate": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
