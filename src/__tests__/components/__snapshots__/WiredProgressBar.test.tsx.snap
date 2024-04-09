@@ -9,21 +9,18 @@ exports[`ProgressBar should render with loading props 1`] = `
     }
   }
 >
-  <ForwardRef(AnimatedComponentWrapper)
+  <View
+    collapsable={false}
     style={
-      [
-        {
-          "backgroundColor": "#00f1a2",
-          "height": 3,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        },
-        {
-          "width": "19.9%",
-        },
-      ]
+      {
+        "backgroundColor": "#00f1a2",
+        "height": 3,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+        "width": "55%",
+      }
     }
   />
 </View>
