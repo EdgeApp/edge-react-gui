@@ -11,6 +11,7 @@
 - changed: Replace `ModalMessage` with `Paragraph`
 - changed: Improved wallet sync indicator bar on top of screen
 - changed: Allow light accounts to buy up to $50 worth of crypto at a time
+- fixed: Glitch on transaction list scene when starting search
 - removed: USPs a/b/c/d test experiment - always uses default USPs
 
 ## 4.4.0 (2024-04-09)

@@ -19,7 +19,7 @@ interface Output {
  * so call the `requestMore` method to request more transactions,
  * until `atEnd` becomes true.
  */
-export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId, searchString?: string): Output {
+export function useTransactionList(wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId, searchString: string = ''): Output {
   const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
 
   const requestMore = React.useRef(() => {})
