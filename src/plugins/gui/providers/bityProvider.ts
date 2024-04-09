@@ -25,7 +25,7 @@ const storeId = 'com.bity'
 const partnerIcon = 'logoBity.png'
 const pluginDisplayName = 'Bity'
 const providerDisplayName = pluginDisplayName
-const supportEmail = 'support@bity.com'
+const supportEmail = 'support_edge@bity.com'
 const supportedPaymentType: FiatPaymentType = 'sepa'
 const partnerFee = 0.005
 
@@ -43,6 +43,7 @@ const allowedCountryCodes: { readonly [code: string]: boolean } = {
   DE: true,
   GR: true,
   HU: true,
+  IE: true, // Ireland
   IT: true,
   LV: true,
   LT: true,
