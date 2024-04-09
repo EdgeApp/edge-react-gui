@@ -2,7 +2,7 @@ import React from 'react'
 import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { type Icon } from 'react-native-vector-icons/Icon'
-import IonIcon from 'react-native-vector-icons/Ionicons'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector'
 import { useTheme } from '../services/ThemeContext'
@@ -95,7 +95,7 @@ export function EyeIconAnimated(props: AnimatedIconProps & { off: boolean }): JS
   // so we recycle the same component with different props:
   return AnimatedFontIcon({
     ...rest,
-    IconComponent: IonIcon,
+    IconComponent: Ionicons,
     name: off ? 'eye-off-outline' : 'eye-outline'
   })
 }
@@ -105,6 +105,8 @@ export const CloseIconAnimated = makeAnimatedFontIcon(AntDesignIcon, 'close')
 
 export const FlipIcon = makeFontIcon(Fontello, 'exchange')
 export const FlipIconAnimated = makeAnimatedFontIcon(Fontello, 'exchange')
+
+export const SwapVerticalIcon = makeFontIcon(Ionicons, 'swap-vertical')
 
 export const SearchIcon = makeFontIcon(AntDesignIcon, 'search1')
 export const SearchIconAnimated = makeAnimatedFontIcon(AntDesignIcon, 'search1')

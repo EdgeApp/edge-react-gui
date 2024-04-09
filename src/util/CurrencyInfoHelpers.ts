@@ -51,8 +51,16 @@ export const getWalletTokenId = (wallet: EdgeCurrencyWallet, currencyCode: strin
  * Get the currencyCode associated with a tokenId
  */
 export const getCurrencyCode = (wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): string => {
-  const { currencyCode } = tokenId != null ? wallet.currencyConfig.allTokens[tokenId] : wallet.currencyInfo
-  return currencyCode
+  if (tokenId == null) {
+    return wallet.currencyInfo.currencyCode
+  } else {
+    if (wallet.currencyConfig.allTokens[tokenId] == null) {
+      // Fail gracefully if we don't have the token for some reason
+      console.warn(`getCurrencyCode: tokenId: '${tokenId}' not found for wallet pluginId: '${wallet.currencyInfo.pluginId}'`)
+      return ''
+    }
+    return wallet.currencyConfig.allTokens[tokenId].currencyCode
+  }
 }
 
 /**
@@ -62,8 +70,17 @@ export const getCurrencyCodeWithAccount = (account: EdgeAccount, pluginId: strin
   if (account.currencyConfig[pluginId] == null) {
     return
   }
-  const { currencyCode } = tokenId != null ? account.currencyConfig[pluginId].allTokens[tokenId] : account.currencyConfig[pluginId].currencyInfo
-  return currencyCode
+
+  if (tokenId == null) {
+    return account.currencyConfig[pluginId].currencyInfo.currencyCode
+  } else {
+    if (account.currencyConfig[pluginId].allTokens[tokenId] == null) {
+      // Fail gracefully if we don't have the token for some reason
+      console.warn(`getCurrencyCodeWithAccount: tokenId: '${tokenId}' not found for pluginId: '${pluginId}'`)
+      return ''
+    }
+    return account.currencyConfig[pluginId].allTokens[tokenId].currencyCode
+  }
 }
 
 export const getToken = (wallet: EdgeCurrencyWallet, tokenId: EdgeTokenId): EdgeToken | undefined => {

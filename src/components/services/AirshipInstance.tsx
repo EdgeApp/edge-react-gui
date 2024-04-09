@@ -32,6 +32,8 @@ export function showError(error: unknown, options: ShowErrorWarningOptions = {})
     }
   }
   console.log(redText('Showing error drop-down alert: ' + makeErrorLog(error)))
+
+  if (translatedMessage.includes('edge-core: The WebView has been unmounted.')) return
   Airship.show(bridge => <AlertDropdown bridge={bridge} message={translatedMessage} />).catch(err => console.error(err))
 }
 

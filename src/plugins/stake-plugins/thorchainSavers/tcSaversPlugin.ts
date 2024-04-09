@@ -556,7 +556,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
     // 1. Sort the outputs by how they are sent to makeSpend making the target output the 1st, change 2nd
     // 2. Only use UTXOs from the primary address (index 0)
     // 3. Force change to go to the primary address
-    otherParams: { outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
+    otherParams: { enableRbf: false, outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
     assetAction: { assetActionType: 'stake' },
     savedAction: {
       actionType: 'stake',
@@ -622,7 +622,7 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
           }
         ]
       },
-      otherParams: { forceChangeAddress }
+      otherParams: { forceChangeAddress, enableRbf: false }
     }
 
     const estimateTx = await wallet.makeSpend(fundingSpendInfo)
@@ -879,7 +879,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
   const spendInfo: EdgeSpendInfo = {
     tokenId,
     spendTargets: [{ publicAddress: poolAddress, nativeAmount: sendNativeAmount }],
-    otherParams: { outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
+    otherParams: { enableRbf: false, outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
     assetAction: { assetActionType: 'unstakeOrder' },
     savedAction: {
       actionType: 'stake',
@@ -888,7 +888,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
         {
           pluginId,
           tokenId,
-          nativeAmount
+          nativeAmount: totalUnstakeNativeAmount
         }
       ]
     },
@@ -949,7 +949,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
           {
             pluginId,
             tokenId,
-            nativeAmount
+            nativeAmount: totalUnstakeNativeAmount
           }
         ]
       }
@@ -969,7 +969,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
         allocationType: 'unstake',
         pluginId,
         currencyCode,
-        nativeAmount
+        nativeAmount: totalUnstakeNativeAmount
       },
       {
         allocationType: 'networkFee',
@@ -1007,7 +1007,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
               }
             ]
           },
-          otherParams: { forceChangeAddress }
+          otherParams: { enableRbf: false, forceChangeAddress }
         })
         const signedTx = await wallet.signTx(tx)
         const broadcastedTx = await wallet.broadcastTx(signedTx)

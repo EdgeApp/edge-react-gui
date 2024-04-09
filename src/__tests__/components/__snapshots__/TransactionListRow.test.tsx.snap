@@ -238,12 +238,17 @@ exports[`TransactionListRow should render with loading props 1`] = `
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
-              {
-                "color": "#F1AA19",
-                "flexShrink": 1,
-                "fontSize": 17,
-                "marginRight": 22,
-              },
+              [
+                {
+                  "color": "#3dd9f4",
+                  "flexShrink": 1,
+                  "fontSize": 17,
+                  "marginRight": 22,
+                },
+                {
+                  "color": "#F1AA19",
+                },
+              ],
               null,
             ]
           }

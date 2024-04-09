@@ -2,9 +2,26 @@
 
 ## Unreleased
 
-## 4.3.0
+## 4.4.0
 
-- added: Wrapped Touchable* components to consolidate tap debounce logic
+- added: Add Cardano (ADA)
+- added: Add auto-detected tokens section in ManageTokensScene
+- added: Display "failed" status for confirmed, but failed, transactions
+- changed: Buttons for receive/send/earn/trade in Transaction List Scene
+- changed: Renamed analytics parameter "dollarConversionValue" to "dollarRevenue"
+- fixed: Reporting negative conversion values
+- fixed: Filecoin sync issue caused by missing and necessary GLIF API key
+- fixed: FIO handle/domain registration error with MATIC payment
+- fixed: Fix duplicate transactions bug and re-enable transaction support in Filecoin FEVM
+- fixed: 'tokenId' related crash on Send scene under certain conditions
+- fixed: Disable RBF for Thorchain Savers transactions
+- fixed: Properly show the Thorchain Savers unstake amount including earned amt
+- fixed: Xcode 15 builds. Remove Flipper as it is deprecated anyway
+- fixed: Light account reporting
+
+## 4.3.0 (2024-03-25)
+
+- added: Wrapped Touchable\* components to consolidate tap debounce logic
 - added: Mt Pelerin for SEPA and Faster Payments
 - added: Setting to change default screen on login
 - changed: Remove extra spaces and normal capitalization of mnemonic seed input
@@ -14,7 +31,6 @@
 - changed: Button width remains constant regardless of content visibility
 - changed: Certain deeplinks blocked for light accounts
 - changed: 'Sweep Private Key' usage blocked for light accounts
-- fixed: Filecoin sync issue caused by missing and necessary GLIF API key
 - fixed: FIO name transfer error when sending with no address
 - fixed: Bottom notification cards sometimes covering parts of the scene
 - fixed: Successfully upload logs, even if a wallet has errors.
@@ -133,7 +149,7 @@
 
 - fixed: Spend regression for non-EIP-1559 transactions
 
-## 3.23.1
+## 3.23.1 (2023-12-22)
 
 - fixed: Paybis sell from Tron USDT
 - fixed: Fix accelerate for EIP-1559 transactions

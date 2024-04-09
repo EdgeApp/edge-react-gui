@@ -1571,6 +1571,11 @@
   resolved "https://registry.yarnpkg.com/@eivifj/dot/-/dot-1.0.3.tgz#b3a6d9662cd84ff4105e0f05620d1045e9d0d9fc"
   integrity sha512-UE2x9N7XD/1qqtXA+4CZPD1RQAlM0lEdXdy09CJ/wNR+mgGKqwLRH4BGGfOAWwwz06pIT3c2tC4gvXbntGAeMA==
 
+"@emurgo/cardano-serialization-lib-nodejs@^11.5.0":
+  version "11.5.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-11.5.0.tgz#0662e2a17d7d1e944f8cdb86396133c8edaec059"
+  integrity sha512-IlVABlRgo9XaTR1NunwZpWcxnfEv04ba2l1vkUz4S1W7Jt36F4CtffP+jPeqBZGnAe+fnUwo0XjIJC3ZTNToNQ==
+
 "@esbuild/android-arm@0.15.15":
   version "0.15.15"
   resolved "https://registry.yarnpkg.com/@esbuild/android-arm/-/android-arm-0.15.15.tgz#35b3cc0f9e69cb53932d44f60b99dd440335d2f0"
@@ -3566,10 +3571,10 @@
   dependencies:
     merge-options "^3.0.4"
 
-"@react-native-clipboard/clipboard@^1.10.0":
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/@react-native-clipboard/clipboard/-/clipboard-1.10.0.tgz#605e784ed5435059c9b5db52b2d112f9fd09c409"
-  integrity sha512-1L+I0vmeUJgMi8MnNsqI00391/RFLkmmxj9qAuOS2madpvce/oNqJb8Pwk2Fc/uxIJSxOckTpq+dQwyPU6s+7w==
+"@react-native-clipboard/clipboard@^1.13.2":
+  version "1.13.2"
+  resolved "https://registry.yarnpkg.com/@react-native-clipboard/clipboard/-/clipboard-1.13.2.tgz#28adcfc43ed2addddf79a59198ec1b25087c115e"
+  integrity sha512-uVM55oEGc6a6ZmSATDeTcMm55A/C1km5X47g0xaoF0Zagv7N/8RGvLceA5L/izPwflIy78t7XQeJUcnGSib0nA==
 
 "@react-native-community/cli-clean@^10.1.1":
   version "10.1.1"
@@ -7994,11 +7999,6 @@ currency-codes@^1.5.1:
     first-match "~0.0.1"
     nub "~0.0.0"
 
-cycle@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/cycle/-/cycle-1.0.3.tgz#21e80b2be8580f98b468f379430662b046c34ad2"
-  integrity sha1-IegLK+hYD5i0aPN5QwZisEbDStI=
-
 d3-array@1, d3-array@^1.1.1, d3-array@^1.2.0:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.2.4.tgz#635ce4d5eea759f6f605863dbcfc30edc737f71f"
@@ -8294,7 +8294,7 @@ dateformat@^3.0.3:
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
   integrity sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==
 
-dayjs@^1.8.15, dayjs@^1.8.29:
+dayjs@^1.8.15:
   version "1.10.4"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.10.4.tgz#8e544a9b8683f61783f570980a8a80eaf54ab1e2"
   integrity sha512-RI/Hh4kqRc1UKLOAf/T5zdMMX5DQIlDxwUe3wSyMMnEbGunnpENCdbUgM+dW7kXidZqCttBrmw7BhN4TMddkCw==
@@ -8786,10 +8786,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-core-js@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.2.1.tgz#d29281a8c02ff84d5901ee47210067b87b81f27c"
-  integrity sha512-1NjbdODCzzt7JFPqcGSUWWPTOwGe1fPPYzp3gKAnTr5okwcxnp4C3pAF4ksYSVhcmg6gQgG8bqW5dYNdsrdJLw==
+edge-core-js@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-2.4.0.tgz#88192bed1d418737405b1b264fe6254830bff732"
+  integrity sha512-JeH7gRAWUr+gnLWWdbxIkzESQ8Y8nWoi2n9txVTqFYQwKHUFyg/H0IIcS92gGS7Cw/Cg2NsRnCyP+rMLH1BXLA==
   dependencies:
     aes-js "^3.1.0"
     base-x "^4.0.0"
@@ -8811,14 +8811,15 @@ edge-core-js@^2.2.1:
     yaob "^0.3.12"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^3.2.8:
-  version "3.2.8"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-3.2.8.tgz#cec79cc15c670ad9845af5e343a07a3d9819e3d9"
-  integrity sha512-UAQNlhKVEzG2q4Xa95SZ9QjEFvBFKBnF9nFD1mKcUfEE1tthvbJ3PXdzs1ER++8dovrufhrDTH6Bmla3cyt/Rg==
+edge-currency-accountbased@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.1.1.tgz#5504411bbf2052433935fb61531237705f5f286c"
+  integrity sha512-TiISfmKyzSxfMogJ32UIiJ6lyj89ws4pdSmU8WfAk7jBBcObm4iRIkbYL5S/UTOB53L9H9oHUNu4UJnou8UHjw==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@chain-registry/client" "^1.15.0"
     "@cosmjs/stargate" "^0.32.2"
+    "@emurgo/cardano-serialization-lib-nodejs" "^11.5.0"
     "@ethereumjs/common" "^4.0.0"
     "@ethereumjs/tx" "^5.0.0"
     "@fioprotocol/fiosdk" "https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b"
@@ -8852,10 +8853,10 @@ edge-currency-accountbased@^3.2.8:
     xrpl "^2.10.0"
     yaob "^0.3.6"
 
-edge-currency-monero@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-1.1.1.tgz#5df42021516e008501a3362d5a8d6544aae40393"
-  integrity sha512-Sq7gmQYt5/E+jvCYW9lZ2S8RHphy0pxgCymjs6NG9uUtC17reQxbbHd0N+pcQP335F0A4RV/n0tImh/kpAs+Kg==
+edge-currency-monero@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-1.3.1.tgz#1268232bd24ac9bd15a432c4b5bee984ee525909"
+  integrity sha512-gaeaPPD5r1+uhtlQ1itaiPcLQ2ftFp00wmE1XD/2abikG0DqTINcg7pkPY33VUFUB7WzLvyts4ln0WiZEXy7Jw==
   dependencies:
     "@mymonero/mymonero-bigint" "^1.4.2"
     "@mymonero/mymonero-money-format" "^1.4.2"
@@ -8894,10 +8895,10 @@ edge-currency-plugins@^2.5.4:
     wifgrs "^2.0.6"
     ws "^7.4.6"
 
-edge-exchange-plugins@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.2.2.tgz#62024b3bb3cd02776a0f366d261adcfd9bf195c9"
-  integrity sha512-svsYxeSGSNpp1D08NqzrJiM96YHKK2EKV8feEtpBsZcYQubdOTpvgPib3jCnY3j90+d5JIErQ1YCefzwZJiCsA==
+edge-exchange-plugins@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-2.4.0.tgz#478d8225759bcee53c276657a7b5709217fe5e17"
+  integrity sha512-kHmKGRAJ+WWCtm6uJR+I514ofIAuoWW2Kd1L0BFpj3CNozaccgJ1G3teDHpjPJL+gDzopJGc1UTKgSPU8Dt9vA==
   dependencies:
     "@cosmjs/encoding" "^0.32.2"
     biggystring "^4.1.3"
@@ -8913,10 +8914,10 @@ edge-info-server@^2.1.0:
   dependencies:
     cleaners "^0.3.16"
 
-edge-login-ui-rn@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.6.0.tgz#aff8996c4181ae76178cb5346d76418274e3ef4d"
-  integrity sha512-Ou5/vomMFnJZ4oBEENniWsgomiRVSSw5qqwjuaFEYZj5BDBktfKYSdpSXShPhcH7f5acpAgd4AxDIVwj7FZU0w==
+edge-login-ui-rn@^3.7.2:
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.7.2.tgz#38ad9b20b3dffe4b9c614ec5e41df49611295c12"
+  integrity sha512-h7t5+x3ShBF6wafk4ywfi/Jm1MRzWLVjdTJ1iYFSuLUC2byKT8NBt64ioF6mRVPlA895UE8K2lrnZH8Yw/z2jA==
   dependencies:
     base-x "^4.0.0"
     cleaners "^0.3.12"
@@ -15615,11 +15616,6 @@ react-native-file-access@^3.0.5:
   resolved "https://registry.yarnpkg.com/react-native-file-access/-/react-native-file-access-3.0.5.tgz#c63af958451e12bf2e3f89ca9aabde9e3fc3cd9b"
   integrity sha512-r9AFT4islJTZnh/kLTapBBwWzJM/JcVmKelP5rOQY1u5XTCrIL7JkTh6KQNJc8oA6jDqB3DioZ01LSqpiCxeOw==
 
-react-native-flipper@^0.143.0:
-  version "0.143.0"
-  resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.143.0.tgz#7370c3dc3d784d5e0a210073b1335056e8f79e8a"
-  integrity sha512-SjjdKv1kcImBhM3ueI2YR2IvKWBSznhXfw5LVdn81K/UOMvjosxp74rxOWqL/SVXwV+cTErzZvfFrq/EHcC0NQ==
-
 react-native-fs@^2.19.0:
   version "2.20.0"
   resolved "https://registry.yarnpkg.com/react-native-fs/-/react-native-fs-2.20.0.tgz#05a9362b473bfc0910772c0acbb73a78dbc810f6"
@@ -15733,10 +15729,10 @@ react-native-permissions@^3.8.3:
     picocolors "^1.0.0"
     pkg-dir "^5.0.0"
 
-react-native-piratechain@^0.4.6:
-  version "0.4.6"
-  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.4.6.tgz#2043e81ad733d03a6c5632aa2764fdfeef342827"
-  integrity sha512-Dzlx9klI/hkOMeITS7pl0NKBvIVinaPc2e+Xqe+veo/mB1El2JlUP/jYij0QM+tmawHEdfGLJuEmj7o8/6sWKA==
+react-native-piratechain@^0.4.7:
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/react-native-piratechain/-/react-native-piratechain-0.4.7.tgz#7970daddd166204f5461ba63724f9b1d58faabf5"
+  integrity sha512-rM3n3qpcxuMlmczL4I3xXFV248Fm16kM1/AsnOmOJbZPDBHngZcO3aSfylCMDCZ34dMlbEJ7tG+PSEiwRL7Y5w==
   dependencies:
     rfc4648 "^1.3.0"
 
@@ -15849,10 +15845,10 @@ react-native-webview@^13.2.2:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
 
-react-native-zcash@^0.6.9:
-  version "0.6.9"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.6.9.tgz#37ea957e9bf06ce7e95f983367d044ac26a9b6b0"
-  integrity sha512-oy2LflqY10UO0w6rH7bDGQBbWm/IvNVFwz2Wf+zcyJIOzkCT+ploQ4V8IJDEStOYieLKmke7X2eP0EZF3t12PQ==
+react-native-zcash@^0.6.10:
+  version "0.6.10"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.6.10.tgz#5e0d2bea734a6c6fea090862a0b58ecd4864e78a"
+  integrity sha512-bLUDPcEIAA+fhl6GxiUFfcHtozAlZAFuHoqv6uWiXxIgBWEKdJEjm2/iLObHUZd/vJll7Oilvyz/I2s1gnI1Wg==
   dependencies:
     biggystring "^4.1.3"
     rfc4648 "^1.3.0"
@@ -16080,14 +16076,6 @@ reduce-flatten@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/reduce-flatten/-/reduce-flatten-2.0.0.tgz#734fd84e65f375d7ca4465c69798c25c9d10ae27"
   integrity sha512-EJ4UNY/U1t2P/2k6oqotuX2Cc3T6nxJwsM0N0asT7dhrtH1ltUxDn4NalSYmPE2rCkVpcf/X6R0wDwcFpzhd4w==
-
-redux-flipper@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/redux-flipper/-/redux-flipper-2.0.1.tgz#a43603a13e6f06a48c627ae7c144579bd4f1fa54"
-  integrity sha512-JqgnL+fUp3h2fPQRszItLkarTbIf5gjU4Sn0IY/ZxUo6oUUmMh4Lx2J7BBy78cE8KEW9prRRpvJ6NH2uc/QktA==
-  dependencies:
-    cycle "^1.0.3"
-    dayjs "^1.8.29"
 
 redux-keto@^0.3.5:
   version "0.3.5"

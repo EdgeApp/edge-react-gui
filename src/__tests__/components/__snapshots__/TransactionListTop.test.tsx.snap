@@ -79,160 +79,16 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         style={
           {
             "alignItems": "center",
-            "flexDirection": "row",
+            "backgroundColor": "rgba(255, 255, 255, .1)",
+            "borderRadius": 100,
             "flexShrink": 1,
             "marginRight": 11,
             "opacity": 1,
+            "paddingHorizontal": 17,
+            "paddingVertical": 6,
           }
         }
       >
-        <View
-          style={
-            {
-              "height": 34,
-              "marginBottom": 0,
-              "marginLeft": 0,
-              "marginRight": 0,
-              "marginTop": 0,
-              "width": 34,
-            }
-          }
-        >
-          <RNSVGSvgView
-            align="xMidYMid"
-            bbHeight="50"
-            bbWidth="50"
-            focusable={false}
-            height={50}
-            meetOrSlice={0}
-            minX={-8}
-            minY={-8}
-            style={
-              [
-                {
-                  "backgroundColor": "transparent",
-                  "borderWidth": 0,
-                },
-                {
-                  "left": -8,
-                  "position": "absolute",
-                  "top": -8,
-                  "transform": [
-                    {
-                      "rotateZ": "-90deg",
-                    },
-                  ],
-                },
-                {
-                  "flex": 0,
-                  "height": 50,
-                  "width": 50,
-                },
-              ]
-            }
-            vbHeight={50}
-            vbWidth={50}
-            width={50}
-          >
-            <RNSVGGroup
-              fill={
-                {
-                  "payload": 4278190080,
-                  "type": 0,
-                }
-              }
-            >
-              <RNSVGCircle
-                cx="17"
-                cy="17"
-                fill={
-                  {
-                    "payload": 0,
-                    "type": 0,
-                  }
-                }
-                opacity={0}
-                propList={
-                  [
-                    "fill",
-                    "stroke",
-                    "strokeWidth",
-                    "strokeDasharray",
-                    "strokeLinecap",
-                  ]
-                }
-                r="19"
-                stroke={
-                  {
-                    "payload": 4278251938,
-                    "type": 0,
-                  }
-                }
-                strokeDasharray={
-                  [
-                    "119.38052083641213",
-                    "119.38052083641213",
-                  ]
-                }
-                strokeLinecap={1}
-                strokeWidth="4"
-              />
-            </RNSVGGroup>
-          </RNSVGSvgView>
-          <View
-            style={
-              {
-                "backgroundColor": "#000000",
-                "borderRadius": 17,
-                "elevation": 0,
-                "height": 34,
-                "shadowColor": "#000000",
-                "shadowOffset": {
-                  "height": 3,
-                  "width": -3,
-                },
-                "shadowOpacity": 0.6,
-                "shadowRadius": 4,
-                "width": 34,
-              }
-            }
-          >
-            <View
-              style={
-                [
-                  {
-                    "overflow": "hidden",
-                  },
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  },
-                ]
-              }
-            >
-              <FastImageView
-                resizeMode="cover"
-                source={
-                  {
-                    "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                  }
-                }
-                style={
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
-                }
-              />
-            </View>
-          </View>
-        </View>
         <Text
           accessible={true}
           adjustsFontSizeToFit={true}
@@ -248,35 +104,14 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               },
               {
                 "flexShrink": 1,
-                "fontSize": 28,
-                "marginLeft": 11,
-                "marginRight": 6,
+                "fontSize": 17,
+                "lineHeight": 34,
               },
               null,
             ]
           }
         >
           wallet name
-        </Text>
-        <Text
-          allowFontScaling={false}
-          style={
-            [
-              {
-                "color": "#00f1a2",
-                "fontSize": 34,
-              },
-              undefined,
-              {
-                "fontFamily": "Ionicons",
-                "fontStyle": "normal",
-                "fontWeight": "normal",
-              },
-              {},
-            ]
-          }
-        >
-          
         </Text>
       </View>
       <View
@@ -309,8 +144,12 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           {
-            "alignSelf": "flex-end",
+            "alignSelf": "center",
+            "margin": -17,
+            "marginRight": -17,
             "opacity": 1,
+            "padding": 17,
+            "paddingRight": 11,
           }
         }
         testID="gearIcon"
@@ -321,12 +160,12 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           style={
             [
               {
-                "color": "#00f1a2",
-                "fontSize": 34,
+                "color": "#FFFFFF",
+                "fontSize": 22,
               },
               undefined,
               {
-                "fontFamily": "custom",
+                "fontFamily": "Entypo",
                 "fontStyle": "normal",
                 "fontWeight": "normal",
               },
@@ -334,7 +173,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
     </View>
@@ -372,29 +211,71 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         }
       }
     >
-      <Text
-        accessible={true}
-        adjustsFontSizeToFit={true}
-        minimumFontScale={0.3}
-        numberOfLines={1}
+      <View
         style={
-          [
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "includeFontPadding": false,
-            },
-            {
-              "fontFamily": "Quicksand-Medium",
-              "fontSize": 45,
-            },
-            null,
-          ]
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "flexShrink": 1,
+          }
         }
       >
-        0.00123123 BTC
-      </Text>
+        <Text
+          accessible={true}
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.25}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 39,
+              },
+              null,
+            ]
+          }
+        >
+          0.00123123 BTC
+        </Text>
+        <Text
+          allowFontScaling={false}
+          style={
+            [
+              {
+                "color": "#00f1a2",
+                "fontSize": 26,
+              },
+              {
+                "alignSelf": "center",
+                "flexGrow": 1,
+                "marginLeft": 11,
+                "marginRight": 0,
+                "textShadowColor": "rgba(0, 0, 0, 0.514)",
+                "textShadowOffset": {
+                  "height": 0,
+                  "width": 0,
+                },
+                "textShadowRadius": 3,
+              },
+              {
+                "fontFamily": "Ionicons",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              {},
+            ]
+          }
+        >
+          
+        </Text>
+      </View>
       <Text
         accessible={true}
         adjustsFontSizeToFit={true}
@@ -418,154 +299,350 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         $0.00 USD
       </Text>
     </View>
+  </View>,
+  <View
+    style={
+      {
+        "flexDirection": "row",
+        "flexShrink": 1,
+        "justifyContent": "space-evenly",
+      }
+    }
+  >
     <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
       style={
         {
-          "flex": 1,
-          "flexDirection": "row",
-          "justifyContent": "space-evenly",
+          "alignItems": "center",
+          "flexShrink": 1,
+          "justifyContent": "center",
           "marginHorizontal": -22,
-          "marginTop": 22,
+          "marginVertical": 11,
+          "opacity": 1,
+          "paddingHorizontal": 22,
         }
       }
     >
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": false,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={false}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
         style={
           {
             "alignItems": "center",
-            "flexDirection": "row",
             "flexShrink": 1,
             "justifyContent": "center",
-            "opacity": 1,
+            "marginBottom": 6,
+            "paddingTop": 11,
           }
         }
       >
-        <Text
-          accessible={true}
-          adjustsFontSizeToFit={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
+        <View
           style={
-            [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
-              {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Medium",
-                "fontSize": 22,
-              },
-              null,
-            ]
+            {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, .1)",
+              "borderRadius": 33.5,
+              "height": 67,
+              "justifyContent": "center",
+              "width": 67,
+            }
           }
         >
-          Receive
-        </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontSize": 45,
+                },
+                undefined,
+                {
+                  "fontFamily": "Ionicons",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                {},
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
       </View>
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "marginBottom": 11,
+              "textAlign": "center",
+            },
+            null,
+          ]
+        }
+      >
+        Receive
+      </Text>
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flexShrink": 1,
+          "justifyContent": "center",
+          "marginHorizontal": -22,
+          "marginVertical": 11,
+          "opacity": 1,
+          "paddingHorizontal": 22,
+        }
+      }
+    >
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": false,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={false}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
         style={
           {
             "alignItems": "center",
-            "flexDirection": "row",
             "flexShrink": 1,
             "justifyContent": "center",
-            "opacity": 1,
+            "marginBottom": 6,
+            "paddingTop": 11,
           }
         }
       >
-        <Text
-          accessible={true}
-          adjustsFontSizeToFit={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
+        <View
           style={
-            [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
-              {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Medium",
-                "fontSize": 22,
-              },
-              null,
-            ]
+            {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, .1)",
+              "borderRadius": 33.5,
+              "height": 67,
+              "justifyContent": "center",
+              "width": 67,
+            }
           }
         >
-          Send
-        </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontSize": 45,
+                },
+                undefined,
+                {
+                  "fontFamily": "Ionicons",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                {},
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
       </View>
-      <ActivityIndicator
-        color="#00f1a2"
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "marginBottom": 11,
+              "textAlign": "center",
+            },
+            null,
+          ]
+        }
+      >
+        Send
+      </Text>
+    </View>
+    <ActivityIndicator
+      color="#00f1a2"
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "center",
+          "paddingRight": 22,
+        }
+      }
+    />
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flexShrink": 1,
+          "justifyContent": "center",
+          "marginHorizontal": -22,
+          "marginVertical": 11,
+          "opacity": 1,
+          "paddingHorizontal": 22,
+        }
+      }
+    >
+      <View
         style={
           {
             "alignItems": "center",
-            "flexDirection": "row",
+            "flexShrink": 1,
             "justifyContent": "center",
-            "paddingRight": 22,
+            "marginBottom": 6,
+            "paddingTop": 11,
           }
         }
-      />
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, .1)",
+              "borderRadius": 33.5,
+              "height": 67,
+              "justifyContent": "center",
+              "width": 67,
+            }
+          }
+        >
+          <Text
+            allowFontScaling={false}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontSize": 45,
+                },
+                undefined,
+                {
+                  "fontFamily": "Ionicons",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                {},
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
+      </View>
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "marginBottom": 11,
+              "textAlign": "center",
+            },
+            null,
+          ]
+        }
+      >
+        Trade
+      </Text>
     </View>
   </View>,
   <View
@@ -823,160 +900,16 @@ exports[`TransactionListTop should render 1`] = `
         style={
           {
             "alignItems": "center",
-            "flexDirection": "row",
+            "backgroundColor": "rgba(255, 255, 255, .1)",
+            "borderRadius": 100,
             "flexShrink": 1,
             "marginRight": 11,
             "opacity": 1,
+            "paddingHorizontal": 17,
+            "paddingVertical": 6,
           }
         }
       >
-        <View
-          style={
-            {
-              "height": 34,
-              "marginBottom": 0,
-              "marginLeft": 0,
-              "marginRight": 0,
-              "marginTop": 0,
-              "width": 34,
-            }
-          }
-        >
-          <RNSVGSvgView
-            align="xMidYMid"
-            bbHeight="50"
-            bbWidth="50"
-            focusable={false}
-            height={50}
-            meetOrSlice={0}
-            minX={-8}
-            minY={-8}
-            style={
-              [
-                {
-                  "backgroundColor": "transparent",
-                  "borderWidth": 0,
-                },
-                {
-                  "left": -8,
-                  "position": "absolute",
-                  "top": -8,
-                  "transform": [
-                    {
-                      "rotateZ": "-90deg",
-                    },
-                  ],
-                },
-                {
-                  "flex": 0,
-                  "height": 50,
-                  "width": 50,
-                },
-              ]
-            }
-            vbHeight={50}
-            vbWidth={50}
-            width={50}
-          >
-            <RNSVGGroup
-              fill={
-                {
-                  "payload": 4278190080,
-                  "type": 0,
-                }
-              }
-            >
-              <RNSVGCircle
-                cx="17"
-                cy="17"
-                fill={
-                  {
-                    "payload": 0,
-                    "type": 0,
-                  }
-                }
-                opacity={0}
-                propList={
-                  [
-                    "fill",
-                    "stroke",
-                    "strokeWidth",
-                    "strokeDasharray",
-                    "strokeLinecap",
-                  ]
-                }
-                r="19"
-                stroke={
-                  {
-                    "payload": 4278251938,
-                    "type": 0,
-                  }
-                }
-                strokeDasharray={
-                  [
-                    "119.38052083641213",
-                    "119.38052083641213",
-                  ]
-                }
-                strokeLinecap={1}
-                strokeWidth="4"
-              />
-            </RNSVGGroup>
-          </RNSVGSvgView>
-          <View
-            style={
-              {
-                "backgroundColor": "#000000",
-                "borderRadius": 17,
-                "elevation": 0,
-                "height": 34,
-                "shadowColor": "#000000",
-                "shadowOffset": {
-                  "height": 3,
-                  "width": -3,
-                },
-                "shadowOpacity": 0.6,
-                "shadowRadius": 4,
-                "width": 34,
-              }
-            }
-          >
-            <View
-              style={
-                [
-                  {
-                    "overflow": "hidden",
-                  },
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  },
-                ]
-              }
-            >
-              <FastImageView
-                resizeMode="cover"
-                source={
-                  {
-                    "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                  }
-                }
-                style={
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
-                }
-              />
-            </View>
-          </View>
-        </View>
         <Text
           accessible={true}
           adjustsFontSizeToFit={true}
@@ -992,35 +925,14 @@ exports[`TransactionListTop should render 1`] = `
               },
               {
                 "flexShrink": 1,
-                "fontSize": 28,
-                "marginLeft": 11,
-                "marginRight": 6,
+                "fontSize": 17,
+                "lineHeight": 34,
               },
               null,
             ]
           }
         >
           wallet name
-        </Text>
-        <Text
-          allowFontScaling={false}
-          style={
-            [
-              {
-                "color": "#00f1a2",
-                "fontSize": 34,
-              },
-              undefined,
-              {
-                "fontFamily": "Ionicons",
-                "fontStyle": "normal",
-                "fontWeight": "normal",
-              },
-              {},
-            ]
-          }
-        >
-          
         </Text>
       </View>
       <View
@@ -1053,8 +965,12 @@ exports[`TransactionListTop should render 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           {
-            "alignSelf": "flex-end",
+            "alignSelf": "center",
+            "margin": -17,
+            "marginRight": -17,
             "opacity": 1,
+            "padding": 17,
+            "paddingRight": 11,
           }
         }
         testID="gearIcon"
@@ -1065,12 +981,12 @@ exports[`TransactionListTop should render 1`] = `
           style={
             [
               {
-                "color": "#00f1a2",
-                "fontSize": 34,
+                "color": "#FFFFFF",
+                "fontSize": 22,
               },
               undefined,
               {
-                "fontFamily": "custom",
+                "fontFamily": "Entypo",
                 "fontStyle": "normal",
                 "fontWeight": "normal",
               },
@@ -1078,7 +994,7 @@ exports[`TransactionListTop should render 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
     </View>
@@ -1116,29 +1032,71 @@ exports[`TransactionListTop should render 1`] = `
         }
       }
     >
-      <Text
-        accessible={true}
-        adjustsFontSizeToFit={true}
-        minimumFontScale={0.3}
-        numberOfLines={1}
+      <View
         style={
-          [
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "includeFontPadding": false,
-            },
-            {
-              "fontFamily": "Quicksand-Medium",
-              "fontSize": 45,
-            },
-            null,
-          ]
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "flexShrink": 1,
+          }
         }
       >
-        0.00123123 BTC
-      </Text>
+        <Text
+          accessible={true}
+          adjustsFontSizeToFit={true}
+          minimumFontScale={0.25}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 39,
+              },
+              null,
+            ]
+          }
+        >
+          0.00123123 BTC
+        </Text>
+        <Text
+          allowFontScaling={false}
+          style={
+            [
+              {
+                "color": "#00f1a2",
+                "fontSize": 26,
+              },
+              {
+                "alignSelf": "center",
+                "flexGrow": 1,
+                "marginLeft": 11,
+                "marginRight": 0,
+                "textShadowColor": "rgba(0, 0, 0, 0.514)",
+                "textShadowOffset": {
+                  "height": 0,
+                  "width": 0,
+                },
+                "textShadowRadius": 3,
+              },
+              {
+                "fontFamily": "Ionicons",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              {},
+            ]
+          }
+        >
+          
+        </Text>
+      </View>
       <Text
         accessible={true}
         adjustsFontSizeToFit={true}
@@ -1162,154 +1120,350 @@ exports[`TransactionListTop should render 1`] = `
         $0.00 USD
       </Text>
     </View>
+  </View>,
+  <View
+    style={
+      {
+        "flexDirection": "row",
+        "flexShrink": 1,
+        "justifyContent": "space-evenly",
+      }
+    }
+  >
     <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
       style={
         {
-          "flex": 1,
-          "flexDirection": "row",
-          "justifyContent": "space-evenly",
+          "alignItems": "center",
+          "flexShrink": 1,
+          "justifyContent": "center",
           "marginHorizontal": -22,
-          "marginTop": 22,
+          "marginVertical": 11,
+          "opacity": 1,
+          "paddingHorizontal": 22,
         }
       }
     >
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": false,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={false}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
         style={
           {
             "alignItems": "center",
-            "flexDirection": "row",
             "flexShrink": 1,
             "justifyContent": "center",
-            "opacity": 1,
+            "marginBottom": 6,
+            "paddingTop": 11,
           }
         }
       >
-        <Text
-          accessible={true}
-          adjustsFontSizeToFit={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
+        <View
           style={
-            [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
-              {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Medium",
-                "fontSize": 22,
-              },
-              null,
-            ]
+            {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, .1)",
+              "borderRadius": 33.5,
+              "height": 67,
+              "justifyContent": "center",
+              "width": 67,
+            }
           }
         >
-          Receive
-        </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontSize": 45,
+                },
+                undefined,
+                {
+                  "fontFamily": "Ionicons",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                {},
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
       </View>
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "marginBottom": 11,
+              "textAlign": "center",
+            },
+            null,
+          ]
+        }
+      >
+        Receive
+      </Text>
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flexShrink": 1,
+          "justifyContent": "center",
+          "marginHorizontal": -22,
+          "marginVertical": 11,
+          "opacity": 1,
+          "paddingHorizontal": 22,
+        }
+      }
+    >
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": false,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={false}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
         style={
           {
             "alignItems": "center",
-            "flexDirection": "row",
             "flexShrink": 1,
             "justifyContent": "center",
-            "opacity": 1,
+            "marginBottom": 6,
+            "paddingTop": 11,
           }
         }
       >
-        <Text
-          accessible={true}
-          adjustsFontSizeToFit={true}
-          minimumFontScale={0.65}
-          numberOfLines={1}
+        <View
           style={
-            [
-              {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
-              },
-              {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Medium",
-                "fontSize": 22,
-              },
-              null,
-            ]
+            {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, .1)",
+              "borderRadius": 33.5,
+              "height": 67,
+              "justifyContent": "center",
+              "width": 67,
+            }
           }
         >
-          Send
-        </Text>
+          <Text
+            allowFontScaling={false}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontSize": 45,
+                },
+                undefined,
+                {
+                  "fontFamily": "Ionicons",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                {},
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
       </View>
-      <ActivityIndicator
-        color="#00f1a2"
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "marginBottom": 11,
+              "textAlign": "center",
+            },
+            null,
+          ]
+        }
+      >
+        Send
+      </Text>
+    </View>
+    <ActivityIndicator
+      color="#00f1a2"
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "center",
+          "paddingRight": 22,
+        }
+      }
+    />
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": false,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={false}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flexShrink": 1,
+          "justifyContent": "center",
+          "marginHorizontal": -22,
+          "marginVertical": 11,
+          "opacity": 1,
+          "paddingHorizontal": 22,
+        }
+      }
+    >
+      <View
         style={
           {
             "alignItems": "center",
-            "flexDirection": "row",
+            "flexShrink": 1,
             "justifyContent": "center",
-            "paddingRight": 22,
+            "marginBottom": 6,
+            "paddingTop": 11,
           }
         }
-      />
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "rgba(255, 255, 255, .1)",
+              "borderRadius": 33.5,
+              "height": 67,
+              "justifyContent": "center",
+              "width": 67,
+            }
+          }
+        >
+          <Text
+            allowFontScaling={false}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontSize": 45,
+                },
+                undefined,
+                {
+                  "fontFamily": "Ionicons",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                {},
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
+      </View>
+      <Text
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "marginBottom": 11,
+              "textAlign": "center",
+            },
+            null,
+          ]
+        }
+      >
+        Trade
+      </Text>
     </View>
   </View>,
   <View

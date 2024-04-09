@@ -5,7 +5,7 @@
 
 import * as React from 'react'
 import { useMemo } from 'react'
-import { ActivityIndicator, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Platform, Text, TextInput, TextInputProps, TouchableOpacity, View } from 'react-native'
 import Animated, {
   interpolate,
   interpolateColor,
@@ -59,6 +59,7 @@ export interface FilledTextInputProps extends SpaceProps {
 
   // Other React Native TextInput properties:
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters' // Defaults to 'sentences'
+  autoComplete?: TextInputProps['autoComplete']
   autoCorrect?: boolean // Defaults to 'true'
   blurOnSubmit?: boolean // Defaults to 'true'
   inputAccessoryViewID?: string
@@ -121,6 +122,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
 
     // TextInput:
     autoCapitalize = props.secureTextEntry === true ? 'none' : undefined,
+    autoComplete,
     autoCorrect,
     autoFocus = false,
     blurOnClear = false,
@@ -267,6 +269,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               // Other Props:
               autoCapitalize={autoCapitalize}
               autoCorrect={autoCorrect}
+              autoComplete={autoComplete}
               blurOnSubmit={blurOnSubmit}
               inputAccessoryViewID={inputAccessoryViewID}
               secureTextEntry={hidePassword}

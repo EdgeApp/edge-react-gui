@@ -9,6 +9,7 @@ import Animated, {
   runOnJS,
   SharedValue,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withDelay,
   withTiming
@@ -19,9 +20,10 @@ import { formatNumberInput, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { useState } from '../../types/reactHooks'
 import { zeroString } from '../../util/utils'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
-import { FlipIcon } from '../icons/ThemedIcons'
+import { CloseIconAnimated, SwapVerticalIcon } from '../icons/ThemedIcons'
 import { showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { NumericInput } from './NumericInput'
@@ -42,17 +44,25 @@ export interface FlipInputFieldInfo {
 export type FlipInputFieldInfos = [FlipInputFieldInfo, FlipInputFieldInfo]
 
 export interface Props {
+  convertValue: (sourceFieldNum: FieldNum, value: string) => Promise<string | undefined>
+  disabled?: boolean
+  fieldInfos: FlipInputFieldInfos
+  forceFieldNum?: FieldNum
+  inputAccessoryViewID?: string
+  keyboardVisible?: boolean
+  placeholders?: [string, string]
+  returnKeyType?: ReturnKeyType
+  startAmounts: [string, string]
+
+  // Renders:
+  renderFooter?: () => React.ReactNode
+  renderHeader?: () => React.ReactNode
+  renderIcon?: () => React.ReactNode
+
+  // Events:
   onBlur?: () => void
   onFocus?: () => void
   onNext?: () => void
-  convertValue: (sourceFieldNum: FieldNum, value: string) => Promise<string | undefined>
-  startAmounts: [string, string]
-  forceFieldNum?: FieldNum
-  keyboardVisible?: boolean
-  inputAccessoryViewID?: string
-  fieldInfos: FlipInputFieldInfos
-  returnKeyType?: ReturnKeyType
-  editable?: boolean
 }
 
 const FLIP_DURATION = 300
@@ -62,31 +72,55 @@ const flipField = (fieldNum: FieldNum): FieldNum => {
 
 export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, ref) => {
   const theme = useTheme()
+  const themeRem = theme.rem(1)
   const inputRefs = [React.useRef<TextInput>(null), React.useRef<TextInput>(null)]
 
   const {
-    startAmounts,
+    convertValue,
+    disabled = false,
     fieldInfos,
+    forceFieldNum = 0,
+    inputAccessoryViewID,
     keyboardVisible,
+    placeholders = [lstrings.string_tap_to_edit, ''],
     returnKeyType = 'done',
+    startAmounts,
+
+    // Renders:
+    renderFooter,
+    renderHeader,
+    renderIcon,
+
+    // Events:
     onBlur,
     onFocus,
-    onNext,
-    inputAccessoryViewID,
-    convertValue,
-    forceFieldNum = 0,
-    editable
+    onNext
   } = props
   const animatedValue = useSharedValue(forceFieldNum)
 
   // `amounts` is always a 2-tuple
   const [amounts, setAmounts] = useState<[string, string]>(startAmounts)
 
+  const hasAmount = !zeroString(amounts[0])
+
   // primaryField is the index into the 2-tuple, 0 or 1
   const [primaryField, setPrimaryField] = useState<FieldNum>(forceFieldNum)
 
+  // Animates between 0 and 1 based our disabled state:
+  const disableAnimation = useSharedValue(0)
+  React.useEffect(() => {
+    disableAnimation.value = withTiming(disabled ? 1 : 0)
+  }, [disableAnimation, disabled])
+
   const [amountFocused, setAmountFocused] = useState(false)
   const focusAnimation = useSharedValue(0)
+
+  const interpolateIconColor = useAnimatedColorInterpolateFn(theme.textInputIconColor, theme.textInputIconColorFocused, theme.textInputIconColorDisabled)
+  const clearIconColor = useDerivedValue(() => interpolateIconColor(focusAnimation, disableAnimation))
+  const clearIconScale = useDerivedValue(() => (hasAmount ? 1 : focusAnimation.value), [hasAmount])
+  // We have to use a SharedValue for the icon size event though it's not animated,
+  // just because that is the expected type
+  const clearIconSize = useSharedValue(themeRem)
 
   const onToggleFlipInput = useHandler(() => {
     const otherField = primaryField === 1 ? 0 : 1
@@ -133,10 +167,15 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
     if (onBlur != null) onBlur()
   })
 
+  const handleClearPress = useHandler(() => {
+    onNumericInputChange('')
+  })
+
   const renderBottomRow = (fieldNum: FieldNum) => {
     const zeroAmount = zeroString(amounts[fieldNum])
     const primaryAmount = zeroAmount && !amountFocused ? '' : amounts[fieldNum]
 
+    const placeholder = placeholders[0]
     const isEnterTextMode = amountFocused || !zeroAmount
     const currencyName = fieldInfos[fieldNum].currencyName
 
@@ -144,11 +183,12 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
       <BottomContainerView key="bottom">
         <AmountAnimatedNumericInput
           value={primaryAmount}
+          disableAnimation={disableAnimation}
           focusAnimation={focusAnimation}
           maxDecimals={fieldInfos[fieldNum].maxEntryDecimals}
           onChangeText={onNumericInputChange}
           autoCorrect={false}
-          editable={editable}
+          editable={!disabled}
           returnKeyType={returnKeyType}
           autoFocus={primaryField === fieldNum && keyboardVisible}
           ref={inputRefs[fieldNum]}
@@ -157,8 +197,12 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
           onFocus={handleBottomFocus}
           onBlur={handleBottomBlur}
         />
-        {!isEnterTextMode ? <PlaceholderAnimatedText>{lstrings.string_tap_to_edit}</PlaceholderAnimatedText> : null}
-        {isEnterTextMode ? <CurrencySymbolAnimatedText focusAnimation={focusAnimation}>{' ' + currencyName}</CurrencySymbolAnimatedText> : null}
+        {!isEnterTextMode && placeholder !== '' ? <PlaceholderAnimatedText>{placeholder}</PlaceholderAnimatedText> : null}
+        {isEnterTextMode ? (
+          <CurrencySymbolAnimatedText disableAnimation={disableAnimation} focusAnimation={focusAnimation}>
+            {' ' + currencyName}
+          </CurrencySymbolAnimatedText>
+        ) : null}
       </BottomContainerView>
     )
   }
@@ -169,12 +213,17 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
       topText = formatNumberInput(topText, { minDecimals: 0, maxDecimals: fieldInfos[fieldNum].maxEntryDecimals })
     }
 
+    const placeholder = placeholders[1]
+    const zeroAmount = zeroString(amounts[fieldNum])
+    const isEnterTextMode = amountFocused || !zeroAmount
+
     const fieldInfo = fieldInfos[fieldNum]
     topText = `${topText} ${fieldInfo.currencyName}`
+
     return (
-      <EdgeTouchableWithoutFeedback onPress={onToggleFlipInput} key="top">
+      <EdgeTouchableWithoutFeedback onPress={onToggleFlipInput} key="top" disabled={disabled}>
         <TopAmountText numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.65}>
-          {topText}
+          {isEnterTextMode || placeholder === '' ? topText : placeholder}
         </TopAmountText>
       </EdgeTouchableWithoutFeedback>
     )
@@ -187,10 +236,16 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
   }))
 
   return (
-    <>
-      <ContainerView>
+    <ContainerView disableAnimation={disableAnimation} focusAnimation={focusAnimation}>
+      {renderHeader != null ? renderHeader() : null}
+
+      <InputContainerView>
+        <ButtonBox onPress={onToggleFlipInput} paddingRem={[1, 0.5, 1, 1]}>
+          {renderIcon ? renderIcon() : <SwapVerticalIcon color={theme.iconTappable} size={theme.rem(1.5)} />}
+        </ButtonBox>
+
         <AmountFieldContainerTouchable accessible={false} onPress={() => inputRefs[primaryField].current?.focus()}>
-          <InnerView focusAnimation={focusAnimation}>
+          <InputTextView disableAnimation={disableAnimation} focusAnimation={focusAnimation}>
             <FrontAnimatedView animatedValue={animatedValue} pointerEvents={flipField(primaryField) ? 'auto' : 'none'}>
               {renderTopRow(1)}
               {renderBottomRow(0)}
@@ -199,50 +254,76 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
               {renderTopRow(0)}
               {renderBottomRow(1)}
             </BackAnimatedView>
-          </InnerView>
+          </InputTextView>
         </AmountFieldContainerTouchable>
+        <SideContainer scale={clearIconScale}>
+          <EdgeTouchableOpacity accessible onPress={handleClearPress}>
+            <CloseIconAnimated color={clearIconColor} size={clearIconSize} />
+          </EdgeTouchableOpacity>
+        </SideContainer>
+      </InputContainerView>
 
-        <ButtonBox onPress={onToggleFlipInput} paddingRem={[0.5, 0, 0.5, 0.5]}>
-          <FlipIcon color={theme.iconTappable} size={theme.rem(1.5)} />
-        </ButtonBox>
-      </ContainerView>
-    </>
+      {renderFooter != null ? renderFooter() : null}
+    </ContainerView>
   )
 })
 
 const AnimatedNumericInput = Animated.createAnimatedComponent(NumericInput)
 
-const ContainerView = styled(View)(theme => ({
-  flexDirection: 'row',
-  alignItems: 'center',
-  margin: theme.rem(0.5)
-}))
-
-const InnerView = styled(Animated.View)<{
+const ContainerView = styled(Animated.View)<{
+  disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
-}>(theme => ({ focusAnimation }) => {
-  const interpolateInputBackgroundColor = useAnimatedColorInterpolateFn(theme.textInputBackgroundColor, theme.textInputBackgroundColorFocused)
-  const interpolateOutlineColor = useAnimatedColorInterpolateFn(theme.textInputBorderColor, theme.textInputBorderColorFocused)
+}>(theme => ({ disableAnimation, focusAnimation }) => {
+  const interpolateInputBackgroundColor = useAnimatedColorInterpolateFn(
+    theme.textInputBackgroundColor,
+    theme.textInputBackgroundColorFocused,
+    theme.textInputBackgroundColorDisabled
+  )
+  const interpolateOutlineColor = useAnimatedColorInterpolateFn(
+    theme.textInputBorderColor,
+    theme.textInputBorderColorFocused,
+    theme.textInputBorderColorDisabled
+  )
+
   return [
     {
-      alignItems: 'center',
+      flexDirection: 'column',
+      alignItems: 'stretch',
+      margin: theme.rem(0.5),
+
       borderWidth: theme.textInputBorderWidth,
       borderRadius: theme.rem(0.5),
-      flex: 1,
-      flexDirection: 'row',
       overflow: 'hidden'
     },
+
     useAnimatedStyle(() => ({
-      backgroundColor: interpolateInputBackgroundColor(focusAnimation),
-      borderColor: interpolateOutlineColor(focusAnimation)
+      backgroundColor: interpolateInputBackgroundColor(focusAnimation, disableAnimation),
+      borderColor: interpolateOutlineColor(focusAnimation, disableAnimation)
     }))
   ]
+})
+
+const InputContainerView = styled(View)(theme => ({
+  flexDirection: 'row',
+  alignItems: 'center'
+}))
+
+const InputTextView = styled(Animated.View)<{
+  disableAnimation: SharedValue<number>
+  focusAnimation: SharedValue<number>
+}>(theme => {
+  return {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    overflow: 'hidden'
+  }
 })
 
 const FrontAnimatedView = styled(Animated.View)<{ animatedValue: SharedValue<number> }>(theme => ({ animatedValue }) => [
   {
     backfaceVisibility: 'hidden',
-    paddingHorizontal: theme.rem(1),
+    paddingRight: theme.rem(1),
     paddingVertical: theme.rem(0.5)
   },
   useAnimatedStyle(() => {
@@ -256,7 +337,7 @@ const FrontAnimatedView = styled(Animated.View)<{ animatedValue: SharedValue<num
 const BackAnimatedView = styled(Animated.View)<{ animatedValue: SharedValue<number> }>(theme => ({ animatedValue }) => [
   {
     backfaceVisibility: 'hidden',
-    paddingHorizontal: theme.rem(1),
+    paddingRight: theme.rem(1),
     paddingVertical: theme.rem(0.5),
     position: 'absolute',
     top: 0,
@@ -282,31 +363,32 @@ const TopAmountText = styled(Text)(theme => () => [
   }
 ])
 
-const AmountAnimatedNumericInput = styledWithRef(AnimatedNumericInput)<{ focusAnimation: SharedValue<number>; value: string }>(
-  theme =>
-    ({ focusAnimation, value }) => {
-      const isAndroid = Platform.OS === 'android'
-      const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused)
-      const characterLength = value.length
-      return [
-        {
-          includeFontPadding: false,
-          fontFamily: theme.fontFaceMedium,
-          fontSize: theme.rem(1.5),
-          // Android has more space added to the width of the input
-          // after the last character in the input. It seems to be
-          // setting a min-width to the input to roughly 2 characters in size.
-          // We can compensate for this with a negative margin when the character length
-          // is less then 2 characters.
-          marginRight: isAndroid ? -theme.rem(Math.max(0, 2 - characterLength) * 0.4) : 0,
-          padding: 0
-        },
-        useAnimatedStyle(() => ({
-          color: interpolateTextColor(focusAnimation)
-        }))
-      ]
-    }
-)
+const AmountAnimatedNumericInput = styledWithRef(AnimatedNumericInput)<{
+  disableAnimation: SharedValue<number>
+  focusAnimation: SharedValue<number>
+  value: string
+}>(theme => ({ disableAnimation, focusAnimation, value }) => {
+  const isAndroid = Platform.OS === 'android'
+  const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused, theme.textInputTextColorDisabled)
+  const characterLength = value.length
+  return [
+    {
+      includeFontPadding: false,
+      fontFamily: theme.fontFaceMedium,
+      fontSize: theme.rem(1.5),
+      // Android has more space added to the width of the input
+      // after the last character in the input. It seems to be
+      // setting a min-width to the input to roughly 2 characters in size.
+      // We can compensate for this with a negative margin when the character length
+      // is less then 2 characters.
+      marginRight: isAndroid ? -theme.rem(Math.max(0, 2 - characterLength) * 0.4) : 0,
+      padding: 0
+    },
+    useAnimatedStyle(() => ({
+      color: interpolateTextColor(focusAnimation, disableAnimation)
+    }))
+  ]
+})
 
 const PlaceholderAnimatedText = styled(Animated.Text)(theme => ({
   position: 'absolute',
@@ -318,8 +400,11 @@ const PlaceholderAnimatedText = styled(Animated.Text)(theme => ({
   fontSize: theme.rem(1.5)
 }))
 
-const CurrencySymbolAnimatedText = styled(Animated.Text)<{ focusAnimation: SharedValue<number> }>(theme => ({ focusAnimation }) => {
-  const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused)
+const CurrencySymbolAnimatedText = styled(Animated.Text)<{
+  disableAnimation: SharedValue<number>
+  focusAnimation: SharedValue<number>
+}>(theme => ({ disableAnimation, focusAnimation }) => {
+  const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused, theme.textInputTextColorDisabled)
   return [
     {
       fontFamily: theme.fontFaceMedium,
@@ -327,7 +412,7 @@ const CurrencySymbolAnimatedText = styled(Animated.Text)<{ focusAnimation: Share
       includeFontPadding: false
     },
     useAnimatedStyle(() => ({
-      color: interpolateTextColor(focusAnimation)
+      color: interpolateTextColor(focusAnimation, disableAnimation)
     }))
   ]
 })
@@ -344,13 +429,27 @@ const BottomContainerView = styled(View)({
   alignItems: 'center'
 })
 
-function useAnimatedColorInterpolateFn(fromColor: string, toColor: string) {
+const SideContainer = styled(Animated.View)<{ scale: SharedValue<number> }>(theme => ({ scale }) => {
+  return [
+    {
+      alignSelf: 'stretch',
+      justifyContent: 'center',
+      paddingHorizontal: theme.rem(1)
+    },
+    useAnimatedStyle(() => ({
+      transform: [{ scale: scale.value }]
+    }))
+  ]
+})
+
+function useAnimatedColorInterpolateFn(defaultColor: string, focusColor: string, disableColor: string) {
   const interpolateFn = useMemo(() => {
-    return (focusValue: SharedValue<number>) => {
+    return (focusValue: SharedValue<number>, disabledValue: SharedValue<number>) => {
       'worklet'
-      return interpolateColor(focusValue.value, [0, 1], [fromColor, toColor])
+      const interFocusColor = interpolateColor(focusValue.value, [0, 1], [defaultColor, focusColor])
+      return interpolateColor(disabledValue.value, [0, 1], [interFocusColor, disableColor])
     }
-  }, [fromColor, toColor])
+  }, [defaultColor, focusColor, disableColor])
 
   return interpolateFn
 }

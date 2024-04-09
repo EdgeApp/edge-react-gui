@@ -140,6 +140,7 @@ const CreateWalletImportComponent = (props: Props) => {
   // https://www.reddit.com/r/reactnative/comments/rt1who/cant_turn_off_autocomplete_in_textinput_android/
 
   const keyboardType = Platform.OS === 'ios' ? 'email-address' : 'visible-password'
+  const secureTextEntry = Platform.OS === 'ios' ? undefined : true
 
   return (
     <SceneWrapper>
@@ -169,8 +170,10 @@ const CreateWalletImportComponent = (props: Props) => {
           placeholder={lstrings.create_wallet_import_input_key_or_seed_prompt}
           autoCapitalize="none"
           autoCorrect={false}
+          autoComplete="off"
           onChangeText={setImportText}
           onSubmitEditing={handleNext}
+          secureTextEntry={secureTextEntry}
           ref={textInputRef}
         />
         <MainButton label={lstrings.string_next_capitalized} type="secondary" marginRem={1} onPress={handleNext} />

@@ -134,7 +134,7 @@ export const FioCreateHandleScene = (props: Props) => {
           logEvent('Fio_Handle_Register', {
             conversionValues: {
               conversionType: 'dollar',
-              dollarConversionValue: 3
+              dollarRevenue: 3
             }
           })
         )

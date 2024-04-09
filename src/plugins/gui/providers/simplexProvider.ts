@@ -304,13 +304,13 @@ export const simplexProvider: FiatProviderFactory = {
             // @ts-expect-error
             const result3 = quote.error.match(/The (.*) amount must be between (.*) and (.*)/)
             if (result3 == null || result3.length < 4) throw new Error('Simplex unknown error')
-            const [minLimit, maxLimit] = result3.slice(2, 4)
+            const [fiatCode, minLimit, maxLimit] = result3.slice(1, 4)
 
             if (gt(params.exchangeAmount, maxLimit)) {
-              throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: parseFloat(maxLimit) })
+              throw new FiatProviderError({ providerId, errorType: 'overLimit', errorAmount: parseFloat(maxLimit), displayCurrencyCode: fiatCode })
             }
             if (lt(params.exchangeAmount, minLimit)) {
-              throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: parseFloat(minLimit) })
+              throw new FiatProviderError({ providerId, errorType: 'underLimit', errorAmount: parseFloat(minLimit), displayCurrencyCode: fiatCode })
             }
           }
           throw new Error('Simplex unknown error')

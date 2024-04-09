@@ -10,6 +10,7 @@ import { cacheStyles, Theme, useTheme } from '../../../components/services/Theme
 import { FilledTextInput } from '../../../components/themed/FilledTextInput'
 import { MainButton } from '../../../components/themed/MainButton'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
+import { ButtonsViewUi4 } from '../../../components/ui4/ButtonsViewUi4'
 import { SectionView } from '../../../components/ui4/SectionView'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
@@ -25,6 +26,7 @@ export interface FiatPluginEnterAmountParams {
   label2: string
   onChangeText?: (event: { fieldNum: number; value: string }, stateManager: StateManager<EnterAmountState>) => Promise<void>
   convertValue: (sourceFieldNum: number, value: string, stateManager: StateManager<EnterAmountState>) => Promise<string | undefined>
+  onMax?: (sourceFieldNum: number, stateManager: StateManager<EnterAmountState>) => Promise<void>
   onPoweredByClick: (stateManager: StateManager<EnterAmountState>) => Promise<void>
   onSubmit: (event: { response: FiatPluginEnterAmountResponse }, stateManager: StateManager<EnterAmountState>) => Promise<void>
   headerIconUri?: string
@@ -70,6 +72,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     initState,
     headerIconUri,
     headerTitle,
+    onMax,
     onSubmit,
     convertValue,
     onPoweredByClick,
@@ -139,6 +142,14 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
     await onSubmit({ response: { lastUsed: lastUsed.current, value1, value2 } }, stateManager).catch(showError)
   })
 
+  const handleMax = useHandler(async () => {
+    if (onMax != null) {
+      stateManager.update({ spinner1: true, spinner2: true })
+      await onMax(lastUsed.current, stateManager).catch(showError)
+      stateManager.update({ spinner1: false, spinner2: false })
+    }
+  })
+
   let statusTextStyle = styles.text
   if (statusText.textType === 'warning') {
     statusTextStyle = styles.textWarning
@@ -197,6 +208,16 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
                   vertical={0.5}
                 />
               </EdgeAnim>
+              {onMax != null ? (
+                <View style={styles.maxButton}>
+                  <ButtonsViewUi4
+                    tertiary={{
+                      label: lstrings.string_max_cap,
+                      onPress: handleMax
+                    }}
+                  />
+                </View>
+              ) : null}
             </View>
           ) : (
             <View style={styles.textFields}>
@@ -238,6 +259,16 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
                   vertical={0.5}
                 />
               </EdgeAnim>
+              {onMax != null ? (
+                <View style={styles.maxButton}>
+                  <ButtonsViewUi4
+                    tertiary={{
+                      label: lstrings.string_max_cap,
+                      onPress: handleMax
+                    }}
+                  />
+                </View>
+              ) : null}
             </View>
           )}
           <>
@@ -274,6 +305,10 @@ const getStyles = cacheStyles((theme: Theme) => {
       alignItems: 'center',
       paddingTop: theme.rem(0.5),
       width: '100%'
+    },
+    maxButton: {
+      alignItems: 'flex-end',
+      marginTop: theme.rem(-0.75)
     },
     textFields: {
       flexDirection: 'column',

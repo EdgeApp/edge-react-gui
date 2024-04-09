@@ -12,9 +12,6 @@ import type { CreateWalletImportOptionsParams } from '../components/scenes/Creat
 import type { CreateWalletImportParams } from '../components/scenes/CreateWalletImportScene'
 import type { CreateWalletSelectCryptoParams } from '../components/scenes/CreateWalletSelectCryptoScene'
 import type { CreateWalletSelectFiatParams } from '../components/scenes/CreateWalletSelectFiatScene'
-import type { ExchangeQuoteProcessingParams } from '../components/scenes/CryptoExchangeQuoteProcessingScene'
-import type { CryptoExchangeQuoteParams } from '../components/scenes/CryptoExchangeQuoteScene'
-import { ExchangeParams } from '../components/scenes/CryptoExchangeScene'
 import type { CurrencyNotificationParams } from '../components/scenes/CurrencyNotificationScene'
 import type { CurrencySettingsParams } from '../components/scenes/CurrencySettingsScene'
 import type { EdgeLoginParams } from '../components/scenes/EdgeLoginScene'
@@ -40,6 +37,9 @@ import type { SendScene2Params } from '../components/scenes/SendScene2'
 import type { StakeModifyParams } from '../components/scenes/Staking/StakeModifyScene'
 import type { StakeOptionsParams } from '../components/scenes/Staking/StakeOptionsScene'
 import type { StakeOverviewParams } from '../components/scenes/Staking/StakeOverviewScene'
+import type { SwapConfirmationParams } from '../components/scenes/SwapConfirmationScene'
+import { SwapCreateParams } from '../components/scenes/SwapCreateScene'
+import type { SwapProcessingParams } from '../components/scenes/SwapProcessingScene'
 import type { TransactionDetailsParams } from '../components/scenes/TransactionDetailsScene'
 import type { TransactionListParams } from '../components/scenes/TransactionListScene'
 import type { TransactionsExportParams } from '../components/scenes/TransactionsExportScene'
@@ -71,7 +71,7 @@ export interface RouteParamList {
   walletsTab: {}
   buyTab: {}
   sellTab: {}
-  exchangeTab: {}
+  swapTab: {}
   extraTab: undefined
   devTab: undefined
 
@@ -105,11 +105,6 @@ export interface RouteParamList {
   defaultFiatSetting: {}
   edgeLogin: EdgeLoginParams
   editToken: EditTokenParams
-  exchange: ExchangeParams
-  exchangeQuote: CryptoExchangeQuoteParams
-  exchangeQuoteProcessing: ExchangeQuoteProcessingParams
-  exchangeSettings: {}
-  exchangeSuccess: {}
   fioCreateHandle: FioCreateHandleParams
   fioAddressDetails: {
     fioAddressName: string
@@ -213,6 +208,11 @@ export interface RouteParamList {
   stakeModify: StakeModifyParams
   stakeOptions: StakeOptionsParams
   stakeOverview: StakeOverviewParams
+  swapCreate: SwapCreateParams
+  swapConfirmation: SwapConfirmationParams
+  swapProcessing: SwapProcessingParams
+  swapSettings: {}
+  swapSuccess: {}
   testScene: {}
   transactionDetails: TransactionDetailsParams
   transactionList: TransactionListParams

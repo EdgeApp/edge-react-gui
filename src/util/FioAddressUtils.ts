@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { FIO_STR, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { CcWalletMap } from '../reducers/FioReducer'
-import { BooleanMap, EdgeAsset, FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, MapObject, StringMap } from '../types/types'
+import { EdgeAsset, FioAddress, FioConnectionWalletItem, FioDomain, FioObtRecord, MapObject, StringMap } from '../types/types'
 import { getWalletName } from './CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, truncateDecimals } from './utils'
 
@@ -638,7 +638,7 @@ export const checkIsDomainPublic = async (fioPlugin: EdgeCurrencyConfig, domain:
  * @param selectedDomain
  * @param displayDenomination
  * @param isFallback
- * @returns {Promise<{activationCost: number, feeValue: number, supportedCurrencies:{[key: string]: boolean}, paymentInfo: {[key: string]: {amount: string, address: string}}}>}
+ * @returns {Promise<{activationCost: number, feeValue: number, paymentInfo: PaymentInfo}>}
  */
 export const getRegInfo = async (
   fioPlugin: EdgeCurrencyConfig,
@@ -649,7 +649,6 @@ export const getRegInfo = async (
   isFallback: boolean = false
 ): Promise<{
   supportedAssets: EdgeAsset[]
-  supportedCurrencies: { [currencyCode: string]: boolean }
   activationCost: number
   feeValue: number
   paymentInfo: PaymentInfo
@@ -670,12 +669,13 @@ export const getRegInfo = async (
       activationCost,
       feeValue,
       supportedAssets: [{ pluginId: 'fio', tokenId: null }],
-      supportedCurrencies: { [FIO_STR]: true },
       paymentInfo: {
         [FIO_STR]: {
-          amount: `${activationCost}`,
-          nativeAmount: '',
-          address: ''
+          '': {
+            amount: `${activationCost}`,
+            nativeAmount: '',
+            address: ''
+          }
         }
       }
     }
@@ -704,10 +704,9 @@ export const getDomainRegInfo = async (
   displayDenomination: EdgeDenomination
 ): Promise<{
   supportedAssets: EdgeAsset[]
-  supportedCurrencies: { [currencyCode: string]: boolean }
   activationCost: number
   feeValue: number
-  paymentInfo: { [currencyCode: string]: { amount: string; address: string } }
+  paymentInfo: PaymentInfo
 }> => {
   let activationCost = 0
   let feeValue = 0
@@ -727,8 +726,8 @@ export const getDomainRegInfo = async (
   }
 }
 
-interface PaymentInfo {
-  [currencyCode: string]: { amount: string; address: string; nativeAmount?: string }
+export interface PaymentInfo {
+  [pluginId: string]: { [tokenIdString: string]: { amount: string; address: string; nativeAmount?: string } }
 }
 
 const buyAddressRequest = async (
@@ -739,7 +738,6 @@ const buyAddressRequest = async (
   activationCost: number
 ): Promise<{
   supportedAssets: EdgeAsset[]
-  supportedCurrencies: { [currencyCode: string]: boolean }
   activationCost: number
   paymentInfo: PaymentInfo
 }> => {
@@ -751,34 +749,39 @@ const buyAddressRequest = async (
     })
 
     if (buyAddressResponse.success) {
-      const supportedCurrencies: BooleanMap = { [FIO_STR]: true }
       const paymentInfo: PaymentInfo = {
         [FIO_STR]: {
-          amount: `${activationCost}`,
-          nativeAmount: '',
-          address: ''
+          '': {
+            amount: `${activationCost}`,
+            nativeAmount: '',
+            address: ''
+          }
         }
       }
 
       const supportedAssets: EdgeAsset[] = []
-      for (const currencyKey of Object.keys(buyAddressResponse.success.charge.pricing)) {
-        const currencyCode = buyAddressResponse.success.charge.pricing[currencyKey].currency
-        supportedCurrencies[currencyCode] = true
+      const { addresses, pricing } = buyAddressResponse.success.charge
+      for (const currencyKey of Object.keys(pricing)) {
+        // const currencyCode = buyAddressResponse.success.charge.pricing[currencyKey].currency
         const asset = fioToEdgeMap[currencyKey]
-        if (asset != null) {
-          supportedAssets.push(asset)
+        if (asset == null) {
+          continue
         }
+        supportedAssets.push(asset)
+        const { pluginId, tokenId } = asset
 
-        paymentInfo[currencyCode] = {
-          amount: buyAddressResponse.success.charge.pricing[currencyKey].amount,
-          address: buyAddressResponse.success.charge.addresses[currencyKey]
+        if (paymentInfo[pluginId] == null) {
+          paymentInfo[pluginId] = {}
+        }
+        paymentInfo[pluginId][tokenId ?? ''] = {
+          amount: pricing[currencyKey].amount,
+          address: addresses[currencyKey]
         }
       }
 
       return {
         activationCost,
         supportedAssets,
-        supportedCurrencies,
         paymentInfo
       }
     }
