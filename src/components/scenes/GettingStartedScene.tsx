@@ -56,55 +56,43 @@ interface SectionData {
   title: string
 }
 
-const slide1 = {
-  image: uspImage0,
-  key: 'slide1',
-  message: lstrings.getting_started_slide_1_message,
-  title: lstrings.getting_started_slide_1_title,
-  footnote: lstrings.getting_started_slide_1_footnote
-}
-const slide1Alt = {
-  image: uspImage0,
-  key: 'slide1Alt',
-  message: lstrings.getting_started_slide_1_message_alt,
-  title: lstrings.getting_started_slide_1_title
-}
-const slide2 = {
-  image: uspImage1,
-  key: 'slide2',
-  message: lstrings.getting_started_slide_2_message,
-  title: lstrings.getting_started_slide_2_title
-}
-const slide3 = {
-  image: uspImage2,
-  key: 'slide3',
-  message: lstrings.getting_started_slide_3_message,
-  title: lstrings.getting_started_slide_3_title
-}
-const slide4 = {
-  image: uspImage3,
-  key: 'slide4',
-  message: lstrings.getting_started_slide_4_message,
-  title: lstrings.getting_started_slide_4_title
-}
-
-const sectionsVariantMap: { [key: string]: SectionData[] } = {
-  default: [slide1, slide2, slide3, slide4],
-  C_UspsMinusWGYC: [slide2, slide3, slide4],
-  D_UspsAltWGYC: [slide1Alt, slide2, slide3, slide4]
-}
+const sections: SectionData[] = [
+  {
+    image: uspImage0,
+    key: 'slide1',
+    message: lstrings.getting_started_slide_1_message,
+    title: lstrings.getting_started_slide_1_title,
+    footnote: lstrings.getting_started_slide_1_footnote
+  },
+  {
+    image: uspImage1,
+    key: 'slide2',
+    message: lstrings.getting_started_slide_2_message,
+    title: lstrings.getting_started_slide_2_title
+  },
+  {
+    image: uspImage2,
+    key: 'slide3',
+    message: lstrings.getting_started_slide_3_message,
+    title: lstrings.getting_started_slide_3_title
+  },
+  {
+    image: uspImage3,
+    key: 'slide4',
+    message: lstrings.getting_started_slide_4_message,
+    title: lstrings.getting_started_slide_4_title
+  }
+]
 
 export const GettingStartedScene = (props: Props) => {
   const { navigation, route } = props
   const dispatch = useDispatch()
   const { experimentConfig } = route.params
-  const { createAccountType, landingType } = experimentConfig
+  const { createAccountType } = experimentConfig
   const context = useSelector(state => state.core.context)
   const isLoggedIn = useSelector(state => state.ui.settings.settingsLoaded ?? false)
   const localUsers = useWatch(context, 'localUsers')
   const hasLocalUsers = localUsers.length > 0
-
-  const sections: SectionData[] = sectionsVariantMap[landingType] ?? sectionsVariantMap.default
 
   // An extra index is added to account for the extra initial usp slide OR to
   // allow the SwipeOffsetDetector extra room for the user to swipe beyond to
