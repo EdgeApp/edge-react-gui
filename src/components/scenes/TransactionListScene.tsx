@@ -301,7 +301,6 @@ function TransactionListComponent(props: Props) {
         <View style={undoInsetStyle}>
           <Animated.FlatList
             style={styles.flatList}
-            // @ts-expect-error
             ref={flashListRef}
             contentContainerStyle={{
               paddingTop: insetStyle.paddingTop + theme.rem(0.5),
