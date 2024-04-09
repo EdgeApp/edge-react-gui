@@ -165,11 +165,6 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         accountInitObject.walletId = walletId
         accountInitObject.currencyCode = currencyCode
       }
-      const activeWalletIds = account.activeWalletIds
-      dispatch({
-        type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
-        data: { activeWalletIds }
-      })
 
       accountInitObject = { ...accountInitObject, ...syncedSettings }
 
