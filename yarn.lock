@@ -2386,9 +2386,9 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b":
+"@fioprotocol/fiosdk@git+https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b":
   version "1.8.0"
-  resolved "https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b"
+  resolved "git+https://github.com/peachbits/fiosdk_typescript.git#d04449fff9f9b8c1487359a5b6bf64b7b53d0b6b"
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -9011,10 +9011,10 @@ edge-core-js@^2.5.0:
     yaob "^0.3.12"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.1.1.tgz#5504411bbf2052433935fb61531237705f5f286c"
-  integrity sha512-TiISfmKyzSxfMogJ32UIiJ6lyj89ws4pdSmU8WfAk7jBBcObm4iRIkbYL5S/UTOB53L9H9oHUNu4UJnou8UHjw==
+edge-currency-accountbased@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.2.0.tgz#e290c888b5a3e3688caea9d6bc417df0ce263522"
+  integrity sha512-CEAgY05fGEDjxLGIqm6zKGpWR/7qrTBXGDmPaqyRvydwbNnJAiNsPI3sIyO0ZdAHi6f0L8k1Cl1PZO5AvJfATQ==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@chain-registry/client" "^1.15.0"
@@ -10352,9 +10352,9 @@ eyes@^0.1.8:
   resolved "https://registry.yarnpkg.com/eyes/-/eyes-0.1.8.tgz#62cf120234c683785d902348a800ef3e0cc20bc0"
   integrity sha512-GipyPsXO1anza0AOZdy69Im7hGFCNB7Y/NGjDlZGJ3GJJLtwNSb2vrzYrTYJRrRloVx7pl+bhUaTB8yiccPvFQ==
 
-"eztz.js@https://github.com/EdgeApp/eztz.git#edge-fixes":
+"eztz.js@git+https://github.com/EdgeApp/eztz.git#edge-fixes":
   version "0.0.1"
-  resolved "https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
+  resolved "git+https://github.com/EdgeApp/eztz.git#eefa603586810c3d62f852e7f28cfe57c523b7db"
   dependencies:
     bignumber.js "^7.2.1"
     bip39 "^3.0.2"
