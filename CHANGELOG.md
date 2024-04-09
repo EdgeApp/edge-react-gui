@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Done button is a part of SimpleTextInput
 - fixed: Glitch on transaction list scene when starting search
 - removed: 'X' button on modals
 
