@@ -266,11 +266,6 @@ exports[`TransactionDetailsScene should render 1`] = `
             >
               <FastImageView
                 resizeMode="cover"
-                source={
-                  {
-                    "uri": "thumb/nail/path",
-                  }
-                }
                 style={
                   {
                     "bottom": 0,
@@ -2433,11 +2428,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             >
               <FastImageView
                 resizeMode="cover"
-                source={
-                  {
-                    "uri": "thumb/nail/path",
-                  }
-                }
                 style={
                   {
                     "bottom": 0,

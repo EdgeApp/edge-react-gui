@@ -740,11 +740,6 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
       >
         <FastImageView
           resizeMode="contain"
-          source={
-            {
-              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-            }
-          }
           style={
             {
               "bottom": 0,
