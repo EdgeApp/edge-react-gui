@@ -16,6 +16,7 @@
 - added: New `Text`-based components
 - added: Light account backup modal text experiments
 - added: "Parent Wallet" section when changing wallet from Transaction List while viewing a token
+- added: Sell-to-debit support in Europe
 - changed: Replace `ModalMessage` with `Paragraph`
 - changed: Improved wallet sync indicator bar on top of screen
 - changed: Allow light accounts to buy up to $50 worth of crypto at a time
