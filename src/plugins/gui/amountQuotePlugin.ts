@@ -127,6 +127,10 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       const paymentProviderPriority = providerPriority[paymentTypes[0]]
       const priorityProviders = providers.filter(p => paymentProviderPriority[p.providerId] != null && paymentProviderPriority[p.providerId] > 0)
 
+      if (priorityProviders.length === 0) {
+        throw new Error('No providers available for payment type: ' + paymentTypes[0])
+      }
+
       // Fetch supported assets from all providers, based on the given
       // paymentTypes this plugin was initialized with.
       for (const provider of priorityProviders) {
