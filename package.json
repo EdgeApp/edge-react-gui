@@ -32,6 +32,7 @@
     "androidKeysCreate": "node -r sucrase/register scripts/createAndroidKeys.ts",
     "configure": "node -r sucrase/register scripts/configure.ts",
     "deploy": "node -r sucrase/register scripts/deploy.ts",
+    "fix-kotlin": "cd android; ./gradlew formatKotlin",
     "fix-java": "cd android; ./format-java.sh",
     "fix-swift": "swift-format format -i ios/*.swift",
     "fix": "npm run lint -- --fix && yarn-deduplicate",

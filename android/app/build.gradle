@@ -5,6 +5,7 @@ apply plugin: "com.facebook.react"
 apply plugin: 'com.bugsnag.android.gradle'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
+apply plugin: 'tech.formatter-kt.formatter'
 
 import com.android.build.OutputFile
 
