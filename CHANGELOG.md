@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.5.0
+
 - added: More descriptive 504 transaction failure error message
 - added: New `Text`-based components
 - added: Light account backup modal text experiments
@@ -11,7 +13,7 @@
 - changed: Allow light accounts to buy up to $50 worth of crypto at a time
 - removed: USPs a/b/c/d test experiment - always uses default USPs
 
-## 4.4.0
+## 4.4.0 (2024-04-09)
 
 - added: Add Cardano (ADA)
 - added: Add auto-detected tokens section in ManageTokensScene
