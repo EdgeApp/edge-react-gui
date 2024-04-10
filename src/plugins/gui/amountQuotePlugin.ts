@@ -484,7 +484,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
           }
 
           // Restrict light accounts from buying more than $50 at a time
-          if (isLightAccount) {
+          if (isLightAccount && isBuy) {
             const quoteFiatCurrencyCode = bestQuote.fiatCurrencyCode
             const quoteFiatRate =
               quoteFiatCurrencyCode === 'iso:USD' ? '1' : (await getHistoricalRate(`${quoteFiatCurrencyCode}_iso:USD`, new Date().toISOString())).toString()
