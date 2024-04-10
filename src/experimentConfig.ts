@@ -6,21 +6,21 @@ import { LOCAL_EXPERIMENT_CONFIG } from './constants/constantSettings'
 import { ENV } from './env'
 import { isMaestro } from './util/maestro'
 
-export type LandingType = 'A_legacy' | 'B_Usps' | 'C_UspsMinusWGYC' | 'D_UspsAltWGYC'
+export type BackupTextType = 'original' | 'backup' | 'secure' | 'create'
 
 // Persistent experiment config for A/B testing. Values initialized in this
 // config persist throughout the liftetime of the app install.
 export interface ExperimentConfig {
   createAccountType: CreateAccountType
-  landingType: LandingType
   signupCaptcha: 'withCaptcha' | 'withoutCaptcha'
+  backupText: BackupTextType
 }
 
 // Defined default "unchanged" values before experimentation.
 export const DEFAULT_EXPERIMENT_CONFIG: ExperimentConfig = {
   createAccountType: 'full',
-  landingType: 'B_Usps',
-  signupCaptcha: 'withoutCaptcha'
+  signupCaptcha: 'withoutCaptcha',
+  backupText: 'original'
 }
 
 const experimentConfigDisklet = makeReactNativeDisklet()
@@ -28,8 +28,8 @@ const experimentConfigDisklet = makeReactNativeDisklet()
 // The probability of an experiment config feature being set for a given key
 const experimentDistribution = {
   createAccountType: [50, 50],
-  landingType: [25, 25, 25, 25],
-  signupCaptcha: [50, 50]
+  signupCaptcha: [50, 50],
+  backupText: [25, 25, 25, 25]
 }
 
 /**
@@ -70,11 +70,8 @@ const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution
 
 const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
   createAccountType: asMaybe(asValue('full', 'light'), generateExperimentConfigVal('createAccountType', ['full', 'light'])),
-  landingType: asMaybe(
-    asValue('A_legacy', 'B_Usps', 'C_UspsMinusWGYC', 'D_UspsAltWGYC'),
-    generateExperimentConfigVal('landingType', ['A_legacy', 'B_Usps', 'C_UspsMinusWGYC', 'D_UspsAltWGYC'])
-  ),
-  signupCaptcha: asMaybe(asValue('withoutCaptcha', 'withCaptcha'), generateExperimentConfigVal('signupCaptcha', ['withoutCaptcha', 'withCaptcha']))
+  signupCaptcha: asMaybe(asValue('withoutCaptcha', 'withCaptcha'), generateExperimentConfigVal('signupCaptcha', ['withoutCaptcha', 'withCaptcha'])),
+  backupText: asMaybe(asValue('original', 'backup', 'secure', 'create'), generateExperimentConfigVal('backupText', ['original', 'backup', 'secure', 'create']))
 })
 
 /**

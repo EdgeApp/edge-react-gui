@@ -133,20 +133,6 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
   }
 }
 
-export function updateWalletLoadingProgress(walletId: string, newWalletProgress: number): ThunkAction<void> {
-  return (dispatch, getState) => {
-    const state = getState()
-    const currentWalletProgress = state.ui.wallets.walletLoadingProgress[walletId]
-    const marginalProgress = newWalletProgress - currentWalletProgress
-    if (newWalletProgress !== 1 && marginalProgress < 0.1) return
-
-    dispatch({
-      type: 'UPDATE_WALLET_LOADING_PROGRESS',
-      data: { walletId, addressLoadingProgress: newWalletProgress }
-    })
-  }
-}
-
 export function updateMostRecentWalletsSelected(walletId: string, tokenId: EdgeTokenId): ThunkAction<void> {
   return (dispatch, getState) => {
     const state = getState()

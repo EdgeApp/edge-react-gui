@@ -6,8 +6,8 @@ import { AirshipBridge } from 'react-native-airship'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { lstrings } from '../../locales/strings'
 import { showToast } from '../services/AirshipInstance'
+import { Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage } from '../themed/ModalParts'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
@@ -30,7 +30,7 @@ export function RawTextModal(props: Props) {
   return (
     <ModalUi4 bridge={bridge} title={title} onCancel={handleCancel}>
       <ScrollView scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
-        <ModalMessage>{body}</ModalMessage>
+        <Paragraph>{body}</Paragraph>
       </ScrollView>
       {disableCopy ? null : <MainButton label={lstrings.fragment_request_copy_title} marginRem={1} onPress={handleCopy} type="secondary" />}
     </ModalUi4>

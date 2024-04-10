@@ -5,9 +5,9 @@ import { AirshipBridge } from 'react-native-airship'
 import { lstrings } from '../../locales/strings'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
+import { Paragraph } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage } from '../themed/ModalParts'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
@@ -98,7 +98,7 @@ export function TextInputModal(props: Props) {
 
   return (
     <ModalUi4 warning={warning} bridge={bridge} title={title} onCancel={() => bridge.resolve(undefined)}>
-      {typeof message === 'string' ? <ModalMessage>{message}</ModalMessage> : <>{message}</>}
+      {typeof message === 'string' ? <Paragraph>{message}</Paragraph> : <>{message}</>}
       {warningMessage != null ? <Alert type="warning" title={lstrings.string_warning} marginRem={0.5} message={warningMessage} numberOfLines={0} /> : null}
       <FilledTextInput
         top={1}

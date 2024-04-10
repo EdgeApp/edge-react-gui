@@ -64,6 +64,7 @@ interface Props {
   headerTitle: string
   showBankOptions?: boolean
   showCreateWallet?: boolean
+  parentWalletId?: string
 }
 
 const keysOnlyModeAssets: EdgeAsset[] = Object.keys(SPECIAL_CURRENCY_INFO)
@@ -91,7 +92,8 @@ export function WalletListModal(props: Props) {
     createWalletId,
     headerTitle,
     showBankOptions = false,
-    showCreateWallet
+    showCreateWallet,
+    parentWalletId
   } = props
 
   // #region Constants
@@ -249,6 +251,7 @@ export function WalletListModal(props: Props) {
         searchText={searchText}
         showCreateWallet={showCreateWallet}
         createWalletId={createWalletId}
+        parentWalletId={parentWalletId}
         onPress={handleWalletListPress}
         navigation={navigation}
       />
@@ -274,19 +277,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 // Given a list of assets, shows a modal for a user to pick a wallet for that asset.
 // If only one wallet exists for that asset, auto pick that wallet
-export const pickWallet = async ({
-  account,
-  assets = [],
-  headerTitle = lstrings.select_wallet,
-  navigation,
-  showCreateWallet
-}: {
+export const pickWallet = async (args: {
   account: EdgeAccount
   assets?: EdgeAsset[]
   headerTitle?: string
   navigation: NavigationBase
   showCreateWallet?: boolean
 }): Promise<WalletListResult> => {
+  const { account, assets = [], headerTitle = lstrings.select_wallet, navigation, showCreateWallet } = args
   const { currencyWallets } = account
 
   const matchingWallets: Array<{ walletId: string; tokenId: EdgeTokenId }> = []

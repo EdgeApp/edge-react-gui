@@ -187,7 +187,13 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
   setDomain = async () => {
     const fioDomain = await Airship.show<string | undefined>(bridge => (
-      <TextInputModal bridge={bridge} initialValue={this.state.fioDomain} inputLabel={lstrings.fio_domain_label} title={lstrings.fio_domain_choose_label} />
+      <TextInputModal
+        bridge={bridge}
+        initialValue={this.state.fioDomain}
+        inputLabel={lstrings.fio_domain_label}
+        title={lstrings.fio_domain_choose_label}
+        autoCorrect={false}
+      />
     ))
     if (fioDomain) this.handleFioDomainChange(fioDomain)
   }

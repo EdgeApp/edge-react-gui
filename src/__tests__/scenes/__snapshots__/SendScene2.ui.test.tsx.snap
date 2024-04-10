@@ -398,6 +398,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -602,6 +603,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -786,6 +788,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   >
                     <Text
                       allowFontScaling={false}
+                      selectable={false}
                       style={
                         [
                           {
@@ -923,6 +926,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -1126,6 +1130,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -1257,6 +1262,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -1745,6 +1751,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -1949,6 +1956,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -2133,6 +2141,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   >
                     <Text
                       allowFontScaling={false}
+                      selectable={false}
                       style={
                         [
                           {
@@ -2270,6 +2279,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -2473,6 +2483,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -2792,6 +2803,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -3280,6 +3292,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -3487,6 +3500,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   >
                     <Text
                       allowFontScaling={false}
+                      selectable={false}
                       style={
                         [
                           {
@@ -3649,6 +3663,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -3833,6 +3848,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   >
                     <Text
                       allowFontScaling={false}
+                      selectable={false}
                       style={
                         [
                           {
@@ -3970,6 +3986,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -4173,6 +4190,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -4304,6 +4322,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -4792,6 +4811,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -4999,6 +5019,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   >
                     <Text
                       allowFontScaling={false}
+                      selectable={false}
                       style={
                         [
                           {
@@ -5184,6 +5205,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   >
                     <Text
                       allowFontScaling={false}
+                      selectable={false}
                       style={
                         [
                           {
@@ -5386,6 +5408,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -5517,6 +5540,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -6005,6 +6029,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -6212,6 +6237,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   >
                     <Text
                       allowFontScaling={false}
+                      selectable={false}
                       style={
                         [
                           {
@@ -6374,6 +6400,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -6575,6 +6602,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -6706,6 +6734,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -7194,6 +7223,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -7401,6 +7431,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   >
                     <Text
                       allowFontScaling={false}
+                      selectable={false}
                       style={
                         [
                           {
@@ -7603,6 +7634,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -7734,6 +7766,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -8222,6 +8255,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -8429,6 +8463,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   >
                     <Text
                       allowFontScaling={false}
+                      selectable={false}
                       style={
                         [
                           {
@@ -8734,6 +8769,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   >
                     <Text
                       allowFontScaling={false}
+                      selectable={false}
                       style={
                         [
                           {
@@ -8936,6 +8972,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -9067,6 +9104,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -9555,6 +9593,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -9883,6 +9922,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -10204,6 +10244,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -10335,6 +10376,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -10823,6 +10865,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -11431,6 +11474,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -11562,6 +11606,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -12050,6 +12095,7 @@ exports[`SendScene2 Render SendScene 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -12265,6 +12311,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     >
                       <Text
                         allowFontScaling={false}
+                        selectable={false}
                         style={
                           [
                             {
@@ -12349,6 +12396,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     >
                       <Text
                         allowFontScaling={false}
+                        selectable={false}
                         style={
                           [
                             {
@@ -12435,6 +12483,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     >
                       <Text
                         allowFontScaling={false}
+                        selectable={false}
                         style={
                           [
                             {
@@ -12575,13 +12624,13 @@ exports[`SendScene2 Render SendScene 1`] = `
                 style={
                   {
                     "alignItems": "center",
-                    "display": "flex",
                     "flexDirection": "row",
                   }
                 }
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -12615,6 +12664,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                         "includeFontPadding": false,
                       },
                       {
+                        "flexShrink": 1,
                         "fontFamily": "Quicksand-Medium",
                         "marginLeft": 4,
                       },

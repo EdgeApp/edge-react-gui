@@ -7,6 +7,7 @@ import { assetOverrides } from '../util/serverState'
 import { normalizeForSearch } from '../util/utils'
 
 export interface WalletCreateItem {
+  type: 'create'
   key: string
   currencyCode: string
   displayName: string
@@ -74,6 +75,7 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
 
     if (['bitcoin', 'litecoin', 'digibyte'].includes(pluginId)) {
       newWallets.push({
+        type: 'create',
         key: `create-${walletType}-bip49-${pluginId}`,
         currencyCode,
         displayName: `${displayName} (Segwit)`,
@@ -83,6 +85,7 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
         walletType
       })
       newWallets.push({
+        type: 'create',
         key: `create-${walletType}-bip44-${pluginId}`,
         currencyCode,
         displayName: `${displayName} (no Segwit)`,
@@ -93,6 +96,7 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
       })
     } else {
       newWallets.push({
+        type: 'create',
         key: `create-${walletType}-${pluginId}`,
         currencyCode,
         displayName,
@@ -132,6 +136,7 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
       if (currencyCode === currencyInfo.currencyCode) continue
 
       const item: TokenWalletCreateItem = {
+        type: 'create',
         key: `create-${currencyInfo.pluginId}-${tokenId}`,
         currencyCode,
         displayName,
@@ -145,8 +150,9 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
 
   // Filter this list:
   const existingWallets: EdgeAsset[] = []
-  for (const { wallet, tokenId } of filteredWalletList) {
-    if (wallet == null) continue
+  for (const item of filteredWalletList) {
+    if (item.type !== 'asset') continue
+    const { wallet, tokenId } = item
     existingWallets.push({
       pluginId: wallet.currencyInfo.pluginId,
       tokenId

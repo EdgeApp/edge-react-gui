@@ -7,10 +7,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { lstrings } from '../../locales/strings'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
+import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage, ModalTitle } from '../themed/ModalParts'
+import { ModalTitle } from '../themed/ModalParts'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
@@ -62,8 +62,8 @@ export function ConfirmContinueModal(props: Props) {
       onCancel={isSkippable ? handleClose : undefined}
     >
       {children}
-      {body != null ? <ModalMessage>{body}</ModalMessage> : null}
-      <ModalMessage>{lstrings.confirm_continue_modal_body}</ModalMessage>
+      {body != null ? <Paragraph>{body}</Paragraph> : null}
+      <Paragraph>{lstrings.confirm_continue_modal_body}</Paragraph>
       <EdgeTouchableWithoutFeedback onPress={handleTogggle}>
         <View style={styles.checkBoxContainer}>
           <EdgeText style={styles.checkboxText}>{lstrings.confirm_continue_modal_button_text}</EdgeText>

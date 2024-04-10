@@ -59,6 +59,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
     >
       <Text
         allowFontScaling={false}
+        selectable={false}
         style={
           [
             {

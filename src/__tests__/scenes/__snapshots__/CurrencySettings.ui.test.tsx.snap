@@ -380,6 +380,7 @@ exports[`CurrencySettings should render 1`] = `
               accessibilityHint="On undefined"
               accessibilityRole="radio"
               allowFontScaling={false}
+              selectable={false}
               style={
                 [
                   {
@@ -514,6 +515,7 @@ exports[`CurrencySettings should render 1`] = `
               accessibilityHint="Off undefined"
               accessibilityRole="radio"
               allowFontScaling={false}
+              selectable={false}
               style={
                 [
                   {
@@ -648,6 +650,7 @@ exports[`CurrencySettings should render 1`] = `
               accessibilityHint="Off undefined"
               accessibilityRole="radio"
               allowFontScaling={false}
+              selectable={false}
               style={
                 [
                   {

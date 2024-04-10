@@ -2,7 +2,18 @@
 
 ## Unreleased
 
-## 4.4.0
+## 4.5.0
+
+- added: More descriptive 504 transaction failure error message
+- added: New `Text`-based components
+- added: Light account backup modal text experiments
+- added: "Parent Wallet" section when changing wallet from Transaction List while viewing a token
+- changed: Replace `ModalMessage` with `Paragraph`
+- changed: Improved wallet sync indicator bar on top of screen
+- changed: Allow light accounts to buy up to $50 worth of crypto at a time
+- removed: USPs a/b/c/d test experiment - always uses default USPs
+
+## 4.4.0 (2024-04-09)
 
 - added: Add Cardano (ADA)
 - added: Add auto-detected tokens section in ManageTokensScene
@@ -14,8 +25,8 @@
 - fixed: FIO handle/domain registration error with MATIC payment
 - fixed: Fix duplicate transactions bug and re-enable transaction support in Filecoin FEVM
 - fixed: 'tokenId' related crash on Send scene under certain conditions
-- fixed: Disable RBF for Thorchain Savers transactions
 - fixed: Properly show the Thorchain Savers unstake amount including earned amt
+- fixed: Disable RBF for Thorchain Savers transactions
 - fixed: Xcode 15 builds. Remove Flipper as it is deprecated anyway
 - fixed: Light account reporting
 

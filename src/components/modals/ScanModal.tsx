@@ -19,9 +19,9 @@ import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError, showWarning } from '../services/AirshipInstance'
 import { checkAndRequestPermission } from '../services/PermissionsManager'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
+import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { ModalFooter, ModalMessage } from '../themed/ModalParts'
+import { ModalFooter } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
 
 interface Props {
@@ -203,7 +203,7 @@ export const ScanModal = (props: Props) => {
 
     return (
       <View style={styles.cameraPermissionContainer}>
-        <ModalMessage>{lstrings.scan_camera_permission_denied}</ModalMessage>
+        <Paragraph>{lstrings.scan_camera_permission_denied}</Paragraph>
         <MainButton onPress={handleSettings} label={lstrings.open_settings} marginRem={1} />
       </View>
     )

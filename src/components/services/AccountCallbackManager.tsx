@@ -8,7 +8,7 @@ import { checkFioObtData } from '../../actions/FioActions'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { showReceiveDropdown } from '../../actions/ReceiveDropdown'
 import { checkPasswordRecovery } from '../../actions/RecoveryReminderActions'
-import { updateWalletLoadingProgress, updateWalletsRequest } from '../../actions/WalletActions'
+import { updateWalletsRequest } from '../../actions/WalletActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useWalletsSubscriber } from '../../hooks/useWalletsSubscriber'
 import { stakeMetadataCache } from '../../plugins/stake-plugins/metadataCache'
@@ -79,10 +79,6 @@ export function AccountCallbackManager(props: Props) {
   // Subscribe to each wallet that comes online:
   useWalletsSubscriber(account, wallet => {
     const cleanups = [
-      wallet.watch('syncRatio', ratio => {
-        dispatch(updateWalletLoadingProgress(wallet.id, ratio))
-      }),
-
       wallet.on('newTransactions', transactions => {
         for (const tx of transactions) {
           const txid = tx.txid.toLowerCase()

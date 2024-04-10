@@ -1,66 +1,104 @@
-import * as React from 'react'
+import React from 'react'
 import { Animated, Easing, View } from 'react-native'
 
-import { connect } from '../../types/reactRedux'
+import { DONE_THRESHOLD } from '../../constants/WalletAndCurrencyConstants'
+import { useWatch } from '../../hooks/useWatch'
+import { useSelector } from '../../types/reactRedux'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
-import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
-interface StateProps {
-  progress: number
-}
+/**
+ * Shows a bar indicating the the number of wallets that are fully synced across
+ * the entire account.
+ */
+export const WiredProgressBar = () => {
+  const theme = useTheme()
+  const style = getStyles(theme)
 
-interface State {
-  isWalletProgressVisible: boolean
-}
+  const account = useSelector(state => state.core.account)
+  const userPausedWalletsSet = useSelector(state => state.ui.settings.userPausedWalletsSet)
 
-type Props = StateProps & ThemeProps
+  const currencyWallets = useWatch(account, 'currencyWallets')
+  const currencyWalletErrors = useWatch(account, 'currencyWalletErrors')
 
-const SHOW_UNSYNCED = false
-const SHOW_UNSYNCED_RATIO = 0.9
+  const [progress, setProgress] = React.useState(0)
+  const [isProgressVisible, setIsProgressVisible] = React.useState(progress !== 100)
 
-export class ProgressBarComponent extends React.PureComponent<Props, State> {
-  animation: Animated.Value
+  const animation = React.useRef(new Animated.Value(progress)).current
 
-  constructor(props: Props) {
-    super(props)
-    this.animation = new Animated.Value(props.progress)
-    this.state = {
-      isWalletProgressVisible: props.progress !== 100
-    }
-  }
+  const syncableWalletIds = Object.keys(currencyWallets).filter(walletId => {
+    const wallet = currencyWallets[walletId]
+    const isKeysOnly = isKeysOnlyPlugin(wallet.currencyInfo.pluginId)
+    const isPaused = userPausedWalletsSet != null && userPausedWalletsSet.has(walletId)
+    return !isKeysOnly && !isPaused
+  })
 
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.progress !== this.props.progress) {
-      Animated.timing(this.animation, {
+  const widthInterpolated = animation.interpolate({
+    inputRange: [0, 100],
+    outputRange: ['10%', '100%'],
+    extrapolate: 'clamp'
+  })
+
+  React.useEffect(() => {
+    if (progress === 100) {
+      // Delay-hide the progress bar after reaching completion.
+      setTimeout(() => {
+        setIsProgressVisible(false)
+      }, 2000)
+    } else {
+      // Re-show progress bar if overall sync state changes for whatever reason:
+      // Added wallets, resynced wallets, unpaused wallets, etc.
+      setIsProgressVisible(true)
+
+      Animated.timing(animation, {
         duration: 1500,
         easing: Easing.ease,
-        toValue: this.props.progress,
+        toValue: progress,
         useNativeDriver: false
       }).start()
     }
-  }
+  }, [animation, progress])
 
-  render() {
-    const style = getStyles(this.props.theme)
-    const widthInterpolated = this.animation.interpolate({
-      inputRange: [0, 100],
-      outputRange: ['10%', '100%'],
-      extrapolate: 'clamp'
-    })
-    if (this.props.progress === 100) {
-      setTimeout(() => {
-        this.setState({
-          isWalletProgressVisible: false
-        })
-      }, 2000)
+  React.useEffect(() => {
+    // Function to update progress based on current wallet states
+    const updateProgress = () => {
+      const syncedWallets = syncableWalletIds.filter(walletId => {
+        const wallet = currencyWallets[walletId]
+
+        return (
+          // Count the number of wallets that are fully synced,
+          wallet.syncRatio > DONE_THRESHOLD ||
+          // Including crashed wallets, too
+          currencyWalletErrors[walletId] != null
+        )
+      }).length
+
+      const newProgress = syncableWalletIds.length === 0 ? 100 : (syncedWallets / syncableWalletIds.length) * 100
+      setProgress(newProgress)
     }
-    if (!this.state.isWalletProgressVisible) return null
-    return (
-      <View style={style.container}>
-        <Animated.View style={[style.bar, { width: widthInterpolated }]} />
-      </View>
-    )
-  }
+
+    // Call updateProgress initially
+    updateProgress()
+
+    // Set up listeners for each wallet's syncRatio
+    const unsubscribers = syncableWalletIds.map(walletId => {
+      const wallet = currencyWallets[walletId]
+      return wallet.watch('syncRatio', updateProgress)
+    })
+
+    // Clean up listeners when component unmounts or dependencies change
+    return () => {
+      unsubscribers.forEach(unsubscribe => unsubscribe())
+    }
+  }, [currencyWallets, currencyWalletErrors, syncableWalletIds])
+
+  if (!isProgressVisible) return null
+
+  return (
+    <View style={style.container}>
+      <Animated.View style={[style.bar, { width: widthInterpolated }]} />
+    </View>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -77,55 +115,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.walletProgressIconFill
   }
 }))
-
-export const WiredProgressBar = connect<StateProps, {}, {}>(
-  state => {
-    const { userPausedWalletsSet } = state.ui.settings
-    const walletsForProgress = state.ui.wallets.walletLoadingProgress
-    const walletIds = Object.keys(walletsForProgress)
-    if (walletIds.length === 0) return { progress: 0 }
-
-    let sum = 0
-    let numPausedWallets = 0
-    const unsyncedWallets: Array<{
-      id: string
-      name: string
-      plugin: string
-    }> = []
-    for (const walletId of walletIds) {
-      const wallet = state.core.account.currencyWallets[walletId]
-      if (wallet == null) return { progress: 0 }
-
-      const paused = userPausedWalletsSet?.has(walletId)
-      const keysOnly = isKeysOnlyPlugin(wallet.currencyInfo.pluginId)
-
-      if (paused === true || keysOnly) {
-        numPausedWallets++
-        continue
-      }
-
-      sum += walletsForProgress[walletId]
-      if (walletsForProgress[walletId] !== 1) {
-        unsyncedWallets.push({
-          id: walletId,
-          plugin: wallet.currencyInfo.pluginId,
-          name: wallet.name ?? 'NO_NAME'
-        })
-      }
-    }
-    const numRunningWallets = walletIds.length - numPausedWallets
-
-    let ratio = sum / numRunningWallets
-    if (ratio > 0.99999) ratio = 1
-
-    if (SHOW_UNSYNCED && ratio > SHOW_UNSYNCED_RATIO) {
-      console.log(`PROGRESS: ${sum}/${numRunningWallets} = ${ratio}`)
-      for (const w of unsyncedWallets) {
-        const { id, plugin, name } = w
-        console.log(`UNSYNCED: ${plugin} ${name} ${id.slice(0, 5)}`)
-      }
-    }
-    return { progress: ratio * 100 }
-  },
-  dispatch => ({})
-)(withTheme(ProgressBarComponent))

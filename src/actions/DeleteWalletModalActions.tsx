@@ -3,7 +3,7 @@ import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { Airship } from '../components/services/AirshipInstance'
-import { ModalMessage } from '../components/themed/ModalParts'
+import { Paragraph } from '../components/themed/EdgeText'
 import { lstrings } from '../locales/strings'
 import { B } from '../styles/common/textStyles'
 import { ThunkAction } from '../types/reduxTypes'
@@ -25,7 +25,7 @@ export function showDeleteWalletModal(walletId: string, tokenCode?: string, addi
         }}
       >
         <>
-          <ModalMessage>
+          <Paragraph>
             {tokenCode == null ? (
               <>
                 {lstrings.fragmet_wallets_delete_wallet_first_confirm_message_mobile}
@@ -34,8 +34,8 @@ export function showDeleteWalletModal(walletId: string, tokenCode?: string, addi
             ) : (
               <>{sprintf(lstrings.fragment_wallets_delete_token_prompt_2s, tokenCode, getWalletName(currencyWallets[walletId]))}</>
             )}
-          </ModalMessage>
-          {additionalMsg == null ? null : <ModalMessage>{additionalMsg}</ModalMessage>}
+          </Paragraph>
+          {additionalMsg == null ? null : <Paragraph>{additionalMsg}</Paragraph>}
         </>
       </ButtonsModal>
     ))

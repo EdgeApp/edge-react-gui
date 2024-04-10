@@ -543,6 +543,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             "keyOptions": {},
             "pluginId": "ethereum",
             "tokenId": null,
+            "type": "create",
             "walletType": undefined,
           },
           {
@@ -554,6 +555,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             "key": "create-ethereum-1985365e9f78359a9b6ad760e32412f4a445e862",
             "pluginId": "ethereum",
             "tokenId": "1985365e9f78359a9b6ad760e32412f4a445e862",
+            "type": "create",
           },
           {
             "createWalletIds": [
@@ -564,6 +566,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             "key": "create-ethereum-221657776846890989a759ba2973e427dff5c9bb",
             "pluginId": "ethereum",
             "tokenId": "221657776846890989a759ba2973e427dff5c9bb",
+            "type": "create",
           },
           {
             "createWalletIds": [
@@ -574,6 +577,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             "key": "create-ethereum-2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1",
             "pluginId": "ethereum",
             "tokenId": "2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1",
+            "type": "create",
           },
           {
             "createWalletIds": [
@@ -584,6 +588,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             "key": "create-ethereum-6b175474e89094c44da98b954eedeac495271d0f",
             "pluginId": "ethereum",
             "tokenId": "6b175474e89094c44da98b954eedeac495271d0f",
+            "type": "create",
           },
         ]
       }

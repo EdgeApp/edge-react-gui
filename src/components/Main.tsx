@@ -282,7 +282,7 @@ export const Main = () => {
       ) : (
         <NavigationContainer theme={reactNavigationTheme}>
           <Stack.Navigator
-            initialRouteName={ENV.USE_WELCOME_SCREENS && experimentConfig.landingType !== 'A_legacy' ? 'gettingStarted' : 'login'}
+            initialRouteName={ENV.USE_WELCOME_SCREENS ? 'gettingStarted' : 'login'}
             screenOptions={{
               headerShown: false
             }}

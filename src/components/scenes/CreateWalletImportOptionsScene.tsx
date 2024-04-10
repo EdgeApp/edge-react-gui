@@ -16,9 +16,8 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
+import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { RowUi4 } from '../ui4/RowUi4'
@@ -111,12 +110,12 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
           Linking.openURL(knowledgeBaseUri).catch(err => showError(err))
         }
         description = (
-          <ModalMessage>
+          <Paragraph>
             {message}
             <EdgeTouchableOpacity onPress={onPress}>
               <Ionicon name="help-circle-outline" size={theme.rem(1)} color={theme.iconTappable} />
             </EdgeTouchableOpacity>
-          </ModalMessage>
+          </Paragraph>
         )
       } else {
         description = message

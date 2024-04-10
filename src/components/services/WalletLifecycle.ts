@@ -108,15 +108,16 @@ export class WalletLifecycleComponent extends React.Component<Props> {
     // Use the sortedWalletList to boot the wallets in the same order they appear in the list
     for (const walletItem of sortedWalletList) {
       if (this.booting.length >= BOOT_LIMIT) break
-      const { token, tokenId, wallet, walletId } = walletItem
 
       // Ignore missing wallets, token rows, started wallets, already-booting
       // wallets, keysOnlyMode, and user-paused wallets:
-      if (token != null || tokenId != null || wallet == null) continue
+      if (walletItem.type !== 'asset') continue
+      const { token, tokenId, wallet } = walletItem
+      if (token != null || tokenId != null) continue
       if (isKeysOnlyPlugin(wallet.currencyInfo.pluginId)) continue
       if (!wallet.paused) continue
-      if (this.booting.find(boot => boot.walletId === walletId) != null) continue
-      if (userPausedWalletsSet.has(walletId)) continue
+      if (this.booting.find(boot => boot.walletId === wallet.id) != null) continue
+      if (userPausedWalletsSet.has(wallet.id)) continue
 
       this.booting.push(bootWallet(wallet, this.handleChange))
     }

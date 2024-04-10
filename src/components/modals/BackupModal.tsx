@@ -16,7 +16,11 @@ import { ButtonsModal } from './ButtonsModal'
 export type BackupModalResult = 'upgrade' | 'dismiss'
 
 /**
- * Informational modal prompting the user to back up their account
+ * Informational modal prompting the user to back up their account for settings,
+ * deleting light accounts, and receiving fio requests
+ *
+ * TODO: Merge our various backup modal flavors with a common design that
+ * satisfies all requirements (design TBD).
  */
 export const BackupModal = (props: { bridge: AirshipBridge<BackupModalResult | undefined>; forgetLoginId?: string }) => {
   const { bridge, forgetLoginId } = props

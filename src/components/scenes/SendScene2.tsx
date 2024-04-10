@@ -885,6 +885,8 @@ const SendComponent = (props: Props) => {
           await handleSliderComplete(resetSlider)
           return
         }
+      } else if (message.includes('504')) {
+        message = lstrings.transaction_failure_504_message
       }
 
       Alert.alert(lstrings.transaction_failure, message, [
