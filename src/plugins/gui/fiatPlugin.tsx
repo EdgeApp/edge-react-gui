@@ -22,6 +22,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
 import { OnLogEvent, SellConversionValues, TrackingEventName } from '../../util/tracking'
+import { datelog } from '../../util/utils'
 import {
   FiatPaymentType,
   FiatPluginAddressFormParams,
@@ -96,7 +97,9 @@ export const executePlugin = async (params: {
     },
 
     openExternalWebView: async (params): Promise<void> => {
-      if (Platform.OS === 'ios') await SafariView.show({ url: params.url })
+      const { url } = params
+      datelog(`**** openExternalWebView ${url}`)
+      if (Platform.OS === 'ios') await SafariView.show({ url })
       else await CustomTabs.openURL(params.url)
     },
     walletPicker: async (params): Promise<FiatPluginWalletPickerResult | undefined> => {
