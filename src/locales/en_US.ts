@@ -610,6 +610,7 @@ const strings = {
   title_change_password: 'Change Password',
   title_change_pin: 'Change PIN',
   title_create_wallet: 'Create Wallet',
+  title_create_wallet_from_seed: 'Create Wallet From Seed',
   title_create_wallets: 'Create Wallets',
   title_export_transactions: 'Export Transactions',
   title_edge_login: 'Edge Login',
@@ -1567,6 +1568,8 @@ const strings = {
 
   redacted_placeholder: '●●●●',
   insufficient_funds_2s: 'Insufficient %1$s (%2$s).',
+  split_from_1s: 'Split from %1$s',
+  split_description: 'This action creates wallets from pre-existing wallets.',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',
