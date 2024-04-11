@@ -4,11 +4,9 @@ import { AirshipBridge } from 'react-native-airship'
 import { Gesture, GestureDetector, ScrollView } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
-import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -114,7 +112,6 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
 
   const bottomGap = safeAreaGap + dragSlop
   const isHeaderless = title == null && onCancel == null
-  const isCustomTitle = title != null && typeof title !== 'string'
 
   const modalLayout = {
     borderColor: warning ? theme.warningText : theme.modalBorderColor,
@@ -145,11 +142,6 @@ export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
                 </EdgeText>
               ) : (
                 title ?? undefined
-              )}
-              {onCancel == null ? null : (
-                <EdgeTouchableOpacity style={isCustomTitle ? styles.closeIconContainerAbsolute : styles.closeIconContainer} onPress={onCancel}>
-                  <AntDesignIcon name="close" color={theme.deactivatedText} size={theme.rem(1.25)} />
-                </EdgeTouchableOpacity>
               )}
             </View>
           )}

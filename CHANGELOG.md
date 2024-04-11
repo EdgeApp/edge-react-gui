@@ -3,6 +3,7 @@
 ## Unreleased
 
 - fixed: Glitch on transaction list scene when starting search
+- removed: 'X' button on modals
 
 ## 4.5.0
 
