@@ -235,7 +235,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     <SceneWrapper>
       <SceneHeader title={isSplit ? lstrings.fragment_wallets_split_wallet : lstrings.title_create_wallet} withTopMargin />
       <View style={styles.content}>
-        {isSplit ? <Paragraph marginRem={[0, 0.5, 1, 0.5]}>{lstrings.split_description}</Paragraph> : renderSelectedFiatRow()}
+        {isSplit ? <Paragraph marginRem={[0, 0.5, 1.5, 0.5]}>{lstrings.split_description}</Paragraph> : renderSelectedFiatRow()}
         <EdgeText style={styles.instructionalText} numberOfLines={1}>
           {lstrings.fragment_create_wallet_instructions}
         </EdgeText>
@@ -264,7 +264,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   content: {
     flex: 1,
     margin: theme.rem(0.5),
-    paddingTop: theme.rem(0.5)
+    marginTop: theme.rem(0)
   },
   cryptoTypeLogo: {
     width: theme.rem(2),
@@ -275,8 +275,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   instructionalText: {
     fontSize: theme.rem(0.75),
     color: theme.primaryText,
-    paddingBottom: theme.rem(0.5),
-    paddingHorizontal: theme.rem(1),
+    paddingHorizontal: theme.rem(0.5),
     textAlign: 'left'
   }
 }))

@@ -136,7 +136,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
       const tokenNameString = newTokenItems.map(item => item.currencyCode).join(', ')
       return (
         <IconDataRow
-          marginRem={[1, 0.5, 0, 1]}
+          marginRem={[1, 0.5, 0, 0.5]}
           icon={<FontAwesome5 name="coins" size={theme.rem(2)} color={theme.iconTappable} />}
           leftText={lstrings.create_wallet_tokens}
           leftSubtext={
@@ -175,7 +175,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
           <SceneHeader title={lstrings.title_create_wallets} withTopMargin />
           <FlatList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5), marginHorizontal: theme.rem(0.5) }}
             data={filteredCreateItemsForDisplay}
             fadingEdgeLength={10}
             keyExtractor={keyExtractor}

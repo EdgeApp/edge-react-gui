@@ -282,7 +282,12 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
           />
           <FlatList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
+            contentContainerStyle={{
+              ...insetStyle,
+              paddingTop: 0,
+              paddingBottom: insetStyle.paddingBottom + theme.rem(5),
+              marginHorizontal: theme.rem(0.5)
+            }}
             data={filteredCreateWalletList}
             extraData={selectedItems}
             keyboardDismissMode="on-drag"

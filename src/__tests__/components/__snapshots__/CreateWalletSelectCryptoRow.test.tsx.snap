@@ -34,8 +34,10 @@ exports[`WalletListRow should render with loading props 1`] = `
       "alignItems": "center",
       "flexDirection": "row",
       "justifyContent": "center",
+      "marginHorizontal": -11,
       "minHeight": 96,
       "opacity": 1,
+      "paddingHorizontal": 11,
     }
   }
 >
@@ -43,10 +45,10 @@ exports[`WalletListRow should render with loading props 1`] = `
     style={
       {
         "height": 45,
-        "marginBottom": 22,
-        "marginLeft": 22,
-        "marginRight": 22,
-        "marginTop": 22,
+        "marginBottom": 11,
+        "marginLeft": 11,
+        "marginRight": 11,
+        "marginTop": 11,
         "width": 45,
       }
     }
@@ -106,7 +108,7 @@ exports[`WalletListRow should render with loading props 1`] = `
         "flexDirection": "column",
         "flexGrow": 1,
         "flexShrink": 1,
-        "marginRight": 11,
+        "marginHorizontal": 11,
       }
     }
   >
