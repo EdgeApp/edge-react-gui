@@ -1566,6 +1566,7 @@ const strings = {
   // #endregion Home
 
   redacted_placeholder: '●●●●',
+  insufficient_funds_2s: 'Insufficient %1$s (%2$s).',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',
