@@ -463,7 +463,7 @@ PODS:
   - react-native-webview (13.8.4):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - react-native-zcash (0.6.10):
+  - react-native-zcash (0.6.13):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -1218,7 +1218,7 @@ SPEC CHECKSUMS:
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: 68b07eabfb0d14547d36f6929c0e98d818064f02
   react-native-webview: fa228e55c53372c2b361d2fa5e415844fa83eabf
-  react-native-zcash: a4085aedd9722e186566bdd33079406414b190ef
+  react-native-zcash: 0a0688184d3170b191ebc589a2c8e0e93a675496
   React-perflogger: 0cc42978a483a47f3696171dac2e7033936fc82d
   React-RCTActionSheet: ea922b476d24f6d40b8e02ac3228412bd3637468
   React-RCTAnimation: 7be2c148398eaa5beac950b2b5ec7102389ec3ad
