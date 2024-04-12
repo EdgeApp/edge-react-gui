@@ -1566,6 +1566,8 @@ const strings = {
   // #endregion Home
 
   redacted_placeholder: '●●●●',
+  add_custom_token: 'Add Custom Token',
+  choose_custom_token_wallet: 'Select Wallet for Custom Token',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

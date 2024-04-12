@@ -22,15 +22,15 @@ import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { ListModal } from '../modals/ListModal'
+import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { EdgeText } from '../themed/EdgeText'
-import { Fade } from '../themed/Fade'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
-import { ButtonUi4 } from '../ui4/ButtonUi4'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 export interface CreateWalletSelectCryptoParams {
   newAccountFlow?: (navigation: NavigationProp<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'>, items: WalletCreateItem[]) => Promise<void>
@@ -45,7 +45,6 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
   const dispatch = useDispatch()
   const theme = useTheme()
-  const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
@@ -62,15 +61,16 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   )
   const [searchTerm, setSearchTerm] = React.useState('')
 
+  const createList = React.useMemo(() => getCreateWalletList(account), [account])
+
   const createWalletList = React.useMemo(() => {
-    const createList = getCreateWalletList(account)
     const preselectedList: WalletCreateItem[] = []
     for (const edgeTokenId of defaultSelection) {
       const i = createList.findIndex(item => item.pluginId === edgeTokenId.pluginId && item.tokenId === edgeTokenId.tokenId)
       preselectedList.push(createList.splice(i, 1)[0])
     }
     return [...preselectedList, ...createList]
-  }, [account, defaultSelection])
+  }, [createList, defaultSelection])
 
   const filteredCreateWalletList = React.useMemo(
     () => filterWalletCreateItemListBySearchText(createWalletList, searchTerm.toLowerCase()),
@@ -208,6 +208,30 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     }
   })
 
+  const handleAddCustomTokenPress = useHandler(async () => {
+    const allowedCreateAssets = createList
+      .filter(createItem => createItem.tokenId === null && Object.keys(account.currencyConfig[createItem.pluginId].builtinTokens).length > 0)
+      .map(filteredCreateItem => ({
+        pluginId: filteredCreateItem.pluginId,
+        tokenId: null
+      }))
+
+    const walletListResult = await Airship.show<WalletListResult>(bridge => (
+      <WalletListModal
+        bridge={bridge}
+        navigation={props.navigation}
+        headerTitle={lstrings.choose_custom_token_wallet}
+        allowedAssets={allowedCreateAssets}
+        showCreateWallet
+      />
+    ))
+    if (walletListResult?.type === 'wallet') {
+      const { walletId } = walletListResult
+      await account.waitForCurrencyWallet(walletId)
+      navigation.navigate('manageTokens', { walletId })
+    }
+  })
+
   const handleSubmitEditing = useHandler(() => {
     Keyboard.dismiss()
   })
@@ -245,17 +269,6 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
   const keyExtractor = useHandler((item: WalletCreateItem) => item.key)
 
-  const renderNextButton = React.useMemo(
-    () => (
-      <Fade noFadeIn={defaultSelection.length > 0} visible={selectedItems.size > 0} duration={300}>
-        <View style={styles.bottomButton}>
-          <ButtonUi4 label={lstrings.string_next_capitalized} onPress={handleNextPress} />
-        </View>
-      </Fade>
-    ),
-    [defaultSelection, handleNextPress, selectedItems, styles.bottomButton]
-  )
-
   return (
     <SceneWrapper>
       {({ insetStyle, undoInsetStyle }) => (
@@ -285,19 +298,16 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             renderItem={renderCreateWalletRow}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
-          {renderNextButton}
+          <ButtonsViewUi4
+            primary={{ label: lstrings.string_next_capitalized, onPress: handleNextPress, disabled: selectedItems.size === 0 }}
+            secondary={{ label: lstrings.add_custom_token, onPress: handleAddCustomTokenPress }}
+            absolute
+            parentType="scene"
+          />
         </View>
       )}
     </SceneWrapper>
   )
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  bottomButton: {
-    alignSelf: 'center',
-    bottom: theme.rem(2),
-    position: 'absolute'
-  }
-}))
 
 export const CreateWalletSelectCryptoScene = React.memo(CreateWalletSelectCryptoComponent)
