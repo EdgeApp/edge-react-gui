@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fixed: Possible to see receive address for a wallet requiring activation when creating the wallet from search
 - fixed: Glitch on transaction list scene when starting search
 - removed: 'X' button on modals
 
