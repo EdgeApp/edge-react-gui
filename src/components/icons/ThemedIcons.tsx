@@ -3,6 +3,7 @@ import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { type Icon } from 'react-native-vector-icons/Icon'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 import { Fontello } from '../../assets/vector'
 import { useTheme } from '../services/ThemeContext'
@@ -99,6 +100,9 @@ export function EyeIconAnimated(props: AnimatedIconProps & { off: boolean }): JS
     name: off ? 'eye-off-outline' : 'eye-outline'
   })
 }
+
+export const ChevronBack = makeFontIcon(MaterialIcons, 'arrow-back-ios')
+export const ChevronBackAnimated = makeAnimatedFontIcon(MaterialIcons, 'arrow-back-ios')
 
 export const CloseIcon = makeFontIcon(AntDesignIcon, 'close')
 export const CloseIconAnimated = makeAnimatedFontIcon(AntDesignIcon, 'close')
