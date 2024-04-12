@@ -1565,6 +1565,8 @@ const strings = {
   insufficient_funds_2s: 'Insufficient %1$s (%2$s).',
   split_from_1s: 'Split from %1$s',
   split_description: 'This action creates wallets from pre-existing wallets.',
+  add_custom_token: 'Add Custom Token',
+  choose_custom_token_wallet: 'Select Wallet for Custom Token',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',
