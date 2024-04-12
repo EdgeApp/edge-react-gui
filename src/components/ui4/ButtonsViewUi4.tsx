@@ -123,9 +123,7 @@ export const StyledButtonContainer = styled(View)<{
   const absoluteStyle: ViewStyle = absolute
     ? {
         position: 'absolute',
-        bottom: 0,
-        left: marginSize,
-        right: marginSize
+        bottom: parentType === 'scene' ? theme.rem(1) : 0
       }
     : {}
 
@@ -163,7 +161,7 @@ export const StyledButtonContainer = styled(View)<{
       : {}
 
   const sceneMarginStyle: ViewStyle =
-    parentType === 'scene'
+    !absolute && parentType === 'scene'
       ? {
           marginBottom: theme.rem(3),
           marginTop: theme.rem(1)
@@ -171,7 +169,7 @@ export const StyledButtonContainer = styled(View)<{
       : {}
 
   const modalMarginStyle: ViewStyle =
-    parentType === 'modal'
+    !absolute && parentType === 'modal'
       ? {
           marginBottom: theme.rem(1),
           marginTop: theme.rem(2)
@@ -180,12 +178,12 @@ export const StyledButtonContainer = styled(View)<{
 
   return {
     ...baseStyle,
-    ...absoluteStyle,
     ...soloStyle,
     ...rowStyle,
     ...columnStyle,
     ...sceneMarginStyle,
-    ...modalMarginStyle
+    ...modalMarginStyle,
+    ...absoluteStyle
   }
 })
 
