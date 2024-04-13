@@ -1348,6 +1348,7 @@
   "body_support": "Contact our team of experts to troubleshoot your crypto needs",
   "button_support": "Contact Support",
   "redacted_placeholder": "●●●●",
+  "insufficient_funds_2s": "Insufficient %1$s (%2$s).",
   "currency_label_AFN": "Afegão",
   "currency_label_ALL": "Lek",
   "currency_label_DZD": "Dinar Argelino",
