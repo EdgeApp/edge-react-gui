@@ -1348,6 +1348,7 @@
   "body_support": "Contatta il nostro team di esperti per risolvere le tue problematiche con le cripto",
   "button_support": "Contatta il supporto",
   "redacted_placeholder": "●●●●",
+  "insufficient_funds_2s": "Insufficient %1$s (%2$s).",
   "currency_label_AFN": "Afghani",
   "currency_label_ALL": "Lek",
   "currency_label_DZD": "Dinar Algerino",
