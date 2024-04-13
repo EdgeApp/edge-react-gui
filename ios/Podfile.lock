@@ -447,7 +447,7 @@ PODS:
     - React-Core
   - react-native-performance (5.1.0):
     - React-Core
-  - react-native-piratechain (0.4.7):
+  - react-native-piratechain (0.4.8):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -1214,7 +1214,7 @@ SPEC CHECKSUMS:
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408
   react-native-netinfo: 5b664b2945a8f02102b296f0f812bddd6827ed9c
   react-native-performance: cef2b618d47b277fb5c3280b81a3aad1e72f2886
-  react-native-piratechain: 7775af3e8dd813587eab8574d9f46c0ed7148f32
+  react-native-piratechain: f188bb7e513eb07751006c27e3ea310bf24e8823
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: 68b07eabfb0d14547d36f6929c0e98d818064f02
   react-native-webview: fa228e55c53372c2b361d2fa5e415844fa83eabf
