@@ -298,7 +298,14 @@ export const makeTcSaversPlugin = async (opts: EdgeGuiPluginOptions): Promise<St
         throw new Error('pluginId mismatch between request and policy')
       }
 
-      return await changeQuoteFuncs[action](opts, request)
+      switch (action) {
+        case 'stake':
+          return await stakeRequest(opts, request)
+        case 'unstake':
+        case 'claim':
+        case 'unstakeExact':
+          return await unstakeRequest(opts, request)
+      }
     },
     async fetchStakePosition(request: StakePositionRequest): Promise<StakePosition> {
       await updateInboundAddresses(opts)
@@ -1020,13 +1027,6 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
       await wallet.saveTx(broadcastedTx)
     }
   }
-}
-
-const changeQuoteFuncs = {
-  stake: stakeRequest,
-  unstake: unstakeRequest,
-  claim: unstakeRequest,
-  unstakeExact: unstakeRequest
 }
 
 const headers = {
