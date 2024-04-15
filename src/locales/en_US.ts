@@ -235,9 +235,6 @@ const strings = {
   fragment_wallets_export_transactions: 'Export Transactions',
   fragment_wallets_rename_wallet: 'Rename Wallet',
   fragment_wallets_resync_wallet_first_confirm_message_mobile: 'Are you sure you want to resync \n',
-  fragment_wallets_split_wallet_bch_to_bsv:
-    'You are about to split this BCH wallet and create a new BSV wallet from your BCH private keys. This requires a BCH transaction to protect your funds from unintentionally being spent on the wrong chain. This will incur a small network transaction fee on the BCH wallet. Please make sure this transaction confirms before making any further BCH transactions. Are you sure you want to split \n',
-  fragment_wallets_split_wallet_first_confirm_message_mobile: 'Are you sure you want to split \n',
   fragment_wallets_get_seed_title: 'Reveal Master Private Key',
   fragment_wallets_get_seed_warning_message:
     'Sharing your master private key may put you at risk of fraudulent tokens and loss of funds.\n\nDo not share your key with anyone.\n\nBy entering your password, you are confirming that you understand the risks.',
@@ -587,7 +584,6 @@ const strings = {
   string_paste: 'Paste',
   string_rename: 'Rename',
   string_resync: 'Resync',
-  string_split: 'Split',
   string_save: 'Save',
   string_share: 'Share',
   string_to_capitalize: 'To',
@@ -600,7 +596,6 @@ const strings = {
   exchange_rates_loading: 'Exchange Rates Loading...',
   exchange_rate_loading_singular: 'Exchange Rate Loading...',
   string_master_private_key: 'Master Private Key',
-  string_split_wallet: 'Split %s',
   string_add_edit_tokens: 'Add / Edit Tokens',
   string_get_raw_keys: 'Get Raw Keys',
   string_raw_keys: 'Raw Keys',
@@ -610,6 +605,7 @@ const strings = {
   title_change_password: 'Change Password',
   title_change_pin: 'Change PIN',
   title_create_wallet: 'Create Wallet',
+  title_create_wallet_from_seed: 'Create Wallet From Seed',
   title_create_wallets: 'Create Wallets',
   title_export_transactions: 'Export Transactions',
   title_edge_login: 'Edge Login',
@@ -1567,6 +1563,8 @@ const strings = {
 
   redacted_placeholder: '●●●●',
   insufficient_funds_2s: 'Insufficient %1$s (%2$s).',
+  split_from_1s: 'Split from %1$s',
+  split_description: 'This action creates wallets from pre-existing wallets.',
 
   // Currency Labels
   currency_label_AFN: 'Afghani',

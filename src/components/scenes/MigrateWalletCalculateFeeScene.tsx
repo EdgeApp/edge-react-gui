@@ -238,6 +238,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
           keyExtractor={keyExtractor}
           renderItem={renderCurrencyRow}
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+          contentContainerStyle={{ marginHorizontal: theme.rem(0.5) }}
         />
         <SafeSlider
           parentStyle={{ marginTop: theme.rem(0.5), marginBottom: theme.rem(1) }}

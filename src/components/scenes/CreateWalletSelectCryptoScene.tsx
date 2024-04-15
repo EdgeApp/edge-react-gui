@@ -35,13 +35,15 @@ import { ButtonUi4 } from '../ui4/ButtonUi4'
 export interface CreateWalletSelectCryptoParams {
   newAccountFlow?: (navigation: NavigationProp<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'>, items: WalletCreateItem[]) => Promise<void>
   defaultSelection?: EdgeAsset[]
+  splitPluginIds?: string[]
+  splitSourceWalletId?: string
 }
 
 interface Props extends EdgeSceneProps<'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'> {}
 
 const CreateWalletSelectCryptoComponent = (props: Props) => {
   const { navigation, route } = props
-  const { newAccountFlow, defaultSelection = [] } = route.params
+  const { newAccountFlow, defaultSelection = [], splitPluginIds = [], splitSourceWalletId } = route.params
 
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -63,14 +65,15 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   const [searchTerm, setSearchTerm] = React.useState('')
 
   const createWalletList = React.useMemo(() => {
-    const createList = getCreateWalletList(account)
+    const allowedAssets = splitPluginIds.length > 0 ? splitPluginIds.map(pluginId => ({ pluginId, tokenId: null })) : undefined
+    const createList = getCreateWalletList(account, { allowedAssets })
     const preselectedList: WalletCreateItem[] = []
     for (const edgeTokenId of defaultSelection) {
       const i = createList.findIndex(item => item.pluginId === edgeTokenId.pluginId && item.tokenId === edgeTokenId.tokenId)
       preselectedList.push(createList.splice(i, 1)[0])
     }
     return [...preselectedList, ...createList]
-  }, [account, defaultSelection])
+  }, [account, defaultSelection, splitPluginIds])
 
   const filteredCreateWalletList = React.useMemo(
     () => filterWalletCreateItemListBySearchText(createWalletList, searchTerm.toLowerCase()),
@@ -200,7 +203,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       await newAccountFlow(navigation, newList)
     } else if (newWalletItems.length > 0) {
       // Navigate to the fiat/name change scene if new wallets are being created.
-      navigation.push('createWalletSelectFiat', { createWalletList: newList })
+      navigation.push('createWalletSelectFiat', { createWalletList: newList, splitSourceWalletId })
     } else {
       // Otherwise enable the tokens and return to the main scene.
       await dispatch(enableTokensAcrossWallets(newTokenItems))
@@ -260,7 +263,10 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     <SceneWrapper>
       {({ insetStyle, undoInsetStyle }) => (
         <View style={{ ...undoInsetStyle, marginTop: 0 }}>
-          <SceneHeader title={lstrings.title_create_wallet_select_crypto} withTopMargin />
+          <SceneHeader
+            title={splitSourceWalletId == null ? lstrings.title_create_wallet_select_crypto : lstrings.title_create_wallet_from_seed}
+            withTopMargin
+          />
           <SimpleTextInput
             vertical={0.5}
             horizontal={1}
@@ -276,7 +282,12 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
           />
           <FlatList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
+            contentContainerStyle={{
+              ...insetStyle,
+              paddingTop: 0,
+              paddingBottom: insetStyle.paddingBottom + theme.rem(5),
+              marginHorizontal: theme.rem(0.5)
+            }}
             data={filteredCreateWalletList}
             extraData={selectedItems}
             keyboardDismissMode="on-drag"
