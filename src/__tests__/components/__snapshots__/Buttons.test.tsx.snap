@@ -4497,11 +4497,6 @@ exports[`Buttons should render with child icons 1`] = `
       >
         <FastImageView
           resizeMode="cover"
-          source={
-            {
-              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-            }
-          }
           style={
             {
               "bottom": 0,
@@ -4640,11 +4635,6 @@ exports[`Buttons should render with child icons 1`] = `
       >
         <FastImageView
           resizeMode="cover"
-          source={
-            {
-              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-            }
-          }
           style={
             {
               "bottom": 0,
@@ -4786,11 +4776,6 @@ exports[`Buttons should render with child icons 1`] = `
       >
         <FastImageView
           resizeMode="cover"
-          source={
-            {
-              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-            }
-          }
           style={
             {
               "bottom": 0,
@@ -4930,11 +4915,6 @@ exports[`Buttons should render with child icons 1`] = `
       >
         <FastImageView
           resizeMode="cover"
-          source={
-            {
-              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-            }
-          }
           style={
             {
               "bottom": 0,
@@ -5074,11 +5054,6 @@ exports[`Buttons should render with child icons 1`] = `
       >
         <FastImageView
           resizeMode="cover"
-          source={
-            {
-              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-            }
-          }
           style={
             {
               "bottom": 0,
@@ -5221,11 +5196,6 @@ exports[`Buttons should render with child icons 1`] = `
       >
         <FastImageView
           resizeMode="cover"
-          source={
-            {
-              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-            }
-          }
           style={
             {
               "bottom": 0,
@@ -5377,11 +5347,6 @@ exports[`Buttons should render with child icons 1`] = `
         >
           <FastImageView
             resizeMode="cover"
-            source={
-              {
-                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-              }
-            }
             style={
               {
                 "bottom": 0,
@@ -5545,11 +5510,6 @@ exports[`Buttons should render with child icons 1`] = `
         >
           <FastImageView
             resizeMode="cover"
-            source={
-              {
-                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-              }
-            }
             style={
               {
                 "bottom": 0,
@@ -5716,11 +5676,6 @@ exports[`Buttons should render with child icons 1`] = `
         >
           <FastImageView
             resizeMode="cover"
-            source={
-              {
-                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-              }
-            }
             style={
               {
                 "bottom": 0,
@@ -5885,11 +5840,6 @@ exports[`Buttons should render with child icons 1`] = `
         >
           <FastImageView
             resizeMode="cover"
-            source={
-              {
-                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-              }
-            }
             style={
               {
                 "bottom": 0,
@@ -6054,11 +6004,6 @@ exports[`Buttons should render with child icons 1`] = `
         >
           <FastImageView
             resizeMode="cover"
-            source={
-              {
-                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-              }
-            }
             style={
               {
                 "bottom": 0,
@@ -6226,11 +6171,6 @@ exports[`Buttons should render with child icons 1`] = `
         >
           <FastImageView
             resizeMode="cover"
-            source={
-              {
-                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-              }
-            }
             style={
               {
                 "bottom": 0,

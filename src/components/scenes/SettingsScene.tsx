@@ -215,9 +215,9 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   handleAutoLogout = (): void => {
     Airship.show<number | undefined>(bridge => <AutoLogoutModal autoLogoutTimeInSeconds={this.props.autoLogoutTimeInSeconds} bridge={bridge} />)
-      .then(result => {
+      .then(async result => {
         if (typeof result === 'number') {
-          return this.props.setAutoLogoutTimeInSeconds(result)
+          return await this.props.setAutoLogoutTimeInSeconds(result)
         }
       })
       .catch(err => showError(err))

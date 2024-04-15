@@ -104,7 +104,7 @@ export function WalletListScene(props: Props) {
         </SceneFooterWrapper>
       ) : (
         <SearchFooter
-          key={key}
+          name={key}
           placeholder={lstrings.wallet_list_wallet_search}
           isSearching={isSearching}
           searchText={searchText}

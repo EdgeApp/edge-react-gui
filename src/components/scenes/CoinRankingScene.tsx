@@ -213,7 +213,7 @@ const CoinRankingComponent = (props: Props) => {
     sceneWrapperInfo => {
       return (
         <SearchFooter
-          key="CoinRankingScene-SearchFooter"
+          name="CoinRankingScene-SearchFooter"
           placeholder={lstrings.search_assets}
           isSearching={isSearching}
           searchText={searchText}

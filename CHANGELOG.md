@@ -4,6 +4,7 @@
 
 - added: Done button is a part of SimpleTextInput
 - changed: Better send error message for insufficient gas
+- changed: Upgrade to React Native v0.73.6
 - fixed: Glitch on transaction list scene when starting search
 - removed: 'X' button on modals
 
