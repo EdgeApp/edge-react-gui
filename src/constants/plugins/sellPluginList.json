@@ -3,11 +3,20 @@
     "id": "ach",
     "pluginId": "ach",
     "paymentType": "ach",
-    "paymentTypes": ["ach"],
+    "paymentTypes": [
+      "ach"
+    ],
     "title": "ACH Bank Transfer",
     "description": "Fee: 1.5%\nSettlement: 2 - 3 days",
-    "forCountries": ["US"],
-    "notStateProvinces": { "US": ["NY", "TX"] },
+    "forCountries": [
+      "US"
+    ],
+    "notStateProvinces": {
+      "US": [
+        "NY",
+        "TX"
+      ]
+    },
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },
@@ -15,10 +24,14 @@
     "id": "directtobank",
     "pluginId": "directtobank",
     "paymentType": "directtobank",
-    "paymentTypes": ["directtobank"],
+    "paymentTypes": [
+      "directtobank"
+    ],
     "title": "Bank Transfer",
     "description": "Fee: 1.5%\nSettlement: 5 min - 24 hours",
-    "forCountries": ["AU"],
+    "forCountries": [
+      "AU"
+    ],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },
@@ -26,11 +39,51 @@
     "id": "debit",
     "pluginId": "debit",
     "paymentType": "credit",
-    "paymentTypes": ["credit"],
+    "paymentTypes": [
+      "credit"
+    ],
     "title": "Bank Transfer via Debit Card",
     "description": "Fee: 4.0%\nSettlement: 5 min - 24 hours",
-    "forCountries": ["US", "GB", "AU"],
-    "notStateProvinces": { "US": ["NY", "HI"] },
+    "forCountries": [
+      "US",
+      "GB",
+      "AU",
+      "AT",
+      "BE",
+      "BG",
+      "CH",
+      "CZ",
+      "DK",
+      "EE",
+      "FI",
+      "FR",
+      "DE",
+      "GR",
+      "HU",
+      "IE",
+      "IT",
+      "LV",
+      "LT",
+      "LU",
+      "NL",
+      "PL",
+      "PT",
+      "RO",
+      "SK",
+      "SI",
+      "ES",
+      "SE",
+      "HR",
+      "LI",
+      "NO",
+      "SM"
+    ],
+    "notStateProvinces": {
+      "US": [
+        "NY",
+        "HI"
+      ]
+    },
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },
@@ -38,10 +91,14 @@
     "id": "colombiabank",
     "pluginId": "colombiabank",
     "paymentType": "colombiabank",
-    "paymentTypes": ["colombiabank"],
+    "paymentTypes": [
+      "colombiabank"
+    ],
     "title": "Colombia Bank Transfer ",
     "description": "Fee: ~7%\nSettlement: 5 min - 24 hours",
-    "forCountries": ["CO"],
+    "forCountries": [
+      "CO"
+    ],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },
@@ -49,10 +106,14 @@
     "id": "fasterpayments",
     "pluginId": "fasterpayments",
     "paymentType": "fasterpayments",
-    "paymentTypes": ["fasterpayments"],
+    "paymentTypes": [
+      "fasterpayments"
+    ],
     "description": "Fee: ~1.5%\nSettlement: 1 hour - 24 hours",
     "title": "Faster Payments",
-    "forCountries": ["GB"],
+    "forCountries": [
+      "GB"
+    ],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },
@@ -60,10 +121,14 @@
     "id": "interac",
     "pluginId": "interac",
     "paymentType": "interac",
-    "paymentTypes": ["interac"],
+    "paymentTypes": [
+      "interac"
+    ],
     "title": "Interac e-Transfer",
     "description": "Fee: 3%\nSettlement: Instant",
-    "forCountries": ["CA"],
+    "forCountries": [
+      "CA"
+    ],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "interac"
   },
@@ -71,10 +136,14 @@
     "id": "mexicobank",
     "pluginId": "mexicobank",
     "paymentType": "mexicobank",
-    "paymentTypes": ["mexicobank"],
+    "paymentTypes": [
+      "mexicobank"
+    ],
     "title": "Mexico Bank Transfer ",
     "description": "Fee: ~6%\nSettlement: 5 min - 24 hours",
-    "forCountries": ["MX"],
+    "forCountries": [
+      "MX"
+    ],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },
@@ -82,22 +151,33 @@
     "id": "pix",
     "pluginId": "pix",
     "paymentType": "pix",
-    "paymentTypes": ["pix"],
+    "paymentTypes": [
+      "pix"
+    ],
     "title": "PIX ",
     "description": "Fee: ~4.7%\nSettlement: 5 min - 24 hours",
-    "forCountries": ["BR"],
+    "forCountries": [
+      "BR"
+    ],
     "cryptoCodes": [],
     "paymentTypeLogoKey": "pix"
   },
   {
     "id": "bitsofgold",
     "pluginId": "bitsofgold",
-    "paymentTypes": ["bank"],
+    "paymentTypes": [
+      "bank"
+    ],
     "title": "Israeli Bank Transfer",
     "description": "Fee: 6.95% / Settlement: 1 - 48 hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
     "partnerIconPath": "bits-of-gold-logo-sm.png",
-    "forCountries": ["IL"],
-    "cryptoCodes": ["BTC", "ETH"],
+    "forCountries": [
+      "IL"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
     "paymentTypeLogoKey": "bank",
     "deepPath": "/order/sell",
     "deepQuery": {
@@ -112,7 +192,9 @@
   {
     "id": "bitrefill",
     "pluginId": "bitrefill",
-    "paymentTypes": ["giftcard"],
+    "paymentTypes": [
+      "giftcard"
+    ],
     "description": "Buy gift cards and reload phones with crypto",
     "title": "Gift Cards",
     "partnerIconPath": "bitrefill-2.png",
@@ -366,7 +448,13 @@
       "ZM",
       "ZW"
     ],
-    "cryptoCodes": ["BTC", "DASH", "DOGE", "ETH", "LTC"],
+    "cryptoCodes": [
+      "BTC",
+      "DASH",
+      "DOGE",
+      "ETH",
+      "LTC"
+    ],
     "paymentTypeLogoKey": "giftcard"
   },
   {
@@ -404,9 +492,13 @@
       "SM",
       "GB"
     ],
-    "cryptoCodes": ["BTC"],
+    "cryptoCodes": [
+      "BTC"
+    ],
     "paymentType": "sepa",
-    "paymentTypes": ["sepa"],
+    "paymentTypes": [
+      "sepa"
+    ],
     "description": "Fee: 1.5% / Settlement: 1 - 2 days\nLimit: €900/day with no KYC",
     "title": "SEPA Bank Transfer",
     "paymentTypeLogoKey": "bank",
@@ -417,7 +509,9 @@
   {
     "id": "xanpool",
     "pluginId": "xanpool",
-    "paymentTypes": ["bank"],
+    "paymentTypes": [
+      "bank"
+    ],
     "description": "Fee: 1.8% / Settlement: Instant",
     "title": "PayNow",
     "partnerIconPath": "xanpool-logo.png",
