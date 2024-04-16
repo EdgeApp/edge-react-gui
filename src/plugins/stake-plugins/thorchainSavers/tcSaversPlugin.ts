@@ -590,6 +590,11 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 
   if (!isToken && lt(addressBalance, nativeAmount)) {
     // Easy check to see if primary address doesn't have enough funds
+    if (isEvm) {
+      // EVM chains only have one address, so if there aren't enough funds in
+      // the primary address then we don't have enough funds at all
+      throw new InsufficientFundsError({ tokenId: null })
+    }
     needsFundingPrimary = true
   } else {
     try {
