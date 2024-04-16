@@ -295,7 +295,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   )
 
   return (
-    <SceneWrapper>
+    <SceneWrapper avoidKeyboard>
       {({ insetStyle, undoInsetStyle }) => (
         <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <SceneHeader
