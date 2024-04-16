@@ -590,13 +590,18 @@ const stakeRequest = async (opts: EdgeGuiPluginOptions, request: ChangeQuoteRequ
 
   if (!isToken && lt(addressBalance, nativeAmount)) {
     // Easy check to see if primary address doesn't have enough funds
+    if (isEvm) {
+      // EVM chains only have one address, so if there aren't enough funds in
+      // the primary address then we don't have enough funds at all
+      throw new InsufficientFundsError({ tokenId: null })
+    }
     needsFundingPrimary = true
   } else {
     try {
       const estimateTx = await wallet.makeSpend(spendInfo)
       networkFee = estimateTx.parentNetworkFee ?? estimateTx.networkFee
     } catch (e: unknown) {
-      if (asMaybeInsufficientFundsError(e) != null && !isToken) {
+      if (!isEvm && asMaybeInsufficientFundsError(e) != null) {
         needsFundingPrimary = true
       } else {
         throw e
@@ -919,6 +924,12 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
 
   if (lt(balanceToCheck, sendNativeAmount)) {
     // Easy check to see if primary address doesn't have enough funds
+    if (isEvm) {
+      // EVM chains only have one address, so if there aren't enough funds in
+      // the primary address then we don't have enough funds at all
+      throw new InsufficientFundsError({ tokenId: null })
+    }
+    // Easy check to see if primary address doesn't have enough funds
     needsFundingPrimary = true
   } else {
     try {
@@ -926,7 +937,7 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
       const estimateTx = await wallet.makeSpend(spendInfo)
       networkFee = estimateTx.networkFee
     } catch (e: unknown) {
-      if (asMaybeInsufficientFundsError(e) != null) {
+      if (!isEvm && asMaybeInsufficientFundsError(e) != null) {
         needsFundingPrimary = true
       } else {
         throw e
