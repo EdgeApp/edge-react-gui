@@ -1,4 +1,4 @@
-import { div, eq, gt, mul, toFixed } from 'biggystring'
+import { div, eq, gt, mul, round, toFixed } from 'biggystring'
 import { asNumber, asObject } from 'cleaners'
 import { sprintf } from 'sprintf-js'
 
@@ -9,7 +9,7 @@ import { getPartnerIconUri } from '../../util/CdnUris'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { infoServerData } from '../../util/network'
 import { logEvent } from '../../util/tracking'
-import { fuzzyTimeout } from '../../util/utils'
+import { DECIMAL_PRECISION, fuzzyTimeout } from '../../util/utils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginStartParams } from './fiatPluginTypes'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
 import { StateManager } from './hooks/useStateManager'
@@ -229,8 +229,24 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
       logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
+      // Pick a default fiat amount that is roughly equal to DEFAULT_FIAT_AMOUNT
+      let initialValue1: string | undefined
+      if (displayFiatCurrencyCode !== 'USD' && defaultFiatAmount == null) {
+        const isoFiatCurrencyCode = `iso:${displayFiatCurrencyCode}`
+        const isoNow = new Date().toISOString()
+        const ratePair = `${isoFiatCurrencyCode}_iso:USD`
+        const rate = await getHistoricalRate(ratePair, isoNow)
+        initialValue1 = div(DEFAULT_FIAT_AMOUNT, String(rate), DECIMAL_PRECISION)
+        // Round out a decimals
+        initialValue1 = round(initialValue1, 0)
+
+        // Only leave the first decimal
+        initialValue1 = round(initialValue1, initialValue1.length - 1)
+      } else {
+        initialValue1 = requireCrypto ? undefined : defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
+      }
+
       // Navigate to scene to have user enter amount
-      const initialValue1 = requireCrypto ? undefined : defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
       const enterAmount: InternalFiatPluginEnterAmountParams = {
         disableInput,
         headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),
