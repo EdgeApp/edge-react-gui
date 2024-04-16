@@ -65,6 +65,7 @@ pipeline {
   agent none
 
   tools {
+    jdk '17'
     nodejs '18'
   }
   options {
