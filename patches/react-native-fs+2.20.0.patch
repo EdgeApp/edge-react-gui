@@ -80,7 +80,7 @@ index 62b7ba7..97315cb 100755
      }
  
 diff --git a/node_modules/react-native-fs/RNFSManager.m b/node_modules/react-native-fs/RNFSManager.m
-index 5ddd941..634000e 100755
+index 5ddd941..eb1ebf6 100755
 --- a/node_modules/react-native-fs/RNFSManager.m
 +++ b/node_modules/react-native-fs/RNFSManager.m
 @@ -112,12 +112,12 @@ + (BOOL)requiresMainQueueSetup
@@ -151,6 +151,37 @@ index 5ddd941..634000e 100755
  }
  
  RCT_EXPORT_METHOD(hash:(NSString *)filepath
+@@ -724,26 +724,10 @@ + (BOOL)requiresMainQueueSetup
+ 
+ RCT_EXPORT_METHOD(getFSInfo:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+ {
+-  unsigned long long totalSpace = 0;
+-  unsigned long long totalFreeSpace = 0;
+-
+-  __autoreleasing NSError *error = nil;
+-  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+-  NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error:&error];
+-
+-  if (dictionary) {
+-    NSNumber *fileSystemSizeInBytes = [dictionary objectForKey: NSFileSystemSize];
+-    NSNumber *freeFileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemFreeSize];
+-    totalSpace = [fileSystemSizeInBytes unsignedLongLongValue];
+-    totalFreeSpace = [freeFileSystemSizeInBytes unsignedLongLongValue];
+-
+-    resolve(@{
+-      @"totalSpace": [NSNumber numberWithUnsignedLongLong:totalSpace],
+-      @"freeSpace": [NSNumber numberWithUnsignedLongLong:totalFreeSpace]
+-    });
+-  } else {
+-    [self reject:reject withError:error];
+-  }
++  resolve(@{
++    @"totalSpace": [NSNumber numberWithUnsignedLongLong:0],
++    @"freeSpace": [NSNumber numberWithUnsignedLongLong:0]
++  });
+ }
+ 
+ 
 diff --git a/node_modules/react-native-fs/android/src/main/java/com/rnfs/RNFSManager.java b/node_modules/react-native-fs/android/src/main/java/com/rnfs/RNFSManager.java
 index 351ac06..d2f63e4 100755
 --- a/node_modules/react-native-fs/android/src/main/java/com/rnfs/RNFSManager.java
