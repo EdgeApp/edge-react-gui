@@ -25,7 +25,6 @@ import { wasBase64 } from '../../../util/cleaners/asBase64'
 import { cleanFetch, fetcherWithOptions } from '../../../util/cleanFetch'
 import { logActivity } from '../../../util/logger'
 import { toBigNumberString } from '../../../util/toBigNumberString'
-import { makeUuid } from '../../../util/utils'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderFactory, FiatProviderGetQuoteParams, FiatProviderQuote } from '../fiatProviderTypes'
 import { RewardsCardItem, UserRewardsCards } from '../RewardsCardPlugin'
 
@@ -121,7 +120,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
   providerId: 'ionia',
   storeId: 'ionia',
   async makeProvider(params) {
-    const { store } = params.io
+    const { makeUuid, store } = params.io
     const pluginKeys = asIoniaPluginApiKeys(params.apiKeys)
 
     const STORE_USERNAME_KEY = `${pluginKeys.scope}:userName`
@@ -332,7 +331,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
     }
 
     async function createUser(): Promise<string> {
-      const uuid = makeUuid()
+      const uuid = await makeUuid()
       const uuidEmail = `${uuid}@edge.app`
       logActivity(`Creating Ionia User: requestedUUID=${params.deviceId} Email=${uuidEmail}`)
       const createUserResponse = await fetchCreateUser({

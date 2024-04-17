@@ -67,7 +67,8 @@ export const asEnvConfig = asObject({
       paybis: asOptional(
         asObject({
           partnerUrl: asString,
-          apiKey: asString
+          apiKey: asString,
+          privateKeyB64: asString
         })
       ),
       simplex: asOptional(

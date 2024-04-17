@@ -2,7 +2,7 @@ import { asNumber, asObject, asString, asValue } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
 
 import { FIRST_OPEN } from '../constants/constantSettings'
-import { makeUuid } from '../util/utils'
+import { makeUuid } from '../util/rnUtils'
 
 const firstOpenDisklet = makeReactNativeDisklet()
 
@@ -30,7 +30,7 @@ export const getFirstOpenInfo = async (): Promise<FirstOpenInfo> => {
     } catch (error: any) {
       // Generate new values.
       firstOpenInfo = {
-        deviceId: makeUuid(),
+        deviceId: await makeUuid(),
         firstOpenEpoch: Date.now(),
         // If firstOpen != null: This is not the first time they opened the app,
         // but with an older version that didn't set a deviceId and firstOpen
