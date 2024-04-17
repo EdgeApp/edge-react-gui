@@ -4929,6 +4929,11 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==
 
+"@types/jsrsasign@^10.5.13":
+  version "10.5.13"
+  resolved "https://registry.yarnpkg.com/@types/jsrsasign/-/jsrsasign-10.5.13.tgz#10f10d298d35f960b1d98a7de0664b6ed13e0da1"
+  integrity sha512-vvVHLrXxoUZgBWTcJnTMSC4FAQcG2loK7N1Uy20I3nr/aUhetbGdfuwSzXkrMoll2RoYKW0IcMIN0I0bwMwVMQ==
+
 "@types/keyv@*":
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/@types/keyv/-/keyv-3.1.4.tgz#3ccdb1c6751b0c7e52300bcdacd5bcbf8faa75b6"
@@ -13314,6 +13319,11 @@ jsprim@^2.0.2:
     extsprintf "1.3.0"
     json-schema "0.4.0"
     verror "1.10.0"
+
+jsrsasign@^11.1.0:
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/jsrsasign/-/jsrsasign-11.1.0.tgz#195e788102731102fbf3e36b33fde28936f4bf57"
+  integrity sha512-Ov74K9GihaK9/9WncTe1mPmvrO7Py665TUfUKvraXBpu+xcTWitrtuOwcjf4KMU9maPaYn0OuaWy0HOzy/GBXg==
 
 "jsx-ast-utils@^2.4.1 || ^3.0.0":
   version "3.3.3"
