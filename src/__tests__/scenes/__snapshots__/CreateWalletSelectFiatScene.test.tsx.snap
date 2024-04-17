@@ -1147,7 +1147,6 @@ exports[`CreateWalletSelectFiatComponent should render with loading props 1`] = 
           "alignItems": "stretch",
           "alignSelf": "center",
           "flexDirection": "column",
-          "justifyContent": "space-between",
           "margin": 11,
         }
       }

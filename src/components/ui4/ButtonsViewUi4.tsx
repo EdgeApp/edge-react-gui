@@ -26,13 +26,14 @@ export interface ButtonInfo {
   animDistanceStart?: number
 }
 
-interface Props {
+export interface ButtonsViewUi4Props {
   // Specifies whether the component should be positioned absolutely.
   // Default value is false.
   absolute?: boolean
   // ButtonInfos
   primary?: ButtonInfo
   secondary?: ButtonInfo
+  /** @deprecated - Create a separate component instead for these weird one-off cases */
   secondary2?: ButtonInfo // A secondary-styled button in the primary position (right/top side)
   tertiary?: ButtonInfo
 
@@ -41,9 +42,10 @@ interface Props {
   layout?:
     | 'row' // Buttons are stacked side by side horizontally, taking up 50% of the available space each.
     | 'column' // Buttons stacked on top of each other vertically, taking up as much space as the widest button.
+    /** @deprecated - Create `SoloButton` instead */
     | 'solo' // A single centered button whose size is determined by label length (default for single-button props)
 
-  // What kind of component this ButtonsView lives on. Affects margins.
+  /** @deprecated Start just creating new components instead of extending this prop. Previously: What kind of component this ButtonsView lives on. Affects margins. */
   parentType?: 'scene' | 'modal'
 
   // 'distance' prop of the first button
@@ -54,10 +56,11 @@ interface Props {
  * A consistently styled view for displaying button layouts.
  */
 export const ButtonsViewUi4 = React.memo(
-  ({ absolute = false, primary, secondary, secondary2, tertiary, layout = 'column', parentType, animDistanceStart }: Props) => {
+  ({ absolute = false, primary, secondary, secondary2, tertiary, layout, parentType, animDistanceStart }: ButtonsViewUi4Props) => {
     const buttonInfos = [primary, secondary, secondary2, tertiary].filter(key => key != null)
-    if (buttonInfos.length === 1) layout = 'solo'
-
+    if (layout == null) {
+      layout = buttonInfos.length === 1 ? 'solo' : 'column'
+    }
     const spacing = <Space around={INTER_BUTTON_SPACING_REM / 2} />
 
     const renderButton = (type: ButtonTypeUi4, buttonProps?: ButtonInfo, index: number = 0) => {
@@ -106,7 +109,7 @@ export const ButtonsViewUi4 = React.memo(
   }
 )
 
-/** @deprecated - Shouldn't use this post-UI4 transition once all our layouts have been codified into this component. */
+/** @deprecated - Shouldn't use this export post-UI4 transition once all our layouts have been codified into button layout components. */
 export const StyledButtonContainer = styled(View)<{
   absolute?: boolean
   layout: 'row' | 'column' | 'solo'
@@ -129,6 +132,7 @@ export const StyledButtonContainer = styled(View)<{
       }
     : {}
 
+  /** @deprecated Instead of a soloStyle case here, create a separate `SoloButton` component */
   const soloStyle: ViewStyle =
     layout === 'solo'
       ? {
@@ -157,14 +161,16 @@ export const StyledButtonContainer = styled(View)<{
       ? {
           alignSelf: 'center', // Shrink view around buttons
           alignItems: 'stretch', // Stretch our children out
-          flexDirection: 'column',
-          justifyContent: 'space-between'
+          flexDirection: 'column'
         }
       : {}
 
   const sceneMarginStyle: ViewStyle =
     parentType === 'scene'
       ? {
+          flexGrow: 1,
+          flexShrink: 0,
+          justifyContent: 'flex-end',
           marginBottom: theme.rem(3),
           marginTop: theme.rem(1)
         }
