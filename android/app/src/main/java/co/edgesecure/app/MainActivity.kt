@@ -1,7 +1,9 @@
 package co.edgesecure.app
 
 import android.content.pm.ActivityInfo
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
@@ -33,6 +35,17 @@ class MainActivity : ReactActivity() {
 
         // Do not pass the saved state, as required by react-native-screens:
         super.onCreate(null)
+
+        // Hide app contents in the background:
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            setRecentsScreenshotEnabled(false);
+        } else {
+            getWindow()
+                .setFlags(
+                    WindowManager.LayoutParams.FLAG_SECURE,
+                    WindowManager.LayoutParams.FLAG_SECURE
+                ) ;
+        }
 
         // Lock the app to portrait mode:
         if (resources.getBoolean(R.bool.portrait_only)) {
