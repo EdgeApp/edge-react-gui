@@ -1077,12 +1077,8 @@ PODS:
     - SQLite.swift (~> 0.12)
   - react-native-safari-view (1.0.0):
     - React
-  - react-native-safe-area-context (4.6.4):
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
+  - react-native-safe-area-context (4.9.0):
     - React-Core
-    - ReactCommon/turbomodule/core
   - react-native-webview (13.8.4):
     - glog
     - RCT-Folly (= 2022.05.16.00)
@@ -1950,7 +1946,7 @@ SPEC CHECKSUMS:
   react-native-performance: cef2b618d47b277fb5c3280b81a3aad1e72f2886
   react-native-piratechain: f188bb7e513eb07751006c27e3ea310bf24e8823
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
-  react-native-safe-area-context: 68b07eabfb0d14547d36f6929c0e98d818064f02
+  react-native-safe-area-context: b97eb6f9e3b7f437806c2ce5983f479f8eb5de4b
   react-native-webview: 9395e82c917d81407deb9b1fe53158dd6c8880ff
   react-native-zcash: 1eb7306db5e8cfff9cad931b2e0e373acfb5bc6d
   React-nativeconfig: b4d4e9901d4cabb57be63053fd2aa6086eb3c85f
