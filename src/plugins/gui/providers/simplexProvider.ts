@@ -3,7 +3,6 @@ import { gt, lt } from 'biggystring'
 import { asArray, asEither, asNumber, asObject, asString } from 'cleaners'
 
 import { fetchInfo } from '../../../util/network'
-import { makeUuid } from '../../../util/utils'
 import { asFiatPaymentType, FiatPaymentType } from '../fiatPluginTypes'
 import {
   FiatProvider,
@@ -180,7 +179,7 @@ export const simplexProvider: FiatProviderFactory = {
     const {
       apiKeys,
       getTokenId,
-      io: { store }
+      io: { makeUuid, store }
     } = params
 
     for (const pluginId in SIMPLEX_ID_MAP) {
@@ -196,7 +195,7 @@ export const simplexProvider: FiatProviderFactory = {
 
     let simplexUserId = await store.getItem('simplex_user_id').catch(e => undefined)
     if (simplexUserId == null || simplexUserId === '') {
-      simplexUserId = makeUuid()
+      simplexUserId = await makeUuid()
       await store.setItem('simplex_user_id', simplexUserId)
     }
 

@@ -8,7 +8,6 @@ import { locale } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { EdgeAsset, StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import { makeUuid } from '../../../util/utils'
 import { SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
 import {
@@ -302,13 +301,13 @@ export const paybisProvider: FiatProviderFactory = {
   makeProvider: async (params: FiatProviderFactoryParams): Promise<FiatProvider> => {
     const {
       apiKeys,
-      io: { store }
+      io: { makeUuid, store }
     } = params
     const { apiKey, partnerUrl: url } = asApiKeys(apiKeys)
 
     let partnerUserId = await store.getItem('partnerUserId').catch(e => undefined)
     if (partnerUserId == null || partnerUserId === '') {
-      partnerUserId = makeUuid()
+      partnerUserId = await makeUuid()
       await store.setItem('partnerUserId', partnerUserId)
     }
 

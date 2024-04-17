@@ -114,10 +114,10 @@ export interface FiatProvider<OtherMethods = null> {
 }
 
 export type FiatProviderGetTokenId = (pluginId: string, currencyCode: string) => EdgeTokenId | undefined
-
+export type FiatProviderMakeUuid = () => Promise<string>
 export interface FiatProviderFactoryParams {
   deviceId: string
-  io: { store: FiatProviderStore }
+  io: { store: FiatProviderStore; makeUuid: FiatProviderMakeUuid }
   getTokenId: FiatProviderGetTokenId
   apiKeys?: unknown // Data specific to the requirements of each provider,
   // which lets the provider know that these orders were made from within Edge.
