@@ -235,6 +235,14 @@ export const asEnvConfig = asObject({
       appId: asOptional(asString, 'edge')
     }).withRest
   ),
+  RANGO_INIT: asCorePluginInit(
+    asObject({
+      appId: asOptional(asString, 'edge'),
+      rangoApiKey: asOptional(asString, ''),
+      referrerAddress: asOptional(asString, ''),
+      referrerFee: asOptional(asString, '0.5')
+    }).withRest
+  ),
 
   // App options:
   APP_CONFIG: asOptional(asString, 'edge'),

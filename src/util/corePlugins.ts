@@ -90,6 +90,7 @@ export const swapPlugins = {
   thorchainda: ENV.THORCHAIN_INIT,
   velodrome: true,
   xrpdex: ENV.XRPDEX_INIT,
+  rango: ENV.RANGO_INIT,
 
   cosmosibc: true,
   transfer: true
