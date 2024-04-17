@@ -7,6 +7,7 @@ import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { locale } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { EdgeAsset, StringMap } from '../../../types/types'
+import { sha512HashAndSign } from '../../../util/crypto'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
@@ -52,7 +53,8 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
 
 const asApiKeys = asObject({
   apiKey: asString,
-  partnerUrl: asString
+  partnerUrl: asString,
+  privateKeyB64: asString
 })
 
 const asPaymentMethodId = asValue(
@@ -192,6 +194,11 @@ const asPaymentDetails = asObject({
   amount: asString
 })
 
+const asPublicRequestResponse = asObject({
+  requestId: asString,
+  oneTimeToken: asOptional(asString)
+})
+
 type PaymentMethodId = ReturnType<typeof asPaymentMethodId>
 type PaybisBuyPairs = ReturnType<typeof asPaybisBuyPairs>
 type PaybisSellPairs = ReturnType<typeof asPaybisSellPairs>
@@ -303,7 +310,7 @@ export const paybisProvider: FiatProviderFactory = {
       apiKeys,
       io: { makeUuid, store }
     } = params
-    const { apiKey, partnerUrl: url } = asApiKeys(apiKeys)
+    const { apiKey, partnerUrl: url, privateKeyB64 } = asApiKeys(apiKeys)
 
     let partnerUserId = await store.getItem('partnerUserId').catch(e => undefined)
     if (partnerUserId == null || partnerUserId === '') {
@@ -484,7 +491,7 @@ export const paybisProvider: FiatProviderFactory = {
                 },
                 partnerUserId,
                 locale: locale.localeIdentifier.slice(0, 2),
-                passwordless: false,
+                passwordless: true,
                 trustedKyc: false,
                 quoteId,
                 flow: 'buyCrypto',
@@ -495,7 +502,7 @@ export const paybisProvider: FiatProviderFactory = {
                 cryptoPaymentMethod: 'partner_controlled_with_redirect',
                 partnerUserId,
                 locale: locale.localeIdentifier.slice(0, 2),
-                passwordless: false,
+                passwordless: true,
                 trustedKyc: false,
                 quoteId,
                 flow: 'sellCrypto',
@@ -504,20 +511,24 @@ export const paybisProvider: FiatProviderFactory = {
               }
             }
 
-            const response = await paybisFetch({ method: 'POST', url, path: 'v2/public/request', apiKey, bodyParams })
-            const { requestId } = response
+            const privateKey = atob(privateKeyB64)
+            const response = await paybisFetch({ method: 'POST', url, path: 'v2/public/request', apiKey, bodyParams, privateKey })
+            const { oneTimeToken, requestId } = asPublicRequestResponse(response)
 
             const widgetUrl = isWalletTestnet(coreWallet) ? WIDGET_URL_SANDBOX : WIDGET_URL
+
+            const ott = oneTimeToken != null ? `&oneTimeToken=${oneTimeToken}` : ''
+
             if (direction === 'buy') {
               await showUi.openExternalWebView({
-                url: `${widgetUrl}?requestId=${requestId}`
+                url: `${widgetUrl}?requestId=${requestId}${ott}`
               })
               return
             }
 
             const successReturnURL = encodeURI(RETURN_URL_SUCCESS)
             const failureReturnURL = encodeURI(RETURN_URL_FAIL)
-            const webviewUrl = `${widgetUrl}?requestId=${requestId}&successReturnURL=${successReturnURL}&failureReturnURL=${failureReturnURL}`
+            const webviewUrl = `${widgetUrl}?requestId=${requestId}&successReturnURL=${successReturnURL}&failureReturnURL=${failureReturnURL}${ott}`
             console.log(`webviewUrl: ${webviewUrl}`)
             let inPayment = false
 
@@ -672,11 +683,17 @@ const paybisFetch = async (params: {
   apiKey: string
   bodyParams?: object
   queryParams?: JsonObject
+  privateKey?: string
 }): Promise<JsonObject> => {
-  const { method, url, path, apiKey, bodyParams, queryParams = {} } = params
+  const { method, url, path, apiKey, bodyParams, queryParams = {}, privateKey } = params
   const urlObj = new URL(url + '/' + path, true)
   const body = bodyParams != null ? JSON.stringify(bodyParams) : undefined
 
+  let signature: string | undefined
+  if (privateKey != null) {
+    if (body == null) throw new Error('Paybis: Cannot sign without body')
+    signature = sha512HashAndSign(body, privateKey)
+  }
   queryParams.apikey = apiKey
   urlObj.set('query', queryParams)
 
@@ -686,6 +703,13 @@ const paybisFetch = async (params: {
       'Content-Type': 'application/json'
     }
   }
+  if (signature != null) {
+    options.headers = {
+      ...options.headers,
+      'x-request-signature': signature
+    }
+  }
+
   if (body != null) {
     options.body = body
   }
