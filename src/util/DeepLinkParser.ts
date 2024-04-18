@@ -182,6 +182,15 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
 
     case 'https': {
       if (url.href.includes('bitpay')) return { type: 'other', uri: 'https:' + url.pathname, protocol: 'bitpay' }
+      break
+    }
+
+    case '': {
+      // If we're a blank edge:// link, just do nothing since we
+      // were probably just deep linked into the app.
+      if (url.href === 'edge://' && url.pathname === '' && url.query === '') {
+        return { type: 'noop' }
+      }
     }
   }
 
