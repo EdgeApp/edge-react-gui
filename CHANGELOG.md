@@ -8,6 +8,7 @@
 - changed: Upgrade to React Native v0.73.6
 - changed: "Split" wallet menu options consolidated into one
 - changed: Paybis implementation to use SHA signatures and oneTimeToken
+- changed: Increase opacity in wallet list gradient for better visibility
 - fixed: Possible to see receive address for a wallet requiring activation when creating the wallet from search
 - fixed: Glitch on transaction list scene when starting search
 - fixed: Properly set default buy/sell fiat amount for non-USD wallets
