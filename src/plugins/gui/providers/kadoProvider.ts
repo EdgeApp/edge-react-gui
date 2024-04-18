@@ -625,7 +625,7 @@ export const kadoProvider: FiatProviderFactory = {
               try {
                 datelog(`**** Kado onMessage ${data}`)
                 const message = asWebviewMessage(JSON.parse(data))
-                showUi.openExternalWebView({ url: message.payload.link }).catch(e => {
+                showUi.openExternalWebView({ url: message.payload.link, redirectExternal: true }).catch(e => {
                   throw e
                 })
               } catch (error) {
