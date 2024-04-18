@@ -16,7 +16,6 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
         "alignItems": "stretch",
         "alignSelf": "center",
         "flexDirection": "column",
-        "justifyContent": "space-between",
         "margin": 11,
       }
     }
@@ -538,7 +537,6 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
       "alignItems": "stretch",
       "alignSelf": "center",
       "flexDirection": "column",
-      "justifyContent": "space-between",
       "margin": 11,
     }
   }
@@ -798,7 +796,6 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
       "alignItems": "stretch",
       "alignSelf": "center",
       "flexDirection": "column",
-      "justifyContent": "space-between",
       "margin": 11,
     }
   }
@@ -1058,7 +1055,6 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
       "alignItems": "stretch",
       "alignSelf": "center",
       "flexDirection": "column",
-      "justifyContent": "space-between",
       "margin": 11,
     }
   }

@@ -3538,7 +3538,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             "alignItems": "stretch",
             "alignSelf": "center",
             "flexDirection": "column",
-            "justifyContent": "space-between",
             "margin": 11,
           }
         }
@@ -7330,7 +7329,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             "alignItems": "stretch",
             "alignSelf": "center",
             "flexDirection": "column",
-            "justifyContent": "space-between",
             "margin": 11,
           }
         }
