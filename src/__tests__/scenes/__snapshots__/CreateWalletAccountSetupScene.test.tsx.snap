@@ -407,8 +407,8 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 "alignItems": "center",
                 "borderRadius": 11,
                 "borderWidth": 1,
-                "flex": undefined,
                 "flexDirection": "row",
+                "flexGrow": undefined,
                 "paddingHorizontal": 17,
               },
               {
