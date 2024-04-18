@@ -95,6 +95,13 @@ export interface FiatPluginEnterAmountResponse {
 
 export interface FiatPluginOpenExternalWebViewParams {
   url: string
+
+  /**
+   * Use a webview that is fully external to the app instead of any semi integrated
+   * webview like a SafariWebView. If set, this will not kill the app but only
+   * redirect to the external webview.
+   */
+  redirectExternal?: boolean
 }
 
 export interface FiatPluginWalletPickerResult {

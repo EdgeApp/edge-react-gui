@@ -2,7 +2,7 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { Disklet } from 'disklet'
 import { EdgeAccount, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { Platform } from 'react-native'
+import { Linking, Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
@@ -97,8 +97,12 @@ export const executePlugin = async (params: {
     },
 
     openExternalWebView: async (params): Promise<void> => {
-      const { url } = params
+      const { redirectExternal, url } = params
       datelog(`**** openExternalWebView ${url}`)
+      if (redirectExternal === true) {
+        await Linking.openURL(url)
+        return
+      }
       if (Platform.OS === 'ios') await SafariView.show({ url })
       else await CustomTabs.openURL(params.url)
     },
