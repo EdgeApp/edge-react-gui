@@ -4,7 +4,6 @@ import { DefaultTheme, NavigationContainer, useNavigation } from '@react-navigat
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import * as React from 'react'
 import { Platform } from 'react-native'
-import { AirshipToast } from 'react-native-airship'
 
 import { getDeviceSettings } from '../actions/DeviceSettingsActions'
 import { logoutRequest } from '../actions/LoginActions'
@@ -119,7 +118,7 @@ import { WcConnectionsScene as WcConnectionsSceneComponent } from './scenes/WcCo
 import { WcConnectScene as WcConnectSceneComponent } from './scenes/WcConnectScene'
 import { WcDisconnectScene as WcDisconnectSceneComponent } from './scenes/WcDisconnectScene'
 import { WebViewScene as WebViewSceneComponent } from './scenes/WebViewScene'
-import { Airship, showError } from './services/AirshipInstance'
+import { showError } from './services/AirshipInstance'
 import { useTheme } from './services/ThemeContext'
 import { MenuTabs } from './themed/MenuTabs'
 import { SideMenu } from './themed/SideMenu'
@@ -310,15 +309,20 @@ const EdgeApp = () => {
       return true
     }
     backPressedOnce.current = true
-    Airship.show(bridge => <AirshipToast bridge={bridge} message={lstrings.back_button_tap_again_to_exit} />)
-      .then(() => {
-        backPressedOnce.current = false
-      })
-      .catch(err => showError(err))
-    // Timeout the back press after 3 seconds so the state isn't "sticky"
-    setTimeout(() => {
-      backPressedOnce.current = false
-    }, 3000)
+
+    // Temporarily disable showing toast since we are getting the back event
+    // on almost every login. This is a temporary fix until we can figure it out
+    // For now just log the event
+    console.warn('Warning: Back button pressed to exit app. Toast supressed.')
+    // Airship.show(bridge => <AirshipToast bridge={bridge} message={lstrings.back_button_tap_again_to_exit} />)
+    //   .then(() => {
+    //     backPressedOnce.current = false
+    //   })
+    //   .catch(err => showError(err))
+    // // Timeout the back press after 3 seconds so the state isn't "sticky"
+    // setTimeout(() => {
+    //   backPressedOnce.current = false
+    // }, 3000)
     return false
   })
 
