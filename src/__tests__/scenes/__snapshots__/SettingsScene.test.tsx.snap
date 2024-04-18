@@ -35,8 +35,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
   >
     <RNSVGSvgView
       align="xMidYMid"
-      bbHeight="0"
-      bbWidth="0"
+      bbHeight={0}
+      bbWidth={0}
       focusable={false}
       height={0}
       meetOrSlice={0}
@@ -170,7 +170,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "fill",
               ]
             }
-            r="224.73239436619718"
+            r={224.73239436619718}
           />
           <RNSVGCircle
             cx="95%"
@@ -186,7 +186,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "fill",
               ]
             }
-            r="238.7781690140845"
+            r={238.7781690140845}
           />
           <RNSVGCircle
             cx="-15%"
@@ -202,7 +202,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "fill",
               ]
             }
-            r="421.37323943661977"
+            r={421.37323943661977}
           />
         </RNSVGGroup>
       </RNSVGGroup>
@@ -3826,8 +3826,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
   >
     <RNSVGSvgView
       align="xMidYMid"
-      bbHeight="0"
-      bbWidth="0"
+      bbHeight={0}
+      bbWidth={0}
       focusable={false}
       height={0}
       meetOrSlice={0}
@@ -3961,7 +3961,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "fill",
               ]
             }
-            r="224.73239436619718"
+            r={224.73239436619718}
           />
           <RNSVGCircle
             cx="95%"
@@ -3977,7 +3977,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "fill",
               ]
             }
-            r="238.7781690140845"
+            r={238.7781690140845}
           />
           <RNSVGCircle
             cx="-15%"
@@ -3993,7 +3993,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "fill",
               ]
             }
-            r="421.37323943661977"
+            r={421.37323943661977}
           />
         </RNSVGGroup>
       </RNSVGGroup>

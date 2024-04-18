@@ -59,8 +59,8 @@ exports[`SendScene2 1 spendTarget 1`] = `
     >
       <RNSVGSvgView
         align="xMidYMid"
-        bbHeight="0"
-        bbWidth="0"
+        bbHeight={0}
+        bbWidth={0}
         focusable={false}
         height={0}
         meetOrSlice={0}
@@ -165,7 +165,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   "fill",
                 ]
               }
-              r="224.73239436619718"
+              r={224.73239436619718}
             />
             <RNSVGCircle
               cx="95%"
@@ -181,7 +181,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   "fill",
                 ]
               }
-              r="238.7781690140845"
+              r={238.7781690140845}
             />
           </RNSVGGroup>
         </RNSVGGroup>
@@ -1412,8 +1412,8 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
     >
       <RNSVGSvgView
         align="xMidYMid"
-        bbHeight="0"
-        bbWidth="0"
+        bbHeight={0}
+        bbWidth={0}
         focusable={false}
         height={0}
         meetOrSlice={0}
@@ -1518,7 +1518,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   "fill",
                 ]
               }
-              r="224.73239436619718"
+              r={224.73239436619718}
             />
             <RNSVGCircle
               cx="95%"
@@ -1534,7 +1534,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   "fill",
                 ]
               }
-              r="238.7781690140845"
+              r={238.7781690140845}
             />
           </RNSVGGroup>
         </RNSVGGroup>
@@ -2953,8 +2953,8 @@ exports[`SendScene2 2 spendTargets 1`] = `
     >
       <RNSVGSvgView
         align="xMidYMid"
-        bbHeight="0"
-        bbWidth="0"
+        bbHeight={0}
+        bbWidth={0}
         focusable={false}
         height={0}
         meetOrSlice={0}
@@ -3059,7 +3059,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   "fill",
                 ]
               }
-              r="224.73239436619718"
+              r={224.73239436619718}
             />
             <RNSVGCircle
               cx="95%"
@@ -3075,7 +3075,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   "fill",
                 ]
               }
-              r="238.7781690140845"
+              r={238.7781690140845}
             />
           </RNSVGGroup>
         </RNSVGGroup>
@@ -4472,8 +4472,8 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
     >
       <RNSVGSvgView
         align="xMidYMid"
-        bbHeight="0"
-        bbWidth="0"
+        bbHeight={0}
+        bbWidth={0}
         focusable={false}
         height={0}
         meetOrSlice={0}
@@ -4578,7 +4578,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   "fill",
                 ]
               }
-              r="224.73239436619718"
+              r={224.73239436619718}
             />
             <RNSVGCircle
               cx="95%"
@@ -4594,7 +4594,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   "fill",
                 ]
               }
-              r="238.7781690140845"
+              r={238.7781690140845}
             />
           </RNSVGGroup>
         </RNSVGGroup>
@@ -5690,8 +5690,8 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
     >
       <RNSVGSvgView
         align="xMidYMid"
-        bbHeight="0"
-        bbWidth="0"
+        bbHeight={0}
+        bbWidth={0}
         focusable={false}
         height={0}
         meetOrSlice={0}
@@ -5796,7 +5796,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   "fill",
                 ]
               }
-              r="224.73239436619718"
+              r={224.73239436619718}
             />
             <RNSVGCircle
               cx="95%"
@@ -5812,7 +5812,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   "fill",
                 ]
               }
-              r="238.7781690140845"
+              r={238.7781690140845}
             />
           </RNSVGGroup>
         </RNSVGGroup>
@@ -6884,8 +6884,8 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
     >
       <RNSVGSvgView
         align="xMidYMid"
-        bbHeight="0"
-        bbWidth="0"
+        bbHeight={0}
+        bbWidth={0}
         focusable={false}
         height={0}
         meetOrSlice={0}
@@ -6990,7 +6990,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   "fill",
                 ]
               }
-              r="224.73239436619718"
+              r={224.73239436619718}
             />
             <RNSVGCircle
               cx="95%"
@@ -7006,7 +7006,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   "fill",
                 ]
               }
-              r="238.7781690140845"
+              r={238.7781690140845}
             />
           </RNSVGGroup>
         </RNSVGGroup>
@@ -7916,8 +7916,8 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
     >
       <RNSVGSvgView
         align="xMidYMid"
-        bbHeight="0"
-        bbWidth="0"
+        bbHeight={0}
+        bbWidth={0}
         focusable={false}
         height={0}
         meetOrSlice={0}
@@ -8022,7 +8022,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   "fill",
                 ]
               }
-              r="224.73239436619718"
+              r={224.73239436619718}
             />
             <RNSVGCircle
               cx="95%"
@@ -8038,7 +8038,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   "fill",
                 ]
               }
-              r="238.7781690140845"
+              r={238.7781690140845}
             />
           </RNSVGGroup>
         </RNSVGGroup>
@@ -9254,8 +9254,8 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
     >
       <RNSVGSvgView
         align="xMidYMid"
-        bbHeight="0"
-        bbWidth="0"
+        bbHeight={0}
+        bbWidth={0}
         focusable={false}
         height={0}
         meetOrSlice={0}
@@ -9360,7 +9360,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   "fill",
                 ]
               }
-              r="224.73239436619718"
+              r={224.73239436619718}
             />
             <RNSVGCircle
               cx="95%"
@@ -9376,7 +9376,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   "fill",
                 ]
               }
-              r="238.7781690140845"
+              r={238.7781690140845}
             />
           </RNSVGGroup>
         </RNSVGGroup>
@@ -10526,8 +10526,8 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
     >
       <RNSVGSvgView
         align="xMidYMid"
-        bbHeight="0"
-        bbWidth="0"
+        bbHeight={0}
+        bbWidth={0}
         focusable={false}
         height={0}
         meetOrSlice={0}
@@ -10632,7 +10632,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   "fill",
                 ]
               }
-              r="224.73239436619718"
+              r={224.73239436619718}
             />
             <RNSVGCircle
               cx="95%"
@@ -10648,7 +10648,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   "fill",
                 ]
               }
-              r="238.7781690140845"
+              r={238.7781690140845}
             />
           </RNSVGGroup>
         </RNSVGGroup>
@@ -11756,8 +11756,8 @@ exports[`SendScene2 Render SendScene 1`] = `
     >
       <RNSVGSvgView
         align="xMidYMid"
-        bbHeight="0"
-        bbWidth="0"
+        bbHeight={0}
+        bbWidth={0}
         focusable={false}
         height={0}
         meetOrSlice={0}
@@ -11862,7 +11862,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                   "fill",
                 ]
               }
-              r="224.73239436619718"
+              r={224.73239436619718}
             />
             <RNSVGCircle
               cx="95%"
@@ -11878,7 +11878,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                   "fill",
                 ]
               }
-              r="238.7781690140845"
+              r={238.7781690140845}
             />
           </RNSVGGroup>
         </RNSVGGroup>
