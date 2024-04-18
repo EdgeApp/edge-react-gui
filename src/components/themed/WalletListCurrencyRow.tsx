@@ -46,7 +46,7 @@ const WalletListCurrencyRowComponent = (props: Props) => {
   // State
   //
   const iconColor = useIconColor({ pluginId, tokenId })
-  const primaryColor = iconColor != null ? `${iconColor}88` : 'rgba(0, 0, 0, 0)'
+  const primaryColor = iconColor != null ? `${iconColor}30` : 'rgba(0, 0, 0, 0)'
 
   //
   // Handlers
