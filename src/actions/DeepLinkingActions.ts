@@ -280,6 +280,10 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       }
       return true
     }
+
+    case 'noop': {
+      return true
+    }
   }
 
   async function launchAzteco(navigation: NavigationBase, edgeWallet: EdgeCurrencyWallet, uri: string): Promise<void> {
