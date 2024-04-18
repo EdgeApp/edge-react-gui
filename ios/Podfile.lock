@@ -1,7 +1,7 @@
 PODS:
   - _NIODataStructures (2.40.0)
   - boost (1.83.0)
-  - BugsnagReactNative (7.22.6):
+  - BugsnagReactNative (7.22.7):
     - React-Core
   - BugsnagReactNativePerformance (2.2.0):
     - glog
@@ -1870,7 +1870,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   _NIODataStructures: 3d45d8e70a1d17a15b1dc59d102c63dbc0525ffd
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
-  BugsnagReactNative: 366a7e11c0bcf34842e54f40b15dd937cb267aa7
+  BugsnagReactNative: 7cc5c927f6a0b00a8e3cc7157dab4cc94a4bc575
   BugsnagReactNativePerformance: 505a888fbc28915dca3d46e8b1937daac58c2d51
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   CGRPCZlib: 298dd3237ba4bd7b3eed109e7080ff3324b7d9c9

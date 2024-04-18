@@ -65,7 +65,7 @@
     "bip39": "3.0.4"
   },
   "dependencies": {
-    "@bugsnag/react-native": "^7.22.6",
+    "@bugsnag/react-native": "^7.22.7",
     "@bugsnag/react-native-performance": "^2.2.0",
     "@connectedcars/react-native-slide-charts": "^1.0.5",
     "@ethersproject/shims": "^5.6.0",
