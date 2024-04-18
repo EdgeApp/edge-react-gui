@@ -889,7 +889,9 @@ const unstakeRequestInner = async (opts: EdgeGuiPluginOptions, request: ChangeQu
   }
 
   const spendInfo: EdgeSpendInfo = {
-    tokenId,
+    // For unstaking we always send just the mainnet coin since we are only sending a message
+    // to the Thorchain pool to withdraw the funds
+    tokenId: null,
     spendTargets: [{ publicAddress: poolAddress, nativeAmount: sendNativeAmount }],
     otherParams: { enableRbf: false, outputSort: 'targets', utxoSourceAddress, forceChangeAddress },
     assetAction: { assetActionType: 'unstakeOrder' },
