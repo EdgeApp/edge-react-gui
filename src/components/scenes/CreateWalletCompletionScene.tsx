@@ -1,4 +1,4 @@
-import { EdgeCreateCurrencyWallet } from 'edge-core-js'
+import { EdgeCreateCurrencyWallet, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -21,6 +21,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
+import { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
 
 export interface CreateWalletCompletionParams {
   createWalletList: WalletCreateItem[]
@@ -43,6 +44,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
   const account = useSelector(state => state.core.account)
 
   const [done, setDone] = React.useState(false)
+  const [wallets, setWallets] = React.useState<EdgeCurrencyWallet[]>([])
 
   const { newWalletItems, newTokenItems } = React.useMemo(() => splitCreateWalletItems(createWalletList), [createWalletList])
 
@@ -107,6 +109,9 @@ const CreateWalletCompletionComponent = (props: Props) => {
           showError(result.error)
           setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'error' }))
         } else {
+          // Wait for wallet creation
+          await account.waitForCurrencyWallet(result.result.id)
+
           setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'complete' }))
         }
       }
@@ -114,6 +119,10 @@ const CreateWalletCompletionComponent = (props: Props) => {
       if (tokenPromise != null) {
         await tokenPromise
       }
+
+      // Save the created wallets
+      setWallets(walletResults.filter((result): result is { ok: true; result: EdgeCurrencyWallet } => result.ok).map(result => result.result))
+
       setDone(true)
       return () => {}
     },
@@ -160,6 +169,32 @@ const CreateWalletCompletionComponent = (props: Props) => {
 
   const handleNext = useHandler(() => navigation.navigate('walletsTab', { screen: 'walletList' }))
 
+  const handleMigrate = useHandler(() => {
+    // Transform filtered items into the structure expected by the migration component
+    const migrateWalletList: MigrateWalletItem[] = newWalletItems.map(createWallet => {
+      // Link the createWalletIds with the created wallets
+      const { key, pluginId } = createWallet
+      const wallet = wallets.find(wallet => wallet.currencyInfo.pluginId === pluginId)
+
+      return {
+        ...createWallet,
+        createWalletIds: wallet == null ? [''] : [wallet.id],
+        displayName: walletNames[key],
+        key,
+        type: 'create'
+      }
+    })
+
+    // Navigate to the migration screen with the prepared list
+    if (migrateWalletList.length > 0) {
+      navigation.navigate('migrateWalletCalculateFee', {
+        migrateWalletList
+      })
+    } else {
+      showError('Unable to migrate imported wallets')
+    }
+  })
+
   const keyExtractor = useHandler((item: WalletCreateItem) => item.key)
 
   return (
@@ -184,7 +219,10 @@ const CreateWalletCompletionComponent = (props: Props) => {
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
 
-          <SceneButtons primary={{ label: lstrings.string_next_capitalized, disabled: !done, onPress: handleNext }} />
+          <SceneButtons
+            primary={{ label: lstrings.string_next_capitalized, disabled: !done, onPress: handleNext }}
+            secondary={importText == null ? undefined : { label: lstrings.migrate_label, disabled: !done, onPress: handleMigrate }}
+          />
         </View>
       )}
     </SceneWrapper>
