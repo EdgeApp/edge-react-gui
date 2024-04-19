@@ -19,7 +19,6 @@ import { FiatPluginEnterAmountParams } from '../../plugins/gui/scenes/FiatPlugin
 import { HomeAddress, SepaInfo } from '../../types/FormTypes'
 import { GuiPlugin } from '../../types/GuiPluginTypes'
 import { NavigationBase } from '../../types/routerTypes'
-import { EdgeAsset } from '../../types/types'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
 import { OnLogEvent, SellConversionValues, TrackingEventName } from '../../util/tracking'
 import { datelog } from '../../util/utils'
@@ -47,7 +46,7 @@ export const executePlugin = async (params: {
   deviceId: string
   direction: 'buy' | 'sell'
   disablePlugins?: NestedDisableMap
-  filterAsset?: EdgeAsset
+  forcedWalletResult?: WalletListResult
   guiPlugin: GuiPlugin
   longPress?: boolean
   navigation: NavigationBase
@@ -62,7 +61,7 @@ export const executePlugin = async (params: {
     deviceId,
     direction,
     disklet,
-    filterAsset,
+    forcedWalletResult,
     guiPlugin,
     longPress = false,
     navigation,
@@ -109,25 +108,19 @@ export const executePlugin = async (params: {
     walletPicker: async (params): Promise<FiatPluginWalletPickerResult | undefined> => {
       const { headerTitle, allowedAssets, showCreateWallet } = params
 
-      const result = await Airship.show<WalletListResult>(bridge => (
-        <WalletListModal
-          bridge={bridge}
-          navigation={navigation}
-          headerTitle={headerTitle}
-          allowedAssets={
-            filterAsset != null
-              ? // Include only the filterAsset, if allowed by the provider
-                allowedAssets == null
-                ? [filterAsset]
-                : allowedAssets.filter(
-                    asset => asset.pluginId === filterAsset.pluginId && (filterAsset.tokenId == null || asset.tokenId === filterAsset.tokenId)
-                  )
-              : // Else, allow everything the provider tells us
-                allowedAssets
-          }
-          showCreateWallet={showCreateWallet}
-        />
-      ))
+      const result =
+        forcedWalletResult == null
+          ? await Airship.show<WalletListResult>(bridge => (
+              <WalletListModal
+                bridge={bridge}
+                navigation={navigation}
+                headerTitle={headerTitle}
+                allowedAssets={allowedAssets}
+                showCreateWallet={showCreateWallet}
+              />
+            ))
+          : forcedWalletResult
+
       if (result?.type === 'wallet') return result
     },
     showError: async (e: unknown): Promise<void> => showError(e),

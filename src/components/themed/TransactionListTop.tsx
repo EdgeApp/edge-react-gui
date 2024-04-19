@@ -265,17 +265,17 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
   handleTradeBuy = (bridge: AirshipBridge<void>) => {
     const { navigation, wallet, tokenId } = this.props
-    const { pluginId } = wallet.currencyInfo
+    const forcedWalletResult = { type: 'wallet', walletId: wallet.id, tokenId }
 
-    navigation.navigate('buyTab', { screen: 'pluginListBuy', params: { filterAsset: { pluginId, tokenId } } })
+    navigation.navigate('buyTab', { screen: 'pluginListBuy', params: { forcedWalletResult } })
     bridge.resolve()
   }
 
   handleTradeSell = (bridge: AirshipBridge<void>) => {
     const { navigation, wallet, tokenId } = this.props
-    const { pluginId } = wallet.currencyInfo
+    const forcedWalletResult = { type: 'wallet', walletId: wallet.id, tokenId }
 
-    navigation.navigate('sellTab', { screen: 'pluginListSell', params: { filterAsset: { pluginId, tokenId } } })
+    navigation.navigate('sellTab', { screen: 'pluginListSell', params: { forcedWalletResult } })
     bridge.resolve()
   }
 
