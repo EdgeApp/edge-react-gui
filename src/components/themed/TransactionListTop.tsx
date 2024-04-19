@@ -10,6 +10,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
+import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
@@ -32,7 +33,6 @@ import { getFioStakingBalances, getPluginFromPolicy, getPositionAllocations } fr
 import { convertNativeToDenomination, datelog, DECIMAL_PRECISION, zeroString } from '../../util/utils'
 import { VisaCardCard } from '../cards/VisaCardCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupForTransferModal'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -183,10 +183,17 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleOpenWalletListModal = () => {
-    const { account, navigation } = this.props
+    const { account, navigation, wallet: parentWallet, tokenId } = this.props
 
     triggerHaptic('impactLight')
-    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={navigation} />)
+    Airship.show<WalletListResult>(bridge => (
+      <WalletListModal
+        bridge={bridge}
+        parentWalletId={tokenId == null ? undefined : parentWallet.id}
+        headerTitle={lstrings.select_wallet}
+        navigation={navigation}
+      />
+    ))
       .then(result => {
         if (result?.type === 'wallet') {
           const { currencyCode, walletId } = result
@@ -560,20 +567,10 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   }
 
   handleRequest = (): void => {
-    const { isLightAccount, navigation, tokenId, wallet } = this.props
+    const { account, navigation, tokenId, wallet } = this.props
 
     triggerHaptic('impactLight')
-    if (isLightAccount) {
-      Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
-        return <BackupForTransferModal bridge={bridge} />
-      })
-        .then((userSel?: BackupForTransferModalResult) => {
-          if (userSel === 'upgrade') {
-            navigation.navigate('upgradeUsername', {})
-          }
-        })
-        .catch(error => showError(error))
-    } else {
+    if (!checkAndShowLightBackupModal(account, navigation)) {
       navigation.push('request', { tokenId, walletId: wallet.id })
     }
   }
@@ -788,7 +785,6 @@ export function TransactionListTop(props: OwnProps) {
   const exchangeDenomination = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
   const exchangeRate = useSelector(state => getExchangeRate(state, currencyCode, wallet.fiatCurrencyCode))
   const isAccountBalanceVisible = useSelector(state => state.ui.settings.isAccountBalanceVisible)
-  const activeUsername = useSelector(state => state.core.account.username)
 
   const walletName = useWalletName(wallet)
   const balanceMap = useWatch(wallet, 'balanceMap')
@@ -807,7 +803,6 @@ export function TransactionListTop(props: OwnProps) {
       exchangeDenomination={exchangeDenomination}
       exchangeRate={exchangeRate}
       isAccountBalanceVisible={isAccountBalanceVisible}
-      isLightAccount={activeUsername == null}
       rootState={rootState}
       toggleBalanceVisibility={handleBalanceVisibility}
       theme={theme}

@@ -272,6 +272,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         multiline
         submitLabel={lstrings.string_save}
         title={lstrings.fio_confirm_request_input_title_memo}
+        autoCorrect={false}
       />
     ))
     if (memo == null) return

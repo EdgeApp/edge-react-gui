@@ -38,6 +38,7 @@
 		3D5BD9CD2A4D27C400590088 /* SourceSansPro-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D5BD9B62A4D277B00590088 /* SourceSansPro-Black.ttf */; };
 		3D5BD9CE2A4D27C400590088 /* SourceSansPro-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D5BD9B02A4D277B00590088 /* SourceSansPro-Bold.ttf */; };
 		3D5BD9CF2A4D27F300590088 /* custom.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D5BD9AD2A4D277B00590088 /* custom.ttf */; };
+		3DB299A62BCEF2A600D867B0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3DB299A52BCEF2A600D867B0 /* PrivacyInfo.xcprivacy */; };
 		812B284944A10A722B22763D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08ADAD14914ABC9FD7D54456 /* ExpoModulesProvider.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -79,6 +80,7 @@
 		3D5BD9BA2A4D277B00590088 /* Quicksand-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Quicksand-Bold.ttf"; path = "../android/app/src/main/assets/fonts/Quicksand-Bold.ttf"; sourceTree = "<group>"; };
 		3D5BD9BB2A4D277B00590088 /* SourceSansPro-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SourceSansPro-BlackItalic.ttf"; path = "../android/app/src/main/assets/fonts/SourceSansPro-BlackItalic.ttf"; sourceTree = "<group>"; };
 		3D5BD9BC2A4D277B00590088 /* Quicksand-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Quicksand-Medium.ttf"; path = "../android/app/src/main/assets/fonts/Quicksand-Medium.ttf"; sourceTree = "<group>"; };
+		3DB299A52BCEF2A600D867B0 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = edge/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-edge.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-edge.release.xcconfig"; path = "Target Support Files/Pods-edge/Pods-edge.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-edge-edgeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-edge-edgeTests.debug.xcconfig"; path = "Target Support Files/Pods-edge-edgeTests/Pods-edge-edgeTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-edge.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-edge.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -107,6 +109,7 @@
 				3D5BD9892A4CF04C00590088 /* GoogleService-Info.plist */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
+				3DB299A52BCEF2A600D867B0 /* PrivacyInfo.xcprivacy */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
@@ -296,6 +299,7 @@
 				3D5BD9C32A4D27C400590088 /* SourceSansPro-Semibold.ttf in Resources */,
 				3D5BD98A2A4CF04C00590088 /* GoogleService-Info.plist in Resources */,
 				3D5BD9C92A4D27C400590088 /* SourceSansPro-Regular.ttf in Resources */,
+				3DB299A62BCEF2A600D867B0 /* PrivacyInfo.xcprivacy in Resources */,
 				3D5BD9C82A4D27C400590088 /* Quicksand-SemiBold.ttf in Resources */,
 				3D5BD9BF2A4D27C400590088 /* Quicksand-Light.ttf in Resources */,
 				3D5BD9C12A4D27C400590088 /* SourceSansPro-LightItalic.ttf in Resources */,

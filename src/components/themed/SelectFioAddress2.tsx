@@ -133,6 +133,7 @@ export class SelectFioAddressComponent extends React.PureComponent<Props, LocalS
         multiline
         submitLabel={lstrings.string_save}
         title={lstrings.fio_sender_memo_label}
+        autoCorrect={false}
       />
     ))
     if (memo != null) this.handleMemoChange(memo)

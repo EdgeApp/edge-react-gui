@@ -147,7 +147,6 @@ exports[`initialState 1`] = `
       "fioWallets": [],
       "selectedCurrencyCode": "",
       "selectedWalletId": "",
-      "walletLoadingProgress": {},
     },
   },
 }

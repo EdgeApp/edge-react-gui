@@ -223,6 +223,7 @@ exports[`HelpModal should render with loading props 1`] = `
       >
         <Text
           allowFontScaling={false}
+          selectable={false}
           style={
             [
               {
@@ -347,6 +348,7 @@ exports[`HelpModal should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -498,6 +500,7 @@ exports[`HelpModal should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -649,6 +652,7 @@ exports[`HelpModal should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -800,6 +804,7 @@ exports[`HelpModal should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -951,6 +956,7 @@ exports[`HelpModal should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {

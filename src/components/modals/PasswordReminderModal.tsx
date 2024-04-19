@@ -7,8 +7,8 @@ import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { showError, showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
+import { Paragraph } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
-import { ModalMessage } from '../themed/ModalParts'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
@@ -79,7 +79,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
 
     return (
       <ModalUi4 bridge={bridge} title={lstrings.password_reminder_modal_title} onCancel={this.handleCancel}>
-        <ModalMessage>{lstrings.password_reminder_modal_body}</ModalMessage>
+        <Paragraph>{lstrings.password_reminder_modal_body}</Paragraph>
         <FilledTextInput
           top={0.5}
           bottom={2}

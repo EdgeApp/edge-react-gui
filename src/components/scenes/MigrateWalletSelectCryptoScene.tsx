@@ -61,6 +61,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
         if (tokenId != null && !enabledTokenIds.includes(tokenId)) continue // ignore token
         const currencyCode = getCurrencyCode(wallet, tokenId)
         walletAssetList.push({
+          type: 'create',
           createWalletIds: [walletId],
           currencyCode,
           displayName: getWalletName(wallet),

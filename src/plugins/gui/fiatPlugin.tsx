@@ -2,11 +2,10 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { Disklet } from 'disklet'
 import { EdgeAccount, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { Platform } from 'react-native'
+import { Linking, Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
-import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { DisablePluginMap, NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { launchPaymentProto, LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
 import { addressWarnings } from '../../actions/ScanActions'
@@ -23,6 +22,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { getNavigationAbsolutePath } from '../../util/routerUtils'
 import { OnLogEvent, SellConversionValues, TrackingEventName } from '../../util/tracking'
+import { datelog } from '../../util/utils'
 import {
   FiatPaymentType,
   FiatPluginAddressFormParams,
@@ -73,7 +73,6 @@ export const executePlugin = async (params: {
   } = params
   const { defaultFiatAmount, forceFiatCurrencyCode, pluginId } = guiPlugin
   const isBuy = direction === 'buy'
-  if (isBuy && checkAndShowLightBackupModal(account, navigation)) return
 
   const tabSceneKey = isBuy ? 'buyTab' : 'sellTab'
   const listSceneKey = isBuy ? 'pluginListBuy' : 'pluginListSell'
@@ -98,7 +97,13 @@ export const executePlugin = async (params: {
     },
 
     openExternalWebView: async (params): Promise<void> => {
-      if (Platform.OS === 'ios') await SafariView.show({ url: params.url })
+      const { redirectExternal, url } = params
+      datelog(`**** openExternalWebView ${url}`)
+      if (redirectExternal === true) {
+        await Linking.openURL(url)
+        return
+      }
+      if (Platform.OS === 'ios') await SafariView.show({ url })
       else await CustomTabs.openURL(params.url)
     },
     walletPicker: async (params): Promise<FiatPluginWalletPickerResult | undefined> => {

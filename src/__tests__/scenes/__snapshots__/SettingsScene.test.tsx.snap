@@ -270,6 +270,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               allowFontScaling={false}
+              selectable={false}
               style={
                 [
                   {
@@ -453,6 +454,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -578,6 +580,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -705,6 +708,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -832,6 +836,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -959,6 +964,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -1086,6 +1092,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -1149,6 +1156,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           >
             <Text
               allowFontScaling={false}
+              selectable={false}
               style={
                 [
                   {
@@ -1332,6 +1340,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -1459,6 +1468,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -2321,6 +2331,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -2448,6 +2459,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -2575,6 +2587,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -3098,6 +3111,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -3225,6 +3239,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -3352,6 +3367,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -4046,6 +4062,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               allowFontScaling={false}
+              selectable={false}
               style={
                 [
                   {
@@ -4229,6 +4246,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -4354,6 +4372,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -4481,6 +4500,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -4608,6 +4628,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -4735,6 +4756,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -4862,6 +4884,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -4925,6 +4948,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           >
             <Text
               allowFontScaling={false}
+              selectable={false}
               style={
                 [
                   {
@@ -5108,6 +5132,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -5235,6 +5260,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -6097,6 +6123,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -6224,6 +6251,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -6351,6 +6379,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -6874,6 +6903,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -7001,6 +7031,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {
@@ -7128,6 +7159,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    selectable={false}
                     style={
                       [
                         {

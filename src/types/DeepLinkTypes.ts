@@ -96,6 +96,10 @@ export interface WalletConnectLink {
   uri: string
 }
 
+export interface NoopLink {
+  type: 'noop'
+}
+
 export interface SceneLink {
   type: 'scene'
   sceneName: keyof AppParamList
@@ -116,6 +120,7 @@ export type DeepLink =
   | EdgeLoginLink
   | FiatPluginLink
   | ModalLink
+  | NoopLink
   | PasswordRecoveryLink
   | PaymentProtoLink
   | PluginLink

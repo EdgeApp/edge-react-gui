@@ -11,9 +11,9 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
+import { Paragraph } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
-import { ModalMessage } from '../themed/ModalParts'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 export interface CreateWalletAccountSetupParams {
@@ -86,8 +86,8 @@ export const CreateWalletAccountSetupScene = withWallet((props: Props) => {
       {/* This is an abuse of ModalMessage,
       but EdgeText breaks this text by setting numberOfLines.
       Switch to MessageText if we ever define that: */}
-      <ModalMessage>{sprintf(lstrings.create_wallet_account_review_instructions, existingCurrencyCode)}</ModalMessage>
-      <ModalMessage>{lstrings.create_wallet_account_requirements_eos}</ModalMessage>
+      <Paragraph>{sprintf(lstrings.create_wallet_account_review_instructions, existingCurrencyCode)}</Paragraph>
+      <Paragraph>{lstrings.create_wallet_account_requirements_eos}</Paragraph>
       <FilledTextInput
         around={1}
         bottom={2}

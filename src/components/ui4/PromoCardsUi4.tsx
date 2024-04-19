@@ -81,12 +81,11 @@ export const PromoCardsUi4 = (props: Props) => {
     }
     return <PromoCardUi4 navigation={navigation} promoInfo={item} onClose={handleClose} />
   })
-  const style = React.useMemo(() => ({ height: theme.rem(11.5) }), [theme])
 
   if (activeCards == null || activeCards.length === 0) return null
   return (
-    <EdgeAnim style={style} enter={fadeInUp110}>
-      <CarouselUi4 data={activeCards} keyExtractor={keyExtractor} renderItem={renderItem} height={theme.rem(9.75)} width={screenWidth} />
+    <EdgeAnim enter={fadeInUp110}>
+      <CarouselUi4 data={activeCards} keyExtractor={keyExtractor} renderItem={renderItem} height={theme.rem(10)} width={screenWidth} />
     </EdgeAnim>
   )
 }

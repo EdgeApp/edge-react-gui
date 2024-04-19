@@ -2,11 +2,14 @@ import { eq } from 'biggystring'
 import { InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
 import { ReturnKeyType, View } from 'react-native'
+import { AirshipBridge } from 'react-native-airship'
 
+import { showBackupModal } from '../../actions/BackupModalActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { Fontello } from '../../assets/vector'
 import { ENV } from '../../env'
 import { useSelectedWallet } from '../../hooks/useSelectedWallet'
+import { lstrings } from '../../locales/strings'
 import { useState } from '../../types/reactHooks'
 import { useDispatch } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -15,6 +18,7 @@ import { consify } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
+import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupForTransferModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { CountryListModal } from '../modals/CountryListModal'
@@ -28,6 +32,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
+import { AlertCardUi4 } from '../ui4/AlertCardUi4'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { ButtonUi4 } from '../ui4/ButtonUi4'
 import { CardUi4 } from '../ui4/CardUi4'
@@ -107,6 +112,7 @@ export function DevTestScene(props: Props) {
   return (
     <SceneWrapper scroll hasTabs hasHeader={false}>
       <SectionView marginRem={1}>
+        <AlertCardUi4 title={lstrings.warning_alphanumeric} type="error" />
         <FilledTextInput
           iconComponent={SearchIconAnimated}
           vertical={1}
@@ -298,6 +304,49 @@ export function DevTestScene(props: Props) {
                 const { freeRegApiToken = '', freeRegRefCode = '' } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
                 navigation.navigate('fioCreateHandle', { freeRegApiToken, freeRegRefCode })
               }
+            }}
+          />
+          <ButtonUi4
+            label="BackupModal (Long, Original with image)"
+            marginRem={0.25}
+            onPress={async () => {
+              showBackupModal({ navigation, forgetLoginId: 'test' })
+            }}
+          />
+          <ButtonUi4
+            label="BackupModal - Short A (control)"
+            marginRem={0.25}
+            onPress={async () => {
+              await Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
+                return <BackupForTransferModal bridge={bridge} variantKey="original" />
+              })
+            }}
+          />
+          <ButtonUi4
+            label="BackupModal - Short B"
+            marginRem={0.25}
+            onPress={async () => {
+              await Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
+                return <BackupForTransferModal bridge={bridge} variantKey="backup" />
+              })
+            }}
+          />
+          <ButtonUi4
+            label="BackupModal - Short C"
+            marginRem={0.25}
+            onPress={async () => {
+              await Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
+                return <BackupForTransferModal bridge={bridge} variantKey="secure" />
+              })
+            }}
+          />
+          <ButtonUi4
+            label="BackupModal - Short D"
+            marginRem={0.25}
+            onPress={async () => {
+              await Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
+                return <BackupForTransferModal bridge={bridge} variantKey="create" />
+              })
             }}
           />
         </>

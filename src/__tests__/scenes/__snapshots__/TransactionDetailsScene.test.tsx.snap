@@ -381,6 +381,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -701,6 +702,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -1231,6 +1233,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -1390,6 +1393,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -1601,6 +1605,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -1804,6 +1809,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -1963,6 +1969,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -2541,6 +2548,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             >
               <Text
                 allowFontScaling={false}
+                selectable={false}
                 style={
                   [
                     {
@@ -2861,6 +2869,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -3391,6 +3400,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -3550,6 +3560,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -3761,6 +3772,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -3964,6 +3976,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {
@@ -4123,6 +4136,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               >
                 <Text
                   allowFontScaling={false}
+                  selectable={false}
                   style={
                     [
                       {

@@ -187,6 +187,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
       >
         <Text
           allowFontScaling={false}
+          selectable={false}
           style={
             [
               {
@@ -1632,6 +1633,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
       >
         <Text
           allowFontScaling={false}
+          selectable={false}
           style={
             [
               {

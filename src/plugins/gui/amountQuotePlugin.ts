@@ -1,4 +1,4 @@
-import { div, eq, gt, toFixed } from 'biggystring'
+import { div, eq, gt, mul, toFixed } from 'biggystring'
 import { asNumber, asObject } from 'cleaners'
 import { sprintf } from 'sprintf-js'
 
@@ -6,6 +6,7 @@ import { formatNumber, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { EdgeAsset } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
+import { getHistoricalRate } from '../../util/exchangeRates'
 import { infoServerData } from '../../util/network'
 import { logEvent } from '../../util/tracking'
 import { fuzzyTimeout } from '../../util/utils'
@@ -59,6 +60,7 @@ const MAX_QUOTE_VALUE = '10000000000'
 export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const { account, guiPlugin, longPress = false, showUi } = params
   const { pluginId } = guiPlugin
+  const isLightAccount = account.username == null
 
   const assetPromises: Array<Promise<FiatProviderAssetMap>> = []
 
@@ -283,7 +285,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             // Try to get an error by requesting a massive quote
             const result = await getMaxQuoteOrError(1, MAX_QUOTE_VALUE)
             if (result == null) {
-              stateManager.update({ statusText: { content: 'Provider cannot create max buy quote', textType: 'error' } })
+              stateManager.update({ statusText: { content: lstrings.fiat_plugin_max_buy_quote_error, textType: 'error' } })
             } else if ('value1' in result) {
               // We got a max quote for both fiat and crypto fields, update the UI to show it
               stateManager.update(result)
@@ -295,14 +297,14 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             // Get the max amount of the wallet's currency
             const publicAddress = dummyAddressMap[currencyPluginId]
             if (publicAddress == null) {
-              stateManager.update({ statusText: { content: sprintf('Cannot create max sell quote for %s', currencyCode), textType: 'error' } })
+              stateManager.update({ statusText: { content: sprintf(lstrings.fiat_plugin_max_sell_quote_error_1s, currencyCode), textType: 'error' } })
             }
             const maxAmount = await coreWallet.getMaxSpendable({ tokenId, spendTargets: [{ publicAddress }] })
             const exchangeAmount = await coreWallet.nativeToDenomination(maxAmount, currencyCode)
 
             const result = await getMaxQuoteOrError(2, exchangeAmount)
             if (result == null) {
-              stateManager.update({ statusText: { content: 'Provider cannot create max sell quote', textType: 'error' } })
+              stateManager.update({ statusText: { content: lstrings.fiat_plugin_max_sell_quote_error, textType: 'error' } })
             } else if ('value1' in result) {
               // We got a max quote for both fiat and crypto fields, update the UI to show it
               stateManager.update(result)
@@ -472,12 +474,25 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             }
           }
         },
-        async onSubmit() {
-          logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
-
+        async onSubmit(_event, stateManager) {
           if (bestQuote == null) {
             return
           }
+
+          // Restrict light accounts from buying more than $50 at a time
+          if (isLightAccount && isBuy) {
+            const quoteFiatCurrencyCode = bestQuote.fiatCurrencyCode
+            const quoteFiatRate =
+              quoteFiatCurrencyCode === 'iso:USD' ? '1' : (await getHistoricalRate(`${quoteFiatCurrencyCode}_iso:USD`, new Date().toISOString())).toString()
+            const quoteDollarValue = mul(bestQuote.fiatAmount, quoteFiatRate)
+
+            if (gt(quoteDollarValue, '50')) {
+              stateManager.update({ statusText: { content: lstrings.fiat_plugin_purchase_limit_error, textType: 'error' } })
+              return
+            }
+          }
+
+          logEvent(isBuy ? 'Buy_Quote_Next' : 'Sell_Quote_Next')
           await bestQuote.approveQuote({ showUi, coreWallet })
         }
       }

@@ -53,10 +53,6 @@ export type Action =
   | { type: 'DEEP_LINK_RECEIVED'; data: DeepLink }
   | { type: 'DEVICE_REFERRAL_LOADED'; data: DeviceReferral }
   | { type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'; data: { exchangeRates: GuiExchangeRates } }
-  | {
-      type: 'INSERT_WALLET_IDS_FOR_PROGRESS'
-      data: { activeWalletIds: string[] }
-    }
   | { type: 'IS_NOTIFICATION_VIEW_ACTIVE'; data: { isNotificationViewActive: boolean } }
   | { type: 'LOGIN'; data: { account: EdgeAccount; walletSort: SortOption } }
   | { type: 'LOGOUT'; data: { nextLoginId?: string } }
@@ -66,7 +62,6 @@ export type Action =
   | { type: 'PROMOTION_ADDED'; data: Promotion }
   | { type: 'PROMOTION_REMOVED'; data: string /* installerId */ }
   | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS'; data: { contacts: GuiContact[] } }
-  | { type: 'RESET_WALLET_LOADING_PROGRESS'; data: { walletId: string } }
   | { type: 'SET_TRANSACTION_SUBCATEGORIES'; data: { subcategories: string[] } }
   | { type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'; data: { spendingLimits: SpendingLimits } }
   | {
@@ -100,7 +95,6 @@ export type Action =
   | { type: 'UPDATE_EXCHANGE_INFO'; data: ExchangeInfo }
   | { type: 'UPDATE_SORTED_WALLET_LIST'; data: WalletListItem[] }
   | { type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'; data: PasswordReminderTime }
-  | { type: 'UPDATE_WALLET_LOADING_PROGRESS'; data: { walletId: string; addressLoadingProgress: number } }
   | { type: 'NETWORK/NETWORK_STATUS'; data: { isConnected: boolean } }
   | { type: 'FIO/SET_FIO_ADDRESSES'; data: { fioAddresses: FioAddress[] } }
   | { type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS'; data: { fioAddress: string; ccWalletMap: CcWalletMap } }

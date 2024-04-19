@@ -148,12 +148,11 @@ export function LoginSceneComponent(props: Props) {
     [navigation]
   )
 
-  const maybeHandleComplete =
-    ENV.USE_WELCOME_SCREENS && experimentConfig != null && experimentConfig.landingType !== 'A_legacy'
-      ? () => {
-          navigation.navigate('gettingStarted', { experimentConfig })
-        }
-      : undefined
+  const maybeHandleComplete = ENV.USE_WELCOME_SCREENS
+    ? () => {
+        navigation.navigate('gettingStarted', { experimentConfig })
+      }
+    : undefined
 
   const handleLogin = useHandler(async (account: EdgeAccount) => {
     setPasswordRecoveryKey(undefined)

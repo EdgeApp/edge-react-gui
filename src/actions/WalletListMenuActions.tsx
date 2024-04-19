@@ -9,7 +9,7 @@ import { RawTextModal } from '../components/modals/RawTextModal'
 import { TextInputModal } from '../components/modals/TextInputModal'
 import { Airship, showError, showToast } from '../components/services/AirshipInstance'
 import { Alert } from '../components/themed/Alert'
-import { ModalMessage } from '../components/themed/ModalParts'
+import { Paragraph } from '../components/themed/EdgeText'
 import { deleteLoanAccount } from '../controllers/loan-manager/redux/actions'
 import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
@@ -70,8 +70,8 @@ export function walletListMenuAction(
         if (Object.values(currencyWallets).length === 1) {
           await Airship.show(bridge => (
             <ButtonsModal bridge={bridge} buttons={{}} closeArrow title={lstrings.cannot_delete_last_wallet_modal_title}>
-              <ModalMessage>{lstrings.cannot_delete_last_wallet_modal_message_part_1}</ModalMessage>
-              <ModalMessage>{lstrings.cannot_delete_last_wallet_modal_message_part_2}</ModalMessage>
+              <Paragraph>{lstrings.cannot_delete_last_wallet_modal_message_part_1}</Paragraph>
+              <Paragraph>{lstrings.cannot_delete_last_wallet_modal_message_part_2}</Paragraph>
             </ButtonsModal>
           ))
           return

@@ -7,7 +7,7 @@ import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { ENV } from '../../../env'
 import { lstrings } from '../../../locales/strings'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import { isHex } from '../../../util/utils'
+import { datelog, isHex } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
 import {
@@ -382,6 +382,8 @@ const asOrderData = asObject({
   // settlementTimeInSeconds: asNumber
 })
 
+const asWebviewMessage = asObject({ type: asValue('PLAID_NEW_ACH_LINK'), payload: asObject({ link: asString }) })
+
 const asOrderInfo = asObject({
   success: asBoolean,
   message: asString,
@@ -399,6 +401,7 @@ interface GetQuoteParams {
 
 interface WidgetParams {
   apiKey: string
+  isMobileWebview: true
   mode: 'minimal'
   network: string
   networkList: string
@@ -584,6 +587,7 @@ export const kadoProvider: FiatProviderFactory = {
               const urlParams: WidgetParamsBuy = {
                 apiKey: apiKey,
                 fiatMethodList: 'ach,wire',
+                isMobileWebview: true,
                 network: blockchain,
                 networkList: blockchain,
                 onPayAmount: fiatAmount,
@@ -599,6 +603,7 @@ export const kadoProvider: FiatProviderFactory = {
               const urlParams: WidgetParamsSell = {
                 apiKey: apiKey,
                 fiatMethodList: 'ach,wire',
+                isMobileWebview: true,
                 network: blockchain,
                 networkList: blockchain,
                 offPayAmount: cryptoAmount,
@@ -613,10 +618,29 @@ export const kadoProvider: FiatProviderFactory = {
             }
             console.log('Launching Kado webview url=' + url.href)
 
+            // If Kado needs to launch the Plaid bank linking widget, it needs it in an external
+            // webview to prevent some glitchiness. When needed, Kado will send an onMessage
+            // trigger with the url to open. The below code is derived from Kado's sample code
+            const onMessage = (data: string) => {
+              try {
+                datelog(`**** Kado onMessage ${data}`)
+                const message = asWebviewMessage(JSON.parse(data))
+                showUi.openExternalWebView({ url: message.payload.link, redirectExternal: true }).catch(e => {
+                  throw e
+                })
+              } catch (error) {
+                // Handle parsing errors gracefully
+                showUi.showError(`Error parsing message: ${String(error)}`).catch(e => {})
+              }
+            }
+
             // Only open standard webview of ACH and sells.
             // Use showUi.openExternalWebView for Apple Pay/Google Pay
             if (direction === 'buy') {
-              await showUi.openWebView({ url: url.href })
+              await showUi.openWebView({
+                url: url.href,
+                onMessage
+              })
               return
             }
 
@@ -625,6 +649,7 @@ export const kadoProvider: FiatProviderFactory = {
             const openWebView = async () => {
               await showUi.openWebView({
                 url: url.href,
+                onMessage,
                 onUrlChange: async newUrl => {
                   console.log(`*** onUrlChange: ${newUrl}`)
 
