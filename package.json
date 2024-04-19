@@ -71,7 +71,7 @@
     "@ethersproject/shims": "^5.6.0",
     "@react-native-async-storage/async-storage": "^1.19.4",
     "@react-native-clipboard/clipboard": "^1.13.2",
-    "@react-native-community/datetimepicker": "^7.6.4",
+    "@react-native-community/datetimepicker": "^7.7.0",
     "@react-native-community/netinfo": "9.0.0",
     "@react-native-firebase/analytics": "14.9.2",
     "@react-native-firebase/app": "14.9.2",
