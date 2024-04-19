@@ -9,6 +9,10 @@
 - changed: "Split" wallet menu options consolidated into one
 - changed: Paybis implementation to use SHA signatures and oneTimeToken
 - changed: Increase opacity in wallet list gradient for better visibility
+- changed: Buy/Sell no longer requires wallet selection when accessing via a wallet's Trade menu
+- fixed: FilledTextInput multi line style squished
+- fixed: Swap transactions always showing as received when viewing source asset
+- fixed: Swap quote amounts hidden if balances set to hidden in Transaction List
 - fixed: Possible to see receive address for a wallet requiring activation when creating the wallet from search
 - fixed: Glitch on transaction list scene when starting search
 - fixed: Properly set default buy/sell fiat amount for non-USD wallets

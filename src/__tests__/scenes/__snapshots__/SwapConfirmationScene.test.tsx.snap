@@ -647,7 +647,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       ]
                     }
                   >
-                    ₿ ●●●●
+                    ₿ 0.0001
                   </Text>
                 </Text>
                 <View
@@ -680,7 +680,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       ]
                     }
                   >
-                    $ ●●●●
+                    $1.84
                   </Text>
                 </View>
               </View>
@@ -1224,7 +1224,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       ]
                     }
                   >
-                    Ξ ●●●●
+                    Ξ 0
                   </Text>
                 </Text>
                 <View
@@ -1257,7 +1257,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       ]
                     }
                   >
-                    $ ●●●●
+                    $0.000000
                   </Text>
                 </View>
               </View>
