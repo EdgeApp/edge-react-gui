@@ -6,7 +6,7 @@ import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
 import { debugUri as currencyPluginsDebugUri, makePluginIo as makeCurrencyPluginsIo, pluginUri as currencyPluginsUri } from 'edge-currency-plugins'
 import { debugUri as exchangeDebugUri, pluginUri as exchangeUri } from 'edge-exchange-plugins'
 import * as React from 'react'
-import RNBootSplash from 'react-native-bootsplash'
+// import RNBootSplash from 'react-native-bootsplash'
 import { getBrand, getDeviceId } from 'react-native-device-info'
 
 import { ENV } from '../../env'
@@ -19,7 +19,7 @@ import { fakeUser } from '../../util/fake-user'
 import { isMaestro } from '../../util/maestro'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
-import { Airship, showError } from './AirshipInstance'
+import { Airship } from './AirshipInstance'
 import { Providers } from './Providers'
 
 const LOGIN_TEST_SERVER = 'https://login-tester.edge.app/api'
@@ -98,9 +98,9 @@ export function EdgeCoreManager(props: Props) {
 
   function hideSplash() {
     if (!splashHidden.current) {
-      setTimeout(() => {
-        RNBootSplash.hide({ fade: true }).catch(err => showError(err))
-      }, 200)
+      // setTimeout(() => {
+      //   RNBootSplash.hide({ fade: true }).catch(err => showError(err))
+      // }, 200)
       splashHidden.current = true
     }
   }
