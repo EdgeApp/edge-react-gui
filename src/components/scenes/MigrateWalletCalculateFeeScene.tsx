@@ -5,7 +5,7 @@ import { ActivityIndicator, ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { DONE_THRESHOLD, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -51,6 +51,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
 
   const [feeState, setFeeState] = React.useState<Map<string, AssetRowState | undefined>>(new Map())
   const [sliderDisabled, setSliderDisabled] = React.useState(true)
+  const [migrateWalletsSynced, setMigrateWalletsSynced] = React.useState(false)
 
   const renderCurrencyRow = useHandler((data: ListRenderItemInfo<MigrateWalletItem>) => {
     const { key, pluginId, tokenId, walletType, createWalletIds } = data.item
@@ -66,7 +67,7 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
     const fee = feeState.get(key)
 
     let rightSide: JSX.Element
-    if (fee == null) {
+    if (fee == null || wallet.syncRatio < 0.999) {
       rightSide = <ActivityIndicator style={{ paddingRight: theme.rem(0.3125) }} color={theme.iconTappable} />
     } else if (fee instanceof Error) {
       rightSide = <EdgeText style={{ color: theme.negativeText, fontSize: theme.rem(0.75) }}>{fee.message}</EdgeText>
@@ -126,6 +127,10 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
   // track of which makeSpends are successful so we can enable the slider. A single failure from any of a wallet's assets will cast them all as failures.
   useAsyncEffect(
     async () => {
+      if (!migrateWalletsSynced) return
+
+      console.debug('migrateWalletsSynced!')
+
       // This bundles the assets by similar walletId with the main asset (ie. ETH) at the end of each array so its makeSpend is called last
       const bundledWalletAssets: MigrateWalletItem[][] = migrateWalletList.reduce((bundles: MigrateWalletItem[][], asset) => {
         const { createWalletIds } = asset
@@ -218,9 +223,46 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
         mounted.current = false
       }
     },
-    [],
+    [migrateWalletsSynced],
     'MigrateWalletCalculateFeeComponent'
   )
+
+  // Wait for wallets to sync
+  React.useEffect(() => {
+    const migrateWalletIds = migrateWalletList.map(item => item.createWalletIds[0])
+
+    // Function to update progress based on current wallet states
+    const updateProgress = () => {
+      const syncedWallets = migrateWalletIds.filter(walletId => {
+        const wallet = currencyWallets[walletId]
+
+        return (
+          // Count the number of wallets that are fully synced
+          wallet.syncRatio >= 1
+        )
+      }).length
+
+      if (syncedWallets === migrateWalletIds.length) {
+        setTimeout(() => {
+          setMigrateWalletsSynced(true)
+        }, 5000)
+      }
+    }
+
+    // Call updateProgress initially
+    updateProgress()
+
+    // Set up listeners for each wallet's syncRatio
+    const unsubscribers = migrateWalletIds.map(walletId => {
+      const wallet = currencyWallets[walletId]
+      return wallet.watch('syncRatio', updateProgress)
+    })
+
+    // Clean up listeners when component unmounts or dependencies change
+    return () => {
+      unsubscribers.forEach(unsubscribe => unsubscribe())
+    }
+  }, [currencyWallets, migrateWalletList])
 
   const keyExtractor = useHandler((item: MigrateWalletItem) => item.key)
 

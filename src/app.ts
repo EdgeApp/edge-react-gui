@@ -19,8 +19,13 @@ import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
 import { initInfoServer } from './util/network'
 
+console.info = () => {}
+console.log = () => {}
+console.warn = () => {}
+console.error = () => {}
+
 // Uncomment the next line to remove popup warning/error boxes.
-// LogBox.ignoreAllLogs()
+LogBox.ignoreAllLogs()
 LogBox.ignoreLogs(['Require cycle:'])
 
 Bugsnag.start({
@@ -45,7 +50,7 @@ console.log('App directory: ' + RNFS.DocumentDirectoryPath)
 console.log('***********************')
 
 // @ts-expect-error
-global.clog = console.log
+global.clog = () => {}
 
 // Disable the font scaling
 // @ts-expect-error
@@ -65,45 +70,45 @@ if (!TextInput.defaultProps) {
 TextInput.defaultProps.allowFontScaling = false
 
 if (!__DEV__) {
-  console.log = log
+  // console.log = log
   console.info = log
-  console.warn = log
-  console.error = log
+  // console.warn = log
+  // console.error = log
 }
 
-const appVersion = getVersion()
-const releaseStage = __DEV__ || appVersion === '99.99.99' ? 'development' : appVersion.includes('-') ? 'testing' : 'production'
+// const appVersion = getVersion()
+// const releaseStage = __DEV__ || appVersion === '99.99.99' ? 'development' : appVersion.includes('-') ? 'testing' : 'production'
 
-BugsnagPerformance.start({
-  apiKey: ENV.BUGSNAG_API_KEY,
-  appVersion,
-  releaseStage,
-  logger: {
-    debug(message: string) {
-      console.log(message)
-    },
-    info(message: string) {
-      console.log(message)
-    },
-    warn(message: string) {
-      console.warn(message)
-    },
-    error(message: string) {
-      console.error(message)
-    }
-  }
-})
+// BugsnagPerformance.start({
+//   apiKey: ENV.BUGSNAG_API_KEY,
+//   appVersion,
+//   releaseStage,
+//   logger: {
+//     debug(message: string) {
+//       // console.log(message)
+//     },
+//     info(message: string) {
+//       // console.log(message)
+//     },
+//     warn(message: string) {
+//       // console.warn(message)
+//     },
+//     error(message: string) {
+//       // console.error(message)
+//     }
+//   }
+// })
 
 if (ENV.LOG_SERVER) {
   console.log = function () {
-    logToServer(arguments)
+    // logToServer(arguments)
   }
 
-  console.info = console.log
+  // console.info = console.log
 
-  console.warn = console.log
+  // console.warn = console.log
 
-  console.error = console.log
+  // console.error = console.log
 }
 
 const clog = console.log

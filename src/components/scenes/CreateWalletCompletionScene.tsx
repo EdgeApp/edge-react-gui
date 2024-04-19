@@ -188,19 +188,16 @@ const CreateWalletCompletionComponent = (props: Props) => {
       }
     })
 
-    // TODO
-    // const migrateTokenList: MigrateWalletItem[] = []
-
     // Navigate to the migration screen with the prepared list
     if (migrateWalletList.length > 0) {
       // TODO: Waiting for wallet sync still yields 0 getMaxSpendable...
-      // navigation.navigate('migrateWalletCalculateFee', {
-      //   migrateWalletList: [...migrateWalletList, ...migrateTokenList]
-      // })
-
-      navigation.navigate('migrateWalletSelectCrypto', {
-        preSelectedWalletIds: migrateWalletList.map(item => item.createWalletIds[0])
+      navigation.navigate('migrateWalletCalculateFee', {
+        migrateWalletList: [...migrateWalletList, ...migrateTokenList]
       })
+
+      // navigation.navigate('migrateWalletSelectCrypto', {
+      //   preSelectedWalletIds: migrateWalletList.map(item => item.createWalletIds[0])
+      // })
     } else {
       showError('Unable to migrate imported wallets')
     }

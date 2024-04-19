@@ -1,11 +1,13 @@
 import { asBlogPosts, BlogPost } from 'edge-info-server'
 import * as React from 'react'
 import { ListRenderItem, View } from 'react-native'
+import { Airship } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
+import { ENV } from '../../../env'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { useSceneScrollHandler } from '../../../state/SceneScrollState'
@@ -15,6 +17,7 @@ import { getUi4ImageUri } from '../../../util/CdnUris'
 import { fetchInfo } from '../../../util/network'
 import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp80, fadeInUp140 } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { FioCreateHandleModal } from '../../modals/FioCreateHandleModal'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { WiredProgressBar } from '../../themed/WiredProgressBar'
 import { BalanceCardUi4 } from '../BalanceCardUi4'
@@ -31,8 +34,51 @@ interface Props extends EdgeSceneProps<'home'> {}
 
 const TEMP_PADDING_REM = 0.5 // To be built-in to SceneWrapper when fully UI4
 
+// 84267731318ca10f38df5bd270b513647ca6808e2d480b84034af6652c8662bd
+
 export const HomeSceneUi4 = (props: Props) => {
   const { navigation } = props
+
+  // navigation.navigate('createWalletImport', {
+  //   createWalletList: [
+  //     {
+  //       type: 'create',
+  //       key: 'create-wallet:bitcoin-bip49-bitcoin',
+  //       currencyCode: 'BTC',
+  //       displayName: 'Bitcoin (Segwit)',
+  //       keyOptions: {
+  //         format: 'bip49'
+  //       },
+  //       pluginId: 'bitcoin',
+  //       tokenId: null,
+  //       walletType: 'wallet:bitcoin'
+  //     }
+  //   ],
+  //   walletNames: {
+  //     'create-wallet:bitcoin-bip49-bitcoin': 'My Bitcoin 3'
+  //   },
+  //   fiatCode: 'USD'
+  // })
+  // navigation.navigate('createWalletCompletion', {
+  //   createWalletList: [
+  //     {
+  //       type: 'create',
+  //       key: 'create-wallet:polygon-polygon',
+  //       currencyCode: 'MATIC',
+  //       displayName: 'Polygon',
+  //       keyOptions: {},
+  //       pluginId: 'polygon',
+  //       tokenId: null,
+  //       walletType: 'wallet:polygon'
+  //     }
+  //   ],
+  //   walletNames: {
+  //     'create-wallet:polygon-polygon': 'My Polygon 2'
+  //   },
+  //   fiatCode: 'USD',
+  //   importText: '84267731318ca10f38df5bd270b513647ca6808e2d480b84034af6652c8662bd'
+  // })
+
   const theme = useTheme()
   const styles = getStyles(theme)
 

@@ -175,25 +175,25 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
   })
 
   const handleScan = useHandler(() => {
-    const title = sprintf(lstrings.send_scan_modal_text_modal_title_s, currencyCode)
-    const message = sprintf(lstrings.send_scan_modal_text_modal_message_s, currencyCode)
-    Airship.show<string | undefined>(bridge => (
-      <ScanModal
-        bridge={bridge}
-        scanModalTitle={lstrings.scan_qr_label}
-        textModalHint={lstrings.send_scan_modal_text_modal_hint}
-        textModalBody={message}
-        textModalTitle={title}
-      />
-    ))
-      .then(async (result: string | undefined) => {
-        if (result) {
-          await changeAddress(result)
-        }
-      })
-      .catch(error => {
-        showError(error)
-      })
+    // const title = sprintf(lstrings.send_scan_modal_text_modal_title_s, currencyCode)
+    // const message = sprintf(lstrings.send_scan_modal_text_modal_message_s, currencyCode)
+    // Airship.show<string | undefined>(bridge => (
+    //   <ScanModal
+    //     bridge={bridge}
+    //     scanModalTitle={lstrings.scan_qr_label}
+    //     textModalHint={lstrings.send_scan_modal_text_modal_hint}
+    //     textModalBody={message}
+    //     textModalTitle={title}
+    //   />
+    // ))
+    //   .then(async (result: string | undefined) => {
+    //     if (result) {
+    //       await changeAddress(result)
+    //     }
+    //   })
+    //   .catch(error => {
+    //     showError(error)
+    //   })
   })
 
   const handleChangeAddress = useHandler(async () => {
