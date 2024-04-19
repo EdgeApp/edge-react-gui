@@ -7,7 +7,6 @@ import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
-import com.zoontek.rnbootsplash.RNBootSplash
 import expo.modules.ReactActivityDelegateWrapper
 
 class MainActivity : ReactActivity() {
@@ -29,9 +28,6 @@ class MainActivity : ReactActivity() {
         )
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Keep the splash screen around until we are ready to hide it:
-        RNBootSplash.init(this)
-
         // Do not pass the saved state, as required by react-native-screens:
         super.onCreate(null)
 

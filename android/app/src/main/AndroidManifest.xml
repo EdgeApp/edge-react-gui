@@ -36,7 +36,7 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:allowBackup="false"
     android:usesCleartextTraffic="true"
-    android:theme="@style/Theme.App.Starting">
+    android:theme="@style/Theme.AppCompat.Light">
     <meta-data android:name="io.sentry.auto-init" android:value="false" />
     <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
                android:resource="@mipmap/edge_logo_hollow" />
