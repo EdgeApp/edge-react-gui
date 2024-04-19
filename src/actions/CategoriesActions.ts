@@ -358,7 +358,7 @@ export const getTxActionDisplayInfo = (tx: EdgeTransaction, account: EdgeAccount
               category: 'exchange',
               subcategory: sprintf(toFromStr, getCurrencyCodeWithAccount(account, otherAsset.pluginId, otherAsset.tokenId))
             }
-            direction = txSrcSameAsset ? 'receive' : 'send'
+            direction = txSrcSameAsset ? 'send' : 'receive'
             break
           }
 
