@@ -4,6 +4,7 @@
 
 - added: Done button is a part of SimpleTextInput
 - added: Ability to add a custom token for any wallet directly from CreateWalletSelectCryptoScene
+- added: Ability to migrate during the wallet import flow
 - changed: Better send error message for insufficient gas
 - changed: Upgrade to React Native v0.73.6
 - changed: "Split" wallet menu options consolidated into one
