@@ -6,6 +6,7 @@ import { formatNumber, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { EdgeAsset } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { infoServerData } from '../../util/network'
 import { logEvent } from '../../util/tracking'
@@ -208,9 +209,9 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       })
 
       if (walletListResult == null) return
-      const { walletId, currencyCode, tokenId } = walletListResult
-
+      const { walletId, tokenId } = walletListResult
       const coreWallet = account.currencyWallets[walletId]
+      const currencyCode = getCurrencyCode(coreWallet, tokenId)
       const currencyPluginId = coreWallet.currencyInfo.pluginId
       if (!coreWallet) return await showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
 

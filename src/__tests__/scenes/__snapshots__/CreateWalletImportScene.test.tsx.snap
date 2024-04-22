@@ -377,8 +377,8 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             "alignItems": "stretch",
             "borderRadius": 11,
             "borderWidth": 1,
-            "flex": 1,
             "flexDirection": "row",
+            "flexGrow": 1,
             "paddingHorizontal": 17,
           },
           {
