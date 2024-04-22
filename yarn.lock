@@ -6690,10 +6690,10 @@ base64-js@*, base64-js@^1.2.3, base64-js@^1.3.0, base64-js@^1.3.1, base64-js@^1.
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
 
-baselet@^0.2.4:
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/baselet/-/baselet-0.2.4.tgz#11450ead06353d9c9971a983790655b93211c097"
-  integrity sha512-42EmWggEbg1XlOjUIuDkepKo5WQUF8b5r7R6avxCw+T8fW2YEl3YNRLKTDguJC+CXJuu478HkdZ/jiLzinxf7Q==
+baselet@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/baselet/-/baselet-0.3.0.tgz#2cebf5ae5833711ce40dcbc0cf06a8732592a94e"
+  integrity sha512-GNwU6O9vkg1TOLzYepsPE7mP7+hXOJhxUHWE4MARXEiiTLG/RxCL7xpbbGAdnh9JvAlJsa5OSkATMloCWQOpMw==
   dependencies:
     disklet "^0.4.5"
     memlet "^0.1.6"
@@ -9273,15 +9273,15 @@ edge-currency-monero@^1.3.1:
     buffer "^5.0.6"
     uri-js "^3.0.2"
 
-edge-currency-plugins@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-2.6.0.tgz#a2a4b08b7f76d85f37065e86119be94eae1a183a"
-  integrity sha512-EfMbMMdMatFWE/ZKMFIr6VAsggjf6/3/yuXNBi6g1PKHTHzuSFlBCaBEdSq5j39civu+setYMLZ/rfBZnip0mQ==
+edge-currency-plugins@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-plugins/-/edge-currency-plugins-2.6.1.tgz#2d1aa6c6affce0a1bd6ab9e3b6663559ef76a811"
+  integrity sha512-GIlBQvxp8HWlr2JMI/rbxqtp+w7yTM+XGZqxaiX5H7DgBPvr103mWltJYkS0jBG3hroKQ9gnohzrkvTYFF/0mQ==
   dependencies:
     "@bitcoin-js/tiny-secp256k1-asmjs" "^2.2.3"
     altcoin-js "^1.0.0"
     async-mutex "^0.2.6"
-    baselet "^0.2.4"
+    baselet "^0.3.0"
     biggystring "^4.1.3"
     bip32 "^2.0.5"
     bip32grs "^2.0.5"
