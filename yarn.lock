@@ -9322,10 +9322,10 @@ edge-info-server@^2.1.0:
   dependencies:
     cleaners "^0.3.16"
 
-edge-login-ui-rn@^3.7.2:
-  version "3.7.2"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.7.2.tgz#38ad9b20b3dffe4b9c614ec5e41df49611295c12"
-  integrity sha512-h7t5+x3ShBF6wafk4ywfi/Jm1MRzWLVjdTJ1iYFSuLUC2byKT8NBt64ioF6mRVPlA895UE8K2lrnZH8Yw/z2jA==
+edge-login-ui-rn@^3.8.0:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-3.8.0.tgz#6683d926b5eaa1a9d388f7f100c9f3557172abfc"
+  integrity sha512-mRRlT6QGbuQsPuyhz51l00sJZcwp7rQyJsOPiJvB1AjftMKmmZt/CFg6Oyskwf8KsqEW+pho/cgShVr6yon91Q==
   dependencies:
     base-x "^4.0.0"
     cleaners "^0.3.12"

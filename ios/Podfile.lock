@@ -27,7 +27,7 @@ PODS:
     - React-Core
   - edge-exchange-plugins (2.4.1):
     - React-Core
-  - edge-login-ui-rn (3.7.2):
+  - edge-login-ui-rn (3.8.0):
     - React-Core
   - EXConstants (15.4.5):
     - ExpoModulesCore
@@ -1886,7 +1886,7 @@ SPEC CHECKSUMS:
   edge-core-js: b7c6fca8bbaf9848a5b4e1871f8ae7b95b5c8f6d
   edge-currency-accountbased: c64f86534b11c093f417cc58c56118b3e2bc3405
   edge-exchange-plugins: b826d2e1a4b19e34eea2f737fabdb0951fcbce20
-  edge-login-ui-rn: f0887abbc2dcaf65a56ddd40263b724194ce4179
+  edge-login-ui-rn: 2ff167779e20cd4466905a4878a9c6d6a79d2f8c
   EXConstants: 988aa430ca0f76b43cd46b66e7fae3287f9cc2fc
   EXFont: f20669cb266ef48b004f1eb1f2b20db96cd1df9f
   Expo: e01a77c6fa4bc80a6d1bb949cda1d12d21044abd
@@ -2020,7 +2020,7 @@ SPEC CHECKSUMS:
   SwiftNIOTLS: 598af547490133e9aac52aed0c23c4a90c31dcfc
   SwiftNIOTransportServices: 0b2b407819d82eb63af558c5396e33c945759503
   SwiftProtobuf: b70d65f419fbfe61a2d58003456ca5da58e337d6
-  Yoga: 805bf71192903b20fc14babe48080582fee65a80
+  Yoga: d17d2cc8105eed528474683b42e2ea310e1daf61
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
