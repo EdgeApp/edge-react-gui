@@ -17,6 +17,7 @@
 - fixed: Glitch on transaction list scene when starting search
 - fixed: Properly set default buy/sell fiat amount for non-USD wallets
 - removed: 'X' button on modals
+- removed: Hedera account purchases
 
 ## 4.5.0
 

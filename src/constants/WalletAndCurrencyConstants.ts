@@ -148,7 +148,6 @@ interface SpecialCurrencyInfo {
   isCustomTokensSupported?: boolean
   isUriEncodedStructure?: boolean
   needsAccountNameSetup?: boolean
-  skipAccountNameValidation?: boolean
   noChangeMiningFee?: boolean
   noMaxSpend?: boolean
   keysOnlyMode?: boolean
@@ -707,8 +706,6 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'HBAR',
     dummyPublicAddress: '0.0.14625',
     isImportKeySupported: true,
-    isAccountActivationRequired: true,
-    skipAccountNameValidation: true,
     noMaxSpend: true,
     noChangeMiningFee: true
   },
