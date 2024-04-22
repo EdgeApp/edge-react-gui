@@ -103,15 +103,16 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
 
   const handleSplit = useHandler(async () => {
     if (splitSourceWalletId != null) {
-      newWalletItems.forEach(async item => {
+      for (const item of newWalletItems) {
         try {
           const splitWalletId = await account.splitWalletInfo(splitSourceWalletId, account.currencyConfig[item.pluginId]?.currencyInfo.walletType)
           const splitWallet = await account.waitForCurrencyWallet(splitWalletId)
           await splitWallet.renameWallet(walletNames[item.key])
         } catch (error: unknown) {
           showError(error)
+          break
         }
-      })
+      }
       navigation.navigate('walletsTab', { screen: 'walletList' })
     }
   })
