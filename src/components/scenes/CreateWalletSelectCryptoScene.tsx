@@ -246,7 +246,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     // Render the bottom button
     if (item.item === null)
       return (
-        <Fade noFadeIn={defaultSelection.length === 0} visible={selectedItems.size === 0} duration={300}>
+        <Fade noFadeIn={selectedItems.size === 0} visible={selectedItems.size === 0} duration={300}>
           <ButtonUi4 type="secondary" label={lstrings.add_custom_token} onPress={handleAddCustomTokenPress} marginRem={0.5} />
         </Fade>
       )
