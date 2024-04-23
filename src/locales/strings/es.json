@@ -1026,6 +1026,7 @@
   "contacts_permission_modal_body_3": "If you deny access, %1$s can still function to buy, sell, trade, and transact cryptocurrency.",
   "contacts_permission_modal_enable_settings": "Para usar %1$s, por favor habilita tu permiso para %2$s.",
   "contacts_permission_modal_enable_settings_mandatory": "Para usar %1$s, por favor habilita tu permiso para %2$s.",
+  "migrate_label": "Migrate",
   "migrate_wallets_select_crypto_title": "Choose Assets to Migrate",
   "migrate_wallets_calculate_fee_title": "Confirm Migration",
   "migrate_wallets_title": "Migrate Wallets",
