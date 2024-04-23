@@ -1026,6 +1026,7 @@
   "contacts_permission_modal_body_3": "Wenn Sie den Zugriff verweigern, kann %1$s trotzdem funktionieren, um Kryptowährungen zu kaufen, zu verkaufen, zu handeln und zu übertragen.",
   "contacts_permission_modal_enable_settings": "Um %1$szu verwenden, aktivieren Sie bitte Ihre %2$s Berechtigung.",
   "contacts_permission_modal_enable_settings_mandatory": "Um %1$szu verwenden, aktivieren Sie bitte Ihre %2$s Berechtigung.",
+  "migrate_label": "Migrate",
   "migrate_wallets_select_crypto_title": "Choose Assets to Migrate",
   "migrate_wallets_calculate_fee_title": "Confirm Migration",
   "migrate_wallets_title": "Migrate Wallets",
