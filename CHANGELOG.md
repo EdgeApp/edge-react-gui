@@ -13,6 +13,7 @@
 - changed: Allow light accounts to buy up to $50 worth of crypto at a time
 - fixed: Plaid bank linking with Kado
 - fixed: Remove red error when deep linking into Edge with no URL path
+- fixed: Unstaking tokens from Thorchain savers
 - removed: USPs a/b/c/d test experiment - always uses default USPs
 
 ## 4.4.0 (2024-04-09)
