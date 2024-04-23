@@ -1026,6 +1026,7 @@
   "contacts_permission_modal_body_3": "アクセスを拒否しても、%1$sは暗号資産の購入、販売、取引、送金を行う機能は引き続き利用できます。",
   "contacts_permission_modal_enable_settings": "%1$sを使用するには、%2$sの許可を有効にしてください。",
   "contacts_permission_modal_enable_settings_mandatory": "%1$sを使用するためには、%2$sの権限を有効にしてください。",
+  "migrate_label": "Migrate",
   "migrate_wallets_select_crypto_title": "移行する資産を選択",
   "migrate_wallets_calculate_fee_title": "移行の確認",
   "migrate_wallets_title": "ウォレットを移行",
