@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { getColors } from 'react-native-image-colors'
 
+// import { getColors } from 'react-native-image-colors'
 import { useState } from '../types/reactHooks'
 import { EdgeAsset } from '../types/types'
 import { getCurrencyIconUris } from '../util/CdnUris'
@@ -19,21 +19,21 @@ export const useIconColor = (edgeAsset: EdgeAsset): string | undefined => {
   React.useEffect(() => {
     if (primaryCurrencyIconUrl == null) return
 
-    getColors(primaryCurrencyIconUrl, {
-      cache: true,
-      key: primaryCurrencyIconUrl
-    })
-      .then(colors => {
-        if (colors.platform === 'ios') {
-          setColor(colors.primary)
-        }
-        if (colors.platform === 'android') {
-          setColor(colors.vibrant)
-        }
-      })
-      .catch(err => {
-        console.warn(err)
-      })
+    // getColors(primaryCurrencyIconUrl, {
+    //   cache: true,
+    //   key: primaryCurrencyIconUrl
+    // })
+    //   .then(colors => {
+    //     if (colors.platform === 'ios') {
+    //       setColor(colors.primary)
+    //     }
+    //     if (colors.platform === 'android') {
+    //       setColor(colors.vibrant)
+    //     }
+    //   })
+    //   .catch(err => {
+    //     console.warn(err)
+    //   })
   }, [primaryCurrencyIconUrl])
 
   return color

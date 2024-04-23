@@ -3,7 +3,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import { DefaultTheme, NavigationContainer, useNavigation } from '@react-navigation/native'
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import * as React from 'react'
-import { Platform } from 'react-native'
+import { Platform, Text, View } from 'react-native'
 
 import { getDeviceSettings } from '../actions/DeviceSettingsActions'
 import { logoutRequest } from '../actions/LoginActions'
@@ -274,6 +274,19 @@ export const Main = () => {
     'setLegacyLanding'
   )
 
+  // return (
+  //   <NavigationContainer theme={reactNavigationTheme}>
+  //     <Stack.Navigator
+  //       initialRouteName="login"
+  //       screenOptions={{
+  //         headerShown: false
+  //       }}
+  //     >
+  //       <Stack.Screen name="login" component={Demo} />
+  //     </Stack.Navigator>
+  //   </NavigationContainer>
+  // )
+
   return (
     <>
       {experimentConfig == null ? (
@@ -281,18 +294,26 @@ export const Main = () => {
       ) : (
         <NavigationContainer theme={reactNavigationTheme}>
           <Stack.Navigator
-            initialRouteName={ENV.USE_WELCOME_SCREENS ? 'gettingStarted' : 'login'}
+            initialRouteName="login"
             screenOptions={{
               headerShown: false
             }}
           >
             <Stack.Screen name="edgeApp" component={EdgeApp} />
-            <Stack.Screen name="gettingStarted" component={GettingStartedScene} initialParams={{ experimentConfig }} />
+            <Stack.Screen name="gettingStarted" component={Demo} initialParams={{ experimentConfig }} />
             <Stack.Screen name="login" component={LoginScene} initialParams={{ experimentConfig }} options={{ animationEnabled: hasInitialScenesLoaded }} />
           </Stack.Navigator>
         </NavigationContainer>
       )}
     </>
+  )
+}
+
+const Demo = () => {
+  return (
+    <View>
+      <Text style={{ color: 'red' }}>"We have a core"</Text>
+    </View>
   )
 }
 
