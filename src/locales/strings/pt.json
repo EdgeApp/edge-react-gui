@@ -1026,6 +1026,7 @@
   "contacts_permission_modal_body_3": "Se você negar o acesso, %1$s ainda poderá funcionar para comprar, vender, negociar e transacionar criptomoedas.",
   "contacts_permission_modal_enable_settings": "Para usar %1$s, por favor, habilite a sua permissão %2$s.",
   "contacts_permission_modal_enable_settings_mandatory": "Para usar %1$s, por favor habilite a sua permissão %2$s.",
+  "migrate_label": "Migrate",
   "migrate_wallets_select_crypto_title": "Escolha os Ativos para Migrar",
   "migrate_wallets_calculate_fee_title": "Confirmar a migração",
   "migrate_wallets_title": "Migrar Carteiras",
