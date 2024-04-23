@@ -90,7 +90,7 @@ function selectActivationRequiredWallet(navigation: NavigationBase, walletId: st
   return async (dispatch, getState) => {
     const state = getState()
     const wallet = state.core.account.currencyWallets[walletId]
-    const { currencyCode, pluginId } = wallet.currencyInfo
+    const { currencyCode } = wallet.currencyInfo
     const { publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
 
     if (publicAddress !== '') {
@@ -106,19 +106,11 @@ function selectActivationRequiredWallet(navigation: NavigationBase, walletId: st
       await dispatch(updateWalletsRequest())
       // not activated yet
       // find fiat and crypto activation-required types and populate scene props
-      const specialCurrencyInfo = getSpecialCurrencyInfo(pluginId)
-      if (specialCurrencyInfo.skipAccountNameValidation) {
-        navigation.push('createWalletAccountSelect', {
-          accountName: getWalletName(wallet),
-          walletId
-        })
-      } else {
-        navigation.push('createWalletAccountSetup', {
-          accountHandle: '',
-          isReactivation: true,
-          walletId
-        })
-      }
+      navigation.push('createWalletAccountSetup', {
+        accountHandle: '',
+        isReactivation: true,
+        walletId
+      })
 
       Airship.show<'ok' | undefined>(bridge => (
         <ButtonsModal
