@@ -1,4 +1,4 @@
-import { EdgeCreateCurrencyWallet } from 'edge-core-js'
+import { EdgeCreateCurrencyWallet, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -13,14 +13,15 @@ import { lstrings } from '../../locales/strings'
 import { splitCreateWalletItems, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { SceneButtons } from '../common/SceneButtons'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { IconDataRow } from '../data/row/IconDataRow'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { EdgeText } from '../themed/EdgeText'
-import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
+import { MigrateWalletItem } from './MigrateWalletSelectCryptoScene'
 
 export interface CreateWalletCompletionParams {
   createWalletList: WalletCreateItem[]
@@ -43,6 +44,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
   const account = useSelector(state => state.core.account)
 
   const [done, setDone] = React.useState(false)
+  const [wallets, setWallets] = React.useState<EdgeCurrencyWallet[]>([])
 
   const { newWalletItems, newTokenItems } = React.useMemo(() => splitCreateWalletItems(createWalletList), [createWalletList])
 
@@ -107,11 +109,20 @@ const CreateWalletCompletionComponent = (props: Props) => {
           showError(result.error)
           setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'error' }))
         } else {
+          // Wait for wallet creation
+          await account.waitForCurrencyWallet(result.result.id)
+
           setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'complete' }))
         }
       }
 
-      if (tokenPromise != null) await tokenPromise
+      if (tokenPromise != null) {
+        await tokenPromise
+      }
+
+      // Save the created wallets
+      setWallets(walletResults.filter((result): result is { ok: true; result: EdgeCurrencyWallet } => result.ok).map(result => result.result))
+
       setDone(true)
       return () => {}
     },
@@ -119,6 +130,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
     'CreateWalletCompletionComponent'
   )
 
+  // TODO: Clean up these hack styles.
   const renderStatus = useHandler((item: WalletCreateItem) => {
     let icon = <ActivityIndicator style={{ paddingRight: theme.rem(0.3125) }} color={theme.iconTappable} />
     if (itemStatus[item.key] === 'complete') icon = <IonIcon name="checkmark-circle-outline" size={theme.rem(1.5)} color={theme.iconTappable} />
@@ -132,18 +144,22 @@ const CreateWalletCompletionComponent = (props: Props) => {
       // Mainnet
       return <CreateWalletSelectCryptoRow tokenId={null} pluginId={item.pluginId} walletName={walletNames[item.key]} rightSide={renderStatus(item)} />
     } else if (item.key === tokenKey) {
-      // Single token row
+      // Single row listing all tokens selected
       const tokenNameString = newTokenItems.map(item => item.currencyCode).join(', ')
+
       return (
         <IconDataRow
-          marginRem={[1, 0.5, 0, 0.5]}
-          icon={<FontAwesome5 name="coins" size={theme.rem(2)} color={theme.iconTappable} />}
+          marginRem={0.5}
+          icon={<FontAwesome5 style={styles.tokenIcon} name="coins" size={theme.rem(2)} color={theme.iconTappable} />}
           leftText={lstrings.create_wallet_tokens}
           leftSubtext={
-            <EdgeText style={{ color: theme.secondaryText, fontSize: theme.rem(0.75) }} ellipsizeMode="tail">
+            <EdgeText style={styles.tokenNames} ellipsizeMode="tail">
               {tokenNameString}
             </EdgeText>
           }
+          // HACK: Right justified icons are supported in
+          // CreateWalletSelectCryptoRow, but not in IconDataRow. This View
+          // lets the icon overflow outside of the top half of the component.
           rightText={<View>{renderStatus(item)}</View>}
         />
       )
@@ -151,20 +167,33 @@ const CreateWalletCompletionComponent = (props: Props) => {
     return null
   })
 
-  const renderNextButton = React.useMemo(() => {
-    return (
-      <View style={styles.bottomButton}>
-        <MainButton
-          spinner={!done}
-          disabled={!done}
-          label={!done ? undefined : lstrings.string_done_cap}
-          type="secondary"
-          marginRem={[0, 0, 1]}
-          onPress={() => navigation.navigate('walletsTab', { screen: 'walletList' })}
-        />
-      </View>
-    )
-  }, [done, navigation, styles.bottomButton])
+  const handleNext = useHandler(() => navigation.navigate('walletsTab', { screen: 'walletList' }))
+
+  const handleMigrate = useHandler(() => {
+    // Transform filtered items into the structure expected by the migration component
+    const migrateWalletList: MigrateWalletItem[] = newWalletItems.map(createWallet => {
+      // Link the createWalletIds with the created wallets
+      const { key, pluginId } = createWallet
+      const wallet = wallets.find(wallet => wallet.currencyInfo.pluginId === pluginId)
+
+      return {
+        ...createWallet,
+        createWalletIds: wallet == null ? [''] : [wallet.id],
+        displayName: walletNames[key],
+        key,
+        type: 'create'
+      }
+    })
+
+    // Navigate to the migration screen with the prepared list
+    if (migrateWalletList.length > 0) {
+      navigation.navigate('migrateWalletCalculateFee', {
+        migrateWalletList
+      })
+    } else {
+      showError('Unable to migrate imported wallets')
+    }
+  })
 
   const keyExtractor = useHandler((item: WalletCreateItem) => item.key)
 
@@ -175,7 +204,12 @@ const CreateWalletCompletionComponent = (props: Props) => {
           <SceneHeader title={lstrings.title_create_wallets} withTopMargin />
           <FlatList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5), marginHorizontal: theme.rem(0.5) }}
+            contentContainerStyle={{
+              ...insetStyle,
+              paddingTop: 0,
+              paddingBottom: insetStyle.paddingBottom + theme.rem(3.5),
+              marginHorizontal: theme.rem(0.5)
+            }}
             data={filteredCreateItemsForDisplay}
             fadingEdgeLength={10}
             keyExtractor={keyExtractor}
@@ -184,7 +218,11 @@ const CreateWalletCompletionComponent = (props: Props) => {
             renderItem={renderRow}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
-          {renderNextButton}
+
+          <SceneButtons
+            primary={{ label: lstrings.string_next_capitalized, disabled: !done, onPress: handleNext }}
+            secondary={importText == null ? undefined : { label: lstrings.migrate_label, disabled: !done, onPress: handleMigrate }}
+          />
         </View>
       )}
     </SceneWrapper>
@@ -196,6 +234,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignSelf: 'center',
     bottom: theme.rem(1),
     position: 'absolute'
+  },
+  tokenIcon: {
+    marginRight: theme.rem(0.5)
+  },
+  tokenNames: {
+    color: theme.secondaryText,
+    fontSize: theme.rem(0.75)
   }
 }))
 

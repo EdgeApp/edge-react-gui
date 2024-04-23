@@ -1154,6 +1154,7 @@ const strings = {
   contacts_permission_modal_enable_settings_mandatory: 'To use %1$s, please enable your %2$s permission.',
 
   // Migrate Wallet
+  migrate_label: 'Migrate',
   migrate_wallets_select_crypto_title: 'Choose Assets to Migrate',
   migrate_wallets_calculate_fee_title: 'Confirm Migration',
   migrate_wallets_title: 'Migrate Wallets',
