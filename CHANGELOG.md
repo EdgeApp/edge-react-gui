@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.6.0
+
 - added: Done button is a part of SimpleTextInput
 - added: Ability to add a custom token for any wallet directly from CreateWalletSelectCryptoScene
 - added: Ability to migrate during the wallet import flow
@@ -20,7 +22,7 @@
 - removed: 'X' button on modals
 - removed: Hedera account purchases
 
-## 4.5.0
+## 4.5.0 (2024-04-24)
 
 - added: More descriptive 504 transaction failure error message
 - added: New `Text`-based components
