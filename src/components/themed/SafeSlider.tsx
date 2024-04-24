@@ -54,7 +54,7 @@ export const SafeSlider = (props: Props) => {
   }
 
   const onGestureEvent = useAnimatedGestureHandler({
-    onStart: (_, ctx) => {
+    onStart: (_, ctx: { offsetX: number }) => {
       if (!sliderDisabled) ctx.offsetX = translateX.value
     },
     onActive: (event, ctx) => {

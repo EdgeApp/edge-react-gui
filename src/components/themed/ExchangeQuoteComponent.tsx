@@ -107,7 +107,13 @@ export const ExchangeQuote = (props: Props) => {
 
   return (
     <CardUi4>
-      <CurrencyRow wallet={isFrom ? fromWallet : toWallet} tokenId={isFrom ? fromTokenId : toTokenId} marginRem={0.5} nativeAmount={nativeAmount} />
+      <CurrencyRow
+        wallet={isFrom ? fromWallet : toWallet}
+        tokenId={isFrom ? fromTokenId : toTokenId}
+        marginRem={0.5}
+        nativeAmount={nativeAmount}
+        hideBalance={false}
+      />
       {renderBottom()}
     </CardUi4>
   )

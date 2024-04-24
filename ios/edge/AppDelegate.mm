@@ -16,7 +16,10 @@
 #import <sys/errno.h>
 #import <UserNotifications/UserNotifications.h>
 
-@implementation AppDelegate
+@implementation AppDelegate {
+  // Edge addition:
+  UIView *securityView;
+}
 
 // From https://reactnative.dev/docs/0.71/linking#enabling-deep-links
 - (BOOL)application:(UIApplication *)application
@@ -146,6 +149,36 @@
       }];
     }
   }];
+}
+
+/**
+ * Hides the app when we go into the background.
+ * Edge addition.
+ */
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+  UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"LaunchScreen" bundle:nil];
+  UIViewController *launchScreen = [storyboard instantiateInitialViewController];
+  if (launchScreen == nil) return;
+  UIView *launchView = launchScreen.view;
+  if (launchView == nil) return;
+  
+  launchView.frame = self.window.bounds;
+  [self.window addSubview:launchView];
+  [self.window makeKeyAndVisible];
+  securityView = launchView;
+}
+
+/**
+ * Shows the app when we come into the foreground.
+ * Edge addition.
+ */
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+  if (securityView != nil) {
+    [securityView removeFromSuperview];
+    securityView = nil;
+  }
 }
 
 @end

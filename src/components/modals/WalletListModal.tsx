@@ -101,7 +101,6 @@ export function WalletListModal(props: Props) {
   const showCustomAssets = customAssets != null && customAssets.length > 0
 
   const account = useSelector(state => state.core.account)
-  const currencyWallets = useSelector(state => state.core.account.currencyWallets)
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -136,14 +135,14 @@ export function WalletListModal(props: Props) {
   const handlePaymentMethodPress = useHandler((fiatAccountId: string) => () => {
     bridge.resolve({ type: 'wyre', fiatAccountId })
   })
-  const handleWalletListPress = useHandler((walletId: string, tokenId: EdgeTokenId, customAsset?: CustomAsset) => {
+  const handleWalletListPress = useHandler(async (walletId: string, tokenId: EdgeTokenId, customAsset?: CustomAsset) => {
     if (walletId === '') {
       handleCancel()
       showError(lstrings.network_alert_title)
     } else if (customAsset != null) {
       bridge.resolve({ type: 'custom', customAsset })
     } else {
-      const wallet = currencyWallets[walletId]
+      const wallet = await account.waitForCurrencyWallet(walletId)
       const currencyCode = getCurrencyCode(wallet, tokenId)
       bridge.resolve({ type: 'wallet', walletId, currencyCode, tokenId })
     }

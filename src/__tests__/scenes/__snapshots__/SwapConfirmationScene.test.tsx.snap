@@ -35,8 +35,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
   >
     <RNSVGSvgView
       align="xMidYMid"
-      bbHeight="0"
-      bbWidth="0"
+      bbHeight={0}
+      bbWidth={0}
       focusable={false}
       height={0}
       meetOrSlice={0}
@@ -170,7 +170,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 "fill",
               ]
             }
-            r="224.73239436619718"
+            r={224.73239436619718}
           />
           <RNSVGCircle
             cx="95%"
@@ -186,7 +186,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 "fill",
               ]
             }
-            r="238.7781690140845"
+            r={238.7781690140845}
           />
           <RNSVGCircle
             cx="-15%"
@@ -202,7 +202,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 "fill",
               ]
             }
-            r="421.37323943661977"
+            r={421.37323943661977}
           />
         </RNSVGGroup>
       </RNSVGGroup>
@@ -410,8 +410,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               >
                 <RNSVGSvgView
                   align="xMidYMid"
-                  bbHeight="61"
-                  bbWidth="61"
+                  bbHeight={61}
+                  bbWidth={61}
                   focusable={false}
                   height={61}
                   meetOrSlice={0}
@@ -453,8 +453,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     }
                   >
                     <RNSVGCircle
-                      cx="22.5"
-                      cy="22.5"
+                      cx={22.5}
+                      cy={22.5}
                       fill={
                         {
                           "payload": 0,
@@ -471,7 +471,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                           "strokeLinecap",
                         ]
                       }
-                      r="24"
+                      r={24}
                       stroke={
                         {
                           "payload": 4278251938,
@@ -480,12 +480,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       }
                       strokeDasharray={
                         [
-                          "150.79644737231007",
-                          "150.79644737231007",
+                          150.79644737231007,
+                          150.79644737231007,
                         ]
                       }
                       strokeLinecap={1}
-                      strokeWidth="4"
+                      strokeWidth={4}
                     />
                   </RNSVGGroup>
                 </RNSVGSvgView>
@@ -525,11 +525,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   >
                     <FastImageView
                       resizeMode="cover"
-                      source={
-                        {
-                          "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-                        }
-                      }
                       style={
                         {
                           "bottom": 0,
@@ -652,7 +647,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       ]
                     }
                   >
-                    ₿ ●●●●
+                    ₿ 0.0001
                   </Text>
                 </Text>
                 <View
@@ -685,7 +680,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       ]
                     }
                   >
-                    $ ●●●●
+                    $1.84
                   </Text>
                 </View>
               </View>
@@ -992,8 +987,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               >
                 <RNSVGSvgView
                   align="xMidYMid"
-                  bbHeight="61"
-                  bbWidth="61"
+                  bbHeight={61}
+                  bbWidth={61}
                   focusable={false}
                   height={61}
                   meetOrSlice={0}
@@ -1035,8 +1030,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     }
                   >
                     <RNSVGCircle
-                      cx="22.5"
-                      cy="22.5"
+                      cx={22.5}
+                      cy={22.5}
                       fill={
                         {
                           "payload": 0,
@@ -1053,7 +1048,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                           "strokeLinecap",
                         ]
                       }
-                      r="24"
+                      r={24}
                       stroke={
                         {
                           "payload": 4278251938,
@@ -1062,12 +1057,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       }
                       strokeDasharray={
                         [
-                          "150.79644737231007",
-                          "150.79644737231007",
+                          150.79644737231007,
+                          150.79644737231007,
                         ]
                       }
                       strokeLinecap={1}
-                      strokeWidth="4"
+                      strokeWidth={4}
                     />
                   </RNSVGGroup>
                 </RNSVGSvgView>
@@ -1107,11 +1102,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   >
                     <FastImageView
                       resizeMode="cover"
-                      source={
-                        {
-                          "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                        }
-                      }
                       style={
                         {
                           "bottom": 0,
@@ -1234,7 +1224,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       ]
                     }
                   >
-                    Ξ ●●●●
+                    Ξ 0
                   </Text>
                 </Text>
                 <View
@@ -1267,7 +1257,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       ]
                     }
                   >
-                    $ ●●●●
+                    $0.000000
                   </Text>
                 </View>
               </View>
@@ -1370,11 +1360,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="contain"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/exchangeIcons/bitcoin/icon.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,

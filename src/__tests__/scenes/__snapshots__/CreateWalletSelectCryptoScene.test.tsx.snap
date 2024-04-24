@@ -20,6 +20,9 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         "paddingTop": 64,
       },
       {
+        "maxHeight": 1334,
+      },
+      {
         "padding": 0,
       },
     ]
@@ -58,8 +61,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
   >
     <RNSVGSvgView
       align="xMidYMid"
-      bbHeight="0"
-      bbWidth="0"
+      bbHeight={0}
+      bbWidth={0}
       focusable={false}
       height={0}
       meetOrSlice={0}
@@ -193,7 +196,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "fill",
               ]
             }
-            r="224.73239436619718"
+            r={224.73239436619718}
           />
           <RNSVGCircle
             cx="95%"
@@ -209,7 +212,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "fill",
               ]
             }
-            r="238.7781690140845"
+            r={238.7781690140845}
           />
           <RNSVGCircle
             cx="-15%"
@@ -225,7 +228,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "fill",
               ]
             }
-            r="421.37323943661977"
+            r={421.37323943661977}
           />
         </RNSVGGroup>
       </RNSVGGroup>
@@ -291,186 +294,33 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
       </View>
     </View>
     <View
-      accessibilityState={
-        {
-          "busy": undefined,
-          "checked": undefined,
-          "disabled": false,
-          "expanded": undefined,
-          "selected": undefined,
-        }
-      }
-      accessible={false}
-      disableAnimation={
-        {
-          "value": 0,
-        }
-      }
-      focusAnimation={
-        {
-          "value": 0,
-        }
-      }
-      focusable={true}
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      scale={
-        {
-          "value": 1,
-        }
-      }
-      spaceProps={
-        {
-          "horizontal": 1,
-          "vertical": 0.5,
-        }
-      }
       style={
-        [
-          {
-            "alignItems": undefined,
-            "flex": undefined,
-            "flexDirection": "column",
-            "justifyContent": undefined,
-            "marginBottom": 11,
-            "marginLeft": 22,
-            "marginRight": 22,
-            "marginTop": 11,
-          },
-          {
-            "alignItems": "center",
-            "borderRadius": 2247,
-            "borderWidth": 1,
-            "flexDirection": "row",
-            "paddingHorizontal": 22,
-            "paddingVertical": 17,
-          },
-          {
-            "backgroundColor": undefined,
-            "borderColor": undefined,
-            "opacity": undefined,
-            "transform": [
-              {
-                "scale": undefined,
-              },
-            ],
-          },
-        ]
+        {
+          "flexDirection": "row",
+        }
       }
     >
-      <View
-        size={
-          {
-            "value": undefined,
-          }
-        }
-        style={
-          [
-            {
-              "alignItems": "stretch",
-              "aspectRatio": 1,
-            },
-            {
-              "opacity": undefined,
-              "width": undefined,
-            },
-          ]
-        }
-      >
-        <Text
-          style={
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "anticon",
-              "fontSize": 22,
-              "fontStyle": "normal",
-              "fontWeight": "normal",
-            }
-          }
-        >
-          
-        </Text>
-      </View>
-      <View
-        style={
-          {
-            "flex": 1,
-          }
-        }
-      >
-        <TextInput
-          accessibilityState={
-            {
-              "disabled": false,
-            }
-          }
-          accessible={true}
-          autoCapitalize="words"
-          autoCorrect={false}
-          autoFocus={false}
-          disableAnimation={
-            {
-              "value": 0,
-            }
-          }
-          focusAnimation={
-            {
-              "value": 0,
-            }
-          }
-          onBlur={[Function]}
-          onChangeText={[Function]}
-          onFocus={[Function]}
-          onSubmitEditing={[Function]}
-          placeholder="Search Wallets"
-          placeholderTextColor="rgba(255, 255, 255, .5)"
-          selectionColor="#FFFFFF"
-          style={
-            [
-              {
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "margin": 0,
-                "paddingHorizontal": 11,
-                "paddingVertical": 0,
-              },
-              {
-                "color": undefined,
-              },
-            ]
-          }
-          testID="undefined.textInput"
-          textAlignVertical="top"
-          value=""
-        />
-      </View>
       <View
         accessibilityState={
           {
             "busy": undefined,
             "checked": undefined,
-            "disabled": undefined,
+            "disabled": false,
             "expanded": undefined,
             "selected": undefined,
           }
         }
-        accessibilityValue={
+        accessible={false}
+        disableAnimation={
           {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
+            "value": 0,
           }
         }
-        accessible={true}
-        collapsable={false}
+        focusAnimation={
+          {
+            "value": 0,
+          }
+        }
         focusable={true}
         onClick={[Function]}
         onResponderGrant={[Function]}
@@ -479,19 +329,55 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         onResponderTerminate={[Function]}
         onResponderTerminationRequest={[Function]}
         onStartShouldSetResponder={[Function]}
-        style={
+        scale={
           {
-            "margin": -22,
-            "opacity": 1,
-            "padding": 22,
+            "value": 1,
           }
         }
-        testID="undefined.clearIcon"
+        spaceProps={
+          {
+            "horizontal": 1,
+            "vertical": 0.5,
+          }
+        }
+        style={
+          [
+            {
+              "alignItems": undefined,
+              "flex": undefined,
+              "flexDirection": "column",
+              "justifyContent": undefined,
+              "marginBottom": 11,
+              "marginLeft": 22,
+              "marginRight": 22,
+              "marginTop": 11,
+            },
+            {
+              "alignItems": "center",
+              "borderRadius": 2247,
+              "borderWidth": 1,
+              "flexDirection": "row",
+              "flexGrow": 1,
+              "paddingHorizontal": 22,
+              "paddingVertical": 17,
+            },
+            {
+              "backgroundColor": undefined,
+              "borderColor": undefined,
+              "opacity": undefined,
+              "transform": [
+                {
+                  "scale": undefined,
+                },
+              ],
+            },
+          ]
+        }
       >
         <View
           size={
             {
-              "value": 0,
+              "value": undefined,
             }
           }
           style={
@@ -501,8 +387,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "aspectRatio": 1,
               },
               {
-                "opacity": 0,
-                "width": 0,
+                "opacity": undefined,
+                "width": undefined,
               },
             ]
           }
@@ -512,14 +398,209 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               {
                 "color": "#FFFFFF",
                 "fontFamily": "anticon",
-                "fontSize": 0,
+                "fontSize": 22,
                 "fontStyle": "normal",
                 "fontWeight": "normal",
               }
             }
           >
-            
+            
           </Text>
+        </View>
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "opacity": 1,
+            }
+          }
+          testID="undefined.doneButton"
+        >
+          <View
+            size={
+              {
+                "value": undefined,
+              }
+            }
+            style={
+              [
+                {
+                  "alignItems": "stretch",
+                  "aspectRatio": 1,
+                },
+                {
+                  "opacity": undefined,
+                  "width": undefined,
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Material Icons",
+                  "fontSize": 22,
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                }
+              }
+            >
+              
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <TextInput
+            accessibilityState={
+              {
+                "disabled": false,
+              }
+            }
+            accessible={true}
+            autoCapitalize="words"
+            autoCorrect={false}
+            autoFocus={false}
+            disableAnimation={
+              {
+                "value": 0,
+              }
+            }
+            focusAnimation={
+              {
+                "value": 0,
+              }
+            }
+            onBlur={[Function]}
+            onChangeText={[Function]}
+            onFocus={[Function]}
+            onSubmitEditing={[Function]}
+            placeholder="Search Wallets"
+            placeholderTextColor="rgba(255, 255, 255, .5)"
+            selectionColor="#FFFFFF"
+            style={
+              [
+                {
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "margin": 0,
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 0,
+                },
+                {
+                  "color": undefined,
+                },
+              ]
+            }
+            testID="undefined.textInput"
+            textAlignVertical="top"
+            value=""
+          />
+        </View>
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "margin": -22,
+              "opacity": 1,
+              "padding": 22,
+            }
+          }
+          testID="undefined.clearIcon"
+        >
+          <View
+            size={
+              {
+                "value": 0,
+              }
+            }
+            style={
+              [
+                {
+                  "alignItems": "stretch",
+                  "aspectRatio": 1,
+                },
+                {
+                  "opacity": 0,
+                  "width": 0,
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "anticon",
+                  "fontSize": 0,
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                }
+              }
+            >
+              
+            </Text>
+          </View>
         </View>
       </View>
     </View>
@@ -528,7 +609,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
       collapsable={false}
       contentContainerStyle={
         {
-          "paddingBottom": 79,
+          "marginHorizontal": 11,
+          "paddingBottom": 112,
           "paddingLeft": 0,
           "paddingRight": 0,
           "paddingTop": 0,
@@ -590,6 +672,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             "tokenId": "6b175474e89094c44da98b954eedeac495271d0f",
             "type": "create",
           },
+          null,
         ]
       }
       extraData={Set {}}
@@ -612,7 +695,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
       removeClippedSubviews={false}
       renderItem={[Function]}
       renderScrollComponent={[Function]}
-      scrollEventThrottle={50}
+      scrollEventThrottle={0.0001}
       scrollIndicatorInsets={
         {
           "right": 1,
@@ -670,8 +753,10 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "alignItems": "center",
                 "flexDirection": "row",
                 "justifyContent": "center",
+                "marginHorizontal": -11,
                 "minHeight": 96,
                 "opacity": 1,
+                "paddingHorizontal": 11,
               }
             }
           >
@@ -679,10 +764,10 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               style={
                 {
                   "height": 45,
-                  "marginBottom": 22,
-                  "marginLeft": 22,
-                  "marginRight": 22,
-                  "marginTop": 22,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                   "width": 45,
                 }
               }
@@ -723,11 +808,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -747,7 +827,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "flexDirection": "column",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "marginRight": 11,
+                  "marginHorizontal": 11,
                 }
               }
             >
@@ -872,8 +952,10 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "alignItems": "center",
                 "flexDirection": "row",
                 "justifyContent": "center",
+                "marginHorizontal": -11,
                 "minHeight": 96,
                 "opacity": 1,
+                "paddingHorizontal": 11,
               }
             }
           >
@@ -881,10 +963,10 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               style={
                 {
                   "height": 45,
-                  "marginBottom": 22,
-                  "marginLeft": 22,
-                  "marginRight": 22,
-                  "marginTop": 22,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                   "width": 45,
                 }
               }
@@ -925,11 +1007,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/1985365e9f78359a9b6ad760e32412f4a445e862.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -959,11 +1036,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -983,7 +1055,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "flexDirection": "column",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "marginRight": 11,
+                  "marginHorizontal": 11,
                 }
               }
             >
@@ -1108,8 +1180,10 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "alignItems": "center",
                 "flexDirection": "row",
                 "justifyContent": "center",
+                "marginHorizontal": -11,
                 "minHeight": 96,
                 "opacity": 1,
+                "paddingHorizontal": 11,
               }
             }
           >
@@ -1117,10 +1191,10 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               style={
                 {
                   "height": 45,
-                  "marginBottom": 22,
-                  "marginLeft": 22,
-                  "marginRight": 22,
-                  "marginTop": 22,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                   "width": 45,
                 }
               }
@@ -1161,11 +1235,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/221657776846890989a759ba2973e427dff5c9bb.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -1195,11 +1264,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -1219,7 +1283,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "flexDirection": "column",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "marginRight": 11,
+                  "marginHorizontal": 11,
                 }
               }
             >
@@ -1344,8 +1408,10 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "alignItems": "center",
                 "flexDirection": "row",
                 "justifyContent": "center",
+                "marginHorizontal": -11,
                 "minHeight": 96,
                 "opacity": 1,
+                "paddingHorizontal": 11,
               }
             }
           >
@@ -1353,10 +1419,10 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               style={
                 {
                   "height": 45,
-                  "marginBottom": 22,
-                  "marginLeft": 22,
-                  "marginRight": 22,
-                  "marginTop": 22,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                   "width": 45,
                 }
               }
@@ -1397,11 +1463,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -1431,11 +1492,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -1455,7 +1511,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "flexDirection": "column",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "marginRight": 11,
+                  "marginHorizontal": 11,
                 }
               }
             >
@@ -1580,8 +1636,10 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "alignItems": "center",
                 "flexDirection": "row",
                 "justifyContent": "center",
+                "marginHorizontal": -11,
                 "minHeight": 96,
                 "opacity": 1,
+                "paddingHorizontal": 11,
               }
             }
           >
@@ -1589,10 +1647,10 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               style={
                 {
                   "height": 45,
-                  "marginBottom": 22,
-                  "marginLeft": 22,
-                  "marginRight": 22,
-                  "marginTop": 22,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
                   "width": 45,
                 }
               }
@@ -1633,11 +1691,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/6b175474e89094c44da98b954eedeac495271d0f.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -1667,11 +1720,6 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
-                    source={
-                      {
-                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
-                      }
-                    }
                     style={
                       {
                         "bottom": 0,
@@ -1691,7 +1739,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                   "flexDirection": "column",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "marginRight": 11,
+                  "marginHorizontal": 11,
                 }
               }
             >
@@ -1775,6 +1823,136 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 tintColor="#888888"
                 value={false}
               />
+            </View>
+          </View>
+        </View>
+        <View
+          onFocusCapture={[Function]}
+          onLayout={[Function]}
+          style={null}
+        >
+          <View
+            pointerEvents="auto"
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+          >
+            <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": false,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "alignSelf": "center",
+                  "flexBasis": "auto",
+                  "flexGrow": 0,
+                  "flexShrink": 0,
+                  "justifyContent": "center",
+                  "opacity": 1,
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
+                }
+              }
+            >
+              <BVLinearGradient
+                colors={
+                  [
+                    872415231,
+                    872415231,
+                  ]
+                }
+                endPoint={
+                  {
+                    "x": 1,
+                    "y": 1,
+                  }
+                }
+                locations={null}
+                startPoint={
+                  {
+                    "x": 0,
+                    "y": 0,
+                  }
+                }
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderRadius": 34,
+                      "flexDirection": "row",
+                      "flexGrow": 0,
+                      "flexShrink": 0,
+                      "justifyContent": "center",
+                    },
+                    {
+                      "alignSelf": "center",
+                    },
+                    {
+                      "height": 67,
+                      "paddingHorizontal": 34,
+                    },
+                    {
+                      "opacity": 1,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                        },
+                        null,
+                      ],
+                      null,
+                    ]
+                  }
+                >
+                  Add Custom Token
+                </Text>
+              </BVLinearGradient>
             </View>
           </View>
         </View>

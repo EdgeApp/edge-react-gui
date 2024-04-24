@@ -975,11 +975,14 @@ const SendComponent = (props: Props) => {
       } catch (e: any) {
         const insufficientFunds = asMaybeInsufficientFundsError(e)
         if (insufficientFunds != null) {
-          if (insufficientFunds.tokenId != null) {
-            const errorCurrencyCode = getCurrencyCode(coreWallet, insufficientFunds.tokenId)
-            e.message = sprintf(lstrings.stake_error_insufficient_s, errorCurrencyCode)
+          const errorCurrencyCode = getCurrencyCode(coreWallet, insufficientFunds.tokenId)
+
+          // Give extra information about the network name like Base or Arbitrum
+          // where the mainnet token is ETH but the network is not Ethereum.
+          if (errorCurrencyCode === 'ETH' && coreWallet.currencyInfo.pluginId !== 'ethereum') {
+            e.message = sprintf(lstrings.insufficient_funds_2s, errorCurrencyCode, coreWallet.currencyInfo.displayName)
           } else {
-            e.message = lstrings.exchange_insufficient_funds_title
+            e.message = sprintf(lstrings.stake_error_insufficient_s, errorCurrencyCode)
           }
         }
 

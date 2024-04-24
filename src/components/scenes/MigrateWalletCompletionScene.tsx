@@ -255,7 +255,7 @@ const MigrateWalletCompletionComponent = (props: Props) => {
           <FlatList
             automaticallyAdjustContentInsets={false}
             data={sortedMigrateWalletList}
-            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(5), marginHorizontal: theme.rem(0.5) }}
             extraData={itemStatus}
             fadingEdgeLength={10}
             keyExtractor={keyExtractor}

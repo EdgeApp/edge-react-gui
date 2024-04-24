@@ -329,7 +329,7 @@ const Container = styled(Animated.View)<{
 
   return [
     {
-      flex: multiline ? 1 : undefined,
+      flexGrow: multiline ? 1 : undefined,
       alignItems: multiline ? 'stretch' : 'center',
       borderWidth: theme.textInputBorderWidth,
       borderRadius: theme.rem(0.5),

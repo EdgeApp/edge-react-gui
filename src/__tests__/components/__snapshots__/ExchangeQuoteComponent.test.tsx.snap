@@ -69,8 +69,8 @@ exports[`ExchangeQuote should render with loading props 1`] = `
     >
       <RNSVGSvgView
         align="xMidYMid"
-        bbHeight="61"
-        bbWidth="61"
+        bbHeight={61}
+        bbWidth={61}
         focusable={false}
         height={61}
         meetOrSlice={0}
@@ -112,8 +112,8 @@ exports[`ExchangeQuote should render with loading props 1`] = `
           }
         >
           <RNSVGCircle
-            cx="22.5"
-            cy="22.5"
+            cx={22.5}
+            cy={22.5}
             fill={
               {
                 "payload": 0,
@@ -130,7 +130,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
                 "strokeLinecap",
               ]
             }
-            r="24"
+            r={24}
             stroke={
               {
                 "payload": 4278251938,
@@ -139,12 +139,12 @@ exports[`ExchangeQuote should render with loading props 1`] = `
             }
             strokeDasharray={
               [
-                "150.79644737231007",
-                "150.79644737231007",
+                150.79644737231007,
+                150.79644737231007,
               ]
             }
             strokeLinecap={1}
-            strokeWidth="4"
+            strokeWidth={4}
           />
         </RNSVGGroup>
       </RNSVGSvgView>
@@ -184,11 +184,6 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         >
           <FastImageView
             resizeMode="cover"
-            source={
-              {
-                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-              }
-            }
             style={
               {
                 "bottom": 0,
@@ -311,7 +306,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
             ]
           }
         >
-          ₿ ●●●●
+          ₿ 0.0001
         </Text>
       </Text>
       <View
@@ -344,7 +339,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
             ]
           }
         >
-          $ ●●●●
+          $1.84
         </Text>
       </View>
     </View>

@@ -1,26 +1,25 @@
 import { JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { Platform, View } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
 import { PLACEHOLDER_WALLET_ID } from '../../actions/CreateWalletActions'
 import ImportKeySvg from '../../assets/images/import-key-icon.svg'
-import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { splitCreateWalletItems, WalletCreateItem } from '../../selectors/getCreateWalletList'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { SceneButtons } from '../common/SceneButtons'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
+import { Paragraph } from '../themed/EdgeText'
 import { FilledTextInput, FilledTextInputRef } from '../themed/FilledTextInput'
-import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
+import { MarginsUi4 } from '../ui4/MarginsUi4'
 
 export interface CreateWalletImportParams {
   createWalletList: WalletCreateItem[]
@@ -40,7 +39,6 @@ const CreateWalletImportComponent = (props: Props) => {
   const { currencyConfig } = account
 
   const [importText, setImportText] = React.useState('')
-  const [scrollEnabled, setScrollEnabled] = React.useState(false)
 
   const textInputRef = React.useRef<FilledTextInputRef>(null)
 
@@ -143,29 +141,18 @@ const CreateWalletImportComponent = (props: Props) => {
   const secureTextEntry = Platform.OS === 'ios' ? undefined : true
 
   return (
-    <SceneWrapper>
+    <SceneWrapper avoidKeyboard>
       <SceneHeader title={lstrings.create_wallet_import_title} withTopMargin />
-      <KeyboardAwareScrollView
-        contentContainerStyle={styles.container}
-        scrollEnabled={scrollEnabled}
-        keyboardShouldPersistTaps="handled"
-        onKeyboardDidChangeFrame={() => setScrollEnabled(false)}
-        onKeyboardWillChangeFrame={() => setScrollEnabled(true)}
-        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-      >
-        <View style={styles.icon}>
-          <ImportKeySvg accessibilityHint={lstrings.import_key_icon_hint} color={theme.iconTappable} height={svgHeight} width={svgWidth} />
-        </View>
-        <EdgeText style={styles.instructionalText} numberOfLines={2}>
-          {lstrings.create_wallet_import_all_instructions}
-        </EdgeText>
+      <View style={styles.icon}>
+        <ImportKeySvg accessibilityHint={lstrings.import_key_icon_hint} color={theme.iconTappable} height={svgHeight} width={svgWidth} />
+      </View>
+      {/* HACK: SceneWrapper's padding prop doesn't work for non-function children */}
+      <MarginsUi4>
+        <Paragraph>{lstrings.create_wallet_import_all_instructions}</Paragraph>
         <FilledTextInput
-          top={1}
-          horizontal={0.75}
-          bottom={1.25}
+          around={0.5}
           keyboardType={keyboardType}
           value={importText}
-          returnKeyType="next"
           multiline
           placeholder={lstrings.create_wallet_import_input_key_or_seed_prompt}
           autoCapitalize="none"
@@ -176,29 +163,17 @@ const CreateWalletImportComponent = (props: Props) => {
           secureTextEntry={secureTextEntry}
           ref={textInputRef}
         />
-        <MainButton label={lstrings.string_next_capitalized} type="secondary" marginRem={1} onPress={handleNext} />
-      </KeyboardAwareScrollView>
+        <SceneButtons primary={{ label: lstrings.string_next_capitalized, onPress: handleNext }} />
+      </MarginsUi4>
     </SceneWrapper>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    marginTop: theme.rem(0.5)
-  },
   icon: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginVertical: theme.rem(2)
-  },
-  instructionalText: {
-    fontSize: theme.rem(1),
-    color: theme.primaryText,
-    paddingHorizontal: theme.rem(1),
-    marginTop: theme.rem(0.5),
-    marginBottom: theme.rem(1),
-    marginHorizontal: theme.rem(0.5),
-    textAlign: 'center'
   }
 }))
 

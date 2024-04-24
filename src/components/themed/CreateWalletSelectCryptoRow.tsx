@@ -50,7 +50,7 @@ export const CreateWalletSelectCryptoRowComponent = (props: Props) => {
 
   return (
     <EdgeTouchableOpacity style={styles.container} disabled={onPress == null} onPress={handlePress}>
-      <CryptoIconUi4 marginRem={1} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
+      <CryptoIconUi4 marginRem={0.5} pluginId={pluginId} sizeRem={2} tokenId={tokenId} />
       <View style={styles.detailsContainer}>
         <EdgeText style={styles.detailsCurrency}>{`${tokenOrCurrencyInfo == null ? '' : tokenOrCurrencyInfo.currencyCode}${networkName}`}</EdgeText>
         <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
@@ -66,7 +66,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    minHeight: theme.rem(4.25)
+    minHeight: theme.rem(4.25),
+    paddingHorizontal: theme.rem(0.5),
+    marginHorizontal: -theme.rem(0.5)
   },
   // Data containers //
   // Details Container
@@ -74,7 +76,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'column',
     flexGrow: 1,
     flexShrink: 1,
-    marginRight: theme.rem(0.5)
+    marginHorizontal: theme.rem(0.5)
   },
   // Children (Right part) Container
   childrenContainer: {

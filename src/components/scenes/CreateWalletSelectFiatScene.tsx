@@ -27,20 +27,22 @@ import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
-import { EdgeText } from '../themed/EdgeText'
+import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 export interface CreateWalletSelectFiatParams {
   createWalletList: WalletCreateItem[]
+  splitSourceWalletId?: string
 }
 
 interface Props extends EdgeSceneProps<'createWalletSelectFiat'> {}
 
 const CreateWalletSelectFiatComponent = (props: Props) => {
   const { navigation, route } = props
-  const { createWalletList } = route.params
+  const { createWalletList, splitSourceWalletId } = route.params
+  const isSplit = splitSourceWalletId != null
 
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -56,7 +58,8 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
 
   const [walletNames, setWalletNames] = React.useState(() =>
     createWalletList.reduce<{ [key: string]: string }>((map, item) => {
-      map[item.key] = getUniqueWalletName(account, item.pluginId)
+      const maybeSplitFrom = isSplit ? ` (${sprintf(lstrings.split_from_1s, getWalletName(currencyWallets[splitSourceWalletId]))})` : ''
+      map[item.key] = `${getUniqueWalletName(account, item.pluginId)}${maybeSplitFrom}`
       return map
     }, {})
   )
@@ -96,6 +99,22 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     }
     // Any other combination goes to the completion scene
     navigation.navigate('createWalletCompletion', { createWalletList, walletNames, fiatCode: fiat.value })
+  })
+
+  const handleSplit = useHandler(async () => {
+    if (splitSourceWalletId != null) {
+      for (const item of newWalletItems) {
+        try {
+          const splitWalletId = await account.splitWalletInfo(splitSourceWalletId, account.currencyConfig[item.pluginId]?.currencyInfo.walletType)
+          const splitWallet = await account.waitForCurrencyWallet(splitWalletId)
+          await splitWallet.renameWallet(walletNames[item.key])
+        } catch (error: unknown) {
+          showError(error)
+          break
+        }
+      }
+      navigation.navigate('walletsTab', { screen: 'walletList' })
+    }
   })
 
   const handleImport = useHandler(async () => {
@@ -215,9 +234,9 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
 
   return (
     <SceneWrapper>
-      <SceneHeader title={lstrings.title_create_wallet} withTopMargin />
+      <SceneHeader title={isSplit ? lstrings.fragment_wallets_split_wallet : lstrings.title_create_wallet} withTopMargin />
       <View style={styles.content}>
-        {renderSelectedFiatRow()}
+        {isSplit ? <Paragraph marginRem={[0, 0.5, 1.5, 0.5]}>{lstrings.split_description}</Paragraph> : renderSelectedFiatRow()}
         <EdgeText style={styles.instructionalText} numberOfLines={1}>
           {lstrings.fragment_create_wallet_instructions}
         </EdgeText>
@@ -229,16 +248,14 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
           renderItem={renderCurrencyRow}
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
-        <ButtonsViewUi4
-          primary={{
-            label: lstrings.title_create_wallets,
-            onPress: handleCreate
-          }}
-          secondary={{
-            label: lstrings.create_wallet_imports_title,
-            onPress: handleImport
-          }}
-        />
+        {isSplit ? (
+          <ButtonsViewUi4 primary={{ label: lstrings.fragment_wallets_split_wallet, onPress: handleSplit }} />
+        ) : (
+          <ButtonsViewUi4
+            primary={{ label: lstrings.title_create_wallets, onPress: handleCreate }}
+            secondary={{ label: lstrings.create_wallet_imports_title, onPress: handleImport }}
+          />
+        )}
       </View>
     </SceneWrapper>
   )
@@ -248,7 +265,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   content: {
     flex: 1,
     margin: theme.rem(0.5),
-    paddingTop: theme.rem(0.5)
+    marginTop: theme.rem(0)
   },
   cryptoTypeLogo: {
     width: theme.rem(2),
@@ -259,8 +276,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   instructionalText: {
     fontSize: theme.rem(0.75),
     color: theme.primaryText,
-    paddingBottom: theme.rem(0.5),
-    paddingHorizontal: theme.rem(1),
+    paddingHorizontal: theme.rem(0.5),
     textAlign: 'left'
   }
 }))

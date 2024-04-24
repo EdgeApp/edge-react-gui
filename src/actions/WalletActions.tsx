@@ -68,9 +68,9 @@ export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivat
 
     const { isAccountActivationRequired } = getSpecialCurrencyInfo(wallet.currencyInfo.pluginId)
     if (isAccountActivationRequired) {
-      // EOS needs different path in case not activated yet
+      // activation-required wallets need different path in case not activated yet
       if (alwaysActivate || walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
-        return await dispatch(selectEOSWallet(navigation, walletId, currencyCode))
+        return await dispatch(selectActivationRequiredWallet(navigation, walletId, currencyCode))
       }
       return true
     }
@@ -85,12 +85,12 @@ export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivat
   }
 }
 
-// check if the EOS wallet is activated (via public address blank string check) and route to activation scene(s)
-function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyCode: string): ThunkAction<Promise<boolean>> {
+// check if the wallet is activated (via public address blank string check) and route to activation scene(s)
+function selectActivationRequiredWallet(navigation: NavigationBase, walletId: string, currencyCode: string): ThunkAction<Promise<boolean>> {
   return async (dispatch, getState) => {
     const state = getState()
     const wallet = state.core.account.currencyWallets[walletId]
-    const { currencyCode, pluginId } = wallet.currencyInfo
+    const { currencyCode } = wallet.currencyInfo
     const { publicAddress } = await wallet.getReceiveAddress({ tokenId: null })
 
     if (publicAddress !== '') {
@@ -102,23 +102,15 @@ function selectEOSWallet(navigation: NavigationBase, walletId: string, currencyC
       return true
     } else {
       // Update all wallets' addresses. Hopefully gets the updated address for the next time
-      // We enter the EOSIO wallet
+      // We enter the activation-required wallet
       await dispatch(updateWalletsRequest())
       // not activated yet
-      // find fiat and crypto (EOSIO) types and populate scene props
-      const specialCurrencyInfo = getSpecialCurrencyInfo(pluginId)
-      if (specialCurrencyInfo.skipAccountNameValidation) {
-        navigation.push('createWalletAccountSelect', {
-          accountName: getWalletName(wallet),
-          walletId
-        })
-      } else {
-        navigation.push('createWalletAccountSetup', {
-          accountHandle: '',
-          isReactivation: true,
-          walletId
-        })
-      }
+      // find fiat and crypto activation-required types and populate scene props
+      navigation.push('createWalletAccountSetup', {
+        accountHandle: '',
+        isReactivation: true,
+        walletId
+      })
 
       Airship.show<'ok' | undefined>(bridge => (
         <ButtonsModal

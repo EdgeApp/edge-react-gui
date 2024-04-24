@@ -35,8 +35,8 @@ exports[`TransactionDetailsScene should render 1`] = `
   >
     <RNSVGSvgView
       align="xMidYMid"
-      bbHeight="0"
-      bbWidth="0"
+      bbHeight={0}
+      bbWidth={0}
       focusable={false}
       height={0}
       meetOrSlice={0}
@@ -141,7 +141,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 "fill",
               ]
             }
-            r="224.73239436619718"
+            r={224.73239436619718}
           />
           <RNSVGCircle
             cx="95%"
@@ -157,7 +157,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                 "fill",
               ]
             }
-            r="238.7781690140845"
+            r={238.7781690140845}
           />
         </RNSVGGroup>
       </RNSVGGroup>
@@ -266,11 +266,6 @@ exports[`TransactionDetailsScene should render 1`] = `
             >
               <FastImageView
                 resizeMode="cover"
-                source={
-                  {
-                    "uri": "thumb/nail/path",
-                  }
-                }
                 style={
                   {
                     "bottom": 0,
@@ -2003,17 +1998,18 @@ exports[`TransactionDetailsScene should render 1`] = `
       >
         <View
           absolute={false}
-          layout="solo"
+          layout="column"
           parentType="scene"
           style={
             {
-              "alignItems": "center",
+              "alignItems": "stretch",
+              "alignSelf": "center",
+              "flexDirection": "column",
               "flexGrow": 1,
-              "flexShrink": 1,
-              "justifyContent": "center",
+              "flexShrink": 0,
+              "justifyContent": "flex-end",
               "margin": 11,
               "marginBottom": 67,
-              "marginHorizontal": 11,
               "marginTop": 22,
             }
           }
@@ -2049,7 +2045,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             style={
               {
                 "alignItems": "center",
-                "alignSelf": "center",
+                "alignSelf": "stretch",
                 "flexBasis": "auto",
                 "flexGrow": 0,
                 "flexShrink": 0,
@@ -2091,7 +2087,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     "justifyContent": "center",
                   },
                   {
-                    "alignSelf": "center",
+                    "alignSelf": "stretch",
                   },
                   {
                     "height": 67,
@@ -2202,8 +2198,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
   >
     <RNSVGSvgView
       align="xMidYMid"
-      bbHeight="0"
-      bbWidth="0"
+      bbHeight={0}
+      bbWidth={0}
       focusable={false}
       height={0}
       meetOrSlice={0}
@@ -2308,7 +2304,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 "fill",
               ]
             }
-            r="224.73239436619718"
+            r={224.73239436619718}
           />
           <RNSVGCircle
             cx="95%"
@@ -2324,7 +2320,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 "fill",
               ]
             }
-            r="238.7781690140845"
+            r={238.7781690140845}
           />
         </RNSVGGroup>
       </RNSVGGroup>
@@ -2433,11 +2429,6 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             >
               <FastImageView
                 resizeMode="cover"
-                source={
-                  {
-                    "uri": "thumb/nail/path",
-                  }
-                }
                 style={
                   {
                     "bottom": 0,
@@ -4170,17 +4161,18 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
       >
         <View
           absolute={false}
-          layout="solo"
+          layout="column"
           parentType="scene"
           style={
             {
-              "alignItems": "center",
+              "alignItems": "stretch",
+              "alignSelf": "center",
+              "flexDirection": "column",
               "flexGrow": 1,
-              "flexShrink": 1,
-              "justifyContent": "center",
+              "flexShrink": 0,
+              "justifyContent": "flex-end",
               "margin": 11,
               "marginBottom": 67,
-              "marginHorizontal": 11,
               "marginTop": 22,
             }
           }
@@ -4216,7 +4208,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             style={
               {
                 "alignItems": "center",
-                "alignSelf": "center",
+                "alignSelf": "stretch",
                 "flexBasis": "auto",
                 "flexGrow": 0,
                 "flexShrink": 0,
@@ -4258,7 +4250,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     "justifyContent": "center",
                   },
                   {
-                    "alignSelf": "center",
+                    "alignSelf": "stretch",
                   },
                   {
                     "height": 67,
