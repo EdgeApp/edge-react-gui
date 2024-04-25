@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: (WalletConnect) Handle sessions with 0 required namespaces
+
 ## 4.6.0
 
 - added: Done button is a part of SimpleTextInput

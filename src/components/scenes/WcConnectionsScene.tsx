@@ -224,7 +224,7 @@ const getProposalNamespaceCompatibleEdgeTokenIds = (proposal: Web3WalletTypes.Se
     }
   }
 
-  if (!hasWalletForRequiredNamespace) {
+  if (requiredChainIds.size > 0 && !hasWalletForRequiredNamespace) {
     throw new Error('No wallets meet dapp requirements')
   }
 

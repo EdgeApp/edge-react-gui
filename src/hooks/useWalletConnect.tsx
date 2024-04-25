@@ -123,11 +123,13 @@ export function useWalletConnect(): WalletConnect {
     const supportedNamespaces = getSupportedNamespaces(chainId, address.publicAddress)
 
     // Check that we support all required methods
-    const unsupportedMethods = proposal.params.requiredNamespaces[chainId.namespace].methods.filter(method => {
-      return !supportedNamespaces[chainId.namespace].methods.includes(method)
-    })
-    if (unsupportedMethods.length > 0) {
-      throw new Error(`Required methods unimplemented: ${unsupportedMethods.join(',')}`)
+    if (Object.keys(proposal.params.requiredNamespaces).length > 0) {
+      const unsupportedMethods = proposal.params.requiredNamespaces[chainId.namespace].methods.filter(method => {
+        return !supportedNamespaces[chainId.namespace].methods.includes(method)
+      })
+      if (unsupportedMethods.length > 0) {
+        throw new Error(`Required methods unimplemented: ${unsupportedMethods.join(',')}`)
+      }
     }
 
     await runWithTimeout(
