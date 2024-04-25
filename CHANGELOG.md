@@ -12,6 +12,7 @@
 - added: New Asset Setting to manually enable tokens with detected balances across all wallets
 - added: MUTE_CONSOLE_OUTPUT environment variable to disable specific console output functions
 - added: Performance logging with app start-up time and login time as initial performance metrics
+- added: Support geo filtering for "Learn" blog cards on the Home Scene
 - changed: (WalletConnect) Handle sessions with 0 required namespaces
 - changed: Consistent light account backup modal UI
 - changed: Currency icon now shown in wallet picker button in Swap and Transaction List scenes

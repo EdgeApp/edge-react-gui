@@ -1,6 +1,6 @@
 import { asBlogPosts, BlogPost } from 'edge-info-server'
 import * as React from 'react'
-import { ListRenderItem, View } from 'react-native'
+import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
@@ -20,8 +20,7 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { WiredProgressBar } from '../../themed/WiredProgressBar'
 import { BalanceCardUi4 } from '../BalanceCardUi4'
-import { BlogCard } from '../BlogCard'
-import { CarouselUi4 } from '../CarouselUi4'
+import { BlogCards } from '../BlogCards'
 import { HomeCardUi4 } from '../HomeCardUi4'
 import { MarketsCardUi4 } from '../MarketsCardUi4'
 import { PromoCardsUi4 } from '../PromoCardsUi4'
@@ -86,8 +85,6 @@ export const HomeSceneUi4 = (props: Props) => {
       })
       .catch(e => console.log(String(e)))
   }, [])
-
-  const renderBlog: ListRenderItem<BlogPost> = useHandler(({ item }) => <BlogCard blogPost={item} />)
 
   const buyCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto') }), [theme])
   const sellCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-sell-crypto') }), [theme])
@@ -171,7 +168,7 @@ export const HomeSceneUi4 = (props: Props) => {
               {blogPosts == null || blogPosts.length === 0 ? null : (
                 <>
                   <SectionHeaderUi4 leftTitle={lstrings.title_learn} />
-                  <CarouselUi4 data={blogPosts} renderItem={renderBlog} height={theme.rem(13)} width={screenWidth} />
+                  <BlogCards countryCode={countryCode} />
                 </>
               )}
               <SupportCardUi4
