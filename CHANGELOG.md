@@ -3,6 +3,7 @@
 ## Unreleased
 
 - changed: (WalletConnect) Handle sessions with 0 required namespaces
+- changed: Consistent light account backup modal UI
 
 ## 4.6.0
 
