@@ -116,7 +116,18 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   componentDidUpdate(prevProps: Props) {
     // Update staking policies if the wallet changes
     if (prevProps.wallet !== this.props.wallet) {
+      this.setState({ lockedNativeAmount: '0' })
       this.updatePluginsAndPolicies().catch(err => showError(err))
+    } else if (prevProps.tokenId !== this.props.tokenId) {
+      // Update staked amount if the tokenId changes but the wallet remains the same
+      let total = '0'
+      let lockedNativeAmount = '0'
+      for (const stakePosition of Object.values(this.state.stakePositionMap)) {
+        const { staked, earned } = getPositionAllocations(stakePosition)
+        total = this.getTotalPosition(this.props.currencyCode, [...staked, ...earned])
+        lockedNativeAmount = add(lockedNativeAmount, total)
+      }
+      this.setState({ lockedNativeAmount })
     }
   }
 

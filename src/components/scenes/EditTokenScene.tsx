@@ -145,7 +145,7 @@ function EditTokenSceneComponent(props: Props) {
 
       if (approveAdd) {
         await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, newTokenId])
-        logActivity(`Add Custom Token: ${account.username} -- ${getWalletName(wallet)} -- ${wallet.type} -- ${tokenId} -- ${currencyCode} -- ${decimals}`)
+        logActivity(`Add Custom Token: ${account.username} -- ${getWalletName(wallet)} -- ${wallet.type} -- ${newTokenId} -- ${currencyCode} -- ${decimals}`)
         navigation.goBack()
       } else {
         await currencyConfig.removeCustomToken(newTokenId)
