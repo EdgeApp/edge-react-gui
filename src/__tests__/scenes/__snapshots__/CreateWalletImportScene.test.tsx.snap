@@ -327,6 +327,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
             "marginRight": 11,
             "marginTop": 11,
           },
+          false,
           null,
         ]
       }
