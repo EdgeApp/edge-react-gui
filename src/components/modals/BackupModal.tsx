@@ -1,26 +1,23 @@
 import React from 'react'
-import { Alert, Text, View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 
+import backupHero from '../../assets/images/backup-hero.png'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
-import { getThemedIconUri } from '../../util/CdnUris'
 import { openBrowserUri } from '../../util/WebUtils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
-import { ButtonsModal } from './ButtonsModal'
+import { HeaderText, Paragraph, SmallText, WarningText } from '../themed/EdgeText'
+import { ButtonsModal2 } from './ButtonsModal'
 
-export type BackupModalResult = 'upgrade' | 'dismiss'
+export type BackupModalResult = 'upgrade' | 'learnMore' | 'dismiss'
 
 /**
- * Informational modal prompting the user to back up their account for settings,
+ * Informational modal prompting the user to back up their account before accessing settings,
  * deleting light accounts, and receiving fio requests
- *
- * TODO: Merge our various backup modal flavors with a common design that
- * satisfies all requirements (design TBD).
  */
 export const BackupModal = (props: { bridge: AirshipBridge<BackupModalResult | undefined>; forgetLoginId?: string }) => {
   const { bridge, forgetLoginId } = props
@@ -49,71 +46,48 @@ export const BackupModal = (props: { bridge: AirshipBridge<BackupModalResult | u
   })
 
   return (
-    <ButtonsModal
+    <ButtonsModal2
       bridge={bridge}
       buttons={{
         upgrade: { label: lstrings.backup_account },
+        learnMore: {
+          label: lstrings.learn_more,
+          onPress: async () => {
+            openBrowserUri(config.backupAccountSite)
+            return await Promise.resolve(true)
+          }
+        },
         dismiss: {
           label: showForgetAccountVariant ? lstrings.delete_account_title : lstrings.backup_dismiss_button,
           onPress: showForgetAccountVariant ? handleDeletePress : undefined,
           spinner: false
         }
       }}
-      fullScreen
     >
       <View style={styles.container}>
-        <FastImage
-          style={styles.image}
-          source={{ uri: getThemedIconUri(theme, `lightAccount/${showForgetAccountVariant ? 'hero-backup-warning' : 'hero-backup-info'}`) }}
-        />
-        <EdgeText style={styles.header} numberOfLines={2}>
-          {lstrings.backup_title}
-        </EdgeText>
-        <EdgeText style={styles.secondaryText} numberOfLines={2}>
-          {lstrings.backup_info_message}
-        </EdgeText>
-        <EdgeText style={styles.warningText} numberOfLines={2}>
-          {backupText}
-        </EdgeText>
-        <Text style={styles.linkText} onPress={() => openBrowserUri(config.backupAccountSite)}>
-          {lstrings.tap_to_learn_more}
-        </Text>
+        <FastImage style={styles.image} source={backupHero} />
+        <Paragraph center>
+          <HeaderText>{lstrings.backup_title}</HeaderText>
+        </Paragraph>
+        <Paragraph center>{lstrings.backup_info_message}</Paragraph>
+        <Paragraph center>
+          <SmallText>
+            <WarningText>{backupText}</WarningText>
+          </SmallText>
+        </Paragraph>
       </View>
-    </ButtonsModal>
+    </ButtonsModal2>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    alignItems: 'center',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    height: '100%'
+    alignItems: 'center'
   },
   image: {
-    flex: 0.6,
-    width: '100%',
+    width: '60%',
     aspectRatio: 1,
-    resizeMode: 'contain'
-  },
-  header: {
-    textAlign: 'center',
-    fontSize: theme.rem(1.5)
-  },
-  secondaryText: {
-    textAlign: 'center',
-    fontSize: theme.rem(1)
-  },
-  warningText: {
-    textAlign: 'center',
-    fontSize: theme.rem(1),
-    color: theme.warningIcon
-  },
-  linkText: {
-    color: theme.iconTappable,
-    flexShrink: 1,
-    fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(0.84),
-    marginBottom: theme.rem(2)
+    resizeMode: 'contain',
+    marginBottom: theme.rem(0.5)
   }
 }))
