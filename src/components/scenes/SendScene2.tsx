@@ -344,7 +344,7 @@ const SendComponent = (props: Props) => {
         if (error == null) return
         console.log(error)
         const insufficientFunds = asMaybeInsufficientFundsError(error)
-        if (insufficientFunds != null && insufficientFunds.tokenId != null && spendInfo.tokenId !== insufficientFunds.tokenId) {
+        if (insufficientFunds != null && spendInfo.tokenId !== insufficientFunds.tokenId) {
           await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={insufficientFunds} navigation={navigation} wallet={coreWallet} />)
         }
       })
