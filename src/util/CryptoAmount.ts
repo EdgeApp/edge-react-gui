@@ -1,8 +1,7 @@
 import { div, mul } from 'biggystring'
 import { EdgeCurrencyConfig, EdgeDenomination, EdgeTokenId } from 'edge-core-js'
 
-import { RootState } from '../reducers/RootReducer'
-import { convertCurrency } from '../selectors/WalletSelectors'
+import { GuiExchangeRates } from '../types/types'
 import { asBiggystring } from './cleaners'
 import { getTokenId } from './CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, mulToPrecision } from './utils'
@@ -150,15 +149,19 @@ export class CryptoAmount {
   /**
    * Automatically uses 2 decimal/cent places if unspecified.
    */
-  displayDollarValue(state: RootState, precision?: number): string {
-    return this.displayFiatValue(state, 'iso:USD', precision)
+  displayDollarValue(exchangeRates: GuiExchangeRates, precision?: number): string {
+    return this.displayFiatValue(exchangeRates, 'iso:USD', precision)
   }
 
   /**
    * Automatically uses 2 decimal/cent places if unspecified.
    */
-  displayFiatValue(state: RootState, isoFiatCode: string, precision?: number) {
-    return parseFloat(convertCurrency(state, this.currencyCode, isoFiatCode, this.exchangeAmount)).toFixed(precision ?? 2)
+  displayFiatValue(exchangeRates: GuiExchangeRates, isoFiatCode: string, precision?: number) {
+    const exchangeRateKey = `${this.currencyCode}_${isoFiatCode}`
+    const exchangeRate = exchangeRates[exchangeRateKey] ?? '0'
+    const convertedAmount = mul(this.exchangeAmount, exchangeRate)
+
+    return parseFloat(convertedAmount).toFixed(precision ?? 2)
   }
 
   /**
