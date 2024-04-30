@@ -208,6 +208,7 @@ function EditTokenSceneComponent(props: Props) {
             <FilledTextInput
               key={item.key}
               around={0.5}
+              autoCapitalize="none"
               autoCorrect={false}
               autoFocus={false}
               placeholder={translateDescription(item.displayName)}
