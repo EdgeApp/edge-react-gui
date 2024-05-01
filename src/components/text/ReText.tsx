@@ -6,8 +6,6 @@ import Animated, { useAnimatedProps } from 'react-native-reanimated'
 import { Theme } from '../../types/Theme'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 
-Animated.addWhitelistedNativeProps({ text: true })
-
 interface TextProps {
   text: Animated.SharedValue<string>
   style?: Animated.AnimateProps<RNTextProps>['style']
