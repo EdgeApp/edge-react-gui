@@ -2,6 +2,7 @@
   "extends": "@react-native/typescript-config/tsconfig.json",
   "compilerOptions": {
     "allowJs": false,
-    "noEmit": true
+    "noEmit": true,
+    "jsx": "react-jsx"
   }
 }
