@@ -93,7 +93,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
         if (!selectedWallet) return showError(lstrings.create_wallet_failed_message)
         navigation.navigate('fioDomainRegisterSelectWallet', {
           fioDomain,
-          selectedWallet
+          walletId: selectedWallet.id
         })
       }
     } else {

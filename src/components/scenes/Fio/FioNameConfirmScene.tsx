@@ -1,4 +1,4 @@
-import { EdgeCurrencyConfig } from 'edge-core-js'
+import { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
@@ -11,6 +11,7 @@ import { fioMakeSpend, fioSignAndBroadcast } from '../../../util/FioAddressUtils
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
+import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
@@ -18,12 +19,21 @@ import { SceneHeader } from '../../themed/SceneHeader'
 import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
+export interface FioNameConfirmParams {
+  fioName: string
+  walletId: string
+  fee: number
+  ownerPublicKey: string
+}
+
 interface StateProps {
   fioPlugin?: EdgeCurrencyConfig
   isConnected: boolean
 }
 
-interface OwnProps extends EdgeSceneProps<'fioDomainConfirm' | 'fioNameConfirm'> {}
+interface OwnProps extends EdgeSceneProps<'fioDomainConfirm' | 'fioNameConfirm'> {
+  wallet: EdgeCurrencyWallet
+}
 
 interface DispatchProps {
   onLogEvent: (event: TrackingEventName, values: TrackingValues) => void
@@ -45,8 +55,8 @@ class FioNameConfirm extends React.PureComponent<Props> {
   }
 
   saveFioName = async () => {
-    const { navigation, route, onLogEvent } = this.props
-    const { fioName, paymentWallet, ownerPublicKey, fee } = route.params
+    const { navigation, route, wallet: paymentWallet, onLogEvent } = this.props
+    const { fioName, ownerPublicKey, fee } = route.params
 
     const { isConnected, fioPlugin } = this.props
     if (!isConnected) {
@@ -82,7 +92,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
               ))
               return navigation.navigate('fioAddressRegisterSelectWallet', {
                 fioAddress: fioName,
-                selectedWallet: paymentWallet,
+                walletId: paymentWallet.id,
                 selectedDomain: {
                   name: domainExists.domain,
                   expiration: new Date().toDateString(),
@@ -166,8 +176,8 @@ class FioNameConfirm extends React.PureComponent<Props> {
   }
 
   render() {
-    const { route, theme, navigation } = this.props
-    const { fioName, paymentWallet } = route.params
+    const { route, theme, navigation, wallet: paymentWallet } = this.props
+    const { fioName } = route.params
     const styles = getStyles(theme)
 
     return (
@@ -204,7 +214,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioNameConfirmScene = connect<StateProps, DispatchProps, OwnProps>(
+const FioNameConfirmConnected = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     fioPlugin: state.core.account.currencyConfig.fio,
     isConnected: state.network.isConnected
@@ -215,3 +225,5 @@ export const FioNameConfirmScene = connect<StateProps, DispatchProps, OwnProps>(
     }
   })
 )(withTheme(FioNameConfirm))
+
+export const FioNameConfirmScene = withWallet(FioNameConfirmConnected)

@@ -198,7 +198,7 @@ const showFioExpiredModal = async (navigation: NavigationBase, fioWallet: EdgeCu
     const { isPublic = false } = fioDomain
     navigation.push('fioDomainSettings', {
       showRenew: true,
-      fioWallet,
+      walletId: fioWallet.id,
       fioDomainName: fioDomain.name,
       isPublic,
       expiration: fioDomain.expiration
