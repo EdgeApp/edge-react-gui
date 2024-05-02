@@ -1,4 +1,4 @@
-import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString, Cleaner } from 'cleaners'
+import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
 
 function asNullable<T>(cleaner: Cleaner<T>): Cleaner<T | null> {
   return function asNullable(raw) {
@@ -267,6 +267,7 @@ export const asEnvConfig = asObject({
   DEBUG_EXCHANGES: asOptional(asBoolean, false),
   DEBUG_VERBOSE_ERRORS: asOptional(asBoolean, false),
   DEBUG_THEME: asOptional(asBoolean, false),
+  MUTE_CONSOLE_OUTPUT: asOptional(asArray(asValue('log', 'info', 'warn', 'error', 'debug', 'trace', 'group', 'groupCollapsed', 'groupEnd')), []),
   ENABLE_FIAT_SANDBOX: asOptional(asBoolean, false),
   ENABLE_TEST_SERVERS: asOptional(asBoolean),
   ENABLE_REDUX_PERF_LOGGING: asOptional(asBoolean, false),
