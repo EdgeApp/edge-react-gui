@@ -1,33 +1,130 @@
 import React from 'react'
-import { Alert, Text, View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
+import { sprintf } from 'sprintf-js'
 
+import backupHero from '../../assets/images/backup-hero.png'
+import { BackupTextType } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
-import { getThemedIconUri } from '../../util/CdnUris'
 import { openBrowserUri } from '../../util/WebUtils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
-import { ButtonsModal } from './ButtonsModal'
+import { HeaderText, Paragraph, SmallText, WarningText } from '../themed/EdgeText'
+import { ButtonsModal, ButtonsModal2 } from './ButtonsModal'
 
-export type BackupModalResult = 'upgrade' | 'dismiss'
+export type BackupModalResult = 'upgrade' | 'learnMore' | 'dismiss'
+export type BackupForTransferModalResult = 'upgrade' | 'learnMore'
 
-/**
- * Informational modal prompting the user to back up their account for settings,
- * deleting light accounts, and receiving fio requests
- *
- * TODO: Merge our various backup modal flavors with a common design that
- * satisfies all requirements (design TBD).
- */
-export const BackupModal = (props: { bridge: AirshipBridge<BackupModalResult | undefined>; forgetLoginId?: string }) => {
-  const { bridge, forgetLoginId } = props
-  const showForgetAccountVariant = forgetLoginId != null
+const body = lstrings.backup_message
+const bodyCont = sprintf(lstrings.no_access_disclaimer_1s, config.appName)
 
+const VARIANT_MAP = {
+  original: {
+    title: lstrings.backup_title,
+    body,
+    bodyCont,
+    subText: lstrings.backup_message_subtext
+  },
+  backup: {
+    title: lstrings.backup_title,
+    body,
+    bodyCont,
+    subText: lstrings.backup_message_subtext
+  },
+  secure: {
+    title: lstrings.secure_account_title,
+    body,
+    bodyCont,
+    subText: lstrings.secure_account_message_subtext
+  },
+  create: {
+    title: lstrings.create_user_title,
+    body,
+    bodyCont,
+    subText: lstrings.create_user_message_subtext
+  }
+}
+
+/** Common backup modal content format */
+const BackupModalContent = (props: { title: string; body: string; bodyCont?: string; subText?: string }) => {
+  const { title, body, bodyCont, subText } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  return (
+    <View style={styles.container}>
+      <FastImage style={styles.image} source={backupHero} />
+      <Paragraph center>
+        <HeaderText>{title}</HeaderText>
+      </Paragraph>
+      <Paragraph center>{body}</Paragraph>
+      {bodyCont == null ? null : <Paragraph center>{bodyCont}</Paragraph>}
+      {subText == null ? null : (
+        <Paragraph center>
+          <WarningText>
+            <SmallText>{subText}</SmallText>
+          </WarningText>
+        </Paragraph>
+      )}
+    </View>
+  )
+}
+
+/**
+ * Informational modal prompting the user to back up their account
+ */
+export const BackupForTransferModal = (props: { bridge: AirshipBridge<BackupForTransferModalResult | undefined>; variantKey: BackupTextType }) => {
+  const { bridge, variantKey } = props
+  const { title, body, bodyCont, subText } = VARIANT_MAP[variantKey]
+
+  const handleLearnMorePress = useHandler(async () => {
+    openBrowserUri(config.backupAccountSite)
+    return false
+  })
+
+  // Unchanged modal, different format...
+  if (variantKey === 'original')
+    return (
+      <ButtonsModal
+        bridge={bridge}
+        buttons={{
+          upgrade: { label: lstrings.backup_account }
+        }}
+      >
+        <BackupModalContent title={lstrings.backup_title} body={lstrings.backup_for_transfer_message} />
+      </ButtonsModal>
+    )
+
+  // New modal variants under testing:
+  return (
+    <ButtonsModal
+      bridge={bridge}
+      buttons={{
+        upgrade: { label: lstrings.get_started_button },
+        learnMore: {
+          label: lstrings.learn_more,
+          onPress: handleLearnMorePress,
+          spinner: false
+        }
+      }}
+      title={title}
+    >
+      <BackupModalContent title={title} body={body} bodyCont={bodyCont} subText={subText} />
+    </ButtonsModal>
+  )
+}
+
+/**
+ * Informational modal prompting the user to back up their account before accessing settings,
+ * deleting light accounts, and receiving fio requests
+ */
+export const BackupForAccountModal = (props: { bridge: AirshipBridge<BackupModalResult | undefined>; forgetLoginId?: string }) => {
+  const { bridge, forgetLoginId } = props
+  const showForgetAccount = forgetLoginId != null
+
   const context = useSelector(state => state.core.context)
   const fioHandles = useSelector(state => state.ui.fioAddress.fioAddresses)
   const backupText = fioHandles.length > 0 ? lstrings.backup_web3_handle_warning_message : lstrings.backup_warning_message
@@ -44,76 +141,41 @@ export const BackupModal = (props: { bridge: AirshipBridge<BackupModalResult | u
         }
       }
     ])
-
     return true
   })
 
   return (
-    <ButtonsModal
+    <ButtonsModal2
       bridge={bridge}
       buttons={{
         upgrade: { label: lstrings.backup_account },
+        learnMore: {
+          label: lstrings.learn_more,
+          onPress: async () => {
+            openBrowserUri(config.backupAccountSite)
+            return await Promise.resolve(true)
+          }
+        },
         dismiss: {
-          label: showForgetAccountVariant ? lstrings.delete_account_title : lstrings.backup_dismiss_button,
-          onPress: showForgetAccountVariant ? handleDeletePress : undefined,
+          label: showForgetAccount ? lstrings.delete_account_title : lstrings.backup_dismiss_button,
+          onPress: showForgetAccount ? handleDeletePress : undefined,
           spinner: false
         }
       }}
-      fullScreen
     >
-      <View style={styles.container}>
-        <FastImage
-          style={styles.image}
-          source={{ uri: getThemedIconUri(theme, `lightAccount/${showForgetAccountVariant ? 'hero-backup-warning' : 'hero-backup-info'}`) }}
-        />
-        <EdgeText style={styles.header} numberOfLines={2}>
-          {lstrings.backup_title}
-        </EdgeText>
-        <EdgeText style={styles.secondaryText} numberOfLines={2}>
-          {lstrings.backup_info_message}
-        </EdgeText>
-        <EdgeText style={styles.warningText} numberOfLines={2}>
-          {backupText}
-        </EdgeText>
-        <Text style={styles.linkText} onPress={() => openBrowserUri(config.backupAccountSite)}>
-          {lstrings.tap_to_learn_more}
-        </Text>
-      </View>
-    </ButtonsModal>
+      <BackupModalContent title={lstrings.backup_title} body={lstrings.backup_info_message} subText={backupText} />
+    </ButtonsModal2>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    alignItems: 'center',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    height: '100%'
+    alignItems: 'center'
   },
   image: {
-    flex: 0.6,
-    width: '100%',
+    width: '60%',
     aspectRatio: 1,
-    resizeMode: 'contain'
-  },
-  header: {
-    textAlign: 'center',
-    fontSize: theme.rem(1.5)
-  },
-  secondaryText: {
-    textAlign: 'center',
-    fontSize: theme.rem(1)
-  },
-  warningText: {
-    textAlign: 'center',
-    fontSize: theme.rem(1),
-    color: theme.warningIcon
-  },
-  linkText: {
-    color: theme.iconTappable,
-    flexShrink: 1,
-    fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(0.84),
-    marginBottom: theme.rem(2)
+    resizeMode: 'contain',
+    marginBottom: theme.rem(0.5)
   }
 }))
