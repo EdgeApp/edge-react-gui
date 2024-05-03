@@ -39,12 +39,6 @@ class MainActivity : ReactActivity() {
         // Hide app contents in the background:
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             setRecentsScreenshotEnabled(false);
-        } else {
-            getWindow()
-                .setFlags(
-                    WindowManager.LayoutParams.FLAG_SECURE,
-                    WindowManager.LayoutParams.FLAG_SECURE
-                ) ;
         }
 
         // Lock the app to portrait mode:
