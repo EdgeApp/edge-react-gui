@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: New Asset Setting to manually enable tokens with detected balances across all wallets
 - changed: (WalletConnect) Handle sessions with 0 required namespaces
 - changed: Consistent light account backup modal UI
 
