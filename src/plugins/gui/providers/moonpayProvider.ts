@@ -116,12 +116,12 @@ const TOKEN_MAP: StringMap = {
 const SUPPORTED_REGIONS: Record<FiatDirection, FiatProviderSupportedRegions> = {
   buy: {
     US: {
-      notStateProvinces: ['LA', 'TX']
+      notStateProvinces: ['TX']
     }
   },
   sell: {
     US: {
-      notStateProvinces: ['LA', 'NY', 'TX']
+      notStateProvinces: ['NY', 'TX']
     }
   }
 }
