@@ -58,6 +58,8 @@ const DEFAULT_FIAT_AMOUNT = '500'
  */
 const MAX_QUOTE_VALUE = '10000000000'
 
+const NO_PROVIDER_TOAST_DURATION_MS = 10000
+
 export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const { account, guiPlugin, longPress = false, showUi } = params
   const { pluginId } = guiPlugin
@@ -129,7 +131,9 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       const priorityProviders = providers.filter(p => paymentProviderPriority[p.providerId] != null && paymentProviderPriority[p.providerId] > 0)
 
       if (priorityProviders.length === 0) {
-        throw new Error('No providers available for payment type: ' + paymentTypes[0])
+        const msg = direction === 'buy' ? lstrings.fiat_plugin_no_buy_providers : lstrings.fiat_plugin_no_sell_providers
+        await showUi.showToast(msg, NO_PROVIDER_TOAST_DURATION_MS)
+        return
       }
 
       // Fetch supported assets from all providers, based on the given
