@@ -249,6 +249,9 @@ export const executePlugin = async (params: {
     },
     exitScene: async () => {
       navigation.pop()
+    },
+    waitForAnimationFrame: async () => {
+      await new Promise(resolve => requestAnimationFrame(resolve))
     }
   }
 
