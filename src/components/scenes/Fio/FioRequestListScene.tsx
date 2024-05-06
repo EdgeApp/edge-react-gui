@@ -199,7 +199,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     if (answer === 'ok') {
       return navigation.navigate('fioAddressSettings', {
         showAddBundledTxs: true,
-        fioWallet,
+        walletId: fioWallet.id,
         fioAddressName
       })
     }

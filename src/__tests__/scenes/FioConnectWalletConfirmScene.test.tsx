@@ -18,17 +18,19 @@ describe('FioConnectWalletConfirm', () => {
       date: 220322,
       txid: '0x34346463',
       signedTx: '0xdgs3442',
-      ourReceiveAddresses: ['FioAddress']
+      ourReceiveAddresses: ['FioAddress'],
+      id: 'id'
     }
 
     const actual = renderer.render(
       <FioConnectWalletConfirm
         {...fakeSceneProps('fioConnectToWalletsConfirm', {
-          fioWallet: fakeWallet,
+          walletId: fakeWallet.id,
           fioAddressName: 'MyFioAddress',
           walletsToConnect: [],
           walletsToDisconnect: []
         })}
+        wallet={fakeWallet}
         ccWalletMap={['FIO'] as any}
         isConnected
         updateConnectedWallets={(fioAddress, ccWalletMap) => undefined}

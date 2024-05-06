@@ -21,7 +21,7 @@ import { initInfoServer } from './util/network'
 
 // Uncomment the next line to remove popup warning/error boxes.
 // LogBox.ignoreAllLogs()
-LogBox.ignoreLogs(['Require cycle:'])
+LogBox.ignoreLogs(['Require cycle:', 'Attempted to end a Span which has already ended.'])
 
 Bugsnag.start({
   onError: event => {

@@ -101,7 +101,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
     const fioWallet = fioWallets.find((fioWallet: EdgeCurrencyWallet) => fioWallet.id === walletId)
     if (fioWallet == null) return
     navigation.navigate('fioDomainSettings', {
-      fioWallet,
+      walletId: fioWallet.id,
       fioDomainName: name,
       expiration,
       isPublic

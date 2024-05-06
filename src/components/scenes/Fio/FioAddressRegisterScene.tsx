@@ -167,14 +167,14 @@ export class FioAddressRegister extends React.Component<Props, State> {
         if (selectedDomain.isFree) {
           navigation.navigate('fioNameConfirm', {
             fioName: fullAddress,
-            paymentWallet: selectedWallet,
+            walletId: selectedWallet.id,
             fee: 0,
             ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey
           })
         } else {
           navigation.navigate('fioAddressRegisterSelectWallet', {
             fioAddress: fullAddress,
-            selectedWallet,
+            walletId: selectedWallet.id,
             selectedDomain
           })
         }

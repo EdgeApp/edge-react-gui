@@ -17,6 +17,7 @@ import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getDomainRegInfo, PaymentInfo } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { Airship, showError } from '../../services/AirshipInstance'
@@ -28,6 +29,11 @@ import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
+export interface FioDomainRegisterSelectWalletParams {
+  walletId: string
+  fioDomain: string
+}
+
 interface StateProps {
   account: EdgeAccount
   fioPlugin?: EdgeCurrencyConfig
@@ -36,7 +42,9 @@ interface StateProps {
   isConnected: boolean
 }
 
-interface OwnProps extends EdgeSceneProps<'fioDomainRegisterSelectWallet'> {}
+interface OwnProps extends EdgeSceneProps<'fioDomainRegisterSelectWallet'> {
+  wallet: EdgeCurrencyWallet
+}
 
 interface DispatchProps {
   onSelectWallet: (walletId: string, currencyCode: string) => void
@@ -73,11 +81,12 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
 
   getRegInfo = async () => {
     this.setState({ loading: true })
-    const { fioPlugin, fioDisplayDenomination, route } = this.props
-    const { fioDomain, selectedWallet } = route.params
+    const { fioPlugin, fioDisplayDenomination, route, wallet } = this.props
+    const { fioDomain } = route.params
+
     if (fioPlugin != null) {
       try {
-        const { activationCost, feeValue, supportedAssets, paymentInfo } = await getDomainRegInfo(fioPlugin, fioDomain, selectedWallet, fioDisplayDenomination)
+        const { activationCost, feeValue, supportedAssets, paymentInfo } = await getDomainRegInfo(fioPlugin, fioDomain, wallet, fioDisplayDenomination)
         this.setState({ activationCost, feeValue, supportedAssets, paymentInfo })
       } catch (e: any) {
         this.setState({ errorMessage: e.message })
@@ -113,8 +122,8 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   }
 
   onNextPress = (): void => {
-    const { account, isConnected, navigation, route, onLogEvent } = this.props
-    const { fioDomain, selectedWallet } = route.params
+    const { account, isConnected, navigation, route, wallet: selectedWallet, onLogEvent } = this.props
+    const { fioDomain } = route.params
     const { feeValue, paymentInfo: allPaymentInfo, paymentWallet } = this.state
 
     if (!paymentWallet || !paymentWallet.id) return
@@ -130,7 +139,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
         if (paymentWallet == null) return
         navigation.navigate('fioDomainConfirm', {
           fioName: fioDomain,
-          paymentWallet,
+          walletId: paymentWallet.id,
           fee: feeValue,
           ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey
         })
@@ -274,12 +283,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioDomainRegisterSelectWalletScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state, { route: { params } }) => ({
+const FioDomainRegisterSelectWalletConnected = connect<StateProps, DispatchProps, OwnProps>(
+  (state, ownProps) => ({
     account: state.core.account,
     fioWallets: state.ui.wallets.fioWallets,
     fioPlugin: state.core.account.currencyConfig.fio,
-    fioDisplayDenomination: selectDisplayDenomByCurrencyCode(state, params.selectedWallet.currencyConfig, FIO_STR),
+    fioDisplayDenomination: selectDisplayDenomByCurrencyCode(state, ownProps.wallet.currencyConfig, FIO_STR),
     isConnected: state.network.isConnected
   }),
   dispatch => ({
@@ -294,3 +303,5 @@ export const FioDomainRegisterSelectWalletScene = connect<StateProps, DispatchPr
     }
   })
 )(withTheme(FioDomainRegisterSelectWallet))
+
+export const FioDomainRegisterSelectWalletScene = withWallet(FioDomainRegisterSelectWalletConnected)

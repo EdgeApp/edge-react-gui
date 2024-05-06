@@ -21,11 +21,11 @@ import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { PositionAllocation, StakePlugin, StakePolicy, StakePositionMap } from '../../plugins/stake-plugins/types'
-import { RootState } from '../../reducers/RootReducer'
 import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
+import { GuiExchangeRates } from '../../types/types'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
@@ -83,7 +83,7 @@ interface StateProps {
   exchangeDenomination: EdgeDenomination
   exchangeRate: string
   isAccountBalanceVisible: boolean
-  rootState: RootState
+  exchangeRates: GuiExchangeRates
   walletName: string
 }
 
@@ -296,7 +296,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const sceneWallet = wallet
     const sceneTokenId = tokenId
     const { currencyWallets } = account
-    const { rootState } = this.props
+    const { exchangeRates } = this.props
 
     // Check balances for the displayed asset on this scene:
     const sceneAssetCryptoBalance = wallet.balanceMap.get(tokenId)
@@ -333,7 +333,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             tokenId: priorityAsset.tokenId,
             nativeAmount: currencyWallet.balanceMap.get(priorityAsset.tokenId) ?? '0'
           })
-          const dollarValue = parseFloat(cryptoAmount.displayDollarValue(rootState, DECIMAL_PRECISION))
+          const dollarValue = parseFloat(cryptoAmount.displayDollarValue(exchangeRates, DECIMAL_PRECISION))
 
           ownedAssets.push({
             pluginId: priorityAsset.pluginId,
@@ -787,7 +787,7 @@ export function TransactionListTop(props: OwnProps) {
   const { tokenId, wallet } = props
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
-  const rootState = useSelector(state => state)
+  const exchangeRates = useSelector(state => state.exchangeRates)
   const theme = useTheme()
 
   const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
@@ -814,7 +814,7 @@ export function TransactionListTop(props: OwnProps) {
       exchangeDenomination={exchangeDenomination}
       exchangeRate={exchangeRate}
       isAccountBalanceVisible={isAccountBalanceVisible}
-      rootState={rootState}
+      exchangeRates={exchangeRates}
       toggleBalanceVisibility={handleBalanceVisibility}
       theme={theme}
       walletName={walletName}
