@@ -1424,6 +1424,10 @@ const strings = {
   fiat_plugin_max_buy_quote_error: 'Provider cannot create max buy quote',
   fiat_plugin_max_sell_quote_error: 'Provider cannot create max sell quote',
   fiat_plugin_max_sell_quote_error_1s: 'Cannot create max sell quote for %$1s',
+  fiat_plugin_no_buy_providers:
+    'Unable to find any available providers for the selected payment method. This may be due to a poor network connection or lack of support in your region. Please try again later or select a different payment method.',
+  fiat_plugin_no_sell_providers:
+    'Unable to find any available providers supporting sell of your current assets. This may be due to a poor network connection or lack of support in your region. Please try again later or select a different payment method.',
 
   // Wallet List Modal
   select_recv_wallet: 'Select Receiving Wallet',
