@@ -18,6 +18,7 @@
 - changed: Paybis implementation to use SHA signatures and oneTimeToken
 - changed: Increase opacity in wallet list gradient for better visibility
 - changed: Buy/Sell no longer requires wallet selection when accessing via a wallet's Trade menu
+- changed: Enable Moonpay for Louisiana
 - fixed: FilledTextInput multi line style squished
 - fixed: Swap transactions always showing as received when viewing source asset
 - fixed: Swap quote amounts hidden if balances set to hidden in Transaction List
