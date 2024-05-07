@@ -1248,6 +1248,7 @@
   "fiat_plugin_sell_no_quote": "Impossibile ottenere la stima di vendita",
   "fiat_plugin_fetching_assets": "Recupero degli asset supportati",
   "fiat_plugin_sell_cancelled": "Ordine di vendita annullato",
+  "fiat_plugin_finalizing_quote": "Finalizing your exchange quote. Please wait as this may take up to a minute",
   "fiat_plugin_sell_failed_try_again": "Ordine di vendita non riuscito. Riprova.",
   "fiat_plugin_sell_failed_to_send_try_again": "Impossibile inviare fondi per la transazione di vendita. Riprova.",
   "fiat_plugin_cannot_continue_camera_permission": "Impossibile continuare. Autorizzazione fotocamera necessaria per la verifica dell'ID",
