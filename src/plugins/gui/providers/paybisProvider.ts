@@ -10,7 +10,7 @@ import { EdgeAsset, StringMap } from '../../../types/types'
 import { sha512HashAndSign } from '../../../util/crypto'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { SendErrorNoTransaction } from '../fiatPlugin'
-import { FiatDirection, FiatPaymentType, SaveTxActionParams } from '../fiatPluginTypes'
+import { FiatDirection, FiatPaymentType, FiatPluginUi, SaveTxActionParams } from '../fiatPluginTypes'
 import {
   FiatProvider,
   FiatProviderApproveQuoteParams,
@@ -512,7 +512,8 @@ export const paybisProvider: FiatProviderFactory = {
             }
 
             const privateKey = atob(privateKeyB64)
-            const response = await paybisFetch({ method: 'POST', url, path: 'v2/public/request', apiKey, bodyParams, privateKey })
+            const promise = paybisFetch({ method: 'POST', url, path: 'v2/public/request', apiKey, bodyParams, privateKey, showUi })
+            const response = await showUi.showToastSpinner(lstrings.fiat_plugin_finalizing_quote, promise)
             const { oneTimeToken, requestId } = asPublicRequestResponse(response)
 
             const widgetUrl = isWalletTestnet(coreWallet) ? WIDGET_URL_SANDBOX : WIDGET_URL
@@ -681,17 +682,21 @@ const paybisFetch = async (params: {
   url: string
   path: string
   apiKey: string
+  showUi?: FiatPluginUi
   bodyParams?: object
   queryParams?: JsonObject
   privateKey?: string
 }): Promise<JsonObject> => {
-  const { method, url, path, apiKey, bodyParams, queryParams = {}, privateKey } = params
+  const { method, url, path, apiKey, bodyParams, queryParams = {}, privateKey, showUi } = params
   const urlObj = new URL(url + '/' + path, true)
   const body = bodyParams != null ? JSON.stringify(bodyParams) : undefined
 
   let signature: string | undefined
   if (privateKey != null) {
     if (body == null) throw new Error('Paybis: Cannot sign without body')
+    // Because we will be doing a slow CPU operation in sha512HashAndSign, we need to first
+    // call waitForAnimationFrame to ensure the UI spinner is rendered.
+    if (showUi != null) await showUi.waitForAnimationFrame()
     signature = sha512HashAndSign(body, privateKey)
   }
   queryParams.apikey = apiKey
