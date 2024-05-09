@@ -26,6 +26,7 @@ import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
 import { FlipInputModal2, FlipInputModalResult } from '../modals/FlipInputModal2'
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
+import { ScamWarningModal } from '../modals/ScamWarningModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -338,6 +339,15 @@ export function DevTestScene(props: Props) {
             onPress={async () => {
               await Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
                 return <BackupForTransferModal bridge={bridge} variantKey="create" />
+              })
+            }}
+          />
+          <ButtonUi4
+            label="ScamWarningModal"
+            marginRem={0.25}
+            onPress={async () => {
+              await Airship.show((bridge: AirshipBridge<'yes' | 'no' | undefined>) => {
+                return <ScamWarningModal bridge={bridge} />
               })
             }}
           />

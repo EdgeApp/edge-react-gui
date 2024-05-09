@@ -8,6 +8,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
+import { showScamWarningModal } from '../../actions/ScamWarningActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -74,6 +75,9 @@ export const WcConnectionsScene = (props: Props) => {
   }
 
   const handleNewConnectionPress = async () => {
+    // Show the scam warning modal if needed
+    await showScamWarningModal('firstWalletConnect')
+
     if (checkAndShowLightBackupModal(account, navigation)) {
       return await Promise.resolve()
     } else {
