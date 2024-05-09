@@ -9,10 +9,11 @@ import { SCAM_WARNING } from '../constants/constantSettings'
 import { lstrings } from '../locales/strings'
 import { config } from '../theme/appConfig'
 
-let isWarningChecked = false
+let isSendScamWarningChecked = false
 
-export const triggerScamWarningModal = async (disklet: Disklet) => {
-  if (isWarningChecked) return
+/** Scam warning to educate users about potential scams before their first Send */
+export const showSendScamWarningModal = async (disklet: Disklet) => {
+  if (isSendScamWarningChecked) return
 
   try {
     await disklet.getText(SCAM_WARNING)
@@ -31,6 +32,8 @@ export const triggerScamWarningModal = async (disklet: Disklet) => {
     })
     await disklet.setText(SCAM_WARNING, '')
 
-    isWarningChecked = true
+    isSendScamWarningChecked = true
+  }
+}
   }
 }

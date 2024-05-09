@@ -16,7 +16,7 @@ import { ActivityIndicator, Alert, TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
-import { triggerScamWarningModal } from '../../actions/ScamWarningActions'
+import { showSendScamWarningModal } from '../../actions/ScamWarningActions'
 import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
 import { playSendSound } from '../../actions/SoundActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -193,7 +193,7 @@ const SendComponent = (props: Props) => {
 
   if (initialMount.current) {
     if (hiddenFeaturesMap.scamWarning === false) {
-      triggerScamWarningModal(account.disklet).catch(err => showError(err))
+      showSendScamWarningModal(account.disklet).catch(err => showError(err))
     }
     initialMount.current = false
   }
