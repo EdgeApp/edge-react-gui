@@ -1,4 +1,3 @@
-import { asMaybe, asObject, asString } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
@@ -10,6 +9,7 @@ import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
+import { asMaybeContractLocation } from '../../util/cleaners'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -202,13 +202,6 @@ function EditTokenSceneComponent(props: Props) {
     </SceneWrapper>
   )
 }
-
-/**
- * Interprets a token location as a contract address.
- * In the future this scene may need to handle other weird networks
- * where the networkLocation has other contents.
- */
-export const asMaybeContractLocation = asMaybe(asObject({ contractAddress: asString }))
 
 async function showMessage(message: string): Promise<void> {
   await Airship.show<'ok' | undefined>(bridge => (
