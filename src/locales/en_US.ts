@@ -166,6 +166,7 @@ const strings = {
   addtoken_contract_address_input_text: 'Contract Address',
   addtoken_currency_code_input_text: 'Token Code',
   addtoken_invalid_information: 'Please enter valid token information and try again',
+  addtoken_invalid_1s: 'Please enter valid %1$s and try again',
   addtoken_denomination_input_text: 'Number of Decimal Places',
   addtoken_name_input_text: 'Token Name',
   addtoken_add: 'Add Custom',
