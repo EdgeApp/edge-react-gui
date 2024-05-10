@@ -3,7 +3,7 @@ import * as React from 'react'
 import { SectionList, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
-import { PREFERRED_TOKENS, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useRowLayout } from '../../hooks/useRowLayout'
 import { useWalletName } from '../../hooks/useWalletName'
@@ -52,7 +52,6 @@ function ManageTokensSceneComponent(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
   const walletName = useWalletName(wallet)
-  const isCustomTokensSupported = SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]?.isCustomTokensSupported ?? false
 
   const [searchValue, setSearchValue] = React.useState('')
 
@@ -197,7 +196,7 @@ function ManageTokensSceneComponent(props: Props) {
           style={styles.sectionList}
         />
       )}
-      {!isCustomTokensSupported ? null : (
+      {wallet.currencyInfo.customTokenTemplate == null ? null : (
         <>
           <DividerLine marginRem={[0, 1]} />
           {/* TODO: Create a layout enum in ButtonsViewUi4 for this persistent button area */}
