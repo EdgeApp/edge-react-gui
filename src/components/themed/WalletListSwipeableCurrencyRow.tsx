@@ -70,7 +70,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
     dispatch(selectWalletToken({ navigation, walletId: wallet.id, tokenId, alwaysActivate: true }))
       .then(async activated => {
         if (activated) {
-          navigation.navigate('transactionList', { tokenId, walletId: wallet.id })
+          navigation.navigate('transactionList', { tokenId, walletId: wallet.id, walletName: wallet.name ?? wallet.currencyInfo.displayName })
         }
       })
       .catch(err => showError(err))

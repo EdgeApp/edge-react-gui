@@ -65,8 +65,17 @@ function WalletListSwipeableComponent(props: Props) {
   )
 
   const handleCreateWallet = useHandler(async (walletId: string, tokenId: EdgeTokenId) => {
+    const wallet = account.currencyWallets[walletId]
     dispatch(selectWalletToken({ navigation, walletId, tokenId }))
-      .then(activationNotRequired => activationNotRequired && navigation.navigate('transactionList', { walletId, tokenId }))
+      .then(
+        activationNotRequired =>
+          activationNotRequired &&
+          navigation.navigate('transactionList', {
+            walletId,
+            tokenId,
+            walletName: wallet.name ?? wallet.currencyInfo.displayName
+          })
+      )
       .finally(onReset)
   })
 
