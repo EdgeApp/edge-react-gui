@@ -1070,11 +1070,11 @@ PODS:
     - React-Core
   - react-native-performance (5.1.0):
     - React-Core
-  - react-native-piratechain (0.4.9):
+  - react-native-piratechain (0.4.10):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
-    - SQLite.swift (~> 0.12)
+    - SQLite.swift/standalone (~> 0.14)
   - react-native-safari-view (1.0.0):
     - React
   - react-native-safe-area-context (4.9.0):
@@ -1083,11 +1083,11 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-  - react-native-zcash (0.7.0):
+  - react-native-zcash (0.7.1):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
-    - SQLite.swift (~> 0.12)
+    - SQLite.swift/standalone (~> 0.14)
   - React-nativeconfig (0.73.6)
   - React-NativeModulesApple (0.73.6):
     - glog
@@ -1337,9 +1337,11 @@ PODS:
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
   - SocketRocket (0.6.1)
-  - SQLite.swift (0.14.1):
-    - SQLite.swift/standard (= 0.14.1)
-  - SQLite.swift/standard (0.14.1)
+  - SQLite.swift/standalone (0.15.3):
+    - sqlite3
+  - "sqlite3 (3.45.3+1)":
+    - "sqlite3/common (= 3.45.3+1)"
+  - "sqlite3/common (3.45.3+1)"
   - SwiftNIO (2.40.0):
     - _NIODataStructures (= 2.40.0)
     - CNIOAtomics (= 2.40.0)
@@ -1594,6 +1596,7 @@ DEPENDENCIES:
   - RNStoreReview (from `../node_modules/react-native-store-review`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - sqlite3
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -1630,6 +1633,7 @@ SPEC REPOS:
     - SDWebImageWebPCoder
     - SocketRocket
     - SQLite.swift
+    - sqlite3
     - SwiftNIO
     - SwiftNIOConcurrencyHelpers
     - SwiftNIOCore
@@ -1944,11 +1948,11 @@ SPEC CHECKSUMS:
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408
   react-native-netinfo: 5b664b2945a8f02102b296f0f812bddd6827ed9c
   react-native-performance: cef2b618d47b277fb5c3280b81a3aad1e72f2886
-  react-native-piratechain: aedd8d85a605d5c89e13c56c71915d2eab9d0b5a
+  react-native-piratechain: 753087fbe3ccf67031f1c4e7ab467f64c3bfb338
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: b97eb6f9e3b7f437806c2ce5983f479f8eb5de4b
   react-native-webview: 9395e82c917d81407deb9b1fe53158dd6c8880ff
-  react-native-zcash: 569a00e0ed4d580db3f1765ad6808fa53e7b2eac
+  react-native-zcash: 0b02cba77b0dc3f3d555fbec906769bcf903eb27
   React-nativeconfig: b4d4e9901d4cabb57be63053fd2aa6086eb3c85f
   React-NativeModulesApple: cd26e56d56350e123da0c1e3e4c76cb58a05e1ee
   React-perflogger: 5f49905de275bac07ac7ea7f575a70611fa988f2
@@ -1999,7 +2003,8 @@ SPEC CHECKSUMS:
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
-  SQLite.swift: 2992550ebf3c5b268bf4352603e3df87d2a4ed72
+  SQLite.swift: 8d054987f02728cc912b0eb5a9659650573a65a2
+  sqlite3: 02d1f07eaaa01f80a1c16b4b31dfcbb3345ee01a
   SwiftNIO: 829958aab300642625091f82fc2f49cb7cf4ef24
   SwiftNIOConcurrencyHelpers: 697370136789b1074e4535eaae75cbd7f900370e
   SwiftNIOCore: 473fdfe746534d7aa25766916459eeaf6f92ef49
@@ -2018,6 +2023,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 03f6685399abca74db3b218f6fe2e64309a56fff
+PODFILE CHECKSUM: 2432be3f2f8dd3c496704b21e4436e2d715755dc
 
 COCOAPODS: 1.15.2
