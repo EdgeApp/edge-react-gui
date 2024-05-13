@@ -46,6 +46,15 @@ interface BuildConfigFile {
   projectName: string
   rsyncLocation?: string
   testRepoUrl?: string
+
+  // Fastlane
+  fastlaneApiKeyJson?: {
+    key_id: string
+    issuer_id: string
+    key_content: string
+    duration: number
+    in_house: boolean
+  }
 }
 
 /**
@@ -164,6 +173,11 @@ function makeCommonPost(buildObj: BuildObj) {
     buildObj.bundleMapFile = '../ios-release.bundle.map'
   }
   buildObj.productNameClean = buildObj.productName.replace(' ', '')
+
+  // Make the tmpDir if it doesn't exist
+  if (!fs.existsSync(buildObj.tmpDir)) {
+    fs.mkdirSync(buildObj.tmpDir)
+  }
 }
 
 // function buildCommonPre() {
@@ -171,11 +185,13 @@ function makeCommonPost(buildObj: BuildObj) {
 // }
 
 function buildIos(buildObj: BuildObj) {
+  const { fastlaneApiKeyJson } = buildObj
   chdir(buildObj.guiDir)
+  const hasFastlaneCreds = (process.env.FASTLANE_USER != null && process.env.FASTLANE_PASSWORD != null) || fastlaneApiKeyJson != null
+
   if (
+    hasFastlaneCreds &&
     process.env.BUILD_REPO_URL &&
-    process.env.FASTLANE_USER != null &&
-    process.env.FASTLANE_PASSWORD != null &&
     // process.env.GITHUB_SSH_KEY != null &&
     process.env.HOME != null &&
     process.env.MATCH_KEYCHAIN_PASSWORD != null &&
@@ -191,14 +207,21 @@ function buildIos(buildObj: BuildObj) {
     fs.writeFileSync(matchFileLoc, matchFile, { encoding: 'utf8' })
     const profileDir = join(process.env.HOME, 'Library', 'MobileDevice', 'Provisioning Profiles')
     call(`rm -rf ${escapePath(profileDir)}`)
+    let apiKeyJsonArg = ''
+    if (fastlaneApiKeyJson != null) {
+      const apiKeyString = JSON.stringify(fastlaneApiKeyJson)
+      // const apiKeyFile = join(buildObj.tmpDir, 'fastlaneApiKey.json')
+      // fs.writeFileSync(apiKeyFile, apiKeyString, { encoding: 'utf8' })
+      apiKeyJsonArg = `--api_key ${apiKeyString} `
+    }
     call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match adhoc ${apiKeyJsonArg}--git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`
     )
     call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match development --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match development ${apiKeyJsonArg}--git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`
     )
     call(
-      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match appstore --git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`
+      `GIT_SSH_COMMAND="ssh -i ${githubSshKey}" fastlane match appstore ${apiKeyJsonArg}--git_branch="${buildObj.appleDeveloperTeamName}" -a ${buildObj.bundleId} --team_id ${buildObj.appleDeveloperTeamId}`
     )
   } else {
     mylog('Missing or incomplete Fastlane params. Not using Fastlane')
