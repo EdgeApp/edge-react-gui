@@ -129,10 +129,10 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
         textModalHint={lstrings.enter_any_input_hint}
       />
     ))
-      .then((result: string | undefined) => {
+      .then(async (result: string | undefined) => {
         if (result) {
           const deepLink = parseDeepLink(result)
-          return dispatch(launchDeepLink(navigation, deepLink))
+          await dispatch(launchDeepLink(navigation, deepLink))
         }
       })
       .catch(err => showError(err))

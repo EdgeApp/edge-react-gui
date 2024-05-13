@@ -2,12 +2,35 @@
 
 ## Unreleased
 
-## 4.5.0
+## 4.6.0
+
+- added: Done button is a part of SimpleTextInput
+- added: Ability to add a custom token for any wallet directly from CreateWalletSelectCryptoScene
+- added: Ability to migrate during the wallet import flow
+- added: Show toast message when there's no provider for buy/sell in selected region
+- changed: Better send error message for insufficient gas
+- changed: Upgrade to React Native v0.73.6
+- changed: "Split" wallet menu options consolidated into one
+- changed: Paybis implementation to use SHA signatures and oneTimeToken
+- changed: Increase opacity in wallet list gradient for better visibility
+- changed: Buy/Sell no longer requires wallet selection when accessing via a wallet's Trade menu
+- changed: Enable Moonpay for Louisiana
+- fixed: FilledTextInput multi line style squished
+- fixed: Swap transactions always showing as received when viewing source asset
+- fixed: Swap quote amounts hidden if balances set to hidden in Transaction List
+- fixed: Possible to see receive address for a wallet requiring activation when creating the wallet from search
+- fixed: Glitch on transaction list scene when starting search
+- fixed: Properly set default buy/sell fiat amount for non-USD wallets
+- removed: 'X' button on modals
+- removed: Hedera account purchases
+
+## 4.5.0 (2024-04-24)
 
 - added: More descriptive 504 transaction failure error message
 - added: New `Text`-based components
 - added: Light account backup modal text experiments
 - added: "Parent Wallet" section when changing wallet from Transaction List while viewing a token
+- added: Sell-to-debit support in Europe
 - changed: Replace `ModalMessage` with `Paragraph`
 - changed: Improved wallet sync indicator bar on top of screen
 - changed: Allow light accounts to buy up to $50 worth of crypto at a time

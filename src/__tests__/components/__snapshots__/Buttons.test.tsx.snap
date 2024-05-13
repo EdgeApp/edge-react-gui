@@ -16,7 +16,6 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
         "alignItems": "stretch",
         "alignSelf": "center",
         "flexDirection": "column",
-        "justifyContent": "space-between",
         "margin": 11,
       }
     }
@@ -400,15 +399,13 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
   </View>
   <View
     absolute={false}
-    layout="solo"
+    layout="column"
     style={
       {
-        "alignItems": "center",
-        "flexGrow": 1,
-        "flexShrink": 1,
-        "justifyContent": "center",
+        "alignItems": "stretch",
+        "alignSelf": "center",
+        "flexDirection": "column",
         "margin": 11,
-        "marginHorizontal": 11,
       }
     }
   >
@@ -443,7 +440,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
       style={
         {
           "alignItems": "center",
-          "alignSelf": "center",
+          "alignSelf": "stretch",
           "flexBasis": "auto",
           "flexGrow": 0,
           "flexShrink": 0,
@@ -485,7 +482,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
               "justifyContent": "center",
             },
             {
-              "alignSelf": "center",
+              "alignSelf": "stretch",
             },
             {
               "height": 67,
@@ -538,7 +535,6 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
       "alignItems": "stretch",
       "alignSelf": "center",
       "flexDirection": "column",
-      "justifyContent": "space-between",
       "margin": 11,
     }
   }
@@ -798,7 +794,6 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
       "alignItems": "stretch",
       "alignSelf": "center",
       "flexDirection": "column",
-      "justifyContent": "space-between",
       "margin": 11,
     }
   }
@@ -1058,7 +1053,6 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
       "alignItems": "stretch",
       "alignSelf": "center",
       "flexDirection": "column",
-      "justifyContent": "space-between",
       "margin": 11,
     }
   }
@@ -1836,15 +1830,14 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
   </View>
   <View
     absolute={false}
-    layout="solo"
+    layout="row"
     style={
       {
-        "alignItems": "center",
+        "flexDirection": "row-reverse",
         "flexGrow": 1,
         "flexShrink": 1,
         "justifyContent": "center",
         "margin": 11,
-        "marginHorizontal": 11,
       }
     }
   >
@@ -1879,10 +1872,8 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
       style={
         {
           "alignItems": "center",
-          "alignSelf": "center",
-          "flexBasis": "auto",
-          "flexGrow": 0,
-          "flexShrink": 0,
+          "alignSelf": "stretch",
+          "flex": 1,
           "justifyContent": "center",
           "margin": -11,
           "opacity": 1,
@@ -1921,7 +1912,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
               "justifyContent": "center",
             },
             {
-              "alignSelf": "center",
+              "alignSelf": "stretch",
             },
             {
               "height": 67,
@@ -4497,11 +4488,6 @@ exports[`Buttons should render with child icons 1`] = `
       >
         <FastImageView
           resizeMode="cover"
-          source={
-            {
-              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-            }
-          }
           style={
             {
               "bottom": 0,
@@ -4640,11 +4626,6 @@ exports[`Buttons should render with child icons 1`] = `
       >
         <FastImageView
           resizeMode="cover"
-          source={
-            {
-              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-            }
-          }
           style={
             {
               "bottom": 0,
@@ -4786,11 +4767,6 @@ exports[`Buttons should render with child icons 1`] = `
       >
         <FastImageView
           resizeMode="cover"
-          source={
-            {
-              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-            }
-          }
           style={
             {
               "bottom": 0,
@@ -4930,11 +4906,6 @@ exports[`Buttons should render with child icons 1`] = `
       >
         <FastImageView
           resizeMode="cover"
-          source={
-            {
-              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-            }
-          }
           style={
             {
               "bottom": 0,
@@ -5074,11 +5045,6 @@ exports[`Buttons should render with child icons 1`] = `
       >
         <FastImageView
           resizeMode="cover"
-          source={
-            {
-              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-            }
-          }
           style={
             {
               "bottom": 0,
@@ -5221,11 +5187,6 @@ exports[`Buttons should render with child icons 1`] = `
       >
         <FastImageView
           resizeMode="cover"
-          source={
-            {
-              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-            }
-          }
           style={
             {
               "bottom": 0,
@@ -5377,11 +5338,6 @@ exports[`Buttons should render with child icons 1`] = `
         >
           <FastImageView
             resizeMode="cover"
-            source={
-              {
-                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-              }
-            }
             style={
               {
                 "bottom": 0,
@@ -5545,11 +5501,6 @@ exports[`Buttons should render with child icons 1`] = `
         >
           <FastImageView
             resizeMode="cover"
-            source={
-              {
-                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-              }
-            }
             style={
               {
                 "bottom": 0,
@@ -5716,11 +5667,6 @@ exports[`Buttons should render with child icons 1`] = `
         >
           <FastImageView
             resizeMode="cover"
-            source={
-              {
-                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-              }
-            }
             style={
               {
                 "bottom": 0,
@@ -5885,11 +5831,6 @@ exports[`Buttons should render with child icons 1`] = `
         >
           <FastImageView
             resizeMode="cover"
-            source={
-              {
-                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-              }
-            }
             style={
               {
                 "bottom": 0,
@@ -6054,11 +5995,6 @@ exports[`Buttons should render with child icons 1`] = `
         >
           <FastImageView
             resizeMode="cover"
-            source={
-              {
-                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-              }
-            }
             style={
               {
                 "bottom": 0,
@@ -6226,11 +6162,6 @@ exports[`Buttons should render with child icons 1`] = `
         >
           <FastImageView
             resizeMode="cover"
-            source={
-              {
-                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
-              }
-            }
             style={
               {
                 "bottom": 0,

@@ -137,11 +137,6 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
           >
             <FastImageView
               resizeMode="cover"
-              source={
-                {
-                  "uri": "https://content.edge.app/currencyIconsV3/fake/fake.png",
-                }
-              }
               style={
                 {
                   "bottom": 0,

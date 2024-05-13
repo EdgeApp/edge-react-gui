@@ -17,7 +17,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { SpaceProps, useSpaceStyle } from '../../hooks/useSpaceStyle'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
-import { AnimatedIconComponent, CloseIconAnimated } from '../icons/ThemedIcons'
+import { AnimatedIconComponent, ChevronBackAnimated, CloseIconAnimated } from '../icons/ThemedIcons'
 import { useTheme } from '../services/ThemeContext'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
@@ -120,7 +120,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   function clear(): void {
     if (inputRef.current != null) inputRef.current.clear()
     if (onChangeText != null) onChangeText('')
-    if (blurOnClear || !hasValue) blur()
+    if (blurOnClear) blur()
     if (onClear != null) onClear()
   }
   function focus(): void {
@@ -157,6 +157,10 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   const handleClearPress = useHandler(() => {
     clear()
   })
+  const handleDonePress = useHandler(() => {
+    clear()
+    blur()
+  })
   const handleFocus = useHandler(() => {
     focusAnimation.value = withTiming(1, { duration: baseDuration })
     if (onFocus != null) onFocus()
@@ -166,6 +170,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
     if (onSubmitEditing != null) onSubmitEditing()
   })
 
+  const backIconSize = useDerivedValue(() => interpolate(focusAnimation.value, [0, 1], [0, themeRem]))
   const leftIconSize = useDerivedValue(() => (hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0), [hasIcon, hasValue])
   const rightIconSize = useDerivedValue(() => (hasValue ? themeRem : focusAnimation.value * themeRem), [hasValue])
 
@@ -179,52 +184,63 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   }, [disabled, isFocused, theme.textInputPlaceholderColor, theme.textInputPlaceholderColorDisabled, theme.textInputPlaceholderColorFocused])
 
   return (
-    <EdgeTouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
-      <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale} spaceProps={spaceProps}>
-        <SideContainer size={leftIconSize}>{Icon == null ? null : <Icon color={iconColor} size={leftIconSize} />}</SideContainer>
+    <ContainerView>
+      <EdgeTouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
+        <InputContainerView disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale} spaceProps={spaceProps}>
+          <SideContainer size={leftIconSize}>{Icon == null ? null : <Icon color={iconColor} size={leftIconSize} />}</SideContainer>
+          <TouchableOpacity accessible onPress={handleDonePress} testID={`${testID}.doneButton`}>
+            <SideContainer size={backIconSize}>
+              <ChevronBackAnimated color={iconColor} size={backIconSize} />
+            </SideContainer>
+          </TouchableOpacity>
 
-        <InnerContainer>
-          <InputField
-            accessible
-            ref={inputRef}
-            keyboardType={props.keyboardType}
-            returnKeyType={props.returnKeyType}
-            accessibilityState={{ disabled }}
-            autoFocus={autoFocus}
-            disableAnimation={disableAnimation}
-            focusAnimation={focusAnimation}
-            placeholder={placeholder}
-            placeholderTextColor={placeholderTextColor}
-            selectionColor={theme.textInputTextColor}
-            testID={`${testID}.textInput`}
-            textAlignVertical="top"
-            value={value}
-            // Callbacks:
-            onBlur={handleBlur}
-            onChangeText={onChangeText}
-            onFocus={handleFocus}
-            onSubmitEditing={handleSubmitEditing}
-            maxLength={maxLength}
-            // Other Props:
-            autoCapitalize={autoCapitalize}
-            autoCorrect={autoCorrect}
-            blurOnSubmit={blurOnSubmit}
-            inputAccessoryViewID={inputAccessoryViewID}
-            secureTextEntry={secureTextEntry}
-          />
-        </InnerContainer>
+          <InnerContainer>
+            <InputField
+              accessible
+              ref={inputRef}
+              keyboardType={props.keyboardType}
+              returnKeyType={props.returnKeyType}
+              accessibilityState={{ disabled }}
+              autoFocus={autoFocus}
+              disableAnimation={disableAnimation}
+              focusAnimation={focusAnimation}
+              placeholder={placeholder}
+              placeholderTextColor={placeholderTextColor}
+              selectionColor={theme.textInputTextColor}
+              testID={`${testID}.textInput`}
+              textAlignVertical="top"
+              value={value}
+              // Callbacks:
+              onBlur={handleBlur}
+              onChangeText={onChangeText}
+              onFocus={handleFocus}
+              onSubmitEditing={handleSubmitEditing}
+              maxLength={maxLength}
+              // Other Props:
+              autoCapitalize={autoCapitalize}
+              autoCorrect={autoCorrect}
+              blurOnSubmit={blurOnSubmit}
+              inputAccessoryViewID={inputAccessoryViewID}
+              secureTextEntry={secureTextEntry}
+            />
+          </InnerContainer>
 
-        <TouchContainer accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
-          <SideContainer size={rightIconSize}>
-            <CloseIconAnimated color={iconColor} size={rightIconSize} />
-          </SideContainer>
-        </TouchContainer>
-      </Container>
-    </EdgeTouchableWithoutFeedback>
+          <TouchContainer accessible onPress={handleClearPress} testID={`${testID}.clearIcon`}>
+            <SideContainer size={rightIconSize}>
+              <CloseIconAnimated color={iconColor} size={rightIconSize} />
+            </SideContainer>
+          </TouchContainer>
+        </InputContainerView>
+      </EdgeTouchableWithoutFeedback>
+    </ContainerView>
   )
 })
 
-const Container = styled(Animated.View)<{
+const ContainerView = styled(View)({
+  flexDirection: 'row'
+})
+
+const InputContainerView = styled(Animated.View)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
   scale: SharedValue<number>
@@ -249,6 +265,7 @@ const Container = styled(Animated.View)<{
       borderWidth: theme.textInputBorderWidth,
       borderRadius: theme.rem(theme.textInputBorderRadius),
       flexDirection: 'row',
+      flexGrow: 1,
       paddingHorizontal: theme.rem(1),
       paddingVertical: theme.rem(0.75)
     },

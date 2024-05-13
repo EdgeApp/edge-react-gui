@@ -156,8 +156,8 @@ export interface FiatPluginUi {
       conversionValues: SellConversionValues
     }
   ) => Promise<void>
-
   exitScene: () => {}
+  waitForAnimationFrame: () => Promise<void>
 }
 
 export interface FiatPluginFactoryArgs {

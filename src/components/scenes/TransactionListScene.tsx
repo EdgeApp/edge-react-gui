@@ -257,7 +257,7 @@ function TransactionListComponent(props: Props) {
     sceneWrapperInfo => {
       return (
         <SearchFooter
-          key="TransactionListScene-SearchFooter"
+          name="TransactionListScene-SearchFooter"
           placeholder={lstrings.transaction_list_search}
           isSearching={isSearching}
           searchText={searchText}
@@ -301,7 +301,6 @@ function TransactionListComponent(props: Props) {
         <View style={undoInsetStyle}>
           <Animated.FlatList
             style={styles.flatList}
-            // @ts-expect-error
             ref={flashListRef}
             contentContainerStyle={{
               paddingTop: insetStyle.paddingTop + theme.rem(0.5),

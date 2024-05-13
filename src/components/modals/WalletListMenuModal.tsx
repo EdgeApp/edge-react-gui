@@ -3,7 +3,6 @@ import React from 'react'
 import { Text, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import { sprintf } from 'sprintf-js'
 
 import { walletListMenuAction, WalletListMenuKey } from '../../actions/WalletListMenuActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
@@ -36,7 +35,7 @@ interface Props {
   walletId: string
 }
 
-const icons = {
+const icons: { [key: string]: string } = {
   delete: 'warning',
   exportWalletTransactions: 'export',
   getRawKeys: 'lock',
@@ -45,6 +44,7 @@ const icons = {
   rawDelete: 'warning',
   rename: 'edit',
   resync: 'sync',
+  split: 'arrowsalt',
   togglePause: 'pause',
   viewPrivateViewKey: 'eye',
   viewXPub: 'eye'
@@ -124,6 +124,7 @@ export function WalletListMenuModal(props: Props) {
   const { bridge, tokenId, navigation, walletId } = props
 
   const [options, setOptions] = React.useState<Option[]>([])
+  const [splitPluginIds, setSplitPluginIds] = React.useState<string[]>([])
 
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
@@ -138,7 +139,7 @@ export function WalletListMenuModal(props: Props) {
 
   const optionAction = useHandler((option: WalletListMenuKey) => {
     bridge.resolve()
-    dispatch(walletListMenuAction(navigation, walletId, option, tokenId)).catch(error => showError(error))
+    dispatch(walletListMenuAction(navigation, walletId, option, tokenId, splitPluginIds)).catch(error => showError(error))
   })
 
   useAsyncEffect(
@@ -201,7 +202,11 @@ export function WalletListMenuModal(props: Props) {
       for (const splitWalletType of splittable) {
         const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
         if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
-        result.push({ label: sprintf(lstrings.string_split_wallet, info.displayName), value: `split${info.pluginId}` })
+        splitPluginIds.push(info.pluginId)
+      }
+      setSplitPluginIds([...splitPluginIds])
+      if (splitPluginIds.length > 0) {
+        result.push({ label: lstrings.fragment_wallets_split_wallet, value: 'split' })
       }
 
       setOptions(result)
@@ -232,8 +237,7 @@ export function WalletListMenuModal(props: Props) {
       {options.map((option: Option) => (
         <EdgeTouchableOpacity key={option.value} onPress={() => optionAction(option.value)} style={styles.row}>
           <AntDesignIcon
-            // @ts-expect-error
-            name={icons[option.value] ?? 'arrowsalt'} // for split keys like splitBCH, splitETH, etc.
+            name={icons[option.value]} // for split keys like splitBCH, splitETH, etc.
             size={theme.rem(1)}
             style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
           />

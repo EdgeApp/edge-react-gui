@@ -149,7 +149,7 @@ const MigrateWalletSelectCryptoComponent = (props: Props) => {
           <SceneHeader title={lstrings.migrate_wallets_select_crypto_title} withTopMargin />
           <FlatList
             automaticallyAdjustContentInsets={false}
-            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(3.5) }}
+            contentContainerStyle={{ ...insetStyle, paddingTop: 0, paddingBottom: insetStyle.paddingBottom + theme.rem(5), marginHorizontal: theme.rem(0.5) }}
             data={migrateWalletList}
             extraData={selectedItems}
             keyboardShouldPersistTaps="handled"

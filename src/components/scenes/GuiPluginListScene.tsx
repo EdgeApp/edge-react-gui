@@ -1,5 +1,5 @@
 import { Disklet } from 'disklet'
-import { EdgeAccount, EdgeTokenId } from 'edge-core-js/types'
+import { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
 import { Image, ListRenderItemInfo, Platform, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -27,7 +27,6 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { AccountReferral } from '../../types/ReferralTypes'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { PluginTweak } from '../../types/TweakTypes'
-import { EdgeAsset } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { filterGuiPluginJson } from '../../util/GuiPluginTools'
@@ -38,6 +37,7 @@ import { base58ToUuid } from '../../util/utils'
 import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
 import { TextInputModal } from '../modals/TextInputModal'
+import { WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
@@ -50,7 +50,7 @@ import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
 
 export interface GuiPluginListParams {
   launchPluginId?: string
-  filterAsset?: EdgeAsset
+  forcedWalletResult?: WalletListResult
 }
 
 const buyRaw = buyPluginJsonOverrideRaw.length > 0 ? buyPluginJsonOverrideRaw : buyPluginJsonRaw
@@ -100,7 +100,7 @@ interface StateProps {
   deviceId: string
   disablePlugins: NestedDisableMap
   insetStyle: InsetStyle
-  filterAsset?: { pluginId: string; tokenId: EdgeTokenId }
+  forcedWalletResult?: WalletListResult
   onCountryPress: () => void
   onPluginOpened: () => void
   onLogEvent: OnLogEvent
@@ -209,7 +209,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow, longPress: boolean = false) {
-    const { coreDisklet, countryCode, filterAsset, stateProvinceCode, deviceId, disablePlugins, navigation, account, onLogEvent, onPluginOpened } = this.props
+    const { coreDisklet, countryCode, forcedWalletResult, stateProvinceCode, deviceId, disablePlugins, navigation, account, onLogEvent, onPluginOpened } =
+      this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -254,7 +255,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         direction,
         disablePlugins: disableProviders,
         disklet: coreDisklet,
-        filterAsset,
+        forcedWalletResult,
         guiPlugin: plugin,
         longPress,
         navigation,
@@ -324,7 +325,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   renderTop = () => {
-    const { account, countryCode, stateProvinceCode, onCountryPress, theme, filterAsset } = this.props
+    const { account, countryCode, stateProvinceCode, onCountryPress, theme, forcedWalletResult } = this.props
     const styles = getStyles(theme)
     const direction = this.getSceneDirection()
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
@@ -337,7 +338,10 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const iconStyle = stateProvinceData == null ? styles.selectedCountryFlag : styles.selectedCountryFlagSelectableRow
     const icon = !hasCountryData ? undefined : <FastImage source={imageSrc} style={iconStyle} />
 
-    const titleAsset = filterAsset == null ? lstrings.cryptocurrency : getCurrencyCodeWithAccount(account, filterAsset.pluginId, filterAsset.tokenId)
+    const titleAsset =
+      forcedWalletResult == null || forcedWalletResult.type !== 'wallet'
+        ? lstrings.cryptocurrency
+        : getCurrencyCodeWithAccount(account, account.currencyWallets[forcedWalletResult.walletId].currencyInfo.pluginId, forcedWalletResult.tokenId ?? null)
 
     const countryCard =
       stateProvinceData == null ? (
@@ -496,7 +500,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const { navigation, route } = props
-  const { params = { filterAsset: undefined } } = route
+  const { params = { forcedWalletResult: undefined } } = route
   const dispatch = useDispatch()
   const theme = useTheme()
 
@@ -512,7 +516,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
   const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
 
-  const [filterAssetLocal, setFilterAssetLocal] = React.useState<EdgeAsset | undefined>(params.filterAsset)
+  const [forcedWalletResultLocal, setForcedWalletResultLocal] = React.useState<WalletListResult | undefined>(params.forcedWalletResult)
 
   const handleLogEvent = useHandler((event, values) => {
     dispatch(logEvent(event, values))
@@ -532,7 +536,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
     // Known issue: We can't resolve the case where the user navigates to this
     // scene with a 'filterAsset,' but does not select a payment method before
     // navigating away.
-    setFilterAssetLocal(undefined)
+    setForcedWalletResultLocal(undefined)
   })
 
   React.useEffect(() => {
@@ -541,7 +545,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   }, [])
 
   React.useEffect(() => {
-    setFilterAssetLocal(params.filterAsset)
+    setForcedWalletResultLocal(params.forcedWalletResult)
   }, [params])
 
   return (
@@ -558,7 +562,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
               developerModeOn={developerModeOn}
               deviceId={deviceId}
               disablePlugins={disablePlugins}
-              filterAsset={filterAssetLocal}
+              forcedWalletResult={forcedWalletResultLocal}
               onScroll={handleScroll}
               insetStyle={insetStyle}
               navigation={navigation}

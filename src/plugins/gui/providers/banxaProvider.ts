@@ -9,7 +9,7 @@ import { lstrings } from '../../../locales/strings'
 import { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { fetchInfo } from '../../../util/network'
-import { consify, makeUuid } from '../../../util/utils'
+import { consify } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
 import {
@@ -354,7 +354,7 @@ export const banxaProvider: FiatProviderFactory = {
     const {
       apiKeys,
       getTokenId,
-      io: { store }
+      io: { makeUuid, store }
     } = params
     const { apiKey, hmacUser, partnerUrl: url } = asBanxaApiKeys(apiKeys)
     if (url.includes('sandbox')) {
@@ -365,7 +365,7 @@ export const banxaProvider: FiatProviderFactory = {
 
     let banxaUsername = await store.getItem('username').catch(e => undefined)
     if (banxaUsername == null || banxaUsername === '') {
-      banxaUsername = makeUuid()
+      banxaUsername = await makeUuid()
       await store.setItem('username', banxaUsername)
     }
 

@@ -156,185 +156,33 @@ exports[`WalletListModal should render with loading props 1`] = `
           </Text>
         </View>
         <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": false,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessible={false}
-          disableAnimation={
-            {
-              "value": 0,
-            }
-          }
-          focusAnimation={
-            {
-              "value": 0,
-            }
-          }
-          focusable={true}
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          scale={
-            {
-              "value": 1,
-            }
-          }
-          spaceProps={
-            {
-              "around": 0.5,
-              "returnKeyType": "search",
-            }
-          }
           style={
-            [
-              {
-                "alignItems": undefined,
-                "flex": undefined,
-                "flexDirection": "column",
-                "justifyContent": undefined,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-              },
-              {
-                "alignItems": "center",
-                "borderRadius": 2247,
-                "borderWidth": 1,
-                "flexDirection": "row",
-                "paddingHorizontal": 22,
-                "paddingVertical": 17,
-              },
-              {
-                "backgroundColor": undefined,
-                "borderColor": undefined,
-                "opacity": undefined,
-                "transform": [
-                  {
-                    "scale": undefined,
-                  },
-                ],
-              },
-            ]
+            {
+              "flexDirection": "row",
+            }
           }
         >
-          <View
-            size={
-              {
-                "value": undefined,
-              }
-            }
-            style={
-              [
-                {
-                  "alignItems": "stretch",
-                  "aspectRatio": 1,
-                },
-                {
-                  "opacity": undefined,
-                  "width": undefined,
-                },
-              ]
-            }
-          >
-            <Text
-              style={
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "anticon",
-                  "fontSize": 22,
-                  "fontStyle": "normal",
-                  "fontWeight": "normal",
-                }
-              }
-            >
-              
-            </Text>
-          </View>
-          <View
-            style={
-              {
-                "flex": 1,
-              }
-            }
-          >
-            <TextInput
-              accessibilityState={
-                {
-                  "disabled": false,
-                }
-              }
-              accessible={true}
-              autoFocus={true}
-              disableAnimation={
-                {
-                  "value": 0,
-                }
-              }
-              focusAnimation={
-                {
-                  "value": 0,
-                }
-              }
-              onBlur={[Function]}
-              onChangeText={[Function]}
-              onFocus={[Function]}
-              onSubmitEditing={[Function]}
-              placeholder="Search Wallets"
-              placeholderTextColor="rgba(255, 255, 255, .5)"
-              returnKeyType="search"
-              selectionColor="#FFFFFF"
-              style={
-                [
-                  {
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "margin": 0,
-                    "paddingHorizontal": 11,
-                    "paddingVertical": 0,
-                  },
-                  {
-                    "color": undefined,
-                  },
-                ]
-              }
-              testID="undefined.textInput"
-              textAlignVertical="top"
-              value=""
-            />
-          </View>
           <View
             accessibilityState={
               {
                 "busy": undefined,
                 "checked": undefined,
-                "disabled": undefined,
+                "disabled": false,
                 "expanded": undefined,
                 "selected": undefined,
               }
             }
-            accessibilityValue={
+            accessible={false}
+            disableAnimation={
               {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
+                "value": 0,
               }
             }
-            accessible={true}
-            collapsable={false}
+            focusAnimation={
+              {
+                "value": 0,
+              }
+            }
             focusable={true}
             onClick={[Function]}
             onResponderGrant={[Function]}
@@ -343,19 +191,55 @@ exports[`WalletListModal should render with loading props 1`] = `
             onResponderTerminate={[Function]}
             onResponderTerminationRequest={[Function]}
             onStartShouldSetResponder={[Function]}
-            style={
+            scale={
               {
-                "margin": -22,
-                "opacity": 1,
-                "padding": 22,
+                "value": 1,
               }
             }
-            testID="undefined.clearIcon"
+            spaceProps={
+              {
+                "around": 0.5,
+                "returnKeyType": "search",
+              }
+            }
+            style={
+              [
+                {
+                  "alignItems": undefined,
+                  "flex": undefined,
+                  "flexDirection": "column",
+                  "justifyContent": undefined,
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                },
+                {
+                  "alignItems": "center",
+                  "borderRadius": 2247,
+                  "borderWidth": 1,
+                  "flexDirection": "row",
+                  "flexGrow": 1,
+                  "paddingHorizontal": 22,
+                  "paddingVertical": 17,
+                },
+                {
+                  "backgroundColor": undefined,
+                  "borderColor": undefined,
+                  "opacity": undefined,
+                  "transform": [
+                    {
+                      "scale": undefined,
+                    },
+                  ],
+                },
+              ]
+            }
           >
             <View
               size={
                 {
-                  "value": 0,
+                  "value": undefined,
                 }
               }
               style={
@@ -365,8 +249,8 @@ exports[`WalletListModal should render with loading props 1`] = `
                     "aspectRatio": 1,
                   },
                   {
-                    "opacity": 0,
-                    "width": 0,
+                    "opacity": undefined,
+                    "width": undefined,
                   },
                 ]
               }
@@ -376,83 +260,211 @@ exports[`WalletListModal should render with loading props 1`] = `
                   {
                     "color": "#FFFFFF",
                     "fontFamily": "anticon",
-                    "fontSize": 0,
+                    "fontSize": 22,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   }
                 }
               >
-                
+                
               </Text>
+            </View>
+            <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "opacity": 1,
+                }
+              }
+              testID="undefined.doneButton"
+            >
+              <View
+                size={
+                  {
+                    "value": undefined,
+                  }
+                }
+                style={
+                  [
+                    {
+                      "alignItems": "stretch",
+                      "aspectRatio": 1,
+                    },
+                    {
+                      "opacity": undefined,
+                      "width": undefined,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  style={
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Material Icons",
+                      "fontSize": 22,
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    }
+                  }
+                >
+                  
+                </Text>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "flex": 1,
+                }
+              }
+            >
+              <TextInput
+                accessibilityState={
+                  {
+                    "disabled": false,
+                  }
+                }
+                accessible={true}
+                autoFocus={true}
+                disableAnimation={
+                  {
+                    "value": 0,
+                  }
+                }
+                focusAnimation={
+                  {
+                    "value": 0,
+                  }
+                }
+                onBlur={[Function]}
+                onChangeText={[Function]}
+                onFocus={[Function]}
+                onSubmitEditing={[Function]}
+                placeholder="Search Wallets"
+                placeholderTextColor="rgba(255, 255, 255, .5)"
+                returnKeyType="search"
+                selectionColor="#FFFFFF"
+                style={
+                  [
+                    {
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "margin": 0,
+                      "paddingHorizontal": 11,
+                      "paddingVertical": 0,
+                    },
+                    {
+                      "color": undefined,
+                    },
+                  ]
+                }
+                testID="undefined.textInput"
+                textAlignVertical="top"
+                value=""
+              />
+            </View>
+            <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "margin": -22,
+                  "opacity": 1,
+                  "padding": 22,
+                }
+              }
+              testID="undefined.clearIcon"
+            >
+              <View
+                size={
+                  {
+                    "value": 0,
+                  }
+                }
+                style={
+                  [
+                    {
+                      "alignItems": "stretch",
+                      "aspectRatio": 1,
+                    },
+                    {
+                      "opacity": 0,
+                      "width": 0,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  style={
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "anticon",
+                      "fontSize": 0,
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    }
+                  }
+                >
+                  
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
-      <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": false,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          {
-            "marginBottom": -17,
-            "marginRight": -22,
-            "marginTop": -22,
-            "opacity": 1,
-            "paddingBottom": 17,
-            "paddingLeft": 22,
-            "paddingRight": 28,
-            "paddingTop": 22,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-          }
-        }
-      >
-        <Text
-          allowFontScaling={false}
-          selectable={false}
-          style={
-            [
-              {
-                "color": "#888888",
-                "fontSize": 28,
-              },
-              undefined,
-              {
-                "fontFamily": "anticon",
-                "fontStyle": "normal",
-                "fontWeight": "normal",
-              },
-              {},
-            ]
-          }
-        >
-          
-        </Text>
       </View>
     </View>
     <RCTScrollView
@@ -482,7 +494,7 @@ exports[`WalletListModal should render with loading props 1`] = `
       removeClippedSubviews={false}
       renderItem={[Function]}
       renderScrollComponent={[Function]}
-      scrollEventThrottle={50}
+      scrollEventThrottle={0.0001}
       stickyHeaderIndices={[]}
       viewabilityConfigCallbackPairs={[]}
       waitFor={

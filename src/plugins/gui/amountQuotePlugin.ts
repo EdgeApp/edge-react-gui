@@ -1,4 +1,4 @@
-import { div, eq, gt, mul, toFixed } from 'biggystring'
+import { div, eq, gt, mul, round, toFixed } from 'biggystring'
 import { asNumber, asObject } from 'cleaners'
 import { sprintf } from 'sprintf-js'
 
@@ -6,10 +6,11 @@ import { formatNumber, isValidInput } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { EdgeAsset } from '../../types/types'
 import { getPartnerIconUri } from '../../util/CdnUris'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { infoServerData } from '../../util/network'
 import { logEvent } from '../../util/tracking'
-import { fuzzyTimeout } from '../../util/utils'
+import { DECIMAL_PRECISION, fuzzyTimeout } from '../../util/utils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginStartParams } from './fiatPluginTypes'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
 import { StateManager } from './hooks/useStateManager'
@@ -56,6 +57,8 @@ const DEFAULT_FIAT_AMOUNT = '500'
  * in either fiat or crypto
  */
 const MAX_QUOTE_VALUE = '10000000000'
+
+const NO_PROVIDER_TOAST_DURATION_MS = 10000
 
 export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPluginFactoryArgs) => {
   const { account, guiPlugin, longPress = false, showUi } = params
@@ -126,6 +129,12 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
       const paymentProviderPriority = providerPriority[paymentTypes[0]]
       const priorityProviders = providers.filter(p => paymentProviderPriority[p.providerId] != null && paymentProviderPriority[p.providerId] > 0)
+
+      if (priorityProviders.length === 0) {
+        const msg = direction === 'buy' ? lstrings.fiat_plugin_no_buy_providers : lstrings.fiat_plugin_no_sell_providers
+        await showUi.showToast(msg, NO_PROVIDER_TOAST_DURATION_MS)
+        return
+      }
 
       // Fetch supported assets from all providers, based on the given
       // paymentTypes this plugin was initialized with.
@@ -204,9 +213,9 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       })
 
       if (walletListResult == null) return
-      const { walletId, currencyCode, tokenId } = walletListResult
-
+      const { walletId, tokenId } = walletListResult
       const coreWallet = account.currencyWallets[walletId]
+      const currencyCode = getCurrencyCode(coreWallet, tokenId)
       const currencyPluginId = coreWallet.currencyInfo.pluginId
       if (!coreWallet) return await showUi.showError(new Error(`Missing wallet with ID ${walletId}`))
 
@@ -225,8 +234,24 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
       logEvent(isBuy ? 'Buy_Quote' : 'Sell_Quote')
 
+      // Pick a default fiat amount that is roughly equal to DEFAULT_FIAT_AMOUNT
+      let initialValue1: string | undefined
+      if (displayFiatCurrencyCode !== 'USD' && defaultFiatAmount == null) {
+        const isoFiatCurrencyCode = `iso:${displayFiatCurrencyCode}`
+        const isoNow = new Date().toISOString()
+        const ratePair = `${isoFiatCurrencyCode}_iso:USD`
+        const rate = await getHistoricalRate(ratePair, isoNow)
+        initialValue1 = div(DEFAULT_FIAT_AMOUNT, String(rate), DECIMAL_PRECISION)
+        // Round out a decimals
+        initialValue1 = round(initialValue1, 0)
+
+        // Only leave the first decimal
+        initialValue1 = round(initialValue1, initialValue1.length - 1)
+      } else {
+        initialValue1 = requireCrypto ? undefined : defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
+      }
+
       // Navigate to scene to have user enter amount
-      const initialValue1 = requireCrypto ? undefined : defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
       const enterAmount: InternalFiatPluginEnterAmountParams = {
         disableInput,
         headerTitle: isBuy ? sprintf(lstrings.fiat_plugin_buy_currencycode, currencyCode) : sprintf(lstrings.fiat_plugin_sell_currencycode_s, currencyCode),

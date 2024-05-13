@@ -21,7 +21,6 @@ import { validatePassword } from './AccountActions'
 import { showDeleteWalletModal } from './DeleteWalletModalActions'
 import { showResyncWalletModal } from './ResyncWalletModalActions'
 import { toggleUserPausedWallet } from './SettingsActions'
-import { showSplitWalletModal } from './SplitWalletModalActions'
 
 export type WalletListMenuKey =
   | 'rename'
@@ -40,7 +39,8 @@ export function walletListMenuAction(
   navigation: NavigationProp<'walletList'> | NavigationProp<'transactionList'>,
   walletId: string,
   option: WalletListMenuKey,
-  tokenId: EdgeTokenId
+  tokenId: EdgeTokenId,
+  splitPluginIds: string[]
 ): ThunkAction<Promise<void>> {
   const switchString = option.startsWith('split') ? 'split' : option
 
@@ -141,8 +141,11 @@ export function walletListMenuAction(
     }
 
     case 'split': {
-      return async dispatch => {
-        await dispatch(showSplitWalletModal(walletId, option.replace('split', '')))
+      return async () => {
+        navigation.navigate('createWalletSelectCrypto', {
+          splitPluginIds,
+          splitSourceWalletId: walletId
+        })
       }
     }
     case 'viewPrivateViewKey':
