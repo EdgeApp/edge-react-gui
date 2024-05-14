@@ -149,10 +149,10 @@ exports[`CountryListModal should render with a country list 1`] = `
           "flex": undefined,
           "flexDirection": "column",
           "justifyContent": undefined,
-          "marginBottom": 22,
+          "marginBottom": 11,
           "marginLeft": 11,
           "marginRight": 11,
-          "marginTop": 22,
+          "marginTop": 11,
         }
       }
     >
@@ -464,6 +464,7 @@ exports[`CountryListModal should render with a country list 1`] = `
       collapsable={false}
       contentContainerStyle={
         {
+          "marginTop": 11,
           "paddingBottom": 67,
         }
       }

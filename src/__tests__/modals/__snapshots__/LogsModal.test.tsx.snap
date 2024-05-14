@@ -200,10 +200,10 @@ exports[`LogsModal should render with a logs modal 1`] = `
               "flex": undefined,
               "flexDirection": "column",
               "justifyContent": undefined,
-              "marginBottom": 22,
-              "marginLeft": 22,
-              "marginRight": 22,
-              "marginTop": 22,
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
             }
           }
         >
