@@ -39,7 +39,7 @@ export const AutoLogoutModal = (props: Props) => {
     }
   }, [theme, isAndroid])
 
-  const numberPickerOptions = [<Picker.Item key="disable" label={lstrings.string_disable} value={0} />]
+  const numberPickerOptions = [<Picker.Item key="disable" label={lstrings.string_disable} value={0} color={textColor} />]
   for (let i = 1; i < 60; i++) {
     const text = String(i)
     numberPickerOptions.push(<Picker.Item key={text} label={text} value={i} color={textColor} />)
