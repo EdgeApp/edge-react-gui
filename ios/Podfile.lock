@@ -25,6 +25,8 @@ PODS:
     - React-Core
   - edge-currency-accountbased (4.3.3):
     - React-Core
+  - edge-currency-plugins (3.0.0):
+    - React-Core
   - edge-exchange-plugins (2.4.2):
     - React-Core
   - edge-login-ui-rn (3.10.0):
@@ -1496,6 +1498,7 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - edge-core-js (from `../node_modules/edge-core-js`)
   - edge-currency-accountbased (from `../node_modules/edge-currency-accountbased`)
+  - edge-currency-plugins (from `../node_modules/edge-currency-plugins`)
   - edge-exchange-plugins (from `../node_modules/edge-exchange-plugins`)
   - edge-login-ui-rn (from `../node_modules/edge-login-ui-rn`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
@@ -1668,6 +1671,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/edge-core-js"
   edge-currency-accountbased:
     :path: "../node_modules/edge-currency-accountbased"
+  edge-currency-plugins:
+    :path: "../node_modules/edge-currency-plugins"
   edge-exchange-plugins:
     :path: "../node_modules/edge-exchange-plugins"
   edge-login-ui-rn:
@@ -1884,6 +1889,7 @@ SPEC CHECKSUMS:
   DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
   edge-core-js: b7c6fca8bbaf9848a5b4e1871f8ae7b95b5c8f6d
   edge-currency-accountbased: f60483525328d690d2d2931cfba33110957d83a4
+  edge-currency-plugins: 2c100b3b02074c903dab36c6f532385084869a01
   edge-exchange-plugins: 05e341eb7cc822037051c295f3054ad04452d657
   edge-login-ui-rn: 4b80a2370aa7e56f62618b62524eb5c4d832b448
   EXConstants: 988aa430ca0f76b43cd46b66e7fae3287f9cc2fc
@@ -2019,7 +2025,7 @@ SPEC CHECKSUMS:
   SwiftNIOTLS: 598af547490133e9aac52aed0c23c4a90c31dcfc
   SwiftNIOTransportServices: 0b2b407819d82eb63af558c5396e33c945759503
   SwiftProtobuf: b70d65f419fbfe61a2d58003456ca5da58e337d6
-  Yoga: d17d2cc8105eed528474683b42e2ea310e1daf61
+  Yoga: 805bf71192903b20fc14babe48080582fee65a80
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
