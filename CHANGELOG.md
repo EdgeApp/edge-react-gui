@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Support for `promoId`-based filtering for Promo Cards
 - added: New Asset Setting to manually enable tokens with detected balances across all wallets
 - added: MUTE_CONSOLE_OUTPUT environment variable to disable specific console output functions
 - changed: (WalletConnect) Handle sessions with 0 required namespaces

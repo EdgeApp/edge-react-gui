@@ -29,6 +29,8 @@ export const PromoCardsUi4 = (props: Props) => {
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
+  const accountReferral = useSelector(state => state.account.accountReferral)
+
   const currencyWallets = useWatch(account, 'currencyWallets')
 
   const [filteredCards, setFilteredCards] = React.useState<FilteredPromoCard[]>([])
@@ -43,6 +45,18 @@ export const PromoCardsUi4 = (props: Props) => {
 
     return unSyncedWallets.length === 0
   })
+
+  /**
+   * promoIds used to filter the promo cards will be checked against both the
+   * actual promotion installerIds *and* the accountReferral installerId, if it
+   * exists.
+   * accountReferral usage directly seems to cause excessive re-renders. Memoize
+   * what we need.
+   **/
+  const promoIds = React.useMemo(() => {
+    const accountReferralId = accountReferral.installerId == null ? [] : [accountReferral.installerId]
+    return [...accountReferral.promotions.map(promotion => promotion.installerId), ...accountReferralId]
+  }, [accountReferral])
 
   // Set account funded status
   React.useEffect(() => {
@@ -67,8 +81,8 @@ export const PromoCardsUi4 = (props: Props) => {
 
     // We want to show cards even if balances aren't ready yet. We'll just
     // skip over balance-dependent cards until balances are ready
-    setFilteredCards(filterPromoCards(cards, countryCode, accountFunded))
-  }, [accountFunded, countryCode])
+    setFilteredCards(filterPromoCards(cards, countryCode, accountFunded, promoIds))
+  }, [accountFunded, countryCode, promoIds])
 
   const hiddenAccountMessages = useSelector(state => state.account.accountReferral.hiddenAccountMessages)
   const activeCards = React.useMemo(() => filteredCards.filter(card => !hiddenAccountMessages[card.messageId]), [filteredCards, hiddenAccountMessages])
@@ -94,7 +108,7 @@ export const PromoCardsUi4 = (props: Props) => {
  * Finds the promo cards that are relevant to our application version &
  * other factors.
  */
-function filterPromoCards(cards: PromoCard2[], countryCode: string, accountFunded?: boolean): FilteredPromoCard[] {
+function filterPromoCards(cards: PromoCard2[], countryCode: string, accountFunded?: boolean, accountPromoIds?: string[]): FilteredPromoCard[] {
   const buildNumber = getBuildNumber()
   const currentDate = new Date()
   const osType = Platform.OS.toLowerCase()
@@ -120,8 +134,10 @@ function filterPromoCards(cards: PromoCard2[], countryCode: string, accountFunde
       noBalance = false,
       osTypes = [],
       osVersions = [],
-      startIsoDate
+      startIsoDate,
+      promoId
     } = card
+
     const startDate = asDate(startIsoDate)
     const endDate = asDate(endIsoDate)
 
@@ -157,6 +173,9 @@ function filterPromoCards(cards: PromoCard2[], countryCode: string, accountFunde
     // Validate date range
     if (startIsoDate != null && currentDate.valueOf() < startDate.valueOf()) continue
     if (endIsoDate != null && currentDate.valueOf() > endDate.valueOf()) continue
+
+    // Validate promoId
+    if (promoId != null && (accountPromoIds == null || !accountPromoIds.some(accountPromoId => accountPromoId === promoId))) continue
 
     const messageId = shajs('sha256')
       .update(localeMessages.en_US ?? JSON.stringify(card), 'utf8')
