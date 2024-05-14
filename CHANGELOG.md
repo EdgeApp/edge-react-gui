@@ -3,6 +3,7 @@
 ## Unreleased
 
 - added: Support for `promoId`-based filtering for Promo Cards
+- added: Scam warning to the first login after app install, first view of private keys, and first use of WalletConnect
 - added: New Asset Setting to manually enable tokens with detected balances across all wallets
 - added: MUTE_CONSOLE_OUTPUT environment variable to disable specific console output functions
 - changed: (WalletConnect) Handle sessions with 0 required namespaces

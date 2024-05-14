@@ -26,6 +26,7 @@ import { getUniqueWalletName } from './CreateWalletActions'
 import { expiredFioNamesCheckDates } from './FioActions'
 import { readLocalSettings } from './LocalSettingsActions'
 import { registerNotificationsV2, updateNotificationSettings } from './NotificationActions'
+import { showScamWarningModal } from './ScamWarningActions'
 
 function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; currencyCode: string } {
   // Find the first wallet:
@@ -131,6 +132,9 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         })
         .catch(err => showError(err))
     }
+
+    // Show the scam warning modal if needed
+    await showScamWarningModal('firstLogin')
 
     // Check for security alerts:
     if (hasSecurityAlerts(account)) {
