@@ -3736,11 +3736,6 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-9.0.0.tgz#d5f64158af5c0772b11bdf0aaba569f944b99589"
   integrity sha512-oodeVNdL0IT/Fv0cpL7CdxnnESNKiiAzf29yhvGSJBvuFmyHxvmYOtBIX27HWG9tQU8Yzeh+MyQcKBCNmkva+Q==
 
-"@react-native-firebase/analytics@14.9.2":
-  version "14.9.2"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-14.9.2.tgz#720caa8e4d20389d5773248d92eac0ad180a9c24"
-  integrity sha512-Q9T6VyKEMnxdKIUeQY38qev3pFsfGtSVQaqAssjK//5g9zDTc9Pf6+/J/J94DhnW1XDPa+sMk8gyP3Rcwn8t8Q==
-
 "@react-native-firebase/app@14.9.2":
   version "14.9.2"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-14.9.2.tgz#73b389c78a2518ad5bdbf2df3fe5dacc31d18f81"

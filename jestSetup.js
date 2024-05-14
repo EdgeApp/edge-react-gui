@@ -84,17 +84,6 @@ jest.mock('rn-qr-generator', () => ({
 // force timezone to UTC
 jest.mock('dateformat', () => (number, format) => require('dateformat')(number, format, true))
 
-jest.mock('@react-native-firebase/analytics', () => () => ({
-  logEvent() {},
-  setUserId() {}
-}))
-
-jest.mock('@react-native-firebase/messaging', () => () => ({
-  requestPermission() {
-    return Promise.resolve()
-  }
-}))
-
 jest.mock('react-native-device-info', () => ({
   getBrand() {
     return 'Apple'
