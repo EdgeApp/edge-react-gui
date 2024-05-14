@@ -37,6 +37,7 @@ import { AccentColors } from '../ui4/DotsBackground'
 
 export interface TransactionListParams {
   walletId: string
+  walletName: string
   tokenId: EdgeTokenId
 }
 

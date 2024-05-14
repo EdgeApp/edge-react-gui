@@ -38,6 +38,7 @@ import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { CardUi4 } from '../ui4/CardUi4'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { IconButton } from '../ui4/IconButton'
 import { ModalUi4 } from '../ui4/ModalUi4'
 import { DividerLine } from './DividerLine'
@@ -440,6 +441,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       <>
         <View style={styles.balanceBoxWalletNameCurrencyContainer}>
           <EdgeTouchableOpacity accessible={false} style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
+            <CryptoIconUi4 marginRem={[0, 0.25, 0, 0]} pluginId={wallet.currencyInfo.pluginId} sizeRem={1} tokenId={tokenId} />
             <EdgeText accessible style={styles.balanceBoxWalletName}>
               {walletName}
             </EdgeText>
@@ -667,6 +669,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   balanceBoxWalletNameContainer: {
     flexShrink: 1,
+    flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.cardBaseColor,
     borderRadius: 100,

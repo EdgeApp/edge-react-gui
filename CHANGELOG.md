@@ -7,6 +7,8 @@
 - added: MUTE_CONSOLE_OUTPUT environment variable to disable specific console output functions
 - changed: (WalletConnect) Handle sessions with 0 required namespaces
 - changed: Consistent light account backup modal UI
+- changed: Currency icon now shown in wallet picker button in Swap and Transaction List scenes
+- changed: Transaction List Scene displays wallet name in title
 - fixed: Various React Native debug warnings
 - fixed: Fio domain registration supported payment currencies
 - removed: Bitpay deeplink support
