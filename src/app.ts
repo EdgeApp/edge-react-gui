@@ -23,6 +23,40 @@ import { initInfoServer } from './util/network'
 // LogBox.ignoreAllLogs()
 LogBox.ignoreLogs(['Require cycle:', 'Attempted to end a Span which has already ended.'])
 
+// Mute specific console output types.
+// Useful for debugging using console output, i.e. mute everything but `debug`
+for (const consoleOutputType of ENV.MUTE_CONSOLE_OUTPUT) {
+  switch (consoleOutputType) {
+    case 'log':
+      console.log = () => {}
+      break
+    case 'info':
+      console.info = () => {}
+      break
+    case 'warn':
+      console.warn = () => {}
+      break
+    case 'error':
+      console.error = () => {}
+      break
+    case 'debug':
+      console.debug = () => {}
+      break
+    case 'trace':
+      console.trace = () => {}
+      break
+    case 'group':
+      console.group = () => {}
+      break
+    case 'groupCollapsed':
+      console.groupCollapsed = () => {}
+      break
+    case 'groupEnd':
+      console.groupEnd = () => {}
+      break
+  }
+}
+
 Bugsnag.start({
   onError: event => {
     log(`Bugsnag Device ID: ${event.device.id ?? ''}`)

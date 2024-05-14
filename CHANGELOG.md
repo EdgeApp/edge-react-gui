@@ -3,9 +3,13 @@
 ## Unreleased
 
 - added: New Asset Setting to manually enable tokens with detected balances across all wallets
+- added: MUTE_CONSOLE_OUTPUT environment variable to disable specific console output functions
 - changed: (WalletConnect) Handle sessions with 0 required namespaces
 - changed: Consistent light account backup modal UI
 - fixed: Various React Native debug warnings
+- fixed: Fio domain registration supported payment currencies
+- removed: Bitpay deeplink support
+- removed: Side menu footer close button
 
 ## 4.6.0
 

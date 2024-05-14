@@ -112,6 +112,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
         bridge={bridge}
         navigation={this.props.navigation}
         headerTitle={lstrings.select_wallet}
+        // FIO asset selection is handled via a special case in onNextPress
         allowedAssets={[...supportedAssets, { pluginId: 'fio', tokenId: null }]}
       />
     ))
