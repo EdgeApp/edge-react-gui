@@ -73,6 +73,8 @@
   "warning_scam_message_irreversibility": "Las transacciones con criptomonedas son irreversibles.",
   "warning_scam_message_unknown_recipients": "No envíes dinero a personas u organizaciones que no concoces.",
   "warning_scam_footer_s": "Si usted tiene alguna pregunta o inquietud con respecto a este envío, comuníquese con %s",
+  "warning_scam_message_no_1s": "Great, if you ever have any questions, please reach out to our support team at %1$s.",
+  "warning_scam_message_yes_1s": "Please proceed with caution! Assistance with account creation has the potential for fraud. Users should never share passwords or private keys. Social media and chat platforms have been involved in attacks. Do not send cryptocurrency to strangers. If you believe you’re being taken advantage of, please contact our support team at %1$s.",
   "warning_token_code_override_2s": "La dirección del contrato ingresada difiere de la dirección del contrato del token integrado %1$s. Por favor. Proceda con precaución y verifique que el contrato sea legítimo, ya que el uso de este token puede provocar la pérdida de fondos. Si tiene preguntas sobre esta función o contrato, comuníquese con %2$s.",
   "warning_token_contract_override_3s": "El token ingresado %1$s existe como un token integrado %2$s con la misma dirección de contrato. Por favor. Proceda con precaución y verifique que el contrato sea legítimo, ya que el uso de este token puede provocar la pérdida de fondos. Si tiene preguntas sobre esta función, comuníquese con %3$s.",
   "warning_token_exists_1s": "El token ingresado ya existe como token integrado %1$s",
