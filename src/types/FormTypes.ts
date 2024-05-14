@@ -1,6 +1,6 @@
 import { asMaybe, asObject, asString } from 'cleaners'
 
-import { FilledTextInputProps } from '../components/themed/FilledTextInput'
+import { FilledTextInputBaseProps } from '../components/themed/FilledTextInput'
 
 // Define all form field types here.
 export type FormFieldType = 'address' | 'address2' | 'text' | 'postalcode' | 'state' | 'city' | 'name' | 'iban' | 'swift'
@@ -8,7 +8,7 @@ export type FormFieldType = 'address' | 'address2' | 'text' | 'postalcode' | 'st
 // For each form field type, define the relevant display properties that will be
 // used to pass along to the FilledTextInput.
 export const FORM_FIELD_DISPLAY_PROPS: {
-  readonly [fieldType in FormFieldType]: { widthRem?: number; textInputProps?: Partial<FilledTextInputProps> }
+  readonly [fieldType in FormFieldType]: { widthRem?: number; textInputProps?: Partial<FilledTextInputBaseProps> }
 } = {
   address: {
     widthRem: undefined,

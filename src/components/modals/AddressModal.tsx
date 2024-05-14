@@ -16,7 +16,7 @@ import { checkPubAddress, FioAddresses, getFioAddressCache } from '../../util/Fi
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { FilledTextInput } from '../themed/FilledTextInput'
+import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { ButtonUi4 } from '../ui4/ButtonUi4'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
@@ -303,9 +303,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
 
     return (
       <ModalUi4 bridge={this.props.bridge} onCancel={this.handleClose} title={title ?? lstrings.address_modal_default_header}>
-        <FilledTextInput
-          around={0.5}
-          bottom={1}
+        <ModalFilledTextInput
           autoCorrect={false}
           returnKeyType="search"
           autoCapitalize="none"
@@ -365,7 +363,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   listContainer: {
     flexGrow: 0,
-    flexShrink: 1
+    flexShrink: 1,
+    marginTop: theme.rem(0.5)
   }
 }))
 

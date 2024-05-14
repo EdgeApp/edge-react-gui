@@ -30,7 +30,7 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
-import { FilledTextInput } from '../themed/FilledTextInput'
+import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { AlertCardUi4 } from '../ui4/AlertCardUi4'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
@@ -113,9 +113,8 @@ export function DevTestScene(props: Props) {
     <SceneWrapper scroll hasTabs hasHeader={false}>
       <SectionView marginRem={1}>
         <AlertCardUi4 title={lstrings.warning_alphanumeric} type="error" />
-        <FilledTextInput
+        <ModalFilledTextInput
           iconComponent={SearchIconAnimated}
-          vertical={1}
           value={filledTextInputValue6}
           onChangeText={setFilledTextInputValue6}
           autoFocus={false}
@@ -123,9 +122,8 @@ export function DevTestScene(props: Props) {
           textsizeRem={1.5}
           maxLength={100}
         />
-        <FilledTextInput
+        <ModalFilledTextInput
           numeric
-          vertical={1}
           value={filledTextInputValue7}
           onChangeText={setFilledTextInputValue7}
           autoFocus={false}
@@ -133,16 +131,14 @@ export function DevTestScene(props: Props) {
           textsizeRem={1.5}
           maxLength={100}
         />
-        <FilledTextInput
-          vertical={1}
+        <ModalFilledTextInput
           value={filledTextInputValue}
           onChangeText={setFilledTextInputValue}
           autoFocus={false}
           placeholder="Test FilledTextInput"
           maxLength={100}
         />
-        <FilledTextInput
-          vertical={1}
+        <ModalFilledTextInput
           prefix="PRE"
           value={filledTextInputValue2}
           onChangeText={setFilledTextInputValue2}
@@ -150,17 +146,15 @@ export function DevTestScene(props: Props) {
           placeholder="Test FilledTextInput"
           maxLength={100}
         />
-        <FilledTextInput
+        <ModalFilledTextInput
           numeric
-          vertical={1}
           value={filledTextInputValue3}
           onChangeText={setFilledTextInputValue3}
           autoFocus={false}
           placeholder="Test FilledTextInput num"
         />
-        <FilledTextInput
+        <ModalFilledTextInput
           numeric
-          vertical={1}
           prefix="$"
           suffix="BTC"
           value={filledTextInputValue4}
@@ -170,8 +164,7 @@ export function DevTestScene(props: Props) {
           error="Error"
           maxLength={100}
         />
-        <FilledTextInput
-          vertical={1}
+        <ModalFilledTextInput
           prefix="USD"
           suffix="BTC"
           value={filledTextInputValue5}
@@ -182,8 +175,7 @@ export function DevTestScene(props: Props) {
           maxLength={100}
         />
         <>
-          <FilledTextInput
-            vertical={1}
+          <ModalFilledTextInput
             value={filledTextInputValue8}
             onChangeText={setFilledTextInputValue8}
             autoFocus={false}
@@ -211,9 +203,9 @@ export function DevTestScene(props: Props) {
         )}
 
         <>
-          <SimpleTextInput vertical={1} value={value0} onChangeText={onChangeText0} autoFocus={false} placeholder="Crypto Amount" />
+          <SimpleTextInput value={value0} onChangeText={onChangeText0} autoFocus={false} placeholder="Crypto Amount" />
           <ButtonUi4 label="Set Crypto Amt" onPress={onPress0} />
-          <SimpleTextInput vertical={1} value={value1} onChangeText={onChangeText1} autoFocus={false} placeholder="Fiat Amount" />
+          <SimpleTextInput value={value1} onChangeText={onChangeText1} autoFocus={false} placeholder="Fiat Amount" />
           <ButtonUi4 label="Set Fiat Amt" onPress={onPress1} />
         </>
 
@@ -397,8 +389,7 @@ export function DevTestScene(props: Props) {
         </>
         <>
           <SectionHeaderUi4 leftTitle="DeepLinking" />
-          <FilledTextInput
-            vertical={0.5}
+          <ModalFilledTextInput
             value={deepLinkInputValue}
             onChangeText={setDeepLinkInputValue}
             autoFocus={false}

@@ -5,11 +5,11 @@ import { AirshipBridge } from 'react-native-airship'
 import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { ModalButtons } from '../common/ModalButtons'
 import { showError, showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
-import { FilledTextInput } from '../themed/FilledTextInput'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface OwnProps {
@@ -80,10 +80,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
     return (
       <ModalUi4 bridge={bridge} title={lstrings.password_reminder_modal_title} onCancel={this.handleCancel}>
         <Paragraph>{lstrings.password_reminder_modal_body}</Paragraph>
-        <FilledTextInput
-          top={0.5}
-          bottom={2}
-          horizontal={0.5}
+        <ModalFilledTextInput
           autoFocus={false}
           error={errorMessage}
           placeholder={lstrings.password}
@@ -92,10 +89,9 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
           secureTextEntry
           value={password}
         />
-        <ButtonsViewUi4
+        <ModalButtons
           primary={{ label: lstrings.password_reminder_check_password, onPress: this.handleSubmit, disabled: password.length === 0 }}
           secondary={{ label: lstrings.password_reminder_forgot_password, onPress: this.handleRequestChangePassword, disabled: checkingPassword }}
-          layout="column"
         />
       </ModalUi4>
     )

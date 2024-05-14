@@ -9,6 +9,8 @@
 - changed: Consistent light account backup modal UI
 - changed: Currency icon now shown in wallet picker button in Swap and Transaction List scenes
 - changed: Transaction List Scene displays wallet name in title
+- changed: Consistent light account backup modal UI
+- changed: Consistent margins for modal text inputs
 - fixed: Various React Native debug warnings
 - fixed: Fio domain registration supported payment currencies
 - removed: Bitpay deeplink support
