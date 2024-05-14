@@ -32,6 +32,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   liberlandtestnet: false,
   optimism: ENV.OPTIMISM_INIT,
   osmosis: ENV.OSMOSIS_INIT,
+  piratechain: true,
   polkadot: true,
   polygon: ENV.POLYGON_INIT,
   pulsechain: ENV.PULSECHAIN_INIT,
@@ -45,6 +46,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   tron: true,
   wax: true,
   zksync: true,
+  zcash: true,
   // edge-currency-bitcoin:
   bitcoin: ENV.BITCOIN_INIT,
   bitcoincash: ENV.BITCOINCASH_INIT,
@@ -67,9 +69,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   vertcoin: true,
   zcoin: ENV.ZCOIN_INIT,
   // edge-currency-monero:
-  monero: ENV.MONERO_INIT,
-  piratechain: true,
-  zcash: true
+  monero: ENV.MONERO_INIT
 }
 
 export const swapPlugins = {
