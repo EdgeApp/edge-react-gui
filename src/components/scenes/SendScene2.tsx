@@ -9,7 +9,8 @@ import {
   EdgeSpendInfo,
   EdgeSpendTarget,
   EdgeTokenId,
-  EdgeTransaction
+  EdgeTransaction,
+  InsufficientFundsError
 } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Alert, TextInput, View } from 'react-native'
@@ -198,6 +199,12 @@ const SendComponent = (props: Props) => {
     initialMount.current = false
   }
 
+  const pendingInsufficientFees = React.useRef<InsufficientFundsError | undefined>(undefined)
+
+  async function showInsufficientFeesModal(error: InsufficientFundsError): Promise<void> {
+    await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={error} navigation={navigation} wallet={coreWallet} />)
+  }
+
   const handleChangeAddress =
     (spendTarget: EdgeSpendTarget) =>
     async (changeAddressResult: ChangeAddressResult): Promise<void> => {
@@ -340,15 +347,14 @@ const SendComponent = (props: Props) => {
         feeNativeAmount={feeNativeAmount}
       />
     ))
-      .then(async () => {
-        if (error == null) return
-        console.log(error)
-        const insufficientFunds = asMaybeInsufficientFundsError(error)
-        if (insufficientFunds != null && insufficientFunds.tokenId != null && spendInfo.tokenId !== insufficientFunds.tokenId) {
-          await Airship.show(bridge => <InsufficientFeesModal bridge={bridge} coreError={insufficientFunds} navigation={navigation} wallet={coreWallet} />)
+      .catch(error => showError(error))
+      .finally(() => {
+        const insufficientFunds = pendingInsufficientFees.current
+        if (insufficientFunds != null) {
+          pendingInsufficientFees.current = undefined
+          showInsufficientFeesModal(insufficientFunds).catch(error => showError(error))
         }
       })
-      .catch(error => showError(error))
   }
 
   const renderAmount = (index: number, spendTarget: EdgeSpendTarget) => {
@@ -912,6 +918,7 @@ const SendComponent = (props: Props) => {
   // Calculate the transaction
   useAsyncEffect(
     async () => {
+      pendingInsufficientFees.current = undefined
       try {
         setProcessingAmountChanged(true)
         if (spendInfo.spendTargets[0].publicAddress == null) {
@@ -983,6 +990,15 @@ const SendComponent = (props: Props) => {
             e.message = sprintf(lstrings.insufficient_funds_2s, errorCurrencyCode, coreWallet.currencyInfo.displayName)
           } else {
             e.message = sprintf(lstrings.stake_error_insufficient_s, errorCurrencyCode)
+          }
+
+          if (spendInfo.tokenId !== insufficientFunds.tokenId) {
+            // Show the modal if the flip input modal is closed or save it to show when it closes later
+            if (flipInputModalRef.current != null) {
+              pendingInsufficientFees.current = insufficientFunds
+            } else {
+              await showInsufficientFeesModal(insufficientFunds).catch(error => showError(error))
+            }
           }
         }
 
