@@ -1,4 +1,3 @@
-import { asMaybe, asObject, asString } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeToken, EdgeTokenId, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
@@ -46,15 +45,26 @@ function EditTokenSceneComponent(props: Props) {
   // Extract our initial state from the token:
   const [currencyCode, setCurrencyCode] = React.useState(route.params.currencyCode ?? '')
   const [displayName, setDisplayName] = React.useState(route.params.displayName ?? '')
-  const [contractAddress, setContractAddress] = React.useState<string>(() => {
-    const clean = asMaybeContractLocation(route.params.networkLocation)
-    if (clean == null) return ''
-    return clean.contractAddress
-  })
   const [decimalPlaces, setDecimalPlaces] = React.useState<string>(() => {
     const { multiplier } = route.params
     if (multiplier == null || !/^10*$/.test(multiplier)) return '18'
     return (multiplier.length - 1).toString()
+  })
+
+  // Extract our initial contract address:
+  const { customTokenTemplate = [] } = wallet.currencyInfo
+  const [location, setLocation] = React.useState<Map<string, string>>(() => {
+    const out = new Map<string, string>()
+    for (const item of customTokenTemplate) {
+      const value = route.params.networkLocation?.[item.key]
+      if (item.type === 'number') {
+        out.set(item.key, typeof value === 'number' ? value.toFixed() : '')
+      } else if (item.type === 'string') {
+        out.set(item.key, typeof value === 'string' ? value : '')
+      }
+      // Note: Token templates don't support `item.type === 'nativeAmount'`
+    }
+    return out
   })
 
   const handleDelete = useHandler(async () => {
@@ -84,12 +94,31 @@ function EditTokenSceneComponent(props: Props) {
 
   const handleSave = useHandler(async () => {
     // Validate input:
-    const decimals = parseInt(decimalPlaces)
-    if (currencyCode === '' || displayName === '' || contractAddress === '') {
+    if (currencyCode === '' || displayName === '') {
       return await showMessage(lstrings.addtoken_invalid_information)
     }
+    const decimals = parseInt(decimalPlaces)
     if (isNaN(decimals)) {
       return await showMessage(lstrings.edittoken_invalid_decimal_places)
+    }
+
+    // Assemble the network location:
+    const networkLocation: JsonObject = {}
+    for (const item of customTokenTemplate) {
+      const value = location.get(item.key) ?? ''
+      if (item.type === 'number') {
+        const number = parseInt(value)
+        if (isNaN(number)) {
+          return await showMessage(sprintf(lstrings.addtoken_invalid_1s, translateDescription(item.displayName)))
+        }
+        networkLocation[item.key] = number
+      } else if (item.type === 'string') {
+        if (value === '') {
+          return await showMessage(sprintf(lstrings.addtoken_invalid_1s, translateDescription(item.displayName)))
+        }
+        networkLocation[item.key] = value
+      }
+      // Note: Token templates don't support `item.type === 'nativeAmount'`
     }
 
     const customTokenInput: EdgeToken = {
@@ -102,9 +131,7 @@ function EditTokenSceneComponent(props: Props) {
           symbol: ''
         }
       ],
-      networkLocation: {
-        contractAddress
-      }
+      networkLocation
     }
 
     if (tokenId != null) {
@@ -175,14 +202,27 @@ function EditTokenSceneComponent(props: Props) {
           value={displayName}
           onChangeText={setDisplayName}
         />
-        <FilledTextInput
-          around={0.5}
-          autoCorrect={false}
-          autoFocus={false}
-          placeholder={lstrings.addtoken_contract_address_input_text}
-          value={contractAddress}
-          onChangeText={setContractAddress}
-        />
+        {customTokenTemplate.map(item => {
+          if (item.type === 'nativeAmount') return null
+          return (
+            <FilledTextInput
+              key={item.key}
+              around={0.5}
+              autoCorrect={false}
+              autoFocus={false}
+              placeholder={translateDescription(item.displayName)}
+              keyboardType={item.type === 'number' ? 'numeric' : 'default'}
+              value={location.get(item.key) ?? ''}
+              onChangeText={value =>
+                setLocation(location => {
+                  const out = new Map(location)
+                  out.set(item.key, value)
+                  return out
+                })
+              }
+            />
+          )
+        })}
         <FilledTextInput
           around={0.5}
           autoCorrect={false}
@@ -203,12 +243,14 @@ function EditTokenSceneComponent(props: Props) {
   )
 }
 
-/**
- * Interprets a token location as a contract address.
- * In the future this scene may need to handle other weird networks
- * where the networkLocation has other contents.
- */
-export const asMaybeContractLocation = asMaybe(asObject({ contractAddress: asString }))
+function translateDescription(displayName: string): string {
+  switch (displayName) {
+    case 'Contract Address':
+      return lstrings.addtoken_contract_address_input_text
+    default:
+      return displayName
+  }
+}
 
 async function showMessage(message: string): Promise<void> {
   await Airship.show<'ok' | undefined>(bridge => (
