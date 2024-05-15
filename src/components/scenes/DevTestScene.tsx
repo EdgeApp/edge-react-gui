@@ -27,6 +27,7 @@ import { FlipInputModal2, FlipInputModalResult } from '../modals/FlipInputModal2
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { ScamWarningModal } from '../modals/ScamWarningModal'
+import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -185,6 +186,7 @@ export function DevTestScene(props: Props) {
           />
           <EdgeText>Ensure errors above don't push me down</EdgeText>
         </>
+
         {selectedWallet == null ? null : (
           <CardUi4>
             <ExchangedFlipInput2
@@ -351,6 +353,24 @@ export function DevTestScene(props: Props) {
               })
             }}
           />
+          <ButtonUi4
+            label="TextInputModal"
+            marginRem={0.25}
+            onPress={async () => {
+              await Airship.show((bridge: AirshipBridge<string | undefined>) => {
+                return (
+                  <TextInputModal
+                    inputLabel={lstrings.transaction_details_notes_title}
+                    submitLabel={lstrings.string_save}
+                    title={lstrings.transaction_details_notes_title}
+                    initialValue={'test\ntest\n\ntest\n\n\ntest'}
+                    multiline
+                    bridge={bridge}
+                  />
+                )
+              })
+            }}
+          />
         </>
         <>
           <SectionHeaderUi4 leftTitle="Buttons" />
@@ -405,6 +425,7 @@ export function DevTestScene(props: Props) {
             autoFocus={false}
             placeholder="DeepLink"
             error={filledTextInputValue8 === '' ? undefined : filledTextInputValue8}
+            multiline
           />
           <ButtonUi4
             marginRem={0.5}
