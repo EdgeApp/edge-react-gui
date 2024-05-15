@@ -1,4 +1,5 @@
-import performance, { PerformanceObserver } from 'react-native-performance'
+import { PerfEvent } from 'edge-login-ui-rn'
+import performance, { PerformanceEntry, PerformanceObserver } from 'react-native-performance'
 
 //
 // Logging
@@ -49,3 +50,76 @@ new PerformanceObserver(list => {
     performance.clearMarks('runJsBundleEnd')
   }
 }).observe({ type: 'react-native-mark', buffered: true })
+
+//
+// App Tracking Measurements
+//
+
+const measurements = [
+  // GUI Login (end-to-end):
+  markerMeasurement('loginFull', 'loginBegin', 'loginEnd'),
+  // Pin Login:
+  markerMeasurement('pinLogin', 'pinLoginBegin', 'pinLoginEnd'),
+  // Password Login:
+  markerMeasurement('passwordLogin', 'passwordLoginBegin', 'passwordLoginEnd')
+]
+
+// Observe for all markers and measure them:
+new PerformanceObserver(list => {
+  const entries = list.getEntries()
+  measurements.forEach(fn => fn(entries))
+}).observe({ type: 'mark', buffered: true })
+
+//
+// Login UI Performance Markers
+//
+
+export function performanceMarkersFromLoginUiPerfEvents(event: PerfEvent): void {
+  switch (event.name) {
+    case 'passwordLoginBegin':
+      performance.mark('loginBegin')
+      performance.mark('passwordLoginBegin')
+      break
+    case 'passwordLoginEnd':
+      performance.mark('passwordLoginEnd', { detail: { isSuccessful: event.error == null } })
+      break
+
+    case 'pinLoginBegin':
+      performance.mark('loginBegin')
+      performance.mark('pinLoginBegin')
+      break
+    case 'pinLoginEnd':
+      performance.mark('pinLoginEnd', { detail: { isSuccessful: event.error == null } })
+      break
+
+    default:
+    // Do nothing
+  }
+}
+
+//
+// Utilities
+//
+
+function markerMeasurement(measureName: string, startName: string, endName: string) {
+  // TODO: Close over internal state to track observations of both start and
+  // end markers, along with any detail they include.
+
+  return (entries: PerformanceEntry[]) => {
+    const endMark = entries.find(entry => entry.name === endName)
+
+    if (endMark != null) {
+      const endMarkDetail = 'detail' in endMark ? endMark.detail : {}
+
+      performance.measure(measureName, {
+        start: startName,
+        end: endName,
+        detail: endMarkDetail
+      })
+
+      // Clear the markers:
+      performance.clearMarks(startName)
+      performance.clearMarks(endName)
+    }
+  }
+}
