@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- changed: Add EUID to Simplex quoting API calls
+
 ## 4.7.0
 
 - added: Add Visa/MC buy support with Paybis

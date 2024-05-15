@@ -276,7 +276,7 @@ export const simplexProvider: FiatProviderFactory = {
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ data: { ts, soam, socn, tacn } })
+            body: JSON.stringify({ data: { euid: simplexUserId, ts, soam, socn, tacn } })
           },
           3000
         ).catch(e => {
