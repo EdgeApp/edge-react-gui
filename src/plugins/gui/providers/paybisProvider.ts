@@ -36,9 +36,12 @@ type AllowedPaymentTypes = Record<FiatDirection, { [Payment in FiatPaymentType]?
 
 const allowedPaymentTypes: AllowedPaymentTypes = {
   buy: {
+    applepay: true,
+    credit: true,
+    googlepay: true,
     pix: true,
-    spei: true,
-    pse: true
+    pse: true,
+    spei: true
   },
   sell: {
     colombiabank: true,
@@ -58,7 +61,7 @@ const asApiKeys = asObject({
 })
 
 const asPaymentMethodId = asValue(
-  // 'method-id-credit-card',
+  'method-id-credit-card',
   'method-id-credit-card-out',
 
   // Colombia
@@ -264,6 +267,7 @@ const EDGE_TO_PAYBIS_CURRENCY_MAP: StringMap = Object.entries(PAYBIS_TO_EDGE_CUR
 }, {})
 
 const PAYMENT_METHOD_MAP: { [Payment in PaymentMethodId]: FiatPaymentType } = {
+  'method-id-credit-card': 'credit',
   'method-id-credit-card-out': 'credit',
 
   // Colombia
@@ -280,6 +284,9 @@ const PAYMENT_METHOD_MAP: { [Payment in PaymentMethodId]: FiatPaymentType } = {
 }
 
 const REVERSE_PAYMENT_METHOD_MAP: Partial<{ [Payment in FiatPaymentType]: PaymentMethodId }> = {
+  applepay: 'method-id-credit-card',
+  credit: 'method-id-credit-card',
+  googlepay: 'method-id-credit-card',
   pix: 'method-id_bridgerpay_directa24_pix',
   pse: 'method-id_bridgerpay_directa24_pse',
   spei: 'method-id_bridgerpay_directa24_spei'
