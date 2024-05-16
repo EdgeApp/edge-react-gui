@@ -102,20 +102,21 @@ export function performanceMarkersFromLoginUiPerfEvents(event: PerfEvent): void 
 //
 
 function markerMeasurement(measureName: string, startName: string, endName: string) {
-  // TODO: Close over internal state to track observations of both start and
-  // end markers, along with any detail they include.
-
   return (entries: PerformanceEntry[]) => {
     const endMark = entries.find(entry => entry.name === endName)
 
     if (endMark != null) {
       const endMarkDetail = 'detail' in endMark ? endMark.detail : {}
+      const [startMark] = performance.getEntriesByName(startName)
 
-      performance.measure(measureName, {
-        start: startName,
-        end: endName,
-        detail: endMarkDetail
-      })
+      // Measure the start and end markers if they exist:
+      if (startMark != null) {
+        performance.measure(measureName, {
+          start: startName,
+          end: endName,
+          detail: endMarkDetail
+        })
+      }
 
       // Clear the markers:
       performance.clearMarks(startName)
