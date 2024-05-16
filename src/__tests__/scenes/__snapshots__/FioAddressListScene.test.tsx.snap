@@ -98,7 +98,7 @@ exports[`FioAddressList should render with loading props 1`] = `
         visible={false}
       >
         <ActivityIndicator
-          color="#00f1a2"
+          color="#e27226"
           size="large"
           style={
             {

@@ -137,12 +137,12 @@ exports[`BuyCrypto should render with some props 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               {
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "marginVertical": 6,
               },
               null,
@@ -172,7 +172,7 @@ exports[`BuyCrypto should render with some props 1`] = `
         [
           {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
@@ -194,12 +194,12 @@ exports[`BuyCrypto should render with some props 1`] = `
         [
           {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
           {
-            "color": "#3dd9f4",
+            "color": "#A5D4FF",
             "textAlign": "center",
           },
           null,

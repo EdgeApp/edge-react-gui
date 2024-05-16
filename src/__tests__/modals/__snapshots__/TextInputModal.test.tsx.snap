@@ -43,7 +43,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
       [
         {
           "alignSelf": "flex-end",
-          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "backgroundColor": "#1c385d80",
           "borderTopLeftRadius": 22,
           "borderTopRightRadius": 22,
           "flexShrink": 1,
@@ -130,13 +130,13 @@ exports[`TextInputModal should render with a blank input field 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
               "flexShrink": 1,
-              "fontFamily": "Quicksand-Medium",
+              "fontFamily": "NunitoSans-Bold",
               "fontSize": 27,
               "marginHorizontal": 11,
             },
@@ -163,7 +163,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -336,7 +336,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                     "color": "hsla(0, 0%, 100%, 0.20)",
                     "flexGrow": 1,
                     "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "margin": 0,
                     "paddingHorizontal": 0,
                     "paddingVertical": 0,
@@ -491,8 +491,8 @@ exports[`TextInputModal should render with a blank input field 1`] = `
           <BVLinearGradient
             colors={
               [
-                4280299823,
-                4278214733,
+                4280723937,
+                4280723937,
               ]
             }
             endPoint={
@@ -539,14 +539,14 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                 [
                   {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
                   [
                     {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Medium",
+                      "color": "#1c385d",
+                      "fontFamily": "NunitoSans-Bold",
                       "fontSize": 22,
                     },
                     null,
@@ -608,7 +608,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
       [
         {
           "alignSelf": "flex-end",
-          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "backgroundColor": "#1c385d80",
           "borderTopLeftRadius": 22,
           "borderTopRightRadius": 22,
           "flexShrink": 1,
@@ -695,13 +695,13 @@ exports[`TextInputModal should render with a populated input field 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
               "flexShrink": 1,
-              "fontFamily": "Quicksand-Medium",
+              "fontFamily": "NunitoSans-Bold",
               "fontSize": 27,
               "marginHorizontal": 11,
             },
@@ -728,7 +728,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -901,7 +901,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                     "color": "hsla(0, 0%, 100%, 0.20)",
                     "flexGrow": 1,
                     "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "margin": 0,
                     "paddingHorizontal": 0,
                     "paddingVertical": 0,
@@ -1056,8 +1056,8 @@ exports[`TextInputModal should render with a populated input field 1`] = `
           <BVLinearGradient
             colors={
               [
-                4280299823,
-                4278214733,
+                4280723937,
+                4280723937,
               ]
             }
             endPoint={
@@ -1104,14 +1104,14 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                 [
                   {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
                   [
                     {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Medium",
+                      "color": "#1c385d",
+                      "fontFamily": "NunitoSans-Bold",
                       "fontSize": 22,
                     },
                     null,

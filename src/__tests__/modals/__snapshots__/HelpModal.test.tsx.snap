@@ -43,7 +43,7 @@ exports[`HelpModal should render with loading props 1`] = `
       [
         {
           "alignSelf": "flex-end",
-          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "backgroundColor": "#1c385d80",
           "borderTopLeftRadius": 22,
           "borderTopRightRadius": 22,
           "flexShrink": 1,
@@ -137,7 +137,7 @@ exports[`HelpModal should render with loading props 1`] = `
           resizeMode="contain"
           source={
             {
-              "testUri": "../../../src/assets/images/edgeLogo/Edge_logo_L.png",
+              "testUri": "../../../src/assets/images/coinhubLogo/Coin_logo_L.png",
             }
           }
           style={
@@ -161,7 +161,7 @@ exports[`HelpModal should render with loading props 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
+                  "fontFamily": "NunitoSans-Bold",
                   "fontSize": 27,
                 },
                 {
@@ -178,7 +178,7 @@ exports[`HelpModal should render with loading props 1`] = `
               ]
             }
           >
-            Thanks for using Edge!
+            Thanks for using Coinhub Bitcoin Wallet!
           </Text>
         </View>
       </View>
@@ -291,7 +291,7 @@ exports[`HelpModal should render with loading props 1`] = `
                 style={
                   [
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 34,
                     },
                     undefined,
@@ -325,7 +325,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
@@ -344,12 +344,12 @@ exports[`HelpModal should render with loading props 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#3dd9f4",
+                      "color": "#A5D4FF",
                       "fontSize": 17,
                       "marginTop": 6,
                     },
@@ -443,7 +443,7 @@ exports[`HelpModal should render with loading props 1`] = `
                 style={
                   [
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 34,
                     },
                     undefined,
@@ -477,7 +477,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
@@ -496,12 +496,12 @@ exports[`HelpModal should render with loading props 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#3dd9f4",
+                      "color": "#A5D4FF",
                       "fontSize": 17,
                       "marginTop": 6,
                     },
@@ -595,7 +595,7 @@ exports[`HelpModal should render with loading props 1`] = `
                 style={
                   [
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 34,
                     },
                     undefined,
@@ -629,7 +629,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
@@ -648,12 +648,12 @@ exports[`HelpModal should render with loading props 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#3dd9f4",
+                      "color": "#A5D4FF",
                       "fontSize": 17,
                       "marginTop": 6,
                     },
@@ -747,7 +747,7 @@ exports[`HelpModal should render with loading props 1`] = `
                 style={
                   [
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 34,
                     },
                     undefined,
@@ -781,7 +781,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
@@ -790,7 +790,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   ]
                 }
               >
-                Visit the Edge site
+                Visit the Coinhub Bitcoin Wallet site
               </Text>
               <Text
                 adjustsFontSizeToFit={true}
@@ -800,12 +800,12 @@ exports[`HelpModal should render with loading props 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#3dd9f4",
+                      "color": "#A5D4FF",
                       "fontSize": 17,
                       "marginTop": 6,
                     },
@@ -813,7 +813,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   ]
                 }
               >
-                More info on Edge
+                More info on Coinhub Bitcoin Wallet
               </Text>
             </View>
           </View>
@@ -899,7 +899,7 @@ exports[`HelpModal should render with loading props 1`] = `
                 style={
                   [
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "fontSize": 34,
                     },
                     undefined,
@@ -933,7 +933,7 @@ exports[`HelpModal should render with loading props 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
@@ -952,12 +952,12 @@ exports[`HelpModal should render with loading props 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#3dd9f4",
+                      "color": "#A5D4FF",
                       "fontSize": 17,
                       "marginTop": 6,
                     },
@@ -989,12 +989,12 @@ exports[`HelpModal should render with loading props 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
                 {
-                  "color": "#3dd9f4",
+                  "color": "#A5D4FF",
                 },
                 null,
               ]
@@ -1010,12 +1010,12 @@ exports[`HelpModal should render with loading props 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
                 {
-                  "color": "#3dd9f4",
+                  "color": "#A5D4FF",
                 },
                 null,
               ]

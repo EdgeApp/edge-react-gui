@@ -5,21 +5,21 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
   <BVLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        4279839052,
+        4280174446,
       ]
     }
     endPoint={
       {
-        "x": 1,
-        "y": 1,
+        "x": 0,
+        "y": 0,
       }
     }
     locations={null}
     onLayout={[Function]}
     startPoint={
       {
-        "x": 0,
+        "x": 1,
         "y": 0,
       }
     }
@@ -60,93 +60,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           }
         }
       >
-        <RNSVGDefs>
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -1,
-                0.125,
-                -167772161,
-                0.25,
-                -637534209,
-                0.75,
-                654311423,
-                0.875,
-                184549375,
-                1,
-                16777215,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad0"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -216279,
-                0.0588,
-                -216279,
-                0.1765,
-                -167988439,
-                0.29410000000000003,
-                -637750487,
-                0.7646999999999999,
-                654095145,
-                0.8824,
-                184333097,
-                1,
-                16560937,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16719740,
-                0.4667,
-                -16719740,
-                0.5333,
-                -184491900,
-                0.6,
-                -654253948,
-                0.8667,
-                637591684,
-                0.9333,
-                167829636,
-                1,
-                57476,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad2"
-            rx="50%"
-            ry="50%"
-          />
-        </RNSVGDefs>
+        <RNSVGDefs />
         <RNSVGGroup
           fill={
             {
@@ -155,56 +69,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
             }
           }
           opacity={0.1}
-        >
-          <RNSVGCircle
-            cx="10%"
-            cy="10%"
-            fill={
-              {
-                "brushRef": "grad0",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={224.73239436619718}
-          />
-          <RNSVGCircle
-            cx="95%"
-            cy="30%"
-            fill={
-              {
-                "brushRef": "grad1",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={238.7781690140845}
-          />
-          <RNSVGCircle
-            cx="-15%"
-            cy="100%"
-            fill={
-              {
-                "brushRef": "grad2",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={421.37323943661977}
-          />
-        </RNSVGGroup>
+        />
       </RNSVGGroup>
     </RNSVGSvgView>
   </BVLinearGradient>,
@@ -286,12 +151,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
                     {
-                      "fontFamily": "Quicksand-Medium",
+                      "fontFamily": "NunitoSans-Bold",
                       "fontSize": 27,
                     },
                     null,
@@ -305,8 +170,8 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           <BVLinearGradient
             colors={
               [
-                452984831,
-                452984831,
+                4293030438,
+                4293030438,
               ]
             }
             endPoint={
@@ -463,7 +328,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       r={24}
                       stroke={
                         {
-                          "payload": 4278251938,
+                          "payload": 4293030438,
                           "type": 0,
                         }
                       }
@@ -574,12 +439,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontFamily": "Quicksand-Medium",
+                          "fontFamily": "NunitoSans-Bold",
                         },
                         null,
                       ]
@@ -597,12 +462,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                       },
                       null,
@@ -628,7 +493,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -645,7 +510,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -675,12 +540,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#3dd9f4",
+                          "color": "#A5D4FF",
                           "fontSize": 17,
                         },
                         null,
@@ -733,7 +598,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -764,7 +629,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -808,7 +673,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -839,7 +704,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -876,7 +741,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
             <View
               style={
                 {
-                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomColor": "#e27226",
                   "borderBottomWidth": 1,
                   "flex": 1,
                 }
@@ -890,14 +755,14 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 [
                   {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
                   [
                     {
-                      "color": "#3dd9f4",
-                      "fontFamily": "Quicksand-Medium",
+                      "color": "#A5D4FF",
+                      "fontFamily": "NunitoSans-Bold",
                       "fontSize": 22,
                       "paddingHorizontal": 17,
                     },
@@ -914,7 +779,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
             <View
               style={
                 {
-                  "borderBottomColor": "rgba(255, 255, 255, .1)",
+                  "borderBottomColor": "#e27226",
                   "borderBottomWidth": 1,
                   "flex": 1,
                 }
@@ -1047,7 +912,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       r={24}
                       stroke={
                         {
-                          "payload": 4278251938,
+                          "payload": 4293030438,
                           "type": 0,
                         }
                       }
@@ -1158,12 +1023,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "fontFamily": "Quicksand-Medium",
+                          "fontFamily": "NunitoSans-Bold",
                         },
                         null,
                       ]
@@ -1181,12 +1046,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                       },
                       null,
@@ -1212,7 +1077,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -1229,7 +1094,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -1259,12 +1124,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#3dd9f4",
+                          "color": "#A5D4FF",
                           "fontSize": 17,
                         },
                         null,
@@ -1413,12 +1278,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         [
                           {
                             "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
+                            "fontFamily": "NunitoSans-Regular",
                             "fontSize": 22,
                             "includeFontPadding": false,
                           },
                           {
-                            "color": "#3dd9f4",
+                            "color": "#A5D4FF",
                             "fontSize": 17,
                           },
                           null,
@@ -1435,12 +1300,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         [
                           {
                             "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
+                            "fontFamily": "NunitoSans-Regular",
                             "fontSize": 22,
                             "includeFontPadding": false,
                           },
                           {
-                            "color": "#3dd9f4",
+                            "color": "#A5D4FF",
                             "fontSize": 17,
                           },
                           null,
@@ -1463,12 +1328,12 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         [
                           {
                             "color": "#FFFFFF",
-                            "fontFamily": "Quicksand-Regular",
+                            "fontFamily": "NunitoSans-Regular",
                             "fontSize": 22,
                             "includeFontPadding": false,
                           },
                           {
-                            "color": "#888888",
+                            "color": "#87939E",
                             "fontSize": 17,
                           },
                           null,
@@ -1485,7 +1350,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   style={
                     [
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "fontSize": 22,
                       },
                       undefined,
@@ -1647,13 +1512,13 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
                         "flexShrink": 1,
-                        "fontFamily": "Quicksand-Medium",
+                        "fontFamily": "NunitoSans-Bold",
                         "marginLeft": 4,
                       },
                       null,
@@ -1671,7 +1536,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
@@ -1727,7 +1592,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 style={
                   [
                     {
-                      "backgroundColor": "#494949",
+                      "backgroundColor": "rgba(255, 255, 255, .05)",
                       "borderRadius": 27.5,
                       "bottom": 0,
                       "left": 0,
@@ -1751,7 +1616,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   [
                     {
                       "alignItems": "center",
-                      "backgroundColor": "#00f1a2",
+                      "backgroundColor": "#26a9e1",
                       "borderRadius": 27.5,
                       "height": 55,
                       "justifyContent": "center",
@@ -1779,7 +1644,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         "fontSize": 34,
                       },
                       {
-                        "color": "#1a1a1a",
+                        "color": "#19294c",
                         "fontSize": 51,
                       },
                       {
@@ -1802,7 +1667,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
