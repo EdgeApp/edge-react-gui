@@ -21,11 +21,11 @@ import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { PositionAllocation, StakePlugin, StakePolicy, StakePositionMap } from '../../plugins/stake-plugins/types'
-import { RootState } from '../../reducers/RootReducer'
 import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
+import { GuiExchangeRates } from '../../types/types'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
@@ -38,6 +38,7 @@ import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { CardUi4 } from '../ui4/CardUi4'
+import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { IconButton } from '../ui4/IconButton'
 import { ModalUi4 } from '../ui4/ModalUi4'
 import { DividerLine } from './DividerLine'
@@ -83,7 +84,7 @@ interface StateProps {
   exchangeDenomination: EdgeDenomination
   exchangeRate: string
   isAccountBalanceVisible: boolean
-  rootState: RootState
+  exchangeRates: GuiExchangeRates
   walletName: string
 }
 
@@ -116,7 +117,18 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   componentDidUpdate(prevProps: Props) {
     // Update staking policies if the wallet changes
     if (prevProps.wallet !== this.props.wallet) {
+      this.setState({ lockedNativeAmount: '0' })
       this.updatePluginsAndPolicies().catch(err => showError(err))
+    } else if (prevProps.tokenId !== this.props.tokenId) {
+      // Update staked amount if the tokenId changes but the wallet remains the same
+      let total = '0'
+      let lockedNativeAmount = '0'
+      for (const stakePosition of Object.values(this.state.stakePositionMap)) {
+        const { staked, earned } = getPositionAllocations(stakePosition)
+        total = this.getTotalPosition(this.props.currencyCode, [...staked, ...earned])
+        lockedNativeAmount = add(lockedNativeAmount, total)
+      }
+      this.setState({ lockedNativeAmount })
     }
   }
 
@@ -285,7 +297,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const sceneWallet = wallet
     const sceneTokenId = tokenId
     const { currencyWallets } = account
-    const { rootState } = this.props
+    const { exchangeRates } = this.props
 
     // Check balances for the displayed asset on this scene:
     const sceneAssetCryptoBalance = wallet.balanceMap.get(tokenId)
@@ -322,7 +334,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             tokenId: priorityAsset.tokenId,
             nativeAmount: currencyWallet.balanceMap.get(priorityAsset.tokenId) ?? '0'
           })
-          const dollarValue = parseFloat(cryptoAmount.displayDollarValue(rootState, DECIMAL_PRECISION))
+          const dollarValue = parseFloat(cryptoAmount.displayDollarValue(exchangeRates, DECIMAL_PRECISION))
 
           ownedAssets.push({
             pluginId: priorityAsset.pluginId,
@@ -429,6 +441,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       <>
         <View style={styles.balanceBoxWalletNameCurrencyContainer}>
           <EdgeTouchableOpacity accessible={false} style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
+            <CryptoIconUi4 marginRem={[0, 0.25, 0, 0]} pluginId={wallet.currencyInfo.pluginId} sizeRem={1} tokenId={tokenId} />
             <EdgeText accessible style={styles.balanceBoxWalletName}>
               {walletName}
             </EdgeText>
@@ -656,6 +669,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   balanceBoxWalletNameContainer: {
     flexShrink: 1,
+    flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.cardBaseColor,
     borderRadius: 100,
@@ -776,7 +790,7 @@ export function TransactionListTop(props: OwnProps) {
   const { tokenId, wallet } = props
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
-  const rootState = useSelector(state => state)
+  const exchangeRates = useSelector(state => state.exchangeRates)
   const theme = useTheme()
 
   const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
@@ -803,7 +817,7 @@ export function TransactionListTop(props: OwnProps) {
       exchangeDenomination={exchangeDenomination}
       exchangeRate={exchangeRate}
       isAccountBalanceVisible={isAccountBalanceVisible}
-      rootState={rootState}
+      exchangeRates={exchangeRates}
       toggleBalanceVisibility={handleBalanceVisibility}
       theme={theme}
       walletName={walletName}

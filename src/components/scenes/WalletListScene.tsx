@@ -97,7 +97,7 @@ export function WalletListScene(props: Props) {
     sceneWrapperInfo => {
       const key = 'WalletListScene-SearchFooter'
       return sorting ? (
-        <SceneFooterWrapper key={key} noBackgroundBlur sceneWrapperInfo={sceneWrapperInfo} onLayoutHeight={handleFooterLayoutHeight}>
+        <SceneFooterWrapper sceneFooterKey={key} noBackgroundBlur sceneWrapperInfo={sceneWrapperInfo} onLayoutHeight={handleFooterLayoutHeight}>
           <View style={styles.sortFooterContainer}>
             <ButtonUi4 key="doneButton" mini type="primary" label={lstrings.string_done_cap} onPress={handlePressDone} />
           </View>

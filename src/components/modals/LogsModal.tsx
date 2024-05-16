@@ -9,7 +9,7 @@ import { lstrings } from '../../locales/strings'
 import { WarningCard } from '../cards/WarningCard'
 import { showToast } from '../services/AirshipInstance'
 import { Paragraph } from '../themed/EdgeText'
-import { FilledTextInput } from '../themed/FilledTextInput'
+import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { ModalUi4 } from '../ui4/ModalUi4'
 interface Props {
@@ -74,8 +74,7 @@ export const LogsModal = (props: Props) => {
     <ModalUi4 bridge={bridge} onCancel={handleCancel} title={lstrings.settings_button_export_logs} scroll>
       {!isDangerous ? null : <WarningCard key="warning" title={lstrings.string_warning} footer={lstrings.settings_modal_send_unsafe} marginRem={0.5} />}
       {isDangerous ? null : <Paragraph>{lstrings.settings_modal_export_logs_message}</Paragraph>}
-      <FilledTextInput
-        around={1}
+      <ModalFilledTextInput
         autoCorrect
         autoFocus={false}
         placeholder={lstrings.settings_modal_send_logs_label}

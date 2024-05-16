@@ -3,6 +3,7 @@ import detectBundler from 'detect-bundler'
 import { EdgeContext, EdgeContextOptions, EdgeCrashReporter, EdgeFakeWorld, EdgeNativeIo, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
 import { debugUri as accountbasedDebugUri, makePluginIo as makeAccountbasedIo, pluginUri as accountbasedUri } from 'edge-currency-accountbased'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io'
+import { debugUri as currencyPluginsDebugUri, makePluginIo as makeCurrencyPluginsIo, pluginUri as currencyPluginsUri } from 'edge-currency-plugins'
 import { debugUri as exchangeDebugUri, pluginUri as exchangeUri } from 'edge-exchange-plugins'
 import * as React from 'react'
 import { Alert } from 'react-native'
@@ -46,6 +47,11 @@ const contextOptions: EdgeContextOptions = {
 const nativeIo: EdgeNativeIo = detectBundler.isReactNative
   ? {
       'edge-currency-accountbased': makeAccountbasedIo(),
+      'edge-currency-plugins': makeCurrencyPluginsIo({
+        memletConfig: {
+          maxMemoryUsage: 50 * 1024 * 1024 // 50MB
+        }
+      }),
       'edge-currency-monero': makeMoneroIo()
     }
   : {}
@@ -118,7 +124,9 @@ export function EdgeCoreManager(props: Props) {
 
   const pluginUris = [
     ENV.DEBUG_ACCOUNTBASED ? accountbasedDebugUri : accountbasedUri,
+    ENV.DEBUG_CURRENCY_PLUGINS ? currencyPluginsDebugUri : currencyPluginsUri,
     ENV.DEBUG_EXCHANGES ? exchangeDebugUri : exchangeUri,
+    // For remaining Monero plugin:
     ENV.DEBUG_PLUGINS ? 'http://localhost:8101/plugin-bundle.js' : 'edge-core/plugin-bundle.js'
   ]
 
@@ -150,7 +158,7 @@ export function EdgeCoreManager(props: Props) {
           {...contextOptions}
           crashReporter={crashReporter}
           debug={ENV.DEBUG_CORE}
-          allowDebugging={ENV.DEBUG_ACCOUNTBASED || ENV.DEBUG_CORE || ENV.DEBUG_PLUGINS}
+          allowDebugging={ENV.DEBUG_ACCOUNTBASED || ENV.DEBUG_CORE || ENV.DEBUG_CURRENCY_PLUGINS || ENV.DEBUG_PLUGINS}
           nativeIo={nativeIo}
           pluginUris={pluginUris}
           onLoad={handleContext}

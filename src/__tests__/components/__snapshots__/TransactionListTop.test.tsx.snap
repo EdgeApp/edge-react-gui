@@ -81,6 +81,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             "alignItems": "center",
             "backgroundColor": "rgba(255, 255, 255, .1)",
             "borderRadius": 100,
+            "flexDirection": "row",
             "flexShrink": 1,
             "marginRight": 11,
             "opacity": 1,
@@ -89,6 +90,67 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           }
         }
       >
+        <View
+          style={
+            {
+              "height": 22,
+              "marginBottom": 0,
+              "marginLeft": 0,
+              "marginRight": 6,
+              "marginTop": 0,
+              "width": 22,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "#000000",
+                "borderRadius": 11,
+                "elevation": 0,
+                "height": 22,
+                "shadowColor": "#000000",
+                "shadowOffset": {
+                  "height": 3,
+                  "width": -3,
+                },
+                "shadowOpacity": 0.6,
+                "shadowRadius": 4,
+                "width": 22,
+              }
+            }
+          >
+            <View
+              style={
+                [
+                  {
+                    "overflow": "hidden",
+                  },
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  },
+                ]
+              }
+            >
+              <FastImageView
+                resizeMode="cover"
+                style={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+            </View>
+          </View>
+        </View>
         <Text
           accessible={true}
           adjustsFontSizeToFit={true}
@@ -902,6 +964,7 @@ exports[`TransactionListTop should render 1`] = `
             "alignItems": "center",
             "backgroundColor": "rgba(255, 255, 255, .1)",
             "borderRadius": 100,
+            "flexDirection": "row",
             "flexShrink": 1,
             "marginRight": 11,
             "opacity": 1,
@@ -910,6 +973,67 @@ exports[`TransactionListTop should render 1`] = `
           }
         }
       >
+        <View
+          style={
+            {
+              "height": 22,
+              "marginBottom": 0,
+              "marginLeft": 0,
+              "marginRight": 6,
+              "marginTop": 0,
+              "width": 22,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "#000000",
+                "borderRadius": 11,
+                "elevation": 0,
+                "height": 22,
+                "shadowColor": "#000000",
+                "shadowOffset": {
+                  "height": 3,
+                  "width": -3,
+                },
+                "shadowOpacity": 0.6,
+                "shadowRadius": 4,
+                "width": 22,
+              }
+            }
+          >
+            <View
+              style={
+                [
+                  {
+                    "overflow": "hidden",
+                  },
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  },
+                ]
+              }
+            >
+              <FastImageView
+                resizeMode="cover"
+                style={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "position": "absolute",
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+              />
+            </View>
+          </View>
+        </View>
         <Text
           accessible={true}
           adjustsFontSizeToFit={true}

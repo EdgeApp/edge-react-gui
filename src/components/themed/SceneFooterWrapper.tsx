@@ -10,7 +10,7 @@ import { BlurBackground } from '../ui4/BlurBackground'
 
 export interface SceneFooterProps {
   // This component requires a key for the onLayoutHeight prop
-  key: string
+  sceneFooterKey: string
 
   children: React.ReactNode
   sceneWrapperInfo?: SceneWrapperInfo
@@ -22,7 +22,7 @@ export interface SceneFooterProps {
 }
 
 export const SceneFooterWrapper = (props: SceneFooterProps) => {
-  const { key, children, noBackgroundBlur = false, sceneWrapperInfo, onLayoutHeight } = props
+  const { sceneFooterKey: key, children, noBackgroundBlur = false, sceneWrapperInfo, onLayoutHeight } = props
   const { hasTabs = true, isKeyboardOpen = false } = sceneWrapperInfo ?? {}
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
 

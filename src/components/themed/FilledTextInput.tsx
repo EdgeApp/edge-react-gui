@@ -31,7 +31,7 @@ const isAndroid = Platform.OS === 'android'
 
 export type FilledTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'done'
 
-export interface FilledTextInputProps extends SpaceProps {
+export interface FilledTextInputBaseProps extends SpaceProps {
   // Contents:
   value: string
   error?: string
@@ -80,6 +80,15 @@ export interface FilledTextInputProps extends SpaceProps {
   disabled?: boolean // Defaults to 'false'
 }
 
+export type ModalFilledTextInputProps = Omit<FilledTextInputBaseProps, keyof SpaceProps>
+
+/**
+ * FilledTextInput with standard `around=0.5` UI4 margins, for use in modals
+ */
+export const ModalFilledTextInput = React.forwardRef<FilledTextInputRef, ModalFilledTextInputProps>((props: ModalFilledTextInputProps) => (
+  <FilledTextInput {...props} around={0.5} />
+))
+
 /**
  * Type definitions for our static methods.
  * Create a ref object using `useRef<FilledTextInputRef>(null)` or
@@ -93,7 +102,12 @@ export interface FilledTextInputRef {
   setNativeProps: (nativeProps: Object) => void
 }
 
-export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextInputProps>((props: FilledTextInputProps, ref) => {
+/**
+ * Raw FilledTextInput that includes no built-in margins. Not meant to be used
+ * by top-level parents, but rather as a raw building block to build a child
+ * component with some fixed margins according to the child use case.
+ */
+export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextInputBaseProps>((props: FilledTextInputBaseProps, ref) => {
   const {
     // Contents:
     error,

@@ -116,7 +116,7 @@ export function WalletList(props: Props) {
       const parentWalletListItem = sortedWalletList.find(
         walletListItem => walletListItem.type === 'asset' && walletListItem.wallet?.id === parentWalletId && walletListItem.tokenId == null
       )
-      if (parentWalletListItem != null) out.push(parentWalletListItem)
+      if (parentWalletListItem != null) out.push({ ...parentWalletListItem, key: `parent-${parentWalletListItem.key}` })
     }
     return out
   }, [parentWalletId, sortedWalletList])

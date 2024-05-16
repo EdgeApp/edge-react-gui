@@ -15,7 +15,7 @@ import { EdgeTouchableHighlight } from '../common/EdgeTouchableHighlight'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
-import { FilledTextInput } from '../themed/FilledTextInput'
+import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { ModalFooter } from '../themed/ModalParts'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
@@ -141,8 +141,7 @@ export function CategoryModal(props: Props) {
           <MinimalButton key={item} highlighted={category === item} label={displayCategories[item]} onPress={() => setCategory(item)} />
         ))}
       </View>
-      <FilledTextInput
-        around={0.5}
+      <ModalFilledTextInput
         autoFocus
         returnKeyType="done"
         autoCapitalize="words"
@@ -161,7 +160,6 @@ export function CategoryModal(props: Props) {
           renderItem={renderRow}
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
-        {/* <ModalFooterFade /> */}
       </View>
     </ModalUi4>
   )

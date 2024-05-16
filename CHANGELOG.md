@@ -2,7 +2,26 @@
 
 ## Unreleased
 
-## 4.6.0
+## 4.7.0
+
+- added: Add Visa/MC buy support with Paybis
+- added: Support for `promoId`-based filtering for Promo Cards
+- added: Scam warning to the first login after app install, first view of private keys, and first use of WalletConnect
+- added: New Asset Setting to manually enable tokens with detected balances across all wallets
+- added: MUTE_CONSOLE_OUTPUT environment variable to disable specific console output functions
+- added: Performance logging with app start-up time and login time as initial performance metrics
+- changed: (WalletConnect) Handle sessions with 0 required namespaces
+- changed: Consistent light account backup modal UI
+- changed: Currency icon now shown in wallet picker button in Swap and Transaction List scenes
+- changed: Transaction List Scene displays wallet name in title
+- changed: Consistent light account backup modal UI
+- changed: Consistent margins for modal text inputs
+- fixed: Various React Native debug warnings
+- fixed: Fio domain registration supported payment currencies
+- removed: Bitpay deeplink support
+- removed: Side menu footer close button
+
+## 4.6.0 (2024-05-13)
 
 - added: Done button is a part of SimpleTextInput
 - added: Ability to add a custom token for any wallet directly from CreateWalletSelectCryptoScene

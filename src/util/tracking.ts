@@ -181,9 +181,10 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
 
         // Populate referral params:
         const state = getState()
-        const { accountReferral } = state.account
-        params.refDeviceInstallerId = state.deviceReferral.installerId
-        params.refDeviceCurrencyCodes = state.deviceReferral.currencyCodes
+        const { exchangeRates, account, deviceReferral } = state
+        const { accountReferral } = account
+        params.refDeviceInstallerId = deviceReferral.installerId
+        params.refDeviceCurrencyCodes = deviceReferral.currencyCodes
 
         const { creationDate, installerId } = accountReferral
         params.refAccountDate = installerId == null || creationDate == null ? undefined : creationDate.toISOString().replace(/-\d\dT.*/, '')
@@ -203,7 +204,7 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
           } else if (conversionType === 'sell') {
             const { sourceAmount, destFiatAmount, destFiatCurrencyCode, orderId, fiatProviderId } = conversionValues
 
-            params.sourceDollarValue = Math.abs(Number(sourceAmount.displayDollarValue(state)))
+            params.sourceDollarValue = Math.abs(Number(sourceAmount.displayDollarValue(exchangeRates)))
             params.sourceCryptoAmount = Math.abs(Number(sourceAmount.exchangeAmount))
             params.sourceCurrencyCode = sourceAmount.currencyCode
 
@@ -218,7 +219,7 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
             params.cryptoAmount = Math.abs(Number(cryptoAmount.exchangeAmount))
             params.currency = cryptoAmount.currencyCode
 
-            params.dollarValue = Math.abs(Number(cryptoAmount.displayDollarValue(state)))
+            params.dollarValue = Math.abs(Number(cryptoAmount.displayDollarValue(exchangeRates)))
 
             if (orderId != null) params.orderId = orderId
             if (swapProviderId != null) params.swapProviderId = swapProviderId

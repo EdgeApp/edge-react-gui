@@ -13,6 +13,7 @@ import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioDomai
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
+import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
@@ -22,6 +23,14 @@ import { SceneHeader } from '../../themed/SceneHeader'
 import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
+
+export interface FioDomainSettingsParams {
+  expiration: string
+  fioDomainName: string
+  isPublic: boolean
+  walletId: string
+  showRenew?: boolean
+}
 
 interface State {
   showRenew: boolean
@@ -37,7 +46,9 @@ interface DispatchProps {
   refreshAllFioAddresses: () => Promise<void>
   onLogEvent: (event: TrackingEventName, values: TrackingValues) => void
 }
-interface OwnProps extends EdgeSceneProps<'fioDomainSettings'> {}
+interface OwnProps extends EdgeSceneProps<'fioDomainSettings'> {
+  wallet: EdgeCurrencyWallet
+}
 
 type Props = StateProps & ThemeProps & DispatchProps & OwnProps
 
@@ -128,12 +139,12 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   }
 
   goToTransfer = (params: { fee: number }) => {
-    const { navigation } = this.props
+    const { navigation, wallet: fioWallet } = this.props
     const { fee: transferFee } = params
     if (!transferFee) return showError(lstrings.fio_get_fee_err_msg)
     this.cancelOperation()
     const { route } = this.props
-    const { fioDomainName, fioWallet } = route.params
+    const { fioDomainName } = route.params
 
     const sendParams: SendScene2Params = {
       tokenId: null,
@@ -167,8 +178,8 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { route, theme } = this.props
-    const { fioWallet, fioDomainName, expiration, isPublic } = route.params
+    const { route, theme, wallet: fioWallet } = this.props
+    const { fioDomainName, expiration, isPublic } = route.params
 
     const { showRenew, showVisibility, showTransfer } = this.state
     const styles = getStyles(theme)
@@ -245,7 +256,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioDomainSettingsScene = connect<StateProps, DispatchProps, OwnProps>(
+const FioDomainSettingsConnected = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     isConnected: state.network.isConnected
   }),
@@ -258,3 +269,5 @@ export const FioDomainSettingsScene = connect<StateProps, DispatchProps, OwnProp
     }
   })
 )(withTheme(FioDomainSettingsComponent))
+
+export const FioDomainSettingsScene = withWallet(FioDomainSettingsConnected)

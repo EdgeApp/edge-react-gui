@@ -11,6 +11,7 @@ import { addBundledTxs, getAddBundledTxsFee, getTransferFee } from '../../../uti
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
+import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
@@ -20,6 +21,14 @@ import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
 import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
+
+export interface FioAddressSettingsParams {
+  fioAddressName: string
+  walletId: string
+  bundledTxs?: number
+  showAddBundledTxs?: boolean
+  refreshAfterAddBundledTxs?: boolean
+}
 
 interface LocalState {
   showAddBundledTxs: boolean
@@ -35,7 +44,9 @@ interface DispatchProps {
   onLogEvent: (event: TrackingEventName, values: TrackingValues) => void
 }
 
-interface OwnProps extends EdgeSceneProps<'fioAddressSettings'> {}
+interface OwnProps extends EdgeSceneProps<'fioAddressSettings'> {
+  wallet: EdgeCurrencyWallet
+}
 
 type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
@@ -114,8 +125,8 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
   }
 
   goToTransfer = (params: { fee: number }) => {
-    const { isConnected, navigation, route } = this.props
-    const { fioWallet, fioAddressName } = route.params
+    const { isConnected, navigation, route, wallet: fioWallet } = this.props
+    const { fioAddressName } = route.params
 
     if (!isConnected) {
       showError(lstrings.fio_network_alert_text)
@@ -158,8 +169,8 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
   }
 
   render() {
-    const { route, theme } = this.props
-    const { fioAddressName, fioWallet, bundledTxs } = route.params
+    const { route, theme, wallet: fioWallet } = this.props
+    const { fioAddressName, bundledTxs } = route.params
     const { showTransfer, showAddBundledTxs } = this.state
     const styles = getStyles(theme)
 
@@ -211,7 +222,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
   }
 }
 
-export const FioAddressSettingsScene = connect<StateProps, DispatchProps, OwnProps>(
+const FioAddressSettingsConnected = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     isConnected: state.network.isConnected
   }),
@@ -230,3 +241,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: theme.rem(0.5)
   }
 }))
+
+export const FioAddressSettingsScene = withWallet(FioAddressSettingsConnected)

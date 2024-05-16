@@ -160,7 +160,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
             if (answer === 'ok') {
               navigation.navigate('fioAddressSettings', {
                 showAddBundledTxs: true,
-                fioWallet,
+                walletId: fioWallet.id,
                 fioAddressName: this.state.fioAddressFrom
               })
             }

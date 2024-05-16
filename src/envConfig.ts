@@ -1,4 +1,4 @@
-import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString, Cleaner } from 'cleaners'
+import { asArray, asBoolean, asEither, asNumber, asObject, asOptional, asString, asValue, Cleaner } from 'cleaners'
 
 function asNullable<T>(cleaner: Cleaner<T>): Cleaner<T | null> {
   return function asNullable(raw) {
@@ -115,6 +115,16 @@ export const asEnvConfig = asObject({
   AVALANCHE_INIT: asCorePluginInit(asEvmApiKeys),
   BASE_INIT: asCorePluginInit(asEvmApiKeys),
   BINANCE_SMART_CHAIN_INIT: asCorePluginInit(asEvmApiKeys),
+  BITCOIN_INIT: asCorePluginInit(
+    asObject({
+      nowNodeApiKey: asOptional(asString, '')
+    })
+  ),
+  BITCOINCASH_INIT: asCorePluginInit(
+    asObject({
+      nowNodeApiKey: asOptional(asString, '')
+    })
+  ),
   CARDANO_INIT: asCorePluginInit(
     asObject({
       blockfrostProjectId: asOptional(asString),
@@ -140,6 +150,21 @@ export const asEnvConfig = asObject({
     }).withRest
   ),
   COREUM_INIT: asCorePluginInit(asBoolean),
+  DASH_INIT: asCorePluginInit(
+    asObject({
+      nowNodeApiKey: asOptional(asString, '')
+    })
+  ),
+  DIGIBYTE_INIT: asCorePluginInit(
+    asObject({
+      nowNodeApiKey: asOptional(asString, '')
+    })
+  ),
+  DOGE_INIT: asCorePluginInit(
+    asObject({
+      nowNodeApiKey: asOptional(asString, '')
+    })
+  ),
   ETHEREUM_INIT: asCorePluginInit(asEvmApiKeys),
   ETHEREUM_POW_INIT: asCorePluginInit(asEvmApiKeys),
   EXOLIX_INIT: asCorePluginInit(
@@ -162,6 +187,11 @@ export const asEnvConfig = asObject({
       glifApiKey: asOptional(asString, '')
     })
   ),
+  GROESTLCOIN_INIT: asCorePluginInit(
+    asObject({
+      nowNodeApiKey: asOptional(asString, '')
+    })
+  ),
   GODEX_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')
@@ -173,6 +203,11 @@ export const asEnvConfig = asObject({
       appId: asOptional(asString, 'edge'),
       integrator: asOptional(asString, 'edgeapp')
     }).withRest
+  ),
+  LITECOIN_INIT: asCorePluginInit(
+    asObject({
+      nowNodeApiKey: asOptional(asString, '')
+    })
   ),
   KOVAN_INIT: asCorePluginInit(asEvmApiKeys),
   GOERLI_INIT: asCorePluginInit(asEvmApiKeys),
@@ -236,6 +271,11 @@ export const asEnvConfig = asObject({
       appId: asOptional(asString, 'edge')
     }).withRest
   ),
+  ZCOIN_INIT: asCorePluginInit(
+    asObject({
+      nowNodeApiKey: asOptional(asString, '')
+    })
+  ),
 
   // App options:
   APP_CONFIG: asOptional(asString, 'edge'),
@@ -262,11 +302,13 @@ export const asEnvConfig = asObject({
   ALLOW_DEVELOPER_MODE: asOptional(asBoolean, true),
   DEV_TAB: asOptional(asBoolean, false),
   DEBUG_CORE: asOptional(asBoolean, false),
+  DEBUG_CURRENCY_PLUGINS: asOptional(asBoolean, false),
   DEBUG_PLUGINS: asOptional(asBoolean, false),
   DEBUG_ACCOUNTBASED: asOptional(asBoolean, false),
   DEBUG_EXCHANGES: asOptional(asBoolean, false),
   DEBUG_VERBOSE_ERRORS: asOptional(asBoolean, false),
   DEBUG_THEME: asOptional(asBoolean, false),
+  MUTE_CONSOLE_OUTPUT: asOptional(asArray(asValue('log', 'info', 'warn', 'error', 'debug', 'trace', 'group', 'groupCollapsed', 'groupEnd')), []),
   ENABLE_FIAT_SANDBOX: asOptional(asBoolean, false),
   ENABLE_TEST_SERVERS: asOptional(asBoolean),
   ENABLE_REDUX_PERF_LOGGING: asOptional(asBoolean, false),

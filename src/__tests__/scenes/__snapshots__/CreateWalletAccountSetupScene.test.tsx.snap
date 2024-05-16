@@ -321,6 +321,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
               "marginRight": 11,
               "marginTop": 11,
             },
+            false,
             null,
           ]
         }
@@ -344,6 +345,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
               "marginRight": 11,
               "marginTop": 11,
             },
+            false,
             null,
           ]
         }

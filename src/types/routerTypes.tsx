@@ -1,6 +1,6 @@
 import * as NavigationCore from '@react-navigation/core'
 import type { StackActionHelpers } from '@react-navigation/native'
-import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeTokenId } from 'edge-core-js'
 
 import type { ChangeMiningFeeParams } from '../components/scenes/ChangeMiningFeeScene'
 import type { CoinRankingDetailsParams } from '../components/scenes/CoinRankingDetailsScene'
@@ -16,7 +16,13 @@ import type { CurrencyNotificationParams } from '../components/scenes/CurrencyNo
 import type { CurrencySettingsParams } from '../components/scenes/CurrencySettingsScene'
 import type { EdgeLoginParams } from '../components/scenes/EdgeLoginScene'
 import type { EditTokenParams } from '../components/scenes/EditTokenScene'
+import { FioAddressRegisterSelectWalletParams } from '../components/scenes/Fio/FioAddressRegisterSelectWalletScene'
+import { FioAddressSettingsParams } from '../components/scenes/Fio/FioAddressSettingsScene'
+import { FioConnectWalletConfirmParams } from '../components/scenes/Fio/FioConnectWalletConfirmScene'
 import type { FioCreateHandleParams } from '../components/scenes/Fio/FioCreateHandleScene'
+import { FioDomainRegisterSelectWalletParams } from '../components/scenes/Fio/FioDomainRegisterSelectWalletScene'
+import { FioDomainSettingsParams } from '../components/scenes/Fio/FioDomainSettingsScene'
+import { FioNameConfirmParams } from '../components/scenes/Fio/FioNameConfirmScene'
 import type { GettingStartedParams } from '../components/scenes/GettingStartedScene'
 import type { GuiPluginListParams } from '../components/scenes/GuiPluginListScene'
 import type { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
@@ -53,7 +59,7 @@ import type { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPlug
 import type { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWebView'
 import type { RewardsCardDashboardParams } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import type { RewardsCardWelcomeParams } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
-import type { FioConnectionWalletItem, FioDomain, FioRequest } from './types'
+import type { FioRequest } from './types'
 
 /**
  * Defines the acceptable route parameters for each scene key.
@@ -112,53 +118,18 @@ export interface RouteParamList {
   }
   fioAddressList: {}
   fioAddressRegister: {}
-  fioAddressRegisterSelectWallet: {
-    fioAddress: string
-    selectedWallet: EdgeCurrencyWallet
-    selectedDomain: FioDomain
-    isFallback?: boolean
-  }
+  fioAddressRegisterSelectWallet: FioAddressRegisterSelectWalletParams
   fioAddressRegisterSuccess: {
     fioName: string
     expiration?: string
   }
-  fioAddressSettings: {
-    fioWallet: EdgeCurrencyWallet
-    fioAddressName: string
-    bundledTxs?: number
-    showAddBundledTxs?: boolean
-    refreshAfterAddBundledTxs?: boolean
-  }
-  fioConnectToWalletsConfirm: {
-    fioWallet: EdgeCurrencyWallet
-    fioAddressName: string
-    walletsToConnect: FioConnectionWalletItem[]
-    walletsToDisconnect: FioConnectionWalletItem[]
-  }
-  fioDomainConfirm: {
-    fioName: string
-    paymentWallet: EdgeCurrencyWallet
-    fee: number
-    ownerPublicKey: string
-  }
+  fioAddressSettings: FioAddressSettingsParams
+  fioConnectToWalletsConfirm: FioConnectWalletConfirmParams
+  fioDomainConfirm: FioNameConfirmParams
   fioDomainRegister: {}
-  fioDomainRegisterSelectWallet: {
-    fioDomain: string
-    selectedWallet: EdgeCurrencyWallet
-  }
-  fioDomainSettings: {
-    fioWallet: EdgeCurrencyWallet
-    fioDomainName: string
-    isPublic: boolean
-    expiration: string
-    showRenew?: boolean
-  }
-  fioNameConfirm: {
-    fioName: string
-    paymentWallet: EdgeCurrencyWallet
-    fee: number
-    ownerPublicKey: string
-  }
+  fioDomainRegisterSelectWallet: FioDomainRegisterSelectWalletParams
+  fioDomainSettings: FioDomainSettingsParams
+  fioNameConfirm: FioNameConfirmParams
   fioRequestConfirmation: {
     amounts: ExchangedFlipInputAmounts
     fioAddressTo: string
