@@ -29,7 +29,7 @@ PODS:
     - React-Core
   - edge-exchange-plugins (2.4.2):
     - React-Core
-  - edge-login-ui-rn (3.10.0):
+  - edge-login-ui-rn (3.11.0):
     - React-Core
   - EXConstants (15.4.5):
     - ExpoModulesCore
@@ -1070,7 +1070,7 @@ PODS:
     - React-Core
   - react-native-netinfo (9.0.0):
     - React-Core
-  - react-native-performance (5.1.0):
+  - react-native-performance (5.1.2):
     - React-Core
   - react-native-piratechain (0.4.10):
     - gRPC-Swift (~> 1.8)
@@ -1892,7 +1892,7 @@ SPEC CHECKSUMS:
   edge-currency-accountbased: 0e303eaad8cb1da2636b94e0ec321c9cd09ee22d
   edge-currency-plugins: 2c100b3b02074c903dab36c6f532385084869a01
   edge-exchange-plugins: 05e341eb7cc822037051c295f3054ad04452d657
-  edge-login-ui-rn: 4b80a2370aa7e56f62618b62524eb5c4d832b448
+  edge-login-ui-rn: 962b102f65d6fe6b2f2a016074900087dde4488e
   EXConstants: 988aa430ca0f76b43cd46b66e7fae3287f9cc2fc
   EXFont: f20669cb266ef48b004f1eb1f2b20db96cd1df9f
   Expo: e01a77c6fa4bc80a6d1bb949cda1d12d21044abd
@@ -1954,7 +1954,7 @@ SPEC CHECKSUMS:
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408
   react-native-netinfo: 5b664b2945a8f02102b296f0f812bddd6827ed9c
-  react-native-performance: cef2b618d47b277fb5c3280b81a3aad1e72f2886
+  react-native-performance: ff93f8af3b2ee9519fd7879896aa9b8b8272691d
   react-native-piratechain: 753087fbe3ccf67031f1c4e7ab467f64c3bfb338
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: dcab599c527c2d7de2d76507a523d20a0b83823d
@@ -2030,6 +2030,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 2432be3f2f8dd3c496704b21e4436e2d715755dc
+PODFILE CHECKSUM: d1abfc51ea1dee4ef7af56be0964fc78629674ed
 
 COCOAPODS: 1.15.2
