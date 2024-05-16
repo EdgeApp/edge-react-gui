@@ -441,7 +441,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       <>
         <View style={styles.balanceBoxWalletNameCurrencyContainer}>
           <EdgeTouchableOpacity accessible={false} style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
-            <CryptoIconUi4 marginRem={[0, 0.25, 0, 0]} pluginId={wallet.currencyInfo.pluginId} sizeRem={1} tokenId={tokenId} />
+            <CryptoIconUi4 marginRem={[0, 0.25, 0, 0]} pluginId={wallet.currencyInfo.pluginId} sizeRem={1} tokenId={tokenId} walletId={wallet.id} />
             <EdgeText accessible style={styles.balanceBoxWalletName}>
               {walletName}
             </EdgeText>
