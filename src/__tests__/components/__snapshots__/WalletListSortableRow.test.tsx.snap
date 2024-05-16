@@ -181,7 +181,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
@@ -202,7 +202,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
@@ -233,12 +233,12 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               {
-                "color": "#3dd9f4",
+                "color": "#A5D4FF",
                 "flex": 1,
                 "fontSize": 17,
               },
@@ -256,12 +256,12 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               {
-                "color": "#3dd9f4",
+                "color": "#A5D4FF",
                 "fontSize": 17,
                 "textAlign": "right",
               },

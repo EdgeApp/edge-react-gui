@@ -43,7 +43,7 @@ exports[`WalletListModal should render with loading props 1`] = `
       [
         {
           "alignSelf": "flex-end",
-          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "backgroundColor": "#1c385d80",
           "borderTopLeftRadius": 22,
           "borderTopRightRadius": 22,
           "flexShrink": 1,
@@ -138,7 +138,7 @@ exports[`WalletListModal should render with loading props 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
+                  "fontFamily": "NunitoSans-Bold",
                   "fontSize": 27,
                 },
                 null,
@@ -372,7 +372,7 @@ exports[`WalletListModal should render with loading props 1`] = `
                     {
                       "flexGrow": 1,
                       "flexShrink": 1,
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "margin": 0,
                       "paddingHorizontal": 11,

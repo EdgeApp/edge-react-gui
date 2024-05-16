@@ -5,8 +5,8 @@ exports[`TransactionDetailsScene should render 1`] = `
   <BVLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        4279839052,
+        4280174446,
       ]
     }
     endPoint={
@@ -60,64 +60,7 @@ exports[`TransactionDetailsScene should render 1`] = `
           }
         }
       >
-        <RNSVGDefs>
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -1,
-                0.125,
-                -167772161,
-                0.25,
-                -637534209,
-                0.75,
-                654311423,
-                0.875,
-                184549375,
-                1,
-                16777215,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad0"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16777216,
-                0.0588,
-                -16777216,
-                0.1765,
-                -184549376,
-                0.29410000000000003,
-                -654311424,
-                0.7646999999999999,
-                637534208,
-                0.8824,
-                167772160,
-                1,
-                0,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-        </RNSVGDefs>
+        <RNSVGDefs />
         <RNSVGGroup
           fill={
             {
@@ -126,40 +69,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             }
           }
           opacity={0.1}
-        >
-          <RNSVGCircle
-            cx="10%"
-            cy="10%"
-            fill={
-              {
-                "brushRef": "grad0",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={224.73239436619718}
-          />
-          <RNSVGCircle
-            cx="95%"
-            cy="30%"
-            fill={
-              {
-                "brushRef": "grad1",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={238.7781690140845}
-          />
-        </RNSVGGroup>
+        />
       </RNSVGGroup>
     </RNSVGSvgView>
   </BVLinearGradient>,
@@ -304,12 +214,12 @@ exports[`TransactionDetailsScene should render 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#3dd9f4",
+                      "color": "#A5D4FF",
                       "fontSize": 17,
                       "paddingRight": 22,
                     },
@@ -327,7 +237,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
@@ -389,7 +299,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       "fontSize": 22,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "marginLeft": 11,
                       "textAlign": "center",
                     },
@@ -503,12 +413,12 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -527,7 +437,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -547,7 +457,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -597,12 +507,12 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -628,7 +538,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -647,7 +557,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -710,7 +620,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "fontSize": 22,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "marginLeft": 11,
                         "textAlign": "center",
                       },
@@ -731,7 +641,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -781,12 +691,12 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -812,7 +722,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -831,7 +741,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -850,7 +760,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -870,7 +780,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -920,12 +830,12 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -944,7 +854,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -964,7 +874,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -1014,12 +924,12 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -1038,7 +948,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -1152,12 +1062,12 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -1176,7 +1086,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -1241,7 +1151,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "fontSize": 22,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "marginLeft": 11,
                         "textAlign": "center",
                       },
@@ -1262,7 +1172,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -1312,12 +1222,12 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -1336,7 +1246,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -1401,7 +1311,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "fontSize": 22,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "marginLeft": 11,
                         "textAlign": "center",
                       },
@@ -1524,12 +1434,12 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -1548,7 +1458,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -1613,7 +1523,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "fontSize": 22,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "marginLeft": 11,
                         "textAlign": "center",
                       },
@@ -1728,12 +1638,12 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -1752,7 +1662,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -1817,7 +1727,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "fontSize": 22,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "marginLeft": 11,
                         "textAlign": "center",
                       },
@@ -1838,7 +1748,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -1888,12 +1798,12 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -1912,7 +1822,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -1977,7 +1887,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         "fontSize": 22,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "marginLeft": 11,
                         "textAlign": "center",
                       },
@@ -2064,8 +1974,8 @@ exports[`TransactionDetailsScene should render 1`] = `
             <BVLinearGradient
               colors={
                 [
-                  4280299823,
-                  4278214733,
+                  4280723937,
+                  4280723937,
                 ]
               }
               endPoint={
@@ -2112,14 +2022,14 @@ exports[`TransactionDetailsScene should render 1`] = `
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Medium",
+                        "color": "#1c385d",
+                        "fontFamily": "NunitoSans-Bold",
                         "fontSize": 22,
                       },
                       null,
@@ -2175,7 +2085,7 @@ exports[`TransactionDetailsScene should render 1`] = `
           [
             {
               "alignItems": "center",
-              "backgroundColor": "#1a1a1a",
+              "backgroundColor": "#1c385d",
               "borderRadius": 11,
               "flexDirection": "row",
               "justifyContent": "center",
@@ -2282,13 +2192,13 @@ exports[`TransactionDetailsScene should render 1`] = `
                 [
                   {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
                   {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Bold",
+                    "fontFamily": "NunitoSans-Bold",
                     "fontSize": 17,
                     "marginHorizontal": 6,
                   },
@@ -2307,12 +2217,12 @@ exports[`TransactionDetailsScene should render 1`] = `
                 [
                   {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
                   {
-                    "color": "#3dd9f4",
+                    "color": "#A5D4FF",
                     "fontSize": 17,
                     "marginHorizontal": 6,
                   },
@@ -2321,7 +2231,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               }
               type="info"
             >
-              Edge prevents logins from unrecognized IP addresses. Tap to learn more.
+              Coinhub Bitcoin Wallet prevents logins from unrecognized IP addresses. Tap to learn more.
             </Text>
           </View>
         </View>
@@ -2366,7 +2276,7 @@ exports[`TransactionDetailsScene should render 1`] = `
             style={
               [
                 {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 28,
                 },
                 undefined,
@@ -2393,8 +2303,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
   <BVLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        4279839052,
+        4280174446,
       ]
     }
     endPoint={
@@ -2448,64 +2358,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           }
         }
       >
-        <RNSVGDefs>
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -1,
-                0.125,
-                -167772161,
-                0.25,
-                -637534209,
-                0.75,
-                654311423,
-                0.875,
-                184549375,
-                1,
-                16777215,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad0"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16777216,
-                0.0588,
-                -16777216,
-                0.1765,
-                -184549376,
-                0.29410000000000003,
-                -654311424,
-                0.7646999999999999,
-                637534208,
-                0.8824,
-                167772160,
-                1,
-                0,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-        </RNSVGDefs>
+        <RNSVGDefs />
         <RNSVGGroup
           fill={
             {
@@ -2514,40 +2367,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             }
           }
           opacity={0.1}
-        >
-          <RNSVGCircle
-            cx="10%"
-            cy="10%"
-            fill={
-              {
-                "brushRef": "grad0",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={224.73239436619718}
-          />
-          <RNSVGCircle
-            cx="95%"
-            cy="30%"
-            fill={
-              {
-                "brushRef": "grad1",
-                "type": 1,
-              }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={238.7781690140845}
-          />
-        </RNSVGGroup>
+        />
       </RNSVGGroup>
     </RNSVGSvgView>
   </BVLinearGradient>,
@@ -2692,12 +2512,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
                     {
-                      "color": "#3dd9f4",
+                      "color": "#A5D4FF",
                       "fontSize": 17,
                       "paddingRight": 22,
                     },
@@ -2715,7 +2535,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
@@ -2777,7 +2597,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       "fontSize": 22,
                     },
                     {
-                      "color": "#00f1a2",
+                      "color": "#e27226",
                       "marginLeft": 11,
                       "textAlign": "center",
                     },
@@ -2891,12 +2711,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -2915,7 +2735,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -2935,7 +2755,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -2985,12 +2805,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -3016,7 +2836,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -3035,7 +2855,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -3098,7 +2918,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "fontSize": 22,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "marginLeft": 11,
                         "textAlign": "center",
                       },
@@ -3119,7 +2939,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -3169,12 +2989,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -3200,7 +3020,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -3219,7 +3039,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
@@ -3238,12 +3058,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       [
                         {
                           "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
+                          "fontFamily": "NunitoSans-Regular",
                           "fontSize": 22,
                           "includeFontPadding": false,
                         },
                         {
-                          "color": "#D9E3ED",
+                          "color": "#E85466",
                         },
                         null,
                       ]
@@ -3258,7 +3078,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -3308,12 +3128,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -3332,7 +3152,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -3352,7 +3172,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -3402,12 +3222,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -3426,7 +3246,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -3540,12 +3360,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -3564,7 +3384,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -3629,7 +3449,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "fontSize": 22,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "marginLeft": 11,
                         "textAlign": "center",
                       },
@@ -3650,7 +3470,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -3700,12 +3520,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -3724,7 +3544,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -3789,7 +3609,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "fontSize": 22,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "marginLeft": 11,
                         "textAlign": "center",
                       },
@@ -3912,12 +3732,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -3936,7 +3756,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -4001,7 +3821,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "fontSize": 22,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "marginLeft": 11,
                         "textAlign": "center",
                       },
@@ -4116,12 +3936,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -4140,7 +3960,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -4205,7 +4025,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "fontSize": 22,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "marginLeft": 11,
                         "textAlign": "center",
                       },
@@ -4226,7 +4046,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               style={
                 [
                   {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomColor": "#e2722640",
                     "borderBottomWidth": 1,
                     "height": 1,
                   },
@@ -4276,12 +4096,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
                       {
-                        "color": "#3dd9f4",
+                        "color": "#A5D4FF",
                         "fontSize": 17,
                         "paddingRight": 22,
                       },
@@ -4300,7 +4120,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     [
                       {
                         "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
+                        "fontFamily": "NunitoSans-Regular",
                         "fontSize": 22,
                         "includeFontPadding": false,
                       },
@@ -4365,7 +4185,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         "fontSize": 22,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "marginLeft": 11,
                         "textAlign": "center",
                       },
@@ -4452,8 +4272,8 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             <BVLinearGradient
               colors={
                 [
-                  4280299823,
-                  4278214733,
+                  4280723937,
+                  4280723937,
                 ]
               }
               endPoint={
@@ -4500,14 +4320,14 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                   [
                     {
                       "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
+                      "fontFamily": "NunitoSans-Regular",
                       "fontSize": 22,
                       "includeFontPadding": false,
                     },
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Medium",
+                        "color": "#1c385d",
+                        "fontFamily": "NunitoSans-Bold",
                         "fontSize": 22,
                       },
                       null,
@@ -4563,7 +4383,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
           [
             {
               "alignItems": "center",
-              "backgroundColor": "#1a1a1a",
+              "backgroundColor": "#1c385d",
               "borderRadius": 11,
               "flexDirection": "row",
               "justifyContent": "center",
@@ -4670,13 +4490,13 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 [
                   {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
                   {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Bold",
+                    "fontFamily": "NunitoSans-Bold",
                     "fontSize": 17,
                     "marginHorizontal": 6,
                   },
@@ -4695,12 +4515,12 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                 [
                   {
                     "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
+                    "fontFamily": "NunitoSans-Regular",
                     "fontSize": 22,
                     "includeFontPadding": false,
                   },
                   {
-                    "color": "#3dd9f4",
+                    "color": "#A5D4FF",
                     "fontSize": 17,
                     "marginHorizontal": 6,
                   },
@@ -4709,7 +4529,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               }
               type="info"
             >
-              Edge prevents logins from unrecognized IP addresses. Tap to learn more.
+              Coinhub Bitcoin Wallet prevents logins from unrecognized IP addresses. Tap to learn more.
             </Text>
           </View>
         </View>
@@ -4754,7 +4574,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
             style={
               [
                 {
-                  "color": "#00f1a2",
+                  "color": "#e27226",
                   "fontSize": 28,
                 },
                 undefined,
