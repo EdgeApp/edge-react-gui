@@ -19,10 +19,7 @@ import { ConfirmContinueModal } from './ConfirmContinueModal'
 export const ScamWarningModal = (props: { bridge: AirshipBridge<'yes' | 'no' | undefined> }) => {
   const { bridge } = props
 
-  const handleCancel = useHandler(() => bridge.resolve(undefined))
-
   const handleYesPress = useHandler(async () => {
-    bridge.resolve('yes')
     await Airship.show((bridge: AirshipBridge<boolean>) => (
       <ConfirmContinueModal
         bridge={bridge}
@@ -31,16 +28,24 @@ export const ScamWarningModal = (props: { bridge: AirshipBridge<'yes' | 'no' | u
         warning
       />
     ))
+    bridge.resolve('yes')
     return await Promise.resolve(true)
   })
 
   const handleNoPress = useHandler(async () => {
-    bridge.resolve('no')
-    await Airship.show(bridge => (
-      <ModalUi4 bridge={bridge} title={lstrings.warning_scam_title} onCancel={handleCancel}>
+    await Airship.show(bridge2 => (
+      <ModalUi4
+        bridge={bridge2}
+        title={lstrings.warning_scam_title}
+        onCancel={() => {
+          bridge2.resolve(undefined)
+          bridge.resolve('no')
+        }}
+      >
         <Paragraph>{sprintf(lstrings.warning_scam_message_no_1s, config.supportEmail)}</Paragraph>
       </ModalUi4>
     ))
+
     return await Promise.resolve(true)
   })
 
