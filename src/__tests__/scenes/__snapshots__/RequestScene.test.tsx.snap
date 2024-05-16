@@ -52,8 +52,8 @@ exports[`Request should render with loaded props 1`] = `
   }
   backgroundGradientColors={
     [
-      "#1a1a1a",
-      "#1a1a1a",
+      "#19294c",
+      "#1e476e",
     ]
   }
   backgroundGradientEnd={
@@ -104,7 +104,7 @@ exports[`Request should render with loaded props 1`] = `
       <EdgeText
         style={
           {
-            "fontFamily": "Quicksand-Medium",
+            "fontFamily": "NunitoSans-Bold",
             "fontSize": 45,
           }
         }
@@ -115,7 +115,7 @@ exports[`Request should render with loaded props 1`] = `
         style={
           {
             "alignSelf": "flex-end",
-            "fontFamily": "Quicksand-Bold",
+            "fontFamily": "NunitoSans-Bold",
             "textAlign": "right",
           }
         }
@@ -156,7 +156,7 @@ exports[`Request should render with loaded props 1`] = `
         style={
           {
             "alignSelf": "flex-end",
-            "fontFamily": "Quicksand-Bold",
+            "fontFamily": "NunitoSans-Bold",
             "textAlign": "right",
           }
         }
@@ -244,7 +244,7 @@ exports[`Request should render with loaded props 1`] = `
           </EdgeText>
           <Icon
             allowFontScaling={false}
-            color="#00f1a2"
+            color="#e27226"
             name="chevron-forward"
             size={34}
           />

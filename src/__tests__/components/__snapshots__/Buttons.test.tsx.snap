@@ -65,8 +65,8 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
       <BVLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            4280723937,
+            4280723937,
           ]
         }
         endPoint={
@@ -113,14 +113,14 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
+                  "color": "#1c385d",
+                  "fontFamily": "NunitoSans-Bold",
                   "fontSize": 22,
                 },
                 null,
@@ -241,14 +241,14 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                 },
                 null,
@@ -372,14 +372,14 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
-                  "color": "#00f1a2",
-                  "fontFamily": "Quicksand-Regular",
+                  "color": "#e27226",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                 },
                 null,
@@ -450,8 +450,8 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
       <BVLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            4280723937,
+            4280723937,
           ]
         }
         endPoint={
@@ -498,14 +498,14 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
+                  "color": "#1c385d",
+                  "fontFamily": "NunitoSans-Bold",
                   "fontSize": 22,
                 },
                 null,
@@ -580,8 +580,8 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
     <BVLinearGradient
       colors={
         [
-          4280299823,
-          4278214733,
+          4280723937,
+          4280723937,
         ]
       }
       endPoint={
@@ -628,14 +628,14 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#1c385d",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
               },
               null,
@@ -756,14 +756,14 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
               },
               null,
@@ -837,8 +837,8 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
     <BVLinearGradient
       colors={
         [
-          4280299823,
-          4278214733,
+          4280723937,
+          4280723937,
         ]
       }
       endPoint={
@@ -885,14 +885,14 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#1c385d",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
               },
               null,
@@ -1013,14 +1013,14 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
               },
               null,
@@ -1094,8 +1094,8 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
     <BVLinearGradient
       colors={
         [
-          4280299823,
-          4278214733,
+          4280723937,
+          4280723937,
         ]
       }
       endPoint={
@@ -1142,14 +1142,14 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#1c385d",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
               },
               null,
@@ -1270,14 +1270,14 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
               },
               null,
@@ -1401,14 +1401,14 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
               },
               null,
@@ -1488,8 +1488,8 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
       <BVLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            4280723937,
+            4280723937,
           ]
         }
         endPoint={
@@ -1536,14 +1536,14 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
+                  "color": "#1c385d",
+                  "fontFamily": "NunitoSans-Bold",
                   "fontSize": 22,
                 },
                 null,
@@ -1662,14 +1662,14 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                 },
                 null,
@@ -1791,14 +1791,14 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
-                  "color": "#00f1a2",
-                  "fontFamily": "Quicksand-Regular",
+                  "color": "#e27226",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                 },
                 null,
@@ -1868,8 +1868,8 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
       <BVLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            4280723937,
+            4280723937,
           ]
         }
         endPoint={
@@ -1916,14 +1916,14 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
+                  "color": "#1c385d",
+                  "fontFamily": "NunitoSans-Bold",
                   "fontSize": 22,
                 },
                 null,
@@ -1997,8 +1997,8 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
     <BVLinearGradient
       colors={
         [
-          4280299823,
-          4278214733,
+          4280723937,
+          4280723937,
         ]
       }
       endPoint={
@@ -2045,14 +2045,14 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#1c385d",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
               },
               null,
@@ -2171,14 +2171,14 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
               },
               null,
@@ -2251,8 +2251,8 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
     <BVLinearGradient
       colors={
         [
-          4280299823,
-          4278214733,
+          4280723937,
+          4280723937,
         ]
       }
       endPoint={
@@ -2299,14 +2299,14 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#1c385d",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
               },
               null,
@@ -2425,14 +2425,14 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
               },
               null,
@@ -2505,8 +2505,8 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
     <BVLinearGradient
       colors={
         [
-          4280299823,
-          4278214733,
+          4280723937,
+          4280723937,
         ]
       }
       endPoint={
@@ -2553,14 +2553,14 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#1c385d",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
               },
               null,
@@ -2679,14 +2679,14 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
               },
               null,
@@ -2808,14 +2808,14 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
               },
               null,
@@ -2878,8 +2878,8 @@ exports[`Buttons should render simple loose buttons 1`] = `
     <BVLinearGradient
       colors={
         [
-          4280299823,
-          4278214733,
+          4280723937,
+          4280723937,
         ]
       }
       endPoint={
@@ -2926,14 +2926,14 @@ exports[`Buttons should render simple loose buttons 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#1c385d",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
               },
               null,
@@ -3039,14 +3039,14 @@ exports[`Buttons should render simple loose buttons 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
               },
               null,
@@ -3155,14 +3155,14 @@ exports[`Buttons should render simple loose buttons 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
               },
               null,
@@ -3220,8 +3220,8 @@ exports[`Buttons should render simple loose buttons 1`] = `
     <BVLinearGradient
       colors={
         [
-          4280299823,
-          4278214733,
+          4280723937,
+          4280723937,
         ]
       }
       endPoint={
@@ -3269,14 +3269,14 @@ exports[`Buttons should render simple loose buttons 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#1c385d",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
               },
               null,
@@ -3383,14 +3383,14 @@ exports[`Buttons should render simple loose buttons 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
               },
               null,
@@ -3500,14 +3500,14 @@ exports[`Buttons should render simple loose buttons 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
               },
               null,
@@ -3570,8 +3570,8 @@ exports[`Buttons should render spinning buttons 1`] = `
     <BVLinearGradient
       colors={
         [
-          4280299823,
-          4278214733,
+          4280723937,
+          4280723937,
         ]
       }
       endPoint={
@@ -3631,14 +3631,14 @@ exports[`Buttons should render spinning buttons 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
+                  "color": "#1c385d",
+                  "fontFamily": "NunitoSans-Bold",
                   "fontSize": 22,
                 },
                 null,
@@ -3652,7 +3652,7 @@ exports[`Buttons should render spinning buttons 1`] = `
       </View>
     </BVLinearGradient>
     <ActivityIndicator
-      color="#FFFFFF"
+      color="#1c385d"
       style={
         [
           undefined,
@@ -3769,14 +3769,14 @@ exports[`Buttons should render spinning buttons 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                 },
                 null,
@@ -3910,14 +3910,14 @@ exports[`Buttons should render spinning buttons 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
-                  "color": "#00f1a2",
-                  "fontFamily": "Quicksand-Regular",
+                  "color": "#e27226",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                 },
                 null,
@@ -3931,7 +3931,7 @@ exports[`Buttons should render spinning buttons 1`] = `
       </View>
     </BVLinearGradient>
     <ActivityIndicator
-      color="#00f1a2"
+      color="#e27226"
       style={
         [
           undefined,
@@ -3987,8 +3987,8 @@ exports[`Buttons should render spinning buttons 1`] = `
     <BVLinearGradient
       colors={
         [
-          4280299823,
-          4278214733,
+          4280723937,
+          4280723937,
         ]
       }
       endPoint={
@@ -4049,14 +4049,14 @@ exports[`Buttons should render spinning buttons 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
+                  "color": "#1c385d",
+                  "fontFamily": "NunitoSans-Bold",
                   "fontSize": 22,
                 },
                 null,
@@ -4070,7 +4070,7 @@ exports[`Buttons should render spinning buttons 1`] = `
       </View>
     </BVLinearGradient>
     <ActivityIndicator
-      color="#FFFFFF"
+      color="#1c385d"
       style={
         [
           undefined,
@@ -4188,14 +4188,14 @@ exports[`Buttons should render spinning buttons 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                 },
                 null,
@@ -4330,14 +4330,14 @@ exports[`Buttons should render spinning buttons 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
-                  "color": "#00f1a2",
-                  "fontFamily": "Quicksand-Regular",
+                  "color": "#e27226",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                 },
                 null,
@@ -4351,7 +4351,7 @@ exports[`Buttons should render spinning buttons 1`] = `
       </View>
     </BVLinearGradient>
     <ActivityIndicator
-      color="#00f1a2"
+      color="#e27226"
       style={
         [
           undefined,
@@ -4412,8 +4412,8 @@ exports[`Buttons should render with child icons 1`] = `
     <BVLinearGradient
       colors={
         [
-          4280299823,
-          4278214733,
+          4280723937,
+          4280723937,
         ]
       }
       endPoint={
@@ -4488,14 +4488,14 @@ exports[`Buttons should render with child icons 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#1c385d",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
               },
               {
@@ -4631,14 +4631,14 @@ exports[`Buttons should render with child icons 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
               },
               {
@@ -4777,14 +4777,14 @@ exports[`Buttons should render with child icons 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
               },
               {
@@ -4844,8 +4844,8 @@ exports[`Buttons should render with child icons 1`] = `
     <BVLinearGradient
       colors={
         [
-          4280299823,
-          4278214733,
+          4280723937,
+          4280723937,
         ]
       }
       endPoint={
@@ -4921,14 +4921,14 @@ exports[`Buttons should render with child icons 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Medium",
+                "color": "#1c385d",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 22,
               },
               {
@@ -5065,14 +5065,14 @@ exports[`Buttons should render with child icons 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
               },
               {
@@ -5212,14 +5212,14 @@ exports[`Buttons should render with child icons 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             [
               {
-                "color": "#00f1a2",
-                "fontFamily": "Quicksand-Regular",
+                "color": "#e27226",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
               },
               {
@@ -5279,8 +5279,8 @@ exports[`Buttons should render with child icons 1`] = `
     <BVLinearGradient
       colors={
         [
-          4280299823,
-          4278214733,
+          4280723937,
+          4280723937,
         ]
       }
       endPoint={
@@ -5368,14 +5368,14 @@ exports[`Buttons should render with child icons 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
+                  "color": "#1c385d",
+                  "fontFamily": "NunitoSans-Bold",
                   "fontSize": 22,
                 },
                 {
@@ -5391,7 +5391,7 @@ exports[`Buttons should render with child icons 1`] = `
       </View>
     </BVLinearGradient>
     <ActivityIndicator
-      color="#FFFFFF"
+      color="#1c385d"
       style={
         [
           undefined,
@@ -5536,14 +5536,14 @@ exports[`Buttons should render with child icons 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                 },
                 {
@@ -5707,14 +5707,14 @@ exports[`Buttons should render with child icons 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
-                  "color": "#00f1a2",
-                  "fontFamily": "Quicksand-Regular",
+                  "color": "#e27226",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                 },
                 {
@@ -5730,7 +5730,7 @@ exports[`Buttons should render with child icons 1`] = `
       </View>
     </BVLinearGradient>
     <ActivityIndicator
-      color="#00f1a2"
+      color="#e27226"
       style={
         [
           undefined,
@@ -5786,8 +5786,8 @@ exports[`Buttons should render with child icons 1`] = `
     <BVLinearGradient
       colors={
         [
-          4280299823,
-          4278214733,
+          4280723937,
+          4280723937,
         ]
       }
       endPoint={
@@ -5876,14 +5876,14 @@ exports[`Buttons should render with child icons 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Medium",
+                  "color": "#1c385d",
+                  "fontFamily": "NunitoSans-Bold",
                   "fontSize": 22,
                 },
                 {
@@ -5899,7 +5899,7 @@ exports[`Buttons should render with child icons 1`] = `
       </View>
     </BVLinearGradient>
     <ActivityIndicator
-      color="#FFFFFF"
+      color="#1c385d"
       style={
         [
           undefined,
@@ -6045,14 +6045,14 @@ exports[`Buttons should render with child icons 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                 },
                 {
@@ -6217,14 +6217,14 @@ exports[`Buttons should render with child icons 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
-                  "color": "#00f1a2",
-                  "fontFamily": "Quicksand-Regular",
+                  "color": "#e27226",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                 },
                 {
@@ -6240,7 +6240,7 @@ exports[`Buttons should render with child icons 1`] = `
       </View>
     </BVLinearGradient>
     <ActivityIndicator
-      color="#00f1a2"
+      color="#e27226"
       style={
         [
           undefined,
