@@ -223,6 +223,9 @@ export function walletListMenuAction(
         const { currencyWallets } = account
         const wallet = currencyWallets[walletId]
 
+        // Show the scam warning modal if needed
+        await showScamWarningModal('firstPrivateKeyView')
+
         const passwordValid = await dispatch(
           validatePassword({
             title: lstrings.fragment_wallets_get_seed_title,
