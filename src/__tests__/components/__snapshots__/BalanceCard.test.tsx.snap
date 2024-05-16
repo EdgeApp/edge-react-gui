@@ -89,12 +89,12 @@ exports[`BalanceCard should render with loading props 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
-              "textShadowColor": "rgba(0, 0, 0, 0.514)",
+              "textShadowColor": "rgba(0, 0, 0, .5)",
               "textShadowOffset": {
                 "height": 0,
                 "width": 0,
@@ -113,14 +113,14 @@ exports[`BalanceCard should render with loading props 1`] = `
         style={
           [
             {
-              "color": "#00f1a2",
+              "color": "#e27226",
               "fontSize": 22,
             },
             {
               "alignSelf": "center",
               "marginLeft": 6,
               "marginRight": 0,
-              "textShadowColor": "rgba(0, 0, 0, 0.514)",
+              "textShadowColor": "rgba(0, 0, 0, .5)",
               "textShadowOffset": {
                 "height": 0,
                 "width": 0,
@@ -156,7 +156,7 @@ exports[`BalanceCard should render with loading props 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -164,7 +164,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               "height": 51,
               "marginBottom": 11,
               "marginTop": 6,
-              "textShadowColor": "rgba(0, 0, 0, 0.514)",
+              "textShadowColor": "rgba(0, 0, 0, .5)",
               "textShadowOffset": {
                 "height": 0,
                 "width": 0,
@@ -283,14 +283,14 @@ exports[`BalanceCard should render with loading props 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                 },
                 null,
@@ -411,14 +411,14 @@ exports[`BalanceCard should render with loading props 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                 },
                 null,

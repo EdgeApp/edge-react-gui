@@ -13,7 +13,7 @@ exports[`ProgressBar should render with loading props 1`] = `
     collapsable={false}
     style={
       {
-        "backgroundColor": "#00f1a2",
+        "backgroundColor": "#e27226",
         "height": 3,
         "left": 0,
         "position": "absolute",
