@@ -93,12 +93,12 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               {
-                "color": "#3dd9f4",
+                "color": "#A5D4FF",
                 "fontSize": 17,
                 "paddingRight": 22,
               },
@@ -117,7 +117,7 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
@@ -182,7 +182,7 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
                 "fontSize": 22,
               },
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "marginLeft": 11,
                 "textAlign": "center",
               },

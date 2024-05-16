@@ -79,21 +79,21 @@ exports[`MenuTabs should render with loading props 1`] = `
     <BVLinearGradient
       colors={
         [
-          16777215,
-          16777215,
+          2149468014,
+          2149132620,
         ]
       }
       endPoint={
         {
-          "x": 0,
-          "y": 1,
+          "x": 1,
+          "y": 0,
         }
       }
       locations={null}
       startPoint={
         {
           "x": 0,
-          "y": 0.5,
+          "y": 0,
         }
       }
       style={
