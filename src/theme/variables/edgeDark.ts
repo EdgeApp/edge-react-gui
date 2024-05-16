@@ -315,7 +315,7 @@ export const edgeDark: Theme = {
     textShadowRadius: 3
   },
 
-  tabBarBackground: [palette.blackOp10, palette.blackOp70],
+  tabBarBackground: [palette.transparent, palette.transparent],
   tabBarBackgroundStart: { x: 0, y: 0.5 },
   tabBarBackgroundEnd: { x: 0, y: 1 },
   tabBarTopOutlineColors: [`${palette.white}22`, `${palette.white}22`],
