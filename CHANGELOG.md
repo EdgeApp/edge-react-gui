@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.7.0
+
 - added: Add Visa/MC buy support with Paybis
 - added: Support for `promoId`-based filtering for Promo Cards
 - added: Scam warning to the first login after app install, first view of private keys, and first use of WalletConnect
@@ -19,7 +21,7 @@
 - removed: Bitpay deeplink support
 - removed: Side menu footer close button
 
-## 4.6.0
+## 4.6.0 (2024-05-13)
 
 - added: Done button is a part of SimpleTextInput
 - added: Ability to add a custom token for any wallet directly from CreateWalletSelectCryptoScene
