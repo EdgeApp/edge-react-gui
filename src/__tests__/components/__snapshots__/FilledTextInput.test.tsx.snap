@@ -46,7 +46,7 @@ exports[`FilledTextInput should render with some props 1`] = `
       {
         "value": {
           "backgroundColor": "rgba(255, 255, 255, 0.2)",
-          "borderColor": "rgba(0, 241, 162, 0)",
+          "borderColor": "rgba(165, 212, 255, 0)",
           "marginHorizontal": 0,
           "opacity": 1,
           "paddingVertical": 22,
@@ -88,7 +88,7 @@ exports[`FilledTextInput should render with some props 1`] = `
         },
         {
           "backgroundColor": "rgba(255, 255, 255, 0.2)",
-          "borderColor": "rgba(0, 241, 162, 0)",
+          "borderColor": "rgba(165, 212, 255, 0)",
           "marginHorizontal": 0,
           "opacity": 1,
           "paddingVertical": 22,
@@ -299,7 +299,7 @@ exports[`FilledTextInput should render with some props 1`] = `
           jestInlineStyle={
             [
               {
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
@@ -311,7 +311,7 @@ exports[`FilledTextInput should render with some props 1`] = `
           style={
             [
               {
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
@@ -362,7 +362,7 @@ exports[`FilledTextInput should render with some props 1`] = `
               "color": "hsla(0, 0%, 100%, 0.20)",
               "flexGrow": 1,
               "flexShrink": 1,
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "margin": 0,
               "paddingHorizontal": 0,
               "paddingVertical": 0,
@@ -392,7 +392,7 @@ exports[`FilledTextInput should render with some props 1`] = `
               "color": "hsla(0, 0%, 100%, 0.20)",
               "flexGrow": 1,
               "flexShrink": 1,
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "margin": 0,
               "paddingHorizontal": 0,
               "paddingVertical": 0,
@@ -570,7 +570,7 @@ exports[`FilledTextInput should render with some props 1`] = `
       style={
         {
           "color": "#E85466",
-          "fontFamily": "Quicksand-Regular",
+          "fontFamily": "NunitoSans-Regular",
           "fontSize": 17,
           "includeFontPadding": false,
         }
@@ -582,8 +582,8 @@ exports[`FilledTextInput should render with some props 1`] = `
       allowFontScaling={false}
       style={
         {
-          "color": "#3dd9f4",
-          "fontFamily": "Quicksand-Regular",
+          "color": "#A5D4FF",
+          "fontFamily": "NunitoSans-Regular",
           "fontSize": 17,
           "includeFontPadding": false,
         }

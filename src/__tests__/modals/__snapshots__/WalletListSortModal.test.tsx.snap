@@ -84,7 +84,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
       [
         {
           "alignSelf": "flex-end",
-          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "backgroundColor": "#1c385d80",
           "borderTopLeftRadius": 22,
           "borderTopRightRadius": 22,
           "flexShrink": 1,
@@ -107,7 +107,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
       [
         {
           "alignSelf": "flex-end",
-          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "backgroundColor": "#1c385d80",
           "borderTopLeftRadius": 22,
           "borderTopRightRadius": 22,
           "flexShrink": 1,
@@ -194,13 +194,13 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
               "flexShrink": 1,
-              "fontFamily": "Quicksand-Medium",
+              "fontFamily": "NunitoSans-Bold",
               "fontSize": 27,
               "marginHorizontal": 11,
             },
@@ -261,7 +261,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
           style={
             [
               {
-                "color": "#888888",
+                "color": "#87939E",
                 "fontSize": 28,
               },
               undefined,
@@ -396,7 +396,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "paddingHorizontal": 11,
                   "textAlign": "left",
@@ -447,7 +447,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 }
               >
                 <ActivityIndicator
-                  color="#00f1a2"
+                  color="#e27226"
                   style={
                     {
                       "height": 34,
@@ -491,7 +491,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                         "fontSize": 12,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "fontSize": 22,
                         "marginHorizontal": 11,
                       },
@@ -565,7 +565,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "paddingHorizontal": 11,
                   "textAlign": "left",
@@ -616,7 +616,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 }
               >
                 <ActivityIndicator
-                  color="#00f1a2"
+                  color="#e27226"
                   style={
                     {
                       "height": 34,
@@ -662,7 +662,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                         "fontSize": 12,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "fontSize": 28,
                         "marginHorizontal": 11,
                       },
@@ -734,7 +734,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "paddingHorizontal": 11,
                   "textAlign": "left",
@@ -785,7 +785,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 }
               >
                 <ActivityIndicator
-                  color="#00f1a2"
+                  color="#e27226"
                   style={
                     {
                       "height": 34,
@@ -831,7 +831,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                         "fontSize": 12,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "fontSize": 28,
                         "marginHorizontal": 11,
                       },
@@ -903,7 +903,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "paddingHorizontal": 11,
                   "textAlign": "left",
@@ -954,7 +954,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 }
               >
                 <ActivityIndicator
-                  color="#00f1a2"
+                  color="#e27226"
                   style={
                     {
                       "height": 34,
@@ -1000,7 +1000,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                         "fontSize": 12,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "fontSize": 28,
                         "marginHorizontal": 11,
                       },
@@ -1072,7 +1072,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "paddingHorizontal": 11,
                   "textAlign": "left",
@@ -1123,7 +1123,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 }
               >
                 <ActivityIndicator
-                  color="#00f1a2"
+                  color="#e27226"
                   style={
                     {
                       "height": 34,
@@ -1169,7 +1169,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                         "fontSize": 12,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "fontSize": 28,
                         "marginHorizontal": 11,
                       },
@@ -1241,7 +1241,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "paddingHorizontal": 11,
                   "textAlign": "left",
@@ -1292,7 +1292,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                 }
               >
                 <ActivityIndicator
-                  color="#00f1a2"
+                  color="#e27226"
                   style={
                     {
                       "height": 34,
@@ -1338,7 +1338,7 @@ exports[`WalletListSortModalComponent should render with loading props 1`] = `
                         "fontSize": 12,
                       },
                       {
-                        "color": "#00f1a2",
+                        "color": "#e27226",
                         "fontSize": 28,
                         "marginHorizontal": 11,
                       },

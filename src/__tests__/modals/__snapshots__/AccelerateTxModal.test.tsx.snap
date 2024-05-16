@@ -84,7 +84,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
       [
         {
           "alignSelf": "flex-end",
-          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "backgroundColor": "#1c385d80",
           "borderTopLeftRadius": 22,
           "borderTopRightRadius": 22,
           "flexShrink": 1,
@@ -107,7 +107,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
       [
         {
           "alignSelf": "flex-end",
-          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "backgroundColor": "#1c385d80",
           "borderTopLeftRadius": 22,
           "borderTopRightRadius": 22,
           "flexShrink": 1,
@@ -194,13 +194,13 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
             {
               "flexShrink": 1,
-              "fontFamily": "Quicksand-Medium",
+              "fontFamily": "NunitoSans-Bold",
               "fontSize": 27,
               "marginHorizontal": 11,
             },
@@ -261,7 +261,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
           style={
             [
               {
-                "color": "#888888",
+                "color": "#87939E",
                 "fontSize": 28,
               },
               undefined,
@@ -286,7 +286,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
         [
           {
             "color": "#FFFFFF",
-            "fontFamily": "Quicksand-Regular",
+            "fontFamily": "NunitoSans-Regular",
             "fontSize": 22,
             "includeFontPadding": false,
           },
@@ -353,12 +353,12 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
                 {
-                  "color": "#3dd9f4",
+                  "color": "#A5D4FF",
                   "fontSize": 17,
                   "paddingRight": 22,
                 },
@@ -378,7 +378,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
@@ -436,12 +436,12 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
                 {
-                  "color": "#3dd9f4",
+                  "color": "#A5D4FF",
                   "fontSize": 17,
                   "paddingRight": 22,
                 },
@@ -461,7 +461,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },
@@ -530,7 +530,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
             jestInlineStyle={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -544,7 +544,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
             style={
               [
                 {
-                  "backgroundColor": "#494949",
+                  "backgroundColor": "rgba(255, 255, 255, .05)",
                   "borderRadius": 27.5,
                   "bottom": 0,
                   "left": 0,
@@ -580,7 +580,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -595,7 +595,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#00f1a2",
+                  "backgroundColor": "#26a9e1",
                   "borderRadius": 27.5,
                   "height": 55,
                   "justifyContent": "center",
@@ -623,7 +623,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                     "fontSize": 34,
                   },
                   {
-                    "color": "#1a1a1a",
+                    "color": "#19294c",
                     "fontSize": 51,
                   },
                   {
@@ -647,7 +647,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
               [
                 {
                   "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
+                  "fontFamily": "NunitoSans-Regular",
                   "fontSize": 22,
                   "includeFontPadding": false,
                 },

@@ -224,7 +224,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 r={13}
                 stroke={
                   {
-                    "payload": 4278251938,
+                    "payload": 4293030438,
                     "type": 0,
                   }
                 }
@@ -251,7 +251,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
@@ -384,13 +384,13 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               {
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 39,
               },
               null,
@@ -405,7 +405,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           style={
             [
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "fontSize": 26,
               },
               {
@@ -413,7 +413,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
                 "flexGrow": 1,
                 "marginLeft": 11,
                 "marginRight": 0,
-                "textShadowColor": "rgba(0, 0, 0, 0.514)",
+                "textShadowColor": "rgba(0, 0, 0, .5)",
                 "textShadowOffset": {
                   "height": 0,
                   "width": 0,
@@ -442,7 +442,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -561,7 +561,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -670,7 +670,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -779,7 +779,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -910,7 +910,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -1152,7 +1152,7 @@ exports[`TransactionListTop should render 1`] = `
                 r={13}
                 stroke={
                   {
-                    "payload": 4278251938,
+                    "payload": 4293030438,
                     "type": 0,
                   }
                 }
@@ -1179,7 +1179,7 @@ exports[`TransactionListTop should render 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
@@ -1312,13 +1312,13 @@ exports[`TransactionListTop should render 1`] = `
             [
               {
                 "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "NunitoSans-Regular",
                 "fontSize": 22,
                 "includeFontPadding": false,
               },
               {
                 "flexShrink": 1,
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "NunitoSans-Bold",
                 "fontSize": 39,
               },
               null,
@@ -1333,7 +1333,7 @@ exports[`TransactionListTop should render 1`] = `
           style={
             [
               {
-                "color": "#00f1a2",
+                "color": "#e27226",
                 "fontSize": 26,
               },
               {
@@ -1341,7 +1341,7 @@ exports[`TransactionListTop should render 1`] = `
                 "flexGrow": 1,
                 "marginLeft": 11,
                 "marginRight": 0,
-                "textShadowColor": "rgba(0, 0, 0, 0.514)",
+                "textShadowColor": "rgba(0, 0, 0, .5)",
                 "textShadowOffset": {
                   "height": 0,
                   "width": 0,
@@ -1370,7 +1370,7 @@ exports[`TransactionListTop should render 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -1489,7 +1489,7 @@ exports[`TransactionListTop should render 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -1598,7 +1598,7 @@ exports[`TransactionListTop should render 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
@@ -1707,7 +1707,7 @@ exports[`TransactionListTop should render 1`] = `
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
+              "fontFamily": "NunitoSans-Regular",
               "fontSize": 22,
               "includeFontPadding": false,
             },
