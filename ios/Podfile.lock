@@ -1085,7 +1085,7 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-  - react-native-zcash (0.7.1):
+  - react-native-zcash (0.7.2):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -1959,7 +1959,7 @@ SPEC CHECKSUMS:
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: dcab599c527c2d7de2d76507a523d20a0b83823d
   react-native-webview: 9395e82c917d81407deb9b1fe53158dd6c8880ff
-  react-native-zcash: 0b02cba77b0dc3f3d555fbec906769bcf903eb27
+  react-native-zcash: 79f07e93325c446181c44edeb83c40ded1371928
   React-nativeconfig: b4d4e9901d4cabb57be63053fd2aa6086eb3c85f
   React-NativeModulesApple: cd26e56d56350e123da0c1e3e4c76cb58a05e1ee
   React-perflogger: 5f49905de275bac07ac7ea7f575a70611fa988f2

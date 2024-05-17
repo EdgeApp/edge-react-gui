@@ -16447,10 +16447,10 @@ react-native-webview@^13.8.4:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
 
-react-native-zcash@^0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.7.1.tgz#e00e62dedf96764107471f1e8cc8063a3aac4844"
-  integrity sha512-JpyBwmqn6/O0NCjzxi4g6vJi2s4Iyixucau/KfB1Us+JuzzKMaMENrSlpR5+G6MBf2BVT/PTE10Gn8LszF0Stg==
+react-native-zcash@^0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/react-native-zcash/-/react-native-zcash-0.7.2.tgz#4644e7abd9650badab147f68cfdbb345843cb7ac"
+  integrity sha512-MFMF3x44T4xn/hntfHBH2Z7D+ANPTCaUtQXUPfjuFp0Qx3s02WjumNIeqTkHLod0JamG3g/u/KkfnDafOv6qpg==
   dependencies:
     biggystring "^4.1.3"
     rfc4648 "^1.3.0"
