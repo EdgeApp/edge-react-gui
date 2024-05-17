@@ -85,8 +85,8 @@ export type ModalFilledTextInputProps = Omit<FilledTextInputBaseProps, keyof Spa
 /**
  * FilledTextInput with standard `around=0.5` UI4 margins, for use in modals
  */
-export const ModalFilledTextInput = React.forwardRef<FilledTextInputRef, ModalFilledTextInputProps>((props: ModalFilledTextInputProps) => (
-  <FilledTextInput {...props} around={0.5} />
+export const ModalFilledTextInput = React.forwardRef<FilledTextInputRef, ModalFilledTextInputProps>((props, ref) => (
+  <FilledTextInput ref={ref} {...props} around={0.5} />
 ))
 
 /**
