@@ -134,10 +134,6 @@ describe('parseDeepLink', function () {
       'https://deep.edge.app/edge/1234567890a': {
         type: 'edgeLogin',
         lobbyId: '1234567890a'
-      },
-      'https://www.edge.app/edgelogin?address=1234567890a': {
-        type: 'edgeLogin',
-        lobbyId: '1234567890a'
       }
     })
 
@@ -154,10 +150,6 @@ describe('parseDeepLink', function () {
         passwordRecoveryKey: '1234567890a'
       },
       'airbitz://recovery?token=1234567890a': {
-        type: 'passwordRecovery',
-        passwordRecoveryKey: '1234567890a'
-      },
-      'https://recovery.edgesecure.co?token=1234567890a': {
         type: 'passwordRecovery',
         passwordRecoveryKey: '1234567890a'
       },
