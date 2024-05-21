@@ -79,7 +79,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
   const renderFooter = useSceneFooterRenderState(state => state.renderFooter)
 
   const { height: keyboardHeight, progress: keyboardProgress } = useReanimatedKeyboardAnimation()
-  const menuTabHeightAndInsetBottomTermForShiftY = useDerivedValue(() => keyboardProgress.value * (insetBottom + MAX_TAB_BAR_HEIGHT), [insetBottom])
+  const menuTabHeightAndInsetBottomTermForShiftY = useDerivedValue(() => keyboardProgress.value * (insetBottom + MAX_TAB_BAR_HEIGHT))
   const shiftY = useDerivedValue(() => keyboardHeight.value + menuTabHeightAndInsetBottomTermForShiftY.value)
 
   return (
