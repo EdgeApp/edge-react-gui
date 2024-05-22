@@ -1424,12 +1424,10 @@
   dependencies:
     "@babel/runtime" "^7.21.0"
 
-"@chain-registry/types@^0.18.1":
-  version "0.18.1"
-  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-0.18.1.tgz#bd926ddf204f2ae986a79b42f0cfe85764e2977a"
-  integrity sha512-H/UnOyd7WdcWHa2FGKxy4MclDDFrbE2rFwaUh9oubNJOey7UBI4dNF10oZIWM/1by15LUgDz45fVbh6uA6W5Tg==
-  dependencies:
-    "@babel/runtime" "^7.21.0"
+"@chain-registry/types@^0.41.3":
+  version "0.41.3"
+  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-0.41.3.tgz#67e32805a281161fe0f283aaabb5133822e1b146"
+  integrity sha512-pmXgS9HJ1vEbZNdgsEMVEqxSki53e35gV+WHSMioXHnCz04tpyEGSa7CvE6mDY/J67NSpJvYr+So7pu27VH5FQ==
 
 "@chain-registry/utils@^1.14.0":
   version "1.14.0"
@@ -7469,13 +7467,12 @@ chai-as-promised@^7.1.1:
   dependencies:
     check-error "^1.0.2"
 
-chain-registry@^1.28.1:
-  version "1.28.6"
-  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-1.28.6.tgz#823bded9c70c64b3f4d0d32139cfd19b8fcb004e"
-  integrity sha512-RO5Ua/8KyuRBzrsGE82lyt04DI1vF20XnWTcVUw56aQEk/BiscoC5/nnqIsdqQkPZTi4gIMoJXrYCYeckc4vlQ==
+chain-registry@^1.47.9:
+  version "1.59.4"
+  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-1.59.4.tgz#dec12fcfe28a25066345ede5b53ffb146b206d7a"
+  integrity sha512-qx//X1DGIaSGH5SP7643C6bIjb3a3nmvVBZPRSZUl2Qq0A1e2WWsfBUVT+spcJGh51tWlIj7m7oGNKxpXVgFLg==
   dependencies:
-    "@babel/runtime" "^7.21.0"
-    "@chain-registry/types" "^0.18.1"
+    "@chain-registry/types" "^0.41.3"
 
 chainsaw@~0.1.0:
   version "0.1.0"
@@ -9213,10 +9210,10 @@ edge-core-js@^2.5.0:
     yaob "^0.3.12"
     yavent "^0.1.3"
 
-edge-currency-accountbased@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.5.0.tgz#2409b34b605819e1fcaf207bc118544c5380309b"
-  integrity sha512-Ju4gKNtmMa9XnIkwUyPkTou3ftBHZke56YwEE3NjIGKTdjpUciEmIb/pmho8VuXMZVRgq8gL44awn0LuX3rzSw==
+edge-currency-accountbased@^4.5.1:
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-4.5.1.tgz#fa1050d0ee92e58211da2a344c98e07c32ed5c13"
+  integrity sha512-nPwIrUwZL0G3yH9vtvF2f9HhksDmg3axDp9JFbEL29QOfxNVRfM7+msP54WYiFAy2n/l18zAgmO2+lK+RnYBPw==
   dependencies:
     "@binance-chain/javascript-sdk" "^4.2.0"
     "@chain-registry/client" "^1.15.0"
@@ -9235,7 +9232,7 @@ edge-currency-accountbased@^4.5.0:
     algosdk "^2.1.0"
     biggystring "^4.1.3"
     bip39 "^3.0.2"
-    chain-registry "^1.28.1"
+    chain-registry "^1.47.9"
     cleaners "^0.3.14"
     ed25519-hd-key "^1.3.0"
     eth-sig-util "^3.0.1"
