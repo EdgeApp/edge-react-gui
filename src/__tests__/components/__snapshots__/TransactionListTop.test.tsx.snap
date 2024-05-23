@@ -102,6 +102,87 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             }
           }
         >
+          <RNSVGSvgView
+            align="xMidYMid"
+            bbHeight={38}
+            bbWidth={38}
+            focusable={false}
+            height={38}
+            meetOrSlice={0}
+            minX={-8}
+            minY={-8}
+            style={
+              [
+                {
+                  "backgroundColor": "transparent",
+                  "borderWidth": 0,
+                },
+                {
+                  "left": -8,
+                  "position": "absolute",
+                  "top": -8,
+                  "transform": [
+                    {
+                      "rotateZ": "-90deg",
+                    },
+                  ],
+                },
+                {
+                  "flex": 0,
+                  "height": 38,
+                  "width": 38,
+                },
+              ]
+            }
+            vbHeight={38}
+            vbWidth={38}
+            width={38}
+          >
+            <RNSVGGroup
+              fill={
+                {
+                  "payload": 4278190080,
+                  "type": 0,
+                }
+              }
+            >
+              <RNSVGCircle
+                cx={11}
+                cy={11}
+                fill={
+                  {
+                    "payload": 0,
+                    "type": 0,
+                  }
+                }
+                opacity={0}
+                propList={
+                  [
+                    "fill",
+                    "stroke",
+                    "strokeWidth",
+                    "strokeDasharray",
+                    "strokeLinecap",
+                  ]
+                }
+                r={13}
+                stroke={
+                  {
+                    "payload": 4278251938,
+                    "type": 0,
+                  }
+                }
+                strokeDasharray={
+                  [
+                    81.68140899333463,
+                    81.68140899333463,
+                  ]
+                }
+                strokeLinecap={1}
+                strokeWidth={4}
+              />
+            </RNSVGGroup>
+          </RNSVGSvgView>
           <View
             style={
               {
@@ -985,6 +1066,87 @@ exports[`TransactionListTop should render 1`] = `
             }
           }
         >
+          <RNSVGSvgView
+            align="xMidYMid"
+            bbHeight={38}
+            bbWidth={38}
+            focusable={false}
+            height={38}
+            meetOrSlice={0}
+            minX={-8}
+            minY={-8}
+            style={
+              [
+                {
+                  "backgroundColor": "transparent",
+                  "borderWidth": 0,
+                },
+                {
+                  "left": -8,
+                  "position": "absolute",
+                  "top": -8,
+                  "transform": [
+                    {
+                      "rotateZ": "-90deg",
+                    },
+                  ],
+                },
+                {
+                  "flex": 0,
+                  "height": 38,
+                  "width": 38,
+                },
+              ]
+            }
+            vbHeight={38}
+            vbWidth={38}
+            width={38}
+          >
+            <RNSVGGroup
+              fill={
+                {
+                  "payload": 4278190080,
+                  "type": 0,
+                }
+              }
+            >
+              <RNSVGCircle
+                cx={11}
+                cy={11}
+                fill={
+                  {
+                    "payload": 0,
+                    "type": 0,
+                  }
+                }
+                opacity={0}
+                propList={
+                  [
+                    "fill",
+                    "stroke",
+                    "strokeWidth",
+                    "strokeDasharray",
+                    "strokeLinecap",
+                  ]
+                }
+                r={13}
+                stroke={
+                  {
+                    "payload": 4278251938,
+                    "type": 0,
+                  }
+                }
+                strokeDasharray={
+                  [
+                    81.68140899333463,
+                    81.68140899333463,
+                  ]
+                }
+                strokeLinecap={1}
+                strokeWidth={4}
+              />
+            </RNSVGGroup>
+          </RNSVGSvgView>
           <View
             style={
               {
