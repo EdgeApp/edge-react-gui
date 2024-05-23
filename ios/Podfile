@@ -46,6 +46,9 @@ if linkage != nil
 end
 
 target 'edge' do
+  # Edge addition:
+  use_modular_headers!
+
   # Edge addition for Expo:
   use_expo_modules!
   post_integrate do |installer|
@@ -81,18 +84,6 @@ target 'edge' do
   # Edge additions
   # --------------------------------------------------------------------------
 
-  pod 'react-native-performance', :path => '../node_modules/react-native-performance'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-
-  # Zcash transitive dependency:
-  pod 'CGRPCZlib', :modular_headers => true
-  pod 'CNIOAtomics', :modular_headers => true
-  pod 'CNIOBoringSSL', :modular_headers => true
-  pod 'CNIOBoringSSLShims', :modular_headers => true
-  pod 'CNIODarwin', :modular_headers => true
-  pod 'CNIOHTTPParser', :modular_headers => true
-  pod 'CNIOLinux', :modular_headers => true
-  pod 'CNIOWindows', :modular_headers => true
-  pod 'sqlite3', :modular_headers => true
 
 end
