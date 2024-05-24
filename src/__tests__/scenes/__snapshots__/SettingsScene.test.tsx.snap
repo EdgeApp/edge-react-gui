@@ -3657,19 +3657,16 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           style={
-            [
-              {
-                "alignItems": undefined,
-                "flex": undefined,
-                "flexDirection": "column",
-                "justifyContent": undefined,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-              },
-              undefined,
-            ]
+            {
+              "alignItems": undefined,
+              "flex": undefined,
+              "flexDirection": "column",
+              "justifyContent": undefined,
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
+            }
           }
         />
         <View
@@ -7448,19 +7445,16 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           style={
-            [
-              {
-                "alignItems": undefined,
-                "flex": undefined,
-                "flexDirection": "column",
-                "justifyContent": undefined,
-                "marginBottom": 11,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 11,
-              },
-              undefined,
-            ]
+            {
+              "alignItems": undefined,
+              "flex": undefined,
+              "flexDirection": "column",
+              "justifyContent": undefined,
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
+            }
           }
         />
         <View
