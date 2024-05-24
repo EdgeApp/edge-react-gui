@@ -28,38 +28,30 @@ export interface SpaceProps {
 
   /**
    * Space props a simple way to give a component space on the sides around
-   * the component. You can provide a number to give a specific rem unit of space
-   * or a boolean to give the maximum amount of space available relative to its
-   * parent component.
+   * the component. You can provide a number to give a specific rem unit of
+   * space.
    *
    * `top`, `left`, `bottom`, and `right` props are specific sides of the
    * component for which you can assign space. Additionally, `horizontal`,
-   * `vertical`, and `around` are a combination of two or more sides. Examples:
+   * `vertical`, and `around` are a combination of two or more sides.
+   *
+   * Examples:
    *
    * ```tsx
    * top={1} // 1rem above the component
    * around={2} // 1rem around all sides
    * horizontal={0.5} // 0.5rem on the left and right sides
    * ```
-   *
-   * Because boolean means to "fill up with maximum space", this allows space
-   * props to be used to center and align a component trivially. Examples:
-   *
-   * ```tsx
-   * around={true} // Center vertically and horizontally
-   * vertical={true} // Center vertically
-   * left={true} // Align to the _right_ (because max space is on the left)
-   * ```
    */
   // Specific:
-  top?: boolean | number
-  right?: boolean | number
-  bottom?: boolean | number
-  left?: boolean | number
+  top?: number
+  right?: number
+  bottom?: number
+  left?: number
   // Compound:
-  around?: boolean | number
-  horizontal?: boolean | number
-  vertical?: boolean | number
+  around?: number
+  horizontal?: number
+  vertical?: number
 
   /*
    * The `expand` space prop tells a component to expand its size within its
@@ -90,10 +82,10 @@ export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
   const { around, horizontal, vertical, top, bottom, left, right, expand = false, sideways = false } = props
   const { alignBottom, alignLeft, alignRight, alignTop, alignCenter, alignHorizontal, alignVertical } = props
 
-  const topFill = boolify(alignBottom, alignVertical, alignCenter, top, vertical, around)
-  const bottomFill = boolify(alignTop, alignVertical, alignCenter, bottom, vertical, around)
-  const leftFill = boolify(alignRight, alignHorizontal, alignCenter, left, horizontal, around)
-  const rightFill = boolify(alignLeft, alignHorizontal, alignCenter, right, horizontal, around)
+  const topFill = boolify(alignBottom, alignVertical, alignCenter)
+  const bottomFill = boolify(alignTop, alignVertical, alignCenter)
+  const leftFill = boolify(alignRight, alignHorizontal, alignCenter)
+  const rightFill = boolify(alignLeft, alignHorizontal, alignCenter)
 
   const topUnits = numberify(top, vertical, around)
   const bottomUnits = numberify(bottom, vertical, around)
@@ -135,7 +127,7 @@ export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
   return style
 }
 
-const numberify = (...things: Array<boolean | number | undefined>): number => {
+const numberify = (...things: Array<number | undefined>): number => {
   for (const thing of things) {
     if (typeof thing === 'number') {
       return thing
@@ -143,7 +135,7 @@ const numberify = (...things: Array<boolean | number | undefined>): number => {
   }
   return 0
 }
-const boolify = (...things: Array<boolean | number | undefined>): boolean => {
+const boolify = (...things: Array<boolean | undefined>): boolean => {
   return things.some(thing => {
     return typeof thing === 'boolean' && thing
   })

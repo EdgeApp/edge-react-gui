@@ -220,17 +220,17 @@ export const LoanDashboardScene = (props: Props) => {
       {Object.keys(loanAccountsMap).length === 0 ? (
         <>
           {isLoansLoading ? (
-            <Space expand around horizontal={1} bottom={2.5}>
+            <Space expand alignCenter horizontal={1} bottom={2.5}>
               <EdgeText style={styles.emptyText}>{lstrings.loan_loading_loans}</EdgeText>
             </Space>
           ) : (
             <>
-              <Space expand around horizontal={1} top={1}>
+              <Space expand alignCenter horizontal={1} top={1}>
                 <EdgeText style={styles.emptyText} numberOfLines={4}>
                   {lstrings.loan_no_active_loans}
                 </EdgeText>
               </Space>
-              <Space around bottom={1}>
+              <Space alignCenter bottom={1}>
                 {renderFooter()}
               </Space>
             </>
