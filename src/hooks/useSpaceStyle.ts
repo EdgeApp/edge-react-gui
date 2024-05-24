@@ -4,6 +4,28 @@ import { ViewStyle } from 'react-native'
 import { useTheme } from '../components/services/ThemeContext'
 
 export interface SpaceProps {
+  //
+  // Alignment props:
+  //
+
+  // Single-sided:
+  /** Align children to the top */
+  alignBottom?: boolean
+  /** Align children to the top */
+  alignLeft?: boolean
+  /** Align children to the right */
+  alignRight?: boolean
+  /** Align children to the top */
+  alignTop?: boolean
+
+  // Multiple-sided:
+  /** Aligns children to the center */
+  alignCenter?: boolean
+  /** Aligns children to the center horizontally */
+  alignHorizontal?: boolean
+  /** Aligns children to the center vertically */
+  alignVertical?: boolean
+
   /**
    * Space props a simple way to give a component space on the sides around
    * the component. You can provide a number to give a specific rem unit of space
@@ -66,11 +88,12 @@ export type SpaceStyle = Pick<
 export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
   const theme = useTheme()
   const { around, horizontal, vertical, top, bottom, left, right, expand = false, sideways = false } = props
+  const { alignBottom, alignLeft, alignRight, alignTop, alignCenter, alignHorizontal, alignVertical } = props
 
-  const topFill = boolify(top, vertical, around)
-  const bottomFill = boolify(bottom, vertical, around)
-  const leftFill = boolify(left, horizontal, around)
-  const rightFill = boolify(right, horizontal, around)
+  const topFill = boolify(alignBottom, alignVertical, alignCenter, top, vertical, around)
+  const bottomFill = boolify(alignTop, alignVertical, alignCenter, bottom, vertical, around)
+  const leftFill = boolify(alignRight, alignHorizontal, alignCenter, left, horizontal, around)
+  const rightFill = boolify(alignLeft, alignHorizontal, alignCenter, right, horizontal, around)
 
   const topUnits = numberify(top, vertical, around)
   const bottomUnits = numberify(bottom, vertical, around)
