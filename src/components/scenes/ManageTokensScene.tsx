@@ -174,7 +174,7 @@ function ManageTokensSceneComponent(props: Props) {
         <Title leftIcon={<CryptoIconUi4 sizeRem={1.5} tokenId={null} walletId={wallet.id} />} text={walletName} />
         <EdgeText style={styles.subTitle}>{lstrings.managetokens_top_instructions}</EdgeText>
         <FilledTextInput
-          top={1}
+          topRem={1}
           placeholder={lstrings.search_tokens}
           returnKeyType="search"
           iconComponent={SearchIconAnimated}

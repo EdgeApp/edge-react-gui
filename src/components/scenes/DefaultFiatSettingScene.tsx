@@ -85,8 +85,8 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
           <View style={{ ...undoInsetStyle, marginTop: 0 }}>
             <SceneHeader title={lstrings.title_create_wallet_select_fiat} underline withTopMargin>
               <SimpleTextInput
-                top={1}
-                horizontal={0.5}
+                topRem={1}
+                horizontalRem={0.5}
                 autoCorrect={false}
                 autoCapitalize="words"
                 onChangeText={this.handleSearchTermChange}

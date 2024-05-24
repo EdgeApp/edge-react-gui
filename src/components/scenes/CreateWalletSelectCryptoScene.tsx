@@ -304,8 +304,8 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             withTopMargin
           />
           <SimpleTextInput
-            vertical={0.5}
-            horizontal={1}
+            verticalRem={0.5}
+            horizontalRem={1}
             autoCorrect={false}
             autoCapitalize="words"
             onChangeText={setSearchTerm}

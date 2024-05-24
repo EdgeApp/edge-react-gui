@@ -84,7 +84,7 @@ export const RewardsCardDashboardScene = (props: Props) => {
         </CardList>
       </SceneWrapper>
       <BottomFloat onLayout={event => setBottomFloatHeight(event.nativeEvent.layout.height)}>
-        <Space around={1}>
+        <Space aroundRem={1}>
           <MainButton onPress={onNewPress} label={lstrings.buy_new_card_button} />
         </Space>
       </BottomFloat>
@@ -134,7 +134,7 @@ export const RewardsCard = (props: RewardsCardProps) => {
             )}
           </CardHeader>
           <Space expand>
-            <Space bottom={0.5} sideways expand>
+            <Space bottomRem={0.5} sideways expand>
               <Space>
                 <CardFieldLabel>{lstrings.purchase_date_label}</CardFieldLabel>
                 <Space>

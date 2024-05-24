@@ -185,7 +185,7 @@ function EditTokenSceneComponent(props: Props) {
       <SceneHeader title={tokenId == null ? lstrings.title_add_token : lstrings.title_edit_token} underline />
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContainer} scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         <FilledTextInput
-          around={0.5}
+          aroundRem={0.5}
           autoCapitalize="characters"
           autoCorrect={false}
           autoFocus={false}
@@ -194,7 +194,7 @@ function EditTokenSceneComponent(props: Props) {
           onChangeText={setCurrencyCode}
         />
         <FilledTextInput
-          around={0.5}
+          aroundRem={0.5}
           autoCapitalize="words"
           autoCorrect={false}
           autoFocus={false}
@@ -207,7 +207,7 @@ function EditTokenSceneComponent(props: Props) {
           return (
             <FilledTextInput
               key={item.key}
-              around={0.5}
+              aroundRem={0.5}
               autoCapitalize="none"
               autoCorrect={false}
               autoFocus={false}
@@ -225,7 +225,7 @@ function EditTokenSceneComponent(props: Props) {
           )
         })}
         <FilledTextInput
-          around={0.5}
+          aroundRem={0.5}
           autoCorrect={false}
           autoFocus={false}
           keyboardType="numeric"

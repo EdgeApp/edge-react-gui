@@ -164,7 +164,7 @@ export const GettingStartedScene = (props: Props) => {
   return (
     <SceneWrapper hasHeader={false}>
       <SkipButton swipeOffset={swipeOffset}>
-        <Space alignRight horizontal={1} vertical={0.5}>
+        <Space alignRight horizontalRem={1} verticalRem={0.5}>
           <EdgeTouchableOpacity onPress={handlePressSkip}>
             <EdgeText>{lstrings.skip}</EdgeText>
           </EdgeTouchableOpacity>

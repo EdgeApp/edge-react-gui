@@ -54,7 +54,7 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
     const displayInterestTotal = toPercentString(debts.length === 0 ? '0' : debts[0].apr)
 
     return (
-      <Space around={0.5}>
+      <Space aroundRem={0.5}>
         <Shimmer isShown={isLoading} />
         <Peek isShown={!isLoading}>
           <TappableCard onPress={onPress}>

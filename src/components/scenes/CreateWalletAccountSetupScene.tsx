@@ -89,8 +89,8 @@ export const CreateWalletAccountSetupScene = withWallet((props: Props) => {
       <Paragraph>{sprintf(lstrings.create_wallet_account_review_instructions, existingCurrencyCode)}</Paragraph>
       <Paragraph>{lstrings.create_wallet_account_requirements_eos}</Paragraph>
       <FilledTextInput
-        around={1}
-        bottom={2}
+        aroundRem={1}
+        bottomRem={2}
         autoCorrect={false}
         autoCapitalize="none"
         autoFocus

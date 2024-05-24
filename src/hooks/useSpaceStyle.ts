@@ -26,32 +26,27 @@ export interface SpaceProps {
   /** Aligns children to the center vertically */
   alignVertical?: boolean
 
-  /**
-   * Space props a simple way to give a component space on the sides around
-   * the component. You can provide a number to give a specific rem unit of
-   * space.
-   *
-   * `top`, `left`, `bottom`, and `right` props are specific sides of the
-   * component for which you can assign space. Additionally, `horizontal`,
-   * `vertical`, and `around` are a combination of two or more sides.
-   *
-   * Examples:
-   *
-   * ```tsx
-   * top={1} // 1rem above the component
-   * around={2} // 1rem around all sides
-   * horizontal={0.5} // 0.5rem on the left and right sides
-   * ```
-   */
-  // Specific:
-  top?: number
-  right?: number
-  bottom?: number
-  left?: number
-  // Compound:
-  around?: number
-  horizontal?: number
-  vertical?: number
+  //
+  // Rem props:
+  //
+
+  // Single-sided:
+  /** Adds rem to the bottom margin side */
+  bottomRem?: number
+  /** Adds rem to the left margin side */
+  leftRem?: number
+  /** Adds rem to the right margin side */
+  rightRem?: number
+  /** Adds rem to the top margin side */
+  topRem?: number
+
+  // Multiple-sided:
+  /** Adds rem to all margin sides */
+  aroundRem?: number
+  /** Adds rem to left and right margin sides */
+  horizontalRem?: number
+  /** Adds rem to top and bottom margin sides */
+  verticalRem?: number
 
   /*
    * The `expand` space prop tells a component to expand its size within its
@@ -79,7 +74,7 @@ export type SpaceStyle = Pick<
 
 export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
   const theme = useTheme()
-  const { around, horizontal, vertical, top, bottom, left, right, expand = false, sideways = false } = props
+  const { aroundRem, horizontalRem, verticalRem, topRem, bottomRem, leftRem, rightRem, expand = false, sideways = false } = props
   const { alignBottom, alignLeft, alignRight, alignTop, alignCenter, alignHorizontal, alignVertical } = props
 
   const topFill = boolify(alignBottom, alignVertical, alignCenter)
@@ -87,10 +82,10 @@ export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
   const leftFill = boolify(alignRight, alignHorizontal, alignCenter)
   const rightFill = boolify(alignLeft, alignHorizontal, alignCenter)
 
-  const topUnits = numberify(top, vertical, around)
-  const bottomUnits = numberify(bottom, vertical, around)
-  const leftUnits = numberify(left, horizontal, around)
-  const rightUnits = numberify(right, horizontal, around)
+  const topUnits = numberify(topRem, verticalRem, aroundRem)
+  const bottomUnits = numberify(bottomRem, verticalRem, aroundRem)
+  const leftUnits = numberify(leftRem, horizontalRem, aroundRem)
+  const rightUnits = numberify(rightRem, horizontalRem, aroundRem)
 
   // Margins:
   const marginTop = theme.rem(topUnits)

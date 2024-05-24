@@ -336,8 +336,8 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         }
         spaceProps={
           {
-            "horizontal": 1,
-            "vertical": 0.5,
+            "horizontalRem": 1,
+            "verticalRem": 0.5,
           }
         }
         style={
