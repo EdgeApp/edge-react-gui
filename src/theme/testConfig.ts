@@ -19,7 +19,7 @@ export const testConfig: AppConfig = {
   forceCloseUrlAndroid: 'https://support.google.com/android/answer/9079646?hl=en',
   knowledgeBase: 'https://support.testy.com/knowledge',
   lightTheme: testLight,
-  notificationServers: ['https://notif1.edge.app'],
+  notificationServers: ['https://push2.edge.app'],
   phoneNumber: '+1-800-100-1000',
   referralServers: ['https://referral1.testy.com'],
   supportsEdgeLogin: false,

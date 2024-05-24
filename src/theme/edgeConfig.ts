@@ -21,7 +21,7 @@ export const edgeConfig: AppConfig = {
   forceCloseUrlAndroid: 'https://support.google.com/android/answer/9079646?hl=en',
   knowledgeBase: 'https://help.edge.app/support/home',
   lightTheme: edgeLight,
-  notificationServers: ['https://notif1.edge.app'],
+  notificationServers: ['https://push2.edge.app'],
   phoneNumber: '+1-619-777-5688',
   referralServers: ['https://referral1.edge.app'],
   supportsEdgeLogin: true,
