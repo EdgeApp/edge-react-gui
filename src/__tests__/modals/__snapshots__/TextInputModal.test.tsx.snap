@@ -169,11 +169,6 @@ exports[`TextInputModal should render with a blank input field 1`] = `
     <View
       style={
         {
-          "alignItems": undefined,
-          "alignSelf": undefined,
-          "flexDirection": "column",
-          "flexGrow": undefined,
-          "justifyContent": undefined,
           "marginBottom": 11,
           "marginLeft": 11,
           "marginRight": 11,
@@ -714,11 +709,6 @@ exports[`TextInputModal should render with a populated input field 1`] = `
     <View
       style={
         {
-          "alignItems": undefined,
-          "alignSelf": undefined,
-          "flexDirection": "column",
-          "flexGrow": undefined,
-          "justifyContent": undefined,
           "marginBottom": 11,
           "marginLeft": 11,
           "marginRight": 11,

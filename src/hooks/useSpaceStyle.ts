@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { ViewStyle } from 'react-native'
 
-import { useTheme } from '../components/services/ThemeContext'
+import { MarginRemProps, MarginRemStyle, useMarginRemStyle } from './useMarginRemStyle'
 
-export interface SpaceProps {
+export interface SpaceProps extends MarginRemProps {
   //
   // Alignment props:
   //
@@ -25,28 +25,6 @@ export interface SpaceProps {
   alignHorizontal?: boolean
   /** Aligns children to the center vertically */
   alignVertical?: boolean
-
-  //
-  // Rem props:
-  //
-
-  // Single-sided:
-  /** Adds rem to the bottom margin side */
-  bottomRem?: number
-  /** Adds rem to the left margin side */
-  leftRem?: number
-  /** Adds rem to the right margin side */
-  rightRem?: number
-  /** Adds rem to the top margin side */
-  topRem?: number
-
-  // Multiple-sided:
-  /** Adds rem to all margin sides */
-  aroundRem?: number
-  /** Adds rem to left and right margin sides */
-  horizontalRem?: number
-  /** Adds rem to top and bottom margin sides */
-  verticalRem?: number
 
   /**
    * The `expand` space prop tells a component to expand its size within its
@@ -72,13 +50,9 @@ export interface SpaceProps {
   row?: boolean
 }
 
-export type SpaceStyle = Pick<
-  ViewStyle,
-  'marginTop' | 'marginBottom' | 'marginLeft' | 'marginRight' | 'flex' | 'flexDirection' | 'alignItems' | 'justifyContent'
->
+export type SpaceStyle = Pick<ViewStyle, 'flex' | 'flexDirection' | 'alignItems' | 'justifyContent'> & MarginRemStyle
 
 export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
-  const theme = useTheme()
   const { aroundRem, horizontalRem, verticalRem, topRem, bottomRem, leftRem, rightRem, expand = false, row = false } = props
   const { alignBottom, alignLeft, alignRight, alignTop, alignCenter, alignHorizontal, alignVertical } = props
 
@@ -87,16 +61,8 @@ export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
   const leftFill = boolify(alignRight, alignHorizontal, alignCenter)
   const rightFill = boolify(alignLeft, alignHorizontal, alignCenter)
 
-  const topUnits = numberify(topRem, verticalRem, aroundRem)
-  const bottomUnits = numberify(bottomRem, verticalRem, aroundRem)
-  const leftUnits = numberify(leftRem, horizontalRem, aroundRem)
-  const rightUnits = numberify(rightRem, horizontalRem, aroundRem)
-
   // Margins:
-  const marginTop = theme.rem(topUnits)
-  const marginBottom = theme.rem(bottomUnits)
-  const marginLeft = theme.rem(leftUnits)
-  const marginRight = theme.rem(rightUnits)
+  const marginRemStyle = useMarginRemStyle({ bottomRem, leftRem, rightRem, topRem, aroundRem, horizontalRem, verticalRem })
 
   // Direction:
   const flexDirection = row ? 'row' : 'column'
@@ -118,25 +84,14 @@ export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
       flexGrow,
       flexDirection,
       justifyContent,
-      marginTop,
-      marginBottom,
-      marginLeft,
-      marginRight
+      ...marginRemStyle
     }),
-    [alignItems, alignSelf, flexDirection, flexGrow, justifyContent, marginBottom, marginLeft, marginRight, marginTop]
+    [alignItems, alignSelf, flexDirection, flexGrow, justifyContent, marginRemStyle]
   )
 
   return style
 }
 
-const numberify = (...things: Array<number | undefined>): number => {
-  for (const thing of things) {
-    if (typeof thing === 'number') {
-      return thing
-    }
-  }
-  return 0
-}
 const boolify = (...things: Array<boolean | undefined>): boolean => {
   return things.some(thing => {
     return typeof thing === 'boolean' && thing

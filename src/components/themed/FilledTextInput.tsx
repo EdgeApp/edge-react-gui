@@ -19,7 +19,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
-import { SpaceProps, useSpaceStyle } from '../../hooks/useSpaceStyle'
+import { MarginRemProps, MarginRemStyle, useMarginRemStyle } from '../../hooks/useMarginRemStyle'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
 import { AnimatedIconComponent, CloseIconAnimated, EyeIconAnimated } from '../icons/ThemedIcons'
@@ -31,7 +31,7 @@ const isAndroid = Platform.OS === 'android'
 
 export type FilledTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'done'
 
-export interface FilledTextInputBaseProps extends SpaceProps {
+export interface FilledTextInputBaseProps extends MarginRemProps {
   // Contents:
   value: string
   error?: string
@@ -80,7 +80,7 @@ export interface FilledTextInputBaseProps extends SpaceProps {
   disabled?: boolean // Defaults to 'false'
 }
 
-export type ModalFilledTextInputProps = Omit<FilledTextInputBaseProps, keyof SpaceProps>
+export type ModalFilledTextInputProps = Omit<FilledTextInputBaseProps, keyof MarginRemStyle>
 
 /**
  * FilledTextInput with standard `around=0.5` UI4 margins, for use in modals
@@ -149,7 +149,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     secureTextEntry,
     testID,
     textsizeRem,
-    ...spaceProps
+    ...marginRemProps
   } = props
   const theme = useTheme()
   const themeRem = theme.rem(1)
@@ -158,7 +158,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   const hasIcon = LeftIcon != null
   const hasValue = value !== ''
 
-  const spaceStyle = useSpaceStyle(spaceProps)
+  const marginRemStyle = useMarginRemStyle(marginRemProps)
 
   // Show/Hide password input:
   const [hidePassword, setHidePassword] = React.useState(secureTextEntry ?? false)
@@ -245,7 +245,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
       : keyboardType
 
   return (
-    <View style={spaceStyle}>
+    <View style={marginRemStyle}>
       <EdgeTouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
         <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} multiline={multiline} scale={scale}>
           <SideContainer scale={leftIconSize}>{LeftIcon == null ? null : <LeftIcon color={iconColor} size={leftIconSize} />}</SideContainer>

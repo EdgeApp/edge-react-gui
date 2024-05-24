@@ -337,11 +337,6 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
     <View
       style={
         {
-          "alignItems": undefined,
-          "alignSelf": undefined,
-          "flexDirection": "column",
-          "flexGrow": undefined,
-          "justifyContent": undefined,
           "marginBottom": 11,
           "marginLeft": 11,
           "marginRight": 11,

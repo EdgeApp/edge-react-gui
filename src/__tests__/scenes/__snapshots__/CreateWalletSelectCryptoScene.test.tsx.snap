@@ -322,6 +322,12 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           }
         }
         focusable={true}
+        marginRemProps={
+          {
+            "horizontalRem": 1,
+            "verticalRem": 0.5,
+          }
+        }
         onClick={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
@@ -334,20 +340,9 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
             "value": 1,
           }
         }
-        spaceProps={
-          {
-            "horizontalRem": 1,
-            "verticalRem": 0.5,
-          }
-        }
         style={
           [
             {
-              "alignItems": undefined,
-              "alignSelf": undefined,
-              "flexDirection": "column",
-              "flexGrow": undefined,
-              "justifyContent": undefined,
               "marginBottom": 11,
               "marginLeft": 22,
               "marginRight": 22,

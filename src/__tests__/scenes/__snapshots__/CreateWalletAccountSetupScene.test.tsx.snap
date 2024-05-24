@@ -357,11 +357,6 @@ exports[`CreateWalletAccountSelect renders 1`] = `
       <View
         style={
           {
-            "alignItems": undefined,
-            "alignSelf": undefined,
-            "flexDirection": "column",
-            "flexGrow": undefined,
-            "justifyContent": undefined,
             "marginBottom": 45,
             "marginLeft": 22,
             "marginRight": 22,

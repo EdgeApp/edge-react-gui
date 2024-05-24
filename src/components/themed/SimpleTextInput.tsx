@@ -14,7 +14,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
-import { SpaceProps, useSpaceStyle } from '../../hooks/useSpaceStyle'
+import { MarginRemProps, useMarginRemStyle } from '../../hooks/useMarginRemStyle'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
 import { AnimatedIconComponent, ChevronBackAnimated, CloseIconAnimated } from '../icons/ThemedIcons'
@@ -24,7 +24,7 @@ const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
 export type SimpleTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'done'
 
-export interface SimpleTextInputProps extends SpaceProps {
+export interface SimpleTextInputProps extends MarginRemProps {
   // Contents:
   value: string
   placeholder?: string
@@ -99,10 +99,12 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
     blurOnSubmit,
     disabled = false,
     inputAccessoryViewID,
+    keyboardType,
     maxLength,
+    returnKeyType,
     secureTextEntry,
     testID,
-    ...spaceProps
+    ...marginRemProps
   } = props
   const theme = useTheme()
   const themeRem = theme.rem(1)
@@ -186,7 +188,7 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
   return (
     <ContainerView>
       <EdgeTouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
-        <InputContainerView disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale} spaceProps={spaceProps}>
+        <InputContainerView disableAnimation={disableAnimation} focusAnimation={focusAnimation} scale={scale} marginRemProps={marginRemProps}>
           <SideContainer size={leftIconSize}>{Icon == null ? null : <Icon color={iconColor} size={leftIconSize} />}</SideContainer>
           <TouchableOpacity accessible onPress={handleDonePress} testID={`${testID}.doneButton`}>
             <SideContainer size={backIconSize}>
@@ -198,8 +200,8 @@ export const SimpleTextInput = React.forwardRef<SimpleTextInputRef, SimpleTextIn
             <InputField
               accessible
               ref={inputRef}
-              keyboardType={props.keyboardType}
-              returnKeyType={props.returnKeyType}
+              keyboardType={keyboardType}
+              returnKeyType={returnKeyType}
               accessibilityState={{ disabled }}
               autoFocus={autoFocus}
               disableAnimation={disableAnimation}
@@ -244,8 +246,8 @@ const InputContainerView = styled(Animated.View)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
   scale: SharedValue<number>
-  spaceProps: SpaceProps
-}>(theme => ({ disableAnimation, focusAnimation, scale, spaceProps }) => {
+  marginRemProps: MarginRemProps
+}>(theme => ({ disableAnimation, focusAnimation, scale, marginRemProps }) => {
   const interpolateInputBackgroundColor = useAnimatedColorInterpolateFn(
     theme.textInputBackgroundColor,
     theme.textInputBackgroundColorFocused,
@@ -256,10 +258,10 @@ const InputContainerView = styled(Animated.View)<{
     theme.textInputBorderColorFocused,
     theme.textInputBorderColorDisabled
   )
-  const spaceStyle = useSpaceStyle(spaceProps)
+  const marginRemStyle = useMarginRemStyle(marginRemProps)
 
   return [
-    spaceStyle,
+    marginRemStyle,
     {
       alignItems: 'center',
       borderWidth: theme.textInputBorderWidth,

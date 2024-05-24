@@ -184,6 +184,11 @@ exports[`WalletListModal should render with loading props 1`] = `
               }
             }
             focusable={true}
+            marginRemProps={
+              {
+                "aroundRem": 0.5,
+              }
+            }
             onClick={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
@@ -196,20 +201,9 @@ exports[`WalletListModal should render with loading props 1`] = `
                 "value": 1,
               }
             }
-            spaceProps={
-              {
-                "aroundRem": 0.5,
-                "returnKeyType": "search",
-              }
-            }
             style={
               [
                 {
-                  "alignItems": undefined,
-                  "alignSelf": undefined,
-                  "flexDirection": "column",
-                  "flexGrow": undefined,
-                  "justifyContent": undefined,
                   "marginBottom": 11,
                   "marginLeft": 11,
                   "marginRight": 11,
