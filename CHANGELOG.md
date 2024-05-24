@@ -20,7 +20,6 @@
 - changed: Consistent light account backup modal UI
 - changed: Consistent margins for modal text inputs
 - fixed: Various React Native debug warnings
-- fixed: Fio domain registration supported payment currencies
 - removed: Bitpay deeplink support
 - removed: Side menu footer close button
 
