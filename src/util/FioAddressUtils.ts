@@ -759,10 +759,25 @@ const buyAddressRequest = async (
         }
       }
 
-      // HACK: Hardcoded assets according to FIO's web interface, since the
-      // response doesn't include the actual supported assets
-      const { bitcoin, bitcoincash, ethereum, litecoin, usdc } = fioToEdgeMap
-      const supportedAssets: EdgeAsset[] = [bitcoin, bitcoincash, ethereum, litecoin, usdc]
+      const supportedAssets: EdgeAsset[] = []
+      const { addresses, pricing } = buyAddressResponse.success.charge
+      for (const currencyKey of Object.keys(pricing)) {
+        // const currencyCode = buyAddressResponse.success.charge.pricing[currencyKey].currency
+        const asset = fioToEdgeMap[currencyKey]
+        if (asset == null) {
+          continue
+        }
+        supportedAssets.push(asset)
+        const { pluginId, tokenId } = asset
+
+        if (paymentInfo[pluginId] == null) {
+          paymentInfo[pluginId] = {}
+        }
+        paymentInfo[pluginId][tokenId ?? ''] = {
+          amount: pricing[currencyKey].amount,
+          address: addresses[currencyKey]
+        }
+      }
 
       return {
         activationCost,
