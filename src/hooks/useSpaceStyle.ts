@@ -55,16 +55,19 @@ export interface SpaceProps {
    */
   expand?: boolean
 
-  /*
-   * The `sideways` prop is an additional, non-space props useful managing the
+  /**
+   * Changes the orientation of child component layout from column
+   * (top-to-bottom) to row (left-to-right).
+   *
+   * The `row` prop is an additional, non-space props useful managing the
    * stacking direction of child components. By default, child components stack
-   * vertically (column-based), from top to bottom. If `sideways={true}`, then
+   * vertically (column-based), from top to bottom. If `row={true}`, then
    * child components stack horizontally (row-based).
-   * The `sideways` prop does not affect the space properties in anyway (i.e.
-   * vertical is always vertical regardless of the value set for the `sideways`
-   *  prop).
+   *
+   * The `row` prop does not affect the alignment or rem props (i.e. vertical
+   * is always vertical regardless of the value set for the `row` prop).
    */
-  sideways?: boolean
+  row?: boolean
 }
 
 export type SpaceStyle = Pick<
@@ -74,7 +77,7 @@ export type SpaceStyle = Pick<
 
 export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
   const theme = useTheme()
-  const { aroundRem, horizontalRem, verticalRem, topRem, bottomRem, leftRem, rightRem, expand = false, sideways = false } = props
+  const { aroundRem, horizontalRem, verticalRem, topRem, bottomRem, leftRem, rightRem, expand = false, row = false } = props
   const { alignBottom, alignLeft, alignRight, alignTop, alignCenter, alignHorizontal, alignVertical } = props
 
   const topFill = boolify(alignBottom, alignVertical, alignCenter)
@@ -94,13 +97,13 @@ export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
   const marginRight = theme.rem(rightUnits)
 
   // Direction:
-  const flexDirection = sideways ? 'row' : 'column'
+  const flexDirection = row ? 'row' : 'column'
 
   // Alignment:
   const horizontalAlignment = leftFill && rightFill ? 'center' : rightFill ? 'flex-start' : leftFill ? 'flex-end' : undefined
   const verticalAlignment = topFill && bottomFill ? 'center' : bottomFill ? 'flex-start' : topFill ? 'flex-end' : undefined
-  const alignItems = sideways ? verticalAlignment : horizontalAlignment
-  const justifyContent = sideways ? horizontalAlignment ?? (expand ? 'space-between' : undefined) : verticalAlignment
+  const alignItems = row ? verticalAlignment : horizontalAlignment
+  const justifyContent = row ? horizontalAlignment ?? (expand ? 'space-between' : undefined) : verticalAlignment
 
   // Flex:
   const flex = expand ? 1 : undefined

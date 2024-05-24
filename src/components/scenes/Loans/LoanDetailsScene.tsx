@@ -119,7 +119,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
       return (
         <EdgeTouchableOpacity onPress={() => handleProgramStatusCardPress(runningProgramEdge)}>
           <CardUi4 marginRem={[0, 0, 1]}>
-            <Space sideways>
+            <Space row>
               <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
               <EdgeText style={styles.programStatusText} numberOfLines={2}>
                 {runningProgramMessage}
@@ -250,7 +250,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
             const aprText = sprintf(lstrings.loan_apr_s, toPercentString(debt.apr))
             return (
               <CardUi4 key={debt.tokenId} marginRem={[0, 0, 1]}>
-                <Space sideways>
+                <Space row>
                   <Space rightRem={1}>
                     <CryptoIconUi4 hideSecondary pluginId={pluginId} tokenId={debt.tokenId} />
                   </Space>
