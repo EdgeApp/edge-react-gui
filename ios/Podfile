@@ -15,6 +15,7 @@ require File.join(File.dirname(`node --print "require.resolve('expo/package.json
 
 # Edge addition to disable advertising ID collection:
 $RNFirebaseAnalyticsWithoutAdIdSupport = true
+$RNFirebaseAsStaticFramework = true
 
 # This is iOS 13.4 for RN 73:
 platform :ios, min_ios_version_supported
@@ -39,11 +40,8 @@ setup_permissions([
 # ```
 flipper_config = FlipperConfiguration.disabled
 
-linkage = ENV['USE_FRAMEWORKS']
-if linkage != nil
-  Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
-  use_frameworks! :linkage => linkage.to_sym
-end
+# Edge modification:
+use_frameworks! :linkage => :static
 
 target 'edge' do
   # Edge addition:
