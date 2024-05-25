@@ -5,8 +5,7 @@ import { ListRenderItem, Platform } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import shajs from 'sha.js'
 
-import { getCountryCodeByIp, hideMessageTweak } from '../../actions/AccountReferralActions'
-import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { hideMessageTweak } from '../../actions/AccountReferralActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -21,10 +20,11 @@ import { FilteredPromoCard, PromoCardUi4 } from './PromoCardUi4'
 interface Props {
   navigation: NavigationBase
   screenWidth: number
+  countryCode?: string
 }
 
 export const PromoCardsUi4 = (props: Props) => {
-  const { navigation, screenWidth } = props
+  const { countryCode, navigation, screenWidth } = props
   const theme = useTheme()
   const dispatch = useDispatch()
 
@@ -35,7 +35,6 @@ export const PromoCardsUi4 = (props: Props) => {
 
   const [filteredCards, setFilteredCards] = React.useState<FilteredPromoCard[]>([])
   const [accountFunded, setAccountFunded] = React.useState<boolean>()
-  const [countryCode, setCountryCode] = React.useState<string | undefined>()
 
   const walletsSynced = useSelector(state => {
     const { currencyWallets } = state.core.account
@@ -63,16 +62,6 @@ export const PromoCardsUi4 = (props: Props) => {
     if (!walletsSynced) return
     setAccountFunded(Object.values(currencyWallets).some(wallet => [...wallet.balanceMap.values()].some(balanceVal => !zeroString(balanceVal))))
   }, [currencyWallets, walletsSynced])
-
-  // Set countryCode once
-  useAsyncEffect(
-    async () => {
-      const countryCode = await getCountryCodeByIp().catch(() => '')
-      setCountryCode(countryCode)
-    },
-    [],
-    'countryCode'
-  )
 
   // Check for PromoCard2 from info server:
   React.useEffect(() => {

@@ -1,11 +1,13 @@
 import { asBlogPosts, BlogPost } from 'edge-info-server'
 import * as React from 'react'
-import { ListRenderItem, View } from 'react-native'
+import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
+import { getCountryCodeByIp } from '../../../actions/AccountReferralActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
+import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { useSceneScrollHandler } from '../../../state/SceneScrollState'
@@ -18,8 +20,7 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { WiredProgressBar } from '../../themed/WiredProgressBar'
 import { BalanceCardUi4 } from '../BalanceCardUi4'
-import { BlogCard } from '../BlogCard'
-import { CarouselUi4 } from '../CarouselUi4'
+import { BlogCards } from '../BlogCards'
 import { HomeCardUi4 } from '../HomeCardUi4'
 import { MarketsCardUi4 } from '../MarketsCardUi4'
 import { PromoCardsUi4 } from '../PromoCardsUi4'
@@ -40,6 +41,9 @@ export const HomeSceneUi4 = (props: Props) => {
 
   // Evenly distribute the home cards into 4 quadrants:
   const cardSize = screenWidth / 2 - theme.rem(TEMP_PADDING_REM)
+
+  const [blogPosts, setBlogPosts] = React.useState<BlogPost[]>([])
+  const [countryCode, setCountryCode] = React.useState<string | undefined>()
 
   //
   // Handlers
@@ -62,7 +66,15 @@ export const HomeSceneUi4 = (props: Props) => {
   })
   const handleScroll = useSceneScrollHandler()
 
-  const [blogPosts, setBlogPosts] = React.useState<BlogPost[]>([])
+  // Set countryCode once
+  useAsyncEffect(
+    async () => {
+      const countryCode = await getCountryCodeByIp().catch(() => '')
+      setCountryCode(countryCode)
+    },
+    [],
+    'countryCode'
+  )
 
   // Check for BlogPosts from info server:
   React.useEffect(() => {
@@ -73,8 +85,6 @@ export const HomeSceneUi4 = (props: Props) => {
       })
       .catch(e => console.log(String(e)))
   }, [])
-
-  const renderBlog: ListRenderItem<BlogPost> = useHandler(({ item }) => <BlogCard blogPost={item} />)
 
   const buyCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-buy-crypto') }), [theme])
   const sellCryptoIcon = React.useMemo(() => ({ uri: getUi4ImageUri(theme, 'cardBackgrounds/bg-sell-crypto') }), [theme])
@@ -99,7 +109,7 @@ export const HomeSceneUi4 = (props: Props) => {
                   <BalanceCardUi4 onViewAssetsPress={handleViewAssetsPress} navigation={navigation} />
                 </EdgeAnim>
                 {/* Animation inside PromoCardsUi4 component */}
-                <PromoCardsUi4 navigation={navigation} screenWidth={screenWidth} />
+                <PromoCardsUi4 countryCode={countryCode} navigation={navigation} screenWidth={screenWidth} />
                 <EdgeAnim style={homeRowStyle} enter={fadeInUp80}>
                   <HomeCardUi4
                     title={lstrings.buy_crypto}
@@ -158,7 +168,7 @@ export const HomeSceneUi4 = (props: Props) => {
               {blogPosts == null || blogPosts.length === 0 ? null : (
                 <>
                   <SectionHeaderUi4 leftTitle={lstrings.title_learn} />
-                  <CarouselUi4 data={blogPosts} renderItem={renderBlog} height={theme.rem(13)} width={screenWidth} />
+                  <BlogCards countryCode={countryCode} />
                 </>
               )}
               <SupportCardUi4
