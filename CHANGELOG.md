@@ -2,8 +2,11 @@
 
 ## Unreleased
 
+- changed: Add EUID to Simplex quoting API calls
+
 ## 4.7.0
 
+- addd: Dynamic height for multiline text inputs
 - added: Add Visa/MC buy support with Paybis
 - added: Support for `promoId`-based filtering for Promo Cards
 - added: New Asset Setting to manually enable tokens with detected balances across all wallets

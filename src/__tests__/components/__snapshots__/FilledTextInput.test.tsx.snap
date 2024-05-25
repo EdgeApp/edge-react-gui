@@ -1,8 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FilledTextInput should render with some props 1`] = `
-<View
-  style={
+<StyledComponent(View)
+  multiline={true}
+  spaceStyle={
     {
       "alignItems": undefined,
       "flex": undefined,
@@ -183,5 +184,5 @@ exports[`FilledTextInput should render with some props 1`] = `
       5
     </StyledComponent(Text)>
   </StyledComponent(View)>
-</View>
+</StyledComponent(View)>
 `;

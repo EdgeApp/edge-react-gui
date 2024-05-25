@@ -194,11 +194,26 @@ exports[`LogsModal should render with a logs modal 1`] = `
           You may add any additional notes here, and select whether to share logs with Edge, or export logs to your device.
         </Text>
         <View
+          multiline={false}
+          spaceStyle={
+            {
+              "alignItems": undefined,
+              "flex": undefined,
+              "flexDirection": "column",
+              "justifyContent": undefined,
+              "marginBottom": 11,
+              "marginLeft": 11,
+              "marginRight": 11,
+              "marginTop": 11,
+            }
+          }
           style={
             {
               "alignItems": undefined,
               "flex": undefined,
               "flexDirection": "column",
+              "flexGrow": undefined,
+              "flexShrink": undefined,
               "justifyContent": undefined,
               "marginBottom": 11,
               "marginLeft": 11,
@@ -250,6 +265,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
                   "borderWidth": 1,
                   "flexDirection": "row",
                   "flexGrow": undefined,
+                  "flexShrink": undefined,
                   "paddingHorizontal": 17,
                 },
                 {

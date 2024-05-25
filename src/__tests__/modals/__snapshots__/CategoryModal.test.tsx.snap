@@ -402,11 +402,26 @@ exports[`CategoryModal should render with a subcategory 1`] = `
       </View>
     </View>
     <View
+      multiline={false}
+      spaceStyle={
+        {
+          "alignItems": undefined,
+          "flex": undefined,
+          "flexDirection": "column",
+          "justifyContent": undefined,
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        }
+      }
       style={
         {
           "alignItems": undefined,
           "flex": undefined,
           "flexDirection": "column",
+          "flexGrow": undefined,
+          "flexShrink": undefined,
           "justifyContent": undefined,
           "marginBottom": 11,
           "marginLeft": 11,
@@ -458,6 +473,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               "borderWidth": 1,
               "flexDirection": "row",
               "flexGrow": undefined,
+              "flexShrink": undefined,
               "paddingHorizontal": 17,
             },
             {
@@ -1782,11 +1798,26 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
       </View>
     </View>
     <View
+      multiline={false}
+      spaceStyle={
+        {
+          "alignItems": undefined,
+          "flex": undefined,
+          "flexDirection": "column",
+          "justifyContent": undefined,
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        }
+      }
       style={
         {
           "alignItems": undefined,
           "flex": undefined,
           "flexDirection": "column",
+          "flexGrow": undefined,
+          "flexShrink": undefined,
           "justifyContent": undefined,
           "marginBottom": 11,
           "marginLeft": 11,
@@ -1838,6 +1869,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               "borderWidth": 1,
               "flexDirection": "row",
               "flexGrow": undefined,
+              "flexShrink": undefined,
               "paddingHorizontal": 17,
             },
             {
