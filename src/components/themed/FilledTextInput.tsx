@@ -245,7 +245,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
       : keyboardType
 
   return (
-    <View style={marginRemStyle}>
+    <OuterContainer multiline={multiline} marginRemStyle={marginRemStyle}>
       <EdgeTouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
         <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} multiline={multiline} scale={scale}>
           <SideContainer scale={leftIconSize}>{LeftIcon == null ? null : <LeftIcon color={iconColor} size={leftIconSize} />}</SideContainer>
@@ -319,9 +319,15 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
           <Message>{charactersLeft}</Message>
         </MessagesContainer>
       ) : null}
-    </View>
+    </OuterContainer>
   )
 })
+
+const OuterContainer = styled(View)<{ multiline: boolean; marginRemStyle: MarginRemStyle }>(theme => ({ multiline, marginRemStyle }) => ({
+  ...marginRemStyle,
+  flexGrow: multiline ? 1 : undefined,
+  flexShrink: multiline ? 1 : undefined
+}))
 
 const Container = styled(Animated.View)<{
   disableAnimation: SharedValue<number>
@@ -344,6 +350,7 @@ const Container = styled(Animated.View)<{
   return [
     {
       flexGrow: multiline ? 1 : undefined,
+      flexShrink: multiline ? 1 : undefined,
       alignItems: multiline ? 'stretch' : 'center',
       borderWidth: theme.textInputBorderWidth,
       borderRadius: theme.rem(0.5),

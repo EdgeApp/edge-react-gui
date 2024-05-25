@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- addd: Dynamic height for multiline text inputs
 - changed: Add EUID to Simplex quoting API calls
 
 ## 4.7.0

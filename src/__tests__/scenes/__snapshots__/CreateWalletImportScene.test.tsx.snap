@@ -335,8 +335,19 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
       Enter your private seed, private key, or active key to verify and restore the associated wallet
     </Text>
     <View
+      marginRemStyle={
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        }
+      }
+      multiline={true}
       style={
         {
+          "flexGrow": 1,
+          "flexShrink": 1,
           "marginBottom": 11,
           "marginLeft": 11,
           "marginRight": 11,
@@ -387,6 +398,7 @@ exports[`CreateWalletImportScene should render with loading props 1`] = `
               "borderWidth": 1,
               "flexDirection": "row",
               "flexGrow": 1,
+              "flexShrink": 1,
               "paddingHorizontal": 17,
             },
             {
