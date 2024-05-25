@@ -174,6 +174,10 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     if (onChangeText != null) onChangeText('')
     if (blurOnClear || !hasValue) blur()
     if (onClear != null) onClear()
+
+    // Ensure multiline input fields resize. For some reason, the way we
+    // dynamically resize as we add lines doesn't work when we clear.
+    dynamicHeight.value = themeRem * (scaleProp?.value ?? 1)
   }
   function focus(): void {
     if (inputRef.current != null && !disabled) inputRef.current.focus()
@@ -186,6 +190,9 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   }
 
   React.useImperativeHandle(ref, () => ({ blur, clear, focus, isFocused, setNativeProps }))
+
+  // Dynamic multiline height, due to changes to the input from newlines:
+  const dynamicHeight = useSharedValue<number | undefined>(undefined) // Initial height
 
   // Animates between 0 and 1 based our disabled state:
   const disableAnimation = useSharedValue(0)
@@ -271,6 +278,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               autoFocus={autoFocus}
               disableAnimation={disableAnimation}
               focusAnimation={focusAnimation}
+              dynamicHeight={dynamicHeight}
               minDecimals={minDecimals}
               maxDecimals={maxDecimals}
               multiline={multiline}
@@ -283,6 +291,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               // Callbacks:
               onBlur={handleBlur}
               onChangeText={handleChangeText}
+              onContentSizeChange={multiline ? event => (dynamicHeight.value = event.nativeEvent.contentSize.height) : undefined}
               onFocus={handleFocus}
               onSubmitEditing={handleSubmitEditing}
               maxLength={maxLength}
@@ -387,6 +396,7 @@ const TouchContainer = styled(TouchableOpacity)<{ extendTappable: 'leftOnly' | '
   return {
     paddingVertical: theme.rem(1.25),
     marginVertical: -theme.rem(1.25),
+    justifyContent: 'center',
     ...tapArea
   }
 })
@@ -525,14 +535,23 @@ const StyledAnimatedTextInput = styledWithRef(AnimatedTextInput)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
   scale: SharedValue<number>
+  dynamicHeight: SharedValue<number | undefined>
   textsizeRem?: number
-}>(theme => ({ disableAnimation, focusAnimation, scale, textsizeRem }) => {
+}>(theme => ({ disableAnimation, dynamicHeight, focusAnimation, scale, textsizeRem }) => {
   const rem = theme.rem(textsizeRem ?? 1)
   const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused, theme.textInputTextColorDisabled)
   // Need 2 pixels of shift given a 16 point rem settings
   // This is due to Android rendering a text input vertically lower
   // than a Text field by ~2 pixels
   const androidVShift = isAndroid ? rem / 8 : 0
+
+  // For animating height changes in multiline input
+  const animatedHeightStyle = useAnimatedStyle(() => {
+    if (dynamicHeight.value == null) return {}
+    return {
+      height: withTiming(dynamicHeight.value, { duration: 100 }) // Smooth animation for height change
+    }
+  })
 
   return [
     {
@@ -545,6 +564,7 @@ const StyledAnimatedTextInput = styledWithRef(AnimatedTextInput)<{
       transform: [{ translateY: -androidVShift }],
       margin: 0
     },
+    animatedHeightStyle,
     useAnimatedStyle(() => ({
       color: interpolateTextColor(focusAnimation, disableAnimation),
       fontSize: scale.value * rem
@@ -556,14 +576,23 @@ const StyledNumericInput = styledWithRef(NumericInput)<{
   disableAnimation: SharedValue<number>
   focusAnimation: SharedValue<number>
   scale: SharedValue<number>
+  dynamicHeight: SharedValue<number | undefined>
   textsizeRem?: number
-}>(theme => ({ disableAnimation, focusAnimation, textsizeRem, scale }) => {
+}>(theme => ({ disableAnimation, dynamicHeight, focusAnimation, textsizeRem, scale }) => {
   const rem = theme.rem(textsizeRem ?? 1)
   const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused, theme.textInputTextColorDisabled)
   // Need 2 pixels of shift given a 16 point rem settings
   // This is due to Android rendering a text input vertically lower
   // than a Text field by ~2 pixels
   const androidVShift = isAndroid ? rem / 8 : 0
+
+  // For animating height changes in multiline input
+  const animatedHeightStyle = useAnimatedStyle(() => {
+    if (dynamicHeight.value == null) return {}
+    return {
+      height: withTiming(dynamicHeight.value, { duration: 100 }) // Smooth animation for height change
+    }
+  })
 
   return [
     {
@@ -576,6 +605,7 @@ const StyledNumericInput = styledWithRef(NumericInput)<{
       transform: [{ translateY: -androidVShift }],
       margin: 0
     },
+    animatedHeightStyle,
     useAnimatedStyle(() => ({
       color: interpolateTextColor(focusAnimation, disableAnimation),
       fontSize: scale.value * rem

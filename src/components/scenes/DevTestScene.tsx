@@ -27,6 +27,7 @@ import { FlipInputModal2, FlipInputModalResult } from '../modals/FlipInputModal2
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { ScamWarningModal } from '../modals/ScamWarningModal'
+import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -93,6 +94,12 @@ export function DevTestScene(props: Props) {
       if (selectedWallet == null) return null
       return <FlipInputModal2 bridge={bridge} wallet={selectedWallet.wallet} tokenId={tokenId} feeTokenId={null} onAmountsChanged={onAmountsChanged} />
     }).catch(error => console.log(error))
+  }
+
+  const handleTextInputModal = () => {
+    Airship.show<string | undefined>(bridge => (
+      <TextInputModal title="TextInputModal" inputLabel="Input Value" message="This is a multiline TextInputModal" multiline bridge={bridge} />
+    )).catch(error => console.log(error))
   }
 
   const coreWallet = selectedWallet?.wallet
@@ -212,6 +219,7 @@ export function DevTestScene(props: Props) {
 
         <>
           <SectionHeaderUi4 leftTitle="Modals" rightNode={<EdgeText>Galore</EdgeText>} />
+          <ButtonUi4 label="TextInputModal" marginRem={0.25} onPress={handleTextInputModal} />
           <ButtonUi4 label="FlipInputModal2" marginRem={0.25} onPress={handleFlipInputModal} />
           <ButtonUi4
             label="ButtonsModal"
