@@ -45,7 +45,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   thorchainrune: ENV.THORCHAIN_INIT,
   tron: true,
   wax: true,
-  zksync: true,
+  zksync: ENV.ZKSYNC_INIT,
   zcash: true,
   // edge-currency-bitcoin:
   bitcoin: ENV.BITCOIN_INIT,
