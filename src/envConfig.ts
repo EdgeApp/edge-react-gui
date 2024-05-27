@@ -276,6 +276,7 @@ export const asEnvConfig = asObject({
       nowNodeApiKey: asOptional(asString, '')
     })
   ),
+  ZKSYNC_INIT: asCorePluginInit(asEvmApiKeys),
 
   // App options:
   APP_CONFIG: asOptional(asString, 'edge'),
