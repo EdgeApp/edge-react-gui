@@ -12,7 +12,6 @@ import com.facebook.react.ReactPackage
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
-import com.facebook.react.flipper.ReactNativeFlipper
 import com.facebook.react.modules.i18nmanager.I18nUtil
 import com.facebook.soloader.SoLoader
 import expo.modules.ApplicationLifecycleDispatcher
@@ -41,7 +40,7 @@ class MainApplication : Application(), ReactApplication {
         )
 
     override val reactHost: ReactHost
-        get() = getDefaultReactHost(this.applicationContext, reactNativeHost)
+        get() = getDefaultReactHost(applicationContext, reactNativeHost)
 
     override fun onCreate() {
         super.onCreate()
@@ -73,7 +72,6 @@ class MainApplication : Application(), ReactApplication {
             // app.
             load()
         }
-        ReactNativeFlipper.initializeFlipper(this, reactNativeHost.reactInstanceManager)
 
         // Expo addition:
         ApplicationLifecycleDispatcher.onApplicationCreate(this)
