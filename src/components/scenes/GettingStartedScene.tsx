@@ -252,14 +252,14 @@ const Container = styled(View)({
 // Skip Button
 //
 
-const SkipButton = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(
-  _theme => props =>
-    useAnimatedStyle(() => {
-      return {
-        opacity: interpolate(props.swipeOffset.value, [0, 1], [0, 1], Extrapolation.CLAMP)
-      }
-    })
-)
+const SkipButton = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(_theme => props => {
+  const { swipeOffset } = props
+  return useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(swipeOffset.value, [0, 1], [0, 1], Extrapolation.CLAMP)
+    }
+  })
+})
 
 //
 // Hero
@@ -270,17 +270,20 @@ const HeroContainer = styled(View)({
   alignItems: 'center'
 })
 
-const WelcomeHero = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(_theme => props => [
-  {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1
-  },
-  useAnimatedStyle(() => ({
-    opacity: interpolate(props.swipeOffset.value, [0, 0.5], [1, 0]),
-    transform: [{ scale: interpolate(props.swipeOffset.value, [0, 1], [1, 0], Extrapolation.CLAMP) }]
-  }))
-])
+const WelcomeHero = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(_theme => props => {
+  const { swipeOffset } = props
+  return [
+    {
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1
+    },
+    useAnimatedStyle(() => ({
+      opacity: interpolate(swipeOffset.value, [0, 0.5], [1, 0]),
+      transform: [{ scale: interpolate(swipeOffset.value, [0, 1], [1, 0], Extrapolation.CLAMP) }]
+    }))
+  ]
+})
 
 const WelcomeHeroTitle = styled(Text)(theme => ({
   color: theme.primaryText,
@@ -353,29 +356,33 @@ const Pagination = styled(View)(theme => ({
   marginVertical: theme.rem(0.7)
 }))
 
-const PageIndicator = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(theme => props => [
-  {
-    borderRadius: 10,
-    margin: theme.rem(0.3),
-    height: theme.rem(0.6),
-    width: theme.rem(0.6)
-  },
-  useAnimatedStyle(() => {
-    const delta = 1 - Math.max(0, Math.min(1, Math.abs(props.itemIndex - props.swipeOffset.value)))
-    const opacity = interpolate(delta, [0, 1], [0.5, 1])
-    const backgroundColor = interpolateColor(delta, [0, 1], [theme.icon, theme.iconTappable])
-    return {
-      backgroundColor,
-      opacity
-    }
-  })
-])
+const PageIndicator = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(theme => props => {
+  const { itemIndex, swipeOffset } = props
+  return [
+    {
+      borderRadius: 10,
+      margin: theme.rem(0.3),
+      height: theme.rem(0.6),
+      width: theme.rem(0.6)
+    },
+    useAnimatedStyle(() => {
+      const delta = 1 - Math.max(0, Math.min(1, Math.abs(itemIndex - swipeOffset.value)))
+      const opacity = interpolate(delta, [0, 1], [0.5, 1])
+      const backgroundColor = interpolateColor(delta, [0, 1], [theme.icon, theme.iconTappable])
+      return {
+        backgroundColor,
+        opacity
+      }
+    })
+  ]
+})
 
 //
 // Sections
 //
 
 const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(theme => props => {
+  const { swipeOffset } = props
   const themeRem = theme.rem(1)
   const insets = useSafeAreaInsets()
 
@@ -388,9 +395,9 @@ const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<nu
       marginBottom: -insets.bottom
     },
     useAnimatedStyle(() => {
-      const backgroundColor = interpolateColor(props.swipeOffset.value, [0, 1], [`${theme.modal}00`, theme.modalLikeBackground])
-      const paddingVertical = interpolate(props.swipeOffset.value, [0, 1], [0, themeRem], Extrapolation.CLAMP)
-      const flexGrow = interpolate(props.swipeOffset.value, [0, 1], [0, 1.2], Extrapolation.CLAMP)
+      const backgroundColor = interpolateColor(swipeOffset.value, [0, 1], [`${theme.modal}00`, theme.modalLikeBackground])
+      const paddingVertical = interpolate(swipeOffset.value, [0, 1], [0, themeRem], Extrapolation.CLAMP)
+      const flexGrow = interpolate(swipeOffset.value, [0, 1], [0, 1.2], Extrapolation.CLAMP)
       return {
         backgroundColor,
         paddingVertical,
@@ -400,20 +407,23 @@ const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<nu
   ]
 })
 
-const Sections = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(theme => props => [
-  {
-    paddingBottom: theme.rem(1)
-  },
-  useAnimatedStyle(() => {
-    const flexGrow = interpolate(props.swipeOffset.value, [0, 1], [0, 1.5])
-    return {
-      flexGrow
-    }
-  })
-])
+const Sections = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(theme => props => {
+  const { swipeOffset } = props
+  return [
+    {
+      paddingBottom: theme.rem(1)
+    },
+    useAnimatedStyle(() => {
+      const flexGrow = interpolate(swipeOffset.value, [0, 1], [0, 1.5])
+      return {
+        flexGrow
+      }
+    })
+  ]
+})
 
 const Section = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(theme => props => {
-  const { swipeOffset, itemIndex } = props
+  const { itemIndex, swipeOffset } = props
   const isFirstItem = itemIndex === 1
   const { width: screenWidth } = useSafeAreaFrame()
   const translateWidth = screenWidth / 2
