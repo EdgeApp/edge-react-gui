@@ -344,8 +344,9 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
           [
             {
               "alignItems": undefined,
-              "flex": undefined,
+              "alignSelf": undefined,
               "flexDirection": "column",
+              "flexGrow": undefined,
               "justifyContent": undefined,
               "marginBottom": 11,
               "marginLeft": 22,

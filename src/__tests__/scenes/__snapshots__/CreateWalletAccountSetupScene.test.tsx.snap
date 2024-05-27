@@ -358,8 +358,9 @@ exports[`CreateWalletAccountSelect renders 1`] = `
         style={
           {
             "alignItems": undefined,
-            "flex": undefined,
+            "alignSelf": undefined,
             "flexDirection": "column",
+            "flexGrow": undefined,
             "justifyContent": undefined,
             "marginBottom": 45,
             "marginLeft": 22,

@@ -137,8 +137,9 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
       style={
         {
           "alignItems": undefined,
-          "flex": undefined,
+          "alignSelf": undefined,
           "flexDirection": "column",
+          "flexGrow": undefined,
           "justifyContent": undefined,
           "marginBottom": 11,
           "marginLeft": 11,
@@ -264,8 +265,9 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
       style={
         {
           "alignItems": undefined,
-          "flex": undefined,
+          "alignSelf": undefined,
           "flexDirection": "column",
+          "flexGrow": undefined,
           "justifyContent": undefined,
           "marginBottom": 11,
           "marginLeft": 11,
@@ -650,8 +652,9 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
     style={
       {
         "alignItems": undefined,
-        "flex": undefined,
+        "alignSelf": undefined,
         "flexDirection": "column",
+        "flexGrow": undefined,
         "justifyContent": undefined,
         "marginBottom": 11,
         "marginLeft": 11,
@@ -906,8 +909,9 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
     style={
       {
         "alignItems": undefined,
-        "flex": undefined,
+        "alignSelf": undefined,
         "flexDirection": "column",
+        "flexGrow": undefined,
         "justifyContent": undefined,
         "marginBottom": 11,
         "marginLeft": 11,
@@ -1162,8 +1166,9 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
     style={
       {
         "alignItems": undefined,
-        "flex": undefined,
+        "alignSelf": undefined,
         "flexDirection": "column",
+        "flexGrow": undefined,
         "justifyContent": undefined,
         "marginBottom": 11,
         "marginLeft": 11,
@@ -1289,8 +1294,9 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
     style={
       {
         "alignItems": undefined,
-        "flex": undefined,
+        "alignSelf": undefined,
         "flexDirection": "column",
+        "flexGrow": undefined,
         "justifyContent": undefined,
         "marginBottom": 11,
         "marginLeft": 11,
@@ -1554,8 +1560,9 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
       style={
         {
           "alignItems": undefined,
-          "flex": undefined,
+          "alignSelf": undefined,
           "flexDirection": "column",
+          "flexGrow": undefined,
           "justifyContent": undefined,
           "marginBottom": 11,
           "marginLeft": 11,
@@ -1679,8 +1686,9 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
       style={
         {
           "alignItems": undefined,
-          "flex": undefined,
+          "alignSelf": undefined,
           "flexDirection": "column",
+          "flexGrow": undefined,
           "justifyContent": undefined,
           "marginBottom": 11,
           "marginLeft": 11,
@@ -2061,8 +2069,9 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
     style={
       {
         "alignItems": undefined,
-        "flex": undefined,
+        "alignSelf": undefined,
         "flexDirection": "column",
+        "flexGrow": undefined,
         "justifyContent": undefined,
         "marginBottom": 11,
         "marginLeft": 11,
@@ -2314,8 +2323,9 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
     style={
       {
         "alignItems": undefined,
-        "flex": undefined,
+        "alignSelf": undefined,
         "flexDirection": "column",
+        "flexGrow": undefined,
         "justifyContent": undefined,
         "marginBottom": 11,
         "marginLeft": 11,
@@ -2567,8 +2577,9 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
     style={
       {
         "alignItems": undefined,
-        "flex": undefined,
+        "alignSelf": undefined,
         "flexDirection": "column",
+        "flexGrow": undefined,
         "justifyContent": undefined,
         "marginBottom": 11,
         "marginLeft": 11,
@@ -2692,8 +2703,9 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
     style={
       {
         "alignItems": undefined,
-        "flex": undefined,
+        "alignSelf": undefined,
         "flexDirection": "column",
+        "flexGrow": undefined,
         "justifyContent": undefined,
         "marginBottom": 11,
         "marginLeft": 11,

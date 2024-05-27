@@ -48,10 +48,12 @@ export interface SpaceProps {
   /** Adds rem to top and bottom margin sides */
   verticalRem?: number
 
-  /*
+  /**
    * The `expand` space prop tells a component to expand its size within its
-   * parent component. This is sometimes useful when you want to use the space
-   * props to align the component.
+   * parent component.
+   *
+   * This is particularly useful when you want to use the space props to
+   * align the component.
    */
   expand?: boolean
 
@@ -106,20 +108,22 @@ export const useSpaceStyle = (props: SpaceProps): SpaceStyle => {
   const justifyContent = row ? horizontalAlignment ?? (expand ? 'space-between' : undefined) : verticalAlignment
 
   // Flex:
-  const flex = expand ? 1 : undefined
+  const alignSelf = expand ? 'stretch' : undefined
+  const flexGrow = expand ? 1 : undefined
 
   const style: SpaceStyle = useMemo(
     () => ({
+      alignSelf,
+      alignItems,
+      flexGrow,
+      flexDirection,
+      justifyContent,
       marginTop,
       marginBottom,
       marginLeft,
-      marginRight,
-      flex,
-      flexDirection,
-      alignItems,
-      justifyContent
+      marginRight
     }),
-    [alignItems, flex, flexDirection, justifyContent, marginBottom, marginLeft, marginRight, marginTop]
+    [alignItems, alignSelf, flexDirection, flexGrow, justifyContent, marginBottom, marginLeft, marginRight, marginTop]
   )
 
   return style
