@@ -96,7 +96,7 @@ export const SearchFooter = (props: SearchFooterProps) => {
 
   return (
     <SceneFooterWrapper
-      sceneFooterKey={`${name}-SceneFooterWrapper`}
+      key={`${name}-SceneFooterWrapper`}
       noBackgroundBlur={noBackground}
       sceneWrapperInfo={sceneWrapperInfo}
       onLayoutHeight={handleFooterLayoutHeight}
