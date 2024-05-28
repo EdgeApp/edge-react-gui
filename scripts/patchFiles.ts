@@ -42,10 +42,18 @@ async function main() {
 
   // Patch native files for Sentry
   const env = require('../env.json')
-  const sentryFiles = ['./android/sentry.properties', './ios/sentry.properties']
+  const sentryFiles = [
+    './android/sentry.properties',
+    './ios/sentry.properties',
+    './ios/edge/AppDelegate.mm',
+    './android/app/src/main/java/co/edgesecure/app/MainApplication.kt',
+    './android/app/build.gradle'
+  ]
 
   for (const file of sentryFiles) {
     await searchReplace(file, 'https://sentryuploadurl.mydomain.com', env.SENTRY_MAP_UPLOAD_URL)
+    await searchReplace(file, 'SENTRY_MAP_UPLOAD_URL', env.SENTRY_MAP_UPLOAD_URL)
+    await searchReplace(file, 'SENTRY_DSN_URL', env.SENTRY_DSN_URL)
     await searchReplace(file, 'SENTRY_MAP_UPLOAD_AUTH_TOKEN', env.SENTRY_MAP_UPLOAD_AUTH_TOKEN)
     await searchReplace(file, 'SENTRY_ORGANIZATION_SLUG', env.SENTRY_ORGANIZATION_SLUG)
     await searchReplace(file, 'SENTRY_PROJECT_SLUG', env.SENTRY_PROJECT_SLUG)

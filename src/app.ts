@@ -23,7 +23,12 @@ const releaseStage = __DEV__ || appVersion === '99.99.99' ? 'development' : appV
 
 Sentry.init({
   dsn: ENV.SENTRY_DSN_URL,
-  tracesSampleRate: releaseStage === 'production' || releaseStage === 'testing' ? 0.2 : 1.0
+  tracesSampleRate: releaseStage === 'production' || releaseStage === 'testing' ? 0.2 : 1.0,
+  maxBreadcrumbs: 25,
+
+  // Initialize Sentry within native iOS and Android code so we can catch crashes at
+  // early app startup.
+  autoInitializeNativeSdk: false
 })
 
 // Uncomment the next line to remove popup warning/error boxes.

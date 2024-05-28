@@ -14,6 +14,7 @@
 #import <React/RCTLinkingManager.h>
 #import <sys/errno.h>
 #import <UserNotifications/UserNotifications.h>
+#import <Sentry.h>
 
 @implementation AppDelegate {
   // Edge addition:
@@ -40,6 +41,18 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [SentrySDK startWithConfigureOptions:^(SentryOptions *options) {
+      options.dsn = @"SENTRY_DSN_URL";
+      options.debug = YES; // Enabled debug when first installing is always helpful
+
+      // Enable tracing to capture 100% of transactions for performance monitoring.
+      // Use 'options.tracesSampleRate' to set the sampling rate.
+      // We recommend setting a sample rate in production.
+      // options.enableTracing = YES;
+      options.tracesSampleRate = @0.2;
+      options.enableCaptureFailedRequests = NO;
+  }];
+
   // React template code:
   self.moduleName = @"edge";
   // You can add your custom initial props in the dictionary below.
