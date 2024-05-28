@@ -84,7 +84,7 @@ export const RewardsCardDashboardScene = (props: Props) => {
         </CardList>
       </SceneWrapper>
       <BottomFloat onLayout={event => setBottomFloatHeight(event.nativeEvent.layout.height)}>
-        <Space around={1}>
+        <Space aroundRem={1}>
           <MainButton onPress={onNewPress} label={lstrings.buy_new_card_button} />
         </Space>
       </BottomFloat>
@@ -118,7 +118,7 @@ export const RewardsCard = (props: RewardsCardProps) => {
       >
         <CardInner shouldStack={shouldStack}>
           <CardHeader>
-            <Space sideways>
+            <Space row>
               <VisaBrandImage source={visaBrandImage} />
               {onPress == null ? null : <Ionicon name="chevron-forward-outline" size={theme.rem(1.5)} color={theme.iconTappable} />}
             </Space>
@@ -134,7 +134,7 @@ export const RewardsCard = (props: RewardsCardProps) => {
             )}
           </CardHeader>
           <Space expand>
-            <Space bottom={0.5} sideways expand>
+            <Space bottomRem={0.5} row expand>
               <Space>
                 <CardFieldLabel>{lstrings.purchase_date_label}</CardFieldLabel>
                 <Space>
@@ -150,7 +150,7 @@ export const RewardsCard = (props: RewardsCardProps) => {
                 </Space>
               </Space>
             </Space>
-            <Space sideways expand>
+            <Space row expand>
               <Space>
                 <CardFieldLabel>{lstrings.string_expires}</CardFieldLabel>
                 <Space>

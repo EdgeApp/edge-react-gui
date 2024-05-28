@@ -359,7 +359,7 @@ export const LoanCreateScene = (props: Props) => {
         withTopMargin
       />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
-        <Space horizontal={0.5} bottom={1} top={0.5}>
+        <Space horizontalRem={0.5} bottomRem={1} topRem={0.5}>
           {/* Amount  to borrow */}
           <FiatAmountInputCard
             wallet={destWallet == null ? borrowEngineWallet : destWallet}
@@ -374,7 +374,7 @@ export const LoanCreateScene = (props: Props) => {
           {isLoading ? (
             <ActivityIndicator color={theme.textLink} style={styles.cardContainer} />
           ) : (
-            <Space around>
+            <Space alignCenter>
               <AprCard apr={apr} />
             </Space>
           )}
@@ -415,7 +415,7 @@ export const LoanCreateScene = (props: Props) => {
           {renderWarning()}
 
           {destWallet == null ? null : (
-            <Space around={1}>
+            <Space aroundRem={1}>
               <MainButton
                 label={lstrings.string_next_capitalized}
                 disabled={isInsufficientCollateral || !isUserInputComplete}

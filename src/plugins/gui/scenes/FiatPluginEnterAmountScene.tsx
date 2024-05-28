@@ -186,7 +186,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
                   showSpinner={spinner2}
                   textsizeRem={1.5}
                   value={value2 ?? '0'}
-                  vertical={0.5}
+                  verticalRem={0.5}
                 />
               </EdgeAnim>
               <EdgeAnim enter={fadeInUp30}>
@@ -205,7 +205,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
                   showSpinner={spinner1}
                   textsizeRem={1.5}
                   value={value1 ?? '0'}
-                  vertical={0.5}
+                  verticalRem={0.5}
                 />
               </EdgeAnim>
               {onMax != null ? (
@@ -237,7 +237,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
                   showSpinner={spinner1}
                   textsizeRem={1.5}
                   value={value1 ?? '0'}
-                  vertical={0.5}
+                  verticalRem={0.5}
                 />
               </EdgeAnim>
               <EdgeAnim enter={fadeInUp30}>
@@ -256,7 +256,7 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
                   showSpinner={spinner2}
                   textsizeRem={1.5}
                   value={value2 ?? '0'}
-                  vertical={0.5}
+                  verticalRem={0.5}
                 />
               </EdgeAnim>
               {onMax != null ? (

@@ -425,7 +425,7 @@ export const LoanManageSceneComponent = (props: Props) => {
         </EdgeTouchableOpacity>
       }
     >
-      <Space vertical={1} around={0.5}>
+      <Space verticalRem={1} aroundRem={0.5}>
         <FiatAmountInputCard
           wallet={borrowEngineWallet}
           iconUri={iconUri}
@@ -436,14 +436,14 @@ export const LoanManageSceneComponent = (props: Props) => {
         />
         {isShowAprChange ? <AprCard apr={newApr} key="apr" /> : null}
         <EdgeText style={styles.textTitle}>{manageActionData.srcDestCard}</EdgeText>
-        <Space around={0.5}>
+        <Space aroundRem={0.5}>
           <Shimmer isShown={bankAccountsMap == null} />
           <Peek isShown={bankAccountsMap != null}>
             <TappableAccountCard emptyLabel={lstrings.loan_select_receiving_wallet} selectedAsset={selectedAsset} onPress={handleShowWalletPickerModal} />
           </Peek>
         </Space>
       </Space>
-      <Space vertical={1} around={0.25}>
+      <Space verticalRem={1} aroundRem={0.25}>
         <TotalDebtCollateralTile
           title={isActionSideDebts ? lstrings.loan_current_principal : lstrings.loan_current_collateral}
           wallet={borrowEngineWallet}

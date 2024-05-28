@@ -101,7 +101,7 @@ export const SearchFooter = (props: SearchFooterProps) => {
       sceneWrapperInfo={sceneWrapperInfo}
       onLayoutHeight={handleFooterLayoutHeight}
     >
-      <Space expand horizontal={1} vertical={0.5}>
+      <Space expand horizontalRem={1} verticalRem={0.5}>
         <SimpleTextInput
           returnKeyType="search"
           placeholder={placeholder}

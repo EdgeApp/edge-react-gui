@@ -61,7 +61,7 @@ export const ButtonsViewUi4 = React.memo(
     if (layout == null) {
       layout = buttonInfos.length === 1 ? 'solo' : 'column'
     }
-    const spacing = <Space around={INTER_BUTTON_SPACING_REM / 2} />
+    const spacing = <Space aroundRem={INTER_BUTTON_SPACING_REM / 2} />
 
     const renderButton = (type: ButtonTypeUi4, buttonProps?: ButtonInfo, index: number = 0) => {
       if (buttonProps == null) return null

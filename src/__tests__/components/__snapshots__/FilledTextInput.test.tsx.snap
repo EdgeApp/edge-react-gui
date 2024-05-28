@@ -4,10 +4,6 @@ exports[`FilledTextInput should render with some props 1`] = `
 <View
   style={
     {
-      "alignItems": undefined,
-      "flex": undefined,
-      "flexDirection": "column",
-      "justifyContent": undefined,
       "marginBottom": 0,
       "marginLeft": 0,
       "marginRight": 0,

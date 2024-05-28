@@ -196,10 +196,6 @@ exports[`LogsModal should render with a logs modal 1`] = `
         <View
           style={
             {
-              "alignItems": undefined,
-              "flex": undefined,
-              "flexDirection": "column",
-              "justifyContent": undefined,
               "marginBottom": 11,
               "marginLeft": 11,
               "marginRight": 11,
