@@ -1,4 +1,3 @@
-import Bugsnag from '@bugsnag/react-native'
 import * as React from 'react'
 import { ActivityIndicator } from 'react-native'
 import { makeAirship } from 'react-native-airship'
@@ -23,12 +22,12 @@ export function showError(error: unknown, options: ShowErrorWarningOptions = {})
   const translatedMessage = translateError(error) + tagMessage
   if (trackError) {
     if (error instanceof Error) {
-      // Log error with stack trace and a translated message to Bugsnag:
+      // Log error with stack trace and a translated message to bug tracker
       error.message = translatedMessage
-      Bugsnag.notify(error)
+      // TODO: Add bug tracker notify method with 'error'
     } else {
-      // Any other types we just send the translated message to Bugsnag:
-      Bugsnag.notify(translatedMessage)
+      // Any other types we just send the translated message to bug tracker
+      // TODO: Add bug tracker notify method with 'translatedMessage'
     }
   }
   console.log(redText('Showing error drop-down alert: ' + makeErrorLog(error)))
@@ -45,7 +44,7 @@ export function showWarning(error: unknown, options: ShowErrorWarningOptions = {
   const { trackError = true, tag } = options
   const translatedError = tag ? `Tag: ${tag}. ` + translateError(error) : translateError(error)
   if (trackError) {
-    Bugsnag.notify(`showWarning: ${translatedError}`)
+    // TODO: Add bug tracker notify method with `showWarning: ${translatedError}`
   }
   console.log(yellowText('Showing warning drop-down alert: ' + makeErrorLog(error)))
   Airship.show(bridge => <AlertDropdown bridge={bridge} message={translatedError} warning />).catch(err => console.error(err))

@@ -5,11 +5,8 @@
  * rerenders
  */
 // import './wdyr'
-import Bugsnag from '@bugsnag/react-native'
-import BugsnagPerformance from '@bugsnag/react-native-performance'
 import { asObject, asString } from 'cleaners'
 import { LogBox, Text, TextInput } from 'react-native'
-import { getVersion } from 'react-native-device-info'
 import RNFS from 'react-native-fs'
 
 import { initDeviceSettings } from './actions/DeviceSettingsActions'
@@ -57,11 +54,6 @@ for (const consoleOutputType of ENV.MUTE_CONSOLE_OUTPUT) {
   }
 }
 
-Bugsnag.start({
-  onError: event => {
-    log(`Bugsnag Device ID: ${event.device.id ?? ''}`)
-  }
-})
 const asServerDetails = asObject({
   host: asString,
   port: asString
@@ -104,29 +96,6 @@ if (!__DEV__) {
   console.warn = log
   console.error = log
 }
-
-const appVersion = getVersion()
-const releaseStage = __DEV__ || appVersion === '99.99.99' ? 'development' : appVersion.includes('-') ? 'testing' : 'production'
-
-BugsnagPerformance.start({
-  apiKey: ENV.BUGSNAG_API_KEY,
-  appVersion,
-  releaseStage,
-  logger: {
-    debug(message: string) {
-      console.log(message)
-    },
-    info(message: string) {
-      console.log(message)
-    },
-    warn(message: string) {
-      console.warn(message)
-    },
-    error(message: string) {
-      console.error(message)
-    }
-  }
-})
 
 if (ENV.LOG_SERVER) {
   console.log = function () {
@@ -225,11 +194,11 @@ const realFetch = fetch
 fetch = async (...args: any) => {
   // @ts-expect-error
   return await realFetch(...args).catch(e => {
-    Bugsnag.leaveBreadcrumb('realFetchError', {
-      url: args[0],
-      errorName: e.name,
-      errorMsg: e.message
-    })
+    // TODO: leaveBreadcrumb('realFetchError', {
+    //   url: args[0],
+    //   errorName: e.name,
+    //   errorMsg: e.message
+    // })
     console.log(`realFetchError: ${args[0]} ${e.name} ${e.message}`)
     throw e
   })

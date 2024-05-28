@@ -23,7 +23,6 @@ buildscript {
 
         // Edge additions:
         classpath 'com.google.gms:google-services:4.3.14'
-        classpath "com.bugsnag:bugsnag-android-gradle-plugin:8.1.0"
         classpath "gradle.plugin.tech.formatter-kt:plugin:0.7.9"
     }
 }

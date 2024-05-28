@@ -2,8 +2,6 @@ package co.edgesecure.app
 
 import android.app.Application
 import android.content.res.Configuration
-import com.bugsnag.android.BreadcrumbType
-import com.bugsnag.android.Bugsnag
 import com.facebook.react.PackageList
 import com.facebook.react.ReactApplication
 import com.facebook.react.ReactHost
@@ -44,18 +42,6 @@ class MainApplication : Application(), ReactApplication {
 
     override fun onCreate() {
         super.onCreate()
-
-        // @bugsnag/react-native
-        val config = com.bugsnag.android.Configuration.load(this)
-        config.enabledBreadcrumbTypes = object : HashSet<BreadcrumbType?>() {
-            init {
-                add(BreadcrumbType.ERROR)
-                add(BreadcrumbType.NAVIGATION)
-                add(BreadcrumbType.STATE)
-                add(BreadcrumbType.USER)
-            }
-        }
-        Bugsnag.start(this, config)
 
         // Disable RTL:
         val sharedI18nUtilInstance = I18nUtil.getInstance()

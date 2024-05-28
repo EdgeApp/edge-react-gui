@@ -8,7 +8,6 @@
 #import "ExpoModulesCore-Swift.h"
 #import "Edge-Swift.h"
 #import "RNBootSplash.h"
-#import <Bugsnag/Bugsnag.h>
 #import <Firebase.h>
 #import <FirebaseMessaging.h>
 #import <Foundation/Foundation.h>
@@ -46,15 +45,6 @@
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
-
-  // Native Bugsnag integration:
-  BugsnagConfiguration *config = [BugsnagConfiguration loadConfig];
-  config.enabledBreadcrumbTypes =
-    BSGEnabledBreadcrumbTypeError &
-    BSGEnabledBreadcrumbTypeNavigation &
-    BSGEnabledBreadcrumbTypeState &
-    BSGEnabledBreadcrumbTypeUser;
-  [Bugsnag startWithConfiguration:config];
 
   // Native Firebase integration:
   if ([FIRApp defaultApp] == nil) {

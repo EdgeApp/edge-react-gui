@@ -39,17 +39,9 @@ async function main() {
       call(`git apply ${file}`)
     })
   }
-
-  // Patch native files for Bugsnag API key
-  const env = require('../env.json')
-  const bugsnagFiles = ['./android/app/src/main/AndroidManifest.xml', './ios/edge/Info.plist']
-
-  for (const file of bugsnagFiles) {
-    await searchReplace(file, 'a0000000000000000000000000000000', env.BUGSNAG_API_KEY)
-  }
 }
 
-async function searchReplace(file: string, search: string, replace: string): Promise<void> {
+export async function searchReplace(file: string, search: string, replace: string): Promise<void> {
   console.log(`${file} ${search} ${replace}`)
   const text = fs.readFileSync(file, { encoding: 'utf8' })
   const newText = text.split(search).join(replace)

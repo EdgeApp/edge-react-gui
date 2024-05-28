@@ -1,4 +1,3 @@
-import Bugsnag from '@bugsnag/react-native'
 import * as React from 'react'
 
 interface Props {
@@ -38,5 +37,4 @@ class ErrorBoundaryComponent extends React.Component<Props, State> {
   }
 }
 
-const reactPlugin = Bugsnag.getPlugin('react')
-export const ErrorBoundary: typeof ErrorBoundaryComponent = reactPlugin != null ? reactPlugin.createErrorBoundary(React) : ErrorBoundaryComponent
+export const ErrorBoundary: typeof ErrorBoundaryComponent = ErrorBoundaryComponent

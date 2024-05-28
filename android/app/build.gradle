@@ -3,7 +3,6 @@ apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
 // Edge build plugins:
-apply plugin: 'com.bugsnag.android.gradle'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'tech.formatter-kt.formatter'
 

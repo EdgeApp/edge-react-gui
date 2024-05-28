@@ -1,29 +1,6 @@
 PODS:
   - _NIODataStructures (2.40.0)
   - boost (1.83.0)
-  - BugsnagReactNative (7.22.7):
-    - React-Core
-  - BugsnagReactNativePerformance (2.2.0):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.01.01.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
   - BVLinearGradient (2.8.3):
     - React-Core
   - CGRPCZlib (1.8.0)
@@ -1758,8 +1735,6 @@ PODS:
 
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
-  - "BugsnagReactNative (from `../node_modules/@bugsnag/react-native`)"
-  - "BugsnagReactNativePerformance (from `../node_modules/@bugsnag/react-native-performance`)"
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - disklet (from `../node_modules/disklet`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
@@ -1926,10 +1901,6 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
-  BugsnagReactNative:
-    :path: "../node_modules/@bugsnag/react-native"
-  BugsnagReactNativePerformance:
-    :path: "../node_modules/@bugsnag/react-native-performance"
   BVLinearGradient:
     :path: "../node_modules/react-native-linear-gradient"
   disklet:
@@ -2155,8 +2126,6 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   _NIODataStructures: 3d45d8e70a1d17a15b1dc59d102c63dbc0525ffd
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
-  BugsnagReactNative: 7cc5c927f6a0b00a8e3cc7157dab4cc94a4bc575
-  BugsnagReactNativePerformance: f1d056ccdaea3496f21dc9e891535dda3da85607
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   CGRPCZlib: 298dd3237ba4bd7b3eed109e7080ff3324b7d9c9
   CNIOAtomics: 8edf08644e5e6fa0f021c239be9e8beb1cd9ef18
