@@ -32,6 +32,7 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
       }
     >
       <PickerItem
+        color="#FFFFFF"
         label="Disabled"
         value={0}
       />

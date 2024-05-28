@@ -8,7 +8,7 @@ import { config } from '../../theme/appConfig'
 import { Airship } from '../services/AirshipInstance'
 import { Paragraph } from '../themed/EdgeText'
 import { ModalUi4 } from '../ui4/ModalUi4'
-import { ButtonsModal2 } from './ButtonsModal'
+import { ButtonsModal } from './ButtonsModal'
 import { ConfirmContinueModal } from './ConfirmContinueModal'
 
 /**
@@ -50,7 +50,7 @@ export const ScamWarningModal = (props: { bridge: AirshipBridge<'yes' | 'no' | u
   })
 
   return (
-    <ButtonsModal2
+    <ButtonsModal
       bridge={bridge}
       buttons={{
         yes: { label: lstrings.yes, onPress: handleYesPress },
