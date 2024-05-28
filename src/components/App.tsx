@@ -1,5 +1,6 @@
 import '@ethersproject/shims'
 
+import { wrap } from '@sentry/react-native'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -15,7 +16,7 @@ function logCrash(error: { originalError: unknown }) {
   console.log('Showing crash screen:', error.originalError)
 }
 
-export function App(props: {}) {
+function MainApp(props: {}) {
   return (
     <SafeAreaProvider>
       <ThemeProvider>
@@ -29,3 +30,5 @@ export function App(props: {}) {
     </SafeAreaProvider>
   )
 }
+
+export const App = wrap(MainApp)

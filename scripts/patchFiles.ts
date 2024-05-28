@@ -39,6 +39,17 @@ async function main() {
       call(`git apply ${file}`)
     })
   }
+
+  // Patch native files for Sentry
+  const env = require('../env.json')
+  const sentryFiles = ['./android/sentry.properties', './ios/sentry.properties']
+
+  for (const file of sentryFiles) {
+    await searchReplace(file, 'https://sentryuploadurl.mydomain.com', env.SENTRY_MAP_UPLOAD_URL)
+    await searchReplace(file, 'SENTRY_MAP_UPLOAD_AUTH_TOKEN', env.SENTRY_MAP_UPLOAD_AUTH_TOKEN)
+    await searchReplace(file, 'SENTRY_ORGANIZATION_SLUG', env.SENTRY_ORGANIZATION_SLUG)
+    await searchReplace(file, 'SENTRY_PROJECT_SLUG', env.SENTRY_PROJECT_SLUG)
+  }
 }
 
 export async function searchReplace(file: string, search: string, replace: string): Promise<void> {

@@ -5,8 +5,10 @@
  * rerenders
  */
 // import './wdyr'
+import * as Sentry from '@sentry/react-native'
 import { asObject, asString } from 'cleaners'
 import { LogBox, Text, TextInput } from 'react-native'
+import { getVersion } from 'react-native-device-info'
 import RNFS from 'react-native-fs'
 
 import { initDeviceSettings } from './actions/DeviceSettingsActions'
@@ -15,6 +17,14 @@ import { ENV } from './env'
 import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
 import { initInfoServer } from './util/network'
+
+const appVersion = getVersion()
+const releaseStage = __DEV__ || appVersion === '99.99.99' ? 'development' : appVersion.includes('-') ? 'testing' : 'production'
+
+Sentry.init({
+  dsn: ENV.SENTRY_DSN_URL,
+  tracesSampleRate: releaseStage === 'production' || releaseStage === 'testing' ? 0.2 : 1.0
+})
 
 // Uncomment the next line to remove popup warning/error boxes.
 // LogBox.ignoreAllLogs()
