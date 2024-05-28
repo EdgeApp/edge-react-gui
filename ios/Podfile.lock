@@ -1434,7 +1434,7 @@ PODS:
     - React-Core
   - RNCAsyncStorage (1.19.4):
     - React-Core
-  - RNCClipboard (1.13.2):
+  - RNCClipboard (1.14.1):
     - React-Core
   - RNCPicker (2.4.0):
     - React-Core
@@ -2195,7 +2195,7 @@ SPEC CHECKSUMS:
   rn-id-blurview: 42b72b8741b1624ef5052928ec7c04fcb345e198
   RNBootSplash: 0a92fb6bd3d265e23cded61faf3e9fda441d0a6b
   RNCAsyncStorage: 3a8f7145d17cdd9f88e7b77666c94a09e4f759c8
-  RNCClipboard: 60fed4b71560d7bfe40e9d35dea9762b024da86d
+  RNCClipboard: 0a720adef5ec193aa0e3de24c3977222c7e52a37
   RNCPicker: 6d5d64e7b90c240c779ee0938ec433c11e2dd758
   RNDateTimePicker: 4f3c4dbd4f908be32ec8c93f086e8924bd4a2e07
   RNDeviceInfo: bf8a32acbcb875f568217285d1793b0e8588c974
