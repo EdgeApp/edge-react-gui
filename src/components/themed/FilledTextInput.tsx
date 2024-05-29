@@ -5,7 +5,7 @@
 
 import * as React from 'react'
 import { useMemo } from 'react'
-import { ActivityIndicator, Platform, Text, TextInput, TextInputProps, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, LayoutChangeEvent, Platform, Text, TextInput, TextInputProps, TouchableOpacity, View } from 'react-native'
 import Animated, {
   interpolate,
   interpolateColor,
@@ -164,6 +164,10 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   const [hidePassword, setHidePassword] = React.useState(secureTextEntry ?? false)
   const handleHidePassword = () => setHidePassword(!hidePassword)
 
+  // Track the height of the outer container to make sure the inner text input
+  // does not exceed this height:
+  const [containerHeight, setContainerHeight] = React.useState<number>(0)
+
   // Imperative methods:
   const inputRef = useAnimatedRef<TextInput>()
   function blur(): void {
@@ -226,6 +230,11 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     if (onSubmitEditing != null) onSubmitEditing()
   })
 
+  const handleContainerLayout = useHandler((event: LayoutChangeEvent) => {
+    const { height } = event.nativeEvent.layout
+    setContainerHeight(height)
+  })
+
   const leftIconSize = useDerivedValue(() => (hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0))
   const rightIconSize = useDerivedValue(() => (clearIcon ? (hasValue ? themeRem : focusAnimation.value * themeRem) : 0))
 
@@ -252,7 +261,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
       : keyboardType
 
   return (
-    <View style={marginRemStyle}>
+    <View style={[marginRemStyle, { flexShrink: 1 }]} onLayout={handleContainerLayout}>
       <EdgeTouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
         <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} multiline={multiline} scale={scale}>
           <SideContainer scale={leftIconSize}>{LeftIcon == null ? null : <LeftIcon color={iconColor} size={leftIconSize} />}</SideContainer>
@@ -279,6 +288,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
               disableAnimation={disableAnimation}
               focusAnimation={focusAnimation}
               dynamicHeight={dynamicHeight}
+              maxHeight={containerHeight}
               minDecimals={minDecimals}
               maxDecimals={maxDecimals}
               multiline={multiline}
@@ -353,6 +363,7 @@ const Container = styled(Animated.View)<{
   return [
     {
       flexGrow: multiline ? 1 : undefined,
+      flexShrink: multiline ? 1 : undefined,
       alignItems: multiline ? 'stretch' : 'center',
       borderWidth: theme.textInputBorderWidth,
       borderRadius: theme.rem(0.5),
@@ -368,6 +379,11 @@ const Container = styled(Animated.View)<{
     }))
   ]
 })
+
+const OuterContainer = styled(View)<{ marginRemStyle: MarginRemStyle }>(theme => ({ marginRemStyle }) => ({
+  ...marginRemStyle,
+  flexShrink: 1
+}))
 
 /**
  * extendTappable: Which horizontal side of the icon do we want to increase
@@ -536,8 +552,9 @@ const StyledAnimatedTextInput = styledWithRef(AnimatedTextInput)<{
   focusAnimation: SharedValue<number>
   scale: SharedValue<number>
   dynamicHeight: SharedValue<number | undefined>
+  maxHeight: number
   textsizeRem?: number
-}>(theme => ({ disableAnimation, dynamicHeight, focusAnimation, scale, textsizeRem }) => {
+}>(theme => ({ disableAnimation, dynamicHeight, focusAnimation, maxHeight, scale, textsizeRem }) => {
   const rem = theme.rem(textsizeRem ?? 1)
   const interpolateTextColor = useAnimatedColorInterpolateFn(theme.textInputTextColor, theme.textInputTextColorFocused, theme.textInputTextColorDisabled)
   // Need 2 pixels of shift given a 16 point rem settings
@@ -549,7 +566,8 @@ const StyledAnimatedTextInput = styledWithRef(AnimatedTextInput)<{
   const animatedHeightStyle = useAnimatedStyle(() => {
     if (dynamicHeight.value == null) return {}
     return {
-      height: withTiming(dynamicHeight.value, { duration: 100 }) // Smooth animation for height change
+      height: withTiming(dynamicHeight.value, { duration: 100 }), // Smooth animation for height change
+      maxHeight: maxHeight > 0 ? maxHeight - rem * 1.5 : undefined // Apply maxHeight dynamically, adjusting for padding
     }
   })
 
@@ -577,6 +595,7 @@ const StyledNumericInput = styledWithRef(NumericInput)<{
   focusAnimation: SharedValue<number>
   scale: SharedValue<number>
   dynamicHeight: SharedValue<number | undefined>
+  maxHeight: number
   textsizeRem?: number
 }>(theme => ({ disableAnimation, dynamicHeight, focusAnimation, textsizeRem, scale }) => {
   const rem = theme.rem(textsizeRem ?? 1)
