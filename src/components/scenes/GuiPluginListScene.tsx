@@ -34,7 +34,7 @@ import { infoServerData } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { logEvent, OnLogEvent } from '../../util/tracking'
 import { base58ToUuid } from '../../util/utils'
-import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
+import { EdgeAnim, fadeInUp20, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
 import { TextInputModal } from '../modals/TextInputModal'
 import { WalletListResult } from '../modals/WalletListModal'
@@ -290,7 +290,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const poweredBy = plugin.poweredBy ?? plugin.displayName
 
     return (
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }} style={styles.hackContainer}>
         <CardUi4
           icon={
             <Image
@@ -363,12 +363,18 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         </EdgeAnim>
 
         {hasCountryData ? (
-          <EdgeAnim enter={fadeInUp60}>
+          <EdgeAnim enter={fadeInUp60} style={styles.hackContainer}>
             <SectionHeaderUi4 leftTitle={lstrings.title_select_region} />
           </EdgeAnim>
         ) : null}
-        <EdgeAnim enter={fadeInUp30}>{countryCard}</EdgeAnim>
-        {hasCountryData ? <SectionHeaderUi4 leftTitle={lstrings.title_select_payment_method} /> : null}
+        <EdgeAnim enter={fadeInUp30} style={styles.hackContainer}>
+          {countryCard}
+        </EdgeAnim>
+        {hasCountryData ? (
+          <EdgeAnim enter={fadeInUp20} style={styles.hackContainer}>
+            <SectionHeaderUi4 leftTitle={lstrings.title_select_payment_method} />
+          </EdgeAnim>
+        ) : null}
       </>
     )
   }
@@ -388,10 +394,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { accountPlugins, accountReferral, countryCode, stateProvinceCode, developerModeOn, disablePlugins, theme, insetStyle } = this.props
+    const { accountPlugins, accountReferral, countryCode, stateProvinceCode, developerModeOn, disablePlugins, insetStyle } = this.props
     const direction = this.getSceneDirection()
     const { buy = [], sell = [] } = this.state.buySellPlugins
-    const styles = getStyles(theme)
 
     // Pick a filter based on our direction:
     let plugins = filterGuiPluginJson(direction === 'buy' ? buy : sell, Platform.OS, countryCode, disablePlugins, stateProvinceCode)
@@ -410,34 +415,35 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     return (
-      <View style={styles.sceneContainer}>
-        <Animated.FlatList
-          data={plugins}
-          onScroll={this.props.onScroll}
-          ListHeaderComponent={this.renderTop}
-          ListEmptyComponent={this.renderEmptyList}
-          renderItem={this.renderPlugin}
-          keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
-          contentContainerStyle={insetStyle}
-        />
-      </View>
+      <Animated.FlatList
+        data={plugins}
+        onScroll={this.props.onScroll}
+        ListHeaderComponent={this.renderTop}
+        ListEmptyComponent={this.renderEmptyList}
+        renderItem={this.renderPlugin}
+        keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
+        contentContainerStyle={insetStyle}
+      />
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   header: {
-    marginLeft: -theme.rem(0.5),
-    width: '100%'
+    marginRight: -theme.rem(0.5),
+    // HACK: Required for the header underline to span all the way to the right
+    // TODO: Make SceneHeader work right under UI4
+    overflow: 'visible'
   },
   cardContentContainer: {
     flexDirection: 'column',
     flexShrink: 1,
     marginRight: theme.rem(0.5)
   },
-  sceneContainer: {
-    flex: 1,
-    padding: theme.rem(0.5)
+  hackContainer: {
+    // HACK: Required for the header underline to span all the way to the right
+    // TODO: Make SceneHeader work right under UI4
+    paddingHorizontal: theme.rem(0.5)
   },
   selectedCountryRow: {
     marginTop: theme.rem(1.5),
