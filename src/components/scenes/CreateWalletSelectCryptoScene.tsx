@@ -245,12 +245,14 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
   const renderRow = useHandler((item: ListRenderItemInfo<WalletCreateItem | null>) => {
     // Render the bottom button
-    if (item.item === null)
+    if (item.item === null) {
+      if (splitSourceWalletId != null) return null
       return (
         <Fade noFadeIn={selectedItems.size === 0} visible={selectedItems.size === 0} duration={300}>
           <ButtonUi4 type="secondary" label={lstrings.add_custom_token} onPress={handleAddCustomTokenPress} marginRem={0.5} />
         </Fade>
       )
+    }
 
     const { key, displayName, pluginId, tokenId } = item.item
 
