@@ -2,6 +2,7 @@ import * as React from 'react'
 import { ActivityIndicator } from 'react-native'
 import { makeAirship } from 'react-native-airship'
 
+import { trackError } from '../../util/tracking'
 import { makeErrorLog, translateError } from '../../util/translateError'
 import { AirshipToast } from '../common/AirshipToast'
 import { AlertDropdown } from '../navigation/AlertDropdown'
@@ -17,17 +18,17 @@ export interface ShowErrorWarningOptions {
  * Used when some user-requested operation fails.
  */
 export function showError(error: unknown, options: ShowErrorWarningOptions = {}): void {
-  const { trackError = true, tag } = options
+  const { trackError: doTrackError = true, tag } = options
   const tagMessage = tag == null ? '' : ` Tag: ${tag}.`
   const translatedMessage = translateError(error) + tagMessage
-  if (trackError) {
+  if (doTrackError) {
     if (error instanceof Error) {
       // Log error with stack trace and a translated message to bug tracker
       error.message = translatedMessage
-      // TODO: Add bug tracker notify method with 'error'
+      trackError(error)
     } else {
       // Any other types we just send the translated message to bug tracker
-      // TODO: Add bug tracker notify method with 'translatedMessage'
+      trackError(translatedMessage)
     }
   }
   console.log(redText('Showing error drop-down alert: ' + makeErrorLog(error)))
@@ -41,10 +42,10 @@ export function showError(error: unknown, options: ShowErrorWarningOptions = {})
  * Used when some user-requested operation succeeds but with a warning.
  */
 export function showWarning(error: unknown, options: ShowErrorWarningOptions = {}): void {
-  const { trackError = true, tag } = options
+  const { trackError: doTrackError = true, tag } = options
   const translatedError = tag ? `Tag: ${tag}. ` + translateError(error) : translateError(error)
-  if (trackError) {
-    // TODO: Add bug tracker notify method with `showWarning: ${translatedError}`
+  if (doTrackError) {
+    trackError(`showWarning: ${translatedError}`)
   }
   console.log(yellowText('Showing warning drop-down alert: ' + makeErrorLog(error)))
   Airship.show(bridge => <AlertDropdown bridge={bridge} message={translatedError} warning />).catch(err => console.error(err))

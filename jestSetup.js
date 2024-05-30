@@ -8,6 +8,14 @@ require('react-native-reanimated/src/reanimated2/jestUtils').setUpTests()
 
 const mockReanimated = jest.requireMock('react-native-reanimated')
 
+jest.mock('@sentry/react-native', () => {
+  return {
+    captureException: () => false,
+    addBreadcrumb: () => {},
+    wrap: x => x
+  }
+})
+
 jest.mock('@react-native-clipboard/clipboard', () => mockClipboard)
 
 jest.mock('disklet', () => {

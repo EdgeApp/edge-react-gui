@@ -1,4 +1,5 @@
 import analytics from '@react-native-firebase/analytics'
+import { captureException } from '@sentry/react-native'
 import { TrackingEventName as LoginTrackingEventName, TrackingValues as LoginTrackingValues } from 'edge-login-ui-rn'
 import PostHog from 'posthog-react-native'
 import { getBuildNumber, getUniqueId, getVersion } from 'react-native-device-info'
@@ -157,11 +158,9 @@ export function trackError(
   }
 
   if (tag == null) {
-    // TODO: Add bug tracker notify method
-    console.log('Error:', err)
+    captureException(err)
   } else {
-    // TODO: Add bug tracker notify method with metadata
-    console.log('Error:', err, 'Tag:', tag, 'Metadata:', String(metadata))
+    captureException(err, { event_id: tag, data: metadata })
   }
 }
 

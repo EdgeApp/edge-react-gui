@@ -2,8 +2,10 @@
 
 ## Unreleased
 
-- addd: Dynamic height for multiline text inputs
+- added: Dynamic height for multiline text inputs
+- added: Sentry SDK for crash reporting
 - changed: Add EUID to Simplex quoting API calls
+- removed: Bugsnag for crash reporting
 
 ## 4.7.0
 

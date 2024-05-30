@@ -209,12 +209,11 @@ const realFetch = fetch
 fetch = async (...args: any) => {
   // @ts-expect-error
   return await realFetch(...args).catch(e => {
-    // TODO: leaveBreadcrumb('realFetchError', {
-    //   url: args[0],
-    //   errorName: e.name,
-    //   errorMsg: e.message
-    // })
-    console.log(`realFetchError: ${args[0]} ${e.name} ${e.message}`)
+    Sentry.addBreadcrumb({
+      event_id: e.name,
+      message: e.message,
+      data: args[0]
+    })
     throw e
   })
 }
