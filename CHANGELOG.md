@@ -18,6 +18,7 @@
 - changed: Transaction List Scene displays wallet name in title
 - changed: Consistent light account backup modal UI
 - changed: Consistent margins for modal text inputs
+- changed: Remove Florida from Kado support
 - fixed: Various React Native debug warnings
 - removed: Bitpay deeplink support
 - removed: Side menu footer close button
