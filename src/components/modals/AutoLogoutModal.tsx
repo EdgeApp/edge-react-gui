@@ -82,7 +82,7 @@ export const AutoLogoutModal = (props: Props) => {
               {numberPickerOptions}
             </Picker>
             <View style={styles.androidPickerOverlayContainer} pointerEvents="none">
-              <EdgeText style={styles.androidPickerText}>{displayTime.value}</EdgeText>
+              <EdgeText style={styles.androidPickerText}>{displayTime.value === 0 ? lstrings.string_disable : displayTime.value}</EdgeText>
               <Feather name="chevron-down" color={theme.iconTappable} size={theme.rem(1.5)} />
             </View>
           </View>
