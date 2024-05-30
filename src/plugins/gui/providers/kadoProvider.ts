@@ -69,7 +69,7 @@ const CHAIN_ID_TO_PLUGIN_MAP: { [chainId: string]: string } = Object.entries(PLU
 
 const SUPPORTED_REGIONS: FiatProviderSupportedRegions = {
   US: {
-    notStateProvinces: ['NY', 'TX']
+    notStateProvinces: ['FL', 'NY', 'TX']
   }
 }
 
