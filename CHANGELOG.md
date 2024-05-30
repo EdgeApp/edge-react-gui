@@ -22,6 +22,7 @@
 - fixed: Various React Native debug warnings
 - removed: Bitpay deeplink support
 - removed: Side menu footer close button
+- removed: Disable Piratechain (iOS only)
 
 ## 4.6.0 (2024-05-13)
 
