@@ -248,7 +248,8 @@ export const Main = () => {
     }
   }, [theme])
 
-  const localUsers = useSelector(state => state.core.context.localUsers)
+  const context = useSelector(state => state.core.context)
+  const { localUsers } = context
 
   useMount(() => {
     dispatch(logEvent('Start_App', { numAccounts: localUsers.length }))
@@ -274,6 +275,8 @@ export const Main = () => {
     'setLegacyLanding'
   )
 
+  const initialRouteName = ENV.USE_WELCOME_SCREENS && localUsers.length === 0 ? 'gettingStarted' : 'login'
+
   return (
     <>
       {experimentConfig == null ? (
@@ -288,7 +291,7 @@ export const Main = () => {
           theme={reactNavigationTheme}
         >
           <Stack.Navigator
-            initialRouteName={ENV.USE_WELCOME_SCREENS ? 'gettingStarted' : 'login'}
+            initialRouteName={initialRouteName}
             screenOptions={{
               headerShown: false
             }}
