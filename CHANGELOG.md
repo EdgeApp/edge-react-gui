@@ -6,7 +6,6 @@
 
 - added: Add Visa/MC buy support with Paybis
 - added: Support for `promoId`-based filtering for Promo Cards
-- added: Scam warning to the first login after app install, first view of private keys, and first use of WalletConnect
 - added: New Asset Setting to manually enable tokens with detected balances across all wallets
 - added: MUTE_CONSOLE_OUTPUT environment variable to disable specific console output functions
 - added: Performance logging with app start-up time and login time as initial performance metrics
