@@ -6,6 +6,7 @@
 - added: Sentry SDK for crash reporting
 - changed: Add EUID to Simplex quoting API calls
 - removed: Bugsnag for crash reporting
+- removed: Firebase/Google Analytics
 
 ## 4.7.0
 

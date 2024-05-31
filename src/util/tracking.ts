@@ -1,8 +1,7 @@
-import analytics from '@react-native-firebase/analytics'
 import { captureException } from '@sentry/react-native'
 import { TrackingEventName as LoginTrackingEventName, TrackingValues as LoginTrackingValues } from 'edge-login-ui-rn'
 import PostHog from 'posthog-react-native'
-import { getBuildNumber, getUniqueId, getVersion } from 'react-native-device-info'
+import { getBuildNumber, getVersion } from 'react-native-device-info'
 import { checkNotifications } from 'react-native-permissions'
 
 import { getFirstOpenInfo } from '../actions/FirstOpenActions'
@@ -13,6 +12,7 @@ import { CryptoAmount } from './CryptoAmount'
 import { fetchReferral } from './network'
 import { makeErrorLog } from './translateError'
 import { consify } from './utils'
+
 export type TrackingEventName =
   | 'Activate_Wallet_Cancel'
   | 'Activate_Wallet_Done'
@@ -107,22 +107,6 @@ export interface TrackingValues extends LoginTrackingValues {
   conversionValues?: DollarConversionValues | CryptoConversionValues | SellConversionValues
 }
 
-// Set up the global Firebase analytics instance at boot:
-if (ENV.USE_FIREBASE) {
-  const inner = analytics()
-  const setUserIdAsync = async () => {
-    const uniqueId = await getUniqueId()
-    await inner.setUserId(uniqueId)
-  }
-  setUserIdAsync().catch(e => console.error(e))
-
-  // @ts-expect-error
-  global.firebase = {
-    analytics() {
-      return inner
-    }
-  }
-}
 // Set up the global Posthog analytics instance at boot
 if (ENV.POSTHOG_INIT) {
   const { apiKey, apiHost } = ENV.POSTHOG_INIT
@@ -233,26 +217,9 @@ export function logEvent(event: TrackingEventName, values: TrackingValues = {}):
 
         consify({ logEvent: { event, params } })
 
-        Promise.all([logToPosthog(event, params), logToFirebase(event, params), logToUtilServer(event, params)]).catch(error => console.warn(error))
+        Promise.all([logToPosthog(event, params), logToUtilServer(event, params)]).catch(error => console.warn(error))
       })
       .catch(console.error)
-  }
-}
-
-/**
- * Send a raw event to Firebase.
- */
-async function logToFirebase(name: TrackingEventName, params: any) {
-  // @ts-expect-error
-  if (!global.firebase) return
-
-  // If we get passed a dollarValue, translate the event into a purchase:
-  if (params.dollarValue != null) {
-    // @ts-expect-error
-    global.firebase.analytics().logEvent('purchase', params)
-  } else {
-    // @ts-expect-error
-    global.firebase.analytics().logEvent(name, params)
   }
 }
 
