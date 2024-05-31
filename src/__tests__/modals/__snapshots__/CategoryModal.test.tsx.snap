@@ -402,8 +402,19 @@ exports[`CategoryModal should render with a subcategory 1`] = `
       </View>
     </View>
     <View
+      marginRemStyle={
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        }
+      }
+      multiline={false}
       style={
         {
+          "flexGrow": undefined,
+          "flexShrink": undefined,
           "marginBottom": 11,
           "marginLeft": 11,
           "marginRight": 11,
@@ -454,6 +465,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               "borderWidth": 1,
               "flexDirection": "row",
               "flexGrow": undefined,
+              "flexShrink": undefined,
               "paddingHorizontal": 17,
             },
             {
@@ -1778,8 +1790,19 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
       </View>
     </View>
     <View
+      marginRemStyle={
+        {
+          "marginBottom": 11,
+          "marginLeft": 11,
+          "marginRight": 11,
+          "marginTop": 11,
+        }
+      }
+      multiline={false}
       style={
         {
+          "flexGrow": undefined,
+          "flexShrink": undefined,
           "marginBottom": 11,
           "marginLeft": 11,
           "marginRight": 11,
@@ -1830,6 +1853,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               "borderWidth": 1,
               "flexDirection": "row",
               "flexGrow": undefined,
+              "flexShrink": undefined,
               "paddingHorizontal": 17,
             },
             {

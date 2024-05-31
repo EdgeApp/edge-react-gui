@@ -1,8 +1,10 @@
 import * as React from 'react'
+import { View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
 import { ModalButtons } from '../common/ModalButtons'
+import { styled } from '../hoc/styled'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
 import { Paragraph } from '../themed/EdgeText'
@@ -89,27 +91,34 @@ export function TextInputModal(props: Props) {
 
   return (
     <ModalUi4 warning={warning} bridge={bridge} title={title} onCancel={() => bridge.resolve(undefined)}>
-      {typeof message === 'string' ? <Paragraph>{message}</Paragraph> : <>{message}</>}
-      {warningMessage != null ? <Alert type="warning" title={lstrings.string_warning} marginRem={0.5} message={warningMessage} numberOfLines={0} /> : null}
-      <ModalFilledTextInput
-        // Text input props:
-        autoCapitalize={autoCapitalize}
-        autoFocus={autoFocus}
-        autoCorrect={autoCorrect}
-        keyboardType={keyboardType}
-        placeholder={inputLabel}
-        returnKeyType={returnKeyType}
-        secureTextEntry={secureTextEntry}
-        multiline={multiline}
-        // Our props:
-        error={errorMessage}
-        onChangeText={handleChangeText}
-        onSubmitEditing={handleSubmit}
-        textsizeRem={textSizeRem}
-        value={text}
-        maxLength={maxLength}
-      />
-      <ModalButtons primary={{ label: submitLabel, onPress: handleSubmit }} />
+      <StyledInnerView fullHeight={multiline}>
+        {typeof message === 'string' ? <Paragraph>{message}</Paragraph> : <>{message}</>}
+        {warningMessage != null ? <Alert type="warning" title={lstrings.string_warning} marginRem={0.5} message={warningMessage} numberOfLines={0} /> : null}
+        <ModalFilledTextInput
+          // Text input props:
+          autoCapitalize={autoCapitalize}
+          autoFocus={autoFocus}
+          autoCorrect={autoCorrect}
+          keyboardType={keyboardType}
+          placeholder={inputLabel}
+          returnKeyType={returnKeyType}
+          secureTextEntry={secureTextEntry}
+          multiline={multiline}
+          // Our props:
+          error={errorMessage}
+          onChangeText={handleChangeText}
+          onSubmitEditing={handleSubmit}
+          textsizeRem={textSizeRem}
+          value={text}
+          maxLength={maxLength}
+        />
+        <ModalButtons primary={{ label: submitLabel, onPress: handleSubmit }} />
+      </StyledInnerView>
     </ModalUi4>
   )
 }
+
+const StyledInnerView = styled(View)<{ fullHeight: boolean }>(() => props => ({
+  flexShrink: 1,
+  flexGrow: props.fullHeight ? 1 : undefined
+}))

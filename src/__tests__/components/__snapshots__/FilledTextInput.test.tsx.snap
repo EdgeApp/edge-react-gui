@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FilledTextInput should render with some props 1`] = `
-<View
-  style={
+<StyledComponent(View)
+  marginRemStyle={
     {
       "marginBottom": 0,
       "marginLeft": 0,
@@ -10,6 +10,7 @@ exports[`FilledTextInput should render with some props 1`] = `
       "marginTop": 0,
     }
   }
+  multiline={true}
 >
   <ExtendedTouchable
     accessible={false}
@@ -179,5 +180,5 @@ exports[`FilledTextInput should render with some props 1`] = `
       5
     </StyledComponent(Text)>
   </StyledComponent(View)>
-</View>
+</StyledComponent(View)>
 `;

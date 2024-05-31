@@ -355,8 +355,19 @@ exports[`CreateWalletAccountSelect renders 1`] = `
 
       </Text>
       <View
+        marginRemStyle={
+          {
+            "marginBottom": 45,
+            "marginLeft": 22,
+            "marginRight": 22,
+            "marginTop": 22,
+          }
+        }
+        multiline={false}
         style={
           {
+            "flexGrow": undefined,
+            "flexShrink": undefined,
             "marginBottom": 45,
             "marginLeft": 22,
             "marginRight": 22,
@@ -407,6 +418,7 @@ exports[`CreateWalletAccountSelect renders 1`] = `
                 "borderWidth": 1,
                 "flexDirection": "row",
                 "flexGrow": undefined,
+                "flexShrink": undefined,
                 "paddingHorizontal": 17,
               },
               {
