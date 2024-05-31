@@ -1,6 +1,4 @@
-import { InitialRouteName } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { useEffect } from 'react'
 import { Image, Pressable, Text, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import Animated, {
@@ -24,7 +22,6 @@ import uspImage3 from '../../assets/images/gettingStarted/usp3.png'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ExperimentConfig } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
-import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -88,11 +85,9 @@ export const GettingStartedScene = (props: Props) => {
   const { navigation, route } = props
   const dispatch = useDispatch()
   const { experimentConfig } = route.params
-  const { createAccountType } = experimentConfig
   const context = useSelector(state => state.core.context)
-  const isLoggedIn = useSelector(state => state.ui.settings.settingsLoaded ?? false)
-  const localUsers = useWatch(context, 'localUsers')
-  const hasLocalUsers = localUsers.length > 0
+  const hasLocalUsers = context.localUsers.length > 0
+  const lightAccounts = experimentConfig.createAccountType === 'light' && !hasLocalUsers
 
   // An extra index is added to account for the extra initial usp slide OR to
   // allow the SwipeOffsetDetector extra room for the user to swipe beyond to
@@ -101,9 +96,17 @@ export const GettingStartedScene = (props: Props) => {
   const swipeOffset = useSharedValue(0)
 
   // Route helpers
-  const newAccountRoute: InitialRouteName = hasLocalUsers || createAccountType === 'full' ? 'new-account' : 'new-light-account'
+  const visitPasswordScene = (): void =>
+    navigation.navigate('login', {
+      loginUiInitialRoute: lightAccounts ? 'login-password-light' : 'login-password',
+      experimentConfig
+    })
 
-  const passwordLoginRoute: InitialRouteName = hasLocalUsers || createAccountType === 'full' ? 'login-password' : 'login-password-light'
+  const visitNewAccountScene = (): void =>
+    navigation.navigate('login', {
+      loginUiInitialRoute: lightAccounts ? 'new-light-account' : 'new-account',
+      experimentConfig
+    })
 
   const handleFinalSwipe = useHandler(() => {
     // This delay is necessary to properly reset the scene since it remains on
@@ -116,9 +119,9 @@ export const GettingStartedScene = (props: Props) => {
 
     // Either route to password login or account creation
     if (hasLocalUsers) {
-      navigation.navigate('login', { loginUiInitialRoute: passwordLoginRoute, experimentConfig })
+      visitPasswordScene()
     } else {
-      navigation.navigate('login', { loginUiInitialRoute: newAccountRoute, experimentConfig })
+      visitNewAccountScene()
     }
   })
 
@@ -128,12 +131,12 @@ export const GettingStartedScene = (props: Props) => {
 
   const handlePressSignIn = useHandler(() => {
     dispatch(logEvent('Welcome_Signin'))
-    navigation.navigate('login', { loginUiInitialRoute: passwordLoginRoute, experimentConfig })
+    visitPasswordScene()
   })
 
   const handlePressSignUp = useHandler(() => {
     dispatch(logEvent('Signup_Welcome'))
-    navigation.navigate('login', { loginUiInitialRoute: newAccountRoute, experimentConfig })
+    visitNewAccountScene()
   })
 
   const handlePressSkip = useHandler(() => {
@@ -150,16 +153,6 @@ export const GettingStartedScene = (props: Props) => {
       }
     }
   )
-
-  // Redirect to login screen if device has memory of accounts
-  // HACK: It's unknown how the localUsers dependency makes the routing work
-  // properly, but use isLoggedIn explicitly to address the bug where this
-  // effect would cause an unwanted navigation while logged in.
-  useEffect(() => {
-    if (localUsers.length > 0 && !isLoggedIn) {
-      navigation.navigate('login', { experimentConfig })
-    }
-  }, [experimentConfig, isLoggedIn, localUsers, navigation])
 
   return (
     <SceneWrapper hasHeader={false}>
