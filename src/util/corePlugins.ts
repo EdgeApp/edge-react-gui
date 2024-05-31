@@ -1,4 +1,5 @@
 import { EdgeCorePluginsInit } from 'edge-core-js'
+import { Platform } from 'react-native'
 
 import { ENV } from '../env'
 
@@ -32,7 +33,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   liberlandtestnet: false,
   optimism: ENV.OPTIMISM_INIT,
   osmosis: ENV.OSMOSIS_INIT,
-  piratechain: true,
+  piratechain: Platform.OS === 'android',
   polkadot: true,
   polygon: ENV.POLYGON_INIT,
   pulsechain: ENV.PULSECHAIN_INIT,
