@@ -8,13 +8,13 @@
 #import "ExpoModulesCore-Swift.h"
 #import "Edge-Swift.h"
 #import "RNBootSplash.h"
-#import <Bugsnag/Bugsnag.h>
 #import <Firebase.h>
 #import <FirebaseMessaging.h>
 #import <Foundation/Foundation.h>
 #import <React/RCTLinkingManager.h>
 #import <sys/errno.h>
 #import <UserNotifications/UserNotifications.h>
+#import <Sentry.h>
 
 @implementation AppDelegate {
   // Edge addition:
@@ -41,20 +41,23 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [SentrySDK startWithConfigureOptions:^(SentryOptions *options) {
+      options.dsn = @"SENTRY_DSN_URL";
+      options.debug = YES; // Enabled debug when first installing is always helpful
+
+      // Enable tracing to capture 100% of transactions for performance monitoring.
+      // Use 'options.tracesSampleRate' to set the sampling rate.
+      // We recommend setting a sample rate in production.
+      // options.enableTracing = YES;
+      options.tracesSampleRate = @0.2;
+      options.enableCaptureFailedRequests = NO;
+  }];
+
   // React template code:
   self.moduleName = @"edge";
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
-
-  // Native Bugsnag integration:
-  BugsnagConfiguration *config = [BugsnagConfiguration loadConfig];
-  config.enabledBreadcrumbTypes =
-    BSGEnabledBreadcrumbTypeError &
-    BSGEnabledBreadcrumbTypeNavigation &
-    BSGEnabledBreadcrumbTypeState &
-    BSGEnabledBreadcrumbTypeUser;
-  [Bugsnag startWithConfiguration:config];
 
   // Native Firebase integration:
   if ([FIRApp defaultApp] == nil) {

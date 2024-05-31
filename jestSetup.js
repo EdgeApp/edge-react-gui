@@ -8,20 +8,11 @@ require('react-native-reanimated/src/reanimated2/jestUtils').setUpTests()
 
 const mockReanimated = jest.requireMock('react-native-reanimated')
 
-jest.mock('@bugsnag/react-native', () => {
+jest.mock('@sentry/react-native', () => {
   return {
-    isStarted: () => false,
-    leaveBreadcrumb: () => {},
-    notify: () => {},
-    start: () => false,
-    getPlugin: () => {
-      return {
-        createErrorBoundary:
-          () =>
-          ({ children }) =>
-            children
-      }
-    }
+    captureException: () => false,
+    addBreadcrumb: () => {},
+    wrap: x => x
   }
 })
 

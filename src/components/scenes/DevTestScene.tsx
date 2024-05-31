@@ -1,3 +1,4 @@
+import { captureException } from '@sentry/react-native'
 import { eq } from 'biggystring'
 import { InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
@@ -429,6 +430,17 @@ export function DevTestScene(props: Props) {
               dispatch(launchDeepLink(navigation, parsed)).catch(e => showError(e))
             }}
             label="Activate DeepLink"
+            type="primary"
+          />
+        </>
+        <>
+          <SectionHeaderUi4 leftTitle="Crash Reporting" />
+          <ButtonUi4
+            marginRem={0.5}
+            onPress={() => {
+              captureException(new Error('First error'))
+            }}
+            label="Crash"
             type="primary"
           />
         </>

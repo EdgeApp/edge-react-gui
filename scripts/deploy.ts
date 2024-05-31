@@ -38,7 +38,6 @@ interface BuildConfigFile {
   appCenterAppName: string
   appCenterDistroGroup: string
   appCenterGroupName: string
-  bugsnagApiKey: string
   hockeyAppId: string
   hockeyAppTags: string
   hockeyAppToken: string
@@ -407,36 +406,6 @@ function buildCommonPost(buildObj: BuildObj) {
 
     call(curl)
     mylog('\nUploaded to HockeyApp')
-  }
-
-  if (buildObj.bugsnagApiKey && buildObj.dSymFile && !simBuild) {
-    mylog('\n\nUploading to Bugsnag')
-    mylog('*********************\n')
-
-    const cpa = `cp -a ${buildObj.dSymFile}/Contents/Resources/DWARF/${escapePath(buildObj.productName)} ${buildObj.tmpDir}/`
-    call(cpa)
-    curl =
-      '/usr/bin/curl https://upload.bugsnag.com/ ' +
-      `-F dsym=@${buildObj.tmpDir}/${escapePath(buildObj.productName)} ` +
-      `-F projectRoot=${buildObj.guiPlatformDir}`
-    call(curl)
-  }
-
-  if (buildObj.bugsnagApiKey && buildObj.platformType === 'android' && !simBuild) {
-    mylog('\n\nUploading Android map files to Bugsnag')
-    mylog('*********************\n')
-    chdir(buildObj.guiDir)
-    call(
-      `yarn run bugsnag-source-maps upload-react-native \
-      --api-key ${buildObj.bugsnagApiKey} \
-      --app-version ${buildObj.version} \
-      --app-version-code ${buildObj.buildNum} \
-      --bundle ${buildObj.bundlePath} \
-      --platform ${buildObj.platformType} \
-      --project-root ${buildObj.guiPlatformDir} \
-      --source-map ${buildObj.bundleMapFile} \
-    `
-    )
   }
 
   if (buildObj.appCenterApiToken && buildObj.appCenterAppName && buildObj.appCenterGroupName && !simBuild) {

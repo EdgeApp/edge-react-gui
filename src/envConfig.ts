@@ -28,9 +28,13 @@ const asEvmApiKeys = asObject({
 export const asEnvConfig = asObject({
   // API keys:
   AIRBITZ_API_KEY: asOptional(asString, ''),
-  BUGSNAG_API_KEY: asOptional(asString, 'a0000000000000000000000000000000'),
   COINGECKO_API_KEY: asOptional(asString, 'a0000000000000000000000000000000'),
   IP_API_KEY: asOptional(asString, ''),
+  SENTRY_DSN_URL: asOptional(asString, 'https://e38932e6141c31de9c9b937c433a3b28@sentryuploadurl.mydomain.com/1'),
+  SENTRY_MAP_UPLOAD_URL: asOptional(asString, 'https://sentryuploadurl.mydomain.com'),
+  SENTRY_MAP_UPLOAD_AUTH_TOKEN: asOptional(asString, ''),
+  SENTRY_ORGANIZATION_SLUG: asOptional(asString, 'edge'),
+  SENTRY_PROJECT_SLUG: asOptional(asString, 'edge-react-gui'),
 
   // GUI plugin options:
   ACTION_QUEUE: asOptional(

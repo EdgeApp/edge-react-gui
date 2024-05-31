@@ -40,16 +40,27 @@ async function main() {
     })
   }
 
-  // Patch native files for Bugsnag API key
+  // Patch native files for Sentry
   const env = require('../env.json')
-  const bugsnagFiles = ['./android/app/src/main/AndroidManifest.xml', './ios/edge/Info.plist']
+  const sentryFiles = [
+    './android/sentry.properties',
+    './ios/sentry.properties',
+    './ios/edge/AppDelegate.mm',
+    './android/app/src/main/java/co/edgesecure/app/MainApplication.kt',
+    './android/app/build.gradle'
+  ]
 
-  for (const file of bugsnagFiles) {
-    await searchReplace(file, 'a0000000000000000000000000000000', env.BUGSNAG_API_KEY)
+  for (const file of sentryFiles) {
+    await searchReplace(file, 'https://sentryuploadurl.mydomain.com', env.SENTRY_MAP_UPLOAD_URL)
+    await searchReplace(file, 'SENTRY_MAP_UPLOAD_URL', env.SENTRY_MAP_UPLOAD_URL)
+    await searchReplace(file, 'SENTRY_DSN_URL', env.SENTRY_DSN_URL)
+    await searchReplace(file, 'SENTRY_MAP_UPLOAD_AUTH_TOKEN', env.SENTRY_MAP_UPLOAD_AUTH_TOKEN)
+    await searchReplace(file, 'SENTRY_ORGANIZATION_SLUG', env.SENTRY_ORGANIZATION_SLUG)
+    await searchReplace(file, 'SENTRY_PROJECT_SLUG', env.SENTRY_PROJECT_SLUG)
   }
 }
 
-async function searchReplace(file: string, search: string, replace: string): Promise<void> {
+export async function searchReplace(file: string, search: string, replace: string): Promise<void> {
   console.log(`${file} ${search} ${replace}`)
   const text = fs.readFileSync(file, { encoding: 'utf8' })
   const newText = text.split(search).join(replace)
