@@ -10,7 +10,7 @@ import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { showError, showToast } from '../services/AirshipInstance'
+import { showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -56,22 +56,14 @@ export const RowUi4 = (props: Props) => {
       showToast(lstrings.fragment_copied)
     } else if (onPress != null) {
       triggerHaptic('impactLight')
-      try {
-        await onPress()
-      } catch (err) {
-        showError(err)
-      }
+      await onPress()
     }
   })
 
   const handleLongPress = useHandler(async () => {
     if (onLongPress != null) {
       triggerHaptic('impactLight')
-      try {
-        await onLongPress()
-      } catch (err) {
-        showError(err)
-      }
+      await onLongPress()
     }
   })
 

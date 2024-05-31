@@ -24,7 +24,7 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
 import { CloseIconAnimated, SwapVerticalIcon } from '../icons/ThemedIcons'
-import { showError } from '../services/AirshipInstance'
+import { showDevError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { NumericInput } from './NumericInput'
 import { ButtonBox } from './ThemedButtons'
@@ -152,7 +152,7 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
           setAmounts(newAmounts)
         }
       })
-      .catch(e => showError(e.message))
+      .catch(e => showDevError(e.message))
   })
 
   const handleBottomFocus = useHandler(() => {
