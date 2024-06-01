@@ -20,6 +20,7 @@ import { logActivity } from '../util/logger'
 import { validatePassword } from './AccountActions'
 import { showDeleteWalletModal } from './DeleteWalletModalActions'
 import { showResyncWalletModal } from './ResyncWalletModalActions'
+import { showScamWarningModal } from './ScamWarningActions'
 import { toggleUserPausedWallet } from './SettingsActions'
 
 export type WalletListMenuKey =
@@ -156,6 +157,9 @@ export function walletListMenuAction(
         const wallet = account.currencyWallets[walletId]
         const { xpubExplorer } = wallet.currencyInfo
 
+        // Show the scam warning modal if needed
+        await showScamWarningModal('firstPrivateKeyView')
+
         const displayPublicSeed = await account.getDisplayPublicKey(wallet.id)
 
         const copy: ButtonInfo = {
@@ -218,6 +222,9 @@ export function walletListMenuAction(
         const { account } = state.core
         const { currencyWallets } = account
         const wallet = currencyWallets[walletId]
+
+        // Show the scam warning modal if needed
+        await showScamWarningModal('firstPrivateKeyView')
 
         const passwordValid = await dispatch(
           validatePassword({

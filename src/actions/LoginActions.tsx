@@ -3,6 +3,7 @@ import { getSupportedBiometryType, hasSecurityAlerts, isTouchEnabled, refreshTou
 import * as React from 'react'
 import { Keyboard } from 'react-native'
 import { getCurrencies } from 'react-native-localize'
+import performance from 'react-native-performance'
 import { sprintf } from 'sprintf-js'
 
 import { readSyncedSettings } from '../actions/SettingsActions'
@@ -26,6 +27,7 @@ import { getUniqueWalletName } from './CreateWalletActions'
 import { expiredFioNamesCheckDates } from './FioActions'
 import { readLocalSettings } from './LocalSettingsActions'
 import { registerNotificationsV2, updateNotificationSettings } from './NotificationActions'
+import { showScamWarningModal } from './ScamWarningActions'
 
 function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; currencyCode: string } {
   // Find the first wallet:
@@ -96,9 +98,13 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
           params: { newAccountFlow, defaultSelection }
         }
       })
+
+      performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
     } else {
       navigation.push('edgeApp', {})
       referralPromise.catch(() => console.log(`Failed to load account referral info`))
+
+      performance.mark('loginEnd', { detail: { isNewAccount: newAccount } })
     }
 
     // Show a notice for deprecated electrum server settings
@@ -131,6 +137,9 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
         })
         .catch(err => showError(err))
     }
+
+    // Show the scam warning modal if needed
+    await showScamWarningModal('firstLogin')
 
     // Check for security alerts:
     if (hasSecurityAlerts(account)) {

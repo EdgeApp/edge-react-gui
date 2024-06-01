@@ -118,13 +118,11 @@ export async function launchPaymentProto(navigation: NavigationBase, account: Ed
   const optionsResponse = asPaymentProtoOptionsResponse(responseJson)
   const paymentId = optionsResponse.paymentId
   const options = optionsResponse.paymentOptions
-  const isTestPaymentProto = uri.toLowerCase().includes('test.bitpay.com')
   const paymentAssets: EdgeAsset[] = []
   const paymentCurrencies: string[] = []
 
   for (const option of options) {
     const { chain, currency } = option
-    if (isTestPaymentProto && currency === 'BTC') continue
     const pluginId = CHAIN_MAP[chain]
     if (pluginId == null) continue
     if (paymentProtoSupportedPluginIds.find(id => id === pluginId) == null) continue

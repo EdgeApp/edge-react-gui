@@ -78,7 +78,7 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
       const walletsToConnect: FioConnectionWalletItem[] = Object.keys(connectWalletsMap).map(key => connectWalletsMap[key])
       navigation.navigate('fioConnectToWalletsConfirm', {
         fioAddressName,
-        fioWallet,
+        walletId: fioWallet.id,
         walletsToConnect,
         walletsToDisconnect
       })

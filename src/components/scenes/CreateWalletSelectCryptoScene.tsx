@@ -72,6 +72,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     const preselectedList: WalletCreateItem[] = []
     for (const edgeTokenId of defaultSelection) {
       const i = createList.findIndex(item => item.pluginId === edgeTokenId.pluginId && item.tokenId === edgeTokenId.tokenId)
+      if (i === -1) continue
       preselectedList.push(createList.splice(i, 1)[0])
     }
     return [...preselectedList, ...createList]

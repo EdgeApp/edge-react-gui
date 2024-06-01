@@ -63,7 +63,7 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
     const { fioWallet } = this.state
     if (fioWallet) {
       navigation.navigate('fioAddressSettings', {
-        fioWallet,
+        walletId: fioWallet.id,
         fioAddressName,
         bundledTxs,
         refreshAfterAddBundledTxs: true

@@ -145,7 +145,6 @@ interface SpecialCurrencyInfo {
   isAccountActivationRequired?: boolean
   tokenActivationAdditionalReserveText?: string
   showTokenNames?: boolean
-  isCustomTokensSupported?: boolean
   isUriEncodedStructure?: boolean
   needsAccountNameSetup?: boolean
   noChangeMiningFee?: boolean
@@ -243,7 +242,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '30'
@@ -302,7 +300,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'edgecreator2',
     initWalletName: lstrings.string_first_eos_wallet_name,
     isAccountActivationRequired: true,
-    isCustomTokensSupported: true,
     isImportKeySupported: true,
     keysOnlyMode: true,
     needsAccountNameSetup: true,
@@ -315,8 +312,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: true,
     noChangeMiningFee: true,
-    isImportKeySupported: true,
-    isCustomTokensSupported: true
+    isImportKeySupported: true
   },
   wax: {
     initWalletName: lstrings.string_first_wax_wallet_name,
@@ -326,7 +322,6 @@ export const SPECIAL_CURRENCY_INFO: {
     needsAccountNameSetup: false,
     noChangeMiningFee: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
     keysOnlyMode: true
   },
   ethereum: {
@@ -337,7 +332,6 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
     walletConnectV2ChainId: {
       namespace: 'eip155',
@@ -350,7 +344,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
     walletConnectV2ChainId: {
       namespace: 'eip155',
@@ -363,7 +356,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
     walletConnectV2ChainId: {
       namespace: 'eip155',
@@ -377,7 +369,6 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: false,
     isImportKeySupported: true,
     isStakingSupported: false,
-    isCustomTokensSupported: false,
     isPaymentProtocolSupported: false,
     noMaxSpend: true
   },
@@ -388,7 +379,6 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: false,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isCustomTokensSupported: false,
     isPaymentProtocolSupported: false
   },
   filecoinfevmcalibration: {
@@ -398,7 +388,6 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: false,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isCustomTokensSupported: false,
     isPaymentProtocolSupported: false
   },
   tron: {
@@ -408,7 +397,6 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     noChangeMiningFee: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
     isStakingSupported: true
   },
@@ -419,7 +407,6 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     displayBuyCrypto: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
     walletConnectV2ChainId: {
       namespace: 'eip155',
@@ -432,7 +419,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
     isPaymentProtocolSupported: false
   },
   ethereumclassic: {
@@ -452,7 +438,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
     isTransactionListUnsupported: true,
     walletConnectV2ChainId: {
@@ -466,7 +451,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
     isStakingSupported: true,
     walletConnectV2ChainId: {
@@ -480,7 +464,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
     walletConnectV2ChainId: {
       namespace: 'eip155',
@@ -533,7 +516,6 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_osmosis_wallet_name,
     chainCode: 'OSMO',
     dummyPublicAddress: 'osmo156hdwk3gx4wkq0r5m0s3ag2yj5pawfeudml34a',
-    isCustomTokensSupported: true,
     isImportKeySupported: true,
     walletConnectV2ChainId: {
       namespace: 'cosmos',
@@ -561,7 +543,6 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: true,
     isStakingSupported: true,
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
-    isCustomTokensSupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '56'
@@ -570,7 +551,6 @@ export const SPECIAL_CURRENCY_INFO: {
   solana: {
     initWalletName: lstrings.string_first_solana_wallet_name,
     chainCode: 'SOL',
-    isCustomTokensSupported: true,
     isImportKeySupported: true,
     dummyPublicAddress: 'DEd1rkRyr5bRkJHgaAKMSYjYC1KMz3Hc5bSs4Jiwt29x',
     noChangeMiningFee: true
@@ -581,7 +561,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '42220'
@@ -695,7 +674,6 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '250'
@@ -733,7 +711,6 @@ export const SPECIAL_CURRENCY_INFO: {
       modalMessage: lstrings.request_lld_minimum_notification_body,
       alertMessage: lstrings.request_lld_minimum_notification_alert_body
     },
-    isCustomTokensSupported: false,
     isTransactionListUnsupported: true,
     isImportKeySupported: true
   },
@@ -748,7 +725,6 @@ export const SPECIAL_CURRENCY_INFO: {
       modalMessage: lstrings.request_lld_minimum_notification_body,
       alertMessage: lstrings.request_lld_minimum_notification_alert_body
     },
-    isCustomTokensSupported: false,
     isTransactionListUnsupported: true,
     isImportKeySupported: true
   },
@@ -785,7 +761,7 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'zs1ps48sm9yusglfd2y28e7uhfkxfljy38papy00lzdmcdmctczx2hmvchcfjvp3n68zr2tu732y8k',
     noChangeMiningFee: true,
     isImportKeySupported: true,
-    keysOnlyMode: Platform.OS === 'android' ? Platform.constants.Version < 28 : false,
+    keysOnlyMode: Platform.OS === 'android' ? Platform.constants.Version < 28 : Platform.OS === 'ios',
     importKeyOptions: [
       {
         optionName: 'birthdayHeight',
@@ -807,7 +783,6 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     displayBuyCrypto: true,
     isImportKeySupported: true,
-    isCustomTokensSupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '137'
@@ -821,7 +796,6 @@ export const SPECIAL_CURRENCY_INFO: {
     displayBuyCrypto: false,
     isImportKeySupported: true,
     isStakingSupported: false,
-    isCustomTokensSupported: true,
     isPaymentProtocolSupported: false,
     walletConnectV2ChainId: {
       namespace: 'eip155',
@@ -835,7 +809,6 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    isCustomTokensSupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '43114'
@@ -845,7 +818,6 @@ export const SPECIAL_CURRENCY_INFO: {
     initWalletName: lstrings.string_first_algorand_wallet_name,
     chainCode: 'ALGO',
     dummyPublicAddress: 'VRWXR3ACL7TDKGHXEDP3N5C2QMXETLWFWSKDKWWZFXBITSP5OFFGWSHYVE',
-    isCustomTokensSupported: true,
     noChangeMiningFee: true,
     tokenActivationAdditionalReserveText: lstrings.activate_wallet_token_scene_body_algo_extra,
     isImportKeySupported: true,

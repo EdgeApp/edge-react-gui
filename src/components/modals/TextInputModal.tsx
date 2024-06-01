@@ -1,13 +1,14 @@
 import * as React from 'react'
-import { Platform } from 'react-native'
+import { View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
+import { ModalButtons } from '../common/ModalButtons'
+import { styled } from '../hoc/styled'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
 import { Paragraph } from '../themed/EdgeText'
-import { FilledTextInput } from '../themed/FilledTextInput'
-import { MainButton } from '../themed/MainButton'
+import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
@@ -65,7 +66,6 @@ export function TextInputModal(props: Props) {
   } = props
 
   const [errorMessage, setErrorMessage] = React.useState<string | undefined>()
-  const [spinning, setSpinning] = React.useState(false)
   const [text, setText] = React.useState(initialValue)
 
   const handleChangeText = (text: string) => {
@@ -75,10 +75,8 @@ export function TextInputModal(props: Props) {
 
   const handleSubmit = () => {
     if (onSubmit == null) return bridge.resolve(text)
-    setSpinning(true)
     onSubmit(text).then(
       result => {
-        setSpinning(false)
         if (typeof result === 'string') {
           setErrorMessage(result)
         } else if (result) {
@@ -86,48 +84,41 @@ export function TextInputModal(props: Props) {
         }
       },
       error => {
-        setSpinning(false)
         showError(error)
       }
     )
   }
 
-  const isAndroid = Platform.OS === 'android'
-  // TODO: Address this in ButtonsViewUi4
-  const androidButtonMargin = isAndroid ? [1, 1, 2, 1] : 1
-
   return (
     <ModalUi4 warning={warning} bridge={bridge} title={title} onCancel={() => bridge.resolve(undefined)}>
-      {typeof message === 'string' ? <Paragraph>{message}</Paragraph> : <>{message}</>}
-      {warningMessage != null ? <Alert type="warning" title={lstrings.string_warning} marginRem={0.5} message={warningMessage} numberOfLines={0} /> : null}
-      <FilledTextInput
-        top={1}
-        horizontal={0.5}
-        bottom={1.5}
-        expand
-        // Text input props:
-        autoCapitalize={autoCapitalize}
-        autoFocus={autoFocus}
-        autoCorrect={autoCorrect}
-        keyboardType={keyboardType}
-        placeholder={inputLabel}
-        returnKeyType={returnKeyType}
-        secureTextEntry={secureTextEntry}
-        multiline={multiline}
-        // Our props:
-        error={errorMessage}
-        onChangeText={handleChangeText}
-        onSubmitEditing={handleSubmit}
-        textsizeRem={textSizeRem}
-        value={text}
-        maxLength={maxLength}
-      />
-      {/* TODO: Style ButtonsViewUi4 for Modals */}
-      {spinning ? (
-        <MainButton disabled marginRem={androidButtonMargin} type="primary" spinner />
-      ) : (
-        <MainButton label={submitLabel} marginRem={androidButtonMargin} onPress={handleSubmit} type="primary" />
-      )}
+      <StyledInnerView fullHeight={multiline}>
+        {typeof message === 'string' ? <Paragraph>{message}</Paragraph> : <>{message}</>}
+        {warningMessage != null ? <Alert type="warning" title={lstrings.string_warning} marginRem={0.5} message={warningMessage} numberOfLines={0} /> : null}
+        <ModalFilledTextInput
+          // Text input props:
+          autoCapitalize={autoCapitalize}
+          autoFocus={autoFocus}
+          autoCorrect={autoCorrect}
+          keyboardType={keyboardType}
+          placeholder={inputLabel}
+          returnKeyType={returnKeyType}
+          secureTextEntry={secureTextEntry}
+          multiline={multiline}
+          // Our props:
+          error={errorMessage}
+          onChangeText={handleChangeText}
+          onSubmitEditing={handleSubmit}
+          textsizeRem={textSizeRem}
+          value={text}
+          maxLength={maxLength}
+        />
+        <ModalButtons primary={{ label: submitLabel, onPress: handleSubmit }} />
+      </StyledInnerView>
     </ModalUi4>
   )
 }
+
+const StyledInnerView = styled(View)<{ fullHeight: boolean }>(() => props => ({
+  flexShrink: 1,
+  flexGrow: props.fullHeight ? 1 : undefined
+}))

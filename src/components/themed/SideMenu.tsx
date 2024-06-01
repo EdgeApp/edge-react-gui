@@ -9,7 +9,6 @@ import LinearGradient from 'react-native-linear-gradient'
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Share from 'react-native-share'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
@@ -39,8 +38,8 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { TitleText } from '../text/TitleText'
 import { DividerLine } from './DividerLine'
 
-const xButtonGradientStart = { x: 0, y: 0 }
-const xButtonGradientEnd = { x: 0, y: 0.75 }
+const footerGradientStart = { x: 0, y: 0 }
+const footerGradientEnd = { x: 0, y: 0.75 }
 
 export function SideMenuComponent(props: DrawerContentComponentProps) {
   // Fix this type assertion (seems like DrawerContentComponentProps works just fine as NavigationBase?)
@@ -65,9 +64,9 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
 
   const sortedUsers = React.useMemo(() => arrangeUsers(localUsers, account), [account, localUsers])
 
-  const closeButtonContainerStyle = React.useMemo(() => {
-    return [styles.closeButtonContainer, { paddingBottom: insets.bottom }]
-  }, [insets.bottom, styles.closeButtonContainer])
+  const footerContainerStyle = React.useMemo(() => {
+    return [styles.footerContainer, { paddingBottom: insets.bottom }]
+  }, [insets.bottom, styles.footerContainer])
 
   // User List dropdown/open state:
   const [isDropped, setIsDropped] = React.useState(false)
@@ -277,12 +276,8 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
     })
   }
 
-  const handlePressClose = () => {
-    navigation.dispatch(DrawerActions.closeDrawer())
-  }
-
-  const xButtonTopColor = theme.modal + '00' // Add full transparency to the modal color
-  const xButtonBottomColor = theme.modal
+  const footerTopColor = theme.modal + '00' // Add full transparency to the modal color
+  const footerBottomColor = theme.modal
 
   return (
     <View style={{ flex: 1, paddingTop: insets.top }}>
@@ -348,19 +343,9 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
           </ScrollView>
           {/* === Navigation Rows End === */}
         </View>
-        {/* === Translucent X Close Button Start === */}
-        <LinearGradient colors={[xButtonTopColor, xButtonBottomColor]} style={closeButtonContainerStyle} start={xButtonGradientStart} end={xButtonGradientEnd}>
-          <EdgeTouchableOpacity onPress={handlePressClose}>
-            <AntDesignIcon
-              testID="closeX"
-              name="close"
-              size={theme.rem(1.25)}
-              color={theme.iconTappable}
-              accessibilityHint={lstrings.close_control_panel_hint}
-            />
-          </EdgeTouchableOpacity>
-        </LinearGradient>
-        {/* === Translucent X Close Button End === */}
+        {/* === Footer Start === */}
+        <LinearGradient colors={[footerTopColor, footerBottomColor]} style={footerContainerStyle} start={footerGradientStart} end={footerGradientEnd} />
+        {/* === Footer End === */}
       </View>
       {/* ==== Bottom Panel End ==== */}
     </View>
@@ -408,7 +393,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderLeftWidth: theme.sideMenuBorderWidth,
     height: theme.rem(7.75)
   },
-  closeButtonContainer: {
+  footerContainer: {
     position: 'absolute',
     width: '100%',
     bottom: 0,

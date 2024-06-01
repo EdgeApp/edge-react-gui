@@ -9,7 +9,9 @@ import { styled } from '../hoc/styled'
 import { BlurBackground } from '../ui4/BlurBackground'
 
 export interface SceneFooterProps {
-  // This component requires a key for the onLayoutHeight prop
+  // This component requires a key prop so that way the onLayoutHeight prop
+  // will work correctly.
+  // eslint-disable-next-line react/no-unused-prop-types
   key: string
 
   children: React.ReactNode
@@ -22,7 +24,7 @@ export interface SceneFooterProps {
 }
 
 export const SceneFooterWrapper = (props: SceneFooterProps) => {
-  const { key, children, noBackgroundBlur = false, sceneWrapperInfo, onLayoutHeight } = props
+  const { children, noBackgroundBlur = false, sceneWrapperInfo, onLayoutHeight } = props
   const { hasTabs = true, isKeyboardOpen = false } = sceneWrapperInfo ?? {}
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
 
@@ -52,7 +54,6 @@ export const SceneFooterWrapper = (props: SceneFooterProps) => {
 
   return (
     <ContainerAnimatedView
-      key={`${key}-ContainerAnimatedView`}
       containerHeight={layout?.height}
       footerOpenRatio={footerOpenRatio}
       isKeyboardOpen={isKeyboardOpen}

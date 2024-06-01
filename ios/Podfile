@@ -81,6 +81,7 @@ target 'edge' do
   # Edge additions
   # --------------------------------------------------------------------------
 
+  pod 'react-native-performance', :path => '../node_modules/react-native-performance'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   # Zcash transitive dependency:

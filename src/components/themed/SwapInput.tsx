@@ -206,6 +206,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props
         <CardHeading>{heading}</CardHeading>
         <Space sideways>
           <WalletPlaceHolder onPress={handleWalletPlaceholderPress}>
+            <CryptoIconUi4 marginRem={[0, 0.25, 0, 0]} pluginId={wallet.currencyInfo.pluginId} sizeRem={1} tokenId={tokenId} />
             <WalletPlaceHolderText>{walletPlaceholderText}</WalletPlaceHolderText>
           </WalletPlaceHolder>
         </Space>
@@ -215,10 +216,6 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props
 
   const renderFooter = () => {
     return <FooterSpace />
-  }
-
-  const renderIcon = () => {
-    return <CryptoIconUi4 marginRem={0} pluginId={wallet.currencyInfo.pluginId} sizeRem={1.75} tokenId={tokenId} />
   }
 
   return (
@@ -234,7 +231,6 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props
         ref={flipInputRef}
         renderFooter={renderFooter}
         renderHeader={renderHeader}
-        renderIcon={renderIcon}
         returnKeyType={returnKeyType}
         startAmounts={[initialDisplayAmount, initialFiatAmount]}
         // Events:

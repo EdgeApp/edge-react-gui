@@ -18,7 +18,7 @@ import { consify } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
-import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupForTransferModal'
+import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { CountryListModal } from '../modals/CountryListModal'
@@ -26,11 +26,13 @@ import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
 import { FlipInputModal2, FlipInputModalResult } from '../modals/FlipInputModal2'
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
+import { ScamWarningModal } from '../modals/ScamWarningModal'
+import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
-import { FilledTextInput } from '../themed/FilledTextInput'
+import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { AlertCardUi4 } from '../ui4/AlertCardUi4'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
@@ -94,6 +96,18 @@ export function DevTestScene(props: Props) {
     }).catch(error => console.log(error))
   }
 
+  const handleMultilineTextInputModal = () => {
+    Airship.show<string | undefined>(bridge => (
+      <TextInputModal title="TextInputModal" inputLabel="Input Value" message="This is a multiline TextInputModal" multiline bridge={bridge} />
+    )).catch(error => console.log(error))
+  }
+
+  const handleTextInputModal = () => {
+    Airship.show<string | undefined>(bridge => (
+      <TextInputModal title="TextInputModal" inputLabel="Input Value" message="This is a single line TextInputModal" bridge={bridge} />
+    )).catch(error => console.log(error))
+  }
+
   const coreWallet = selectedWallet?.wallet
   let balance = coreWallet?.balanceMap.get(tokenId) ?? ''
   if (eq(balance, '0')) balance = ''
@@ -113,9 +127,8 @@ export function DevTestScene(props: Props) {
     <SceneWrapper scroll hasTabs hasHeader={false}>
       <SectionView marginRem={1}>
         <AlertCardUi4 title={lstrings.warning_alphanumeric} type="error" />
-        <FilledTextInput
+        <ModalFilledTextInput
           iconComponent={SearchIconAnimated}
-          vertical={1}
           value={filledTextInputValue6}
           onChangeText={setFilledTextInputValue6}
           autoFocus={false}
@@ -123,9 +136,8 @@ export function DevTestScene(props: Props) {
           textsizeRem={1.5}
           maxLength={100}
         />
-        <FilledTextInput
+        <ModalFilledTextInput
           numeric
-          vertical={1}
           value={filledTextInputValue7}
           onChangeText={setFilledTextInputValue7}
           autoFocus={false}
@@ -133,16 +145,14 @@ export function DevTestScene(props: Props) {
           textsizeRem={1.5}
           maxLength={100}
         />
-        <FilledTextInput
-          vertical={1}
+        <ModalFilledTextInput
           value={filledTextInputValue}
           onChangeText={setFilledTextInputValue}
           autoFocus={false}
           placeholder="Test FilledTextInput"
           maxLength={100}
         />
-        <FilledTextInput
-          vertical={1}
+        <ModalFilledTextInput
           prefix="PRE"
           value={filledTextInputValue2}
           onChangeText={setFilledTextInputValue2}
@@ -150,17 +160,15 @@ export function DevTestScene(props: Props) {
           placeholder="Test FilledTextInput"
           maxLength={100}
         />
-        <FilledTextInput
+        <ModalFilledTextInput
           numeric
-          vertical={1}
           value={filledTextInputValue3}
           onChangeText={setFilledTextInputValue3}
           autoFocus={false}
           placeholder="Test FilledTextInput num"
         />
-        <FilledTextInput
+        <ModalFilledTextInput
           numeric
-          vertical={1}
           prefix="$"
           suffix="BTC"
           value={filledTextInputValue4}
@@ -170,8 +178,7 @@ export function DevTestScene(props: Props) {
           error="Error"
           maxLength={100}
         />
-        <FilledTextInput
-          vertical={1}
+        <ModalFilledTextInput
           prefix="USD"
           suffix="BTC"
           value={filledTextInputValue5}
@@ -182,8 +189,7 @@ export function DevTestScene(props: Props) {
           maxLength={100}
         />
         <>
-          <FilledTextInput
-            vertical={1}
+          <ModalFilledTextInput
             value={filledTextInputValue8}
             onChangeText={setFilledTextInputValue8}
             autoFocus={false}
@@ -211,14 +217,16 @@ export function DevTestScene(props: Props) {
         )}
 
         <>
-          <SimpleTextInput vertical={1} value={value0} onChangeText={onChangeText0} autoFocus={false} placeholder="Crypto Amount" />
+          <SimpleTextInput value={value0} onChangeText={onChangeText0} autoFocus={false} placeholder="Crypto Amount" />
           <ButtonUi4 label="Set Crypto Amt" onPress={onPress0} />
-          <SimpleTextInput vertical={1} value={value1} onChangeText={onChangeText1} autoFocus={false} placeholder="Fiat Amount" />
+          <SimpleTextInput value={value1} onChangeText={onChangeText1} autoFocus={false} placeholder="Fiat Amount" />
           <ButtonUi4 label="Set Fiat Amt" onPress={onPress1} />
         </>
 
         <>
           <SectionHeaderUi4 leftTitle="Modals" rightNode={<EdgeText>Galore</EdgeText>} />
+          <ButtonUi4 label="TextInputModal (multiline)" marginRem={0.25} onPress={handleMultilineTextInputModal} />
+          <ButtonUi4 label="TextInputModal (single line)" marginRem={0.25} onPress={handleTextInputModal} />
           <ButtonUi4 label="FlipInputModal2" marginRem={0.25} onPress={handleFlipInputModal} />
           <ButtonUi4
             label="ButtonsModal"
@@ -349,6 +357,15 @@ export function DevTestScene(props: Props) {
               })
             }}
           />
+          <ButtonUi4
+            label="ScamWarningModal"
+            marginRem={0.25}
+            onPress={async () => {
+              await Airship.show((bridge: AirshipBridge<'yes' | 'no' | undefined>) => {
+                return <ScamWarningModal bridge={bridge} />
+              })
+            }}
+          />
         </>
         <>
           <SectionHeaderUi4 leftTitle="Buttons" />
@@ -397,8 +414,7 @@ export function DevTestScene(props: Props) {
         </>
         <>
           <SectionHeaderUi4 leftTitle="DeepLinking" />
-          <FilledTextInput
-            vertical={0.5}
+          <ModalFilledTextInput
             value={deepLinkInputValue}
             onChangeText={setDeepLinkInputValue}
             autoFocus={false}

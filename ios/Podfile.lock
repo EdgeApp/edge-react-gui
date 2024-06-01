@@ -23,11 +23,13 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (2.5.0):
     - React-Core
-  - edge-currency-accountbased (4.3.0-2):
+  - edge-currency-accountbased (4.6.0):
+    - React-Core
+  - edge-currency-plugins (3.0.0):
     - React-Core
   - edge-exchange-plugins (2.4.2):
     - React-Core
-  - edge-login-ui-rn (3.9.0):
+  - edge-login-ui-rn (3.11.3):
     - React-Core
   - EXConstants (15.4.5):
     - ExpoModulesCore
@@ -1068,16 +1070,11 @@ PODS:
     - React-Core
   - react-native-netinfo (9.0.0):
     - React-Core
-  - react-native-performance (5.1.0):
+  - react-native-performance (5.1.2):
     - React-Core
-  - react-native-piratechain (0.4.10):
-    - gRPC-Swift (~> 1.8)
-    - MnemonicSwift (~> 2.2)
-    - React-Core
-    - SQLite.swift/standalone (~> 0.14)
   - react-native-safari-view (1.0.0):
     - React
-  - react-native-safe-area-context (4.9.0):
+  - react-native-safe-area-context (4.10.1):
     - React-Core
   - react-native-webview (13.8.4):
     - glog
@@ -1291,8 +1288,6 @@ PODS:
     - Firebase/RemoteConfig (= 8.15.0)
     - React-Core
     - RNFBApp
-  - RNFlashList (1.6.3):
-    - React-Core
   - RNFS (2.20.0):
     - React-Core
   - RNGestureHandler (2.16.0):
@@ -1313,10 +1308,11 @@ PODS:
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
     - ReactCommon/turbomodule/core
-  - RNScreens (3.30.1):
+  - RNScreens (3.31.1):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
+    - React-RCTImage
   - RNSecureRandom (1.0.1):
     - React
   - RNShare (10.2.0):
@@ -1498,6 +1494,7 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - edge-core-js (from `../node_modules/edge-core-js`)
   - edge-currency-accountbased (from `../node_modules/edge-currency-accountbased`)
+  - edge-currency-plugins (from `../node_modules/edge-currency-plugins`)
   - edge-exchange-plugins (from `../node_modules/edge-exchange-plugins`)
   - edge-login-ui-rn (from `../node_modules/edge-login-ui-rn`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
@@ -1546,7 +1543,6 @@ DEPENDENCIES:
   - react-native-mymonero-core (from `../node_modules/react-native-mymonero-core`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-performance (from `../node_modules/react-native-performance`)
-  - react-native-piratechain (from `../node_modules/react-native-piratechain`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -1584,7 +1580,6 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - "RNFBRemoteConfig (from `../node_modules/@react-native-firebase/remote-config`)"
-  - "RNFlashList (from `../node_modules/@shopify/flash-list`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNLocalize (from `../node_modules/react-native-localize`)
@@ -1671,6 +1666,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/edge-core-js"
   edge-currency-accountbased:
     :path: "../node_modules/edge-currency-accountbased"
+  edge-currency-plugins:
+    :path: "../node_modules/edge-currency-plugins"
   edge-exchange-plugins:
     :path: "../node_modules/edge-exchange-plugins"
   edge-login-ui-rn:
@@ -1762,8 +1759,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-performance:
     :path: "../node_modules/react-native-performance"
-  react-native-piratechain:
-    :path: "../node_modules/react-native-piratechain"
   react-native-safari-view:
     :path: "../node_modules/react-native-safari-view"
   react-native-safe-area-context:
@@ -1838,8 +1833,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNFBRemoteConfig:
     :path: "../node_modules/@react-native-firebase/remote-config"
-  RNFlashList:
-    :path: "../node_modules/@shopify/flash-list"
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
@@ -1888,9 +1881,10 @@ SPEC CHECKSUMS:
   disklet: e7ed3e673ccad9d175a1675f9f3589ffbf69a5fd
   DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
   edge-core-js: b7c6fca8bbaf9848a5b4e1871f8ae7b95b5c8f6d
-  edge-currency-accountbased: 38f9a784aa7cf1b34da0e10bf8d48fff46b0149d
+  edge-currency-accountbased: cef92e7de1103af98d639e89c29b9ae77726fe1d
+  edge-currency-plugins: 2c100b3b02074c903dab36c6f532385084869a01
   edge-exchange-plugins: 05e341eb7cc822037051c295f3054ad04452d657
-  edge-login-ui-rn: 934c30d72a12490f7a687e4e52d95e7bcd418931
+  edge-login-ui-rn: afd4b191cdbf6d67ca27ccbb4f211bcc9f777c19
   EXConstants: 988aa430ca0f76b43cd46b66e7fae3287f9cc2fc
   EXFont: f20669cb266ef48b004f1eb1f2b20db96cd1df9f
   Expo: e01a77c6fa4bc80a6d1bb949cda1d12d21044abd
@@ -1952,10 +1946,9 @@ SPEC CHECKSUMS:
   react-native-mail: 8fdcd3aef007c33a6877a18eb4cf7447a1d4ce4a
   react-native-mymonero-core: 780bf854f27a0a905bcef5e7757d2de0a15b4408
   react-native-netinfo: 5b664b2945a8f02102b296f0f812bddd6827ed9c
-  react-native-performance: cef2b618d47b277fb5c3280b81a3aad1e72f2886
-  react-native-piratechain: 753087fbe3ccf67031f1c4e7ab467f64c3bfb338
+  react-native-performance: ff93f8af3b2ee9519fd7879896aa9b8b8272691d
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
-  react-native-safe-area-context: b97eb6f9e3b7f437806c2ce5983f479f8eb5de4b
+  react-native-safe-area-context: dcab599c527c2d7de2d76507a523d20a0b83823d
   react-native-webview: 9395e82c917d81407deb9b1fe53158dd6c8880ff
   react-native-zcash: 0b02cba77b0dc3f3d555fbec906769bcf903eb27
   React-nativeconfig: b4d4e9901d4cabb57be63053fd2aa6086eb3c85f
@@ -1991,7 +1984,6 @@ SPEC CHECKSUMS:
   RNFBApp: 6f5c7b9931378efb467e08144959ff93172ac83b
   RNFBMessaging: cecaa5c11d993b6b5c22c580bb5c3111fa5c6ef5
   RNFBRemoteConfig: 837617c42142be01e0c3f9bc6a0c0e7330131206
-  RNFlashList: 4b4b6b093afc0df60ae08f9cbf6ccd4c836c667a
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: bc2cdb2dc42facdf34992ae364b8a728e19a3686
   RNLocalize: dbea38dcb344bf80ff18a1757b1becf11f70cae4
@@ -1999,7 +1991,7 @@ SPEC CHECKSUMS:
   RNQrGenerator: 90461ba3ca88c1d38ef73da50fade35d9648215d
   RNReactNativeHapticFeedback: 1e3efeca9628ff9876ee7cdd9edec1b336913f8c
   RNReanimated: 8a4d86eb951a4a99d8e86266dc71d7735c0c30a9
-  RNScreens: b6b64d956af3715adbfe84808694ae82d3fec74f
+  RNScreens: 134a7511b12b8eb440b87aac21e36a71295d6024
   RNSecureRandom: 07efbdf2cd99efe13497433668e54acd7df49fef
   RNShare: 554a91f5cfbe4adac4cfe3654826ee8b299fe365
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
@@ -2029,6 +2021,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 2432be3f2f8dd3c496704b21e4436e2d715755dc
+PODFILE CHECKSUM: d1abfc51ea1dee4ef7af56be0964fc78629674ed
 
 COCOAPODS: 1.15.2

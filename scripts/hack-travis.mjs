@@ -9,7 +9,6 @@ function editFile(name, cb) {
 editFile('package.json', text =>
   text //
     .replace(/"edge-currency-accountbased".*/, '')
-    .replace(/"edge-currency-plugins".*/, '')
     .replace(/"eosjs-api".*/, '')
 )
 

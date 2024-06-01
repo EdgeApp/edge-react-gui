@@ -1,8 +1,8 @@
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import { EdgeAccount, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
+import { ListRenderItem, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
+import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
@@ -190,31 +190,19 @@ export function WalletListModal(props: Props) {
     }
     return (
       <View style={styles.bankMargin}>
-        <FlashList
-          estimatedItemSize={theme.rem(4.25)}
-          data={Object.values(bankAccountsMap)}
-          keyboardShouldPersistTaps="handled"
-          renderItem={renderPaymentMethod}
-          keyExtractor={item => item.id}
-        />
+        <FlatList data={Object.values(bankAccountsMap)} keyboardShouldPersistTaps="handled" renderItem={renderPaymentMethod} keyExtractor={item => item.id} />
       </View>
     )
-  }, [bankAccountsMap, handleShowBankPlugin, renderPaymentMethod, showBankOptions, styles.bankMargin, theme])
+  }, [bankAccountsMap, handleShowBankPlugin, renderPaymentMethod, showBankOptions, styles.bankMargin])
 
   const customAssetSection = React.useMemo<React.ReactNode>(() => {
     if (!showCustomAssets) return null
     return (
       <View style={styles.customAssetMargin}>
-        <FlashList
-          estimatedItemSize={theme.rem(4.25)}
-          data={customAssets}
-          keyboardShouldPersistTaps="handled"
-          renderItem={renderCustomAsset}
-          keyExtractor={item => item.referenceTokenId}
-        />
+        <FlatList data={customAssets} keyboardShouldPersistTaps="handled" renderItem={renderCustomAsset} keyExtractor={item => item.referenceTokenId} />
       </View>
     )
-  }, [customAssets, renderCustomAsset, showCustomAssets, styles.customAssetMargin, theme])
+  }, [customAssets, renderCustomAsset, showCustomAssets, styles.customAssetMargin])
 
   // #endregion Renderers
 

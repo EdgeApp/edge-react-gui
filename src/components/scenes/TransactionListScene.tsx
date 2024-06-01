@@ -1,5 +1,5 @@
 import { abs, lt } from 'biggystring'
-import { asArray } from 'cleaners'
+import { asArray, asMaybe } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { asAssetStatus, AssetStatus } from 'edge-info-server'
 import * as React from 'react'
@@ -37,6 +37,7 @@ import { AccentColors } from '../ui4/DotsBackground'
 
 export interface TransactionListParams {
   walletId: string
+  walletName: string
   tokenId: EdgeTokenId
 }
 
@@ -141,7 +142,9 @@ function TransactionListComponent(props: Props) {
   React.useEffect(() => {
     fetchInfo(`v1/assetStatusCards/${pluginId}${tokenId == null ? '' : `_${tokenId}`}`)
       .then(async res => {
-        const allAssetStatuses: AssetStatus[] = asArray(asAssetStatus)(await res.json())
+        const raw = await res.json()
+        const allAssetStatuses = asMaybe(asArray(asAssetStatus))(raw)
+        if (allAssetStatuses == null) return
         const version = getVersion()
 
         // Filter for assetStatuses relevant to this instance of the app

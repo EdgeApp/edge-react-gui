@@ -19,7 +19,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
-import { SpaceProps, useSpaceStyle } from '../../hooks/useSpaceStyle'
+import { SpaceProps, SpaceStyle, useSpaceStyle } from '../../hooks/useSpaceStyle'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
 import { AnimatedIconComponent, CloseIconAnimated, EyeIconAnimated } from '../icons/ThemedIcons'
@@ -31,7 +31,7 @@ const isAndroid = Platform.OS === 'android'
 
 export type FilledTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'done'
 
-export interface FilledTextInputProps extends SpaceProps {
+export interface FilledTextInputBaseProps extends SpaceProps {
   // Contents:
   value: string
   error?: string
@@ -80,6 +80,15 @@ export interface FilledTextInputProps extends SpaceProps {
   disabled?: boolean // Defaults to 'false'
 }
 
+export type ModalFilledTextInputProps = Omit<FilledTextInputBaseProps, keyof SpaceProps>
+
+/**
+ * FilledTextInput with standard `around=0.5` UI4 margins, for use in modals
+ */
+export const ModalFilledTextInput = React.forwardRef<FilledTextInputRef, ModalFilledTextInputProps>((props: ModalFilledTextInputProps) => (
+  <FilledTextInput {...props} around={0.5} />
+))
+
 /**
  * Type definitions for our static methods.
  * Create a ref object using `useRef<FilledTextInputRef>(null)` or
@@ -93,7 +102,12 @@ export interface FilledTextInputRef {
   setNativeProps: (nativeProps: Object) => void
 }
 
-export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextInputProps>((props: FilledTextInputProps, ref) => {
+/**
+ * Raw FilledTextInput that includes no built-in margins. Not meant to be used
+ * by top-level parents, but rather as a raw building block to build a child
+ * component with some fixed margins according to the child use case.
+ */
+export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextInputBaseProps>((props: FilledTextInputBaseProps, ref) => {
   const {
     // Contents:
     error,
@@ -231,7 +245,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
       : keyboardType
 
   return (
-    <View style={spaceStyle}>
+    <OuterContainer multiline={multiline} spaceStyle={spaceStyle}>
       <EdgeTouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
         <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} multiline={multiline} scale={scale}>
           <SideContainer scale={leftIconSize}>{LeftIcon == null ? null : <LeftIcon color={iconColor} size={leftIconSize} />}</SideContainer>
@@ -305,9 +319,15 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
           <Message>{charactersLeft}</Message>
         </MessagesContainer>
       ) : null}
-    </View>
+    </OuterContainer>
   )
 })
+
+const OuterContainer = styled(View)<{ multiline: boolean; spaceStyle: SpaceStyle }>(theme => ({ multiline, spaceStyle: marginRemStyle }) => ({
+  ...marginRemStyle,
+  flexGrow: multiline ? 1 : undefined,
+  flexShrink: multiline ? 1 : undefined
+}))
 
 const Container = styled(Animated.View)<{
   disableAnimation: SharedValue<number>
@@ -330,6 +350,7 @@ const Container = styled(Animated.View)<{
   return [
     {
       flexGrow: multiline ? 1 : undefined,
+      flexShrink: multiline ? 1 : undefined,
       alignItems: multiline ? 'stretch' : 'center',
       borderWidth: theme.textInputBorderWidth,
       borderRadius: theme.rem(0.5),
