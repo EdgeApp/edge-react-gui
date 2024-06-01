@@ -348,7 +348,7 @@ const EdgeApp = () => {
       screenOptions={{
         drawerPosition: 'right',
         drawerType: 'front',
-        drawerStyle: { backgroundColor: 'transparent', bottom: 0 },
+        drawerStyle: { backgroundColor: 'transparent', bottom: 0, width: '66%' },
         headerShown: false
       }}
     >
