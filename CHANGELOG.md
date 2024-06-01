@@ -5,6 +5,7 @@
 - added: Dynamic height for multiline text inputs
 - added: Sentry SDK for crash reporting
 - changed: Add EUID to Simplex quoting API calls
+- fixed: Excessive side menu width
 - removed: Bugsnag for crash reporting
 - removed: Firebase/Google Analytics
 - removed: Light Account Backup Modal A/B/C/D test experiment
