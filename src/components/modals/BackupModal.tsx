@@ -64,7 +64,6 @@ export const BackupForTransferModal = (props: { bridge: AirshipBridge<BackupForT
           spinner: false
         }
       }}
-      title={lstrings.backup_title}
     >
       <BackupModalContent
         title={lstrings.backup_title}
