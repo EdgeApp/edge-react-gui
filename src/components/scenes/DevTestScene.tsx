@@ -323,38 +323,11 @@ export function DevTestScene(props: Props) {
             }}
           />
           <ButtonUi4
-            label="BackupModal - Short A (control)"
+            label="BackupForTransferModal"
             marginRem={0.25}
             onPress={async () => {
               await Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
-                return <BackupForTransferModal bridge={bridge} variantKey="original" />
-              })
-            }}
-          />
-          <ButtonUi4
-            label="BackupModal - Short B"
-            marginRem={0.25}
-            onPress={async () => {
-              await Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
-                return <BackupForTransferModal bridge={bridge} variantKey="backup" />
-              })
-            }}
-          />
-          <ButtonUi4
-            label="BackupModal - Short C"
-            marginRem={0.25}
-            onPress={async () => {
-              await Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
-                return <BackupForTransferModal bridge={bridge} variantKey="secure" />
-              })
-            }}
-          />
-          <ButtonUi4
-            label="BackupModal - Short D"
-            marginRem={0.25}
-            onPress={async () => {
-              await Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
-                return <BackupForTransferModal bridge={bridge} variantKey="create" />
+                return <BackupForTransferModal bridge={bridge} />
               })
             }}
           />

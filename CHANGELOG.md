@@ -7,6 +7,7 @@
 - changed: Add EUID to Simplex quoting API calls
 - removed: Bugsnag for crash reporting
 - removed: Firebase/Google Analytics
+- removed: Light Account Backup Modal A/B/C/D test experiment
 
 ## 4.7.0
 

@@ -5,7 +5,6 @@ import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
 import backupHero from '../../assets/images/backup-hero.png'
-import { BackupTextType } from '../../experimentConfig'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
@@ -13,40 +12,10 @@ import { useSelector } from '../../types/reactRedux'
 import { openBrowserUri } from '../../util/WebUtils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { HeaderText, Paragraph, SmallText, WarningText } from '../themed/EdgeText'
-import { ButtonsModal, ButtonsModal2 } from './ButtonsModal'
+import { ButtonsModal2 } from './ButtonsModal'
 
 export type BackupModalResult = 'upgrade' | 'learnMore' | 'dismiss'
 export type BackupForTransferModalResult = 'upgrade' | 'learnMore'
-
-const body = lstrings.backup_message
-const bodyCont = sprintf(lstrings.no_access_disclaimer_1s, config.appName)
-
-const VARIANT_MAP = {
-  original: {
-    title: lstrings.backup_title,
-    body,
-    bodyCont,
-    subText: lstrings.backup_message_subtext
-  },
-  backup: {
-    title: lstrings.backup_title,
-    body,
-    bodyCont,
-    subText: lstrings.backup_message_subtext
-  },
-  secure: {
-    title: lstrings.secure_account_title,
-    body,
-    bodyCont,
-    subText: lstrings.secure_account_message_subtext
-  },
-  create: {
-    title: lstrings.create_user_title,
-    body,
-    bodyCont,
-    subText: lstrings.create_user_message_subtext
-  }
-}
 
 /** Common backup modal content format */
 const BackupModalContent = (props: { title: string; body: string; bodyCont?: string; subText?: string }) => {
@@ -76,31 +45,16 @@ const BackupModalContent = (props: { title: string; body: string; bodyCont?: str
 /**
  * Informational modal prompting the user to back up their account
  */
-export const BackupForTransferModal = (props: { bridge: AirshipBridge<BackupForTransferModalResult | undefined>; variantKey: BackupTextType }) => {
-  const { bridge, variantKey } = props
-  const { title, body, bodyCont, subText } = VARIANT_MAP[variantKey]
+export const BackupForTransferModal = (props: { bridge: AirshipBridge<BackupForTransferModalResult | undefined> }) => {
+  const { bridge } = props
 
   const handleLearnMorePress = useHandler(async () => {
     openBrowserUri(config.backupAccountSite)
     return false
   })
 
-  // Unchanged modal, different format...
-  if (variantKey === 'original')
-    return (
-      <ButtonsModal
-        bridge={bridge}
-        buttons={{
-          upgrade: { label: lstrings.backup_account }
-        }}
-      >
-        <BackupModalContent title={lstrings.backup_title} body={lstrings.backup_for_transfer_message} />
-      </ButtonsModal>
-    )
-
-  // New modal variants under testing:
   return (
-    <ButtonsModal
+    <ButtonsModal2
       bridge={bridge}
       buttons={{
         upgrade: { label: lstrings.get_started_button },
@@ -110,10 +64,15 @@ export const BackupForTransferModal = (props: { bridge: AirshipBridge<BackupForT
           spinner: false
         }
       }}
-      title={title}
+      title={lstrings.backup_title}
     >
-      <BackupModalContent title={title} body={body} bodyCont={bodyCont} subText={subText} />
-    </ButtonsModal>
+      <BackupModalContent
+        title={lstrings.backup_title}
+        body={lstrings.backup_message}
+        bodyCont={sprintf(lstrings.no_access_disclaimer_1s, config.appName)}
+        subText={lstrings.backup_message_subtext}
+      />
+    </ButtonsModal2>
   )
 }
 
