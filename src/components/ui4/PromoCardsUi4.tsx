@@ -163,8 +163,9 @@ function filterPromoCards(cards: PromoCard2[], countryCode: string, accountFunde
     if (startIsoDate != null && currentDate.valueOf() < startDate.valueOf()) continue
     if (endIsoDate != null && currentDate.valueOf() > endDate.valueOf()) continue
 
-    // Validate promoId
-    if (promoId != null && (accountPromoIds == null || !accountPromoIds.some(accountPromoId => accountPromoId === promoId))) continue
+    // Validate promoId (temporarily disabled)
+    // if (promoId != null && (accountPromoIds == null || !accountPromoIds.some(accountPromoId => accountPromoId === promoId))) continue
+    if (promoId != null) continue
 
     const messageId = shajs('sha256')
       .update(localeMessages.en_US ?? JSON.stringify(card), 'utf8')
