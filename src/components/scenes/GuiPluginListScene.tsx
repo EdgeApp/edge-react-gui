@@ -536,7 +536,12 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
     // Known issue: We can't resolve the case where the user navigates to this
     // scene with a 'filterAsset,' but does not select a payment method before
     // navigating away.
-    setForcedWalletResultLocal(undefined)
+
+    setTimeout(() => {
+      // Wait a short amount of time for the scene transition animation to
+      // complete before we reset the forced asset
+      setForcedWalletResultLocal(undefined)
+    }, 500)
   })
 
   React.useEffect(() => {
