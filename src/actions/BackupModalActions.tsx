@@ -4,7 +4,6 @@ import { AirshipBridge } from 'react-native-airship'
 
 import { BackupForAccountModal, BackupForTransferModal, BackupForTransferModalResult, BackupModalResult } from '../components/modals/BackupModal'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { getExperimentConfigValue } from '../experimentConfig'
 import { NavigationBase } from '../types/routerTypes'
 
 let isBackupModalShowing = false
@@ -39,20 +38,16 @@ export const showBackupModal = (props: { navigation: NavigationBase; forgetLogin
  */
 export const checkAndShowLightBackupModal = (account: EdgeAccount, navigation: NavigationBase): boolean => {
   if (account.username == null) {
-    getExperimentConfigValue('backupText')
-      .then(variantKey => {
-        Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
-          return <BackupForTransferModal bridge={bridge} variantKey={variantKey} />
-        })
-          .then((userSel?: BackupForTransferModalResult) => {
-            if (userSel === 'upgrade') {
-              navigation.navigate('upgradeUsername', {})
-            }
-          })
-          .finally(() => {
-            isBackupModalShowing = false
-          })
-          .catch(error => showError(error))
+    Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
+      return <BackupForTransferModal bridge={bridge} />
+    })
+      .then((userSel?: BackupForTransferModalResult) => {
+        if (userSel === 'upgrade') {
+          navigation.navigate('upgradeUsername', {})
+        }
+      })
+      .finally(() => {
+        isBackupModalShowing = false
       })
       .catch(error => showError(error))
     return true
