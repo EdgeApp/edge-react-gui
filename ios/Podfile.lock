@@ -1501,7 +1501,7 @@ PODS:
     - ZXingObjC
   - RNReactNativeHapticFeedback (1.14.0):
     - React-Core
-  - RNReanimated (3.11.0):
+  - RNReanimated (3.12.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2229,7 +2229,7 @@ SPEC CHECKSUMS:
   RNPermissions: 5829ce9a821b8bcab921dae16a7d1a3dc4c95a03
   RNQrGenerator: 90461ba3ca88c1d38ef73da50fade35d9648215d
   RNReactNativeHapticFeedback: 1e3efeca9628ff9876ee7cdd9edec1b336913f8c
-  RNReanimated: 82d44098f1640ac390d073bca26264d52a67dc7d
+  RNReanimated: 967ae35616ef948658afa75d24595d4584051540
   RNScreens: 30249f9331c3b00ae7cb7922e11f58b3ed369c07
   RNSecureRandom: 07efbdf2cd99efe13497433668e54acd7df49fef
   RNSentry: 7e184247ee04989474d12cce0b7ef7bc4a71632f
