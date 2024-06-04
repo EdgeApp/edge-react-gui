@@ -61,45 +61,33 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - FBLazyVector (0.74.1)
-  - Firebase/CoreOnly (8.15.0):
-    - FirebaseCore (= 8.15.0)
-  - Firebase/Messaging (8.15.0):
+  - Firebase/CoreOnly (10.27.0):
+    - FirebaseCore (= 10.27.0)
+  - Firebase/Messaging (10.27.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 8.15.0)
-  - Firebase/RemoteConfig (8.15.0):
-    - Firebase/CoreOnly
-    - FirebaseRemoteConfig (~> 8.15.0)
-  - FirebaseABTesting (8.15.0):
-    - FirebaseCore (~> 8.0)
-  - FirebaseCore (8.15.0):
-    - FirebaseCoreDiagnostics (~> 8.0)
-    - GoogleUtilities/Environment (~> 7.7)
-    - GoogleUtilities/Logger (~> 7.7)
-  - FirebaseCoreDiagnostics (8.15.0):
-    - GoogleDataTransport (~> 9.1)
-    - GoogleUtilities/Environment (~> 7.7)
-    - GoogleUtilities/Logger (~> 7.7)
-    - nanopb (~> 2.30908.0)
-  - FirebaseInstallations (8.15.0):
-    - FirebaseCore (~> 8.0)
-    - GoogleUtilities/Environment (~> 7.7)
-    - GoogleUtilities/UserDefaults (~> 7.7)
-    - PromisesObjC (< 3.0, >= 1.2)
-  - FirebaseMessaging (8.15.0):
-    - FirebaseCore (~> 8.0)
-    - FirebaseInstallations (~> 8.0)
-    - GoogleDataTransport (~> 9.1)
-    - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
-    - GoogleUtilities/Environment (~> 7.7)
-    - GoogleUtilities/Reachability (~> 7.7)
-    - GoogleUtilities/UserDefaults (~> 7.7)
-    - nanopb (~> 2.30908.0)
-  - FirebaseRemoteConfig (8.15.0):
-    - FirebaseABTesting (~> 8.0)
-    - FirebaseCore (~> 8.0)
-    - FirebaseInstallations (~> 8.0)
-    - GoogleUtilities/Environment (~> 7.7)
-    - "GoogleUtilities/NSData+zlib (~> 7.7)"
+    - FirebaseMessaging (~> 10.27.0)
+  - FirebaseCore (10.27.0):
+    - FirebaseCoreInternal (~> 10.0)
+    - GoogleUtilities/Environment (~> 7.12)
+    - GoogleUtilities/Logger (~> 7.12)
+  - FirebaseCoreExtension (10.27.0):
+    - FirebaseCore (~> 10.0)
+  - FirebaseCoreInternal (10.27.0):
+    - "GoogleUtilities/NSData+zlib (~> 7.8)"
+  - FirebaseInstallations (10.27.0):
+    - FirebaseCore (~> 10.0)
+    - GoogleUtilities/Environment (~> 7.8)
+    - GoogleUtilities/UserDefaults (~> 7.8)
+    - PromisesObjC (~> 2.1)
+  - FirebaseMessaging (10.27.0):
+    - FirebaseCore (~> 10.0)
+    - FirebaseInstallations (~> 10.0)
+    - GoogleDataTransport (~> 9.3)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
+    - GoogleUtilities/Environment (~> 7.8)
+    - GoogleUtilities/Reachability (~> 7.8)
+    - GoogleUtilities/UserDefaults (~> 7.8)
+    - nanopb (< 2.30911.0, >= 2.30908.0)
   - fmt (9.1.0)
   - glog (0.3.5)
   - GoogleDataTransport (9.4.1):
@@ -159,11 +147,11 @@ PODS:
     - libwebp/sharpyuv
   - Logging (1.4.0)
   - MnemonicSwift (2.2.4)
-  - nanopb (2.30908.0):
-    - nanopb/decode (= 2.30908.0)
-    - nanopb/encode (= 2.30908.0)
-  - nanopb/decode (2.30908.0)
-  - nanopb/encode (2.30908.0)
+  - nanopb (2.30910.0):
+    - nanopb/decode (= 2.30910.0)
+    - nanopb/encode (= 2.30910.0)
+  - nanopb/decode (2.30910.0)
+  - nanopb/encode (2.30910.0)
   - PromisesObjC (2.4.0)
   - RCT-Folly (2024.01.01.00):
     - boost
@@ -1458,15 +1446,12 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNFBApp (14.9.2):
-    - Firebase/CoreOnly (= 8.15.0)
+  - RNFBApp (20.1.0):
+    - Firebase/CoreOnly (= 10.27.0)
     - React-Core
-  - RNFBMessaging (14.9.2):
-    - Firebase/Messaging (= 8.15.0)
-    - React-Core
-    - RNFBApp
-  - RNFBRemoteConfig (14.9.2):
-    - Firebase/RemoteConfig (= 8.15.0)
+  - RNFBMessaging (20.1.0):
+    - Firebase/Messaging (= 10.27.0)
+    - FirebaseCoreExtension
     - React-Core
     - RNFBApp
   - RNFS (2.20.0):
@@ -1811,7 +1796,6 @@ DEPENDENCIES:
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
-  - "RNFBRemoteConfig (from `../node_modules/@react-native-firebase/remote-config`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNLocalize (from `../node_modules/react-native-localize`)
@@ -1841,12 +1825,11 @@ SPEC REPOS:
     - CNIOLinux
     - CNIOWindows
     - Firebase
-    - FirebaseABTesting
     - FirebaseCore
-    - FirebaseCoreDiagnostics
+    - FirebaseCoreExtension
+    - FirebaseCoreInternal
     - FirebaseInstallations
     - FirebaseMessaging
-    - FirebaseRemoteConfig
     - GoogleDataTransport
     - GoogleUtilities
     - gRPC-Swift
@@ -2068,8 +2051,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
-  RNFBRemoteConfig:
-    :path: "../node_modules/@react-native-firebase/remote-config"
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
@@ -2130,13 +2111,12 @@ SPEC CHECKSUMS:
   ExpoKeepAwake: 3b8815d9dd1d419ee474df004021c69fdd316d08
   ExpoModulesCore: 8ccf937127626db22bd3a175c9691d1b4fd86345
   FBLazyVector: 898d14d17bf19e2435cafd9ea2a1033efe445709
-  Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
-  FirebaseABTesting: 10cbce8db9985ae2e3847ea44e9947dd18f94e10
-  FirebaseCore: 5743c5785c074a794d35f2fff7ecc254a91e08b1
-  FirebaseCoreDiagnostics: 92e07a649aeb66352b319d43bdd2ee3942af84cb
-  FirebaseInstallations: 40bd9054049b2eae9a2c38ef1c3dd213df3605cd
-  FirebaseMessaging: 5e5118a2383b3531e730d974680954c679ca0a13
-  FirebaseRemoteConfig: 2d6e2cfdb49af79535c8af8a80a4a5009038ec2b
+  Firebase: 26b040b20866a55f55eb3611b9fcf3ae64816b86
+  FirebaseCore: a2b95ae4ce7c83ceecfbbbe3b6f1cddc7415a808
+  FirebaseCoreExtension: 4ec89dd0c6de93d6becde32122d68b7c35f6bf5d
+  FirebaseCoreInternal: 4b297a2d56063dbea2c1d0d04222d44a8d058862
+  FirebaseInstallations: 766dabca09fd94aef922538aaf144cc4a6fb6869
+  FirebaseMessaging: 585984d0a1df120617eb10b44cad8968b859815e
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
   glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
@@ -2147,7 +2127,7 @@ SPEC CHECKSUMS:
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
   MnemonicSwift: 40ba76b951b75b32e2719df989b4d6da5798fe26
-  nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  nanopb: 438bc412db1928dac798aa6fd75726007be04262
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RCT-Folly: 02617c592a293bd6d418e0a88ff4ee1f88329b47
   RCTDeprecation: efb313d8126259e9294dc4ee0002f44a6f676aba
@@ -2220,9 +2200,8 @@ SPEC CHECKSUMS:
   RNDateTimePicker: 4f3c4dbd4f908be32ec8c93f086e8924bd4a2e07
   RNDeviceInfo: bf8a32acbcb875f568217285d1793b0e8588c974
   RNFastImage: 1f2cab428712a4baaf78d6169eaec7f622556dd7
-  RNFBApp: 65664eda974f35aca8250eb4e18d136b8301a58e
-  RNFBMessaging: 05c338a2bd4b77a07bbfd1b0f79b21990843555a
-  RNFBRemoteConfig: dbfb143a8cda9de49f73c3bad2f4992dfd18abce
+  RNFBApp: 9acbe359ef3559d6f8ca5c350db471f2b352f98a
+  RNFBMessaging: b82ef70d252500d3ad104284c0c7f8e1cd22b51e
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 72574cf7d3910bdbdf8136c1caf70cd45ede9d9f
   RNLocalize: dbea38dcb344bf80ff18a1757b1becf11f70cae4
