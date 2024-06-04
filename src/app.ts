@@ -23,16 +23,20 @@ export type Environment = 'development' | 'testing' | 'production'
 const appVersion = getVersion()
 const environment: Environment = __DEV__ || appVersion === '99.99.99' ? 'development' : appVersion.includes('-') ? 'testing' : 'production'
 
-Sentry.init({
-  dsn: ENV.SENTRY_DSN_URL,
-  tracesSampleRate: environment === 'production' || environment === 'testing' ? 0.2 : 1.0,
-  maxBreadcrumbs: 25,
-  environment,
+if (ENV.SENTRY_ORGANIZATION_SLUG.includes('SENTRY_ORGANIZATION')) {
+  console.log('Sentry keys not set. Sentry disabled.')
+} else {
+  Sentry.init({
+    dsn: ENV.SENTRY_DSN_URL,
+    tracesSampleRate: environment === 'production' || environment === 'testing' ? 0.2 : 1.0,
+    maxBreadcrumbs: 25,
+    environment,
 
-  // Initialize Sentry within native iOS and Android code so we can catch crashes at
-  // early app startup.
-  autoInitializeNativeSdk: false
-})
+    // Initialize Sentry within native iOS and Android code so we can catch crashes at
+    // early app startup.
+    autoInitializeNativeSdk: false
+  })
+}
 
 // Uncomment the next line to remove popup warning/error boxes.
 // LogBox.ignoreAllLogs()

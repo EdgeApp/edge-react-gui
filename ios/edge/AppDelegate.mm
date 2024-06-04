@@ -42,26 +42,31 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSString *versionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-  [SentrySDK startWithConfigureOptions:^(SentryOptions *options) {
-      options.dsn = @"SENTRY_DSN_URL";
-      options.debug = YES; // Enabled debug when first installing is always helpful
+  NSString *dsnUrl = @"SENTRY_DSN_URL";
+  if ([dsnUrl containsString:@"SENTRY_DSN"]) {
+    NSLog(@"Please set the SENTRY_DSN_URL in env.json. Sentry disabbled");
+  } else {
+    [SentrySDK startWithConfigureOptions:^(SentryOptions *options) {
+        options.dsn = @"SENTRY_DSN_URL";
+        options.debug = YES; // Enabled debug when first installing is always helpful
 
-      // Check if the version string is equal to "99.99.99" or contains a "-"
-      if ([versionString isEqualToString:@"99.99.99"]) {
-        options.environment = @"development";
-      } else if ([versionString containsString:@"-"]) {
-        options.environment = @"testing";
-      } else {
-        options.environment = @"production";
-      }
+        // Check if the version string is equal to "99.99.99" or contains a "-"
+        if ([versionString isEqualToString:@"99.99.99"]) {
+          options.environment = @"development";
+        } else if ([versionString containsString:@"-"]) {
+          options.environment = @"testing";
+        } else {
+          options.environment = @"production";
+        }
 
-      // Enable tracing to capture 100% of transactions for performance monitoring.
-      // Use 'options.tracesSampleRate' to set the sampling rate.
-      // We recommend setting a sample rate in production.
-      // options.enableTracing = YES;
-      options.tracesSampleRate = @0.2;
-      options.enableCaptureFailedRequests = NO;
-  }];
+        // Enable tracing to capture 100% of transactions for performance monitoring.
+        // Use 'options.tracesSampleRate' to set the sampling rate.
+        // We recommend setting a sample rate in production.
+        // options.enableTracing = YES;
+        options.tracesSampleRate = @0.2;
+        options.enableCaptureFailedRequests = NO;
+    }];
+  }
 
   // React template code:
   self.moduleName = @"edge";
