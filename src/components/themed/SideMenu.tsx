@@ -30,6 +30,7 @@ import { NavigationBase } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { styled } from '../hoc/styled'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal'
 import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
@@ -280,7 +281,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
   const footerBottomColor = theme.modal
 
   return (
-    <View style={{ flex: 1, paddingTop: insets.top }}>
+    <OuterView insets={insets}>
       {/* ==== Top Panel Start ==== */}
       <View style={styles.topPanel}>
         <Image style={styles.logoImage} source={theme.primaryLogo} resizeMode="contain" />
@@ -348,7 +349,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
         {/* === Footer End === */}
       </View>
       {/* ==== Bottom Panel End ==== */}
-    </View>
+    </OuterView>
   )
 }
 
@@ -474,6 +475,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderBottomLeftRadius: theme.rem(2),
     zIndex: 1
   }
+}))
+
+// TODO: Refactor more of SideMenu into styled components
+const OuterView = styled(View)<{ insets: { top: number; bottom: number } }>(() => props => ({
+  flexGrow: 1,
+  paddingTop: props.insets.top,
+  paddingBottom: props.insets.bottom
 }))
 
 export function SideMenu(props: DrawerContentComponentProps) {
