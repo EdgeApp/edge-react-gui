@@ -19,7 +19,7 @@ PODS:
     - React-Core
   - edge-currency-accountbased (4.6.0):
     - React-Core
-  - edge-currency-plugins (3.0.1):
+  - edge-currency-plugins (3.0.2):
     - React-Core
   - edge-exchange-plugins (2.4.3):
     - React-Core
@@ -2119,7 +2119,7 @@ SPEC CHECKSUMS:
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   edge-core-js: f1c052d4505789e3597301df50bdba3fd9a46e41
   edge-currency-accountbased: cef92e7de1103af98d639e89c29b9ae77726fe1d
-  edge-currency-plugins: 98c782b83cd9099a6c91980effaa7e272065f7bc
+  edge-currency-plugins: a2975ed3d7b525b3c6dda5c96b3947508e4e309f
   edge-exchange-plugins: 1068da9c0850d7abb60717dc96a20b7465abeee1
   edge-login-ui-rn: 6b012ec11e88b3690ab74dc9b5081314ca1cedf0
   EXConstants: 9a008dbf262550884e6280dea95b81b51f65ea6f
@@ -2258,7 +2258,7 @@ SPEC CHECKSUMS:
   SwiftNIOTLS: 598af547490133e9aac52aed0c23c4a90c31dcfc
   SwiftNIOTransportServices: 0b2b407819d82eb63af558c5396e33c945759503
   SwiftProtobuf: 5e8349171e7c2f88f5b9e683cb3cb79d1dc780b3
-  Yoga: d02ee88821190d82b2daa5cd15640a82ffafaaab
+  Yoga: dafebc41bc66910af33077aaa41078e89fd635bf
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
