@@ -41,9 +41,19 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  NSString *versionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
   [SentrySDK startWithConfigureOptions:^(SentryOptions *options) {
       options.dsn = @"SENTRY_DSN_URL";
       options.debug = YES; // Enabled debug when first installing is always helpful
+
+      // Check if the version string is equal to "99.99.99" or contains a "-"
+      if ([versionString isEqualToString:@"99.99.99"]) {
+        options.environment = @"development";
+      } else if ([versionString containsString:@"-"]) {
+        options.environment = @"testing";
+      } else {
+        options.environment = @"production";
+      }
 
       // Enable tracing to capture 100% of transactions for performance monitoring.
       // Use 'options.tracesSampleRate' to set the sampling rate.

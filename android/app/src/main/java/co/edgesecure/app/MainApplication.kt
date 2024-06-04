@@ -48,8 +48,20 @@ class MainApplication : Application(), ReactApplication {
     override fun onCreate() {
         super.onCreate()
 
+        // Retrieve the version string from the app's BuildConfig
+        val versionString = BuildConfig.VERSION_NAME
+
         SentryAndroid.init(this) { options ->
-          options.dsn = "https://9b258dcdb5f03a80a122aa3bcf3df213@sentry.edge.app/2"
+          options.dsn = "SENTRY_DSN_URL"
+
+          if (versionString == "99.99.99") {
+            options.environment = "development"
+          } else if (versionString.contains("-")) {
+            options.environment = "testing"
+          } else {
+            options.environment = "production"
+          }
+
           // Add a callback that will be used before the event is sent to Sentry.
           // With this callback, you can modify the event or, when returning null, also discard the event.
           options.beforeSend =

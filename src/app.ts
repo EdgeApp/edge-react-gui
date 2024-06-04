@@ -18,13 +18,16 @@ import { NumberMap } from './types/types'
 import { log, logToServer } from './util/logger'
 import { initInfoServer } from './util/network'
 
+export type Environment = 'development' | 'testing' | 'production'
+
 const appVersion = getVersion()
-const releaseStage = __DEV__ || appVersion === '99.99.99' ? 'development' : appVersion.includes('-') ? 'testing' : 'production'
+const environment: Environment = __DEV__ || appVersion === '99.99.99' ? 'development' : appVersion.includes('-') ? 'testing' : 'production'
 
 Sentry.init({
   dsn: ENV.SENTRY_DSN_URL,
-  tracesSampleRate: releaseStage === 'production' || releaseStage === 'testing' ? 0.2 : 1.0,
+  tracesSampleRate: environment === 'production' || environment === 'testing' ? 0.2 : 1.0,
   maxBreadcrumbs: 25,
+  environment,
 
   // Initialize Sentry within native iOS and Android code so we can catch crashes at
   // early app startup.
