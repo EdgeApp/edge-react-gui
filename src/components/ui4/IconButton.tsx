@@ -46,7 +46,7 @@ export const IconButton = (props: Props) => {
   )
 
   return (
-    <EdgeTouchableOpacity accessible={false} style={styles.tappableArea} onPress={onPress} testID={testID}>
+    <EdgeTouchableOpacity accessible={false} style={styles.tappableArea} onPress={onPress} testID={testID} debounce>
       <View style={styles.topContainer}>
         <View style={iconContainerStyle}>{children}</View>
         {superscriptLabel == null ? null : (
