@@ -180,8 +180,8 @@ export const SwapCreateScene = (props: Props) => {
     setState(defaultState)
   }
 
-  const showWalletListModal = (whichWallet: 'from' | 'to') => {
-    Airship.show<WalletListResult>(bridge => (
+  const showWalletListModal = async (whichWallet: 'from' | 'to') => {
+    const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
         navigation={props.navigation}
@@ -191,13 +191,10 @@ export const SwapCreateScene = (props: Props) => {
         filterActivation
       />
     ))
-      .then(async result => {
-        if (result?.type === 'wallet') {
-          const { walletId, tokenId } = result
-          await handleSelectWallet(walletId, tokenId, whichWallet)
-        }
-      })
-      .catch(error => showError(error))
+    if (result?.type === 'wallet') {
+      const { walletId, tokenId } = result
+      await handleSelectWallet(walletId, tokenId, whichWallet)
+    }
   }
 
   //
@@ -292,12 +289,12 @@ export const SwapCreateScene = (props: Props) => {
     getQuote(request)
   })
 
-  const handleFromSelectWallet = useHandler(() => {
-    showWalletListModal('from')
+  const handleFromSelectWallet = useHandler(async () => {
+    await showWalletListModal('from')
   })
 
-  const handleToSelectWallet = useHandler(() => {
-    showWalletListModal('to')
+  const handleToSelectWallet = useHandler(async () => {
+    await showWalletListModal('to')
   })
 
   const handleFromAmountChange = useHandler((amounts: ExchangedFlipInputAmounts) => {
