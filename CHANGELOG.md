@@ -5,6 +5,7 @@
 - added: Dynamic height for multiline text inputs
 - added: Sentry SDK for crash reporting
 - changed: Add EUID to Simplex quoting API calls
+- changed: Velodrome, cemetery, and masonry staking polcies - insufficient balance errors reduced severity to untracked warnings
 - fixed: Buy/Sell Scene briefly changes title after selecting payment method if an asset was pre-selected via the "Trade" modal
 - removed: Bugsnag for crash reporting
 - removed: Firebase/Google Analytics
