@@ -143,7 +143,7 @@ const TransactionDetailsComponent = (props: Props) => {
 
         await onSaveTxDetails({ exchangeAmount: { [wallet.fiatCurrencyCode]: amountFiat } })
       })
-      .catch(showError)
+      .catch(error => showError(error))
   })
 
   // #endregion Crypto Fiat Rows

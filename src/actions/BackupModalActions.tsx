@@ -3,7 +3,7 @@ import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'
 
 import { BackupForAccountModal, BackupForTransferModal, BackupForTransferModalResult, BackupModalResult } from '../components/modals/BackupModal'
-import { Airship, showError } from '../components/services/AirshipInstance'
+import { Airship, showDevError } from '../components/services/AirshipInstance'
 import { NavigationBase } from '../types/routerTypes'
 
 let isBackupModalShowing = false
@@ -29,7 +29,7 @@ export const showBackupModal = (props: { navigation: NavigationBase; forgetLogin
     .finally(() => {
       isBackupModalShowing = false
     })
-    .catch(error => showError(error))
+    .catch(error => showDevError(error))
 }
 
 /**
@@ -49,7 +49,7 @@ export const checkAndShowLightBackupModal = (account: EdgeAccount, navigation: N
       .finally(() => {
         isBackupModalShowing = false
       })
-      .catch(error => showError(error))
+      .catch(error => showDevError(error))
     return true
   }
   return false

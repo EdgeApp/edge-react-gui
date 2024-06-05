@@ -16,7 +16,7 @@ import { FlatListItem, GuiFiatType } from '../../types/types'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
-import { showError } from '../services/AirshipInstance'
+import { showDevError } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
@@ -119,7 +119,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     } else {
       this.setState({ selectedFiat })
       Keyboard.dismiss()
-      this.props.onSelectFiat(selectedFiat).catch(err => showError(err))
+      this.props.onSelectFiat(selectedFiat).catch(err => showDevError(err))
       navigation.goBack()
     }
   }

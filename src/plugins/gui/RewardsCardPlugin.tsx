@@ -216,7 +216,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           .approveQuote({ showUi, coreWallet: wallet })
           .then(async () => {
             await showDashboard({ showLoading: true })
-            await refreshRewardsCards(0).catch(showError)
+            await refreshRewardsCards(0).catch(error => showError(error))
             await showDashboard({ showLoading: false })
           })
           .catch(error => {

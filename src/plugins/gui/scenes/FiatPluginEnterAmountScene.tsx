@@ -139,13 +139,13 @@ export const FiatPluginEnterAmountScene = React.memo((props: Props) => {
   })
   const handlePoweredByPress = useHandler(async () => await onPoweredByClick(stateManager))
   const handleSubmit = useHandler(async () => {
-    await onSubmit({ response: { lastUsed: lastUsed.current, value1, value2 } }, stateManager).catch(showError)
+    await onSubmit({ response: { lastUsed: lastUsed.current, value1, value2 } }, stateManager).catch(error => showError(error))
   })
 
   const handleMax = useHandler(async () => {
     if (onMax != null) {
       stateManager.update({ spinner1: true, spinner2: true })
-      await onMax(lastUsed.current, stateManager).catch(showError)
+      await onMax(lastUsed.current, stateManager).catch(error => showError(error))
       stateManager.update({ spinner1: false, spinner2: false })
     }
   })

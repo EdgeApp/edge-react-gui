@@ -16,7 +16,7 @@ import { logActivity } from '../../util/logger'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { QrPeephole } from '../common/QrPeephole'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship, showError, showWarning } from '../services/AirshipInstance'
+import { Airship, showDevError, showError, showWarning } from '../services/AirshipInstance'
 import { checkAndRequestPermission } from '../services/PermissionsManager'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
@@ -101,7 +101,7 @@ export const ScanModal = (props: Props) => {
         if (result.didCancel) return
 
         if (result.errorMessage) {
-          showError(result.errorMessage)
+          showDevError(result.errorMessage)
           return
         }
 
@@ -125,7 +125,7 @@ export const ScanModal = (props: Props) => {
             bridge.resolve(response.values[0])
           })
           .catch(error => {
-            showError(error)
+            showDevError(error)
           })
       }
     ).catch(err => showError(err))

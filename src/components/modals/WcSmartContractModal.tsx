@@ -65,12 +65,14 @@ export const WcSmartContractModal = (props: Props) => {
       .then(() => {
         Airship.show(bridge => <FlashNotification bridge={bridge} message={lstrings.wc_smartcontract_confirmed} />).catch(() => {})
       })
-      .catch(showError)
+      .catch(error => showError(error))
       .finally(props.bridge.resolve)
   }
 
   const handleClose = () => {
-    wcRequestResponse(false).catch(showError).finally(props.bridge.resolve)
+    wcRequestResponse(false)
+      .catch(error => showError(error))
+      .finally(props.bridge.resolve)
   }
 
   const renderWarning = () => {

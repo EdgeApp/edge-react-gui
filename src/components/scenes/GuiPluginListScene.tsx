@@ -299,8 +299,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
               source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]}
             />
           }
-          onPress={async () => await this.openPlugin(item).catch(showError)}
-          onLongPress={async () => await this.openPlugin(item, true).catch(showError)}
+          onPress={async () => await this.openPlugin(item).catch(error => showError(error))}
+          onLongPress={async () => await this.openPlugin(item, true).catch(error => showError(error))}
           paddingRem={[1, 0.5, 1, 0.5]}
         >
           <View style={styles.cardContentContainer}>

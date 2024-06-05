@@ -105,7 +105,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.loadBiometryType().catch(showError)
+    this.loadBiometryType().catch(error => showError(error))
     this.cleanups = [
       this.props.context.watch('logSettings', logSettings => {
         this.setState({ defaultLogLevel: logSettings.defaultLogLevel })
@@ -310,7 +310,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
         defaultLogLevel,
         sources: {}
       })
-      .catch(showError)
+      .catch(error => showError(error))
   }
 
   handleUpgrade = (): void => {

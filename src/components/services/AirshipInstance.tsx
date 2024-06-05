@@ -1,6 +1,8 @@
+import { addBreadcrumb } from '@sentry/react-native'
 import * as React from 'react'
 import { ActivityIndicator } from 'react-native'
 import { makeAirship } from 'react-native-airship'
+import { getVersion } from 'react-native-device-info'
 
 import { trackError } from '../../util/tracking'
 import { makeErrorLog, translateError } from '../../util/translateError'
@@ -35,6 +37,43 @@ export function showError(error: unknown, options: ShowErrorWarningOptions = {})
 
   if (translatedMessage.includes('edge-core: The WebView has been unmounted.')) return
   Airship.show(bridge => <AlertDropdown bridge={bridge} message={translatedMessage} />).catch(err => console.error(err))
+}
+
+/**
+ * Only shows on develop builds and only logs to disk, not to bugsnag. Will not
+ * show on staging or master. Dropdown does not auto-dismiss.
+ *
+ * Async for core errors only, so it can properly avoid spamming errors.
+ */
+export async function showDevErrorAsync(error: unknown, options: ShowErrorWarningOptions = {}): Promise<void> {
+  const appVersion = getVersion()
+  const { tag } = options
+  const tagMessage = tag == null ? '' : ` Tag: ${tag}.`
+  const translatedMessage = translateError(error) + tagMessage
+  if (translatedMessage.includes('edge-core: The WebView has been unmounted.')) return
+
+  console.error(redText('Showing DEV drop-down alert: ' + makeErrorLog(error)))
+
+  if (__DEV__ || appVersion === '99.99.99' || appVersion.includes('-d')) {
+    // Non-production (develop) builds show all errors
+    await Airship.show(bridge => <AlertDropdown bridge={bridge} devAlert message={translatedMessage} />)
+  } else {
+    // Production/staging builds don't show visible errors, but just saves a
+    // breadcrumb.
+    addBreadcrumb({
+      type: 'DEV_ERROR',
+      message: translatedMessage,
+      timestamp: new Date().getTime() / 1000
+    })
+  }
+}
+
+/**
+ * Only shows on develop builds and only logs to disk, not to bugsnag. Will not
+ * show on staging or master. Dropdown does not auto-dismiss.
+ */
+export function showDevError(error: unknown, options: ShowErrorWarningOptions = {}): void {
+  showDevErrorAsync(error, options).catch(err => console.error(err))
 }
 
 /**

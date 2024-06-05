@@ -8,7 +8,6 @@ import { useHandler } from '../../hooks/useHandler'
 import { triggerHaptic } from '../../util/haptic'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SectionView } from './SectionView'
 
@@ -64,33 +63,21 @@ export const CardUi4 = (props: Props) => {
   const handlePress = useHandler(async () => {
     if (onPress != null) {
       triggerHaptic('impactLight')
-      try {
-        await onPress()
-      } catch (err) {
-        showError(err)
-      }
+      await onPress()
     }
   })
 
   const handleLongPress = useHandler(async () => {
     if (onLongPress != null) {
       triggerHaptic('impactLight')
-      try {
-        await onLongPress()
-      } catch (err) {
-        showError(err)
-      }
+      await onLongPress()
     }
   })
 
   const handleClose = useHandler(async () => {
     if (onClose != null) {
       triggerHaptic('impactLight')
-      try {
-        await onClose()
-      } catch (err) {
-        showError(err)
-      }
+      await onClose()
     }
   })
   const imageSrc = React.useMemo(() => (typeof icon === 'string' ? { uri: icon } : { uri: '' }), [icon])

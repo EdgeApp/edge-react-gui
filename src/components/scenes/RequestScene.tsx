@@ -517,7 +517,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
       failOnCancel: false
     }
 
-    await Share.open(shareOptions).catch(showError)
+    await Share.open(shareOptions).catch(error => showError(error))
   }
 
   openFioAddressModal = async (): Promise<void> => {

@@ -17,7 +17,7 @@ import { getOtpReminderModal } from '../../util/otpReminder'
 import { EdgeAnim, fadeIn, fadeOut } from '../common/EdgeAnim'
 import { styled } from '../hoc/styled'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showDevError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { MAX_TAB_BAR_HEIGHT, MIN_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
 import { NotificationCard } from './NotificationCard'
@@ -56,7 +56,7 @@ const NotificationViewComponent = (props: Props) => {
   const handleBackupPress = useHandler(async () => {
     writeHasInteractedWithBackupModal(true)
       .then(() => setHasInteractedWithBackupModal(true))
-      .catch(err => showError(err))
+      .catch(err => showDevError(err))
     await showBackupModal({ navigation })
     hasInteractedWithBackupModalLocal = true
   })
