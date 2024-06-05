@@ -23,7 +23,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwapVerticalIcon } from '../icons/ThemedIcons'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship, showError, showWarning } from '../services/AirshipInstance'
+import { Airship, showError, showToast, showWarning } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
 import { LineTextDivider } from '../themed/LineTextDivider'
@@ -271,7 +271,7 @@ export const SwapCreateScene = (props: Props) => {
     if (fromWallet == null || toWallet == null) return
 
     if (zeroString(state.nativeAmount)) {
-      showError(`${lstrings.no_exchange_amount}. ${lstrings.select_exchange_amount}.`)
+      showToast(`${lstrings.no_exchange_amount}. ${lstrings.select_exchange_amount}.`)
       return
     }
 
