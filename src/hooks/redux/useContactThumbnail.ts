@@ -16,10 +16,10 @@ export const maybeShowContactsPermissionModal = (dispatch: Dispatch, contactsPer
     .then(modalResult => {
       if (modalResult !== undefined) {
         // Update the Edge setting and system permission setting
-        dispatch(setContactsPermissionOn(modalResult === 'allow')).catch(showError)
+        dispatch(setContactsPermissionOn(modalResult === 'allow')).catch(error => showError(error))
       }
     })
-    .catch(showError)
+    .catch(error => showError(error))
 }
 
 /**

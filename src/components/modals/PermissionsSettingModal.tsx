@@ -38,7 +38,7 @@ export function PermissionsSettingModal(props: {
   )
 
   const handlePress = () => {
-    openSettings().catch(showError)
+    openSettings().catch(error => showError(error))
     if (!mandatory) handleClose()
   }
 

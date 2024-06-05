@@ -51,7 +51,7 @@ export function WalletListScene(props: Props) {
           setSorting(true)
         }
       })
-      .catch(showError)
+      .catch(error => showError(error))
   })
 
   const handleRefresh = useHandler(() => {

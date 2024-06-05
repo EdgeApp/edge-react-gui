@@ -84,7 +84,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
     // If we have become paused (app into background), shut down all wallets:
     if (paused && !this.paused) {
       this.cancelBoot()
-      Promise.all(Object.keys(currencyWallets).map(async walletId => await currencyWallets[walletId].changePaused(true))).catch(showError)
+      Promise.all(Object.keys(currencyWallets).map(async walletId => await currencyWallets[walletId].changePaused(true))).catch(error => showError(error))
     }
     this.paused = paused
 
@@ -185,7 +185,7 @@ function bootWallet(wallet: EdgeCurrencyWallet, onBoot: () => void): WalletBoot 
         out.close()
       }, 5000)
     })
-    .catch(showError)
+    .catch(error => showError(error))
 
   return out
 }

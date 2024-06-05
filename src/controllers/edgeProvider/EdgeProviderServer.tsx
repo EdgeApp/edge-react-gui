@@ -344,7 +344,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
         currencyCode,
         wallet: this._selectedWallet,
         metadata
-      }).catch(showError)
+      }).catch(error => showError(error))
       return
     }
 

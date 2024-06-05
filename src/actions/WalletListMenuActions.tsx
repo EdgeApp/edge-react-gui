@@ -58,7 +58,7 @@ export function walletListMenuAction(
       return async (dispatch, getState) => {
         const state = getState()
         const { account } = state.core
-        account.changeWalletStates({ [walletId]: { deleted: true } }).catch(showError)
+        account.changeWalletStates({ [walletId]: { deleted: true } }).catch(error => showError(error))
       }
     }
     case 'delete': {
@@ -116,7 +116,7 @@ export function walletListMenuAction(
               .then(r => {
                 logActivity(`Archived Wallet ${account.username} -- ${getWalletName(wallet)} ${wallet.type} ${wallet.id}`)
               })
-              .catch(showError)
+              .catch(error => showError(error))
 
             // Remove loan accounts associated with the wallet
             if (state.loanManager.loanAccounts[walletId] != null) {
@@ -129,7 +129,7 @@ export function walletListMenuAction(
               .then(() => {
                 logActivity(`Disable Token: ${getWalletName(wallet)} ${wallet.type} ${wallet.id} ${tokenId}`)
               })
-              .catch(showError)
+              .catch(error => showError(error))
           }
         }
       }

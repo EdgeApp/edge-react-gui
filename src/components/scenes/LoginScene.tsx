@@ -75,7 +75,7 @@ export function LoginSceneComponent(props: Props) {
           .then(async account => {
             await dispatch(initializeAccount(navigation, account))
           })
-          .catch(showError)
+          .catch(error => showError(error))
       }
       if (YOLO_PASSWORD != null) {
         context
@@ -83,7 +83,7 @@ export function LoginSceneComponent(props: Props) {
           .then(async account => {
             await dispatch(initializeAccount(navigation, account))
           })
-          .catch(showError)
+          .catch(error => showError(error))
       }
     } else if (YOLO_USERNAME == null && account.username == null && context.localUsers[0]?.loginId != null && typeof YOLO_PIN === 'string') {
       // Allow YOLO_PIN with light accounts
@@ -93,7 +93,7 @@ export function LoginSceneComponent(props: Props) {
         .then(async account => {
           await dispatch(initializeAccount(navigation, account))
         })
-        .catch(showError)
+        .catch(error => showError(error))
     }
   }, [account, context, dispatch, navigation])
 
