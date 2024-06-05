@@ -242,7 +242,7 @@ export const SwapCreateScene = (props: Props) => {
 
   const handleMaxPress = useHandler(() => {
     if (toWallet == null) {
-      showWarning(`${lstrings.exchange_select_receiving_wallet}`)
+      showWarning(`${lstrings.exchange_select_receiving_wallet}`, { trackError: false })
       Keyboard.dismiss()
       return
     }
@@ -250,7 +250,7 @@ export const SwapCreateScene = (props: Props) => {
     if (fromWallet == null) {
       // Shouldn't ever happen because max button UI is disabled when no
       // fromWallet is selected
-      showWarning(`${lstrings.exchange_select_sending_wallet}`)
+      showWarning(`${lstrings.exchange_select_sending_wallet}`, { trackError: false })
       return
     }
 
