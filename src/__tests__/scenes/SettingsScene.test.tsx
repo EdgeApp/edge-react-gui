@@ -1,62 +1,30 @@
 import { describe, expect, it } from '@jest/globals'
-import { EdgeAccount, EdgeContext } from 'edge-core-js'
 import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
-import { SettingsSceneComponent } from '../../components/scenes/SettingsScene'
-import { config } from '../../theme/appConfig'
-import { FakeProviders } from '../../util/fake/FakeProviders'
+import { SettingsScene } from '../../components/scenes/SettingsScene'
+import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 import { fakeSceneProps } from '../../util/fake/fakeSceneProps'
 
-const typeHack: any = {
-  currencyConfig: {},
-  username: 'some user',
-  logSettings: { defaultLogLevel: 'info' },
-  watch() {
-    return () => {}
-  }
-}
-const account: EdgeAccount = typeHack
-const context: EdgeContext = typeHack
-
 describe('SettingsScene', () => {
+  const mockState: FakeState = {
+    core: {
+      account: {
+        currencyConfig: {},
+        username: 'some user',
+        watch: () => () => {}
+      },
+      context: {
+        logSettings: { defaultLogLevel: 'silent' },
+        watch: () => () => {}
+      }
+    }
+  }
+
   it('should render SettingsScene', () => {
     const renderer = TestRenderer.create(
-      <FakeProviders>
-        <SettingsSceneComponent
-          {...fakeSceneProps('settingsOverview', {})}
-          username="some user"
-          theme={config.darkTheme}
-          // StateProps:
-          account={account}
-          context={context}
-          disableAnim={false}
-          autoLogoutTimeInSeconds={600}
-          contactsPermissionOn
-          defaultFiat="iso:USD"
-          defaultScreen="home"
-          developerModeOn
-          spamFilterOn
-          isLocked
-          pinLoginEnabled
-          supportsTouchId={false}
-          touchIdEnabled
-          // DispatchProps:
-          dispatchUpdateEnableTouchIdEnable={async () => undefined}
-          handleClearLogs={async () => {}}
-          handleSendLogs={() => undefined}
-          lockSettings={() => undefined}
-          onTogglePinLoginEnabled={async () => undefined}
-          onToggleContactsPermissionOn={async () => undefined}
-          setAutoLogoutTimeInSeconds={async () => {}}
-          setDefaultScreen={async () => {}}
-          showRestoreWalletsModal={async () => {}}
-          showUnlockSettingsModal={async () => {}}
-          toggleDeveloperMode={() => undefined}
-          toggleDisableAnimations={() => undefined}
-          toggleSpamFilter={() => undefined}
-          logoutRequest={async () => undefined}
-        />
+      <FakeProviders initialState={mockState}>
+        <SettingsScene {...fakeSceneProps('settingsOverview', {})} />
       </FakeProviders>
     )
 
