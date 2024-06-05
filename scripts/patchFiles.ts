@@ -51,7 +51,6 @@ async function main() {
   ]
 
   for (const file of sentryFiles) {
-    await searchReplace(file, 'https://sentryuploadurl.mydomain.com', env.SENTRY_MAP_UPLOAD_URL)
     await searchReplace(file, 'SENTRY_MAP_UPLOAD_URL', env.SENTRY_MAP_UPLOAD_URL)
     await searchReplace(file, 'SENTRY_DSN_URL', env.SENTRY_DSN_URL)
     await searchReplace(file, 'SENTRY_MAP_UPLOAD_AUTH_TOKEN', env.SENTRY_MAP_UPLOAD_AUTH_TOKEN)

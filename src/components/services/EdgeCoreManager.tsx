@@ -66,7 +66,8 @@ const crashReporter: EdgeCrashReporter = {
     })
   },
   logCrash(event) {
-    captureException(event, { level: 'fatal' })
+    const eventString = JSON.stringify(event, null, 2)
+    captureException(eventString, { level: 'fatal' })
   }
 }
 
