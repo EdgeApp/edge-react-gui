@@ -61,6 +61,18 @@ target 'edge' do
       :mac_catalyst_enabled => false
       # :ccache_enabled => true
     )
+
+    # Remove the -lsqlite3 linker flag.
+    # We already include our own sqlite3 implementation via a pod,
+    # so we don't want the system-provided one as well.
+    # Firebase seems to be the one adding this flag to the build,
+    # but that's a transitive dependency so we can't fix it there.
+    for target in installer.generated_aggregate_targets
+      target.xcconfigs.each do |name, config|
+        config.libraries.delete('sqlite3')
+        config.save_as(Pathname.new(target.xcconfig_relative_path(name)))
+      end
+    end
   end
 
   # --------------------------------------------------------------------------
