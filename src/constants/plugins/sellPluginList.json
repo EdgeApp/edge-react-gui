@@ -13,6 +13,7 @@
     ],
     "notStateProvinces": {
       "US": [
+        "FL",
         "NY",
         "TX"
       ]
