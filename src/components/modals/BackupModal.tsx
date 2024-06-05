@@ -12,7 +12,7 @@ import { useSelector } from '../../types/reactRedux'
 import { openBrowserUri } from '../../util/WebUtils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { HeaderText, Paragraph, SmallText, WarningText } from '../themed/EdgeText'
-import { ButtonsModal2 } from './ButtonsModal'
+import { ButtonsModal } from './ButtonsModal'
 
 export type BackupModalResult = 'upgrade' | 'learnMore' | 'dismiss'
 export type BackupForTransferModalResult = 'upgrade' | 'learnMore'
@@ -54,7 +54,7 @@ export const BackupForTransferModal = (props: { bridge: AirshipBridge<BackupForT
   })
 
   return (
-    <ButtonsModal2
+    <ButtonsModal
       bridge={bridge}
       buttons={{
         upgrade: { label: lstrings.get_started_button },
@@ -71,7 +71,7 @@ export const BackupForTransferModal = (props: { bridge: AirshipBridge<BackupForT
         bodyCont={sprintf(lstrings.no_access_disclaimer_1s, config.appName)}
         subText={lstrings.backup_message_subtext}
       />
-    </ButtonsModal2>
+    </ButtonsModal>
   )
 }
 
@@ -103,7 +103,7 @@ export const BackupForAccountModal = (props: { bridge: AirshipBridge<BackupModal
   })
 
   return (
-    <ButtonsModal2
+    <ButtonsModal
       bridge={bridge}
       buttons={{
         upgrade: { label: lstrings.backup_account },
@@ -122,7 +122,7 @@ export const BackupForAccountModal = (props: { bridge: AirshipBridge<BackupModal
       }}
     >
       <BackupModalContent title={lstrings.backup_title} body={lstrings.backup_info_message} subText={backupText} />
-    </ButtonsModal2>
+    </ButtonsModal>
   )
 }
 

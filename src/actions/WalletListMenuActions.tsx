@@ -163,12 +163,10 @@ export function walletListMenuAction(
         const displayPublicSeed = await account.getDisplayPublicKey(wallet.id)
 
         const copy: ButtonInfo = {
-          label: lstrings.fragment_request_copy_title,
-          type: 'secondary'
+          label: lstrings.fragment_request_copy_title
         }
         const link: ButtonInfo = {
-          label: lstrings.transaction_details_show_advanced_block_explorer,
-          type: 'secondary'
+          label: lstrings.transaction_details_show_advanced_block_explorer
         }
         const buttons = xpubExplorer != null ? { copy, link } : { copy }
 

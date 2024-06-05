@@ -5,9 +5,17 @@
 - added: Dynamic height for multiline text inputs
 - added: Sentry SDK for crash reporting
 - changed: Some red Airship alerts deemed unecessary are now hidden from production builds
+- added: Gas requirement warnings for more UX flows
+- added: Mainnet code appended to assets in exchange details modal
 - changed: Add EUID to Simplex quoting API calls
 - changed: Velodrome, cemetery, and masonry staking polcies - insufficient balance errors reduced severity to untracked warnings
+- changed: Distinction between disabled and paused wallets
+- changed: Wallet menu modal item ordering for "Split Wallet"
 - fixed: Buy/Sell Scene briefly changes title after selecting payment method if an asset was pre-selected via the "Trade" modal
+- fixed: Android Auto Log Off "Disabled" text color
+- fixed: Android Auto Log Off "Disabled" selection showing as "0"
+- fixed: WalletConnect Smart Contract Call details cut off
+- fixed: Buy/Sell Scenes header underline not fully extending to the right
 - removed: Bugsnag for crash reporting
 - removed: Firebase/Google Analytics
 - removed: Light Account Backup Modal A/B/C/D test experiment

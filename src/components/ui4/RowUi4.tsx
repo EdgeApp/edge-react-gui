@@ -1,6 +1,6 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, StyleProp, View, ViewStyle } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
@@ -34,6 +34,8 @@ interface Props {
   onLongPress?: () => Promise<void> | void
   onPress?: () => Promise<void> | void
 
+  /** @deprecated To be integrated permanently next release */
+  shrinkBody?: boolean
   /** @deprecated Only to be used during the UI4 transition */
   marginRem?: number[] | number
 }
@@ -42,12 +44,20 @@ export const RowUi4 = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { body, title, children, maximumHeight = 'medium', error, icon, loading, marginRem, onLongPress, onPress } = props
+  const { body, title, children, maximumHeight = 'medium', error, icon, loading, marginRem, shrinkBody, onLongPress, onPress } = props
   const { rightButtonType = onLongPress == null && onPress == null ? 'none' : 'touchable' } = props
 
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
 
   const numberOfLines = textHeights[maximumHeight]
+
+  // TODO: Merge styles.containerTemp into styles.container permanently.
+  // Explicitly setting the container style here to avoid unit test snapshot
+  // diffs.
+  const containerStyle: StyleProp<ViewStyle> = React.useMemo(
+    () => (shrinkBody === true ? [styles.container, margin, styles.containerTemp] : [styles.container, margin]),
+    [shrinkBody, styles.container, styles.containerTemp, margin]
+  )
 
   const handlePress = useHandler(async () => {
     if (rightButtonType === 'copy' && body != null) {
@@ -108,11 +118,11 @@ export const RowUi4 = (props: Props) => {
   // TODO: If a right button is specified, onPress/onLogPress is ignored! Refine
   // API and possibly restructure JSX.
   return isTappable && !rightButtonVisible ? (
-    <EdgeTouchableOpacity style={[styles.container, margin]} accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={loading}>
+    <EdgeTouchableOpacity style={containerStyle} accessible={false} onPress={handlePress} onLongPress={handleLongPress} disabled={loading}>
       {content}
     </EdgeTouchableOpacity>
   ) : (
-    <View style={[styles.container, margin]}>{content}</View>
+    <View style={containerStyle}>{content}</View>
   )
 }
 
@@ -124,6 +134,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'stretch'
+  },
+  containerTemp: {
+    flexShrink: 1 // Conditionally using this style temporarily to reduce scope of changes. To be merged into the main `container` style above next release.
   },
   content: {
     flexDirection: 'column',

@@ -115,6 +115,10 @@ export const WALLET_LIST_MENU: Array<{
     value: 'getRawKeys'
   },
   {
+    label: lstrings.fragment_wallets_split_wallet,
+    value: 'split'
+  },
+  {
     label: lstrings.string_archive_wallet,
     value: 'delete'
   }
@@ -180,8 +184,23 @@ export function WalletListMenuModal(props: Props) {
         })
       }
 
+      const isSplittable = await account.listSplittableWalletTypes(wallet.id)
+
+      const currencyInfos = getCurrencyInfos(account)
+      for (const splitWalletType of isSplittable) {
+        const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
+        if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
+        splitPluginIds.push(info.pluginId)
+      }
+      setSplitPluginIds([...splitPluginIds])
+      if (splitPluginIds.length > 0) {
+        result.push({ label: lstrings.fragment_wallets_split_wallet, value: 'split' })
+      }
+
       for (const option of WALLET_LIST_MENU) {
         const { pluginIds, label, value } = option
+
+        if (value === 'split' && !isSplittable) continue
 
         if (Array.isArray(pluginIds) && !pluginIds.includes(pluginId)) continue
 
@@ -194,19 +213,6 @@ export function WalletListMenuModal(props: Props) {
         if (account.username == null && (value === 'getSeed' || value === 'getRawKeys')) continue
 
         result.push({ label, value })
-      }
-
-      const splittable = await account.listSplittableWalletTypes(wallet.id)
-
-      const currencyInfos = getCurrencyInfos(account)
-      for (const splitWalletType of splittable) {
-        const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
-        if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
-        splitPluginIds.push(info.pluginId)
-      }
-      setSplitPluginIds([...splitPluginIds])
-      if (splitPluginIds.length > 0) {
-        result.push({ label: lstrings.fragment_wallets_split_wallet, value: 'split' })
       }
 
       setOptions(result)

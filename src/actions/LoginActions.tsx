@@ -28,6 +28,7 @@ import { expiredFioNamesCheckDates } from './FioActions'
 import { readLocalSettings } from './LocalSettingsActions'
 import { registerNotificationsV2, updateNotificationSettings } from './NotificationActions'
 import { showScamWarningModal } from './ScamWarningActions'
+import { approveTokenTerms } from './TokenTermsActions'
 
 function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; currencyCode: string } {
   // Find the first wallet:
@@ -256,22 +257,22 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
     const { keyOptions, pluginId, tokenId } = item
 
     // Ensure we create the wallet:
-    let row = optionsMap.get(pluginId)
-    if (row == null) {
+    let createWallet = optionsMap.get(pluginId)
+    if (createWallet == null) {
       const { walletType } = account.currencyConfig[pluginId].currencyInfo
-      row = {
+      createWallet = {
         fiatCurrencyCode,
         keyOptions,
         name: getUniqueWalletName(account, pluginId),
         walletType
       }
-      optionsMap.set(pluginId, row)
+      optionsMap.set(pluginId, createWallet)
     }
 
     // If this is a token, add it:
     if (tokenId != null) {
-      row.enabledTokenIds ??= []
-      row.enabledTokenIds.push(tokenId)
+      createWallet.enabledTokenIds ??= []
+      createWallet.enabledTokenIds.push(tokenId)
     }
   }
 
@@ -287,6 +288,9 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
     if (!result.ok) continue
     const { walletType, name } = options[i]
     logActivity(`Create Wallet (login): ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${name}`)
+
+    // Show token warning:
+    await approveTokenTerms(result.result)
   }
 
   dispatch(logEvent('Signup_Wallets_Created_Success'))
