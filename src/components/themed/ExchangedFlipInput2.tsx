@@ -38,7 +38,7 @@ export interface Props {
   returnKeyType?: ReturnKeyType
   editable?: boolean
   inputAccessoryViewID?: string
-  headerCallback?: () => void
+  headerCallback?: () => void | Promise<void>
   onAmountChanged: (amounts: ExchangedFlipInputAmounts) => unknown
   onBlur?: () => void
   onFocus?: () => void

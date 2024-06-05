@@ -16,6 +16,7 @@
 - fixed: Android Auto Log Off "Disabled" selection showing as "0"
 - fixed: WalletConnect Smart Contract Call details cut off
 - fixed: Buy/Sell Scenes header underline not fully extending to the right
+- fixed: Quickly spamming taps on certain buttons resulted in duplicate actions
 - removed: Bugsnag for crash reporting
 - removed: Firebase/Google Analytics
 - removed: Light Account Backup Modal A/B/C/D test experiment

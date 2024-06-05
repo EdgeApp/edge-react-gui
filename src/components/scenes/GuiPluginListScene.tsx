@@ -101,7 +101,7 @@ interface StateProps {
   disablePlugins: NestedDisableMap
   insetStyle: InsetStyle
   forcedWalletResult?: WalletListResult
-  onCountryPress: () => void
+  onCountryPress: () => Promise<void>
   onPluginOpened: () => void
   onLogEvent: OnLogEvent
   onScroll: SceneScrollHandler
@@ -528,8 +528,8 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
     dispatch(logEvent(event, values))
   })
 
-  const handleCountryPress = useHandler(() => {
-    dispatch(
+  const handleCountryPress = useHandler(async () => {
+    await dispatch(
       showCountrySelectionModal({
         account,
         countryCode,
