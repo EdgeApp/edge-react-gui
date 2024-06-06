@@ -1203,7 +1203,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-zcash (0.7.3):
+  - react-native-zcash (0.7.4):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -2187,7 +2187,7 @@ SPEC CHECKSUMS:
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-safe-area-context: dcab599c527c2d7de2d76507a523d20a0b83823d
   react-native-webview: d9a17bfbf56fcfca316e859934d9fe2aa1bc3c91
-  react-native-zcash: 068bfa2f855394089a6adb97dae97882680346a6
+  react-native-zcash: 0f19f8d301bbc0d74f9ed92a6f6b3480e147461b
   React-nativeconfig: 21d89c65ca39875fad2c5c465e0e013e514eba21
   React-NativeModulesApple: e2e180dae4486b2978fcf3564cc4c8de4b453a68
   React-perflogger: 3d31e0d1e8ad891e43a09ac70b7b17a79773003a
