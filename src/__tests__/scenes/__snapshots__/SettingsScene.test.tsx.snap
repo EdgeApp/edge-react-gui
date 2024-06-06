@@ -2676,138 +2676,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                   }
                 }
               >
-                Developer Mode
-              </Text>
-              <View>
-                <View
-                  pending={false}
-                  style={
-                    [
-                      {
-                        "aspectRatio": 1,
-                        "position": "absolute",
-                        "width": "100%",
-                        "zIndex": 1,
-                      },
-                      {
-                        "opacity": 0,
-                      },
-                    ]
-                  }
-                >
-                  <ActivityIndicator
-                    color="#00f1a2"
-                    style={
-                      {
-                        "height": 34,
-                        "marginHorizontal": 11,
-                      }
-                    }
-                  />
-                </View>
-                <View
-                  pending={false}
-                  style={
-                    {
-                      "opacity": 1,
-                    }
-                  }
-                >
-                  <View
-                    pointerEvents="none"
-                    style={
-                      {
-                        "marginHorizontal": 11,
-                        "padding": 0,
-                      }
-                    }
-                  >
-                    <RCTSwitch
-                      accessibilityRole="switch"
-                      onChange={[Function]}
-                      onResponderTerminationRequest={[Function]}
-                      onStartShouldSetResponder={[Function]}
-                      onTintColor="#00f1a2"
-                      style={
-                        [
-                          {
-                            "height": 31,
-                            "width": 51,
-                          },
-                          {
-                            "backgroundColor": "#888888",
-                            "borderRadius": 16,
-                          },
-                        ]
-                      }
-                      tintColor="#888888"
-                      value={false}
-                    />
-                  </View>
-                </View>
-              </View>
-            </View>
-            <View
-              style={
-                [
-                  {
-                    "borderBottomColor": "rgba(255, 255, 255, .1)",
-                    "borderBottomWidth": 1,
-                    "height": 1,
-                  },
-                  {
-                    "margin": 11,
-                  },
-                ]
-              }
-            />
-            <View
-              accessibilityState={
-                {
-                  "disabled": false,
-                }
-              }
-              accessibilityValue={
-                {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
-                }
-              }
-              accessible={false}
-              focusable={true}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              style={
-                {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "marginBottom": 1,
-                  "minHeight": 67,
-                  "padding": 11,
-                }
-              }
-            >
-              <Text
-                style={
-                  {
-                    "color": "#FFFFFF",
-                    "flexGrow": 1,
-                    "flexShrink": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "paddingHorizontal": 11,
-                    "textAlign": "left",
-                  }
-                }
-              >
                 Disable Animations
               </Text>
               <View>
@@ -3325,6 +3193,193 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 }
               >
                 Verbose Logging
+              </Text>
+              <View>
+                <View
+                  pending={false}
+                  style={
+                    [
+                      {
+                        "aspectRatio": 1,
+                        "position": "absolute",
+                        "width": "100%",
+                        "zIndex": 1,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
+                  }
+                >
+                  <ActivityIndicator
+                    color="#00f1a2"
+                    style={
+                      {
+                        "height": 34,
+                        "marginHorizontal": 11,
+                      }
+                    }
+                  />
+                </View>
+                <View
+                  pending={false}
+                  style={
+                    {
+                      "opacity": 1,
+                    }
+                  }
+                >
+                  <View
+                    pointerEvents="none"
+                    style={
+                      {
+                        "marginHorizontal": 11,
+                        "padding": 0,
+                      }
+                    }
+                  >
+                    <RCTSwitch
+                      accessibilityRole="switch"
+                      onChange={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      onTintColor="#00f1a2"
+                      style={
+                        [
+                          {
+                            "height": 31,
+                            "width": 51,
+                          },
+                          {
+                            "backgroundColor": "#888888",
+                            "borderRadius": 16,
+                          },
+                        ]
+                      }
+                      tintColor="#888888"
+                      value={false}
+                    />
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "borderBottomColor": "rgba(255, 255, 255, .1)",
+                "borderBottomWidth": 1,
+                "height": 1,
+              },
+              {
+                "marginLeft": 22,
+                "marginRight": -11,
+                "marginVertical": 11,
+              },
+            ]
+          }
+        />
+        <View
+          style={
+            [
+              {
+                "alignSelf": "stretch",
+                "borderRadius": 16,
+              },
+              {
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
+              },
+              {
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
+              },
+              undefined,
+            ]
+          }
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "rgba(255, 255, 255, .1)",
+                "borderRadius": 16,
+                "bottom": 0,
+                "left": 0,
+                "overflow": "hidden",
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
+          <View
+            style={
+              [
+                {
+                  "flexDirection": "column",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                },
+                {
+                  "marginVertical": 0,
+                },
+              ]
+            }
+          >
+            <View
+              accessibilityState={
+                {
+                  "disabled": false,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "marginBottom": 1,
+                  "minHeight": 67,
+                  "padding": 11,
+                }
+              }
+            >
+              <Text
+                style={
+                  {
+                    "color": "#FFFFFF",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "paddingHorizontal": 11,
+                    "textAlign": "left",
+                  }
+                }
+              >
+                Developer Mode
               </Text>
               <View>
                 <View

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: "Force Light Account Creation" developer mode setting
+
 ## 4.8.0
 
 - added: Dynamic height for multiline text inputs

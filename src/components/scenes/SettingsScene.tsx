@@ -7,7 +7,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
-import { getDeviceSettings, writeDefaultScreen, writeDisableAnimations } from '../../actions/DeviceSettingsActions'
+import { getDeviceSettings, writeDefaultScreen, writeDisableAnimations, writeForceLightAccountCreate } from '../../actions/DeviceSettingsActions'
 import { setContactsPermissionOn, setDeveloperModeOn, setSpamFilterOn } from '../../actions/LocalSettingsActions'
 import { showClearLogsModal, showSendLogsModal } from '../../actions/LogActions'
 import { logoutRequest } from '../../actions/LoginActions'
@@ -72,6 +72,7 @@ export const SettingsScene = (props: Props) => {
   const [defaultLogLevel, setDefaultLogLevel] = React.useState<EdgeLogType | 'silent'>(logSettings.defaultLogLevel)
   const [defaultScreen, setDefaultScreen] = useState<DefaultScreen>(getDeviceSettings().defaultScreen)
   const [disableAnim, setDisableAnim] = useState<boolean>(getDeviceSettings().disableAnimations)
+  const [forceLightAccountCreate, setForceLightAccountCreate] = useState<boolean>(getDeviceSettings().forceLightAccountCreate)
   const [touchIdText, setTouchIdText] = React.useState(lstrings.settings_button_use_touchID)
 
   const iconSize = theme.rem(1.25)
@@ -259,6 +260,10 @@ export const SettingsScene = (props: Props) => {
   const handleToggleDeveloperMode = useHandler(async () => {
     await dispatch(setDeveloperModeOn(!developerModeOn))
   })
+  const handleToggleForceLightAccountCreate = useHandler(async () => {
+    setForceLightAccountCreate(!forceLightAccountCreate)
+    await writeForceLightAccountCreate(!forceLightAccountCreate)
+  })
 
   const loadBiometryType = async () => {
     if (Platform.OS === 'ios') {
@@ -351,10 +356,7 @@ export const SettingsScene = (props: Props) => {
               onPress={() => navigation.push('assetSettings', { currencySettingsKeys: CURRENCY_SETTINGS_KEYS })}
             />
             <SettingsTappableRow label={lstrings.title_promotion_settings} onPress={handlePromotionSettings} />
-            {ENV.ALLOW_DEVELOPER_MODE && (
-              <SettingsSwitchRow key="developerMode" label={lstrings.settings_developer_mode} value={developerModeOn} onPress={handleToggleDeveloperMode} />
-            )}
-            {developerModeOn && <SettingsSwitchRow key="darkTheme" label={lstrings.settings_dark_theme} value={isDarkTheme} onPress={handleToggleDarkTheme} />}
+
             <SettingsSwitchRow key="disableAnim" label={lstrings.button_disable_animations} value={disableAnim} onPress={handleToggleDisableAnimations} />
             <SettingsTappableRow label={lstrings.restore_wallets_modal_title} onPress={handleShowRestoreWalletsModal} />
             <SettingsTappableRow label={lstrings.migrate_wallets_title} onPress={() => navigation.push('migrateWalletSelectCrypto', {})} />
@@ -367,6 +369,21 @@ export const SettingsScene = (props: Props) => {
             />
           </CardUi4>
         </>
+        {ENV.ALLOW_DEVELOPER_MODE && (
+          <CardUi4 sections>
+            <SettingsSwitchRow key="developerMode" label={lstrings.settings_developer_mode} value={developerModeOn} onPress={handleToggleDeveloperMode} />
+
+            {developerModeOn && [
+              <SettingsSwitchRow key="darkTheme" label={lstrings.settings_dark_theme} value={isDarkTheme} onPress={handleToggleDarkTheme} />,
+              <SettingsSwitchRow
+                key="forceLightAccount"
+                label={lstrings.settings_developer_options_force_la}
+                value={forceLightAccountCreate}
+                onPress={handleToggleForceLightAccountCreate}
+              />
+            ]}
+          </CardUi4>
+        )}
       </SectionView>
       <ButtonsViewUi4
         layout="column"
