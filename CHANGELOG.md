@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.8.0
+
 - added: Dynamic height for multiline text inputs
 - added: Sentry SDK for crash reporting
 - changed: Some red Airship alerts deemed unecessary are now hidden from production builds
@@ -21,7 +23,7 @@
 - removed: Firebase/Google Analytics
 - removed: Light Account Backup Modal A/B/C/D test experiment
 
-## 4.7.0
+## 4.7.0 (2024-05-31)
 
 - added: Add Visa/MC buy support with Paybis
 - added: New Asset Setting to manually enable tokens with detected balances across all wallets
