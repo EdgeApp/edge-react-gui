@@ -350,6 +350,8 @@ const Pagination = styled(View)(theme => ({
 }))
 
 const PageIndicator = styled(Animated.View)<{ swipeOffset: SharedValue<number>; itemIndex: number }>(theme => props => {
+  const themeIcon = theme.icon
+  const themeIconTappable = theme.iconTappable
   const { itemIndex, swipeOffset } = props
   return [
     {
@@ -361,7 +363,7 @@ const PageIndicator = styled(Animated.View)<{ swipeOffset: SharedValue<number>; 
     useAnimatedStyle(() => {
       const delta = 1 - Math.max(0, Math.min(1, Math.abs(itemIndex - swipeOffset.value)))
       const opacity = interpolate(delta, [0, 1], [0.5, 1])
-      const backgroundColor = interpolateColor(delta, [0, 1], [theme.icon, theme.iconTappable])
+      const backgroundColor = interpolateColor(delta, [0, 1], [themeIcon, themeIconTappable])
       return {
         backgroundColor,
         opacity
@@ -377,6 +379,8 @@ const PageIndicator = styled(Animated.View)<{ swipeOffset: SharedValue<number>; 
 const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<number> }>(theme => props => {
   const { swipeOffset } = props
   const themeRem = theme.rem(1)
+  const themeModal = theme.modal
+  const themeModalLikeBackground = theme.modalLikeBackground
   const insets = useSafeAreaInsets()
 
   return [
@@ -388,7 +392,7 @@ const SectionCoverAnimated = styled(Animated.View)<{ swipeOffset: SharedValue<nu
       marginBottom: -insets.bottom
     },
     useAnimatedStyle(() => {
-      const backgroundColor = interpolateColor(swipeOffset.value, [0, 1], [`${theme.modal}00`, theme.modalLikeBackground])
+      const backgroundColor = interpolateColor(swipeOffset.value, [0, 1], [`${themeModal}00`, themeModalLikeBackground])
       const paddingVertical = interpolate(swipeOffset.value, [0, 1], [0, themeRem], Extrapolation.CLAMP)
       const flexGrow = interpolate(swipeOffset.value, [0, 1], [0, 1.2], Extrapolation.CLAMP)
       return {

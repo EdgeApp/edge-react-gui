@@ -29,6 +29,7 @@ export const SafeSlider = (props: Props) => {
 
   const theme = useTheme()
   const styles = getStyles(theme)
+  const { confirmationSliderThumbWidth } = theme
   const [completed, setCompleted] = React.useState(false)
 
   const { width = theme.confirmationSliderWidth } = props
@@ -85,7 +86,7 @@ export const SafeSlider = (props: Props) => {
 
   const progressStyle = useAnimatedStyle(() => {
     return {
-      width: translateX.value + theme.confirmationSliderThumbWidth
+      width: translateX.value + confirmationSliderThumbWidth
     }
   })
 
