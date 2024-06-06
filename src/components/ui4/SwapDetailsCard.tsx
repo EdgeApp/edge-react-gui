@@ -99,8 +99,13 @@ export function SwapDetailsCard(props: Props) {
 
   const sourceNativeAmount = sub(abs(transaction.nativeAmount), transaction.networkFee)
   const sourceAmount = convertNativeToDisplay(walletDefaultDenom.multiplier)(sourceNativeAmount)
+  const sourceAssetName = tokenId == null ? walletDefaultDenom.name : `${walletDefaultDenom.name} (${getExchangeDenom(wallet.currencyConfig, null).name})`
+
   const destinationAmount = convertNativeToDisplay(destinationDenomination.multiplier)(swapData.payoutNativeAmount)
-  const destinationCurrencyCode = destinationDenomination.name
+  const destinationAssetName =
+    payoutCurrencyCode === getExchangeDenom(destinationWallet.currencyConfig, null).name
+      ? payoutCurrencyCode
+      : `${payoutCurrencyCode} (${getExchangeDenom(destinationWallet.currencyConfig, null).name})`
 
   const symbolString =
     currencyInfo.currencyCode === transaction.currencyCode && walletDefaultDenom.symbol != null ? walletDefaultDenom.symbol : transaction.currencyCode
@@ -114,7 +119,7 @@ export function SwapDetailsCard(props: Props) {
       lstrings.transaction_details_exchange_order_id
     }: ${orderId || ''}${newline}${lstrings.transaction_details_exchange_source_wallet}: ${walletName}${newline}${
       lstrings.fragment_send_from_label
-    }: ${sourceAmount} ${symbolString}${newline}${lstrings.string_to_capitalize}: ${destinationAmount} ${destinationCurrencyCode}${newline}${
+    }: ${sourceAmount} ${sourceAssetName}${newline}${lstrings.string_to_capitalize}: ${destinationAmount} ${destinationAssetName}${newline}${
       lstrings.transaction_details_exchange_destination_wallet
     }: ${destinationWalletName}${newline}${isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote}${newline}${newline}${
       lstrings.transaction_details_exchange_exchange_address
@@ -130,7 +135,7 @@ export function SwapDetailsCard(props: Props) {
       <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_exchange_details} onPress={handleExchangeDetails}>
         <View style={styles.tileColumn}>
           <EdgeText>{lstrings.title_exchange + ' ' + sourceAmount + ' ' + symbolString}</EdgeText>
-          <EdgeText>{lstrings.string_to_capitalize + ' ' + destinationAmount + ' ' + destinationCurrencyCode}</EdgeText>
+          <EdgeText>{lstrings.string_to_capitalize + ' ' + destinationAmount + ' ' + destinationAssetName}</EdgeText>
           <EdgeText>{swapData.isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote}</EdgeText>
         </View>
       </RowUi4>

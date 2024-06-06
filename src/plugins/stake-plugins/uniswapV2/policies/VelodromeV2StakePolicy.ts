@@ -4,6 +4,7 @@ import { add, div, gt, gte, lte, mul, sub } from 'biggystring'
 import { BigNumber, ethers } from 'ethers'
 import { sprintf } from 'sprintf-js'
 
+import { showWarning } from '../../../../components/services/AirshipInstance'
 import { lstrings } from '../../../../locales/strings'
 import { cacheTxMetadata } from '../../metadataCache'
 import { AssetId, ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakePosition, StakePositionRequest } from '../../types'
@@ -421,7 +422,7 @@ export const makeVelodromeV2StakePolicy = (options: UniswapV2LpPolicyOptions): S
         const totalLpTokenBalance = add(lpTokenBalance, stakedLpTokenBalance)
         const isBalanceEnough = gte(totalLpTokenBalance, expectedLiquidityAmount)
         if (!isBalanceEnough) {
-          throw new Error(sprintf(lstrings.stake_error_insufficient_s, tokenACurrencyCode))
+          showWarning(sprintf(lstrings.stake_error_insufficient_s, tokenACurrencyCode), { trackError: false })
         }
 
         // 3. Withdraw LP-token from Pool Contract

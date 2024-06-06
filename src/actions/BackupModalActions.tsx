@@ -3,8 +3,7 @@ import * as React from 'react'
 import { AirshipBridge } from 'react-native-airship'
 
 import { BackupForAccountModal, BackupForTransferModal, BackupForTransferModalResult, BackupModalResult } from '../components/modals/BackupModal'
-import { Airship, showError } from '../components/services/AirshipInstance'
-import { getExperimentConfigValue } from '../experimentConfig'
+import { Airship, showDevError } from '../components/services/AirshipInstance'
 import { NavigationBase } from '../types/routerTypes'
 
 let isBackupModalShowing = false
@@ -30,7 +29,7 @@ export const showBackupModal = (props: { navigation: NavigationBase; forgetLogin
     .finally(() => {
       isBackupModalShowing = false
     })
-    .catch(error => showError(error))
+    .catch(error => showDevError(error))
 }
 
 /**
@@ -39,22 +38,18 @@ export const showBackupModal = (props: { navigation: NavigationBase; forgetLogin
  */
 export const checkAndShowLightBackupModal = (account: EdgeAccount, navigation: NavigationBase): boolean => {
   if (account.username == null) {
-    getExperimentConfigValue('backupText')
-      .then(variantKey => {
-        Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
-          return <BackupForTransferModal bridge={bridge} variantKey={variantKey} />
-        })
-          .then((userSel?: BackupForTransferModalResult) => {
-            if (userSel === 'upgrade') {
-              navigation.navigate('upgradeUsername', {})
-            }
-          })
-          .finally(() => {
-            isBackupModalShowing = false
-          })
-          .catch(error => showError(error))
+    Airship.show((bridge: AirshipBridge<BackupForTransferModalResult | undefined>) => {
+      return <BackupForTransferModal bridge={bridge} />
+    })
+      .then((userSel?: BackupForTransferModalResult) => {
+        if (userSel === 'upgrade') {
+          navigation.navigate('upgradeUsername', {})
+        }
       })
-      .catch(error => showError(error))
+      .finally(() => {
+        isBackupModalShowing = false
+      })
+      .catch(error => showDevError(error))
     return true
   }
   return false

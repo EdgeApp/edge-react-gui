@@ -157,7 +157,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     return (
       <ModalUi4 bridge={bridge} onCancel={() => bridge.resolve(undefined)} title={lstrings.fio_address_choose_domain_label}>
         <SimpleTextInput
-          around={0.5}
+          aroundRem={0.5}
           autoCorrect={false}
           returnKeyType="search"
           autoCapitalize="none"

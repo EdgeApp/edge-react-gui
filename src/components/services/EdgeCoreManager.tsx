@@ -1,4 +1,4 @@
-import Bugsnag from '@bugsnag/react-native'
+import { addBreadcrumb, captureException } from '@sentry/react-native'
 import detectBundler from 'detect-bundler'
 import { EdgeContext, EdgeContextOptions, EdgeCrashReporter, EdgeFakeWorld, EdgeNativeIo, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
 import { debugUri as accountbasedDebugUri, makePluginIo as makeAccountbasedIo, pluginUri as accountbasedUri } from 'edge-currency-accountbased'
@@ -58,13 +58,16 @@ const nativeIo: EdgeNativeIo = detectBundler.isReactNative
 
 const crashReporter: EdgeCrashReporter = {
   logBreadcrumb(event) {
-    return Bugsnag.leaveBreadcrumb(event.message, event.metadata)
+    addBreadcrumb({
+      type: event.source,
+      message: event.message,
+      data: event.metadata,
+      timestamp: event.time.getTime() / 1000
+    })
   },
   logCrash(event) {
-    // @ts-expect-error
-    return Bugsnag.notify(event.error, report => {
-      report.addMetadata(event.source, event.metadata)
-    })
+    const eventString = JSON.stringify(event, null, 2)
+    captureException(eventString, { level: 'fatal' })
   }
 }
 

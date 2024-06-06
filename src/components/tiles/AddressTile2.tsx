@@ -134,7 +134,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
           currencyCode,
           navigateReplace: true,
           wallet: coreWallet
-        }).catch(showError)
+        }).catch(error => showError(error))
 
         return
       }
@@ -153,7 +153,11 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
         if (ercTokenStandard === 'ERC20') {
           showError(new PaymentProtoError('CurrencyNotSupported', { text: currencyInfo.currencyCode }))
         } else {
-          await launchPaymentProto(navigation, account, parsedLink.uri, { currencyCode, navigateReplace: true, wallet: coreWallet }).catch(showError)
+          await launchPaymentProto(navigation, account, parsedLink.uri, {
+            currencyCode,
+            navigateReplace: true,
+            wallet: coreWallet
+          }).catch(error => showError(error))
         }
       } else {
         showError(`${lstrings.scan_invalid_address_error_title} ${lstrings.scan_invalid_address_error_description}`)

@@ -39,7 +39,8 @@ const WalletListCurrencyRowComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const pausedWallets = useSelector(state => state.ui.settings.userPausedWalletsSet)
-  const isPaused = (pausedWallets != null && pausedWallets.has(wallet.id)) || isKeysOnlyPlugin(wallet.currencyInfo.pluginId)
+  const isPaused = pausedWallets != null && pausedWallets.has(wallet.id)
+  const isDisabled = isKeysOnlyPlugin(wallet.currencyInfo.pluginId)
   const { pluginId } = wallet.currencyInfo
 
   //
@@ -68,7 +69,11 @@ const WalletListCurrencyRowComponent = (props: Props) => {
     </EdgeTouchableOpacity>
   ) : (
     <CardUi4
-      overlay={isPaused ? <EdgeText style={styles.overlayLabel}>{lstrings.fragment_wallets_wallet_paused}</EdgeText> : null}
+      overlay={
+        isPaused || isDisabled ? (
+          <EdgeText style={styles.overlayLabel}>{isPaused ? lstrings.fragment_wallets_wallet_paused : lstrings.fragment_wallets_wallet_disabled}</EdgeText>
+        ) : null
+      }
       onLongPress={handleLongPress}
       onPress={handlePress}
       gradientBackground={{ colors: [primaryColor, '#00000000'], start: { x: 0, y: 0 }, end: { x: 1, y: 0 } }}

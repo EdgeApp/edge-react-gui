@@ -258,21 +258,20 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
       .catch(error => showError(error))
   }
 
-  handleOpenWalletListModal = () => {
+  handleOpenWalletListModal = async () => {
     const { navigation } = this.props
-    Airship.show<WalletListResult>(bridge => <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={this.props.navigation} />)
-      .then(async result => {
-        if (result?.type === 'wallet') {
-          const { walletId, tokenId } = result
-          navigation.setParams({ tokenId, walletId })
-          await this.props.onSelectWallet(this.props.navigation, walletId, tokenId)
+    const result = await Airship.show<WalletListResult>(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} navigation={this.props.navigation} />
+    ))
+    if (result?.type === 'wallet') {
+      const { walletId, tokenId } = result
+      navigation.setParams({ tokenId, walletId })
+      await this.props.onSelectWallet(this.props.navigation, walletId, tokenId)
 
-          if (this.flipInputRef.current != null) {
-            this.flipInputRef.current.setAmount('fiat', this.state.amounts?.fiatAmount ?? '0')
-          }
-        }
-      })
-      .catch(err => showError(err))
+      if (this.flipInputRef.current != null) {
+        this.flipInputRef.current.setAmount('fiat', this.state.amounts?.fiatAmount ?? '0')
+      }
+    }
   }
 
   onError = (errorMessage?: string) => this.setState({ errorMessage })
@@ -517,7 +516,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
       failOnCancel: false
     }
 
-    await Share.open(shareOptions).catch(showError)
+    await Share.open(shareOptions).catch(error => showError(error))
   }
 
   openFioAddressModal = async (): Promise<void> => {

@@ -23,7 +23,7 @@ export const LoanWelcomeModal = (props: { bridge: AirshipBridge<'ok' | undefined
 
   return (
     <ButtonsModal bridge={bridge} buttons={{ ok: { label: lstrings.legacy_address_modal_continue } }}>
-      <Space around={1}>
+      <Space aroundRem={1}>
         <FastImage style={styles.icon} source={{ uri: iconUri }} />
         <EdgeText numberOfLines={20}>{sprintf(lstrings.loan_welcome_6s, config.appName, lstrings.loan_aave_fragment, 'BTC', 'USDC', '10', '120')}</EdgeText>
       </Space>

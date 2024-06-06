@@ -166,7 +166,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props & HookPr
       <>
         {customFormat.map(key => (
           <FilledTextInput
-            around={1}
+            aroundRem={1}
             key={key}
             autoFocus={false}
             autoCorrect={false}

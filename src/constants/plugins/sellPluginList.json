@@ -13,6 +13,7 @@
     ],
     "notStateProvinces": {
       "US": [
+        "FL",
         "NY",
         "TX"
       ]
@@ -78,7 +79,7 @@
       "NO",
       "SM"
     ],
-    "notStateProvinces": { "US": ["FL", "NY", "TX"] },
+    "notStateProvinces": { "US": ["NY", "TX"] },
     "cryptoCodes": [],
     "paymentTypeLogoKey": "bank"
   },

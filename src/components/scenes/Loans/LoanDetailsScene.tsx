@@ -119,7 +119,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
       return (
         <EdgeTouchableOpacity onPress={() => handleProgramStatusCardPress(runningProgramEdge)}>
           <CardUi4 marginRem={[0, 0, 1]}>
-            <Space sideways>
+            <Space row>
               <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
               <EdgeText style={styles.programStatusText} numberOfLines={2}>
                 {runningProgramMessage}
@@ -193,7 +193,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
           const { title, iconName, handlePress, isDisabled } = actionCardConfigData
           return (
             <TappableCard marginRem={[0, 0, 1, 0]} onPress={handlePress} disabled={isDisabled} key={iconName}>
-              <Space right={1}>
+              <Space rightRem={1}>
                 <Fontello name={iconName} size={theme.rem(2)} color={isDisabled ? theme.deactivatedText : theme.iconTappable} />
               </Space>
               <EdgeText style={isDisabled ? styles.actionLabelDisabled : styles.actionLabel}>{title}</EdgeText>
@@ -231,7 +231,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         withTopMargin
       />
       <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
-        <Space around={1} top={1.5}>
+        <Space aroundRem={1} topRem={1.5}>
           {renderProgramStatusCard()}
           <LoanDetailsSummaryCard
             currencyIcon={<FiatIcon fiatCurrencyCode={fiatCurrencyCode} />}
@@ -241,8 +241,8 @@ export const LoanDetailsSceneComponent = (props: Props) => {
             ltv={loanToValue}
           />
         </Space>
-        <Space horizontal={1}>
-          <Space bottom={1}>
+        <Space horizontalRem={1}>
+          <Space bottomRem={1}>
             <SectionHeading>{lstrings.loan_loan_breakdown_title}</SectionHeading>
           </Space>
           {debts.map(debt => {
@@ -250,8 +250,8 @@ export const LoanDetailsSceneComponent = (props: Props) => {
             const aprText = sprintf(lstrings.loan_apr_s, toPercentString(debt.apr))
             return (
               <CardUi4 key={debt.tokenId} marginRem={[0, 0, 1]}>
-                <Space sideways>
-                  <Space right={1}>
+                <Space row>
+                  <Space rightRem={1}>
                     <CryptoIconUi4 hideSecondary pluginId={pluginId} tokenId={debt.tokenId} />
                   </Space>
                   <Space>
@@ -267,8 +267,8 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         </Space>
 
         {/* Tappable Action Cards */}
-        <Space horizontal={1}>
-          <Space bottom={1}>
+        <Space horizontalRem={1}>
+          <Space bottomRem={1}>
             <SectionHeading>{lstrings.loan_actions_title}</SectionHeading>
             {isActionProgramRunning ? (
               <Alert type="warning" title={lstrings.warning_please_wait_title} message={lstrings.loan_action_program_running} marginRem={[0.5, 0, 0, 0]} />

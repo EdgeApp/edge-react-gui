@@ -95,7 +95,7 @@ export function showClearLogsModal(): ThunkAction<Promise<void>> {
           }
         }}
       />
-    )).catch(showError)
+    )).catch(error => showError(error))
   }
 }
 

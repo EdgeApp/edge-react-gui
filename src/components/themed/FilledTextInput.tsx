@@ -19,7 +19,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { useHandler } from '../../hooks/useHandler'
-import { SpaceProps, SpaceStyle, useSpaceStyle } from '../../hooks/useSpaceStyle'
+import { MarginRemProps, MarginRemStyle, useMarginRemStyle } from '../../hooks/useMarginRemStyle'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
 import { AnimatedIconComponent, CloseIconAnimated, EyeIconAnimated } from '../icons/ThemedIcons'
@@ -31,7 +31,7 @@ const isAndroid = Platform.OS === 'android'
 
 export type FilledTextInputReturnKeyType = 'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'done'
 
-export interface FilledTextInputBaseProps extends SpaceProps {
+export interface FilledTextInputBaseProps extends MarginRemProps {
   // Contents:
   value: string
   error?: string
@@ -80,13 +80,13 @@ export interface FilledTextInputBaseProps extends SpaceProps {
   disabled?: boolean // Defaults to 'false'
 }
 
-export type ModalFilledTextInputProps = Omit<FilledTextInputBaseProps, keyof SpaceProps>
+export type ModalFilledTextInputProps = Omit<FilledTextInputBaseProps, keyof MarginRemStyle>
 
 /**
  * FilledTextInput with standard `around=0.5` UI4 margins, for use in modals
  */
-export const ModalFilledTextInput = React.forwardRef<FilledTextInputRef, ModalFilledTextInputProps>((props: ModalFilledTextInputProps) => (
-  <FilledTextInput {...props} around={0.5} />
+export const ModalFilledTextInput = React.forwardRef<FilledTextInputRef, ModalFilledTextInputProps>((props, ref) => (
+  <FilledTextInput ref={ref} {...props} aroundRem={0.5} />
 ))
 
 /**
@@ -149,7 +149,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     secureTextEntry,
     testID,
     textsizeRem,
-    ...spaceProps
+    ...marginRemProps
   } = props
   const theme = useTheme()
   const themeRem = theme.rem(1)
@@ -158,7 +158,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   const hasIcon = LeftIcon != null
   const hasValue = value !== ''
 
-  const spaceStyle = useSpaceStyle(spaceProps)
+  const marginRemStyle = useMarginRemStyle(marginRemProps)
 
   // Show/Hide password input:
   const [hidePassword, setHidePassword] = React.useState(secureTextEntry ?? false)
@@ -219,15 +219,15 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
     if (onSubmitEditing != null) onSubmitEditing()
   })
 
-  const leftIconSize = useDerivedValue(() => (hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0), [hasIcon, hasValue])
-  const rightIconSize = useDerivedValue(() => (clearIcon ? (hasValue ? themeRem : focusAnimation.value * themeRem) : 0), [clearIcon, hasValue])
+  const leftIconSize = useDerivedValue(() => (hasIcon ? (hasValue ? 0 : interpolate(focusAnimation.value, [0, 1], [themeRem, 0])) : 0))
+  const rightIconSize = useDerivedValue(() => (clearIcon ? (hasValue ? themeRem : focusAnimation.value * themeRem) : 0))
 
   const scale = useDerivedValue(() => scaleProp?.value ?? 1)
 
   const interpolateIconColor = useAnimatedColorInterpolateFn(theme.textInputIconColor, theme.textInputIconColorFocused, theme.textInputIconColorDisabled)
   const iconColor = useDerivedValue(() => interpolateIconColor(focusAnimation, disableAnimation))
 
-  const focusValue = useDerivedValue(() => (hasValue ? 1 : focusAnimation.value), [hasValue])
+  const focusValue = useDerivedValue(() => (hasValue ? 1 : focusAnimation.value))
 
   // Character Limit:
   const charactersLeft = maxLength === undefined ? '' : `${maxLength - value.length}`
@@ -245,7 +245,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
       : keyboardType
 
   return (
-    <OuterContainer multiline={multiline} spaceStyle={spaceStyle}>
+    <OuterContainer multiline={multiline} marginRemStyle={marginRemStyle}>
       <EdgeTouchableWithoutFeedback accessible={false} testID={testID} onPress={() => focus()}>
         <Container disableAnimation={disableAnimation} focusAnimation={focusAnimation} multiline={multiline} scale={scale}>
           <SideContainer scale={leftIconSize}>{LeftIcon == null ? null : <LeftIcon color={iconColor} size={leftIconSize} />}</SideContainer>
@@ -323,7 +323,7 @@ export const FilledTextInput = React.forwardRef<FilledTextInputRef, FilledTextIn
   )
 })
 
-const OuterContainer = styled(View)<{ multiline: boolean; spaceStyle: SpaceStyle }>(theme => ({ multiline, spaceStyle: marginRemStyle }) => ({
+const OuterContainer = styled(View)<{ multiline: boolean; marginRemStyle: MarginRemStyle }>(theme => ({ multiline, marginRemStyle }) => ({
   ...marginRemStyle,
   flexGrow: multiline ? 1 : undefined,
   flexShrink: multiline ? 1 : undefined

@@ -105,7 +105,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.loadBiometryType().catch(showError)
+    this.loadBiometryType().catch(error => showError(error))
     this.cleanups = [
       this.props.context.watch('logSettings', logSettings => {
         this.setState({ defaultLogLevel: logSettings.defaultLogLevel })
@@ -213,14 +213,13 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     navigation.navigate('spendingLimits', {})
   }
 
-  handleAutoLogout = (): void => {
-    Airship.show<number | undefined>(bridge => <AutoLogoutModal autoLogoutTimeInSeconds={this.props.autoLogoutTimeInSeconds} bridge={bridge} />)
-      .then(async result => {
-        if (typeof result === 'number') {
-          return await this.props.setAutoLogoutTimeInSeconds(result)
-        }
-      })
-      .catch(err => showError(err))
+  handleAutoLogout = async (): Promise<void> => {
+    const result = await Airship.show<number | undefined>(bridge => (
+      <AutoLogoutModal autoLogoutTimeInSeconds={this.props.autoLogoutTimeInSeconds} bridge={bridge} />
+    ))
+    if (typeof result === 'number') {
+      return await this.props.setAutoLogoutTimeInSeconds(result)
+    }
   }
 
   handleDefaultFiat = (): void => {
@@ -310,7 +309,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
         defaultLogLevel,
         sources: {}
       })
-      .catch(showError)
+      .catch(error => showError(error))
   }
 
   handleUpgrade = (): void => {

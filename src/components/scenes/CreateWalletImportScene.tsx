@@ -150,7 +150,7 @@ const CreateWalletImportComponent = (props: Props) => {
       <MarginsUi4>
         <Paragraph>{lstrings.create_wallet_import_all_instructions}</Paragraph>
         <FilledTextInput
-          around={0.5}
+          aroundRem={0.5}
           keyboardType={keyboardType}
           value={importText}
           multiline

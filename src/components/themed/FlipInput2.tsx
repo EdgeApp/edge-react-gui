@@ -24,7 +24,7 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { styled, styledWithRef } from '../hoc/styled'
 import { CloseIconAnimated, SwapVerticalIcon } from '../icons/ThemedIcons'
-import { showError } from '../services/AirshipInstance'
+import { showDevError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { NumericInput } from './NumericInput'
 import { ButtonBox } from './ThemedButtons'
@@ -117,7 +117,7 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
 
   const interpolateIconColor = useAnimatedColorInterpolateFn(theme.textInputIconColor, theme.textInputIconColorFocused, theme.textInputIconColorDisabled)
   const clearIconColor = useDerivedValue(() => interpolateIconColor(focusAnimation, disableAnimation))
-  const clearIconScale = useDerivedValue(() => (hasAmount ? 1 : focusAnimation.value), [hasAmount])
+  const clearIconScale = useDerivedValue(() => (hasAmount ? 1 : focusAnimation.value))
   // We have to use a SharedValue for the icon size event though it's not animated,
   // just because that is the expected type
   const clearIconSize = useSharedValue(themeRem)
@@ -152,7 +152,7 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>((props: Props, r
           setAmounts(newAmounts)
         }
       })
-      .catch(e => showError(e.message))
+      .catch(e => showDevError(e.message))
   })
 
   const handleBottomFocus = useHandler(() => {

@@ -53,7 +53,7 @@ export function setNewSubcategory(newSubcategory: string): ThunkAction<Promise<v
           data: { subcategories: newSubcategories.sort() }
         })
       })
-      .catch(showError)
+      .catch(error => showError(error))
   }
 }
 

@@ -3,7 +3,6 @@ import { EdgeContext } from 'edge-core-js/types'
 import { LoginUiProvider } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
-import { MenuProvider } from 'react-native-popup-menu'
 import { Provider } from 'react-redux'
 import { applyMiddleware, createStore } from 'redux'
 import thunk from 'redux-thunk'
@@ -64,11 +63,9 @@ export function Providers(props: Props) {
       >
         <KeyboardProvider statusBarTranslucent>
           {renderStateProviders(
-            <MenuProvider>
-              <Airship>
-                <Main />
-              </Airship>
-            </MenuProvider>
+            <Airship>
+              <Main />
+            </Airship>
           )}
         </KeyboardProvider>
       </LoginUiProvider>

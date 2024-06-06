@@ -19,9 +19,6 @@ export const asReleaseConfig = asObject({
   androidKeyStorePassword: asString,
   androidTask: asString,
 
-  // Bugsnag:
-  bugsnagApiKey: asOptional(asString),
-
   // AppCenter:
   appCenterAppName: asOptional(asString),
   appCenterApiToken: asOptional(asString),

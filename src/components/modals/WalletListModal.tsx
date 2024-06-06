@@ -213,7 +213,7 @@ export function WalletListModal(props: Props) {
         <View style={styles.header}>
           <ModalTitle>{headerTitle}</ModalTitle>
           <SimpleTextInput
-            around={0.5}
+            aroundRem={0.5}
             autoFocus
             returnKeyType="search"
             placeholder={lstrings.search_wallets}

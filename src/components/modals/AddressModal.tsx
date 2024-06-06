@@ -14,7 +14,7 @@ import { ResolutionError } from '../../types/ResolutionError'
 import { FioAddress, FlatListItem } from '../../types/types'
 import { checkPubAddress, FioAddresses, getFioAddressCache } from '../../util/FioAddressUtils'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
-import { showError } from '../services/AirshipInstance'
+import { showDevError, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { ButtonUi4 } from '../ui4/ButtonUi4'
@@ -131,7 +131,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
       this.updateUri(domain)
       await this.checkIfFioAddress(domain)
     } catch (error) {
-      showError(error)
+      showDevError(error)
     }
   }
 

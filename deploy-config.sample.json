@@ -10,7 +10,6 @@
     "androidTask": "bundleRelease",
     "hockeyAppToken": "xxxxx",
     "hockeyAppTags": "internal",
-    "bugsnagApiKey": "xxxxxxxxxx",
     "appCenterApiToken": "xxxxxxxxxx",
     "appCenterGroupName": "xxxxxxxxxx",
     "appCenterDistroGroup": "xxxxxxxxxx",

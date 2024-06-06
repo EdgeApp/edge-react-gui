@@ -7,24 +7,9 @@ import { ModalButtons } from '../common/ModalButtons'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
-import { ButtonTypeUi4, ButtonUi4 } from '../ui4/ButtonUi4'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
-// TODO: Remove ButtonsModal in favor of ButtonsModal2
-
 export interface ButtonInfo {
-  label: string
-  type?: ButtonTypeUi4
-
-  // The modal will show a spinner as long as this promise is pending.
-  // Returning true will dismiss the modal,
-  // but returning false will leave the modal up.
-  // Although multiple buttons can be spinning at once,
-  // a spinning button cannot be clicked again until the promise resolves.
-  onPress?: () => Promise<boolean>
-}
-
-export interface ButtonInfo2 {
   label: string
 
   // The modal will show a spinner as long as this promise is pending.
@@ -67,69 +52,8 @@ export interface ButtonModalProps<Buttons> {
  *
  * Build a custom modal component if you need form fields, check boxes,
  * or other interactive elements.
- * @deprecated - Use ButtonsModal2 instead
  */
 export function ButtonsModal<Buttons extends { [key: string]: ButtonInfo }>(props: ButtonModalProps<Buttons>) {
-  const { bridge, title, message, children, buttons, disableCancel = false, fullScreen = false, warning } = props
-  const theme = useTheme()
-  const styles = getStyles(theme)
-
-  const handleCancel = useHandler(() => bridge.resolve(undefined))
-
-  const containerStyle: ViewStyle = {
-    flex: fullScreen ? 1 : 0
-  }
-
-  return (
-    <ModalUi4 warning={warning} bridge={bridge} title={title} onCancel={disableCancel ? undefined : handleCancel}>
-      <View style={[styles.textStyle, containerStyle]}>
-        {message != null ? <Paragraph>{message}</Paragraph> : null}
-        {children}
-      </View>
-      <View style={styles.buttonsStyle}>
-        <View style={styles.innerButtonStyle}>
-          {Object.keys(buttons).map((key, i, arr) => {
-            let defaultType: 'primary' | 'secondary'
-            if (theme.preferPrimaryButton) {
-              defaultType = i === 0 ? 'primary' : 'secondary'
-            } else {
-              defaultType = i === 0 && arr.length > 1 ? 'primary' : 'secondary'
-            }
-            const { type = defaultType, label, onPress } = buttons[key]
-
-            const handlePress = (): Promise<void> | undefined => {
-              if (onPress == null) {
-                bridge.resolve(key)
-                return
-              }
-              return onPress().then(
-                result => {
-                  if (result) bridge.resolve(key)
-                },
-                error => showError(error)
-              )
-            }
-
-            return <ButtonUi4 key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} layout="column" />
-          })}
-        </View>
-      </View>
-    </ModalUi4>
-  )
-}
-
-/**
- * A modal with a title, message, and buttons.
- * This is an alternative to the native `Alert` component.
- *
- * Child components appear between the message and the buttons,
- * but this feature is only meant for inserting extra message elements,
- * like images or custom text formatting.
- *
- * Build a custom modal component if you need form fields, check boxes,
- * or other interactive elements.
- */
-export function ButtonsModal2<Buttons extends { [key: string]: ButtonInfo2 }>(props: ButtonModalProps<Buttons>) {
   const { bridge, title, message, children, buttons, disableCancel = false, fullScreen = false, warning } = props
   const theme = useTheme()
   const styles = getStyles(theme)

@@ -236,11 +236,7 @@ function parseRequestAddress(url: URL<string>): DeepLink {
 }
 
 const prefixes: Array<[string, string]> = [
-  // Alternative HTTPS links:
-  ['https://recovery.edgesecure.co', 'edge://recovery'],
-
   // Legacy links:
-  ['https://www.edge.app/edgelogin?address=', 'edge://edge/'],
   ['edge-ret://plugins/simplex/', 'edge://plugin/simplex/'],
   ['edge-ret://x-callback-url/', 'edge://x-callback-url/'],
   ['airbitz-ret://x-callback-url/', 'edge://x-callback-url/'],

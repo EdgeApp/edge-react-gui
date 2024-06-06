@@ -58,7 +58,7 @@ export function walletListMenuAction(
       return async (dispatch, getState) => {
         const state = getState()
         const { account } = state.core
-        account.changeWalletStates({ [walletId]: { deleted: true } }).catch(showError)
+        account.changeWalletStates({ [walletId]: { deleted: true } }).catch(error => showError(error))
       }
     }
     case 'delete': {
@@ -116,7 +116,7 @@ export function walletListMenuAction(
               .then(r => {
                 logActivity(`Archived Wallet ${account.username} -- ${getWalletName(wallet)} ${wallet.type} ${wallet.id}`)
               })
-              .catch(showError)
+              .catch(error => showError(error))
 
             // Remove loan accounts associated with the wallet
             if (state.loanManager.loanAccounts[walletId] != null) {
@@ -129,7 +129,7 @@ export function walletListMenuAction(
               .then(() => {
                 logActivity(`Disable Token: ${getWalletName(wallet)} ${wallet.type} ${wallet.id} ${tokenId}`)
               })
-              .catch(showError)
+              .catch(error => showError(error))
           }
         }
       }
@@ -163,12 +163,10 @@ export function walletListMenuAction(
         const displayPublicSeed = await account.getDisplayPublicKey(wallet.id)
 
         const copy: ButtonInfo = {
-          label: lstrings.fragment_request_copy_title,
-          type: 'secondary'
+          label: lstrings.fragment_request_copy_title
         }
         const link: ButtonInfo = {
-          label: lstrings.transaction_details_show_advanced_block_explorer,
-          type: 'secondary'
+          label: lstrings.transaction_details_show_advanced_block_explorer
         }
         const buttons = xpubExplorer != null ? { copy, link } : { copy }
 

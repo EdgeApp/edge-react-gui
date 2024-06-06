@@ -24,7 +24,7 @@ export function toggleAccountBalanceVisibility(): ThunkAction<void> {
           data: { isAccountBalanceVisible: !currentAccountBalanceVisibility }
         })
       })
-      .catch(showError)
+      .catch(error => showError(error))
   }
 }
 
@@ -32,7 +32,7 @@ export function setPasswordReminder(passwordReminder: PasswordReminder): ThunkAc
   return (dispatch, getState) => {
     const state = getState()
     const account = state.core.account
-    writePasswordReminderSetting(account, passwordReminder).catch(showError)
+    writePasswordReminderSetting(account, passwordReminder).catch(error => showError(error))
   }
 }
 
@@ -48,7 +48,7 @@ export function setDeveloperModeOn(developerModeOn: boolean): ThunkAction<void> 
         }
         dispatch({ type: 'DEVELOPER_MODE_OFF' })
       })
-      .catch(showError)
+      .catch(error => showError(error))
   }
 }
 
@@ -64,7 +64,7 @@ export function setSpamFilterOn(spamFilterOn: boolean): ThunkAction<void> {
         }
         dispatch({ type: 'SPAM_FILTER_OFF' })
       })
-      .catch(showError)
+      .catch(error => showError(error))
   }
 }
 

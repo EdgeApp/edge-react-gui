@@ -20,13 +20,13 @@ export const checkAndSetRegion = (props: { account: EdgeAccount; countryCode: st
 
     if (countryCode == null || countryCode === '') {
       // If no countryCode, always show country selection
-      dispatch(showCountrySelectionModal(props))
+      await dispatch(showCountrySelectionModal(props))
     } else {
       // Show state province selection if stateProvinceCode is required according
       // to the country data
       const countryData = COUNTRY_CODES.find(cc => cc['alpha-2'] === countryCode)
       if (countryData != null && stateProvinceCode == null) {
-        dispatch(showCountrySelectionModal({ ...props, skipCountry: true }))
+        await dispatch(showCountrySelectionModal({ ...props, skipCountry: true }))
       }
     }
   }
@@ -44,7 +44,7 @@ export const showCountrySelectionModal =
 
     /** Set to true to select stateProvinceCode only */
     skipCountry?: boolean
-  }): ThunkAction<void> =>
+  }): ThunkAction<Promise<void>> =>
   async (dispatch, getState) => {
     const { account, countryCode, stateProvinceCode, skipCountry } = props
 

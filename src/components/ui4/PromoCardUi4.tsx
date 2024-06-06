@@ -43,7 +43,7 @@ export function PromoCardUi4(props: Props) {
   const message = getLocaleOrDefaultString(localeMessages)
   const ctaLabel = ctaButton == null ? null : getLocaleOrDefaultString(ctaButton.localeLabels)
 
-  const handlePress = useHandler(() => {
+  const handlePress = useHandler(async () => {
     if (ctaButton == null) return
     const { localeUrls } = ctaButton
     const url = getLocaleOrDefaultString(localeUrls)
@@ -52,7 +52,7 @@ export function PromoCardUi4(props: Props) {
       return
     }
 
-    dispatch(linkReferralWithCurrencies(navigation, url)).catch(err => showError(err))
+    await dispatch(linkReferralWithCurrencies(navigation, url))
   })
 
   const imageSrc = React.useMemo(() => ({ uri: imageUri }), [imageUri])

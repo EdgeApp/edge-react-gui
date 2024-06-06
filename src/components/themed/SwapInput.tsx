@@ -204,7 +204,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props
     return (
       <Header>
         <CardHeading>{heading}</CardHeading>
-        <Space sideways>
+        <Space row>
           <WalletPlaceHolder onPress={handleWalletPlaceholderPress}>
             <CryptoIconUi4 marginRem={[0, 0.25, 0, 0]} pluginId={wallet.currencyInfo.pluginId} sizeRem={1} tokenId={tokenId} />
             <WalletPlaceHolderText>{walletPlaceholderText}</WalletPlaceHolderText>
