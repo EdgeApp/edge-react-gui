@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
-import { getDeviceSettings, writeHasInteractedWithBackupModal } from '../../actions/DeviceSettingsActions'
+import { getDeviceSettings, writeDeviceNotifDismissInfo } from '../../actions/DeviceSettingsActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -17,7 +17,7 @@ import { getOtpReminderModal } from '../../util/otpReminder'
 import { EdgeAnim, fadeIn, fadeOut } from '../common/EdgeAnim'
 import { styled } from '../hoc/styled'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
-import { Airship, showDevError } from '../services/AirshipInstance'
+import { Airship } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { MAX_TAB_BAR_HEIGHT, MIN_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
 import { NotificationCard } from './NotificationCard'
@@ -28,8 +28,6 @@ interface Props {
   hasTabs: boolean
   footerHeight: number
 }
-
-let hasInteractedWithBackupModalLocal = false
 
 const NotificationViewComponent = (props: Props) => {
   const { navigation, hasTabs, footerHeight } = props
@@ -48,17 +46,14 @@ const NotificationViewComponent = (props: Props) => {
 
   const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
   const [otpReminderCard, setOtpReminderCard] = React.useState<React.JSX.Element>()
-  const [hasInteractedWithBackupModal, setHasInteractedWithBackupModal] = React.useState<boolean>(getDeviceSettings().hasInteractedWithBackupModal)
+  const deviceNotifDismissInfo = getDeviceSettings().deviceNotifDismissInfo
 
-  if (hasInteractedWithBackupModal) hasInteractedWithBackupModalLocal = true
-  const isBackupWarningShown = account.id != null && account.username == null && fioAddresses.length > 0 && !hasInteractedWithBackupModalLocal
+  const isBackupWarningNotifShown =
+    account.id != null && account.username == null && fioAddresses.length > 0 && deviceNotifDismissInfo != null && !deviceNotifDismissInfo.backupNotifShown
 
   const handleBackupPress = useHandler(async () => {
-    writeHasInteractedWithBackupModal(true)
-      .then(() => setHasInteractedWithBackupModal(true))
-      .catch(err => showDevError(err))
+    await writeDeviceNotifDismissInfo({ ...deviceNotifDismissInfo, backupNotifShown: true })
     await showBackupModal({ navigation })
-    hasInteractedWithBackupModalLocal = true
   })
 
   const handlePasswordReminderPress = useHandler(async () => {
@@ -136,7 +131,7 @@ const NotificationViewComponent = (props: Props) => {
       footerOpenRatio={footerOpenRatio}
       onLayout={handleLayout}
     >
-      <EdgeAnim visible={isBackupWarningShown} enter={fadeIn} exit={fadeOut}>
+      <EdgeAnim visible={isBackupWarningNotifShown} enter={fadeIn} exit={fadeOut}>
         <NotificationCard type="warning" title={lstrings.backup_title} message={lstrings.backup_web3_handle_warning_message} onPress={handleBackupPress} />
       </EdgeAnim>
       <EdgeAnim visible={autoDetectTokenCards.length > 0} enter={fadeIn} exit={fadeOut}>
