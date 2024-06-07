@@ -1,3 +1,4 @@
+import { useIsFocused } from '@react-navigation/native'
 import { Disklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
@@ -521,6 +522,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const developerModeOn = useSelector(state => state.ui.settings.developerModeOn)
   const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
   const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
+  const isFocused = useIsFocused()
 
   const [forcedWalletResultLocal, setForcedWalletResultLocal] = React.useState<WalletListResult | undefined>(params.forcedWalletResult)
 
@@ -551,6 +553,9 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   })
 
   React.useEffect(() => {
+    // HACK: Latest React Navigation causes multiple mounts
+    if (isFocused) return
+
     dispatch(checkAndSetRegion({ account, countryCode, stateProvinceCode }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
