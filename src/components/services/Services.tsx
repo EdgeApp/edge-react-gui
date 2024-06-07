@@ -48,6 +48,8 @@ const asFioCreateHandleRecord = asJSON(
   })
 )
 
+let isFioModalShown = false
+
 /**
  * Provides various services to the application. These are non-visual components
  * which provide some background tasks and exterior functionality for the app.
@@ -59,6 +61,10 @@ export function Services(props: Props) {
 
   // Show FIO handle modal for new accounts or existing accounts without a FIO wallet:
   const maybeShowFioHandleModal = useHandler(async (account: EdgeAccount) => {
+    // HACK: Latest React Navigation causes multiple mounts
+    if (isFioModalShown) return
+    isFioModalShown = true
+
     const { freeRegApiToken = undefined, freeRegRefCode = undefined } = typeof ENV.FIO_INIT === 'object' ? ENV.FIO_INIT : {}
     const hasFioWallets = account.allKeys.some(keyInfo => keyInfo.type === 'wallet:fio')
 
