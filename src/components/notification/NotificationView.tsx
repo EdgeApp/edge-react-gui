@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
 import { getDeviceSettings, writeDeviceNotifDismissInfo } from '../../actions/DeviceSettingsActions'
+import { getLocalAccountSettings, writeNotifDismissInfo } from '../../actions/LocalSettingsActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -13,7 +14,9 @@ import { lstrings } from '../../locales/strings'
 import { useSceneFooterState } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { getThemedIconUri } from '../../util/CdnUris'
 import { getOtpReminderModal } from '../../util/otpReminder'
+import { openBrowserUri } from '../../util/WebUtils'
 import { EdgeAnim, fadeIn, fadeOut } from '../common/EdgeAnim'
 import { styled } from '../hoc/styled'
 import { PasswordReminderModal } from '../modals/PasswordReminderModal'
@@ -37,16 +40,18 @@ const NotificationViewComponent = (props: Props) => {
   const account = useSelector(state => state.core.account)
   const detectedTokensRedux = useSelector(state => state.core.enabledDetectedTokens)
   const needsPasswordCheck = useSelector(state => state.ui.passwordReminder.needsPasswordCheck)
-
   const fioAddresses = useSelector(state => state.ui.fioAddress.fioAddresses)
 
   const wallets = useWatch(account, 'currencyWallets')
+  const otpKey = useWatch(account, 'otpKey')
+
   const { bottom: insetBottom } = useSafeAreaInsets()
   const footerOpenRatio = useSceneFooterState(state => state.footerOpenRatio)
 
   const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
   const [otpReminderCard, setOtpReminderCard] = React.useState<React.JSX.Element>()
   const deviceNotifDismissInfo = getDeviceSettings().deviceNotifDismissInfo
+  const accountNotifDismissInfo = getLocalAccountSettings().accountNotifDismissInfo
 
   const isBackupWarningNotifShown =
     account.id != null && account.username == null && fioAddresses.length > 0 && deviceNotifDismissInfo != null && !deviceNotifDismissInfo.backupNotifShown
@@ -58,6 +63,14 @@ const NotificationViewComponent = (props: Props) => {
 
   const handlePasswordReminderPress = useHandler(async () => {
     await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation} />)
+  })
+
+  const handle2FaEnabledDismiss = useHandler(async () => {
+    await writeNotifDismissInfo(account, { ...accountNotifDismissInfo, ip2FaNotifShown: true })
+  })
+  const handle2FaEnabledPress = useHandler(async () => {
+    await openBrowserUri('https://support.edge.app/hc/en-us/articles/7018106439579-Edge-Security-IP-Validation-and-2FA')
+    await handle2FaEnabledDismiss()
   })
 
   const handleLayout = useHandler((event: LayoutChangeEvent) => {
@@ -108,7 +121,8 @@ const NotificationViewComponent = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [detectedTokensRedux, handleBackupPress, theme])
 
-  // Check for 2fa/otp notifications
+  // Check for 2FA/OTP reminder disabled notifications
+  // Periodically remind the user to enable 2FA/OTP
   useAsyncEffect(
     async () => {
       const otpReminderModal = await getOtpReminderModal(account)
@@ -146,6 +160,16 @@ const NotificationViewComponent = (props: Props) => {
           title={lstrings.password_reminder_card_title}
           message={lstrings.password_reminder_card_body}
           onPress={handlePasswordReminderPress}
+        />
+      </EdgeAnim>
+      <EdgeAnim visible={otpKey != null && accountNotifDismissInfo != null && !accountNotifDismissInfo.ip2FaNotifShown} enter={fadeIn} exit={fadeOut}>
+        <NotificationCard
+          type="info"
+          title={lstrings.notif_ip_validation_enabled_title}
+          message={lstrings.notif_ip_validation_enabled_body}
+          iconUri={getThemedIconUri(theme, 'notifications/icon-lock')}
+          onPress={handle2FaEnabledPress}
+          onClose={handle2FaEnabledDismiss}
         />
       </EdgeAnim>
     </NotificationCardsContainer>
