@@ -19,6 +19,7 @@ export const edgeConfig: AppConfig = {
   ],
   forceCloseUrlIos: 'https://support.apple.com/en-us/HT201330 ',
   forceCloseUrlAndroid: 'https://support.google.com/android/answer/9079646?hl=en',
+  ip2faSite: 'https://support.edge.app/hc/en-us/articles/7018106439579-Edge-Security-IP-Validation-and-2FA',
   knowledgeBase: 'https://help.edge.app/support/home',
   lightTheme: edgeLight,
   notificationServers: ['https://push2.edge.app'],
