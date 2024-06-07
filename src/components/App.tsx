@@ -14,6 +14,7 @@ import { ThemeProvider } from './services/ThemeContext'
 
 function MainApp() {
   const handleBeforeCapture = useHandler((scope: Scope) => {
+    scope.setLevel('fatal')
     scope.setTag('handled', false)
   })
 
