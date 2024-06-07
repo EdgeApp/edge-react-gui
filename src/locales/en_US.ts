@@ -1536,6 +1536,8 @@ const strings = {
   notif_tokens_detected_on_wallet_name_1s: `New tokens were detected and enabled on %1$s. Tap to review.`,
   notif_tokens_detected_on_address_1s: 'New tokens were detected and enabled on a %1$s address. Tap to review.',
   notif_otp_message: 'Enable Two-Factor Authentication (2FA) to prevent unauthorized access.',
+  notif_ip_validation_enabled_title: 'IP Validation Protection Enabled',
+  notif_ip_validation_enabled_body: 'Your account is protected from unauthorized logins. Tap to learn more.',
 
   // #endregion Notifications
 

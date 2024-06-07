@@ -4,6 +4,7 @@
 
 ## 4.8.0
 
+- added: "IP Validation Protection Enabled" bottom notification card
 - added: Dynamic height for multiline text inputs
 - added: Sentry SDK for crash reporting
 - changed: Some red Airship alerts deemed unecessary are now hidden from production builds

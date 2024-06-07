@@ -151,13 +151,19 @@ export const asSpendingLimits = asObject({
   transaction: asMaybe(asTransaction, () => asTransaction({}))
 })
 
+const asAccountNotifDismissInfo = asObject({
+  ip2FaNotifShown: asMaybe(asBoolean, false)
+})
+export type AccountNotifDismissInfo = ReturnType<typeof asAccountNotifDismissInfo>
+
 const asLocalAccountSettingsInner = asObject({
   contactsPermissionOn: asMaybe(asBoolean, true),
   developerModeOn: asMaybe(asBoolean, false),
   passwordReminder: asMaybe(asPasswordReminder, () => asPasswordReminder({})),
   isAccountBalanceVisible: asMaybe(asBoolean, true),
   spamFilterOn: asMaybe(asBoolean, true),
-  spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({}))
+  spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({})),
+  accountNotifDismissInfo: asMaybe(asAccountNotifDismissInfo, asAccountNotifDismissInfo({}))
 })
 
 const asDeviceNotifDismissInfo = asObject({

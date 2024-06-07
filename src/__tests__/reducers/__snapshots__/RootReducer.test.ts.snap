@@ -97,6 +97,9 @@ exports[`initialState 1`] = `
       "passwordUseCount": 0,
     },
     "settings": {
+      "accountNotifDismissInfo": {
+        "ip2FaNotifShown": false,
+      },
       "autoLogoutTimeInSeconds": 3600,
       "changesLocked": true,
       "contactsPermissionOn": true,
