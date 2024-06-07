@@ -166,6 +166,7 @@ const asDeviceSettingsInner = asObject({
   defaultScreen: asMaybe(asDefaultScreen, 'home'),
   developerPluginUri: asMaybe(asString),
   disableAnimations: asMaybe(asBoolean, false),
+  forceLightAccountCreate: asMaybe(asBoolean, false),
   hasInteractedWithBackupModal: asMaybe(asBoolean, false)
 })
 

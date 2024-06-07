@@ -47,6 +47,18 @@ export const writeDefaultScreen = async (defaultScreen: DefaultScreen) => {
   return await writeDeviceSettings(updatedSettings)
 }
 
+export const writeForceLightAccountCreate = async (forceLightAccountCreate: boolean) => {
+  try {
+    const raw = await disklet.getText(DEVICE_SETTINGS_FILENAME)
+    const json = JSON.parse(raw)
+    deviceSettings = asDeviceSettings(json)
+  } catch (e) {
+    console.log(e)
+  }
+  const updatedSettings: DeviceSettings = { ...deviceSettings, forceLightAccountCreate }
+  return await writeDeviceSettings(updatedSettings)
+}
+
 export const writeHasInteractedWithBackupModal = async (hasInteractedWithBackupModal: boolean) => {
   try {
     const raw = await disklet.getText(DEVICE_SETTINGS_FILENAME)
