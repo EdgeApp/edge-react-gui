@@ -160,13 +160,18 @@ const asLocalAccountSettingsInner = asObject({
   spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({}))
 })
 
+const asDeviceNotifDismissInfo = asObject({
+  backupNotifShown: asMaybe(asBoolean, false)
+})
+export type DeviceNotifDismissInfo = ReturnType<typeof asDeviceNotifDismissInfo>
+
 export const asDefaultScreen = asValue('home', 'assets')
 
 const asDeviceSettingsInner = asObject({
   defaultScreen: asMaybe(asDefaultScreen, 'home'),
   developerPluginUri: asMaybe(asString),
   disableAnimations: asMaybe(asBoolean, false),
-  hasInteractedWithBackupModal: asMaybe(asBoolean, false)
+  deviceNotifDismissInfo: asMaybe(asDeviceNotifDismissInfo, asDeviceNotifDismissInfo({}))
 })
 
 export const asLocalAccountSettings = asMaybe(asLocalAccountSettingsInner, () => asLocalAccountSettingsInner({}))
