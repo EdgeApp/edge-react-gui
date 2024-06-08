@@ -359,6 +359,7 @@
   "settings_default_screen_title": "Mostrar pantalla al iniciar sesión",
   "settings_default_screen_home": "Casa",
   "settings_default_screen_assets": "Activos",
+  "settings_developer_options_force_la": "Force Light Account Creation",
   "swap_preferred_header": "Casa de cambio preferida",
   "swap_preferred_cheapest": "Elegir mejor precio",
   "swap_preferred_dex": "Preferir modo descentralizado",
