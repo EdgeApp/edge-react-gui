@@ -554,7 +554,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
 
   React.useEffect(() => {
     // HACK: Latest React Navigation causes multiple mounts
-    if (isFocused) return
+    if (!isFocused) return
 
     dispatch(checkAndSetRegion({ account, countryCode, stateProvinceCode }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
