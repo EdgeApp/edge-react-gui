@@ -359,6 +359,7 @@
   "settings_default_screen_title": "Show Screen on Login",
   "settings_default_screen_home": "Home",
   "settings_default_screen_assets": "Assets",
+  "settings_developer_options_force_la": "Force Light Account Creation",
   "swap_preferred_header": "Bevorzugte Börse",
   "swap_preferred_cheapest": "Besten Preis wählen",
   "swap_preferred_dex": "Prefer Decentralized",
