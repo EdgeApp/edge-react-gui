@@ -359,7 +359,7 @@
   "settings_default_screen_title": "Schermata da mostrare al login",
   "settings_default_screen_home": "Home",
   "settings_default_screen_assets": "Asset",
-  "settings_developer_options_force_la": "Force Light Account Creation",
+  "settings_developer_options_force_la": "Forza la creazione di un Light Account",
   "swap_preferred_header": "Cambio preferito",
   "swap_preferred_cheapest": "Scegli il miglior prezzo",
   "swap_preferred_dex": "Preferisci Decentralizzato",
