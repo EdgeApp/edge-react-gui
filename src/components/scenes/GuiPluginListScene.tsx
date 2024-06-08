@@ -19,6 +19,7 @@ import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
 import sellPluginJsonRaw from '../../constants/plugins/sellPluginList.json'
 import sellPluginJsonOverrideRaw from '../../constants/plugins/sellPluginListOverride.json'
 import { ENV } from '../../env'
+import { useAsyncNavigation } from '../../hooks/useAsyncNavigation'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { executePlugin } from '../../plugins/gui/fiatPlugin'
@@ -524,6 +525,8 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
   const isFocused = useIsFocused()
 
+  const debouncedNavigation = useAsyncNavigation(navigation)
+
   const [forcedWalletResultLocal, setForcedWalletResultLocal] = React.useState<WalletListResult | undefined>(params.forcedWalletResult)
 
   const handleLogEvent = useHandler((event, values) => {
@@ -581,7 +584,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
               forcedWalletResult={forcedWalletResultLocal}
               onScroll={handleScroll}
               insetStyle={insetStyle}
-              navigation={navigation}
+              navigation={debouncedNavigation}
               route={route}
               stateProvinceCode={stateProvinceCode}
               theme={theme}
