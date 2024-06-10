@@ -25,7 +25,7 @@ import { runWithTimeout } from '../util/utils'
 import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions'
 import { getUniqueWalletName } from './CreateWalletActions'
 import { expiredFioNamesCheckDates } from './FioActions'
-import { readLocalSettings } from './LocalSettingsActions'
+import { readLocalAccountSettings } from './LocalSettingsActions'
 import { registerNotificationsV2, updateNotificationSettings } from './NotificationActions'
 import { showScamWarningModal } from './ScamWarningActions'
 import { approveTokenTerms } from './TokenTermsActions'
@@ -178,7 +178,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
 
       accountInitObject = { ...accountInitObject, ...syncedSettings }
 
-      const loadedLocalSettings = await readLocalSettings(account)
+      const loadedLocalSettings = await readLocalAccountSettings(account)
       accountInitObject = { ...accountInitObject, ...loadedLocalSettings }
 
       for (const userInfo of context.localUsers) {

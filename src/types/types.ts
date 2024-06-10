@@ -151,14 +151,25 @@ export const asSpendingLimits = asObject({
   transaction: asMaybe(asTransaction, () => asTransaction({}))
 })
 
+const asAccountNotifDismissInfo = asObject({
+  ip2FaNotifShown: asMaybe(asBoolean, false)
+})
+export type AccountNotifDismissInfo = ReturnType<typeof asAccountNotifDismissInfo>
+
 const asLocalAccountSettingsInner = asObject({
   contactsPermissionOn: asMaybe(asBoolean, true),
   developerModeOn: asMaybe(asBoolean, false),
   passwordReminder: asMaybe(asPasswordReminder, () => asPasswordReminder({})),
   isAccountBalanceVisible: asMaybe(asBoolean, true),
   spamFilterOn: asMaybe(asBoolean, true),
-  spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({}))
+  spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({})),
+  accountNotifDismissInfo: asMaybe(asAccountNotifDismissInfo, asAccountNotifDismissInfo({}))
 })
+
+const asDeviceNotifDismissInfo = asObject({
+  backupNotifShown: asMaybe(asBoolean, false)
+})
+export type DeviceNotifDismissInfo = ReturnType<typeof asDeviceNotifDismissInfo>
 
 export const asDefaultScreen = asValue('home', 'assets')
 
@@ -167,7 +178,7 @@ const asDeviceSettingsInner = asObject({
   developerPluginUri: asMaybe(asString),
   disableAnimations: asMaybe(asBoolean, false),
   forceLightAccountCreate: asMaybe(asBoolean, false),
-  hasInteractedWithBackupModal: asMaybe(asBoolean, false)
+  deviceNotifDismissInfo: asMaybe(asDeviceNotifDismissInfo, asDeviceNotifDismissInfo({}))
 })
 
 export const asLocalAccountSettings = asMaybe(asLocalAccountSettingsInner, () => asLocalAccountSettingsInner({}))
