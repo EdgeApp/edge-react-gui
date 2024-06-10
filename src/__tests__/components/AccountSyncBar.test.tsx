@@ -9,6 +9,7 @@ describe('ProgressBar', () => {
   const mockState: FakeState = {
     core: {
       account: {
+        activeWalletIds: ['x', 'y'],
         currencyWallets: {
           x: {
             watch: () => () => {},

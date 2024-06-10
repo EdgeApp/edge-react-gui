@@ -4,6 +4,7 @@
 
 - added: "Force Light Account Creation" developer mode setting
 - changed: Light account backup notification card now persists no matter what while logged in to a light account
+- fixed: Stabilize the account sync bar progress motion.
 
 ## 4.8.0
 
