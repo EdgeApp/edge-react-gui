@@ -230,6 +230,7 @@ export const asEnvConfig = asObject({
   PULSECHAIN_INIT: asCorePluginInit(asEvmApiKeys),
 
   POLYGON_INIT: asCorePluginInit(asEvmApiKeys),
+  MUMBAI_INIT: asCorePluginInit(asEvmApiKeys),
   SIDESHIFT_INIT: asCorePluginInit(
     asObject({
       affiliateId: asOptional(asString, '')

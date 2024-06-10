@@ -29,6 +29,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   goerli: ENV.GOERLI_INIT,
   hedera: true,
   kovan: ENV.KOVAN_INIT,
+  mumbai: ENV.MUMBAI_INIT,
   liberland: true,
   liberlandtestnet: false,
   optimism: ENV.OPTIMISM_INIT,

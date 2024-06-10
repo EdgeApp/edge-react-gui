@@ -550,6 +550,7 @@ const strings = {
   string_first_litecoin_wallet_name: 'My Litecoin',
   string_first_cardano_wallet_name: 'My Cardano',
   string_first_cardano_preprod_wallet_name: 'My Cardano Testnet',
+  string_first_mumbai_wallet_name: 'My Mumbai',
   string_first_monero_wallet_name: 'My Monero',
   string_first_qtum_wallet_name: 'My Qtum',
   string_first_ripple_wallet_name: 'My XRP',
