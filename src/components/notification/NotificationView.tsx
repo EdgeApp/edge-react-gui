@@ -8,10 +8,12 @@ import { showBackupModal } from '../../actions/BackupModalActions'
 import { getDeviceSettings, writeDeviceNotifDismissInfo } from '../../actions/DeviceSettingsActions'
 import { getLocalAccountSettings, writeNotifDismissInfo } from '../../actions/LocalSettingsActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useAsyncNavigation } from '../../hooks/useAsyncNavigation'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSceneFooterState } from '../../state/SceneFooterState'
+import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { getThemedIconUri } from '../../util/CdnUris'
@@ -34,6 +36,7 @@ interface Props {
 
 const NotificationViewComponent = (props: Props) => {
   const { navigation, hasTabs, footerHeight } = props
+  const navigationDebounced = useAsyncNavigation(navigation)
   const theme = useTheme()
   const dispatch = useDispatch()
 
@@ -58,18 +61,18 @@ const NotificationViewComponent = (props: Props) => {
 
   const handleBackupPress = useHandler(async () => {
     await writeDeviceNotifDismissInfo({ ...deviceNotifDismissInfo, backupNotifShown: true })
-    await showBackupModal({ navigation })
+    await showBackupModal({ navigation: navigationDebounced })
   })
 
   const handlePasswordReminderPress = useHandler(async () => {
-    await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation} />)
+    await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigationDebounced} />)
   })
 
   const handle2FaEnabledDismiss = useHandler(async () => {
     await writeNotifDismissInfo(account, { ...accountNotifDismissInfo, ip2FaNotifShown: true })
   })
   const handle2FaEnabledPress = useHandler(async () => {
-    await openBrowserUri('https://support.edge.app/hc/en-us/articles/7018106439579-Edge-Security-IP-Validation-and-2FA')
+    await openBrowserUri(config.ip2faSite)
     await handle2FaEnabledDismiss()
   })
 
@@ -106,7 +109,7 @@ const NotificationViewComponent = (props: Props) => {
             }
             onPress={() => {
               dismissNewTokens(walletId)
-              navigation.navigate('manageTokens', {
+              navigationDebounced.navigate('manageTokens', {
                 walletId,
                 newTokenIds
               })

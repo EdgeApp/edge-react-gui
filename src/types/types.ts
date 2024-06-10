@@ -321,6 +321,7 @@ export interface AppConfig {
   defaultWallets: EdgeAsset[]
   forceCloseUrlIos: string
   forceCloseUrlAndroid: string
+  ip2faSite: string
   knowledgeBase: string
   lightTheme: Theme
   notificationServers: string[]

@@ -7,11 +7,12 @@
 ## 4.8.0
 
 - added: "IP Validation Protection Enabled" bottom notification card
+- added: useAsyncNavigation hook to prevent duplicate navigation calls
 - added: Dynamic height for multiline text inputs
 - added: Sentry SDK for crash reporting
-- changed: Some red Airship alerts deemed unecessary are now hidden from production builds
 - added: Gas requirement warnings for more UX flows
 - added: Mainnet code appended to assets in exchange details modal
+- changed: Some red Airship alerts deemed unecessary are now hidden from production builds
 - changed: Add EUID to Simplex quoting API calls
 - changed: Velodrome, cemetery, and masonry staking polcies - insufficient balance errors reduced severity to untracked warnings
 - changed: Distinction between disabled and paused wallets
