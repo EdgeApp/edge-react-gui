@@ -19,7 +19,6 @@ import { getWalletTokenId } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { filterNull } from '../util/safeFilters'
 import { logEvent } from '../util/tracking'
-import { approveTokenTerms } from './TokenTermsActions'
 
 export const createWallets = async (account: EdgeAccount, items: EdgeCreateCurrencyWallet[]): Promise<Array<EdgeResult<EdgeCurrencyWallet>>> => {
   const out = await account.createCurrencyWallets(items)
@@ -193,7 +192,8 @@ export const PLACEHOLDER_WALLET_ID = 'NEW_WALLET_UNIQUE_STRING'
 export function enableTokensAcrossWallets(newTokenItems: TokenWalletCreateItem[]): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
-    const { currencyWallets } = state.core.account
+    const { account } = state.core
+    const { currencyWallets } = account
 
     const walletIdTokenMap = newTokenItems.reduce((map: { [walletId: string]: string[] }, item) => {
       const { createWalletIds, tokenId } = item
@@ -209,9 +209,6 @@ export function enableTokensAcrossWallets(newTokenItems: TokenWalletCreateItem[]
     const promises: Array<Promise<void>> = Object.keys(walletIdTokenMap).map(async walletId => {
       const wallet = currencyWallets[walletId]
       if (wallet == null) return
-
-      // Make sure we've shown the token terms agreement before for this wallet:
-      await approveTokenTerms(wallet)
 
       return await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, ...walletIdTokenMap[walletId]])
     })
