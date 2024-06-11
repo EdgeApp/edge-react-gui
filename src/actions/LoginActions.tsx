@@ -69,6 +69,11 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       const defaultSelection = accountReferralCurrencyCodes != null ? currencyCodesToEdgeAssets(account, accountReferralCurrencyCodes) : config.defaultWallets
       const fiatCurrencyCode = 'iso:' + defaultFiat
 
+      // Ensure we have initialized the account settings first so we can begin
+      // keeping track of token warnings shown from the initial selected assets
+      // during account creation
+      await readLocalAccountSettings(account)
+
       const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
         navigation.replace('edgeTabs', {
           screen: 'homeTab',
