@@ -1,14 +1,5 @@
 import { add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
-import {
-  EdgeCurrencyConfig,
-  EdgeCurrencyInfo,
-  EdgeCurrencyWallet,
-  EdgeDenomination,
-  EdgePluginMap,
-  EdgeToken,
-  EdgeTokenMap,
-  EdgeTransaction
-} from 'edge-core-js'
+import { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeDenomination, EdgePluginMap, EdgeToken, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import SafariView from 'react-native-safari-view'
@@ -27,7 +18,6 @@ import { toLocaleDate, toLocaleDateTime, toLocaleTime, truncateDecimalsPeriod } 
 import { lstrings } from '../locales/strings'
 import { RootState } from '../types/reduxTypes'
 import { GuiExchangeRates, GuiFiatType } from '../types/types'
-import { getWalletFiat } from '../util/CurrencyWalletHelpers'
 import { getCurrencyCode, getTokenId } from './CurrencyInfoHelpers'
 import { base58 } from './encoding'
 
@@ -412,14 +402,14 @@ export const feeStyle = {
 }
 
 export const convertTransactionFeeToDisplayFee = (
-  wallet: EdgeCurrencyWallet,
+  currencyCode: string,
+  isoFiatCurrencyCode: string,
   exchangeRates: GuiExchangeRates,
   transaction: EdgeTransaction | null,
   feeDisplayDenomination: EdgeDenomination,
   feeDefaultDenomination: EdgeDenomination
 ): { fiatSymbol?: string; fiatAmount: string; fiatStyle?: string; cryptoSymbol?: string; cryptoAmount: string; nativeCryptoAmount: string } => {
-  const { fiatCurrencyCode, isoFiatCurrencyCode } = getWalletFiat(wallet)
-  const secondaryDisplayDenomination = getDenomFromIsoCode(fiatCurrencyCode)
+  const secondaryDisplayDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
 
   let feeNativeAmount
   if (transaction?.parentNetworkFee != null) {
@@ -433,7 +423,6 @@ export const convertTransactionFeeToDisplayFee = (
     const cryptoFeeExchangeDenomAmount = feeNativeAmount ? convertNativeToDisplay(exchangeMultiplier)(feeNativeAmount) : ''
     const exchangeToDisplayMultiplierRatio = div(exchangeMultiplier, displayMultiplier, DECIMAL_PRECISION)
     const cryptoAmount = mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
-    const { currencyCode } = wallet.currencyInfo
     const cryptoFeeExchangeAmount = convertNativeToExchange(exchangeMultiplier)(feeNativeAmount)
     const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoFeeExchangeAmount)
     const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', cryptoFeeExchangeAmount)

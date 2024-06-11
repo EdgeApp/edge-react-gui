@@ -30,6 +30,7 @@ function WalletListSortableRowComponent(props: Props) {
   const dispatch = useDispatch()
 
   const showBalance = useSelector(state => state.ui.settings.isAccountBalanceVisible)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const exchangeRates = useSelector(state => state.exchangeRates)
   const exchangeDenomination = wallet == null ? null : getExchangeDenom(wallet.currencyConfig, null)
 
@@ -55,7 +56,7 @@ function WalletListSortableRowComponent(props: Props) {
   const preliminaryCryptoAmount = truncateDecimals(div(balance, multiplier, DECIMAL_PRECISION))
   const finalCryptoAmount = formatNumberInput(decimalOrZero(preliminaryCryptoAmount, 6)) // make it show zero if infinitesimal number
   const finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
-  const fiatBalance = calculateFiatBalance(wallet, exchangeDenomination, exchangeRates)
+  const fiatBalance = calculateFiatBalance(wallet, defaultIsoFiat, exchangeDenomination, exchangeRates)
   const fiatBalanceFormat = fiatBalance && gt(fiatBalance, '0.000001') ? fiatBalance : 0
   const fiatBalanceSymbol = showBalance && walletFiatSymbol ? walletFiatSymbol : ''
   const fiatBalanceString = showBalance ? formatNumber(fiatBalanceFormat, { toFixed: FIAT_PRECISION }) : ''

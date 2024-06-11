@@ -1,10 +1,10 @@
 import { div, round, toFixed } from 'biggystring'
-import { EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
+import { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 
 import { lstrings } from '../../locales/strings'
+import { useSelector } from '../../types/reactRedux'
 import { GuiExchangeRates } from '../../types/types'
-import { getWalletFiat } from '../../util/CurrencyWalletHelpers'
 import { convertCurrencyFromExchangeRates, DECIMAL_PRECISION, getDenomFromIsoCode, zeroString } from '../../util/utils'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -15,7 +15,6 @@ interface Props {
   title: string
   exchangeRates: GuiExchangeRates
   nativeAmount: string
-  wallet: EdgeCurrencyWallet
   currencyCode: string
   exchangeDenomination: EdgeDenomination
   displayDenomination: EdgeDenomination
@@ -28,8 +27,8 @@ export const EditableAmountTile = (props: Props) => {
   let cryptoAmountSyntax
   let cryptoAmountStyle
   let fiatAmountSyntax
-  const { title, exchangeRates, nativeAmount, wallet, currencyCode, exchangeDenomination, displayDenomination, lockInputs, onPress, compressed = false } = props
-  const { isoFiatCurrencyCode } = getWalletFiat(wallet)
+  const { title, exchangeRates, nativeAmount, currencyCode, exchangeDenomination, displayDenomination, lockInputs, onPress, compressed = false } = props
+  const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
   const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
   const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
   const theme = useTheme()

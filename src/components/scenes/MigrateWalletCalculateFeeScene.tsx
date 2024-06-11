@@ -45,6 +45,8 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
     const { denominationSettings = {} } = state.ui.settings
     return denominationSettings
   })
+  const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
+
   const currencyWallets = useWatch(account, 'currencyWallets')
 
   const mounted = React.useRef<boolean>(true)
@@ -103,7 +105,14 @@ const MigrateWalletCalculateFeeComponent = (props: Props) => {
       const exchangeDenom = denominations.find(denom => denom.name === currencyCode) as EdgeDenomination
       const displayDenom = displayDenominations[pluginId]?.[currencyCode] ?? exchangeDenom
 
-      const transactionFee = convertTransactionFeeToDisplayFee(wallet, exchangeRates, fakeEdgeTransaction, displayDenom, exchangeDenom)
+      const transactionFee = convertTransactionFeeToDisplayFee(
+        wallet.currencyInfo.currencyCode,
+        isoFiatCurrencyCode,
+        exchangeRates,
+        fakeEdgeTransaction,
+        displayDenom,
+        exchangeDenom
+      )
       const fiatAmount = transactionFee.fiatAmount === '0' ? '0' : ` ${transactionFee.fiatAmount}`
       const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${truncateDecimals(transactionFee.cryptoAmount)} (${
         transactionFee.fiatSymbol ?? ''

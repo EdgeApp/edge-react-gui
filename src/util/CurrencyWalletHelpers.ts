@@ -18,11 +18,6 @@ export function getWalletName(wallet: EdgeCurrencyWallet): string {
   return sprintf(lstrings.my_crypto_wallet_name, wallet.currencyInfo.displayName)
 }
 
-export function getWalletFiat(wallet: EdgeCurrencyWallet): { fiatCurrencyCode: string; isoFiatCurrencyCode: string } {
-  const { fiatCurrencyCode } = wallet
-  return { fiatCurrencyCode: fiatCurrencyCode.replace('iso:', ''), isoFiatCurrencyCode: fiatCurrencyCode }
-}
-
 /**
  * Takes any form of fiat currency code and returns a version with and without
  * the "iso:" prefix
