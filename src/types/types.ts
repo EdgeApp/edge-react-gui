@@ -166,9 +166,7 @@ const asLocalAccountSettingsInner = asObject({
   accountNotifDismissInfo: asMaybe(asAccountNotifDismissInfo, asAccountNotifDismissInfo({}))
 })
 
-const asDeviceNotifDismissInfo = asObject({
-  backupNotifShown: asMaybe(asBoolean, false)
-})
+const asDeviceNotifDismissInfo = asObject({})
 export type DeviceNotifDismissInfo = ReturnType<typeof asDeviceNotifDismissInfo>
 
 export const asDefaultScreen = asValue('home', 'assets')
