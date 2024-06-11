@@ -179,7 +179,7 @@ function createAndSelectToken({
             )
 
       // Show the user the token terms modal only once
-      await approveTokenTerms(wallet)
+      await approveTokenTerms(account, wallet.currencyInfo.pluginId)
 
       await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, tokenId])
       if (trackingEventSuccess != null) logEvent(trackingEventSuccess)
