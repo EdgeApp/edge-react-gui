@@ -1,4 +1,4 @@
-import { asBoolean, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
+import { asArray, asBoolean, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeToken, EdgeTokenId } from 'edge-core-js/types'
 
 import { LocaleStringKey } from '../locales/en_US'
@@ -156,6 +156,8 @@ const asAccountNotifDismissInfo = asObject({
 })
 export type AccountNotifDismissInfo = ReturnType<typeof asAccountNotifDismissInfo>
 
+const asTokenWarningsShown = asArray(asString)
+
 const asLocalAccountSettingsInner = asObject({
   contactsPermissionOn: asMaybe(asBoolean, true),
   developerModeOn: asMaybe(asBoolean, false),
@@ -163,7 +165,8 @@ const asLocalAccountSettingsInner = asObject({
   isAccountBalanceVisible: asMaybe(asBoolean, true),
   spamFilterOn: asMaybe(asBoolean, true),
   spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({})),
-  accountNotifDismissInfo: asMaybe(asAccountNotifDismissInfo, asAccountNotifDismissInfo({}))
+  accountNotifDismissInfo: asMaybe(asAccountNotifDismissInfo, asAccountNotifDismissInfo({})),
+  tokenWarningsShown: asMaybe(asTokenWarningsShown, [])
 })
 
 const asDeviceNotifDismissInfo = asObject({})

@@ -4,6 +4,7 @@ import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { enableTokensAcrossWallets, PLACEHOLDER_WALLET_ID } from '../../actions/CreateWalletActions'
+import { approveTokenTerms } from '../../actions/TokenTermsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -97,13 +98,22 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     return newItem as MainWalletCreateItem
   }
 
-  const handleCreateWalletToggle = useHandler((key: string) => {
+  const handleCreateWalletToggle = useHandler(async (key: string) => {
     setSelectedItems(state => {
       const copy = new Set(state)
-      if (copy.has(key)) copy.delete(key)
-      else copy.add(key)
+      if (copy.has(key)) {
+        copy.delete(key)
+      } else {
+        copy.add(key)
+      }
       return copy
     })
+
+    // Check if this is a token to potentially show the gas requirement warning
+    const newAsset = createWalletList.find(item => item.key === key)
+    if (newAsset != null && newAsset.tokenId != null) {
+      await approveTokenTerms(account, newAsset.pluginId)
+    }
   })
 
   const handleNextPress = useHandler(async () => {
@@ -273,7 +283,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
           true: theme.toggleButton
         }}
         value={selected}
-        onValueChange={() => handleCreateWalletToggle(key)}
+        onValueChange={async () => await handleCreateWalletToggle(key)}
       />
     )
 
@@ -282,7 +292,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
         pluginId={pluginId}
         tokenId={tokenId}
         walletName={displayName}
-        onPress={() => handleCreateWalletToggle(key)}
+        onPress={async () => await handleCreateWalletToggle(key)}
         rightSide={toggle}
       />
     )
