@@ -1,4 +1,4 @@
-import { getDefaultHeaderHeight } from '@react-navigation/elements'
+import { useHeaderHeight } from '@react-navigation/elements'
 import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { useEffect, useMemo, useState } from 'react'
@@ -157,27 +157,28 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
     [frameHeight, frameWidth]
   )
 
-  const headerBarHeight = getDefaultHeaderHeight({ height: frameHeight, width: frameWidth }, false, 0)
+  // This includes the top safe area inset:
+  const headerBarHeight = useHeaderHeight()
 
   // Calculate app insets considering the app's header, tab-bar,
   // notification area, etc:
   const maybeNotificationHeight = hasNotifications ? notificationHeight : 0
 
-  const maybeHeaderHeight = hasHeader ? headerBarHeight : 0
   // Ignore tab bar height when keyboard is open because it is rendered behind it
   const maybeTabBarHeight = hasTabs && !isKeyboardOpen ? MAX_TAB_BAR_HEIGHT : 0
   // Ignore inset bottom when keyboard is open because it is rendered behind it
   const maybeInsetBottom = !isKeyboardOpen ? safeAreaInsets.bottom : 0
   const insets: EdgeInsets = useMemo(
     () => ({
-      top: safeAreaInsets.top + maybeHeaderHeight,
+      top: hasHeader ? headerBarHeight : safeAreaInsets.top,
       right: safeAreaInsets.right,
       bottom: maybeInsetBottom + maybeNotificationHeight + maybeTabBarHeight + footerHeight,
       left: safeAreaInsets.left
     }),
     [
       footerHeight,
-      maybeHeaderHeight,
+      hasHeader,
+      headerBarHeight,
       maybeInsetBottom,
       maybeNotificationHeight,
       maybeTabBarHeight,

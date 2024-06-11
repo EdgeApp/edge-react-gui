@@ -72,7 +72,7 @@ jest.mock('react-native/Libraries/Utilities/Platform', () => ({
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
 
 jest.mock('@react-navigation/elements', () => ({
-  getDefaultHeaderHeight: () => 44
+  useHeaderHeight: () => 64
 }))
 
 jest.mock('rn-qr-generator', () => ({
