@@ -149,6 +149,7 @@ const NotificationViewComponent = (props: Props) => {
           type="warning"
           title={lstrings.backup_title}
           message={fioAddresses.length > 0 ? lstrings.backup_web3_handle_warning_message : lstrings.backup_info_message}
+          persistent
           onPress={handleBackupPress}
         />
       </EdgeAnim>
