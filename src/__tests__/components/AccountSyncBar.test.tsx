@@ -2,7 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 import * as React from 'react'
 import TestRenderer from 'react-test-renderer'
 
-import { WiredProgressBar } from '../../components/themed/WiredProgressBar'
+import { AccountSyncBar } from '../../components/progress-indicators/AccountSyncBar'
 import { FakeProviders, FakeState } from '../../util/fake/FakeProviders'
 
 describe('ProgressBar', () => {
@@ -31,7 +31,7 @@ describe('ProgressBar', () => {
   it('should render with loading props', () => {
     const renderer = TestRenderer.create(
       <FakeProviders initialState={mockState}>
-        <WiredProgressBar />
+        <AccountSyncBar />
       </FakeProviders>
     )
 
