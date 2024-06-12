@@ -1,35 +1,28 @@
 import * as React from 'react'
 import { ListRenderItemInfo, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 import { FlatList } from 'react-native-gesture-handler'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { createWallet, enableTokensAcrossWallets, getUniqueWalletName } from '../../actions/CreateWalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { splitCreateWalletItems, WalletCreateItem } from '../../selectors/getCreateWalletList'
-import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { GuiFiatType } from '../../types/types'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
-import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { FiatListModal } from '../modals/FiatListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
-import { SelectableRow } from '../themed/SelectableRow'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 export interface CreateWalletSelectFiatParams {
@@ -49,10 +42,8 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const currencyWallets = useWatch(account, 'currencyWallets')
-
-  const defaultFiat = useSelector(state => getDefaultFiat(state))
-  const [fiat, setFiat] = React.useState(() => getSupportedFiats(defaultFiat)[0])
 
   const { newWalletItems, newTokenItems } = React.useMemo(() => splitCreateWalletItems(createWalletList), [createWalletList])
 
@@ -84,7 +75,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
       const item = newWalletItems[0]
       try {
         await createWallet(account, {
-          fiatCurrencyCode: `iso:${fiat.value}`,
+          fiatCurrencyCode: defaultIsoFiat,
           keyOptions: item.keyOptions,
           name: walletNames[item.key],
           walletType: item.walletType
@@ -98,7 +89,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
       return
     }
     // Any other combination goes to the completion scene
-    navigation.navigate('createWalletCompletion', { createWalletList, walletNames, fiatCode: fiat.value })
+    navigation.navigate('createWalletCompletion', { createWalletList, walletNames })
   })
 
   const handleSplit = useHandler(async () => {
@@ -174,28 +165,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
       return
     }
 
-    navigation.navigate('createWalletImport', { createWalletList: [...newWalletItemsCopy, ...newTokenItems], walletNames, fiatCode: fiat.value })
-  })
-
-  const renderSelectedFiatRow = useHandler(() => {
-    const fiatCountry = FIAT_COUNTRY[fiat.value]
-
-    const key = `currency_label_${fiat.value}`
-    const subTitle = lstrings[key as keyof typeof lstrings] ?? lstrings.currency_label_
-
-    return (
-      <SelectableRow
-        icon={fiatCountry.logoUrl ? <FastImage source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
-        subTitle={subTitle}
-        title={fiat.value}
-        onPress={renderSelectFiatTypeModal}
-      />
-    )
-  })
-
-  const renderSelectFiatTypeModal = useHandler(async () => {
-    const fiat = await Airship.show<GuiFiatType>(bridge => <FiatListModal bridge={bridge} />)
-    if (fiat != null) setFiat(fiat)
+    navigation.navigate('createWalletImport', { createWalletList: [...newWalletItemsCopy, ...newTokenItems], walletNames })
   })
 
   const renderCurrencyRow = useHandler((data: ListRenderItemInfo<WalletCreateItem>) => {
@@ -236,7 +206,7 @@ const CreateWalletSelectFiatComponent = (props: Props) => {
     <SceneWrapper>
       <SceneHeader title={isSplit ? lstrings.fragment_wallets_split_wallet : lstrings.title_create_wallet} withTopMargin />
       <View style={styles.content}>
-        {isSplit ? <Paragraph marginRem={[0, 0.5, 1.5, 0.5]}>{lstrings.split_description}</Paragraph> : renderSelectedFiatRow()}
+        {isSplit && <Paragraph marginRem={[0, 0.5, 1.5, 0.5]}>{lstrings.split_description}</Paragraph>}
         <EdgeText style={styles.instructionalText} numberOfLines={1}>
           {lstrings.fragment_create_wallet_instructions}
         </EdgeText>
