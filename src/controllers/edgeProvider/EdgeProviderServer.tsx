@@ -51,6 +51,7 @@ const asCurrencyCodesArray = asOptional(asArray(asExtendedCurrencyCode))
 export class EdgeProviderServer implements EdgeProviderMethods {
   // Private properties:
   _account: EdgeAccount
+  _defaultIsoFiat: string
   _dispatch: Dispatch
   _navigation: NavigationBase
   _plugin: GuiPlugin
@@ -64,6 +65,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
   constructor(opts: {
     account: EdgeAccount
     deepLink: EdgeProviderDeepLink
+    defaultIsoFiat: string
     dispatch: Dispatch
     navigation: NavigationBase
     plugin: GuiPlugin
@@ -71,9 +73,10 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     selectedTokenId: string | null
     selectedWallet?: EdgeCurrencyWallet
   }) {
-    const { account, deepLink, dispatch, navigation, plugin, reloadWebView, selectedTokenId, selectedWallet } = opts
+    const { account, deepLink, defaultIsoFiat, dispatch, navigation, plugin, reloadWebView, selectedTokenId, selectedWallet } = opts
 
     this._account = account
+    this._defaultIsoFiat = defaultIsoFiat
     this._dispatch = dispatch
     this._navigation = navigation
     this._plugin = plugin
@@ -165,7 +168,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     const wallet = this._selectedWallet
     if (wallet == null) throw new Error('No selected wallet')
 
-    const { currencyConfig, currencyInfo, fiatCurrencyCode } = wallet
+    const { currencyConfig, currencyInfo } = wallet
     const { currencyCode } = tokenId == null ? currencyInfo : currencyConfig.allTokens[tokenId]
     const walletName = getWalletName(wallet)
     const receiveAddress = await wallet.getReceiveAddress({ tokenId: null })
@@ -177,7 +180,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       receiveAddress,
       chainCode: currencyInfo.currencyCode,
       currencyCode,
-      fiatCurrencyCode: fiatCurrencyCode.replace('iso:', ''),
+      fiatCurrencyCode: this._defaultIsoFiat.replace('iso:', ''),
       currencyIcon: icons.symbolImage,
       currencyIconDark: icons.symbolImageDarkMono
     }
@@ -253,8 +256,6 @@ export class EdgeProviderServer implements EdgeProviderMethods {
     const wallet = this._selectedWallet
     if (wallet == null) throw new Error('No selected wallet')
 
-    const { fiatCurrencyCode } = wallet
-
     // Prompt user with yes/no modal for permission
     const confirmTxShare = await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
@@ -276,7 +277,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
 
     const txs = await wallet.getTransactions({ tokenId })
     const result: EdgeGetWalletHistoryResult = {
-      fiatCurrencyCode,
+      fiatCurrencyCode: this._defaultIsoFiat,
       balance,
       transactions: txs.map(cleanTx)
     }

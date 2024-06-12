@@ -31,7 +31,7 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
   const syncRatio = useWatch(borrowEngine, 'syncRatio')
   const isLoading = syncRatio < 1
 
-  const isoFiatCurrencyCode = currencyWallet.fiatCurrencyCode
+  const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
   const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
   const fiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
 

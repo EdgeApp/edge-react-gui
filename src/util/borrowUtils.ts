@@ -11,11 +11,11 @@ import { mulToPrecision } from './utils'
 export const useTotalFiatAmount = (wallet: EdgeCurrencyWallet, borrowArray: BorrowDebt[] | BorrowCollateral[]): string => {
   const {
     currencyConfig: { allTokens },
-    currencyInfo,
-    fiatCurrencyCode: isoFiatCurrencyCode
+    currencyInfo
   } = wallet
 
   const exchangeRates = useSelector(state => state.exchangeRates)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   return React.useMemo(() => {
     const getExchangeRate = (pair: string) => exchangeRates[pair] ?? '0'
@@ -24,9 +24,9 @@ export const useTotalFiatAmount = (wallet: EdgeCurrencyWallet, borrowArray: Borr
       const { currencyCode, denominations } = obj.tokenId == null ? currencyInfo : allTokens[obj.tokenId] ?? {}
       const denom = denominations.find(denom => denom.name === currencyCode)
       const multiplier = denom?.multiplier ?? '1'
-      return add(total, mul(div(obj.nativeAmount, multiplier, mulToPrecision(multiplier)), getExchangeRate(`${currencyCode}_${isoFiatCurrencyCode}`)))
+      return add(total, mul(div(obj.nativeAmount, multiplier, mulToPrecision(multiplier)), getExchangeRate(`${currencyCode}_${defaultIsoFiat}`)))
     }, '0')
-  }, [allTokens, borrowArray, currencyInfo, exchangeRates, isoFiatCurrencyCode])
+  }, [allTokens, borrowArray, currencyInfo, exchangeRates, defaultIsoFiat])
 }
 
 export const getWalletPickerExcludeWalletIds = (

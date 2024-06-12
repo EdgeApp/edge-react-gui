@@ -124,12 +124,13 @@ export const LoanManageSceneComponent = (props: Props) => {
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
   const clientId = useSelector(state => state.core.context.clientId)
+  const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   const executionContext = useExecutionContext()
 
   const { borrowEngine, borrowPlugin } = loanAccount
   const { currencyWallet: borrowEngineWallet } = loanAccount.borrowEngine
-  const { fiatCurrencyCode: isoFiatCurrencyCode, currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
+  const { currencyInfo: borrowEngineCurrencyInfo } = borrowEngineWallet
   const manageActionData = MANAGE_ACTION_DATA_MAP[loanManageType]
   const collaterals = useWatch(borrowEngine, 'collaterals')
   const debts = useWatch(borrowEngine, 'debts')

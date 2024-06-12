@@ -181,9 +181,9 @@ const activateWalletTokens = async (
 ): Promise<void> => {
   if (tokenIds == null) throw new Error('Activating mainnet wallets unsupported')
   const { account } = state.core
+  const { defaultIsoFiat, defaultFiat } = state.ui.settings
   const { assetOptions } = await account.getActivationAssets({ activateWalletId: wallet.id, activateTokenIds: tokenIds })
   const { pluginId } = wallet.currencyInfo
-  const { fiatCurrencyCode } = wallet
 
   // See if there is only one wallet option for activation
   if (assetOptions.length === 1 && assetOptions[0].paymentWalletId != null) {
@@ -212,10 +212,10 @@ const activateWalletTokens = async (
     const exchangeNetworkFee = await wallet.nativeToDenomination(nativeFee, paymentCurrencyCode)
     const feeDenom = selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, paymentCurrencyCode)
     const displayFee = div(nativeFee, feeDenom.multiplier, log10(feeDenom.multiplier))
-    let fiatFee = convertCurrencyFromExchangeRates(state.exchangeRates, paymentCurrencyCode, fiatCurrencyCode, exchangeNetworkFee)
+    let fiatFee = convertCurrencyFromExchangeRates(state.exchangeRates, paymentCurrencyCode, defaultIsoFiat, exchangeNetworkFee)
     if (lt(fiatFee, '0.001')) fiatFee = '<0.001'
     fiatFee = round(fiatFee, -3)
-    const feeString = `${displayFee} ${feeDenom.name} (${fiatFee} ${fiatCurrencyCode.replace('iso:', '')})`
+    const feeString = `${displayFee} ${feeDenom.name} (${fiatFee} ${defaultFiat})`
     let bodyText = lstrings.activate_wallet_token_scene_body
 
     const { tokenActivationAdditionalReserveText } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}

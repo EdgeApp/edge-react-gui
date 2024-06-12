@@ -179,6 +179,7 @@ export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnPro
       }
     } = ownProps
     const { account } = state.core
+    const { defaultIsoFiat, defaultFiat } = state.ui.settings
     const currencyWallet = account.currencyWallets[walletId]
     const currencyCode = getCurrencyCode(currencyWallet, tokenId)
 
@@ -190,7 +191,7 @@ export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnPro
 
     const defaultDenomination = getExchangeDenomByCurrencyCode(currencyWallet.currencyConfig, currencyCode)
     const stakingDefaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(stakedNativeAmount ?? '0')
-    const stakingFiatBalance = convertCurrency(state, currencyCode, currencyWallet.fiatCurrencyCode, stakingDefaultCryptoAmount)
+    const stakingFiatBalance = convertCurrency(state, currencyCode, defaultIsoFiat, stakingDefaultCryptoAmount)
     const stakingFiatBalanceFormat = formatNumber(stakingFiatBalance && gt(stakingFiatBalance, '0.000001') ? stakingFiatBalance : 0, { toFixed: 2 })
 
     return {
@@ -198,8 +199,8 @@ export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnPro
       stakingCryptoAmountFormat,
       stakingFiatBalanceFormat,
       currencyDenomination,
-      fiatCurrencyCode: currencyWallet.fiatCurrencyCode.replace('iso:', ''),
-      fiatSymbol: getSymbolFromCurrency(currencyWallet.fiatCurrencyCode)
+      fiatCurrencyCode: defaultFiat,
+      fiatSymbol: getSymbolFromCurrency(defaultIsoFiat)
     }
   },
   dispatch => ({

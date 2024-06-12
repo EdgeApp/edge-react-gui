@@ -45,7 +45,7 @@ function WalletListSortableRowComponent(props: Props) {
   }
 
   const { currencyCode } = wallet.currencyInfo
-  const walletFiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode)
+  const fiatSymbol = getSymbolFromCurrency(defaultIsoFiat)
   const displayDenomination = dispatch((_, getState) => selectDisplayDenom(getState(), wallet.currencyConfig, null))
   const multiplier = displayDenomination.multiplier
   const name = getWalletName(wallet)
@@ -58,7 +58,7 @@ function WalletListSortableRowComponent(props: Props) {
   const finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
   const fiatBalance = calculateFiatBalance(wallet, defaultIsoFiat, exchangeDenomination, exchangeRates)
   const fiatBalanceFormat = fiatBalance && gt(fiatBalance, '0.000001') ? fiatBalance : 0
-  const fiatBalanceSymbol = showBalance && walletFiatSymbol ? walletFiatSymbol : ''
+  const fiatBalanceSymbol = showBalance && fiatSymbol ? fiatSymbol : ''
   const fiatBalanceString = showBalance ? formatNumber(fiatBalanceFormat, { toFixed: FIAT_PRECISION }) : ''
 
   return (

@@ -638,3 +638,7 @@ export function getOsVersion(): string {
   const osVersionRaw = DeviceInfo.getSystemVersion()
   return Array.from({ length: 3 }, (_, i) => osVersionRaw.split('.')[i] || '0').join('.')
 }
+
+export const removeIsoPrefix = (currencyCode: string): string => {
+  return currencyCode.replace('iso:', '')
+}

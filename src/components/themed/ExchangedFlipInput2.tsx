@@ -5,7 +5,6 @@ import { Platform, ReturnKeyType } from 'react-native'
 
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useHandler } from '../../hooks/useHandler'
-import { useWatch } from '../../hooks/useWatch'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
@@ -77,19 +76,19 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
   const styles = getStyles(theme)
 
   const exchangeRates = useSelector(state => state.exchangeRates)
-  const fiatCurrencyCode = useWatch(wallet, 'fiatCurrencyCode')
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const flipInputRef = React.useRef<FlipInputRef>(null)
 
   const pluginId = wallet.currencyInfo.pluginId
   const cryptoCurrencyCode = getCurrencyCode(wallet, tokenId)
   const cryptoExchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
   const cryptoDisplayDenom = useDisplayDenom(wallet.currencyConfig, tokenId)
-  const fiatDenom = getDenomFromIsoCode(fiatCurrencyCode)
+  const fiatDenom = getDenomFromIsoCode(defaultIsoFiat)
 
   const precisionAdjustVal = precisionAdjust({
     primaryExchangeMultiplier: cryptoExchangeDenom.multiplier,
     secondaryExchangeMultiplier: fiatDenom.multiplier,
-    exchangeSecondaryToPrimaryRatio: exchangeRates[`${cryptoCurrencyCode}_${fiatCurrencyCode}`]
+    exchangeSecondaryToPrimaryRatio: exchangeRates[`${cryptoCurrencyCode}_${defaultIsoFiat}`]
   })
   const cryptoMaxPrecision = maxPrimaryCurrencyConversionDecimals(log10(cryptoDisplayDenom.multiplier), precisionAdjustVal)
   const fieldInfos: FlipInputFieldInfos = [
@@ -107,14 +106,14 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
     if (nativeAmount === '') return { fiatAmount: '', exchangeAmount: '', displayAmount: '' }
     const exchangeAmount = div(nativeAmount, cryptoExchangeDenom.multiplier, DECIMAL_PRECISION)
     const displayAmount = div(nativeAmount, cryptoDisplayDenom.multiplier, DECIMAL_PRECISION)
-    const fiatAmountLong = convertCurrency(exchangeAmount, cryptoCurrencyCode, fiatCurrencyCode)
+    const fiatAmountLong = convertCurrency(exchangeAmount, cryptoCurrencyCode, defaultIsoFiat)
     const fiatAmount = round(fiatAmountLong, -2)
     return { fiatAmount, exchangeAmount, displayAmount }
   })
 
   const convertFromFiat = useHandler((fiatAmount: string) => {
     if (fiatAmount === '') return { nativeAmount: '', exchangeAmount: '', displayAmount: '' }
-    const exchangeAmountLong = convertCurrency(fiatAmount, fiatCurrencyCode, cryptoCurrencyCode)
+    const exchangeAmountLong = convertCurrency(fiatAmount, defaultIsoFiat, cryptoCurrencyCode)
     const nativeAmountLong = mul(exchangeAmountLong, cryptoExchangeDenom.multiplier)
     const displayAmountLong = div(nativeAmountLong, cryptoDisplayDenom.multiplier, DECIMAL_PRECISION)
 
@@ -171,10 +170,10 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
 
   React.useEffect(() => {
     const { exchangeAmount, displayAmount } = convertFromCryptoNative(startNativeAmount ?? '')
-    const initFiat = convertCurrency(exchangeAmount, cryptoCurrencyCode, fiatCurrencyCode)
+    const initFiat = convertCurrency(exchangeAmount, cryptoCurrencyCode, defaultIsoFiat)
     setRenderDisplayAmount(displayAmount)
     setRenderFiatAmount(initFiat)
-  }, [convertCurrency, convertFromCryptoNative, cryptoCurrencyCode, fiatCurrencyCode, startNativeAmount])
+  }, [convertCurrency, convertFromCryptoNative, cryptoCurrencyCode, defaultIsoFiat, startNativeAmount])
 
   React.useImperativeHandle(ref, () => ({
     setAmount: (field, value) => {
@@ -196,8 +195,8 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
    * to initialize the focused flip input field with fiat.
    */
   const overrideForceField = useMemo(
-    () => (convertCurrency('100', cryptoCurrencyCode, fiatCurrencyCode) === '0' ? 'crypto' : forceField),
-    [convertCurrency, cryptoCurrencyCode, fiatCurrencyCode, forceField]
+    () => (convertCurrency('100', cryptoCurrencyCode, defaultIsoFiat) === '0' ? 'crypto' : forceField),
+    [convertCurrency, cryptoCurrencyCode, defaultIsoFiat, forceField]
   )
 
   return (
