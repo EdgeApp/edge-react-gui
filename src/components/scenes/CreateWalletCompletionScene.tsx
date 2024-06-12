@@ -6,7 +6,6 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { createWallets, enableTokensAcrossWallets, PLACEHOLDER_WALLET_ID } from '../../actions/CreateWalletActions'
-import { approveTokenTerms } from '../../actions/TokenTermsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -111,11 +110,7 @@ const CreateWalletCompletionComponent = (props: Props) => {
           setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'error' }))
         } else {
           // Wait for wallet creation
-          const newWallet = await account.waitForCurrencyWallet(result.result.id)
-
-          // Check if any tokens were enabled for this wallet and show warning
-          await approveTokenTerms(newWallet)
-
+          await account.waitForCurrencyWallet(result.result.id)
           setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'complete' }))
         }
       }

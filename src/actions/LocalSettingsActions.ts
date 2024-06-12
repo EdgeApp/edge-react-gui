@@ -160,6 +160,21 @@ export const writeNotifDismissInfo = async (account: EdgeAccount, accountNotifDi
   return await writeLocalAccountSettings(account, updatedSettings)
 }
 
+/**
+ * Tracks whether a token gas requirement warning has been shown per a
+ * particular currency plugin. If the plugin id exists in this array, the
+ * warning will not be shown again for that currency plugin.
+ */
+export const writeTokenWarningsShown = async (account: EdgeAccount, pluginId: string) => {
+  // Use a Set to ensure there's no duplicates when adding to this info
+  const updatedSettings = {
+    ...localAccountSettings,
+    tokenWarningsShown: Array.from(new Set([...localAccountSettings.tokenWarningsShown, pluginId]))
+  }
+
+  return await writeLocalAccountSettings(account, updatedSettings)
+}
+
 export const readLocalAccountSettings = async (account: EdgeAccount): Promise<LocalAccountSettings> => {
   try {
     const text = await account.localDisklet.getText(LOCAL_SETTINGS_FILENAME)
@@ -174,7 +189,7 @@ export const readLocalAccountSettings = async (account: EdgeAccount): Promise<Lo
 }
 
 export const writeLocalAccountSettings = async (account: EdgeAccount, settings: LocalAccountSettings) => {
-  localAccountSettings = settings
+  localAccountSettings = asLocalAccountSettings(settings)
   const text = JSON.stringify(settings)
   return await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
 }

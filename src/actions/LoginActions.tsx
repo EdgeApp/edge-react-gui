@@ -28,7 +28,6 @@ import { expiredFioNamesCheckDates } from './FioActions'
 import { readLocalAccountSettings } from './LocalSettingsActions'
 import { registerNotificationsV2, updateNotificationSettings } from './NotificationActions'
 import { showScamWarningModal } from './ScamWarningActions'
-import { approveTokenTerms } from './TokenTermsActions'
 
 function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; currencyCode: string } {
   // Find the first wallet:
@@ -69,6 +68,11 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       const accountReferralCurrencyCodes = getState().account.accountReferral.currencyCodes
       const defaultSelection = accountReferralCurrencyCodes != null ? currencyCodesToEdgeAssets(account, accountReferralCurrencyCodes) : config.defaultWallets
       const fiatCurrencyCode = 'iso:' + defaultFiat
+
+      // Ensure we have initialized the account settings first so we can begin
+      // keeping track of token warnings shown from the initial selected assets
+      // during account creation
+      await readLocalAccountSettings(account)
 
       const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
         navigation.replace('edgeTabs', {
@@ -288,9 +292,6 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
     if (!result.ok) continue
     const { walletType, name } = options[i]
     logActivity(`Create Wallet (login): ${account.username} -- ${walletType} -- ${fiatCurrencyCode ?? ''} -- ${name}`)
-
-    // Show token warning:
-    await approveTokenTerms(result.result)
   }
 
   dispatch(logEvent('Signup_Wallets_Created_Success'))
