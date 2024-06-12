@@ -10,7 +10,7 @@ import { formatNumber, formatTime } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { getSelectedCurrencyWallet } from '../../selectors/WalletSelectors'
-import { connect, useSelector } from '../../types/reactRedux'
+import { connect } from '../../types/reactRedux'
 import { FioRequest, FioRequestStatus } from '../../types/types'
 import { getCryptoText } from '../../util/cryptoTextUtils'
 import { convertEdgeToFIOCodes, convertFIOToEdgeCodes } from '../../util/FioAddressUtils'
@@ -198,9 +198,7 @@ const emptyDenomination = { name: '', multiplier: '0' }
 export const FioRequestRow = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => {
     const { fioRequest } = ownProps
-    const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
-    const defaultFiat = removeIsoPrefix(defaultIsoFiat)
-
+    const { defaultIsoFiat } = state.ui.settings
     let displayDenomination = emptyDenomination
     let exchangeDenomination = emptyDenomination
     const wallet = getSelectedCurrencyWallet(state)
@@ -231,7 +229,7 @@ export const FioRequestRow = connect<StateProps, {}, OwnProps>(
     } catch (e: any) {
       console.log('No denomination for this Token Code -', tokenCode)
     }
-    const fiatSymbol = getSymbolFromCurrency(defaultFiat)
+    const fiatSymbol = getSymbolFromCurrency(removeIsoPrefix(defaultIsoFiat))
     const exchangeRates = state.exchangeRates
 
     const rateKey = `${tokenCode}_${defaultIsoFiat}`

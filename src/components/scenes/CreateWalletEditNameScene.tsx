@@ -25,14 +25,14 @@ import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
-export interface CreateWalletSelectFiatParams {
+export interface CreateWalletEditNameParams {
   createWalletList: WalletCreateItem[]
   splitSourceWalletId?: string
 }
 
-interface Props extends EdgeSceneProps<'createWalletSelectFiat'> {}
+interface Props extends EdgeSceneProps<'createWalletEditName'> {}
 
-const CreateWalletSelectFiatComponent = (props: Props) => {
+const CreateWalletEditNameComponent = (props: Props) => {
   const { navigation, route } = props
   const { createWalletList, splitSourceWalletId } = route.params
   const isSplit = splitSourceWalletId != null
@@ -251,4 +251,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CreateWalletSelectFiatScene = React.memo(CreateWalletSelectFiatComponent)
+export const CreateWalletEditNameScene = React.memo(CreateWalletEditNameComponent)

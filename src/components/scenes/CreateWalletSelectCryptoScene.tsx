@@ -216,7 +216,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
       await newAccountFlow(navigation, newList)
     } else if (newWalletItems.length > 0) {
       // Navigate to the fiat/name change scene if new wallets are being created.
-      navigation.push('createWalletSelectFiat', { createWalletList: newList, splitSourceWalletId })
+      navigation.push('createWalletEditName', { createWalletList: newList, splitSourceWalletId })
     } else {
       // Otherwise enable the tokens and return to the main scene.
       await dispatch(enableTokensAcrossWallets(newTokenItems))
