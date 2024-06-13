@@ -7,7 +7,6 @@ import { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { locale } from '../../../locales/intl'
 import { lstrings } from '../../../locales/strings'
 import { EdgeAsset, StringMap } from '../../../types/types'
-import { sha512HashAndSign } from '../../../util/crypto'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType, FiatPluginUi, SaveTxActionParams } from '../fiatPluginTypes'
@@ -205,6 +204,7 @@ const asPublicRequestResponse = asObject({
 type PaymentMethodId = ReturnType<typeof asPaymentMethodId>
 type PaybisBuyPairs = ReturnType<typeof asPaybisBuyPairs>
 type PaybisSellPairs = ReturnType<typeof asPaybisSellPairs>
+type Signature = string | undefined
 
 interface InitializePairs {
   url: string
@@ -684,6 +684,37 @@ export const paybisProvider: FiatProviderFactory = {
   }
 }
 
+const openWebViewAndCreateSignature = async (showUi: FiatPluginUi | undefined, privateKey: string, body: string): Promise<Signature> => {
+  return await new Promise<Signature>(resolve => {
+    if (showUi === undefined) return undefined
+    /* eslint-disable-next-line @typescript-eslint/no-floating-promises */
+    showUi.openWebView({
+      url: '',
+      html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- TODO: import library -->
+  <script src="https://cdn.jsdelivr.net/npm/jsrsasign@10.5.17/lib/jsrsasign-all-min.js"></script>
+</head>
+<body>
+  <script>
+    const sig = new KJUR.crypto.Signature({ 'alg': 'SHA512withRSAandMGF1' });
+    sig.init(\`${privateKey}\`);
+    sig.updateString(\`${body}\`);
+    window.ReactNativeWebView.postMessage(hextob64(sig.sign()));
+  </script>
+</body>
+</html>
+      `,
+      onMessage: (signature: Signature) => {
+        resolve(signature)
+        showUi.exitScene()
+      }
+    })
+  })
+}
+
 const paybisFetch = async (params: {
   method: 'POST' | 'GET'
   url: string
@@ -698,13 +729,10 @@ const paybisFetch = async (params: {
   const urlObj = new URL(url + '/' + path, true)
   const body = bodyParams != null ? JSON.stringify(bodyParams) : undefined
 
-  let signature: string | undefined
+  let signature: Signature
   if (privateKey != null) {
     if (body == null) throw new Error('Paybis: Cannot sign without body')
-    // Because we will be doing a slow CPU operation in sha512HashAndSign, we need to first
-    // call waitForAnimationFrame to ensure the UI spinner is rendered.
-    if (showUi != null) await showUi.waitForAnimationFrame()
-    signature = sha512HashAndSign(body, privateKey)
+    signature = await openWebViewAndCreateSignature(showUi, privateKey, body)
   }
   queryParams.apikey = apiKey
   urlObj.set('query', queryParams)
@@ -715,7 +743,7 @@ const paybisFetch = async (params: {
       'Content-Type': 'application/json'
     }
   }
-  if (signature != null) {
+  if (signature !== undefined) {
     options.headers = {
       ...options.headers,
       'x-request-signature': signature
