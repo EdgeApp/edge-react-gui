@@ -2,11 +2,13 @@
 
 ## Unreleased (develop)
 
+
 ## 4.34.0 (staging)
 
 - added: `PendingTxModal` to route to pending txs for acceleration
 - added: Added "Report Error" button to all `AlertDropdown`s from `showError`.
 - changed: Increased tappable area for the close button of `NotificationCard`
+- changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
 - changed: Upgrade to React Native v0.79
 - changed: Update translations
 
