@@ -460,4 +460,9 @@ export interface Theme {
   txDirFgReceive: string
   txDirFgSend: string
   txDirFgSwap: string
+
+  // guiPluginWebView
+  guiPluginWebView: {
+    backgroundColor: string
+  }
 }

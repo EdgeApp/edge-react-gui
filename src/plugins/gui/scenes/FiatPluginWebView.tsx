@@ -3,10 +3,12 @@ import { WebView, WebViewNavigation } from 'react-native-webview'
 
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { useHandler } from '../../../hooks/useHandler'
+import { config } from '../../../theme/appConfig'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 
 export interface FiatPluginOpenWebViewParams {
   url: string
+  html?: string
   injectedJs?: string
   onClose?: () => void
   onMessage?: (message: string, injectJs: (js: string) => void) => void
@@ -17,7 +19,7 @@ interface Props extends EdgeSceneProps<'guiPluginWebView'> {}
 
 export function FiatPluginWebViewComponent(props: Props): JSX.Element {
   const { route } = props
-  const { injectedJs, onClose, onMessage, onUrlChange, url } = route.params
+  const { injectedJs, onClose, onMessage, onUrlChange, url, html } = route.params
 
   const webViewRef = React.useRef<WebView>(null)
 
@@ -43,6 +45,7 @@ export function FiatPluginWebViewComponent(props: Props): JSX.Element {
   return (
     <SceneWrapper hasTabs>
       <WebView
+        style={config.lightTheme.guiPluginWebView}
         allowUniversalAccessFromFileURLs
         geolocationEnabled
         javaScriptEnabled
@@ -50,7 +53,7 @@ export function FiatPluginWebViewComponent(props: Props): JSX.Element {
         mediaPlaybackRequiresUserAction={false}
         ref={webViewRef}
         scalesPageToFit
-        source={{ uri: url }}
+        source={html ? { html } : { url }}
         onMessage={handleMessage}
         onNavigationStateChange={handleNavigationStateChange}
         injectedJavaScriptBeforeContentLoaded={injectedJs}

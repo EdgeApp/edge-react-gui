@@ -473,5 +473,10 @@ export const testLight: Theme = {
   txDirBgSwap: palette.grayOp70,
   txDirFgReceive: palette.lightGreen,
   txDirFgSend: palette.lightRed,
-  txDirFgSwap: palette.lightGray
+  txDirFgSwap: palette.lightGray,
+
+  // guiPluginWebView
+  guiPluginWebView: {
+    backgroundColor: palette.transparent
+  }
 }

@@ -517,5 +517,10 @@ export const edgeDark: Theme = {
   txDirBgSwap: palette.blueGrayOp70,
   txDirFgReceive: palette.lightGreen,
   txDirFgSend: palette.lightRed,
-  txDirFgSwap: palette.blueGray
+  txDirFgSwap: palette.blueGray,
+
+  // guiPluginWebView
+  guiPluginWebView: {
+    backgroundColor: palette.transparent
+  }
 }
