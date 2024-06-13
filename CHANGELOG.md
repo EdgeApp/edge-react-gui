@@ -1,5 +1,7 @@
 # edge-react-gui
 
+- changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
+
 ## Unreleased
 
 ## 4.10.0
