@@ -150,8 +150,8 @@ export function filterPromoCards(params: {
       promoId
     } = card
 
-    const startDate = asDate(startIsoDate)
-    const endDate = asDate(endIsoDate)
+    const startDate = asDate(startIsoDate ?? '1970-01-01')
+    const endDate = asDate(endIsoDate ?? '1970-01-01')
 
     // Validate balance status. If the card specifies 'noBalance' and
     // accountFunded balances are not ready yet (undefined), omit until balances
