@@ -17,8 +17,8 @@ import { getUi4ImageUri } from '../../../util/CdnUris'
 import { fetchInfo } from '../../../util/network'
 import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp80, fadeInUp140 } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { AccountSyncBar } from '../../progress-indicators/AccountSyncBar'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
-import { WiredProgressBar } from '../../themed/WiredProgressBar'
 import { BalanceCardUi4 } from '../BalanceCardUi4'
 import { BlogCards } from '../BlogCards'
 import { HomeCardUi4 } from '../HomeCardUi4'
@@ -96,7 +96,7 @@ export const HomeSceneUi4 = (props: Props) => {
     <SceneWrapper hasNotifications hasTabs>
       {({ insetStyle, undoInsetStyle }) => (
         <>
-          <WiredProgressBar />
+          <AccountSyncBar />
           <Animated.ScrollView
             onScroll={handleScroll}
             style={undoInsetStyle}
