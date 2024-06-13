@@ -70,7 +70,7 @@ export const PromoCardsUi4 = (props: Props) => {
 
     // We want to show cards even if balances aren't ready yet. We'll just
     // skip over balance-dependent cards until balances are ready
-    setFilteredCards(filterPromoCards(cards, countryCode, accountFunded, promoIds))
+    setFilteredCards(filterPromoCards({ cards, countryCode, accountFunded, accountPromoIds: promoIds }))
   }, [accountFunded, countryCode, promoIds])
 
   const hiddenAccountMessages = useSelector(state => state.account.accountReferral.hiddenAccountMessages)
@@ -97,13 +97,14 @@ export const PromoCardsUi4 = (props: Props) => {
  * Finds the promo cards that are relevant to our application version &
  * other factors.
  */
-function filterPromoCards(cards: PromoCard2[], countryCode: string, accountFunded?: boolean, accountPromoIds?: string[]): FilteredPromoCard[] {
+function filterPromoCards(params: { cards: PromoCard2[]; countryCode: string; accountFunded?: boolean; accountPromoIds?: string[] }): FilteredPromoCard[] {
+  const { cards, countryCode: cc, accountFunded } = params
   const buildNumber = getBuildNumber()
   const currentDate = new Date()
   const osType = Platform.OS.toLowerCase()
   const version = getVersion()
   const osVersion = getOsVersion()
-  countryCode = countryCode.toLowerCase()
+  const countryCode = cc.toLowerCase()
 
   // Find relevant cards:
   const filteredCards: FilteredPromoCard[] = []
