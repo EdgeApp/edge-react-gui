@@ -113,4 +113,44 @@ describe('filterPromoCards', () => {
     expect(result[0].localeMessages.en).toBe('UK message')
     expect(result[1].localeMessages.en).toBe('ES message')
   })
+  test('With installerId', () => {
+    const cards: PromoCard2[] = [
+      { ...dummyCard, promoId: 'bob1', localeMessages: { en: 'Bob1 message' } },
+      { ...dummyCard, promoId: 'bob2', localeMessages: { en: 'Bob2 Message' } },
+      { ...dummyCard, promoId: 'bob3', localeMessages: { en: 'Bob3 Message' } },
+      { ...dummyCard, promoId: 'bob4', localeMessages: { en: 'Bob4 Message' } }
+    ]
+    const result = filterPromoCards({
+      cards,
+      countryCode: 'US',
+      buildNumber,
+      osType,
+      version,
+      osVersion,
+      currentDate,
+      accountReferral: { installerId: 'bob2' }
+    })
+    expect(result.length).toBe(1)
+    expect(result[0].localeMessages.en).toBe('Bob2 Message')
+  })
+  test('With promotions.installerId', () => {
+    const cards: PromoCard2[] = [
+      { ...dummyCard, promoId: 'bob1', localeMessages: { en: 'Bob1 message' } },
+      { ...dummyCard, promoId: 'bob2', localeMessages: { en: 'Bob2 Message' } },
+      { ...dummyCard, promoId: 'bob3', localeMessages: { en: 'Bob3 Message' } },
+      { ...dummyCard, promoId: 'bob4', localeMessages: { en: 'Bob4 Message' } }
+    ]
+    const result = filterPromoCards({
+      cards,
+      countryCode: 'US',
+      buildNumber,
+      osType,
+      version,
+      osVersion,
+      currentDate,
+      accountReferral: { promotions: [{ installerId: 'bob2', hiddenMessages: {}, messages: [], plugins: [] }] }
+    })
+    expect(result.length).toBe(1)
+    expect(result[0].localeMessages.en).toBe('Bob2 Message')
+  })
 })

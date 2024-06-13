@@ -9,6 +9,7 @@ import { hideMessageTweak } from '../../actions/AccountReferralActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { useDispatch, useSelector } from '../../types/reactRedux'
+import { AccountReferral } from '../../types/ReferralTypes'
 import { NavigationBase } from '../../types/routerTypes'
 import { infoServerData } from '../../util/network'
 import { getOsVersion, zeroString } from '../../util/utils'
@@ -45,18 +46,6 @@ export const PromoCardsUi4 = (props: Props) => {
     return unSyncedWallets.length === 0
   })
 
-  /**
-   * promoIds used to filter the promo cards will be checked against both the
-   * actual promotion installerIds *and* the accountReferral installerId, if it
-   * exists.
-   * accountReferral usage directly seems to cause excessive re-renders. Memoize
-   * what we need.
-   **/
-  const promoIds = React.useMemo(() => {
-    const accountReferralId = accountReferral.installerId == null ? [] : [accountReferral.installerId]
-    return [...accountReferral.promotions.map(promotion => promotion.installerId), ...accountReferralId]
-  }, [accountReferral])
-
   // Set account funded status
   React.useEffect(() => {
     if (!walletsSynced) return
@@ -80,7 +69,7 @@ export const PromoCardsUi4 = (props: Props) => {
         cards,
         countryCode,
         accountFunded,
-        accountPromoIds: promoIds,
+        accountReferral,
         buildNumber,
         osType,
         osVersion,
@@ -88,7 +77,7 @@ export const PromoCardsUi4 = (props: Props) => {
         currentDate
       })
     )
-  }, [accountFunded, countryCode, promoIds])
+  }, [accountFunded, accountReferral, countryCode])
 
   const hiddenAccountMessages = useSelector(state => state.account.accountReferral.hiddenAccountMessages)
   const activeCards = React.useMemo(() => filteredCards.filter(card => !hiddenAccountMessages[card.messageId]), [filteredCards, hiddenAccountMessages])
@@ -123,9 +112,16 @@ export function filterPromoCards(params: {
   osVersion: string
   currentDate: Date
   accountFunded?: boolean
-  accountPromoIds?: string[]
+  accountReferral?: Partial<AccountReferral>
 }): FilteredPromoCard[] {
-  const { cards, countryCode, accountFunded, buildNumber, osType, version, osVersion, currentDate } = params
+  const { cards, countryCode, accountFunded, buildNumber, osType, version, osVersion, currentDate, accountReferral } = params
+
+  let accountPromoIds: string[] | undefined
+  if (accountReferral != null) {
+    const accountReferralId = accountReferral?.installerId == null ? [] : [accountReferral.installerId]
+    const promotions = accountReferral.promotions ?? []
+    accountPromoIds = [...promotions.map(promotion => promotion.installerId), ...accountReferralId]
+  }
 
   // Find relevant cards:
   const ccLowerCase = countryCode?.toLowerCase()
@@ -189,9 +185,8 @@ export function filterPromoCards(params: {
     if (startIsoDate != null && currentDate.valueOf() < startDate.valueOf()) continue
     if (endIsoDate != null && currentDate.valueOf() > endDate.valueOf()) continue
 
-    // Validate promoId (temporarily disabled)
-    // if (promoId != null && (accountPromoIds == null || !accountPromoIds.some(accountPromoId => accountPromoId === promoId))) continue
-    if (promoId != null) continue
+    // Validate promoId
+    if (promoId != null && (accountPromoIds == null || !accountPromoIds.some(accountPromoId => accountPromoId === promoId))) continue
 
     const messageId = shajs('sha256')
       .update(localeMessages.en_US ?? JSON.stringify(card), 'utf8')
