@@ -65,7 +65,6 @@ export const PromoCardsUi4 = (props: Props) => {
 
   // Check for PromoCard2 from info server:
   React.useEffect(() => {
-    if (countryCode == null) return
     const cards = infoServerData.rollup?.promoCards2 ?? []
 
     // We want to show cards even if balances aren't ready yet. We'll just
@@ -79,7 +78,7 @@ export const PromoCardsUi4 = (props: Props) => {
     setFilteredCards(
       filterPromoCards({
         cards,
-        countryCode: countryCode.toLowerCase(),
+        countryCode,
         accountFunded,
         accountPromoIds: promoIds,
         buildNumber,
@@ -117,7 +116,7 @@ export const PromoCardsUi4 = (props: Props) => {
  */
 export function filterPromoCards(params: {
   cards: PromoCard2[]
-  countryCode: string
+  countryCode?: string
   buildNumber: string
   osType: string
   version: string
@@ -129,6 +128,7 @@ export function filterPromoCards(params: {
   const { cards, countryCode, accountFunded, buildNumber, osType, version, osVersion, currentDate } = params
 
   // Find relevant cards:
+  const ccLowerCase = countryCode?.toLowerCase()
   const filteredCards: FilteredPromoCard[] = []
   for (const card of cards) {
     const {
@@ -172,9 +172,12 @@ export function filterPromoCards(params: {
     if (maxBuildNum != null && maxBuildNum < buildNumber) continue
 
     // Validate country
-    const isCountryInclude = countryCodes.length === 0 || countryCodes.map(countryCode => countryCode.toLowerCase()).includes(countryCode)
-    const isCountryExclude = excludeCountryCodes.length > 0 && excludeCountryCodes.map(countryCode => countryCode.toLowerCase()).includes(countryCode)
-    if (!isCountryInclude || isCountryExclude) continue
+    if (excludeCountryCodes.length > 0 || countryCodes.length > 0) {
+      if (ccLowerCase == null) continue
+      const isCountryInclude = countryCodes.length === 0 || countryCodes.map(cc => cc.toLowerCase()).includes(ccLowerCase)
+      const isCountryExclude = excludeCountryCodes.length > 0 && excludeCountryCodes.map(cc => cc.toLowerCase()).includes(ccLowerCase)
+      if (!isCountryInclude || isCountryExclude) continue
+    }
 
     // Validate OS type
     if (osTypes.length > 0 && !osTypes.map(osType => osType).includes(osType)) continue
