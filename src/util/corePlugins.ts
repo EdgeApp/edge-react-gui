@@ -93,6 +93,7 @@ export const swapPlugins = {
   tombSwap: ENV.TOMB_SWAP_INIT,
   velodrome: true,
   xrpdex: ENV.XRPDEX_INIT,
+  '0xgasless': ENV['0XGASLESS_INIT'],
 
   cosmosibc: true,
   transfer: true
