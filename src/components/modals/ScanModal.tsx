@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { Linking, View } from 'react-native'
 import { AirshipBridge, AirshipModal } from 'react-native-airship'
-import { RNCamera } from 'react-native-camera'
 import { launchImageLibrary } from 'react-native-image-picker'
 import RNPermissions from 'react-native-permissions'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import { Camera, Code, useCameraDevice, useCodeScanner } from 'react-native-vision-camera'
 import RNQRGenerator from 'rn-qr-generator'
 
 import { useLayout } from '../../hooks/useLayout'
@@ -47,6 +47,13 @@ export const ScanModal = (props: Props) => {
   const { width: windowWidth, height: windowHeight } = useSafeAreaFrame()
   const isLandscape = windowWidth > windowHeight
 
+  const device = useCameraDevice('back')
+  const codeScanner = useCodeScanner({
+    codeTypes: ['qr'],
+    onCodeScanned: codes => {
+      handleBarCodeRead(codes)
+    }
+  })
   const cameraPermission = useSelector(state => state.permissions.camera)
   const [torchEnabled, setTorchEnabled] = React.useState(false)
   const [scanEnabled, setScanEnabled] = React.useState(false)
@@ -63,9 +70,10 @@ export const ScanModal = (props: Props) => {
     return () => setScanEnabled(false)
   }, [])
 
-  const handleBarCodeRead = (result: { data: string }) => {
+  const handleBarCodeRead = (codes: Code[]) => {
+    setScanEnabled(false)
     triggerHaptic('impactLight')
-    bridge.resolve(result.data)
+    bridge.resolve(codes[0].value)
   }
 
   const handleSettings = async () => {
@@ -152,18 +160,19 @@ export const ScanModal = (props: Props) => {
     }
 
     if (cameraPermission === RNPermissions.RESULTS.GRANTED || cameraPermission === RNPermissions.RESULTS.LIMITED) {
-      const flashMode = torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
-
       return (
         <>
           <View style={styles.cameraContainer} onLayout={handleLayoutCameraContainer}>
-            <RNCamera
-              style={styles.cameraArea}
-              captureAudio={false}
-              flashMode={flashMode}
-              onBarCodeRead={handleBarCodeRead}
-              type={RNCamera.Constants.Type.back}
-            />
+            {device == null ? null : (
+              <Camera
+                style={styles.cameraArea}
+                audio={false}
+                torch={torchEnabled ? 'on' : 'off'}
+                codeScanner={codeScanner}
+                device={device}
+                isActive={scanEnabled}
+              />
+            )}
           </View>
 
           <QrPeephole
@@ -183,7 +192,7 @@ export const ScanModal = (props: Props) => {
               <View style={styles.peepholeSpace} onLayout={handleLayoutPeepholeSpace} />
               <View style={[styles.buttonsContainer, { flexDirection: isLandscape ? 'column-reverse' : 'row' }]}>
                 <EdgeTouchableOpacity style={styles.iconButton} onPress={handleFlash}>
-                  <Ionicon style={styles.icon} name={flashMode ? 'flash' : 'flash-outline'} />
+                  <Ionicon style={styles.icon} name={torchEnabled ? 'flash' : 'flash-outline'} />
                   <EdgeText>{lstrings.fragment_send_flash}</EdgeText>
                 </EdgeTouchableOpacity>
                 <EdgeTouchableOpacity style={styles.iconButton} onPress={handleAlbum}>
