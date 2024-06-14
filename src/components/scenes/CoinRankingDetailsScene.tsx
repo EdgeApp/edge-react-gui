@@ -1,3 +1,4 @@
+import { useIsFocused } from '@react-navigation/native'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -75,12 +76,25 @@ const COLUMN_RIGHT_DATA_KEYS: Array<keyof CoinRankingData> = [
 const CoinRankingDetailsSceneComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { route } = props
+  const { route, navigation } = props
   const { coinRankingData } = route.params
   const { currencyCode, currencyName } = coinRankingData
   const currencyCodeUppercase = currencyCode.toUpperCase()
 
   const defaultFiat = useSelector(state => getDefaultFiat(state))
+
+  // In case the user changes their default fiat while viewing this scene, we
+  // want to go back since the parent scene handles fetching data.
+  const isFocused = useIsFocused()
+  const initFiat = React.useState<string>(defaultFiat)[0]
+  React.useEffect(() => {
+    if (isFocused && initFiat !== defaultFiat) {
+      // Take this stale scene off the stack
+      navigation.pop()
+      // Force a refresh & refetch
+      navigation.navigate('coinRanking', {})
+    }
+  }, [defaultFiat, initFiat, isFocused, navigation])
 
   const imageUrlObject = React.useMemo(
     () => ({

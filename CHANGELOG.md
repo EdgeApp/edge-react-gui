@@ -10,6 +10,8 @@
 - changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
 - fixed: Stabilize the account sync bar progress motion.
 - fixed: Slight animation stutter when opening the CountryListModal
+- fixed: Account-level Default Fiat setting not being correctly used in Markets View Scenes
+- fixed: Changing Default Fiat setting does not properly refresh CoinRankingDetailsScene
 
 ## 4.8.0
 
