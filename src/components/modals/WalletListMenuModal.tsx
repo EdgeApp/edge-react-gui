@@ -5,14 +5,14 @@ import { AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { walletListMenuAction, WalletListMenuKey } from '../../actions/WalletListMenuActions'
-import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
+import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
-import { getCurrencyCode, getCurrencyInfos, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
@@ -184,23 +184,20 @@ export function WalletListMenuModal(props: Props) {
         })
       }
 
-      const isSplittable = await account.listSplittableWalletTypes(wallet.id)
-
-      const currencyInfos = getCurrencyInfos(account)
-      for (const splitWalletType of isSplittable) {
-        const info = currencyInfos.find(({ walletType }) => walletType === splitWalletType)
-        if (info == null || getSpecialCurrencyInfo(info.pluginId).isSplittingDisabled) continue
-        splitPluginIds.push(info.pluginId)
+      const splitTypes = await account.listSplittableWalletTypes(wallet.id)
+      const splitPluginIds: string[] = []
+      for (const splitType of splitTypes) {
+        const pluginId = Object.keys(account.currencyConfig).find(pluginId => account.currencyConfig[pluginId].currencyInfo.walletType === splitType)
+        if (pluginId == null) continue
+        if (SPECIAL_CURRENCY_INFO[pluginId]?.isSplittingDisabled === true) continue
+        splitPluginIds.push(pluginId)
       }
-      setSplitPluginIds([...splitPluginIds])
-      if (splitPluginIds.length > 0) {
-        result.push({ label: lstrings.fragment_wallets_split_wallet, value: 'split' })
-      }
+      setSplitPluginIds(splitPluginIds)
 
       for (const option of WALLET_LIST_MENU) {
         const { pluginIds, label, value } = option
 
-        if (value === 'split' && !isSplittable) continue
+        if (value === 'split' && splitPluginIds.length <= 0) continue
 
         if (Array.isArray(pluginIds) && !pluginIds.includes(pluginId)) continue
 
