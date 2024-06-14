@@ -3,6 +3,8 @@
 ## Unreleased
 
 - added: "Force Light Account Creation" developer mode setting
+- added: Allow promoCards to send promoCodes to fiat partners for special pricing
+- added: Allow promoCard URLs to specify a currency pluginId to have replaced with a public address
 - changed: Light account backup notification card now persists no matter what while logged in to a light account
 - changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
 - fixed: Stabilize the account sync bar progress motion.

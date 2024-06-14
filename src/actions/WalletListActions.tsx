@@ -89,7 +89,7 @@ const getFirstCurrencyAddress = async (params: { pluginId?: string; currencyCode
     <ButtonsModal
       bridge={bridge}
       title={lstrings.fragment_create_wallet_create_wallet}
-      message={sprintf(lstrings.wallet_list_referral_link_ask_wallet_creation, currencyCode)}
+      message={sprintf(lstrings.wallet_list_referral_link_ask_wallet_creation_1s, currencyCode)}
       buttons={{
         ok: { label: lstrings.yes },
         cancel: { label: lstrings.no }
