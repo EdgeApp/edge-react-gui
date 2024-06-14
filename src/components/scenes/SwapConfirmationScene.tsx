@@ -58,7 +58,7 @@ interface Section {
 
 export const SwapConfirmationScene = (props: Props) => {
   const { route, navigation } = props
-  const { selectedQuote: initialSelectedQuote, quotes, onApprove } = route.params
+  const { quotes, onApprove } = route.params
 
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -69,7 +69,7 @@ export const SwapConfirmationScene = (props: Props) => {
 
   const swapRequestOptions = useSwapRequestOptions()
 
-  const [selectedQuote, setSelectedQuote] = useState(initialSelectedQuote)
+  const [selectedQuote, setSelectedQuote] = useState(pickBestQuote(quotes))
   const [calledApprove, setCalledApprove] = useState(false)
 
   const { request } = selectedQuote
@@ -395,4 +395,48 @@ const getSwapInfo = (quote: EdgeSwapQuote): ThunkAction<Promise<GuiSwapInfo>> =>
     }
     return swapInfo
   }
+}
+
+const getBetterQuoteRate = (quoteA: EdgeSwapQuote, quoteB: EdgeSwapQuote): EdgeSwapQuote => {
+  const aRate = div(quoteA.toNativeAmount, quoteA.fromNativeAmount, DECIMAL_PRECISION)
+  const bRate = div(quoteB.toNativeAmount, quoteB.fromNativeAmount, DECIMAL_PRECISION)
+  return gte(aRate, bRate) ? quoteA : quoteB
+}
+
+export const pickBestQuote = (quotes: EdgeSwapQuote[]): EdgeSwapQuote => {
+  const best = quotes.reduce((bestQuote, quote) => {
+    const { swapInfo, isEstimate } = quote
+    const { isDex = false } = swapInfo
+    const { isEstimate: isBestQuoteEstimate } = bestQuote
+    const isBestQuoteDex = bestQuote.swapInfo.isDex === true
+
+    // If the quote isDex and has a better rate, pick the quote
+    if (isDex) {
+      return getBetterQuoteRate(quote, bestQuote)
+    }
+
+    // If best quote isDex and new quote is fixed. Pick the better rate
+    if (isBestQuoteDex) {
+      if (!isEstimate) {
+        return getBetterQuoteRate(quote, bestQuote)
+      }
+      return bestQuote
+    }
+
+    // Neither quotes are isDex. If both quotes are estimates or fixed,
+    // pick the better rate
+    if ((!isEstimate && !isBestQuoteEstimate) || (isEstimate && isBestQuoteEstimate)) {
+      return getBetterQuoteRate(quote, bestQuote)
+    }
+
+    // Pick the fixed quote
+    if (!isEstimate) {
+      return quote
+    } else {
+      // This has to be a fixed quote
+      return bestQuote
+    }
+  })
+
+  return best
 }
