@@ -195,7 +195,7 @@
   "wallet_list_add_token": "Añadir token",
   "wallet_list_referral_link_currency_invalid": "La moneda a crear no es válida",
   "wallet_list_referral_link_currency_loading": "Un momento. Creando la cartera necesaria para esta promoción",
-  "wallet_list_referral_link_ask_wallet_creation": "Necesitas una cartera de %s para esta promoción. ¿Quieres crear una?",
+  "wallet_list_referral_link_ask_wallet_creation_1s": "You need a %1$s wallet for this promotion. Would you like to create one?",
   "wallet_list_wallet_search": "Buscar carteras",
   "compromised_key_label": "Lave comprometida",
   "create_wallet_choice_new_button": "Crear nueva cartera",
