@@ -1,6 +1,7 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import { Disklet } from 'disklet'
 import { EdgeAccount, EdgeTransaction } from 'edge-core-js'
+import { PluginPromotion } from 'edge-info-server'
 import * as React from 'react'
 import { Linking, Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
@@ -51,6 +52,7 @@ export const executePlugin = async (params: {
   longPress?: boolean
   navigation: NavigationBase
   paymentType?: FiatPaymentType
+  pluginPromotion?: PluginPromotion
   providerId?: string
   regionCode: FiatPluginRegionCode
   onLogEvent: OnLogEvent
@@ -66,6 +68,7 @@ export const executePlugin = async (params: {
     longPress = false,
     navigation,
     paymentType,
+    pluginPromotion,
     providerId,
     regionCode,
     onLogEvent
@@ -286,6 +289,7 @@ export const executePlugin = async (params: {
     paymentTypes,
     forceFiatCurrencyCode,
     defaultFiatAmount,
+    pluginPromotion,
     providerId
   }
   await plugin.startPlugin(startPluginParams)

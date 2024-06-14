@@ -143,6 +143,7 @@ export function filterPromoCards(params: {
       osTypes = [],
       osVersions = [],
       startIsoDate,
+      pluginPromotions,
       promoId
     } = card
 
@@ -197,6 +198,7 @@ export function filterPromoCards(params: {
       ctaButton,
       dismissable,
       localeMessages,
+      pluginPromotions,
       messageId
     })
   }
