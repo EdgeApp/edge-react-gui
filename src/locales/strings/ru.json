@@ -195,7 +195,7 @@
   "wallet_list_add_token": "Добавить токен",
   "wallet_list_referral_link_currency_invalid": "Валюта для создания недействительна",
   "wallet_list_referral_link_currency_loading": "Подождите. Создание кошелька необходимого для этой акции",
-  "wallet_list_referral_link_ask_wallet_creation": "Для этого промо-акции необходим кошелек %s . Вы хотите создать его?",
+  "wallet_list_referral_link_ask_wallet_creation_1s": "You need a %1$s wallet for this promotion. Would you like to create one?",
   "wallet_list_wallet_search": "Search Wallets",
   "compromised_key_label": "Compromised Key",
   "create_wallet_choice_new_button": "Создать Новый Кошелёк",
