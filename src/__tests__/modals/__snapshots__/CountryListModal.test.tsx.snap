@@ -1908,7 +1908,6 @@ exports[`CountryListModal should render with a country list 1`] = `
       onScroll={[Function]}
       onScrollBeginDrag={[Function]}
       onScrollEndDrag={[Function]}
-      onViewableItemsChanged={[Function]}
       removeClippedSubviews={false}
       renderItem={[Function]}
       renderScrollComponent={[Function]}
@@ -1919,14 +1918,7 @@ exports[`CountryListModal should render with a country list 1`] = `
         }
       }
       stickyHeaderIndices={[]}
-      viewabilityConfigCallbackPairs={
-        [
-          {
-            "onViewableItemsChanged": [Function],
-            "viewabilityConfig": undefined,
-          },
-        ]
-      }
+      viewabilityConfigCallbackPairs={[]}
       waitFor={
         [
           {
