@@ -313,7 +313,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'EOS',
     dummyPublicAddress: 'edgecreator2',
     initWalletName: lstrings.string_first_eos_wallet_name,
-    isAccountActivationRequired: true,
+    isAccountActivationRequired: false,
     isImportKeySupported: true,
     keysOnlyMode: true,
     needsAccountNameSetup: true,
@@ -322,7 +322,8 @@ export const SPECIAL_CURRENCY_INFO: {
   telos: {
     initWalletName: lstrings.string_first_telos_wallet_name,
     chainCode: 'TLOS',
-    isAccountActivationRequired: true,
+    keysOnlyMode: true,
+    isAccountActivationRequired: false,
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: true,
     noChangeMiningFee: true,
