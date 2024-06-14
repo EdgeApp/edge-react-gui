@@ -35,7 +35,16 @@ export function linkReferralWithCurrencies(navigation: NavigationBase, uri: stri
     if (currencyCodeMatches != null) {
       for (const match of currencyCodeMatches) {
         const currencyCode = match.toUpperCase().replace(/%/g, '')
-        const address = await getFirstCurrencyAddress(currencyCode, getState)
+        const address = await getFirstCurrencyAddress({ currencyCode, getState })
+        if (address == null) return
+        uri = uri.replace(match, address)
+      }
+    }
+    const pluginIdMatches = uri.match(/{{([a-zA-Z]+)}}/g)
+    if (pluginIdMatches != null) {
+      for (const match of pluginIdMatches) {
+        const pluginId = match.replace(/{{/g, '').replace(/}}/g, '')
+        const address = await getFirstCurrencyAddress({ pluginId, getState })
         if (address == null) return
         uri = uri.replace(match, address)
       }
@@ -47,13 +56,28 @@ export function linkReferralWithCurrencies(navigation: NavigationBase, uri: stri
   }
 }
 
-const getFirstCurrencyAddress = async (currencyCode: string, getState: GetState): Promise<string | undefined> => {
+const getFirstCurrencyAddress = async (params: { pluginId?: string; currencyCode?: string; getState: GetState }): Promise<string | undefined> => {
+  const { getState } = params
   const state = getState()
   const { account } = state.core
   const { currencyWallets, currencyConfig } = account
+  let { pluginId, currencyCode } = params
+
+  // If we have a plugin ID, use that
+  try {
+    if (pluginId != null) {
+      currencyCode = currencyConfig[pluginId].currencyInfo.currencyCode
+    } else if (currencyCode != null) {
+      pluginId = Object.keys(currencyConfig).find(pluginId => currencyConfig[pluginId].currencyInfo.currencyCode === currencyCode)
+    }
+  } catch (e) {}
+
+  if (pluginId == null || currencyCode == null) {
+    throw new Error(lstrings.wallet_list_referral_link_currency_invalid)
+  }
 
   // If we have a wallet, use that:
-  const walletId = Object.keys(currencyWallets).find(walletId => currencyWallets[walletId].currencyInfo.currencyCode === currencyCode)
+  const walletId = Object.keys(currencyWallets).find(walletId => currencyWallets[walletId].currencyInfo.pluginId === pluginId)
   if (walletId != null) {
     const wallet = currencyWallets[walletId]
     const address = await wallet.getReceiveAddress({ tokenId: null })
@@ -75,11 +99,6 @@ const getFirstCurrencyAddress = async (currencyCode: string, getState: GetState)
   if (result !== 'ok') return
 
   // Create the wallet:
-  const pluginId = Object.keys(currencyConfig).find(pluginId => currencyConfig[pluginId].currencyInfo.currencyCode === currencyCode)
-  if (pluginId == null) {
-    throw new Error(lstrings.wallet_list_referral_link_currency_invalid)
-  }
-
   const { walletType } = currencyConfig[pluginId].currencyInfo
   const { defaultIsoFiat } = state.ui.settings
 
