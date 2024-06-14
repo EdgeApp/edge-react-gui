@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { ViewToken } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 import FastImage from 'react-native-fast-image'
 import { getCountry } from 'react-native-localize'
@@ -18,17 +17,11 @@ interface Props {
   bridge: AirshipBridge<string>
 }
 
-interface CountryListViewToken extends ViewToken {
-  item: CountryData
-}
-
 export const CountryListModal = ({ countryCode: rawCountryCode, bridge }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const countryCode = rawCountryCode === '' ? getCountry() ?? 'US' : rawCountryCode
-
-  const [visibleRows, setVisibleRows] = React.useState<CountryListViewToken[]>([])
 
   const rowComponent = ({ filename, name, 'alpha-2': alpha }: CountryData) => {
     const logoName = filename ?? name.toLowerCase().replace(' ', '-')
@@ -54,14 +47,14 @@ export const CountryListModal = ({ countryCode: rawCountryCode, bridge }: Props)
     else countryCodes.push(country)
   }
 
-  const handleSubmitEditing = useHandler(() => {
-    if (visibleRows.length > 0) {
-      bridge.resolve(visibleRows[0].item['alpha-2'])
-    }
-  })
+  const handleSubmitEditing = useHandler((text: string) => {
+    // Filter the countryCodes array based on the input text
+    const filteredCountries = countryCodes.filter(country => rowDataFilter(text, country))
 
-  const onViewableItemsChanged = useHandler((info: { viewableItems: ViewToken[] }) => {
-    setVisibleRows(info.viewableItems)
+    // Resolve the first filtered country's alpha-2 code
+    if (filteredCountries.length > 0) {
+      bridge.resolve(filteredCountries[0]['alpha-2'])
+    }
   })
 
   return (
@@ -74,7 +67,6 @@ export const CountryListModal = ({ countryCode: rawCountryCode, bridge }: Props)
       onSubmitEditing={handleSubmitEditing}
       rowComponent={rowComponent}
       rowDataFilter={rowDataFilter}
-      onViewableItemsChanged={onViewableItemsChanged}
     />
   )
 }
