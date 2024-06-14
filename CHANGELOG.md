@@ -14,6 +14,7 @@
 - fixed: Slight animation stutter when opening the CountryListModal
 - fixed: Account-level Default Fiat setting not being correctly used in Markets View Scenes
 - fixed: Changing Default Fiat setting does not properly refresh CoinRankingDetailsScene
+- fixed: Possible for keyboard to cover input fields in some Android WebViews
 - fixed: Call the correct method when rejecting a WalletConnect session
 
 ## 4.8.0
