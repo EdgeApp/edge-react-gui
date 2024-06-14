@@ -177,9 +177,10 @@ export const asDefaultScreen = asValue('home', 'assets')
 const asDeviceSettingsInner = asObject({
   defaultScreen: asMaybe(asDefaultScreen, 'home'),
   developerPluginUri: asMaybe(asString),
+  deviceNotifDismissInfo: asMaybe(asDeviceNotifDismissInfo, asDeviceNotifDismissInfo({})),
   disableAnimations: asMaybe(asBoolean, false),
   forceLightAccountCreate: asMaybe(asBoolean, false),
-  deviceNotifDismissInfo: asMaybe(asDeviceNotifDismissInfo, asDeviceNotifDismissInfo({}))
+  isSurveyDiscoverShown: asMaybe(asBoolean, false)
 })
 
 export const asLocalAccountSettings = asMaybe(asLocalAccountSettingsInner, () => asLocalAccountSettingsInner({}))
