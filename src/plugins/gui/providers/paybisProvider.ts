@@ -64,6 +64,10 @@ const asPaymentMethodId = asValue(
   'method-id-credit-card',
   'method-id-credit-card-out',
 
+  // XXX Hack. Fake payment methods for googlepay/applepay
+  'fake-id-googlepay',
+  'fake-id-applepay',
+
   // Colombia
   'method-id_bridgerpay_directa24_pse',
   'method-id_bridgerpay_directa24_colombia_payout',
@@ -269,6 +273,10 @@ const EDGE_TO_PAYBIS_CURRENCY_MAP: StringMap = Object.entries(PAYBIS_TO_EDGE_CUR
 const PAYMENT_METHOD_MAP: { [Payment in PaymentMethodId]: FiatPaymentType } = {
   'method-id-credit-card': 'credit',
   'method-id-credit-card-out': 'credit',
+
+  // XXX Hack. Fake payment methods for googlepay/applepay
+  'fake-id-googlepay': 'googlepay',
+  'fake-id-applepay': 'applepay',
 
   // Colombia
   'method-id_bridgerpay_directa24_pse': 'pse',
@@ -757,6 +765,20 @@ const initializeBuyPairs = async ({ url, apiKey }: InitializePairs): Promise<voi
   }
 
   if (paybisPairs.buy != null) {
+    // XXX Hack. Paybis doesn't have a specific payment method for applepay or googlepay
+    // so if we see a creditcard method, we just dupe it for googlepay and applepay.
+    const ccMethod = paybisPairs.buy.data.find(pair => pair.name === 'method-id-credit-card')
+    if (ccMethod != null) {
+      paybisPairs.buy.data.push({
+        name: 'fake-id-googlepay',
+        pairs: ccMethod.pairs
+      })
+      paybisPairs.buy.data.push({
+        name: 'fake-id-applepay',
+        pairs: ccMethod.pairs
+      })
+    }
+
     for (const paymentMethodPairs of paybisPairs.buy.data) {
       const { name, pairs } = paymentMethodPairs
       if (name == null) continue
