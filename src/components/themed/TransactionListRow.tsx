@@ -9,7 +9,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { formatCategory, getTxActionDisplayInfo, pluginIdIcons, splitCategory } from '../../actions/CategoriesActions'
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { displayFiatAmount } from '../../hooks/useFiatText'
@@ -87,7 +87,7 @@ export function TransactionListRow(props: Props) {
   const historicalRate = useHistoricalRate(`${currencyCode}_${defaultIsoFiat}`, isoDate)
   const amountFiat = (defaultAmountFiat ?? 0) > 0 ? defaultAmountFiat ?? 0 : historicalRate * Number(cryptoExchangeAmount)
   const fiatAmount = displayFiatAmount(amountFiat)
-  const fiatSymbol = getSymbolFromCurrency(defaultIsoFiat)
+  const fiatSymbol = getFiatSymbol(defaultIsoFiat)
 
   const fiatAmountString = `${fiatSymbol}${fiatAmount}`
 

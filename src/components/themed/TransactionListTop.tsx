@@ -12,7 +12,7 @@ import { sprintf } from 'sprintf-js'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
-import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
 import { useAsyncNavigation } from '../../hooks/useAsyncNavigation'
 import { useHandler } from '../../hooks/useHandler'
@@ -428,7 +428,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
       this.props
     const styles = getStyles(theme)
 
-    const fiatSymbol = getSymbolFromCurrency(defaultFiat)
+    const fiatSymbol = getFiatSymbol(defaultFiat)
 
     const nativeBalance = balanceMap.get(tokenId) ?? '0'
     const cryptoAmount = convertNativeToDenomination(displayDenomination.multiplier)(nativeBalance) // convert to correct denomination
@@ -483,7 +483,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
 
     if (SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]?.isStakingSupported !== true) return null
 
-    const fiatSymbol = getSymbolFromCurrency(defaultFiat)
+    const fiatSymbol = getFiatSymbol(defaultFiat)
 
     const { locked } = getFioStakingBalances(wallet.stakingStatus)
 

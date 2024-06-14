@@ -3,7 +3,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { toPercentString } from '../../locales/intl'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
@@ -58,7 +58,7 @@ const CoinRow = (props: CoinRowProps) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const defaultFiat = useSelector(state => getDefaultFiat(state))
-  const fiatSymbol = React.useMemo(() => getSymbolFromCurrency(defaultFiat), [defaultFiat])
+  const fiatSymbol = React.useMemo(() => getFiatSymbol(defaultFiat), [defaultFiat])
 
   const { assetId, currencyCode, price, percentChange, imageUrl } = coinRow
   const key = `${index}-${currencyCode}`

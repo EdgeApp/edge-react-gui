@@ -5,7 +5,7 @@ import { StyleSheet, View } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, formatTime } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
@@ -229,7 +229,7 @@ export const FioRequestRow = connect<StateProps, {}, OwnProps>(
     } catch (e: any) {
       console.log('No denomination for this Token Code -', tokenCode)
     }
-    const fiatSymbol = getSymbolFromCurrency(removeIsoPrefix(defaultIsoFiat))
+    const fiatSymbol = getFiatSymbol(removeIsoPrefix(defaultIsoFiat))
     const exchangeRates = state.exchangeRates
 
     const rateKey = `${tokenCode}_${defaultIsoFiat}`

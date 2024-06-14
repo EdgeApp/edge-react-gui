@@ -1,6 +1,6 @@
 import { abs, div, lt, toFixed } from 'biggystring'
 
-import { getSymbolFromCurrency, USD_FIAT } from '../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol, USD_FIAT } from '../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { convertCurrency } from '../selectors/WalletSelectors'
@@ -66,7 +66,7 @@ export const useFiatText = (props: Props): string => {
     : '0'
 
   const lessThanSymbol = isSubCentTruncationActive ? '<' : ''
-  const fiatSymbol = hideFiatSymbol ? '' : `${getSymbolFromCurrency(isoFiatCurrencyCode)}${fiatSymbolSpace || hideBalance ? ' ' : ''}`
+  const fiatSymbol = hideFiatSymbol ? '' : `${getFiatSymbol(isoFiatCurrencyCode)}${fiatSymbolSpace || hideBalance ? ' ' : ''}`
   const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
   return `${lessThanSymbol}${fiatSymbol}${fiatString}${fiatCurrencyCode}`
 }

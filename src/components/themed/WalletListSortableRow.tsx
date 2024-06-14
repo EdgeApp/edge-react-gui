@@ -4,7 +4,7 @@ import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
-import { FIAT_PRECISION, getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { FIAT_PRECISION, getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, formatNumberInput } from '../../locales/intl'
 import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { calculateFiatBalance } from '../../selectors/WalletSelectors'
@@ -45,7 +45,7 @@ function WalletListSortableRowComponent(props: Props) {
   }
 
   const { currencyCode } = wallet.currencyInfo
-  const fiatSymbol = getSymbolFromCurrency(defaultIsoFiat)
+  const fiatSymbol = getFiatSymbol(defaultIsoFiat)
   const displayDenomination = dispatch((_, getState) => selectDisplayDenom(getState(), wallet.currencyConfig, null))
   const multiplier = displayDenomination.multiplier
   const name = getWalletName(wallet)

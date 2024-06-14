@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 import { Fontello } from '../../../assets/vector'
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
-import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../../constants/WalletAndCurrencyConstants'
 import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
 import { ActionDisplayInfo } from '../../../controllers/action-queue/types'
 import { checkEffectIsDone } from '../../../controllers/action-queue/util/checkEffectIsDone'
@@ -326,7 +326,7 @@ export const useFiatTotal = (wallet: EdgeCurrencyWallet, tokenAmounts: Array<{ t
 }
 
 export const displayFiatTotal = (isoFiatCurrencyCode: string, fiatAmount: string) => {
-  const fiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
+  const fiatSymbol = getFiatSymbol(isoFiatCurrencyCode)
 
   return `${fiatSymbol}${formatFiatString({ autoPrecision: true, fiatAmount })}`
 }

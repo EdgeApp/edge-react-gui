@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
 
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useWatch } from '../../hooks/useWatch'
 import { toPercentString } from '../../locales/intl'
@@ -33,7 +33,7 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
 
   const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
   const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
-  const fiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
+  const fiatSymbol = getFiatSymbol(isoFiatCurrencyCode)
 
   const collateralTotal = useFiatTotal(currencyWallet, collaterals)
   const displayCollateralTotal = `${fiatSymbol}${formatFiatString({ autoPrecision: true, fiatAmount: collateralTotal })}`

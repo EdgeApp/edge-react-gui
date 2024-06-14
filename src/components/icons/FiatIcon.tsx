@@ -2,7 +2,7 @@ import * as React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { fixFiatCurrencyCode } from '../../util/utils'
@@ -31,7 +31,7 @@ export const FiatIconComponent = (props: Props) => {
     () => ({ uri: mono ? fiatBackgroundIcon.symbolImageDarkMono : fiatBackgroundIcon.symbolImage }),
     [fiatBackgroundIcon.symbolImage, fiatBackgroundIcon.symbolImageDarkMono, mono]
   )
-  const fiatSymbol = getSymbolFromCurrency(fixFiatCurrencyCode(fiatCurrencyCode))
+  const fiatSymbol = getFiatSymbol(fixFiatCurrencyCode(fiatCurrencyCode))
 
   // Main view styling
   const viewStyle = React.useMemo(() => {

@@ -6,7 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../../actions/FioAddressActions'
 import fioLogo from '../../../assets/images/fio/fio_logo.png'
-import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useWatch } from '../../../hooks/useWatch'
 import { formatNumber, formatTimeDate } from '../../../locales/intl'
@@ -200,7 +200,7 @@ export const FioStakingOverviewScene = connect<StateProps, DispatchProps, OwnPro
       stakingFiatBalanceFormat,
       currencyDenomination,
       fiatCurrencyCode: defaultFiat,
-      fiatSymbol: getSymbolFromCurrency(defaultIsoFiat)
+      fiatSymbol: getFiatSymbol(defaultIsoFiat)
     }
   },
   dispatch => ({

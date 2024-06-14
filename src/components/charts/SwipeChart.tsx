@@ -7,7 +7,7 @@ import Animated, { Easing, SharedValue, useAnimatedProps, useAnimatedStyle, useS
 import Svg, { Circle, CircleProps, LinearGradient, Stop } from 'react-native-svg'
 import { sprintf } from 'sprintf-js'
 
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { formatFiatString } from '../../hooks/useFiatText'
@@ -150,7 +150,7 @@ const SwipeChartComponent = (params: Props) => {
   const chartWidth = React.useRef(0)
   const chartHeight = React.useRef(0)
 
-  const fiatSymbol = React.useMemo(() => getSymbolFromCurrency(defaultFiat), [defaultFiat])
+  const fiatSymbol = React.useMemo(() => getFiatSymbol(defaultFiat), [defaultFiat])
 
   // Min/Max Price Calcs
   const prices = React.useMemo(() => chartData.map(dataPoint => dataPoint.y), [chartData])

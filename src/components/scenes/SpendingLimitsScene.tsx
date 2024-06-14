@@ -4,7 +4,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import { writeSpendingLimits } from '../../actions/LocalSettingsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -27,7 +27,7 @@ export const SpendingLimitsScene = (props: Props) => {
   const dispatch = useDispatch()
 
   const account = useSelector(state => state.core.account)
-  const currencySymbol = useSelector(state => getSymbolFromCurrency(state.ui.settings.defaultFiat))
+  const currencySymbol = useSelector(state => getFiatSymbol(state.ui.settings.defaultFiat))
   const transactionSpendingLimit = useSelector(state => state.ui.settings.spendingLimits.transaction)
 
   const [password, setPassword] = React.useState('')

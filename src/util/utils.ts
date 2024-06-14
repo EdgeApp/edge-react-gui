@@ -11,7 +11,7 @@ import {
   FEE_COLOR_THRESHOLD,
   FIAT_CODES_SYMBOLS,
   FIAT_PRECISION,
-  getSymbolFromCurrency,
+  getFiatSymbol,
   SPECIAL_CURRENCY_INFO
 } from '../constants/WalletAndCurrencyConstants'
 import { toLocaleDate, toLocaleDateTime, toLocaleTime, truncateDecimalsPeriod } from '../locales/intl'
@@ -177,7 +177,7 @@ export function getDenomFromIsoCode(currencyCode: string): EdgeDenomination {
       multiplier: '0'
     }
   }
-  const symbol = getSymbolFromCurrency(currencyCode)
+  const symbol = getFiatSymbol(currencyCode)
   const denom: EdgeDenomination = {
     name: currencyCode,
     symbol,

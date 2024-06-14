@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import { formatCategory, getTxActionDisplayInfo, pluginIdIcons, splitCategory } from '../../actions/CategoriesActions'
 import { playSendSound } from '../../actions/SoundActions'
-import { getSymbolFromCurrency } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
@@ -86,7 +86,7 @@ const TransactionDetailsComponent = (props: Props) => {
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const defaultFiat = removeIsoPrefix(defaultIsoFiat)
   const walletName = useWatch(wallet, 'name')
-  const fiatSymbol = getSymbolFromCurrency(defaultIsoFiat)
+  const fiatSymbol = getFiatSymbol(defaultIsoFiat)
 
   // Look up transaction stuff:
   const absoluteAmount = abs(nativeAmount)
