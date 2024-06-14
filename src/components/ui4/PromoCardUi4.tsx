@@ -20,6 +20,7 @@ export interface FilteredPromoCard {
   ctaButton: PromoCard2['ctaButton']
   dismissable: PromoCard2['dismissable']
   localeMessages: PromoCard2['localeMessages']
+  pluginPromotions: PromoCard2['pluginPromotions']
   messageId: string
 }
 

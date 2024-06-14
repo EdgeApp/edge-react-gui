@@ -104,7 +104,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
   const fiatPlugin: FiatPlugin = {
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
-      const { direction, defaultFiatAmount, forceFiatCurrencyCode, regionCode, paymentTypes, providerId } = params
+      const { direction, defaultFiatAmount, forceFiatCurrencyCode, regionCode, paymentTypes, pluginPromotion, providerId } = params
       // TODO: Address 'paymentTypes' vs 'paymentType'. Both are defined in the
       // buy/sellPluginList.jsons.
       if (paymentTypes.length === 0) console.warn('No payment types given to FiatPlugin: ' + pluginId)
@@ -406,7 +406,11 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
           const quotePromises = finalProvidersArray
             .filter(p => (providerId == null ? true : providerId === p.providerId))
-            .map(async p => await p.getQuote(quoteParams))
+            .map(async p => {
+              const providerIds = pluginPromotion?.providerIds ?? []
+              const promoCode = providerIds.some(pid => pid === p.providerId) ? pluginPromotion?.promoCode : undefined
+              return await p.getQuote({ ...quoteParams, promoCode })
+            })
           let errors: unknown[] = []
           const quotes = await fuzzyTimeout(quotePromises, 5000).catch(e => {
             errors = e

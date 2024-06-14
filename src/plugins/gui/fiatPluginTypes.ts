@@ -1,6 +1,7 @@
 import { asValue } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 import { EdgeAssetAction, EdgeMetadata, EdgeTokenId, EdgeTransaction, EdgeTxAction } from 'edge-core-js/types'
+import { PluginPromotion } from 'edge-info-server'
 
 import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
@@ -183,6 +184,7 @@ export interface FiatPluginStartParams {
   regionCode: FiatPluginRegionCode
   forceFiatCurrencyCode?: string
   defaultFiatAmount?: string
+  pluginPromotion?: PluginPromotion
   providerId?: string
 }
 export interface FiatPlugin {
