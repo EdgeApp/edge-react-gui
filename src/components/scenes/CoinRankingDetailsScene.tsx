@@ -114,7 +114,9 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       case 'priceChange24h':
       case 'high24h':
       case 'low24h':
-        return `${formatFiatString({ fiatAmount: baseString })} ${defaultFiat}`
+        // Sometimes the data comes back as something like "1.2 M"
+        // In this case, just show the value as-is without our own special formatting.
+        return `${baseString.split(' ').length > 1 ? baseString : formatFiatString({ fiatAmount: baseString })} ${defaultFiat}`
       case 'rank':
         return `#${baseString}`
       case 'marketCapChange24h':
