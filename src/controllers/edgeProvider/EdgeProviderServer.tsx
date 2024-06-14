@@ -33,7 +33,7 @@ import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { makeCurrencyCodeTable } from '../../util/tokenIdTools'
 import { logEvent } from '../../util/tracking'
-import { CurrencyConfigMap } from '../../util/utils'
+import { CurrencyConfigMap, removeIsoPrefix } from '../../util/utils'
 import { asExtendedCurrencyCode } from './types/edgeProviderCleaners'
 import {
   EdgeGetReceiveAddressOptions,
@@ -180,7 +180,7 @@ export class EdgeProviderServer implements EdgeProviderMethods {
       receiveAddress,
       chainCode: currencyInfo.currencyCode,
       currencyCode,
-      fiatCurrencyCode: this._defaultIsoFiat.replace('iso:', ''),
+      fiatCurrencyCode: removeIsoPrefix(this._defaultIsoFiat),
       currencyIcon: icons.symbolImage,
       currencyIconDark: icons.symbolImageDarkMono
     }

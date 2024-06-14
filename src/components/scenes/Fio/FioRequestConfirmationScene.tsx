@@ -20,7 +20,7 @@ import {
   fioSignAndBroadcast,
   getRemainingBundles
 } from '../../../util/FioAddressUtils'
-import { DECIMAL_PRECISION } from '../../../util/utils'
+import { DECIMAL_PRECISION, removeIsoPrefix } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { AddressModal } from '../../modals/AddressModal'
 import { ButtonsModal } from '../../modals/ButtonsModal'
@@ -301,7 +301,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
     const fiatAmount = formatNumber(mul(exchangeSecondaryToPrimaryRatio, exchangeAmount), { toFixed: 2 }) || '0'
     const cryptoName = primaryCurrencyInfo.displayDenomination.name
-    const fiatName = defaultIsoFiat.replace('iso:', '')
+    const fiatName = removeIsoPrefix(defaultIsoFiat)
 
     return (
       <SceneWrapper scroll>

@@ -30,6 +30,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { DefaultScreen } from '../../types/types'
 import { secondsToDisplay } from '../../util/displayTime'
+import { removeIsoPrefix } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { TextDropdown } from '../common/TextDropdown'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal'
@@ -334,7 +335,7 @@ export const SettingsScene = (props: Props) => {
             {config.disableSwaps !== true ? <SettingsTappableRow label={lstrings.settings_exchange_settings} onPress={handleExchangeSettings} /> : null}
             <SettingsTappableRow label={lstrings.spending_limits} onPress={handleSpendingLimits} />
             <SettingsLabelRow right={autoLogoutRightText} label={lstrings.settings_title_auto_logoff} onPress={handleSetAutoLogoutTime} />
-            <SettingsLabelRow right={defaultFiat.replace('iso:', '')} label={lstrings.settings_title_currency} onPress={handleDefaultFiat} />
+            <SettingsLabelRow right={removeIsoPrefix(defaultFiat)} label={lstrings.settings_title_currency} onPress={handleDefaultFiat} />
             <SettingsLabelRow right={defaultScreenRightText} label={lstrings.settings_default_screen_title} onPress={handleSetDefaultScreen} />
 
             {isLightAccount ? null : (

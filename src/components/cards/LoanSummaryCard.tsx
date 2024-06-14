@@ -11,6 +11,7 @@ import { lstrings } from '../../locales/strings'
 import { BorrowEngine } from '../../plugins/borrow-plugins/types'
 import { useSelector } from '../../types/reactRedux'
 import { Theme } from '../../types/Theme'
+import { removeIsoPrefix } from '../../util/utils'
 import { Peek } from '../layout/Peek'
 import { Space } from '../layout/Space'
 import { Shimmer } from '../progress-indicators/Shimmer'
@@ -32,7 +33,7 @@ const LoanSummaryCardComponent = ({ borrowEngine, iconUri, onPress }: { borrowEn
   const isLoading = syncRatio < 1
 
   const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
-  const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
+  const fiatCurrencyCode = removeIsoPrefix(isoFiatCurrencyCode)
   const fiatSymbol = getFiatSymbol(isoFiatCurrencyCode)
 
   const collateralTotal = useFiatTotal(currencyWallet, collaterals)

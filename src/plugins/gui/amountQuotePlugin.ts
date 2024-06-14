@@ -10,7 +10,7 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { infoServerData } from '../../util/network'
 import { logEvent } from '../../util/tracking'
-import { DECIMAL_PRECISION, fuzzyTimeout } from '../../util/utils'
+import { DECIMAL_PRECISION, fuzzyTimeout, removeIsoPrefix } from '../../util/utils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginStartParams } from './fiatPluginTypes'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
 import { StateManager } from './hooks/useStateManager'
@@ -228,7 +228,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // wallet fiat selection regardless of region.
       // TODO: Remove when Fiat selection is designed.
       const fiatCurrencyCode = forceFiatCurrencyCode ?? defaultIsoFiat
-      const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
+      const displayFiatCurrencyCode = removeIsoPrefix(fiatCurrencyCode)
       const isBuy = direction === 'buy'
       const disableInput = requireCrypto ? 1 : requireFiat ? 2 : undefined
 
@@ -466,7 +466,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             } else {
               // User entered a crypto value. Show the fiat value per partner
               const localeAmount = formatNumber(toFixed(quote.fiatAmount, 0, 2))
-              text = `(${localeAmount} ${quote.fiatCurrencyCode.replace('iso:', '')})`
+              text = `(${localeAmount} ${removeIsoPrefix(quote.fiatCurrencyCode)})`
             }
             const out = {
               text,

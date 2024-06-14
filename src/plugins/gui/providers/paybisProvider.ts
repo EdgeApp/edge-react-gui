@@ -9,6 +9,7 @@ import { lstrings } from '../../../locales/strings'
 import { EdgeAsset, StringMap } from '../../../types/types'
 import { sha512HashAndSign } from '../../../util/crypto'
 import { CryptoAmount } from '../../../util/CryptoAmount'
+import { removeIsoPrefix } from '../../../util/utils'
 import { SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType, FiatPluginUi, SaveTxActionParams } from '../fiatPluginTypes'
 import {
@@ -388,7 +389,7 @@ export const paybisProvider: FiatProviderFactory = {
         }
 
         // Check if the region, payment type, and fiat/crypto codes are supported
-        const fiat = fiatCurrencyCode.replace('iso:', '')
+        const fiat = removeIsoPrefix(fiatCurrencyCode)
 
         const paymentMethod = direction === 'buy' ? REVERSE_PAYMENT_METHOD_MAP[paymentType] : SELL_REVERSE_PAYMENT_METHOD_MAP[paymentType]
         const paybisCc = EDGE_TO_PAYBIS_CURRENCY_MAP[`${currencyPluginId}_${tokenId ?? ''}`]

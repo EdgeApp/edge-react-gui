@@ -7,7 +7,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
-import { DECIMAL_PRECISION, getDenomFromIsoCode, maxPrimaryCurrencyConversionDecimals, precisionAdjust } from '../../util/utils'
+import { DECIMAL_PRECISION, getDenomFromIsoCode, maxPrimaryCurrencyConversionDecimals, precisionAdjust, removeIsoPrefix } from '../../util/utils'
 import { styled } from '../hoc/styled'
 import { Space } from '../layout/Space'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
@@ -81,7 +81,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>((props
 
   const fieldInfos: FlipInputFieldInfos = [
     { currencyName: cryptoDisplayDenom.name, maxEntryDecimals: log10(cryptoDisplayDenom.multiplier) },
-    { currencyName: fiatDenom.name.replace('iso:', ''), maxEntryDecimals: log10(fiatDenom.multiplier) }
+    { currencyName: removeIsoPrefix(fiatDenom.name), maxEntryDecimals: log10(fiatDenom.multiplier) }
   ]
 
   const convertCurrency = useHandler((amount: string, fromCurrencyCode: string, toCurrencyCode: string): string => {

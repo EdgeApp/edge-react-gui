@@ -6,6 +6,7 @@ import { showFullScreenSpinner } from '../components/modals/AirshipFullScreenSpi
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { getFioStakingBalances } from './stakeUtils'
+import { removeIsoPrefix } from './utils'
 
 /**
  * Safely get a wallet name, returning a fallback when the name is null.
@@ -24,7 +25,7 @@ export function getWalletName(wallet: EdgeCurrencyWallet): string {
  */
 export function cleanFiatCurrencyCode(fiatCurrencyCode: string): { fiatCurrencyCode: string; isoFiatCurrencyCode: string } {
   if (fiatCurrencyCode.startsWith('iso:')) {
-    return { fiatCurrencyCode: fiatCurrencyCode.replace('iso:', ''), isoFiatCurrencyCode: fiatCurrencyCode }
+    return { fiatCurrencyCode: removeIsoPrefix(fiatCurrencyCode), isoFiatCurrencyCode: fiatCurrencyCode }
   } else {
     return { fiatCurrencyCode, isoFiatCurrencyCode: `iso:${fiatCurrencyCode}` }
   }

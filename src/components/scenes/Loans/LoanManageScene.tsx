@@ -31,7 +31,7 @@ import { getWalletPickerExcludeWalletIds } from '../../../util/borrowUtils'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
 import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getExecutionNetworkFees } from '../../../util/networkFeeUtils'
-import { zeroString } from '../../../util/utils'
+import { removeIsoPrefix, zeroString } from '../../../util/utils'
 import { FiatAmountInputCard } from '../../cards/FiatAmountInputCard'
 import { SelectableAsset, TappableAccountCard } from '../../cards/TappableAccountCard'
 import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
@@ -153,7 +153,7 @@ export const LoanManageSceneComponent = (props: Props) => {
 
   // Amount card
   const iconUri = getBorrowPluginIconUri(borrowPluginInfo)
-  const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
+  const fiatCurrencyCode = removeIsoPrefix(isoFiatCurrencyCode)
 
   // #endregion Constants
 

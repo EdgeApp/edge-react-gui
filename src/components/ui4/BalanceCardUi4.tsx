@@ -9,7 +9,7 @@ import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { getTotalFiatAmountFromExchangeRates } from '../../util/utils'
+import { getTotalFiatAmountFromExchangeRates, removeIsoPrefix } from '../../util/utils'
 import { AnimatedNumber } from '../common/AnimatedNumber'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { TransferModal } from '../modals/TransferModal'
@@ -44,7 +44,7 @@ export const BalanceCardUi4 = (props: Props) => {
   const exchangeRates = useSelector(state => state.exchangeRates)
 
   const fiatSymbol = defaultIsoFiat ? getFiatSymbol(defaultIsoFiat) : ''
-  const fiatCurrencyCode = defaultIsoFiat.replace('iso:', '')
+  const fiatCurrencyCode = removeIsoPrefix(defaultIsoFiat)
   const formattedFiat = isBalanceVisible ? formatNumber(fiatAmount, { toFixed: 2 }) : lstrings.redacted_placeholder
 
   const exchangeRatesReady = exchangeRates != null && Object.keys(exchangeRates).length > 0
