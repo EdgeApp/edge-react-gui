@@ -1,4 +1,4 @@
-import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 
 import { showError } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
@@ -12,14 +12,6 @@ import { EdgeAsset } from '../types/types'
 export function isKeysOnlyPlugin(pluginId: string): boolean {
   const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
   return keysOnlyMode || ENV.KEYS_ONLY_PLUGINS[pluginId]
-}
-
-/**
- * Grab all the EdgeCurrencyInfo objects in an account.
- */
-export function getCurrencyInfos(account: EdgeAccount): EdgeCurrencyInfo[] {
-  const { currencyConfig = {} } = account
-  return Object.keys(currencyConfig).map(pluginId => currencyConfig[pluginId].currencyInfo)
 }
 
 export const getTokenId = (currencyConfig: EdgeCurrencyConfig, currencyCode: string): EdgeTokenId | undefined => {
