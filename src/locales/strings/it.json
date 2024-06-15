@@ -195,7 +195,7 @@
   "wallet_list_add_token": "Aggiungi token",
   "wallet_list_referral_link_currency_invalid": "La valuta da creare non è valida",
   "wallet_list_referral_link_currency_loading": "Tieni duro. Sto creando un portafoglio necessario per questa promozione",
-  "wallet_list_referral_link_ask_wallet_creation_1s": "You need a %1$s wallet for this promotion. Would you like to create one?",
+  "wallet_list_referral_link_ask_wallet_creation_1s": "Hai bisogno di un portafoglio %1$s per questa promozione, vuoi crearne uno?",
   "wallet_list_wallet_search": "Cerca portafogli",
   "compromised_key_label": "Chiave Compromessa",
   "create_wallet_choice_new_button": "Crea un nuovo portafoglio",
