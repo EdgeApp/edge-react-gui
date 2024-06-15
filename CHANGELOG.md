@@ -8,6 +8,7 @@
 - changed: Prefer DEX estimate quotes over CEX fixed rate quotes if the DEX quote has a better rate
 - changed: Light account backup notification card now persists no matter what while logged in to a light account
 - changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
+- changed: WalletConnect: Move initial wallet selection to connections list scene
 - fixed: Stabilize the account sync bar progress motion.
 - fixed: Update Algorand's WalletConnectv2 reference
 - fixed: Slight animation stutter when opening the CountryListModal
