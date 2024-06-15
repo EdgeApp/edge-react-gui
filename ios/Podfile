@@ -18,7 +18,9 @@ $RNFirebaseAnalyticsWithoutAdIdSupport = true
 $RNFirebaseAsStaticFramework = true
 
 # The min_ios_version_supported is iOS 13.4 for RN 74:
-platform :ios, min_ios_version_supported
+# However any device that can use iOS 13.4 can also upgrade to iOS 15.6 which
+# is still supported by the latest version of Xcode for debugging
+platform :ios, '15.6'
 prepare_react_native_project!
 
 # Edge addition:
