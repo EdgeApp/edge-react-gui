@@ -46,6 +46,10 @@ import type { StakeOverviewParams } from '../components/scenes/Staking/StakeOver
 import type { SwapConfirmationParams } from '../components/scenes/SwapConfirmationScene'
 import type { SwapCreateParams } from '../components/scenes/SwapCreateScene'
 import type { SwapProcessingParams } from '../components/scenes/SwapProcessingScene'
+import type { SweepPrivateKeyCalculateFeeParams } from '../components/scenes/SweepPrivateKeyCalculateFeeScene'
+import type { SweepPrivateKeyCompletionParams } from '../components/scenes/SweepPrivateKeyCompletionScene'
+import type { SweepPrivateKeyProcessingParams } from '../components/scenes/SweepPrivateKeyProcessingScene'
+import type { SweepPrivateKeySelectCryptoParams } from '../components/scenes/SweepPrivateKeySelectCryptoScene'
 import type { TransactionDetailsParams } from '../components/scenes/TransactionDetailsScene'
 import type { TransactionListParams } from '../components/scenes/TransactionListScene'
 import type { TransactionsExportParams } from '../components/scenes/TransactionsExportScene'
@@ -184,6 +188,10 @@ export interface RouteParamList {
   swapProcessing: SwapProcessingParams
   swapSettings: {}
   swapSuccess: {}
+  sweepPrivateKeyProcessing: SweepPrivateKeyProcessingParams
+  sweepPrivateKeySelectCrypto: SweepPrivateKeySelectCryptoParams
+  sweepPrivateKeyCalculateFee: SweepPrivateKeyCalculateFeeParams
+  sweepPrivateKeyCompletion: SweepPrivateKeyCompletionParams
   testScene: {}
   transactionDetails: TransactionDetailsParams
   transactionList: TransactionListParams
