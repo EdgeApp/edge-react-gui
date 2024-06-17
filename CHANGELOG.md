@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: Support for splitting LTC to BTC wallets for recovering BTC erroneously sent to an LTC address
 - added: "Force Light Account Creation" developer mode setting
 - added: Allow promoCards to send promoCodes to fiat partners for special pricing
 - added: Allow promoCard URLs to specify a currency pluginId to have replaced with a public address

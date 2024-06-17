@@ -67,7 +67,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
   const [searchTerm, setSearchTerm] = React.useState('')
 
   const allowedAssets = splitPluginIds.length > 0 ? splitPluginIds.map(pluginId => ({ pluginId, tokenId: null })) : undefined
-  const createList = getCreateWalletList(account, { allowedAssets })
+  const createList = getCreateWalletList(account, { allowedAssets, disableLegacy: splitPluginIds.length > 0 })
 
   const createWalletList = React.useMemo(() => {
     const preselectedList: WalletCreateItem[] = []
