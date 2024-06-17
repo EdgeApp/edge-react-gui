@@ -105,6 +105,10 @@ import { SwapConfirmationScene as SwapConfirmationSceneComponent } from './scene
 import { SwapProcessingScene as SwapProcessingSceneComponent } from './scenes/SwapProcessingScene'
 import { SwapSettingsScene as SwapSettingsSceneComponent } from './scenes/SwapSettingsScene'
 import { SwapSuccessScene as SwapSuccessSceneComponent } from './scenes/SwapSuccessScene'
+import { SweepPrivateKeyCalculateFeeScene as SweepPrivateKeyCalculateFeeSceneComponent } from './scenes/SweepPrivateKeyCalculateFeeScene'
+import { SweepPrivateKeyCompletionScene as SweepPrivateKeyCompletionSceneComponent } from './scenes/SweepPrivateKeyCompletionScene'
+import { SweepPrivateKeyProcessingScene as SweepPrivateKeyProcessingSceneComponent } from './scenes/SweepPrivateKeyProcessingScene'
+import { SweepPrivateKeySelectCryptoScene as SweepPrivateKeySelectCryptoSceneComponent } from './scenes/SweepPrivateKeySelectCryptoScene'
 import { TransactionDetailsScene as TransactionDetailsSceneComponent } from './scenes/TransactionDetailsScene'
 import { TransactionList as TransactionListComponent } from './scenes/TransactionListScene'
 import { TransactionsExportScene as TransactionsExportSceneComponent } from './scenes/TransactionsExportScene'
@@ -168,6 +172,10 @@ const LoanDetailsScene = ifLoggedIn(LoanDetailsSceneComponent)
 const LoanManageScene = ifLoggedIn(LoanManageSceneComponent)
 const LoanStatusScene = ifLoggedIn(LoanStatusSceneComponent)
 const ManageTokensScene = ifLoggedIn(ManageTokensSceneComponent)
+const SweepPrivateKeyCalculateFeeScene = ifLoggedIn(SweepPrivateKeyCalculateFeeSceneComponent)
+const SweepPrivateKeyCompletionScene = ifLoggedIn(SweepPrivateKeyCompletionSceneComponent)
+const SweepPrivateKeySelectCryptoScene = ifLoggedIn(SweepPrivateKeySelectCryptoSceneComponent)
+const SweepPrivateKeyProcessingScene = ifLoggedIn(SweepPrivateKeyProcessingSceneComponent)
 const MigrateWalletCalculateFeeScene = ifLoggedIn(MigrateWalletCalculateFeeSceneComponent)
 const MigrateWalletCompletionScene = ifLoggedIn(MigrateWalletCompletionSceneComponent)
 const MigrateWalletSelectCryptoScene = ifLoggedIn(MigrateWalletSelectCryptoSceneComponent)
@@ -626,6 +634,17 @@ const EdgeAppStack = () => {
         }}
       />
 
+      <Stack.Screen name="sweepPrivateKeyProcessing" component={SweepPrivateKeyProcessingScene} />
+      <Stack.Screen name="sweepPrivateKeySelectCrypto" component={SweepPrivateKeySelectCryptoScene} />
+      <Stack.Screen name="sweepPrivateKeyCalculateFee" component={SweepPrivateKeyCalculateFeeScene} />
+      <Stack.Screen
+        name="sweepPrivateKeyCompletion"
+        component={SweepPrivateKeyCompletionScene}
+        options={{
+          headerLeft: () => null,
+          headerRight: () => null
+        }}
+      />
       <Stack.Screen name="migrateWalletCalculateFee" component={MigrateWalletCalculateFeeScene} />
       <Stack.Screen
         name="migrateWalletCompletion"
