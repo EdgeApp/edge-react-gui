@@ -1501,7 +1501,7 @@ PODS:
     - ZXingObjC
   - RNReactNativeHapticFeedback (1.14.0):
     - React-Core
-  - RNReanimated (3.12.0):
+  - RNReanimated (3.13.0-rc.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1574,9 +1574,9 @@ PODS:
   - SocketRocket (0.7.0)
   - SQLite.swift/standalone (0.15.3):
     - sqlite3
-  - sqlite3 (3.46.0):
-    - sqlite3/common (= 3.46.0)
-  - sqlite3/common (3.46.0)
+  - "sqlite3 (3.46.0+1)":
+    - "sqlite3/common (= 3.46.0+1)"
+  - "sqlite3/common (3.46.0+1)"
   - SwiftNIO (2.40.0):
     - _NIODataStructures (= 2.40.0)
     - CNIOAtomics (= 2.40.0)
@@ -2229,7 +2229,7 @@ SPEC CHECKSUMS:
   RNPermissions: 5829ce9a821b8bcab921dae16a7d1a3dc4c95a03
   RNQrGenerator: 90461ba3ca88c1d38ef73da50fade35d9648215d
   RNReactNativeHapticFeedback: 1e3efeca9628ff9876ee7cdd9edec1b336913f8c
-  RNReanimated: 967ae35616ef948658afa75d24595d4584051540
+  RNReanimated: 5504c7d79fee5d8932fdc6eb2f2c14d29a1e0f06
   RNScreens: 30249f9331c3b00ae7cb7922e11f58b3ed369c07
   RNSecureRandom: 07efbdf2cd99efe13497433668e54acd7df49fef
   RNSentry: 7e184247ee04989474d12cce0b7ef7bc4a71632f
@@ -2243,7 +2243,7 @@ SPEC CHECKSUMS:
   Sentry: 74a073c71c998117edb08f56f443c83570a31bed
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   SQLite.swift: 8d054987f02728cc912b0eb5a9659650573a65a2
-  sqlite3: 154b084339ede06960a5b3c8160066adc9176b7d
+  sqlite3: 292c3e1bfe89f64e51ea7fc7dab9182a017c8630
   SwiftNIO: 829958aab300642625091f82fc2f49cb7cf4ef24
   SwiftNIOConcurrencyHelpers: 697370136789b1074e4535eaae75cbd7f900370e
   SwiftNIOCore: 473fdfe746534d7aa25766916459eeaf6f92ef49
@@ -2262,6 +2262,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
-PODFILE CHECKSUM: e0f36811c270f12ab9d278fd85d03e29554f97bc
+PODFILE CHECKSUM: 008ac5aae575965e7a2e98a18f18838f6c622384
 
 COCOAPODS: 1.15.2

@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-reanimated/src/Colors.ts b/node_modules/react-native-reanimated/src/Colors.ts
+index 2b01b32..40a571e 100644
+--- a/node_modules/react-native-reanimated/src/Colors.ts
++++ b/node_modules/react-native-reanimated/src/Colors.ts
+@@ -521,7 +521,7 @@ export const rgbaColor = (
+   alpha = 1
+ ): number | string => {
+   'worklet';
+-  if (IS_WEB || !_WORKLET) {
++  if (!IS_ANDROID || !_WORKLET) {
+     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+   }
+ 
