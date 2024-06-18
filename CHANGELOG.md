@@ -15,6 +15,7 @@
 - changed: Velodrome, cemetery, and masonry staking polcies - insufficient balance errors reduced severity to untracked warnings
 - changed: Distinction between disabled and paused wallets
 - changed: Wallet menu modal item ordering for "Split Wallet"
+- changed: WalletConnect: Move initial wallet selection to connections list scene
 - fixed: Buy/Sell Scene briefly changes title after selecting payment method if an asset was pre-selected via the "Trade" modal
 - fixed: Android Auto Log Off "Disabled" text color
 - fixed: Android Auto Log Off "Disabled" selection showing as "0"

@@ -21,6 +21,7 @@ import { EdgeAsset, WcConnectionInfo } from '../../types/types'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ScanModal } from '../modals/ScanModal'
+import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -40,6 +41,7 @@ export const WcConnectionsScene = (props: Props) => {
   const styles = getStyles(theme)
   const [connections, setConnections] = React.useState<WcConnectionInfo[]>([])
   const [connecting, setConnecting] = React.useState(false)
+  const [sessionProposal, setSessionProposal] = React.useState<Map<string, Web3WalletTypes.SessionProposal>>(new Map())
 
   const account = useSelector(state => state.core.account)
   const walletConnect = useWalletConnect()
@@ -61,9 +63,25 @@ export const WcConnectionsScene = (props: Props) => {
   const onScanSuccess = async (qrResult: string) => {
     setConnecting(true)
     try {
-      const proposal = await walletConnect.initSession(qrResult)
+      let proposal = sessionProposal.get(qrResult)
+
+      if (proposal == null) {
+        const newProposal = await walletConnect.initSession(qrResult)
+        setSessionProposal(proposals => {
+          const out = new Map(proposals)
+          out.set(qrResult, newProposal)
+          return out
+        })
+        proposal = newProposal
+      }
       const edgeTokenIds = getProposalNamespaceCompatibleEdgeTokenIds(proposal, account.currencyConfig)
-      navigation.navigate('wcConnect', { proposal, edgeTokenIds })
+      const result = await Airship.show<WalletListResult>(bridge => (
+        <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} allowedAssets={edgeTokenIds} showCreateWallet navigation={navigation} />
+      ))
+
+      if (result?.type === 'wallet') {
+        navigation.navigate('wcConnect', { proposal, edgeTokenIds, walletId: result.walletId })
+      }
     } catch (error: any) {
       showError(error)
     }
