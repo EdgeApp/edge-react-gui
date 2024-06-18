@@ -1478,7 +1478,7 @@ PODS:
     - ZXingObjC
   - RNReactNativeHapticFeedback (1.14.0):
     - React-Core
-  - RNReanimated (3.12.0):
+  - RNReanimated (3.13.0-rc.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2205,7 +2205,7 @@ SPEC CHECKSUMS:
   RNPermissions: 5829ce9a821b8bcab921dae16a7d1a3dc4c95a03
   RNQrGenerator: 90461ba3ca88c1d38ef73da50fade35d9648215d
   RNReactNativeHapticFeedback: 1e3efeca9628ff9876ee7cdd9edec1b336913f8c
-  RNReanimated: 967ae35616ef948658afa75d24595d4584051540
+  RNReanimated: 5504c7d79fee5d8932fdc6eb2f2c14d29a1e0f06
   RNScreens: 30249f9331c3b00ae7cb7922e11f58b3ed369c07
   RNSecureRandom: 07efbdf2cd99efe13497433668e54acd7df49fef
   RNSentry: 7e184247ee04989474d12cce0b7ef7bc4a71632f
@@ -2235,7 +2235,7 @@ SPEC CHECKSUMS:
   SwiftNIOTransportServices: 0b2b407819d82eb63af558c5396e33c945759503
   SwiftProtobuf: 5e8349171e7c2f88f5b9e683cb3cb79d1dc780b3
   VisionCamera: 2c4cb89c573c5d54d1191e433bd224998d3b14b7
-  Yoga: d02ee88821190d82b2daa5cd15640a82ffafaaab
+  Yoga: dafebc41bc66910af33077aaa41078e89fd635bf
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 

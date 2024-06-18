@@ -4,7 +4,7 @@ import { jest } from '@jest/globals'
 import mockClipboard from '@react-native-clipboard/clipboard/jest/clipboard-mock.js'
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock'
 
-require('react-native-reanimated/src/reanimated2/jestUtils').setUpTests()
+require('react-native-reanimated').setUpTests()
 
 const mockReanimated = jest.requireMock('react-native-reanimated')
 
