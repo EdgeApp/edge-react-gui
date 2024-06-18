@@ -24,6 +24,7 @@
 - fixed: WalletConnect Smart Contract Call details cut off
 - fixed: Buy/Sell Scenes header underline not fully extending to the right
 - fixed: Quickly spamming taps on certain buttons resulted in duplicate actions
+- fixed: Banxa error due to API removing params
 - removed: Bugsnag for crash reporting
 - removed: Firebase/Google Analytics
 - removed: Light Account Backup Modal A/B/C/D test experiment
