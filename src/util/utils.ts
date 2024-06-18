@@ -1,14 +1,5 @@
 import { add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
-import {
-  EdgeCurrencyConfig,
-  EdgeCurrencyInfo,
-  EdgeCurrencyWallet,
-  EdgeDenomination,
-  EdgePluginMap,
-  EdgeToken,
-  EdgeTokenMap,
-  EdgeTransaction
-} from 'edge-core-js'
+import { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeDenomination, EdgePluginMap, EdgeToken, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import SafariView from 'react-native-safari-view'
@@ -20,14 +11,13 @@ import {
   FEE_COLOR_THRESHOLD,
   FIAT_CODES_SYMBOLS,
   FIAT_PRECISION,
-  getSymbolFromCurrency,
+  getFiatSymbol,
   SPECIAL_CURRENCY_INFO
 } from '../constants/WalletAndCurrencyConstants'
 import { toLocaleDate, toLocaleDateTime, toLocaleTime, truncateDecimalsPeriod } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { RootState } from '../types/reduxTypes'
 import { GuiExchangeRates, GuiFiatType } from '../types/types'
-import { getWalletFiat } from '../util/CurrencyWalletHelpers'
 import { getCurrencyCode, getTokenId } from './CurrencyInfoHelpers'
 import { base58 } from './encoding'
 
@@ -187,7 +177,7 @@ export function getDenomFromIsoCode(currencyCode: string): EdgeDenomination {
       multiplier: '0'
     }
   }
-  const symbol = getSymbolFromCurrency(currencyCode)
+  const symbol = getFiatSymbol(currencyCode)
   const denom: EdgeDenomination = {
     name: currencyCode,
     symbol,
@@ -412,14 +402,14 @@ export const feeStyle = {
 }
 
 export const convertTransactionFeeToDisplayFee = (
-  wallet: EdgeCurrencyWallet,
+  currencyCode: string,
+  isoFiatCurrencyCode: string,
   exchangeRates: GuiExchangeRates,
   transaction: EdgeTransaction | null,
   feeDisplayDenomination: EdgeDenomination,
   feeDefaultDenomination: EdgeDenomination
 ): { fiatSymbol?: string; fiatAmount: string; fiatStyle?: string; cryptoSymbol?: string; cryptoAmount: string; nativeCryptoAmount: string } => {
-  const { fiatCurrencyCode, isoFiatCurrencyCode } = getWalletFiat(wallet)
-  const secondaryDisplayDenomination = getDenomFromIsoCode(fiatCurrencyCode)
+  const secondaryDisplayDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
 
   let feeNativeAmount
   if (transaction?.parentNetworkFee != null) {
@@ -433,7 +423,6 @@ export const convertTransactionFeeToDisplayFee = (
     const cryptoFeeExchangeDenomAmount = feeNativeAmount ? convertNativeToDisplay(exchangeMultiplier)(feeNativeAmount) : ''
     const exchangeToDisplayMultiplierRatio = div(exchangeMultiplier, displayMultiplier, DECIMAL_PRECISION)
     const cryptoAmount = mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
-    const { currencyCode } = wallet.currencyInfo
     const cryptoFeeExchangeAmount = convertNativeToExchange(exchangeMultiplier)(feeNativeAmount)
     const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoFeeExchangeAmount)
     const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', cryptoFeeExchangeAmount)
@@ -648,4 +637,8 @@ export const darkenHexColor = (hexColor: string, scaleFactor: number): string =>
 export function getOsVersion(): string {
   const osVersionRaw = DeviceInfo.getSystemVersion()
   return Array.from({ length: 3 }, (_, i) => osVersionRaw.split('.')[i] || '0').join('.')
+}
+
+export const removeIsoPrefix = (currencyCode: string): string => {
+  return currencyCode.replace('iso:', '')
 }

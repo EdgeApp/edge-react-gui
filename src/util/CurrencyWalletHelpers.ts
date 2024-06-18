@@ -6,6 +6,7 @@ import { showFullScreenSpinner } from '../components/modals/AirshipFullScreenSpi
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { getFioStakingBalances } from './stakeUtils'
+import { removeIsoPrefix } from './utils'
 
 /**
  * Safely get a wallet name, returning a fallback when the name is null.
@@ -18,18 +19,13 @@ export function getWalletName(wallet: EdgeCurrencyWallet): string {
   return sprintf(lstrings.my_crypto_wallet_name, wallet.currencyInfo.displayName)
 }
 
-export function getWalletFiat(wallet: EdgeCurrencyWallet): { fiatCurrencyCode: string; isoFiatCurrencyCode: string } {
-  const { fiatCurrencyCode } = wallet
-  return { fiatCurrencyCode: fiatCurrencyCode.replace('iso:', ''), isoFiatCurrencyCode: fiatCurrencyCode }
-}
-
 /**
  * Takes any form of fiat currency code and returns a version with and without
  * the "iso:" prefix
  */
 export function cleanFiatCurrencyCode(fiatCurrencyCode: string): { fiatCurrencyCode: string; isoFiatCurrencyCode: string } {
   if (fiatCurrencyCode.startsWith('iso:')) {
-    return { fiatCurrencyCode: fiatCurrencyCode.replace('iso:', ''), isoFiatCurrencyCode: fiatCurrencyCode }
+    return { fiatCurrencyCode: removeIsoPrefix(fiatCurrencyCode), isoFiatCurrencyCode: fiatCurrencyCode }
   } else {
     return { fiatCurrencyCode, isoFiatCurrencyCode: `iso:${fiatCurrencyCode}` }
   }

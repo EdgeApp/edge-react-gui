@@ -12,7 +12,7 @@ import { sprintf } from 'sprintf-js'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
-import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
 import { useAsyncNavigation } from '../../hooks/useAsyncNavigation'
 import { useHandler } from '../../hooks/useHandler'
@@ -31,7 +31,7 @@ import { CryptoAmount } from '../../util/CryptoAmount'
 import { getTokenId } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { getFioStakingBalances, getPluginFromPolicy, getPositionAllocations } from '../../util/stakeUtils'
-import { convertNativeToDenomination, datelog, DECIMAL_PRECISION, zeroString } from '../../util/utils'
+import { convertNativeToDenomination, datelog, DECIMAL_PRECISION, removeIsoPrefix, zeroString } from '../../util/utils'
 import { VisaCardCard } from '../cards/VisaCardCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
@@ -81,6 +81,7 @@ interface StateProps {
   account: EdgeAccount
   balanceMap: EdgeBalanceMap
   currencyCode: string
+  defaultFiat: string
   displayDenomination: EdgeDenomination
   exchangeDenomination: EdgeDenomination
   exchangeRate: string
@@ -423,11 +424,11 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
   renderBalanceBox = () => {
     // TODO: Use CryptoText/FiatText and/or CryptoAmount after they are extended
     // to gracefully handle edge cases such as explicit no rounding and scaling.
-    const { balanceMap, displayDenomination, exchangeDenomination, exchangeRate, isAccountBalanceVisible, theme, tokenId, wallet, walletName } = this.props
+    const { balanceMap, displayDenomination, exchangeDenomination, exchangeRate, isAccountBalanceVisible, theme, tokenId, wallet, walletName, defaultFiat } =
+      this.props
     const styles = getStyles(theme)
 
-    const fiatCurrencyCode = wallet.fiatCurrencyCode.replace(/^iso:/, '')
-    const fiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode)
+    const fiatSymbol = getFiatSymbol(defaultFiat)
 
     const nativeBalance = balanceMap.get(tokenId) ?? '0'
     const cryptoAmount = convertNativeToDenomination(displayDenomination.multiplier)(nativeBalance) // convert to correct denomination
@@ -464,7 +465,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             />
           </View>
           <EdgeText accessible style={styles.balanceFiatBalance}>
-            {fiatSymbol + (isAccountBalanceVisible ? fiatBalanceFormat : ' ' + lstrings.redacted_placeholder) + ' ' + fiatCurrencyCode}
+            {fiatSymbol + (isAccountBalanceVisible ? fiatBalanceFormat : ' ' + lstrings.redacted_placeholder) + ' ' + defaultFiat}
           </EdgeText>
         </EdgeTouchableOpacity>
       </>
@@ -477,13 +478,12 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
    * spinner.
    */
   renderStakedBalance() {
-    const { theme, wallet, displayDenomination, exchangeDenomination, exchangeRate } = this.props
+    const { theme, wallet, defaultFiat, displayDenomination, exchangeDenomination, exchangeRate } = this.props
     const styles = getStyles(theme)
 
     if (SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]?.isStakingSupported !== true) return null
 
-    const fiatCurrencyCode = wallet.fiatCurrencyCode.replace(/^iso:/, '')
-    const fiatSymbol = getSymbolFromCurrency(wallet.fiatCurrencyCode)
+    const fiatSymbol = getFiatSymbol(defaultFiat)
 
     const { locked } = getFioStakingBalances(wallet.stakingStatus)
 
@@ -504,7 +504,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
           {sprintf(
             lstrings.staking_status,
             stakingCryptoAmountFormat + ' ' + displayDenomination.name,
-            fiatSymbol + stakingFiatBalanceFormat + ' ' + fiatCurrencyCode
+            fiatSymbol + stakingFiatBalanceFormat + ' ' + defaultFiat
           )}
         </EdgeText>
       </View>
@@ -792,13 +792,15 @@ export function TransactionListTop(props: OwnProps) {
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
   const exchangeRates = useSelector(state => state.exchangeRates)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const defaultFiat = removeIsoPrefix(defaultIsoFiat)
   const theme = useTheme()
 
   const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
 
   const displayDenomination = useSelector(state => selectDisplayDenomByCurrencyCode(state, wallet.currencyConfig, currencyCode))
   const exchangeDenomination = getExchangeDenomByCurrencyCode(wallet.currencyConfig, currencyCode)
-  const exchangeRate = useSelector(state => getExchangeRate(state, currencyCode, wallet.fiatCurrencyCode))
+  const exchangeRate = useSelector(state => getExchangeRate(state, currencyCode, defaultIsoFiat))
   const isAccountBalanceVisible = useSelector(state => state.ui.settings.isAccountBalanceVisible)
 
   const walletName = useWalletName(wallet)
@@ -817,6 +819,7 @@ export function TransactionListTop(props: OwnProps) {
       account={account}
       balanceMap={balanceMap}
       currencyCode={currencyCode}
+      defaultFiat={defaultFiat}
       displayDenomination={displayDenomination}
       exchangeDenomination={exchangeDenomination}
       exchangeRate={exchangeRate}

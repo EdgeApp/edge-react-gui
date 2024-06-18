@@ -99,12 +99,13 @@ interface StateProps {
   accountReferral: AccountReferral
   coreDisklet: Disklet
   countryCode: string
-  stateProvinceCode?: string
+  defaultIsoFiat: string
   developerModeOn: boolean
   deviceId: string
   disablePlugins: NestedDisableMap
   insetStyle: InsetStyle
   forcedWalletResult?: WalletListResult
+  stateProvinceCode?: string
   onCountryPress: () => Promise<void>
   onPluginOpened: () => void
   onLogEvent: OnLogEvent
@@ -214,15 +215,16 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    */
   async openPlugin(listRow: GuiPluginRow, longPress: boolean = false) {
     const {
+      account,
       accountReferral,
       coreDisklet,
       countryCode,
-      forcedWalletResult,
-      stateProvinceCode,
+      defaultIsoFiat,
       deviceId,
       disablePlugins,
+      forcedWalletResult,
       navigation,
-      account,
+      stateProvinceCode,
       onLogEvent,
       onPluginOpened
     } = this.props
@@ -285,6 +287,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
       await executePlugin({
         account,
+        defaultIsoFiat,
         deviceId,
         direction,
         disablePlugins: disableProviders,
@@ -551,9 +554,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const accountReferral = useSelector(state => state.account.accountReferral)
   const deviceId = useSelector(state => base58ToUuid(state.core.context.clientId))
   const coreDisklet = useSelector(state => state.core.disklet)
-  const countryCode = useSelector(state => state.ui.settings.countryCode)
-  const stateProvinceCode = useSelector(state => state.ui.settings.stateProvinceCode)
-  const developerModeOn = useSelector(state => state.ui.settings.developerModeOn)
+  const { countryCode, defaultIsoFiat, developerModeOn, stateProvinceCode } = useSelector(state => state.ui.settings)
   const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
   const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
   const isFocused = useIsFocused()
@@ -611,6 +612,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
               accountReferral={accountReferral}
               coreDisklet={coreDisklet}
               countryCode={countryCode}
+              defaultIsoFiat={defaultIsoFiat}
               developerModeOn={developerModeOn}
               deviceId={deviceId}
               disablePlugins={disablePlugins}

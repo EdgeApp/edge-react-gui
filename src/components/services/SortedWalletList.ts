@@ -45,6 +45,7 @@ export function SortedWalletList(props: Props) {
   const currencyWallets = useWatch(account, 'currencyWallets')
   const enabledTokenIds = useEnabledWalletIds(account)
   const exchangeRates = useSelector(state => state.exchangeRates)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const walletsSort = useSelector(state => state.ui.settings.walletsSort)
 
   // Phase 1: Gather the active wallets and tokens.
@@ -110,14 +111,14 @@ export function SortedWalletList(props: Props) {
     case 'highest':
       sorted = stableSort(
         wallets,
-        numericSort(item => -getFiat(item, exchangeRates))
+        numericSort(item => -getFiat(item, defaultIsoFiat, exchangeRates))
       )
       break
 
     case 'lowest':
       sorted = stableSort(
         wallets,
-        numericSort(item => getFiat(item, exchangeRates))
+        numericSort(item => getFiat(item, defaultIsoFiat, exchangeRates))
       )
       break
 
@@ -219,7 +220,7 @@ function stableSort<T>(items: T[], compare: (a: T, b: T) => number): T[] {
  * This uses floating-point math for speed,
  * since rates are approximate and big math is super-expensive.
  */
-function getFiat(item: WalletListAssetItem, exchangeRates: GuiExchangeRates): number {
+function getFiat(item: WalletListAssetItem, isoFiatCurrencyCode: string, exchangeRates: GuiExchangeRates): number {
   const { token, wallet } = item
 
   // The core does not yet report balances by tokenId, just by currencyCode:
@@ -231,7 +232,7 @@ function getFiat(item: WalletListAssetItem, exchangeRates: GuiExchangeRates): nu
   const nativeBalance = wallet.balanceMap.get(tokenId) ?? '0'
 
   // Find the rate:
-  const rate = exchangeRates[`${currencyCode}_${wallet.fiatCurrencyCode}`] ?? '0'
+  const rate = exchangeRates[`${currencyCode}_${isoFiatCurrencyCode}`] ?? '0'
 
   // Do the conversion:
   return parseFloat(rate) * (parseFloat(nativeBalance) / parseFloat(denomination.multiplier))

@@ -342,6 +342,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 const getSwapInfo = (quote: EdgeSwapQuote): ThunkAction<Promise<GuiSwapInfo>> => {
   return async (_dispatch, getState) => {
     const state = getState()
+    const { defaultFiat, defaultIsoFiat } = state.ui.settings
 
     // Currency conversion tools:
     // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
@@ -358,7 +359,7 @@ const getSwapInfo = (quote: EdgeSwapQuote): ThunkAction<Promise<GuiSwapInfo>> =>
     // Format from fiat:
     const fromExchangeDenomination = getExchangeDenom(fromWallet.currencyConfig, fromTokenId)
     const fromBalanceInCryptoDisplay = convertNativeToExchange(fromExchangeDenomination.multiplier)(quote.fromNativeAmount)
-    const fromBalanceInFiatRaw = parseFloat(convertCurrency(state, fromCurrencyCode, fromWallet.fiatCurrencyCode, fromBalanceInCryptoDisplay))
+    const fromBalanceInFiatRaw = parseFloat(convertCurrency(state, fromCurrencyCode, defaultIsoFiat, fromBalanceInCryptoDisplay))
     const fromFiat = formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
 
     // Format crypto fee:
@@ -369,9 +370,9 @@ const getSwapInfo = (quote: EdgeSwapQuote): ThunkAction<Promise<GuiSwapInfo>> =>
 
     // Format fiat fee:
     const feeDenominatedAmount = await fromWallet.nativeToDenomination(feeNativeAmount, request.fromWallet.currencyInfo.currencyCode)
-    const feeFiatAmountRaw = parseFloat(convertCurrency(state, request.fromWallet.currencyInfo.currencyCode, fromWallet.fiatCurrencyCode, feeDenominatedAmount))
+    const feeFiatAmountRaw = parseFloat(convertCurrency(state, request.fromWallet.currencyInfo.currencyCode, defaultIsoFiat, feeDenominatedAmount))
     const feeFiatAmount = formatNumber(feeFiatAmountRaw || 0, { toFixed: 2 })
-    const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${fromWallet.fiatCurrencyCode.replace('iso:', '')})`
+    const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${defaultFiat})`
     const fromTotalFiat = formatNumber(add(fromBalanceInFiatRaw.toFixed(DECIMAL_PRECISION), feeFiatAmountRaw.toFixed(DECIMAL_PRECISION)), { toFixed: 2 })
 
     // Format to amount:
@@ -382,7 +383,7 @@ const getSwapInfo = (quote: EdgeSwapQuote): ThunkAction<Promise<GuiSwapInfo>> =>
     // Format to fiat:
     const toExchangeDenomination = getExchangeDenom(toWallet.currencyConfig, toTokenId)
     const toBalanceInCryptoDisplay = convertNativeToExchange(toExchangeDenomination.multiplier)(quote.toNativeAmount)
-    const toBalanceInFiatRaw = parseFloat(convertCurrency(state, toCurrencyCode, toWallet.fiatCurrencyCode, toBalanceInCryptoDisplay))
+    const toBalanceInFiatRaw = parseFloat(convertCurrency(state, toCurrencyCode, defaultIsoFiat, toBalanceInCryptoDisplay))
     const toFiat = formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
 
     const swapInfo: GuiSwapInfo = {

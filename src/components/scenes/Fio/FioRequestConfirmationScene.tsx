@@ -20,7 +20,7 @@ import {
   fioSignAndBroadcast,
   getRemainingBundles
 } from '../../../util/FioAddressUtils'
-import { DECIMAL_PRECISION } from '../../../util/utils'
+import { DECIMAL_PRECISION, removeIsoPrefix } from '../../../util/utils'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { AddressModal } from '../../modals/AddressModal'
 import { ButtonsModal } from '../../modals/ButtonsModal'
@@ -46,6 +46,7 @@ interface StateProps {
   connectedWalletsByFioAddress: {
     [fioAddress: string]: CcWalletMap
   }
+  defaultIsoFiat: string
 }
 
 interface OwnProps extends EdgeSceneProps<'fioRequestConfirmation'> {}
@@ -282,7 +283,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   render() {
-    const { edgeWallet, exchangeSecondaryToPrimaryRatio, primaryCurrencyInfo, route, theme } = this.props
+    const { defaultIsoFiat, exchangeSecondaryToPrimaryRatio, primaryCurrencyInfo, route, theme } = this.props
     const { amounts } = route.params
 
     const { fioAddressFrom, fioAddressTo, loading, memo, settingFioAddressTo, showSlider } = this.state
@@ -300,7 +301,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
     const fiatAmount = formatNumber(mul(exchangeSecondaryToPrimaryRatio, exchangeAmount), { toFixed: 2 }) || '0'
     const cryptoName = primaryCurrencyInfo.displayDenomination.name
-    const fiatName = edgeWallet.fiatCurrencyCode.replace('iso:', '')
+    const fiatName = removeIsoPrefix(defaultIsoFiat)
 
     return (
       <SceneWrapper scroll>
@@ -342,6 +343,7 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
     const selectedWallet: EdgeCurrencyWallet = getSelectedCurrencyWallet(state)
     const { account } = state.core
     const currencyCode: string = state.ui.wallets.selectedCurrencyCode
+    const defaultIsoFiat = state.ui.settings.defaultIsoFiat
     const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
     const { isConnected } = state.network
 
@@ -357,7 +359,8 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
         walletId: '',
         currencyCode: '',
         fioPlugin: account.currencyConfig.fio,
-        connectedWalletsByFioAddress: {}
+        connectedWalletsByFioAddress: {},
+        defaultIsoFiat
       }
     }
 
@@ -373,8 +376,7 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
       exchangeCurrencyCode: primaryExchangeCurrencyCode,
       exchangeDenomination: primaryExchangeDenomination
     }
-    const isoFiatCurrencyCode: string = selectedWallet.fiatCurrencyCode
-    const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+    const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, defaultIsoFiat)
 
     return {
       exchangeSecondaryToPrimaryRatio,
@@ -387,7 +389,8 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
       walletId: state.ui.wallets.selectedWalletId,
       currencyCode: state.ui.wallets.selectedCurrencyCode,
       fioPlugin: account.currencyConfig.fio,
-      connectedWalletsByFioAddress: state.ui.fio.connectedWalletsByFioAddress
+      connectedWalletsByFioAddress: state.ui.fio.connectedWalletsByFioAddress,
+      defaultIsoFiat
     }
   },
   dispatch => ({})

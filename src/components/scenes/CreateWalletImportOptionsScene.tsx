@@ -25,7 +25,6 @@ import { RowUi4 } from '../ui4/RowUi4'
 export interface CreateWalletImportOptionsParams {
   createWalletList: WalletCreateItem[]
   walletNames: { [key: string]: string }
-  fiatCode: string
   importText: string
 }
 
@@ -33,7 +32,7 @@ interface Props extends EdgeSceneProps<'createWalletImportOptions'> {}
 
 const CreateWalletImportOptionsComponent = (props: Props) => {
   const { navigation, route } = props
-  const { createWalletList, fiatCode, importText, walletNames } = route.params
+  const { createWalletList, importText, walletNames } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -206,7 +205,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
 
       allKeyOptions.set(pluginId, keyOptions)
     })
-    navigation.navigate('createWalletCompletion', { createWalletList, walletNames, fiatCode, keyOptions: allKeyOptions, importText })
+    navigation.navigate('createWalletCompletion', { createWalletList, walletNames, keyOptions: allKeyOptions, importText })
   })
 
   const keyExtractor = useHandler((item: [string, Set<ImportKeyOption>]) => item[0])

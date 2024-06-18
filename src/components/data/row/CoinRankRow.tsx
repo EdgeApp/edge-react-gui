@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
 
-import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../../constants/WalletAndCurrencyConstants'
 import { formatFiatString } from '../../../hooks/useFiatText'
 import { useHandler } from '../../../hooks/useHandler'
 import { toPercentString } from '../../../locales/intl'
@@ -38,7 +38,7 @@ const CoinRankRowComponent = (props: Props) => {
   const { coinRankingDatas } = coinRanking
 
   const defaultFiat = useSelector(state => getDefaultFiat(state))
-  const fiatSymbol = React.useMemo(() => getSymbolFromCurrency(defaultFiat), [defaultFiat])
+  const fiatSymbol = React.useMemo(() => getFiatSymbol(defaultFiat), [defaultFiat])
 
   const mounted = React.useRef<boolean>(true)
   const timeoutHandler = React.useRef<Timeout | undefined>()

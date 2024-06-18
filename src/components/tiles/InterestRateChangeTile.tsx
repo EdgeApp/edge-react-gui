@@ -33,11 +33,11 @@ const InterestRateChangeTileComponent = (props: Props) => {
   const { currencyWallet } = borrowEngine
 
   const debts = useWatch(borrowEngine, 'debts')
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   const {
     currencyConfig: { allTokens },
-    currencyInfo,
-    fiatCurrencyCode
+    currencyInfo
   } = currencyWallet
 
   // Define exchange rates
@@ -45,7 +45,7 @@ const InterestRateChangeTileComponent = (props: Props) => {
     const { tokenId } = obj
     const { currencyCode } = tokenId == null ? currencyInfo : allTokens[tokenId]
     // @ts-expect-error
-    pairs.push(`${currencyCode}_${fiatCurrencyCode}`)
+    pairs.push(`${currencyCode}_${defaultIsoFiat}`)
     return pairs
   }, [])
 
@@ -64,7 +64,7 @@ const InterestRateChangeTileComponent = (props: Props) => {
     const { currencyCode, denominations } = tokenId == null ? currencyInfo : allTokens[tokenId]
     const denom = denominations.find(denom => denom.name === currencyCode)
     const multiplier = denom?.multiplier ?? '1'
-    return mul(div(debt.nativeAmount, multiplier, mulToPrecision(multiplier)), exchangeRates(`${currencyCode}_${fiatCurrencyCode}`))
+    return mul(div(debt.nativeAmount, multiplier, mulToPrecision(multiplier)), exchangeRates(`${currencyCode}_${defaultIsoFiat}`))
   })
 
   // Incoming debt
@@ -72,7 +72,7 @@ const InterestRateChangeTileComponent = (props: Props) => {
   const { currencyCode, denominations } = tokenId == null ? currencyInfo : allTokens[tokenId]
   const denom = denominations.find(denom => denom.name === currencyCode)
   const multiplier = denom?.multiplier ?? '1'
-  const incomingDebtFiatAmount = mul(div(nativeAmount, multiplier, mulToPrecision(multiplier)), exchangeRates(`${currencyCode}_${fiatCurrencyCode}`))
+  const incomingDebtFiatAmount = mul(div(nativeAmount, multiplier, mulToPrecision(multiplier)), exchangeRates(`${currencyCode}_${defaultIsoFiat}`))
 
   const currentWeightedApr = React.useMemo(() => weightedAverage(currentAprs, currentFiatAmounts), [currentAprs, currentFiatAmounts])
   const futureWeightedApr = React.useMemo(

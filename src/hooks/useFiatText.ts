@@ -1,12 +1,12 @@
 import { abs, div, lt, toFixed } from 'biggystring'
 
-import { getSymbolFromCurrency, USD_FIAT } from '../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol, USD_FIAT } from '../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../locales/intl'
 import { lstrings } from '../locales/strings'
 import { convertCurrency } from '../selectors/WalletSelectors'
 import { useSelector } from '../types/reactRedux'
 import { toBigNumberString } from '../util/toBigNumberString'
-import { DECIMAL_PRECISION, zeroString } from '../util/utils'
+import { DECIMAL_PRECISION, removeIsoPrefix, zeroString } from '../util/utils'
 
 const defaultMultiplier = Math.pow(10, DECIMAL_PRECISION).toString()
 interface Props {
@@ -66,8 +66,8 @@ export const useFiatText = (props: Props): string => {
     : '0'
 
   const lessThanSymbol = isSubCentTruncationActive ? '<' : ''
-  const fiatSymbol = hideFiatSymbol ? '' : `${getSymbolFromCurrency(isoFiatCurrencyCode)}${fiatSymbolSpace || hideBalance ? ' ' : ''}`
-  const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${isoFiatCurrencyCode.replace('iso:', '')}` : ''
+  const fiatSymbol = hideFiatSymbol ? '' : `${getFiatSymbol(isoFiatCurrencyCode)}${fiatSymbolSpace || hideBalance ? ' ' : ''}`
+  const fiatCurrencyCode = appendFiatCurrencyCode ? ` ${removeIsoPrefix(isoFiatCurrencyCode)}` : ''
   return `${lessThanSymbol}${fiatSymbol}${fiatString}${fiatCurrencyCode}`
 }
 

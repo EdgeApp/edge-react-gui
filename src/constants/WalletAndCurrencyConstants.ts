@@ -3,6 +3,7 @@ import { Platform } from 'react-native'
 
 import { lstrings } from '../locales/strings'
 import { WalletConnectChainId } from '../types/types'
+import { removeIsoPrefix } from '../util/utils'
 
 export const MAX_TOKEN_CODE_CHARACTERS = 7
 
@@ -853,9 +854,12 @@ export const SPECIAL_CURRENCY_INFO: {
 }
 
 export const USD_FIAT = 'iso:USD'
-export const getSymbolFromCurrency = (currencyCode: string) => {
-  if (typeof currencyCode !== 'string') return ''
-  const codeWithoutIso = currencyCode.replace('iso:', '')
+/**
+ * Get the fiat symbol from an iso:[fiat] OR fiat currency code
+ */
+export const getFiatSymbol = (isoOrFiatCurrencyCode: string) => {
+  if (typeof isoOrFiatCurrencyCode !== 'string') return ''
+  const codeWithoutIso = removeIsoPrefix(isoOrFiatCurrencyCode)
   const out = FIAT_CODES_SYMBOLS[codeWithoutIso.toUpperCase()]
   return out != null ? out : ''
 }

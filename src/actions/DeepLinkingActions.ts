@@ -76,6 +76,7 @@ export function retryPendingDeepLink(navigation: NavigationBase): ThunkAction<vo
  */
 export async function handleLink(navigation: NavigationBase, dispatch: Dispatch, state: RootState, link: DeepLink): Promise<boolean> {
   const { account, disklet } = state.core
+  const { defaultIsoFiat } = state.ui.settings
   const { activeWalletIds, currencyWallets } = account
   const deviceId = base58ToUuid(state.core.context.clientId)
 
@@ -133,6 +134,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
 
       await executePlugin({
         account,
+        defaultIsoFiat,
         deviceId,
         disablePlugins: disableProviders,
         disklet,

@@ -49,10 +49,10 @@ import { ConfirmScene as ConfirmSceneComponent } from './scenes/ConfirmScene'
 import { CreateWalletAccountSelectScene as CreateWalletAccountSelectSceneComponent } from './scenes/CreateWalletAccountSelectScene'
 import { CreateWalletAccountSetupScene as CreateWalletAccountSetupSceneComponent } from './scenes/CreateWalletAccountSetupScene'
 import { CreateWalletCompletionScene as CreateWalletCompletionSceneComponent } from './scenes/CreateWalletCompletionScene'
+import { CreateWalletEditNameScene as CreateWalletSelectFiatSceneComponent } from './scenes/CreateWalletEditNameScene'
 import { CreateWalletImportOptionsScene as CreateWalletImportOptionsSceneComponent } from './scenes/CreateWalletImportOptionsScene'
 import { CreateWalletImportScene as CreateWalletImportSceneComponent } from './scenes/CreateWalletImportScene'
 import { CreateWalletSelectCryptoScene as CreateWalletSelectCryptoSceneComponent } from './scenes/CreateWalletSelectCryptoScene'
-import { CreateWalletSelectFiatScene as CreateWalletSelectFiatSceneComponent } from './scenes/CreateWalletSelectFiatScene'
 import { CurrencyNotificationScene as CurrencyNotificationSceneComponent } from './scenes/CurrencyNotificationScene'
 import { CurrencySettingsScene as CurrencySettingsSceneComponent } from './scenes/CurrencySettingsScene'
 import { DefaultFiatSettingScene as DefaultFiatSettingSceneComponent } from './scenes/DefaultFiatSettingScene'
@@ -449,7 +449,7 @@ const EdgeAppStack = () => {
           headerLeft: () => null
         }}
       />
-      <Stack.Screen name="createWalletSelectFiat" component={CreateWalletSelectFiatScene} />
+      <Stack.Screen name="createWalletEditName" component={CreateWalletSelectFiatScene} />
       <Stack.Screen
         name="currencyNotificationSettings"
         component={CurrencyNotificationScene}

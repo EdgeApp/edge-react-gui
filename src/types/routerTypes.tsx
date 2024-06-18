@@ -8,10 +8,10 @@ import type { ConfirmSceneParams } from '../components/scenes/ConfirmScene'
 import type { CreateWalletAccountSelectParams } from '../components/scenes/CreateWalletAccountSelectScene'
 import type { CreateWalletAccountSetupParams } from '../components/scenes/CreateWalletAccountSetupScene'
 import type { CreateWalletCompletionParams } from '../components/scenes/CreateWalletCompletionScene'
+import type { CreateWalletEditNameParams } from '../components/scenes/CreateWalletEditNameScene'
 import type { CreateWalletImportOptionsParams } from '../components/scenes/CreateWalletImportOptionsScene'
 import type { CreateWalletImportParams } from '../components/scenes/CreateWalletImportScene'
 import type { CreateWalletSelectCryptoParams } from '../components/scenes/CreateWalletSelectCryptoScene'
-import type { CreateWalletSelectFiatParams } from '../components/scenes/CreateWalletSelectFiatScene'
 import type { CurrencyNotificationParams } from '../components/scenes/CurrencyNotificationScene'
 import type { CurrencySettingsParams } from '../components/scenes/CurrencySettingsScene'
 import type { EdgeLoginParams } from '../components/scenes/EdgeLoginScene'
@@ -105,7 +105,7 @@ export interface RouteParamList {
   createWalletImportOptions: CreateWalletImportOptionsParams
   createWalletSelectCrypto: CreateWalletSelectCryptoParams
   createWalletSelectCryptoNewAccount: CreateWalletSelectCryptoParams
-  createWalletSelectFiat: CreateWalletSelectFiatParams
+  createWalletEditName: CreateWalletEditNameParams
   currencyNotificationSettings: CurrencyNotificationParams
   currencySettings: CurrencySettingsParams
   defaultFiatSetting: {}

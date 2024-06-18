@@ -17,6 +17,7 @@
 - fixed: Changing Default Fiat setting does not properly refresh CoinRankingDetailsScene
 - fixed: Possible for keyboard to cover input fields in some Android WebViews
 - fixed: Call the correct method when rejecting a WalletConnect session
+- removed: Wallet-specific fiat currency setting. Account-wide fiat currency setting is now used for app-wide fiat calculation and display
 
 ## 4.8.0
 
