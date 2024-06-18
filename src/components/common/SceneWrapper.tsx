@@ -3,7 +3,7 @@ import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/n
 import * as React from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
-import { useKeyboardHandler, useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
+import { useKeyboardController, useKeyboardHandler, useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
 import Reanimated, { runOnJS, useAnimatedStyle } from 'react-native-reanimated'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -229,19 +229,36 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
   })
 
   /*
-  Hack to force `keyboardAwareStyle` to update from keyboard change during
-  scene transitions. As of react-native-reanimated v3.12.0, there is a bug
-  where if the keyboard is up before a scene transition starts (caused by
-  tapping the back button), then the `keyboardHeightDiff` value will change
-  but the style won't be applied to the scene based ont he keybaordHeightDiff.
-  There must be some race condition that occurs during the transition that
-  is resolvable by forcing the `keyboardHeightDiff` value to change after
-  the transition is complete.
+  Hack to fix floating-nav issues.
+
+  As of react-native-reanimated v3.12.0, there is a bug when the keyboard is
+  up before a scene transition starts (caused by tapping the back button), 
+  then the `keyboardHeightDiff` value will change but the style won't be 
+  applied to the scene.
+  There is some kind of bug causing the scenes in stack that are not focused to
+  not update their styles when the scenes are in transition. This could be
+  an issue with react-navigation in conjunction with reanimated, but it's not
+  clear. It's also not clear if the issue lies in the keyboard controller 
+  library.
+  This fix is a hack that causes the scene to disable the keyboard controller
+  when the scene is no longer in focus. This will cause the keyboard controller
+  to no longer apply the styles at all for the scenes not in focus. The scene
+  in focus may re-enable the controller when the SceneWrapper is used in that
+  focused scene. This will cause the keyboard controller to re-apply the for
+  that focused scene. During transition back to the previous scene, the 
+  controller is immediately disabled and re-enabled again when transition is
+  complete. This seems to kick the controller back into gear and apply the
+  styles correctly.
+  The only side effect to this solution is that if navigation  occurs that 
+  pushes a new scene on the stack while the keyboard is open, then the styles
+  are fixed as applied until navigated back to the scene to reset it.
   */
+  const { setEnabled } = useKeyboardController()
   useFocusEffect(() => {
-    setTimeout(() => {
-      keyboardHeightDiff.value = keyboardHeightDiff.value + 0.000001
-    }, 1)
+    setEnabled(true)
+    return () => {
+      setEnabled(false)
+    }
   })
 
   // If function children, the caller handles the insets and overscroll
