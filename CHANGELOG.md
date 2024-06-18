@@ -9,6 +9,7 @@
 - changed: Light account backup notification card now persists no matter what while logged in to a light account
 - changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
 - fixed: Stabilize the account sync bar progress motion.
+- fixed: Update Algorand's WalletConnectv2 reference
 - fixed: Slight animation stutter when opening the CountryListModal
 - fixed: Account-level Default Fiat setting not being correctly used in Markets View Scenes
 - fixed: Changing Default Fiat setting does not properly refresh CoinRankingDetailsScene

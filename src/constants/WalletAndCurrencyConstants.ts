@@ -846,7 +846,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: true,
     walletConnectV2ChainId: {
       namespace: 'algorand',
-      reference: 'wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8='
+      reference: 'wGHE2Pwdvd7S12BL5FaOP20EGYesN73k'
     }
   }
 }
