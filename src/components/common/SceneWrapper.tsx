@@ -228,22 +228,6 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
     }
   })
 
-  /*
-  Hack to force `keyboardAwareStyle` to update from keyboard change during
-  scene transitions. As of react-native-reanimated v3.12.0, there is a bug
-  where if the keyboard is up before a scene transition starts (caused by
-  tapping the back button), then the `keyboardHeightDiff` value will change
-  but the style won't be applied to the scene based ont he keybaordHeightDiff.
-  There must be some race condition that occurs during the transition that
-  is resolvable by forcing the `keyboardHeightDiff` value to change after
-  the transition is complete.
-  */
-  useFocusEffect(() => {
-    setTimeout(() => {
-      keyboardHeightDiff.value = keyboardHeightDiff.value + 0.000001
-    }, 1)
-  })
-
   // If function children, the caller handles the insets and overscroll
   const memoizedChildren = useMemo(() => (typeof children === 'function' ? children(sceneWrapperInfo) : children), [children, sceneWrapperInfo])
 
