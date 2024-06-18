@@ -4,21 +4,18 @@ import { ScrollView, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
-import { selectWalletToken } from '../../actions/WalletActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
-import { useMount } from '../../hooks/useMount'
 import { useUnmount } from '../../hooks/useUnmount'
 import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { useDispatch, useSelector } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
-import { getTokenIdForced } from '../../util/CurrencyInfoHelpers'
 import { truncateString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
@@ -36,19 +33,19 @@ interface Props extends EdgeSceneProps<'wcConnect'> {}
 export interface WcConnectParams {
   proposal: Web3WalletTypes.SessionProposal
   edgeTokenIds: EdgeAsset[]
+  walletId: string
 }
 
 export const WcConnectScene = (props: Props) => {
   const { navigation } = props
-  const [selectedWallet, setSelectedWallet] = React.useState({ walletId: '', currencyCode: '' })
   const connected = React.useRef(false)
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { proposal, edgeTokenIds } = props.route.params
+  const { proposal, edgeTokenIds, walletId } = props.route.params
   const [walletAddress, setWalletAddress] = React.useState('')
+  const [selectedWalletId, setSelectedWallet] = React.useState(walletId)
 
   const account = useSelector(state => state.core.account)
-  const selectedWalletId = useSelector(state => state.ui.wallets.selectedWalletId)
   const currencyWallets = useWatch(account, 'currencyWallets')
   const wallet = currencyWallets[selectedWalletId]
   const walletName = useWalletName(wallet)
@@ -71,8 +68,6 @@ export const WcConnectScene = (props: Props) => {
     'WcConnectScene'
   )
 
-  const dispatch = useDispatch()
-
   const handleConnect = async () => {
     try {
       await walletConnect.approveSession(proposal, wallet.id)
@@ -90,33 +85,19 @@ export const WcConnectScene = (props: Props) => {
       <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} allowedAssets={edgeTokenIds} showCreateWallet navigation={navigation} />
     ))
     if (result?.type === 'wallet') {
-      const { walletId, currencyCode } = result
-      const wallet = account.currencyWallets[walletId]
-      const tokenId = getTokenIdForced(account, wallet.currencyInfo.pluginId, currencyCode)
-      await dispatch(selectWalletToken({ navigation, walletId, tokenId }))
-      setSelectedWallet({ walletId, currencyCode })
+      setSelectedWallet(result.walletId)
     }
   })
 
-  useMount(() => {
-    handleWalletListModal().catch(err => showError(err))
-  })
-
-  useUnmount(() => {
-    if (!connected.current) wallet.otherMethods.rejectSession(proposal)
+  useUnmount(async () => {
+    if (!connected.current) await walletConnect.rejectSession(proposal)
   })
 
   const renderWalletSelect = () => {
-    if (selectedWallet.walletId === '' && selectedWallet.currencyCode === '') {
-      return <SelectableRow title={lstrings.wc_confirm_select_wallet} onPress={handleWalletListModal} />
-    } else {
-      const walletNameStr = truncateString(walletName || '', MAX_ADDRESS_CHARACTERS)
-      const walletImage = (
-        <CryptoIconUi4 pluginId={wallet.currencyInfo.pluginId} tokenId={getTokenIdForced(account, wallet.currencyInfo.pluginId, selectedWallet.currencyCode)} />
-      )
-      const walletAddressStr = truncateString(walletAddress, MAX_ADDRESS_CHARACTERS, true)
-      return <SelectableRow icon={walletImage} subTitle={walletAddressStr} title={walletNameStr} onPress={handleWalletListModal} />
-    }
+    const walletNameStr = truncateString(walletName, MAX_ADDRESS_CHARACTERS)
+    const walletImage = <CryptoIconUi4 pluginId={wallet.currencyInfo.pluginId} tokenId={null} />
+    const walletAddressStr = truncateString(walletAddress, MAX_ADDRESS_CHARACTERS, true)
+    return <SelectableRow icon={walletImage} subTitle={walletAddressStr} title={walletNameStr} onPress={handleWalletListModal} />
   }
 
   return (
