@@ -15,7 +15,7 @@ export const WebViewScene = (props: Props) => {
   const { uri } = props.route.params
 
   return (
-    <SceneWrapper>
+    <SceneWrapper avoidKeyboard>
       <WebView source={{ uri }} />
     </SceneWrapper>
   )

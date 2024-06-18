@@ -27,7 +27,7 @@ export function GuiPluginViewScene(props: Props): JSX.Element {
   if (checkAndShowLightBackupModal(account, navigation)) navigation.pop()
 
   return (
-    <SceneWrapper hasTabs={route.name !== 'pluginView'}>
+    <SceneWrapper hasTabs={route.name !== 'pluginView'} avoidKeyboard>
       <EdgeProviderComponent plugin={plugin} deepPath={deepPath} deepQuery={deepQuery} navigation={navigation} />
     </SceneWrapper>
   )
