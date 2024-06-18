@@ -23,7 +23,7 @@ PODS:
     - React-Core
   - edge-exchange-plugins (2.5.0):
     - React-Core
-  - edge-login-ui-rn (3.14.1):
+  - edge-login-ui-rn (3.15.0):
     - React-Core
   - EXConstants (16.0.1):
     - ExpoModulesCore
@@ -2100,7 +2100,7 @@ SPEC CHECKSUMS:
   edge-currency-accountbased: df5efdb607bf91825b46413df08e18a13aa05fa8
   edge-currency-plugins: 0cf7d286982bbefc962dcd272cd19d2414d32e15
   edge-exchange-plugins: 111f2fcc139a4a18f76d3e827bc7cce15805bbcf
-  edge-login-ui-rn: 52f6fd98a4fcd41690c5ddad2f3811ce0a7b3630
+  edge-login-ui-rn: d168c9973e83bd278aacdadf00522c9848de56a3
   EXConstants: 9a008dbf262550884e6280dea95b81b51f65ea6f
   Expo: c99f14ca53381d5399b88684c88e20ff7928d3c7
   ExpoAsset: 9b7433ecc5f1b608ccbb823492e062bde944abd2
@@ -2239,6 +2239,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
-PODFILE CHECKSUM: e0f36811c270f12ab9d278fd85d03e29554f97bc
+PODFILE CHECKSUM: 008ac5aae575965e7a2e98a18f18838f6c622384
 
 COCOAPODS: 1.15.2
