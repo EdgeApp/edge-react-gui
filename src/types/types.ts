@@ -108,11 +108,6 @@ export interface GuiReceiveAddress {
   nativeAmount: string
 }
 
-export type FlipInputFieldInfo = GuiCurrencyInfo & {
-  nativeAmount?: string
-  displayAmount?: string
-}
-
 export interface CurrencyConverter {
   convertCurrency: (state: RootState, currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
 }
