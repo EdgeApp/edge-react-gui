@@ -1527,10 +1527,11 @@ const strings = {
 
   no_access_disclaimer_1s: '%1$s has zero access to user funds and does not see or store any private keys or personal information.',
 
+  // #endregion Light Account
+
   // Buttons
   learn_more: 'Learn More',
-
-  // #endregion Light Account
+  dismiss: 'Dismiss',
 
   // #region Notifications
 
@@ -1542,6 +1543,23 @@ const strings = {
   notif_ip_validation_enabled_body: 'Your account is protected from unauthorized logins. Tap to learn more.',
 
   // #endregion Notifications
+
+  // #region Survey Modal
+
+  survey_discover_title_1s: 'How Did You Discover %1$s?',
+  survey_discover_subtitle: 'This survey is anonymous and your response will not be tied to your account.',
+  survey_opt_youtube: 'YouTube',
+  survey_opt_search_engine: 'Search Engine',
+  survey_opt_x_twitter: 'X/Twitter',
+  survey_opt_in_person_event: 'In-person Event',
+  survey_opt_personal_referral: 'Personal Referral',
+  survey_opt_article: 'Article',
+  survey_opt_submit: 'Submit',
+  survey_opt_dismiss: 'Dismiss',
+  survey_opt_other_specify: 'Other (Specify)',
+  specify_placeholder: 'Specify',
+
+  // #endregion Survey Modal
 
   // #region Transfer Modal
 

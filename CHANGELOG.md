@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- added: A post-install survey asking users how they discovered the app
 - added: Support for splitting LTC to BTC wallets for recovering BTC erroneously sent to an LTC address
 - added: "Force Light Account Creation" developer mode setting
 - added: Allow promoCards to send promoCodes to fiat partners for special pricing

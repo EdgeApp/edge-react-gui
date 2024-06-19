@@ -68,6 +68,13 @@ export const writeDeviceNotifDismissInfo = async (deviceNotifDismissInfo: Device
   return await writeDeviceSettings(updatedSettings)
 }
 
+/**
+ * Track the state of whether the "How did you Discover Edge" modal was shown.
+ **/
+export const writeIsSurveyDiscoverShown = async (isSurveyDiscoverShown: boolean) => {
+  return await writeDeviceSettings({ ...deviceSettings, isSurveyDiscoverShown })
+}
+
 const readDeviceSettings = async (): Promise<DeviceSettings> => {
   try {
     const text = await disklet.getText(DEVICE_SETTINGS_FILENAME)
