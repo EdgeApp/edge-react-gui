@@ -1,5 +1,5 @@
 import { asArray, asBoolean, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
-import { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeToken, EdgeTokenId } from 'edge-core-js/types'
+import { EdgeCurrencyWallet, EdgeMetadata, EdgeToken, EdgeTokenId } from 'edge-core-js/types'
 
 import { LocaleStringKey } from '../locales/en_US'
 import { RootState } from './reduxTypes'
@@ -31,15 +31,6 @@ export interface StringMap {
 }
 export interface MapObject<T> {
   [key: string]: T
-}
-
-export interface GuiCurrencyInfo {
-  walletId: string
-  tokenId: EdgeTokenId
-  displayCurrencyCode: string
-  exchangeCurrencyCode: string
-  displayDenomination: EdgeDenomination
-  exchangeDenomination: EdgeDenomination
 }
 
 export interface GuiContact {
@@ -110,21 +101,6 @@ export interface GuiReceiveAddress {
 
 export interface CurrencyConverter {
   convertCurrency: (state: RootState, currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
-}
-
-export const emptyCurrencyInfo: GuiCurrencyInfo = {
-  walletId: '',
-  tokenId: null,
-  displayCurrencyCode: '',
-  exchangeCurrencyCode: '',
-  displayDenomination: {
-    name: '',
-    multiplier: '1'
-  },
-  exchangeDenomination: {
-    name: '',
-    multiplier: '1'
-  }
 }
 
 const asPasswordReminder = asObject({
