@@ -1,3 +1,4 @@
+import { useIsFocused } from '@react-navigation/native'
 import React, { useEffect, useRef } from 'react'
 import { View } from 'react-native'
 
@@ -11,9 +12,10 @@ export const TEN_MINUTES = 600
 export const CircleTimer: React.FC<Props> = ({ expiration, timeExpired }) => {
   const componentMounted = useRef(true)
   const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const isFocused = useIsFocused()
 
   const timerTick = () => {
-    if (!componentMounted.current) {
+    if (!componentMounted.current || !isFocused) {
       if (timeoutId.current != null) {
         clearTimeout(timeoutId.current)
       }
