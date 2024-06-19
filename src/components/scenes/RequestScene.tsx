@@ -520,7 +520,8 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
   }
 
   openFioAddressModal = async (): Promise<void> => {
-    const { navigation, wallet, currencyCode } = this.props
+    const { navigation, wallet, currencyCode, route } = this.props
+    const { walletId, tokenId } = route.params
     if (wallet?.id == null || currencyCode == null) return
 
     if (!this.props.isConnected) {
@@ -542,7 +543,9 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
     if (fioAddressTo != null) {
       navigation.navigate('fioRequestConfirmation', {
         amounts: this.state.amounts,
-        fioAddressTo
+        fioAddressTo,
+        tokenId,
+        walletId
       })
     }
   }
