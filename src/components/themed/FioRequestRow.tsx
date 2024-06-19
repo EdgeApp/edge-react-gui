@@ -9,7 +9,6 @@ import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { formatNumber, formatTime } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
-import { getSelectedCurrencyWallet } from '../../selectors/WalletSelectors'
 import { connect } from '../../types/reactRedux'
 import { FioRequest, FioRequestStatus } from '../../types/types'
 import { getCryptoText } from '../../util/cryptoTextUtils'
@@ -201,15 +200,6 @@ export const FioRequestRow = connect<StateProps, {}, OwnProps>(
     const { defaultIsoFiat } = state.ui.settings
     let displayDenomination = emptyDenomination
     let exchangeDenomination = emptyDenomination
-    const wallet = getSelectedCurrencyWallet(state)
-    if (!wallet) {
-      return {
-        exchangeDenomination,
-        displayDenomination,
-        fiatSymbol: '',
-        fiatAmount: ''
-      }
-    }
     let tokenCode = fioRequest.content.token_code.toUpperCase()
     try {
       const { account } = state.core
