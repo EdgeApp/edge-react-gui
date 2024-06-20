@@ -1,10 +1,11 @@
 import { lt } from 'biggystring'
 import * as React from 'react'
-import { View } from 'react-native'
+import { ActivityIndicator, View, ViewStyle } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
+import { useAccountWalletsSyncProgress } from '../../hooks/useAccountWalletsSyncProgress'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
@@ -44,6 +45,8 @@ export const BalanceCardUi4 = (props: Props) => {
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const fiatAmount = useSelector(state => getTotalFiatAmountFromExchangeRates(state, defaultIsoFiat))
   const exchangeRates = useSelector(state => state.exchangeRates)
+
+  const accountSyncProgress = useAccountWalletsSyncProgress()
 
   const activeWalletIds = useWatch(account, 'activeWalletIds')
   const currencyWallets = useWatch(account, 'currencyWallets')
@@ -91,9 +94,15 @@ export const BalanceCardUi4 = (props: Props) => {
           {!exchangeRatesReady && zeroString(fiatAmount) ? (
             <EdgeText style={styles.balanceText}>{lstrings.loading}</EdgeText>
           ) : animateNumber ? (
-            <AnimatedNumber numberString={balanceString} textStyle={styles.balanceText} />
+            <>
+              <AnimatedNumber numberString={balanceString} textStyle={styles.balanceText} />
+              <ActivityIndicator color={theme.primaryText} style={styles.spinner} animating={accountSyncProgress < 100} />
+            </>
           ) : (
-            <EdgeText style={styles.balanceTextNoAnim}>{balanceString}</EdgeText>
+            <>
+              <EdgeText style={styles.balanceTextNoAnim}>{balanceString}</EdgeText>
+              <ActivityIndicator color={theme.primaryText} style={styles.spinner} animating={accountSyncProgress < 100} />
+            </>
           )}
         </View>
       </EdgeTouchableOpacity>
@@ -119,10 +128,12 @@ export const BalanceCardUi4 = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => {
-  const balanceTextContainer = {
+  const balanceTextContainer: ViewStyle = {
     marginTop: theme.rem(0.25),
     marginBottom: theme.rem(0.5),
-    height: theme.rem(2.25)
+    height: theme.rem(2.25),
+    flexDirection: 'row',
+    alignItems: 'center'
   }
 
   const balanceText = {
@@ -158,7 +169,6 @@ const getStyles = cacheStyles((theme: Theme) => {
       ...theme.cardTextShadow
     },
 
-    // These two icons have different bounding boxes. Adjusted to match
     eyeIcon: {
       alignSelf: 'center',
       marginLeft: theme.rem(0.25),
@@ -182,6 +192,9 @@ const getStyles = cacheStyles((theme: Theme) => {
     showBalance: {
       fontSize: theme.rem(1.5),
       fontFamily: theme.fontFaceMedium
+    },
+    spinner: {
+      marginLeft: theme.rem(0.5)
     }
   }
 })
