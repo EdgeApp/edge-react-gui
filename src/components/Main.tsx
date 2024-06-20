@@ -223,93 +223,185 @@ const firstSceneScreenOptions: StackNavigationOptions = {
   headerTitleAlign: 'center'
 }
 
-export const Main = () => {
-  const theme = useTheme()
-  const dispatch = useDispatch()
+// -------------------------------------------------------------------------
+// Tab router
+// -------------------------------------------------------------------------
 
-  // TODO: Create a new provider instead to serve the experimentConfig globally
-  const [experimentConfig, setExperimentConfig] = React.useState<ExperimentConfig | undefined>(isMaestro() ? DEFAULT_EXPERIMENT_CONFIG : undefined)
-
-  const [hasInitialScenesLoaded, setHasInitialScenesLoaded] = React.useState(false)
-
-  // Match react navigation theme background with the patina theme
-  const reactNavigationTheme = React.useMemo(() => {
-    return {
-      ...DefaultTheme,
-      colors: {
-        ...DefaultTheme.colors,
-        background: theme.backgroundGradientColors[0]
-      }
-    }
-  }, [theme])
-
-  const context = useSelector(state => state.core.context)
-  const { localUsers } = context
-
-  useMount(() => {
-    dispatch(logEvent('Start_App', { numAccounts: localUsers.length }))
-    if (localUsers.length === 0) {
-      dispatch(logEvent('Start_App_No_Accounts'))
-    } else {
-      dispatch(logEvent('Start_App_With_Accounts'))
-    }
-
-    // Used to re-enable animations to login scene:
-    setTimeout(() => {
-      setHasInitialScenesLoaded(true)
-    }, 0)
-  })
-
-  // Wait for the experiment config to initialize before rendering anything
-  useAsyncEffect(
-    async () => {
-      if (isMaestro()) return
-      setExperimentConfig(await getExperimentConfig())
-    },
-    [],
-    'setLegacyLanding'
-  )
-
-  const initialRouteName = ENV.USE_WELCOME_SCREENS && localUsers.length === 0 ? 'gettingStarted' : 'login'
-
+const EdgeHomeTabScreen = () => {
   return (
-    <>
-      {experimentConfig == null ? (
-        <LoadingSplashScreen />
-      ) : (
-        <NavigationContainer theme={reactNavigationTheme}>
-          <Stack.Navigator
-            initialRouteName={initialRouteName}
-            screenOptions={{
-              headerShown: false
-            }}
-          >
-            <Stack.Screen name="edgeApp" component={EdgeApp} />
-            <Stack.Screen name="gettingStarted" component={GettingStartedScene} initialParams={{ experimentConfig }} />
-            <Stack.Screen name="login" component={LoginScene} initialParams={{ experimentConfig }} options={{ animationEnabled: hasInitialScenesLoaded }} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      )}
-    </>
+    <Stack.Navigator initialRouteName="home" screenOptions={defaultScreenOptions}>
+      <Stack.Screen name="home" component={HomeScene} options={firstSceneScreenOptions} />
+    </Stack.Navigator>
   )
 }
 
-const EdgeApp = () => {
+const EdgeWalletsTabScreen = () => {
   return (
-    <Drawer.Navigator
-      drawerContent={props => SideMenu(props)}
-      initialRouteName="edgeAppStack"
+    <Stack.Navigator initialRouteName="walletList" screenOptions={defaultScreenOptions}>
+      <Stack.Screen
+        name="transactionDetails"
+        component={TransactionDetailsScene}
+        options={{
+          headerTitle: () => <TransactionDetailsTitle />
+        }}
+      />
+      <Stack.Screen name="walletList" component={WalletListScene} options={firstSceneScreenOptions} />
+      <Stack.Screen
+        name="transactionList"
+        component={TransactionList}
+        options={{ headerTitle: () => <ParamHeaderTitle<'transactionList'> fromParams={params => params.walletName} /> }}
+      />
+    </Stack.Navigator>
+  )
+}
+
+const EdgeBuyTabScreen = () => {
+  return (
+    <Stack.Navigator initialRouteName="pluginListBuy" screenOptions={defaultScreenOptions}>
+      <Stack.Screen name="pluginListBuy" component={GuiPluginListScene} options={firstSceneScreenOptions} />
+      <Stack.Screen
+        name="pluginViewBuy"
+        component={GuiPluginViewScene}
+        options={{
+          headerTitle: () => <ParamHeaderTitle<'pluginViewBuy'> fromParams={params => params.plugin.displayName} />,
+          headerRight: () => <HeaderTextButton type="exit" />,
+          headerLeft: () => <PluginBackButton />
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginAddressForm"
+        component={AddressFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginEnterAmount"
+        component={FiatPluginEnterAmountScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginInfoDisplay"
+        component={InfoDisplayScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginSepaForm"
+        component={SepaFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
+      <Stack.Screen name="rewardsCardDashboard" component={RewardsCardDashboardScene} />
+      <Stack.Screen name="rewardsCardWelcome" component={RewardsCardWelcomeScene} />
+    </Stack.Navigator>
+  )
+}
+
+const EdgeSellTabScreen = () => {
+  return (
+    <Stack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
+      <Stack.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
+      <Stack.Screen
+        name="pluginViewSell"
+        component={GuiPluginViewScene}
+        options={{
+          headerTitle: () => <ParamHeaderTitle<'pluginViewSell'> fromParams={params => params.plugin.displayName} />,
+          headerRight: () => <HeaderTextButton type="exit" />,
+          headerLeft: () => <PluginBackButton />
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginAddressForm"
+        component={AddressFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginEnterAmount"
+        component={FiatPluginEnterAmountScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginInfoDisplay"
+        component={InfoDisplayScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen
+        name="guiPluginSepaForm"
+        component={SepaFormScene}
+        options={{
+          headerRight: () => null
+        }}
+      />
+      <Stack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
+      <Stack.Screen name="rewardsCardDashboard" component={RewardsCardDashboardScene} />
+      <Stack.Screen name="rewardsCardWelcome" component={RewardsCardWelcomeScene} />
+    </Stack.Navigator>
+  )
+}
+
+const EdgeSwapTabScreen = () => {
+  return (
+    <Stack.Navigator initialRouteName="swapCreate" screenOptions={defaultScreenOptions}>
+      <Stack.Screen
+        name="swapCreate"
+        component={SwapCreateScene}
+        options={{
+          ...firstSceneScreenOptions,
+          title: lstrings.title_exchange
+        }}
+      />
+      <Stack.Screen name="swapConfirmation" component={SwapConfirmationScene} />
+      <Stack.Screen
+        name="swapProcessing"
+        component={SwapProcessingScene}
+        options={{
+          headerLeft: () => null,
+          headerRight: () => null
+        }}
+      />
+    </Stack.Navigator>
+  )
+}
+
+const EdgeTabs = () => {
+  const { defaultScreen } = getDeviceSettings()
+  const initialRouteName = defaultScreen === 'assets' ? 'walletsTab' : 'homeTab'
+
+  return (
+    <Tab.Navigator
+      initialRouteName={initialRouteName}
+      tabBar={props => <MenuTabs {...props} />}
       screenOptions={{
-        drawerPosition: 'right',
-        drawerType: 'front',
-        drawerStyle: { backgroundColor: 'transparent', bottom: 0, width: '66%' },
         headerShown: false
       }}
     >
-      <Drawer.Screen name="edgeAppStack" component={EdgeAppStack} />
-    </Drawer.Navigator>
+      <Tab.Screen name="homeTab" component={EdgeHomeTabScreen} />
+      <Tab.Screen name="walletsTab" component={EdgeWalletsTabScreen} />
+      <Tab.Screen name="buyTab" component={EdgeBuyTabScreen} />
+      <Tab.Screen name="sellTab" component={EdgeSellTabScreen} />
+      <Tab.Screen name="swapTab" component={EdgeSwapTabScreen} />
+      <Tab.Screen name="extraTab" component={ExtraTabScene} />
+      <Tab.Screen name="devTab" component={DevTestScene} />
+    </Tab.Navigator>
   )
 }
+
+// -------------------------------------------------------------------------
+// Main `edgeAppStack`
+// The tabs live inside this stack, as well as most app scenes.
+// -------------------------------------------------------------------------
 
 const EdgeAppStack = () => {
   return (
@@ -643,173 +735,94 @@ const EdgeAppStack = () => {
   )
 }
 
-const EdgeTabs = () => {
-  const { defaultScreen } = getDeviceSettings()
-  const initialRouteName = defaultScreen === 'assets' ? 'walletsTab' : 'homeTab'
+// -------------------------------------------------------------------------
+// Root router
+// -------------------------------------------------------------------------
 
+const EdgeApp = () => {
   return (
-    <Tab.Navigator
-      initialRouteName={initialRouteName}
-      tabBar={props => <MenuTabs {...props} />}
+    <Drawer.Navigator
+      drawerContent={props => SideMenu(props)}
+      initialRouteName="edgeAppStack"
       screenOptions={{
+        drawerPosition: 'right',
+        drawerType: 'front',
+        drawerStyle: { backgroundColor: 'transparent', bottom: 0, width: '66%' },
         headerShown: false
       }}
     >
-      <Tab.Screen name="homeTab" component={EdgeHomeTabScreen} />
-      <Tab.Screen name="walletsTab" component={EdgeWalletsTabScreen} />
-      <Tab.Screen name="buyTab" component={EdgeBuyTabScreen} />
-      <Tab.Screen name="sellTab" component={EdgeSellTabScreen} />
-      <Tab.Screen name="swapTab" component={EdgeSwapTabScreen} />
-      <Tab.Screen name="extraTab" component={ExtraTabScene} />
-      <Tab.Screen name="devTab" component={DevTestScene} />
-    </Tab.Navigator>
+      <Drawer.Screen name="edgeAppStack" component={EdgeAppStack} />
+    </Drawer.Navigator>
   )
 }
 
-const EdgeHomeTabScreen = () => {
-  return (
-    <Stack.Navigator initialRouteName="home" screenOptions={defaultScreenOptions}>
-      <Stack.Screen name="home" component={HomeScene} options={firstSceneScreenOptions} />
-    </Stack.Navigator>
-  )
-}
+export const Main = () => {
+  const theme = useTheme()
+  const dispatch = useDispatch()
 
-const EdgeWalletsTabScreen = () => {
-  return (
-    <Stack.Navigator initialRouteName="walletList" screenOptions={defaultScreenOptions}>
-      <Stack.Screen
-        name="transactionDetails"
-        component={TransactionDetailsScene}
-        options={{
-          headerTitle: () => <TransactionDetailsTitle />
-        }}
-      />
-      <Stack.Screen name="walletList" component={WalletListScene} options={firstSceneScreenOptions} />
-      <Stack.Screen
-        name="transactionList"
-        component={TransactionList}
-        options={{ headerTitle: () => <ParamHeaderTitle<'transactionList'> fromParams={params => params.walletName} /> }}
-      />
-    </Stack.Navigator>
-  )
-}
+  // TODO: Create a new provider instead to serve the experimentConfig globally
+  const [experimentConfig, setExperimentConfig] = React.useState<ExperimentConfig | undefined>(isMaestro() ? DEFAULT_EXPERIMENT_CONFIG : undefined)
 
-const EdgeBuyTabScreen = () => {
-  return (
-    <Stack.Navigator initialRouteName="pluginListBuy" screenOptions={defaultScreenOptions}>
-      <Stack.Screen name="pluginListBuy" component={GuiPluginListScene} options={firstSceneScreenOptions} />
-      <Stack.Screen
-        name="pluginViewBuy"
-        component={GuiPluginViewScene}
-        options={{
-          headerTitle: () => <ParamHeaderTitle<'pluginViewBuy'> fromParams={params => params.plugin.displayName} />,
-          headerRight: () => <HeaderTextButton type="exit" />,
-          headerLeft: () => <PluginBackButton />
-        }}
-      />
-      <Stack.Screen
-        name="guiPluginAddressForm"
-        component={AddressFormScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <Stack.Screen
-        name="guiPluginEnterAmount"
-        component={FiatPluginEnterAmountScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <Stack.Screen
-        name="guiPluginInfoDisplay"
-        component={InfoDisplayScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <Stack.Screen
-        name="guiPluginSepaForm"
-        component={SepaFormScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <Stack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
-      <Stack.Screen name="rewardsCardDashboard" component={RewardsCardDashboardScene} />
-      <Stack.Screen name="rewardsCardWelcome" component={RewardsCardWelcomeScene} />
-    </Stack.Navigator>
-  )
-}
+  const [hasInitialScenesLoaded, setHasInitialScenesLoaded] = React.useState(false)
 
-const EdgeSellTabScreen = () => {
-  return (
-    <Stack.Navigator initialRouteName="pluginListSell" screenOptions={defaultScreenOptions}>
-      <Stack.Screen name="pluginListSell" component={GuiPluginListScene} options={firstSceneScreenOptions} />
-      <Stack.Screen
-        name="pluginViewSell"
-        component={GuiPluginViewScene}
-        options={{
-          headerTitle: () => <ParamHeaderTitle<'pluginViewSell'> fromParams={params => params.plugin.displayName} />,
-          headerRight: () => <HeaderTextButton type="exit" />,
-          headerLeft: () => <PluginBackButton />
-        }}
-      />
-      <Stack.Screen
-        name="guiPluginAddressForm"
-        component={AddressFormScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <Stack.Screen
-        name="guiPluginEnterAmount"
-        component={FiatPluginEnterAmountScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <Stack.Screen
-        name="guiPluginInfoDisplay"
-        component={InfoDisplayScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <Stack.Screen
-        name="guiPluginSepaForm"
-        component={SepaFormScene}
-        options={{
-          headerRight: () => null
-        }}
-      />
-      <Stack.Screen name="guiPluginWebView" component={FiatPluginWebViewComponent} />
-      <Stack.Screen name="rewardsCardDashboard" component={RewardsCardDashboardScene} />
-      <Stack.Screen name="rewardsCardWelcome" component={RewardsCardWelcomeScene} />
-    </Stack.Navigator>
-  )
-}
+  // Match react navigation theme background with the patina theme
+  const reactNavigationTheme = React.useMemo(() => {
+    return {
+      ...DefaultTheme,
+      colors: {
+        ...DefaultTheme.colors,
+        background: theme.backgroundGradientColors[0]
+      }
+    }
+  }, [theme])
 
-const EdgeSwapTabScreen = () => {
+  const context = useSelector(state => state.core.context)
+  const { localUsers } = context
+
+  useMount(() => {
+    dispatch(logEvent('Start_App', { numAccounts: localUsers.length }))
+    if (localUsers.length === 0) {
+      dispatch(logEvent('Start_App_No_Accounts'))
+    } else {
+      dispatch(logEvent('Start_App_With_Accounts'))
+    }
+
+    // Used to re-enable animations to login scene:
+    setTimeout(() => {
+      setHasInitialScenesLoaded(true)
+    }, 0)
+  })
+
+  // Wait for the experiment config to initialize before rendering anything
+  useAsyncEffect(
+    async () => {
+      if (isMaestro()) return
+      setExperimentConfig(await getExperimentConfig())
+    },
+    [],
+    'setLegacyLanding'
+  )
+
+  const initialRouteName = ENV.USE_WELCOME_SCREENS && localUsers.length === 0 ? 'gettingStarted' : 'login'
+
   return (
-    <Stack.Navigator initialRouteName="swapCreate" screenOptions={defaultScreenOptions}>
-      <Stack.Screen
-        name="swapCreate"
-        component={SwapCreateScene}
-        options={{
-          ...firstSceneScreenOptions,
-          title: lstrings.title_exchange
-        }}
-      />
-      <Stack.Screen name="swapConfirmation" component={SwapConfirmationScene} />
-      <Stack.Screen
-        name="swapProcessing"
-        component={SwapProcessingScene}
-        options={{
-          headerLeft: () => null,
-          headerRight: () => null
-        }}
-      />
-    </Stack.Navigator>
+    <>
+      {experimentConfig == null ? (
+        <LoadingSplashScreen />
+      ) : (
+        <NavigationContainer theme={reactNavigationTheme}>
+          <Stack.Navigator
+            initialRouteName={initialRouteName}
+            screenOptions={{
+              headerShown: false
+            }}
+          >
+            <Stack.Screen name="edgeApp" component={EdgeApp} />
+            <Stack.Screen name="gettingStarted" component={GettingStartedScene} initialParams={{ experimentConfig }} />
+            <Stack.Screen name="login" component={LoginScene} initialParams={{ experimentConfig }} options={{ animationEnabled: hasInitialScenesLoaded }} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      )}
+    </>
   )
 }
