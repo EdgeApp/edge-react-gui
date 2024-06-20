@@ -5,6 +5,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
@@ -44,12 +45,15 @@ export const BalanceCardUi4 = (props: Props) => {
   const fiatAmount = useSelector(state => getTotalFiatAmountFromExchangeRates(state, defaultIsoFiat))
   const exchangeRates = useSelector(state => state.exchangeRates)
 
+  const [isWalletsLoaded, setIsWalletsLoaded] = React.useState(false)
+
   const fiatSymbol = defaultIsoFiat ? getFiatSymbol(defaultIsoFiat) : ''
   const fiatCurrencyCode = removeIsoPrefix(defaultIsoFiat)
   const formattedFiat = isBalanceVisible ? formatNumber(fiatAmount, { toFixed: 2 }) : lstrings.redacted_placeholder
 
-  const exchangeRatesReady = exchangeRates != null && Object.keys(exchangeRates).length > 0
-
+  const exchangeRatesReady = Object.keys(account.currencyWallets).every(
+    walletId => exchangeRates[`${account.currencyWallets[walletId].currencyInfo.currencyCode}_${defaultIsoFiat}`] != null
+  )
   const handleToggleAccountBalanceVisibility = useHandler(() => {
     dispatch(toggleAccountBalanceVisibility())
   })
@@ -65,6 +69,15 @@ export const BalanceCardUi4 = (props: Props) => {
   const balanceString = fiatSymbol.length !== 1 ? `${formattedFiat} ${fiatCurrencyCode}` : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`
   const animateNumber = lt(fiatAmount, MAX_ANIMATED_AMOUNT)
 
+  useAsyncEffect(
+    async () => {
+      await account.waitForAllWallets()
+      setIsWalletsLoaded(true)
+    },
+    [],
+    'BalanceCard'
+  )
+
   return (
     <CardUi4>
       <EdgeTouchableOpacity style={styles.balanceContainer} onPress={handleToggleAccountBalanceVisibility}>
@@ -72,19 +85,15 @@ export const BalanceCardUi4 = (props: Props) => {
           <EdgeText style={theme.cardTextShadow}>{lstrings.fragment_wallets_balance_text}</EdgeText>
           <IonIcon name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'} style={styles.eyeIcon} color={theme.iconTappable} size={theme.rem(1)} />
         </View>
-        {!exchangeRatesReady ? (
-          <View style={styles.balanceTextContainer}>
-            <EdgeText style={styles.ratesLoading}>{lstrings.exchange_rates_loading}</EdgeText>
-          </View>
-        ) : animateNumber ? (
-          <View style={styles.balanceTextContainer}>
-            <AnimatedNumber numberString={balanceString} style={styles.balanceTextContainer} textStyle={styles.balanceText} />
-          </View>
-        ) : (
-          <View style={styles.balanceTextContainer}>
+        <View style={styles.balanceTextContainer}>
+          {(!exchangeRatesReady || !isWalletsLoaded) && fiatAmount === 0 ? (
+            <EdgeText style={styles.balanceText}>{lstrings.loading}</EdgeText>
+          ) : animateNumber ? (
+            <AnimatedNumber numberString={balanceString} textStyle={styles.balanceText} />
+          ) : (
             <EdgeText style={styles.balanceTextNoAnim}>{balanceString}</EdgeText>
-          </View>
-        )}
+          )}
+        </View>
       </EdgeTouchableOpacity>
       {onViewAssetsPress == null ? null : (
         <EdgeTouchableOpacity style={styles.rightButtonContainer} onPress={onViewAssetsPress}>
@@ -168,7 +177,6 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontSize: theme.rem(1),
       color: theme.secondaryText
     },
-    ratesLoading: { ...balanceTextContainer, ...theme.cardTextShadow },
     showBalance: {
       fontSize: theme.rem(1.5),
       fontFamily: theme.fontFaceMedium

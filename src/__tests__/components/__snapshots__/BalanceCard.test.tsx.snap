@@ -161,9 +161,10 @@ exports[`BalanceCard should render with loading props 1`] = `
               "includeFontPadding": false,
             },
             {
-              "height": 51,
-              "marginBottom": 11,
-              "marginTop": 6,
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Medium",
+              "fontSize": 39,
+              "includeFontPadding": false,
               "textShadowColor": "rgba(0, 0, 0, 0.514)",
               "textShadowOffset": {
                 "height": 0,
@@ -175,7 +176,7 @@ exports[`BalanceCard should render with loading props 1`] = `
           ]
         }
       >
-        Exchange Rates Loading...
+        Loading…
       </Text>
     </View>
   </View>
