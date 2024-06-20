@@ -165,7 +165,7 @@ const NotificationViewComponent = (props: Props) => {
           onPress={handlePasswordReminderPress}
         />
       </EdgeAnim>
-      <EdgeAnim visible={otpKey != null && accountNotifDismissInfo != null && !accountNotifDismissInfo.ip2FaNotifShown} enter={fadeIn} exit={fadeOut}>
+      <EdgeAnim visible={otpKey == null && accountNotifDismissInfo != null && !accountNotifDismissInfo.ip2FaNotifShown} enter={fadeIn} exit={fadeOut}>
         <NotificationCard
           type="info"
           title={lstrings.notif_ip_validation_enabled_title}
