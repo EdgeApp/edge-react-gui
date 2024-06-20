@@ -78,6 +78,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         {
           "alignItems": "center",
           "flexDirection": "row",
+          "marginBottom": 11,
         }
       }
     >
@@ -144,9 +145,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         {
           "alignItems": "center",
           "flexDirection": "row",
-          "height": 51,
-          "marginBottom": 11,
-          "marginTop": 6,
+          "height": 56,
         }
       }
     >

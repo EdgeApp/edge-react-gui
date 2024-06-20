@@ -1,6 +1,6 @@
 import { lt } from 'biggystring'
 import * as React from 'react'
-import { ActivityIndicator, View, ViewStyle } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
@@ -100,7 +100,7 @@ export const BalanceCardUi4 = (props: Props) => {
             </>
           ) : (
             <>
-              <EdgeText style={styles.balanceTextNoAnim}>{balanceString}</EdgeText>
+              <EdgeText style={styles.balanceText}>{balanceString}</EdgeText>
               <ActivityIndicator color={theme.primaryText} style={styles.spinner} animating={accountSyncProgress < 1} />
             </>
           )}
@@ -127,74 +127,55 @@ export const BalanceCardUi4 = (props: Props) => {
   )
 }
 
-const getStyles = cacheStyles((theme: Theme) => {
-  const balanceTextContainer: ViewStyle = {
-    marginTop: theme.rem(0.25),
-    marginBottom: theme.rem(0.5),
-    height: theme.rem(2.25),
+const getStyles = cacheStyles((theme: Theme) => ({
+  balanceContainer: {
+    margin: theme.rem(0.5)
+  },
+  titleContainer: {
     flexDirection: 'row',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+    marginBottom: theme.rem(0.5)
+  },
 
-  const balanceText = {
+  rightButtonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 0,
+    right: 0
+  },
+  tappableText: {
+    fontSize: theme.rem(0.75),
+    color: theme.iconTappable,
+    margin: theme.rem(1),
+    marginTop: theme.rem(1) + 3, // Fudge factor to align with the larger text on the left
+    ...theme.cardTextShadow
+  },
+
+  eyeIcon: {
+    alignSelf: 'center',
+    marginLeft: theme.rem(0.25),
+    marginRight: theme.rem(0),
+    ...theme.cardTextShadow
+  },
+  balanceText: {
     fontSize: theme.rem(1.75),
     fontFamily: theme.fontFaceMedium,
     color: theme.primaryText,
     includeFontPadding: false,
     ...theme.cardTextShadow
+  },
+  balanceTextContainer: {
+    height: theme.rem(2.5),
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  showBalance: {
+    fontSize: theme.rem(1.5),
+    fontFamily: theme.fontFaceMedium
+  },
+  spinner: {
+    marginLeft: theme.rem(0.5)
   }
-
-  return {
-    balanceContainer: {
-      margin: theme.rem(0.5)
-    },
-    titleContainer: {
-      flexDirection: 'row',
-      alignItems: 'center'
-    },
-
-    rightButtonContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'absolute',
-      top: 0,
-      right: 0
-    },
-    tappableText: {
-      fontSize: theme.rem(0.75),
-      color: theme.iconTappable,
-      margin: theme.rem(1),
-      marginTop: theme.rem(1) + 3, // Fudge factor to align with the larger text on the left
-      ...theme.cardTextShadow
-    },
-
-    eyeIcon: {
-      alignSelf: 'center',
-      marginLeft: theme.rem(0.25),
-      marginRight: theme.rem(0),
-      ...theme.cardTextShadow
-    },
-    balanceText,
-    balanceTextContainer,
-    balanceTextNoAnim: {
-      ...balanceTextContainer,
-      ...balanceText
-    },
-    balanceBoxContainer: {
-      height: theme.rem(3.25),
-      marginTop: theme.rem(0.5)
-    },
-    balanceHeader: {
-      fontSize: theme.rem(1),
-      color: theme.secondaryText
-    },
-    showBalance: {
-      fontSize: theme.rem(1.5),
-      fontFamily: theme.fontFaceMedium
-    },
-    spinner: {
-      marginLeft: theme.rem(0.5)
-    }
-  }
-})
+}))
