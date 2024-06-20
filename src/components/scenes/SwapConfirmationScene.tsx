@@ -1,3 +1,4 @@
+import { useIsFocused } from '@react-navigation/native'
 import { add, div, gte, toFixed } from 'biggystring'
 import { EdgeSwapQuote, EdgeSwapResult } from 'edge-core-js'
 import React, { useState } from 'react'
@@ -69,6 +70,8 @@ export const SwapConfirmationScene = (props: Props) => {
 
   const swapRequestOptions = useSwapRequestOptions()
 
+  const isFocused = useIsFocused()
+
   const [selectedQuote, setSelectedQuote] = useState(pickBestQuote(quotes))
   const [calledApprove, setCalledApprove] = useState(false)
 
@@ -108,6 +111,8 @@ export const SwapConfirmationScene = (props: Props) => {
   const showFeeWarning = gte(feePercent, '0.05')
 
   const handleExchangeTimerExpired = useHandler(() => {
+    if (!isFocused) return
+
     navigation.replace('swapProcessing', {
       swapRequest: selectedQuote.request,
       swapRequestOptions,
@@ -200,6 +205,7 @@ export const SwapConfirmationScene = (props: Props) => {
       }, 1)
     }
     setPending(false)
+    await selectedQuote.close()
   }
 
   const renderTimer = () => {
