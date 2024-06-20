@@ -149,21 +149,14 @@ exports[`BalanceCard should render with loading props 1`] = `
       }
     >
       <Text
-        adjustsFontSizeToFit={true}
-        minimumFontScale={0.65}
-        numberOfLines={1}
+        onLayout={[Function]}
         style={
           [
             {
               "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
+              "fontFamily": "Quicksand-Medium",
+              "fontSize": 39,
               "includeFontPadding": false,
-            },
-            {
-              "height": 51,
-              "marginBottom": 11,
-              "marginTop": 6,
               "textShadowColor": "rgba(0, 0, 0, 0.514)",
               "textShadowOffset": {
                 "height": 0,
@@ -171,11 +164,14 @@ exports[`BalanceCard should render with loading props 1`] = `
               },
               "textShadowRadius": 3,
             },
-            null,
+            {
+              "position": "absolute",
+              "top": -999999,
+            },
           ]
         }
       >
-        Exchange Rates Loading...
+        0
       </Text>
     </View>
   </View>

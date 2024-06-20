@@ -6,11 +6,12 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { getTotalFiatAmountFromExchangeRates, removeIsoPrefix } from '../../util/utils'
+import { getTotalFiatAmountFromExchangeRates, removeIsoPrefix, zeroString } from '../../util/utils'
 import { AnimatedNumber } from '../common/AnimatedNumber'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { TransferModal } from '../modals/TransferModal'
@@ -44,12 +45,26 @@ export const BalanceCardUi4 = (props: Props) => {
   const fiatAmount = useSelector(state => getTotalFiatAmountFromExchangeRates(state, defaultIsoFiat))
   const exchangeRates = useSelector(state => state.exchangeRates)
 
+  const activeWalletIds = useWatch(account, 'activeWalletIds')
+  const currencyWallets = useWatch(account, 'currencyWallets')
+  const currencyWalletErrors = useWatch(account, 'currencyWalletErrors')
+
+  const exchangeRatesReady = React.useMemo(
+    () =>
+      activeWalletIds.every(walletId => {
+        // Ignore wallets that have crashed:
+        if (currencyWalletErrors[walletId]) return true
+
+        // Both the wallet and its rate need to be loaded:
+        const wallet = currencyWallets[walletId]
+        return wallet != null && exchangeRates[`${wallet.currencyInfo.currencyCode}_${defaultIsoFiat}`] != null
+      }),
+    [activeWalletIds, currencyWalletErrors, currencyWallets, exchangeRates, defaultIsoFiat]
+  )
+
   const fiatSymbol = defaultIsoFiat ? getFiatSymbol(defaultIsoFiat) : ''
   const fiatCurrencyCode = removeIsoPrefix(defaultIsoFiat)
   const formattedFiat = isBalanceVisible ? formatNumber(fiatAmount, { toFixed: 2 }) : lstrings.redacted_placeholder
-
-  const exchangeRatesReady = exchangeRates != null && Object.keys(exchangeRates).length > 0
-
   const handleToggleAccountBalanceVisibility = useHandler(() => {
     dispatch(toggleAccountBalanceVisibility())
   })
@@ -72,19 +87,15 @@ export const BalanceCardUi4 = (props: Props) => {
           <EdgeText style={theme.cardTextShadow}>{lstrings.fragment_wallets_balance_text}</EdgeText>
           <IonIcon name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'} style={styles.eyeIcon} color={theme.iconTappable} size={theme.rem(1)} />
         </View>
-        {!exchangeRatesReady ? (
-          <View style={styles.balanceTextContainer}>
-            <EdgeText style={styles.ratesLoading}>{lstrings.exchange_rates_loading}</EdgeText>
-          </View>
-        ) : animateNumber ? (
-          <View style={styles.balanceTextContainer}>
-            <AnimatedNumber numberString={balanceString} style={styles.balanceTextContainer} textStyle={styles.balanceText} />
-          </View>
-        ) : (
-          <View style={styles.balanceTextContainer}>
+        <View style={styles.balanceTextContainer}>
+          {!exchangeRatesReady && zeroString(fiatAmount) ? (
+            <EdgeText style={styles.balanceText}>{lstrings.loading}</EdgeText>
+          ) : animateNumber ? (
+            <AnimatedNumber numberString={balanceString} textStyle={styles.balanceText} />
+          ) : (
             <EdgeText style={styles.balanceTextNoAnim}>{balanceString}</EdgeText>
-          </View>
-        )}
+          )}
+        </View>
       </EdgeTouchableOpacity>
       {onViewAssetsPress == null ? null : (
         <EdgeTouchableOpacity style={styles.rightButtonContainer} onPress={onViewAssetsPress}>
@@ -168,7 +179,6 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontSize: theme.rem(1),
       color: theme.secondaryText
     },
-    ratesLoading: { ...balanceTextContainer, ...theme.cardTextShadow },
     showBalance: {
       fontSize: theme.rem(1.5),
       fontFamily: theme.fontFaceMedium
