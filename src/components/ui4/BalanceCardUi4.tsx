@@ -1,6 +1,6 @@
 import { lt } from 'biggystring'
 import * as React from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, LayoutChangeEvent, Text, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
@@ -64,6 +64,7 @@ export const BalanceCardUi4 = (props: Props) => {
       }),
     [activeWalletIds, currencyWalletErrors, currencyWallets, exchangeRates, defaultIsoFiat]
   )
+  const [digitHeight, setDigitHeight] = React.useState(0)
 
   const fiatSymbol = defaultIsoFiat ? getFiatSymbol(defaultIsoFiat) : ''
   const fiatCurrencyCode = removeIsoPrefix(defaultIsoFiat)
@@ -80,11 +81,19 @@ export const BalanceCardUi4 = (props: Props) => {
     Airship.show(bridge => <TransferModal depositOrSend="deposit" bridge={bridge} account={account} navigation={navigation} />).catch(() => {})
   })
 
+  const handleDigitLayout = useHandler((event: LayoutChangeEvent) => {
+    setDigitHeight(event.nativeEvent.layout.height)
+  })
+
   const balanceString = fiatSymbol.length !== 1 ? `${formattedFiat} ${fiatCurrencyCode}` : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`
   const animateNumber = lt(fiatAmount, MAX_ANIMATED_AMOUNT)
 
   return (
     <CardUi4>
+      {/* For passing to the animated number. Do the measurement here to avoid flicker */}
+      <Text style={[styles.balanceText, styles.measuredDigit]} onLayout={handleDigitLayout}>
+        0
+      </Text>
       <EdgeTouchableOpacity style={styles.balanceContainer} onPress={handleToggleAccountBalanceVisibility}>
         <View style={styles.titleContainer}>
           <EdgeText style={theme.cardTextShadow}>{lstrings.fragment_wallets_balance_text}</EdgeText>
@@ -95,7 +104,7 @@ export const BalanceCardUi4 = (props: Props) => {
             <EdgeText style={styles.balanceText}>{lstrings.loading}</EdgeText>
           ) : animateNumber ? (
             <>
-              <AnimatedNumber numberString={balanceString} textStyle={styles.balanceText} />
+              <AnimatedNumber digitHeight={digitHeight} numberString={balanceString} textStyle={styles.balanceText} />
               <ActivityIndicator color={theme.primaryText} style={styles.spinner} animating={accountSyncProgress < 1} />
             </>
           ) : (
@@ -177,5 +186,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   spinner: {
     marginLeft: theme.rem(0.5)
-  }
+  },
+  measuredDigit: { position: 'absolute', top: -999999 }
 }))
