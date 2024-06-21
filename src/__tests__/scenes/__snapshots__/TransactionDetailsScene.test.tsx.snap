@@ -2287,7 +2287,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               }
               type="info"
             >
-              IP Validation Protection Enabled
+              IP Validation Protection
             </Text>
             <Text
               adjustsFontSizeToFit={true}
@@ -2311,7 +2311,7 @@ exports[`TransactionDetailsScene should render 1`] = `
               }
               type="info"
             >
-              Your account is protected from unauthorized logins. Tap to learn more.
+              Edge prevents logins from unrecognized IP addresses. Tap to learn more.
             </Text>
           </View>
         </View>
@@ -4665,7 +4665,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               }
               type="info"
             >
-              IP Validation Protection Enabled
+              IP Validation Protection
             </Text>
             <Text
               adjustsFontSizeToFit={true}
@@ -4689,7 +4689,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
               }
               type="info"
             >
-              Your account is protected from unauthorized logins. Tap to learn more.
+              Edge prevents logins from unrecognized IP addresses. Tap to learn more.
             </Text>
           </View>
         </View>

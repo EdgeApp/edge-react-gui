@@ -745,7 +745,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
               }
               type="info"
             >
-              IP Validation Protection Enabled
+              IP Validation Protection
             </Text>
             <Text
               adjustsFontSizeToFit={true}
@@ -769,7 +769,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
               }
               type="info"
             >
-              Your account is protected from unauthorized logins. Tap to learn more.
+              Edge prevents logins from unrecognized IP addresses. Tap to learn more.
             </Text>
           </View>
         </View>

@@ -171,7 +171,7 @@ const NotificationViewComponent = (props: Props) => {
         <NotificationCard
           type="info"
           title={lstrings.notif_ip_validation_enabled_title}
-          message={lstrings.notif_ip_validation_enabled_body}
+          message={sprintf(lstrings.notif_ip_validation_enabled_body_1s, config.appName)}
           iconUri={getThemedIconUri(theme, 'notifications/icon-lock')}
           onPress={handle2FaEnabledPress}
           onClose={handle2FaEnabledDismiss}
