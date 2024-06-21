@@ -1477,7 +1477,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
               }
               type="info"
             >
-              IP Validation Protection Enabled
+              IP Validation Protection
             </Text>
             <Text
               adjustsFontSizeToFit={true}
@@ -1501,7 +1501,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
               }
               type="info"
             >
-              Your account is protected from unauthorized logins. Tap to learn more.
+              Edge prevents logins from unrecognized IP addresses. Tap to learn more.
             </Text>
           </View>
         </View>
@@ -3233,7 +3233,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               }
               type="info"
             >
-              IP Validation Protection Enabled
+              IP Validation Protection
             </Text>
             <Text
               adjustsFontSizeToFit={true}
@@ -3257,7 +3257,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
               }
               type="info"
             >
-              Your account is protected from unauthorized logins. Tap to learn more.
+              Edge prevents logins from unrecognized IP addresses. Tap to learn more.
             </Text>
           </View>
         </View>
@@ -4967,7 +4967,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
               }
               type="info"
             >
-              IP Validation Protection Enabled
+              IP Validation Protection
             </Text>
             <Text
               adjustsFontSizeToFit={true}
@@ -4991,7 +4991,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
               }
               type="info"
             >
-              Your account is protected from unauthorized logins. Tap to learn more.
+              Edge prevents logins from unrecognized IP addresses. Tap to learn more.
             </Text>
           </View>
         </View>
@@ -6400,7 +6400,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
               }
               type="info"
             >
-              IP Validation Protection Enabled
+              IP Validation Protection
             </Text>
             <Text
               adjustsFontSizeToFit={true}
@@ -6424,7 +6424,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
               }
               type="info"
             >
-              Your account is protected from unauthorized logins. Tap to learn more.
+              Edge prevents logins from unrecognized IP addresses. Tap to learn more.
             </Text>
           </View>
         </View>
@@ -7809,7 +7809,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
               }
               type="info"
             >
-              IP Validation Protection Enabled
+              IP Validation Protection
             </Text>
             <Text
               adjustsFontSizeToFit={true}
@@ -7833,7 +7833,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
               }
               type="info"
             >
-              Your account is protected from unauthorized logins. Tap to learn more.
+              Edge prevents logins from unrecognized IP addresses. Tap to learn more.
             </Text>
           </View>
         </View>
@@ -9056,7 +9056,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
               }
               type="info"
             >
-              IP Validation Protection Enabled
+              IP Validation Protection
             </Text>
             <Text
               adjustsFontSizeToFit={true}
@@ -9080,7 +9080,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
               }
               type="info"
             >
-              Your account is protected from unauthorized logins. Tap to learn more.
+              Edge prevents logins from unrecognized IP addresses. Tap to learn more.
             </Text>
           </View>
         </View>
@@ -10609,7 +10609,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
               }
               type="info"
             >
-              IP Validation Protection Enabled
+              IP Validation Protection
             </Text>
             <Text
               adjustsFontSizeToFit={true}
@@ -10633,7 +10633,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
               }
               type="info"
             >
-              Your account is protected from unauthorized logins. Tap to learn more.
+              Edge prevents logins from unrecognized IP addresses. Tap to learn more.
             </Text>
           </View>
         </View>
@@ -12096,7 +12096,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
               }
               type="info"
             >
-              IP Validation Protection Enabled
+              IP Validation Protection
             </Text>
             <Text
               adjustsFontSizeToFit={true}
@@ -12120,7 +12120,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
               }
               type="info"
             >
-              Your account is protected from unauthorized logins. Tap to learn more.
+              Edge prevents logins from unrecognized IP addresses. Tap to learn more.
             </Text>
           </View>
         </View>
@@ -13541,7 +13541,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
               }
               type="info"
             >
-              IP Validation Protection Enabled
+              IP Validation Protection
             </Text>
             <Text
               adjustsFontSizeToFit={true}
@@ -13565,7 +13565,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
               }
               type="info"
             >
-              Your account is protected from unauthorized logins. Tap to learn more.
+              Edge prevents logins from unrecognized IP addresses. Tap to learn more.
             </Text>
           </View>
         </View>
@@ -14972,7 +14972,7 @@ exports[`SendScene2 Render SendScene 1`] = `
               }
               type="info"
             >
-              IP Validation Protection Enabled
+              IP Validation Protection
             </Text>
             <Text
               adjustsFontSizeToFit={true}
@@ -14996,7 +14996,7 @@ exports[`SendScene2 Render SendScene 1`] = `
               }
               type="info"
             >
-              Your account is protected from unauthorized logins. Tap to learn more.
+              Edge prevents logins from unrecognized IP addresses. Tap to learn more.
             </Text>
           </View>
         </View>
