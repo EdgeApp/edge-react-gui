@@ -2,7 +2,7 @@ import { gt, gte } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeSwapRequest, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
-import { Keyboard, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { DisableAsset } from '../../actions/ExchangeInfoActions'
@@ -173,7 +173,6 @@ export const SwapCreateScene = (props: Props) => {
         })
       }
     })
-    Keyboard.dismiss()
   }
 
   const resetState = () => {
@@ -243,7 +242,6 @@ export const SwapCreateScene = (props: Props) => {
   const handleMaxPress = useHandler(() => {
     if (toWallet == null) {
       showWarning(`${lstrings.exchange_select_receiving_wallet}`, { trackError: false })
-      Keyboard.dismiss()
       return
     }
 
