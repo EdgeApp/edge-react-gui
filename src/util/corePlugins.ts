@@ -86,10 +86,11 @@ export const swapPlugins = {
   swapuz: ENV.SWAPUZ_INIT,
 
   // Defi Swaps
-  tombSwap: ENV.TOMB_SWAP_INIT,
+  rango: ENV.RANGO_INIT,
   spookySwap: false,
   thorchain: ENV.THORCHAIN_INIT,
   thorchainda: ENV.THORCHAIN_INIT,
+  tombSwap: ENV.TOMB_SWAP_INIT,
   velodrome: true,
   xrpdex: ENV.XRPDEX_INIT,
 
