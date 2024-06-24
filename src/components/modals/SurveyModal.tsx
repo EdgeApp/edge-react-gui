@@ -91,12 +91,6 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
   return (
     <ModalUi4 bridge={bridge} onCancel={handleModalDismiss}>
       {/** HACK: iOS and Android use extraScrollHeight differently... */}
-      <Paragraph center>
-        <HeaderText>{sprintf(lstrings.survey_discover_title_1s, config.appName)}</HeaderText>
-      </Paragraph>
-      <Paragraph center>
-        <SmallText>{lstrings.survey_discover_subtitle}</SmallText>
-      </Paragraph>
       <KeyboardAwareScrollView
         extraScrollHeight={Platform.OS === 'ios' ? theme.rem(-16) : theme.rem(9)}
         enableOnAndroid
@@ -104,6 +98,12 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
         keyboardShouldPersistTaps="handled"
         style={styles.containerStyle}
       >
+        <Paragraph center>
+          <HeaderText>{sprintf(lstrings.survey_discover_title_1s, config.appName)}</HeaderText>
+        </Paragraph>
+        <Paragraph center>
+          <SmallText>{lstrings.survey_discover_subtitle}</SmallText>
+        </Paragraph>
         <CardUi4>
           <View style={styles.radioContainer}>
             {options.map((option, index) => (
