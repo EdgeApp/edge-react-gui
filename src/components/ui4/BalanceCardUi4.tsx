@@ -1,3 +1,4 @@
+import { lt } from 'biggystring'
 import * as React from 'react'
 import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -21,7 +22,7 @@ import { CardUi4 } from './CardUi4'
 
 // Numbers larger than this are likely to overflow the display width so don't
 // use regular Text components which can auto shrink
-const MAX_ANIMATED_AMOUNT = 10000000
+const MAX_ANIMATED_AMOUNT = '10000000'
 interface Props {
   navigation: NavigationBase
   onViewAssetsPress?: () => void
@@ -62,7 +63,7 @@ export const BalanceCardUi4 = (props: Props) => {
   })
 
   const balanceString = fiatSymbol.length !== 1 ? `${formattedFiat} ${fiatCurrencyCode}` : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`
-  const animateNumber = fiatAmount < MAX_ANIMATED_AMOUNT
+  const animateNumber = lt(fiatAmount, MAX_ANIMATED_AMOUNT)
 
   return (
     <CardUi4>

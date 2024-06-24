@@ -272,7 +272,7 @@ export async function snooze(ms: number): Promise<void> {
 }
 
 let prevTotal = '0'
-export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCurrencyCode: string): number => {
+export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCurrencyCode: string): string => {
   const log: string[] = ['', '']
   let total = '0'
   const { exchangeRates } = state
@@ -313,10 +313,10 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
 
   if (total !== prevTotal) {
     // Use for troubleshooting incorrect balance issues. Disable for now as it's pretty noisy
-    // console.log(log.join('\n'))
+    // console.warn(log.join('\n'))
   }
   prevTotal = total
-  return Number(total)
+  return total
 }
 
 export const getYesterdayDateRoundDownHour = () => {
