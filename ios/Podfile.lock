@@ -23,7 +23,7 @@ PODS:
     - React-Core
   - edge-exchange-plugins (2.6.0):
     - React-Core
-  - edge-login-ui-rn (3.15.1):
+  - edge-login-ui-rn (3.16.0):
     - React-Core
   - EXConstants (16.0.1):
     - ExpoModulesCore
@@ -2100,7 +2100,7 @@ SPEC CHECKSUMS:
   edge-currency-accountbased: 33abadf7835c9b4fb68efd4af3cfbf3f17ea57eb
   edge-currency-plugins: 0cf7d286982bbefc962dcd272cd19d2414d32e15
   edge-exchange-plugins: e4379f52344856a372db89c3e6abc62c6b829f3c
-  edge-login-ui-rn: b81291f398f6a55df94d5df5aefd6aafb54b32bd
+  edge-login-ui-rn: 6f154152287d0f07668cb953ea2531d4f7903bca
   EXConstants: 9a008dbf262550884e6280dea95b81b51f65ea6f
   Expo: c99f14ca53381d5399b88684c88e20ff7928d3c7
   ExpoAsset: 9b7433ecc5f1b608ccbb823492e062bde944abd2
@@ -2235,7 +2235,7 @@ SPEC CHECKSUMS:
   SwiftNIOTransportServices: 0b2b407819d82eb63af558c5396e33c945759503
   SwiftProtobuf: 5e8349171e7c2f88f5b9e683cb3cb79d1dc780b3
   VisionCamera: 2c4cb89c573c5d54d1191e433bd224998d3b14b7
-  Yoga: dafebc41bc66910af33077aaa41078e89fd635bf
+  Yoga: d02ee88821190d82b2daa5cd15640a82ffafaaab
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
