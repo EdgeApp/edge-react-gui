@@ -5,13 +5,13 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
-import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
+import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { getTotalFiatAmountFromExchangeRates, removeIsoPrefix } from '../../util/utils'
+import { getTotalFiatAmountFromExchangeRates, removeIsoPrefix, zeroString } from '../../util/utils'
 import { AnimatedNumber } from '../common/AnimatedNumber'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { TransferModal } from '../modals/TransferModal'
@@ -45,15 +45,26 @@ export const BalanceCardUi4 = (props: Props) => {
   const fiatAmount = useSelector(state => getTotalFiatAmountFromExchangeRates(state, defaultIsoFiat))
   const exchangeRates = useSelector(state => state.exchangeRates)
 
-  const [isWalletsLoaded, setIsWalletsLoaded] = React.useState(false)
+  const activeWalletIds = useWatch(account, 'activeWalletIds')
+  const currencyWallets = useWatch(account, 'currencyWallets')
+  const currencyWalletErrors = useWatch(account, 'currencyWalletErrors')
+
+  const exchangeRatesReady = React.useMemo(
+    () =>
+      activeWalletIds.every(walletId => {
+        // Ignore wallets that have crashed:
+        if (currencyWalletErrors[walletId]) return true
+
+        // Both the wallet and its rate need to be loaded:
+        const wallet = currencyWallets[walletId]
+        return wallet != null && exchangeRates[`${wallet.currencyInfo.currencyCode}_${defaultIsoFiat}`] != null
+      }),
+    [activeWalletIds, currencyWalletErrors, currencyWallets, exchangeRates, defaultIsoFiat]
+  )
 
   const fiatSymbol = defaultIsoFiat ? getFiatSymbol(defaultIsoFiat) : ''
   const fiatCurrencyCode = removeIsoPrefix(defaultIsoFiat)
   const formattedFiat = isBalanceVisible ? formatNumber(fiatAmount, { toFixed: 2 }) : lstrings.redacted_placeholder
-
-  const exchangeRatesReady = Object.keys(account.currencyWallets).every(
-    walletId => exchangeRates[`${account.currencyWallets[walletId].currencyInfo.currencyCode}_${defaultIsoFiat}`] != null
-  )
   const handleToggleAccountBalanceVisibility = useHandler(() => {
     dispatch(toggleAccountBalanceVisibility())
   })
@@ -69,15 +80,6 @@ export const BalanceCardUi4 = (props: Props) => {
   const balanceString = fiatSymbol.length !== 1 ? `${formattedFiat} ${fiatCurrencyCode}` : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`
   const animateNumber = lt(fiatAmount, MAX_ANIMATED_AMOUNT)
 
-  useAsyncEffect(
-    async () => {
-      await account.waitForAllWallets()
-      setIsWalletsLoaded(true)
-    },
-    [],
-    'BalanceCard'
-  )
-
   return (
     <CardUi4>
       <EdgeTouchableOpacity style={styles.balanceContainer} onPress={handleToggleAccountBalanceVisibility}>
@@ -86,7 +88,7 @@ export const BalanceCardUi4 = (props: Props) => {
           <IonIcon name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'} style={styles.eyeIcon} color={theme.iconTappable} size={theme.rem(1)} />
         </View>
         <View style={styles.balanceTextContainer}>
-          {(!exchangeRatesReady || !isWalletsLoaded) && fiatAmount === 0 ? (
+          {!exchangeRatesReady && zeroString(fiatAmount) ? (
             <EdgeText style={styles.balanceText}>{lstrings.loading}</EdgeText>
           ) : animateNumber ? (
             <AnimatedNumber numberString={balanceString} textStyle={styles.balanceText} />

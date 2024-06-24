@@ -149,17 +149,9 @@ exports[`BalanceCard should render with loading props 1`] = `
       }
     >
       <Text
-        adjustsFontSizeToFit={true}
-        minimumFontScale={0.65}
-        numberOfLines={1}
+        onLayout={[Function]}
         style={
           [
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "includeFontPadding": false,
-            },
             {
               "color": "#FFFFFF",
               "fontFamily": "Quicksand-Medium",
@@ -172,11 +164,14 @@ exports[`BalanceCard should render with loading props 1`] = `
               },
               "textShadowRadius": 3,
             },
-            null,
+            {
+              "position": "absolute",
+              "top": -999999,
+            },
           ]
         }
       >
-        Loading…
+        0
       </Text>
     </View>
   </View>
