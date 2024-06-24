@@ -370,6 +370,18 @@ describe('formatNumber', function () {
       const actual = formatNumber(input, options)
       expect(actual).toBe(expected)
     })
+    test('toFixed small number 0.00000000000000000123456 => 0.00', function () {
+      const input = 0.00000000000000000123456
+      const expected = '0.00'
+      const actual = formatNumber(input, { toFixed: 2 })
+      expect(actual).toBe(expected)
+    })
+    test('toFixed big number 123+e23 => 123,000,000,000,000,000,000,000.00', function () {
+      const input = 1.23e23
+      const expected = '123,000,000,000,000,000,000,000.00'
+      const actual = formatNumber(input, { toFixed: 2 })
+      expect(actual).toBe(expected)
+    })
     test('noGrouping toFixed=2 1234 => 1234.00', function () {
       const input = '1234'
       const options = { toFixed: 2, noGrouping: true }
