@@ -69,19 +69,18 @@ const SweepPrivateKeyCompletionComponent = (props: Props) => {
     flatListRef.current?.scrollToIndex({ animated: true, index, viewPosition: 0.5 })
   }
 
-  // Create the wallets and enable the tokens
+  // Sweep the funds and enable the tokens
   useAsyncEffect(
     async () => {
       const mainnetItem = sortedSweepPrivateKeyList[sortedSweepPrivateKeyList.length - 1]
 
-      // Create new wallet
       const sweepPrivateKeyPromise = async () => {
         const addressInfo = await receivingWallet.getReceiveAddress({ tokenId: null })
-        const newPublicAddress = addressInfo.segwitAddress ?? addressInfo.publicAddress
+        const publicAddress = addressInfo.segwitAddress ?? addressInfo.publicAddress
 
         const tokenItems = sortedSweepPrivateKeyList.filter((pair: any): pair is SweepPrivateKeyTokenItem => pair.tokenId != null)
 
-        // Enable tokens on new wallet
+        // Enable tokens on receiving wallet
         const tokenIdsToEnable = [...new Set([...receivingWallet.enabledTokenIds, ...tokenItems.map(pair => pair.tokenId)])]
         await receivingWallet.changeEnabledTokenIds(tokenIdsToEnable)
 
@@ -93,7 +92,7 @@ const SweepPrivateKeyCompletionComponent = (props: Props) => {
         for (const item of tokenItems) {
           let tokenSpendInfo: EdgeSpendInfo = {
             tokenId: item.tokenId,
-            spendTargets: [{ publicAddress: newPublicAddress }],
+            spendTargets: [{ publicAddress }],
             networkFeeOption: 'standard',
             pendingTxs
           }
@@ -117,7 +116,7 @@ const SweepPrivateKeyCompletionComponent = (props: Props) => {
           // Send mainnet
           let spendInfo: EdgeSpendInfo = {
             tokenId: null,
-            spendTargets: [{ publicAddress: newPublicAddress }],
+            spendTargets: [{ publicAddress }],
             networkFeeOption: 'standard',
             pendingTxs
           }
@@ -136,11 +135,11 @@ const SweepPrivateKeyCompletionComponent = (props: Props) => {
           handleItemStatus(mainnetItem, 'error')
         }
 
-        const newTokenIdList = new Set(receivingWallet.enabledTokenIds)
+        const tokenIdList = new Set(receivingWallet.enabledTokenIds)
         for (const tokenId of successfullyTransferredTokenIds) {
-          newTokenIdList.add(tokenId)
+          tokenIdList.add(tokenId)
         }
-        await receivingWallet.changeEnabledTokenIds([...newTokenIdList])
+        await receivingWallet.changeEnabledTokenIds([...tokenIdList])
       }
 
       await sweepPrivateKeyPromise()

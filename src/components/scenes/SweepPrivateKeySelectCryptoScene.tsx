@@ -40,15 +40,6 @@ const SweepPrivateKeySelectCryptoComponent = (props: Props) => {
     currencyInfo: { displayName: mainnetDisplayName, pluginId }
   } = receivingWallet
 
-  // const sweepPrivateKeyList = React.useMemo<SweepPrivateKeyItem[]>(() => {
-  //   const list: SweepPrivateKeyItem[] = [{ key: 'null', displayName: displayName, pluginId, tokenId: null }]
-  //   for (const [tokenId, bal] of memoryWallet.balanceMap.entries()) {
-  //     if (zeroString(bal) || tokenId == null) continue
-  //     list.push({ key: tokenId, displayName: allTokens[tokenId].displayName, pluginId, tokenId })
-  //   }
-  //   return list
-  // }, [allTokens, displayName, memoryWallet.balanceMap, pluginId])
-
   const [selectedItems, setSelectedItems] = React.useState<Set<string>>(() => {
     const out: Set<string> = new Set()
     for (const sweepPrivateKeyItem of sweepPrivateKeyList) {
