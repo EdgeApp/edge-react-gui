@@ -1,13 +1,11 @@
-import { EdgeMemoryWallet } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeMemoryWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ListRenderItemInfo, Switch, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
-import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
@@ -20,7 +18,7 @@ import { SweepPrivateKeyItem } from './SweepPrivateKeyProcessingScene'
 
 export interface SweepPrivateKeySelectCryptoParams {
   memoryWallet: EdgeMemoryWallet
-  receivingWalletId: string
+  receivingWallet: EdgeCurrencyWallet
   sweepPrivateKeyList: SweepPrivateKeyItem[]
 }
 
@@ -28,13 +26,11 @@ interface Props extends EdgeSceneProps<'sweepPrivateKeySelectCrypto'> {}
 
 const SweepPrivateKeySelectCryptoComponent = (props: Props) => {
   const { navigation, route } = props
-  const { memoryWallet, receivingWalletId, sweepPrivateKeyList } = route.params
+  const { memoryWallet, receivingWallet, sweepPrivateKeyList } = route.params
 
   const theme = useTheme()
   const styles = getStyles(theme)
-  const account = useSelector(state => state.core.account)
-  const currencyWallets = useWatch(account, 'currencyWallets')
-  const receivingWallet = currencyWallets[receivingWalletId]
+
   const {
     currencyConfig: { allTokens },
     currencyInfo: { displayName: mainnetDisplayName, pluginId }
@@ -73,7 +69,7 @@ const SweepPrivateKeySelectCryptoComponent = (props: Props) => {
     const filteredSweepPrivateKeyList = sweepPrivateKeyList.filter(item => selectedItems.has(item.key))
     navigation.push('sweepPrivateKeyCalculateFee', {
       memoryWallet,
-      receivingWalletId,
+      receivingWallet,
       sweepPrivateKeyList: filteredSweepPrivateKeyList
     })
   })

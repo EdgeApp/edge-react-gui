@@ -1,9 +1,7 @@
-import { EdgeMemoryWallet, EdgeTokenId } from 'edge-core-js'
+import { EdgeCurrencyWallet, EdgeMemoryWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
-import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { zeroString } from '../../util/utils'
 import { CancellableProcessingScene } from '../progress-indicators/CancellableProcessingScene'
@@ -11,7 +9,7 @@ import { showError } from '../services/AirshipInstance'
 
 export interface SweepPrivateKeyProcessingParams {
   memoryWalletPromise: Promise<EdgeMemoryWallet>
-  receivingWalletId: string
+  receivingWallet: EdgeCurrencyWallet
 }
 
 export interface SweepPrivateKeyItem {
@@ -26,11 +24,7 @@ interface Props extends EdgeSceneProps<'sweepPrivateKeyProcessing'> {}
 
 export function SweepPrivateKeyProcessingScene(props: Props) {
   const { route, navigation } = props
-  const { memoryWalletPromise, receivingWalletId } = route.params
-
-  const account = useSelector(state => state.core.account)
-  const currencyWallets = useWatch(account, 'currencyWallets')
-  const receivingWallet = currencyWallets[receivingWalletId]
+  const { memoryWalletPromise, receivingWallet } = route.params
 
   const { displayName, pluginId } = receivingWallet.currencyInfo
   const { allTokens } = receivingWallet.currencyConfig
@@ -74,9 +68,9 @@ export function SweepPrivateKeyProcessingScene(props: Props) {
     }
 
     if (sweepPrivateKeyList.length > 1) {
-      navigation.replace('sweepPrivateKeySelectCrypto', { memoryWallet, receivingWalletId, sweepPrivateKeyList })
+      navigation.replace('sweepPrivateKeySelectCrypto', { memoryWallet, receivingWallet, sweepPrivateKeyList })
     } else {
-      navigation.replace('sweepPrivateKeyCalculateFee', { memoryWallet, receivingWalletId, sweepPrivateKeyList })
+      navigation.replace('sweepPrivateKeyCalculateFee', { memoryWallet, receivingWallet, sweepPrivateKeyList })
     }
   }
 

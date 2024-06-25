@@ -1,5 +1,13 @@
 import { add, lt } from 'biggystring'
-import { asMaybeInsufficientFundsError, EdgeDenomination, EdgeMemoryWallet, EdgeSpendInfo, EdgeTransaction, InsufficientFundsError } from 'edge-core-js'
+import {
+  asMaybeInsufficientFundsError,
+  EdgeCurrencyWallet,
+  EdgeDenomination,
+  EdgeMemoryWallet,
+  EdgeSpendInfo,
+  EdgeTransaction,
+  InsufficientFundsError
+} from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, ListRenderItemInfo, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -7,7 +15,6 @@ import { FlatList } from 'react-native-gesture-handler'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
-import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -24,7 +31,7 @@ import { SweepPrivateKeyItem } from './SweepPrivateKeyProcessingScene'
 
 export interface SweepPrivateKeyCalculateFeeParams {
   memoryWallet: EdgeMemoryWallet
-  receivingWalletId: string
+  receivingWallet: EdgeCurrencyWallet
   sweepPrivateKeyList: SweepPrivateKeyItem[]
 }
 
@@ -34,13 +41,10 @@ type AssetRowState = string | Error
 
 const SweepPrivateKeyCalculateFeeComponent = (props: Props) => {
   const { navigation, route } = props
-  const { memoryWallet, receivingWalletId, sweepPrivateKeyList } = route.params
+  const { memoryWallet, receivingWallet, sweepPrivateKeyList } = route.params
 
   const theme = useTheme()
   const styles = getStyles(theme)
-  const account = useSelector(state => state.core.account)
-  const currencyWallets = useWatch(account, 'currencyWallets')
-  const receivingWallet = currencyWallets[receivingWalletId]
 
   const exchangeRates = useSelector(state => state.exchangeRates)
   const displayDenominations = useSelector(state => {

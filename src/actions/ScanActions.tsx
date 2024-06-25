@@ -255,7 +255,7 @@ async function privateKeyModalActivated(account: EdgeAccount, navigation: Naviga
               try {
                 const keys = await account.currencyConfig[wallet.currencyInfo.pluginId].importKey(privateKeys[0])
                 const memoryWalletPromise = account.makeMemoryWallet(wallet.type, { keys })
-                navigation.navigate('sweepPrivateKeyProcessing', { memoryWalletPromise, receivingWalletId: wallet.id })
+                navigation.navigate('sweepPrivateKeyProcessing', { memoryWalletPromise, receivingWallet: wallet })
               } catch (e) {
                 await sweepPrivateKeys(account, navigation, wallet, privateKeys)
               }
