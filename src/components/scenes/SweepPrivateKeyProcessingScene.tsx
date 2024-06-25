@@ -88,7 +88,7 @@ export function SweepPrivateKeyProcessingScene(props: Props) {
     <CancellableProcessingScene
       animationDuration={1000}
       navigation={navigation}
-      promise={promise}
+      doWork={promise}
       onCancel={onCancel}
       onDone={onDone}
       onError={onError}
