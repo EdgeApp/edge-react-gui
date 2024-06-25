@@ -105,17 +105,6 @@ const SweepPrivateKeySelectCryptoComponent = (props: Props) => {
     )
   })
 
-  const renderNextButton = React.useMemo(
-    () => (
-      <Fade noFadeIn={numSelected > 0} visible={numSelected > 0} duration={300}>
-        <View style={styles.bottomButton}>
-          <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, 0, 0.75]} onPress={handleNext} />
-        </View>
-      </Fade>
-    ),
-    [handleNext, numSelected, styles.bottomButton]
-  )
-
   const keyExtractor = useHandler((item: SweepPrivateKeyItem) => item.key)
 
   return (
@@ -138,7 +127,11 @@ const SweepPrivateKeySelectCryptoComponent = (props: Props) => {
             renderItem={renderCreateWalletRow}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           />
-          {renderNextButton}
+          <Fade noFadeIn={numSelected > 0} visible={numSelected > 0} duration={300}>
+            <View style={styles.bottomButton}>
+              <MainButton label={lstrings.string_next_capitalized} type="primary" marginRem={[0, 0, 0.75]} onPress={handleNext} />
+            </View>
+          </Fade>
         </View>
       )}
     </SceneWrapper>
