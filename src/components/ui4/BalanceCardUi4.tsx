@@ -5,7 +5,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
-import { useAccountWalletsSyncProgress } from '../../hooks/useAccountWalletsSyncProgress'
+import { useAccountSyncRatio } from '../../hooks/useAccountSyncRatio'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
@@ -46,7 +46,7 @@ export const BalanceCardUi4 = (props: Props) => {
   const fiatAmount = useSelector(state => getTotalFiatAmountFromExchangeRates(state, defaultIsoFiat))
   const exchangeRates = useSelector(state => state.exchangeRates)
 
-  const accountSyncProgress = useAccountWalletsSyncProgress()
+  const accountSyncProgress = useAccountSyncRatio()
 
   const activeWalletIds = useWatch(account, 'activeWalletIds')
   const currencyWallets = useWatch(account, 'currencyWallets')
@@ -96,12 +96,12 @@ export const BalanceCardUi4 = (props: Props) => {
           ) : animateNumber ? (
             <>
               <AnimatedNumber numberString={balanceString} textStyle={styles.balanceText} />
-              <ActivityIndicator color={theme.primaryText} style={styles.spinner} animating={accountSyncProgress < 100} />
+              <ActivityIndicator color={theme.primaryText} style={styles.spinner} animating={accountSyncProgress < 1} />
             </>
           ) : (
             <>
               <EdgeText style={styles.balanceTextNoAnim}>{balanceString}</EdgeText>
-              <ActivityIndicator color={theme.primaryText} style={styles.spinner} animating={accountSyncProgress < 100} />
+              <ActivityIndicator color={theme.primaryText} style={styles.spinner} animating={accountSyncProgress < 1} />
             </>
           )}
         </View>
