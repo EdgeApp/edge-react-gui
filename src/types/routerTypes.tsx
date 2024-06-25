@@ -23,6 +23,7 @@ import type { FioCreateHandleParams } from '../components/scenes/Fio/FioCreateHa
 import { FioDomainRegisterSelectWalletParams } from '../components/scenes/Fio/FioDomainRegisterSelectWalletScene'
 import { FioDomainSettingsParams } from '../components/scenes/Fio/FioDomainSettingsScene'
 import { FioNameConfirmParams } from '../components/scenes/Fio/FioNameConfirmScene'
+import { FioRequestConfirmationParams } from '../components/scenes/Fio/FioRequestConfirmationScene'
 import type { GettingStartedParams } from '../components/scenes/GettingStartedScene'
 import type { GuiPluginListParams } from '../components/scenes/GuiPluginListScene'
 import type { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
@@ -53,7 +54,6 @@ import type { WcConnectionsParams } from '../components/scenes/WcConnectionsScen
 import type { WcConnectParams } from '../components/scenes/WcConnectScene'
 import type { WcDisconnectParams } from '../components/scenes/WcDisconnectScene'
 import type { WebViewSceneParams } from '../components/scenes/WebViewScene'
-import type { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput2'
 import type { FiatPluginAddressFormParams, FiatPluginSepaFormParams, FiatPluginSepaTransferParams } from '../plugins/gui/fiatPluginTypes'
 import type { FiatPluginEnterAmountParams } from '../plugins/gui/scenes/FiatPluginEnterAmountScene'
 import type { FiatPluginOpenWebViewParams } from '../plugins/gui/scenes/FiatPluginWebView'
@@ -130,10 +130,7 @@ export interface RouteParamList {
   fioDomainRegisterSelectWallet: FioDomainRegisterSelectWalletParams
   fioDomainSettings: FioDomainSettingsParams
   fioNameConfirm: FioNameConfirmParams
-  fioRequestConfirmation: {
-    amounts: ExchangedFlipInputAmounts
-    fioAddressTo: string
-  }
+  fioRequestConfirmation: FioRequestConfirmationParams
   fioRequestList: {}
   fioSentRequestDetails: {
     selectedFioSentRequest: FioRequest

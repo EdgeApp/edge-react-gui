@@ -15,10 +15,11 @@ describe('Request', () => {
         {...fakeSceneProps('request', { tokenId: null, walletId: '' })}
         isConnected={false}
         isLightAccount={false}
+        fioAddressesExist={false}
         currencyCode={null as any}
         wallet={null as any}
         exchangeSecondaryToPrimaryRatio={null as any}
-        primaryCurrencyInfo={null as any}
+        displayDenomination={null as any}
         theme={getTheme()}
         refreshAllFioAddresses={async () => {}}
         onSelectWallet={async (walletId, currencyCode) => {}}
@@ -43,10 +44,11 @@ describe('Request', () => {
         {...fakeSceneProps('request', { tokenId: null, walletId: '' })}
         isConnected={false}
         isLightAccount={false}
+        fioAddressesExist={false}
         currencyCode="BTC"
         wallet={fakeWallet}
         exchangeSecondaryToPrimaryRatio={{} as any}
-        primaryCurrencyInfo={{ tokenId: null, displayDenomination: { multiplier: '100000000' }, exchangeDenomination: { multiplier: '100000000' } } as any}
+        displayDenomination={{ multiplier: '100000000', name: 'BTC' }}
         theme={getTheme()}
         refreshAllFioAddresses={async () => {}}
         onSelectWallet={async (walletId, currencyCode) => {}}
@@ -71,10 +73,11 @@ describe('Request', () => {
         {...fakeSceneProps('request', { tokenId: null, walletId: '' })}
         isConnected={false}
         isLightAccount
+        fioAddressesExist={false}
         currencyCode="BTC"
         wallet={fakeWallet}
         exchangeSecondaryToPrimaryRatio={{} as any}
-        primaryCurrencyInfo={{ tokenId: null, displayDenomination: { multiplier: '100000000' }, exchangeDenomination: { multiplier: '100000000' } } as any}
+        displayDenomination={{ multiplier: '100000000', name: 'BTC' }}
         theme={getTheme()}
         refreshAllFioAddresses={async () => {}}
         onSelectWallet={async (walletId, currencyCode) => {}}

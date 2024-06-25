@@ -120,7 +120,7 @@ exports[`Request should render with loaded props 1`] = `
           }
         }
       >
-        1 undefined
+        1 BTC
       </EdgeText>
     </Memo(EdgeAnimInner)>
     <Memo(EdgeAnimInner)
@@ -149,7 +149,7 @@ exports[`Request should render with loaded props 1`] = `
         }
       >
         <EdgeText>
-          You have 0.000012 undefined
+          You have 0.000012 BTC
         </EdgeText>
       </ExtendedTouchable>
       <EdgeText
