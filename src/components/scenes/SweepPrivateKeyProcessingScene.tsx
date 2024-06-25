@@ -37,7 +37,7 @@ export function SweepPrivateKeyProcessingScene(props: Props) {
 
   const promise = async (): Promise<EdgeMemoryWallet> => {
     const memoryWallet = await memoryWalletPromise
-    await memoryWallet.startEngine({ lightMode: true })
+    await memoryWallet.startEngine()
 
     let syncRatioResolver: (value: unknown) => void
     const syncRatioPromise = new Promise((resolve, reject) => {
@@ -62,6 +62,7 @@ export function SweepPrivateKeyProcessingScene(props: Props) {
   }
 
   const onCancel = () => {
+    memoryWalletPromise.then(async memoryWallet => await memoryWallet.close()).catch(() => {})
     navigation.goBack()
   }
 
