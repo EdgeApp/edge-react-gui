@@ -9,6 +9,7 @@ import { lstrings } from '../../../locales/strings'
 import { EdgeAsset, StringMap } from '../../../types/types'
 import { sha512HashAndSign } from '../../../util/crypto'
 import { CryptoAmount } from '../../../util/CryptoAmount'
+import { removeIsoPrefix } from '../../../util/utils'
 import { SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType, FiatPluginUi, SaveTxActionParams } from '../fiatPluginTypes'
 import {
@@ -63,6 +64,10 @@ const asApiKeys = asObject({
 const asPaymentMethodId = asValue(
   'method-id-credit-card',
   'method-id-credit-card-out',
+
+  // XXX Hack. Fake payment methods for googlepay/applepay
+  'fake-id-googlepay',
+  'fake-id-applepay',
 
   // Colombia
   'method-id_bridgerpay_directa24_pse',
@@ -270,6 +275,10 @@ const PAYMENT_METHOD_MAP: { [Payment in PaymentMethodId]: FiatPaymentType } = {
   'method-id-credit-card': 'credit',
   'method-id-credit-card-out': 'credit',
 
+  // XXX Hack. Fake payment methods for googlepay/applepay
+  'fake-id-googlepay': 'googlepay',
+  'fake-id-applepay': 'applepay',
+
   // Colombia
   'method-id_bridgerpay_directa24_pse': 'pse',
   'method-id_bridgerpay_directa24_colombia_payout': 'colombiabank',
@@ -364,6 +373,7 @@ export const paybisProvider: FiatProviderFactory = {
           regionCode,
           paymentTypes,
           pluginId: currencyPluginId,
+          promoCode,
           fiatCurrencyCode,
           displayCurrencyCode,
           direction,
@@ -379,7 +389,7 @@ export const paybisProvider: FiatProviderFactory = {
         }
 
         // Check if the region, payment type, and fiat/crypto codes are supported
-        const fiat = fiatCurrencyCode.replace('iso:', '')
+        const fiat = removeIsoPrefix(fiatCurrencyCode)
 
         const paymentMethod = direction === 'buy' ? REVERSE_PAYMENT_METHOD_MAP[paymentType] : SELL_REVERSE_PAYMENT_METHOD_MAP[paymentType]
         const paybisCc = EDGE_TO_PAYBIS_CURRENCY_MAP[`${currencyPluginId}_${tokenId ?? ''}`]
@@ -421,7 +431,7 @@ export const paybisProvider: FiatProviderFactory = {
           paymentMethod: direction === 'buy' ? paymentMethod : undefined,
           payoutMethod: direction === 'sell' ? paymentMethod : undefined
         }
-        const response = await paybisFetch({ method: 'POST', url, path: 'v2/public/quote', apiKey, bodyParams })
+        const response = await paybisFetch({ method: 'POST', url, path: 'v2/public/quote', apiKey, bodyParams, promoCode })
         const { id: quoteId, paymentMethods, paymentMethodErrors, payoutMethods, payoutMethodErrors } = asQuote(response)
 
         const pmErrors = paymentMethodErrors ?? payoutMethodErrors
@@ -519,24 +529,25 @@ export const paybisProvider: FiatProviderFactory = {
             }
 
             const privateKey = atob(privateKeyB64)
-            const promise = paybisFetch({ method: 'POST', url, path: 'v2/public/request', apiKey, bodyParams, privateKey, showUi })
+            const promise = paybisFetch({ method: 'POST', url, path: 'v2/public/request', apiKey, bodyParams, promoCode, privateKey, showUi })
             const response = await showUi.showToastSpinner(lstrings.fiat_plugin_finalizing_quote, promise)
             const { oneTimeToken, requestId } = asPublicRequestResponse(response)
 
             const widgetUrl = isWalletTestnet(coreWallet) ? WIDGET_URL_SANDBOX : WIDGET_URL
 
             const ott = oneTimeToken != null ? `&oneTimeToken=${oneTimeToken}` : ''
+            const promoCodeParam = promoCode != null ? `&promoCode=${promoCode}` : ''
 
             if (direction === 'buy') {
               await showUi.openExternalWebView({
-                url: `${widgetUrl}?requestId=${requestId}${ott}`
+                url: `${widgetUrl}?requestId=${requestId}${ott}${promoCodeParam}`
               })
               return
             }
 
             const successReturnURL = encodeURI(RETURN_URL_SUCCESS)
             const failureReturnURL = encodeURI(RETURN_URL_FAIL)
-            const webviewUrl = `${widgetUrl}?requestId=${requestId}&successReturnURL=${successReturnURL}&failureReturnURL=${failureReturnURL}${ott}`
+            const webviewUrl = `${widgetUrl}?requestId=${requestId}&successReturnURL=${successReturnURL}&failureReturnURL=${failureReturnURL}${ott}${promoCodeParam}`
             console.log(`webviewUrl: ${webviewUrl}`)
             let inPayment = false
 
@@ -552,7 +563,7 @@ export const paybisProvider: FiatProviderFactory = {
                     if (inPayment) return
                     inPayment = true
                     try {
-                      const payDetails = await paybisFetch({ method: 'GET', url, path: `v2/request/${requestId}/payment-details`, apiKey })
+                      const payDetails = await paybisFetch({ method: 'GET', url, path: `v2/request/${requestId}/payment-details`, apiKey, promoCode })
                       const { assetId, amount, currencyCode: pbCurrencyCode, invoice, network, depositAddress, destinationTag } = asPaymentDetails(payDetails)
                       const { pluginId, tokenId } = PAYBIS_TO_EDGE_CURRENCY_MAP[assetId]
 
@@ -693,8 +704,9 @@ const paybisFetch = async (params: {
   bodyParams?: object
   queryParams?: JsonObject
   privateKey?: string
+  promoCode?: string
 }): Promise<JsonObject> => {
-  const { method, url, path, apiKey, bodyParams, queryParams = {}, privateKey, showUi } = params
+  const { method, url, path, apiKey, bodyParams, queryParams = {}, promoCode, privateKey, showUi } = params
   const urlObj = new URL(url + '/' + path, true)
   const body = bodyParams != null ? JSON.stringify(bodyParams) : undefined
 
@@ -707,6 +719,10 @@ const paybisFetch = async (params: {
     signature = sha512HashAndSign(body, privateKey)
   }
   queryParams.apikey = apiKey
+
+  if (promoCode != null) {
+    queryParams.promoCode = promoCode
+  }
   urlObj.set('query', queryParams)
 
   const options: EdgeFetchOptions = {
@@ -750,6 +766,20 @@ const initializeBuyPairs = async ({ url, apiKey }: InitializePairs): Promise<voi
   }
 
   if (paybisPairs.buy != null) {
+    // XXX Hack. Paybis doesn't have a specific payment method for applepay or googlepay
+    // so if we see a creditcard method, we just dupe it for googlepay and applepay.
+    const ccMethod = paybisPairs.buy.data.find(pair => pair.name === 'method-id-credit-card')
+    if (ccMethod != null) {
+      paybisPairs.buy.data.push({
+        name: 'fake-id-googlepay',
+        pairs: ccMethod.pairs
+      })
+      paybisPairs.buy.data.push({
+        name: 'fake-id-applepay',
+        pairs: ccMethod.pairs
+      })
+    }
+
     for (const paymentMethodPairs of paybisPairs.buy.data) {
       const { name, pairs } = paymentMethodPairs
       if (name == null) continue

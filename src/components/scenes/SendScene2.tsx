@@ -248,7 +248,6 @@ const SendComponent = (props: Props) => {
         title={title}
         exchangeRates={exchangeRates}
         nativeAmount={nativeAmount ?? ''}
-        wallet={coreWallet}
         currencyCode={currencyCode}
         exchangeDenomination={cryptoExchangeDenomination}
         displayDenomination={cryptoDisplayDenomination}
@@ -366,7 +365,6 @@ const SendComponent = (props: Props) => {
           title={title}
           exchangeRates={exchangeRates}
           nativeAmount={nativeAmount ?? ''}
-          wallet={coreWallet}
           currencyCode={currencyCode}
           exchangeDenomination={cryptoExchangeDenomination}
           displayDenomination={cryptoDisplayDenomination}
@@ -482,7 +480,14 @@ const SendComponent = (props: Props) => {
         feeDisplayDenomination = cryptoDisplayDenomination
         feeExchangeDenomination = cryptoExchangeDenomination
       }
-      const transactionFee = convertTransactionFeeToDisplayFee(coreWallet, exchangeRates, edgeTransaction, feeDisplayDenomination, feeExchangeDenomination)
+      const transactionFee = convertTransactionFeeToDisplayFee(
+        coreWallet.currencyInfo.currencyCode,
+        defaultIsoFiat,
+        exchangeRates,
+        edgeTransaction,
+        feeDisplayDenomination,
+        feeExchangeDenomination
+      )
 
       const fiatAmount = transactionFee.fiatAmount === '0' ? '0' : ` ${transactionFee.fiatAmount}`
       const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol ?? ''}${fiatAmount})`

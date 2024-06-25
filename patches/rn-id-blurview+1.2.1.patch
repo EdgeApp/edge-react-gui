@@ -1,0 +1,47 @@
+diff --git a/node_modules/rn-id-blurview/src/BlurView.android.tsx b/node_modules/rn-id-blurview/src/BlurView.android.tsx
+index 02a29c1..b637bcd 100644
+--- a/node_modules/rn-id-blurview/src/BlurView.android.tsx
++++ b/node_modules/rn-id-blurview/src/BlurView.android.tsx
+@@ -27,7 +27,7 @@ interface AndroidProps extends ViewProps {
+ }
+ 
+ export const BlurView = (props: PropsWithChildren<AndroidProps>) => {
+-
++  props = { blurType: 'dark', blurAmount: 10, ...props };
+   const blurType: AndroidBlurType = ['light', 'xlight', 'dark'].includes(props.blurType) ? props.blurType as AndroidBlurType : 'dark';
+ 
+   useEffect(() => {
+@@ -91,11 +91,6 @@ export const BlurView = (props: PropsWithChildren<AndroidProps>) => {
+     );
+ }
+ 
+-BlurView.defaultProps = {
+-  blurType: 'dark',
+-  blurAmount: 10,
+-};
+-
+ // requireNativeComponent automatically resolves 'BlurView' to 'BlurViewManager'
+ const NativeBlurView = requireNativeComponent<AndroidProps>(
+   'BlurView',
+diff --git a/node_modules/rn-id-blurview/src/BlurView.ios.tsx b/node_modules/rn-id-blurview/src/BlurView.ios.tsx
+index bc82817..7d403c6 100644
+--- a/node_modules/rn-id-blurview/src/BlurView.ios.tsx
++++ b/node_modules/rn-id-blurview/src/BlurView.ios.tsx
+@@ -4,16 +4,12 @@ import { styles } from './BlurView.style';
+ import type { BlurViewProperties } from './types';
+ 
+ export const BlurView = (props: BlurViewProperties) => {
++  props = { blurType: 'dark', blurAmount: 10, ...props };
+   return (
+     <NativeBlurView style={StyleSheet.compose(styles.transparent, props?.style)} {...props} />
+   );
+ };
+ 
+-BlurView.defaultProps = {
+-  blurType: 'dark',
+-  blurAmount: 10,
+-};
+-
+ // requireNativeComponent automatically resolves 'BlurView' to 'BlurViewManager'
+ const NativeBlurView = requireNativeComponent<BlurViewProperties>(
+   'BlurView',

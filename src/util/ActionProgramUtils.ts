@@ -236,14 +236,15 @@ export const makeAaveDepositAction = async ({
 export const makeAaveCloseAction = async ({
   borrowPluginId,
   borrowEngine,
+  defaultIsoFiat,
   exchangeRates
 }: {
   borrowPluginId: string
+  defaultIsoFiat: string
   borrowEngine: BorrowEngine
   exchangeRates: GuiExchangeRates
 }): Promise<ActionOp | null> => {
   const { currencyWallet: wallet } = borrowEngine
-  const { fiatCurrencyCode: isoFiatCurrencyCode } = wallet
 
   const evmActions: ActionOp[] = []
 
@@ -288,21 +289,21 @@ export const makeAaveCloseAction = async ({
       const collateralFiat = convertCurrencyFromExchangeRates(
         exchangeRates,
         collateralCurrencyCode,
-        isoFiatCurrencyCode,
+        defaultIsoFiat,
         convertNativeToExchange(collateralDenom.multiplier)(collateral.nativeAmount)
       )
       const debtDenom = debtDenoms[0]
       const principalFiat = convertCurrencyFromExchangeRates(
         exchangeRates,
         debtCurrencyCode,
-        isoFiatCurrencyCode,
+        defaultIsoFiat,
         convertNativeToExchange(debtDenom.multiplier)(debt.nativeAmount)
       )
       const debtBalanceNativeAmount = wallet.balanceMap.get(debtTokenId) ?? '0'
       const debtBalanceFiat = convertCurrencyFromExchangeRates(
         exchangeRates,
         debtCurrencyCode,
-        isoFiatCurrencyCode,
+        defaultIsoFiat,
         convertNativeToExchange(debtDenom.multiplier)(debtBalanceNativeAmount)
       )
 
@@ -323,12 +324,12 @@ export const makeAaveCloseAction = async ({
           div(mul(add('1', LIQUIDATION_THRESHOLD), remainingPrincipalFiat), LIQUIDATION_THRESHOLD, DECIMAL_PRECISION),
           collateralFiat
         )
-        const collateralDeficitAmount = div(collateralDeficitFiat, exchangeRates[`${collateralCurrencyCode}_${isoFiatCurrencyCode}`], DECIMAL_PRECISION)
+        const collateralDeficitAmount = div(collateralDeficitFiat, exchangeRates[`${collateralCurrencyCode}_${defaultIsoFiat}`], DECIMAL_PRECISION)
 
         const collateralPrecisionAdjust = precisionAdjust({
           primaryExchangeMultiplier: collateralDenom.multiplier,
-          secondaryExchangeMultiplier: getDenomFromIsoCode(isoFiatCurrencyCode).multiplier,
-          exchangeSecondaryToPrimaryRatio: exchangeRates[`${collateralCurrencyCode}_${isoFiatCurrencyCode}`]
+          secondaryExchangeMultiplier: getDenomFromIsoCode(defaultIsoFiat).multiplier,
+          exchangeSecondaryToPrimaryRatio: exchangeRates[`${collateralCurrencyCode}_${defaultIsoFiat}`]
         })
         const collateralMaxPrecision = maxPrimaryCurrencyConversionDecimals(log10(collateralDenom.multiplier), collateralPrecisionAdjust)
 

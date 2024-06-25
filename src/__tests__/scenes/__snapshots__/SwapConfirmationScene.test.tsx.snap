@@ -680,7 +680,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       ]
                     }
                   >
-                    $1.84
+                    €1.83
                   </Text>
                 </View>
               </View>
@@ -769,7 +769,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       ]
                     }
                   >
-                    0.00000001 BTC (&lt;0.01 USD)
+                    0.00000001 BTC (&lt;0.01 EUR)
                   </Text>
                 </View>
               </View>
@@ -844,7 +844,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       ]
                     }
                   >
-                    1.84 USD
+                    1.83 EUR
                   </Text>
                 </View>
               </View>
@@ -1257,7 +1257,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       ]
                     }
                   >
-                    $0.000000
+                    €0.000000
                   </Text>
                 </View>
               </View>

@@ -1,5 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="co.edgesecure.app">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="co.edgesecure.app">
 
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -35,7 +35,6 @@
     android:icon="@mipmap/ic_launcher"
     android:roundIcon="@mipmap/ic_launcher_round"
     android:allowBackup="false"
-    android:extractNativeLibs="true"
     android:usesCleartextTraffic="true"
     android:theme="@style/Theme.App.Starting">
     <meta-data android:name="io.sentry.auto-init" android:value="false" />

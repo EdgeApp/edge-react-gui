@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 import { lstrings } from '../../../locales/strings'
 import { HomeAddress, SepaInfo } from '../../../types/FormTypes'
 import { StringMap } from '../../../types/types'
+import { removeIsoPrefix } from '../../../util/utils'
 import { FiatPaymentType, FiatPluginUi } from '../fiatPluginTypes'
 import {
   FiatProvider,
@@ -439,7 +440,7 @@ export const bityProvider: FiatProviderFactory = {
               providerId,
               errorType: 'overLimit',
               errorAmount: 1000,
-              displayCurrencyCode: fiatCurrencyCode.replace('iso:', '')
+              displayCurrencyCode: removeIsoPrefix(fiatCurrencyCode)
             })
           }
         } else {
@@ -484,7 +485,7 @@ export const bityProvider: FiatProviderFactory = {
         //
         // When a quote is requested that is larger than the maximum amount,
         // Bity returns a quote at the maximum value
-        const quoteCurrencyCode = (amountType === 'fiat' ? fiatCurrencyCode : cryptoCode).replace('iso:', '')
+        const quoteCurrencyCode = removeIsoPrefix(amountType === 'fiat' ? fiatCurrencyCode : cryptoCode)
         let quoteAmount
         if (isBuy) {
           quoteAmount = amountType === 'fiat' ? bityQuote.input.amount : bityQuote.output.amount

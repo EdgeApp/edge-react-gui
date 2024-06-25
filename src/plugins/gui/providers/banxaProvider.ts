@@ -9,7 +9,7 @@ import { lstrings } from '../../../locales/strings'
 import { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { fetchInfo } from '../../../util/network'
-import { consify } from '../../../util/utils'
+import { consify, removeIsoPrefix } from '../../../util/utils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import { FiatDirection, FiatPaymentType } from '../fiatPluginTypes'
 import {
@@ -435,7 +435,7 @@ export const banxaProvider: FiatProviderFactory = {
           throw new FiatProviderError({ providerId, errorType: 'paymentUnsupported' })
 
         // Check if the region, payment type, and fiat/crypto codes are supported
-        const fiat = fiatCurrencyCode.replace('iso:', '')
+        const fiatCode = removeIsoPrefix(fiatCurrencyCode)
 
         let banxaCrypto
         try {
@@ -454,7 +454,7 @@ export const banxaProvider: FiatProviderFactory = {
         let hasFetched = false
         while (true) {
           for (const pt of paymentTypes) {
-            paymentObj = getPaymentIdLimit(direction, fiat, banxaCoin, pt)
+            paymentObj = getPaymentIdLimit(direction, fiatCode, banxaCoin, pt)
             if (paymentObj != null) {
               paymentType = pt
               break
@@ -492,20 +492,20 @@ export const banxaProvider: FiatProviderFactory = {
         }
 
         if (direction === 'buy') {
-          queryParams.source = fiat
+          queryParams.source = fiatCode
           queryParams.target = banxaCoin
           if (amountType === 'fiat') {
             queryParams.source_amount = exchangeAmount
-            checkMinMax(exchangeAmount, paymentObj, fiat)
+            checkMinMax(exchangeAmount, paymentObj, fiatCode)
           } else {
             queryParams.target_amount = exchangeAmount
           }
         } else {
           queryParams.source = banxaCoin
-          queryParams.target = fiat
+          queryParams.target = fiatCode
           if (amountType === 'fiat') {
             queryParams.target_amount = exchangeAmount
-            checkMinMax(exchangeAmount, paymentObj, fiat)
+            checkMinMax(exchangeAmount, paymentObj, fiatCode)
           } else {
             queryParams.source_amount = exchangeAmount
           }
@@ -517,7 +517,7 @@ export const banxaProvider: FiatProviderFactory = {
         console.log('Got Banxa Quote:')
         consify(priceQuote)
 
-        checkMinMax(priceQuote.fiat_amount, paymentObj, fiat)
+        checkMinMax(priceQuote.fiat_amount, paymentObj, fiatCode)
         const chosenPaymentTypes: FiatPaymentType[] = []
         chosenPaymentTypes.push(paymentType)
 

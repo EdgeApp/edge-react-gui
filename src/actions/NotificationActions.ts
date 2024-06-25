@@ -15,7 +15,7 @@ import { getActiveWalletCurrencyInfos } from '../selectors/WalletSelectors'
 import { ThunkAction } from '../types/reduxTypes'
 import { base58 } from '../util/encoding'
 import { fetchPush } from '../util/network'
-import { getDenomFromIsoCode } from '../util/utils'
+import { getDenomFromIsoCode, removeIsoPrefix } from '../util/utils'
 
 export interface NotificationSettings {
   ignoreMarketing: boolean
@@ -219,7 +219,7 @@ export const newPriceChangeEvent = (
 ): NewPushEvent => {
   const { currencyCode, displayName, pluginId } = currencyInfo
 
-  const fiatDenomination = getDenomFromIsoCode(isoFiatCurrencyCode.replace('iso:', ''))
+  const fiatDenomination = getDenomFromIsoCode(removeIsoPrefix(isoFiatCurrencyCode))
   const fiatSymbol = fiatDenomination.symbol ?? ''
 
   const fiatSymbolString = `${fiatSymbol}#to_price#`

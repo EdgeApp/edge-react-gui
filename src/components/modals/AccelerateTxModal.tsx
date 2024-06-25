@@ -24,6 +24,7 @@ interface OwnProps {
 }
 interface StateProps {
   exchangeRates: GuiExchangeRates
+  isoFiatCurrencyCode: string
   feeDisplayDenomination: EdgeDenomination
 }
 type Props = OwnProps & StateProps & ThemeProps
@@ -84,10 +85,17 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
   }
 
   getTxFeeDisplay = (edgeTransaction: EdgeTransaction): string => {
-    const { exchangeRates, feeDisplayDenomination, wallet } = this.props
+    const { exchangeRates, feeDisplayDenomination, wallet, isoFiatCurrencyCode } = this.props
 
     const feeDefaultDenomination = getExchangeDenom(wallet.currencyConfig, null)
-    const transactionFee = convertTransactionFeeToDisplayFee(wallet, exchangeRates, edgeTransaction, feeDisplayDenomination, feeDefaultDenomination)
+    const transactionFee = convertTransactionFeeToDisplayFee(
+      wallet.currencyInfo.currencyCode,
+      isoFiatCurrencyCode,
+      exchangeRates,
+      edgeTransaction,
+      feeDisplayDenomination,
+      feeDefaultDenomination
+    )
 
     const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol ?? ''} ${transactionFee.fiatAmount})`
 
@@ -164,6 +172,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const AccelerateTxModal = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => ({
     exchangeRates: state.exchangeRates,
+    isoFiatCurrencyCode: state.ui.settings.defaultFiat,
     feeDisplayDenomination: selectDisplayDenom(state, ownProps.wallet.currencyConfig, null)
   }),
   dispatch => ({})

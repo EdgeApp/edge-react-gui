@@ -24,14 +24,13 @@ import { MarginsUi4 } from '../ui4/MarginsUi4'
 export interface CreateWalletImportParams {
   createWalletList: WalletCreateItem[]
   walletNames: { [key: string]: string }
-  fiatCode: string
 }
 
 interface Props extends EdgeSceneProps<'createWalletImport'> {}
 
 const CreateWalletImportComponent = (props: Props) => {
   const { navigation, route } = props
-  const { createWalletList, walletNames, fiatCode } = route.params
+  const { createWalletList, walletNames } = route.params
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -124,10 +123,10 @@ const CreateWalletImportComponent = (props: Props) => {
     }
 
     if (pluginIds.length > 0 && pluginIds.some(pluginId => SPECIAL_CURRENCY_INFO[pluginId]?.importKeyOptions != null)) {
-      navigation.navigate('createWalletImportOptions', { createWalletList, walletNames, fiatCode, importText: cleanImportText })
+      navigation.navigate('createWalletImportOptions', { createWalletList, walletNames, importText: cleanImportText })
       return
     }
-    navigation.navigate('createWalletCompletion', { createWalletList, walletNames, fiatCode, importText: cleanImportText })
+    navigation.navigate('createWalletCompletion', { createWalletList, walletNames, importText: cleanImportText })
   })
 
   // Scale the icon

@@ -43,21 +43,18 @@ async function buildExchangeRates(state: RootState): Promise<GuiExchangeRates> {
   }
   for (const id of Object.keys(currencyWallets)) {
     const wallet = currencyWallets[id]
-    const walletIsoFiat = wallet.fiatCurrencyCode
     const currencyCode = wallet.currencyInfo.currencyCode
     // need to get both forward and backwards exchange rates for wallets & account fiats, for each parent currency AND each token
-    exchangeRates.push({ currency_pair: `${currencyCode}_${walletIsoFiat}` })
     exchangeRates.push({ currency_pair: `${currencyCode}_${accountIsoFiat}` })
     exchangeRates.push({ currency_pair: `${currencyCode}_iso:USD`, date: `${yesterdayDate}` })
     // now add tokens, if they exist
-    if (walletIsoFiat !== 'iso:USD') {
-      exchangeRates.push({ currency_pair: `iso:USD_${walletIsoFiat}` })
+    if (accountIsoFiat !== 'iso:USD') {
+      exchangeRates.push({ currency_pair: `iso:USD_${accountIsoFiat}` })
     }
     for (const tokenId of wallet.enabledTokenIds) {
       if (wallet.currencyConfig.allTokens[tokenId] == null) continue
       const { currencyCode: tokenCode } = wallet.currencyConfig.allTokens[tokenId]
       if (tokenCode !== currencyCode) {
-        exchangeRates.push({ currency_pair: `${tokenCode}_${walletIsoFiat}` })
         exchangeRates.push({ currency_pair: `${tokenCode}_${accountIsoFiat}` })
         exchangeRates.push({ currency_pair: `${tokenCode}_iso:USD`, date: `${yesterdayDate}` })
       }

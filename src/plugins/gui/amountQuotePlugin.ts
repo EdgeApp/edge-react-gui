@@ -10,7 +10,7 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalRate } from '../../util/exchangeRates'
 import { infoServerData } from '../../util/network'
 import { logEvent } from '../../util/tracking'
-import { DECIMAL_PRECISION, fuzzyTimeout } from '../../util/utils'
+import { DECIMAL_PRECISION, fuzzyTimeout, removeIsoPrefix } from '../../util/utils'
 import { FiatPlugin, FiatPluginFactory, FiatPluginFactoryArgs, FiatPluginStartParams } from './fiatPluginTypes'
 import { FiatProvider, FiatProviderAssetMap, FiatProviderGetQuoteParams, FiatProviderQuote } from './fiatProviderTypes'
 import { StateManager } from './hooks/useStateManager'
@@ -104,7 +104,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
   const fiatPlugin: FiatPlugin = {
     pluginId,
     startPlugin: async (params: FiatPluginStartParams) => {
-      const { direction, defaultFiatAmount, forceFiatCurrencyCode, regionCode, paymentTypes, providerId } = params
+      const { defaultIsoFiat, direction, defaultFiatAmount, forceFiatCurrencyCode, regionCode, paymentTypes, pluginPromotion, providerId } = params
       // TODO: Address 'paymentTypes' vs 'paymentType'. Both are defined in the
       // buy/sellPluginList.jsons.
       if (paymentTypes.length === 0) console.warn('No payment types given to FiatPlugin: ' + pluginId)
@@ -227,8 +227,8 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
       // HACK: Force EUR for sepa Bity, since Bity doesn't accept USD, a common
       // wallet fiat selection regardless of region.
       // TODO: Remove when Fiat selection is designed.
-      const fiatCurrencyCode = forceFiatCurrencyCode ?? coreWallet.fiatCurrencyCode
-      const displayFiatCurrencyCode = fiatCurrencyCode.replace('iso:', '')
+      const fiatCurrencyCode = forceFiatCurrencyCode ?? defaultIsoFiat
+      const displayFiatCurrencyCode = removeIsoPrefix(fiatCurrencyCode)
       const isBuy = direction === 'buy'
       const disableInput = requireCrypto ? 1 : requireFiat ? 2 : undefined
 
@@ -406,7 +406,11 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
 
           const quotePromises = finalProvidersArray
             .filter(p => (providerId == null ? true : providerId === p.providerId))
-            .map(async p => await p.getQuote(quoteParams))
+            .map(async p => {
+              const providerIds = pluginPromotion?.providerIds ?? []
+              const promoCode = providerIds.some(pid => pid === p.providerId) ? pluginPromotion?.promoCode : undefined
+              return await p.getQuote({ ...quoteParams, promoCode })
+            })
           let errors: unknown[] = []
           const quotes = await fuzzyTimeout(quotePromises, 5000).catch(e => {
             errors = e
@@ -462,7 +466,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (params: FiatPlugi
             } else {
               // User entered a crypto value. Show the fiat value per partner
               const localeAmount = formatNumber(toFixed(quote.fiatAmount, 0, 2))
-              text = `(${localeAmount} ${quote.fiatCurrencyCode.replace('iso:', '')})`
+              text = `(${localeAmount} ${removeIsoPrefix(quote.fiatCurrencyCode)})`
             }
             const out = {
               text,

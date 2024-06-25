@@ -88,6 +88,7 @@ export interface FiatProviderGetQuoteParams {
   amountType: 'fiat' | 'crypto'
   direction: 'buy' | 'sell'
   regionCode: FiatPluginRegionCode
+  promoCode?: string
   paymentTypes: FiatPaymentType[]
 }
 

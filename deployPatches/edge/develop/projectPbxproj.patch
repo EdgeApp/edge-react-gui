@@ -1,26 +1,26 @@
 diff --git a/ios/edge.xcodeproj/project.pbxproj b/ios/edge.xcodeproj/project.pbxproj
-index a80f27717..e50152609 100644
+index 443ab795d..a7104ecff 100644
 --- a/ios/edge.xcodeproj/project.pbxproj
 +++ b/ios/edge.xcodeproj/project.pbxproj
-@@ -452,8 +452,8 @@
- 					"-lc++",
- 				);
+@@ -487,8 +487,8 @@
+ 				MARKETING_VERSION = 1.0;
+ 				OTHER_LDFLAGS = "$(inherited)";
  				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 -				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
 -				PRODUCT_NAME = Edge;
 +				PRODUCT_BUNDLE_IDENTIFIER = app.edge.develop;
-+ 				PRODUCT_NAME = "Edge Develop";
++				PRODUCT_NAME = "Edge Develop";
  				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
  				SUPPORTS_MACCATALYST = NO;
  				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
-@@ -487,8 +487,8 @@
- 					"-lc++",
- 				);
+@@ -518,8 +518,8 @@
+ 				MARKETING_VERSION = 1.0;
+ 				OTHER_LDFLAGS = "$(inherited)";
  				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 -				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.app;
 -				PRODUCT_NAME = Edge;
 +				PRODUCT_BUNDLE_IDENTIFIER = app.edge.develop;
-+ 				PRODUCT_NAME = "Edge Develop";
++				PRODUCT_NAME = "Edge Develop";
  				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
  				SUPPORTS_MACCATALYST = NO;
  				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;

@@ -1,4 +1,5 @@
 import { Web3WalletTypes } from '@walletconnect/web3wallet'
+import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -11,13 +12,12 @@ import { useHandler } from '../../hooks/useHandler'
 import { useUnmount } from '../../hooks/useUnmount'
 import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { useWalletName } from '../../hooks/useWalletName'
-import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { truncateString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { withWallet } from '../hoc/withWallet'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { FlashNotification } from '../navigation/FlashNotification'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -28,7 +28,9 @@ import { SelectableRow } from '../themed/SelectableRow'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
-interface Props extends EdgeSceneProps<'wcConnect'> {}
+interface Props extends EdgeSceneProps<'wcConnect'> {
+  wallet: EdgeCurrencyWallet
+}
 
 export interface WcConnectParams {
   proposal: Web3WalletTypes.SessionProposal
@@ -36,18 +38,14 @@ export interface WcConnectParams {
   walletId: string
 }
 
-export const WcConnectScene = (props: Props) => {
-  const { navigation } = props
+export const WcConnectScene = withWallet((props: Props) => {
+  const { navigation, wallet } = props
   const connected = React.useRef(false)
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { proposal, edgeTokenIds, walletId } = props.route.params
+  const { proposal, edgeTokenIds } = props.route.params
   const [walletAddress, setWalletAddress] = React.useState('')
-  const [selectedWalletId, setSelectedWallet] = React.useState(walletId)
 
-  const account = useSelector(state => state.core.account)
-  const currencyWallets = useWatch(account, 'currencyWallets')
-  const wallet = currencyWallets[selectedWalletId]
   const walletName = useWalletName(wallet)
   const walletConnect = useWalletConnect()
 
@@ -85,7 +83,8 @@ export const WcConnectScene = (props: Props) => {
       <WalletListModal bridge={bridge} headerTitle={lstrings.select_wallet} allowedAssets={edgeTokenIds} showCreateWallet navigation={navigation} />
     ))
     if (result?.type === 'wallet') {
-      setSelectedWallet(result.walletId)
+      const { walletId } = result
+      navigation.setParams({ walletId })
     }
   })
 
@@ -118,7 +117,7 @@ export const WcConnectScene = (props: Props) => {
       </ScrollView>
     </SceneWrapper>
   )
-}
+})
 
 const getStyles = cacheStyles((theme: Theme) => ({
   currencyLogo: {

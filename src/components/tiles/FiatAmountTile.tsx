@@ -2,6 +2,7 @@ import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 
 import { formatFiatString } from '../../hooks/useFiatText'
+import { useSelector } from '../../types/reactRedux'
 import { getDenomFromIsoCode } from '../../util/utils'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
@@ -23,10 +24,11 @@ interface Props {
 export const FiatAmountTile = (props: Props) => {
   const { fiatAmount, nativeCryptoAmount, title, tokenId, wallet } = props
   if (fiatAmount == null && nativeCryptoAmount == null) throw new Error('Either fiat or crypto amount must be given to FiatAmountTile')
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   const amountValue =
     fiatAmount != null ? (
-      `${getDenomFromIsoCode(wallet.fiatCurrencyCode).symbol ?? ''}${formatFiatString({ fiatAmount })}`
+      `${getDenomFromIsoCode(defaultIsoFiat).symbol ?? ''}${formatFiatString({ fiatAmount })}`
     ) : nativeCryptoAmount != null ? (
       <FiatText tokenId={tokenId} nativeCryptoAmount={nativeCryptoAmount} wallet={wallet} />
     ) : null

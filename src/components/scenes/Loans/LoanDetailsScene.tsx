@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 import { Fontello } from '../../../assets/vector'
 import { AAVE_SUPPORT_ARTICLE_URL_1S } from '../../../constants/aaveConstants'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
-import { getSymbolFromCurrency } from '../../../constants/WalletAndCurrencyConstants'
+import { getFiatSymbol } from '../../../constants/WalletAndCurrencyConstants'
 import { getActionProgramDisplayInfo } from '../../../controllers/action-queue/display'
 import { ActionDisplayInfo } from '../../../controllers/action-queue/types'
 import { checkEffectIsDone } from '../../../controllers/action-queue/util/checkEffectIsDone'
@@ -25,7 +25,7 @@ import { useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { GuiExchangeRates } from '../../../types/types'
 import { getToken } from '../../../util/CurrencyInfoHelpers'
-import { DECIMAL_PRECISION, zeroString } from '../../../util/utils'
+import { DECIMAL_PRECISION, removeIsoPrefix, zeroString } from '../../../util/utils'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
 import { TappableCard } from '../../cards/TappableCard'
 import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
@@ -55,6 +55,8 @@ export const LoanDetailsSceneComponent = (props: Props) => {
   const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
+  const defaultFiat = removeIsoPrefix(defaultIsoFiat)
   const actionQueueMap = useSelector(state => state.actionQueue.actionQueueMap)
 
   const { navigation, loanAccount } = props
@@ -63,7 +65,6 @@ export const LoanDetailsSceneComponent = (props: Props) => {
 
   // Derive state from borrowEngine:
   const { currencyWallet: wallet } = borrowEngine
-  const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
 
   const collaterals = useWatch(borrowEngine, 'collaterals')
   const debts = useWatch(borrowEngine, 'debts')
@@ -100,10 +101,10 @@ export const LoanDetailsSceneComponent = (props: Props) => {
   )
 
   const summaryDetails = [
-    { label: lstrings.loan_collateral_value, value: displayFiatTotal(wallet, collateralTotal) },
+    { label: lstrings.loan_collateral_value, value: displayFiatTotal(defaultIsoFiat, collateralTotal) },
     {
       label: lstrings.loan_available_equity,
-      value: displayFiatTotal(wallet, availableEquity),
+      value: displayFiatTotal(defaultIsoFiat, availableEquity),
       icon: <Ionicon name="information-circle-outline" size={theme.rem(1)} color={theme.iconTappable} />
     }
   ]
@@ -234,8 +235,8 @@ export const LoanDetailsSceneComponent = (props: Props) => {
         <Space aroundRem={1} topRem={1.5}>
           {renderProgramStatusCard()}
           <LoanDetailsSummaryCard
-            currencyIcon={<FiatIcon fiatCurrencyCode={fiatCurrencyCode} />}
-            currencyCode={fiatCurrencyCode}
+            currencyIcon={<FiatIcon fiatCurrencyCode={defaultFiat} />}
+            currencyCode={defaultFiat}
             total={debtTotal}
             details={summaryDetails}
             ltv={loanToValue}
@@ -316,28 +317,34 @@ export const LoanDetailsScene = withLoanAccount(LoanDetailsSceneComponent)
 
 export const useFiatTotal = (wallet: EdgeCurrencyWallet, tokenAmounts: Array<{ tokenId: EdgeTokenId; nativeAmount: string }>): string => {
   const exchangeRates = useSelector(state => state.exchangeRates)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   return tokenAmounts.reduce((sum, tokenAmount) => {
-    const fiatAmount = calculateFiatAmount(wallet, exchangeRates, tokenAmount.tokenId, tokenAmount.nativeAmount)
+    const fiatAmount = calculateFiatAmount(wallet, defaultIsoFiat, exchangeRates, tokenAmount.tokenId, tokenAmount.nativeAmount)
     return add(sum, fiatAmount)
   }, '0')
 }
 
-export const displayFiatTotal = (wallet: EdgeCurrencyWallet, fiatAmount: string) => {
-  const isoFiatCurrencyCode = wallet.fiatCurrencyCode
-  const fiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
+export const displayFiatTotal = (isoFiatCurrencyCode: string, fiatAmount: string) => {
+  const fiatSymbol = getFiatSymbol(isoFiatCurrencyCode)
 
   return `${fiatSymbol}${formatFiatString({ autoPrecision: true, fiatAmount })}`
 }
 
-export const calculateFiatAmount = (wallet: EdgeCurrencyWallet, exchangeRates: GuiExchangeRates, tokenId: EdgeTokenId, nativeAmount: string): string => {
+export const calculateFiatAmount = (
+  wallet: EdgeCurrencyWallet,
+  isoFiatCurrencyCode: string,
+  exchangeRates: GuiExchangeRates,
+  tokenId: EdgeTokenId,
+  nativeAmount: string
+): string => {
   if (tokenId == null) return '0' // TODO: Support wrapped native token
 
   const token = getToken(wallet, tokenId)
   if (token == null) return '0'
 
   const { currencyCode, denominations } = token
-  const key = `${currencyCode}_${wallet.fiatCurrencyCode}`
+  const key = `${currencyCode}_${isoFiatCurrencyCode}`
   const assetFiatPrice = exchangeRates[key] ?? '0'
   if (zeroString(assetFiatPrice)) {
     return '0'

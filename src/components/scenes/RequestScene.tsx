@@ -620,6 +620,7 @@ const RequestSceneConnected = connect<StateProps, DispatchProps, OwnProps & Hook
     const { route, wallet } = ownProps
     const { tokenId } = route.params
     const currencyCode = getCurrencyCode(wallet, tokenId)
+    const isoFiatCurrencyCode = state.ui.settings.defaultIsoFiat
 
     const primaryDisplayDenomination = selectDisplayDenom(state, wallet.currencyConfig, tokenId)
     const primaryExchangeDenomination = getExchangeDenom(wallet.currencyConfig, tokenId)
@@ -633,7 +634,6 @@ const RequestSceneConnected = connect<StateProps, DispatchProps, OwnProps & Hook
       exchangeCurrencyCode: primaryExchangeCurrencyCode,
       exchangeDenomination: primaryExchangeDenomination
     }
-    const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
     const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
     const fioAddressesExist = !!state.ui.fioAddress.fioAddresses.length
     const isLightAccount = state.core.account.username == null

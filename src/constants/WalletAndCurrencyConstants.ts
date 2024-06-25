@@ -3,6 +3,7 @@ import { Platform } from 'react-native'
 
 import { lstrings } from '../locales/strings'
 import { WalletConnectChainId } from '../types/types'
+import { removeIsoPrefix } from '../util/utils'
 
 export const MAX_TOKEN_CODE_CHARACTERS = 7
 
@@ -279,6 +280,19 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'XMR',
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
     isImportKeySupported: false
+  },
+  mumbai: {
+    allowZeroTx: true,
+    chainCode: 'MUMBAI',
+    displayBuyCrypto: false,
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    initWalletName: lstrings.string_first_mumbai_wallet_name,
+    isImportKeySupported: true,
+    isPaymentProtocolSupported: false,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '80001'
+    }
   },
   cardano: {
     initWalletName: lstrings.string_first_cardano_wallet_name,
@@ -834,15 +848,18 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: true,
     walletConnectV2ChainId: {
       namespace: 'algorand',
-      reference: 'wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8='
+      reference: 'wGHE2Pwdvd7S12BL5FaOP20EGYesN73k'
     }
   }
 }
 
 export const USD_FIAT = 'iso:USD'
-export const getSymbolFromCurrency = (currencyCode: string) => {
-  if (typeof currencyCode !== 'string') return ''
-  const codeWithoutIso = currencyCode.replace('iso:', '')
+/**
+ * Get the fiat symbol from an iso:[fiat] OR fiat currency code
+ */
+export const getFiatSymbol = (isoOrFiatCurrencyCode: string) => {
+  if (typeof isoOrFiatCurrencyCode !== 'string') return ''
+  const codeWithoutIso = removeIsoPrefix(isoOrFiatCurrencyCode)
   const out = FIAT_CODES_SYMBOLS[codeWithoutIso.toUpperCase()]
   return out != null ? out : ''
 }

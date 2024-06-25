@@ -3,6 +3,7 @@ import { Disklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
 import { Image, ListRenderItemInfo, Platform, View } from 'react-native'
+import { getBuildNumber, getVersion } from 'react-native-device-info'
 import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
 import { sprintf } from 'sprintf-js'
@@ -35,7 +36,7 @@ import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { infoServerData } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { logEvent, OnLogEvent } from '../../util/tracking'
-import { base58ToUuid } from '../../util/utils'
+import { base58ToUuid, getOsVersion } from '../../util/utils'
 import { EdgeAnim, fadeInUp20, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -47,6 +48,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 import { CardUi4 } from '../ui4/CardUi4'
+import { filterPromoCards } from '../ui4/PromoCardsUi4'
 import { RowUi4 } from '../ui4/RowUi4'
 import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
 
@@ -97,12 +99,13 @@ interface StateProps {
   accountReferral: AccountReferral
   coreDisklet: Disklet
   countryCode: string
-  stateProvinceCode?: string
+  defaultIsoFiat: string
   developerModeOn: boolean
   deviceId: string
   disablePlugins: NestedDisableMap
   insetStyle: InsetStyle
   forcedWalletResult?: WalletListResult
+  stateProvinceCode?: string
   onCountryPress: () => Promise<void>
   onPluginOpened: () => void
   onLogEvent: OnLogEvent
@@ -211,8 +214,20 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow, longPress: boolean = false) {
-    const { coreDisklet, countryCode, forcedWalletResult, stateProvinceCode, deviceId, disablePlugins, navigation, account, onLogEvent, onPluginOpened } =
-      this.props
+    const {
+      account,
+      accountReferral,
+      coreDisklet,
+      countryCode,
+      defaultIsoFiat,
+      deviceId,
+      disablePlugins,
+      forcedWalletResult,
+      navigation,
+      stateProvinceCode,
+      onLogEvent,
+      onPluginOpened
+    } = this.props
     const { pluginId, paymentType, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -246,6 +261,25 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       }
     }
     if (plugin.nativePlugin != null) {
+      const cards = infoServerData.rollup?.promoCards2 ?? []
+      const promoCards = filterPromoCards({
+        accountReferral,
+        cards,
+        countryCode,
+        buildNumber: getBuildNumber(),
+        osType: Platform.OS,
+        version: getVersion(),
+        osVersion: getOsVersion(),
+        currentDate: new Date()
+      })
+      const pluginPromos = promoCards.map(card => card.pluginPromotions ?? []).flat()
+      const filteredPromos = pluginPromos.filter(promo => {
+        const pluginIdMatch = (promo.pluginIds ?? []).some(pid => pid === pluginId)
+        return pluginIdMatch && promo.pluginType === direction
+      })
+
+      // For lack of a better algo, choose the first promotion that matches
+      const pluginPromotion = filteredPromos[0]
       const disableProviders = disablePlugins[pluginId]
 
       // This should not happen, since we don't show disabled rows:
@@ -253,6 +287,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
       await executePlugin({
         account,
+        defaultIsoFiat,
         deviceId,
         direction,
         disablePlugins: disableProviders,
@@ -262,6 +297,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         longPress,
         navigation,
         paymentType,
+        pluginPromotion,
         regionCode: { countryCode, stateProvinceCode },
         onLogEvent
       })
@@ -518,9 +554,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const accountReferral = useSelector(state => state.account.accountReferral)
   const deviceId = useSelector(state => base58ToUuid(state.core.context.clientId))
   const coreDisklet = useSelector(state => state.core.disklet)
-  const countryCode = useSelector(state => state.ui.settings.countryCode)
-  const stateProvinceCode = useSelector(state => state.ui.settings.stateProvinceCode)
-  const developerModeOn = useSelector(state => state.ui.settings.developerModeOn)
+  const { countryCode, defaultIsoFiat, developerModeOn, stateProvinceCode } = useSelector(state => state.ui.settings)
   const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
   const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
   const isFocused = useIsFocused()
@@ -578,6 +612,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
               accountReferral={accountReferral}
               coreDisklet={coreDisklet}
               countryCode={countryCode}
+              defaultIsoFiat={defaultIsoFiat}
               developerModeOn={developerModeOn}
               deviceId={deviceId}
               disablePlugins={disablePlugins}

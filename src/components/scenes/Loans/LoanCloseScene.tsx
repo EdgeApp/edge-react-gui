@@ -74,10 +74,12 @@ export const LoanCloseSceneComponent = (props: Props) => {
 
   // Create Action Ops
   const exchangeRates = useSelector(state => state.exchangeRates)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const [actionProgram, actionProgramError] = useAsyncValue(async () => {
     const actionOp = await makeAaveCloseAction({
       borrowPluginId,
       borrowEngine,
+      defaultIsoFiat,
       exchangeRates
     })
 

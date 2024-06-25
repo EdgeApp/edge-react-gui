@@ -10,7 +10,7 @@ import { lstrings } from '../../locales/strings'
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
-import { DECIMAL_PRECISION } from '../../util/utils'
+import { DECIMAL_PRECISION, removeIsoPrefix } from '../../util/utils'
 import { CurrencyRow } from '../data/row/CurrencyRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CardUi4 } from '../ui4/CardUi4'
@@ -70,7 +70,7 @@ export const ExchangeQuote = (props: Props) => {
     return convertCurrency(state, fromCurrencyCode, isoFiatCurrencyCode, cryptoAmount)
   })
 
-  const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
+  const fiatCurrencyCode = removeIsoPrefix(isoFiatCurrencyCode)
   const totalFiatText = `${formatFiatString({ fiatAmount: add(feeFiatAmount, fromFiatAmount) })} ${fiatCurrencyCode}`
 
   const renderRow = (label: React.ReactNode, value: React.ReactNode, style: any = {}) => {

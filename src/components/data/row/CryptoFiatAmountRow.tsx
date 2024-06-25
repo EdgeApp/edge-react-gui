@@ -2,6 +2,7 @@ import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
+import { useSelector } from '../../../types/reactRedux'
 import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
 import { FiatIcon } from '../../icons/FiatIcon'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
@@ -25,6 +26,7 @@ const CryptoFiatAmountRowComponent = (props: Props) => {
   const { marginRem, nativeAmount, tokenId, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 1), theme.rem))
   const { pluginId } = wallet.currencyInfo
 
@@ -39,7 +41,7 @@ const CryptoFiatAmountRowComponent = (props: Props) => {
       </View>
 
       <View style={styles.columnRight}>
-        <FiatIcon sizeRem={1.5} fiatCurrencyCode={wallet.fiatCurrencyCode} />
+        <FiatIcon sizeRem={1.5} fiatCurrencyCode={isoFiatCurrencyCode} />
         <EdgeText style={styles.text}>
           <FiatText appendFiatCurrencyCode autoPrecision hideFiatSymbol nativeCryptoAmount={nativeAmount} tokenId={tokenId} wallet={wallet} />
         </EdgeText>

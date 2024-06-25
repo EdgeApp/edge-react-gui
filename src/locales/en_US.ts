@@ -255,7 +255,7 @@ const strings = {
   wallet_list_add_token: 'Add Token',
   wallet_list_referral_link_currency_invalid: 'Currency to create is invalid',
   wallet_list_referral_link_currency_loading: 'Hang tight. Creating wallet necessary for this promotion',
-  wallet_list_referral_link_ask_wallet_creation: 'You need %s wallet for this promotion, do you want to create one?',
+  wallet_list_referral_link_ask_wallet_creation_1s: 'You need a %1$s wallet for this promotion. Would you like to create one?',
   wallet_list_wallet_search: 'Search Wallets',
   compromised_key_label: 'Compromised Key',
   create_wallet_choice_new_button: 'Create New Wallet',
@@ -426,6 +426,7 @@ const strings = {
   settings_default_screen_title: 'Show Screen on Login',
   settings_default_screen_home: 'Home',
   settings_default_screen_assets: 'Assets',
+  settings_developer_options_force_la: 'Force Light Account Creation',
   swap_preferred_header: 'Preferred Exchange',
   swap_preferred_cheapest: 'Pick best price',
   swap_preferred_dex: 'Prefer Decentralized',
@@ -549,6 +550,7 @@ const strings = {
   string_first_litecoin_wallet_name: 'My Litecoin',
   string_first_cardano_wallet_name: 'My Cardano',
   string_first_cardano_preprod_wallet_name: 'My Cardano Testnet',
+  string_first_mumbai_wallet_name: 'My Mumbai',
   string_first_monero_wallet_name: 'My Monero',
   string_first_qtum_wallet_name: 'My Qtum',
   string_first_ripple_wallet_name: 'My XRP',
@@ -1525,10 +1527,11 @@ const strings = {
 
   no_access_disclaimer_1s: '%1$s has zero access to user funds and does not see or store any private keys or personal information.',
 
+  // #endregion Light Account
+
   // Buttons
   learn_more: 'Learn More',
-
-  // #endregion Light Account
+  dismiss: 'Dismiss',
 
   // #region Notifications
 
@@ -1540,6 +1543,23 @@ const strings = {
   notif_ip_validation_enabled_body_1s: '%1$s prevents logins from unrecognized IP addresses. Tap to learn more.',
 
   // #endregion Notifications
+
+  // #region Survey Modal
+
+  survey_discover_title_1s: 'How Did You Discover %1$s?',
+  survey_discover_subtitle: 'This survey is anonymous and your response will not be tied to your account.',
+  survey_opt_youtube: 'YouTube',
+  survey_opt_search_engine: 'Search Engine',
+  survey_opt_x_twitter: 'X/Twitter',
+  survey_opt_in_person_event: 'In-person Event',
+  survey_opt_personal_referral: 'Personal Referral',
+  survey_opt_article: 'Article',
+  survey_opt_submit: 'Submit',
+  survey_opt_dismiss: 'Dismiss',
+  survey_opt_other_specify: 'Other (Specify)',
+  specify_placeholder: 'Specify',
+
+  // #endregion Survey Modal
 
   // #region Transfer Modal
 

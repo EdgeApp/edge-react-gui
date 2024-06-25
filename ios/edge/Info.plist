@@ -62,6 +62,16 @@
 		<string>https</string>
 		<string>http</string>
 		<string>bankid</string>
+		<string>edge</string>
+		<string>airbitz</string>
+		<string>edge-ret</string>
+		<string>airbitz-ret</string>
+		<string>dash</string>
+		<string>litecoin</string>
+		<string>ethereum</string>
+		<string>bitcoincash</string>
+		<string>bitcoin</string>
+		<string>reqaddr</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -163,5 +173,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:edge.app</string>
+	</array>
 </dict>
 </plist>

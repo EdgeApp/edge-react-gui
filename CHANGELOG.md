@@ -2,6 +2,29 @@
 
 ## Unreleased
 
+- added: Support for Universal and App Links
+- added: A post-install survey asking users how they discovered the app
+- added: Support for splitting LTC to BTC wallets for recovering BTC erroneously sent to an LTC address
+- added: "Force Light Account Creation" developer mode setting
+- added: Allow promoCards to send promoCodes to fiat partners for special pricing
+- added: Allow promoCard URLs to specify a currency pluginId to have replaced with a public address
+- added: Rango Exchange DEX aggregator support
+- added: A spinner next to the total balance to indicate syncing
+- changed: Prefer DEX estimate quotes over CEX fixed rate quotes if the DEX quote has a better rate
+- changed: Light account backup notification card now persists no matter what while logged in to a light account
+- changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
+- changed: WalletConnect: Move initial wallet selection to connections list scene
+- fixed: Fix for negative total balance due to small numbers and scientific notation
+- fixed: Stabilize the account sync bar progress motion.
+- fixed: Update Algorand's WalletConnectv2 reference
+- fixed: Slight animation stutter when opening the CountryListModal
+- fixed: Account-level Default Fiat setting not being correctly used in Markets View Scenes
+- fixed: Changing Default Fiat setting does not properly refresh CoinRankingDetailsScene
+- fixed: Possible for keyboard to cover input fields in some Android WebViews
+- fixed: Call the correct method when rejecting a WalletConnect session
+- fixed: "Exchange Rates Loading..." not showing in the balance card
+- removed: Wallet-specific fiat currency setting. Account-wide fiat currency setting is now used for app-wide fiat calculation and display
+
 ## 4.8.0
 
 - added: "IP Validation Protection Enabled" bottom notification card
@@ -15,7 +38,6 @@
 - changed: Velodrome, cemetery, and masonry staking polcies - insufficient balance errors reduced severity to untracked warnings
 - changed: Distinction between disabled and paused wallets
 - changed: Wallet menu modal item ordering for "Split Wallet"
-- changed: WalletConnect: Move initial wallet selection to connections list scene
 - changed: Enable `keysOnlyMode` for Telos
 - changed: Increase iOS minimum to 15.6
 - fixed: Buy/Sell Scene briefly changes title after selecting payment method if an asset was pre-selected via the "Trade" modal

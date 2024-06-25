@@ -5,7 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
-import { getDeviceSettings, writeDeviceNotifDismissInfo } from '../../actions/DeviceSettingsActions'
 import { getLocalAccountSettings, writeNotifDismissInfo } from '../../actions/LocalSettingsActions'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useAsyncNavigation } from '../../hooks/useAsyncNavigation'
@@ -53,14 +52,11 @@ const NotificationViewComponent = (props: Props) => {
 
   const [autoDetectTokenCards, setAutoDetectTokenCards] = React.useState<React.JSX.Element[]>([])
   const [otpReminderCard, setOtpReminderCard] = React.useState<React.JSX.Element>()
-  const deviceNotifDismissInfo = getDeviceSettings().deviceNotifDismissInfo
   const accountNotifDismissInfo = getLocalAccountSettings().accountNotifDismissInfo
 
-  const isBackupWarningNotifShown =
-    account.id != null && account.username == null && fioAddresses.length > 0 && deviceNotifDismissInfo != null && !deviceNotifDismissInfo.backupNotifShown
+  const isBackupWarningNotifShown = account.id != null && account.username == null
 
   const handleBackupPress = useHandler(async () => {
-    await writeDeviceNotifDismissInfo({ ...deviceNotifDismissInfo, backupNotifShown: true })
     await showBackupModal({ navigation: navigationDebounced })
   })
 
@@ -149,7 +145,13 @@ const NotificationViewComponent = (props: Props) => {
       onLayout={handleLayout}
     >
       <EdgeAnim visible={isBackupWarningNotifShown} enter={fadeIn} exit={fadeOut}>
-        <NotificationCard type="warning" title={lstrings.backup_title} message={lstrings.backup_web3_handle_warning_message} onPress={handleBackupPress} />
+        <NotificationCard
+          type="warning"
+          title={lstrings.backup_title}
+          message={fioAddresses.length > 0 ? lstrings.backup_web3_handle_warning_message : lstrings.backup_info_message}
+          persistent
+          onPress={handleBackupPress}
+        />
       </EdgeAnim>
       <EdgeAnim visible={autoDetectTokenCards.length > 0} enter={fadeIn} exit={fadeOut}>
         {autoDetectTokenCards}
