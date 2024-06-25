@@ -1,41 +1,31 @@
 import { AppParamList, EdgeSceneProps, NavigationProp } from '../../types/routerTypes'
 
 export const fakeNavigation: NavigationProp<any> = {
-  // Events:
   addListener() {
     return () => undefined
   },
   removeListener() {},
+  isFocused() {
+    return true
+  },
 
-  // Status:
+  navigate() {},
+  push() {},
+  replace() {},
+  setParams(params) {},
+
+  goBack() {},
+  pop() {},
+  popToTop() {},
+
+  dispatch() {},
+  reset() {},
   canGoBack() {
     return true
   },
   getId() {
     return undefined
   },
-  getParent() {
-    return fakeNavigation as any
-  },
-  isFocused() {
-    return true
-  },
-
-  // Forward navigation:
-  navigate() {},
-  navigateDeprecated() {},
-  push() {},
-  replace() {},
-  setParams() {},
-
-  // Backwards navigation:
-  goBack() {},
-  pop() {},
-  popTo() {},
-  popToTop() {},
-
-  // Internal router state:
-  dispatch() {},
   getState() {
     return {
       key: 'foo',
@@ -46,14 +36,10 @@ export const fakeNavigation: NavigationProp<any> = {
       stale: false
     }
   },
-  setOptions() {},
-  setStateForNextRouteNamesChange() {},
-  reset() {},
-
-  // Cache management:
-  preload() {},
-  remove() {},
-  retain() {}
+  getParent() {
+    throw new Error('not implemented')
+  },
+  setOptions() {}
 }
 
 export function fakeSceneProps<Name extends keyof AppParamList>(name: Name, params: AppParamList[Name]): EdgeSceneProps<Name> {
