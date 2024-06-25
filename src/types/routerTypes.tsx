@@ -16,13 +16,13 @@ import type { CurrencyNotificationParams } from '../components/scenes/CurrencyNo
 import type { CurrencySettingsParams } from '../components/scenes/CurrencySettingsScene'
 import type { EdgeLoginParams } from '../components/scenes/EdgeLoginScene'
 import type { EditTokenParams } from '../components/scenes/EditTokenScene'
-import { FioAddressRegisterSelectWalletParams } from '../components/scenes/Fio/FioAddressRegisterSelectWalletScene'
-import { FioAddressSettingsParams } from '../components/scenes/Fio/FioAddressSettingsScene'
-import { FioConnectWalletConfirmParams } from '../components/scenes/Fio/FioConnectWalletConfirmScene'
+import type { FioAddressRegisterSelectWalletParams } from '../components/scenes/Fio/FioAddressRegisterSelectWalletScene'
+import type { FioAddressSettingsParams } from '../components/scenes/Fio/FioAddressSettingsScene'
+import type { FioConnectWalletConfirmParams } from '../components/scenes/Fio/FioConnectWalletConfirmScene'
 import type { FioCreateHandleParams } from '../components/scenes/Fio/FioCreateHandleScene'
-import { FioDomainRegisterSelectWalletParams } from '../components/scenes/Fio/FioDomainRegisterSelectWalletScene'
-import { FioDomainSettingsParams } from '../components/scenes/Fio/FioDomainSettingsScene'
-import { FioNameConfirmParams } from '../components/scenes/Fio/FioNameConfirmScene'
+import type { FioDomainRegisterSelectWalletParams } from '../components/scenes/Fio/FioDomainRegisterSelectWalletScene'
+import type { FioDomainSettingsParams } from '../components/scenes/Fio/FioDomainSettingsScene'
+import type { FioNameConfirmParams } from '../components/scenes/Fio/FioNameConfirmScene'
 import type { GettingStartedParams } from '../components/scenes/GettingStartedScene'
 import type { GuiPluginListParams } from '../components/scenes/GuiPluginListScene'
 import type { PluginViewParams } from '../components/scenes/GuiPluginViewScene'
@@ -44,8 +44,12 @@ import type { StakeModifyParams } from '../components/scenes/Staking/StakeModify
 import type { StakeOptionsParams } from '../components/scenes/Staking/StakeOptionsScene'
 import type { StakeOverviewParams } from '../components/scenes/Staking/StakeOverviewScene'
 import type { SwapConfirmationParams } from '../components/scenes/SwapConfirmationScene'
-import { SwapCreateParams } from '../components/scenes/SwapCreateScene'
+import type { SwapCreateParams } from '../components/scenes/SwapCreateScene'
 import type { SwapProcessingParams } from '../components/scenes/SwapProcessingScene'
+import type { SweepPrivateKeyCalculateFeeParams } from '../components/scenes/SweepPrivateKeyCalculateFeeScene'
+import type { SweepPrivateKeyCompletionParams } from '../components/scenes/SweepPrivateKeyCompletionScene'
+import type { SweepPrivateKeyProcessingParams } from '../components/scenes/SweepPrivateKeyProcessingScene'
+import type { SweepPrivateKeySelectCryptoParams } from '../components/scenes/SweepPrivateKeySelectCryptoScene'
 import type { TransactionDetailsParams } from '../components/scenes/TransactionDetailsScene'
 import type { TransactionListParams } from '../components/scenes/TransactionListScene'
 import type { TransactionsExportParams } from '../components/scenes/TransactionsExportScene'
@@ -184,6 +188,10 @@ export interface RouteParamList {
   swapProcessing: SwapProcessingParams
   swapSettings: {}
   swapSuccess: {}
+  sweepPrivateKeyProcessing: SweepPrivateKeyProcessingParams
+  sweepPrivateKeySelectCrypto: SweepPrivateKeySelectCryptoParams
+  sweepPrivateKeyCalculateFee: SweepPrivateKeyCalculateFeeParams
+  sweepPrivateKeyCompletion: SweepPrivateKeyCompletionParams
   testScene: {}
   transactionDetails: TransactionDetailsParams
   transactionList: TransactionListParams
