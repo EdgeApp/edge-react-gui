@@ -234,6 +234,7 @@ const strings = {
   fragment_wallets_pause_wallet: 'Pause Wallet',
   fragment_wallets_unpause_wallet: 'Unpause Wallet',
   fragment_wallets_wallet_paused: 'Wallet Paused',
+  fragment_wallets_wallet_disabled: 'Wallet Disabled',
   fragment_wallets_view_private_view_key: 'Private View Key',
   fragment_wallets_view_private_view_key_warning_s: `The private view key allows the receiver to see the balance in your %1$s wallet. Do not share this key unless necessary, such as for tax purposes, accounting, or similar reasons.`,
   fragment_wallets_view_xpub: 'View XPub Address',
@@ -581,6 +582,7 @@ const strings = {
   string_first_pulsechain_wallet_name: 'My PulseChain',
   string_first_avalanche_wallet_name: 'My Avalanche',
   string_first_optimism_wallet_name: 'My Optimism',
+  string_first_bobevm_wallet_name: 'My BOB',
   string_first_algorand_wallet_name: 'My Algorand',
   string_first_zksync_wallet_name: 'My zkSync',
   my_crypto_wallet_name: 'My %s',
@@ -1516,18 +1518,10 @@ const strings = {
   backup_for_transfer_message:
     'To buy, sell, and receive funds, please back up your account. Edge encrypted backups use a familiar username and password method that will safeguard your assets and help prevent loss of funds.\n\nNever share your username and password, and store your credentials securely!',
 
-  backup_title_b: 'Secure your Account',
-
   // Backup Message Variants
   backup_title: 'Back Up Your Account',
   backup_message: 'Create a username and password to continue.',
   backup_message_subtext: 'Backing up your account ensures you can safely recover your funds in the event that you lose access to your device.',
-
-  secure_account_title: 'Secure Your Account',
-  secure_account_message_subtext: 'Securing your account ensures that you can safely recover your funds in the event that you lose access to your device.',
-
-  create_user_title: 'Create Account', // Duplicate string in case the translations don't match
-  create_user_message_subtext: 'Creating your account ensures that you can safely recover your funds in the event that you lose access to your device.',
 
   no_access_disclaimer_1s: '%1$s has zero access to user funds and does not see or store any private keys or personal information.',
 
@@ -1542,6 +1536,8 @@ const strings = {
   notif_tokens_detected_on_wallet_name_1s: `New tokens were detected and enabled on %1$s. Tap to review.`,
   notif_tokens_detected_on_address_1s: 'New tokens were detected and enabled on a %1$s address. Tap to review.',
   notif_otp_message: 'Enable Two-Factor Authentication (2FA) to prevent unauthorized access.',
+  notif_ip_validation_enabled_title: 'IP Validation Protection',
+  notif_ip_validation_enabled_body_1s: '%1$s prevents logins from unrecognized IP addresses. Tap to learn more.',
 
   // #endregion Notifications
 

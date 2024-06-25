@@ -34,14 +34,20 @@ exports[`ChangePinComponent should render with loading props 1`] = `
               "goBack": [Function],
               "isFocused": [Function],
               "navigate": [Function],
+              "navigateDeprecated": [Function],
               "pop": [Function],
+              "popTo": [Function],
               "popToTop": [Function],
+              "preload": [Function],
               "push": [Function],
+              "remove": [Function],
               "removeListener": [Function],
               "replace": [Function],
               "reset": [Function],
+              "retain": [Function],
               "setOptions": [Function],
               "setParams": [Function],
+              "setStateForNextRouteNamesChange": [Function],
             }
           }
         >
@@ -68,14 +74,20 @@ exports[`ChangePinComponent should render with loading props 1`] = `
                   "goBack": [Function],
                   "isFocused": [Function],
                   "navigate": [Function],
+                  "navigateDeprecated": [Function],
                   "pop": [Function],
+                  "popTo": [Function],
                   "popToTop": [Function],
+                  "preload": [Function],
                   "push": [Function],
+                  "remove": [Function],
                   "removeListener": [Function],
                   "replace": [Function],
                   "reset": [Function],
+                  "retain": [Function],
                   "setOptions": [Function],
                   "setParams": [Function],
+                  "setStateForNextRouteNamesChange": [Function],
                 }
               }
               route={

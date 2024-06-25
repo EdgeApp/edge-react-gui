@@ -1,3 +1,4 @@
+import { useIsFocused } from '@react-navigation/native'
 import { Disklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
@@ -18,6 +19,7 @@ import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
 import sellPluginJsonRaw from '../../constants/plugins/sellPluginList.json'
 import sellPluginJsonOverrideRaw from '../../constants/plugins/sellPluginListOverride.json'
 import { ENV } from '../../env'
+import { useAsyncNavigation } from '../../hooks/useAsyncNavigation'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { executePlugin } from '../../plugins/gui/fiatPlugin'
@@ -34,7 +36,7 @@ import { infoServerData } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { logEvent, OnLogEvent } from '../../util/tracking'
 import { base58ToUuid } from '../../util/utils'
-import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
+import { EdgeAnim, fadeInUp20, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
 import { TextInputModal } from '../modals/TextInputModal'
 import { WalletListResult } from '../modals/WalletListModal'
@@ -101,7 +103,7 @@ interface StateProps {
   disablePlugins: NestedDisableMap
   insetStyle: InsetStyle
   forcedWalletResult?: WalletListResult
-  onCountryPress: () => void
+  onCountryPress: () => Promise<void>
   onPluginOpened: () => void
   onLogEvent: OnLogEvent
   onScroll: SceneScrollHandler
@@ -290,7 +292,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const poweredBy = plugin.poweredBy ?? plugin.displayName
 
     return (
-      <EdgeAnim enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }}>
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }} style={styles.hackContainer}>
         <CardUi4
           icon={
             <Image
@@ -299,8 +301,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
               source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]}
             />
           }
-          onPress={async () => await this.openPlugin(item).catch(showError)}
-          onLongPress={async () => await this.openPlugin(item, true).catch(showError)}
+          onPress={async () => await this.openPlugin(item).catch(error => showError(error))}
+          onLongPress={async () => await this.openPlugin(item, true).catch(error => showError(error))}
           paddingRem={[1, 0.5, 1, 0.5]}
         >
           <View style={styles.cardContentContainer}>
@@ -363,12 +365,18 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         </EdgeAnim>
 
         {hasCountryData ? (
-          <EdgeAnim enter={fadeInUp60}>
+          <EdgeAnim enter={fadeInUp60} style={styles.hackContainer}>
             <SectionHeaderUi4 leftTitle={lstrings.title_select_region} />
           </EdgeAnim>
         ) : null}
-        <EdgeAnim enter={fadeInUp30}>{countryCard}</EdgeAnim>
-        {hasCountryData ? <SectionHeaderUi4 leftTitle={lstrings.title_select_payment_method} /> : null}
+        <EdgeAnim enter={fadeInUp30} style={styles.hackContainer}>
+          {countryCard}
+        </EdgeAnim>
+        {hasCountryData ? (
+          <EdgeAnim enter={fadeInUp20} style={styles.hackContainer}>
+            <SectionHeaderUi4 leftTitle={lstrings.title_select_payment_method} />
+          </EdgeAnim>
+        ) : null}
       </>
     )
   }
@@ -388,10 +396,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { accountPlugins, accountReferral, countryCode, stateProvinceCode, developerModeOn, disablePlugins, theme, insetStyle } = this.props
+    const { accountPlugins, accountReferral, countryCode, stateProvinceCode, developerModeOn, disablePlugins, insetStyle } = this.props
     const direction = this.getSceneDirection()
     const { buy = [], sell = [] } = this.state.buySellPlugins
-    const styles = getStyles(theme)
 
     // Pick a filter based on our direction:
     let plugins = filterGuiPluginJson(direction === 'buy' ? buy : sell, Platform.OS, countryCode, disablePlugins, stateProvinceCode)
@@ -410,34 +417,35 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     return (
-      <View style={styles.sceneContainer}>
-        <Animated.FlatList
-          data={plugins}
-          onScroll={this.props.onScroll}
-          ListHeaderComponent={this.renderTop}
-          ListEmptyComponent={this.renderEmptyList}
-          renderItem={this.renderPlugin}
-          keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
-          contentContainerStyle={insetStyle}
-        />
-      </View>
+      <Animated.FlatList
+        data={plugins}
+        onScroll={this.props.onScroll}
+        ListHeaderComponent={this.renderTop}
+        ListEmptyComponent={this.renderEmptyList}
+        renderItem={this.renderPlugin}
+        keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
+        contentContainerStyle={insetStyle}
+      />
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   header: {
-    marginLeft: -theme.rem(0.5),
-    width: '100%'
+    marginRight: -theme.rem(0.5),
+    // HACK: Required for the header underline to span all the way to the right
+    // TODO: Make SceneHeader work right under UI4
+    overflow: 'visible'
   },
   cardContentContainer: {
     flexDirection: 'column',
     flexShrink: 1,
     marginRight: theme.rem(0.5)
   },
-  sceneContainer: {
-    flex: 1,
-    padding: theme.rem(0.5)
+  hackContainer: {
+    // HACK: Required for the header underline to span all the way to the right
+    // TODO: Make SceneHeader work right under UI4
+    paddingHorizontal: theme.rem(0.5)
   },
   selectedCountryRow: {
     marginTop: theme.rem(1.5),
@@ -515,6 +523,9 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const developerModeOn = useSelector(state => state.ui.settings.developerModeOn)
   const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
   const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
+  const isFocused = useIsFocused()
+
+  const debouncedNavigation = useAsyncNavigation(navigation)
 
   const [forcedWalletResultLocal, setForcedWalletResultLocal] = React.useState<WalletListResult | undefined>(params.forcedWalletResult)
 
@@ -522,8 +533,8 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
     dispatch(logEvent(event, values))
   })
 
-  const handleCountryPress = useHandler(() => {
-    dispatch(
+  const handleCountryPress = useHandler(async () => {
+    await dispatch(
       showCountrySelectionModal({
         account,
         countryCode,
@@ -536,10 +547,18 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
     // Known issue: We can't resolve the case where the user navigates to this
     // scene with a 'filterAsset,' but does not select a payment method before
     // navigating away.
-    setForcedWalletResultLocal(undefined)
+
+    setTimeout(() => {
+      // Wait a short amount of time for the scene transition animation to
+      // complete before we reset the forced asset
+      setForcedWalletResultLocal(undefined)
+    }, 500)
   })
 
   React.useEffect(() => {
+    // HACK: Latest React Navigation causes multiple mounts
+    if (!isFocused) return
+
     dispatch(checkAndSetRegion({ account, countryCode, stateProvinceCode }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -565,7 +584,7 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
               forcedWalletResult={forcedWalletResultLocal}
               onScroll={handleScroll}
               insetStyle={insetStyle}
-              navigation={navigation}
+              navigation={debouncedNavigation}
               route={route}
               stateProvinceCode={stateProvinceCode}
               theme={theme}

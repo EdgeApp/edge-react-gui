@@ -15,9 +15,12 @@ require File.join(File.dirname(`node --print "require.resolve('expo/package.json
 
 # Edge addition to disable advertising ID collection:
 $RNFirebaseAnalyticsWithoutAdIdSupport = true
+$RNFirebaseAsStaticFramework = true
 
-# This is iOS 13.4 for RN 73:
-platform :ios, min_ios_version_supported
+# The min_ios_version_supported is iOS 13.4 for RN 74:
+# However any device that can use iOS 13.4 can also upgrade to iOS 15.6 which
+# is still supported by the latest version of Xcode for debugging
+platform :ios, '15.6'
 prepare_react_native_project!
 
 # Edge addition:
@@ -28,24 +31,13 @@ setup_permissions([
   'Notifications',
 ])
 
-# If you are using a `react-native-flipper` your iOS build will fail when `NO_FLIPPER=1` is set.
-# because `react-native-flipper` depends on (FlipperKit,...) that will be excluded
-#
-# To fix this you can also exclude `react-native-flipper` using a `react-native.config.js`
-# ```js
-# module.exports = {
-#   dependencies: {
-#     ...(process.env.NO_FLIPPER ? { 'react-native-flipper': { platforms: { ios: null } } } : {}),
-# ```
-flipper_config = FlipperConfiguration.disabled
-
-linkage = ENV['USE_FRAMEWORKS']
-if linkage != nil
-  Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
-  use_frameworks! :linkage => linkage.to_sym
-end
+# Edge modification:
+use_frameworks! :linkage => :static
 
 target 'edge' do
+  # Edge addition:
+  use_modular_headers!
+
   # Edge addition for Expo:
   use_expo_modules!
   post_integrate do |installer|
@@ -59,11 +51,6 @@ target 'edge' do
   config = use_native_modules!
   use_react_native!(
     :path => config[:reactNativePath],
-    # Enables Flipper.
-    #
-    # Note that if you have use_frameworks! enabled, Flipper will not work and
-    # you should disable the next line.
-    :flipper_configuration => flipper_config,
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
@@ -74,25 +61,26 @@ target 'edge' do
       installer,
       config[:reactNativePath],
       :mac_catalyst_enabled => false
+      # :ccache_enabled => true
     )
+
+    # Remove the -lsqlite3 linker flag.
+    # We already include our own sqlite3 implementation via a pod,
+    # so we don't want the system-provided one as well.
+    # Firebase seems to be the one adding this flag to the build,
+    # but that's a transitive dependency so we can't fix it there.
+    for target in installer.generated_aggregate_targets
+      target.xcconfigs.each do |name, config|
+        config.libraries.delete('sqlite3')
+        config.save_as(Pathname.new(target.xcconfig_relative_path(name)))
+      end
+    end
   end
 
   # --------------------------------------------------------------------------
   # Edge additions
   # --------------------------------------------------------------------------
 
-  pod 'react-native-performance', :path => '../node_modules/react-native-performance'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-
-  # Zcash transitive dependency:
-  pod 'CGRPCZlib', :modular_headers => true
-  pod 'CNIOAtomics', :modular_headers => true
-  pod 'CNIOBoringSSL', :modular_headers => true
-  pod 'CNIOBoringSSLShims', :modular_headers => true
-  pod 'CNIODarwin', :modular_headers => true
-  pod 'CNIOHTTPParser', :modular_headers => true
-  pod 'CNIOLinux', :modular_headers => true
-  pod 'CNIOWindows', :modular_headers => true
-  pod 'sqlite3', :modular_headers => true
 
 end

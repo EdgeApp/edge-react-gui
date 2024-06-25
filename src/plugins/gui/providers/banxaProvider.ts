@@ -216,16 +216,16 @@ const asBanxaOrderResponse = asObject({
       // tx_confirms: asMaybe(asNumber), // null,
       // created_date: asString, // "20-Sep-2023",
       // created_at: asString, // "20-Sep-2023 23:01:19",
-      status: asBanxaOrderStatus, // "pendingPayment",
+      status: asBanxaOrderStatus // "pendingPayment",
       // completed_at: asString, // null,
       // merchant_fee: asMaybe(asNumber), // null,
       // merchant_commission: asMaybe(asNumber), // null,
       // meta_data: asString, // null,
-      blockchain: asObject({
-        id: asNumber, // 1,
-        code: asString, // "BTC",
-        description: asString // "Bitcoin"
-      })
+      // blockchain: asObject({
+      //   id: asNumber, // 1,
+      //   code: asString, // "BTC",
+      //   description: asString // "Bitcoin"
+      // })
       // network_fee: asMaybe(asNumber) // null
     })
   })

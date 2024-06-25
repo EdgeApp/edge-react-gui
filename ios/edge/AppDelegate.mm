@@ -8,13 +8,13 @@
 #import "ExpoModulesCore-Swift.h"
 #import "Edge-Swift.h"
 #import "RNBootSplash.h"
-#import <Bugsnag/Bugsnag.h>
 #import <Firebase.h>
 #import <FirebaseMessaging.h>
 #import <Foundation/Foundation.h>
 #import <React/RCTLinkingManager.h>
 #import <sys/errno.h>
 #import <UserNotifications/UserNotifications.h>
+#import <Sentry.h>
 
 @implementation AppDelegate {
   // Edge addition:
@@ -41,20 +41,38 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  NSString *versionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+  NSString *dsnUrl = @"SENTRY_DSN_URL";
+  if ([dsnUrl containsString:@"SENTRY_DSN"]) {
+    NSLog(@"Please set the SENTRY_DSN_URL in env.json. Sentry disabbled");
+  } else {
+    [SentrySDK startWithConfigureOptions:^(SentryOptions *options) {
+        options.dsn = @"SENTRY_DSN_URL";
+        options.debug = YES; // Enabled debug when first installing is always helpful
+
+        // Check if the version string is equal to "99.99.99" or contains a "-"
+        if ([versionString isEqualToString:@"99.99.99"]) {
+          options.environment = @"development";
+        } else if ([versionString containsString:@"-"]) {
+          options.environment = @"testing";
+        } else {
+          options.environment = @"production";
+        }
+
+        // Enable tracing to capture 100% of transactions for performance monitoring.
+        // Use 'options.tracesSampleRate' to set the sampling rate.
+        // We recommend setting a sample rate in production.
+        // options.enableTracing = YES;
+        options.tracesSampleRate = @0.2;
+        options.enableCaptureFailedRequests = NO;
+    }];
+  }
+
   // React template code:
   self.moduleName = @"edge";
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
-
-  // Native Bugsnag integration:
-  BugsnagConfiguration *config = [BugsnagConfiguration loadConfig];
-  config.enabledBreadcrumbTypes =
-    BSGEnabledBreadcrumbTypeError &
-    BSGEnabledBreadcrumbTypeNavigation &
-    BSGEnabledBreadcrumbTypeState &
-    BSGEnabledBreadcrumbTypeUser;
-  [Bugsnag startWithConfiguration:config];
 
   // Native Firebase integration:
   if ([FIRApp defaultApp] == nil) {
@@ -70,6 +88,11 @@
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {
+  return [self bundleURL];
+}
+
+- (NSURL *)bundleURL
+{
 #if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
 #else
@@ -77,30 +100,15 @@
 #endif
 }
 
-/// This method controls whether the `concurrentRoot`feature of React18 is turned on or off.
-///
-/// @see: https://reactjs.org/blog/2022/03/29/react-v18.html
-/// @note: This requires to be rendering on Fabric (i.e. on the New Architecture).
-/// @return: `true` if the `concurrentRoot` feature is enabled. Otherwise, it returns `false`.
-- (BOOL)concurrentRootEnabled
-{
-  return true;
-}
-
 // react-native-bootsplash integration:
-- (UIView *)createRootViewWithBridge:(RCTBridge *)bridge
-                          moduleName:(NSString *)moduleName
-                           initProps:(NSDictionary *)initProps {
-  UIView *rootView = [super createRootViewWithBridge:bridge
-                                          moduleName:moduleName
-                                           initProps:initProps];
-
+- (void)customizeRootView:(RCTRootView *)rootView {
   [RNBootSplash initWithStoryboard:@"LaunchScreen" rootView:rootView];
-
-  return rootView;
 }
 
-// Edge background-fetch logic:
+/**
+ * Background-fetch logic.
+ * Edge addition.
+ */
 - (void)application:(UIApplication *)application
   performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
@@ -162,7 +170,7 @@
   if (launchScreen == nil) return;
   UIView *launchView = launchScreen.view;
   if (launchView == nil) return;
-  
+
   launchView.frame = self.window.bounds;
   [self.window addSubview:launchView];
   [self.window makeKeyAndVisible];

@@ -73,7 +73,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
           cancel: { label: lstrings.string_cancel_cap }
         }}
       />
-    )).catch(showError)
+    )).catch(error => showError(error))
   }
 
   handleEnable = async (): Promise<void> => {

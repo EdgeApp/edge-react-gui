@@ -2,15 +2,40 @@
 
 ## Unreleased
 
+## 4.8.0
+
+- added: "IP Validation Protection Enabled" bottom notification card
+- added: useAsyncNavigation hook to prevent duplicate navigation calls
+- added: Dynamic height for multiline text inputs
+- added: Sentry SDK for crash reporting
+- added: Gas requirement warnings for more UX flows
+- added: Mainnet code appended to assets in exchange details modal
+- changed: Some red Airship alerts deemed unecessary are now hidden from production builds
 - changed: Add EUID to Simplex quoting API calls
+- changed: Velodrome, cemetery, and masonry staking polcies - insufficient balance errors reduced severity to untracked warnings
+- changed: Distinction between disabled and paused wallets
+- changed: Wallet menu modal item ordering for "Split Wallet"
+- changed: WalletConnect: Move initial wallet selection to connections list scene
+- changed: Enable `keysOnlyMode` for Telos
+- changed: Increase iOS minimum to 15.6
+- fixed: Buy/Sell Scene briefly changes title after selecting payment method if an asset was pre-selected via the "Trade" modal
+- fixed: Android Auto Log Off "Disabled" text color
+- fixed: Android Auto Log Off "Disabled" selection showing as "0"
+- fixed: WalletConnect Smart Contract Call details cut off
+- fixed: Buy/Sell Scenes header underline not fully extending to the right
+- fixed: Quickly spamming taps on certain buttons resulted in duplicate actions
+- fixed: Banxa error due to API removing params
+- removed: Bugsnag for crash reporting
+- removed: Firebase/Google Analytics
+- removed: Light Account Backup Modal A/B/C/D test experiment
 
-## 4.7.0
+## 4.7.0 (2024-05-31)
 
-- addd: Dynamic height for multiline text inputs
 - added: Add Visa/MC buy support with Paybis
 - added: New Asset Setting to manually enable tokens with detected balances across all wallets
 - added: MUTE_CONSOLE_OUTPUT environment variable to disable specific console output functions
 - added: Performance logging with app start-up time and login time as initial performance metrics
+- added: Support geo filtering for "Learn" blog cards on the Home Scene
 - changed: (WalletConnect) Handle sessions with 0 required namespaces
 - changed: Consistent light account backup modal UI
 - changed: Currency icon now shown in wallet picker button in Swap and Transaction List scenes

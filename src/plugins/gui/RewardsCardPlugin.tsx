@@ -119,7 +119,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       title: lstrings.delete_card_confirmation_title,
       message: lstrings.rewards_card_delete_modal_message,
       children: (
-        <Space around={0.5}>
+        <Space aroundRem={0.5}>
           <RewardsCard item={card} />
         </Space>
       )
@@ -216,7 +216,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           .approveQuote({ showUi, coreWallet: wallet })
           .then(async () => {
             await showDashboard({ showLoading: true })
-            await refreshRewardsCards(0).catch(showError)
+            await refreshRewardsCards(0).catch(error => showError(error))
             await showDashboard({ showLoading: false })
           })
           .catch(error => {

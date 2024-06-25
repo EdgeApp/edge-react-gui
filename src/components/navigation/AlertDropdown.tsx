@@ -15,16 +15,17 @@ interface Props {
 
   // True for orange warning, false for red alert:
   warning?: boolean
+  devAlert?: boolean
 }
 
 export function AlertDropdown(props: Props) {
-  const { bridge, message, warning } = props
+  const { bridge, devAlert, message, warning } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const color = warning ? theme.dropdownWarning : theme.dropdownError
 
   return (
-    <AirshipDropdown bridge={bridge} backgroundColor={color}>
+    <AirshipDropdown autoHideMs={devAlert ? 0 : undefined} bridge={bridge} backgroundColor={color}>
       <View style={styles.container}>
         <EntypoIcon name="warning" size={theme.rem(1)} style={styles.icon} />
         <Text style={styles.text}>

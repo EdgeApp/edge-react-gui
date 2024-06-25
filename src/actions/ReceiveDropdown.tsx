@@ -65,7 +65,7 @@ export function showReceiveDropdown(navigation: NavigationBase, transaction: Edg
               walletId,
               tokenId
             })
-          ).catch(showError)
+          ).catch(error => showError(error))
 
           navigation.navigate('transactionDetails', {
             edgeTransaction: transaction,

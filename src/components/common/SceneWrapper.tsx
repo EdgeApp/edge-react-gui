@@ -1,8 +1,8 @@
-import { getDefaultHeaderHeight } from '@react-navigation/elements'
+import { useHeaderHeight } from '@react-navigation/elements'
 import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { useEffect, useMemo, useState } from 'react'
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import { Keyboard, StyleSheet, View, ViewStyle } from 'react-native'
 import { useKeyboardHandler, useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
 import Reanimated, { runOnJS, useAnimatedStyle } from 'react-native-reanimated'
 import { EdgeInsets, useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -157,27 +157,28 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
     [frameHeight, frameWidth]
   )
 
-  const headerBarHeight = getDefaultHeaderHeight({ height: frameHeight, width: frameWidth }, false, 0)
+  // This includes the top safe area inset:
+  const headerBarHeight = useHeaderHeight()
 
   // Calculate app insets considering the app's header, tab-bar,
   // notification area, etc:
   const maybeNotificationHeight = hasNotifications ? notificationHeight : 0
 
-  const maybeHeaderHeight = hasHeader ? headerBarHeight : 0
   // Ignore tab bar height when keyboard is open because it is rendered behind it
   const maybeTabBarHeight = hasTabs && !isKeyboardOpen ? MAX_TAB_BAR_HEIGHT : 0
   // Ignore inset bottom when keyboard is open because it is rendered behind it
   const maybeInsetBottom = !isKeyboardOpen ? safeAreaInsets.bottom : 0
   const insets: EdgeInsets = useMemo(
     () => ({
-      top: safeAreaInsets.top + maybeHeaderHeight,
+      top: hasHeader ? headerBarHeight : safeAreaInsets.top,
       right: safeAreaInsets.right,
       bottom: maybeInsetBottom + maybeNotificationHeight + maybeTabBarHeight + footerHeight,
       left: safeAreaInsets.left
     }),
     [
       footerHeight,
-      maybeHeaderHeight,
+      hasHeader,
+      headerBarHeight,
       maybeInsetBottom,
       maybeNotificationHeight,
       maybeTabBarHeight,
@@ -225,7 +226,7 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
     return {
       maxHeight: frameHeight + maybeKeyboardHeightDiff
     }
-  }, [avoidKeyboard, frameHeight])
+  })
 
   // If function children, the caller handles the insets and overscroll
   const memoizedChildren = useMemo(() => (typeof children === 'function' ? children(sceneWrapperInfo) : children), [children, sceneWrapperInfo])
@@ -247,6 +248,7 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
           <SceneWrapperFooterContainer footerHeight={footerHeight} hasTabs={hasTabs} renderFooter={renderFooter} sceneWrapperInfo={sceneWrapperInfo} />
         )}
         {hasNotifications ? <NotificationView hasTabs={hasTabs} footerHeight={footerHeight} navigation={navigation} /> : null}
+        <FloatingNavFixer navigation={navigation} />
       </>
     )
   }
@@ -269,6 +271,7 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
           )}
         </Reanimated.View>
         {hasNotifications ? <NotificationView hasTabs={hasTabs} footerHeight={footerHeight} navigation={navigation} /> : null}
+        <FloatingNavFixer navigation={navigation} />
       </>
     )
   }
@@ -290,6 +293,7 @@ function SceneWrapperComponent(props: SceneWrapperProps): JSX.Element {
         <SceneWrapperFooterContainer footerHeight={footerHeight} hasTabs={hasTabs} renderFooter={renderFooter} sceneWrapperInfo={sceneWrapperInfo} />
       )}
       {hasNotifications ? <NotificationView hasTabs={hasTabs} footerHeight={footerHeight} navigation={navigation} /> : null}
+      <FloatingNavFixer navigation={navigation} />
     </>
   )
 }
@@ -371,3 +375,38 @@ const SceneFooter = styled(View)({
   left: 0,
   right: 0
 })
+
+/**
+ * A hacky component to fix floating nav-bar issues caused by the keyboard being
+ * opened before a navigation is dispatched.
+ *
+ * This component listens for the 'beforeRemove' event on the navigation object
+ * and prevents the default behavior of leaving the screen if the keyboard is
+ * visible. It dismisses the keyboard and waits for the 'keyboardWillHide'
+ * event before dispatching the navigation action.
+ *
+ * @returns null
+ */
+function FloatingNavFixer(props: { navigation: NavigationBase }) {
+  const { navigation } = props
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', e => {
+      if (Keyboard.isVisible()) {
+        // Prevent default behavior of leaving the screen
+        e.preventDefault()
+
+        const keyboardDidHideListener = Keyboard.addListener('keyboardWillHide', () => {
+          navigation.dispatch(e.data.action)
+          keyboardDidHideListener.remove()
+        })
+
+        Keyboard.dismiss()
+      }
+    })
+
+    return unsubscribe
+  }, [navigation])
+
+  return null
+}

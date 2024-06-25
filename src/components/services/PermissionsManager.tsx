@@ -104,7 +104,7 @@ export async function requestPermissionOnSettings(disklet: Disklet, data: Permis
           [data]: permissionLimit + 1
         })
       )
-      .catch(showError)
+      .catch(error => showError(error))
 
     return false
   }

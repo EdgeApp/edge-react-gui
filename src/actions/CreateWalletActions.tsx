@@ -192,7 +192,8 @@ export const PLACEHOLDER_WALLET_ID = 'NEW_WALLET_UNIQUE_STRING'
 export function enableTokensAcrossWallets(newTokenItems: TokenWalletCreateItem[]): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
-    const { currencyWallets } = state.core.account
+    const { account } = state.core
+    const { currencyWallets } = account
 
     const walletIdTokenMap = newTokenItems.reduce((map: { [walletId: string]: string[] }, item) => {
       const { createWalletIds, tokenId } = item
@@ -208,6 +209,7 @@ export function enableTokensAcrossWallets(newTokenItems: TokenWalletCreateItem[]
     const promises: Array<Promise<void>> = Object.keys(walletIdTokenMap).map(async walletId => {
       const wallet = currencyWallets[walletId]
       if (wallet == null) return
+
       return await wallet.changeEnabledTokenIds([...wallet.enabledTokenIds, ...walletIdTokenMap[walletId]])
     })
 

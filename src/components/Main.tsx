@@ -248,7 +248,8 @@ export const Main = () => {
     }
   }, [theme])
 
-  const localUsers = useSelector(state => state.core.context.localUsers)
+  const context = useSelector(state => state.core.context)
+  const { localUsers } = context
 
   useMount(() => {
     dispatch(logEvent('Start_App', { numAccounts: localUsers.length }))
@@ -274,21 +275,35 @@ export const Main = () => {
     'setLegacyLanding'
   )
 
+  const initialRouteName = ENV.USE_WELCOME_SCREENS && localUsers.length === 0 ? 'gettingStarted' : 'login'
+
   return (
     <>
       {experimentConfig == null ? (
         <LoadingSplashScreen />
       ) : (
-        <NavigationContainer theme={reactNavigationTheme}>
+        <NavigationContainer
+          // This lets us dive into nested navigators using just a route name.
+          // We need to port to using the new syntax,
+          // so do `navigate('stackName', { screen: 'nestedSceneName' }`
+          // instead of `navigate('nestedSceneName')`:
+          navigationInChildEnabled
+          theme={reactNavigationTheme}
+        >
           <Stack.Navigator
-            initialRouteName={ENV.USE_WELCOME_SCREENS ? 'gettingStarted' : 'login'}
+            initialRouteName={initialRouteName}
             screenOptions={{
               headerShown: false
             }}
           >
             <Stack.Screen name="edgeApp" component={EdgeApp} />
             <Stack.Screen name="gettingStarted" component={GettingStartedScene} initialParams={{ experimentConfig }} />
-            <Stack.Screen name="login" component={LoginScene} initialParams={{ experimentConfig }} options={{ animationEnabled: hasInitialScenesLoaded }} />
+            <Stack.Screen
+              name="login"
+              component={LoginScene}
+              initialParams={{ experimentConfig }}
+              options={{ animation: hasInitialScenesLoaded ? 'slide_from_left' : 'none' }}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       )}
@@ -333,7 +348,7 @@ const EdgeApp = () => {
       screenOptions={{
         drawerPosition: 'right',
         drawerType: 'front',
-        drawerStyle: { backgroundColor: 'transparent', bottom: 0 },
+        drawerStyle: { backgroundColor: 'transparent', bottom: 0, width: '66%' },
         headerShown: false
       }}
     >

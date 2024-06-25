@@ -13,14 +13,12 @@ export type BackupTextType = 'original' | 'backup' | 'secure' | 'create'
 export interface ExperimentConfig {
   createAccountType: CreateAccountType
   signupCaptcha: 'withCaptcha' | 'withoutCaptcha'
-  backupText: BackupTextType
 }
 
 // Defined default "unchanged" values before experimentation.
 export const DEFAULT_EXPERIMENT_CONFIG: ExperimentConfig = {
   createAccountType: 'full',
-  signupCaptcha: 'withoutCaptcha',
-  backupText: 'original'
+  signupCaptcha: 'withoutCaptcha'
 }
 
 const experimentConfigDisklet = makeReactNativeDisklet()
@@ -70,8 +68,7 @@ const generateExperimentConfigVal = <T>(key: keyof typeof experimentDistribution
 
 const asExperimentConfig: Cleaner<ExperimentConfig> = asObject({
   createAccountType: asMaybe(asValue('full', 'light'), generateExperimentConfigVal('createAccountType', ['full', 'light'])),
-  signupCaptcha: asMaybe(asValue('withoutCaptcha', 'withCaptcha'), generateExperimentConfigVal('signupCaptcha', ['withoutCaptcha', 'withCaptcha'])),
-  backupText: asMaybe(asValue('original', 'backup', 'secure', 'create'), generateExperimentConfigVal('backupText', ['original', 'backup', 'secure', 'create']))
+  signupCaptcha: asMaybe(asValue('withoutCaptcha', 'withCaptcha'), generateExperimentConfigVal('signupCaptcha', ['withoutCaptcha', 'withCaptcha']))
 })
 
 /**

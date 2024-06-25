@@ -42,7 +42,7 @@ export function selectWalletToken({ navigation, walletId, tokenId, alwaysActivat
 
     // Manually un-pause the wallet, if necessary:
     const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
-    if (wallet.paused && !isKeysOnlyPlugin(wallet.currencyInfo.pluginId)) wallet.changePaused(false).catch(showError)
+    if (wallet.paused && !isKeysOnlyPlugin(wallet.currencyInfo.pluginId)) wallet.changePaused(false).catch(error => showError(error))
 
     // XXX Still need a darn currencyCode. Hope to deprecate later
     const currencyCode = getCurrencyCode(wallet, tokenId)
@@ -147,7 +147,7 @@ export function updateMostRecentWalletsSelected(walletId: string, tokenId: EdgeT
           data: { mostRecentWallets: currentMostRecentWallets }
         })
       })
-      .catch(showError)
+      .catch(error => showError(error))
   }
 }
 

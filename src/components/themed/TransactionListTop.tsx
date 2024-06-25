@@ -14,6 +14,7 @@ import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { getSymbolFromCurrency, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { ENV } from '../../env'
+import { useAsyncNavigation } from '../../hooks/useAsyncNavigation'
 import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
@@ -787,7 +788,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export function TransactionListTop(props: OwnProps) {
-  const { tokenId, wallet } = props
+  const { tokenId, wallet, navigation } = props
   const dispatch = useDispatch()
   const account = useSelector(state => state.core.account)
   const exchangeRates = useSelector(state => state.exchangeRates)
@@ -803,6 +804,8 @@ export function TransactionListTop(props: OwnProps) {
   const walletName = useWalletName(wallet)
   const balanceMap = useWatch(wallet, 'balanceMap')
 
+  const navigationDebounced = useAsyncNavigation(navigation)
+
   const handleBalanceVisibility = useHandler(() => {
     dispatch(toggleAccountBalanceVisibility())
   })
@@ -810,6 +813,7 @@ export function TransactionListTop(props: OwnProps) {
   return (
     <TransactionListTopComponent
       {...props}
+      navigation={navigationDebounced}
       account={account}
       balanceMap={balanceMap}
       currencyCode={currencyCode}

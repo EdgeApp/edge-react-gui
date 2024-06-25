@@ -4,9 +4,7 @@ import * as React from 'react'
 import { handleOtpError } from '../../actions/AccountActions'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
-import { makeErrorLog, translateError } from '../../util/translateError'
-import { AlertDropdown } from '../navigation/AlertDropdown'
-import { Airship, showError, yellowText } from './AirshipInstance'
+import { showDevError, showDevErrorAsync } from './AirshipInstance'
 
 interface OwnProps {
   navigation: NavigationBase
@@ -39,11 +37,11 @@ class EdgeContextCallbackManagerComponent extends React.Component<Props> {
 
         if (!errorShown) {
           errorShown = true
-          this.showError(error)
+          showDevErrorAsync(error)
             .then(() => {
               errorShown = false
             })
-            .catch(err => showError(err))
+            .catch(err => showDevError(err))
         }
       })
     )
@@ -51,15 +49,6 @@ class EdgeContextCallbackManagerComponent extends React.Component<Props> {
 
   componentWillUnmount() {
     for (const cleanup of this.cleanups) cleanup()
-  }
-
-  /**
-   * Like AirshipInstance/showWarning,
-   * but asynchronous so we don't spam multiple pop-ups.
-   */
-  async showError(error: unknown): Promise<void> {
-    console.log(yellowText('Showing core drop-down alert: ' + makeErrorLog(error)))
-    return await Airship.show(bridge => <AlertDropdown bridge={bridge} message={translateError(error)} warning />)
   }
 
   render() {

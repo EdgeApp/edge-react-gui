@@ -2,7 +2,7 @@ import { gt, gte } from 'biggystring'
 import { EdgeCurrencyWallet, EdgeSwapRequest, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
-import { Keyboard, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { DisableAsset } from '../../actions/ExchangeInfoActions'
@@ -23,7 +23,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SwapVerticalIcon } from '../icons/ThemedIcons'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship, showError, showWarning } from '../services/AirshipInstance'
+import { Airship, showError, showToast, showWarning } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
 import { LineTextDivider } from '../themed/LineTextDivider'
@@ -173,15 +173,14 @@ export const SwapCreateScene = (props: Props) => {
         })
       }
     })
-    Keyboard.dismiss()
   }
 
   const resetState = () => {
     setState(defaultState)
   }
 
-  const showWalletListModal = (whichWallet: 'from' | 'to') => {
-    Airship.show<WalletListResult>(bridge => (
+  const showWalletListModal = async (whichWallet: 'from' | 'to') => {
+    const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
         navigation={props.navigation}
@@ -191,13 +190,10 @@ export const SwapCreateScene = (props: Props) => {
         filterActivation
       />
     ))
-      .then(async result => {
-        if (result?.type === 'wallet') {
-          const { walletId, tokenId } = result
-          await handleSelectWallet(walletId, tokenId, whichWallet)
-        }
-      })
-      .catch(error => showError(error))
+    if (result?.type === 'wallet') {
+      const { walletId, tokenId } = result
+      await handleSelectWallet(walletId, tokenId, whichWallet)
+    }
   }
 
   //
@@ -245,15 +241,14 @@ export const SwapCreateScene = (props: Props) => {
 
   const handleMaxPress = useHandler(() => {
     if (toWallet == null) {
-      showWarning(`${lstrings.exchange_select_receiving_wallet}`)
-      Keyboard.dismiss()
+      showWarning(`${lstrings.exchange_select_receiving_wallet}`, { trackError: false })
       return
     }
 
     if (fromWallet == null) {
       // Shouldn't ever happen because max button UI is disabled when no
       // fromWallet is selected
-      showWarning(`${lstrings.exchange_select_sending_wallet}`)
+      showWarning(`${lstrings.exchange_select_sending_wallet}`, { trackError: false })
       return
     }
 
@@ -274,7 +269,7 @@ export const SwapCreateScene = (props: Props) => {
     if (fromWallet == null || toWallet == null) return
 
     if (zeroString(state.nativeAmount)) {
-      showError(`${lstrings.no_exchange_amount}. ${lstrings.select_exchange_amount}.`)
+      showToast(`${lstrings.no_exchange_amount}. ${lstrings.select_exchange_amount}.`)
       return
     }
 
@@ -292,12 +287,12 @@ export const SwapCreateScene = (props: Props) => {
     getQuote(request)
   })
 
-  const handleFromSelectWallet = useHandler(() => {
-    showWalletListModal('from')
+  const handleFromSelectWallet = useHandler(async () => {
+    await showWalletListModal('from')
   })
 
-  const handleToSelectWallet = useHandler(() => {
-    showWalletListModal('to')
+  const handleToSelectWallet = useHandler(async () => {
+    await showWalletListModal('to')
   })
 
   const handleFromAmountChange = useHandler((amounts: ExchangedFlipInputAmounts) => {

@@ -8,6 +8,7 @@ import { approveTokenTerms } from '../../actions/TokenTermsActions'
 import { useHandler } from '../../hooks/useHandler'
 import { usePendingPressAnimation } from '../../hooks/usePendingPress'
 import { lstrings } from '../../locales/strings'
+import { useSelector } from '../../types/reactRedux'
 import { NavigationProp } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
@@ -33,6 +34,7 @@ const AnimatedSwitch = Animated.createAnimatedComponent(Switch)
 
 export const ManageTokensRowComponent = (props: Props) => {
   const { navigation, wallet, isCustom, isEnabled, token, tokenId } = props
+  const account = useSelector(state => state.core.account)
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -52,7 +54,7 @@ export const ManageTokensRowComponent = (props: Props) => {
 
   // Handle toggling the token on or off:
   const [pending, handleToggle] = usePendingPressAnimation(async () => {
-    if (!isEnabled) await approveTokenTerms(wallet)
+    if (!isEnabled) await approveTokenTerms(account, wallet.currencyInfo.pluginId)
 
     const newIds = isEnabled ? wallet.enabledTokenIds.filter(id => id !== tokenId) : [...wallet.enabledTokenIds, tokenId]
     await wallet.changeEnabledTokenIds(newIds)

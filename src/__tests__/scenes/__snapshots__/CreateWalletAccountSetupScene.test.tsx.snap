@@ -355,27 +355,19 @@ exports[`CreateWalletAccountSelect renders 1`] = `
 
       </Text>
       <View
-        multiline={false}
-        spaceStyle={
+        marginRemStyle={
           {
-            "alignItems": undefined,
-            "flex": undefined,
-            "flexDirection": "column",
-            "justifyContent": undefined,
             "marginBottom": 45,
             "marginLeft": 22,
             "marginRight": 22,
             "marginTop": 22,
           }
         }
+        multiline={false}
         style={
           {
-            "alignItems": undefined,
-            "flex": undefined,
-            "flexDirection": "column",
             "flexGrow": undefined,
             "flexShrink": undefined,
-            "justifyContent": undefined,
             "marginBottom": 45,
             "marginLeft": 22,
             "marginRight": 22,

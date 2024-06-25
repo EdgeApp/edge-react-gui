@@ -2,6 +2,7 @@ import { gt, lte } from 'biggystring'
 import { BigNumber } from 'ethers'
 import { sprintf } from 'sprintf-js'
 
+import { showWarning } from '../../../../components/services/AirshipInstance'
 import { lstrings } from '../../../../locales/strings'
 import { cacheTxMetadata } from '../../metadataCache'
 import { ChangeQuote, ChangeQuoteRequest, PositionAllocation, QuoteAllocation, StakePosition, StakePositionRequest } from '../../types'
@@ -186,7 +187,7 @@ export const makeMasonryPolicy = (options?: MasonryPolicyOptions): StakePluginPo
           const balanceAmount = fromHex(balanceResponse._hex)
           const isBalanceEnough = lte(allocation.nativeAmount, balanceAmount)
           if (!isBalanceEnough) {
-            throw new Error(sprintf(lstrings.stake_error_insufficient_s, request.currencyCode))
+            showWarning(sprintf(lstrings.stake_error_insufficient_s, request.currencyCode), { trackError: false })
           }
         })
       )

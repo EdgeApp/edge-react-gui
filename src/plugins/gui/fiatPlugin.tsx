@@ -288,5 +288,5 @@ export const executePlugin = async (params: {
     defaultFiatAmount,
     providerId
   }
-  plugin.startPlugin(startPluginParams).catch(showError)
+  await plugin.startPlugin(startPluginParams)
 }

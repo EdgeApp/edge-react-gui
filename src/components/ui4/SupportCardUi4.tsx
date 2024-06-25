@@ -27,7 +27,7 @@ export function SupportCardUi4(props: Props) {
 
   return (
     <CardUi4 gradientBackground={theme.cardGradientLearn}>
-      <Space around={0.5}>
+      <Space aroundRem={0.5}>
         <EdgeText numberOfLines={1} style={styles.title}>
           {title}
         </EdgeText>

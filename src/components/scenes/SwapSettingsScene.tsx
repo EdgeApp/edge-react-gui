@@ -19,7 +19,7 @@ import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { RadioListModal } from '../modals/RadioListModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsSubHeader } from '../settings/SettingsSubHeader'
@@ -87,7 +87,7 @@ export class SwapSettings extends React.Component<Props, State> {
     }
   }
 
-  handlePreferredModal = () => {
+  handlePreferredModal = async () => {
     const {
       accountPlugins,
       changePreferredSwapPlugin,
@@ -148,7 +148,7 @@ export class SwapSettings extends React.Component<Props, State> {
     }
 
     // Render
-    Airship.show<string | undefined>(bridge => (
+    const result = await Airship.show<string | undefined>(bridge => (
       <RadioListModal
         bridge={bridge}
         title={lstrings.swap_preferred_header}
@@ -156,22 +156,20 @@ export class SwapSettings extends React.Component<Props, State> {
         selected={selected}
       />
     ))
-      .then(async result => {
-        if (result == null) return
 
-        // Cancel any active promotions:
-        if (activePlugins.swapSource.type === 'account') await ignoreAccountSwap()
+    if (result == null) return
 
-        // Apply the user's choice:
-        if (result === preferDex.name) {
-          changePreferredSwapPluginType('DEX')
-        } else if (result === preferCex.name) {
-          changePreferredSwapPluginType('CEX')
-        } else {
-          changePreferredSwapPlugin(Object.keys(swapConfigs).find(pluginId => swapConfigs[pluginId].swapInfo.displayName === result))
-        }
-      })
-      .catch(err => showError(err))
+    // Cancel any active promotions:
+    if (activePlugins.swapSource.type === 'account') await ignoreAccountSwap()
+
+    // Apply the user's choice:
+    if (result === preferDex.name) {
+      changePreferredSwapPluginType('DEX')
+    } else if (result === preferCex.name) {
+      changePreferredSwapPluginType('CEX')
+    } else {
+      changePreferredSwapPlugin(Object.keys(swapConfigs).find(pluginId => swapConfigs[pluginId].swapInfo.displayName === result))
+    }
   }
 
   render() {

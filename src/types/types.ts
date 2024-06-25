@@ -1,4 +1,4 @@
-import { asBoolean, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
+import { asArray, asBoolean, asEither, asMaybe, asNull, asNumber, asObject, asOptional, asString, asValue } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeToken, EdgeTokenId } from 'edge-core-js/types'
 
 import { LocaleStringKey } from '../locales/en_US'
@@ -151,14 +151,28 @@ export const asSpendingLimits = asObject({
   transaction: asMaybe(asTransaction, () => asTransaction({}))
 })
 
+const asAccountNotifDismissInfo = asObject({
+  ip2FaNotifShown: asMaybe(asBoolean, false)
+})
+export type AccountNotifDismissInfo = ReturnType<typeof asAccountNotifDismissInfo>
+
+const asTokenWarningsShown = asArray(asString)
+
 const asLocalAccountSettingsInner = asObject({
   contactsPermissionOn: asMaybe(asBoolean, true),
   developerModeOn: asMaybe(asBoolean, false),
   passwordReminder: asMaybe(asPasswordReminder, () => asPasswordReminder({})),
   isAccountBalanceVisible: asMaybe(asBoolean, true),
   spamFilterOn: asMaybe(asBoolean, true),
-  spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({}))
+  spendingLimits: asMaybe(asSpendingLimits, () => asSpendingLimits({})),
+  accountNotifDismissInfo: asMaybe(asAccountNotifDismissInfo, asAccountNotifDismissInfo({})),
+  tokenWarningsShown: asMaybe(asTokenWarningsShown, [])
 })
+
+const asDeviceNotifDismissInfo = asObject({
+  backupNotifShown: asMaybe(asBoolean, false)
+})
+export type DeviceNotifDismissInfo = ReturnType<typeof asDeviceNotifDismissInfo>
 
 export const asDefaultScreen = asValue('home', 'assets')
 
@@ -166,7 +180,7 @@ const asDeviceSettingsInner = asObject({
   defaultScreen: asMaybe(asDefaultScreen, 'home'),
   developerPluginUri: asMaybe(asString),
   disableAnimations: asMaybe(asBoolean, false),
-  hasInteractedWithBackupModal: asMaybe(asBoolean, false)
+  deviceNotifDismissInfo: asMaybe(asDeviceNotifDismissInfo, asDeviceNotifDismissInfo({}))
 })
 
 export const asLocalAccountSettings = asMaybe(asLocalAccountSettingsInner, () => asLocalAccountSettingsInner({}))
@@ -309,6 +323,7 @@ export interface AppConfig {
   defaultWallets: EdgeAsset[]
   forceCloseUrlIos: string
   forceCloseUrlAndroid: string
+  ip2faSite: string
   knowledgeBase: string
   lightTheme: Theme
   notificationServers: string[]

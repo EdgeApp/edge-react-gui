@@ -19,6 +19,9 @@ interface Props {
   noFadeIn?: boolean
 }
 
+/**
+ * @deprecated - Not Maestro-compatible. Use `EdgeAnim` instead
+ */
 export const Fade = ({ children, duration, delay, visible, noFadeIn }: Props) => {
   const style = useFadeAnimation(visible, { noFadeIn, duration, delay })
 

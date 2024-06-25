@@ -19,7 +19,7 @@ import { EdgeAnim, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CoinRankRow } from '../data/row/CoinRankRow'
-import { showError } from '../services/AirshipInstance'
+import { showDevError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
@@ -105,7 +105,7 @@ const CoinRankingComponent = (props: Props) => {
     if (index < 0) {
       const msg = `Invalid percent change value ${percentChangeTimeFrame}`
       console.error(msg)
-      showError(msg)
+      showDevError(msg)
       return
     }
     const newIndex = index + 1 >= percentChangeOrder.length ? 0 : index + 1

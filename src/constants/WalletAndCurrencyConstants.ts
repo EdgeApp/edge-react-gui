@@ -102,7 +102,8 @@ export const WALLET_TYPE_ORDER = [
   'wallet:liberlandtestnet',
   'wallet:coreum',
   'wallet:osmosis',
-  'wallet:thorchainrune'
+  'wallet:thorchainrune',
+  'wallet:bobevm'
 ]
 
 // Put these in reverse order of preference
@@ -299,7 +300,7 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'EOS',
     dummyPublicAddress: 'edgecreator2',
     initWalletName: lstrings.string_first_eos_wallet_name,
-    isAccountActivationRequired: true,
+    isAccountActivationRequired: false,
     isImportKeySupported: true,
     keysOnlyMode: true,
     needsAccountNameSetup: true,
@@ -308,7 +309,8 @@ export const SPECIAL_CURRENCY_INFO: {
   telos: {
     initWalletName: lstrings.string_first_telos_wallet_name,
     chainCode: 'TLOS',
-    isAccountActivationRequired: true,
+    keysOnlyMode: true,
+    isAccountActivationRequired: false,
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: true,
     noChangeMiningFee: true,
@@ -426,7 +428,6 @@ export const SPECIAL_CURRENCY_INFO: {
     chainCode: 'ETC',
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isImportKeySupported: true,
-    isTransactionListUnsupported: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '61'
@@ -456,6 +457,16 @@ export const SPECIAL_CURRENCY_INFO: {
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '10'
+    }
+  },
+  bobevm: {
+    initWalletName: lstrings.string_first_bobevm_wallet_name,
+    chainCode: 'ETH',
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    isImportKeySupported: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '60808'
     }
   },
   zksync: {

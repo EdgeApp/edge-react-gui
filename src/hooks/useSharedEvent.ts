@@ -19,6 +19,5 @@ export const useSharedEvent = <T>(sharedEvent: SharedValue<T> | undefined, handl
         // runOnJS(handler)(currentValue)
         handler(currentValue)
       }
-    },
-    [sharedEvent, handler]
+    }
   )

@@ -111,7 +111,6 @@ const CreateWalletCompletionComponent = (props: Props) => {
         } else {
           // Wait for wallet creation
           await account.waitForCurrencyWallet(result.result.id)
-
           setItemStatus(currentState => ({ ...currentState, [filteredCreateItemsForDisplay[i].key]: 'complete' }))
         }
       }

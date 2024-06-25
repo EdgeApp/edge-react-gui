@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Platform, TouchableOpacity, View } from 'react-native'
+import { Platform, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { cacheStyles } from 'react-native-patina'
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
@@ -7,6 +7,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { useHandler } from '../../hooks/useHandler'
 import { getThemedIconUri } from '../../util/CdnUris'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -68,7 +69,7 @@ const NotificationCardComponent = (props: Props) => {
 
   return nullComponent ? null : (
     <Animated.View style={[styles.cardContainer, animatedStyle]}>
-      <Contents onPress={handlePress}>
+      <TouchableContents onPress={handlePress}>
         <Icon source={{ uri: iconUri }} />
         <TextView>
           <TitleText type={type}>{title}</TitleText>
@@ -81,11 +82,11 @@ const NotificationCardComponent = (props: Props) => {
             {message}
           </MessageText>
         </TextView>
-      </Contents>
+      </TouchableContents>
       {onClose != null ? (
-        <CloseButton onPress={handleClose}>
+        <TouchableCloseButton onPress={handleClose}>
           <AntDesignIcon color={theme.iconTappable} name="close" size={theme.rem(1.25)} />
-        </CloseButton>
+        </TouchableCloseButton>
       ) : null}
     </Animated.View>
   )
@@ -138,7 +139,7 @@ const TextView = styled(View)(theme => ({
   width: '100%'
 }))
 
-const Contents = styled(TouchableOpacity)((theme: Theme) => ({
+const TouchableContents = styled(EdgeTouchableOpacity)((theme: Theme) => ({
   flexShrink: 1,
   flexDirection: 'row',
   justifyContent: 'center',
@@ -146,7 +147,7 @@ const Contents = styled(TouchableOpacity)((theme: Theme) => ({
   margin: theme.rem(0.25)
 }))
 
-const CloseButton = styled(TouchableOpacity)((theme: Theme) => ({
+const TouchableCloseButton = styled(EdgeTouchableOpacity)((theme: Theme) => ({
   margin: theme.rem(0.25)
 }))
 

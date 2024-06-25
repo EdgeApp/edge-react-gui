@@ -2,8 +2,6 @@ package co.edgesecure.app
 
 import android.app.Application
 import android.content.res.Configuration
-import com.bugsnag.android.BreadcrumbType
-import com.bugsnag.android.Bugsnag
 import com.facebook.react.PackageList
 import com.facebook.react.ReactApplication
 import com.facebook.react.ReactHost
@@ -12,11 +10,15 @@ import com.facebook.react.ReactPackage
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
-import com.facebook.react.flipper.ReactNativeFlipper
 import com.facebook.react.modules.i18nmanager.I18nUtil
 import com.facebook.soloader.SoLoader
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
+import io.sentry.android.core.SentryAndroid
+import io.sentry.Hint
+import io.sentry.SentryEvent
+import io.sentry.SentryLevel
+import io.sentry.SentryOptions.BeforeSendCallback
 
 class MainApplication : Application(), ReactApplication {
     override val reactNativeHost: ReactNativeHost =
@@ -41,22 +43,40 @@ class MainApplication : Application(), ReactApplication {
         )
 
     override val reactHost: ReactHost
-        get() = getDefaultReactHost(this.applicationContext, reactNativeHost)
+        get() = getDefaultReactHost(applicationContext, reactNativeHost)
 
     override fun onCreate() {
         super.onCreate()
 
-        // @bugsnag/react-native
-        val config = com.bugsnag.android.Configuration.load(this)
-        config.enabledBreadcrumbTypes = object : HashSet<BreadcrumbType?>() {
-            init {
-                add(BreadcrumbType.ERROR)
-                add(BreadcrumbType.NAVIGATION)
-                add(BreadcrumbType.STATE)
-                add(BreadcrumbType.USER)
+        // Retrieve the version string from the app's BuildConfig
+        val versionString = BuildConfig.VERSION_NAME
+
+        if ("SENTRY_DSN_URL".contains("SENTRY_DSN")) {
+          // Sentry disabled. Need to add sentry keys to env.json
+        } else {
+          SentryAndroid.init(this) { options ->
+            options.dsn = "SENTRY_DSN_URL"
+
+            if (versionString == "99.99.99") {
+              options.environment = "development"
+            } else if (versionString.contains("-")) {
+              options.environment = "testing"
+            } else {
+              options.environment = "production"
             }
+
+            // Add a callback that will be used before the event is sent to Sentry.
+            // With this callback, you can modify the event or, when returning null, also discard the event.
+            options.beforeSend =
+              BeforeSendCallback { event: SentryEvent, hint: Hint ->
+                if (SentryLevel.DEBUG == event.level) {
+                  null
+                } else {
+                  event
+                }
+              }
+          }
         }
-        Bugsnag.start(this, config)
 
         // Disable RTL:
         val sharedI18nUtilInstance = I18nUtil.getInstance()
@@ -73,7 +93,6 @@ class MainApplication : Application(), ReactApplication {
             // app.
             load()
         }
-        ReactNativeFlipper.initializeFlipper(this, reactNativeHost.reactInstanceManager)
 
         // Expo addition:
         ApplicationLifecycleDispatcher.onApplicationCreate(this)

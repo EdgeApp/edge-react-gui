@@ -125,7 +125,7 @@ export function setPreferredSwapPluginId(pluginId: string | undefined): ThunkAct
           data: undefined
         })
       })
-      .catch(showError)
+      .catch(error => showError(error))
   }
 }
 
@@ -144,7 +144,7 @@ export function setPreferredSwapPluginType(swapPluginType: EdgeSwapPluginType | 
           data: undefined
         })
       })
-      .catch(showError)
+      .catch(error => showError(error))
   }
 }
 
@@ -161,7 +161,7 @@ export function setDenominationKeyRequest(pluginId: string, currencyCode: string
           data: { pluginId, currencyCode, denomination }
         })
       )
-      .catch(showError)
+      .catch(error => showError(error))
   }
 }
 

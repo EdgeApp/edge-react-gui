@@ -4,6 +4,7 @@ import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { enableTokensAcrossWallets, PLACEHOLDER_WALLET_ID } from '../../actions/CreateWalletActions'
+import { approveTokenTerms } from '../../actions/TokenTermsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -19,15 +20,16 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps, NavigationProp } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { logEvent } from '../../util/tracking'
+import { EdgeAnim } from '../common/EdgeAnim'
+import { SceneButtons } from '../common/SceneButtons'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { ListModal } from '../modals/ListModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { useTheme } from '../services/ThemeContext'
 import { CreateWalletSelectCryptoRow } from '../themed/CreateWalletSelectCryptoRow'
 import { EdgeText } from '../themed/EdgeText'
-import { Fade } from '../themed/Fade'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
@@ -48,7 +50,6 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
   const dispatch = useDispatch()
   const theme = useTheme()
-  const styles = getStyles(theme)
 
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
@@ -97,13 +98,22 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     return newItem as MainWalletCreateItem
   }
 
-  const handleCreateWalletToggle = useHandler((key: string) => {
+  const handleCreateWalletToggle = useHandler(async (key: string) => {
     setSelectedItems(state => {
       const copy = new Set(state)
-      if (copy.has(key)) copy.delete(key)
-      else copy.add(key)
+      if (copy.has(key)) {
+        copy.delete(key)
+      } else {
+        copy.add(key)
+      }
       return copy
     })
+
+    // Check if this is a token to potentially show the gas requirement warning
+    const newAsset = createWalletList.find(item => item.key === key)
+    if (newAsset != null && newAsset.tokenId != null) {
+      await approveTokenTerms(account, newAsset.pluginId)
+    }
   })
 
   const handleNextPress = useHandler(async () => {
@@ -245,12 +255,18 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
   const renderRow = useHandler((item: ListRenderItemInfo<WalletCreateItem | null>) => {
     // Render the bottom button
-    if (item.item === null)
+    if (item.item === null) {
+      if (splitSourceWalletId != null) return null
       return (
-        <Fade noFadeIn={selectedItems.size === 0} visible={selectedItems.size === 0} duration={300}>
+        <EdgeAnim
+          visible={selectedItems.size === 0}
+          enter={{ type: 'fadeIn', duration: selectedItems.size === 0 ? 0 : 300 }}
+          exit={{ type: 'fadeOut', duration: 300 }}
+        >
           <ButtonUi4 type="secondary" label={lstrings.add_custom_token} onPress={handleAddCustomTokenPress} marginRem={0.5} />
-        </Fade>
+        </EdgeAnim>
       )
+    }
 
     const { key, displayName, pluginId, tokenId } = item.item
 
@@ -267,7 +283,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
           true: theme.toggleButton
         }}
         value={selected}
-        onValueChange={() => handleCreateWalletToggle(key)}
+        onValueChange={async () => await handleCreateWalletToggle(key)}
       />
     )
 
@@ -276,7 +292,7 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
         pluginId={pluginId}
         tokenId={tokenId}
         walletName={displayName}
-        onPress={() => handleCreateWalletToggle(key)}
+        onPress={async () => await handleCreateWalletToggle(key)}
         rightSide={toggle}
       />
     )
@@ -286,13 +302,16 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
 
   const renderNextButton = React.useMemo(
     () => (
-      <Fade noFadeIn={defaultSelection.length > 0} visible={selectedItems.size > 0} duration={300}>
-        <View style={styles.bottomButton}>
-          <ButtonUi4 label={lstrings.string_next_capitalized} onPress={handleNextPress} />
-        </View>
-      </Fade>
+      <EdgeAnim
+        visible={selectedItems.size > 0}
+        enter={{ type: 'fadeIn', duration: defaultSelection.length > 0 ? 0 : 300 }}
+        exit={{ type: 'fadeOut', duration: 300 }}
+        accessible={false}
+      >
+        <SceneButtons primary={{ label: lstrings.string_next_capitalized, onPress: handleNextPress }} absolute />
+      </EdgeAnim>
     ),
-    [defaultSelection, handleNextPress, selectedItems, styles.bottomButton]
+    [defaultSelection.length, handleNextPress, selectedItems.size]
   )
 
   return (
@@ -304,8 +323,8 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
             withTopMargin
           />
           <SimpleTextInput
-            vertical={0.5}
-            horizontal={1}
+            verticalRem={0.5}
+            horizontalRem={1}
             autoCorrect={false}
             autoCapitalize="words"
             onChangeText={setSearchTerm}
@@ -338,13 +357,5 @@ const CreateWalletSelectCryptoComponent = (props: Props) => {
     </SceneWrapper>
   )
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  bottomButton: {
-    alignSelf: 'center',
-    bottom: theme.rem(2),
-    position: 'absolute'
-  }
-}))
 
 export const CreateWalletSelectCryptoScene = React.memo(CreateWalletSelectCryptoComponent)
