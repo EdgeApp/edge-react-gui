@@ -14,7 +14,7 @@ interface Props<T> {
   animationDuration?: number
   navigation: NavigationBase
 
-  promise: () => Promise<T>
+  doWork: () => Promise<T>
   onCancel: () => void
   onDone: (res: T) => void
   onError: (navigation: NavigationBase, error: unknown) => Promise<void>
@@ -33,7 +33,7 @@ export function CancellableProcessingScene<T>(props: Props<T>) {
     onCancel,
     onDone,
     onError,
-    promise,
+    doWork,
     processingText,
     longProcessingText = processingText,
     longProcessingTime = 10000
@@ -56,7 +56,7 @@ export function CancellableProcessingScene<T>(props: Props<T>) {
   useAsyncEffect(
     async () => {
       try {
-        const result = await promise()
+        const result = await doWork()
         if (mounted.current) onDone(result)
       } catch (error: unknown) {
         await onError(navigation, error)
@@ -66,7 +66,7 @@ export function CancellableProcessingScene<T>(props: Props<T>) {
         mounted.current = false
       }
     },
-    [promise, onCancel, onError],
+    [doWork, onCancel, onError],
     'CancellableProcessingScene'
   )
 
