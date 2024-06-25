@@ -10,7 +10,7 @@ import { useWatch } from './useWatch'
 /**
  * Returns the overall sync progress for all wallets in an account
  */
-export const useAccountWalletsSyncProgress = () => {
+export const useAccountSyncRatio = () => {
   const account = useSelector(state => state.core.account)
   const userPausedWalletsSet = useSelector(state => state.ui.settings.userPausedWalletsSet)
   const currencyWallets = useWatch(account, 'currencyWallets')
@@ -61,10 +61,7 @@ export const useAccountWalletsSyncProgress = () => {
     [currencyWalletErrors, progressMap, syncableWalletIds]
   )
 
-  const progress = React.useMemo(
-    () => (syncableWalletIds.length === 0 ? 100 : 100 * (syncedWallets / syncableWalletIds.length)),
-    [syncableWalletIds.length, syncedWallets]
-  )
+  const progress = syncableWalletIds.length === 0 ? 1 : syncedWallets / syncableWalletIds.length
 
   return progress
 }

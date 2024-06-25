@@ -1,7 +1,7 @@
 import React from 'react'
 import { Animated, Easing, View } from 'react-native'
 
-import { useAccountWalletsSyncProgress } from '../../hooks/useAccountWalletsSyncProgress'
+import { useAccountSyncRatio } from '../../hooks/useAccountSyncRatio'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 
 /**
@@ -13,20 +13,20 @@ export const AccountSyncBar = () => {
   const style = getStyles(theme)
 
   // Calculate the average progress:
-  const progress = useAccountWalletsSyncProgress()
+  const progress = useAccountSyncRatio()
 
   // Animation state:
   const [isProgressVisible, setIsProgressVisible] = React.useState(progress !== 100)
   const animation = React.useRef(new Animated.Value(progress)).current
 
   const widthInterpolated = animation.interpolate({
-    inputRange: [0, 100],
+    inputRange: [0, 1],
     outputRange: ['10%', '100%'],
     extrapolate: 'clamp'
   })
 
   React.useEffect(() => {
-    if (progress === 100) {
+    if (progress === 1) {
       // Delay-hide the progress bar after reaching completion.
       setTimeout(() => {
         setIsProgressVisible(false)
