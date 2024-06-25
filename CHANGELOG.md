@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 4.9.0
+
 - added: Support for Universal and App Links
 - added: A post-install survey asking users how they discovered the app
 - added: Support for splitting LTC to BTC wallets for recovering BTC erroneously sent to an LTC address
