@@ -20,7 +20,7 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { convertNativeToDisplay } from '../../util/utils'
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { Airship } from '../services/AirshipInstance'
-import { CancellableProcessingScene } from './CancellableProcessingScene'
+import { CancellableProcessingScene } from '../progress-indicators/CancellableProcessingScene'
 import { SwapErrorDisplayInfo } from './SwapCreateScene'
 
 export interface SwapProcessingParams {

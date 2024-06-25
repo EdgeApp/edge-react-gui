@@ -6,8 +6,8 @@ import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { zeroString } from '../../util/utils'
+import { CancellableProcessingScene } from '../progress-indicators/CancellableProcessingScene'
 import { showError } from '../services/AirshipInstance'
-import { CancellableProcessingScene } from './CancellableProcessingScene'
 
 export interface SweepPrivateKeyProcessingParams {
   memoryWalletPromise: Promise<EdgeMemoryWallet>
