@@ -2,8 +2,7 @@
 
 ## Unreleased
 
-- fixed: Fix for negative total balance due to small numbers and scientific notation
-
+- added: Support for Universal and App Links
 - added: A post-install survey asking users how they discovered the app
 - added: Support for splitting LTC to BTC wallets for recovering BTC erroneously sent to an LTC address
 - added: "Force Light Account Creation" developer mode setting
@@ -14,6 +13,7 @@
 - changed: Light account backup notification card now persists no matter what while logged in to a light account
 - changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
 - changed: WalletConnect: Move initial wallet selection to connections list scene
+- fixed: Fix for negative total balance due to small numbers and scientific notation
 - fixed: Stabilize the account sync bar progress motion.
 - fixed: Update Algorand's WalletConnectv2 reference
 - fixed: Slight animation stutter when opening the CountryListModal
