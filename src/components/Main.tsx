@@ -282,14 +282,7 @@ export const Main = () => {
       {experimentConfig == null ? (
         <LoadingSplashScreen />
       ) : (
-        <NavigationContainer
-          // This lets us dive into nested navigators using just a route name.
-          // We need to port to using the new syntax,
-          // so do `navigate('stackName', { screen: 'nestedSceneName' }`
-          // instead of `navigate('nestedSceneName')`:
-          navigationInChildEnabled
-          theme={reactNavigationTheme}
-        >
+        <NavigationContainer theme={reactNavigationTheme}>
           <Stack.Navigator
             initialRouteName={initialRouteName}
             screenOptions={{
@@ -298,12 +291,7 @@ export const Main = () => {
           >
             <Stack.Screen name="edgeApp" component={EdgeApp} />
             <Stack.Screen name="gettingStarted" component={GettingStartedScene} initialParams={{ experimentConfig }} />
-            <Stack.Screen
-              name="login"
-              component={LoginScene}
-              initialParams={{ experimentConfig }}
-              options={{ animation: hasInitialScenesLoaded ? 'slide_from_left' : 'none' }}
-            />
+            <Stack.Screen name="login" component={LoginScene} initialParams={{ experimentConfig }} options={{ animationEnabled: hasInitialScenesLoaded }} />
           </Stack.Navigator>
         </NavigationContainer>
       )}
