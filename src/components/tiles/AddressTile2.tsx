@@ -23,7 +23,7 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { AddressModal } from '../modals/AddressModal'
 import { ScanModal } from '../modals/ScanModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { RowUi4 } from '../ui4/RowUi4'
@@ -160,7 +160,7 @@ export const AddressTile2 = React.forwardRef((props: Props, ref: React.Forwarded
           }).catch(error => showError(error))
         }
       } else {
-        showError(`${lstrings.scan_invalid_address_error_title} ${lstrings.scan_invalid_address_error_description}`)
+        showToast(`${lstrings.scan_invalid_address_error_title} ${lstrings.scan_invalid_address_error_description}`)
       }
 
       setLoading(false)
