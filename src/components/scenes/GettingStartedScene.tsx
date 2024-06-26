@@ -28,7 +28,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { ImageProp } from '../../types/Theme'
 import { parseMarkedText } from '../../util/parseMarkedText'
 import { logEvent } from '../../util/tracking'
-import { EdgeAnim } from '../common/EdgeAnim'
+import { EdgeAnim, fadeInDown50 } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
@@ -215,17 +215,22 @@ export const GettingStartedScene = (props: Props) => {
                 )
               })}
             </Sections>
-            <ButtonsViewUi4
-              animDistanceStart={40}
-              primary={{
-                label: lstrings.account_get_started,
-                onPress: handlePressSignUp
-              }}
-              tertiary={{
-                label: lstrings.getting_started_button_sign_in,
-                onPress: handlePressSignIn
-              }}
-            />
+            <EdgeAnim enter={fadeInDown50}>
+              <ButtonsViewUi4
+                layout="column"
+                primary={{
+                  label: lstrings.account_get_started,
+                  onPress: handlePressSignUp
+                }}
+              />
+              <TertiaryTouchable onPress={handlePressSignIn}>
+                <TertiaryText>
+                  {/* eslint-disable-next-line react-native/no-raw-text */}
+                  {`${lstrings.getting_started_already_have_an_account} `}
+                  <TappableText>{lstrings.getting_started_sign_in}</TappableText>
+                </TertiaryText>
+              </TertiaryTouchable>
+            </EdgeAnim>
           </SectionCoverAnimated>
         </Container>
       </SwipeOffsetDetector>
@@ -236,6 +241,19 @@ export const GettingStartedScene = (props: Props) => {
 // -----------------------------------------------------------------------------
 // Local Components
 // -----------------------------------------------------------------------------
+
+const TertiaryTouchable = styled(EdgeTouchableOpacity)(theme => props => ({
+  marginVertical: theme.rem(0.5),
+  alignItems: 'center'
+}))
+
+const TertiaryText = styled(EdgeText)(theme => props => ({
+  color: theme.textInputTextColorDisabled
+}))
+
+const TappableText = styled(EdgeText)(theme => props => ({
+  color: theme.iconTappable
+}))
 
 const Container = styled(View)({
   flex: 1
