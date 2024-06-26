@@ -81,12 +81,15 @@ export function SwapProcessingScene(props: Props) {
           toDenomination
         })
 
-        navigation.popTo('swapCreate', {
-          fromWalletId: swapRequest.fromWallet.id,
-          fromTokenId: swapRequest.fromTokenId,
-          toWalletId: swapRequest.toWallet.id,
-          toTokenId: swapRequest.toTokenId,
-          errorDisplayInfo
+        navigation.navigate('swapTab', {
+          screen: 'swapCreate',
+          params: {
+            fromWalletId: swapRequest.fromWallet.id,
+            fromTokenId: swapRequest.fromTokenId,
+            toWalletId: swapRequest.toWallet.id,
+            toTokenId: swapRequest.toTokenId,
+            errorDisplayInfo
+          }
         })
 
         const insufficientFunds = asMaybeInsufficientFundsError(error)
