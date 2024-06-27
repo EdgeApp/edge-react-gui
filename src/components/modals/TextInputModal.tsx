@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View } from 'react-native'
+import { Platform, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
@@ -8,7 +8,7 @@ import { styled } from '../hoc/styled'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
 import { Paragraph } from '../themed/EdgeText'
-import { ModalFilledTextInput } from '../themed/FilledTextInput'
+import { FilledTextInputReturnKeyType, ModalFilledTextInput } from '../themed/FilledTextInput'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
@@ -39,7 +39,7 @@ interface Props {
   keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad'
   multiline?: boolean
   maxLength?: number
-  returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send'
+  returnKeyType?: FilledTextInputReturnKeyType
   secureTextEntry?: boolean
 }
 
@@ -101,16 +101,17 @@ export function TextInputModal(props: Props) {
           autoCorrect={autoCorrect}
           keyboardType={keyboardType}
           placeholder={inputLabel}
-          returnKeyType={returnKeyType}
+          returnKeyType={multiline ? (Platform.OS === 'ios' ? undefined : 'none') : returnKeyType}
           secureTextEntry={secureTextEntry}
           multiline={multiline}
           // Our props:
           error={errorMessage}
           onChangeText={handleChangeText}
-          onSubmitEditing={handleSubmit}
+          onSubmitEditing={multiline ? undefined : handleSubmit}
           textsizeRem={textSizeRem}
           value={text}
           maxLength={maxLength}
+          blurOnSubmit={multiline ? false : undefined}
         />
         <ModalButtons primary={{ label: submitLabel, onPress: handleSubmit }} />
       </StyledInnerView>
