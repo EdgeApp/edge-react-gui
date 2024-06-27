@@ -184,6 +184,11 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         >
           <FastImageView
             resizeMode="cover"
+            source={
+              {
+                "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+              }
+            }
             style={
               {
                 "bottom": 0,
