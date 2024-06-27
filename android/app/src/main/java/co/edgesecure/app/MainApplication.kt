@@ -14,11 +14,11 @@ import com.facebook.react.modules.i18nmanager.I18nUtil
 import com.facebook.soloader.SoLoader
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
-import io.sentry.android.core.SentryAndroid
 import io.sentry.Hint
 import io.sentry.SentryEvent
 import io.sentry.SentryLevel
 import io.sentry.SentryOptions.BeforeSendCallback
+import io.sentry.android.core.SentryAndroid
 
 class MainApplication : Application(), ReactApplication {
     override val reactNativeHost: ReactNativeHost =
@@ -52,30 +52,31 @@ class MainApplication : Application(), ReactApplication {
         val versionString = BuildConfig.VERSION_NAME
 
         if ("SENTRY_DSN_URL".contains("SENTRY_DSN")) {
-          // Sentry disabled. Need to add sentry keys to env.json
+            // Sentry disabled. Need to add sentry keys to env.json
         } else {
-          SentryAndroid.init(this) { options ->
-            options.dsn = "SENTRY_DSN_URL"
+            SentryAndroid.init(this) { options ->
+                options.dsn = "SENTRY_DSN_URL"
 
-            if (versionString == "99.99.99") {
-              options.environment = "development"
-            } else if (versionString.contains("-")) {
-              options.environment = "testing"
-            } else {
-              options.environment = "production"
-            }
-
-            // Add a callback that will be used before the event is sent to Sentry.
-            // With this callback, you can modify the event or, when returning null, also discard the event.
-            options.beforeSend =
-              BeforeSendCallback { event: SentryEvent, hint: Hint ->
-                if (SentryLevel.DEBUG == event.level) {
-                  null
+                if (versionString == "99.99.99") {
+                    options.environment = "development"
+                } else if (versionString.contains("-")) {
+                    options.environment = "testing"
                 } else {
-                  event
+                    options.environment = "production"
                 }
-              }
-          }
+
+                // Add a callback that will be used before the event is sent to Sentry.
+                // With this callback, you can modify the event or, when returning null, also
+                // discard the event.
+                options.beforeSend =
+                    BeforeSendCallback { event: SentryEvent, hint: Hint ->
+                        if (SentryLevel.DEBUG == event.level) {
+                            null
+                        } else {
+                            event
+                        }
+                    }
+            }
         }
 
         // Disable RTL:
