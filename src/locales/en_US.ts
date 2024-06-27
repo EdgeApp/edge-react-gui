@@ -1327,6 +1327,8 @@ const strings = {
   wc_smartcontract_confirmed: 'Smart Contract Call confirmed',
   wc_scan_modal_text_modal_title: 'Enter Wallet Connect URI',
   wc_scan_modal_text_modal_hint: 'Wallet Connect URI',
+  wc_unsupported_version: 'Unsupported WalletConnect version',
+  wc_no_wallets_dapp_requirements: 'No wallets meet dapp requirements',
 
   // New Token TermsAgreement Modal
   token_agreement_modal_title: '%s Needed to Send Tokens',
