@@ -17,8 +17,7 @@ export const edgeConfig: AppConfig = {
     { pluginId: 'bitcoincash', tokenId: null },
     { pluginId: 'dash', tokenId: null }
   ],
-  forceCloseUrlIos: 'https://support.apple.com/en-us/HT201330 ',
-  forceCloseUrlAndroid: 'https://support.google.com/android/answer/9079646?hl=en',
+  forceCloseUrl: 'https://support.edge.app/hc/en-us/articles/26702768694811-How-to-force-close-Edge-Android-and-iOS',
   ip2faSite: 'https://support.edge.app/hc/en-us/articles/7018106439579-Edge-Security-IP-Validation-and-2FA',
   knowledgeBase: 'https://help.edge.app/support/home',
   lightTheme: edgeLight,

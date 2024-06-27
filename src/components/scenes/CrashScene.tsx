@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Platform, ScrollView, Text } from 'react-native'
+import { ScrollView, Text } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
@@ -20,8 +20,6 @@ export function CrashScene(props: Props): React.ReactElement {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const url = Platform.OS === 'ios' ? config.forceCloseUrlIos : config.forceCloseUrlAndroid
-
   const safeAreaInsets = useSafeAreaInsets()
 
   return (
@@ -31,7 +29,7 @@ export function CrashScene(props: Props): React.ReactElement {
         <AntDesignIcon name="frowno" style={styles.icon} />
         <Text style={styles.titleText}>{lstrings.error_boundary_title}</Text>
         <Text style={styles.messageText}>{sprintf(lstrings.error_boundary_message_s, config.appNameShort)}</Text>
-        <ButtonsViewUi4 secondary={{ label: lstrings.error_boundary_help_button, onPress: () => openBrowserUri(url) }} />
+        <ButtonsViewUi4 secondary={{ label: lstrings.error_boundary_help_button, onPress: () => openBrowserUri(config.forceCloseUrl) }} />
         <Text style={styles.messageText}>{lstrings.error_boundary_message2}</Text>
         <ButtonsViewUi4 secondary={{ label: lstrings.button_support, onPress: () => openBrowserUri(config.supportContactSite) }} />
       </ScrollView>
