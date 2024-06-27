@@ -110,10 +110,14 @@ export function activatePromotion(installerId: string): ThunkAction<Promise<void
       return
     }
     if (!reply.ok) {
+      const text = await reply.text()
+      console.warn(`activatePromotion:fetch ${uri} ${text}`)
+      if (reply.status === 404) {
+        console.warn(`Invalid promotion code ${installerId}`)
+        return
+      }
       console.warn(`Referral server returned status code ${reply.status}`)
-    }
-    if (reply.status === 404) {
-      throw new Error(`Invalid promotion code ${installerId}`)
+      return
     }
     const clean = asServerTweaks(await reply.json())
 
