@@ -330,7 +330,7 @@ export async function validatePromoCardsInner(dataStore: EdgeDataStore, cards: M
 async function saveAccountReferral(state: RootState): Promise<void> {
   const { account } = state.core
   const { accountReferral } = state.account
-  await account.disklet.setText(ACCOUNT_REFERRAL_FILE, JSON.stringify(accountReferral))
+  await account?.disklet?.setText(ACCOUNT_REFERRAL_FILE, JSON.stringify(accountReferral))
 }
 
 /**
@@ -339,7 +339,7 @@ async function saveAccountReferral(state: RootState): Promise<void> {
 async function saveReferralCache(state: RootState): Promise<void> {
   const { account } = state.core
   const { referralCache } = state.account
-  await account.localDisklet.setText(REFERRAL_CACHE_FILE, JSON.stringify(referralCache))
+  await account?.localDisklet?.setText(REFERRAL_CACHE_FILE, JSON.stringify(referralCache))
 }
 
 /**
