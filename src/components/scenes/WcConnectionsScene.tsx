@@ -13,7 +13,7 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useMount } from '../../hooks/useMount'
-import { useWalletConnect, walletConnectClient } from '../../hooks/useWalletConnect'
+import { UNSUPPORTED_WC_VERSION, useWalletConnect, walletConnectClient } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -22,7 +22,7 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ScanModal } from '../modals/ScanModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
@@ -30,6 +30,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 
 interface Props extends EdgeSceneProps<'wcConnections'> {}
 
+const NO_WALLETS_DAPP_REQUIREMENTS = 'NO_WALLETS_DAPP_REQUIREMENTS'
 export interface WcConnectionsParams {
   uri?: string
 }
@@ -83,7 +84,13 @@ export const WcConnectionsScene = (props: Props) => {
         navigation.navigate('wcConnect', { proposal, edgeTokenIds, walletId: result.walletId })
       }
     } catch (error: any) {
-      showError(error)
+      if (error?.message === UNSUPPORTED_WC_VERSION) {
+        showToast(lstrings.wc_unsupported_version)
+      } else if (error?.message === NO_WALLETS_DAPP_REQUIREMENTS) {
+        showToast(lstrings.wc_no_wallets_dapp_requirements)
+      } else {
+        showError(error)
+      }
     }
     setConnecting(false)
   }
@@ -247,7 +254,7 @@ const getProposalNamespaceCompatibleEdgeTokenIds = (proposal: Web3WalletTypes.Se
   }
 
   if (requiredChainIds.size > 0 && !hasWalletForRequiredNamespace) {
-    throw new Error('No wallets meet dapp requirements')
+    throw new Error(NO_WALLETS_DAPP_REQUIREMENTS)
   }
 
   return [...edgeTokenIdMap.values()]
