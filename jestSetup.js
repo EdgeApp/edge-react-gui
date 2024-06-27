@@ -130,7 +130,14 @@ jest.mock(
     }
 )
 
-jest.mock('react-native-vision-camera', () => ({}))
+jest.mock('react-native-camera', () => ({
+  RNCamera: {
+    Constants: {
+      FlashMode: { torch: 'torch', off: 'off' },
+      Type: { back: 'back' }
+    }
+  }
+}))
 
 jest.mock('react-native-safari-view', () => ({
   show() {}
