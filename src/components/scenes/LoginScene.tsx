@@ -2,7 +2,6 @@ import { EdgeAccount } from 'edge-core-js'
 import { InitialRouteName, LoginScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Keyboard, StatusBar, View } from 'react-native'
-import { checkVersion } from 'react-native-check-version'
 import { BlurView } from 'rn-id-blurview'
 
 import { showSendLogsModal } from '../../actions/LogActions'
@@ -17,12 +16,10 @@ import { performanceMarkersFromLoginUiPerfEvents } from '../../perf'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { isMaestro } from '../../util/maestro'
 import { logEvent } from '../../util/tracking'
 import { withServices } from '../hoc/withServices'
 import { showHelpModal } from '../modals/HelpModal'
-import { UpdateModal } from '../modals/UpdateModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { showError } from '../services/AirshipInstance'
 import { DotsBackground } from '../ui4/DotsBackground'
 import { LoadingScene } from './LoadingScene'
 
@@ -52,7 +49,6 @@ export function LoginSceneComponent(props: Props) {
 
   const account = useSelector(state => state.core.account)
   const context = useSelector(state => state.core.context)
-  const disklet = useSelector(state => state.core.disklet)
   const pendingDeepLink = useSelector(state => state.pendingDeepLink)
   const nextLoginId = useSelector(state => state.nextLoginId)
   const loggedIn = useWatch(account, 'loggedIn')
@@ -111,28 +107,6 @@ export function LoginSceneComponent(props: Props) {
       dispatch({ type: 'DEEP_LINK_HANDLED' })
     }
   }, [account, dispatch, navigation, pendingDeepLink])
-
-  const checkForUpdates = useHandler(async () => {
-    if (isMaestro()) return
-    const response = await checkVersion()
-    const skipUpdate = (await disklet.getText('ignoreUpdate.json').catch(() => '')) === response.version
-    if (response.needsUpdate && !skipUpdate) {
-      await Airship.show(bridge => (
-        <UpdateModal
-          bridge={bridge}
-          onSkip={() => {
-            disklet
-              .setText('ignoreUpdate.json', response.version)
-              .then(() => bridge.resolve())
-              .catch(err => bridge.reject(err))
-          }}
-        />
-      ))
-    }
-  })
-  React.useEffect(() => {
-    checkForUpdates().catch(error => showError(error))
-  }, [checkForUpdates])
 
   // ---------------------------------------------------------------------
   // Handlers

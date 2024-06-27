@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 4.8.1
+
+- fixed: Remove react-native-check-version to fix red error
+
 ## 4.8.0
 
 - added: "IP Validation Protection Enabled" bottom notification card
