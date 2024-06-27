@@ -1,0 +1,57 @@
+diff --git a/node_modules/expo-file-system/ios/EXFileSystem.m b/node_modules/expo-file-system/ios/EXFileSystem.m
+index 65aeae5..0582b5a 100644
+--- a/node_modules/expo-file-system/ios/EXFileSystem.m
++++ b/node_modules/expo-file-system/ios/EXFileSystem.m
+@@ -969,24 +969,6 @@ - (void)sendEventWithName:(NSString *)eventName body:(id)body
+   }
+ }
+ 
+-- (NSDictionary<NSURLResourceKey, id> *)documentFileResourcesForKeys:(NSArray<NSURLResourceKey> *)keys
+-                                                               error:(out NSError * __autoreleasing *)error
+-{
+-  if (!keys.count) {
+-    return @{};
+-  }
+-
+-  NSURL *documentDirectoryUrl = [NSURL fileURLWithPath:_documentDirectory];
+-  NSDictionary *results = [documentDirectoryUrl resourceValuesForKeys:keys
+-                                                                error:error];
+-
+-  if (!results) {
+-    return @{};
+-  }
+-
+-  return results;
+-}
+-
+ #pragma mark - Public utils
+ 
+ - (EXFileSystemPermissionFlags)permissionsForURI:(NSURL *)uri
+@@ -1061,25 +1043,13 @@ + (NSString *)generatePathInDirectory:(NSString *)directory withExtension:(NSStr
+ // '<ARCType> *__autoreleasing*' problem solution: https://stackoverflow.com/a/8862061/4337317
+ - (NSNumber *)totalDiskCapacityWithError:(out NSError * __autoreleasing *)error
+ {
+-  NSDictionary *results = [self documentFileResourcesForKeys:@[NSURLVolumeTotalCapacityKey]
+-                                                       error:error];
+-
+-  return results[NSURLVolumeTotalCapacityKey];
++  return @0;
+ }
+ 
+ // '<ARCType> *__autoreleasing*' problem solution: https://stackoverflow.com/a/8862061/4337317
+ - (NSNumber *)freeDiskStorageWithError:(out NSError * __autoreleasing *)error
+ {
+-#if TARGET_OS_TV
+-  NSURLResourceKey key = NSURLVolumeAvailableCapacityKey;
+-#else
+-  NSURLResourceKey key = NSURLVolumeAvailableCapacityForImportantUsageKey;
+-#endif
+-
+-  NSDictionary *results = [self documentFileResourcesForKeys:@[key]
+-                                                       error:error];
+-
+-  return results[key];
++  return @0;
+ }
+ 
+ @end
