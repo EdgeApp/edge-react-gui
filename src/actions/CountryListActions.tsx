@@ -4,7 +4,7 @@ import { sprintf } from 'sprintf-js'
 
 import { CountryListModal } from '../components/modals/CountryListModal'
 import { StateProvinceListModal } from '../components/modals/StateProvinceListModal'
-import { Airship, showError } from '../components/services/AirshipInstance'
+import { Airship, showError, showToast } from '../components/services/AirshipInstance'
 import { COUNTRY_CODES } from '../constants/CountryConstants'
 import { lstrings } from '../locales/strings'
 import { ThunkAction } from '../types/reduxTypes'
@@ -67,7 +67,8 @@ export const showCountrySelectionModal =
             <StateProvinceListModal countryCode={selectedCountryCode} bridge={bridge} stateProvince={previousStateProvince} stateProvinces={stateProvinces} />
           ))
           if (selectedStateProvince == null) {
-            throw new Error(sprintf(lstrings.error_must_select_state_province_s, name))
+            showToast(sprintf(lstrings.error_must_select_state_province_s, name))
+            return
           }
         }
         const syncedSettings = await readSyncedSettings(account)

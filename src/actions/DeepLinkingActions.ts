@@ -230,7 +230,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       if (matchingWalletIdsAndUris.length === 0 && createWalletAsset == null) {
         if (!allWalletsLoaded) return false
 
-        showError(lstrings.alert_deep_link_no_wallet_for_uri)
+        showToast(lstrings.alert_deep_link_no_wallet_for_uri)
         return true
       }
 
