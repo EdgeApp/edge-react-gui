@@ -82,11 +82,10 @@ const CoinRankingComponent = (props: Props) => {
     debugLog(LOG_COINRANK, `renderItem ${key.toString()}`)
 
     return (
-      <EdgeAnim disableAnimation={index >= MAX_LIST_ITEMS_ANIM} enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}>
+      <EdgeAnim key={key} disableAnimation={index >= MAX_LIST_ITEMS_ANIM} enter={{ type: 'fadeInDown', distance: 20 * (index + 1) }}>
         <CoinRankRow
           navigation={navigation}
           index={item}
-          key={key}
           coinRanking={coinRanking}
           percentChangeTimeFrame={percentChangeTimeFrame}
           assetSubText={assetSubText}
