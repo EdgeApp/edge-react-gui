@@ -33,9 +33,6 @@ interface Props {
   title?: string
   onLongPress?: () => Promise<void> | void
   onPress?: () => Promise<void> | void
-
-  /** @deprecated To be integrated permanently next release */
-  shrinkBody?: boolean
   /** @deprecated Only to be used during the UI4 transition */
   marginRem?: number[] | number
 }
@@ -44,7 +41,7 @@ export const RowUi4 = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { body, title, children, maximumHeight = 'medium', error, icon, loading, marginRem, shrinkBody, onLongPress, onPress } = props
+  const { body, title, children, maximumHeight = 'medium', error, icon, loading, marginRem, onLongPress, onPress } = props
   const { rightButtonType = onLongPress == null && onPress == null ? 'none' : 'touchable' } = props
 
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
@@ -54,10 +51,7 @@ export const RowUi4 = (props: Props) => {
   // TODO: Merge styles.containerTemp into styles.container permanently.
   // Explicitly setting the container style here to avoid unit test snapshot
   // diffs.
-  const containerStyle: StyleProp<ViewStyle> = React.useMemo(
-    () => (shrinkBody === true ? [styles.container, margin, styles.containerTemp] : [styles.container, margin]),
-    [shrinkBody, styles.container, styles.containerTemp, margin]
-  )
+  const containerStyle: StyleProp<ViewStyle> = React.useMemo(() => [styles.container, margin], [styles.container, margin])
 
   const handlePress = useHandler(async () => {
     if (rightButtonType === 'copy' && body != null) {
@@ -133,10 +127,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.tileBackground,
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'stretch'
-  },
-  containerTemp: {
-    flexShrink: 1 // Conditionally using this style temporarily to reduce scope of changes. To be merged into the main `container` style above next release.
+    alignSelf: 'stretch',
+    flexShrink: 1
   },
   content: {
     flexDirection: 'column',
