@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AirshipFullScreenSpinner should render with loading props 1`] = `
-<Animated(View)
+<ForwardRef(AnimatedComponentWrapper)
   style={
     [
       {
@@ -61,5 +61,5 @@ exports[`AirshipFullScreenSpinner should render with loading props 1`] = `
       string
     </Text>
   </View>
-</Animated(View)>
+</ForwardRef(AnimatedComponentWrapper)>
 `;

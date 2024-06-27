@@ -372,7 +372,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
       removeClippedSubviews={false}
       renderItem={[Function]}
       renderScrollComponent={[Function]}
-      scrollEventThrottle={0.0001}
+      scrollEventThrottle={50}
       scrollIndicatorInsets={
         {
           "right": 1,
@@ -485,6 +485,11 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                      }
+                    }
                     style={
                       {
                         "bottom": 0,
@@ -678,6 +683,11 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
+                      }
+                    }
                     style={
                       {
                         "bottom": 0,
@@ -871,6 +881,11 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/9992ec3cf6a55b00978cddf2b27bc6882d88d1ec.png",
+                      }
+                    }
                     style={
                       {
                         "bottom": 0,
@@ -900,6 +915,11 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
+                      }
+                    }
                     style={
                       {
                         "bottom": 0,
