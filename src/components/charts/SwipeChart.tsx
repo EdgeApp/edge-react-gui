@@ -215,8 +215,9 @@ const SwipeChartComponent = (params: Props) => {
                     fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
                     continue
                   }
+                } else {
+                  throw new Error(JSON.stringify(marketChartRange))
                 }
-                throw new Error(String(marketChartRange))
               } else {
                 const rawChartData = marketChartRange.prices.map(rawDataPoint => {
                   return {
@@ -237,7 +238,7 @@ const SwipeChartComponent = (params: Props) => {
           }
         } catch (e: any) {
           showWarning(`Failed to retrieve market data for ${currencyCode}.`)
-          console.error(e)
+          console.error(JSON.stringify(e))
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
