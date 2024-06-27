@@ -168,6 +168,7 @@ export function TransactionListRow(props: Props) {
   const handleLongPress = useHandler(() => {
     const url = sprintf(currencyInfo.transactionExplorer, transaction.txid)
     const shareOptions = {
+      failOnCancel: false,
       url
     }
     Share.open(shareOptions).catch(e => showError(e))

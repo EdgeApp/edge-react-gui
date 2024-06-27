@@ -366,6 +366,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
         title,
         message: '',
         url,
+        failOnCancel: false,
         filename: file.fileName,
         subject: title
       }).catch(error => console.log('Share error', error))
@@ -385,6 +386,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     }
 
     await Share.open({
+      failOnCancel: false,
       title,
       urls,
       subject: title

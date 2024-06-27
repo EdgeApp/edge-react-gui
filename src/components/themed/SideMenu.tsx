@@ -152,6 +152,7 @@ export function SideMenuComponent(props: DrawerContentComponentProps) {
     const website = `${config.website}?af=appreferred_${refId}`
 
     const shareOptions = {
+      failOnCancel: false,
       message: Platform.OS === 'ios' ? message : message + website,
       url: Platform.OS === 'ios' ? website : ''
     }
