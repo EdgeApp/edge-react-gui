@@ -20,7 +20,7 @@ import io.sentry.SentryOptions.BeforeSendCallback
 import io.sentry.android.core.SentryAndroid
 
 class MainApplication : Application(), ReactApplication {
-    override val reactNativeHost: ReactNativeHost =
+     val mReactNativeHost: ReactNativeHost =
         ReactNativeHostWrapper(
             this,
             object : DefaultReactNativeHost(this) {
@@ -45,6 +45,10 @@ class MainApplication : Application(), ReactApplication {
                     protected get() = BuildConfig.IS_HERMES_ENABLED
             }
         )
+
+    override fun getReactNativeHost(): ReactNativeHost {
+        return mReactNativeHost
+    }
 
     override fun onCreate() {
         super.onCreate()
