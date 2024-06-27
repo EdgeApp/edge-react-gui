@@ -260,6 +260,7 @@ function TransactionListComponent(props: Props) {
     sceneWrapperInfo => {
       return (
         <SearchFooter
+          key="TransactionListScene-SearchFooter"
           name="TransactionListScene-SearchFooter"
           placeholder={lstrings.transaction_list_search}
           isSearching={isSearching}
