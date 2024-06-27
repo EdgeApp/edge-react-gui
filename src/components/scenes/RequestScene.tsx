@@ -520,11 +520,11 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
     if (wallet?.id == null || currencyCode == null) return
 
     if (!this.props.isConnected) {
-      showError(lstrings.fio_network_alert_text)
+      showError(lstrings.fio_network_alert_text, { trackError: false })
       return
     }
     if (!this.props.fioAddressesExist) {
-      showError(`${lstrings.title_register_fio_address}. ${lstrings.fio_request_by_fio_address_error_no_address}`)
+      showToast(`${lstrings.title_register_fio_address}. ${lstrings.fio_request_by_fio_address_error_no_address}`)
       return
     }
     if (this.state.amounts == null || zeroString(this.state.amounts?.nativeAmount)) {
