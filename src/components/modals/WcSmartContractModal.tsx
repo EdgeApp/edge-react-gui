@@ -176,7 +176,7 @@ export const WcSmartContractModal = (props: Props) => {
           <RowUi4 title={lstrings.wc_smartcontract_wallet} body={walletName} />
         </CardUi4>
         <CardUi4 icon={iconUri}>
-          <RowUi4 title={lstrings.wc_smartcontract_dapp} body={dAppName} shrinkBody />
+          <RowUi4 title={lstrings.wc_smartcontract_dapp} body={dAppName} />
         </CardUi4>
         {zeroString(networkFee) ? null : (
           <CryptoFiatAmountTile
