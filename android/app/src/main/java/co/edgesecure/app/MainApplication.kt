@@ -51,7 +51,7 @@ class MainApplication : Application(), ReactApplication {
         // Retrieve the version string from the app's BuildConfig
         val versionString = BuildConfig.VERSION_NAME
 
-        if ("SENTRY_DSN_URL".contains("SENTRY_DSN")) {
+        if (true || "SENTRY_DSN_URL".contains("SENTRY_DSN")) {
           // Sentry disabled. Need to add sentry keys to env.json
         } else {
           SentryAndroid.init(this) { options ->

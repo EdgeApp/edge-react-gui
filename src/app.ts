@@ -23,7 +23,7 @@ export type Environment = 'development' | 'testing' | 'production'
 const appVersion = getVersion()
 const environment: Environment = __DEV__ || appVersion === '99.99.99' ? 'development' : appVersion.includes('-') ? 'testing' : 'production'
 
-if (ENV.SENTRY_ORGANIZATION_SLUG.includes('SENTRY_ORGANIZATION')) {
+if (Math.random() < 2 || ENV.SENTRY_ORGANIZATION_SLUG.includes('SENTRY_ORGANIZATION')) {
   console.log('Sentry keys not set. Sentry disabled.')
 } else {
   Sentry.init({
@@ -216,11 +216,11 @@ const realFetch = fetch
 fetch = async (...args: any) => {
   // @ts-expect-error
   return await realFetch(...args).catch(e => {
-    Sentry.addBreadcrumb({
-      event_id: e.name,
-      message: e.message,
-      data: args[0]
-    })
+    // Sentry.addBreadcrumb({
+    //   event_id: e.name,
+    //   message: e.message,
+    //   data: args[0]
+    // })
     throw e
   })
 }

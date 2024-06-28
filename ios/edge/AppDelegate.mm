@@ -43,7 +43,7 @@
 {
   NSString *versionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
   NSString *dsnUrl = @"SENTRY_DSN_URL";
-  if ([dsnUrl containsString:@"SENTRY_DSN"]) {
+  if (true || [dsnUrl containsString:@"SENTRY_DSN"]) {
     NSLog(@"Please set the SENTRY_DSN_URL in env.json. Sentry disabbled");
   } else {
     [SentrySDK startWithConfigureOptions:^(SentryOptions *options) {
