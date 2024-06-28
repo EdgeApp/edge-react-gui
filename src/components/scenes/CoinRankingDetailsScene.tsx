@@ -114,6 +114,8 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
   }
 
   const parseCoinRankingData = (dataKey: string, data: CoinRankingDataValueType): string => {
+    // Start with either a plain number string, truncated large number string,
+    // or some other alphanumeric string
     const baseString = formatData(data)
     let extendedString
 
@@ -128,9 +130,9 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
       case 'priceChange24h':
       case 'high24h':
       case 'low24h':
-        // Sometimes the data comes back as something like "1.2 M"
-        // In this case, just show the value as-is without our own special formatting.
-        return `${baseString.split(' ').length > 1 ? baseString : formatFiatString({ fiatAmount: baseString })} ${defaultFiat}`
+      case 'volume24h':
+      case 'marketCap':
+        return `${formatFiatString({ fiatAmount: baseString })} ${defaultFiat}`
       case 'rank':
         return `#${baseString}`
       case 'marketCapChange24h':
@@ -149,7 +151,7 @@ const CoinRankingDetailsSceneComponent = (props: Props) => {
         return baseString
     }
 
-    return `${baseString} ${extendedString}`
+    return `${baseString}${extendedString}`
   }
 
   const renderRow = (dataKey: string, data: CoinRankingDataValueType, index: number): JSX.Element => {
