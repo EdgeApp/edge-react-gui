@@ -7,7 +7,7 @@ import { getVersion } from 'react-native-device-info'
 import { config } from '../theme/appConfig'
 import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
 const INFO_SERVERS = ['https://info1.edge.app', 'https://info2.edge.app']
-const RATES_SERVERS = ['https://rates1.edge.app', 'https://rates2.edge.app']
+const RATES_SERVERS = ['http://127.0.0.1:8087']
 
 const INFO_FETCH_INTERVAL = 60000
 
