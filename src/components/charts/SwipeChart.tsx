@@ -1,4 +1,5 @@
 import { CursorProps, GradientProps, SlideAreaChart, ToolTipProps, ToolTipTextRenderersInput, YAxisProps } from '@connectedcars/react-native-slide-charts'
+import { mul } from 'biggystring'
 import { asArray, asEither, asNumber, asObject, asString, asTuple } from 'cleaners'
 import * as React from 'react'
 import { LayoutChangeEvent, Platform, View } from 'react-native'
@@ -16,6 +17,7 @@ import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { useSelector } from '../../types/reactRedux'
+import { zeroString } from '../../util/utils'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { FillLoader } from '../progress-indicators/FillLoader'
 import { showWarning } from '../services/AirshipInstance'
@@ -133,6 +135,8 @@ const SwipeChartComponent = (params: Props) => {
   // #region Chart setup
 
   const defaultFiat = useSelector(state => getDefaultFiat(state))
+  const exchangeRates = useSelector(state => state.exchangeRates)
+  const usdFiatPrice = exchangeRates[`iso:USD_iso:${defaultFiat}`]
 
   const [chartData, setChartData] = React.useState<ChartDataPoint[]>([])
   const [cachedTimespanChartData, setCachedChartData] = React.useState<Map<Timespan, ChartDataPoint[] | undefined>>(
@@ -201,7 +205,7 @@ const SwipeChartComponent = (params: Props) => {
           } else {
             const unixNow = Math.trunc(new Date().getTime() / 1000)
             const fromParam = unixNow - queryFromTimeOffset
-            const fetchPath = sprintf(DATASET_URL_4S, assetId, defaultFiat, fromParam, unixNow)
+            const fetchPath = sprintf(DATASET_URL_4S, assetId, 'USD', fromParam, unixNow)
             let fetchUrl = `${COINGECKO_URL}${fetchPath}`
             do {
               // Construct the dataset query
@@ -248,14 +252,14 @@ const SwipeChartComponent = (params: Props) => {
   )
 
   React.useEffect(() => {
-    if (chartData.length > 0) {
+    if (chartData.length > 0 && !zeroString(usdFiatPrice)) {
       rPriceCursorWidth.current = 0
       rXTooltipWidth.current = 0
-      sMinPriceString.value = `${fiatSymbol}${formatFiatString({ fiatAmount: minPrice.toString(), autoPrecision: true })}`
-      sMaxPriceString.value = `${fiatSymbol}${formatFiatString({ fiatAmount: maxPrice.toString(), autoPrecision: true })}`
+      sMinPriceString.value = `${fiatSymbol}${formatFiatString({ fiatAmount: mul(minPrice.toString(), usdFiatPrice), autoPrecision: true })}`
+      sMaxPriceString.value = `${fiatSymbol}${formatFiatString({ fiatAmount: mul(maxPrice.toString(), usdFiatPrice), autoPrecision: true })}`
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chartData])
+  }, [chartData, usdFiatPrice])
 
   // #endregion Chart setup
 
@@ -397,7 +401,7 @@ const SwipeChartComponent = (params: Props) => {
    */
   const handlePriceCallbackWithY = useHandler((y: number) => {
     if (rIsShowCursor.current) {
-      const newDisplayPrice = `${fiatSymbol}${formatFiatString({ fiatAmount: y.toString(), noGrouping: false, autoPrecision: true })}`
+      const newDisplayPrice = `${fiatSymbol}${formatFiatString({ fiatAmount: mul(y.toString(), usdFiatPrice), noGrouping: false, autoPrecision: true })}`
       if (newDisplayPrice !== sPriceValString.value) sPriceValString.value = newDisplayPrice
     }
   })
