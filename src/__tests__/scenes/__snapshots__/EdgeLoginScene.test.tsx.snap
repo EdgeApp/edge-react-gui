@@ -334,7 +334,7 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
             ]
           }
         >
-          
+          ?
         </Text>
         <Text
           adjustsFontSizeToFit={true}

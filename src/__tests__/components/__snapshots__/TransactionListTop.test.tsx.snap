@@ -418,7 +418,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
       <Text
@@ -536,7 +536,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>
@@ -645,7 +645,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>
@@ -765,7 +765,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>
@@ -1382,7 +1382,7 @@ exports[`TransactionListTop should render 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
       <Text
@@ -1500,7 +1500,7 @@ exports[`TransactionListTop should render 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>
@@ -1609,7 +1609,7 @@ exports[`TransactionListTop should render 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>
@@ -1729,7 +1729,7 @@ exports[`TransactionListTop should render 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>

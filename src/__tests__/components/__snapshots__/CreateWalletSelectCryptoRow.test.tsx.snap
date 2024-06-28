@@ -184,7 +184,7 @@ exports[`WalletListRow should render with loading props 1`] = `
         ]
       }
     >
-      
+      
     </Text>
   </View>
 </View>

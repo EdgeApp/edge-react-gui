@@ -14584,7 +14584,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     ]
                   }
                 >
-                  
+                  ?
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}

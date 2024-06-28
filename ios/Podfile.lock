@@ -1539,8 +1539,27 @@ PODS:
     - React-Core
   - RNSVG (15.3.0):
     - React-Core
-  - RNVectorIcons (9.2.0):
+  - RNVectorIcons (10.1.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
     - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - SDWebImage (5.11.1):
     - SDWebImage/Core (= 5.11.1)
   - SDWebImage/Core (5.11.1)
@@ -2213,7 +2232,7 @@ SPEC CHECKSUMS:
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
   RNStoreReview: 923b1c888c13469925bf0256dc2c046eab557ce5
   RNSVG: a48668fd382115bc89761ce291a81c4ca5f2fd2e
-  RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
+  RNVectorIcons: 7ac7aaa83f8f3d4c7c0f7daea5a431e91a29b0cd
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   Sentry: 74a073c71c998117edb08f56f443c83570a31bed
