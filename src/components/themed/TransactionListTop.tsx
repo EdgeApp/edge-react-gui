@@ -20,6 +20,7 @@ import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { rateCounter } from '../../perf'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { PositionAllocation, StakePlugin, StakePolicy, StakePositionMap } from '../../plugins/stake-plugins/types'
 import { getExchangeDenomByCurrencyCode, selectDisplayDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
@@ -795,6 +796,7 @@ export function TransactionListTop(props: OwnProps) {
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const defaultFiat = removeIsoPrefix(defaultIsoFiat)
   const theme = useTheme()
+  rateCounter('TransactionListTop')
 
   const { currencyCode } = tokenId == null ? wallet.currencyInfo : wallet.currencyConfig.allTokens[tokenId]
 
@@ -831,3 +833,5 @@ export function TransactionListTop(props: OwnProps) {
     />
   )
 }
+
+TransactionListTop.whyDidYouRender = true

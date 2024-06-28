@@ -1,6 +1,8 @@
 import { PerfEvent } from 'edge-login-ui-rn'
 import performance, { PerformanceEntry, PerformanceObserver } from 'react-native-performance'
 
+import { ENV } from './env'
+
 //
 // Logging
 //
@@ -122,5 +124,35 @@ function markerMeasurement(measureName: string, startName: string, endName: stri
       performance.clearMarks(startName)
       performance.clearMarks(endName)
     }
+  }
+}
+
+const perfDate = () => new Date().toISOString().slice(11, 23)
+
+const INTERVAL_SECONDS = 3
+const LOG_FREQUENCY_SECONDS = 0
+
+const counters: { [counterTag: string]: { callTimes: number[]; lastLogTime: number } } = {}
+
+export const rateCounter = (tag: string) => {
+  if (!ENV.ENABLE_RATE_COUNTERS) return
+
+  const currentTime = Date.now()
+  if (counters[tag] == null) {
+    counters[tag] = { callTimes: [], lastLogTime: 0 }
+  }
+  const counter = counters[tag]
+  counter.callTimes.push(currentTime)
+
+  // Remove call times older than the interval
+  const intervalAgo = currentTime - INTERVAL_SECONDS * 1000
+  counter.callTimes = counter.callTimes.filter(time => time >= intervalAgo)
+
+  // Check if more than 1 second has elapsed since the last log
+  if (currentTime - counter.lastLogTime >= LOG_FREQUENCY_SECONDS * 1000) {
+    const recentCalls = counter.callTimes.filter(time => time >= intervalAgo)
+    const callsPerSecond = recentCalls.length / INTERVAL_SECONDS
+    console.log(`rc: ${perfDate()} ${tag} calls:${recentCalls.length} cps:${callsPerSecond.toFixed(2)}`)
+    counter.lastLogTime = currentTime
   }
 }

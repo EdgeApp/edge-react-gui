@@ -326,6 +326,7 @@ export const asEnvConfig = asObject({
   ENABLE_FIAT_SANDBOX: asOptional(asBoolean, false),
   ENABLE_TEST_SERVERS: asOptional(asBoolean),
   ENABLE_REDUX_PERF_LOGGING: asOptional(asBoolean, false),
+  ENABLE_RATE_COUNTERS: asOptional(asBoolean, false),
   LOG_SERVER: asNullable(
     asObject({
       host: asOptional(asString, 'localhost'),

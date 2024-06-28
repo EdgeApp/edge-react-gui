@@ -121,6 +121,7 @@ interface State {
 const BUY_SELL_PLUGIN_REFRESH_INTERVAL = 60000
 
 class GuiPluginList extends React.PureComponent<Props, State> {
+  static whyDidYouRender = true
   componentMounted: boolean
   timeoutId: ReturnType<typeof setTimeout> | undefined
 

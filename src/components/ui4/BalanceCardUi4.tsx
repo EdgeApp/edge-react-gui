@@ -10,6 +10,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { rateCounter } from '../../perf'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { getTotalFiatAmountFromExchangeRates, removeIsoPrefix, zeroString } from '../../util/utils'
@@ -34,6 +35,7 @@ interface Props {
  * Card that displays balance, deposit/send buttons, and a link to view assets
  */
 export const BalanceCardUi4 = (props: Props) => {
+  rateCounter('BalanceCardUi4')
   const { navigation, onViewAssetsPress } = props
 
   const dispatch = useDispatch()

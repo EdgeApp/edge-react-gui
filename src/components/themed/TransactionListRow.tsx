@@ -17,6 +17,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useHistoricalRate } from '../../hooks/useHistoricalRate'
 import { formatNumber } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { rateCounter } from '../../perf'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
@@ -58,6 +59,7 @@ export function TransactionListRow(props: Props) {
   const fiatDenomination = getDenomFromIsoCode(defaultIsoFiat)
   const denominationSymbol = displayDenomination.symbol
   const defaultAmountFiat = metadata.exchangeAmount?.[defaultIsoFiat] ?? 0
+  rateCounter(`TransactionListRow ${wallet.id.slice(0, 3)} ${transaction.txid.slice(0, 5)}`)
 
   // CryptoAmount
   const rateKey = `${currencyCode}_${defaultIsoFiat}`
@@ -200,6 +202,8 @@ export function TransactionListRow(props: Props) {
     </CardUi4>
   )
 }
+
+TransactionListRow.whyDidYouRender = true
 
 const getStyles = cacheStyles((theme: Theme) => ({
   icon: {

@@ -10,6 +10,7 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
+import { rateCounter } from '../../../perf'
 import { useSceneScrollHandler } from '../../../state/SceneScrollState'
 import { config } from '../../../theme/appConfig'
 import { EdgeSceneProps } from '../../../types/routerTypes'
@@ -33,6 +34,7 @@ interface Props extends EdgeSceneProps<'home'> {}
 const TEMP_PADDING_REM = 0.5 // To be built-in to SceneWrapper when fully UI4
 
 export const HomeSceneUi4 = (props: Props) => {
+  rateCounter('HomeSceneUi4')
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -184,6 +186,8 @@ export const HomeSceneUi4 = (props: Props) => {
     </SceneWrapper>
   )
 }
+
+HomeSceneUi4.whyDidYouRender = true
 
 const getStyles = cacheStyles((theme: Theme) => ({
   backroundImageContainer: {

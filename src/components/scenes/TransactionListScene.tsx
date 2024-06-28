@@ -14,6 +14,7 @@ import { useIconColor } from '../../hooks/useIconColor'
 import { useTransactionList } from '../../hooks/useTransactionList'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { rateCounter } from '../../perf'
 import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
@@ -48,6 +49,7 @@ interface Props extends EdgeSceneProps<'transactionList'> {
 
 function TransactionListComponent(props: Props) {
   const { navigation, route, wallet } = props
+  rateCounter('TransactionListScene')
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -231,6 +233,7 @@ function TransactionListComponent(props: Props) {
   }, [isTransactionListUnsupported, navigation, isSearching, tokenId, wallet])
 
   const renderItem = useHandler(({ index, item }: ListRenderItemInfo<ListItem>) => {
+    rateCounter('TransactionListScene-RenderItem')
     if (item == null) {
       return <EmptyLoader />
     }
@@ -333,6 +336,8 @@ function TransactionListComponent(props: Props) {
   )
 }
 
+TransactionListComponent.whyDidYouRender = true
+
 /**
  * If the token gets deleted, the scene will crash.
  * Fall back to the main currency code if this happens.
@@ -344,6 +349,7 @@ function checkToken(tokenId: EdgeTokenId, allTokens: EdgeTokenMap): EdgeTokenId 
 }
 
 export const TransactionList = withWallet(TransactionListComponent)
+TransactionList.whyDidYouRender = true
 
 const getStyles = cacheStyles(() => ({
   flatList: {

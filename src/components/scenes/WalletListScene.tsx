@@ -4,6 +4,7 @@ import { View } from 'react-native'
 import { updateWalletsSort } from '../../actions/WalletListActions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { rateCounter } from '../../perf'
 import { FooterRender, useSceneFooterState } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
@@ -36,6 +37,7 @@ export function WalletListScene(props: Props) {
   const sortOption = useSelector(state => state.ui.settings.walletsSort)
 
   const setKeepOpen = useSceneFooterState(state => state.setKeepOpen)
+  rateCounter('WalletListScene')
 
   //
   // Handlers
@@ -156,6 +158,8 @@ export function WalletListScene(props: Props) {
     </SceneWrapper>
   )
 }
+
+WalletListScene.whyDidYouRender = true
 
 const getStyles = cacheStyles((theme: Theme) => ({
   sortFooterContainer: {
