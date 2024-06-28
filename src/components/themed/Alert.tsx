@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Platform, View } from 'react-native'
+import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -39,14 +39,7 @@ export function Alert(props: Props) {
   const result = (
     <View style={[styles.alert, margin, padding, { borderColor: typeColor }]}>
       <View style={styles.header}>
-        {type !== 'error' ? null : (
-          <IonIcon
-            color={typeColor}
-            name={Platform.OS === 'ios' ? 'ios-information-circle-outline' : 'md-information-circle-outline'}
-            size={theme.rem(1.25)}
-            style={styles.icon}
-          />
-        )}
+        {type !== 'error' ? null : <IonIcon color={typeColor} name="information-circle-outline" size={theme.rem(1.25)} style={styles.icon} />}
         <EdgeText style={[styles.title, { color: typeColor }]}>{title}</EdgeText>
       </View>
       {message == null ? null : (

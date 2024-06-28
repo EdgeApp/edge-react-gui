@@ -28,7 +28,7 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
     const addSortButtons = (
       <View key="defaultButtons" style={styles.buttonsContainer}>
         <EdgeTouchableOpacity accessible={false} style={styles.addButton} onPress={() => navigation.push('createWalletSelectCrypto', {})}>
-          <Ionicon testID="addButton" accessibilityHint={lstrings.wallet_list_add_wallet} color={theme.iconTappable} name="md-add" size={theme.rem(1.5)} />
+          <Ionicon testID="addButton" accessibilityHint={lstrings.wallet_list_add_wallet} color={theme.iconTappable} name="add" size={theme.rem(1.5)} />
         </EdgeTouchableOpacity>
         <EdgeTouchableOpacity accessible={false} onPress={this.props.openSortModal}>
           <Fontello testID="sortButton" accessibilityHint={lstrings.sort_wallets_hint} color={theme.iconTappable} name="sort" size={theme.rem(1.5)} />

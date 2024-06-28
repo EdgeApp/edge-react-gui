@@ -33,7 +33,7 @@ export function RadioListModal(props: Props) {
     const { name, icon, text } = item
 
     const isSelected = selected === name
-    const radio = isSelected ? { icon: 'ios-radio-button-on', color: theme.iconTappable } : { icon: 'ios-radio-button-off', color: theme.iconTappable }
+    const radio = isSelected ? { icon: 'radio-button-on', color: theme.iconTappable } : { icon: 'radio-button-off', color: theme.iconTappable }
     const accessibilityState = isSelected ? { checked: true } : { checked: false }
     const accessibilityHint = `${isSelected ? lstrings.on_hint : lstrings.off_hint} ${name}`
 

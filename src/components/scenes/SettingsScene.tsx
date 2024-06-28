@@ -330,7 +330,7 @@ export const SettingsScene = (props: Props) => {
           )}
         </>
         <>
-          <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} label={lstrings.settings_options_title_cap} />
+          <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="options" size={iconSize} />} label={lstrings.settings_options_title_cap} />
           <CardUi4 sections>
             {config.disableSwaps !== true ? <SettingsTappableRow label={lstrings.settings_exchange_settings} onPress={handleExchangeSettings} /> : null}
             <SettingsTappableRow label={lstrings.spending_limits} onPress={handleSpendingLimits} />
