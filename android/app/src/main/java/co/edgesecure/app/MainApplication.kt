@@ -98,7 +98,6 @@ class MainApplication : Application(), ReactApplication {
             // app.
             load()
         }
-        ReactNativeFlipper.initializeFlipper(this, reactNativeHost.reactInstanceManager)
         onApplicationCreate(this)
     }
 
