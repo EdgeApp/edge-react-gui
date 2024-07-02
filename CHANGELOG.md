@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added: 0x Gasless Swap exchange plugin
+
 ## 4.9.0
 
 - added: Support for Universal and App Links

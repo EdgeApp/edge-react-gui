@@ -198,10 +198,9 @@ export const SwapConfirmationScene = (props: Props) => {
         })
       )
     } catch (error: any) {
-      console.log(error)
       dispatch(logEvent('Exchange_Shift_Failed', { error: String(error) })) // TODO: Do we need to parse/clean all cases?
       setTimeout(() => {
-        showError(`${lstrings.exchange_failed}. ${error.message}`)
+        showError(error)
       }, 1)
     }
     setPending(false)
