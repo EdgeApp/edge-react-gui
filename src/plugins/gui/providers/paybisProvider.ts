@@ -52,6 +52,8 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
   }
 }
 
+const asPaybisLocale = asMaybe(asValue('en', 'ru', 'es', 'it', 'fr', 'de', 'pt', 'ko', 'ar'), 'en')
+
 // https://widget.sandbox.paybis.com/?requestId={requestId}&successReturnURL= {urlencodedUrl}&failureReturnURL={urlendodedUrl}
 // requestId<string>(format: uuid) successReturnURL<string>(urlencoded) failureReturnURL<string>(urlencoded)
 
@@ -495,7 +497,7 @@ export const paybisProvider: FiatProviderFactory = {
             const { coreWallet, showUi } = approveParams
             const success = await showUi.requestPermission(['camera'], pluginDisplayName, true)
             if (!success) {
-              await showUi.showError(lstrings.fiat_plugin_cannot_continue_camera_permission)
+              await showUi.showToast(lstrings.fiat_plugin_cannot_continue_camera_permission)
             }
             const receiveAddress = await coreWallet.getReceiveAddress({ tokenId: null })
 
@@ -507,7 +509,7 @@ export const paybisProvider: FiatProviderFactory = {
                   address: receiveAddress.segwitAddress ?? receiveAddress.publicAddress
                 },
                 partnerUserId,
-                locale: locale.localeIdentifier.slice(0, 2),
+                locale: asPaybisLocale(locale.localeIdentifier.slice(0, 2)),
                 passwordless: true,
                 trustedKyc: false,
                 quoteId,
@@ -518,7 +520,7 @@ export const paybisProvider: FiatProviderFactory = {
               bodyParams = {
                 cryptoPaymentMethod: 'partner_controlled_with_redirect',
                 partnerUserId,
-                locale: locale.localeIdentifier.slice(0, 2),
+                locale: asPaybisLocale(locale.localeIdentifier.slice(0, 2)),
                 passwordless: true,
                 trustedKyc: false,
                 quoteId,

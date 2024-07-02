@@ -50,7 +50,7 @@ import { FlipInputModal2, FlipInputModalRef, FlipInputModalResult } from '../mod
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInputAmounts, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
@@ -750,7 +750,7 @@ const SendComponent = (props: Props) => {
       if (!isAuthorized) {
         resetSlider()
         setPinValue('')
-        showError(new Error(lstrings.incorrect_pin))
+        showToast(lstrings.incorrect_pin)
         return
       }
     }
