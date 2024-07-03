@@ -1,4 +1,5 @@
-import { NestedDisableMap } from '../actions/ExchangeInfoActions'
+import { NestedDisableMap } from 'edge-info-server'
+
 import { GuiPlugin, GuiPluginJson, GuiPluginRow } from '../types/GuiPluginTypes'
 import { UriQueryMap } from '../types/WebTypes'
 import { stringifyQuery } from './WebUtils'

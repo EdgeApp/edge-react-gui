@@ -3,7 +3,6 @@ import { EdgeAccount } from 'edge-core-js'
 import { EdgeAssetAction, EdgeMetadata, EdgeTokenId, EdgeTransaction, EdgeTxAction } from 'edge-core-js/types'
 import { PluginPromotion } from 'edge-info-server'
 
-import { DisablePluginMap } from '../../actions/ExchangeInfoActions'
 import { LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
 import { ButtonInfo, ButtonModalProps } from '../../components/modals/ButtonsModal'
 import { SendScene2Params } from '../../components/scenes/SendScene2'
@@ -17,6 +16,9 @@ import { FiatPluginOpenWebViewParams } from './scenes/FiatPluginWebView'
 import { RewardsCardDashboardParams } from './scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeParams } from './scenes/RewardsCardWelcomeScene'
 
+export interface DisablePluginMap {
+  [pluginId: string]: boolean
+}
 export const asFiatDirection = asValue('buy', 'sell')
 export type FiatDirection = ReturnType<typeof asFiatDirection>
 

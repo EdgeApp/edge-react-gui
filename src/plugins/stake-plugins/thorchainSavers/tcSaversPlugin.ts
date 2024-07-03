@@ -6,7 +6,7 @@ import { StringMap } from '../../../types/types'
 import { asMaybeContractLocation } from '../../../util/cleaners'
 import { getTokenId, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getHistoricalRate } from '../../../util/exchangeRates'
-import { cleanMultiFetch, fetchInfo, fetchWaterfall, infoServerData } from '../../../util/network'
+import { cleanMultiFetch, fetchWaterfall, infoServerData } from '../../../util/network'
 import { assert } from '../../gui/pluginUtils'
 import {
   ChangeQuote,
@@ -27,7 +27,6 @@ import {
 import { asInfoServerResponse, EdgeGuiPluginOptions, InfoServerResponse } from '../util/internalTypes'
 import { getEvmApprovalData, getEvmDepositWithExpiryData } from './defiUtils'
 
-const EXCHANGE_INFO_UPDATE_FREQ_MS = 10 * 60 * 1000 // 2 min
 const INBOUND_ADDRESSES_UPDATE_FREQ_MS = 10 * 60 * 1000 // 2 min
 const MIDGARD_SERVERS_DEFAULT = ['https://midgard.ninerealms.com', 'https://midgard.thorchain.info']
 const THORNODE_SERVERS_DEFAULT = ['https://thornode.ninerealms.com']
@@ -214,7 +213,6 @@ const MAINNET_CODE_TRANSCRIPTION: { [cc: string]: string } = {
 }
 
 let exchangeInfo: ExchangeInfo | undefined
-let exchangeInfoLastUpdate: number = 0
 let inboundAddresses: InboundAddresses | undefined
 
 let midgardServers: string[] = MIDGARD_SERVERS_DEFAULT
@@ -1109,21 +1107,11 @@ const estimateUnstakeFee = async (
 const updateInboundAddresses = async (opts: EdgeGuiPluginOptions): Promise<void> => {
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
   const now = Date.now()
-  if (now - exchangeInfoLastUpdate > EXCHANGE_INFO_UPDATE_FREQ_MS || exchangeInfo == null) {
-    try {
-      const exchangeInfoResponse = await fetchInfo('v1/exchangeInfo/edge')
 
-      if (exchangeInfoResponse.ok) {
-        const responseJson = await exchangeInfoResponse.json()
-        exchangeInfo = asThorchainExchangeInfo(responseJson)
-        exchangeInfoLastUpdate = now
-      } else {
-        // Error is ok. We just use defaults
-        console.warn('Error getting info server exchangeInfo. Using defaults...')
-      }
-    } catch (e: any) {
-      console.log('Error getting info server exchangeInfo. Using defaults...', e.message)
-    }
+  try {
+    exchangeInfo = asThorchainExchangeInfo(infoServerData.rollup?.exchangeInfo)
+  } catch (e: any) {
+    console.log('Error getting info server exchangeInfo. Using defaults...')
   }
 
   try {

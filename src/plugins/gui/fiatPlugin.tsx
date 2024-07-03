@@ -1,13 +1,12 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import { Disklet } from 'disklet'
 import { EdgeAccount, EdgeTransaction } from 'edge-core-js'
-import { PluginPromotion } from 'edge-info-server'
+import { NestedDisableMap, PluginPromotion } from 'edge-info-server'
 import * as React from 'react'
 import { Linking, Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
 import SafariView from 'react-native-safari-view'
 
-import { DisablePluginMap, NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { launchPaymentProto, LaunchPaymentProtoParams } from '../../actions/PaymentProtoActions'
 import { addressWarnings } from '../../actions/ScanActions'
 import { ButtonsModal } from '../../components/modals/ButtonsModal'
@@ -24,6 +23,7 @@ import { getNavigationAbsolutePath } from '../../util/routerUtils'
 import { OnLogEvent, SellConversionValues, TrackingEventName } from '../../util/tracking'
 import { datelog } from '../../util/utils'
 import {
+  DisablePluginMap,
   FiatPaymentType,
   FiatPluginAddressFormParams,
   FiatPluginListModalParams,

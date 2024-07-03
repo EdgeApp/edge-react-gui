@@ -1,11 +1,11 @@
 import { gt, gte } from 'biggystring'
+import { asObject, asOptional, asString } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeSwapRequest, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
 import { Text, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { DisableAsset } from '../../actions/ExchangeInfoActions'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { infoServerData } from '../../util/network'
 import { zeroString } from '../../util/utils'
 import { EdgeAnim, fadeInDown30, fadeInDown60, fadeInDown90, fadeInUp60 } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -63,6 +64,17 @@ const defaultState: State = {
   nativeAmountFor: 'from'
 }
 
+// TODO: Moved into the info server types
+const asDisableAsset = asObject({
+  pluginId: asString,
+
+  // tokenId = undefined will only disable the mainnet coin
+  // tokenId = 'allTokens' will disable all tokens
+  // tokenId = 'allCoins' will disable all tokens and mainnet coin
+  tokenId: asOptional(asString) // May also be 'all' to disable all tokens
+})
+export type DisableAsset = ReturnType<typeof asDisableAsset>
+
 export const SwapCreateScene = (props: Props) => {
   const { navigation, route } = props
   const { fromWalletId, fromTokenId = null, toWalletId, toTokenId = null, errorDisplayInfo } = route.params ?? {}
@@ -80,7 +92,7 @@ export const SwapCreateScene = (props: Props) => {
 
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
-  const exchangeInfo = useSelector(state => state.ui.exchangeInfo)
+  const exchangeInfo = infoServerData.rollup?.exchangeInfo
 
   const toWallet: EdgeCurrencyWallet | undefined = toWalletId == null ? undefined : currencyWallets[toWalletId]
   const fromWallet: EdgeCurrencyWallet | undefined = fromWalletId == null ? undefined : currencyWallets[fromWalletId]

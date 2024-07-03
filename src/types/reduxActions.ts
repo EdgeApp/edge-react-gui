@@ -1,7 +1,6 @@
 import { Disklet } from 'disklet'
 import { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeDenomination, EdgeSwapPluginType } from 'edge-core-js'
 
-import { ExchangeInfo } from '../actions/ExchangeInfoActions'
 import { NotificationSettings } from '../actions/NotificationActions'
 import { PasswordReminderTime, SecurityCheckedWallets } from '../actions/SettingsActions'
 import { SortOption } from '../components/modals/WalletListSortModal'
@@ -92,7 +91,6 @@ export type Action =
       data: { height: number }
     }
   | { type: 'UI/WALLETS/UPSERT_WALLETS'; data: { wallets: EdgeCurrencyWallet[] } }
-  | { type: 'UPDATE_EXCHANGE_INFO'; data: ExchangeInfo }
   | { type: 'UPDATE_SORTED_WALLET_LIST'; data: WalletListItem[] }
   | { type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'; data: PasswordReminderTime }
   | { type: 'NETWORK/NETWORK_STATUS'; data: { isConnected: boolean } }

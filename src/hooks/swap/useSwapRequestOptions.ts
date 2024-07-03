@@ -2,6 +2,7 @@ import { EdgeSwapRequestOptions } from 'edge-core-js'
 import { useMemo } from 'react'
 
 import { useSelector } from '../../types/reactRedux'
+import { infoServerData } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 
 /**
@@ -13,7 +14,7 @@ export const useSwapRequestOptions = (): EdgeSwapRequestOptions => {
   const accountReferral = useSelector(state => state.account.accountReferral)
   const preferredSwapPluginId = useSelector(state => state.ui.settings.preferredSwapPluginId)
   const preferredSwapPluginType = useSelector(state => state.ui.settings.preferredSwapPluginType)
-  const disablePlugins = useSelector(state => state.ui.exchangeInfo.swap.disablePlugins)
+  const disablePlugins = infoServerData.rollup?.exchangeInfo?.swap.disablePlugins
 
   return useMemo((): EdgeSwapRequestOptions => {
     // Find preferred swap provider:

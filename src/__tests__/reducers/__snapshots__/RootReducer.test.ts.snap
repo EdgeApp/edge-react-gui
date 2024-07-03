@@ -59,21 +59,6 @@ exports[`initialState 1`] = `
   },
   "sortedWalletList": [],
   "ui": {
-    "exchangeInfo": {
-      "buy": {
-        "disablePlugins": {},
-      },
-      "sell": {
-        "disablePlugins": {},
-      },
-      "swap": {
-        "disableAssets": {
-          "destination": [],
-          "source": [],
-        },
-        "disablePlugins": {},
-      },
-    },
     "fio": {
       "connectedWalletsByFioAddress": {},
       "expireReminderShown": false,

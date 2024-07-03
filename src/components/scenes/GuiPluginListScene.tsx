@@ -1,6 +1,7 @@
 import { useIsFocused } from '@react-navigation/native'
 import { Disklet } from 'disklet'
 import { EdgeAccount } from 'edge-core-js/types'
+import { ExchangeInfo, NestedDisableMap } from 'edge-info-server'
 import * as React from 'react'
 import { Image, ListRenderItemInfo, Platform, View } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
@@ -11,7 +12,6 @@ import { sprintf } from 'sprintf-js'
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { checkAndSetRegion, showCountrySelectionModal } from '../../actions/CountryListActions'
 import { getDeviceSettings, writeDeveloperPluginUri } from '../../actions/DeviceSettingsActions'
-import { NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
 import buyPluginJsonRaw from '../../constants/plugins/buyPluginList.json'
@@ -290,7 +290,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         defaultIsoFiat,
         deviceId,
         direction,
-        disablePlugins: disableProviders,
+        disablePlugins: disableProviders === false ? undefined : disableProviders,
         disklet: coreDisklet,
         forcedWalletResult,
         guiPlugin: plugin,
@@ -556,7 +556,13 @@ export const GuiPluginListScene = React.memo((props: OwnProps) => {
   const coreDisklet = useSelector(state => state.core.disklet)
   const { countryCode, defaultIsoFiat, developerModeOn, stateProvinceCode } = useSelector(state => state.ui.settings)
   const direction = props.route.name === 'pluginListSell' ? 'sell' : 'buy'
-  const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
+  const exchangeInfo: ExchangeInfo = infoServerData.rollup?.exchangeInfo ?? {
+    buy: { disablePlugins: {} },
+    sell: { disablePlugins: {} },
+    swap: { disableAssets: {}, disablePlugins: {}, plugins: {} }
+  }
+  const disablePlugins = exchangeInfo[direction].disablePlugins ?? {}
+  // const disablePlugins = useSelector(state => state.ui.exchangeInfo[direction].disablePlugins)
   const isFocused = useIsFocused()
 
   const debouncedNavigation = useAsyncNavigation(navigation)

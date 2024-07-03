@@ -2,7 +2,6 @@ import { asDate, asJSON, asObject, uncleaner } from 'cleaners'
 import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 
-import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { registerNotificationsV2 } from '../../actions/NotificationActions'
 import { checkCompromisedKeys, updateWalletsRequest } from '../../actions/WalletActions'
@@ -127,7 +126,6 @@ export function Services(props: Props) {
   useRefresher(
     async () => {
       makeStakePlugins().catch(err => console.warn(err))
-      dispatch(updateExchangeInfo()).catch(err => console.warn(err))
     },
     undefined,
     REFRESH_INFO_SERVER_MS

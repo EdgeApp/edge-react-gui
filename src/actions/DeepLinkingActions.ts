@@ -10,6 +10,7 @@ import { DeepLink } from '../types/DeepLinkTypes'
 import { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { EdgeAsset } from '../types/types'
+import { infoServerData } from '../util/network'
 import { logEvent } from '../util/tracking'
 import { base58ToUuid } from '../util/utils'
 import { activatePromotion } from './AccountReferralActions'
@@ -82,6 +83,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
 
   // Wait for all wallets to load before handling deep links
   const allWalletsLoaded = activeWalletIds.length === Object.keys(currencyWallets).length
+  const exchangeInfo = infoServerData.rollup?.exchangeInfo
 
   // We can't handle any links without being logged into the app:
   if (!state.ui.settings.settingsLoaded) return false
@@ -104,7 +106,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       }
 
       // Check the disabled status:
-      if (state.ui.exchangeInfo.buy.disablePlugins[pluginId] === true || state.ui.exchangeInfo.sell.disablePlugins[pluginId] === true) {
+      if (exchangeInfo?.buy.disablePlugins[pluginId] === true || exchangeInfo?.sell.disablePlugins[pluginId] === true) {
         showError(`Plugin "${pluginId}" is disabled`)
         return true
       }
@@ -126,7 +128,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
       }
 
       // Check the disabled status:
-      const disableProviders = state.ui.exchangeInfo[direction].disablePlugins[pluginId] ?? {}
+      const disableProviders = exchangeInfo?.[direction].disablePlugins[pluginId] ?? {}
       if (disableProviders === true) {
         showError(`Plugin "${pluginId}" is disabled`)
         return true
@@ -136,7 +138,7 @@ export async function handleLink(navigation: NavigationBase, dispatch: Dispatch,
         account,
         defaultIsoFiat,
         deviceId,
-        disablePlugins: disableProviders,
+        disablePlugins: disableProviders === false ? undefined : disableProviders,
         disklet,
         guiPlugin: plugin,
         direction,
