@@ -24,17 +24,22 @@ import { ReText } from '../text/ReText'
 import { EdgeText } from '../themed/EdgeText'
 
 type Timespan = 'year' | 'month' | 'week' | 'day' | 'hour'
+type CoinGeckoDataPair = number[]
 
+interface Props {
+  assetId: string // The asset's 'id' as defined by CoinGecko
+  currencyCode: string
+}
 interface ChartDataPoint {
   x: Date
   y: number
 }
-type CoinGeckoDataPair = number[]
 interface CoinGeckoMarketChartRange {
   prices: CoinGeckoDataPair[]
   market_caps: CoinGeckoDataPair[]
   total_volumes: CoinGeckoDataPair[]
 }
+
 const asCoinGeckoDataPair = asTuple(asNumber, asNumber)
 const asCoinGeckoError = asObject({
   status: asObject({
@@ -49,14 +54,11 @@ const asCoinGeckoMarketChartRange = asObject<CoinGeckoMarketChartRange>({
 })
 
 const asCoinGeckoMarketApi = asEither(asCoinGeckoMarketChartRange, asCoinGeckoError)
-interface Props {
-  currencyCode: string
-  assetId: string // The asset's 'id' as defined by CoinGecko
-}
 
 const COINGECKO_URL = 'https://api.coingecko.com'
 const COINGECKO_URL_PRO = 'https://pro-api.coingecko.com'
-const DATASET_URL_4S = '/api/v3/coins/%1$s/market_chart/range?vs_currency=%2$s&from=%3$s&to=%4$s'
+const MARKET_CHART_ENDPOINT_4S = '/api/v3/coins/%1$s/market_chart/range?vs_currency=%2$s&from=%3$s&to=%4$s'
+
 const UNIX_SECONDS_HOUR_OFFSET = 60 * 60
 const UNIX_SECONDS_DAY_OFFSET = 24 * UNIX_SECONDS_HOUR_OFFSET
 const UNIX_SECONDS_WEEK_OFFSET = 7 * UNIX_SECONDS_DAY_OFFSET
@@ -201,7 +203,8 @@ const SwipeChartComponent = (params: Props) => {
           } else {
             const unixNow = Math.trunc(new Date().getTime() / 1000)
             const fromParam = unixNow - queryFromTimeOffset
-            const fetchPath = sprintf(DATASET_URL_4S, assetId, defaultFiat, fromParam, unixNow)
+            const fetchPath = sprintf(MARKET_CHART_ENDPOINT_4S, assetId, 'USD', fromParam, unixNow)
+            // Start with the free base URL
             let fetchUrl = `${COINGECKO_URL}${fetchPath}`
             do {
               // Construct the dataset query
@@ -210,7 +213,7 @@ const SwipeChartComponent = (params: Props) => {
               const marketChartRange = asCoinGeckoMarketApi(result)
               if ('status' in marketChartRange) {
                 if (marketChartRange.status.error_code === 429) {
-                  // Rate limit error
+                  // Rate limit error, use our API key as a fallback
                   if (!fetchUrl.includes('x_cg_pro_api_key')) {
                     fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
                     continue
