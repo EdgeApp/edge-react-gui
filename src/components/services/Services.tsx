@@ -38,7 +38,7 @@ interface Props {
   navigation: NavigationBase
 }
 
-const REFRESH_INFO_SERVER_MS = 60000
+const REFRESH_INFO_SERVER_MS = 10 * 60 * 1000 // 10 minutes
 
 const FIO_CREATE_HANDLE_ITEM_ID = 'fioCreateHandleRecord'
 const asFioCreateHandleRecord = asJSON(
