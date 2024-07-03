@@ -14,8 +14,6 @@ import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
-import { getDefaultFiat } from '../../selectors/SettingsSelectors'
-import { useSelector } from '../../types/reactRedux'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { FillLoader } from '../progress-indicators/FillLoader'
 import { showWarning } from '../services/AirshipInstance'
@@ -29,6 +27,7 @@ type CoinGeckoDataPair = number[]
 interface Props {
   assetId: string // The asset's 'id' as defined by CoinGecko
   currencyCode: string
+  fiatCurrencyCode: string
 }
 interface ChartDataPoint {
   x: Date
@@ -130,11 +129,9 @@ const reduceChartData = (chartData: ChartDataPoint[], timespan: Timespan): Chart
 const SwipeChartComponent = (params: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { assetId, currencyCode } = params
+  const { assetId, currencyCode, fiatCurrencyCode } = params
 
   // #region Chart setup
-
-  const defaultFiat = useSelector(state => getDefaultFiat(state))
 
   const [chartData, setChartData] = React.useState<ChartDataPoint[]>([])
   const [cachedTimespanChartData, setCachedChartData] = React.useState<Map<Timespan, ChartDataPoint[] | undefined>>(
@@ -152,7 +149,7 @@ const SwipeChartComponent = (params: Props) => {
   const chartWidth = React.useRef(0)
   const chartHeight = React.useRef(0)
 
-  const fiatSymbol = React.useMemo(() => getFiatSymbol(defaultFiat), [defaultFiat])
+  const fiatSymbol = React.useMemo(() => getFiatSymbol(fiatCurrencyCode), [fiatCurrencyCode])
 
   // Min/Max Price Calcs
   const prices = React.useMemo(() => chartData.map(dataPoint => dataPoint.y), [chartData])
@@ -203,7 +200,7 @@ const SwipeChartComponent = (params: Props) => {
           } else {
             const unixNow = Math.trunc(new Date().getTime() / 1000)
             const fromParam = unixNow - queryFromTimeOffset
-            const fetchPath = sprintf(MARKET_CHART_ENDPOINT_4S, assetId, 'USD', fromParam, unixNow)
+            const fetchPath = sprintf(MARKET_CHART_ENDPOINT_4S, assetId, fiatCurrencyCode, fromParam, unixNow)
             // Start with the free base URL
             let fetchUrl = `${COINGECKO_URL}${fetchPath}`
             do {
