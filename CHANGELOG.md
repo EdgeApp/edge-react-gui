@@ -26,6 +26,7 @@
 - fixed: Possible for keyboard to cover input fields in some Android WebViews
 - fixed: Call the correct method when rejecting a WalletConnect session
 - fixed: "Exchange Rates Loading..." not showing in the balance card
+- fixed: Incorrect values in Markets scenes when certain non-USD fiats selected in settings - unsupported fiats will default to USD Market data
 - removed: Wallet-specific fiat currency setting. Account-wide fiat currency setting is now used for app-wide fiat calculation and display
 
 ## 4.8.1 (2024-06-28)
