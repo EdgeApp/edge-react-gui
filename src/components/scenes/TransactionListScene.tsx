@@ -12,6 +12,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useIconColor } from '../../hooks/useIconColor'
 import { useTransactionList } from '../../hooks/useTransactionList'
 import { useWatch } from '../../hooks/useWatch'
+import { getLocaleOrDefaultString } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getExchangeDenomByCurrencyCode } from '../../selectors/DenominationSelectors'
 import { FooterRender } from '../../state/SceneFooterState'
@@ -142,8 +143,18 @@ function TransactionListComponent(props: Props) {
     const allAssetStatuses = (infoServerData.rollup?.assetStatusCards ?? {})[pluginTokenId] ?? []
     const version = getVersion()
     return allAssetStatuses.filter(assetStatus => {
-      const { appId, appVersions } = assetStatus
-      return (appId == null || appId === config.appId) && (appVersions == null || appVersions.includes(version))
+      const { appId, appVersions, localeStatusBody, localeStatusTitle, statusStartIsoDate, statusEndIsoDate } = assetStatus
+      const curDate = new Date().toISOString()
+
+      const title = getLocaleOrDefaultString(localeStatusTitle)
+      const message = getLocaleOrDefaultString(localeStatusBody)
+
+      if (title == null || message == null) return false
+      if (appId != null && appId !== config.appId) return false
+      if (appVersions != null && !appVersions.includes(version)) return false
+      if (statusEndIsoDate != null && statusEndIsoDate < curDate) return false
+      if (statusStartIsoDate != null && statusStartIsoDate > curDate) return false
+      return true
     })
   }, [pluginId, tokenId])
 
