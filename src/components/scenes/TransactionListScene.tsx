@@ -1,7 +1,6 @@
 import { abs, lt } from 'biggystring'
-import { asArray, asMaybe } from 'cleaners'
 import { EdgeCurrencyWallet, EdgeTokenId, EdgeTokenMap, EdgeTransaction } from 'edge-core-js'
-import { asAssetStatus, AssetStatus } from 'edge-info-server'
+import { AssetStatus } from 'edge-info-server'
 import * as React from 'react'
 import { ListRenderItemInfo, RefreshControl, View } from 'react-native'
 import { getVersion } from 'react-native-device-info'
@@ -20,7 +19,7 @@ import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
-import { fetchInfo } from '../../util/network'
+import { infoServerData } from '../../util/network'
 import { calculateSpamThreshold, darkenHexColor, unixToLocaleDateTime, zeroString } from '../../util/utils'
 import { AssetStatusCard } from '../cards/AssetStatusCard'
 import { EdgeAnim, fadeInDown10, MAX_LIST_ITEMS_ANIM } from '../common/EdgeAnim'
@@ -59,7 +58,6 @@ function TransactionListComponent(props: Props) {
   const flashListRef = React.useRef<Animated.FlatList<ListItem> | null>(null)
   const [isSearching, setIsSearching] = React.useState(false)
   const [searchText, setSearchText] = React.useState('')
-  const [assetStatuses, setAssetStatuses] = React.useState<AssetStatus[]>([])
   const iconColor = useIconColor({ pluginId, tokenId })
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
 
@@ -139,23 +137,14 @@ function TransactionListComponent(props: Props) {
   }, [enabledTokenIds, navigation, tokenId])
 
   // Check for AssetStatuses from info server (known sync issues, etc):
-  React.useEffect(() => {
-    fetchInfo(`v1/assetStatusCards/${pluginId}${tokenId == null ? '' : `_${tokenId}`}`)
-      .then(async res => {
-        const raw = await res.json()
-        const allAssetStatuses = asMaybe(asArray(asAssetStatus))(raw)
-        if (allAssetStatuses == null) return
-        const version = getVersion()
-
-        // Filter for assetStatuses relevant to this instance of the app
-        setAssetStatuses(
-          allAssetStatuses.filter(assetStatus => {
-            const { appId, appVersions } = assetStatus
-            return (appId == null || appId === config.appId) && (appVersions == null || appVersions.includes(version))
-          })
-        )
-      })
-      .catch(e => console.log(String(e)))
+  const assetStatuses = React.useMemo<AssetStatus[]>(() => {
+    const pluginTokenId = `${pluginId}${tokenId == null ? '' : `_${tokenId}`}`
+    const allAssetStatuses = (infoServerData.rollup?.assetStatusCards ?? {})[pluginTokenId] ?? []
+    const version = getVersion()
+    return allAssetStatuses.filter(assetStatus => {
+      const { appId, appVersions } = assetStatus
+      return (appId == null || appId === config.appId) && (appVersions == null || appVersions.includes(version))
+    })
   }, [pluginId, tokenId])
 
   //
