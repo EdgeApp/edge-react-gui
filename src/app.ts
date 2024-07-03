@@ -5,7 +5,9 @@
  * rerenders
  */
 // import './wdyr'
+import { breadcrumbsIntegration } from '@sentry/browser'
 import * as Sentry from '@sentry/react-native'
+import type { Integration } from '@sentry/types'
 import { asObject, asString } from 'cleaners'
 import { LogBox, Text, TextInput } from 'react-native'
 import { getVersion } from 'react-native-device-info'
@@ -31,7 +33,19 @@ if (ENV.SENTRY_ORGANIZATION_SLUG.includes('SENTRY_ORGANIZATION')) {
     tracesSampleRate: environment === 'production' || environment === 'testing' ? 0.2 : 1.0,
     maxBreadcrumbs: 25,
     environment,
+    defaultIntegrations: false,
 
+    integrations: defaultIntegration => {
+      const out: Integration[] = []
+      for (const integration of defaultIntegration) {
+        if (integration.name === 'Breadcrumbs') {
+          out.push(breadcrumbsIntegration({ console: false, dom: false, fetch: false, history: false, sentry: false, xhr: false }))
+        } else {
+          out.push(integration)
+        }
+      }
+      return out
+    },
     // Initialize Sentry within native iOS and Android code so we can catch crashes at
     // early app startup.
     autoInitializeNativeSdk: false
@@ -39,8 +53,8 @@ if (ENV.SENTRY_ORGANIZATION_SLUG.includes('SENTRY_ORGANIZATION')) {
 }
 
 // Uncomment the next line to remove popup warning/error boxes.
-// LogBox.ignoreAllLogs()
-LogBox.ignoreLogs(['Require cycle:', 'Attempted to end a Span which has already ended.'])
+LogBox.ignoreAllLogs()
+// LogBox.ignoreLogs(['Require cycle:', 'Attempted to end a Span which has already ended.'])
 
 // Mute specific console output types.
 // Useful for debugging using console output, i.e. mute everything but `debug`
