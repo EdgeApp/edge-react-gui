@@ -3,7 +3,7 @@ import { EdgeAccount, EdgeTokenId, JsonObject } from 'edge-core-js'
 import { SPECIAL_CURRENCY_INFO, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants'
 import { EdgeAsset, WalletListItem } from '../types/types'
 import { checkAssetFilter, hasAsset, isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
-import { assetOverrides } from '../util/serverState'
+import { infoServerData } from '../util/network'
 import { normalizeForSearch } from '../util/utils'
 
 export interface WalletCreateItem {
@@ -161,6 +161,7 @@ export const getCreateWalletList = (account: EdgeAccount, opts: CreateWalletList
     })
   }
   const out = walletList.filter(item => !hasAsset(existingWallets, item) && checkAssetFilter(item, allowedAssets, excludeAssets))
+  const assetOverrides = infoServerData.rollup?.assetOverrides ?? { disable: {} }
   return out.filter(item => !assetOverrides.disable[item.pluginId])
 }
 

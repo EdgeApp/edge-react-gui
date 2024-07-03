@@ -16,7 +16,6 @@ import { FooterAccordionEventService } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { height, ratioHorizontal, ratioVertical, width } from '../../util/scaling'
-import { updateAssetOverrides } from '../../util/serverState'
 import { snooze } from '../../util/utils'
 import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
 import { AccountCallbackManager } from './AccountCallbackManager'
@@ -128,7 +127,6 @@ export function Services(props: Props) {
   useRefresher(
     async () => {
       makeStakePlugins().catch(err => console.warn(err))
-      updateAssetOverrides().catch(err => console.warn(err))
       dispatch(updateExchangeInfo()).catch(err => console.warn(err))
     },
     undefined,
