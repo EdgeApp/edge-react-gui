@@ -17,7 +17,7 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { DomainListModal } from '../../FioAddress/DomainListModal'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
-import { Airship, showError, showToast } from '../../services/AirshipInstance'
+import { Airship, showError, showToast, showWarning } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
@@ -198,10 +198,9 @@ export class FioAddressRegister extends React.Component<Props, State> {
       this.fioCheckQueue = 0
       const { fioPlugin } = this.props
       if (isCustomDomain) {
-        try {
-          await checkIsDomainPublic(fioPlugin, domain)
-        } catch (e: any) {
-          showError(e.message)
+        const result = await checkIsDomainPublic(fioPlugin, domain)
+        if (result !== true) {
+          showWarning(result, { trackError: false })
           return this.setState({
             isAvailable: false,
             loading: false

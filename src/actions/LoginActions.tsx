@@ -31,6 +31,9 @@ import { readLocalAccountSettings } from './LocalSettingsActions'
 import { registerNotificationsV2, updateNotificationSettings } from './NotificationActions'
 import { showScamWarningModal } from './ScamWarningActions'
 
+const PER_WALLET_TIMEOUT = 5000
+const MIN_CREATE_WALLET_TIMEOUT = 20000
+
 function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string; currencyCode: string } {
   // Find the first wallet:
   const [walletId] = account.activeWalletIds
@@ -303,7 +306,8 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
 
   // Actually create the wallets:
   const options = [...optionsMap.values()]
-  const results = await runWithTimeout(account.createCurrencyWallets(options), 20000, new Error(lstrings.error_creating_wallets)).catch(error => {
+  const timeoutMs = Math.max(options.length * PER_WALLET_TIMEOUT, MIN_CREATE_WALLET_TIMEOUT)
+  const results = await runWithTimeout(account.createCurrencyWallets(options), timeoutMs, new Error(lstrings.error_creating_wallets)).catch(error => {
     dispatch(logEvent('Signup_Wallets_Created_Failed', { error }))
     throw error
   })
