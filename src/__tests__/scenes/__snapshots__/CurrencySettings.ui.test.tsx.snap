@@ -401,7 +401,7 @@ exports[`CurrencySettings should render 1`] = `
                 ]
               }
             >
-              ?
+              
             </Text>
           </View>
         </View>
@@ -536,7 +536,7 @@ exports[`CurrencySettings should render 1`] = `
                 ]
               }
             >
-              ?
+              
             </Text>
           </View>
         </View>
@@ -671,7 +671,7 @@ exports[`CurrencySettings should render 1`] = `
                 ]
               }
             >
-              ?
+              
             </Text>
           </View>
         </View>

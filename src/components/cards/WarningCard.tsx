@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Platform, View } from 'react-native'
+import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
@@ -50,12 +50,7 @@ export function WarningCard({ title, header, points, footer, marginRem, paddingR
   return (
     <View style={[styles.warning, margin, padding]}>
       <View style={styles.titleContainer}>
-        <IonIcon
-          name={Platform.OS === 'ios' ? 'ios-warning-outline' : 'md-warning-outline'}
-          style={styles.icon}
-          color={theme.warningText}
-          size={theme.rem(0.8)}
-        />
+        <IonIcon name="warning-outline" style={styles.icon} color={theme.warningText} size={theme.rem(0.8)} />
         <EdgeText style={styles.title}>{title}</EdgeText>
       </View>
       {header != null && (

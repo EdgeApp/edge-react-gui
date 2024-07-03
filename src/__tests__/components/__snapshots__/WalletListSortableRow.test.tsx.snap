@@ -76,7 +76,7 @@ exports[`WalletListSortableRow should render with fake wallet 1`] = `
           ]
         }
       >
-        ?
+        
       </Text>
     </View>
     <View

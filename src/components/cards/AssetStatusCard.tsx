@@ -1,6 +1,5 @@
 import { AssetStatus } from 'edge-info-server'
 import * as React from 'react'
-import { Platform } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { getLocaleOrDefaultString } from '../../locales/intl'
@@ -28,12 +27,7 @@ export const AssetStatusCard = (props: { assetStatus: AssetStatus }) => {
         // If not explicitly set, auto-fill if warning status.
         iconUrl == null ? (
           statusType === 'warning' ? (
-            <IonIcon
-              name={Platform.OS === 'ios' ? 'ios-warning-outline' : 'md-warning-outline'}
-              style={styles.icon}
-              color={theme.warningText}
-              size={theme.rem(3)}
-            />
+            <IonIcon name="warning-outline" style={styles.icon} color={theme.warningText} size={theme.rem(3)} />
           ) : (
             // statusType === 'info'
             <IonIcon name="information-circle-outline" size={theme.rem(1.25)} color={theme.warningText} />
