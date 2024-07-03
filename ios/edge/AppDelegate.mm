@@ -58,7 +58,20 @@
         } else {
           options.environment = @"production";
         }
-
+        options.beforeBreadcrumb = ^SentryBreadcrumb * _Nullable(SentryBreadcrumb * _Nonnull breadcrumb) {
+          // Check the type of breadcrumb
+          if ([breadcrumb.category isEqualToString:@"http"] ||
+              [breadcrumb.category isEqualToString:@"console"] ||
+              [breadcrumb.category isEqualToString:@"navigation"] ||
+              [breadcrumb.category isEqualToString:@"ui.lifecycle"] ||
+              [breadcrumb.category isEqualToString:@"xhr"]
+          ) {
+            // Discard automatic breadcrumbs
+            return nil;
+          }
+          // Allow manual breadcrumbs to be recorded
+          return breadcrumb;
+        };
         // Enable tracing to capture 100% of transactions for performance monitoring.
         // Use 'options.tracesSampleRate' to set the sampling rate.
         // We recommend setting a sample rate in production.

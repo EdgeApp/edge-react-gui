@@ -17,6 +17,7 @@ import io.sentry.Hint
 import io.sentry.SentryEvent
 import io.sentry.SentryLevel
 import io.sentry.SentryOptions.BeforeSendCallback
+import io.sentry.SentryOptions.BeforeBreadcrumbCallback
 import io.sentry.android.core.SentryAndroid
 
 class MainApplication : Application(), ReactApplication {
@@ -71,6 +72,13 @@ class MainApplication : Application(), ReactApplication {
                     options.environment = "production"
                 }
 
+                options.beforeBreadcrumb = BeforeBreadcrumbCallback { breadcrumb, hint ->
+                    if ("network.event" == breadcrumb.category || "http" == breadcrumb.category || "console" == breadcrumb.category) {
+                        null
+                    } else {
+                        breadcrumb
+                    }
+                }
                 // Add a callback that will be used before the event is sent to Sentry.
                 // With this callback, you can modify the event or, when returning null, also
                 // discard the event.
