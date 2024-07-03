@@ -6,7 +6,7 @@ import { StringMap } from '../../../types/types'
 import { asMaybeContractLocation } from '../../../util/cleaners'
 import { getTokenId, getWalletTokenId } from '../../../util/CurrencyInfoHelpers'
 import { getHistoricalRate } from '../../../util/exchangeRates'
-import { cleanMultiFetch, fetchInfo, fetchWaterfall } from '../../../util/network'
+import { cleanMultiFetch, fetchInfo, fetchWaterfall, infoServerData } from '../../../util/network'
 import { assert } from '../../gui/pluginUtils'
 import {
   ChangeQuote,
@@ -259,26 +259,12 @@ export const makeTcSaversPlugin = async (opts: EdgeGuiPluginOptions): Promise<St
     }
   }
 
-  const fetchResponse = await fetchInfo(`v1/apyValues`)
-    .then(async res => {
-      if (!res.ok) {
-        throw new Error(`Fetch APY invalid response: ${await res.text()}`)
-      }
-      return res
-    })
-    .catch(err => {
-      const msg = `Fetch APY failed: ${err.message}`
-      console.warn(msg)
-    })
-  if (fetchResponse != null) {
-    try {
-      const fetchResponseJson = await fetchResponse.json()
-      const infoServerResponse = asInfoServerResponse(fetchResponseJson)
-      updatePolicyApys(infoServerResponse)
-    } catch (err: any) {
-      const msg = `Parsing Fetch APY failed: ${err.message}`
-      console.warn(msg)
-    }
+  try {
+    const infoServerResponse = asInfoServerResponse(infoServerData.rollup?.apyValues)
+    updatePolicyApys(infoServerResponse)
+  } catch (err: any) {
+    const msg = `Parsing Fetch APY failed`
+    console.warn(msg)
   }
 
   const instance: StakePlugin = {
