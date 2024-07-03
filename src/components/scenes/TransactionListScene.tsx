@@ -33,6 +33,7 @@ import { EmptyLoader, SectionHeader, SectionHeaderCentered } from '../themed/Tra
 import { TransactionListRow } from '../themed/TransactionListRow'
 import { TransactionListTop } from '../themed/TransactionListTop'
 import { AccentColors } from '../ui4/DotsBackground'
+import { getLocaleOrDefaultString } from '../../locales/intl'
 
 export interface TransactionListParams {
   walletId: string
@@ -142,8 +143,17 @@ function TransactionListComponent(props: Props) {
     const allAssetStatuses = (infoServerData.rollup?.assetStatusCards ?? {})[pluginTokenId]
     const version = getVersion()
     return allAssetStatuses.filter(assetStatus => {
-      const { appId, appVersions } = assetStatus
-      return (appId == null || appId === config.appId) && (appVersions == null || appVersions.includes(version))
+      const { appId, appVersions, localeStatusBody, localeStatusTitle, statusStartIsoDate, statusEndIsoDate } = assetStatus
+      const curDate = new Date().toISOString()
+
+      const title = getLocaleOrDefaultString(localeStatusTitle)
+      const message = getLocaleOrDefaultString(localeStatusBody)
+
+      if (title == null || message == null) return false
+      if (appId != null && appId !== config.appId) return false
+      if (appVersions != null && !appVersions.includes(version)) return false
+      if (statusEndIsoDate != null && statusEndIsoDate < curDate) return false
+      if (statusStartIsoDate != null && statusStartIsoDate > curDate) return false
     })
   }, [pluginId, tokenId])
 

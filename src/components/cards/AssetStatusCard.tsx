@@ -8,18 +8,15 @@ import { openBrowserUri } from '../../util/WebUtils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { IconMessageCard } from './IconMessageCard'
 export const AssetStatusCard = (props: { assetStatus: AssetStatus }) => {
-  const { statusType, localeStatusTitle, localeStatusBody, iconUrl, statusUrl, statusStartIsoDate, statusEndIsoDate } = props.assetStatus
+  const { statusType, localeStatusTitle, localeStatusBody, iconUrl, statusUrl } = props.assetStatus
   const theme = useTheme()
   const styles = getStyles(theme)
-
-  const curDate = new Date().toISOString()
-  const isWithinDate = statusStartIsoDate != null && statusEndIsoDate != null && statusStartIsoDate <= curDate && statusEndIsoDate >= curDate
 
   const title = getLocaleOrDefaultString(localeStatusTitle)
   const message = getLocaleOrDefaultString(localeStatusBody)
   const isValidText = title != null && message != null
 
-  return isWithinDate && isValidText ? (
+  return isValidText ? (
     <IconMessageCard
       message={message}
       title={title}
