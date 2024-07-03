@@ -133,8 +133,7 @@ export function AccountCallbackManager(props: Props) {
         dispatch({ type: 'CORE/NEW_TOKENS', data: { walletId: wallet.id, enablingTokenIds } })
       }),
 
-      // These ones defer their work until later:
-      wallet.watch('balanceMap', () => setRatesDirty()),
+      // This one defers their work until later:
       wallet.watch('enabledTokenIds', () => setRatesDirty())
     ]
 
