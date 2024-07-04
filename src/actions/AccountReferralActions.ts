@@ -1,17 +1,12 @@
 import { asArray, asBoolean, asDate, asObject, asOptional, asString } from 'cleaners'
 import { EdgeDataStore } from 'edge-core-js'
 import { EdgeAccount } from 'edge-core-js/types'
-import { Platform } from 'react-native'
-import { getBuildNumber, getVersion } from 'react-native-device-info'
-import { getLocales } from 'react-native-localize'
 
 import { ENV } from '../env'
-import { pickLanguage } from '../locales/intl'
-import { config } from '../theme/appConfig'
 import { RootState, ThunkAction } from '../types/reduxTypes'
 import { AccountReferral, Promotion, ReferralCache } from '../types/ReferralTypes'
-import { asCurrencyCode, asIpApi, asMessageTweak, asPluginTweak, MessageTweak } from '../types/TweakTypes'
-import { fetchInfo, fetchReferral } from '../util/network'
+import { asCurrencyCode, asIpApi, asMessageTweak, asPluginTweak } from '../types/TweakTypes'
+import { fetchReferral } from '../util/network'
 import { lockStartDates, TweakSource } from '../util/ReferralHelpers'
 import { logEvent } from '../util/tracking'
 
@@ -173,7 +168,7 @@ export function refreshAccountReferral(): ThunkAction<Promise<void>> {
       accountPlugins: []
     }
 
-    let uri = `api/v1/partner?installerId=${installerId}`
+    const uri = `api/v1/partner?installerId=${installerId}`
     let reply
     try {
       reply = await fetchReferral(uri)
@@ -188,21 +183,6 @@ export function refreshAccountReferral(): ThunkAction<Promise<void>> {
     }
 
     // Get promo cards from info server
-    const appId = config.appId ?? 'edge'
-
-    uri = `v1/promoCards/${appId}`
-    try {
-      reply = await fetchInfo(uri)
-      if (!reply.ok) {
-        throw new Error(`Returned status code ${reply.status}`)
-      }
-      const clean = asArray(asMessageTweak)(await reply.json())
-      const validated = await validatePromoCards(state.core.account, clean)
-      cache.accountMessages.push(...lockStartDates(validated, creationDate))
-    } catch (e: any) {
-      console.warn(`Failed to contact info server: ${e.message}`)
-    }
-
     if (cache.accountMessages.length <= 0 && cache.accountPlugins.length <= 0) return
     dispatch({ type: 'ACCOUNT_TWEAKS_REFRESHED', data: cache })
     await saveReferralCache(getState())
@@ -230,97 +210,6 @@ export const getCountryCodeByIp = async (): Promise<string> => {
   } catch (e: any) {
     console.error(e.message)
   }
-  return out
-}
-const getLanguageTag = (): string => {
-  const [firstLocale = { languageTag: 'en_US' }] = getLocales()
-  return firstLocale.languageTag
-}
-const getOs = (): string => Platform.OS
-
-const checkDummyPluginHasBank = async (): Promise<boolean> => false
-
-async function validatePromoCards(account: EdgeAccount, cards: MessageTweak[]): Promise<MessageTweak[]> {
-  const funcs: ValidateFuncs = { getCountryCodeByIp, checkDummyPluginHasBank, getBuildNumber, getLanguageTag, getOs, getVersion }
-  return await validatePromoCardsInner(account.dataStore, cards, funcs)
-}
-export async function validatePromoCardsInner(dataStore: EdgeDataStore, cards: MessageTweak[], funcs: ValidateFuncs): Promise<MessageTweak[]> {
-  const out: MessageTweak[] = []
-  let dummyPluginHasLinkedBank
-
-  for (const card of cards) {
-    // Validate OS type
-    if (card.osTypes != null) {
-      const match = card.osTypes.some(os => os === funcs.getOs())
-      if (!match) continue
-    }
-
-    // Validate app buildnum
-    const buildNum = funcs.getBuildNumber()
-    if (typeof card.exactBuildNum === 'string') {
-      if (card.exactBuildNum !== buildNum) continue
-    }
-    if (typeof card.minBuildNum === 'string') {
-      if (card.minBuildNum > buildNum) continue
-    }
-    if (typeof card.maxBuildNum === 'string') {
-      if (card.maxBuildNum < buildNum) continue
-    }
-
-    if (typeof card.version === 'string') {
-      const version = funcs.getVersion()
-      if (card.version !== version) continue
-    }
-
-    if (card.countryCodes != null) {
-      // Validate Country
-      const countryCode = await funcs.getCountryCodeByIp()
-      const match = (card.countryCodes ?? []).some(cc => cc === countryCode)
-      if (!match) continue
-    }
-
-    if (card.excludeCountryCodes != null) {
-      // Validate Country
-      const countryCode = await funcs.getCountryCodeByIp()
-      const excludeMatch = (card.excludeCountryCodes ?? []).some(cc => cc === countryCode)
-      if (excludeMatch) continue
-    }
-
-    // Validate Bank Linkage
-    if (card.hasLinkedBankMap != null) {
-      let useCard = true
-      for (const [pluginId, hasLinkedBank] of Object.entries(card.hasLinkedBankMap)) {
-        if (pluginId === 'com.dummyplugin.app') {
-          if (dummyPluginHasLinkedBank == null) {
-            dummyPluginHasLinkedBank = await funcs.checkDummyPluginHasBank(dataStore)
-          }
-          if (dummyPluginHasLinkedBank !== hasLinkedBank) {
-            useCard = false
-            break
-          }
-        } else {
-          // We can't track any other types of bank linkage so punt on this promo card.
-          useCard = false
-          break
-        }
-      }
-      if (!useCard) continue
-    }
-
-    // Pick proper language
-    if (card.localeMessages != null) {
-      const localeList = Object.keys(card.localeMessages ?? {})
-      const lang = pickLanguage(funcs.getLanguageTag(), localeList)
-      if (lang != null) {
-        const message = (card.localeMessages ?? {})[lang]
-        if (message != null) {
-          card.message = message
-        }
-      }
-    }
-    out.push(card)
-  }
-
   return out
 }
 
