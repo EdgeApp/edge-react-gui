@@ -775,6 +775,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    minWidth: theme.rem(3),
     paddingRight: theme.rem(1)
   },
 

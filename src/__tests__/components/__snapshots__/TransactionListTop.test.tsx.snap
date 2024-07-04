@@ -684,6 +684,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           "alignItems": "center",
           "flexDirection": "row",
           "justifyContent": "center",
+          "minWidth": 67,
           "paddingRight": 22,
         }
       }
@@ -1658,6 +1659,7 @@ exports[`TransactionListTop should render 1`] = `
           "alignItems": "center",
           "flexDirection": "row",
           "justifyContent": "center",
+          "minWidth": 67,
           "paddingRight": 22,
         }
       }
