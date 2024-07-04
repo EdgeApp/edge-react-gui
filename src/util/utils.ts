@@ -234,6 +234,7 @@ export function precisionAdjust(params: PrecisionAdjustParams): number {
   const exchangeSecondaryToPrimaryRatio = parseFloat(params.exchangeSecondaryToPrimaryRatio)
   const order = Math.floor(Math.log(exchangeSecondaryToPrimaryRatio) / Math.LN10 + 0.000000001) // because float math sucks like that
   const exchangeRateOrderOfMagnitude = Math.pow(10, order)
+  if (isNaN(exchangeRateOrderOfMagnitude)) return 0
 
   // Get the exchange rate in tenth of pennies
   const exchangeRateString = mul(exchangeRateOrderOfMagnitude.toString(), mul(params.secondaryExchangeMultiplier, '10'))
