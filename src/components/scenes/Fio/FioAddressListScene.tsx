@@ -140,7 +140,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
                   key={`${domain.name}`}
                   name={domain.name}
                   expiration={domain.expiration}
-                  icon={<IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />}
+                  icon={<IonIcon name="at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />}
                   onPress={() => this.onDomainPress(domain)}
                 />
               ))}

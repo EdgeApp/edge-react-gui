@@ -71,7 +71,7 @@ exports[`FioAddressList should render with loading props 1`] = `
             <Icon
               allowFontScaling={false}
               color="#FFFFFF"
-              name="ios-at"
+              name="at"
               size={34}
               style={
                 {

@@ -40,7 +40,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
         <Icon
           allowFontScaling={false}
           color="#FFFFFF"
-          name="ios-link"
+          name="link"
           size={34}
         />
       }
