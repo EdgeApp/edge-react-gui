@@ -1,4 +1,4 @@
-import { captureException } from '@sentry/react-native'
+import { addBreadcrumb, captureException } from '@sentry/react-native'
 import { eq } from 'biggystring'
 import { InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
@@ -421,6 +421,11 @@ export function DevTestScene(props: Props) {
           <ButtonUi4
             marginRem={0.5}
             onPress={() => {
+              addBreadcrumb({
+                type: 'DEV_ERROR',
+                message: 'Test Breadcrumb before error',
+                timestamp: new Date().getTime() / 1000
+              })
               captureException(new Error('First error'))
             }}
             label="Crash"

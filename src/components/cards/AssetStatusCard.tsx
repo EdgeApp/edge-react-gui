@@ -1,6 +1,5 @@
 import { AssetStatus } from 'edge-info-server'
 import * as React from 'react'
-import { Platform } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { getLocaleOrDefaultString } from '../../locales/intl'
@@ -8,18 +7,15 @@ import { openBrowserUri } from '../../util/WebUtils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { IconMessageCard } from './IconMessageCard'
 export const AssetStatusCard = (props: { assetStatus: AssetStatus }) => {
-  const { statusType, localeStatusTitle, localeStatusBody, iconUrl, statusUrl, statusStartIsoDate, statusEndIsoDate } = props.assetStatus
+  const { statusType, localeStatusTitle, localeStatusBody, iconUrl, statusUrl } = props.assetStatus
   const theme = useTheme()
   const styles = getStyles(theme)
-
-  const curDate = new Date().toISOString()
-  const isWithinDate = statusStartIsoDate != null && statusEndIsoDate != null && statusStartIsoDate <= curDate && statusEndIsoDate >= curDate
 
   const title = getLocaleOrDefaultString(localeStatusTitle)
   const message = getLocaleOrDefaultString(localeStatusBody)
   const isValidText = title != null && message != null
 
-  return isWithinDate && isValidText ? (
+  return isValidText ? (
     <IconMessageCard
       message={message}
       title={title}
@@ -28,12 +24,7 @@ export const AssetStatusCard = (props: { assetStatus: AssetStatus }) => {
         // If not explicitly set, auto-fill if warning status.
         iconUrl == null ? (
           statusType === 'warning' ? (
-            <IonIcon
-              name={Platform.OS === 'ios' ? 'ios-warning-outline' : 'md-warning-outline'}
-              style={styles.icon}
-              color={theme.warningText}
-              size={theme.rem(3)}
-            />
+            <IonIcon name="warning-outline" style={styles.icon} color={theme.warningText} size={theme.rem(3)} />
           ) : (
             // statusType === 'info'
             <IonIcon name="information-circle-outline" size={theme.rem(1.25)} color={theme.warningText} />

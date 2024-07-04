@@ -19,6 +19,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
+import { matchJson } from '../../util/matchJson'
 
 export const DEFAULT_ANIMATION_DURATION_MS = 300
 export const LAYOUT_ANIMATION = LinearTransition.duration(DEFAULT_ANIMATION_DURATION_MS)
@@ -69,12 +70,16 @@ interface Anim {
   distance?: number
 }
 
-interface Props extends ViewProps {
+interface Props {
   disableAnimation?: boolean
   enter?: Anim
   exit?: Anim
 
   visible?: boolean
+
+  children?: ViewProps['children']
+  style?: ViewProps['style']
+  accessible?: ViewProps['accessible']
 }
 
 const builderMap: Record<AnimType, AnimBuilder> = {
@@ -135,4 +140,20 @@ const EdgeAnimInner = ({ children, disableAnimation, enter, exit, visible = true
   )
 }
 
-export const EdgeAnim = React.memo(EdgeAnimInner)
+const edgeAnimPropsAreEqual = (prevProps: Props, nextProps: Props): boolean => {
+  const { children: prevChildren, ...prevRest } = prevProps
+  const { children: nextChildren, ...nextRest } = nextProps
+  if (
+    prevRest.accessible !== nextRest.accessible ||
+    prevRest.visible !== nextRest.visible ||
+    prevRest.disableAnimation !== nextRest.disableAnimation ||
+    prevChildren !== nextChildren
+  ) {
+    return false
+  }
+  if (prevRest.style !== nextRest.style || prevRest.enter !== nextRest.enter || prevRest.exit !== nextRest.exit) {
+    return matchJson(prevRest, nextRest)
+  }
+  return true
+}
+export const EdgeAnim = React.memo(EdgeAnimInner, edgeAnimPropsAreEqual)

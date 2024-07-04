@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Platform, View } from 'react-native'
+import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
@@ -56,12 +56,7 @@ export function AlertCardUi4(props: Props) {
     <CardUi4 gradientBackground={type === 'error' ? theme.cardGradientError : theme.cardGradientWarning} marginRem={marginRem} onPress={onPress}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <IonIcon
-            name={Platform.OS === 'ios' ? 'ios-warning-outline' : 'md-warning-outline'}
-            style={styles.icon}
-            color={theme.primaryText}
-            size={theme.rem(1.25)}
-          />
+          <IonIcon name="warning-outline" style={styles.icon} color={theme.primaryText} size={theme.rem(1.25)} />
           <EdgeText numberOfLines={0} style={styles.titleText}>
             {title}
           </EdgeText>

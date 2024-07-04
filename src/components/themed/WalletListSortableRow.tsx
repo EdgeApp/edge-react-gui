@@ -65,7 +65,7 @@ function WalletListSortableRowComponent(props: Props) {
     <EdgeTouchableOpacity style={styles.container} onLongPress={onDrag}>
       <View style={styles.rowContainer}>
         <View style={styles.iconContainer}>
-          <Ionicon name="ios-menu" size={theme.rem(1.25)} color={theme.icon} />
+          <Ionicon name="menu" size={theme.rem(1.25)} color={theme.icon} />
         </View>
         <View style={styles.iconContainer}>
           <CryptoIconUi4 pluginId={wallet.currencyInfo.pluginId} walletId={wallet.id} tokenId={null} />

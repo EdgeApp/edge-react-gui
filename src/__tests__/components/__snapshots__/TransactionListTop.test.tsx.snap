@@ -219,6 +219,11 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             >
               <FastImageView
                 resizeMode="cover"
+                source={
+                  {
+                    "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                  }
+                }
                 style={
                   {
                     "bottom": 0,
@@ -418,7 +423,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
       <Text
@@ -536,7 +541,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>
@@ -645,7 +650,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>
@@ -679,6 +684,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
           "alignItems": "center",
           "flexDirection": "row",
           "justifyContent": "center",
+          "minWidth": 67,
           "paddingRight": 22,
         }
       }
@@ -765,7 +771,7 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>
@@ -883,6 +889,11 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
       >
         <FastImageView
           resizeMode="contain"
+          source={
+            {
+              "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+            }
+          }
           style={
             {
               "bottom": 0,
@@ -1183,6 +1194,11 @@ exports[`TransactionListTop should render 1`] = `
             >
               <FastImageView
                 resizeMode="cover"
+                source={
+                  {
+                    "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                  }
+                }
                 style={
                   {
                     "bottom": 0,
@@ -1382,7 +1398,7 @@ exports[`TransactionListTop should render 1`] = `
             ]
           }
         >
-          
+          
         </Text>
       </View>
       <Text
@@ -1500,7 +1516,7 @@ exports[`TransactionListTop should render 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>
@@ -1609,7 +1625,7 @@ exports[`TransactionListTop should render 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>
@@ -1643,6 +1659,7 @@ exports[`TransactionListTop should render 1`] = `
           "alignItems": "center",
           "flexDirection": "row",
           "justifyContent": "center",
+          "minWidth": 67,
           "paddingRight": 22,
         }
       }
@@ -1729,7 +1746,7 @@ exports[`TransactionListTop should render 1`] = `
               ]
             }
           >
-            
+            
           </Text>
         </View>
       </View>

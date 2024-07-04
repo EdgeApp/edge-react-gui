@@ -19,6 +19,8 @@ import { runWithTimeout, unixToLocaleDateTime } from '../util/utils'
 import { useHandler } from './useHandler'
 import { useWatch } from './useWatch'
 
+export const UNSUPPORTED_WC_VERSION = 'UNSUPPORTED_WC_VERSION'
+
 interface WalletConnect {
   getActiveSessions: () => Promise<WcConnectionInfo[]>
   initSession: (uri: string) => Promise<Web3WalletTypes.SessionProposal>
@@ -87,7 +89,7 @@ export function useWalletConnect(): WalletConnect {
 
     const parsedUri = parseUri(uri)
     if (parsedUri.version !== 2) {
-      throw new Error('Unsupported WalletConnect version')
+      throw new Error(UNSUPPORTED_WC_VERSION)
     }
 
     return await runWithTimeout(

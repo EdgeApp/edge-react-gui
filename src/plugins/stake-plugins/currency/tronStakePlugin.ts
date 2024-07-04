@@ -130,7 +130,8 @@ const getPolicyFromId = (policyId: string): StakePolicy => {
   return policy
 }
 
-export const makeTronStakePlugin = async (): Promise<StakePlugin> => {
+export const makeTronStakePlugin = async (pluginId: string): Promise<StakePlugin | undefined> => {
+  if (pluginId !== 'tron') return
   const instance: StakePlugin = {
     getPolicies(filter?: StakePolicyFilter): StakePolicy[] {
       const out: StakePolicy[] = []

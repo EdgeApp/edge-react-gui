@@ -1327,6 +1327,8 @@ const strings = {
   wc_smartcontract_confirmed: 'Smart Contract Call confirmed',
   wc_scan_modal_text_modal_title: 'Enter Wallet Connect URI',
   wc_scan_modal_text_modal_hint: 'Wallet Connect URI',
+  wc_unsupported_version: 'Unsupported WalletConnect version',
+  wc_no_wallets_dapp_requirements: 'No wallets meet dapp requirements',
 
   // New Token TermsAgreement Modal
   token_agreement_modal_title: '%s Needed to Send Tokens',
@@ -1437,7 +1439,7 @@ const strings = {
   fiat_plugin_purchase_limit_error: 'Please back up your account to increase the purchase limit',
   fiat_plugin_max_buy_quote_error: 'Provider cannot create max buy quote',
   fiat_plugin_max_sell_quote_error: 'Provider cannot create max sell quote',
-  fiat_plugin_max_sell_quote_error_1s: 'Cannot create max sell quote for %$1s',
+  fiat_plugin_max_sell_quote_error_1s: 'Cannot create max sell quote for %1$s',
   fiat_plugin_no_buy_providers:
     'Unable to find any available providers for the selected payment method. This may be due to a poor network connection or lack of support in your region. Please try again later or select a different payment method.',
   fiat_plugin_no_sell_providers:

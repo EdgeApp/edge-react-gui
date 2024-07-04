@@ -18,7 +18,7 @@ import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { DateModal } from '../modals/DateModal'
 import { TextInputModal } from '../modals/TextInputModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsLabelRow } from '../settings/SettingsLabelRow'
@@ -315,7 +315,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     // which we are relying on to determine if the date range is empty:
     const csvFile = await exportTransactionsToCSV(sourceWallet, defaultIsoFiat, txs, currencyCode, multiplier)
     if (typeof csvFile !== 'string' || csvFile === '' || csvFile == null) {
-      showError(lstrings.export_transaction_export_error)
+      showToast(lstrings.export_transaction_export_error)
       return
     }
 
@@ -366,6 +366,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
         title,
         message: '',
         url,
+        failOnCancel: false,
         filename: file.fileName,
         subject: title
       }).catch(error => console.log('Share error', error))
@@ -385,10 +386,11 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     }
 
     await Share.open({
+      failOnCancel: false,
       title,
       urls,
       subject: title
-    }).catch(error => console.log(error))
+    }).catch(error => showError(error))
   }
 }
 

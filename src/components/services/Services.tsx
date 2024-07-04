@@ -10,13 +10,11 @@ import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useRefresher } from '../../hooks/useRefresher'
-import { makeStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { defaultAccount } from '../../reducers/CoreReducer'
 import { FooterAccordionEventService } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { height, ratioHorizontal, ratioVertical, width } from '../../util/scaling'
-import { updateAssetOverrides } from '../../util/serverState'
 import { snooze } from '../../util/utils'
 import { FioCreateHandleModal } from '../modals/FioCreateHandleModal'
 import { AccountCallbackManager } from './AccountCallbackManager'
@@ -39,7 +37,7 @@ interface Props {
   navigation: NavigationBase
 }
 
-const REFRESH_INFO_SERVER_MS = 60000
+const REFRESH_INFO_SERVER_MS = 10 * 60 * 1000 // 10 minutes
 
 const FIO_CREATE_HANDLE_ITEM_ID = 'fioCreateHandleRecord'
 const asFioCreateHandleRecord = asJSON(
@@ -127,8 +125,6 @@ export function Services(props: Props) {
   // Methods to call periodically
   useRefresher(
     async () => {
-      makeStakePlugins().catch(err => console.warn(err))
-      updateAssetOverrides().catch(err => console.warn(err))
       dispatch(updateExchangeInfo()).catch(err => console.warn(err))
     },
     undefined,

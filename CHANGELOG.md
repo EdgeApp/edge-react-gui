@@ -16,6 +16,7 @@
 - changed: Light account backup notification card now persists no matter what while logged in to a light account
 - changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
 - changed: WalletConnect: Move initial wallet selection to connections list scene
+- changed: Disable Sentry automatic breadcrumbs
 - fixed: Fix for negative total balance due to small numbers and scientific notation
 - fixed: Stabilize the account sync bar progress motion.
 - fixed: Update Algorand's WalletConnectv2 reference
@@ -27,11 +28,11 @@
 - fixed: "Exchange Rates Loading..." not showing in the balance card
 - removed: Wallet-specific fiat currency setting. Account-wide fiat currency setting is now used for app-wide fiat calculation and display
 
-## 4.8.1
+## 4.8.1 (2024-06-28)
 
 - fixed: Remove react-native-check-version to fix red error
 
-## 4.8.0
+## 4.8.0 (2024-06-24)
 
 - added: "IP Validation Protection Enabled" bottom notification card
 - added: useAsyncNavigation hook to prevent duplicate navigation calls

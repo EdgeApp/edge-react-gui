@@ -525,6 +525,11 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   >
                     <FastImageView
                       resizeMode="cover"
+                      source={
+                        {
+                          "uri": "https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png",
+                        }
+                      }
                       style={
                         {
                           "bottom": 0,
@@ -1102,6 +1107,11 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   >
                     <FastImageView
                       resizeMode="cover"
+                      source={
+                        {
+                          "uri": "https://content.edge.app/currencyIconsV3/ethereum/ethereum.png",
+                        }
+                      }
                       style={
                         {
                           "bottom": 0,
@@ -1360,6 +1370,11 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 >
                   <FastImageView
                     resizeMode="contain"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/exchangeIcons/bitcoin/icon.png",
+                      }
+                    }
                     style={
                       {
                         "bottom": 0,
@@ -1582,7 +1597,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     ]
                   }
                 >
-                  
+                  
                 </Text>
                 <Text
                   adjustsFontSizeToFit={true}
@@ -1885,6 +1900,11 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
           >
             <FastImageView
               resizeMode="cover"
+              source={
+                {
+                  "uri": "https://content.edge.app/notifications/icon-lock.png",
+                }
+              }
               style={
                 {
                   "bottom": 0,
