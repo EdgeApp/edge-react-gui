@@ -253,7 +253,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     return (
       <SceneWrapper scroll>
         <SceneHeader style={styles.header} title={lstrings.title_register_fio_domain} underline withTopMargin>
-          <IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />
+          <IonIcon name="at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />
         </SceneHeader>
         <View style={styles.container}>
           <EdgeText style={[styles.paddings, styles.instructionalText, styles.title]} numberOfLines={3}>

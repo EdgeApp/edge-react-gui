@@ -106,7 +106,7 @@ export class FioAddressDetails extends React.Component<Props, LocalState> {
           <EdgeText style={styles.bundledTxs}>{bundledTxsLabel}</EdgeText>
           {this.renderAccountSettings()}
           <SettingsHeaderRow
-            icon={<IonIcon name="ios-link" color={theme.primaryText} size={theme.rem(1.5)} />}
+            icon={<IonIcon name="link" color={theme.primaryText} size={theme.rem(1.5)} />}
             label={lstrings.fio_address_details_connect_to_wallets}
           />
           <ConnectWallets fioAddressName={fioAddressName} fioWallet={this.state.fioWallet} navigation={navigation} disabled={this.state.fioWalletLoading} />
