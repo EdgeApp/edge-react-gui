@@ -222,7 +222,10 @@ let thornodeServers: string[] = THORNODE_SERVERS_DEFAULT
 
 let inboundAddressesLastUpdate: number = 0
 
-export const makeTcSaversPlugin = async (opts: EdgeGuiPluginOptions): Promise<StakePlugin> => {
+export const makeTcSaversPlugin = async (pluginId: string, opts: EdgeGuiPluginOptions): Promise<StakePlugin | undefined> => {
+  if (Object.values(tcChainCodePluginIdMap).find(p => p === pluginId) == null) {
+    return
+  }
   const { ninerealmsClientId } = asInitOptions(opts.initOptions)
 
   if (!policiesInitialized && !initializingPolicies) {

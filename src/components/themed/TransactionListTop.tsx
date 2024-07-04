@@ -143,7 +143,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const { pluginId } = wallet.currencyInfo
 
     if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true && ENV.ENABLE_STAKING) {
-      const stakePlugins = await getStakePlugins()
+      const stakePlugins = await getStakePlugins(pluginId)
       const stakePolicies: StakePolicy[] = []
       for (const stakePlugin of stakePlugins) {
         const policies = stakePlugin.getPolicies({ wallet, currencyCode })
@@ -775,6 +775,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    minWidth: theme.rem(3),
     paddingRight: theme.rem(1)
   },
 

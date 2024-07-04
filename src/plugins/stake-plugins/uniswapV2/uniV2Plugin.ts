@@ -1,12 +1,13 @@
-import { EdgeCorePluginOptions } from 'edge-core-js'
-
 import { infoServerData } from '../../../util/network'
 import { ChangeQuote, ChangeQuoteRequest, StakePlugin, StakePolicy, StakePolicyFilter, StakePosition, StakePositionRequest } from '../types'
 import { asInfoServerResponse } from '../util/internalTypes'
 import { pluginInfo } from './pluginInfo'
 import { StakePolicyInfo, toStakePolicy } from './stakePolicy'
 
-export const makeUniV2StakePlugin = async (opts?: EdgeCorePluginOptions): Promise<StakePlugin> => {
+export const makeUniV2StakePlugin = async (pluginId: string): Promise<StakePlugin | undefined> => {
+  if (!pluginInfo.policyInfo.some(info => info.parentPluginId === pluginId)) {
+    return
+  }
   const infoServerResponse = asInfoServerResponse(infoServerData.rollup?.apyValues ?? { policies: {} })
 
   const instance: StakePlugin = {

@@ -10,7 +10,6 @@ import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useRefresher } from '../../hooks/useRefresher'
-import { makeStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import { defaultAccount } from '../../reducers/CoreReducer'
 import { FooterAccordionEventService } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -126,7 +125,6 @@ export function Services(props: Props) {
   // Methods to call periodically
   useRefresher(
     async () => {
-      makeStakePlugins().catch(err => console.warn(err))
       dispatch(updateExchangeInfo()).catch(err => console.warn(err))
     },
     undefined,
