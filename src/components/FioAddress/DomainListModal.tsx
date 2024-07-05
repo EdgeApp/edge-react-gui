@@ -12,11 +12,11 @@ import { FioDomain, FlatListItem } from '../../types/types'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
+import { EdgeModal } from '../modals/EdgeModal'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalFooter } from '../themed/ModalParts'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
-import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Item {
   label: string
@@ -155,7 +155,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <ModalUi4 bridge={bridge} onCancel={() => bridge.resolve(undefined)} title={lstrings.fio_address_choose_domain_label}>
+      <EdgeModal bridge={bridge} onCancel={() => bridge.resolve(undefined)} title={lstrings.fio_address_choose_domain_label}>
         <SimpleTextInput
           aroundRem={0.5}
           autoCorrect={false}
@@ -176,7 +176,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
           contentContainerStyle={styles.scrollPadding}
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
-      </ModalUi4>
+      </EdgeModal>
     )
   }
 }

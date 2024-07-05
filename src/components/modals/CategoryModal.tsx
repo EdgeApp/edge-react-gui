@@ -17,7 +17,7 @@ import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { ModalFooter } from '../themed/ModalParts'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 interface Props {
   bridge: AirshipBridge<string | undefined>
@@ -135,7 +135,7 @@ export function CategoryModal(props: Props) {
   ))
 
   return (
-    <ModalUi4 bridge={bridge} onCancel={handleCancel} title={lstrings.category_modal_title}>
+    <EdgeModal bridge={bridge} onCancel={handleCancel} title={lstrings.category_modal_title}>
       <View style={styles.inputCategoryRow}>
         {categoryOrder.map(item => (
           <MinimalButton key={item} highlighted={category === item} label={displayCategories[item]} onPress={() => setCategory(item)} />
@@ -161,7 +161,7 @@ export function CategoryModal(props: Props) {
           scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
         />
       </View>
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

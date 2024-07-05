@@ -19,7 +19,7 @@ import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { ModalTitle } from '../themed/ModalParts'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 interface Option {
   value: WalletListMenuKey
@@ -221,7 +221,7 @@ export function WalletListMenuModal(props: Props) {
   )
 
   return (
-    <ModalUi4
+    <EdgeModal
       bridge={bridge}
       title={
         wallet == null ? null : (
@@ -247,7 +247,7 @@ export function WalletListMenuModal(props: Props) {
           <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
         </EdgeTouchableOpacity>
       ))}
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

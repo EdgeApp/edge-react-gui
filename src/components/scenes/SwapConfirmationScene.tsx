@@ -32,6 +32,7 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SwapProviderRow } from '../data/row/SwapProviderRow'
 import { ButtonsModal } from '../modals/ButtonsModal'
+import { EdgeModal } from '../modals/EdgeModal'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal'
 import { CircleTimer } from '../progress-indicators/CircleTimer'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -42,7 +43,6 @@ import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Slider } from '../themed/Slider'
 import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
-import { ModalUi4 } from '../ui4/ModalUi4'
 
 export interface SwapConfirmationParams {
   selectedQuote: EdgeSwapQuote
@@ -235,7 +235,7 @@ export const SwapConfirmationScene = (props: Props) => {
 
   const handlePoweredByTap = useHandler(async () => {
     await Airship.show(bridge => (
-      <ModalUi4 bridge={bridge} onCancel={() => bridge.resolve()}>
+      <EdgeModal bridge={bridge} onCancel={() => bridge.resolve()}>
         <ModalTitle>{lstrings.quote_swap_provider}</ModalTitle>
         <SectionList
           style={styles.container}
@@ -247,7 +247,7 @@ export const SwapConfirmationScene = (props: Props) => {
           renderSectionHeader={renderSectionHeader}
           sections={sectionList}
         />
-      </ModalUi4>
+      </EdgeModal>
     ))
   })
 

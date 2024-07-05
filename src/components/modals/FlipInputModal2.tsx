@@ -23,7 +23,7 @@ import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef, ExchangeFlipInputFields } from '../themed/ExchangedFlipInput2'
 import { MiniButton } from '../themed/MiniButton'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 export interface FlipInputModalResult {
   nativeAmount: string
@@ -217,7 +217,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
   }))
 
   return (
-    <ModalUi4 bridge={bridge} onCancel={handleCloseModal}>
+    <EdgeModal bridge={bridge} onCancel={handleCloseModal}>
       <View style={styles.flipInput}>{renderFlipInput()}</View>
       <EdgeTouchableWithoutFeedback onPress={handleFeesChange}>
         <View style={styles.fees}>
@@ -227,7 +227,7 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>((pro
           {renderErrorMessage()}
         </View>
       </EdgeTouchableWithoutFeedback>
-    </ModalUi4>
+    </EdgeModal>
   )
 })
 

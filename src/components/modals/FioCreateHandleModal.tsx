@@ -11,7 +11,7 @@ import { ButtonsView } from '../buttons/ButtonsView'
 import { styled } from '../hoc/styled'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 interface Props {
   bridge: AirshipBridge<boolean>
@@ -38,7 +38,7 @@ export const FioCreateHandleModal = (props: Props) => {
   })
 
   return (
-    <ModalUi4 bridge={bridge} onCancel={handleCancel}>
+    <EdgeModal bridge={bridge} onCancel={handleCancel}>
       <View style={styles.container}>
         <FastImage source={{ uri: getUi4ImageUri(theme, 'fio/newHandle') }} style={styles.icon} resizeMode={FastImage.resizeMode.contain} />
         <GetFioHandleTitle numberOfLines={1} adjustsFontSizeToFit>
@@ -58,7 +58,7 @@ export const FioCreateHandleModal = (props: Props) => {
         secondary={{ label: lstrings.not_now_button, onPress: handleCancel }}
         layout="column"
       />
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

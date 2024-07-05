@@ -17,7 +17,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, HeaderText, Paragraph, SmallText } from '../themed/EdgeText'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { Radio } from '../themed/ThemedButtons'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 const SURVEY_OPTS = [
   { label: lstrings.survey_opt_youtube, selected: false },
@@ -89,7 +89,7 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
   }))
 
   return (
-    <ModalUi4 bridge={bridge} onCancel={handleModalDismiss}>
+    <EdgeModal bridge={bridge} onCancel={handleModalDismiss}>
       {/** HACK: iOS and Android use extraScrollHeight differently... */}
       <KeyboardAwareScrollView
         extraScrollHeight={Platform.OS === 'ios' ? theme.rem(-16) : theme.rem(9)}
@@ -130,7 +130,7 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
           spinner: false
         }}
       />
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

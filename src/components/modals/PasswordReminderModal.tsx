@@ -10,7 +10,7 @@ import { showError, showToast } from '../services/AirshipInstance'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 interface OwnProps {
   bridge: AirshipBridge<void>
@@ -78,7 +78,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
     const { errorMessage, password, checkingPassword } = this.state
 
     return (
-      <ModalUi4 bridge={bridge} title={lstrings.password_reminder_modal_title} onCancel={this.handleCancel}>
+      <EdgeModal bridge={bridge} title={lstrings.password_reminder_modal_title} onCancel={this.handleCancel}>
         <Paragraph>{lstrings.password_reminder_modal_body}</Paragraph>
         <ModalFilledTextInput
           autoFocus={false}
@@ -93,7 +93,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<Props, S
           primary={{ label: lstrings.password_reminder_check_password, onPress: this.handleSubmit, disabled: password.length === 0 }}
           secondary={{ label: lstrings.password_reminder_forgot_password, onPress: this.handleRequestChangePassword, disabled: checkingPassword }}
         />
-      </ModalUi4>
+      </EdgeModal>
     )
   }
 }

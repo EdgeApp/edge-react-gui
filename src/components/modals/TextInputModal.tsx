@@ -9,7 +9,7 @@ import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'
 import { Paragraph } from '../themed/EdgeText'
 import { FilledTextInputReturnKeyType, ModalFilledTextInput } from '../themed/FilledTextInput'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 interface Props {
   // Resolves to the entered string, or void if cancelled.
@@ -90,7 +90,7 @@ export function TextInputModal(props: Props) {
   }
 
   return (
-    <ModalUi4 warning={warning} bridge={bridge} title={title} onCancel={() => bridge.resolve(undefined)}>
+    <EdgeModal warning={warning} bridge={bridge} title={title} onCancel={() => bridge.resolve(undefined)}>
       <StyledInnerView fullHeight={multiline}>
         {typeof message === 'string' ? <Paragraph>{message}</Paragraph> : <>{message}</>}
         {warningMessage != null ? <Alert type="warning" title={lstrings.string_warning} marginRem={0.5} message={warningMessage} numberOfLines={0} /> : null}
@@ -115,7 +115,7 @@ export function TextInputModal(props: Props) {
         />
         <ModalButtons primary={{ label: submitLabel, onPress: handleSubmit }} />
       </StyledInnerView>
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

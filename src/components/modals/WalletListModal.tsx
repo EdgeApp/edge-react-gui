@@ -27,8 +27,8 @@ import { ModalTitle } from '../themed/ModalParts'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { WalletList } from '../themed/WalletList'
 import { WalletListCurrencyRow } from '../themed/WalletListCurrencyRow'
-import { ModalUi4 } from '../ui4/ModalUi4'
 import { ButtonsModal } from './ButtonsModal'
+import { EdgeModal } from './EdgeModal'
 
 export const ErrorNoMatchingWallets = 'ErrorNoMatchingWallets'
 export type WalletListResult =
@@ -207,7 +207,7 @@ export function WalletListModal(props: Props) {
   // #endregion Renderers
 
   return (
-    <ModalUi4
+    <EdgeModal
       bridge={bridge}
       title={
         <View style={styles.header}>
@@ -242,7 +242,7 @@ export function WalletListModal(props: Props) {
         onPress={handleWalletListPress}
         navigation={navigation}
       />
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 

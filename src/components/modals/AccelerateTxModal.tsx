@@ -13,8 +13,8 @@ import { WarningCard } from '../cards/WarningCard'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
 import { Slider } from '../themed/Slider'
-import { ModalUi4 } from '../ui4/ModalUi4'
 import { RowUi4 } from '../ui4/RowUi4'
+import { EdgeModal } from './EdgeModal'
 
 interface OwnProps {
   acceleratedTx: EdgeTransaction
@@ -115,7 +115,7 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
     const isSending = status === 'sending'
 
     return (
-      <ModalUi4 bridge={bridge} onCancel={this.handleCancel} title={lstrings.transaction_details_accelerate_transaction_header}>
+      <EdgeModal bridge={bridge} onCancel={this.handleCancel} title={lstrings.transaction_details_accelerate_transaction_header}>
         <Paragraph>{lstrings.transaction_details_accelerate_transaction_instructional}</Paragraph>
         <View style={styles.container}>
           <RowUi4 title={lstrings.transaction_details_accelerate_transaction_old_fee_title} body={oldFee} />
@@ -143,7 +143,7 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
             disabledText={lstrings.transaction_details_accelerate_transaction_slider_disabled}
           />
         </View>
-      </ModalUi4>
+      </EdgeModal>
     )
   }
 }

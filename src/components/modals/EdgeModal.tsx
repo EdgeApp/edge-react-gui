@@ -10,11 +10,11 @@ import { useHandler } from '../../hooks/useHandler'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { BlurBackground } from './BlurBackground'
+import { BlurBackground } from '../ui4/BlurBackground'
 
 const BACKGROUND_ALPHA = 0.7
 
-export interface ModalPropsUi4<T = unknown> {
+export interface EdgeModalProps<T = unknown> {
   bridge: AirshipBridge<T>
 
   // If a non-string title is provided, it's up to the caller to ensure no close
@@ -41,7 +41,7 @@ const duration = 300
  * A modal that slides a modal up from the bottom of the screen
  * and dims the rest of the app.
  */
-export function ModalUi4<T>(props: ModalPropsUi4<T>): JSX.Element {
+export function EdgeModal<T>(props: EdgeModalProps<T>): JSX.Element {
   const { bridge, title, children, scroll = false, warning = false, onCancel } = props
   const theme = useTheme()
   const styles = getStyles(theme)

@@ -22,6 +22,7 @@ import { AlertCardUi4 } from '../../cards/AlertCard'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
+import { EdgeModal } from '../../modals/EdgeModal'
 import { FlipInputModal2, FlipInputModalResult } from '../../modals/FlipInputModal2'
 import { Airship, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
@@ -30,7 +31,6 @@ import { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
 import { ModalTitle } from '../../themed/ModalParts'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
-import { ModalUi4 } from '../../ui4/ModalUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
 interface Props extends EdgeSceneProps<'fioStakingChange'> {
@@ -189,7 +189,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
   const handleUnlockDate = async () => {
     await Airship.show(bridge => {
       return (
-        <ModalUi4
+        <EdgeModal
           bridge={bridge}
           onCancel={bridge.resolve}
           title={
@@ -200,7 +200,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
         >
           <Paragraph>{lstrings.staking_change_unlock_explainer1}</Paragraph>
           <Paragraph>{lstrings.staking_change_unlock_explainer2}</Paragraph>
-        </ModalUi4>
+        </EdgeModal>
       )
     })
   }

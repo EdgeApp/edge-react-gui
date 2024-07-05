@@ -18,7 +18,7 @@ import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeed
 import { showDevError, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 interface OwnProps {
   bridge: AirshipBridge<string | undefined>
@@ -302,7 +302,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <ModalUi4 bridge={this.props.bridge} onCancel={this.handleClose} title={title ?? lstrings.address_modal_default_header}>
+      <EdgeModal bridge={this.props.bridge} onCancel={this.handleClose} title={title ?? lstrings.address_modal_default_header}>
         <ModalFilledTextInput
           autoCorrect={false}
           returnKeyType="search"
@@ -332,7 +332,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
           <ButtonsViewUi4 sceneMargin primary={{ label: lstrings.string_next_capitalized, onPress: this.handleSubmit }} />
         */}
         <EdgeButton marginRem={[1, 0, 2]} label={lstrings.string_next_capitalized} onPress={this.handleSubmit} />
-      </ModalUi4>
+      </EdgeModal>
     )
   }
 }

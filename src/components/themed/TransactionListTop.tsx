@@ -36,12 +36,12 @@ import { IconButton } from '../buttons/IconButton'
 import { EdgeCard } from '../cards/EdgeCard'
 import { VisaCardCard } from '../cards/VisaCardCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { EdgeModal } from '../modals/EdgeModal'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
-import { ModalUi4 } from '../ui4/ModalUi4'
 import { DividerLine } from './DividerLine'
 import { EdgeText } from './EdgeText'
 import { SelectableRow } from './SelectableRow'
@@ -234,7 +234,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
     const sceneCurrencyCode = tokenId == null ? wallet.currencyInfo.currencyCode : wallet.currencyConfig.allTokens[tokenId].currencyCode
 
     await Airship.show(bridge => (
-      <ModalUi4
+      <EdgeModal
         bridge={bridge}
         title={sprintf(lstrings.trade_s, sceneCurrencyCode)}
         onCancel={() => {
@@ -273,7 +273,7 @@ export class TransactionListTopComponent extends React.PureComponent<Props, Stat
             </View>
           }
         />
-      </ModalUi4>
+      </EdgeModal>
     ))
   }
 

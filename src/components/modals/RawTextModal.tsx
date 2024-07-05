@@ -8,7 +8,7 @@ import { lstrings } from '../../locales/strings'
 import { showToast } from '../services/AirshipInstance'
 import { Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 interface Props {
   bridge: AirshipBridge<void>
@@ -28,11 +28,11 @@ export function RawTextModal(props: Props) {
   }
 
   return (
-    <ModalUi4 bridge={bridge} title={title} onCancel={handleCancel}>
+    <EdgeModal bridge={bridge} title={title} onCancel={handleCancel}>
       <ScrollView scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}>
         <Paragraph>{body}</Paragraph>
       </ScrollView>
       {disableCopy ? null : <MainButton label={lstrings.fragment_request_copy_title} marginRem={1} onPress={handleCopy} type="secondary" />}
-    </ModalUi4>
+    </EdgeModal>
   )
 }

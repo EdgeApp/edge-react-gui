@@ -11,7 +11,7 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { roundedFee } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { Paragraph } from '../themed/EdgeText'
-import { ModalUi4 } from '../ui4/ModalUi4'
+import { EdgeModal } from './EdgeModal'
 
 interface Props {
   bridge: AirshipBridge<void>
@@ -49,13 +49,13 @@ export function InsufficientFeesModal(props: Props) {
   })
 
   return (
-    <ModalUi4 bridge={bridge} title={lstrings.buy_crypto_modal_title} onCancel={handleCancel}>
+    <EdgeModal bridge={bridge} title={lstrings.buy_crypto_modal_title} onCancel={handleCancel}>
       <Paragraph>{sprintf(lstrings.buy_parent_crypto_modal_message_2s, amountString, name)}</Paragraph>
       <ButtonsView
         primary={{ label: sprintf(lstrings.buy_crypto_modal_buy_action, currencyCode), onPress: handleBuy }}
         secondary={{ label: lstrings.buy_crypto_modal_exchange, onPress: handleSwap }}
         tertiary={{ label: lstrings.buy_crypto_decline, onPress: handleCancel }}
       />
-    </ModalUi4>
+    </EdgeModal>
   )
 }

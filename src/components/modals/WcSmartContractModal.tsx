@@ -25,8 +25,8 @@ import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { SafeSlider } from '../themed/SafeSlider'
 import { CryptoFiatAmountTile } from '../tiles/CryptoFiatAmountTile'
 import { FiatAmountTile } from '../tiles/FiatAmountTile'
-import { ModalUi4 } from '../ui4/ModalUi4'
 import { RowUi4 } from '../ui4/RowUi4'
+import { EdgeModal } from './EdgeModal'
 
 interface Props extends WcSmartContractModalProps {
   bridge: AirshipBridge<void>
@@ -151,7 +151,7 @@ export const WcSmartContractModal = (props: Props) => {
   )
 
   return (
-    <ModalUi4
+    <EdgeModal
       bridge={bridge}
       onCancel={handleClose}
       title={
@@ -193,7 +193,7 @@ export const WcSmartContractModal = (props: Props) => {
         {slider}
       </ScrollView>
       {/* <ModalFooterFade /> */}
-    </ModalUi4>
+    </EdgeModal>
   )
 }
 
