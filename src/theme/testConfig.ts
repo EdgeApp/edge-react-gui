@@ -15,8 +15,7 @@ export const testConfig: AppConfig = {
     { pluginId: 'fantom', tokenId: '6c021ae822bea943b2e66552bde1d2696a53fbb7' },
     { pluginId: 'ethereum', tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' }
   ],
-  forceCloseUrlIos: 'https://support.apple.com/en-us/HT201330 ',
-  forceCloseUrlAndroid: 'https://support.google.com/android/answer/9079646?hl=en',
+  forceCloseUrl: 'https://support.edge.app/hc/en-us/articles/26702768694811-How-to-force-close-Edge-Android-and-iOS',
   ip2faSite: 'https://support.edge.app/hc/en-us/articles/7018106439579-Edge-Security-IP-Validation-and-2FA',
   knowledgeBase: 'https://support.testy.com/knowledge',
   lightTheme: testLight,
