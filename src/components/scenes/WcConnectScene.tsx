@@ -19,6 +19,7 @@ import { truncateString } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
 import { FlashNotification } from '../navigation/FlashNotification'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -26,7 +27,6 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface Props extends EdgeSceneProps<'wcConnect'> {
   wallet: EdgeCurrencyWallet
@@ -94,7 +94,7 @@ export const WcConnectScene = withWallet((props: Props) => {
 
   const renderWalletSelect = () => {
     const walletNameStr = truncateString(walletName, MAX_ADDRESS_CHARACTERS)
-    const walletImage = <CryptoIconUi4 pluginId={wallet.currencyInfo.pluginId} tokenId={null} />
+    const walletImage = <CryptoIcon pluginId={wallet.currencyInfo.pluginId} tokenId={null} />
     const walletAddressStr = truncateString(walletAddress, MAX_ADDRESS_CHARACTERS, true)
     return <SelectableRow icon={walletImage} subTitle={walletAddressStr} title={walletNameStr} onPress={handleWalletListModal} />
   }

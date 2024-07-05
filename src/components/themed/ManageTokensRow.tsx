@@ -13,8 +13,8 @@ import { NavigationProp } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logActivity } from '../../util/logger'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 
 export interface Props {
@@ -75,7 +75,7 @@ export const ManageTokensRowComponent = (props: Props) => {
 
   return (
     <Pressable style={styles.row} onPress={handleToggle}>
-      <CryptoIconUi4
+      <CryptoIcon
         marginRem={[0, 0.5, 0, 0]} // We don't need left margins because there's no border. This component effectively is the left "border"
         sizeRem={2}
         // Use the pluginId to avoid showing the wallet loading spinner:

@@ -15,6 +15,7 @@ import { normalizeForSearch } from '../../util/utils'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
@@ -24,7 +25,6 @@ import { ManageTokensRow } from '../themed/ManageTokensRow'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Title } from '../themed/Title'
 import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 /**
  * walletId: ID of the wallet whose tokens we are managing
@@ -171,7 +171,7 @@ function ManageTokensSceneComponent(props: Props) {
   return (
     <SceneWrapper>
       <SceneHeader underline>
-        <Title leftIcon={<CryptoIconUi4 sizeRem={1.5} tokenId={null} walletId={wallet.id} />} text={walletName} />
+        <Title leftIcon={<CryptoIcon sizeRem={1.5} tokenId={null} walletId={wallet.id} />} text={walletName} />
         <EdgeText style={styles.subTitle}>{lstrings.managetokens_top_instructions}</EdgeText>
         <FilledTextInput
           topRem={1}

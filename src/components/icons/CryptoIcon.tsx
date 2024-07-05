@@ -28,7 +28,7 @@ interface Props {
   sizeRem?: number
 }
 
-export const CryptoIconUi4 = (props: Props) => {
+export const CryptoIcon = (props: Props) => {
   const { hideSecondary = false, marginRem, mono = false, sizeRem = 2, tokenId, walletId } = props
 
   const theme = useTheme()

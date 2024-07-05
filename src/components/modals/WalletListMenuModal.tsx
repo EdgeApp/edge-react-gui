@@ -15,10 +15,10 @@ import { NavigationProp } from '../../types/routerTypes'
 import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { ModalTitle } from '../themed/ModalParts'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeModal } from './EdgeModal'
 
 interface Option {
@@ -228,7 +228,7 @@ export function WalletListMenuModal(props: Props) {
           <View>
             <ModalTitle paddingRem={[0, 0, 0.5]}>{getWalletName(wallet)}</ModalTitle>
             <View style={styles.row}>
-              <CryptoIconUi4 marginRem={[0, 0, 0, 0.5]} sizeRem={1} tokenId={tokenId} walletId={walletId} />
+              <CryptoIcon marginRem={[0, 0, 0, 0.5]} sizeRem={1} tokenId={tokenId} walletId={walletId} />
               <ModalTitle>{getCurrencyCode(wallet, tokenId)}</ModalTitle>
             </View>
           </View>

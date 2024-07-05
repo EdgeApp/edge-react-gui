@@ -11,10 +11,10 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { Paragraph } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 export interface CreateWalletAccountSetupParams {
   accountHandle?: string
@@ -81,7 +81,7 @@ export const CreateWalletAccountSetupScene = withWallet((props: Props) => {
   return (
     <SceneWrapper scroll>
       <View style={{ alignSelf: 'center' }}>
-        <CryptoIconUi4 marginRem={1} pluginId={existingPluginId} sizeRem={4} tokenId={null} />
+        <CryptoIcon marginRem={1} pluginId={existingPluginId} sizeRem={4} tokenId={null} />
       </View>
       {/* This is an abuse of ModalMessage,
       but EdgeText breaks this text by setting numberOfLines.

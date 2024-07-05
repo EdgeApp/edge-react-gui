@@ -3,10 +3,10 @@ import * as React from 'react'
 
 import { SPECIAL_CURRENCY_INFO } from '../../../constants/WalletAndCurrencyConstants'
 import { useSelector } from '../../../types/reactRedux'
+import { CryptoIcon } from '../../icons/CryptoIcon'
 import { CryptoText } from '../../text/CryptoText'
 import { FiatText } from '../../text/FiatText'
 import { TickerText } from '../../text/TickerText'
-import { CryptoIconUi4 } from '../../ui4/CryptoIconUi4'
 import { IconDataRow } from './IconDataRow'
 
 // For display of custom assets such as AAVE collateral tokens
@@ -41,7 +41,7 @@ const CustomAssetRowComponent = (props: Props) => {
   const cryptoText = showBalance ? <CryptoText wallet={wallet} tokenId={referenceTokenId} nativeAmount={nativeBalance} withSymbol /> : null
   const fiatText = showBalance ? <FiatText nativeCryptoAmount={nativeBalance} tokenId={referenceTokenId} wallet={wallet} /> : null
 
-  const icon = <CryptoIconUi4 sizeRem={2} tokenId={referenceTokenId} walletId={wallet.id} />
+  const icon = <CryptoIcon sizeRem={2} tokenId={referenceTokenId} walletId={wallet.id} />
 
   let displayCurrencyCode = currencyCode
   const tokenFromId = wallet.currencyConfig.allTokens[referenceTokenId]

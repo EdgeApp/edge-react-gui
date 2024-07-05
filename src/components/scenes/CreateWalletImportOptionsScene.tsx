@@ -13,13 +13,13 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { RowUi4 } from '../ui4/RowUi4'
 
 export interface CreateWalletImportOptionsParams {
@@ -145,7 +145,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
     return (
       <View style={styles.optionContainer}>
         <View style={styles.optionHeader}>
-          <CryptoIconUi4 sizeRem={1.25} pluginId={pluginId} tokenId={null} />
+          <CryptoIcon sizeRem={1.25} pluginId={pluginId} tokenId={null} />
           <EdgeText style={styles.pluginIdText}>{currencyConfig[pluginId].currencyInfo.displayName}</EdgeText>
         </View>
         {arr.map(opt => {

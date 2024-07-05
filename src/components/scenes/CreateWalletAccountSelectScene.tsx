@@ -22,10 +22,10 @@ import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { IconDataRow } from '../data/row/IconDataRow'
 import { withWallet } from '../hoc/withWallet'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 export interface CreateWalletAccountSelectParams {
   accountName: string
@@ -156,7 +156,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
   return (
     <SceneWrapper>
       <View style={styles.titleIconArea}>
-        <CryptoIconUi4 sizeRem={4} pluginId={existingPluginId} tokenId={null} />
+        <CryptoIcon sizeRem={4} pluginId={existingPluginId} tokenId={null} />
       </View>
       <View style={styles.createWalletPromptArea}>
         <EdgeText numberOfLines={10}>{isRenderSelect ? instructionSyntax : confirmMessageSyntax}</EdgeText>
@@ -174,7 +174,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
           </EdgeCard>
         ) : (
           <IconDataRow
-            icon={<CryptoIconUi4 pluginId={paymentWallet.currencyInfo.pluginId} tokenId={null} sizeRem={2} />}
+            icon={<CryptoIcon pluginId={paymentWallet.currencyInfo.pluginId} tokenId={null} sizeRem={2} />}
             leftText={getWalletName(paymentWallet)}
             leftSubtext={`${lstrings.send_confirmation_balance}: ${paymentWallet.balanceMap.get(paymentTokenId)} ${paymentCurrencyCode}`}
             rightText={`${paymentDenominationSymbol} ${amount} ${paymentCurrencyCode}`}

@@ -13,8 +13,8 @@ import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { DECIMAL_PRECISION, decimalOrZero, truncateDecimals } from '../../util/utils'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -68,7 +68,7 @@ function WalletListSortableRowComponent(props: Props) {
           <Ionicon name="menu" size={theme.rem(1.25)} color={theme.icon} />
         </View>
         <View style={styles.iconContainer}>
-          <CryptoIconUi4 pluginId={wallet.currencyInfo.pluginId} walletId={wallet.id} tokenId={null} />
+          <CryptoIcon pluginId={wallet.currencyInfo.pluginId} walletId={wallet.id} tokenId={null} />
         </View>
         <View style={styles.detailsContainer}>
           <View style={styles.detailsRow}>
