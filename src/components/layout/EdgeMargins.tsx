@@ -9,7 +9,7 @@ interface Props {
 }
 
 /** @deprecated Simple View to apply 0.5rem margins to make legacy components easier to adapt to UI4 */
-export const MarginsUi4 = (props: Props) => {
+export const EdgeMargins = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { shrink = false, children } = props

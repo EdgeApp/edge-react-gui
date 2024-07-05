@@ -9,9 +9,9 @@ import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { CurrencyView } from '../layout/CurrencyView'
 import { CustomAsset, CustomAssetRow } from '../rows/CustomAssetRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CurrencyViewUi4 } from '../ui4/CurrencyViewUi4'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -78,7 +78,7 @@ const WalletListCurrencyRowComponent = (props: Props) => {
       onPress={handlePress}
       gradientBackground={{ colors: [primaryColor, '#00000000'], start: { x: 0, y: 0 }, end: { x: 1, y: 0 } }}
     >
-      <CurrencyViewUi4 token={token} tokenId={tokenId} wallet={wallet} />
+      <CurrencyView token={token} tokenId={tokenId} wallet={wallet} />
     </EdgeCard>
   )
 }

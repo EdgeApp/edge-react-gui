@@ -31,9 +31,9 @@ import {
   unixToLocaleDateTime
 } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
+import { SectionView } from '../layout/SectionView'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { SectionView } from '../ui4/SectionView'
 import { EdgeText } from './EdgeText'
 
 interface Props {

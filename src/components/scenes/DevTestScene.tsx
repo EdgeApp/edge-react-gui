@@ -23,6 +23,7 @@ import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
+import { SectionView } from '../layout/SectionView'
 import { BackupForTransferModal, BackupForTransferModalResult } from '../modals/BackupModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
@@ -41,7 +42,6 @@ import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef }
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
-import { SectionView } from '../ui4/SectionView'
 
 interface Props extends EdgeSceneProps<'devTab'> {}
 

@@ -8,8 +8,8 @@ import { useHandler } from '../../hooks/useHandler'
 import { triggerHaptic } from '../../util/haptic'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { SectionView } from '../layout/SectionView'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { SectionView } from '../ui4/SectionView'
 
 interface Props {
   // Top layer:

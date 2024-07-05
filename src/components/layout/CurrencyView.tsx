@@ -12,7 +12,7 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { CryptoText } from '../text/CryptoText'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
-import { AssetChangeTextUi4 } from './AssetChangeTextUi4'
+import { AssetChangeTextUi4 } from '../ui4/AssetChangeTextUi4'
 import { SplitRowsView } from './SplitRowsView'
 
 interface Props {
@@ -25,7 +25,7 @@ interface Props {
 /**
  * A view representing the data from a wallet, used for rows, cards, etc.
  */
-const CurrencyViewUi4Component = (props: Props) => {
+export const CurrencyView = (props: Props) => {
   const { nativeAmount, token, tokenId, wallet } = props
   const { currencyConfig, currencyInfo } = wallet
   const { pluginId } = currencyInfo
@@ -143,5 +143,3 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceMedium
   }
 }))
-
-export const CurrencyViewUi4 = React.memo(CurrencyViewUi4Component)

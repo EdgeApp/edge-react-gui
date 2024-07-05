@@ -2,9 +2,9 @@ import * as React from 'react'
 import { cacheStyles } from 'react-native-patina'
 
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { SplitRowsView } from '../layout/SplitRowsView'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { SplitRowsView } from './SplitRowsView'
 
 interface Props {
   leftTitle: string

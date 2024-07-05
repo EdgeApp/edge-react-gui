@@ -22,10 +22,10 @@ import { PromoCardsUi4 } from '../cards/PromoCards'
 import { SupportCardUi4 } from '../cards/SupportCard'
 import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp80, fadeInUp140 } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SectionView } from '../layout/SectionView'
 import { AccountSyncBar } from '../progress-indicators/AccountSyncBar'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
-import { SectionView } from '../ui4/SectionView'
 
 interface Props extends EdgeSceneProps<'home'> {}
 
