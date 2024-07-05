@@ -9,10 +9,10 @@ import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { AssetChangeTextUi4 } from '../text/AssetChangeText'
 import { CryptoText } from '../text/CryptoText'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
-import { AssetChangeTextUi4 } from '../ui4/AssetChangeTextUi4'
 import { SplitRowsView } from './SplitRowsView'
 
 interface Props {
