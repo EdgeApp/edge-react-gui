@@ -12,8 +12,8 @@ import { NavigationBase } from '../../types/routerTypes'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ButtonUi4 } from './ButtonUi4'
-import { CardUi4 } from './CardUi4'
+import { ButtonUi4 } from '../ui4/ButtonUi4'
+import { EdgeCard } from './EdgeCard'
 
 export interface FilteredPromoCard {
   background: PromoCard2['background']
@@ -59,7 +59,7 @@ export function PromoCardUi4(props: Props) {
   const imageSrc = React.useMemo(() => ({ uri: imageUri }), [imageUri])
 
   return (
-    <CardUi4
+    <EdgeCard
       onClose={dismissable ? onClose : undefined}
       nodeBackground={
         <LinearGradient colors={backgroundGradientColors} start={backgroundGradientStart} end={backgroundGradientEnd} style={styles.backgroundContainer}>
@@ -77,7 +77,7 @@ export function PromoCardUi4(props: Props) {
           </View>
         )}
       </View>
-    </CardUi4>
+    </EdgeCard>
   )
 }
 const getStyles = cacheStyles((theme: Theme) => ({

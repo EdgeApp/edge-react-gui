@@ -18,8 +18,8 @@ import { TransferModal } from '../modals/TransferModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ButtonsViewUi4 } from './ButtonsViewUi4'
-import { CardUi4 } from './CardUi4'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { EdgeCard } from './EdgeCard'
 
 // Numbers larger than this are likely to overflow the display width so don't
 // use regular Text components which can auto shrink
@@ -86,7 +86,7 @@ export const BalanceCardUi4 = (props: Props) => {
   const animateNumber = lt(fiatAmount, MAX_ANIMATED_AMOUNT)
 
   return (
-    <CardUi4>
+    <EdgeCard>
       {/* For passing to the animated number. Do the measurement here to avoid flicker */}
       <Text style={[styles.balanceText, styles.measuredDigit]} onLayout={handleDigitLayout}>
         0
@@ -123,7 +123,7 @@ export const BalanceCardUi4 = (props: Props) => {
           label: lstrings.fragment_send_subtitle
         }}
       />
-    </CardUi4>
+    </EdgeCard>
   )
 }
 

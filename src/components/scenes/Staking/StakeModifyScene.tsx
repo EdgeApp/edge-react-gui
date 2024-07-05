@@ -25,6 +25,7 @@ import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getPolicyIconUris, getPositionAllocations } from '../../../util/stakeUtils'
 import { toBigNumberString } from '../../../util/toBigNumberString'
 import { zeroString } from '../../../util/utils'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
@@ -40,7 +41,6 @@ import { Slider } from '../../themed/Slider'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 import { EditableAmountTile } from '../../tiles/EditableAmountTile'
 import { ErrorTile } from '../../tiles/ErrorTile'
-import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
 export interface StakeModifyParams {
@@ -323,7 +323,7 @@ const StakeModifySceneComponent = (props: Props) => {
     }
 
     return (
-      <CardUi4>
+      <EdgeCard>
         <EditableAmountTile
           title={title}
           key={allocationType + pluginId + currencyCode}
@@ -335,7 +335,7 @@ const StakeModifySceneComponent = (props: Props) => {
           lockInputs={isClaim || (!!mustMaxUnstake && allocationType === 'unstake')}
           onPress={handleShowFlipInputModal(currencyCode, tokenId)}
         />
-      </CardUi4>
+      </EdgeCard>
     )
   }
 
@@ -406,11 +406,11 @@ const StakeModifySceneComponent = (props: Props) => {
       message = sprintf(lstrings.stake_break_even_days_s, days)
     }
     return (
-      <CardUi4>
+      <EdgeCard>
         <RowUi4 rightButtonType="questionable" title={lstrings.stake_break_even_time} onPress={handlePressBreakEvenDays}>
           <EdgeText>{message}</EdgeText>
         </RowUi4>
-      </CardUi4>
+      </EdgeCard>
     )
   }
 
@@ -444,9 +444,9 @@ const StakeModifySceneComponent = (props: Props) => {
 
     return (
       <View style={styles.amountTilesContainer}>
-        <CardUi4 icon={getCurrencyIconUris(wallet.currencyInfo.pluginId, null).symbolImage}>
+        <EdgeCard icon={getCurrencyIconUris(wallet.currencyInfo.pluginId, null).symbolImage}>
           <RowUi4 title={lstrings.wc_smartcontract_wallet} body={getWalletName(wallet)} />
-        </CardUi4>
+        </EdgeCard>
         {
           // Render stake/unstake amount tiles
           modification === 'stake' || modification === 'unstake'

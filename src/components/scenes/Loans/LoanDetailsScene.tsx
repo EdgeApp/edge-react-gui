@@ -26,6 +26,7 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { GuiExchangeRates } from '../../../types/types'
 import { getToken } from '../../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, removeIsoPrefix, zeroString } from '../../../util/utils'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { LoanDetailsSummaryCard } from '../../cards/LoanDetailsSummaryCard'
 import { TappableCard } from '../../cards/TappableCard'
 import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
@@ -39,7 +40,6 @@ import { SectionHeading } from '../../text/SectionHeading'
 import { Alert } from '../../themed/Alert'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { CardUi4 } from '../../ui4/CardUi4'
 import { CryptoIconUi4 } from '../../ui4/CryptoIconUi4'
 
 export interface LoanDetailsParams {
@@ -119,14 +119,14 @@ export const LoanDetailsSceneComponent = (props: Props) => {
     if (runningProgramMessage != null && runningProgramEdge != null) {
       return (
         <EdgeTouchableOpacity onPress={() => handleProgramStatusCardPress(runningProgramEdge)}>
-          <CardUi4 marginRem={[0, 0, 1]}>
+          <EdgeCard marginRem={[0, 0, 1]}>
             <Space row>
               <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
               <EdgeText style={styles.programStatusText} numberOfLines={2}>
                 {runningProgramMessage}
               </EdgeText>
             </Space>
-          </CardUi4>
+          </EdgeCard>
         </EdgeTouchableOpacity>
       )
     } else return null
@@ -250,7 +250,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
             if (zeroString(debt.nativeAmount)) return null
             const aprText = sprintf(lstrings.loan_apr_s, toPercentString(debt.apr))
             return (
-              <CardUi4 key={debt.tokenId} marginRem={[0, 0, 1]}>
+              <EdgeCard key={debt.tokenId} marginRem={[0, 0, 1]}>
                 <Space row>
                   <Space rightRem={1}>
                     <CryptoIconUi4 hideSecondary pluginId={pluginId} tokenId={debt.tokenId} />
@@ -262,7 +262,7 @@ export const LoanDetailsSceneComponent = (props: Props) => {
                     <EdgeText style={styles.breakdownSubText}>{aprText}</EdgeText>
                   </Space>
                 </Space>
-              </CardUi4>
+              </EdgeCard>
             )
           })}
         </Space>

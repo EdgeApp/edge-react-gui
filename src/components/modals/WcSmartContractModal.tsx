@@ -17,6 +17,7 @@ import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
+import { EdgeCard } from '../cards/EdgeCard'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
@@ -24,7 +25,6 @@ import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { SafeSlider } from '../themed/SafeSlider'
 import { CryptoFiatAmountTile } from '../tiles/CryptoFiatAmountTile'
 import { FiatAmountTile } from '../tiles/FiatAmountTile'
-import { CardUi4 } from '../ui4/CardUi4'
 import { ModalUi4 } from '../ui4/ModalUi4'
 import { RowUi4 } from '../ui4/RowUi4'
 
@@ -172,12 +172,12 @@ export const WcSmartContractModal = (props: Props) => {
             tokenId={tokenId}
           />
         )}
-        <CardUi4 icon={walletImageUri}>
+        <EdgeCard icon={walletImageUri}>
           <RowUi4 title={lstrings.wc_smartcontract_wallet} body={walletName} />
-        </CardUi4>
-        <CardUi4 icon={iconUri}>
+        </EdgeCard>
+        <EdgeCard icon={iconUri}>
           <RowUi4 title={lstrings.wc_smartcontract_dapp} body={dAppName} />
-        </CardUi4>
+        </EdgeCard>
         {zeroString(networkFee) ? null : (
           <CryptoFiatAmountTile
             title={lstrings.wc_smartcontract_network_fee}

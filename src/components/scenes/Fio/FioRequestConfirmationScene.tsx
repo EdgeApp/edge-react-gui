@@ -20,6 +20,7 @@ import {
   getRemainingBundles
 } from '../../../util/FioAddressUtils'
 import { DECIMAL_PRECISION, removeIsoPrefix } from '../../../util/utils'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { AddressModal } from '../../modals/AddressModal'
@@ -30,7 +31,6 @@ import { cacheStyles, Theme, ThemeProps, useTheme } from '../../services/ThemeCo
 import { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
-import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
 export interface FioRequestConfirmationParams {
@@ -314,7 +314,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       <SceneWrapper scroll>
         <SceneHeader title={lstrings.fio_confirm_request_header} underline withTopMargin />
         <View style={styles.container}>
-          <CardUi4 sections>
+          <EdgeCard sections>
             <RowUi4 rightButtonType="editable" title={lstrings.fio_confirm_request_from} body={fioAddressFrom} onPress={this.onAddressFromPressed} />
             <RowUi4
               rightButtonType="editable"
@@ -324,7 +324,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
             />
             <RowUi4 title={lstrings.fio_confirm_request_amount} body={`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`} />
             <RowUi4 maximumHeight="large" rightButtonType="editable" title={lstrings.fio_confirm_request_memo} body={memo} onPress={this.onMemoPressed} />
-          </CardUi4>
+          </EdgeCard>
           <View style={styles.sliderContainer}>
             {fioAddressFrom.length > 0 && fioAddressTo.length > 0 && showSlider ? (
               <Slider onSlidingComplete={this.onConfirm} disabled={loading} showSpinner={loading} disabledText={lstrings.loading} />

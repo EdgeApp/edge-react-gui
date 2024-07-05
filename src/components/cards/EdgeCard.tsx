@@ -9,7 +9,7 @@ import { triggerHaptic } from '../../util/haptic'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { SectionView } from './SectionView'
+import { SectionView } from '../ui4/SectionView'
 
 interface Props {
   // Top layer:
@@ -49,7 +49,7 @@ interface Props {
  *
  * onClose: If specified, adds a close button
  */
-export const CardUi4 = (props: Props) => {
+export const EdgeCard = (props: Props) => {
   const { children, icon, marginRem, paddingRem, overlay, sections, gradientBackground, nodeBackground, fill = false, onClose, onLongPress, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)

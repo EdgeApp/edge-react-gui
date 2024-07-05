@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
 import { PromoCard2 } from 'edge-info-server'
 
-import { filterPromoCards } from '../../components/ui4/PromoCardsUi4'
+import { filterPromoCards } from '../../components/cards/PromoCards'
 
 const dummyCard: PromoCard2 = {
   localeMessages: { en: 'hello' },

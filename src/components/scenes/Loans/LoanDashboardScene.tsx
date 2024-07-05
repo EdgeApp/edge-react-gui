@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { Theme } from '../../../types/Theme'
 import { getBorrowPluginIconUri } from '../../../util/CdnUris'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { LoanSummaryCard } from '../../cards/LoanSummaryCard'
 import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
@@ -31,7 +32,6 @@ import { Airship, redText } from '../../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { CardUi4 } from '../../ui4/CardUi4'
 
 interface Props extends EdgeSceneProps<'loanDashboard'> {}
 
@@ -174,9 +174,9 @@ export const LoanDashboardScene = (props: Props) => {
     return (
       <>
         {isNewLoanLoading ? (
-          <CardUi4 marginRem={[0, 0.5, 0, 0.5, 0]}>
+          <EdgeCard marginRem={[0, 0.5, 0, 0.5, 0]}>
             <FillLoader />
-          </CardUi4>
+          </EdgeCard>
         ) : null}
         {isLoansLoading ? (
           <Space aroundRem={1}>

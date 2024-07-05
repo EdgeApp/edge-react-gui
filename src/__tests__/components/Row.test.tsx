@@ -4,8 +4,8 @@ import * as React from 'react'
 import { View } from 'react-native'
 import TestRenderer from 'react-test-renderer'
 
+import { EdgeCard } from '../../components/cards/EdgeCard'
 import { EdgeTouchableOpacity } from '../../components/common/EdgeTouchableOpacity'
-import { CardUi4 } from '../../components/ui4/CardUi4'
 import { RowUi4 } from '../../components/ui4/RowUi4'
 import { FakeProviders } from '../../util/fake/FakeProviders'
 
@@ -37,9 +37,9 @@ describe('RowUi4', () => {
   it('should render a row in a card', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <CardUi4>
+        <EdgeCard>
           <RowUi4 title="title" body="body" />
-        </CardUi4>
+        </EdgeCard>
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()

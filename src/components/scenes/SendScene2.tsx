@@ -42,6 +42,8 @@ import { addToFioAddressCache, checkRecordSendFee, FIO_FEE_EXCEEDS_SUPPLIED_MAXI
 import { logActivity } from '../../util/logger'
 import { convertTransactionFeeToDisplayFee, darkenHexColor, DECIMAL_PRECISION, zeroString } from '../../util/utils'
 import { getMemoError, getMemoLabel, getMemoTitle } from '../../util/validateMemos'
+import { AlertCardUi4 } from '../cards/AlertCard'
+import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
@@ -61,8 +63,6 @@ import { AddressTile2, ChangeAddressResult } from '../tiles/AddressTile2'
 import { CountdownTile } from '../tiles/CountdownTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
-import { AlertCardUi4 } from '../ui4/AlertCardUi4'
-import { CardUi4 } from '../ui4/CardUi4'
 import { AccentColors } from '../ui4/DotsBackground'
 import { RowUi4 } from '../ui4/RowUi4'
 
@@ -1070,25 +1070,25 @@ const SendComponent = (props: Props) => {
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           >
             <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
-              <CardUi4>{renderSelectedWallet()}</CardUi4>
+              <EdgeCard>{renderSelectedWallet()}</EdgeCard>
             </EdgeAnim>
             <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
-              <CardUi4 sections>
+              <EdgeCard sections>
                 {renderAddressAmountPairs()}
                 {renderAddAddress()}
                 {renderTimeout()}
                 {renderError()}
-              </CardUi4>
+              </EdgeCard>
             </EdgeAnim>
             <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
-              <CardUi4 sections>
+              <EdgeCard sections>
                 {renderFees()}
                 {renderMetadataNotes()}
                 {renderSelectFioAddress()}
                 {renderUniqueIdentifier()}
                 {renderInfoTiles()}
                 {renderAuthentication()}
-              </CardUi4>
+              </EdgeCard>
             </EdgeAnim>
             <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>{renderScamWarning()}</EdgeAnim>
           </StyledKeyboardAwareScrollView>

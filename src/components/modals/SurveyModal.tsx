@@ -11,12 +11,12 @@ import { config } from '../../theme/appConfig'
 import { useDispatch } from '../../types/reactRedux'
 import { logEvent } from '../../util/tracking'
 import { shuffleArray } from '../../util/utils'
+import { EdgeCard } from '../cards/EdgeCard'
 import { ModalButtons } from '../common/ModalButtons'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, HeaderText, Paragraph, SmallText } from '../themed/EdgeText'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { Radio } from '../themed/ThemedButtons'
-import { CardUi4 } from '../ui4/CardUi4'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 const SURVEY_OPTS = [
@@ -104,7 +104,7 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
         <Paragraph center>
           <SmallText>{lstrings.survey_discover_subtitle}</SmallText>
         </Paragraph>
-        <CardUi4>
+        <EdgeCard>
           <View style={styles.radioContainer}>
             {options.map((option, index) => (
               <Radio value={option.selected} onPress={() => handleOptionPress(index)} key={index}>
@@ -115,7 +115,7 @@ export const SurveyModal = (props: { bridge: AirshipBridge<void> }) => {
               <SimpleTextInput value={otherText} onChangeText={setOtherText} placeholder={lstrings.specify_placeholder} horizontalRem={0.5} bottomRem={0.5} />
             </Animated.View>
           </View>
-        </CardUi4>
+        </EdgeCard>
       </KeyboardAwareScrollView>
       <ModalButtons
         primary={{

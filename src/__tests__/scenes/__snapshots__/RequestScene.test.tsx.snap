@@ -187,7 +187,7 @@ exports[`Request should render with loaded props 1`] = `
         }
       }
     >
-      <CardUi4
+      <EdgeCard
         marginRem={0}
       >
         <Memo
@@ -210,7 +210,7 @@ exports[`Request should render with loaded props 1`] = `
             }
           }
         />
-      </CardUi4>
+      </EdgeCard>
     </Memo(EdgeAnimInner)>
     <Carousel
       items={[]}

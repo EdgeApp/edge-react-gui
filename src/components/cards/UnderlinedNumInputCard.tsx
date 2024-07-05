@@ -10,7 +10,7 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { CardUi4 } from '../ui4/CardUi4'
+import { EdgeCard } from './EdgeCard'
 
 const UnderlinedNumInputCardComponent = (props: {
   currencyCode: string
@@ -45,7 +45,7 @@ const UnderlinedNumInputCardComponent = (props: {
   return (
     <View style={styles.container}>
       <EdgeTouchableOpacity onPress={handlePress}>
-        <CardUi4>
+        <EdgeCard>
           <View style={styles.cardContainer}>
             <View style={styles.leftContainer}>
               <EdgeText style={styles.textTitle}>{title}</EdgeText>
@@ -70,7 +70,7 @@ const UnderlinedNumInputCardComponent = (props: {
             </View>
             <FastImage style={styles.icon} source={{ uri: iconUri }} />
           </View>
-        </CardUi4>
+        </EdgeCard>
       </EdgeTouchableOpacity>
     </View>
   )

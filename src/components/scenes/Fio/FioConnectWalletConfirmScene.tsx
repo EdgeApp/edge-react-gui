@@ -8,6 +8,7 @@ import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { FioConnectionWalletItem } from '../../../types/types'
 import { FIO_NO_BUNDLED_ERR_CODE, updatePubAddressesForFioAddress } from '../../../util/FioAddressUtils'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
@@ -17,7 +18,6 @@ import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
 import { Radio } from '../../themed/ThemedButtons'
-import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
 export interface FioConnectWalletConfirmParams {
@@ -206,14 +206,14 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
       <SceneWrapper scroll>
         <SceneHeader title={lstrings.title_fio_connect_to_wallet} underline withTopMargin />
         <View style={styles.container}>
-          <CardUi4 sections>
+          <EdgeCard sections>
             <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
             {walletsToConnect.length ? <RowUi4 title={lstrings.title_fio_connect_to_wallet}>{walletsToConnect.map(this.renderWalletLine)}</RowUi4> : null}
 
             {walletsToDisconnect.length ? (
               <RowUi4 title={lstrings.title_fio_disconnect_wallets}>{walletsToDisconnect.map(this.renderWalletLine)}</RowUi4>
             ) : null}
-          </CardUi4>
+          </EdgeCard>
 
           <Radio value={acknowledge} onPress={this.check} marginRem={[2, 2, 0]}>
             <EdgeText style={styles.checkTitle} numberOfLines={4}>

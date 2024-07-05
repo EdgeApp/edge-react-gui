@@ -8,7 +8,7 @@ import { getLocaleOrDefaultString } from '../../locales/intl'
 import { openBrowserUri } from '../../util/WebUtils'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { CardUi4 } from './CardUi4'
+import { EdgeCard } from './EdgeCard'
 
 interface Props {
   blogPost: BlogPost
@@ -36,7 +36,7 @@ export const BlogCard = (props: Props) => {
   const imageSrc = React.useMemo(() => ({ uri: image }), [image])
 
   return (
-    <CardUi4
+    <EdgeCard
       onPress={handlePress}
       nodeBackground={
         <View style={styles.nodeBackground}>
@@ -53,7 +53,7 @@ export const BlogCard = (props: Props) => {
           {body}
         </EdgeText>
       </View>
-    </CardUi4>
+    </EdgeCard>
   )
 }
 

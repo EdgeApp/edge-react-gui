@@ -16,6 +16,8 @@ import { useDispatch } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { consify } from '../../util/utils'
+import { AlertCardUi4 } from '../cards/AlertCard'
+import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
@@ -36,10 +38,8 @@ import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
-import { AlertCardUi4 } from '../ui4/AlertCardUi4'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { ButtonUi4 } from '../ui4/ButtonUi4'
-import { CardUi4 } from '../ui4/CardUi4'
 import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
 import { SectionView } from '../ui4/SectionView'
 
@@ -327,7 +327,7 @@ export function DevTestScene(props: Props) {
           <EdgeText>Ensure errors above don't push me down</EdgeText>
         </>
         {selectedWallet == null ? null : (
-          <CardUi4>
+          <EdgeCard>
             <ExchangedFlipInput2
               ref={exchangedFlipInputRef}
               wallet={selectedWallet.wallet}
@@ -341,7 +341,7 @@ export function DevTestScene(props: Props) {
               startNativeAmount={balance}
               onAmountChanged={onAmountChanged}
             />
-          </CardUi4>
+          </EdgeCard>
         )}
 
         <>

@@ -4,8 +4,8 @@ import React, { PureComponent } from 'react'
 import { lstrings } from '../../locales/strings'
 import { openBrowserUri } from '../../util/WebUtils'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
-import { CardUi4 } from './CardUi4'
-import { RowUi4 } from './RowUi4'
+import { RowUi4 } from '../ui4/RowUi4'
+import { EdgeCard } from './EdgeCard'
 
 const localizedFeeText = {
   satPerVByte: lstrings.transaction_details_advance_details_satpervbyte,
@@ -76,7 +76,7 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
     }
 
     return (
-      <CardUi4 sections>
+      <EdgeCard sections>
         {url != null && url !== '' && (
           <RowUi4
             rightButtonType="touchable"
@@ -102,7 +102,7 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
         ) : null}
 
         {deviceDescription != null && <RowUi4 title={lstrings.transaction_details_advance_details_device} body={deviceDescription} />}
-      </CardUi4>
+      </EdgeCard>
     )
   }
 }

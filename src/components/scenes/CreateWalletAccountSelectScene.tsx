@@ -17,6 +17,7 @@ import { EdgeAsset } from '../../types/types'
 import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
+import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { IconDataRow } from '../data/row/IconDataRow'
 import { withWallet } from '../hoc/withWallet'
@@ -24,7 +25,6 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
-import { CardUi4 } from '../ui4/CardUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 export interface CreateWalletAccountSelectParams {
@@ -164,14 +164,14 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
 
       <View style={styles.selectPaymentLower}>
         {isRenderSelect ? (
-          <CardUi4>
+          <EdgeCard>
             <View style={styles.paymentCostArea}>
               <EdgeText>{lstrings.create_wallet_account_amount_due}</EdgeText>
               <EdgeText style={styles.paymentRight}>
                 {activationCost} {existingCurrencyCode}
               </EdgeText>
             </View>
-          </CardUi4>
+          </EdgeCard>
         ) : (
           <IconDataRow
             icon={<CryptoIconUi4 pluginId={paymentWallet.currencyInfo.pluginId} tokenId={null} sizeRem={2} />}

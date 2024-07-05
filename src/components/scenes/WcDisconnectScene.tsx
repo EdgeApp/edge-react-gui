@@ -6,13 +6,13 @@ import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { WcConnectionInfo } from '../../types/types'
+import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
-import { CardUi4 } from '../ui4/CardUi4'
 import { RowUi4 } from '../ui4/RowUi4'
 
 interface Props extends EdgeSceneProps<'wcDisconnect'> {}
@@ -42,7 +42,7 @@ export const WcDisconnectScene = (props: Props) => {
     <SceneWrapper>
       <SceneHeader underline title={lstrings.wc_walletconnect_title} />
       <View style={styles.container}>
-        <CardUi4 paddingRem={0} marginRem={[0.5, 0.5, 0.5]}>
+        <EdgeCard paddingRem={0} marginRem={[0.5, 0.5, 0.5]}>
           <View key={wcConnectionInfo.dAppName} style={styles.listRow}>
             <FastImage style={styles.currencyLogo} source={{ uri: wcConnectionInfo.icon }} />
             <View style={styles.info}>
@@ -50,7 +50,7 @@ export const WcDisconnectScene = (props: Props) => {
               <EdgeText style={styles.infoBody}>{wcConnectionInfo.dAppUrl}</EdgeText>
             </View>
           </View>
-        </CardUi4>
+        </EdgeCard>
       </View>
       <RowUi4 title={lstrings.string_expiration} body={wcConnectionInfo.expiration} />
       <RowUi4 title={lstrings.wc_details_connected_wallet} body={wcConnectionInfo.walletName} />

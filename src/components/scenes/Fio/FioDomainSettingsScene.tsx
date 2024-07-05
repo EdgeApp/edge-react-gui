@@ -11,6 +11,7 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioDomain, setDomainVisibility } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
 import { withWallet } from '../../hoc/withWallet'
@@ -20,7 +21,6 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeC
 import { SettingsTappableRow } from '../../settings/SettingsTappableRow'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
@@ -188,12 +188,12 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
       <SceneWrapper scroll>
         <SceneHeader title={lstrings.title_fio_domain_settings} underline withTopMargin />
         <View style={styles.container}>
-          <CardUi4>
+          <EdgeCard>
             <RowUi4 title={lstrings.fio_domain_label} body={`${FIO_ADDRESS_DELIMITER} ${fioDomainName}`} />
-          </CardUi4>
-          <CardUi4>
+          </EdgeCard>
+          <EdgeCard>
             <RowUi4 title={lstrings.fio_address_details_screen_expires} body={formatDate(new Date(expiration))} />
-          </CardUi4>
+          </EdgeCard>
           {showVisibility && (
             <FioActionSubmit
               title={isPublic ? lstrings.title_fio_make_private_domain : lstrings.title_fio_make_public_domain}
@@ -223,14 +223,14 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
             <FioActionSubmit goTo={this.goToTransfer} getOperationFee={this.getTransferFee} fioWallet={fioWallet} navigation={this.props.navigation} />
           )}
           {!showRenew && !showVisibility && !showTransfer && (
-            <CardUi4 sections>
+            <EdgeCard sections>
               <SettingsTappableRow label={lstrings.title_fio_renew_domain} onPress={this.onRenewPress} />
               <SettingsTappableRow label={lstrings.title_fio_transfer_domain} onPress={this.onTransferPress} />
               <SettingsTappableRow
                 label={isPublic ? lstrings.title_fio_make_private_domain : lstrings.title_fio_make_public_domain}
                 onPress={this.onVisibilityPress}
               />
-            </CardUi4>
+            </EdgeCard>
           )}
         </View>
       </SceneWrapper>

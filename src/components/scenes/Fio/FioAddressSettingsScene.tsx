@@ -9,6 +9,7 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { addBundledTxs, getAddBundledTxsFee, getTransferFee } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
 import { withWallet } from '../../hoc/withWallet'
@@ -18,7 +19,6 @@ import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeC
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
-import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
@@ -178,10 +178,10 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
       <SceneWrapper scroll>
         <SceneHeader title={lstrings.title_fio_address_settings} underline withTopMargin />
         <View style={styles.container}>
-          <CardUi4 sections>
+          <EdgeCard sections>
             <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
             {bundledTxs != null ? <RowUi4 title={lstrings.fio_address_details_screen_bundled_txs} body={`${bundledTxs}`} /> : null}
-          </CardUi4>
+          </EdgeCard>
           {showAddBundledTxs && (
             <FioActionSubmit
               onSubmit={this.onAddBundledTxsSubmit}

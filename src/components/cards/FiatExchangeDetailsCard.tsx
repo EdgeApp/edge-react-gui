@@ -15,8 +15,8 @@ import { RawTextModal } from '../modals/RawTextModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { CardUi4 } from './CardUi4'
-import { RowUi4 } from './RowUi4'
+import { RowUi4 } from '../ui4/RowUi4'
+import { EdgeCard } from './EdgeCard'
 
 interface Props {
   action: EdgeTxActionFiat
@@ -132,7 +132,7 @@ export function FiatExchangeDetailsCard(props: Props) {
   if (direction !== 'buy' && direction !== 'sell') return null
 
   return (
-    <CardUi4 sections>
+    <EdgeCard sections>
       <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_exchange_details} onPress={handleExchangeDetails}>
         <View style={styles.tileColumn}>
           <EdgeText>{lstrings.title_exchange + ' ' + sourceAmount + sourceCurrencyCode}</EdgeText>
@@ -147,7 +147,7 @@ export function FiatExchangeDetailsCard(props: Props) {
       {supportEmail == null ? null : (
         <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_exchange_support} onPress={handleEmail} body={supportEmail} />
       )}
-    </CardUi4>
+    </EdgeCard>
   )
 }
 

@@ -73,7 +73,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
     >
       A FIO Crypto Handle consists of a username and a domain. If you purchase a custom domain, only you will able to register a Crypto Handle on it. Crypto Handle registrations will have to be paid for with FIO tokens from the same wallet which owns the domain.
     </EdgeText>
-    <CardUi4>
+    <EdgeCard>
       <RowUi4
         onPress={[Function]}
         rightButtonType="editable"
@@ -107,7 +107,7 @@ exports[`FioDomainRegister should render with loading props 1`] = `
           </EdgeText>
         </View>
       </RowUi4>
-    </CardUi4>
+    </EdgeCard>
     <Memo(EdgeAnimInner)
       enter={
         {

@@ -30,9 +30,9 @@ import {
   truncateDecimals,
   unixToLocaleDateTime
 } from '../../util/utils'
+import { EdgeCard } from '../cards/EdgeCard'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CardUi4 } from '../ui4/CardUi4'
 import { SectionView } from '../ui4/SectionView'
 import { EdgeText } from './EdgeText'
 
@@ -176,7 +176,7 @@ export function TransactionListRow(props: Props) {
 
   // HACK: Handle 100% of the margins because of SceneHeader usage on this scene
   return (
-    <CardUi4 icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
+    <EdgeCard icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
       <SectionView dividerMarginRem={[0.2, 0.5]} marginRem={[0.25, 0]}>
         <>
           <View style={styles.row}>
@@ -198,7 +198,7 @@ export function TransactionListRow(props: Props) {
           </View>
         )}
       </SectionView>
-    </CardUi4>
+    </EdgeCard>
   )
 }
 

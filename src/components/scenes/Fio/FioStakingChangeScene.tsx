@@ -18,6 +18,8 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { FioStakingBalanceType, getFioStakingBalances } from '../../../util/stakeUtils'
 import { convertCurrencyFromExchangeRates, convertNativeToDenomination } from '../../../util/utils'
+import { AlertCardUi4 } from '../../cards/AlertCard'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { FlipInputModal2, FlipInputModalResult } from '../../modals/FlipInputModal2'
@@ -28,8 +30,6 @@ import { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
 import { ModalTitle } from '../../themed/ModalParts'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
-import { AlertCardUi4 } from '../../ui4/AlertCardUi4'
-import { CardUi4 } from '../../ui4/CardUi4'
 import { ModalUi4 } from '../../ui4/ModalUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
@@ -298,11 +298,11 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
           <Paragraph>{lstrings.staking_change_explaner1}</Paragraph>
           <Paragraph>{lstrings.staking_change_explaner2}</Paragraph>
         </View>
-        <CardUi4 marginRem={1}>
+        <EdgeCard marginRem={1}>
           <RowUi4 rightButtonType="editable" title={lstrings.staking_change_add_amount_title} onPress={handleAmount}>
             <EdgeText style={styles.amountText}>{exchangeAmount}</EdgeText>
           </RowUi4>
-        </CardUi4>
+        </EdgeCard>
         {apy != null && apy !== 0 && (
           <View style={styles.estReturn}>
             <EdgeText>{apyValue}</EdgeText>
@@ -324,7 +324,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
         <SceneHeader style={styles.sceneHeader} title={sprintf(lstrings.staking_change_remove_header, currencyCode)} underline withTopMargin>
           <Image style={styles.currencyLogo} source={fioLogo} />
         </SceneHeader>
-        <CardUi4 sections>
+        <EdgeCard sections>
           <RowUi4 rightButtonType="editable" title={lstrings.staking_change_remove_amount_title} onPress={handleAmount}>
             <EdgeText style={styles.amountText}>{exchangeAmount}</EdgeText>
           </RowUi4>
@@ -336,7 +336,7 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
           <RowUi4 rightButtonType="questionable" title={lstrings.staking_change_remove_unlock_date} onPress={handleUnlockDate}>
             <EdgeText>{unlockDateFormat}</EdgeText>
           </RowUi4>
-        </CardUi4>
+        </EdgeCard>
       </>
     )
   }

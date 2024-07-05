@@ -16,6 +16,8 @@ import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getDomainRegInfo, PaymentInfo } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
+import { AlertCardUi4 } from '../../cards/AlertCard'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
@@ -24,8 +26,6 @@ import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
-import { AlertCardUi4 } from '../../ui4/AlertCardUi4'
-import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
@@ -230,13 +230,13 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
           <EdgeText style={styles.instructionalText} numberOfLines={7}>
             {detailsText}
           </EdgeText>
-          <CardUi4>
+          <EdgeCard>
             <RowUi4 title={lstrings.fio_domain_label} body={fioDomain} />
-          </CardUi4>
-          <CardUi4>
+          </EdgeCard>
+          <EdgeCard>
             <RowUi4 title={lstrings.create_wallet_account_amount_due} body={loading ? lstrings.loading : `${activationCost} ${FIO_STR}`} />
-          </CardUi4>
-          <CardUi4>
+          </EdgeCard>
+          <EdgeCard>
             <RowUi4
               rightButtonType="touchable"
               title={lstrings.create_wallet_account_select_wallet}
@@ -245,7 +245,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
               // @ts-expect-error
               disabled={!activationCost || activationCost === 0}
             />
-          </CardUi4>
+          </EdgeCard>
           {!loading && paymentWallet && paymentWallet.id && (
             <MainButton label={lstrings.string_next_capitalized} marginRem={[2, 0, 2]} onPress={this.onNextPress} type="primary" />
           )}

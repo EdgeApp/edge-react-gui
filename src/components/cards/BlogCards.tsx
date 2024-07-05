@@ -6,8 +6,8 @@ import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { useHandler } from '../../hooks/useHandler'
 import { infoServerData } from '../../util/network'
 import { useTheme } from '../services/ThemeContext'
+import { CarouselUi4 } from '../ui4/CarouselUi4'
 import { BlogCard } from './BlogCard'
-import { CarouselUi4 } from './CarouselUi4'
 
 export interface Props {
   countryCode?: string

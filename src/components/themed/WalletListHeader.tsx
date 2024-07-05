@@ -5,10 +5,10 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { Fontello } from '../../assets/vector/index'
 import { lstrings } from '../../locales/strings'
 import { NavigationBase } from '../../types/routerTypes'
+import { BalanceCardUi4 } from '../cards/BalanceCard'
 import { EdgeAnim, fadeInUp40, fadeInUp60 } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { BalanceCardUi4 } from '../ui4/BalanceCardUi4'
 import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
 
 interface OwnProps {

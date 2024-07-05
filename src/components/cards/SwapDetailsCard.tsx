@@ -18,8 +18,8 @@ import { RawTextModal } from '../modals/RawTextModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { CardUi4 } from './CardUi4'
-import { RowUi4 } from './RowUi4'
+import { RowUi4 } from '../ui4/RowUi4'
+import { EdgeCard } from './EdgeCard'
 
 interface Props {
   swapData: EdgeTxSwap
@@ -131,7 +131,7 @@ export function SwapDetailsCard(props: Props) {
   }
 
   return (
-    <CardUi4 sections>
+    <EdgeCard sections>
       <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_exchange_details} onPress={handleExchangeDetails}>
         <View style={styles.tileColumn}>
           <EdgeText>{lstrings.title_exchange + ' ' + sourceAmount + ' ' + symbolString}</EdgeText>
@@ -145,7 +145,7 @@ export function SwapDetailsCard(props: Props) {
       {plugin.supportEmail == null ? null : (
         <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_exchange_support} onPress={handleEmail} body={swapData.plugin.supportEmail} />
       )}
-    </CardUi4>
+    </EdgeCard>
   )
 }
 

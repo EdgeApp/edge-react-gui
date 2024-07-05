@@ -5,8 +5,8 @@ import { openBrowserUri } from '../../util/WebUtils'
 import { Space } from '../layout/Space'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ButtonsViewUi4 } from './ButtonsViewUi4'
-import { CardUi4 } from './CardUi4'
+import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
+import { EdgeCard } from './EdgeCard'
 
 interface Props {
   title: string
@@ -26,7 +26,7 @@ export function SupportCardUi4(props: Props) {
   })
 
   return (
-    <CardUi4 gradientBackground={theme.cardGradientLearn}>
+    <EdgeCard gradientBackground={theme.cardGradientLearn}>
       <Space aroundRem={0.5}>
         <EdgeText numberOfLines={1} style={styles.title}>
           {title}
@@ -36,7 +36,7 @@ export function SupportCardUi4(props: Props) {
         </EdgeText>
         <ButtonsViewUi4 secondary={{ label: buttonText, onPress: handlePress }} />
       </Space>
-    </CardUi4>
+    </EdgeCard>
   )
 }
 const getStyles = cacheStyles((theme: Theme) => ({

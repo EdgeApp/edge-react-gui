@@ -18,12 +18,12 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getFioStakingBalances } from '../../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../../util/utils'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
-import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
 interface OwnProps extends EdgeSceneProps<'fioStakingOverview'> {}
@@ -121,15 +121,15 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
         <View style={styles.container}>
           <EdgeText style={styles.explainerText}>{lstrings.staking_overview_explainer}</EdgeText>
 
-          <CardUi4>
+          <EdgeCard>
             <RowUi4 title="Currently Staked">
               <EdgeText>
                 {staked}
                 <EdgeText style={styles.fiatAmount}>{fiatStaked}</EdgeText>
               </EdgeText>
             </RowUi4>
-          </CardUi4>
-          <CardUi4 sections>{renderItems()}</CardUi4>
+          </EdgeCard>
+          <EdgeCard sections>{renderItems()}</EdgeCard>
         </View>
       </SceneWrapper>
 

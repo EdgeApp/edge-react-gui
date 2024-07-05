@@ -7,10 +7,10 @@ import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
+import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CustomAsset, CustomAssetRow } from '../data/row/CustomAssetRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CardUi4 } from '../ui4/CardUi4'
 import { CurrencyViewUi4 } from '../ui4/CurrencyViewUi4'
 import { EdgeText } from './EdgeText'
 
@@ -68,7 +68,7 @@ const WalletListCurrencyRowComponent = (props: Props) => {
       <CustomAssetRow customAsset={customAsset} />
     </EdgeTouchableOpacity>
   ) : (
-    <CardUi4
+    <EdgeCard
       overlay={
         isPaused || isDisabled ? (
           <EdgeText style={styles.overlayLabel}>{isPaused ? lstrings.fragment_wallets_wallet_paused : lstrings.fragment_wallets_wallet_disabled}</EdgeText>
@@ -79,7 +79,7 @@ const WalletListCurrencyRowComponent = (props: Props) => {
       gradientBackground={{ colors: [primaryColor, '#00000000'], start: { x: 0, y: 0 }, end: { x: 1, y: 0 } }}
     >
       <CurrencyViewUi4 token={token} tokenId={tokenId} wallet={wallet} />
-    </CardUi4>
+    </EdgeCard>
   )
 }
 

@@ -3,9 +3,9 @@ import { View } from 'react-native'
 
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
+import { EdgeCard } from '../cards/EdgeCard'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { CardUi4 } from '../ui4/CardUi4'
 import { RowUi4 } from '../ui4/RowUi4'
 
 interface FioNameProps {
@@ -36,14 +36,14 @@ export const FioNameRow = (props: FioNameProps) => {
   }
 
   return (
-    <CardUi4>
+    <EdgeCard>
       <RowUi4 icon={<View style={styles.icon}>{icon}</View>} onPress={onPress}>
         <View style={styles.info}>
           <EdgeText style={styles.infoTitle}>{name}</EdgeText>
           {renderSubTitle()}
         </View>
       </RowUi4>
-    </CardUi4>
+    </EdgeCard>
   )
 }
 

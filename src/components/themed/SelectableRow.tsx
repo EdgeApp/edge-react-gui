@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
+import { EdgeCard } from '../cards/EdgeCard'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { CardUi4 } from '../ui4/CardUi4'
 import { EdgeText } from './EdgeText'
 
 interface Props {
@@ -28,7 +28,7 @@ export const SelectableRow = (props: Props) => {
   const styles = getStyles(theme)
 
   return (
-    <CardUi4 onPress={onPress} marginRem={marginRem}>
+    <EdgeCard onPress={onPress} marginRem={marginRem}>
       <View style={styles.rowContainer}>
         {/* HACK: Keeping the iconContainer instead of CardUi4's built-in icon prop because the prop's behavior is inconsistent in legacy use cases */}
         <View style={styles.iconContainer}>{icon}</View>
@@ -41,7 +41,7 @@ export const SelectableRow = (props: Props) => {
           ) : null}
         </View>
       </View>
-    </CardUi4>
+    </EdgeCard>
   )
 }
 

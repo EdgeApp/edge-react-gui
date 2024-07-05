@@ -12,6 +12,8 @@ import { FioDomain, FioPublicDomain } from '../../../types/types'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { checkIsDomainPublic } from '../../../util/FioAddressUtils'
 import { openLink } from '../../../util/utils'
+import { AlertCardUi4 } from '../../cards/AlertCard'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { EdgeAnim, fadeIn, fadeOut } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { DomainListModal } from '../../FioAddress/DomainListModal'
@@ -21,9 +23,7 @@ import { Airship, showError, showToast, showWarning } from '../../services/Airsh
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { AlertCardUi4 } from '../../ui4/AlertCardUi4'
 import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
-import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
 interface State {
@@ -415,7 +415,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
           </View>
 
           <View onLayout={this.fieldViewOnLayout}>
-            <CardUi4 sections>
+            <EdgeCard sections>
               <RowUi4 rightButtonType="editable" title={lstrings.fio_address_choose_label} onPress={this.editAddressPressed}>
                 <View style={styles.addressTileBody}>
                   {fioAddress ? (
@@ -433,7 +433,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
                 body={domainsLoading ? lstrings.loading : `${FIO_ADDRESS_DELIMITER}${selectedDomain.name}`}
               />
               {this.renderFioWallets()}
-            </CardUi4>
+            </EdgeCard>
           </View>
           {this.renderButton()}
           {this.renderErrorMessage()}

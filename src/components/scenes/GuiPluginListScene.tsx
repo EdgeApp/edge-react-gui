@@ -37,6 +37,8 @@ import { infoServerData } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { logEvent, OnLogEvent } from '../../util/tracking'
 import { base58ToUuid, getOsVersion } from '../../util/utils'
+import { EdgeCard } from '../cards/EdgeCard'
+import { filterPromoCards } from '../cards/PromoCards'
 import { EdgeAnim, fadeInUp20, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -47,8 +49,6 @@ import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
-import { CardUi4 } from '../ui4/CardUi4'
-import { filterPromoCards } from '../ui4/PromoCardsUi4'
 import { RowUi4 } from '../ui4/RowUi4'
 import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
 
@@ -329,7 +329,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     return (
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 30 * (index + 1) }} style={styles.hackContainer}>
-        <CardUi4
+        <EdgeCard
           icon={
             <Image
               style={styles.logo}
@@ -357,7 +357,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
               </>
             ) : null}
           </View>
-        </CardUi4>
+        </EdgeCard>
       </EdgeAnim>
     )
   }
@@ -383,9 +383,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     const countryCard =
       stateProvinceData == null ? (
-        <CardUi4>
+        <EdgeCard>
           <RowUi4 onPress={onCountryPress} rightButtonType="none" icon={icon} body={countryName} />
-        </CardUi4>
+        </EdgeCard>
       ) : (
         <SelectableRow onPress={onCountryPress} subTitle={stateProvinceData.name} title={countryData?.name} icon={icon} />
       )

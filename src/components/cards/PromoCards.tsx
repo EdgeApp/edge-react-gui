@@ -15,8 +15,8 @@ import { infoServerData } from '../../util/network'
 import { getOsVersion, zeroString } from '../../util/utils'
 import { EdgeAnim, fadeInUp110 } from '../common/EdgeAnim'
 import { useTheme } from '../services/ThemeContext'
-import { CarouselUi4 } from './CarouselUi4'
-import { FilteredPromoCard, PromoCardUi4 } from './PromoCardUi4'
+import { CarouselUi4 } from '../ui4/CarouselUi4'
+import { FilteredPromoCard, PromoCardUi4 } from './PromoCard'
 
 interface Props {
   navigation: NavigationBase

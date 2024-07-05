@@ -4,7 +4,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { CardUi4 } from './CardUi4'
+import { EdgeCard } from './EdgeCard'
 
 interface Props {
   body?: string[] | string // Bullet point messages if an array is provided
@@ -53,7 +53,7 @@ export function AlertCardUi4(props: Props) {
   }
 
   return (
-    <CardUi4 gradientBackground={type === 'error' ? theme.cardGradientError : theme.cardGradientWarning} marginRem={marginRem} onPress={onPress}>
+    <EdgeCard gradientBackground={type === 'error' ? theme.cardGradientError : theme.cardGradientWarning} marginRem={marginRem} onPress={onPress}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <IonIcon name="warning-outline" style={styles.icon} color={theme.primaryText} size={theme.rem(1.25)} />
@@ -78,7 +78,7 @@ export function AlertCardUi4(props: Props) {
           </EdgeText>
         )}
       </View>
-    </CardUi4>
+    </EdgeCard>
   )
 }
 

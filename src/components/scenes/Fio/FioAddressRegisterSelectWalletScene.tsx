@@ -15,6 +15,7 @@ import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getRegInfo, PaymentInfo } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
+import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
@@ -23,7 +24,6 @@ import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { ButtonUi4 } from '../../ui4/ButtonUi4'
-import { CardUi4 } from '../../ui4/CardUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
@@ -237,13 +237,13 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
 
     return (
       <>
-        <CardUi4 sections marginRem={[0.5, 0.5, 2, 0.5]}>
+        <EdgeCard sections marginRem={[0.5, 0.5, 2, 0.5]}>
           <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddress} />
           {!selectedDomain.walletId && (
             <RowUi4 rightButtonType="touchable" title={lstrings.create_wallet_account_select_wallet} body={walletName} onPress={this.onWalletPress} />
           )}
           <RowUi4 title={lstrings.create_wallet_account_amount_due} body={costStr} loading={loading} />
-        </CardUi4>
+        </EdgeCard>
         <ButtonUi4 disabled={nextDisabled} onPress={this.onNextPress} label={lstrings.string_next_capitalized} type="primary" />
       </>
     )

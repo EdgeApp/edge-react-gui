@@ -5,7 +5,7 @@ import { LinearGradientProps } from 'react-native-linear-gradient'
 import { useHandler } from '../../hooks/useHandler'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { CardUi4 } from './CardUi4'
+import { EdgeCard } from './EdgeCard'
 
 interface Props {
   title: string
@@ -29,14 +29,14 @@ export const HomeCardUi4 = (props: Props) => {
   })
 
   return (
-    <CardUi4 gradientBackground={gradientBackground} nodeBackground={nodeBackground} onPress={handlePress} fill>
+    <EdgeCard gradientBackground={gradientBackground} nodeBackground={nodeBackground} onPress={handlePress} fill>
       <View style={styles.verticalSplitContainer}>
         <EdgeText style={theme.cardTextShadow}>{title}</EdgeText>
         <EdgeText style={styles.footerText} numberOfLines={3} disableFontScaling>
           {footer}
         </EdgeText>
       </View>
-    </CardUi4>
+    </EdgeCard>
   )
 }
 
