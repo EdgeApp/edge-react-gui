@@ -7,7 +7,6 @@ import { Platform } from 'react-native'
 
 import { getDeviceSettings } from '../actions/DeviceSettingsActions'
 import { SwapCreateScene as SwapCreateSceneComponent } from '../components/scenes/SwapCreateScene'
-import { HomeSceneUi4 as HomeSceneUi4Component } from '../components/ui4/scenes/HomeSceneUi4'
 import { ENV } from '../env'
 import { DEFAULT_EXPERIMENT_CONFIG, ExperimentConfig, getExperimentConfig } from '../experimentConfig'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
@@ -76,6 +75,7 @@ import { FioStakingOverviewScene as FioStakingOverviewSceneComponent } from './s
 import { GettingStartedScene } from './scenes/GettingStartedScene'
 import { GuiPluginListScene as GuiPluginListSceneComponent } from './scenes/GuiPluginListScene'
 import { GuiPluginViewScene as GuiPluginViewSceneComponent } from './scenes/GuiPluginViewScene'
+import { HomeScene as HomeSceneComponent } from './scenes/HomeScene'
 import { LoanCloseScene as LoanCloseSceneComponent } from './scenes/Loans/LoanCloseScene'
 import { LoanCreateConfirmationScene as LoanCreateConfirmationSceneComponent } from './scenes/Loans/LoanCreateConfirmationScene'
 import { LoanCreateScene as LoanCreateSceneComponent } from './scenes/Loans/LoanCreateScene'
@@ -198,7 +198,7 @@ const WcConnectionsScene = ifLoggedIn(WcConnectionsSceneComponent)
 const WcConnectScene = ifLoggedIn(WcConnectSceneComponent)
 const WcDisconnectScene = ifLoggedIn(WcDisconnectSceneComponent)
 const WebViewScene = ifLoggedIn(WebViewSceneComponent)
-const HomeSceneUi4 = ifLoggedIn(HomeSceneUi4Component)
+const HomeScene = ifLoggedIn(HomeSceneComponent)
 
 const Drawer = createDrawerNavigator<AppParamList>()
 const Stack = createStackNavigator<AppParamList>()
@@ -690,7 +690,7 @@ const EdgeTabs = () => {
 const EdgeHomeTabScreen = () => {
   return (
     <Stack.Navigator initialRouteName="home" screenOptions={defaultScreenOptions}>
-      <Stack.Screen name="home" component={HomeSceneUi4} options={firstSceneScreenOptions} />
+      <Stack.Screen name="home" component={HomeScene} options={firstSceneScreenOptions} />
     </Stack.Navigator>
   )
 }

@@ -4,35 +4,34 @@ import FastImage from 'react-native-fast-image'
 import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
-import { getCountryCodeByIp } from '../../../actions/AccountReferralActions'
-import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
-import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
-import { useBackButtonToast } from '../../../hooks/useBackButtonToast'
-import { useHandler } from '../../../hooks/useHandler'
-import { lstrings } from '../../../locales/strings'
-import { useSceneScrollHandler } from '../../../state/SceneScrollState'
-import { config } from '../../../theme/appConfig'
-import { EdgeSceneProps } from '../../../types/routerTypes'
-import { getUi4ImageUri } from '../../../util/CdnUris'
-import { infoServerData } from '../../../util/network'
-import { BalanceCardUi4 } from '../../cards/BalanceCard'
-import { BlogCards } from '../../cards/BlogCards'
-import { HomeCardUi4 } from '../../cards/HomeCard'
-import { MarketsCardUi4 } from '../../cards/MarketsCard'
-import { PromoCardsUi4 } from '../../cards/PromoCards'
-import { SupportCardUi4 } from '../../cards/SupportCard'
-import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp80, fadeInUp140 } from '../../common/EdgeAnim'
-import { SceneWrapper } from '../../common/SceneWrapper'
-import { AccountSyncBar } from '../../progress-indicators/AccountSyncBar'
-import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
-import { SectionHeaderUi4 } from '../SectionHeaderUi4'
-import { SectionView } from '../SectionView'
+import { getCountryCodeByIp } from '../../actions/AccountReferralActions'
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useHandler } from '../../hooks/useHandler'
+import { lstrings } from '../../locales/strings'
+import { useSceneScrollHandler } from '../../state/SceneScrollState'
+import { config } from '../../theme/appConfig'
+import { EdgeSceneProps } from '../../types/routerTypes'
+import { getUi4ImageUri } from '../../util/CdnUris'
+import { infoServerData } from '../../util/network'
+import { BalanceCardUi4 } from '../cards/BalanceCard'
+import { BlogCards } from '../cards/BlogCards'
+import { HomeCardUi4 } from '../cards/HomeCard'
+import { MarketsCardUi4 } from '../cards/MarketsCard'
+import { PromoCardsUi4 } from '../cards/PromoCards'
+import { SupportCardUi4 } from '../cards/SupportCard'
+import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp80, fadeInUp140 } from '../common/EdgeAnim'
+import { SceneWrapper } from '../common/SceneWrapper'
+import { AccountSyncBar } from '../progress-indicators/AccountSyncBar'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
+import { SectionView } from '../ui4/SectionView'
 
 interface Props extends EdgeSceneProps<'home'> {}
 
 const TEMP_PADDING_REM = 0.5 // To be built-in to SceneWrapper when fully UI4
 
-export const HomeSceneUi4 = (props: Props) => {
+export const HomeScene = (props: Props) => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -43,8 +42,6 @@ export const HomeSceneUi4 = (props: Props) => {
   const cardSize = screenWidth / 2 - theme.rem(TEMP_PADDING_REM)
 
   const [countryCode, setCountryCode] = React.useState<string | undefined>()
-
-  useBackButtonToast()
 
   //
   // Handlers
