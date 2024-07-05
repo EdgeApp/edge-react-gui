@@ -15,6 +15,7 @@ import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { getRegInfo, PaymentInfo } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
+import { EdgeButton } from '../../buttons/EdgeButton'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
@@ -23,7 +24,6 @@ import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
-import { ButtonUi4 } from '../../ui4/ButtonUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
@@ -244,7 +244,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
           )}
           <RowUi4 title={lstrings.create_wallet_account_amount_due} body={costStr} loading={loading} />
         </EdgeCard>
-        <ButtonUi4 disabled={nextDisabled} onPress={this.onNextPress} label={lstrings.string_next_capitalized} type="primary" />
+        <EdgeButton disabled={nextDisabled} onPress={this.onNextPress} label={lstrings.string_next_capitalized} type="primary" />
       </>
     )
   }

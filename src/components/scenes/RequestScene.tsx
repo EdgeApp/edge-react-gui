@@ -23,6 +23,7 @@ import { getCurrencyCode, isKeysOnlyPlugin } from '../../util/CurrencyInfoHelper
 import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { convertNativeToDenomination, darkenHexColor, truncateDecimals, zeroString } from '../../util/utils'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeAnim, fadeInDown50, fadeInDown75, fadeInUp25, fadeInUp50, fadeInUp80 } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
@@ -43,7 +44,6 @@ import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef }
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ShareButtons } from '../themed/ShareButtons'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { AccentColors } from '../ui4/DotsBackground'
 
 export interface RequestParams {
@@ -299,7 +299,7 @@ export class RequestSceneComponent extends React.Component<Props & HookProps, St
           <EdgeText numberOfLines={0} style={styles.backupText}>
             {lstrings.backup_for_transfer_message}
           </EdgeText>
-          <ButtonsViewUi4 parentType="scene" primary={{ label: lstrings.backup_account, onPress: this.handleBackupPress }} />
+          <ButtonsView parentType="scene" primary={{ label: lstrings.backup_account, onPress: this.handleBackupPress }} />
         </View>
       </SceneWrapper>
     )

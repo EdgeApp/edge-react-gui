@@ -2,10 +2,10 @@ import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
 import { openBrowserUri } from '../../util/WebUtils'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { Space } from '../layout/Space'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { EdgeCard } from './EdgeCard'
 
 interface Props {
@@ -34,7 +34,7 @@ export function SupportCardUi4(props: Props) {
         <EdgeText numberOfLines={3} style={styles.body}>
           {body}
         </EdgeText>
-        <ButtonsViewUi4 secondary={{ label: buttonText, onPress: handlePress }} />
+        <ButtonsView secondary={{ label: buttonText, onPress: handlePress }} />
       </Space>
     </EdgeCard>
   )

@@ -16,6 +16,8 @@ import { useDispatch } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { consify } from '../../util/utils'
+import { ButtonsView } from '../buttons/ButtonsView'
+import { EdgeButton } from '../buttons/EdgeButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -38,8 +40,6 @@ import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
-import { ButtonUi4 } from '../ui4/ButtonUi4'
 import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
 import { SectionView } from '../ui4/SectionView'
 
@@ -130,7 +130,7 @@ export function DevTestScene(props: Props) {
       <SectionView marginRem={1}>
         <>
           <SectionHeaderUi4 leftTitle="Modals" rightNode={<EdgeText>Galore</EdgeText>} />
-          <ButtonUi4
+          <EdgeButton
             label="SurveyModal"
             marginRem={0.25}
             onPress={async () => {
@@ -139,10 +139,10 @@ export function DevTestScene(props: Props) {
               })
             }}
           />
-          <ButtonUi4 label="TextInputModal (multiline)" marginRem={0.25} onPress={handleMultilineTextInputModal} />
-          <ButtonUi4 label="TextInputModal (single line)" marginRem={0.25} onPress={handleTextInputModal} />
-          <ButtonUi4 label="FlipInputModal2" marginRem={0.25} onPress={handleFlipInputModal} />
-          <ButtonUi4
+          <EdgeButton label="TextInputModal (multiline)" marginRem={0.25} onPress={handleMultilineTextInputModal} />
+          <EdgeButton label="TextInputModal (single line)" marginRem={0.25} onPress={handleTextInputModal} />
+          <EdgeButton label="FlipInputModal2" marginRem={0.25} onPress={handleFlipInputModal} />
+          <EdgeButton
             label="ButtonsModal"
             marginRem={0.25}
             onPress={async () => {
@@ -161,7 +161,7 @@ export function DevTestScene(props: Props) {
               console.debug(test)
             }}
           />
-          <ButtonUi4
+          <EdgeButton
             label="ConfirmContinueModal"
             marginRem={0.25}
             onPress={async () => {
@@ -176,7 +176,7 @@ export function DevTestScene(props: Props) {
               console.debug(test)
             }}
           />
-          <ButtonUi4
+          <EdgeButton
             label="ConfirmContinueModal (warn)"
             marginRem={0.25}
             onPress={async () => {
@@ -192,7 +192,7 @@ export function DevTestScene(props: Props) {
               console.debug(test)
             }}
           />
-          <ButtonUi4
+          <EdgeButton
             label="CountryListModal"
             marginRem={0.25}
             onPress={async () => {
@@ -200,14 +200,14 @@ export function DevTestScene(props: Props) {
               console.debug(test)
             }}
           />
-          <ButtonUi4
+          <EdgeButton
             label="PasswordReminderModal"
             marginRem={0.25}
             onPress={async () => {
               await Airship.show(bridge => <PasswordReminderModal bridge={bridge} navigation={navigation} />)
             }}
           />
-          <ButtonUi4
+          <EdgeButton
             label="InsufficientFeesModal"
             marginRem={0.25}
             onPress={async () => {
@@ -217,7 +217,7 @@ export function DevTestScene(props: Props) {
               ))
             }}
           />
-          <ButtonUi4
+          <EdgeButton
             label="FioCreateHandleModal"
             marginRem={0.25}
             onPress={async () => {
@@ -228,14 +228,14 @@ export function DevTestScene(props: Props) {
               }
             }}
           />
-          <ButtonUi4
+          <EdgeButton
             label="BackupModal (Long, Original with image)"
             marginRem={0.25}
             onPress={async () => {
               showBackupModal({ navigation, forgetLoginId: 'test' })
             }}
           />
-          <ButtonUi4
+          <EdgeButton
             label="BackupForTransferModal"
             marginRem={0.25}
             onPress={async () => {
@@ -244,7 +244,7 @@ export function DevTestScene(props: Props) {
               })
             }}
           />
-          <ButtonUi4
+          <EdgeButton
             label="ScamWarningModal"
             marginRem={0.25}
             onPress={async () => {
@@ -346,24 +346,24 @@ export function DevTestScene(props: Props) {
 
         <>
           <SimpleTextInput value={value0} onChangeText={onChangeText0} autoFocus={false} placeholder="Crypto Amount" />
-          <ButtonUi4 label="Set Crypto Amt" onPress={onPress0} />
+          <EdgeButton label="Set Crypto Amt" onPress={onPress0} />
           <SimpleTextInput value={value1} onChangeText={onChangeText1} autoFocus={false} placeholder="Fiat Amount" />
-          <ButtonUi4 label="Set Fiat Amt" onPress={onPress1} />
+          <EdgeButton label="Set Fiat Amt" onPress={onPress1} />
         </>
 
         <>
           <SectionHeaderUi4 leftTitle="Buttons" />
-          <ButtonUi4 onPress={() => {}} label="Button With Child" marginRem={0.5} type="secondary">
+          <EdgeButton onPress={() => {}} label="Button With Child" marginRem={0.5} type="secondary">
             <Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />
-          </ButtonUi4>
+          </EdgeButton>
           <EdgeText>Button with spinner and child (same width as above)</EdgeText>
-          <ButtonUi4 onPress={() => {}} label="Button With Child" marginRem={0.5} type="secondary" spinner>
+          <EdgeButton onPress={() => {}} label="Button With Child" marginRem={0.5} type="secondary" spinner>
             <Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />
-          </ButtonUi4>
-          <ButtonUi4 onPress={() => {}} label="Mini" marginRem={0.5} type="secondary" mini />
+          </EdgeButton>
+          <EdgeButton onPress={() => {}} label="Mini" marginRem={0.5} type="secondary" mini />
           <EdgeText style={{ marginVertical: theme.rem(0.5) }}>ButtonsViews</EdgeText>
           <OutlinedView>
-            <ButtonsViewUi4
+            <ButtonsView
               primary={{ label: 'Primary', onPress: () => {} }}
               secondary={{ label: 'Secondary', onPress: () => {} }}
               tertiary={{ label: 'Tertiary Tertiary Tertiary Tertiary', onPress: () => {} }}
@@ -371,7 +371,7 @@ export function DevTestScene(props: Props) {
             />
           </OutlinedView>
           <OutlinedView>
-            <ButtonsViewUi4
+            <ButtonsView
               primary={{ label: 'Primary Primary', onPress: () => {} }}
               secondary={{ label: 'Secondary', onPress: () => {} }}
               tertiary={{ label: 'Tertiary', onPress: () => {} }}
@@ -379,21 +379,21 @@ export function DevTestScene(props: Props) {
             />
           </OutlinedView>
           <OutlinedView>
-            <ButtonsViewUi4 primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} layout="row" />
+            <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} layout="row" />
           </OutlinedView>
           <OutlinedView>
-            <ButtonsViewUi4 secondary={{ label: 'Secondary', onPress: () => {} }} secondary2={{ label: 'Secondary', onPress: () => {} }} layout="row" />
+            <ButtonsView secondary={{ label: 'Secondary', onPress: () => {} }} secondary2={{ label: 'Secondary', onPress: () => {} }} layout="row" />
           </OutlinedView>
 
           <EdgeText style={{ marginVertical: theme.rem(0.5) }}>Loose Buttons (0.5rem margin)</EdgeText>
           <OutlinedView>
-            <ButtonUi4 marginRem={0.5} onPress={() => {}} label="Mini" type="secondary" mini />
-            <ButtonUi4 marginRem={0.5} onPress={() => {}} label="Mini" type="secondary" mini />
+            <EdgeButton marginRem={0.5} onPress={() => {}} label="Mini" type="secondary" mini />
+            <EdgeButton marginRem={0.5} onPress={() => {}} label="Mini" type="secondary" mini />
           </OutlinedView>
           <OutlinedView>
-            <ButtonUi4 marginRem={0.5} onPress={() => {}} label="Primary" type="primary" />
-            <ButtonUi4 marginRem={0.5} onPress={() => {}} label="Secondary" type="secondary" />
-            <ButtonUi4 marginRem={0.5} onPress={() => {}} label="Tertiary" type="tertiary" />
+            <EdgeButton marginRem={0.5} onPress={() => {}} label="Primary" type="primary" />
+            <EdgeButton marginRem={0.5} onPress={() => {}} label="Secondary" type="secondary" />
+            <EdgeButton marginRem={0.5} onPress={() => {}} label="Tertiary" type="tertiary" />
           </OutlinedView>
         </>
         <>
@@ -405,7 +405,7 @@ export function DevTestScene(props: Props) {
             placeholder="DeepLink"
             error={filledTextInputValue8 === '' ? undefined : filledTextInputValue8}
           />
-          <ButtonUi4
+          <EdgeButton
             marginRem={0.5}
             onPress={() => {
               const parsed = parseDeepLink(deepLinkInputValue)
@@ -418,7 +418,7 @@ export function DevTestScene(props: Props) {
         </>
         <>
           <SectionHeaderUi4 leftTitle="Crash Reporting" />
-          <ButtonUi4
+          <EdgeButton
             marginRem={0.5}
             onPress={() => {
               addBreadcrumb({

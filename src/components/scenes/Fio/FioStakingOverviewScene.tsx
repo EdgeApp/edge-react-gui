@@ -18,12 +18,12 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import { getFioStakingBalances } from '../../../util/stakeUtils'
 import { convertNativeToDenomination } from '../../../util/utils'
+import { ButtonsView } from '../../buttons/ButtonsView'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
 interface OwnProps extends EdgeSceneProps<'fioStakingOverview'> {}
@@ -133,7 +133,7 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
         </View>
       </SceneWrapper>
 
-      <ButtonsViewUi4
+      <ButtonsView
         parentType="scene"
         primary={{ label: lstrings.staking_stake_funds_button, onPress: handlePressStake }}
         tertiary={{ label: lstrings.staking_unstake_funds_button, onPress: handlePressUnstake }}

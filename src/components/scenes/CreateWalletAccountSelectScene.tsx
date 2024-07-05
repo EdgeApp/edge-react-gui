@@ -17,6 +17,7 @@ import { EdgeAsset } from '../../types/types'
 import { getWalletTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { logEvent } from '../../util/tracking'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { IconDataRow } from '../data/row/IconDataRow'
@@ -24,7 +25,6 @@ import { withWallet } from '../hoc/withWallet'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 export interface CreateWalletAccountSelectParams {
@@ -184,7 +184,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
       </View>
       <View style={styles.buttonArea}>
         {isRenderSelect ? (
-          <ButtonsViewUi4
+          <ButtonsView
             primary={{ disabled: !activationCost || activationCost === '', onPress: handleSelect, label: lstrings.create_wallet_account_select_wallet }}
             layout="column"
             parentType="scene"
@@ -194,7 +194,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
             <EdgeText style={styles.accountReviewConfirmText} numberOfLines={2}>
               {lstrings.create_wallet_account_confirm}
             </EdgeText>
-            <ButtonsViewUi4
+            <ButtonsView
               primary={{ disabled: isCreatingWallet, onPress: handleSubmit, label: lstrings.legacy_address_modal_continue }}
               secondary={{ disabled: isCreatingWallet, onPress: handleCancel, label: lstrings.string_cancel_cap }}
               layout="column"

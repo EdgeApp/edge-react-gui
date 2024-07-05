@@ -10,7 +10,7 @@ import { EdgeAnim } from '../common/EdgeAnim'
 import { maybeComponent } from '../hoc/maybeComponent'
 import { styled } from '../hoc/styled'
 import { Space } from '../layout/Space'
-import { ButtonTypeUi4, ButtonUi4 } from './ButtonUi4'
+import { EdgeButton, EdgeButtonType } from './EdgeButton'
 
 const INTER_BUTTON_SPACING_REM = 1
 const ANIM_DURATION = 1000
@@ -26,7 +26,7 @@ export interface ButtonInfo {
   animDistanceStart?: number
 }
 
-export interface ButtonsViewUi4Props {
+export interface ButtonsViewProps {
   // Specifies whether the component should be positioned absolutely.
   // Default value is false.
   absolute?: boolean
@@ -55,15 +55,15 @@ export interface ButtonsViewUi4Props {
 /**
  * A consistently styled view for displaying button layouts.
  */
-export const ButtonsViewUi4 = React.memo(
-  ({ absolute = false, primary, secondary, secondary2, tertiary, layout, parentType, animDistanceStart }: ButtonsViewUi4Props) => {
+export const ButtonsView = React.memo(
+  ({ absolute = false, primary, secondary, secondary2, tertiary, layout, parentType, animDistanceStart }: ButtonsViewProps) => {
     const buttonInfos = [primary, secondary, secondary2, tertiary].filter(key => key != null)
     if (layout == null) {
       layout = buttonInfos.length === 1 ? 'solo' : 'column'
     }
     const spacing = <Space aroundRem={INTER_BUTTON_SPACING_REM / 2} />
 
-    const renderButton = (type: ButtonTypeUi4, buttonProps?: ButtonInfo, index: number = 0) => {
+    const renderButton = (type: EdgeButtonType, buttonProps?: ButtonInfo, index: number = 0) => {
       if (buttonProps == null) return null
       const { label, onPress, disabled, spinner, testID } = buttonProps
 
@@ -73,7 +73,7 @@ export const ButtonsViewUi4 = React.memo(
 
       return (
         <MaybeEdgeAnim when={animDistanceStart != null} disableAnimation={disableAnimation} enter={{ type: 'fadeInDown', duration: ANIM_DURATION, distance }}>
-          <ButtonUi4 layout={layout} label={label} onPress={onPress} type={type} disabled={disabled} spinner={spinner} testID={testID} />
+          <EdgeButton layout={layout} label={label} onPress={onPress} type={type} disabled={disabled} spinner={spinner} testID={testID} />
         </MaybeEdgeAnim>
       )
     }

@@ -14,7 +14,7 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-export type ButtonTypeUi4 = 'primary' | 'secondary' | 'tertiary'
+export type EdgeButtonType = 'primary' | 'secondary' | 'tertiary'
 
 interface Props {
   children?: React.ReactNode
@@ -37,7 +37,7 @@ interface Props {
   spinner?: boolean
 
   // Which visual style to use. Defaults to primary (solid):
-  type?: ButtonTypeUi4
+  type?: EdgeButtonType
 
   // Still uses 'type', but makes it shorter (2 rem vs 3 rem)
   mini?: boolean
@@ -53,7 +53,7 @@ interface Props {
  * - Typically to be used as a child of ButtonsViewUi4.
  * - NOT meant to be used on its own outside of ButtonsViewUi4 unless layout='solo'
  */
-export function ButtonUi4(props: Props) {
+export function EdgeButton(props: Props) {
   const { layout = 'solo', children, disabled = false, label, onPress, type = 'primary', spinner = false, mini = false, marginRem, testID } = props
 
   // `onPress` promise logic:

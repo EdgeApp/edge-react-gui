@@ -7,8 +7,8 @@ import { sprintf } from 'sprintf-js'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { openBrowserUri } from '../../util/WebUtils'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { DotsBackground } from '../ui4/DotsBackground'
 
 interface Props {}
@@ -29,9 +29,9 @@ export function CrashScene(props: Props): React.ReactElement {
         <AntDesignIcon name="frowno" style={styles.icon} />
         <Text style={styles.titleText}>{lstrings.error_boundary_title}</Text>
         <Text style={styles.messageText}>{sprintf(lstrings.error_boundary_message_s, config.appNameShort)}</Text>
-        <ButtonsViewUi4 secondary={{ label: lstrings.error_boundary_help_button, onPress: () => openBrowserUri(config.forceCloseUrl) }} />
+        <ButtonsView secondary={{ label: lstrings.error_boundary_help_button, onPress: () => openBrowserUri(config.forceCloseUrl) }} />
         <Text style={styles.messageText}>{lstrings.error_boundary_message2}</Text>
-        <ButtonsViewUi4 secondary={{ label: lstrings.button_support, onPress: () => openBrowserUri(config.supportContactSite) }} />
+        <ButtonsView secondary={{ label: lstrings.button_support, onPress: () => openBrowserUri(config.supportContactSite) }} />
       </ScrollView>
     </>
   )

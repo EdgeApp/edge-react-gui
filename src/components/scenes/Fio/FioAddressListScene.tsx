@@ -11,6 +11,7 @@ import { lstrings } from '../../../locales/strings'
 import { connect } from '../../../types/reactRedux'
 import { EdgeSceneProps } from '../../../types/routerTypes'
 import { FioAddress, FioDomain } from '../../../types/types'
+import { ButtonsView } from '../../buttons/ButtonsView'
 import { EdgeAnim, fadeIn, fadeOut } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioNameRow } from '../../FioAddress/FioName'
@@ -19,7 +20,6 @@ import { showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
 
 interface LocalState {
   initLoading: boolean
@@ -150,7 +150,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
             </EdgeAnim>
           </ScrollView>
           <View style={styles.buttons}>
-            <ButtonsViewUi4
+            <ButtonsView
               primary={{
                 label: lstrings.fio_address_list_screen_button_register,
                 onPress: () => navigation.navigate('fioAddressRegister', {})

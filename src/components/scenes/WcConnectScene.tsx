@@ -16,6 +16,7 @@ import { lstrings } from '../../locales/strings'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { EdgeAsset } from '../../types/types'
 import { truncateString } from '../../util/utils'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
@@ -25,7 +26,6 @@ import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 interface Props extends EdgeSceneProps<'wcConnect'> {
@@ -113,7 +113,7 @@ export const WcConnectScene = withWallet((props: Props) => {
         <EdgeText style={styles.bodyTitle}>{bodyTitleText}</EdgeText>
         <EdgeText style={styles.body}>{lstrings.wc_confirm_body}</EdgeText>
         {renderWalletSelect()}
-        {subTitleText === '' ? null : <ButtonsViewUi4 parentType="scene" primary={{ label: lstrings.wc_confirm_connect_button, onPress: handleConnect }} />}
+        {subTitleText === '' ? null : <ButtonsView parentType="scene" primary={{ label: lstrings.wc_confirm_connect_button, onPress: handleConnect }} />}
       </ScrollView>
     </SceneWrapper>
   )

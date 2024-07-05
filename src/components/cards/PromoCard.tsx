@@ -9,10 +9,10 @@ import { useHandler } from '../../hooks/useHandler'
 import { getLocaleOrDefaultString } from '../../locales/intl'
 import { useDispatch } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
+import { EdgeButton } from '../buttons/EdgeButton'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ButtonUi4 } from '../ui4/ButtonUi4'
 import { EdgeCard } from './EdgeCard'
 
 export interface FilteredPromoCard {
@@ -73,7 +73,7 @@ export function PromoCardUi4(props: Props) {
         </EdgeText>
         {ctaLabel == null ? null : (
           <View style={styles.cornerButtonContainer}>
-            <ButtonUi4 layout="solo" type="secondary" label={ctaLabel} mini onPress={handlePress} />
+            <EdgeButton layout="solo" type="secondary" label={ctaLabel} mini onPress={handlePress} />
           </View>
         )}
       </View>

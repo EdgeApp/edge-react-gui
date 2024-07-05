@@ -3,7 +3,7 @@ import { View, ViewStyle } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { useHandler } from '../../hooks/useHandler'
-import { ModalButtons } from '../common/ModalButtons'
+import { ModalButtons } from '../buttons/ModalButtons'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'

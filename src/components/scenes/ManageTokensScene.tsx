@@ -12,6 +12,7 @@ import { lstrings } from '../../locales/strings'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { FlatListItem } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
@@ -23,7 +24,6 @@ import { ManageTokensRow } from '../themed/ManageTokensRow'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Title } from '../themed/Title'
 import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { CryptoIconUi4 } from '../ui4/CryptoIconUi4'
 
 /**
@@ -201,7 +201,7 @@ function ManageTokensSceneComponent(props: Props) {
           <DividerLine marginRem={[0, 1]} />
           {/* TODO: Create a layout enum in ButtonsViewUi4 for this persistent button area */}
           <View style={styles.buttonsContainer}>
-            <ButtonsViewUi4
+            <ButtonsView
               primary={{ label: lstrings.string_done_cap, onPress: navigation.goBack }}
               secondary={{ label: lstrings.addtoken_add, onPress: handleAdd }}
               layout="column"

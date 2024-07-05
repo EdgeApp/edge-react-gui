@@ -24,6 +24,7 @@ import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { matchJson } from '../../util/matchJson'
 import { convertCurrencyFromExchangeRates, convertNativeToExchange, darkenHexColor, removeIsoPrefix } from '../../util/utils'
 import { getMemoTitle } from '../../util/validateMemos'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { AdvancedDetailsCard } from '../cards/AdvancedDetailsCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { FiatExchangeDetailsCard } from '../cards/FiatExchangeDetailsCard'
@@ -38,7 +39,6 @@ import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { AccentColors } from '../ui4/DotsBackground'
 import { RowUi4 } from '../ui4/RowUi4'
 import { TxCryptoAmountRow } from '../ui4/TxCryptoAmountRow'
@@ -410,7 +410,7 @@ const TransactionDetailsComponent = (props: Props) => {
         <AdvancedDetailsCard transaction={transaction} url={sprintf(wallet.currencyInfo.transactionExplorer, transaction.txid)} />
       </EdgeAnim>
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 140 }}>
-        <ButtonsViewUi4
+        <ButtonsView
           layout="column"
           primary={{
             onPress: navigation.pop,

@@ -7,10 +7,10 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getUi4ImageUri } from '../../util/CdnUris'
 import { parseMarkedText } from '../../util/parseMarkedText'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { styled } from '../hoc/styled'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Props {
@@ -53,7 +53,7 @@ export const FioCreateHandleModal = (props: Props) => {
           {lstrings.fio_free_handle_please_wait}
         </EdgeText>
       ) : null}
-      <ButtonsViewUi4
+      <ButtonsView
         primary={{ label: lstrings.get_started_button, onPress: handleConfirm }}
         secondary={{ label: lstrings.not_now_button, onPress: handleCancel }}
         layout="column"

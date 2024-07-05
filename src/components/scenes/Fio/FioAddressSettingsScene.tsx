@@ -9,6 +9,7 @@ import { EdgeSceneProps } from '../../../types/routerTypes'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { addBundledTxs, getAddBundledTxsFee, getTransferFee } from '../../../util/FioAddressUtils'
 import { logEvent, TrackingEventName, TrackingValues } from '../../../util/tracking'
+import { ButtonsView } from '../../buttons/ButtonsView'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
@@ -18,7 +19,6 @@ import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
@@ -205,7 +205,7 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
             />
           )}
           {!showAddBundledTxs && !showTransfer && (
-            <ButtonsViewUi4
+            <ButtonsView
               secondary={{
                 label: lstrings.title_fio_add_bundled_txs,
                 onPress: this.onAddBundledTxsPress

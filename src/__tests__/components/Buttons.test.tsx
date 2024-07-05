@@ -5,9 +5,9 @@ import { TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import TestRenderer from 'react-test-renderer'
 
+import { ButtonsView } from '../../components/buttons/ButtonsView'
+import { EdgeButton } from '../../components/buttons/EdgeButton'
 import { EdgeText } from '../../components/themed/EdgeText'
-import { ButtonsViewUi4 } from '../../components/ui4/ButtonsViewUi4'
-import { ButtonUi4 } from '../../components/ui4/ButtonUi4'
 import { FakeProviders } from '../../util/fake/FakeProviders'
 
 const testIconUri = 'https://content.edge.app/currencyIconsV3/bitcoin/bitcoin.png'
@@ -16,12 +16,12 @@ describe('Buttons', () => {
   it('should render simple loose buttons', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <ButtonUi4 label="Primary" type="primary" />
-        <ButtonUi4 label="Secondary" type="secondary" />
-        <ButtonUi4 label="Tertiary" type="tertiary" />
-        <ButtonUi4 label="Primary (mini)" type="primary" mini />
-        <ButtonUi4 label="Secondary (mini)" type="secondary" mini />
-        <ButtonUi4 label="Tertiary (mini)" type="tertiary" mini />
+        <EdgeButton label="Primary" type="primary" />
+        <EdgeButton label="Secondary" type="secondary" />
+        <EdgeButton label="Tertiary" type="tertiary" />
+        <EdgeButton label="Primary (mini)" type="primary" mini />
+        <EdgeButton label="Secondary (mini)" type="secondary" mini />
+        <EdgeButton label="Tertiary (mini)" type="tertiary" mini />
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -30,12 +30,12 @@ describe('Buttons', () => {
   it('should render spinning buttons', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <ButtonUi4 label="Primary" type="primary" spinner />
-        <ButtonUi4 label="Secondary" type="secondary" spinner />
-        <ButtonUi4 label="Tertiary" type="tertiary" spinner />
-        <ButtonUi4 label="Primary (mini)" type="primary" mini spinner />
-        <ButtonUi4 label="Secondary (mini)" type="secondary" mini spinner />
-        <ButtonUi4 label="Tertiary (mini)" type="tertiary" mini spinner />
+        <EdgeButton label="Primary" type="primary" spinner />
+        <EdgeButton label="Secondary" type="secondary" spinner />
+        <EdgeButton label="Tertiary" type="tertiary" spinner />
+        <EdgeButton label="Primary (mini)" type="primary" mini spinner />
+        <EdgeButton label="Secondary (mini)" type="secondary" mini spinner />
+        <EdgeButton label="Tertiary (mini)" type="tertiary" mini spinner />
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -46,43 +46,43 @@ describe('Buttons', () => {
 
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <ButtonUi4 label="Primary" type="primary">
+        <EdgeButton label="Primary" type="primary">
           {icon}
-        </ButtonUi4>
-        <ButtonUi4 label="Secondary" type="secondary">
+        </EdgeButton>
+        <EdgeButton label="Secondary" type="secondary">
           {icon}
-        </ButtonUi4>
-        <ButtonUi4 label="Tertiary" type="tertiary">
+        </EdgeButton>
+        <EdgeButton label="Tertiary" type="tertiary">
           {icon}
-        </ButtonUi4>
-        <ButtonUi4 label="Primary (mini)" type="primary" mini>
+        </EdgeButton>
+        <EdgeButton label="Primary (mini)" type="primary" mini>
           {icon}
-        </ButtonUi4>
-        <ButtonUi4 label="Secondary (mini)" type="secondary" mini>
+        </EdgeButton>
+        <EdgeButton label="Secondary (mini)" type="secondary" mini>
           {icon}
-        </ButtonUi4>
-        <ButtonUi4 label="Tertiary (mini)" type="tertiary" mini>
+        </EdgeButton>
+        <EdgeButton label="Tertiary (mini)" type="tertiary" mini>
           {icon}
-        </ButtonUi4>
+        </EdgeButton>
 
-        <ButtonUi4 label="Primary" type="primary" spinner>
+        <EdgeButton label="Primary" type="primary" spinner>
           {icon}
-        </ButtonUi4>
-        <ButtonUi4 label="Secondary" type="secondary" spinner>
+        </EdgeButton>
+        <EdgeButton label="Secondary" type="secondary" spinner>
           {icon}
-        </ButtonUi4>
-        <ButtonUi4 label="Tertiary" type="tertiary" spinner>
+        </EdgeButton>
+        <EdgeButton label="Tertiary" type="tertiary" spinner>
           {icon}
-        </ButtonUi4>
-        <ButtonUi4 label="Primary (mini)" type="primary" mini spinner>
+        </EdgeButton>
+        <EdgeButton label="Primary (mini)" type="primary" mini spinner>
           {icon}
-        </ButtonUi4>
-        <ButtonUi4 label="Secondary (mini)" type="secondary" mini spinner>
+        </EdgeButton>
+        <EdgeButton label="Secondary (mini)" type="secondary" mini spinner>
           {icon}
-        </ButtonUi4>
-        <ButtonUi4 label="Tertiary (mini)" type="tertiary" mini spinner>
+        </EdgeButton>
+        <EdgeButton label="Tertiary (mini)" type="tertiary" mini spinner>
           {icon}
-        </ButtonUi4>
+        </EdgeButton>
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -94,9 +94,9 @@ describe('Buttons', () => {
     // Press enabled
     const testRenderer = TestRenderer.create(
       <FakeProviders>
-        <ButtonUi4 onPress={mockOnPress}>
+        <EdgeButton onPress={mockOnPress}>
           <EdgeText>Press Me</EdgeText>
-        </ButtonUi4>
+        </EdgeButton>
       </FakeProviders>
     )
 
@@ -110,7 +110,7 @@ describe('Buttons', () => {
   it('should render in a ButtonsView in a column layout with 1 buttons', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <ButtonsViewUi4 primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} />
+        <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} />
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -119,7 +119,7 @@ describe('Buttons', () => {
   it('should render in a ButtonsView in a column layout with 2 buttons', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <ButtonsViewUi4 primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} />
+        <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} />
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -128,7 +128,7 @@ describe('Buttons', () => {
   it('should render in a ButtonsView in a column layout with 3 buttons', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <ButtonsViewUi4
+        <ButtonsView
           primary={{ label: 'Primary', onPress: () => {} }}
           secondary={{ label: 'Secondary', onPress: () => {} }}
           tertiary={{ label: 'Tertiary', onPress: () => {} }}
@@ -141,7 +141,7 @@ describe('Buttons', () => {
   it('should render in a ButtonsView in a row layout with 1 buttons', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <ButtonsViewUi4 primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} layout="row" />
+        <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} layout="row" />
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -150,7 +150,7 @@ describe('Buttons', () => {
   it('should render in a ButtonsView in a row layout with 2 buttons', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <ButtonsViewUi4 primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} layout="row" />
+        <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} secondary={{ label: 'Secondary', onPress: () => {} }} layout="row" />
       </FakeProviders>
     )
     expect(renderer.toJSON()).toMatchSnapshot()
@@ -159,7 +159,7 @@ describe('Buttons', () => {
   it('should render in a ButtonsView in a row layout with 3 buttons', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
-        <ButtonsViewUi4
+        <ButtonsView
           primary={{ label: 'Primary', onPress: () => {} }}
           secondary={{ label: 'Secondary', onPress: () => {} }}
           tertiary={{ label: 'Tertiary', onPress: () => {} }}
@@ -174,13 +174,13 @@ describe('Buttons', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
         <View style={{ flex: 1 }}>
-          <ButtonsViewUi4
+          <ButtonsView
             primary={{ label: 'Primary', onPress: () => {} }}
             secondary={{ label: 'Secondary', onPress: () => {} }}
             tertiary={{ label: 'Tertiary', onPress: () => {} }}
             layout="column"
           />
-          <ButtonsViewUi4 primary={{ label: 'Primary', onPress: () => {} }} layout="column" />
+          <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} layout="column" />
         </View>
       </FakeProviders>
     )
@@ -191,13 +191,13 @@ describe('Buttons', () => {
     const renderer = TestRenderer.create(
       <FakeProviders>
         <View style={{ flex: 1 }}>
-          <ButtonsViewUi4
+          <ButtonsView
             primary={{ label: 'Primary', onPress: () => {} }}
             secondary={{ label: 'Secondary', onPress: () => {} }}
             tertiary={{ label: 'Tertiary', onPress: () => {} }}
             layout="row"
           />
-          <ButtonsViewUi4 primary={{ label: 'Primary', onPress: () => {} }} layout="row" />
+          <ButtonsView primary={{ label: 'Primary', onPress: () => {} }} layout="row" />
         </View>
       </FakeProviders>
     )

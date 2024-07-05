@@ -3,7 +3,7 @@ import { Platform, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
 
 import { lstrings } from '../../locales/strings'
-import { ModalButtons } from '../common/ModalButtons'
+import { ModalButtons } from '../buttons/ModalButtons'
 import { styled } from '../hoc/styled'
 import { showError } from '../services/AirshipInstance'
 import { Alert } from '../themed/Alert'

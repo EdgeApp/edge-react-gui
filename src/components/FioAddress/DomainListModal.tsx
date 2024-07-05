@@ -9,13 +9,13 @@ import { lstrings } from '../../locales/strings'
 import { connect } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { FioDomain, FlatListItem } from '../../types/types'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalFooter } from '../themed/ModalParts'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { ModalUi4 } from '../ui4/ModalUi4'
 
 interface Item {
@@ -124,7 +124,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     if (createNew) {
       return (
         <View style={styles.registerDomainRow}>
-          <ButtonsViewUi4
+          <ButtonsView
             tertiary={{
               label: lstrings.fio_address_list_domain_register,
               onPress: this.registerNewDomain

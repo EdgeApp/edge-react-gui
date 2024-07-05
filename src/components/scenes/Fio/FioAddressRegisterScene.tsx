@@ -12,6 +12,7 @@ import { FioDomain, FioPublicDomain } from '../../../types/types'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
 import { checkIsDomainPublic } from '../../../util/FioAddressUtils'
 import { openLink } from '../../../util/utils'
+import { ButtonsView } from '../../buttons/ButtonsView'
 import { AlertCardUi4 } from '../../cards/AlertCard'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { EdgeAnim, fadeIn, fadeOut } from '../../common/EdgeAnim'
@@ -23,7 +24,6 @@ import { Airship, showError, showToast, showWarning } from '../../services/Airsh
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { ButtonsViewUi4 } from '../../ui4/ButtonsViewUi4'
 import { RowUi4 } from '../../ui4/RowUi4'
 
 interface State {
@@ -335,7 +335,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
     return (
       <View style={styles.buttons}>
-        <ButtonsViewUi4 primary={primary} tertiary={tertiary} />
+        <ButtonsView primary={primary} tertiary={tertiary} />
       </View>
     )
   }

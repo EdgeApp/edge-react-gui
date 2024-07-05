@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
+import { ButtonsView } from '../../../components/buttons/ButtonsView'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { cacheStyles, Theme, useTheme } from '../../../components/services/ThemeContext'
 import { SceneHeader } from '../../../components/themed/SceneHeader'
-import { ButtonsViewUi4 } from '../../../components/ui4/ButtonsViewUi4'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
@@ -67,7 +67,7 @@ export const SepaFormScene = React.memo((props: Props) => {
         <GuiFormField fieldType="name" value={name} label={lstrings.form_field_title_account_owner} onChangeText={handleNameInput} autofocus />
         <GuiFormField fieldType="iban" value={iban} label={lstrings.form_field_title_iban} onChangeText={handleIbanInput} />
         <GuiFormField fieldType="swift" value={swift} returnKeyType="done" label={lstrings.form_field_title_swift_bic} onChangeText={handleSwiftInput} />
-        <ButtonsViewUi4
+        <ButtonsView
           primary={{
             label: lstrings.string_next_capitalized,
             disabled: !name.trim() || !iban.trim() || !swift.trim(),

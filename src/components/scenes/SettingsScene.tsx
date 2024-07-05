@@ -32,6 +32,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { DefaultScreen } from '../../types/types'
 import { secondsToDisplay } from '../../util/displayTime'
 import { removeIsoPrefix } from '../../util/utils'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { TextDropdown } from '../common/TextDropdown'
@@ -44,7 +45,6 @@ import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsLabelRow } from '../settings/SettingsLabelRow'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { SectionView } from '../ui4/SectionView'
 
 interface Props extends EdgeSceneProps<'settingsOverview'> {}
@@ -392,7 +392,7 @@ export const SettingsScene = (props: Props) => {
           </EdgeCard>
         )}
       </SectionView>
-      <ButtonsViewUi4
+      <ButtonsView
         layout="column"
         primary={{
           onPress: handleSendLogs,

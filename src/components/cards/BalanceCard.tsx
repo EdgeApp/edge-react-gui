@@ -12,13 +12,13 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { getTotalFiatAmountFromExchangeRates, removeIsoPrefix, zeroString } from '../../util/utils'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { AnimatedNumber } from '../common/AnimatedNumber'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { TransferModal } from '../modals/TransferModal'
 import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 import { EdgeCard } from './EdgeCard'
 
 // Numbers larger than this are likely to overflow the display width so don't
@@ -112,7 +112,7 @@ export const BalanceCardUi4 = (props: Props) => {
         </EdgeTouchableOpacity>
       )}
 
-      <ButtonsViewUi4
+      <ButtonsView
         layout="row"
         secondary={{
           onPress: handleDeposit,

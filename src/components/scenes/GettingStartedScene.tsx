@@ -28,6 +28,7 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { ImageProp } from '../../types/Theme'
 import { parseMarkedText } from '../../util/parseMarkedText'
 import { logEvent } from '../../util/tracking'
+import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeAnim, fadeInDown50 } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -35,7 +36,6 @@ import { styled } from '../hoc/styled'
 import { SwipeOffsetDetector } from '../interactions/SwipeOffsetDetector'
 import { Space } from '../layout/Space'
 import { EdgeText } from '../themed/EdgeText'
-import { ButtonsViewUi4 } from '../ui4/ButtonsViewUi4'
 
 const ANIM_DURATION = 1000
 
@@ -218,7 +218,7 @@ export const GettingStartedScene = (props: Props) => {
               })}
             </Sections>
             <EdgeAnim enter={fadeInDown50}>
-              <ButtonsViewUi4
+              <ButtonsView
                 layout="column"
                 primary={{
                   label: lstrings.account_get_started,
