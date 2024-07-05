@@ -11,12 +11,12 @@ import { getAvailableBalance, getWalletName } from '../../util/CurrencyWalletHel
 import { DECIMAL_PRECISION, truncateDecimals } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { Slider } from '../themed/Slider'
-import { RowUi4 } from '../ui4/RowUi4'
 
 type ActionResult =
   | {
@@ -192,14 +192,14 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     const balanceText = `${balance ? balance.toFixed(2) : '0'} ${balance ? lstrings.fio_address_confirm_screen_fio_label : ''}`
     return (
       <EdgeCard sections>
-        <RowUi4
+        <EdgeRow
           title={lstrings.fio_action_fee_label}
           body={displayFee ? `${displayFee} ${lstrings.fio_address_confirm_screen_fio_label}` : lstrings.fio_address_confirm_screen_free_label}
         />
         {displayFee ? (
-          <RowUi4 title={lstrings.fio_address_confirm_screen_balance_label}>
+          <EdgeRow title={lstrings.fio_address_confirm_screen_balance_label}>
             <EdgeText style={displayFee > balance ? styles.balanceTitleDisabled : styles.balanceTitle}>{balanceText}</EdgeText>
-          </RowUi4>
+          </EdgeRow>
         ) : null}
       </EdgeCard>
     )
@@ -216,7 +216,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
         {title ? <EdgeText style={styles.actionTitle}>{title}</EdgeText> : null}
         {showPaymentWalletPicker && fioWallets.length > 1 ? (
           <EdgeCard>
-            <RowUi4
+            <EdgeRow
               rightButtonType="editable"
               title={lstrings.select_wallet}
               onPress={this.handleWalletPress}

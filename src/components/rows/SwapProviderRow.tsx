@@ -2,11 +2,11 @@ import { EdgeSwapQuote } from 'edge-core-js'
 import React from 'react'
 import FastImage from 'react-native-fast-image'
 
-import { useCryptoText } from '../../../hooks/useCryptoText'
-import { lstrings } from '../../../locales/strings'
-import { getSwapPluginIconUri } from '../../../util/CdnUris'
-import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
-import { EdgeText } from '../../themed/EdgeText'
+import { useCryptoText } from '../../hooks/useCryptoText'
+import { lstrings } from '../../locales/strings'
+import { getSwapPluginIconUri } from '../../util/CdnUris'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
 import { IconDataRow } from './IconDataRow'
 
 export interface Props {

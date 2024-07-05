@@ -25,11 +25,11 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
       }
     }
   >
-    <RowUi4
+    <EdgeRow
       body=" 0.000681 ($ 0.00)"
       title="Old Fee"
     />
-    <RowUi4
+    <EdgeRow
       body=" 0.001362 ($ 0.00)"
       title="New Fee"
     />

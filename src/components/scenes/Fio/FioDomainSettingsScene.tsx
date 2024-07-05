@@ -16,12 +16,12 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
 import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { SettingsTappableRow } from '../../settings/SettingsTappableRow'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
 export interface FioDomainSettingsParams {
@@ -189,10 +189,10 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
         <SceneHeader title={lstrings.title_fio_domain_settings} underline withTopMargin />
         <View style={styles.container}>
           <EdgeCard>
-            <RowUi4 title={lstrings.fio_domain_label} body={`${FIO_ADDRESS_DELIMITER} ${fioDomainName}`} />
+            <EdgeRow title={lstrings.fio_domain_label} body={`${FIO_ADDRESS_DELIMITER} ${fioDomainName}`} />
           </EdgeCard>
           <EdgeCard>
-            <RowUi4 title={lstrings.fio_address_details_screen_expires} body={formatDate(new Date(expiration))} />
+            <EdgeRow title={lstrings.fio_address_details_screen_expires} body={formatDate(new Date(expiration))} />
           </EdgeCard>
           {showVisibility && (
             <FioActionSubmit

@@ -18,6 +18,7 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
+import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { Alert } from '../themed/Alert'
@@ -25,7 +26,6 @@ import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { SafeSlider } from '../themed/SafeSlider'
 import { CryptoFiatAmountTile } from '../tiles/CryptoFiatAmountTile'
 import { FiatAmountTile } from '../tiles/FiatAmountTile'
-import { RowUi4 } from '../ui4/RowUi4'
 import { EdgeModal } from './EdgeModal'
 
 interface Props extends WcSmartContractModalProps {
@@ -173,10 +173,10 @@ export const WcSmartContractModal = (props: Props) => {
           />
         )}
         <EdgeCard icon={walletImageUri}>
-          <RowUi4 title={lstrings.wc_smartcontract_wallet} body={walletName} />
+          <EdgeRow title={lstrings.wc_smartcontract_wallet} body={walletName} />
         </EdgeCard>
         <EdgeCard icon={iconUri}>
-          <RowUi4 title={lstrings.wc_smartcontract_dapp} body={dAppName} />
+          <EdgeRow title={lstrings.wc_smartcontract_dapp} body={dAppName} />
         </EdgeCard>
         {zeroString(networkFee) ? null : (
           <CryptoFiatAmountTile

@@ -26,12 +26,12 @@ import { withWallet } from '../../hoc/withWallet'
 import { AddressModal } from '../../modals/AddressModal'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { TextInputModal } from '../../modals/TextInputModal'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../../services/ThemeContext'
 import { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
-import { RowUi4 } from '../../ui4/RowUi4'
 
 export interface FioRequestConfirmationParams {
   amounts: ExchangedFlipInputAmounts
@@ -315,15 +315,15 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         <SceneHeader title={lstrings.fio_confirm_request_header} underline withTopMargin />
         <View style={styles.container}>
           <EdgeCard sections>
-            <RowUi4 rightButtonType="editable" title={lstrings.fio_confirm_request_from} body={fioAddressFrom} onPress={this.onAddressFromPressed} />
-            <RowUi4
+            <EdgeRow rightButtonType="editable" title={lstrings.fio_confirm_request_from} body={fioAddressFrom} onPress={this.onAddressFromPressed} />
+            <EdgeRow
               rightButtonType="editable"
               title={lstrings.fio_confirm_request_to}
               body={settingFioAddressTo ? lstrings.resolving : fioAddressTo}
               onPress={this.onAddressToPressed}
             />
-            <RowUi4 title={lstrings.fio_confirm_request_amount} body={`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`} />
-            <RowUi4 maximumHeight="large" rightButtonType="editable" title={lstrings.fio_confirm_request_memo} body={memo} onPress={this.onMemoPressed} />
+            <EdgeRow title={lstrings.fio_confirm_request_amount} body={`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`} />
+            <EdgeRow maximumHeight="large" rightButtonType="editable" title={lstrings.fio_confirm_request_memo} body={memo} onPress={this.onMemoPressed} />
           </EdgeCard>
           <View style={styles.sliderContainer}>
             {fioAddressFrom.length > 0 && fioAddressTo.length > 0 && showSlider ? (

@@ -10,8 +10,8 @@ import { useSelector } from '../../types/reactRedux'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { DECIMAL_PRECISION, getDenomFromIsoCode, maxPrimaryCurrencyConversionDecimals, precisionAdjust, removeIsoPrefix } from '../../util/utils'
 import { CryptoIcon } from '../icons/CryptoIcon'
+import { EdgeRow } from '../rows/EdgeRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { RowUi4 } from '../ui4/RowUi4'
 import { EdgeText } from './EdgeText'
 import { FieldNum, FlipInput2, FlipInputFieldInfos, FlipInputRef } from './FlipInput2'
 export type ExchangeFlipInputFields = 'fiat' | 'crypto'
@@ -201,9 +201,9 @@ const ExchangedFlipInput2Component = React.forwardRef<ExchangedFlipInputRef, Pro
 
   return (
     <>
-      <RowUi4 onPress={headerCallback} icon={<CryptoIcon marginRem={[0, 0.5, 0, 0]} pluginId={pluginId} sizeRem={1.5} tokenId={tokenId} />}>
+      <EdgeRow onPress={headerCallback} icon={<CryptoIcon marginRem={[0, 0.5, 0, 0]} pluginId={pluginId} sizeRem={1.5} tokenId={tokenId} />}>
         <EdgeText style={styles.headerText}>{headerText}</EdgeText>
-      </RowUi4>
+      </EdgeRow>
 
       <FlipInput2
         onBlur={onBlur}

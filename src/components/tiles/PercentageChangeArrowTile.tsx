@@ -3,9 +3,9 @@ import * as React from 'react'
 import { View, ViewStyle } from 'react-native'
 
 import { EdgeCard } from '../cards/EdgeCard'
+import { EdgeRow } from '../rows/EdgeRow'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { RowUi4 } from '../ui4/RowUi4'
 
 interface Props {
   title: string
@@ -34,7 +34,7 @@ const PercentageChangeArrowTileComponent = (props: Props) => {
   }
 
   return (
-    <RowUi4 title={title}>
+    <EdgeRow title={title}>
       <EdgeCard marginRem={[0.5, 1, 0, 1]} paddingRem={[0.5, 1, 0.5, 1]}>
         <View style={styles.container}>
           <EdgeText style={{ color: currentValueColor }}>{currentValueString}</EdgeText>
@@ -42,7 +42,7 @@ const PercentageChangeArrowTileComponent = (props: Props) => {
           <EdgeText style={{ color: futureValueColor }}>{futureValueString}</EdgeText>
         </View>
       </EdgeCard>
-    </RowUi4>
+    </EdgeRow>
   )
 }
 

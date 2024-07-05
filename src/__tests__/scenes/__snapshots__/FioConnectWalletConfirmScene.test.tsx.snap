@@ -19,7 +19,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
     <EdgeCard
       sections={true}
     >
-      <RowUi4
+      <EdgeRow
         body="MyFioAddress"
         title="FIO Crypto Handle"
       />

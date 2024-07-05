@@ -2,14 +2,14 @@ import { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { useSelector } from '../../../types/reactRedux'
-import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
-import { CryptoIcon } from '../../icons/CryptoIcon'
-import { FiatIcon } from '../../icons/FiatIcon'
-import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
-import { CryptoText } from '../../text/CryptoText'
-import { FiatText } from '../../text/FiatText'
-import { EdgeText } from '../../themed/EdgeText'
+import { useSelector } from '../../types/reactRedux'
+import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import { CryptoIcon } from '../icons/CryptoIcon'
+import { FiatIcon } from '../icons/FiatIcon'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { CryptoText } from '../text/CryptoText'
+import { FiatText } from '../text/FiatText'
+import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
   marginRem?: number[] | number

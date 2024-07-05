@@ -2,21 +2,19 @@ import { div, lt, round } from 'biggystring'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import { cacheStyles } from 'react-native-patina'
 
-import { getFiatSymbol } from '../../../constants/WalletAndCurrencyConstants'
-import { formatFiatString } from '../../../hooks/useFiatText'
-import { useHandler } from '../../../hooks/useHandler'
-import { toPercentString } from '../../../locales/intl'
-import { AssetSubText, CoinRanking, CoinRankingData, PercentChangeTimeFrame } from '../../../types/coinrankTypes'
-import { useState } from '../../../types/reactHooks'
-import { NavigationProp } from '../../../types/routerTypes'
-import { triggerHaptic } from '../../../util/haptic'
-import { debugLog, LOG_COINRANK } from '../../../util/logger'
-import { DECIMAL_PRECISION } from '../../../util/utils'
-import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
-import { Theme, useTheme } from '../../services/ThemeContext'
-import { EdgeText } from '../../themed/EdgeText'
+import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
+import { formatFiatString } from '../../hooks/useFiatText'
+import { useHandler } from '../../hooks/useHandler'
+import { toPercentString } from '../../locales/intl'
+import { AssetSubText, CoinRanking, CoinRankingData, PercentChangeTimeFrame } from '../../types/coinrankTypes'
+import { NavigationProp } from '../../types/routerTypes'
+import { triggerHaptic } from '../../util/haptic'
+import { debugLog, LOG_COINRANK } from '../../util/logger'
+import { DECIMAL_PRECISION } from '../../util/utils'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
   assetSubText: AssetSubText
@@ -43,7 +41,7 @@ const CoinRankRowComponent = (props: Props) => {
 
   const theme = useTheme()
   const styles = getStyles(theme)
-  const [coinRow, setCoinRow] = useState<CoinRankingData | undefined>(coinRankingDatas[index])
+  const [coinRow, setCoinRow] = React.useState<CoinRankingData | undefined>(coinRankingDatas[index])
 
   const handlePress = useHandler(() => {
     triggerHaptic('impactLight')

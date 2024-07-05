@@ -37,7 +37,7 @@ interface Props {
   marginRem?: number[] | number
 }
 
-export const RowUi4 = (props: Props) => {
+export const EdgeRow = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 

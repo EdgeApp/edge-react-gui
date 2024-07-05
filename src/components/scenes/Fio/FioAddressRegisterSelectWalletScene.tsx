@@ -21,10 +21,10 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
-import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
 export interface FioAddressRegisterSelectWalletParams {
@@ -238,11 +238,11 @@ export class FioAddressRegisterSelectWallet extends React.Component<Props, Local
     return (
       <>
         <EdgeCard sections marginRem={[0.5, 0.5, 2, 0.5]}>
-          <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddress} />
+          <EdgeRow title={lstrings.fio_address_register_form_field_label} body={fioAddress} />
           {!selectedDomain.walletId && (
-            <RowUi4 rightButtonType="touchable" title={lstrings.create_wallet_account_select_wallet} body={walletName} onPress={this.onWalletPress} />
+            <EdgeRow rightButtonType="touchable" title={lstrings.create_wallet_account_select_wallet} body={walletName} onPress={this.onWalletPress} />
           )}
-          <RowUi4 title={lstrings.create_wallet_account_amount_due} body={costStr} loading={loading} />
+          <EdgeRow title={lstrings.create_wallet_account_amount_due} body={costStr} loading={loading} />
         </EdgeCard>
         <EdgeButton disabled={nextDisabled} onPress={this.onNextPress} label={lstrings.string_next_capitalized} type="primary" />
       </>

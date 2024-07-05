@@ -7,7 +7,7 @@ import { lstrings } from '../../locales/strings'
 import { getExchangeDenom, selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { convertNativeToDisplay, truncateDecimals } from '../../util/utils'
-import { RowUi4 } from './RowUi4'
+import { EdgeRow } from './EdgeRow'
 
 interface Props {
   transaction: EdgeTransaction
@@ -67,5 +67,5 @@ export function TxCryptoAmountRow(props: Props) {
     return `${symbolString} ${absoluteAmount}`
   }, [currencyCode, currencyInfo, nativeAmount, networkFee, swapData, walletDefaultDenom])
 
-  return <RowUi4 rightButtonType="none" title={sprintf(lstrings.transaction_details_crypto_amount, currencyName)} body={text} />
+  return <EdgeRow rightButtonType="none" title={sprintf(lstrings.transaction_details_crypto_amount, currencyName)} body={text} />
 }

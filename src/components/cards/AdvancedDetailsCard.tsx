@@ -3,8 +3,8 @@ import React, { PureComponent } from 'react'
 
 import { lstrings } from '../../locales/strings'
 import { openBrowserUri } from '../../util/WebUtils'
+import { EdgeRow } from '../rows/EdgeRow'
 import { ThemeProps, withTheme } from '../services/ThemeContext'
-import { RowUi4 } from '../ui4/RowUi4'
 import { EdgeCard } from './EdgeCard'
 
 const localizedFeeText = {
@@ -78,19 +78,19 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
     return (
       <EdgeCard sections>
         {url != null && url !== '' && (
-          <RowUi4
+          <EdgeRow
             rightButtonType="touchable"
             title={lstrings.transaction_details_view_advanced_data}
             body={lstrings.transaction_details_advance_details_show_explorer}
             onPress={this.openUrl}
           />
         )}
-        {receiveAddressesString != null && <RowUi4 rightButtonType="copy" title={lstrings.my_receive_addresses_title} body={receiveAddressesString} />}
-        {networkFeeOption != null && <RowUi4 title={lstrings.transaction_details_advance_details_fee_setting} body={this.renderFeeOptions()} />}
-        {feeRateUsed != null && <RowUi4 title={lstrings.transaction_details_advance_details_fee_used} body={this.renderFees(feeRateUsed)} />}
-        {txSecret != null && <RowUi4 rightButtonType="copy" title={lstrings.transaction_details_advance_details_txSecret} body={txSecret} />}
+        {receiveAddressesString != null && <EdgeRow rightButtonType="copy" title={lstrings.my_receive_addresses_title} body={receiveAddressesString} />}
+        {networkFeeOption != null && <EdgeRow title={lstrings.transaction_details_advance_details_fee_setting} body={this.renderFeeOptions()} />}
+        {feeRateUsed != null && <EdgeRow title={lstrings.transaction_details_advance_details_fee_used} body={this.renderFees(feeRateUsed)} />}
+        {txSecret != null && <EdgeRow rightButtonType="copy" title={lstrings.transaction_details_advance_details_txSecret} body={txSecret} />}
         {txSecret != null && recipientAddress !== '' && txid !== '' && (
-          <RowUi4
+          <EdgeRow
             rightButtonType="touchable"
             title={lstrings.transaction_details_advance_details_payment_proof}
             body={lstrings.transaction_details_advance_details_show_explorer}
@@ -98,10 +98,10 @@ export class AdvancedDetailsCardComponent extends PureComponent<Props> {
           />
         )}
         {signedTx != null && signedTx !== '' ? (
-          <RowUi4 rightButtonType="copy" title={lstrings.transaction_details_advance_details_raw_txbytes} body={signedTx} maximumHeight="small" />
+          <EdgeRow rightButtonType="copy" title={lstrings.transaction_details_advance_details_raw_txbytes} body={signedTx} maximumHeight="small" />
         ) : null}
 
-        {deviceDescription != null && <RowUi4 title={lstrings.transaction_details_advance_details_device} body={deviceDescription} />}
+        {deviceDescription != null && <EdgeRow title={lstrings.transaction_details_advance_details_device} body={deviceDescription} />}
       </EdgeCard>
     )
   }

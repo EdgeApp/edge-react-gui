@@ -21,10 +21,10 @@ import { convertNativeToDenomination } from '../../../util/utils'
 import { ButtonsView } from '../../buttons/ButtonsView'
 import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { RowUi4 } from '../../ui4/RowUi4'
 
 interface OwnProps extends EdgeSceneProps<'fioStakingOverview'> {}
 
@@ -103,9 +103,9 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
     locks.map(item => {
       const amount = `${item.amount} ${currencyCode}`
       return (
-        <RowUi4 key={item.id} title={item.title}>
+        <EdgeRow key={item.id} title={item.title}>
           <EdgeText>{amount}</EdgeText>
-        </RowUi4>
+        </EdgeRow>
       )
     })
 
@@ -122,12 +122,12 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
           <EdgeText style={styles.explainerText}>{lstrings.staking_overview_explainer}</EdgeText>
 
           <EdgeCard>
-            <RowUi4 title="Currently Staked">
+            <EdgeRow title="Currently Staked">
               <EdgeText>
                 {staked}
                 <EdgeText style={styles.fiatAmount}>{fiatStaked}</EdgeText>
               </EdgeText>
-            </RowUi4>
+            </EdgeRow>
           </EdgeCard>
           <EdgeCard sections>{renderItems()}</EdgeCard>
         </View>

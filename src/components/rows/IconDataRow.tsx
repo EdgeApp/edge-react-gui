@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { fixSides, mapSides, sidesToMargin } from '../../../util/sides'
-import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
-import { EdgeText } from '../../themed/EdgeText'
+import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
 
 interface Props {
   icon: React.ReactNode

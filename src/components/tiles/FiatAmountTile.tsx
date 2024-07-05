@@ -4,9 +4,9 @@ import * as React from 'react'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useSelector } from '../../types/reactRedux'
 import { getDenomFromIsoCode } from '../../util/utils'
+import { EdgeRow } from '../rows/EdgeRow'
 import { FiatText } from '../text/FiatText'
 import { EdgeText } from '../themed/EdgeText'
-import { RowUi4 } from '../ui4/RowUi4'
 
 // Either Fiat OR Crypto amount props must be provided.
 interface Props {
@@ -34,8 +34,8 @@ export const FiatAmountTile = (props: Props) => {
     ) : null
 
   return (
-    <RowUi4 title={title}>
+    <EdgeRow title={title}>
       <EdgeText>{amountValue}</EdgeText>
-    </RowUi4>
+    </EdgeRow>
   )
 }

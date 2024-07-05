@@ -1,12 +1,12 @@
 import { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
-import { SPECIAL_CURRENCY_INFO } from '../../../constants/WalletAndCurrencyConstants'
-import { useSelector } from '../../../types/reactRedux'
-import { CryptoIcon } from '../../icons/CryptoIcon'
-import { CryptoText } from '../../text/CryptoText'
-import { FiatText } from '../../text/FiatText'
-import { TickerText } from '../../text/TickerText'
+import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import { useSelector } from '../../types/reactRedux'
+import { CryptoIcon } from '../icons/CryptoIcon'
+import { CryptoText } from '../text/CryptoText'
+import { FiatText } from '../text/FiatText'
+import { TickerText } from '../text/TickerText'
 import { IconDataRow } from './IconDataRow'
 
 // For display of custom assets such as AAVE collateral tokens

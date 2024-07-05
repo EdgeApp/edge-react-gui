@@ -15,12 +15,12 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { TextInputModal } from '../modals/TextInputModal'
+import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
-import { RowUi4 } from '../ui4/RowUi4'
 
 export interface CreateWalletImportOptionsParams {
   createWalletList: WalletCreateItem[]
@@ -157,7 +157,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
 
           return (
             <View key={key} style={styles.optionInput}>
-              <RowUi4
+              <EdgeRow
                 rightButtonType="editable"
                 title={opt.displayName}
                 maximumHeight="large"
@@ -182,7 +182,7 @@ const CreateWalletImportOptionsComponent = (props: Props) => {
                     {lstrings.fragment_required}
                   </EdgeText>
                 </View>
-              </RowUi4>
+              </EdgeRow>
             </View>
           )
         })}

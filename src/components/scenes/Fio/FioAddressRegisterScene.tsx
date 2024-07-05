@@ -20,11 +20,11 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { DomainListModal } from '../../FioAddress/DomainListModal'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError, showToast, showWarning } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { RowUi4 } from '../../ui4/RowUi4'
 
 interface State {
   selectedWallet: EdgeCurrencyWallet | null
@@ -355,7 +355,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
     if (fioWallets && fioWallets.length > 1) {
       const title = `${selectedWallet == null ? lstrings.fio_address_register_no_wallet_name : getWalletName(selectedWallet)}`
-      return <RowUi4 rightButtonType="touchable" title={`${lstrings.title_fio_connect_to_wallet}`} onPress={this.selectFioWallet} body={title} />
+      return <EdgeRow rightButtonType="touchable" title={`${lstrings.title_fio_connect_to_wallet}`} onPress={this.selectFioWallet} body={title} />
     }
   }
 
@@ -416,7 +416,7 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
           <View onLayout={this.fieldViewOnLayout}>
             <EdgeCard sections>
-              <RowUi4 rightButtonType="editable" title={lstrings.fio_address_choose_label} onPress={this.editAddressPressed}>
+              <EdgeRow rightButtonType="editable" title={lstrings.fio_address_choose_label} onPress={this.editAddressPressed}>
                 <View style={styles.addressTileBody}>
                   {fioAddress ? (
                     <EdgeText style={styles.fioAddressName}>{fioAddress}</EdgeText>
@@ -425,8 +425,8 @@ export class FioAddressRegister extends React.Component<Props, State> {
                   )}
                   {this.renderLoader()}
                 </View>
-              </RowUi4>
-              <RowUi4
+              </EdgeRow>
+              <EdgeRow
                 rightButtonType="touchable"
                 title={lstrings.fio_address_choose_domain_label}
                 onPress={this.selectFioDomain}

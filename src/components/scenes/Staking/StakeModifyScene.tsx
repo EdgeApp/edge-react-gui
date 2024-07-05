@@ -32,6 +32,7 @@ import { ButtonsModal } from '../../modals/ButtonsModal'
 import { FlipInputModal2, FlipInputModalResult } from '../../modals/FlipInputModal2'
 import { FlashNotification } from '../../navigation/FlashNotification'
 import { FillLoader } from '../../progress-indicators/FillLoader'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { Alert } from '../../themed/Alert'
@@ -41,7 +42,6 @@ import { Slider } from '../../themed/Slider'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 import { EditableAmountTile } from '../../tiles/EditableAmountTile'
 import { ErrorTile } from '../../tiles/ErrorTile'
-import { RowUi4 } from '../../ui4/RowUi4'
 
 export interface StakeModifyParams {
   title: string
@@ -407,9 +407,9 @@ const StakeModifySceneComponent = (props: Props) => {
     }
     return (
       <EdgeCard>
-        <RowUi4 rightButtonType="questionable" title={lstrings.stake_break_even_time} onPress={handlePressBreakEvenDays}>
+        <EdgeRow rightButtonType="questionable" title={lstrings.stake_break_even_time} onPress={handlePressBreakEvenDays}>
           <EdgeText>{message}</EdgeText>
-        </RowUi4>
+        </EdgeRow>
       </EdgeCard>
     )
   }
@@ -445,7 +445,7 @@ const StakeModifySceneComponent = (props: Props) => {
     return (
       <View style={styles.amountTilesContainer}>
         <EdgeCard icon={getCurrencyIconUris(wallet.currencyInfo.pluginId, null).symbolImage}>
-          <RowUi4 title={lstrings.wc_smartcontract_wallet} body={getWalletName(wallet)} />
+          <EdgeRow title={lstrings.wc_smartcontract_wallet} body={getWalletName(wallet)} />
         </EdgeCard>
         {
           // Render stake/unstake amount tiles

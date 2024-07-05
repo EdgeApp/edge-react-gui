@@ -43,13 +43,13 @@ import { EdgeAnim, fadeInUp20, fadeInUp30, fadeInUp60, fadeInUp90 } from '../com
 import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
 import { TextInputModal } from '../modals/TextInputModal'
 import { WalletListResult } from '../modals/WalletListModal'
+import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
-import { RowUi4 } from '../ui4/RowUi4'
 import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
 
 export interface GuiPluginListParams {
@@ -384,7 +384,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const countryCard =
       stateProvinceData == null ? (
         <EdgeCard>
-          <RowUi4 onPress={onCountryPress} rightButtonType="none" icon={icon} body={countryName} />
+          <EdgeRow onPress={onCountryPress} rightButtonType="none" icon={icon} body={countryName} />
         </EdgeCard>
       ) : (
         <SelectableRow onPress={onCountryPress} subTitle={stateProvinceData.name} title={countryData?.name} icon={icon} />

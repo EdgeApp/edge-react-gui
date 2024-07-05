@@ -22,11 +22,11 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { WalletListModal, WalletListResult } from '../../modals/WalletListModal'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { MainButton } from '../../themed/MainButton'
-import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
 export interface FioDomainRegisterSelectWalletParams {
@@ -231,13 +231,13 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
             {detailsText}
           </EdgeText>
           <EdgeCard>
-            <RowUi4 title={lstrings.fio_domain_label} body={fioDomain} />
+            <EdgeRow title={lstrings.fio_domain_label} body={fioDomain} />
           </EdgeCard>
           <EdgeCard>
-            <RowUi4 title={lstrings.create_wallet_account_amount_due} body={loading ? lstrings.loading : `${activationCost} ${FIO_STR}`} />
+            <EdgeRow title={lstrings.create_wallet_account_amount_due} body={loading ? lstrings.loading : `${activationCost} ${FIO_STR}`} />
           </EdgeCard>
           <EdgeCard>
-            <RowUi4
+            <EdgeRow
               rightButtonType="touchable"
               title={lstrings.create_wallet_account_select_wallet}
               body={paymentWalletBody}

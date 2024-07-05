@@ -24,6 +24,7 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { EdgeModal } from '../../modals/EdgeModal'
 import { FlipInputModal2, FlipInputModalResult } from '../../modals/FlipInputModal2'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText, Paragraph } from '../../themed/EdgeText'
@@ -31,7 +32,6 @@ import { ExchangedFlipInputAmounts } from '../../themed/ExchangedFlipInput2'
 import { ModalTitle } from '../../themed/ModalParts'
 import { SceneHeader } from '../../themed/SceneHeader'
 import { Slider } from '../../themed/Slider'
-import { RowUi4 } from '../../ui4/RowUi4'
 
 interface Props extends EdgeSceneProps<'fioStakingChange'> {
   wallet: EdgeCurrencyWallet
@@ -299,9 +299,9 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
           <Paragraph>{lstrings.staking_change_explaner2}</Paragraph>
         </View>
         <EdgeCard marginRem={1}>
-          <RowUi4 rightButtonType="editable" title={lstrings.staking_change_add_amount_title} onPress={handleAmount}>
+          <EdgeRow rightButtonType="editable" title={lstrings.staking_change_add_amount_title} onPress={handleAmount}>
             <EdgeText style={styles.amountText}>{exchangeAmount}</EdgeText>
-          </RowUi4>
+          </EdgeRow>
         </EdgeCard>
         {apy != null && apy !== 0 && (
           <View style={styles.estReturn}>
@@ -325,17 +325,17 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
           <Image style={styles.currencyLogo} source={fioLogo} />
         </SceneHeader>
         <EdgeCard sections>
-          <RowUi4 rightButtonType="editable" title={lstrings.staking_change_remove_amount_title} onPress={handleAmount}>
+          <EdgeRow rightButtonType="editable" title={lstrings.staking_change_remove_amount_title} onPress={handleAmount}>
             <EdgeText style={styles.amountText}>{exchangeAmount}</EdgeText>
-          </RowUi4>
+          </EdgeRow>
           {estReward !== '0' && (
-            <RowUi4 title={lstrings.staking_estimated_rewards}>
+            <EdgeRow title={lstrings.staking_estimated_rewards}>
               <EdgeText style={styles.amountText}>{estReward}</EdgeText>
-            </RowUi4>
+            </EdgeRow>
           )}
-          <RowUi4 rightButtonType="questionable" title={lstrings.staking_change_remove_unlock_date} onPress={handleUnlockDate}>
+          <EdgeRow rightButtonType="questionable" title={lstrings.staking_change_remove_unlock_date} onPress={handleUnlockDate}>
             <EdgeText>{unlockDateFormat}</EdgeText>
-          </RowUi4>
+          </EdgeRow>
         </EdgeCard>
       </>
     )

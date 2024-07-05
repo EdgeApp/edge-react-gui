@@ -15,11 +15,11 @@ import { SceneWrapper } from '../../common/SceneWrapper'
 import { FioActionSubmit } from '../../FioAddress/FioActionSubmit'
 import { withWallet } from '../../hoc/withWallet'
 import { ButtonsModal } from '../../modals/ButtonsModal'
+import { EdgeRow } from '../../rows/EdgeRow'
 import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { RowUi4 } from '../../ui4/RowUi4'
 import { SendScene2Params } from '../SendScene2'
 
 export interface FioAddressSettingsParams {
@@ -179,8 +179,8 @@ export class FioAddressSettingsComponent extends React.Component<Props, LocalSta
         <SceneHeader title={lstrings.title_fio_address_settings} underline withTopMargin />
         <View style={styles.container}>
           <EdgeCard sections>
-            <RowUi4 title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
-            {bundledTxs != null ? <RowUi4 title={lstrings.fio_address_details_screen_bundled_txs} body={`${bundledTxs}`} /> : null}
+            <EdgeRow title={lstrings.fio_address_register_form_field_label} body={fioAddressName} />
+            {bundledTxs != null ? <EdgeRow title={lstrings.fio_address_details_screen_bundled_txs} body={`${bundledTxs}`} /> : null}
           </EdgeCard>
           {showAddBundledTxs && (
             <FioActionSubmit

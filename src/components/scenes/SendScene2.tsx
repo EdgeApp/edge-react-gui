@@ -52,6 +52,7 @@ import { FlipInputModal2, FlipInputModalRef, FlipInputModalResult } from '../mod
 import { InsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { WalletListModal, WalletListResult } from '../modals/WalletListModal'
+import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -64,7 +65,6 @@ import { CountdownTile } from '../tiles/CountdownTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
 import { AccentColors } from '../ui4/DotsBackground'
-import { RowUi4 } from '../ui4/RowUi4'
 
 // TODO: Check contentPadding
 
@@ -419,7 +419,7 @@ const SendComponent = (props: Props) => {
     const name = coreWallet == null ? '' : getWalletName(coreWallet)
 
     return (
-      <RowUi4
+      <EdgeRow
         rightButtonType={lockTilesMap.wallet ? 'none' : 'editable'}
         title={lstrings.send_scene_send_from_wallet}
         onPress={lockTilesMap.wallet ? undefined : handleWalletPress}
@@ -443,7 +443,7 @@ const SendComponent = (props: Props) => {
     const lastTargetHasAddress = spendInfo.spendTargets[numTargets - 1].publicAddress != null
     const lastTargetHasAmount = spendInfo.spendTargets[numTargets - 1].nativeAmount != null
     if (lastTargetHasAddress && lastTargetHasAmount && ALLOW_MULTIPLE_TARGETS) {
-      return <RowUi4 rightButtonType="touchable" title={lstrings.send_add_destination_address} onPress={handleAddAddress} maximumHeight="small" />
+      return <EdgeRow rightButtonType="touchable" title={lstrings.send_add_destination_address} onPress={handleAddAddress} maximumHeight="small" />
     } else {
       return null
     }
@@ -494,7 +494,7 @@ const SendComponent = (props: Props) => {
       const feeSyntaxStyle = transactionFee.fiatStyle
 
       return (
-        <RowUi4
+        <EdgeRow
           rightButtonType={noChangeMiningFee || lockTilesMap.fee ? 'none' : 'touchable'}
           title={`${lstrings.wc_smartcontract_network_fee}:`}
           onPress={noChangeMiningFee ? undefined : handleFeesChange}
@@ -522,7 +522,7 @@ const SendComponent = (props: Props) => {
               {feeSyntax}
             </EdgeText>
           )}
-        </RowUi4>
+        </EdgeRow>
       )
     }
 
@@ -533,9 +533,9 @@ const SendComponent = (props: Props) => {
     const notes = edgeTransaction?.metadata?.notes
     if (notes != null) {
       return (
-        <RowUi4 title={lstrings.send_scene_metadata_name_title}>
+        <EdgeRow title={lstrings.send_scene_metadata_name_title}>
           <EdgeText>{notes}</EdgeText>
-        </RowUi4>
+        </EdgeRow>
       )
     }
   }
@@ -629,9 +629,9 @@ const SendComponent = (props: Props) => {
       }
 
       return (
-        <RowUi4 rightButtonType="touchable" title={memoTitle} onPress={handleUniqueIdentifier}>
+        <EdgeRow rightButtonType="touchable" title={memoTitle} onPress={handleUniqueIdentifier}>
           <EdgeText>{uniqueIdentifier ?? addButtonText}</EdgeText>
-        </RowUi4>
+        </EdgeRow>
       )
     }
 
@@ -651,7 +651,7 @@ const SendComponent = (props: Props) => {
 
   const renderInfoTiles = () => {
     if (!infoTiles || !infoTiles.length) return null
-    return infoTiles.map(({ label, value }) => <RowUi4 key={label} title={label} body={value} />)
+    return infoTiles.map(({ label, value }) => <EdgeRow key={label} title={label} body={value} />)
   }
 
   const renderAuthentication = () => {
@@ -660,7 +660,7 @@ const SendComponent = (props: Props) => {
 
     const pinLength = pinValue?.length ?? 0
     return (
-      <RowUi4 rightButtonType="touchable" title={lstrings.four_digit_pin} onPress={handleFocusPin}>
+      <EdgeRow rightButtonType="touchable" title={lstrings.four_digit_pin} onPress={handleFocusPin}>
         <View style={styles.pinContainer}>
           <PinDots pinLength={pinLength} maxLength={PIN_MAX_LENGTH} />
         </View>
@@ -676,7 +676,7 @@ const SendComponent = (props: Props) => {
           value={pinValue}
           secureTextEntry
         />
-      </RowUi4>
+      </EdgeRow>
     )
   }
 

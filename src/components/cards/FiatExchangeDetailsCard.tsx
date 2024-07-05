@@ -12,10 +12,10 @@ import { useState } from '../../types/reactHooks'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { unixToLocaleDateTime } from '../../util/utils'
 import { RawTextModal } from '../modals/RawTextModal'
+import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { RowUi4 } from '../ui4/RowUi4'
 import { EdgeCard } from './EdgeCard'
 
 interface Props {
@@ -133,19 +133,19 @@ export function FiatExchangeDetailsCard(props: Props) {
 
   return (
     <EdgeCard sections>
-      <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_exchange_details} onPress={handleExchangeDetails}>
+      <EdgeRow rightButtonType="touchable" title={lstrings.transaction_details_exchange_details} onPress={handleExchangeDetails}>
         <View style={styles.tileColumn}>
           <EdgeText>{lstrings.title_exchange + ' ' + sourceAmount + sourceCurrencyCode}</EdgeText>
           <EdgeText>{lstrings.string_to_capitalize + ' ' + destinationAmount + destinationCurrencyCode}</EdgeText>
           <EdgeText>{isEstimate ? lstrings.estimated_quote : lstrings.fixed_quote}</EdgeText>
         </View>
-      </RowUi4>
-      <RowUi4 rightButtonType="copy" title={lstrings.transaction_details_exchange_order_id} body={orderId} />
+      </EdgeRow>
+      <EdgeRow rightButtonType="copy" title={lstrings.transaction_details_exchange_order_id} body={orderId} />
       {orderUri == null ? null : (
-        <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_exchange_status_page} onPress={handleLink} body={orderUri} />
+        <EdgeRow rightButtonType="touchable" title={lstrings.transaction_details_exchange_status_page} onPress={handleLink} body={orderUri} />
       )}
       {supportEmail == null ? null : (
-        <RowUi4 rightButtonType="touchable" title={lstrings.transaction_details_exchange_support} onPress={handleEmail} body={supportEmail} />
+        <EdgeRow rightButtonType="touchable" title={lstrings.transaction_details_exchange_support} onPress={handleEmail} body={supportEmail} />
       )}
     </EdgeCard>
   )

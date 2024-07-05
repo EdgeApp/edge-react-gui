@@ -8,12 +8,12 @@ import { EdgeSceneProps } from '../../types/routerTypes'
 import { WcConnectionInfo } from '../../types/types'
 import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { EdgeRow } from '../rows/EdgeRow'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
-import { RowUi4 } from '../ui4/RowUi4'
 
 interface Props extends EdgeSceneProps<'wcDisconnect'> {}
 
@@ -52,8 +52,8 @@ export const WcDisconnectScene = (props: Props) => {
           </View>
         </EdgeCard>
       </View>
-      <RowUi4 title={lstrings.string_expiration} body={wcConnectionInfo.expiration} />
-      <RowUi4 title={lstrings.wc_details_connected_wallet} body={wcConnectionInfo.walletName} />
+      <EdgeRow title={lstrings.string_expiration} body={wcConnectionInfo.expiration} />
+      <EdgeRow title={lstrings.wc_details_connected_wallet} body={wcConnectionInfo.walletName} />
       <MainButton label={lstrings.wc_details_disconnect_button} type="secondary" marginRem={[3.5, 0]} onPress={handleDisconnect} />
     </SceneWrapper>
   )

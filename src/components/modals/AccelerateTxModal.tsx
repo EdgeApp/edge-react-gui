@@ -10,10 +10,10 @@ import { connect } from '../../types/reactRedux'
 import { GuiExchangeRates } from '../../types/types'
 import { convertTransactionFeeToDisplayFee } from '../../util/utils'
 import { WarningCard } from '../cards/WarningCard'
+import { EdgeRow } from '../rows/EdgeRow'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
 import { Slider } from '../themed/Slider'
-import { RowUi4 } from '../ui4/RowUi4'
 import { EdgeModal } from './EdgeModal'
 
 interface OwnProps {
@@ -118,8 +118,8 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
       <EdgeModal bridge={bridge} onCancel={this.handleCancel} title={lstrings.transaction_details_accelerate_transaction_header}>
         <Paragraph>{lstrings.transaction_details_accelerate_transaction_instructional}</Paragraph>
         <View style={styles.container}>
-          <RowUi4 title={lstrings.transaction_details_accelerate_transaction_old_fee_title} body={oldFee} />
-          {newFee == null ? null : <RowUi4 title={lstrings.transaction_details_accelerate_transaction_new_fee_title} body={newFee} />}
+          <EdgeRow title={lstrings.transaction_details_accelerate_transaction_old_fee_title} body={oldFee} />
+          {newFee == null ? null : <EdgeRow title={lstrings.transaction_details_accelerate_transaction_new_fee_title} body={newFee} />}
         </View>
         {isLowerAmount ? (
           <WarningCard
