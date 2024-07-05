@@ -496,7 +496,7 @@ const SendComponent = (props: Props) => {
       return (
         <RowUi4
           rightButtonType={noChangeMiningFee || lockTilesMap.fee ? 'none' : 'touchable'}
-          title={`${lstrings.string_fee}:`}
+          title={`${lstrings.wc_smartcontract_network_fee}:`}
           onPress={noChangeMiningFee ? undefined : handleFeesChange}
         >
           {processingAmountChanged ? (
