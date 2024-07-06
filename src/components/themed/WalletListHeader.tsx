@@ -8,8 +8,8 @@ import { NavigationBase } from '../../types/routerTypes'
 import { BalanceCardUi4 } from '../cards/BalanceCard'
 import { EdgeAnim, fadeInUp40, fadeInUp60 } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { SectionHeader } from '../common/SectionHeader'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
-import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
 
 interface OwnProps {
   navigation: NavigationBase
@@ -45,7 +45,7 @@ export class WalletListHeaderComponent extends React.PureComponent<Props> {
         )}
         {sorting || searching ? null : (
           <EdgeAnim enter={fadeInUp40}>
-            <SectionHeaderUi4 leftTitle={lstrings.title_wallets} rightNode={addSortButtons} />
+            <SectionHeader leftTitle={lstrings.title_wallets} rightNode={addSortButtons} />
           </EdgeAnim>
         )}
       </>

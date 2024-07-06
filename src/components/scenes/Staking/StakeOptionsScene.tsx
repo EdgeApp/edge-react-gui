@@ -14,6 +14,7 @@ import { getTokenIdForced } from '../../../util/CurrencyInfoHelpers'
 import { getPluginFromPolicy, getPolicyAssetName, getPolicyIconUris, getPolicyTitleName } from '../../../util/stakeUtils'
 import { darkenHexColor } from '../../../util/utils'
 import { StakingOptionCard } from '../../cards/StakingOptionCard'
+import { AccentColors } from '../../common/DotsBackground'
 import { EdgeTouchableOpacity } from '../../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
@@ -21,7 +22,6 @@ import { CryptoIcon } from '../../icons/CryptoIcon'
 import { cacheStyles, Theme, useTheme } from '../../services/ThemeContext'
 import { EdgeText } from '../../themed/EdgeText'
 import { SceneHeader } from '../../themed/SceneHeader'
-import { AccentColors } from '../../ui4/DotsBackground'
 
 interface Props extends EdgeSceneProps<'stakeOptions'> {
   wallet: EdgeCurrencyWallet

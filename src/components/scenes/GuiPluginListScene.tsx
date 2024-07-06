@@ -41,6 +41,7 @@ import { EdgeCard } from '../cards/EdgeCard'
 import { filterPromoCards } from '../cards/PromoCards'
 import { EdgeAnim, fadeInUp20, fadeInUp30, fadeInUp60, fadeInUp90 } from '../common/EdgeAnim'
 import { InsetStyle, SceneWrapper } from '../common/SceneWrapper'
+import { SectionHeader } from '../common/SectionHeader'
 import { TextInputModal } from '../modals/TextInputModal'
 import { WalletListResult } from '../modals/WalletListModal'
 import { EdgeRow } from '../rows/EdgeRow'
@@ -50,7 +51,6 @@ import { DividerLine } from '../themed/DividerLine'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
-import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
 
 export interface GuiPluginListParams {
   launchPluginId?: string
@@ -402,7 +402,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
         {hasCountryData ? (
           <EdgeAnim enter={fadeInUp60} style={styles.hackContainer}>
-            <SectionHeaderUi4 leftTitle={lstrings.title_select_region} />
+            <SectionHeader leftTitle={lstrings.title_select_region} />
           </EdgeAnim>
         ) : null}
         <EdgeAnim enter={fadeInUp30} style={styles.hackContainer}>
@@ -410,7 +410,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         </EdgeAnim>
         {hasCountryData ? (
           <EdgeAnim enter={fadeInUp20} style={styles.hackContainer}>
-            <SectionHeaderUi4 leftTitle={lstrings.title_select_payment_method} />
+            <SectionHeader leftTitle={lstrings.title_select_payment_method} />
           </EdgeAnim>
         ) : null}
       </>

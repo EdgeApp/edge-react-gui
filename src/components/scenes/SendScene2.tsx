@@ -44,6 +44,7 @@ import { convertTransactionFeeToDisplayFee, darkenHexColor, DECIMAL_PRECISION, z
 import { getMemoError, getMemoLabel, getMemoTitle } from '../../util/validateMemos'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
+import { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
@@ -64,7 +65,6 @@ import { AddressTile2, ChangeAddressResult } from '../tiles/AddressTile2'
 import { CountdownTile } from '../tiles/CountdownTile'
 import { EditableAmountTile } from '../tiles/EditableAmountTile'
 import { ErrorTile } from '../tiles/ErrorTile'
-import { AccentColors } from '../ui4/DotsBackground'
 
 // TODO: Check contentPadding
 

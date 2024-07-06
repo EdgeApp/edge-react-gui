@@ -5,8 +5,8 @@ import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { useHandler } from '../../hooks/useHandler'
 import { infoServerData } from '../../util/network'
+import { EdgeCarousel } from '../common/EdgeCarousel'
 import { useTheme } from '../services/ThemeContext'
-import { CarouselUi4 } from '../ui4/CarouselUi4'
 import { BlogCard } from './BlogCard'
 
 export interface Props {
@@ -57,5 +57,5 @@ export const BlogCards = (props: Props) => {
     setBlogCards([...(infoServerData.rollup?.blogPosts ?? []), ...filteredBlogPostsGeo])
   }, [countryCode])
 
-  return <CarouselUi4 data={blogCards} renderItem={renderBlog} height={theme.rem(13)} width={width} />
+  return <EdgeCarousel data={blogCards} renderItem={renderBlog} height={theme.rem(13)} width={width} />
 }

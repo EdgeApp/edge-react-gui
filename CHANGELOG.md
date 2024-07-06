@@ -6,6 +6,12 @@
 - changed: Replace native `Alert` with `showToast` and `ButtonsModal`
 - changed: Show common chain icon as primary for L2 chains
 - changed: Use new `FioService` to manage expired domains and `fioWallets` redux value
+- changed: Ui4 components renamed and reorganized
+- changed: SendScene "Fee:" renamed to "Network Fee:"
+- changed: Style of "Already have an account? Sign in" tappable text
+- changed: EdgeRow shrinks content by default
+- fixed: Android keyboard enter key to support newlines in multiline text inputs
+- fixed: Broken link in "Help Closing App"
 
 ## 4.9.0
 

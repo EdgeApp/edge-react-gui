@@ -22,10 +22,10 @@ import { PromoCardsUi4 } from '../cards/PromoCards'
 import { SupportCardUi4 } from '../cards/SupportCard'
 import { EdgeAnim, fadeInUp30, fadeInUp60, fadeInUp80, fadeInUp140 } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SectionHeader } from '../common/SectionHeader'
 import { SectionView } from '../layout/SectionView'
 import { AccountSyncBar } from '../progress-indicators/AccountSyncBar'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
 
 interface Props extends EdgeSceneProps<'home'> {}
 
@@ -150,14 +150,14 @@ export const HomeScene = (props: Props) => {
                 </EdgeAnim>
               </>
               <>
-                <SectionHeaderUi4 leftTitle={lstrings.title_markets} rightNode={lstrings.see_all} onRightPress={() => navigation.navigate('coinRanking', {})} />
+                <SectionHeader leftTitle={lstrings.title_markets} rightNode={lstrings.see_all} onRightPress={() => navigation.navigate('coinRanking', {})} />
                 <EdgeAnim enter={fadeInUp30}>
                   <MarketsCardUi4 navigation={navigation} numRows={5} />
                 </EdgeAnim>
               </>
               {blogPosts == null || blogPosts.length === 0 ? null : (
                 <>
-                  <SectionHeaderUi4 leftTitle={lstrings.title_learn} />
+                  <SectionHeader leftTitle={lstrings.title_learn} />
                   <BlogCards countryCode={countryCode} />
                 </>
               )}

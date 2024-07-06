@@ -11,6 +11,7 @@ import { lstrings } from '../../locales/strings'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { FeeOption } from '../../types/types'
 import { darkenHexColor } from '../../util/utils'
+import { AccentColors } from '../common/DotsBackground'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { cacheStyles, Theme, ThemeProps, withTheme } from '../services/ThemeContext'
@@ -19,7 +20,6 @@ import { Alert } from '../themed/Alert'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
-import { AccentColors } from '../ui4/DotsBackground'
 
 export interface ChangeMiningFeeParams {
   maxSpendSet: boolean

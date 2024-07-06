@@ -21,6 +21,7 @@ import { EdgeButton } from '../buttons/EdgeButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SectionHeader } from '../common/SectionHeader'
 import { styled } from '../hoc/styled'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { SectionView } from '../layout/SectionView'
@@ -41,7 +42,6 @@ import { EdgeText } from '../themed/EdgeText'
 import { ExchangedFlipInput2, ExchangedFlipInputAmounts, ExchangedFlipInputRef } from '../themed/ExchangedFlipInput2'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
-import { SectionHeaderUi4 } from '../ui4/SectionHeaderUi4'
 
 interface Props extends EdgeSceneProps<'devTab'> {}
 
@@ -129,7 +129,7 @@ export function DevTestScene(props: Props) {
     <SceneWrapper scroll hasTabs hasHeader={false}>
       <SectionView marginRem={1}>
         <>
-          <SectionHeaderUi4 leftTitle="Modals" rightNode={<EdgeText>Galore</EdgeText>} />
+          <SectionHeader leftTitle="Modals" rightNode={<EdgeText>Galore</EdgeText>} />
           <EdgeButton
             label="SurveyModal"
             marginRem={0.25}
@@ -352,7 +352,7 @@ export function DevTestScene(props: Props) {
         </>
 
         <>
-          <SectionHeaderUi4 leftTitle="Buttons" />
+          <SectionHeader leftTitle="Buttons" />
           <EdgeButton onPress={() => {}} label="Button With Child" marginRem={0.5} type="secondary">
             <Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />
           </EdgeButton>
@@ -397,7 +397,7 @@ export function DevTestScene(props: Props) {
           </OutlinedView>
         </>
         <>
-          <SectionHeaderUi4 leftTitle="DeepLinking" />
+          <SectionHeader leftTitle="DeepLinking" />
           <ModalFilledTextInput
             value={deepLinkInputValue}
             onChangeText={setDeepLinkInputValue}
@@ -417,7 +417,7 @@ export function DevTestScene(props: Props) {
           />
         </>
         <>
-          <SectionHeaderUi4 leftTitle="Crash Reporting" />
+          <SectionHeader leftTitle="Crash Reporting" />
           <EdgeButton
             marginRem={0.5}
             onPress={() => {

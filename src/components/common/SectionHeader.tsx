@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { cacheStyles } from 'react-native-patina'
 
-import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SplitRowsView } from '../layout/SplitRowsView'
 import { Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { EdgeTouchableOpacity } from './EdgeTouchableOpacity'
 
 interface Props {
   leftTitle: string
@@ -23,7 +23,7 @@ interface Props {
  * If the right side is a string and onRightPress handler is provided, it will
  * be rendered as green tappable text, else it's up to the caller to decide.
  **/
-export const SectionHeaderUi4 = (props: Props) => {
+export const SectionHeader = (props: Props) => {
   const { leftTitle, rightNode, marginRem = [0.5, 1, 0, 1], onRightPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)

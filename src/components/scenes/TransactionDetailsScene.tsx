@@ -29,6 +29,7 @@ import { AdvancedDetailsCard } from '../cards/AdvancedDetailsCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { FiatExchangeDetailsCard } from '../cards/FiatExchangeDetailsCard'
 import { SwapDetailsCard } from '../cards/SwapDetailsCard'
+import { AccentColors } from '../common/DotsBackground'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
@@ -41,7 +42,6 @@ import { TxCryptoAmountRow } from '../rows/TxCryptoAmountRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { AccentColors } from '../ui4/DotsBackground'
 
 interface Props extends EdgeSceneProps<'transactionDetails'> {
   wallet: EdgeCurrencyWallet

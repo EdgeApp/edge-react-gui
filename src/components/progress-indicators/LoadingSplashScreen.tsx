@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
+import { DotsBackground } from '../common/DotsBackground'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
-import { DotsBackground } from '../ui4/DotsBackground'
 
 /**
  * This is not a scene component. It's purpose is to be used outside of the

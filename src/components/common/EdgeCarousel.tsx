@@ -19,7 +19,7 @@ const DOT_SIZE_REM = 0.5
 /**
  * A horizontal carousel with pagination dots
  */
-export function CarouselUi4<T>(props: Props<T>): JSX.Element {
+export function EdgeCarousel<T>(props: Props<T>): JSX.Element {
   const { data, keyExtractor, height, width } = props
   const theme = useTheme()
   const styles = getStyles(theme)

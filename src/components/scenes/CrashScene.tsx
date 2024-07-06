@@ -8,8 +8,8 @@ import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { openBrowserUri } from '../../util/WebUtils'
 import { ButtonsView } from '../buttons/ButtonsView'
+import { DotsBackground } from '../common/DotsBackground'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
-import { DotsBackground } from '../ui4/DotsBackground'
 
 interface Props {}
 

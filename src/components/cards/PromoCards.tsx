@@ -14,8 +14,8 @@ import { NavigationBase } from '../../types/routerTypes'
 import { infoServerData } from '../../util/network'
 import { getOsVersion, zeroString } from '../../util/utils'
 import { EdgeAnim, fadeInUp110 } from '../common/EdgeAnim'
+import { EdgeCarousel } from '../common/EdgeCarousel'
 import { useTheme } from '../services/ThemeContext'
-import { CarouselUi4 } from '../ui4/CarouselUi4'
 import { FilteredPromoCard, PromoCardUi4 } from './PromoCard'
 
 interface Props {
@@ -94,7 +94,7 @@ export const PromoCardsUi4 = (props: Props) => {
   if (activeCards == null || activeCards.length === 0) return null
   return (
     <EdgeAnim enter={fadeInUp110}>
-      <CarouselUi4 data={activeCards} keyExtractor={keyExtractor} renderItem={renderItem} height={theme.rem(10)} width={screenWidth} />
+      <EdgeCarousel data={activeCards} keyExtractor={keyExtractor} renderItem={renderItem} height={theme.rem(10)} width={screenWidth} />
     </EdgeAnim>
   )
 }
