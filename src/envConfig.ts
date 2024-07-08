@@ -289,6 +289,11 @@ export const asEnvConfig = asObject({
       nowNodeApiKey: asOptional(asString, '')
     })
   ),
+  '0XGASLESS_INIT': asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, '')
+    })
+  ),
   ZKSYNC_INIT: asCorePluginInit(asEvmApiKeys),
 
   // App options:
