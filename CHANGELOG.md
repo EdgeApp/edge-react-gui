@@ -10,6 +10,7 @@
 - changed: Replace native `Alert` with `showToast` and `ButtonsModal`
 - changed: Show common chain icon as primary for L2 chains
 - changed: Use new `FioService` to manage expired domains and `fioWallets` redux value
+- change: Update generic stake plugins to use info server rollup for APY values
 - changed: Ui4 components renamed and reorganized
 - changed: SendScene "Fee:" renamed to "Network Fee:"
 - changed: Style of "Already have an account? Sign in" tappable text
