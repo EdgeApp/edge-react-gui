@@ -160,6 +160,7 @@ interface SpecialCurrencyInfo {
   stakeMaxApy?: number
   maxSpendTargets?: number
   walletConnectV2ChainId?: WalletConnectChainId
+  chainIcon?: boolean
 }
 
 /*
@@ -361,6 +362,7 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     isImportKeySupported: true,
     isPaymentProtocolSupported: false,
+    chainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '42161'
@@ -373,6 +375,7 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     isImportKeySupported: true,
     isPaymentProtocolSupported: false,
+    chainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '8453'
@@ -468,6 +471,7 @@ export const SPECIAL_CURRENCY_INFO: {
     isImportKeySupported: true,
     isPaymentProtocolSupported: false,
     isStakingSupported: true,
+    chainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '10'
@@ -490,6 +494,7 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     isImportKeySupported: true,
     isPaymentProtocolSupported: false,
+    chainIcon: true,
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '324'

@@ -5,6 +5,7 @@ import FastImage from 'react-native-fast-image'
 import { ShadowedView } from 'react-native-fast-shadow'
 
 import compromisedIcon from '../../assets/images/compromisedIcon.png'
+import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useWatch } from '../../hooks/useWatch'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyIconUris } from '../../util/CdnUris'
@@ -46,15 +47,16 @@ export const CryptoIconUi4 = (props: Props) => {
   })
 
   const { pluginId = wallet?.currencyInfo.pluginId } = props
+  const useChainIcon = pluginId == null ? false : SPECIAL_CURRENCY_INFO[pluginId]?.chainIcon ?? false
 
   // Primary Currency icon
   const primaryCurrencyIconUrl = React.useMemo(() => {
     if (pluginId == null) return null
 
     // Get Currency Icon URI
-    const icon = getCurrencyIconUris(pluginId, tokenId)
+    const icon = getCurrencyIconUris(pluginId, tokenId, useChainIcon)
     return mono ? icon.symbolImageDarkMono : icon.symbolImage
-  }, [pluginId, tokenId, mono])
+  }, [pluginId, tokenId, mono, useChainIcon])
 
   const primaryCurrencyIcon = React.useMemo(() => {
     if (primaryCurrencyIconUrl == null) return null
@@ -72,7 +74,7 @@ export const CryptoIconUi4 = (props: Props) => {
     }
 
     // Skip if this is not a token:
-    if (pluginId == null || tokenId == null || tokenId === pluginId) {
+    if (pluginId == null || (tokenId == null && !useChainIcon) || tokenId === pluginId) {
       return null
     }
 
@@ -82,7 +84,7 @@ export const CryptoIconUi4 = (props: Props) => {
 
     return source
     // Return Parent logo from the edge server
-  }, [compromised, mono, pluginId, tokenId])
+  }, [compromised, mono, pluginId, tokenId, useChainIcon])
 
   // Main view styling
   const spacingStyle = React.useMemo(
