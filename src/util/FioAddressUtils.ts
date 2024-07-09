@@ -302,9 +302,7 @@ export const updatePubAddressesForFioAddress = async (
     })
     if (iteration.publicAddresses.length === limitPerCall) {
       try {
-        isConnection
-          ? await addPublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
-          : await removePublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
+        await updatePublicAddresses(fioWallet, fioAddress, iteration.publicAddresses, isConnection ? 'addPublicAddresses' : 'removePublicAddresses')
         await setConnectedWalletsFromFile(fioWallet, fioAddress, connectedWalletsFromDisklet)
         updatedCcWallets = [...updatedCcWallets, ...iteration.ccWalletArray]
         iteration.publicAddresses = []
@@ -317,9 +315,7 @@ export const updatePubAddressesForFioAddress = async (
 
   if (iteration.publicAddresses.length) {
     try {
-      isConnection
-        ? await addPublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
-        : await removePublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
+      await updatePublicAddresses(fioWallet, fioAddress, iteration.publicAddresses, isConnection ? 'addPublicAddresses' : 'removePublicAddresses')
       await setConnectedWalletsFromFile(fioWallet, fioAddress, connectedWalletsFromDisklet)
       updatedCcWallets = [...updatedCcWallets, ...iteration.ccWalletArray]
     } catch (e: any) {
@@ -331,51 +327,24 @@ export const updatePubAddressesForFioAddress = async (
 }
 
 /**
- * Add public addresses for FIO Address API call method
+ * Update public addresses for FIO Address API call method
  *
  * @param fioWallet
  * @param fioAddress
  * @param publicAddresses
+ * @param action - addPublicAddresses or removePublicAddresses
  * @returns {Promise<void>}
  */
-export const addPublicAddresses = async (
+const updatePublicAddresses = async (
   fioWallet: EdgeCurrencyWallet,
   fioAddress: string,
-  publicAddresses: Array<{ token_code: string; chain_code: string; public_address: string }>
+  publicAddresses: Array<{ token_code: string; chain_code: string; public_address: string }>,
+  action: 'addPublicAddresses' | 'removePublicAddresses'
 ) => {
   let fee: string
   let edgeTx: EdgeTransaction
   try {
-    edgeTx = await fioMakeSpend(fioWallet, 'addPublicAddresses', { fioAddress, publicAddresses })
-    fee = edgeTx.networkFee
-  } catch (e: any) {
-    throw new Error(lstrings.fio_get_fee_err_msg)
-  }
-  if (fee !== '0') throw new FioError(lstrings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
-  try {
-    await fioSignAndBroadcast(fioWallet, edgeTx)
-  } catch (e: any) {
-    throw new Error(lstrings.fio_connect_wallets_err)
-  }
-}
-
-/**
- * Remove public addresses for FIO Address API call method
- *
- * @param fioWallet
- * @param fioAddress
- * @param publicAddresses
- * @returns {Promise<void>}
- */
-export const removePublicAddresses = async (
-  fioWallet: EdgeCurrencyWallet,
-  fioAddress: string,
-  publicAddresses: Array<{ token_code: string; chain_code: string; public_address: string }>
-) => {
-  let fee: string
-  let edgeTx: EdgeTransaction
-  try {
-    edgeTx = await fioMakeSpend(fioWallet, 'removePublicAddresses', { fioAddress, publicAddresses })
+    edgeTx = await fioMakeSpend(fioWallet, action, { fioAddress, publicAddresses })
     fee = edgeTx.networkFee
   } catch (e: any) {
     throw new Error(lstrings.fio_get_fee_err_msg)
