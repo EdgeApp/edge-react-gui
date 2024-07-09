@@ -2,6 +2,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { updateWalletsSort } from '../../actions/WalletListActions'
+import { useBackButtonToast } from '../../hooks/useBackButtonToast'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { FooterRender, useSceneFooterState } from '../../state/SceneFooterState'
@@ -36,6 +37,8 @@ export function WalletListScene(props: Props) {
   const sortOption = useSelector(state => state.ui.settings.walletsSort)
 
   const setKeepOpen = useSceneFooterState(state => state.setKeepOpen)
+
+  useBackButtonToast()
 
   //
   // Handlers

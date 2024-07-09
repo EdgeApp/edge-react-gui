@@ -1,12 +1,11 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createDrawerNavigator } from '@react-navigation/drawer'
-import { DefaultTheme, NavigationContainer, useNavigation } from '@react-navigation/native'
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack'
 import * as React from 'react'
 import { Platform } from 'react-native'
 
 import { getDeviceSettings } from '../actions/DeviceSettingsActions'
-import { logoutRequest } from '../actions/LoginActions'
 import { checkEnabledExchanges, showReEnableOtpModal } from '../actions/SettingsActions'
 import { SwapCreateScene as SwapCreateSceneComponent } from '../components/scenes/SwapCreateScene'
 import { HomeSceneUi4 as HomeSceneUi4Component } from '../components/ui4/scenes/HomeSceneUi4'
@@ -22,13 +21,11 @@ import { InfoDisplayScene } from '../plugins/gui/scenes/InfoDisplayScene'
 import { RewardsCardDashboardScene as RewardsCardListSceneComponent } from '../plugins/gui/scenes/RewardsCardDashboardScene'
 import { RewardsCardWelcomeScene as RewardsCardWelcomeSceneComponent } from '../plugins/gui/scenes/RewardsCardWelcomeScene'
 import { SepaFormScene } from '../plugins/gui/scenes/SepaFormScene'
-import { defaultAccount } from '../reducers/CoreReducer'
 import { useDispatch, useSelector } from '../types/reactRedux'
-import { AppParamList, NavigationBase } from '../types/routerTypes'
+import { AppParamList } from '../types/routerTypes'
 import { isMaestro } from '../util/maestro'
 import { logEvent } from '../util/tracking'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
-import { useBackEvent } from './hoc/useBackEvent'
 import { BackButton } from './navigation/BackButton'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle'
 import { EdgeHeader } from './navigation/EdgeHeader'
@@ -300,35 +297,6 @@ export const Main = () => {
 }
 
 const EdgeApp = () => {
-  const backPressedOnce = React.useRef(false)
-  const account = useSelector(state => state.core.account)
-  const dispatch = useDispatch()
-  const navigation = useNavigation<NavigationBase>()
-
-  useBackEvent(() => {
-    // Allow back if logged out or this is the second back press
-    if (account === defaultAccount || backPressedOnce.current) {
-      dispatch(logoutRequest(navigation)).catch(err => showError(err))
-      return true
-    }
-    backPressedOnce.current = true
-
-    // Temporarily disable showing toast since we are getting the back event
-    // on almost every login. This is a temporary fix until we can figure it out
-    // For now just log the event
-    console.warn('Warning: Back button pressed to exit app. Toast supressed.')
-    // Airship.show(bridge => <AirshipToast bridge={bridge} message={lstrings.back_button_tap_again_to_exit} />)
-    //   .then(() => {
-    //     backPressedOnce.current = false
-    //   })
-    //   .catch(err => showError(err))
-    // // Timeout the back press after 3 seconds so the state isn't "sticky"
-    // setTimeout(() => {
-    //   backPressedOnce.current = false
-    // }, 3000)
-    return false
-  })
-
   return (
     <Drawer.Navigator
       drawerContent={props => SideMenu(props)}
