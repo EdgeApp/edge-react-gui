@@ -6,7 +6,6 @@ import * as React from 'react'
 import { Platform } from 'react-native'
 
 import { getDeviceSettings } from '../actions/DeviceSettingsActions'
-import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { SwapCreateScene as SwapCreateSceneComponent } from '../components/scenes/SwapCreateScene'
 import { HomeSceneUi4 as HomeSceneUi4Component } from '../components/ui4/scenes/HomeSceneUi4'
 import { ENV } from '../env'
@@ -115,7 +114,6 @@ import { WcConnectionsScene as WcConnectionsSceneComponent } from './scenes/WcCo
 import { WcConnectScene as WcConnectSceneComponent } from './scenes/WcConnectScene'
 import { WcDisconnectScene as WcDisconnectSceneComponent } from './scenes/WcDisconnectScene'
 import { WebViewScene as WebViewSceneComponent } from './scenes/WebViewScene'
-import { showError } from './services/AirshipInstance'
 import { useTheme } from './services/ThemeContext'
 import { MenuTabs } from './themed/MenuTabs'
 import { SideMenu } from './themed/SideMenu'
@@ -314,8 +312,6 @@ const EdgeApp = () => {
 }
 
 const EdgeAppStack = () => {
-  const dispatch = useDispatch()
-
   return (
     <Stack.Navigator initialRouteName="edgeTabs" screenOptions={defaultScreenOptions}>
       <Stack.Screen
@@ -626,11 +622,6 @@ const EdgeAppStack = () => {
         component={SettingsScene}
         options={{
           title: lstrings.title_settings
-        }}
-        listeners={{
-          focus: () => {
-            dispatch(showReEnableOtpModal()).catch(err => showError(err))
-          }
         }}
       />
       <Stack.Screen
