@@ -562,7 +562,7 @@ PODS:
     - ZXingObjC
   - RNReactNativeHapticFeedback (1.14.0):
     - React-Core
-  - RNReanimated (3.13.0):
+  - RNReanimated (3.14.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
     - ReactCommon/turbomodule/core
@@ -1171,7 +1171,7 @@ SPEC CHECKSUMS:
   RNPermissions: 5829ce9a821b8bcab921dae16a7d1a3dc4c95a03
   RNQrGenerator: 90461ba3ca88c1d38ef73da50fade35d9648215d
   RNReactNativeHapticFeedback: 1e3efeca9628ff9876ee7cdd9edec1b336913f8c
-  RNReanimated: 94fa977a5d4545b6f93994cf39fb6d152f8a58bc
+  RNReanimated: 271f958e94385e59e0660b872ce866407e36bb45
   RNScreens: 93ae3be2f119d955620f9bbb39ad372adb53b7a9
   RNSecureRandom: 07efbdf2cd99efe13497433668e54acd7df49fef
   RNSentry: 7e184247ee04989474d12cce0b7ef7bc4a71632f
