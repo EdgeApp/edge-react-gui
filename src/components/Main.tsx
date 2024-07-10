@@ -6,7 +6,7 @@ import * as React from 'react'
 import { Platform } from 'react-native'
 
 import { getDeviceSettings } from '../actions/DeviceSettingsActions'
-import { checkEnabledExchanges, showReEnableOtpModal } from '../actions/SettingsActions'
+import { showReEnableOtpModal } from '../actions/SettingsActions'
 import { SwapCreateScene as SwapCreateSceneComponent } from '../components/scenes/SwapCreateScene'
 import { HomeSceneUi4 as HomeSceneUi4Component } from '../components/ui4/scenes/HomeSceneUi4'
 import { ENV } from '../env'
@@ -349,13 +349,7 @@ const EdgeAppStack = () => {
           headerRight: () => null
         }}
       />
-      <Stack.Screen
-        name="coinRanking"
-        component={CoinRankingScene}
-        listeners={{
-          focus: () => dispatch(checkEnabledExchanges())
-        }}
-      />
+      <Stack.Screen name="coinRanking" component={CoinRankingScene} />
       <Stack.Screen name="coinRankingDetails" component={CoinRankingDetailsScene} />
       <Stack.Screen name="confirmScene" component={ConfirmScene} />
       <Stack.Screen
@@ -777,7 +771,6 @@ const EdgeSellTabScreen = () => {
 }
 
 const EdgeSwapTabScreen = () => {
-  const dispatch = useDispatch()
   return (
     <Stack.Navigator initialRouteName="swapCreate" screenOptions={defaultScreenOptions}>
       <Stack.Screen
@@ -786,9 +779,6 @@ const EdgeSwapTabScreen = () => {
         options={{
           ...firstSceneScreenOptions,
           title: lstrings.title_exchange
-        }}
-        listeners={{
-          focus: () => dispatch(checkEnabledExchanges())
         }}
       />
       <Stack.Screen name="swapConfirmation" component={SwapConfirmationScene} />

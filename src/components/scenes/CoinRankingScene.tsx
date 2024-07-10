@@ -2,6 +2,7 @@ import * as React from 'react'
 import { ListRenderItemInfo, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 
+import { checkEnabledExchanges } from '../../actions/SettingsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -11,7 +12,7 @@ import { FooterRender } from '../../state/SceneFooterState'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
 import { asCoinranking, AssetSubText, CoinRanking, PercentChangeTimeFrame } from '../../types/coinrankTypes'
 import { useState } from '../../types/reactHooks'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { debugLog, enableDebugLogType, LOG_COINRANK } from '../../util/logger'
 import { fetchRates } from '../../util/network'
@@ -53,6 +54,7 @@ const CoinRankingComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { navigation } = props
+  const dispatch = useDispatch()
 
   const defaultIsoFiat = useSelector(state => `iso:${getDefaultFiat(state)}`)
   const [lastUsedFiat, setLastUsedFiat] = useState<string>(defaultIsoFiat)
@@ -143,6 +145,12 @@ const CoinRankingComponent = (props: Props) => {
       mounted.current = false
     }
   }, [])
+
+  React.useEffect(() => {
+    return navigation.addListener('focus', () => {
+      dispatch(checkEnabledExchanges())
+    })
+  }, [dispatch, navigation])
 
   useAsyncEffect(
     async () => {
