@@ -214,7 +214,7 @@ const activateWalletTokens = async (
     const displayFee = div(nativeFee, feeDenom.multiplier, log10(feeDenom.multiplier))
     let fiatFee = convertCurrencyFromExchangeRates(state.exchangeRates, paymentCurrencyCode, defaultIsoFiat, exchangeNetworkFee)
     if (lt(fiatFee, '0.001')) fiatFee = '<0.001'
-    fiatFee = round(fiatFee, -3)
+    else fiatFee = round(fiatFee, -3)
     const feeString = `${displayFee} ${feeDenom.name} (${fiatFee} ${defaultFiat})`
     let bodyText = lstrings.activate_wallet_token_scene_body
 
