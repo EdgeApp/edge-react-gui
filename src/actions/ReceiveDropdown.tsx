@@ -7,7 +7,6 @@ import { FlashNotification } from '../components/navigation/FlashNotification'
 import { Airship, showError } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { getExchangeDenom, selectDisplayDenom } from '../selectors/DenominationSelectors'
-import { useSelector } from '../types/reactRedux'
 import { ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
 import { calculateSpamThreshold, convertNativeToDisplay, zeroString } from '../util/utils'
@@ -29,7 +28,7 @@ export function showReceiveDropdown(navigation: NavigationBase, transaction: Edg
     const wallet = account.currencyWallets[walletId]
     if (wallet == null) return
 
-    const isoFiatCurrencyCode = useSelector(state => state.ui.settings.defaultIsoFiat)
+    const isoFiatCurrencyCode = state.ui.settings.defaultIsoFiat
 
     // Never stack dropdowns:
     if (receiveDropdownShowing) return
