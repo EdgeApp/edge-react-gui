@@ -7,6 +7,7 @@ import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { getCountryCodeByIp } from '../../../actions/AccountReferralActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
+import { useBackButtonToast } from '../../../hooks/useBackButtonToast'
 import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { useSceneScrollHandler } from '../../../state/SceneScrollState'
@@ -42,6 +43,8 @@ export const HomeSceneUi4 = (props: Props) => {
   const cardSize = screenWidth / 2 - theme.rem(TEMP_PADDING_REM)
 
   const [countryCode, setCountryCode] = React.useState<string | undefined>()
+
+  useBackButtonToast()
 
   //
   // Handlers

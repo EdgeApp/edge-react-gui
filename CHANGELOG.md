@@ -19,6 +19,7 @@
 - changed: Replaced 'react-native-camera' with 'react-native-vision-camera'
 - changed: WalletConnect: Move initial wallet selection to connections list scene
 - changed: Disable Sentry automatic breadcrumbs
+- fixed: Bring back the "Please tap BACK again to log out" toast
 - fixed: Fix for negative total balance due to small numbers and scientific notation
 - fixed: Stabilize the account sync bar progress motion.
 - fixed: Update Algorand's WalletConnectv2 reference
