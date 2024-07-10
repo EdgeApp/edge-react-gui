@@ -3,9 +3,10 @@ import { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 
 import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
+import { refreshConnectedWallets } from '../../actions/FioActions'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { registerNotificationsV2 } from '../../actions/NotificationActions'
-import { checkCompromisedKeys, updateWalletsRequest } from '../../actions/WalletActions'
+import { checkCompromisedKeys } from '../../actions/WalletActions'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -110,7 +111,7 @@ export function Services(props: Props) {
         console.warn('registerNotificationsV2 error:', e)
       })
 
-      await dispatch(updateWalletsRequest()).catch(err => console.warn(err))
+      await dispatch(refreshConnectedWallets).catch(err => console.warn(err))
       await dispatch(refreshAllFioAddresses()).catch(err => console.warn(err))
 
       // HACK: The balances object isn't full when the above promise resolves so we need to wait a few seconds before proceeding

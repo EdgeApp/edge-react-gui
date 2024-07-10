@@ -18,7 +18,6 @@ import { getCurrencyCode, getToken, isKeysOnlyPlugin } from '../util/CurrencyInf
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { fetchInfo } from '../util/network'
 import { convertCurrencyFromExchangeRates } from '../util/utils'
-import { refreshConnectedWallets } from './FioActions'
 
 export interface SelectWalletTokenParams {
   navigation: NavigationBase
@@ -101,9 +100,6 @@ function selectActivationRequiredWallet(navigation: NavigationBase, walletId: st
       })
       return true
     } else {
-      // Update all wallets' addresses. Hopefully gets the updated address for the next time
-      // We enter the activation-required wallet
-      await dispatch(updateWalletsRequest())
       // not activated yet
       // find fiat and crypto activation-required types and populate scene props
       navigation.push('createWalletAccountSetup', {
@@ -148,16 +144,6 @@ export function updateMostRecentWalletsSelected(walletId: string, tokenId: EdgeT
         })
       })
       .catch(error => showError(error))
-  }
-}
-
-export function updateWalletsRequest(): ThunkAction<Promise<void>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-    const { currencyWallets } = account
-
-    await refreshConnectedWallets(dispatch, getState, currencyWallets)
   }
 }
 

@@ -4,7 +4,6 @@ import { sprintf } from 'sprintf-js'
 
 import { FioExpiredModal } from '../components/modals/FioExpiredModal'
 import { Airship } from '../components/services/AirshipInstance'
-import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { Dispatch, GetState, ThunkAction } from '../types/reduxTypes'
 import { NavigationBase } from '../types/routerTypes'
@@ -14,13 +13,11 @@ import { snooze } from '../util/utils'
 
 const MAX_OBT_DATA_CHECKS = 15
 
-export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetState, currencyWallets: { [walletId: string]: EdgeCurrencyWallet }) => {
+export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetState) => {
   const wallets: EdgeCurrencyWallet[] = []
-  const fioWallets: EdgeCurrencyWallet[] = []
+  const fioWallets: EdgeCurrencyWallet[] = getState().ui.wallets.fioWallets
+  const currencyWallets = getState().core.account.currencyWallets
   for (const walletId of Object.keys(currencyWallets)) {
-    if (currencyWallets[walletId] && currencyWallets[walletId].type === FIO_WALLET_TYPE) {
-      fioWallets.push(currencyWallets[walletId])
-    }
     wallets.push(currencyWallets[walletId])
   }
   const connectedWalletsByFioAddress = {}
