@@ -14,15 +14,11 @@ import {
   getExpiredSoonFioDomains,
   getFioExpiredCheckFromDisklet,
   getFioObtData,
-  needToCheckExpired,
   refreshConnectedWalletsForFioAddress,
-  refreshFioNames,
   setFioExpiredCheckToDisklet
 } from '../util/FioAddressUtils'
 import { snooze } from '../util/utils'
 
-const EXPIRE_CHECK_TIMEOUT = 30000
-const INIT_EXPIRE_CHECK_TIMEOUT = 5000
 const MAX_OBT_DATA_CHECKS = 15
 
 export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetState, currencyWallets: { [walletId: string]: EdgeCurrencyWallet }) => {
@@ -109,51 +105,11 @@ export function checkFioObtData(wallet: EdgeCurrencyWallet, transactions: EdgeTr
   }
 }
 
-export function expiredFioNamesCheckDates(navigation: NavigationBase): ThunkAction<Promise<void>> {
+export function expiredFioNamesCheckDates(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const lastChecks = await getFioExpiredCheckFromDisklet(state.core.disklet)
     dispatch({ type: 'FIO/SET_LAST_EXPIRED_CHECKS', data: lastChecks })
-    setTimeout(async () => await dispatch(refreshNamesToCheckExpired(navigation)), INIT_EXPIRE_CHECK_TIMEOUT)
-  }
-}
-
-function refreshNamesToCheckExpired(navigation: NavigationBase): ThunkAction<Promise<unknown>> {
-  return async (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-    if (!account) return
-    if (state.ui.fio.expireReminderShown) return
-
-    const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-    if (fioWallets.length === 0) {
-      return setTimeout(async () => await dispatch(refreshNamesToCheckExpired(navigation)), EXPIRE_CHECK_TIMEOUT)
-    }
-
-    const { expiredLastChecks, expiredChecking, walletsCheckedForExpired } = state.ui.fio
-    if (expiredChecking) return setTimeout(async () => await dispatch(refreshNamesToCheckExpired(navigation)), EXPIRE_CHECK_TIMEOUT)
-
-    const walletsToCheck: EdgeCurrencyWallet[] = []
-    for (const fioWallet of fioWallets) {
-      if (!walletsCheckedForExpired[fioWallet.id]) {
-        walletsToCheck.push(fioWallet)
-      }
-    }
-
-    const namesToCheck: FioDomain[] = []
-    const { fioDomains, fioWalletsById } = await refreshFioNames(walletsToCheck)
-    for (const fioDomain of fioDomains) {
-      if (needToCheckExpired(expiredLastChecks, fioDomain.name)) {
-        namesToCheck.push(fioDomain)
-      }
-    }
-
-    if (namesToCheck.length !== 0) {
-      dispatch({ type: 'FIO/CHECKING_EXPIRED', data: true })
-      await dispatch(checkExpiredFioDomains(navigation, namesToCheck, fioWalletsById))
-    }
-
-    return setTimeout(async () => await dispatch(refreshNamesToCheckExpired(navigation)), EXPIRE_CHECK_TIMEOUT)
   }
 }
 

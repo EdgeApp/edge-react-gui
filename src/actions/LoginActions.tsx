@@ -232,7 +232,7 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       })
 
       await dispatch(refreshAccountReferral())
-      await dispatch(expiredFioNamesCheckDates(navigation))
+      await dispatch(expiredFioNamesCheckDates())
 
       refreshTouchId(account).catch(() => {
         // We have always failed silently here

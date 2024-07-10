@@ -24,6 +24,7 @@ import { AutoLogout } from './AutoLogout'
 import { ContactsLoader } from './ContactsLoader'
 import { DeepLinkingManager } from './DeepLinkingManager'
 import { EdgeContextCallbackManager } from './EdgeContextCallbackManager'
+import { FioService } from './FioService'
 import { LoanManagerService } from './LoanManagerService'
 import { NetworkActivity } from './NetworkActivity'
 import { PasswordReminderService } from './PasswordReminderService'
@@ -142,6 +143,7 @@ export function Services(props: Props) {
       {account == null ? null : <AccountCallbackManager account={account} navigation={navigation} />}
       {account == null ? null : <SortedWalletList account={account} />}
       <EdgeContextCallbackManager navigation={navigation} />
+      <FioService navigation={navigation} />
       <PermissionsManager />
       {startLoanManager ? <LoanManagerService account={account} /> : null}
       <NetworkActivity />
