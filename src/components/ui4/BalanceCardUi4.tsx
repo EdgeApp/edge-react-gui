@@ -1,11 +1,10 @@
 import { lt } from 'biggystring'
 import * as React from 'react'
-import { ActivityIndicator, LayoutChangeEvent, Text, View } from 'react-native'
+import { LayoutChangeEvent, Text, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { toggleAccountBalanceVisibility } from '../../actions/LocalSettingsActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
-import { useAccountSyncRatio } from '../../hooks/useAccountSyncRatio'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { formatNumber } from '../../locales/intl'
@@ -45,8 +44,6 @@ export const BalanceCardUi4 = (props: Props) => {
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const fiatAmount = useSelector(state => getTotalFiatAmountFromExchangeRates(state, defaultIsoFiat))
   const exchangeRates = useSelector(state => state.exchangeRates)
-
-  const accountSyncProgress = useAccountSyncRatio()
 
   const activeWalletIds = useWatch(account, 'activeWalletIds')
   const currencyWallets = useWatch(account, 'currencyWallets')
@@ -103,15 +100,9 @@ export const BalanceCardUi4 = (props: Props) => {
           {!exchangeRatesReady && zeroString(fiatAmount) ? (
             <EdgeText style={styles.balanceText}>{lstrings.loading}</EdgeText>
           ) : animateNumber ? (
-            <>
-              <AnimatedNumber digitHeight={digitHeight} numberString={balanceString} textStyle={styles.balanceText} />
-              <ActivityIndicator color={theme.primaryText} style={styles.spinner} animating={accountSyncProgress < 1} />
-            </>
+            <AnimatedNumber digitHeight={digitHeight} numberString={balanceString} textStyle={styles.balanceText} />
           ) : (
-            <>
-              <EdgeText style={styles.balanceText}>{balanceString}</EdgeText>
-              <ActivityIndicator color={theme.primaryText} style={styles.spinner} animating={accountSyncProgress < 1} />
-            </>
+            <EdgeText style={styles.balanceText}>{balanceString}</EdgeText>
           )}
         </View>
       </EdgeTouchableOpacity>
@@ -183,9 +174,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   showBalance: {
     fontSize: theme.rem(1.5),
     fontFamily: theme.fontFaceMedium
-  },
-  spinner: {
-    marginLeft: theme.rem(0.5)
   },
   measuredDigit: { position: 'absolute', top: -999999 }
 }))

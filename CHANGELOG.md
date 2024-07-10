@@ -11,7 +11,6 @@
 - added: Allow promoCards to send promoCodes to fiat partners for special pricing
 - added: Allow promoCard URLs to specify a currency pluginId to have replaced with a public address
 - added: Rango Exchange DEX aggregator support
-- added: A spinner next to the total balance to indicate syncing
 - changed: Prefer DEX estimate quotes over CEX fixed rate quotes if the DEX quote has a better rate
 - changed: Light account backup notification card now persists no matter what while logged in to a light account
 - changed: Replaced 'react-native-camera' with 'react-native-vision-camera'

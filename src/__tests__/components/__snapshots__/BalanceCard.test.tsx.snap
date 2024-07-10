@@ -1399,15 +1399,6 @@ exports[`BalanceCard should render with loading props 1`] = `
           D
         </Text>
       </View>
-      <ActivityIndicator
-        animating={false}
-        color="#FFFFFF"
-        style={
-          {
-            "marginLeft": 11,
-          }
-        }
-      />
     </View>
   </View>
   <View
