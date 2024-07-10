@@ -254,9 +254,10 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       showError(error)
     }
 
-    if (!hideSurvey && !getDeviceSettings().isSurveyDiscoverShown) {
-      // Show the survey modal once per app install, only if the user didn't get
-      // any other modals or scene changes immediately after login
+    if (!newAccount && !hideSurvey && !getDeviceSettings().isSurveyDiscoverShown) {
+      // Show the survey modal once per app install, only if this isn't the
+      // first login of a newly created account and the user didn't get any
+      // other modals or scene changes immediately after login.
       await Airship.show(bridge => <SurveyModal bridge={bridge} />)
       await writeIsSurveyDiscoverShown(true)
     }
