@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Alert, View } from 'react-native'
+import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { writeSpendingLimits } from '../../actions/LocalSettingsActions'
@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import { EdgeSceneProps } from '../../types/routerTypes'
 import { zeroString } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { showError } from '../services/AirshipInstance'
+import { showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, Theme, useTheme } from '../services/ThemeContext'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { EdgeText } from '../themed/EdgeText'
@@ -40,7 +40,7 @@ export const SpendingLimitsScene = (props: Props) => {
 
   const handleSubmitAsync = async () => {
     const isAuthorized = await account.checkPassword(password)
-    if (!isAuthorized) return Alert.alert(lstrings.password_check_incorrect_password_title)
+    if (!isAuthorized) return showToast(lstrings.password_check_incorrect_password_title)
 
     const spendingLimits = {
       transaction: {
