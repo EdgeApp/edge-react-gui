@@ -162,10 +162,6 @@ export const SettingsScene = (props: Props) => {
     dispatch(setSpamFilterOn(!spamFilterOn))
   })
 
-  const handleLogoutRequest = useHandler(async () => {
-    await dispatch(logoutRequest(navigation))
-  })
-
   const handleChangePassword = useHandler((): void => {
     isLocked ? handleUnlock() : navigation.navigate('changePassword', {})
   })
@@ -213,7 +209,7 @@ export const SettingsScene = (props: Props) => {
         onSubmit={async text => {
           if (text !== username) return lstrings.delete_account_verification_error
           await account.deleteRemoteAccount()
-          await handleLogoutRequest()
+          await dispatch(logoutRequest(navigation))
           await context.forgetAccount(rootLoginId)
           Airship.show(bridge => <TextDropdown bridge={bridge} message={sprintf(lstrings.delete_account_feedback, username)} />).catch(err => showError(err))
           return true
