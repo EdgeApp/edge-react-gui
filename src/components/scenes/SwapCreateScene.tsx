@@ -6,6 +6,7 @@ import { Text, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { DisableAsset } from '../../actions/ExchangeInfoActions'
+import { checkEnabledExchanges } from '../../actions/SettingsActions'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
@@ -106,6 +107,16 @@ export const SwapCreateScene = (props: Props) => {
     zeroString(state.nativeAmount) ||
     // Don't show next button if the amount exceeds the balance:
     checkAmountExceedsBalance()
+
+  //
+  // Effects
+  //
+
+  React.useEffect(() => {
+    return navigation.addListener('focus', () => {
+      dispatch(checkEnabledExchanges())
+    })
+  }, [dispatch, navigation])
 
   //
   // Callbacks

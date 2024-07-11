@@ -13,6 +13,7 @@ import { showClearLogsModal, showSendLogsModal } from '../../actions/LogActions'
 import { logoutRequest } from '../../actions/LoginActions'
 import {
   setAutoLogoutTimeInSecondsRequest,
+  showReEnableOtpModal,
   showRestoreWalletsModal,
   showUnlockSettingsModal,
   togglePinLoginEnabled,
@@ -162,10 +163,6 @@ export const SettingsScene = (props: Props) => {
     dispatch(setSpamFilterOn(!spamFilterOn))
   })
 
-  const handleLogoutRequest = useHandler(async () => {
-    await dispatch(logoutRequest(navigation))
-  })
-
   const handleChangePassword = useHandler((): void => {
     isLocked ? handleUnlock() : navigation.navigate('changePassword', {})
   })
@@ -213,7 +210,7 @@ export const SettingsScene = (props: Props) => {
         onSubmit={async text => {
           if (text !== username) return lstrings.delete_account_verification_error
           await account.deleteRemoteAccount()
-          await handleLogoutRequest()
+          await dispatch(logoutRequest(navigation))
           await context.forgetAccount(rootLoginId)
           Airship.show(bridge => <TextDropdown bridge={bridge} message={sprintf(lstrings.delete_account_feedback, username)} />).catch(err => showError(err))
           return true
@@ -301,6 +298,15 @@ export const SettingsScene = (props: Props) => {
       if (cleanup) cleanup()
     }
   }, [context, supportsTouchId])
+
+  // Show a modal if we have a pending OTP resent when we enter the scene:
+  React.useEffect(() => {
+    return navigation.addListener('focus', () => {
+      if (account.otpResetDate != null) {
+        showReEnableOtpModal(account).catch(error => showError(error))
+      }
+    })
+  }, [account, navigation])
 
   return (
     <SceneWrapper scroll>
