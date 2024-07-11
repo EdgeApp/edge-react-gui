@@ -84,6 +84,9 @@ export function initializeAccount(navigation: NavigationBase, account: EdgeAccou
       // during account creation
       await readLocalAccountSettings(account)
 
+      // HACK: Android needs this for some reason for proper logout
+      navigation.pop()
+
       const newAccountFlow = async (navigation: NavigationProp<'createWalletSelectCrypto'>, items: WalletCreateItem[]) => {
         navigation.push('edgeTabs', {
           screen: 'homeTab',
