@@ -157,12 +157,12 @@ export function createAccountTransaction(
             paymentWallet.saveTxMetadata({ txid: edgeTransaction.txid, tokenId, metadata: edgeMetadata }).catch(err => console.warn(err))
             navigation.navigate('walletsTab', { screen: 'walletList' })
             setTimeout(() => {
-              Airship.show(bridge => (
+              Airship.show<'ok' | undefined>(bridge => (
                 <ButtonsModal
                   bridge={bridge}
                   title={lstrings.create_wallet_account_payment_sent_title}
                   message={lstrings.create_wallet_account_payment_sent_message}
-                  buttons={{}}
+                  buttons={{ ok: { label: lstrings.string_ok_cap } }}
                 />
               )).catch(() => {})
             }, 750)

@@ -69,8 +69,8 @@ export function walletListMenuAction(
         const wallet = currencyWallets[walletId]
 
         if (Object.values(currencyWallets).length === 1) {
-          await Airship.show(bridge => (
-            <ButtonsModal bridge={bridge} buttons={{}} closeArrow title={lstrings.cannot_delete_last_wallet_modal_title}>
+          await Airship.show<'ok' | undefined>(bridge => (
+            <ButtonsModal bridge={bridge} buttons={{ ok: { label: lstrings.string_ok_cap } }} closeArrow title={lstrings.cannot_delete_last_wallet_modal_title}>
               <Paragraph>{lstrings.cannot_delete_last_wallet_modal_message_part_1}</Paragraph>
               <Paragraph>{lstrings.cannot_delete_last_wallet_modal_message_part_2}</Paragraph>
             </ButtonsModal>
