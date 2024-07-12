@@ -1,9 +1,11 @@
-import { EdgeCurrencyWallet } from 'edge-core-js'
+import { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
 import { showFioExpiredModal } from '../../actions/FioActions'
+import { FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
-import { useSelector } from '../../types/reactRedux'
+import { useWatch } from '../../hooks/useWatch'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { FioDomain } from '../../types/types'
 import {
@@ -19,23 +21,43 @@ import { showDevError } from './AirshipInstance'
 const EXPIRE_CHECK_TIMEOUT = 30000
 
 interface Props {
+  account: EdgeAccount
   navigation: NavigationBase
 }
 
 export const FioService = (props: Props) => {
-  const { navigation } = props
+  const { account, navigation } = props
+  const dispatch = useDispatch()
 
+  const currencyWallets = useWatch(account, 'currencyWallets')
   const expiredLastChecks = React.useRef<{ [fioName: string]: Date } | undefined>()
   const expireReminderShown = React.useRef(false)
   const expiredChecking = React.useRef(false)
   const walletsCheckedForExpired = React.useRef<{ [walletId: string]: boolean }>({})
-  const fioWallets = useSelector(state => state.ui.wallets.fioWallets)
+  const fioWallets = React.useRef<EdgeCurrencyWallet[]>([])
   const disklet = useSelector(state => state.core.disklet)
+
+  React.useEffect(() => {
+    const fioWalletsTemp: EdgeCurrencyWallet[] = []
+    for (const walletId of Object.keys(currencyWallets)) {
+      if (currencyWallets[walletId].type === FIO_WALLET_TYPE) {
+        fioWalletsTemp.push(currencyWallets[walletId])
+      }
+    }
+
+    if (!arraysEqual(fioWalletsTemp, fioWallets.current)) {
+      fioWallets.current = fioWalletsTemp
+      dispatch({
+        type: 'UPDATE_FIO_WALLETS',
+        data: { fioWallets: fioWallets.current }
+      })
+    }
+  }, [currencyWallets, dispatch])
 
   const refreshNamesToCheckExpired = useHandler(async () => {
     if (expireReminderShown.current) return
 
-    if (fioWallets.length === 0) {
+    if (fioWallets.current.length === 0) {
       return
     }
 
@@ -43,7 +65,7 @@ export const FioService = (props: Props) => {
     expiredChecking.current = true
 
     const walletsToCheck: EdgeCurrencyWallet[] = []
-    for (const fioWallet of fioWallets) {
+    for (const fioWallet of fioWallets.current) {
       if (!walletsCheckedForExpired.current[fioWallet.id]) {
         walletsToCheck.push(fioWallet)
       }
@@ -94,4 +116,17 @@ export const FioService = (props: Props) => {
   }, [refreshNamesToCheckExpired])
 
   return null
+}
+
+function arraysEqual(arr1: EdgeCurrencyWallet[], arr2: EdgeCurrencyWallet[]) {
+  if (arr1.length !== arr2.length) return false
+
+  arr1.sort((a, b) => a.id.localeCompare(b.id))
+  arr2.sort((a, b) => a.id.localeCompare(b.id))
+
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i].id !== arr2[i].id) return false
+  }
+
+  return true
 }

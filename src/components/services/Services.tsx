@@ -143,7 +143,7 @@ export function Services(props: Props) {
       {account == null ? null : <AccountCallbackManager account={account} navigation={navigation} />}
       {account == null ? null : <SortedWalletList account={account} />}
       <EdgeContextCallbackManager navigation={navigation} />
-      <FioService navigation={navigation} />
+      {account == null ? null : <FioService account={account} navigation={navigation} />}
       <PermissionsManager />
       {startLoanManager ? <LoanManagerService account={account} /> : null}
       <NetworkActivity />
