@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import { showFioExpiredModal } from '../../actions/FioActions'
 import { useHandler } from '../../hooks/useHandler'
-import { useDispatch, useSelector } from '../../types/reactRedux'
+import { useSelector } from '../../types/reactRedux'
 import { NavigationBase } from '../../types/routerTypes'
 import { FioDomain } from '../../types/types'
 import {
@@ -24,12 +24,11 @@ interface Props {
 
 export const FioService = (props: Props) => {
   const { navigation } = props
-  const dispatch = useDispatch()
 
   const expiredLastChecks = React.useRef<{ [fioName: string]: Date } | undefined>()
   const expireReminderShown = React.useRef(false)
   const expiredChecking = React.useRef(false)
-  const walletsCheckedForExpired = useSelector(state => state.ui.fio.walletsCheckedForExpired)
+  const walletsCheckedForExpired = React.useRef<{ [walletId: string]: boolean }>({})
   const fioWallets = useSelector(state => state.ui.wallets.fioWallets)
   const disklet = useSelector(state => state.core.disklet)
 
@@ -45,7 +44,7 @@ export const FioService = (props: Props) => {
 
     const walletsToCheck: EdgeCurrencyWallet[] = []
     for (const fioWallet of fioWallets) {
-      if (!walletsCheckedForExpired[fioWallet.id]) {
+      if (!walletsCheckedForExpired.current[fioWallet.id]) {
         walletsToCheck.push(fioWallet)
       }
     }
@@ -74,9 +73,8 @@ export const FioService = (props: Props) => {
       }
 
       for (const walletId in fioWalletsById) {
-        walletsCheckedForExpired[walletId] = true
+        walletsCheckedForExpired.current[walletId] = true
       }
-      dispatch({ type: 'FIO/WALLETS_CHECKED_FOR_EXPIRED', data: walletsCheckedForExpired })
 
       expiredChecking.current = false
     }
